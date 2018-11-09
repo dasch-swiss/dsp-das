@@ -17,7 +17,7 @@ import { BoardComponent } from './project/board/board.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
 import { UserItemComponent } from './project/collaboration/user-item/user-item.component';
 import { UserListComponent } from './project/collaboration/user-list/user-list.component';
-import { OntologyItemComponent } from './project/ontology-item/ontology-item.component';
+import { OntologyComponent } from './project/ontology/ontology.component';
 import { OntologyListComponent } from './project/ontology-list/ontology-list.component';
 import { PropertyItemComponent } from './project/ontology/property-item/property-item.component';
 import { PropertyListComponent } from './project/ontology/property-list/property-list.component';
@@ -37,6 +37,7 @@ import { UserComponent } from './user/user.component';
 import { LoremIpsumComponent } from './dev/lorem-ipsum/lorem-ipsum.component';
 import { HttpClientModule } from '@angular/common/http';
 
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -47,7 +48,7 @@ import { HttpClientModule } from '@angular/common/http';
         UserListComponent,
         UserItemComponent,
         OntologyListComponent,
-        OntologyItemComponent,
+        OntologyComponent,
         PropertyListComponent,
         PropertyItemComponent,
         ResourceListComponent,

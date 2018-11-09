@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OntologyItemComponent } from './ontology-item.component';
+import { OntologyComponent } from './ontology.component';
 
-describe('OntologyItemComponent', () => {
-  let component: OntologyItemComponent;
-  let fixture: ComponentFixture<OntologyItemComponent>;
+describe('OntologyComponent', () => {
+  let component: OntologyComponent;
+  let fixture: ComponentFixture<OntologyComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OntologyItemComponent ]
+      declarations: [ OntologyComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OntologyItemComponent);
+    fixture = TestBed.createComponent(OntologyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
