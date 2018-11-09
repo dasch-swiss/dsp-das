@@ -1,0 +1,26 @@
+.app-header {
+  padding: 0 16px 0 0;
+}
+
+.logo {
+
+  .mat-button {
+    padding: 12px 0;
+  }
+
+  .mat-icon {
+    height: 40px;
+
+    &.large {
+      width: 180px;
+    }
+
+    &.small {
+      margin-left: 12px;
+      width: 40px;
+    }
+  }
+
+}
+
+

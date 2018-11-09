@@ -1,0 +1,26 @@
+// responsive sizes
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+);
+
+@media (max-width: map-get($grid-breakpoints, md)) {
+  .large {
+    display: none !important;
+  }
+  .small {
+    display: block !important;
+  }
+}
+
+@media (min-width: map-get($grid-breakpoints, md)) {
+  .large {
+    display: block !important;
+  }
+  .small {
+    display: none !important;
+  }
+}
