@@ -1,9 +1,12 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LoremIpsumComponent } from './dev/lorem-ipsum/lorem-ipsum.component';
 import { ConfirmComponent } from './main/dialog/confirm/confirm.component';
 import { DialogComponent } from './main/dialog/dialog.component';
 import { ErrorComponent } from './main/error/error.component';
@@ -17,8 +20,8 @@ import { BoardComponent } from './project/board/board.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
 import { UserItemComponent } from './project/collaboration/user-item/user-item.component';
 import { UserListComponent } from './project/collaboration/user-list/user-list.component';
-import { OntologyComponent } from './project/ontology/ontology.component';
 import { OntologyListComponent } from './project/ontology-list/ontology-list.component';
+import { OntologyComponent } from './project/ontology/ontology.component';
 import { PropertyItemComponent } from './project/ontology/property-item/property-item.component';
 import { PropertyListComponent } from './project/ontology/property-list/property-list.component';
 import { ResourceItemComponent } from './project/ontology/resource-item/resource-item.component';
@@ -34,8 +37,6 @@ import { ProjectListComponent } from './user/project-list/project-list.component
 import { UserFormComponent } from './user/user-form/user-form.component';
 import { UserMenuComponent } from './user/user-menu/user-menu.component';
 import { UserComponent } from './user/user.component';
-import { LoremIpsumComponent } from './dev/lorem-ipsum/lorem-ipsum.component';
-import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -76,6 +77,7 @@ import { HttpClientModule } from '@angular/common/http';
         AppRoutingModule,
         BrowserModule,
         BrowserAnimationsModule,
+        FlexLayoutModule,
         HttpClientModule,
         MaterialModule
     ],

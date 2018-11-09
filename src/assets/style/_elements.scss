@@ -4,21 +4,8 @@
   flex: 1 1 auto;
 }
 
-// component content container
-.wrapper {
-  max-width: 960px;
-  padding: 48px 24px;
-  width: 80%;
-
-  &.narrow {
-    width: 320px;
-  }
-
-  &.wide {
-    width: 640px;
-  }
-
-  &.center {
-    margin: 0 auto;
-  }
+.link {
+  cursor: pointer;
+  text-decoration: underline;
 }
+

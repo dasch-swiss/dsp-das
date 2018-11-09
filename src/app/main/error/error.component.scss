@@ -1,0 +1,33 @@
+.error-page {
+  background: #000;
+  height: 100%;
+  width: 100%;
+
+  .container {
+    color: #fff;
+    padding-top: 120px;
+
+    .image,
+    .text {
+      flex: 1 1 auto;
+      box-sizing: border-box;
+      padding: 24px;
+      max-height: 280px;
+
+
+      &.error-message {
+        line-height: 1.5;
+        margin: 0 auto;
+      }
+
+      img {
+        display: block;
+        margin: 0 auto;
+        max-width: 400px;
+      }
+    }
+
+  }
+
+}
+
