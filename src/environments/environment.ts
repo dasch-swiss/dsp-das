@@ -3,7 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+    production: false,
+    appName: 'KUIRL',
+    appUrl: 'http://localhost:4200',
+    apiUrl: 'http://0.0.0.0:3333',
+    iiifUrl: 'http://localhost:1024'
 };
 
 /*

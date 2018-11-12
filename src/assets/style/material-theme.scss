@@ -3,7 +3,7 @@
 @include mat-core();
 
 // Define the color palettes for the theme.
-$primary: mat-palette($mat-blue-grey, 700, 500, 800);
+$primary: mat-palette($mat-blue-grey, 700, 500, 900);
 $accent: mat-palette($mat-amber, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
