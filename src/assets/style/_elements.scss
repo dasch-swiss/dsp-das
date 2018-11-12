@@ -9,3 +9,19 @@
   text-decoration: underline;
 }
 
+.cdk-overlay-connected-position-bounding-box {
+  top: 12px !important;
+  right: 12px !important;
+}
+
+.mat-menu-content {
+  padding: 0 !important;
+
+  .menu-action {
+
+    .mat-button-wrapper {
+      line-height: unset !important;
+    }
+
+  }
+}

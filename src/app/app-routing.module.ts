@@ -9,6 +9,7 @@ import { OntologyListComponent } from './project/ontology-list/ontology-list.com
 import { OntologyComponent } from './project/ontology/ontology.component';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ErrorComponent } from './main/error/error.component';
+import { CollectionListComponent } from './user/collection-list/collection-list.component';
 import { ProfileComponent } from './user/profile/profile.component';
 import { UserComponent } from './user/user.component';
 import { UserFormComponent } from './user/user-form/user-form.component';
@@ -70,28 +71,21 @@ const routes: Routes = [
     },
     {
         path: 'user/:name',
-        component: UserComponent,
-        children: [
-            {
-                path: '',
-                pathMatch: 'full',
-                redirectTo: 'profile'
-            },
-            {
-                path: 'account',
-                component: UserFormComponent
-            },
-            {
-                path: 'projects',
-                component: ProjectListComponent,
-                data: {list: true}
-            },
-            {
-                path: '**',
-                component: ErrorComponent,
-                data: {status: 404}
-            }
-        ]
+        component: UserComponent
+    },
+    {
+        path: 'account',
+        component: UserFormComponent
+    },
+    {
+        path: 'projects',
+        component: ProjectListComponent,
+        data: {list: true}
+    },
+    {
+        path: 'collections',
+        component: CollectionListComponent,
+        data: {list: true}
     },
     {
         path: '**',

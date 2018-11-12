@@ -1,3 +1,39 @@
-<p>
-  user-menu works!
-</p>
+<button mat-button [matMenuTriggerFor]="userMenu">
+    <img kuiAdminImage [image]="userName" [type]="'user'" class="avatar"/>
+</button>
+
+<mat-menu #userMenu="matMenu" xPosition="before" class="menu">
+    <!-- first line: user name and close button -->
+    <div class="menu-header">
+        <p class="menu-title">
+            {{userName}}
+        </p>
+        <!--
+        <span class="menu-action">
+            <button mat-icon-button>
+                <mat-icon>close</mat-icon>
+            </button>
+        </span>
+        -->
+    </div>
+
+    <!-- menu items -->
+    <div class="menu-content">
+        <mat-grid-list cols="2" gutterSize="6px">
+            <mat-grid-tile *ngFor="let item of items">
+                <button mat-button [routerLink]="item.route">
+                    <mat-icon>{{item.icon}}</mat-icon>
+                    <br>
+                    {{item.title}}
+                </button>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </div>
+
+    <div class="menu-footer">
+        <button mat-button class="menu-action logout" routerLink="/logout">
+            <mat-icon>power_settings_new</mat-icon>
+            Logout
+        </button>
+    </div>
+</mat-menu>

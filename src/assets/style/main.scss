@@ -1,5 +1,4 @@
-@import 'config';
-@import 'mixins';
+@import 'theme';
 @import 'layout';
 @import 'elements';
 @import 'responsive';
@@ -12,5 +11,5 @@ body {
 
 
 a, .link {
-  color: $primary_900;
+  color: $primary;
 }

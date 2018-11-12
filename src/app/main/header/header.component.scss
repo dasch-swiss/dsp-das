@@ -1,12 +1,17 @@
 .app-header {
-  padding: 0 16px 0 0;
+  padding: 0;
 }
 
-.logo {
+.logo,
+.action {
 
   .mat-button {
     padding: 12px 0;
   }
+
+}
+
+.logo {
 
   .mat-icon {
     height: 40px;
