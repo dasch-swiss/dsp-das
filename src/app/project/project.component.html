@@ -1,3 +1,30 @@
-<p>
-  project works!
-</p>
+<mat-sidenav-container class="sidenav-container full-size" [autosize]="true">
+    <mat-sidenav #sidenav mode="side" [opened]="true" [class.wide]="open" [class.narrow]="!open"
+                 class="sidenav border-right">
+        <!-- side nav list: navigation and tools -->
+        <div class="side-nav-content scroll-y-only">
+
+            <!-- the navigation depends on the route -->
+            <app-navigation [navigation]="navigation"></app-navigation>
+
+        </div>
+        <div class="side-nav-footer">
+            <button mat-button (click)="open = !open">
+                <mat-icon *ngIf="!open">keyboard_arrow_right</mat-icon>
+                <mat-icon *ngIf="open">keyboard_arrow_left</mat-icon>
+            </button>
+        </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
+
+        <!-- main content: router outlet -->
+        <div class="content" *ngIf="!loading">
+
+            <router-outlet></router-outlet>
+
+        </div>
+
+    </mat-sidenav-content>
+</mat-sidenav-container>

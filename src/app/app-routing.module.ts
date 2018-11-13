@@ -1,19 +1,16 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { MainComponent } from './main/main.component';
+import { RouterModule, Routes } from '@angular/router';
+import { ErrorComponent } from './main/error/error.component';
 import { LoginComponent } from './main/login/login.component';
-import { ProjectComponent } from './project/project.component';
+import { MainComponent } from './main/main.component';
 import { BoardComponent } from './project/board/board.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
 import { OntologyListComponent } from './project/ontology-list/ontology-list.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
-import { ErrorComponent } from './main/error/error.component';
-import { CollectionListComponent } from './user/collection-list/collection-list.component';
-import { ProfileComponent } from './user/profile/profile.component';
-import { UserComponent } from './user/user.component';
+import { ProjectComponent } from './project/project.component';
 import { UserFormComponent } from './user/user-form/user-form.component';
-import { ProjectListComponent } from './user/project-list/project-list.component';
+import { UserComponent } from './user/user.component';
 
 const routes: Routes = [
     {
@@ -95,7 +92,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

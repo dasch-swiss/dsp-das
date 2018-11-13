@@ -52,13 +52,9 @@ export class UserComponent implements OnInit {
 
         this.loading = true;
         // set the cache here:
-        // user's user-profile
+        // current/logged-in user
         this._cache.get(this.username, this._usersService.getUserByEmail(this.username));
         this.loading = false;
-    }
-
-    toggleSidenav() {
-        this.open = !this.open;
     }
 
 }

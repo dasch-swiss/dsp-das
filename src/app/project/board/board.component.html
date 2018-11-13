@@ -1,3 +1,92 @@
-<p>
-  board works!
-</p>
+<kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
+
+<div *ngIf="project && !loading">
+    <!-- get project by shortname -->
+
+    <!-- description, keywords and other infos -->
+    <mat-card class="salsah-card no-shadow">
+        <!--<mat-card-header>-->
+        <mat-card-subtitle>Project {{project.shortcode}} | {{project.shortname}}</mat-card-subtitle>
+        <mat-card-title>{{project.longname}}</mat-card-title>
+        <!--</mat-card-header>-->
+
+        <!-- description -->
+        <mat-card-content>
+            <div *ngFor="let description of project.description">
+                <div [innerHtml]="description.value"></div>
+            </div>
+        </mat-card-content>
+
+        <!-- keywords -->
+        <!--<mat-card-subtitle>{{project.keywords.length | i18nPlural: itemPluralMapping['keyword']}}</mat-card-subtitle>-->
+        <mat-card-content>
+            <mat-chip-list>
+                <mat-chip *ngFor="let k of project.keywords">
+                    {{k}}
+                </mat-chip>
+            </mat-chip-list>
+        </mat-card-content>
+
+        <mat-card-actions>
+            <button mat-icon-button class="right" *ngIf="project.status" [routerLink]="'../edit'">
+                <mat-icon>edit</mat-icon>
+            </button>
+        </mat-card-actions>
+    </mat-card>
+
+    <mat-divider></mat-divider>
+
+    <!-- list project members -->
+    <mat-card class="salsah-card no-shadow">
+        <mat-card-header>
+            <mat-card-subtitle>{{projectMembers.length | i18nPlural: itemPluralMapping['member']}}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+            <mat-list role="list" class="simple-list">
+                <mat-list-item *ngFor="let m of projectMembers">
+                    <h4 mat-line>{{m.givenName}} {{m.familyName}}</h4>
+                    <p mat-line> {{m.email}} </p>
+                    <img kuiAdminImage [image]="m.email" [type]="'user'" class="list-icon" />
+                </mat-list-item>
+            </mat-list>
+        </mat-card-content>
+
+        <mat-card-actions>
+            <button mat-icon-button class="right" [routerLink]="'../team'">
+                <mat-icon>arrow_forward</mat-icon>
+            </button>
+        </mat-card-actions>
+    </mat-card>
+
+    <mat-divider></mat-divider>
+
+
+
+    <mat-divider></mat-divider>
+
+    <mat-card class="salsah-card no-shadow">
+        <mat-card-subtitle>{{project.ontologies.length | i18nPlural: itemPluralMapping['ontology']}}</mat-card-subtitle>
+        <mat-card-content>
+            {{project.ontologies}}
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-icon-button class="right" [routerLink]="'../ontology'">
+                <mat-icon>arrow_forward</mat-icon>
+            </button>
+        </mat-card-actions>
+    </mat-card>
+
+    <mat-divider></mat-divider>
+
+    <mat-card class="salsah-card no-shadow">
+        <mat-card-subtitle>Status</mat-card-subtitle>
+        <mat-card-title *ngIf="project.status">Active</mat-card-title>
+        <mat-card-title *ngIf="!project.status">Archived</mat-card-title>
+        <mat-card-actions class="center">
+            <button *ngIf="project.status" mat-button [color]="'warn'" (click)="delete()">DELETE</button>
+            <button *ngIf="!project.status" mat-button [color]="'primary'" (click)="activate()">ACTIVATE</button>
+        </mat-card-actions>
+    </mat-card>
+
+</div>

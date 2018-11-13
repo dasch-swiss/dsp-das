@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ApiServiceError, Project, ProjectsService, Session, User, UsersService } from '@knora/core';
 import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
-  selector: 'app-project-list',
-  templateUrl: './project-list.component.html',
-  styleUrls: ['./project-list.component.scss']
+    selector: 'app-project-list',
+    templateUrl: './project-list.component.html',
+    styleUrls: ['./project-list.component.scss']
 })
 export class ProjectListComponent implements OnInit {
 
@@ -15,14 +16,18 @@ export class ProjectListComponent implements OnInit {
     active: Project[] = [];
     inactive: Project[] = [];
 
-  constructor(private _cache: CacheService,
-              private _projectsService: ProjectsService,
-              private _usersService: UsersService) { }
+    selectedProject: Project;
 
-  ngOnInit() {
+    constructor(private _cache: CacheService,
+                private _projectsService: ProjectsService,
+                private _router: Router,
+                private _usersService: UsersService) {
+    }
 
-      this.getUsersProjects();
-  }
+    ngOnInit() {
+
+        this.getUsersProjects();
+    }
 
     getUsersProjects() {
 
@@ -43,8 +48,6 @@ export class ProjectListComponent implements OnInit {
                                 this.inactive.push(p);
                             }
                         }
-                        // this.projects = result;
-                        // console.log(this.projects);
                     },
                     (error: ApiServiceError) => {
                         console.error(error);
@@ -75,4 +78,26 @@ export class ProjectListComponent implements OnInit {
         // TODO: in case of sys admin: is it possible to mix all projects with user's projects to mark them somehow in the list?!
     }
 
+    /**
+     *
+     * @param id
+     */
+    setProject(id: string) {
+        // get project by id
+        // by searching in the list of projects
+        // instead of an additional api request
+        this.projects.filter(project => {
+
+            if (project.id === id) {
+
+                this._router.navigateByUrl('/refresh', {skipLocationChange: true}).then(() =>
+                    this._router.navigate(['/project/' + project.shortcode + '/dashboard'])
+                );
+
+                // this._router.navigate(['/project/' + project.shortname + '/dashboard']);
+
+                // location.reload(true);
+            }
+        });
+    }
 }
