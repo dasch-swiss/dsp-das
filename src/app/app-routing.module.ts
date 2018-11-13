@@ -75,16 +75,16 @@ const routes: Routes = [
     },
     {
         path: 'account',
-        component: UserFormComponent
+        component: UserComponent
     },
     {
         path: 'projects',
-        component: ProjectListComponent,
-        data: {list: true}
+        component: UserComponent,
+        data: {view: true}
     },
     {
         path: 'collections',
-        component: CollectionListComponent,
+        component: UserComponent,
         data: {list: true}
     },
     {

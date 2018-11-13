@@ -1,0 +1,27 @@
+.side-nav {
+  width: 36px;
+
+  &.large {
+    width: 200px;
+  }
+
+  &.small {
+    width: 36px;
+  }
+
+}
+
+.mat-sidenav-content {
+  background: #fff;
+
+  &.large {
+    margin-left: 36px;
+    background: red;
+  }
+
+  &.small {
+    margin-left: 200px;
+    background: green;
+  }
+
+}

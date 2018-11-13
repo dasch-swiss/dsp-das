@@ -1,3 +1,4 @@
+//
 // component content container
 .wrapper {
   max-width: 960px;
@@ -16,3 +17,84 @@
     margin: 0 auto;
   }
 }
+
+// --------------------------------------
+
+//
+// sidenav
+.side-nav {
+  background-color: lighten($primary, 39%);
+  letter-spacing: .3px;
+  width: 36px;
+
+  &.large {
+    width: 200px;
+  }
+
+  &.small {
+    width: 36px;
+  }
+
+  .mat-sidenav-content {
+    background: #fff;
+    padding: 24px 0;
+
+    &.large {
+      margin-left: 36px;
+    }
+
+    &.small {
+      margin-left: 200px;
+    }
+  }
+
+  .side-nav-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    bottom: 0;
+    height: 36px;
+    position: absolute;
+    width: 100%;
+
+    .mat-button {
+      min-width: 30px;
+      padding: 0;
+      width: 100%;
+
+      .mat-icon {
+        margin: 0 auto;
+      }
+    }
+  }
+}
+
+// --------------------------------------
+
+//
+// size and position
+.full-size {
+  height: 100%;
+  width: 100%;
+}
+
+.left {
+  left: 0;
+  text-align: left;
+}
+
+// center an element
+.middle {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// center content of an element
+.center {
+  text-align: center !important;
+}
+
+.right {
+  right: 0;
+  text-align: right;
+}
+
+// --------------------------------------

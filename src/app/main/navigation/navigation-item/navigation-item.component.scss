@@ -1,0 +1,39 @@
+.nav-item {
+  height: 48px;
+  text-align: left;
+  width: 100%;
+
+  &.button {
+    margin-left: -16px;
+    margin-right: -16px;
+    width: calc(100% + 32px);
+
+  }
+}
+
+.label {
+  margin-left: 20px;
+}
+
+.mat-icon {
+  position: absolute;
+  top: 12px;
+
+  &.prefix {
+    left: 4px;
+  }
+
+  &.suffix {
+    display: none;
+    right: 0;
+  }
+}
+
+.active-link {
+  background: rgba(33,33,33,.1);
+
+  .mat-icon.suffix {
+    display: block;
+  }
+
+}

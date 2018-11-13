@@ -1,14 +1,24 @@
+//
+// flex layout helper
 .fill-remaining-space {
   /* This fills the remaining space, by using flexbox.
      Every toolbar row uses a flexbox row layout. */
   flex: 1 1 auto;
 }
+// --------------------------------------
 
+//
+// Link
+a,
 .link {
+  color: $primary;
   cursor: pointer;
-  text-decoration: underline;
+  text-decoration: none;
 }
+// --------------------------------------
 
+//
+// menu
 .cdk-overlay-connected-position-bounding-box {
   top: 12px !important;
   right: 12px !important;
@@ -25,3 +35,4 @@
 
   }
 }
+// --------------------------------------

@@ -1,3 +1,90 @@
-<p>
-  project-list works!
-</p>
+
+<div class="select-project-from-list">
+
+    <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
+
+
+
+    <mat-toolbar>
+        <span>
+            <h3>Active Projects</h3>
+        </span>
+        <span class="fill-remaining-space"></span>
+        <span>
+            <button mat-button routerLink="/project/new">
+                <mat-icon prefix>add</mat-icon>
+                NEW
+            </button>
+        </span>
+    </mat-toolbar>
+
+    <div fxLayout="row wrap"
+         fxLayout.xs="column"
+         fxLayoutGap="18px grid">
+
+        <!-- 0) create new project -->
+        <div fxFlex.sm="50" fxFlex="32.5" class="preview ">
+            <!--<mat-card (click)="openProjectForm()" class="link create-new">-->
+            <mat-card [routerLink]="'/new/project'" class="link create-new">
+
+                <mat-card-subtitle>---- | add</mat-card-subtitle>
+                <mat-card-title>Create new project</mat-card-title>
+
+                <mat-card-content>
+                    <button mat-icon-button>
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </mat-card-content>
+
+            </mat-card>
+        </div>
+
+        <!-- 1-n) user's active projects -->
+        <div fxFlex.sm="50" fxFlex="32.5" *ngFor="let project of active | sortBy: 'shortname'" class="preview">
+            <mat-card (click)="setProject(project.id)" class="link">
+
+                <mat-card-subtitle>{{project.shortcode}} | {{project.shortname}}</mat-card-subtitle>
+                <mat-card-title>{{project.longname}}</mat-card-title>
+
+
+                <mat-card-content>
+                    {{project.description.value}}
+                </mat-card-content>
+
+            </mat-card>
+        </div>
+    </div>
+
+    <mat-divider style="margin: 24px 0;"></mat-divider>
+
+    <!-- user's inactive projects -->
+    <mat-toolbar>
+        <span>
+            <h3>Archived Projects</h3>
+        </span>
+        <span class="fill-remaining-space"></span>
+    </mat-toolbar>
+
+    <div fxLayout="row wrap"
+         fxFlexFill
+         fxLayout.xs="column"
+         fxLayoutGap="18px grid"
+         fxLayoutAlign="space-between stretch">
+
+
+        <div fxFlex="32.5%" *ngFor="let project of inactive | sortBy: 'shortname'" class="preview">
+            <mat-card (click)="setProject(project.id)" class="link archived">
+
+                <mat-card-subtitle>{{project.shortcode}} | {{project.shortname}}</mat-card-subtitle>
+                <mat-card-title>{{project.longname}}</mat-card-title>
+
+                <mat-card-content>
+                    {{project.description.value}}
+                </mat-card-content>
+
+            </mat-card>
+        </div>
+
+    </div>
+
+</div>

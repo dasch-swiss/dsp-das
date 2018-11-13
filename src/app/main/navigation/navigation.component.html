@@ -1,3 +1,26 @@
-<p>
-  navigation works!
-</p>
+<mat-list class="navigation">
+    <div *ngFor="let item of navigation">
+        <app-navigation-item [item]="item"></app-navigation-item>
+
+        <div *ngIf="item.children" class="nav-item-children">
+
+            <mat-list-item *ngFor="let child of item.children | sortBy: 'name'" [class.parent]="item.children" class="nav-item">
+                <button mat-button [routerLink]="item.route" routerLinkActive="active-link" class="nav-item button">
+                    <mat-icon class="prefix">{{item.icon}}</mat-icon>
+                    <span class="label">{{item.label}}</span>
+                    <mat-icon class="suffix">
+                        <!--
+                        <span *ngIf="!item.children">keyboard_arrow_right</span>
+                        <span *ngIf="item.children">keyboard_arrow_down</span>
+                        -->
+                    </mat-icon>
+                </button>
+            </mat-list-item>
+
+
+        </div>
+
+        <mat-divider></mat-divider>
+
+    </div>
+</mat-list>
