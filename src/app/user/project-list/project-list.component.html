@@ -22,23 +22,6 @@
          fxLayout.xs="column"
          fxLayoutGap="grid">
 
-        <!-- 0) create new project -->
-<!--        <div fxFlex.sm="50" fxFlex class="preview ">
-            &lt;!&ndash;<mat-card (click)="openProjectForm()" class="link create-new">&ndash;&gt;
-            <mat-card [routerLink]="'/new/project'" class="link create-new">
-
-                <mat-card-subtitle>&#45;&#45;&#45;&#45; | add</mat-card-subtitle>
-                <mat-card-title>Create new project</mat-card-title>
-
-                <mat-card-content>
-                    <button mat-icon-button>
-                        <mat-icon>add</mat-icon>
-                    </button>
-                </mat-card-content>
-
-            </mat-card>
-        </div>-->
-
         <!-- 1-n) user's active projects -->
         <div fxFlex.sm="50" fxFlex="33.3" *ngFor="let project of active | sortBy: 'shortname'" class="preview">
             <mat-card (click)="setProject(project.id)" class="link">
@@ -70,7 +53,6 @@
          fxLayout.xs="column"
          fxLayoutGap="grid"
          fxLayoutAlign="space-between stretch">
-
 
         <div fxFlex="33.3" *ngFor="let project of inactive | sortBy: 'shortname'" class="preview">
             <mat-card (click)="setProject(project.id)" class="link archived">

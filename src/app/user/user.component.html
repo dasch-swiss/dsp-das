@@ -23,10 +23,10 @@
         <div class="content" [ngSwitch]="route" *ngIf="!loading && route">
 
             <!-- user profile -->
-            <app-profile *ngSwitchCase="'profile'"></app-profile>
+            <app-profile [username]="username" *ngSwitchCase="'profile'"></app-profile>
 
             <!-- edit user data -->
-            <app-account *ngSwitchCase="'account'"></app-account>
+            <app-account [username]="username" *ngSwitchCase="'account'"></app-account>
 
             <!-- user's projects -->
             <app-project-list *ngSwitchCase="'projects'"></app-project-list>

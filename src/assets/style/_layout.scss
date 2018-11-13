@@ -24,7 +24,7 @@
 // sidenav
 .sidenav-container {
   .sidenav {
-    background-color: lighten($primary, 39%);
+    background-color: lighten($primary, 50%);
     letter-spacing: .3px;
     width: 36px;
 
@@ -75,6 +75,7 @@
 
     .content {
       padding: 48px;
+      max-width: calc(1000px - (2 * 48px));
     }
 
   }
@@ -110,6 +111,10 @@
 .right {
   right: 0;
   text-align: right;
+}
+
+.flex-panel {
+  display: flex !important;
 }
 
 // --------------------------------------

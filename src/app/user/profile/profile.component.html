@@ -1,3 +1,32 @@
-<p>
-  profile works!
-</p>
+<kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
+
+<div *ngIf="user && !loading">
+
+    <mat-card class="salsah-card no-shadow">
+        <!--<mat-card-header>-->
+        <mat-card-subtitle>User</mat-card-subtitle>
+        <mat-card-title>{{user.familyName}}, {{user.givenName}}</mat-card-title>
+        <!--</mat-card-header>-->
+
+
+        <mat-card-content>
+            <!-- todo: add more user information here -->
+
+        </mat-card-content>
+
+        <!-- action panel: edit -->
+        <mat-card-actions class="flex-panel">
+            <span class="fill-remaining-space"></span>
+            <span>
+                <button mat-icon-button class="right" *ngIf="user.status" [routerLink]="'/account'">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </span>
+        </mat-card-actions>
+    </mat-card>
+
+    <mat-divider></mat-divider>
+
+    <!-- todo: add list of projects, collections etc. (user dashboard style)-->
+
+</div>
