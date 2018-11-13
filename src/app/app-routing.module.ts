@@ -70,7 +70,7 @@ const routes: Routes = [
         component: UserFormComponent
     },
     {
-        path: 'user/:name',
+        path: 'profile',
         component: UserComponent
     },
     {

@@ -20,14 +20,26 @@
   word-wrap: break-word;
 
   .mat-card {
-    height: 120px;
+    height: 160px;
+    color: rgba(0, 0, 0, 0.81);
 
     &:hover {
       background: rgba($primary, 0.39);
+      color: rgba(0, 0, 0, 1);
     }
 
     &:active {
       background: rgba($primary, 0.61);
+    }
+
+    &.archived,
+    &.archived .mat-icon {
+      color: rgba(0, 0, 0, 0.39);
+
+      &:hover {
+        color: rgba(0, 0, 0, 0.61);
+      }
+
     }
 
     &.create-new {
@@ -77,13 +89,4 @@
   }
 }
 
-.archived,
-.archived .mat-icon {
-  color: $primary;
 
-  &:hover,
-  &:hover .mat-icon {
-    color: rgba(0, 0, 0, 0.87);
-  }
-
-}

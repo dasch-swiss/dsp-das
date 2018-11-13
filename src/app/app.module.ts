@@ -41,6 +41,7 @@ import { ProjectListComponent } from './user/project-list/project-list.component
 import { UserFormComponent } from './user/user-form/user-form.component';
 import { UserMenuComponent } from './user/user-menu/user-menu.component';
 import { UserComponent } from './user/user.component';
+import { AccountComponent } from './user/account/account.component';
 
 
 @NgModule({
@@ -75,7 +76,8 @@ import { UserComponent } from './user/user.component';
         ConfirmComponent,
         ErrorComponent,
         LoginComponent,
-        LoremIpsumComponent
+        LoremIpsumComponent,
+        AccountComponent
     ],
     imports: [
         AppRoutingModule,

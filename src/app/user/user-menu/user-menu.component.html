@@ -1,12 +1,12 @@
 <button mat-button [matMenuTriggerFor]="userMenu">
-    <img kuiAdminImage [image]="userName" [type]="'user'" class="avatar"/>
+    <img kuiAdminImage [image]="username" [type]="'user'" class="avatar"/>
 </button>
 
 <mat-menu #userMenu="matMenu" xPosition="before" class="menu">
     <!-- first line: user name and close button -->
     <div class="menu-header">
         <p class="menu-title">
-            {{userName}}
+            {{username}}
         </p>
         <!--
         <span class="menu-action">
@@ -24,7 +24,7 @@
                 <button mat-button [routerLink]="item.route">
                     <mat-icon>{{item.icon}}</mat-icon>
                     <br>
-                    {{item.title}}
+                    {{item.label}}
                 </button>
             </mat-grid-tile>
         </mat-grid-list>

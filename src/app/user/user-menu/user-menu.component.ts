@@ -8,7 +8,7 @@ import { MenuItem } from '../../main/declarations/menu-item';
 })
 export class UserMenuComponent implements OnInit {
 
-    userName: string;
+    username: string;
 
     items: MenuItem[] = [
         {
@@ -23,7 +23,7 @@ export class UserMenuComponent implements OnInit {
         },
         {
             label: 'Profile',
-            route: '/user/',
+            route: '/profile',
             icon: 'fingerprint'
         },
         {
@@ -38,9 +38,7 @@ export class UserMenuComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.userName = JSON.parse(localStorage.getItem('session')).user.name;
-        const userEncoded = encodeURIComponent(this.userName);
-        this.items[2].route += this.userName;
+        this.username = JSON.parse(localStorage.getItem('session')).user.name;
     }
 
 }

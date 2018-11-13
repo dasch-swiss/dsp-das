@@ -22,49 +22,64 @@
 
 //
 // sidenav
-.side-nav {
-  background-color: lighten($primary, 39%);
-  letter-spacing: .3px;
-  width: 36px;
-
-  &.large {
-    width: 200px;
-  }
-
-  &.small {
+.sidenav-container {
+  .sidenav {
+    background-color: lighten($primary, 39%);
+    letter-spacing: .3px;
     width: 36px;
+
+    &.wide {
+      width: 180px;
+    }
+
+    &.narrow {
+      width: 36px;
+    }
+
+    .mat-drawer-inner-container {
+
+      overflow-x: hidden;
+
+      .mat-list {
+        padding-top: 0;
+      }
+
+      .mat-button {
+        border-radius: 0;
+      }
+
+    }
+
+    .side-nav-footer {
+      border-top: 1px solid rgba(0, 0, 0, 0.12);
+      bottom: 0;
+      height: 36px;
+      position: absolute;
+      width: 100%;
+
+      .mat-button {
+        min-width: 30px;
+        padding: 0;
+        width: 100%;
+
+        .mat-icon {
+          margin: 0 auto;
+        }
+      }
+    }
+
   }
 
   .mat-sidenav-content {
     background: #fff;
-    padding: 24px 0;
 
-    &.large {
-      margin-left: 36px;
+    .content {
+      padding: 48px;
     }
 
-    &.small {
-      margin-left: 200px;
-    }
   }
 
-  .side-nav-footer {
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
-    bottom: 0;
-    height: 36px;
-    position: absolute;
-    width: 100%;
 
-    .mat-button {
-      min-width: 30px;
-      padding: 0;
-      width: 100%;
-
-      .mat-icon {
-        margin: 0 auto;
-      }
-    }
-  }
 }
 
 // --------------------------------------
@@ -95,6 +110,14 @@
 .right {
   right: 0;
   text-align: right;
+}
+
+// --------------------------------------
+
+//
+// color
+.transparent {
+  background: none;
 }
 
 // --------------------------------------

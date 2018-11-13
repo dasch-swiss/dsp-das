@@ -5,14 +5,14 @@
 
 
 
-    <mat-toolbar>
+    <mat-toolbar class="transparent">
         <span>
             <h3>Active Projects</h3>
         </span>
         <span class="fill-remaining-space"></span>
         <span>
             <button mat-button routerLink="/project/new">
-                <mat-icon prefix>add</mat-icon>
+                <mat-icon>add</mat-icon>
                 NEW
             </button>
         </span>
@@ -20,14 +20,14 @@
 
     <div fxLayout="row wrap"
          fxLayout.xs="column"
-         fxLayoutGap="18px grid">
+         fxLayoutGap="grid">
 
         <!-- 0) create new project -->
-        <div fxFlex.sm="50" fxFlex="32.5" class="preview ">
-            <!--<mat-card (click)="openProjectForm()" class="link create-new">-->
+<!--        <div fxFlex.sm="50" fxFlex class="preview ">
+            &lt;!&ndash;<mat-card (click)="openProjectForm()" class="link create-new">&ndash;&gt;
             <mat-card [routerLink]="'/new/project'" class="link create-new">
 
-                <mat-card-subtitle>---- | add</mat-card-subtitle>
+                <mat-card-subtitle>&#45;&#45;&#45;&#45; | add</mat-card-subtitle>
                 <mat-card-title>Create new project</mat-card-title>
 
                 <mat-card-content>
@@ -37,10 +37,10 @@
                 </mat-card-content>
 
             </mat-card>
-        </div>
+        </div>-->
 
         <!-- 1-n) user's active projects -->
-        <div fxFlex.sm="50" fxFlex="32.5" *ngFor="let project of active | sortBy: 'shortname'" class="preview">
+        <div fxFlex.sm="50" fxFlex="33.3" *ngFor="let project of active | sortBy: 'shortname'" class="preview">
             <mat-card (click)="setProject(project.id)" class="link">
 
                 <mat-card-subtitle>{{project.shortcode}} | {{project.shortname}}</mat-card-subtitle>
@@ -58,7 +58,7 @@
     <mat-divider style="margin: 24px 0;"></mat-divider>
 
     <!-- user's inactive projects -->
-    <mat-toolbar>
+    <mat-toolbar class="transparent">
         <span>
             <h3>Archived Projects</h3>
         </span>
@@ -68,11 +68,11 @@
     <div fxLayout="row wrap"
          fxFlexFill
          fxLayout.xs="column"
-         fxLayoutGap="18px grid"
+         fxLayoutGap="grid"
          fxLayoutAlign="space-between stretch">
 
 
-        <div fxFlex="32.5%" *ngFor="let project of inactive | sortBy: 'shortname'" class="preview">
+        <div fxFlex="33.3" *ngFor="let project of inactive | sortBy: 'shortname'" class="preview">
             <mat-card (click)="setProject(project.id)" class="link archived">
 
                 <mat-card-subtitle>{{project.shortcode}} | {{project.shortname}}</mat-card-subtitle>

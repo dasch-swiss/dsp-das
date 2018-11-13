@@ -13,10 +13,12 @@ export class UserComponent implements OnInit {
 
     loading: boolean;
 
-    userName: string;
+    username: string;
+
+    route: string;
 
     // for the sidenav
-    opened = true;
+    open: boolean = true;
 
     navigation: MenuItem[] = [
         {
@@ -39,18 +41,24 @@ export class UserComponent implements OnInit {
     constructor(private _cache: CacheService,
                 private _route: ActivatedRoute,
                 private _usersService: UsersService) {
+
+        // get the activated route; we need it for the viewer switch
+        this.route = this._route.pathFromRoot[1].snapshot.url[0].path;
+        // get username
+        this.username = JSON.parse(localStorage.getItem('session')).user.name;
     }
 
     ngOnInit() {
+
+        this.loading = true;
         // set the cache here:
         // user's user-profile
-        this.loading = true;
-//        this._cache.get(this.userName, this._usersService.getUserByEmail(this.userName));
+        this._cache.get(this.username, this._usersService.getUserByEmail(this.username));
         this.loading = false;
     }
 
     toggleSidenav() {
-        this.opened = !this.opened;
+        this.open = !this.open;
     }
 
 }
