@@ -1,0 +1,11 @@
+@import '../../../assets/style/theme';
+
+.content {
+  margin: 96px auto;
+  max-width: 80%;
+
+  @media (max-width: map-get($grid-breakpoints, phone)) {
+    max-width: 100%;
+  }
+
+}
