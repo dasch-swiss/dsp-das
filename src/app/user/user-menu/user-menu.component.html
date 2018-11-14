@@ -1,6 +1,8 @@
-<button mat-button [matMenuTriggerFor]="userMenu">
-    <img kuiAdminImage [image]="username" [type]="'user'" class="avatar"/>
-</button>
+<span class="action">
+    <button mat-button [matMenuTriggerFor]="userMenu" class="main-toolbar-button">
+        <img kuiAdminImage [image]="username" [type]="'user'" class="avatar"/>
+    </button>
+</span>
 
 <mat-menu #userMenu="matMenu" xPosition="before" class="menu">
     <!-- first line: user name and close button -->
@@ -19,6 +21,18 @@
 
     <!-- menu items -->
     <div class="menu-content">
+
+        <mat-list class="navigation">
+            <mat-list-item *ngFor="let item of items" class="nav-item">
+                <button mat-button [routerLink]="item.route" routerLinkActive="active-link" class="nav-item button">
+                    <mat-icon class="prefix">{{item.icon}}</mat-icon>
+                    <span class="label">{{item.label}}</span>
+                </button>
+            </mat-list-item>
+        </mat-list>
+
+    </div>
+    <!--
         <mat-grid-list cols="2" gutterSize="6px">
             <mat-grid-tile *ngFor="let item of items">
                 <button mat-button [routerLink]="item.route">
@@ -27,8 +41,7 @@
                     {{item.label}}
                 </button>
             </mat-grid-tile>
-        </mat-grid-list>
-    </div>
+        </mat-grid-list>-->
 
     <div class="menu-footer">
         <button mat-button class="menu-action logout" routerLink="/logout">

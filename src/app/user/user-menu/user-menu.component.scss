@@ -2,12 +2,8 @@
 
 .avatar {
   height: 40px;
-//  width: 40px;
 }
 
-.mat-button {
-  padding: 12px 0;
-}
 
 .menu-header,
 .menu-content,
@@ -34,7 +30,6 @@
 }
 
 .menu-content {
-  height: 200px;
 
   .mat-grid-tile button {
     border-radius: $border-radius;

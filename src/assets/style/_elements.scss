@@ -5,7 +5,24 @@
      Every toolbar row uses a flexbox row layout. */
   flex: 1 1 auto;
 }
+
 // --------------------------------------
+
+//
+// images, logos, avatars
+.avatar-image {
+  border-radius: 50%;
+  height: 36px;
+  width: 36px;
+  margin-right: 12px;
+
+  &.square {
+    border-radius: 6px;
+  }
+}
+// --------------------------------------
+
+
 
 //
 // Link
@@ -18,11 +35,25 @@ a,
 // --------------------------------------
 
 //
+// logo, action button
+.logo,
+.action {
+
+  .mat-button {
+    padding: 12px 0;
+  }
+
+}
+// --------------------------------------
+
+//
 // menu
+/*
 .cdk-overlay-connected-position-bounding-box {
   top: 12px !important;
   right: 12px !important;
 }
+*/
 
 .mat-menu-content {
   padding: 0 !important;
@@ -35,11 +66,105 @@ a,
 
   }
 }
+
 // --------------------------------------
 
 //
 // card
-.mat-card.no-shadow {
-  box-shadow: none !important;
+.mat-card {
+
+  &.no-shadow {
+    box-shadow: none !important;
+  }
+  .mat-card-actions {
+    text-align: right;
+  }
 }
+
+// --------------------------------------
+
+//
+// list
+.simple-list {
+
+  .mat-list-item {
+
+    .list-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      padding: 4px;
+      position: absolute;
+      left: 0;
+    }
+
+    .mat-list-text {
+      position: relative;
+      left: 48px;
+    }
+
+    .mat-list-action {
+
+    }
+
+  }
+}
+
+// --------------------------------------
+
+//
+// table
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: calc(1000px - 2 * 48px);
+
+  tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    height: 88px;
+
+    .hidden {
+      display: none;
+    }
+
+    //    &:not(:first-child):hover {
+    &:hover {
+      background-color: darken(#fff, 25%);
+
+      .hidden {
+        display: block;
+      }
+    }
+
+    td,
+    th {
+
+      &:not(:first-child) {
+        min-width: 96px;
+      }
+
+      &.table-action {
+
+        button {
+          float: right;
+        }
+      }
+
+      padding: 6px 12px;
+      text-align: left;
+
+      h5.mat-subheading-2,
+      p.mat-subheading-1 {
+        margin: 0;
+      }
+    }
+  }
+
+  .avatar-cell {
+    text-align: center;
+    width: 48px;
+  }
+}
+
+
 // --------------------------------------
