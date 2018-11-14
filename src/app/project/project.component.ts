@@ -23,7 +23,7 @@ export class ProjectComponent implements OnInit {
         {
             label: 'Project',
             route: 'board',
-            icon: 'dashboard'
+            icon: 'assignment'
         },
         {
             label: 'Collaboration',
@@ -36,8 +36,8 @@ export class ProjectComponent implements OnInit {
             icon: 'timeline',
             children: [
                 {
-                    label: '',
-                    route: '',
+                    label: 'gaga',
+                    route: 'gaga',
                     icon: 'dash',
                 }
             ]
@@ -51,9 +51,6 @@ export class ProjectComponent implements OnInit {
 
         // get the shortcode of the current project
         this.projectcode = this._route.snapshot.params.shortcode;
-
-        console.log(this._route.snapshot.params);
-
     }
 
     ngOnInit() {
@@ -62,6 +59,8 @@ export class ProjectComponent implements OnInit {
         // set the cache here:
         // current project data
         this._cache.get(this.projectcode, this._projectsService.getProjectByShortcode(this.projectcode));
+        this._cache.get('members_of_' + this.projectcode, this._projectsService.getProjectMembersByShortcode(this.projectcode));
+
         this.loading = false;
 
     }

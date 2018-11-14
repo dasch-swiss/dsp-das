@@ -1,3 +1,31 @@
-<p>
-  collaboration works!
-</p>
+<!-- select user to add new team member -->
+<!--<app-select-user [projectName]="projectName" (userAdded)="refresh()"></app-select-user>-->
+
+
+<!--<button mat-button (click)="openUserForm()">
+    <mat-icon prefix>add</mat-icon>
+    Add new member
+</button>
+
+<div *ngIf="!addMember">
+    <app-select-user [projectIri]="project.id"></app-select-user>
+</div>-->
+
+<!--<mat-divider></mat-divider>-->
+
+<div class="list-container">
+    <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
+
+    <div *ngIf="!loading">
+        <!-- list of active users -->
+        <app-user-list [list]="active"></app-user-list>
+
+        <br>
+
+        <!-- list of inactive / deleted users -->
+        <app-user-list [list]="inactive" [disabled]="true"></app-user-list>
+    </div>
+
+</div>
+
+

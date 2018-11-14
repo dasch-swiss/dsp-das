@@ -1,3 +1,69 @@
-<p>
-  user-list works!
-</p>
+<div *ngIf="list && !loading">
+    <div class="list-toolbar">
+        <h4 class="mat-title">{{list.length | i18nPlural: itemPluralMapping['member']}}
+            <span *ngIf="disabled"> | <span class="smaller">already deleted</span>
+                <!-- | <span class="smaller">{{'salsahLabels.form.user.title.deleted' | translate}}</span>-->
+            </span>
+        </h4>
+        <span class="fill-remaining-space"></span>
+        <span class="list-action">
+            <kui-sort-button *ngIf="list.length > 1"
+                             [sortProps]="sortProps"
+                             [(sortKey)]="sortBy"
+                             [position]="'right'">
+            </kui-sort-button>
+        </span>
+    </div>
+
+    <table class="table">
+        <tr *ngFor="let item of list | sortBy: sortBy;">
+            <td class="avatar-cell">
+                <img kuiAdminImage [image]="item.email" [type]="'user'" class="avatar-image" />
+            </td>
+            <td>
+                <h5 class="mat-subheading-2">{{item.givenName}} {{item.familyName}}</h5>
+                <p class="mat-subheading-1">
+                    <span>{{item.email}}</span>
+                </p>
+                <!--
+                <p class="mat-subheading-1">
+                    <span>{{item.id}}</span>
+                </p>
+                -->
+            </td>
+            <td>
+
+            </td>
+            <td>
+                <p>
+                <span *ngIf="item.permissions.groupsPerProject[project.id]">
+                    <span *ngFor="let iri of item.permissions.groupsPerProject[project.id]">
+                        <span color="primary" selected="true"
+                              *ngIf="iri === 'http://www.knora.org/ontology/knora-base#ProjectAdmin'">admin</span>
+                    </span>
+                </span>
+                </p>
+            </td>
+            <td class="table-action">
+                <div class="hidden">
+                    <!--
+                    <button mat-icon-button (click)="setInactive(item?.id, item?.givenName + ' ' + item?.familyName)" matTooltip="Remove user from project">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    -->
+                    <button mat-icon-button *ngIf="item.status" (click)="edit(item.email)" matTooltip="Edit user">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <!--
+                    <button mat-icon-button (click)="open(item?.email)" matTooltip="Go to the user's dashboard">
+                        <mat-icon>forward</mat-icon>
+                    </button>
+                    -->
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+

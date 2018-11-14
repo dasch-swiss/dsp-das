@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Project, ProjectsService, User } from '@knora/core';
+import { ApiServiceError, Project, ProjectsService, User } from '@knora/core';
 import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
@@ -17,6 +17,25 @@ export class BoardComponent implements OnInit {
     project: Project;
     projectMembers: User[] = [];
 
+    // i18n setup
+    itemPluralMapping = {
+        'member': {
+            // '=0': '0 Members',
+            '=1': '1 Member',
+            'other': '# Members'
+        },
+        'ontology': {
+            // '=0': '0 Ontologies',
+            '=1': '1 Ontology',
+            'other': '# Ontologies'
+        },
+        'keyword': {
+            // '=0': '0 Keywords',
+            '=1': '1 Keyword',
+            'other': '# Keywords'
+        }
+    };
+
     constructor(private _cache: CacheService,
                 private _route: ActivatedRoute,
                 private _projectsService: ProjectsService) {
@@ -28,15 +47,26 @@ export class BoardComponent implements OnInit {
 
     ngOnInit() {
         this.loading = true;
+
+        // get project data from cache
         this._cache.get(this.projectcode, this._projectsService.getProjectByShortcode(this.projectcode)).subscribe(
             (response: any) => {
                 this.project = response;
-                this.loading = false;
             },
-            (error: any) => {
+            (error: ApiServiceError) => {
                 console.error(error);
             }
         );
+
+        this._cache.get('members_of_' + this.projectcode, this._projectsService.getProjectMembersByShortcode(this.projectcode)).subscribe(
+            (result: User[]) => {
+                this.projectMembers = result;
+            },
+            (error: ApiServiceError) => {
+                console.error(error);
+            }
+        );
+
         this.loading = false;
 
     }

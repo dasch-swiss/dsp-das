@@ -1,14 +1,12 @@
-<kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
+<kui-progress-indicator *ngIf="!project && !projectMembers && loading"></kui-progress-indicator>
 
-<div *ngIf="project && !loading">
+<div *ngIf="project && projectMembers && !loading">
     <!-- get project by shortname -->
 
     <!-- description, keywords and other infos -->
-    <mat-card class="salsah-card no-shadow">
-        <!--<mat-card-header>-->
+    <mat-card class="no-shadow">
         <mat-card-subtitle>Project {{project.shortcode}} | {{project.shortname}}</mat-card-subtitle>
         <mat-card-title>{{project.longname}}</mat-card-title>
-        <!--</mat-card-header>-->
 
         <!-- description -->
         <mat-card-content>
@@ -18,7 +16,6 @@
         </mat-card-content>
 
         <!-- keywords -->
-        <!--<mat-card-subtitle>{{project.keywords.length | i18nPlural: itemPluralMapping['keyword']}}</mat-card-subtitle>-->
         <mat-card-content>
             <mat-chip-list>
                 <mat-chip *ngFor="let k of project.keywords">
@@ -37,10 +34,8 @@
     <mat-divider></mat-divider>
 
     <!-- list project members -->
-    <mat-card class="salsah-card no-shadow">
-        <mat-card-header>
-            <mat-card-subtitle>{{projectMembers.length | i18nPlural: itemPluralMapping['member']}}</mat-card-subtitle>
-        </mat-card-header>
+    <mat-card class="no-shadow">
+        <mat-card-subtitle>{{projectMembers.length | i18nPlural: itemPluralMapping['member']}}</mat-card-subtitle>
 
         <mat-card-content>
             <mat-list role="list" class="simple-list">
@@ -53,7 +48,7 @@
         </mat-card-content>
 
         <mat-card-actions>
-            <button mat-icon-button class="right" [routerLink]="'../team'">
+            <button mat-icon-button class="right" [routerLink]="'../collaboration'">
                 <mat-icon>arrow_forward</mat-icon>
             </button>
         </mat-card-actions>
@@ -61,15 +56,13 @@
 
     <mat-divider></mat-divider>
 
-
-
-    <mat-divider></mat-divider>
-
-    <mat-card class="salsah-card no-shadow">
+    <mat-card class="no-shadow">
         <mat-card-subtitle>{{project.ontologies.length | i18nPlural: itemPluralMapping['ontology']}}</mat-card-subtitle>
+
         <mat-card-content>
             {{project.ontologies}}
         </mat-card-content>
+
         <mat-card-actions>
             <button mat-icon-button class="right" [routerLink]="'../ontology'">
                 <mat-icon>arrow_forward</mat-icon>
@@ -79,14 +72,10 @@
 
     <mat-divider></mat-divider>
 
-    <mat-card class="salsah-card no-shadow">
+    <mat-card class="no-shadow">
         <mat-card-subtitle>Status</mat-card-subtitle>
         <mat-card-title *ngIf="project.status">Active</mat-card-title>
         <mat-card-title *ngIf="!project.status">Archived</mat-card-title>
-        <mat-card-actions class="center">
-            <button *ngIf="project.status" mat-button [color]="'warn'" (click)="delete()">DELETE</button>
-            <button *ngIf="!project.status" mat-button [color]="'primary'" (click)="activate()">ACTIVATE</button>
-        </mat-card-actions>
     </mat-card>
 
 </div>
