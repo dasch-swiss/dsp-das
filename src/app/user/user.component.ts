@@ -22,14 +22,19 @@ export class UserComponent implements OnInit {
 
     navigation: MenuItem[] = [
         {
-            label: 'Profile',
-            route: '/profile',
-            icon: 'fingerprint'
-        },
-        {
             label: 'Projects',
             route: '/projects',
             icon: 'assignment'
+        },
+        // {
+        //     label: 'Collections',
+        //     route: '/collections',
+        //     icon: 'bookmark_outline'
+        // },
+        {
+            label: 'Profile',
+            route: '/profile',
+            icon: 'fingerprint'
         },
         {
             label: 'Account',

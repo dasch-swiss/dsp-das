@@ -16,13 +16,13 @@ export class ProfileComponent implements OnInit {
     user: User;
 
     constructor(private _cache: CacheService,
-                private _users: UsersService) {
+                private _usersService: UsersService) {
     }
 
     ngOnInit() {
         this.loading = true;
 
-        this._cache.get(this.username, this._users.getUserByEmail(this.username)).subscribe(
+        this._cache.get(this.username, this._usersService.getUserByEmail(this.username)).subscribe(
             (response: any) => {
                 this.user = response;
                 this.loading = false;

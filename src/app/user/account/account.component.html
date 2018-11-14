@@ -3,7 +3,7 @@
 <div *ngIf="user && !loading">
 
     <!-- data -->
-    <mat-card class="salsah-card no-shadow">
+    <mat-card class="no-shadow">
 
         <app-user-form></app-user-form>
 
@@ -12,14 +12,14 @@
     <mat-divider></mat-divider>
 
     <!-- password -->
-    <mat-card class="salsah-card no-shadow">
+    <mat-card class="no-shadow">
 
     </mat-card>
 
     <mat-divider></mat-divider>
 
     <!-- delete -->
-    <mat-card class="salsah-card no-shadow">
+    <mat-card class="no-shadow">
         <mat-card-subtitle>Status</mat-card-subtitle>
         <mat-card-title *ngIf="user.status">Active</mat-card-title>
         <mat-card-title *ngIf="!user.status">Deleted</mat-card-title>

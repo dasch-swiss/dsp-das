@@ -91,7 +91,7 @@ export class ProjectListComponent implements OnInit {
             if (project.id === id) {
 
                 this._router.navigateByUrl('/refresh', {skipLocationChange: true}).then(() =>
-                    this._router.navigate(['/project/' + project.shortcode + '/dashboard'])
+                    this._router.navigate(['/project/' + project.shortcode])
                 );
 
                 // this._router.navigate(['/project/' + project.shortname + '/dashboard']);
