@@ -1,5 +1,5 @@
 <div *ngIf="list && !loading">
-    <div class="list-toolbar">
+    <div class="list-header">
         <h4 class="mat-title">{{list.length | i18nPlural: itemPluralMapping['member']}}
             <span *ngIf="disabled"> | <span class="smaller">already deleted</span>
                 <!-- | <span class="smaller">{{'salsahLabels.form.user.title.deleted' | translate}}</span>-->

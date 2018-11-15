@@ -1,13 +1,9 @@
 <kui-progress-indicator *ngIf="loading && (!project && !projectMembers)"></kui-progress-indicator>
 
 <div *ngIf="!loading && (project && projectMembers)">
-    <!-- get project by shortname -->
 
     <!-- description, keywords and other infos -->
     <mat-card class="no-shadow">
-        <mat-card-subtitle>Project {{project.shortcode}} | {{project.shortname}}</mat-card-subtitle>
-        <mat-card-title>{{project.longname}}</mat-card-title>
-
         <!-- description -->
         <mat-card-content>
             <div *ngFor="let description of project.description">
