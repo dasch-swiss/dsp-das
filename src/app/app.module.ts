@@ -1,10 +1,10 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KuiActionModule } from '@knora/action';
-import { KuiAuthenticationModule } from '@knora/authentication';
+import { JwtInterceptor, KuiAuthenticationModule } from '@knora/authentication';
 import { KuiCoreModule } from '@knora/core';
 import { environment } from '../environments/environment';
 
@@ -34,6 +34,7 @@ import { SelectItemComponent } from './project/ontology/select-item/select-item.
 import { SelectListComponent } from './project/ontology/select-list/select-list.component';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ProjectComponent } from './project/project.component';
+import { AccountComponent } from './user/account/account.component';
 import { CollectionListComponent } from './user/collection-list/collection-list.component';
 import { CreateMenuComponent } from './user/create-menu/create-menu.component';
 import { ProfileComponent } from './user/profile/profile.component';
@@ -41,7 +42,6 @@ import { ProjectListComponent } from './user/project-list/project-list.component
 import { UserFormComponent } from './user/user-form/user-form.component';
 import { UserMenuComponent } from './user/user-menu/user-menu.component';
 import { UserComponent } from './user/user.component';
-import { AccountComponent } from './user/account/account.component';
 
 
 @NgModule({
@@ -95,7 +95,9 @@ import { AccountComponent } from './user/account/account.component';
         }),
         MaterialModule
     ],
-    providers: [],
+    providers: [
+        {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {

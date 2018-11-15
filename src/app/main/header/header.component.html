@@ -9,7 +9,7 @@
     <span class="fill-remaining-space"></span>
 
     <span class="action">
-        <button mat-button routerLink="/login">LOGIN</button>
-        <app-user-menu></app-user-menu>
+        <button mat-raised-button color="primary" routerLink="/login" *ngIf="!session" class="login">LOGIN</button>
+        <app-user-menu *ngIf="session"></app-user-menu>
     </span>
 </mat-toolbar>

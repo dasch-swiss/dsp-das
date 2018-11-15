@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '@knora/authentication';
 import { MenuItem } from '../../main/declarations/menu-item';
 
 @Component({
@@ -34,11 +35,16 @@ export class UserMenuComponent implements OnInit {
     ];
 
 
-    constructor() {
+    constructor(private _auth: AuthenticationService) {
     }
 
     ngOnInit() {
         this.username = JSON.parse(localStorage.getItem('session')).user.name;
+    }
+
+    logout() {
+        this._auth.logout();
+        location.reload(true);
     }
 
 }

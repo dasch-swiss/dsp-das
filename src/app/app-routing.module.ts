@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from '@knora/authentication';
 import { ErrorComponent } from './main/error/error.component';
 import { LoginComponent } from './main/login/login.component';
 import { MainComponent } from './main/main.component';
@@ -23,12 +24,13 @@ const routes: Routes = [
     },
     {
         path: 'project/new',
-        component: ProjectFormComponent
+        component: ProjectFormComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'project/:shortcode',
         component: ProjectComponent,
-
+        canActivate: [AuthGuard],
         children: [
             {
                 path: '',
@@ -64,25 +66,28 @@ const routes: Routes = [
     },
     {
         path: 'user/new',
-        component: UserFormComponent
+        component: UserFormComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'profile',
-        component: UserComponent
+        component: UserComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'account',
-        component: UserComponent
+        component: UserComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'projects',
         component: UserComponent,
-        data: {view: true}
+        canActivate: [AuthGuard]
     },
     {
         path: 'collections',
         component: UserComponent,
-        data: {list: true}
+        canActivate: [AuthGuard]
     },
     {
         path: '**',
