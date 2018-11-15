@@ -313,17 +313,17 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@knora/action@^0.0.13":
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/@knora/action/-/action-0.0.13.tgz#a3933f89b0c32dc63699fe7c28dc72c0aa828aa1"
-  integrity sha512-upUEH3ykz2FGROqQiHZHAUqWMgDiRFoezNLtBu64G0j6+8kRsA9vbOrQ7C3nvjgyYAh/mancytYV6jEGQMXE+A==
+"@knora/action@^0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@knora/action/-/action-0.0.14.tgz#b8bb8ffb74f93204e8071405c5d48415e604f691"
+  integrity sha512-CAO+/UEsMDiCYtfLNQt5milJN18LpDWberwbJ+wxFF6+P8IKduMfIloHRTGYwNi7IMbFs3sunrqHpuFY7wyFfA==
   dependencies:
     tslib "^1.9.0"
 
-"@knora/authentication@^1.0.0-alpha.4":
-  version "1.0.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/@knora/authentication/-/authentication-1.0.0-alpha.4.tgz#5c79637d7df2de11876ef532014eb140ec116b7c"
-  integrity sha512-sopLZq4lpW1IP5H631zoB5kKSeMearqJDYJJzkeJuwtnGybJo9etVdglCW6tVoHgnx2dOXWMaF/Vy2bDThCtqg==
+"@knora/authentication@^1.0.0-alpha.5":
+  version "1.0.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/@knora/authentication/-/authentication-1.0.0-alpha.5.tgz#09095032d8757f724fcd2769f8c95a99c8654026"
+  integrity sha512-1oLwR4dNnRFvm+zd2WX31r9I+DzjhOllVrRgC4//dYhZWuS/5iaAP5kmEf/FBL2eo2qvVyYzYFMPW4C7/3fwQQ==
   dependencies:
     tslib "^1.9.0"
 

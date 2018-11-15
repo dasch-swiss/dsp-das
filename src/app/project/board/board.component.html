@@ -1,6 +1,6 @@
-<kui-progress-indicator *ngIf="!project && !projectMembers && loading"></kui-progress-indicator>
+<kui-progress-indicator *ngIf="loading && (!project && !projectMembers)"></kui-progress-indicator>
 
-<div *ngIf="project && projectMembers && !loading">
+<div *ngIf="!loading && (project && projectMembers)">
     <!-- get project by shortname -->
 
     <!-- description, keywords and other infos -->

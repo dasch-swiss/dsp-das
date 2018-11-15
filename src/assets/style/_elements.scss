@@ -168,3 +168,13 @@ a,
 
 
 // --------------------------------------
+
+//
+// progress-indicator without default color
+
+.kui-progress-indicator {
+  .line > div {
+    background-color: $primary_700 !important;
+  }
+}
+// --------------------------------------
