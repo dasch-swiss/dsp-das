@@ -1,0 +1,85 @@
+<div *ngIf="!errorMessage; else errorMsg">
+    <!-- <salsah-progress-indicator *ngIf="loading"></salsah-progress-indicator> -->
+    <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
+
+    <!-- success message after updating -->
+    <!--<salsah-message *ngIf="success" [message]="successMessage" [short]="true"></salsah-message>-->
+
+    <!-- content -->
+    <form *ngIf="!loading" [formGroup]="userDataForm" class="form-content user-data">
+
+        <h3 class="large center">
+            <!--<span *ngIf="user?.id">{{ 'appLabels.form.user.title.edit' | translate }}</span>-->
+            <!--<span *ngIf="!user?.id">{{ 'appLabels.form.user.title.new' | translate }}</span>-->
+        </h3>
+
+        <!-- email = username -->
+        <mat-form-field class="large">
+            <input matInput type="email" [formControl]="userDataForm.controls['email']" placeholder="{{ 'appLabels.form.user.general.email' | translate }} *">
+        </mat-form-field>
+
+        <!-- given name -->
+        <mat-form-field class="small">
+            <input matInput [formControl]="userDataForm.controls['givenName']" placeholder="{{ 'appLabels.form.user.general.givenName' | translate }} *">
+            <mat-hint *ngIf="formErrors.givenName">
+                {{ formErrors.givenName }}
+            </mat-hint>
+        </mat-form-field>
+
+        <!-- family name -->
+        <mat-form-field class="medium">
+            <input matInput [formControl]="userDataForm.controls['familyName']" placeholder="{{ 'appLabels.form.user.general.familyName' | translate }} *">
+            <mat-hint *ngIf="formErrors.familyName">
+                {{ formErrors.familyName }}
+            </mat-hint>
+        </mat-form-field>
+
+        <!-- password -->
+        <mat-form-field class="large" *ngIf="!this.standalone">
+            <input matInput [type]="showPassword ? 'text' : 'password'" [formControl]="userDataForm.controls['password']" placeholder="{{ 'appLabels.form.user.general.password' | translate }} *">
+
+            <button mat-button matSuffix mat-icon-button class="input-icon" attr.aria-label="{{showPassword ? 'Hide password' : 'Show password'}}"
+                (click)="toggleVisibility()">
+                <mat-icon>
+                    {{showPassword ? 'visibility_off' : 'visibility'}}
+                </mat-icon>
+            </button>
+            <mat-hint *ngIf="formErrors.password">
+                {{ formErrors.password }}
+            </mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="large">
+
+            <mat-select [formControl]="userDataForm.controls['lang']" [placeholder]="'appLabels.form.user.general.language' | translate">
+                <mat-option *ngFor="let lang of languagesList" [value]="lang.id">
+                    {{ lang.name }}
+                </mat-option>
+            </mat-select>
+
+        </mat-form-field>
+
+        <div class="salsah-panel large" *ngIf="standalone; else stepperNav">
+            <span class="fill-remaining-space"></span>
+            <button mat-button type="button" color="primary" (click)="submitData()" [disabled]="!userDataForm.valid">
+                {{ 'appLabels.form.action.update' | translate }}
+            </button>
+        </div>
+
+        <ng-template #stepperNav>
+            <div class="salsah-panel large">
+                <button mat-button matStepperPrevious>{{ 'appLabels.form.action.back' | translate }}</button>
+                <span class="fill-remaining-space"></span>
+                <button mat-button color="primary" matStepperNext [disabled]="!userDataForm.valid" (click)="submitData()">
+                    {{ 'appLabels.form.action.next' | translate }}
+                </button>
+            </div>
+        </ng-template>
+
+    </form>
+</div>
+
+<!-- in the case of an API error: show the error message -->
+<ng-template #errorMsg>
+    <!--<salsah-message *ngIf="errorMessage" [message]="errorMessage"></salsah-message>-->
+</ng-template>
