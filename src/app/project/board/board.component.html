@@ -55,8 +55,15 @@
     <mat-card class="no-shadow">
         <mat-card-subtitle>{{project.ontologies.length | i18nPlural: itemPluralMapping['ontology']}}</mat-card-subtitle>
 
+
         <mat-card-content>
-            {{project.ontologies}}
+            <mat-list role="list" class="simple-list">
+                <mat-list-item *ngFor="let o of project.ontologies">
+                    <h4 mat-line>{{o}}</h4>
+                    <!--<p mat-line> {{m.email}} </p>-->
+                    <!--<img kuiAdminImage [image]="m.email" [type]="'user'" class="list-icon" />-->
+                </mat-list-item>
+            </mat-list>
         </mat-card-content>
 
         <mat-card-actions>
