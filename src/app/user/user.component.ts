@@ -58,7 +58,7 @@ export class UserComponent implements OnInit {
         this.loading = true;
         // set the cache here:
         // current/logged-in user
-        this._cache.get(this.username, this._usersService.getUserByEmail(this.username));
+        this._cache.get(this.username, this._usersService.getUser(this.username));
         this.loading = false;
     }
 

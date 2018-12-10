@@ -56,7 +56,7 @@ export class ProjectListComponent implements OnInit {
         } else {
             // the logged-in user has no system admin rights;
             // he get only his own projects
-            this._usersService.getUserByEmail(session.user.name)
+            this._usersService.getUser(session.user.name)
                 .subscribe(
                     (result: User) => {
                         this.projects = result.projects;

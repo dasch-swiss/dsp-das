@@ -22,7 +22,7 @@ export class ProfileComponent implements OnInit {
     ngOnInit() {
         this.loading = true;
 
-        this._cache.get(this.username, this._usersService.getUserByEmail(this.username)).subscribe(
+        this._cache.get(this.username, this._usersService.getUser(this.username)).subscribe(
             (response: any) => {
                 this.user = response;
                 this.loading = false;
