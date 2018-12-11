@@ -26,9 +26,11 @@
 
 //
 // Link
+a {
+  color: $primary;
+}
 a,
 .link {
-  color: $primary;
   cursor: pointer;
   text-decoration: none;
 }
