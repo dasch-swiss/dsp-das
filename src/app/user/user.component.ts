@@ -56,8 +56,10 @@ export class UserComponent implements OnInit {
     ngOnInit() {
 
         this.loading = true;
-        // set the cache here:
-        // current/logged-in user
+
+        /**
+         * set the cache here for current/logged-in user
+         */
         this._cache.get(this.username, this._usersService.getUser(this.username));
         this.loading = false;
     }

@@ -1,4 +1,4 @@
-<div *ngIf="!isLoading && !errorMessage; else errorMsg">
+<div *ngIf="!isLoading && !errorMessage; else errorMsg" class="form">
 
     <mat-vertical-stepper [linear]="isLinear" #stepper="matVerticalStepper">
 
@@ -28,15 +28,10 @@
                 b) empty form in case of unknown eMail = the user doesn't exist yet
         ------------------------------------------------------------------- -->
 
-        <mat-step [editable]="selectedUser">
+        <mat-step>
             <ng-template matStepLabel>{{ 'appLabels.form.user.title.formWizard.step_2' | translate }}</ng-template>
             <div class="center form-content">
-                <app-user-data *ngIf="userFormGroup.valid && selectedUser"
-                                  [user]="selectedUser"
-                                  [standalone]="false"
-                                  (userData)="getUserData($event)">
-                    <kui-progress-indicator></kui-progress-indicator>
-                </app-user-data>
+                <app-user-data [standalone]="false"></app-user-data>
             </div>
 
         </mat-step>

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { ApiServiceError, User, UsersService, Utils } from '@knora/core';
 import { CacheService } from '../../../main/cache/cache.service';
 
@@ -12,40 +12,68 @@ import { CacheService } from '../../../main/cache/cache.service';
 export class UserDataComponent implements OnInit, OnChanges {
 
     /**
-     * user iri in the case of edit
+     * status for the progress indicator
      */
-    @Input() userName?: string;
+    loading: boolean = true;
 
     /**
-     * user user-profile in case of edit?
+     * user iri, email or username: in case of edit
+     *
      */
-    @Input() user?: User;
+    @Input() id?: string;
+
+    /**
+     * user data
+     */
+    user: User;
 
     /**
      * Is the form a standalone or embedded in a step by step form wizard?
      *
-     * @type {boolean}
      */
     @Input() standalone = true;
 
     /**
-     *
-     * @type {EventEmitter<User>}
+     *  send user data to parent component;
+     *  in case of standalone = false
      */
     @Output() userData = new EventEmitter<User>();
 
-    // form group for the form controller
+
+    /**
+     * username should be unique
+     */
+    existingUsernames: [RegExp] = [
+        new RegExp('anEmptyRegularExpressionWasntPossible')
+    ];
+    usernameMinLength: number = 4;
+
+    /**
+     * email should be unique
+     */
+    existingEmails: [RegExp] = [
+        new RegExp('anEmptyRegularExpressionWasntPossible')
+    ];
+
+    /**
+     * form group for the form controller
+     */
     userDataForm: FormGroup;
 
-    // error checking on the following fields
+    /**
+     * error checking on the following fields
+     */
     formErrors = {
         'givenName': '',
         'familyName': '',
-        //        'email': '',
+        'email': '',
+        'username': '',
         'password': ''
     };
 
-    // ...and the error hints
+    /**
+     * error hints
+     */
     validationMessages = {
         'givenName': {
             'required': 'First name is required.'
@@ -53,13 +81,18 @@ export class UserDataComponent implements OnInit, OnChanges {
         'familyName': {
             'required': 'Last name is required.'
         },
-        /*
         'email': {
             'required': 'Email address is required.',
             'pattern': 'This doesn\'t appear to be a valid email address.',
-            'existingName': 'This email address exists already.'
+            'existingName': 'This user exists already. If you want to edit it, ask a system administrator.',
+            'member': 'This user is already a member of the project.'
         },
-        */
+        'username': {
+            'required': 'Username is required.',
+            'minlength': 'Username must be at least ' + this.usernameMinLength + ' characters long.',
+            'existingName': 'This user exists already. If you want to edit it, ask a system administrator.',
+            'member': 'This user is already a member of the project.'
+        },
         'password': {
             'required': 'A password is required.',
             'minlength': 'Use at least 8 characters.',
@@ -67,23 +100,32 @@ export class UserDataComponent implements OnInit, OnChanges {
         }
     };
 
-    // password visibility
-    showPassword = false;
-
-    // in case of an API error
+    /**
+     * in case of an API error
+     */
     errorMessage: any;
 
-    // in case of success:
+    /**
+     * password visibility
+     */
+    showPassword = false;
+
+
+    /**
+     * success of sending data
+     */
     success = false;
+    /**
+     * message after successful post
+     */
     successMessage: any = {
         status: 200,
-        statusText: 'You have successfully updated the user user-profile.'
+        statusText: 'You have successfully updated the user profile data.'
     };
 
-    // show the content after every service has loaded and the data is ready
-    loading = true;
-
-
+    /**
+     * selector to set default language
+     */
     languagesList: any[] = [
         {
             id: 'en',
@@ -107,35 +149,31 @@ export class UserDataComponent implements OnInit, OnChanges {
                 private _cache: CacheService,
                 private _users: UsersService,
                 private _formBuilder: FormBuilder) {
-
-        const routeParams = this._route.parent.snapshot.params;
-        this.userName = decodeURIComponent(routeParams.name);
     }
 
     ngOnInit() {
 
         this.loading = true;
 
-        if (!this.user && this.userName) {
-
-            this._cache.get(this.userName, this._users.getUser(this.userName)).subscribe(
-                (response: any) => {
+        if (this.id) {
+            /**
+            * edit mode: get user data from cache
+            */
+            this._cache.get(this.id, this._users.getUser(this.id)).subscribe(
+                (response: User) => {
                     this.user = response;
-                    this.buildForm(this.user);
-                    this.loading = false;
+                    this.loading = !this.buildForm(this.user);
                 },
                 (error: any) => {
                     console.error(error);
                 }
             );
-
         } else {
-
-            this.buildForm(this.user);
-
-            this.loading = false;
+            /**
+             * create mode: empty form for new user
+             */
+            this.loading = !this.buildForm(new User());
         }
-
     }
 
     ngOnChanges() {
@@ -146,10 +184,10 @@ export class UserDataComponent implements OnInit, OnChanges {
 
 
     /**
+     * build the whole form
      *
-     * @param {User} user
      */
-    buildForm(user: User): void {
+    buildForm(user: User): boolean {
 
         // if user is defined, we're in the edit mode
         // otherwise "create new user" mode is active
@@ -191,6 +229,8 @@ export class UserDataComponent implements OnInit, OnChanges {
             .subscribe(data => this.onValueChanged(data));
 
         //        this.onValueChanged(); // (re)set validation messages now
+
+        return true;
 
     }
 
