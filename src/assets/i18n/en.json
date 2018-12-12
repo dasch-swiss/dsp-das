@@ -56,9 +56,10 @@
         "general": {
           "givenName": "First name",
           "familyName": "Last name",
-          "email": "Email address (will be the username)",
-          "emailHint": "This will be your login name",
+          "email": "Email address",
           "emailValidation": "This does not appear to be a valid email address.",
+          "username": "Username",
+          "usernameHint": "Spaces and special characters are not allowed in username",
           "password": "Password",
           "passwordHint": "Use at least 8 characters with one uppercase letter and one number.",
           "oldPassword": "Old password",
@@ -82,7 +83,7 @@
             "step_4": "Confirm",
             "more": "Add more users"
           },
-          "select": "Add new user to the project",
+          "select": "Add user to the project by typing e-mail address or username",
           "deleted": "already deleted"
         }
       },

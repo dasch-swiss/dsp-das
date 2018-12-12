@@ -1,27 +1,28 @@
 <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
 
-<form [formGroup]="selectUserForm" class="form-content" *ngIf="!loading">
+<form [formGroup]="selectUserForm" class="form select-user" *ngIf="!loading">
 
     <!-- auto complete list to select user -->
 
     <mat-form-field class="large">
         <!--<span matPrefix><mat-icon>add</mat-icon>&nbsp;</span>-->
-        <input matInput [matAutocomplete]="user" [formControl]="selectUserForm.controls['username']">
-        <!--[placeholder]="'appLabels.form.user.title.select' | translate">-->
-        <!--
-              <input matInput [formControl]="selectUserForm.controls['username']"
-                     [placeholder]="'appLabels.form.user.title.select' | translate">-->
+
+        <input matInput [matAutocomplete]="user" [formControl]="selectUserForm.controls['username']"
+        [placeholder]="'appLabels.form.user.title.select' | translate">
 
         <!--
-        <button mat-button color="primary" matSuffix matStepperNext [disabled]="!selectUserForm.valid"
-                (click)="setSelected()">
-          {{ 'appLabels.form.action.next' | translate }}
-        </button>
-  -->
+              <input matInput [formControl]="selectUserForm.controls['username']"
+                     [placeholder]="'appLabels.form.user.title.select' | translate">
+
+            <button mat-button color="primary" matSuffix matStepperNext [disabled]="!selectUserForm.valid"
+                    (click)="setSelected()">
+              {{ 'appLabels.form.action.next' | translate }}
+            </button>
+        -->
 
         <button mat-button color="primary" matSuffix [disabled]="!selectUserForm.valid"
                 (click)="setSelected()">
-            <!--{{ 'appLabels.form.action.add' | translate }}-->
+            {{ 'appLabels.form.action.add' | translate }}
         </button>
 
         <mat-autocomplete #user="matAutocomplete">

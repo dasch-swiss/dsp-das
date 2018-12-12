@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Project, ProjectsService, User } from '@knora/core';
+import { ProjectsService, User } from '@knora/core';
 import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
@@ -34,6 +34,9 @@ export class CollaborationComponent implements OnInit {
         this.initList();
     }
 
+    /**
+     * build the list of members
+     */
     initList(): void {
         this._cache.get('members_of_' + this.projectcode, this._projectsService.getProjectMembersByShortcode(this.projectcode)).subscribe(
             (response: any) => {
@@ -59,6 +62,18 @@ export class CollaborationComponent implements OnInit {
                 console.error(error);
             }
         );
+    }
+
+    /**
+     * refresh list of members after adding a new user to the team
+     */
+    refresh(): void {
+        // referesh the component
+        this.loading = true;
+        // update the cache
+        this._cache.del('members_of_' + this.projectcode);
+        this._cache.get('members_of_' + this.projectcode, this._projectsService.getProjectMembersByShortcode(this.projectcode));
+        this.initList();
     }
 
 }

@@ -47,9 +47,10 @@
         "general": {
           "givenName": "Vorname",
           "familyName": "Nachname",
-          "email": "Email Adresse (ist zugleich Benutzername)",
-          "emailHint": "Dies wird dein Benutzername",
+          "email": "Email Adresse",
           "emailValidation": "Das ist keine gültige Email Adresse",
+          "username": "Benutzername",
+          "usernameHint": "Benutzername darf keine Sonder- oder Leerzeichen beinhalten",
           "password": "Passwort",
           "passwordHint": "Mindestens 8 Zeichen, wobein ein Grossbuchstabe und eine Zahl vorhanden sein müssen.",
           "oldPassword": "Altes Passwort",
@@ -73,7 +74,7 @@
             "step_4": "Bestätigen",
             "more": "Mehr Benutzer hinzufügen"
           },
-          "select": "Neuen Benutzer zum Projekt hinzufügen",
+          "select": "Neuen Benutzer zum Projekt hinzufügen (eMail Adresse oder Benutzername)",
           "deleted": "bereits gelöscht"
         }
       },
