@@ -1,4 +1,6 @@
-<!-- select user to add new team member -->
+<!-- select user to add to the team -->
+<app-user-add [projectName]="projectName" (userAdded)="refresh()"></app-user-add>
+
 <!--<app-select-user [projectName]="projectName" (userAdded)="refresh()"></app-select-user>-->
 
 

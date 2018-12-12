@@ -51,6 +51,7 @@ import { UserPasswordComponent } from './user/user-form/user-password/user-passw
 import { UserRoleComponent } from './user/user-form/user-role/user-role.component';
 import { UserMenuComponent } from './user/user-menu/user-menu.component';
 import { UserComponent } from './user/user.component';
+import { UserAddComponent } from './project/collaboration/user-add/user-add.component';
 
 
 // Translate: AoT requires an exported function for factories
@@ -97,7 +98,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         LoginComponent,
         LoremIpsumComponent,
         AccountComponent,
-        SelectLanguageComponent
+        SelectLanguageComponent,
+        UserAddComponent
     ],
     imports: [
         AppRoutingModule,

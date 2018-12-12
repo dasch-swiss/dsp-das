@@ -53,7 +53,6 @@ export class ProjectComponent implements OnInit {
 
         // get the shortcode of the current project
         this.projectcode = this._route.snapshot.params.shortcode;
-        console.log(this.projectcode);
 
         this.error = this.validateShortcode(this.projectcode);
 
@@ -81,13 +80,16 @@ export class ProjectComponent implements OnInit {
                     this.loading = false;
                 }
             );
+        } else {
+            // shortcode isn't valid
+            // TODO: show an error page
         }
     }
 
     validateShortcode(code: string) {
         const regexp: any = /^[0-9A-Fa-f]+$/;
 
-        return !regexp.test(code) && code.length === 4;
+        return !(regexp.test(code) && code.length === 4);
     }
 
 }
