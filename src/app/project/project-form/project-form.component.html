@@ -63,15 +63,15 @@
 
         <!-- keywords -->
         <mat-form-field class="large-field">
-            <mat-chip-list #tagsList>
+            <mat-chip-list #chipList>
                 <mat-chip *ngFor="let tag of keywords" [selectable]="selectable"
-                          [removable]="removable" (remove)="removeKeyword(tag)">
+                          [removable]="removable" (removed)="removeKeyword(tag)">
                     {{tag}}
                     <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                 </mat-chip>
                 <input [placeholder]=" 'appLabels.form.project.general.keywords' | translate "
                        [formControl]="form.controls['keywords']"
-                       [matChipInputFor]="tagsList"
+                       [matChipInputFor]="chipList"
                        [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
                        [matChipInputAddOnBlur]="addOnBlur"
                        (matChipInputTokenEnd)="addKeyword($event)"/>
@@ -138,7 +138,7 @@
         <div class="salsah-panel form-action">
             <span>
                 <button mat-button
-                        (click)="cancel(projectName)">
+                        (click)="cancel(projectcode)">
                     {{ 'appLabels.form.action.cancel' | translate }}
                 </button>
 
@@ -150,8 +150,8 @@
                         color="primary"
                         (click)="submitData()"
                         [disabled]="!form.valid">
-                    <span *ngIf="projectName">{{ 'appLabels.form.action.update' | translate }}</span>
-                    <span *ngIf="!projectName">{{ 'appLabels.form.action.submit' | translate }}</span>
+                    <span *ngIf="projectcode">{{ 'appLabels.form.action.update' | translate }}</span>
+                    <span *ngIf="!projectcode">{{ 'appLabels.form.action.submit' | translate }}</span>
                 </button>
             </span>
         </div>

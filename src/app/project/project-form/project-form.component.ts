@@ -260,6 +260,9 @@ export class ProjectFormComponent implements OnInit {
      * @param keyword
      */
     removeKeyword(keyword: any): void {
+
+        console.log(keyword);
+
         const index = this.keywords.indexOf(keyword);
 
         if (index >= 0) {
@@ -270,7 +273,7 @@ export class ProjectFormComponent implements OnInit {
     submitData() {
         this.loading = true;
 
-        // a) update keyowrds from mat-chip-list
+        // a) update keywords from mat-chip-list
         if (!this.keywords) {
             this.keywords = [];
         }
@@ -356,7 +359,7 @@ export class ProjectFormComponent implements OnInit {
 
         if (name) {
             // go back to the project dashboard
-            this._router.navigate(['/project/' + name + '/dashboard']);
+            this._router.navigate(['/project/' + name]);
         } else {
             this._router.navigate(['/']);
         }
