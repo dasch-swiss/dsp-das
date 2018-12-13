@@ -47,11 +47,6 @@
             </td>
             <td class="table-action">
                 <div class="hidden">
-                    <!--
-                    <button mat-icon-button (click)="setInactive(item?.id, item?.givenName + ' ' + item?.familyName)" matTooltip="Remove user from project">
-                        <mat-icon>close</mat-icon>
-                    </button>
-                    -->
                     <button mat-icon-button
                             *ngIf="item.status"
                             (click)="removeUser(item.id)"
@@ -59,11 +54,6 @@
                             matTooltipPosition="above">
                         <mat-icon>close</mat-icon>
                     </button>
-                    <!--
-                    <button mat-icon-button (click)="open(item?.email)" matTooltip="Go to the user's dashboard">
-                        <mat-icon>forward</mat-icon>
-                    </button>
-                    -->
                 </div>
             </td>
         </tr>

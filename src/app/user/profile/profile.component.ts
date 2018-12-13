@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User, UsersService } from '@knora/core';
 import { CacheService } from '../../main/cache/cache.service';
 
@@ -15,16 +15,23 @@ export class ProfileComponent implements OnInit {
 
     @Input() username: string;
 
+    loggedInUser: boolean = false;
+
     user: User;
 
     constructor(private _cache: CacheService,
                 private _route: ActivatedRoute,
+                private _router: Router,
                 private _usersService: UsersService) {
 
         // get username from route and set the cache
         if (this._route.snapshot.params.name  && (this._route.snapshot.params.name.length > 3)) {
             this.username = this._route.snapshot.params.name;
             this._cache.get(this.username, this._usersService.getUser(this.username));
+            if (this.username === JSON.parse(localStorage.getItem('session')).user.name) {
+                // redirect to logged-in user profile
+                this._router.navigate(['/profile']);
+            }
         }
 
     }
