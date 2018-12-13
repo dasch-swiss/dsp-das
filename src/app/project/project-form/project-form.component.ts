@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatChipInputEvent } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { existingNamesValidator } from '@knora/action';
-import { ApiServiceError, Project, ProjectsService, UsersService } from '@knora/core';
+import { ApiServiceError, Project, ProjectsService, User, UsersService } from '@knora/core';
 import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
@@ -49,7 +49,7 @@ export class ProjectFormComponent implements OnInit {
     // keywords is an array of objects of {name: 'string'}
     keywords: string[] = [];
     // separator: Enter, comma
-    separatorKeysCodes = [ENTER, COMMA];
+    separatorKeyCodes = [ENTER, COMMA];
     visible = true;
     selectable = true;
     removable = true;
@@ -293,23 +293,21 @@ export class ProjectFormComponent implements OnInit {
 //                    console.log(result);
                     this.project = result;
                     this.buildForm(this.project);
-                    this._refresh.setStatus(true);
 
                     // update cache
-                    this._cache.set(this.form.controls['shortname'].value, result);
+                    this._cache.set(this.form.controls['shortcode'].value, result);
 
                     this.loading = false;
 
                     // redirect to project page
                     this._router.navigateByUrl('/project', {skipLocationChange: true}).then(() =>
-                        this._router.navigate(['/project/' + this.form.controls['shortname'].value + '/dashboard'])
+                        this._router.navigate(['/project/' + this.form.controls['shortcode'].value])
                     );
 
                 },
                 (error: ApiServiceError) => {
                     this.errorMessage = error;
                     this.loading = false;
-                    this.success = false;
                 }
             );
         } else {
@@ -318,11 +316,10 @@ export class ProjectFormComponent implements OnInit {
                 (project: Project) => {
                     this.project = project;
                     this.buildForm(this.project);
-                    this._refresh.setStatus(true);
 
                     // add logged-in user to the project
                     // who am I?
-                    this._users.getUserByEmail(JSON.parse(localStorage.getItem('session')).user.name).subscribe(
+                    this._users.getUser(JSON.parse(localStorage.getItem('session')).user.name).subscribe(
                         (user: User) => {
                             this._users.addUserToProject(user.id, project.id).subscribe(
                                 (add: User) => {
@@ -330,7 +327,7 @@ export class ProjectFormComponent implements OnInit {
                                     this.loading = false;
                                     // redirect to (new) project page
                                     this._router.navigateByUrl('/project', {skipLocationChange: true}).then(() =>
-                                        this._router.navigate(['/project/' + this.form.controls['shortname'].value + '/dashboard'])
+                                        this._router.navigate(['/project/' + this.form.controls['shortcode'].value])
                                     );
                                 },
                                 (error: any) => {
@@ -347,7 +344,6 @@ export class ProjectFormComponent implements OnInit {
                 (error: ApiServiceError) => {
                     this.errorMessage = error;
                     this.loading = false;
-                    this.success = false;
                 }
             );
         }

@@ -7,7 +7,7 @@
     <!-- content -->
     <form *ngIf="!loading" [formGroup]="form" class="form-content project-data">
         <!-- short and long name -->
-        <mat-form-field class="small">
+        <mat-form-field class="small-field">
             <input matInput
                    placeholder="{{'appLabels.form.project.general.shortcode' | translate}} * "
                    [maxlength]="shortcodeMaxLength"
@@ -18,7 +18,7 @@
         </mat-form-field>
 
         <!-- short name -->
-        <mat-form-field class="medium">
+        <mat-form-field class="medium-field">
             <input matInput
                    [maxlength]="shortnameMaxLength"
                    placeholder="{{'appLabels.form.project.general.shortname' | translate}} * "
@@ -29,7 +29,7 @@
         </mat-form-field>
 
         <!-- long name -->
-        <mat-form-field class="large">
+        <mat-form-field class="large-field">
             <input matInput
                    placeholder="{{'appLabels.form.project.general.longname' | translate}} *"
                    [formControl]="form.controls['longname']">
@@ -39,7 +39,7 @@
         </mat-form-field>
 
         <!-- description -->
-        <mat-form-field class="large">
+        <mat-form-field class="large-field">
             <textarea matInput matTextareaAutosize [matAutosizeMinRows]="6" [matAutosizeMaxRows]="12"
                       [placeholder]=" 'appLabels.form.project.general.description' | translate "
                       [formControl]="form.controls['description']">
@@ -62,7 +62,7 @@
         -->
 
         <!-- keywords -->
-        <mat-form-field class="large">
+        <mat-form-field class="large-field">
             <mat-chip-list #tagsList>
                 <mat-chip *ngFor="let tag of keywords" [selectable]="selectable"
                           [removable]="removable" (remove)="removeKeyword(tag)">
@@ -72,11 +72,11 @@
                 <input [placeholder]=" 'appLabels.form.project.general.keywords' | translate "
                        [formControl]="form.controls['keywords']"
                        [matChipInputFor]="tagsList"
-                       [matChipInputSeparatorKeyCodes]="separatorKeywords"
-
+                       [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
+                       [matChipInputAddOnBlur]="addOnBlur"
                        (matChipInputTokenEnd)="addKeyword($event)"/>
-                <!--[matChipInputAddOnBlur]="addOnBlur"-->
             </mat-chip-list>
+
             <!--
             <mat-hint *ngIf="formErrors.keywords">
                 {{ formErrors.keywords }}
