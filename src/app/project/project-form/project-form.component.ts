@@ -2,6 +2,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { existingNamesValidator } from '@knora/action';
 import { ApiServiceError, Project, ProjectsService, User, UsersService } from '@knora/core';
@@ -105,9 +106,18 @@ export class ProjectFormComponent implements OnInit {
                 private _router: Router,
                 private _projects: ProjectsService,
                 private _users: UsersService,
-                private _fb: FormBuilder) {
+                private _fb: FormBuilder,
+                private _titleService: Title) {
+
+        // set the page title
+        this._titleService.setTitle('New project');
 
         this.projectcode = this._route.parent.snapshot.params.shortcode;
+
+        if (this.projectcode) {
+            // set the page title
+            this._titleService.setTitle('Edit project ' + this.projectcode);
+        }
     }
 
     ngOnInit() {

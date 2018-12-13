@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { User, UsersService } from '@knora/core';
 import { CacheService } from '../../main/cache/cache.service';
 
@@ -16,7 +17,10 @@ export class AccountComponent implements OnInit {
     user: User;
 
     constructor(private _cache: CacheService,
-                private _usersService: UsersService) {
+                private _usersService: UsersService,
+                private _titleService: Title) {
+        // set the page title
+        this._titleService.setTitle('Your account');
     }
 
     ngOnInit() {

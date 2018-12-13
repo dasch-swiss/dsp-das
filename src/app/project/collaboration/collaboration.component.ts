@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectsService, User } from '@knora/core';
 import { CacheService } from '../../main/cache/cache.service';
@@ -24,10 +25,15 @@ export class CollaborationComponent implements OnInit {
 
     constructor(private _cache: CacheService,
                 private _projectsService: ProjectsService,
-                private _route: ActivatedRoute) {
+                private _route: ActivatedRoute,
+                private _titleService: Title) {
 
         // get the shortcode of the current project
         this.projectcode = this._route.parent.snapshot.params.shortcode;
+
+        // set the page title
+        this._titleService.setTitle('Project ' + this.projectcode + ' | Collaboration');
+
     }
 
     ngOnInit() {

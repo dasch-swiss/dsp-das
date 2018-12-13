@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { UsersService } from '@knora/core';
 import { CacheService } from '../main/cache/cache.service';
@@ -45,12 +46,18 @@ export class UserComponent implements OnInit {
 
     constructor(private _cache: CacheService,
                 private _route: ActivatedRoute,
-                private _usersService: UsersService) {
+                private _usersService: UsersService,
+                private _titleService: Title) {
 
         // get the activated route; we need it for the viewer switch
         this.route = this._route.pathFromRoot[1].snapshot.url[0].path;
+
         // get username
         this.username = JSON.parse(localStorage.getItem('session')).user.name;
+
+        // set the page title
+        this._titleService.setTitle(this.username);
+
     }
 
     ngOnInit() {
