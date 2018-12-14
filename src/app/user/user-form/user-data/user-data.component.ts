@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
+import { existingNamesValidator } from '@knora/action';
 import { ApiServiceError, User, UsersService, Utils } from '@knora/core';
 import { CacheService } from '../../../main/cache/cache.service';
 
@@ -58,7 +59,7 @@ export class UserDataComponent implements OnInit, OnChanges {
     /**
      * form group for the form controller
      */
-    userDataForm: FormGroup;
+    form: FormGroup;
 
     /**
      * error checking on the following fields
@@ -89,6 +90,7 @@ export class UserDataComponent implements OnInit, OnChanges {
         },
         'username': {
             'required': 'Username is required.',
+            'pattern': 'Spaces and special characters are not allowed in username',
             'minlength': 'Username must be at least ' + this.usernameMinLength + ' characters long.',
             'existingName': 'This user exists already. If you want to edit it, ask a system administrator.',
             'member': 'This user is already a member of the project.'
@@ -191,9 +193,9 @@ export class UserDataComponent implements OnInit, OnChanges {
 
         // if user is defined, we're in the edit mode
         // otherwise "create new user" mode is active
-        const edit: boolean = (!!user.id);
+        const editMode: boolean = (!!user.id);
 
-        this.userDataForm = this._formBuilder.group({
+        this.form = this._formBuilder.group({
             'givenName': new FormControl({
                 value: user.givenName, disabled: false
             }, [
@@ -205,10 +207,21 @@ export class UserDataComponent implements OnInit, OnChanges {
                 Validators.required
             ]),
             'email': new FormControl({
-                value: user.email, disabled: true
-            }),
+                value: user.email, disabled: editMode
+            }, [
+                Validators.required,
+                Validators.pattern(Utils.RegexEmail),
+                existingNamesValidator(this.existingEmails)
+            ]),
+            'username': new FormControl({
+                value: user.username, disabled: editMode
+            }, [
+                Validators.required,
+                Validators.minLength(4),
+                existingNamesValidator(this.existingUsernames)
+            ]),
             'password': new FormControl({
-                value: user.password, disabled: (edit)
+                value: user.password, disabled: editMode
             }, [
                 Validators.required,
                 Validators.minLength(8),
@@ -225,7 +238,7 @@ export class UserDataComponent implements OnInit, OnChanges {
         //        this.loading = false;
 
 
-        this.userDataForm.valueChanges
+        this.form.valueChanges
             .subscribe(data => this.onValueChanged(data));
 
         //        this.onValueChanged(); // (re)set validation messages now
@@ -240,11 +253,11 @@ export class UserDataComponent implements OnInit, OnChanges {
      */
     onValueChanged(data?: any) {
 
-        if (!this.userDataForm) {
+        if (!this.form) {
             return;
         }
 
-        const form = this.userDataForm;
+        const form = this.form;
 
         Object.keys(this.formErrors).map(field => {
             this.formErrors[field] = '';
@@ -275,7 +288,7 @@ export class UserDataComponent implements OnInit, OnChanges {
             this.loading = true;
             // this method is only used in standalone user data form
             // to edit user user-profile
-            this._users.updateUser(this.user.id, this.userDataForm.value).subscribe(
+            this._users.updateUser(this.user.id, this.form.value).subscribe(
                 (result: User) => {
                     this.user = result;
                     this.buildForm(this.user);
@@ -289,7 +302,7 @@ export class UserDataComponent implements OnInit, OnChanges {
                 }
             );
         } else {
-            this.userData.emit(this.userDataForm.value);
+            this.userData.emit(this.form.value);
         }
     }
 
