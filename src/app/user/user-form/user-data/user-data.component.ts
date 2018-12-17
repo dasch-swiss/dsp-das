@@ -159,8 +159,8 @@ export class UserDataComponent implements OnInit, OnChanges {
 
         if (this.id) {
             /**
-            * edit mode: get user data from cache
-            */
+             * edit mode: get user data from cache
+             */
             this._cache.get(this.id, this._users.getUser(this.id)).subscribe(
                 (response: User) => {
                     this.user = response;
@@ -174,7 +174,27 @@ export class UserDataComponent implements OnInit, OnChanges {
             /**
              * create mode: empty form for new user
              */
-            this.loading = !this.buildForm(new User());
+            // get existing users to avoid same usernames and email addresses
+            this._cache.get('allUsers', this._users.getAllUsers())
+                .subscribe(
+                    (result: User[]) => {
+
+                        for (const user of result) {
+                            // The email address of the user should be unique.
+                            // Therefore we create a list of existing email addresses to avoid multiple use of user names
+                            this.existingEmails.push(
+                                new RegExp('(?:^|\W)' + user.email.toLowerCase() + '(?:$|\W)')
+                            );
+                            // The username should also be unique.
+                            // Therefore we create a list of existingUsernames to avoid multiple use of user names
+                            this.existingUsernames.push(
+                                new RegExp('(?:^|\W)' + user.username.toLowerCase() + '(?:$|\W)')
+                            );
+                        }
+
+                        this.loading = !this.buildForm(new User());
+                    }
+                );
         }
     }
 
