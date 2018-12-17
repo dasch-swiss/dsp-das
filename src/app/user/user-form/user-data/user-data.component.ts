@@ -12,6 +12,8 @@ import { CacheService } from '../../../main/cache/cache.service';
 })
 export class UserDataComponent implements OnInit, OnChanges {
 
+    public readonly RegexUsername = /^[a-zA-Z0-9]+$/;
+
     /**
      * status for the progress indicator
      */
@@ -238,6 +240,7 @@ export class UserDataComponent implements OnInit, OnChanges {
             }, [
                 Validators.required,
                 Validators.minLength(4),
+                Validators.pattern(this.RegexUsername),
                 existingNamesValidator(this.existingUsernames)
             ]),
             'password': new FormControl({
