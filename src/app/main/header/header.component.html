@@ -10,6 +10,9 @@
 
 
     <span class="action">
+        <button mat-button routerLink="/search">
+            <mat-icon>search</mat-icon>
+        </button>
         <app-select-language></app-select-language>
         <button mat-raised-button color="primary" routerLink="/login" *ngIf="!session" class="login">LOGIN</button>
         <app-user-menu *ngIf="session"></app-user-menu>
