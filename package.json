@@ -26,6 +26,8 @@
     "@knora/action": "^0.0.14",
     "@knora/authentication": "github:dhlab-basel/Knora-ui-authentication-builds#v6-rc.1",
     "@knora/core": "github:dhlab-basel/Knora-ui-core-builds#v6-rc.1",
+    "@knora/search": "^1.0.0-beta.2",
+    "@knora/viewer": "^0.0.2-alpha.2",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
     "core-js": "^2.5.4",
