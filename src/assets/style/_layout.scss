@@ -73,6 +73,17 @@
       max-width: calc(1000px - (2 * 48px));
     }
 
+    .content-search {
+      padding: 24px;
+      max-width: calc(1000px - (2 * 24px));
+    }
+
+    .content-search-results {
+      padding: 24px;
+      max-width: calc(1000px - (2 * 24px));
+      box-shadow: none !important;
+    }
+
   }
 }
 // --------------------------------------

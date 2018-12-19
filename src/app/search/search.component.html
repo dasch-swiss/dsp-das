@@ -20,9 +20,27 @@
 
     <mat-sidenav-content>
         <!-- <kui-progress-indicator *ngIf="loading"></kui-progress-indicator> -->
-        <div class="content">
+
+        <!-- search form -->
+        <div class="content-search">
             <router-outlet></router-outlet>
         </div>
+
+        <!-- search results -->
+        <mat-tab-group mat-stretch-tabs class="content-search-results">
+            <mat-tab label="List">
+                <app-search-results></app-search-results>
+            </mat-tab>
+            <mat-tab label="Grid">
+                <app-search-results></app-search-results>
+            </mat-tab>
+            <mat-tab label="Table">
+                <app-search-results></app-search-results>
+            </mat-tab>
+            <mat-tab label="Gravsearch query">
+                <app-search-results></app-search-results>
+            </mat-tab>
+        </mat-tab-group>
 
     </mat-sidenav-content>
 
