@@ -7,6 +7,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KuiActionModule } from '@knora/action';
 import { JwtInterceptor, KuiAuthenticationModule } from '@knora/authentication';
 import { KuiCoreModule } from '@knora/core';
+import { KuiSearchModule } from '@knora/search';
+import { KuiViewerModule } from '@knora/viewer';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
@@ -52,6 +54,12 @@ import { UserRoleComponent } from './user/user-form/user-role/user-role.componen
 import { UserMenuComponent } from './user/user-menu/user-menu.component';
 import { UserComponent } from './user/user.component';
 import { UserAddComponent } from './project/collaboration/user-add/user-add.component';
+import { SearchComponent } from './search/search.component';
+import { FacetedSearchComponent } from './search/faceted-search/faceted-search.component';
+import { ExtendedSearchComponent } from './search/extended-search/extended-search.component';
+import { GravsearchComponent } from './search/gravsearch/gravsearch.component';
+import { FulltextSearchComponent } from './search/fulltext-search/fulltext-search.component';
+import { SearchResultsComponent } from './search/search-results/search-results.component';
 
 
 // Translate: AoT requires an exported function for factories
@@ -99,7 +107,13 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         LoremIpsumComponent,
         AccountComponent,
         SelectLanguageComponent,
-        UserAddComponent
+        UserAddComponent,
+        SearchComponent,
+        FacetedSearchComponent,
+        ExtendedSearchComponent,
+        GravsearchComponent,
+        FulltextSearchComponent,
+        SearchResultsComponent
     ],
     imports: [
         AppRoutingModule,
@@ -108,6 +122,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         FlexLayoutModule,
         HttpClientModule,
         KuiActionModule,
+        KuiSearchModule,
+        KuiViewerModule,
         KuiAuthenticationModule,
         KuiCoreModule.forRoot({
             name: environment.appName,
@@ -126,7 +142,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         })
     ],
     providers: [
-        {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
     ],
     bootstrap: [AppComponent]
 })

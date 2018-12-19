@@ -13,6 +13,11 @@ import { ProjectComponent } from './project/project.component';
 import { ProfileComponent } from './user/profile/profile.component';
 import { UserFormComponent } from './user/user-form/user-form.component';
 import { UserComponent } from './user/user.component';
+import { SearchComponent } from './search/search.component';
+import { ExtendedSearchComponent } from './search/extended-search/extended-search.component';
+import { FacetedSearchComponent } from './search/faceted-search/faceted-search.component';
+import { GravsearchComponent } from './search/gravsearch/gravsearch.component';
+import { FulltextSearchComponent } from './search/fulltext-search/fulltext-search.component';
 
 const routes: Routes = [
     {
@@ -61,7 +66,34 @@ const routes: Routes = [
             {
                 path: '**',
                 component: ErrorComponent,
-                data: {status: 404}
+                data: { status: 404 }
+            }
+        ]
+    },
+    {
+        path: 'search',
+        component: SearchComponent,
+        children: [
+            {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'fulltext'
+            },
+            {
+                path: 'fulltext',
+                component: FulltextSearchComponent
+            },
+            {
+                path: 'extended',
+                component: ExtendedSearchComponent
+            },
+            {
+                path: 'faceted',
+                component: FacetedSearchComponent
+            },
+            {
+                path: 'gravsearch',
+                component: GravsearchComponent
             }
         ]
     },
@@ -97,7 +129,7 @@ const routes: Routes = [
     {
         path: '**',
         component: ErrorComponent,
-        data: {status: 404}
+        data: { status: 404 }
     }
 ];
 
