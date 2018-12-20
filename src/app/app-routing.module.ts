@@ -18,6 +18,7 @@ import { ExtendedSearchComponent } from './search/extended-search/extended-searc
 import { FacetedSearchComponent } from './search/faceted-search/faceted-search.component';
 import { GravsearchComponent } from './search/gravsearch/gravsearch.component';
 import { FulltextSearchComponent } from './search/fulltext-search/fulltext-search.component';
+import { SearchResultsComponent } from './search/search-results/search-results.component';
 
 const routes: Routes = [
     {
@@ -94,6 +95,10 @@ const routes: Routes = [
             {
                 path: 'gravsearch',
                 component: GravsearchComponent
+            },
+            {
+                path: ':mode/:q',
+                component: SearchResultsComponent
             }
         ]
     },
