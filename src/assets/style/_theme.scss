@@ -1,6 +1,10 @@
 // Import material theming functions
 @import '~@angular/material/theming';
 
+// fonts
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+$fonts: Roboto, Arial, sans-serif;
+
 // Copy the palettes from your selected theme (usually theme.scss).
 $app-primary: mat-palette($mat-blue-grey);
 $app-accent:  mat-palette($mat-amber);
