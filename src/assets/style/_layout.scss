@@ -64,6 +64,10 @@
     }
 
   }
+  
+  .sidenav-content-search {
+    display: flex;
+  }
 
   .mat-sidenav-content {
     background: #fff;
@@ -74,14 +78,18 @@
     }
 
     .content-search {
-      padding: 24px;
-      max-width: calc(1000px - (2 * 24px));
+      padding: 48px;
+      flex: 50%;
+      // max-width: calc(1000px - (2 * 24px));
     }
 
     .content-search-results {
       padding: 24px;
-      max-width: calc(1000px - (2 * 24px));
-      box-shadow: none !important;
+      margin: 24px;
+      flex: 50%;
+      border-style: solid;
+      border-color: $primary_500;
+      // max-width: calc(1000px - (2 * 24px));
     }
 
   }
