@@ -16,7 +16,7 @@
     </div>
 
     <table class="table">
-        <tr *ngFor="let item of list | sortBy: sortBy;">
+        <tr *ngFor="let item of list | kuiSortBy: sortBy;">
             <td class="avatar-cell">
                 <img kuiAdminImage [image]="item.email" [type]="'user'" class="avatar-image" />
             </td>
