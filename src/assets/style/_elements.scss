@@ -26,9 +26,11 @@
 
 //
 // Link
+a {
+  color: $primary;
+}
 a,
 .link {
-  color: $primary;
   cursor: pointer;
   text-decoration: none;
 }
@@ -87,6 +89,8 @@ a,
 // list
 .simple-list {
 
+  padding: 16px;
+
   .mat-list-item {
 
     .list-icon {
@@ -108,6 +112,24 @@ a,
     }
 
   }
+}
+
+.list-header {
+  display: flex;
+  padding: 24px 0 24px 12px;
+
+  .smaller {
+    font-size: small;
+  }
+
+  .list-action {
+
+    .mat-icon-button {
+      margin: 0 0 16px !important;
+    }
+
+  }
+
 }
 
 // --------------------------------------
@@ -166,6 +188,49 @@ a,
   }
 }
 
+// --------------------------------------
+
+// form
+//
+$form-width: 472;
+$gc-large: decimal-floor($form-width / 1.618, 0) - 2;
+$gc-small: $form-width - $gc-large - 4;
+
+.form-content {
+  margin: 24px auto;
+  padding: 0 20px;
+  width: $form-width + px;
+
+
+
+  .small-field, .medium-field, .large-field {
+    margin: 0 2px 24px 0;
+  }
+
+  .small-field {
+    width: $gc-small + px;
+  }
+
+  .medium-field {
+    width: $gc-large + px;
+  }
+
+  .large-field {
+    min-width: $form-width + px;
+  }
+
+  .input-icon {
+    color: $black-60-opacity;
+  }
+
+  .salsah-panel {
+    width: $form-width + px;
+
+    &.form-action {
+      display: flex;
+    }
+  }
+}
 
 // --------------------------------------
 

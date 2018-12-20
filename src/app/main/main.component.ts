@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-main',
@@ -7,7 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-  constructor() { }
+  constructor(private _titleService: Title) {
+      // set the page title
+      this._titleService.setTitle('Knora User Interface | Research Layer');
+  }
 
   ngOnInit() {
   }

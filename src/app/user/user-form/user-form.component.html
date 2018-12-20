@@ -1,3 +1,173 @@
-<p>
-  user-form works!
-</p>
+<div *ngIf="!isLoading && !errorMessage; else errorMsg" class="form">
+
+    <mat-vertical-stepper [linear]="isLinear" #stepper="matVerticalStepper">
+
+
+        <!-- ------------------------------------------------------------------
+            1.  add' or 'create new' user starts always with the user's email address;
+                it's an auto complete form, which checks, if the user already exists
+        ------------------------------------------------------------------- -->
+        <!--
+        <mat-step [stepControl]="userFormGroup">
+            <ng-template matStepLabel>
+
+                {{ 'appLabels.form.user.title.formWizard.step_1' | translate }}
+            </ng-template>
+            <div class="center form-content">
+                <app-select-user></app-select-user>
+            </div>
+
+        </mat-step>
+        -->
+        <!-- -------------------------------------------------------------- -->
+        <!-- -------------------------------------------------------------- -->
+
+        <!-- ------------------------------------------------------------------
+            2. user data form:
+                a) edit form in case of existing user
+                b) empty form in case of unknown eMail = the user doesn't exist yet
+        ------------------------------------------------------------------- -->
+
+        <mat-step>
+            <ng-template matStepLabel>{{ 'appLabels.form.user.title.formWizard.step_2' | translate }}</ng-template>
+            <div class="center form-content">
+                <app-user-data [standalone]="false"></app-user-data>
+            </div>
+
+        </mat-step>
+        <!-- -------------------------------------------------------------- -->
+        <!-- -------------------------------------------------------------- -->
+
+        <!-- ------------------------------------------------------------------
+            3. set user's role in project:
+                a) in system view: select project and role
+                b) in project view: select role only
+        ------------------------------------------------------------------- -->
+        <mat-step [editable]="selectedUser">
+            <ng-template matStepLabel>
+                <!--{{ 'appLabels.form.user.title.formWizard.step_3' | translate }}-->
+            </ng-template>
+
+            <app-user-role *ngIf="selectedUser" [projectIri]="projectIri" [user]="selectedUser"
+                              (userRole)="getUserRole($event)" [standalone]="false">
+            </app-user-role>
+
+        </mat-step>
+        <!-- -------------------------------------------------------------- -->
+        <!-- -------------------------------------------------------------- -->
+
+        <!-- ------------------------------------------------------------------
+            4. confirm the setup before submit
+        ------------------------------------------------------------------- -->
+        <mat-step [editable]="false">
+
+            <ng-template matStepLabel>
+                <!--{{ 'appLabels.form.user.title.formWizard.step_4' | translate }}-->
+            </ng-template>
+
+            <div class="form-content">
+                <mat-list class="form-overview">
+
+                    <!-- from step 1 and 2) user data -->
+                    <mat-list-item *ngIf="selectedUser">
+
+                        <kui-progress-indicator mat-list-avatar
+                                                [status]="submitUserStatus"></kui-progress-indicator>
+                        <h4 mat-line>
+                            <span *ngIf="selectedUser.id">
+                                <!--{{ 'appLabels.form.user.title.edit' | translate }}-->
+                            </span>
+                            <span *ngIf="!selectedUser.id">
+                                <!--{{ 'appLabels.form.user.title.new' | translate }}-->
+                            </span>
+                        </h4>
+                        <p mat-line>
+                            <span>
+                                {{selectedUser?.givenName}} {{selectedUser?.familyName}}, {{selectedUser?.email}}
+                            </span>
+                        </p>
+                        <mat-hint mat-line *ngIf="userErrorMessage" class="salsah-error-message">
+                            {{userErrorMessage?.statusText}}
+                        </mat-hint>
+                    </mat-list-item>
+
+                    <!-- from step 3a) membership in project -->
+                    <mat-list-item *ngIf="selectedProject">
+                        <!-- <salsah-progress-indicator mat-list-avatar class="salsah-avatar" [status]="submitMembershipStatus"></salsah-progress-indicator> -->
+                        <kui-progress-indicator mat-list-avatar class="salsah-avatar"
+                                                [status]="submitMembershipStatus"></kui-progress-indicator>
+                        <h4 mat-line>
+                            {{ 'appLabels.form.member.title.project' | translate }}
+                        </h4>
+                        <p mat-line>
+                            &bull; {{selectedProject?.name}}
+                        </p>
+                        <mat-hint mat-line *ngIf="isAlreadyMember" class="salsah-warning">
+                            <!--({{ 'appLabels.form.member.hint.alreadyMember' | translate }})-->
+                        </mat-hint>
+                        <mat-hint mat-line *ngIf="membershipErrorMessage" class="salsah-error-message">
+                            {{membershipErrorMessage?.statusText}}
+                        </mat-hint>
+                    </mat-list-item>
+
+                    <!-- from step 3b) project permission: groups -->
+                    <mat-list-item *ngIf="selectedProject && selectedGroups">
+                        <!-- <salsah-progress-indicator mat-list-avatar class="salsah-avatar" [status]="submitPermissionsStatus"></salsah-progress-indicator> -->
+                        <kui-progress-indicator mat-list-avatar class="salsah-avatar"
+                                                [status]="submitPermissionsStatus"></kui-progress-indicator>
+                        <h4 mat-line>
+                            <!--{{ 'appLabels.form.member.title.group' | translate}}-->
+                        </h4>
+                        <p mat-line>
+                            <span *ngFor="let group of selectedGroups; let last = last">&bull; {{group.name}}
+                                <br *ngIf="!last">
+                            </span>
+                        </p>
+                        <mat-hint mat-line *ngIf="permissionsErrorMessage" class="salsah-error-message">
+                            {{permissionsErrorMessage?.statusText}}
+                        </mat-hint>
+                    </mat-list-item>
+
+                </mat-list>
+
+
+                <div class="salsah-panel large">
+                    <button mat-button matStepperPrevious>
+                        {{ 'appLabels.form.action.back' | translate }}
+                    </button>
+                    <span class="fill-remaining-space"></span>
+                    <button mat-raised-button type="button" color="primary" (click)="submitData()"
+                            [disabled]="!selectedUser && !selectedProject && !selectedGroups">
+                        {{ 'appLabels.form.action.submit' | translate }}
+                    </button>
+                    <!-- after submit
+                    <button mat-button (click)="stepper.reset()">Add more user</button>
+                    -->
+                </div>
+            </div>
+        </mat-step>
+    </mat-vertical-stepper>
+</div>
+
+<!-- in the case of an API error: show the error message -->
+<ng-template #errorMsg>
+    <!--<salsah-message *ngIf="errorMessage" [message]="errorMessage"></salsah-message>-->
+</ng-template>
+
+
+<!--
+ the user form is a step by step form, which will be used in system and project admin
+ to create new user, to edit existing users or/and to add user to or remove from projects
+
+ the steps (depending on the usage / route) are as follow:
+    1) user user-profile
+        a) in case of project admin: select existing user OR create new user user-profile => b)
+        b) in case of system and project admin: create new user user-profile and edit old one
+
+    2) project membership
+        a) in case of system admin: select project AND set the permissions => b)
+        b) in case of project and system admin: set permissions incl. system permissions (if the logged in user is sys admin)
+
+    3) special stuff like "add the user to system project" and set system permissions
+
+-->

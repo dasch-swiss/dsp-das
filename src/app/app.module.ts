@@ -1,11 +1,14 @@
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KuiActionModule } from '@knora/action';
 import { JwtInterceptor, KuiAuthenticationModule } from '@knora/authentication';
 import { KuiCoreModule } from '@knora/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -19,6 +22,7 @@ import { LoginComponent } from './main/login/login.component';
 import { MainComponent } from './main/main.component';
 import { NavigationItemComponent } from './main/navigation/navigation-item/navigation-item.component';
 import { NavigationComponent } from './main/navigation/navigation.component';
+import { SelectLanguageComponent } from './main/select-language/select-language.component';
 import { MaterialModule } from './material-module';
 import { BoardComponent } from './project/board/board.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
@@ -39,10 +43,21 @@ import { CollectionListComponent } from './user/collection-list/collection-list.
 import { CreateMenuComponent } from './user/create-menu/create-menu.component';
 import { ProfileComponent } from './user/profile/profile.component';
 import { ProjectListComponent } from './user/project-list/project-list.component';
+import { GroupSelectComponent } from './user/user-form/group-select/group-select.component';
+import { SelectUserComponent } from './user/user-form/select-user/select-user.component';
+import { UserDataComponent } from './user/user-form/user-data/user-data.component';
 import { UserFormComponent } from './user/user-form/user-form.component';
+import { UserPasswordComponent } from './user/user-form/user-password/user-password.component';
+import { UserRoleComponent } from './user/user-form/user-role/user-role.component';
 import { UserMenuComponent } from './user/user-menu/user-menu.component';
 import { UserComponent } from './user/user.component';
+import { UserAddComponent } from './project/collaboration/user-add/user-add.component';
 
+
+// Translate: AoT requires an exported function for factories
+export function HttpLoaderFactory(httpClient: HttpClient) {
+    return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json');
+}
 
 @NgModule({
     declarations: [
@@ -65,6 +80,11 @@ import { UserComponent } from './user/user.component';
         ProfileComponent,
         ProjectListComponent,
         UserFormComponent,
+        GroupSelectComponent,
+        SelectUserComponent,
+        UserDataComponent,
+        UserPasswordComponent,
+        UserRoleComponent,
         CollectionListComponent,
         UserMenuComponent,
         CreateMenuComponent,
@@ -77,7 +97,9 @@ import { UserComponent } from './user/user.component';
         ErrorComponent,
         LoginComponent,
         LoremIpsumComponent,
-        AccountComponent
+        AccountComponent,
+        SelectLanguageComponent,
+        UserAddComponent
     ],
     imports: [
         AppRoutingModule,
@@ -93,7 +115,15 @@ import { UserComponent } from './user/user.component';
             media: environment.iiifUrl,
             app: environment.appUrl,
         }),
-        MaterialModule
+        MaterialModule,
+        ReactiveFormsModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        })
     ],
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}

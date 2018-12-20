@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { ProjectsService } from '@knora/core';
+import { ApiServiceError, Project, ProjectsService } from '@knora/core';
 import { CacheService } from '../main/cache/cache.service';
 import { MenuItem } from '../main/declarations/menu-item';
 
@@ -11,10 +12,12 @@ import { MenuItem } from '../main/declarations/menu-item';
 })
 export class ProjectComponent implements OnInit {
 
-
     loading: boolean;
+    error: boolean;
 
     projectcode: string;
+
+    project: Project;
 
     // for the sidenav
     open: boolean = true;
@@ -47,22 +50,51 @@ export class ProjectComponent implements OnInit {
 
     constructor(private _cache: CacheService,
                 private _route: ActivatedRoute,
-                private _projectsService: ProjectsService) {
+                private _projectsService: ProjectsService,
+                private _titleService: Title) {
 
         // get the shortcode of the current project
         this.projectcode = this._route.snapshot.params.shortcode;
+
+        // set the page title
+        this._titleService.setTitle('Project ' + this.projectcode);
+
+        this.error = this.validateShortcode(this.projectcode);
+
     }
 
     ngOnInit() {
 
-        this.loading = true;
-        // set the cache here:
-        // current project data
-        this._cache.get(this.projectcode, this._projectsService.getProjectByShortcode(this.projectcode));
-        this._cache.get('members_of_' + this.projectcode, this._projectsService.getProjectMembersByShortcode(this.projectcode));
+        if (!this.error) {
 
-        this.loading = false;
+            this.loading = true;
+            // set the cache here:
+            // current project data
+            this._cache.get(this.projectcode, this._projectsService.getProjectByShortcode(this.projectcode));
+            this._cache.get('members_of_' + this.projectcode, this._projectsService.getProjectMembersByShortcode(this.projectcode));
 
+            this._cache.get(this.projectcode, this._projectsService.getProjectByShortcode(this.projectcode)).subscribe(
+                (result: any) => {
+                    this.project = result;
+                    this.navigation[0].label = result.shortname.toUpperCase();
+                    this.loading = false;
+                },
+                (error: ApiServiceError) => {
+                    console.error(error);
+                    this.error = true;
+                    this.loading = false;
+                }
+            );
+        } else {
+            // shortcode isn't valid
+            // TODO: show an error page
+        }
+    }
+
+    validateShortcode(code: string) {
+        const regexp: any = /^[0-9A-Fa-f]+$/;
+
+        return !(regexp.test(code) && code.length === 4);
     }
 
 }

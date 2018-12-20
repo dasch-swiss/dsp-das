@@ -15,7 +15,6 @@
     ],
     "typedef": [
       true,
-      "variable-declaration",
       "parameter"
     ],
     "no-inferrable-types": false

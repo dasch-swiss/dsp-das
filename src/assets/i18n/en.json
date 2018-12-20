@@ -1,0 +1,136 @@
+{
+  "appLabels": {
+    "dashboardComponent": {
+      "firstParagraph": "Welcome to Salsah — a web-based virtual research environment that helps researchers in the humanities to deal with digital data. It allows the annotation and linkage of arbitrary sources such as digital texts, still and moving images, and sound.",
+      "secondParagraph": "SALSAH is one (generic) user interface to handle the data from the main repository called ",
+      "projectsIntro": "Public projects in Knora"
+    },
+    "frameworkForListings": {
+      "project": {
+        "list": {
+          "title": "Projects",
+          "description": ""
+        },
+        "add": {
+          "title": "Add a new team member",
+          "description": ""
+        }
+      },
+      "user": {
+        "list": {
+          "title": "Members in this project",
+          "description": ""
+        },
+        "add": {
+          "title": "Add a new team member",
+          "description": ""
+        }
+      }
+    },
+    "usersList": {
+      "sortProps": {
+        "familyName": "Last name",
+        "givenName": "First name",
+        "sortTitle": "Sort by "
+      }
+    },
+    "formDialog": {
+      "discard": "You're sure to close the form and discard all changes?"
+    },
+    "form": {
+      "action": {
+        "cancel": "Cancel",
+        "close": "Close",
+        "submit": "Save",
+        "add": "Add",
+        "update": "Update",
+        "next": "Next",
+        "back": "Back",
+        "skip": "Skip",
+        "reset": "Reset",
+        "activate": "Activate",
+        "deactivate": "Deactivate",
+        "confirm": "Yes"
+      },
+      "user": {
+        "general": {
+          "givenName": "First name",
+          "familyName": "Last name",
+          "email": "Email address",
+          "emailValidation": "This does not appear to be a valid email address.",
+          "username": "Username",
+          "usernameHint": "Spaces and special characters are not allowed in username",
+          "password": "Password",
+          "passwordHint": "Use at least 8 characters with one uppercase letter and one number.",
+          "oldPassword": "Old password",
+          "newPassword": "New password",
+          "requesterPassword": "Admin password",
+          "avatar": "Upload a profile pic",
+          "language": "Default language"
+        },
+        "title": {
+          "new": "Create user",
+          "edit": "Update user",
+          "editSuccess": "You have successfully updated the user profile.",
+          "delete": "Delete user",
+          "deleteHint": "You're sure to delete this user?",
+          "password": "Change password",
+          "passwordSuccess": "You have successfully changed your password.",
+          "formWizard": {
+            "step_1": "Start with username",
+            "step_2": "User data",
+            "step_3": "User role",
+            "step_4": "Confirm",
+            "more": "Add more users"
+          },
+          "select": "Add user to the project by typing e-mail address or username",
+          "deleted": "already deleted"
+        }
+      },
+      "project": {
+        "general": {
+          "description": "Description",
+          "shortcode": "Short code",
+          "shortname": "Short name",
+          "longname": "Project name",
+          "institution": "Institution",
+          "logo": {
+            "upload": "Upload a logo",
+            "or": "OR",
+            "url": "Set an URL to the logo file",
+            "name": "Logo file name or URL"
+          },
+          "keywords": "Keywords"
+        },
+        "title": {
+          "new": "Create project",
+          "edit": "Update project",
+          "editSuccess": "You have successfully updated this project.",
+          "delete": "Delete project",
+          "deleteHint": "You're sure to delete this project?",
+          "formWizard": {
+            "step_1": "Project data",
+            "step_2": "Add project member",
+            "step_3": "Confirm",
+            "more": "Add more projects"
+          }
+        }
+      },
+      "member": {
+        "select": {
+          "project": "Select project",
+          "user": "Select user",
+          "group": "Select permission group"
+        },
+        "title": {
+          "project": "Project membership",
+          "user": "Members in the project",
+          "group": "Permissions"
+        },
+        "hint": {
+          "alreadyMember": "The user is already a member of this project"
+        }
+      }
+    }
+  }
+}

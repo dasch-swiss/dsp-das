@@ -28,6 +28,8 @@
     "@knora/core": "^6.0.0",
     "@knora/search": "^6.0.0",
     "@knora/viewer": "^6.0.0-alpha",
+    "@ngx-translate/core": "^11.0.1",
+    "@ngx-translate/http-loader": "^4.0.0",
     "core-js": "^2.5.4",
     "hammerjs": "^2.0.8",
     "jdnconvertiblecalendar": "^0.0.2",

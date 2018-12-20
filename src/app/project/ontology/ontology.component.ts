@@ -1,15 +1,20 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-ontology',
-  templateUrl: './ontology.component.html',
-  styleUrls: ['./ontology.component.scss']
+    selector: 'app-ontology',
+    templateUrl: './ontology.component.html',
+    styleUrls: ['./ontology.component.scss']
 })
 export class OntologyComponent implements OnInit {
 
-  constructor() { }
+    constructor(private _titleService: Title) {
 
-  ngOnInit() {
-  }
+        // set the page title
+        this._titleService.setTitle('Ontology Editor');
+    }
+
+    ngOnInit() {
+    }
 
 }

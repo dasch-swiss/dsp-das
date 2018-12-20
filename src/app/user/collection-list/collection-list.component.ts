@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-collection-list',
@@ -7,7 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CollectionListComponent implements OnInit {
 
-  constructor() { }
+    constructor(private _titleService: Title) {
+
+        // set the page title
+        this._titleService.setTitle('Your collections');
+    }
 
   ngOnInit() {
   }

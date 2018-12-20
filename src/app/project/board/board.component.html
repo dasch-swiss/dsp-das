@@ -1,13 +1,9 @@
 <kui-progress-indicator *ngIf="loading && (!project && !projectMembers)"></kui-progress-indicator>
 
 <div *ngIf="!loading && (project && projectMembers)">
-    <!-- get project by shortname -->
 
     <!-- description, keywords and other infos -->
     <mat-card class="no-shadow">
-        <mat-card-subtitle>Project {{project.shortcode}} | {{project.shortname}}</mat-card-subtitle>
-        <mat-card-title>{{project.longname}}</mat-card-title>
-
         <!-- description -->
         <mat-card-content>
             <div *ngFor="let description of project.description">
@@ -33,49 +29,38 @@
 
     <mat-divider></mat-divider>
 
-    <!-- list project members -->
-    <mat-card class="no-shadow">
-        <mat-card-subtitle>{{projectMembers.length | i18nPlural: itemPluralMapping['member']}}</mat-card-subtitle>
+    <!-- # project members -->
+    <mat-card class="no-shadow link" routerLink="../collaboration">
 
-        <mat-card-content>
-            <mat-list role="list" class="simple-list">
-                <mat-list-item *ngFor="let m of projectMembers">
-                    <h4 mat-line>{{m.givenName}} {{m.familyName}}</h4>
-                    <p mat-line> {{m.email}} </p>
-                    <img kuiAdminImage [image]="m.email" [type]="'user'" class="list-icon" />
-                </mat-list-item>
-            </mat-list>
-        </mat-card-content>
-
-        <mat-card-actions>
-            <button mat-icon-button class="right" [routerLink]="'../collaboration'">
-                <mat-icon>arrow_forward</mat-icon>
-            </button>
-        </mat-card-actions>
+        <mat-card-subtitle>Collaboration</mat-card-subtitle>
+        <mat-card-title>
+            {{projectMembers.length | i18nPlural: itemPluralMapping['member']}}
+            <span class="fill-remaining-space"></span>
+            <span>
+                <button mat-icon-button class="right">
+                    <mat-icon>arrow_forward</mat-icon>
+                </button>
+            </span>
+        </mat-card-title>
     </mat-card>
 
     <mat-divider></mat-divider>
 
-    <mat-card class="no-shadow">
-        <mat-card-subtitle>{{project.ontologies.length | i18nPlural: itemPluralMapping['ontology']}}</mat-card-subtitle>
+    <!-- # project ontologies -->
+    <mat-card class="no-shadow link" routerLink="../ontologies">
 
-        <mat-card-content>
-            {{project.ontologies}}
-        </mat-card-content>
-
-        <mat-card-actions>
-            <button mat-icon-button class="right" [routerLink]="'../ontologies'">
-                <mat-icon>arrow_forward</mat-icon>
-            </button>
-        </mat-card-actions>
+        <mat-card-subtitle>Data model</mat-card-subtitle>
+        <mat-card-title>
+            {{project.ontologies.length | i18nPlural: itemPluralMapping['ontology']}}
+            <span class="fill-remaining-space"></span>
+            <span>
+                <button mat-icon-button class="right">
+                    <mat-icon>arrow_forward</mat-icon>
+                </button>
+            </span>
+        </mat-card-title>
     </mat-card>
 
     <mat-divider></mat-divider>
-
-    <mat-card class="no-shadow">
-        <mat-card-subtitle>Status</mat-card-subtitle>
-        <mat-card-title *ngIf="project.status">Active</mat-card-title>
-        <mat-card-title *ngIf="!project.status">Archived</mat-card-title>
-    </mat-card>
 
 </div>

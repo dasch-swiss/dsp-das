@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiServiceError, Project, ProjectsService, User } from '@knora/core';
+import { ApiServiceError, Project, ProjectsService, User, UsersService } from '@knora/core';
 import { CacheService } from '../../../main/cache/cache.service';
 
 @Component({
@@ -14,6 +14,8 @@ export class UserListComponent implements OnInit {
 
     @Input() list: User[];
     @Input() disabled?: boolean;
+
+    @Output() userRemoved: EventEmitter<any> = new EventEmitter<any>();
 
     projectcode: string;
 
@@ -43,6 +45,7 @@ export class UserListComponent implements OnInit {
 
     constructor(private _cache: CacheService,
                 private _projectsService: ProjectsService,
+                private _usersService: UsersService,
                 private _route: ActivatedRoute,
                 private _router: Router) {
 
@@ -67,14 +70,19 @@ export class UserListComponent implements OnInit {
         this.loading = false;
     }
 
-    edit(user: string) {
-        const userEncoded: string = encodeURIComponent(user);
-        this._router.navigate(['/user/' + userEncoded + '/edit']).catch(
-            result => console.log(result)
+    removeUser(id: string) {
+
+        this._usersService.removeUserFromProject(id, this.project.id).subscribe(
+            (result: User) => {
+                console.log(result);
+                this.userRemoved.emit();
+            },
+            (error: ApiServiceError) => {
+                // this.errorMessage = error;
+                console.error(error);
+            }
         );
-        // [routerLink]="'/user/' + encodeURIComponent(item.email) + '/edit'"
-        // activate form inside of expansion panel
-        // console.log('open dialog box for', user.id);
+
     }
 
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ApiServiceError, Project, ProjectsService, Session, User, UsersService } from '@knora/core';
 import { CacheService } from '../../main/cache/cache.service';
@@ -21,7 +22,10 @@ export class ProjectListComponent implements OnInit {
     constructor(private _cache: CacheService,
                 private _projectsService: ProjectsService,
                 private _router: Router,
-                private _usersService: UsersService) {
+                private _usersService: UsersService,
+                private _titleService: Title) {
+        // set the page title
+        this._titleService.setTitle('Your projects');
     }
 
     ngOnInit() {
@@ -56,7 +60,7 @@ export class ProjectListComponent implements OnInit {
         } else {
             // the logged-in user has no system admin rights;
             // he get only his own projects
-            this._usersService.getUserByEmail(session.user.name)
+            this._usersService.getUser(session.user.name)
                 .subscribe(
                     (result: User) => {
                         this.projects = result.projects;
