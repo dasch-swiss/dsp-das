@@ -335,10 +335,9 @@
   dependencies:
     tslib "^1.9.0"
 
-"@knora/search@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@knora/search/-/search-6.0.0.tgz#26008856d0b38fd44215726640e239fdd0bd55f4"
-  integrity sha512-EpZ9vxaXQepw8MJEa2+jeH0cVMpjUQ5qRk0Qi6Y/CDzLTERqgEfVpM2eIbxrruGAIP+lHmYkS4cSi3F79WYiTA==
+"@knora/search@github:dhlab-basel/Knora-ui-search-builds#v6.1.0":
+  version "6.1.0"
+  resolved "https://codeload.github.com/dhlab-basel/Knora-ui-search-builds/tar.gz/50f89660a91a15e04efb36a3dbe57bdcd1fdacde"
   dependencies:
     tslib "^1.9.0"
 
@@ -346,20 +345,6 @@
   version "6.0.0-alpha"
   resolved "https://registry.yarnpkg.com/@knora/viewer/-/viewer-6.0.0-alpha.tgz#97f644aca363f20b13ac34462a34e919b0b134bb"
   integrity sha512-SM7sGlxE9WYkf0ZF9qVKMZL9dhmZ8EamgnqeaCe/8SqmQfbi99kJNEgV454eUhoaCSGJxetK8Gktd/kpaHShvQ==
-  dependencies:
-    tslib "^1.9.0"
-
-"@knora/search@^1.0.0-beta.2":
-  version "1.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@knora/search/-/search-1.0.0-beta.2.tgz#77476713f862b781220c70eede63c07a46d37623"
-  integrity sha512-a9Iok05x+kjMBDN1ms6geXOxjX6enSt+WolrMSVx005joyhzJ+Q92HqnJig3dSJ1NNo1XWCMTA8/8NdQKbxtaQ==
-  dependencies:
-    tslib "^1.9.0"
-
-"@knora/viewer@^0.0.2-alpha.2":
-  version "0.0.2-alpha.2"
-  resolved "https://registry.yarnpkg.com/@knora/viewer/-/viewer-0.0.2-alpha.2.tgz#445805df3e4e09c4b94a99283739410897246dee"
-  integrity sha512-tl9Z5BSwfMuIoPiBLkcOlkN+YWu669R5aOxjkLi1cBYO9nTpVJOgKOQyLB1wQi/D2Tqr/D5oZNnhbQu0VlQOUg==
   dependencies:
     tslib "^1.9.0"
 
