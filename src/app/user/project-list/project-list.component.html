@@ -23,7 +23,7 @@
          fxLayoutGap="grid">
 
         <!-- 1-n) user's active projects -->
-        <div fxFlex.sm="50" fxFlex="33.3" *ngFor="let project of active | sortBy: 'shortname'" class="preview">
+        <div fxFlex.sm="50" fxFlex="33.3" *ngFor="let project of active | kuiSortBy: 'shortname'" class="preview">
             <mat-card (click)="setProject(project.id)" class="link">
 
                 <mat-card-subtitle>{{project.shortcode}} | {{project.shortname}}</mat-card-subtitle>
@@ -54,7 +54,7 @@
          fxLayoutGap="grid"
          fxLayoutAlign="space-between stretch">
 
-        <div fxFlex="33.3" *ngFor="let project of inactive | sortBy: 'shortname'" class="preview">
+        <div fxFlex="33.3" *ngFor="let project of inactive | kuiSortBy: 'shortname'" class="preview">
             <mat-card (click)="setProject(project.id)" class="link archived">
 
                 <mat-card-subtitle>{{project.shortcode}} | {{project.shortname}}</mat-card-subtitle>
