@@ -29,18 +29,14 @@ $header-height: 64px;
 .wrapper {
   max-width: 960px;
   padding: 48px 24px;
-  width: 80%;
+  width: calc(100% - 48px);
 
   &.narrow {
-    width: 320px;
+    max-width: 320px;
   }
 
   &.wide {
-    width: 640px;
-  }
-
-  &.center {
-    margin: 0 auto;
+    max-width: 960px;
   }
 }
 

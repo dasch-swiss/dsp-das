@@ -36,14 +36,7 @@ export class ProjectComponent implements OnInit {
         {
             label: 'Ontologies',
             route: 'ontologies',
-            icon: 'timeline',
-            children: [
-                {
-                    label: 'gaga',
-                    route: 'gaga',
-                    icon: 'dash',
-                }
-            ]
+            icon: 'timeline'
         }
     ];
 

@@ -9,7 +9,6 @@ import { Title } from '@angular/platform-browser';
 export class AppComponent {
 
     constructor(private _titleService: Title) {
-
         // set the page title
         this._titleService.setTitle('Knora User Interface | Research Layer');
     }

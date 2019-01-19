@@ -55,6 +55,7 @@ import { UserMenuComponent } from './user/user-menu/user-menu.component';
 import { UserComponent } from './user/user.component';
 import { SelectGroupComponent } from './project/collaboration/select-group/select-group.component';
 import { FullframeDialogComponent } from './main/dialog/fullframe-dialog/fullframe-dialog.component';
+import { DashboardComponent } from './user/dashboard/dashboard.component';
 
 
 // Translate: AoT requires an exported function for factories
@@ -105,7 +106,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         SelectLanguageComponent,
         ProjectsComponent,
         SelectGroupComponent,
-        FullframeDialogComponent
+        FullframeDialogComponent,
+        DashboardComponent
     ],
     imports: [
         AppRoutingModule,
