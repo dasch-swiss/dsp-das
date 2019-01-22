@@ -1,3 +1,44 @@
-<p>
-  ontology-list works!
-</p>
+<p>The following button is a quick hack to create an ontology</p>
+<button mat-raised-button color="accent" (click)="createOntology()">Create new ontology</button>
+<br><br>
+
+<mat-divider></mat-divider>
+
+<kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
+
+<!-- list of active users -->
+<mat-card class="no-shadow simple-list" *ngIf="!loading">
+    <mat-card-subtitle>Data model</mat-card-subtitle>
+    <mat-card-title>You have {{ontologies.length | i18nPlural: itemPluralMapping['ontology']}} in your project</mat-card-title>
+    <mat-card-content>
+
+        <div *ngIf="ontologies && !loading">
+
+
+            <table class="table">
+                <tr *ngFor="let item of ontologies; let last = last;" [class.no-border]="last">
+                    <!-- label -->
+                    <td>
+                        <h5 class="mat-subheading-2 link" [routerLink]="'./' + item.name">
+                            {{item['rdfs:label']}}
+                        </h5>
+                    </td>
+                    <!-- action: remove -->
+                    <td class="table-action">
+                        <div class="hidden">
+                            <button mat-icon-button
+                                    *ngIf="!disabled"
+                                    (click)="removeOntology(item['@id'])"
+                                    matTooltip="Delete {{item['rdfs:label']}}"
+                                    matTooltipPosition="above">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </mat-card-content>
+
+</mat-card>

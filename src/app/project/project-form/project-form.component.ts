@@ -5,7 +5,7 @@ import { MatChipInputEvent } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { existingNamesValidator } from '@knora/action';
-import { ApiServiceError, Project, ProjectsService, User, UsersService } from '@knora/core';
+import { ApiServiceError, NewOntology, OntologyService, Project, ProjectsService, User, UsersService } from '@knora/core';
 import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
@@ -106,6 +106,7 @@ export class ProjectFormComponent implements OnInit {
                 private _router: Router,
                 private _projects: ProjectsService,
                 private _users: UsersService,
+                private _ontology: OntologyService,
                 private _fb: FormBuilder,
                 private _titleService: Title) {
 
@@ -305,7 +306,7 @@ export class ProjectFormComponent implements OnInit {
 
         // b) update description field / multi language preparation
         // FIXME: this is a quick (hardcoded) hack:
-        // TODO: create multi language input fields
+        // TODO: create multi language input fields e.g. in @knora/action
         this.form.controls['description'].setValue([{
             'language': 'en',
             'value': this.form.controls['description'].value
@@ -344,18 +345,18 @@ export class ProjectFormComponent implements OnInit {
                     this.project = project;
                     this.buildForm(this.project);
 
+                    let userAdded: boolean;
+                    let ontoAdded: boolean;
+
                     // add logged-in user to the project
                     // who am I?
                     this._users.getUser(JSON.parse(localStorage.getItem('session')).user.name).subscribe(
                         (user: User) => {
                             this._users.addUserToProject(user.id, project.id).subscribe(
-                                (add: User) => {
-
-                                    this.loading = false;
-                                    // redirect to (new) project page
-                                    this._router.navigateByUrl('/project', {skipLocationChange: true}).then(() =>
-                                        this._router.navigate(['/project/' + this.form.controls['shortcode'].value])
-                                    );
+                                (added: User) => {
+                                    userAdded = (!!added);
+                                    console.log('user added: ', userAdded);
+                                    // TODO: add user as admin!
                                 },
                                 (error: any) => {
                                     console.error(error);
@@ -366,6 +367,35 @@ export class ProjectFormComponent implements OnInit {
                             console.error(error);
                         }
                     );
+
+                    // create a new default project ontology
+                    // this needs the iri of the project
+                    const ontologyData: NewOntology = {
+                        projectIri: project.id,
+                        name: project.shortname + '-data-model',
+                        label: 'Data Model (Ontology) for ' + project.shortname
+                    };
+                    this._ontology.createOntology(ontologyData).subscribe(
+                        (ontology: any) => {
+                            console.log(ontology);
+                            ontoAdded = (!!ontology);
+                            console.log('ontology added: ', ontoAdded);
+                        },
+                        (error: any) => {
+                            console.error(error);
+                        }
+                    );
+
+
+                    // if everything is done: stop loading and go to project dashboard page
+                    if (project && userAdded && ontoAdded) {
+                        this.loading = false;
+                        // redirect to (new) project page
+                        this._router.navigateByUrl('/project', {skipLocationChange: true}).then(() =>
+                            this._router.navigate(['/project/' + this.form.controls['shortcode'].value])
+                        );
+                    }
+
 
                 },
                 (error: ApiServiceError) => {

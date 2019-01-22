@@ -18,11 +18,10 @@
         <!-- list of active projects -->
         <div fxLayout="row wrap"
              fxFlexFill
-             fxLayout.xs="column"
-             fxLayoutGap="grid"
-             fxLayoutAlign="stretch">
+             fxlayout.xs="column"
+             fxLayoutGap="grid">
 
-            <div fxFlex="33.3" *ngFor="let project of group.value | kuiSortBy: 'shortname'" class="preview">
+            <div fxFlex *ngFor="let project of group.value | kuiSortBy: 'shortname'" class="preview">
                 <mat-card (click)="setProject(project.id, group.key)" class="link active">
 
                     <mat-card-subtitle>{{project.shortcode}} | {{project.shortname}}</mat-card-subtitle>
