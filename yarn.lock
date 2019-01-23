@@ -328,10 +328,9 @@
   dependencies:
     tslib "^1.9.0"
 
-"@knora/core@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@knora/core/-/core-6.0.0.tgz#fbfd26d43fe6f41cf83fad4e9eb7329923061bf9"
-  integrity sha512-zdKkK6tzutqVtBGZ0AyKbaxrKJ15jofdLkYYlKZ25JzNVAX3N0x2cgvghozOBFpX9mtGwfB8Qnf4OAkvOUD3HQ==
+"@knora/core@github:dhlab-basel/Knora-ui-core-builds#v6.3.0-beta":
+  version "6.3.0"
+  resolved "https://codeload.github.com/dhlab-basel/Knora-ui-core-builds/tar.gz/c2961bd927a09dd9b2f6c76d6067ed3f86e38b1c"
   dependencies:
     tslib "^1.9.0"
 
