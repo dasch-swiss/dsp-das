@@ -27,10 +27,14 @@
                     <mat-card-subtitle>{{project.shortcode}} | {{project.shortname}}</mat-card-subtitle>
                     <mat-card-title>{{project.longname}}</mat-card-title>
 
-                    <mat-card-content>
-                        {{project.description.value}}
+                    <mat-card-content [innerHTML]="project.description[0].value">
                     </mat-card-content>
 
+                    <!--
+                    <mat-card-footer>
+                        <button mat-button>Read more</button>
+                    </mat-card-footer>
+                    -->
                 </mat-card>
             </div>
         </div>

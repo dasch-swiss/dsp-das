@@ -16,13 +16,14 @@
 
 .preview {
   margin: 6px 0;
-  padding: 24px;
+  padding: 12px;
   word-wrap: break-word;
   min-width: 280px;
 
   .mat-card {
     height: 160px;
     color: rgba(0, 0, 0, 0.81);
+    overflow: hidden;
 
     &:hover {
       background: rgba($primary, 0.39);
@@ -52,6 +53,25 @@
 
       &:active {
         background: rgba($accent, 0.39);
+      }
+    }
+
+    .mat-card-footer {
+      height: 36px;
+      width: 100%;
+      margin: 0 0 0 -16px;
+      bottom: 0;
+      position: absolute;
+      text-align: center;
+      // background: rgba(255,255,255, 1);
+      @include border-top();
+
+
+      .mat-button {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        background: white;
       }
     }
 
