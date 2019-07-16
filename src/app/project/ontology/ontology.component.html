@@ -1,14 +1,33 @@
+<div *ngIf="projectAdmin" class="content large middle">
+
+    <!-- add user to the project -->
+    <app-add-source-type *ngIf="project?.status && sysAdmin" [projectcode]="projectcode" (refreshParent)="refresh()"
+                         #addSourceTypeComponent></app-add-source-type>
+
+    <!-- <mat-divider *ngIf="project?.status" ></mat-divider> -->
+
+    <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
+
+    <div *ngIf="!loading" class="content">
+
+        <!-- list of source types -->
+
+    </div>
+
+</div>
+
+<div *ngIf="!projectAdmin" class="content large middle">
+    <app-error [status]="403"></app-error>
+</div>
 
 
-
-
-
+<!--
 
 <div class="content ontology-editor drag-drop-boundary">
 
-        <mat-card class="resource-type" cdkDragBoundary=".drag-drop-boundary" cdkDrag>
-                Create your data model: add the first source type here
-        </mat-card>
+    <mat-card class="resource-type" cdkDragBoundary=".drag-drop-boundary" cdkDrag>
+        Create your data model: add the first source type here
+    </mat-card>
 
 
     <!--
@@ -51,5 +70,5 @@
           </div>
 
     </div>
--->
 </div>
+-->

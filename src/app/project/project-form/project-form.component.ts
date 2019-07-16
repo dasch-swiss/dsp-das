@@ -65,6 +65,7 @@ export class ProjectFormComponent implements OnInit {
      * success of sending data
      */
     success = false;
+
     /**
      * message after successful post
      */

@@ -1,0 +1,51 @@
+<div class="no-shadow" *ngIf="!errorMessage; else errorMsg">
+
+    <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
+
+    <!-- success message after updating -->
+    <kui-message *ngIf="success" [message]="successMessage" [short]="true" (click)="closeMessage()"></kui-message>
+
+    <!-- content -->
+    <form *ngIf="!loading" [formGroup]="form" class="form-content project-data" (ngSubmit)="submitData()">
+
+        <!-- long name -->
+        <mat-form-field class="large-field">
+            <input matInput placeholder="Label *" [formControl]="form.controls['label']">
+            <mat-hint *ngIf="formErrors.label">
+                {{ formErrors.label }}
+            </mat-hint>
+        </mat-form-field>
+
+        <!-- TODO: add permissions of source type -->
+
+        <mat-divider></mat-divider>
+        <h3 class="mat-body subtitle">Define the metadata for this source type</h3>
+
+        <!-- TODO: properties -->
+
+        <!-- TODO: action buttons -->
+        <div class="form-panel form-action">
+            <span>
+                <button mat-button type="reset" (click)="resetForm($event, sourceType)">
+                    {{ 'appLabels.form.action.reset' | translate }}
+                </button>
+
+            </span>
+            <span class="fill-remaining-space"></span>
+            <span>
+                <button mat-raised-button type="submit" color="primary" [disabled]="!form.valid"
+                        [disabled]="!form.valid || (projectcode && !project.status)">
+                    Create
+                    <!-- <span *ngIf="projectcode">{{ 'appLabels.form.action.update' | translate }}</span> -->
+                    <!-- <span *ngIf="!projectcode">{{ 'appLabels.form.action.submit' | translate }}</span> -->
+                </button>
+            </span>
+        </div>
+    </form>
+</div>
+
+
+<!-- in the case of an API error: show the error message -->
+<ng-template #errorMsg>
+    <kui-message *ngIf="errorMessage" [message]="errorMessage"></kui-message>
+</ng-template>

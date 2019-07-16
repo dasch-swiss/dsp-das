@@ -9,7 +9,6 @@
     <form *ngIf="!loading && project.status" [formGroup]="form" class="form-content project-data"
           (ngSubmit)="submitData()">
 
-
         <!-- short and long name -->
         <mat-form-field class="small-field">
             <input matInput placeholder="{{'appLabels.form.project.general.shortcode' | translate}} * "
@@ -115,5 +114,5 @@
 
 <!-- in the case of an API error: show the error message -->
 <ng-template #errorMsg>
-    <kui-message *ngIf="errorMessage" [message]="errorMessage" ></kui-message>
+    <kui-message *ngIf="errorMessage" [message]="errorMessage"></kui-message>
 </ng-template>

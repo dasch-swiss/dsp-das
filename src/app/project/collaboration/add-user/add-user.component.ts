@@ -1,14 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { MatDialog, MatDialogConfig } from '@angular/material';
 import { existingNamesValidator } from '@knora/action';
 import { Session } from '@knora/authentication';
 import { ApiServiceError, AutocompleteItem, Project, ProjectsService, User, UsersService } from '@knora/core';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { CacheService } from '../../../main/cache/cache.service';
-import { MatDialog, MatDialogConfig } from '@angular/material';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { CacheService } from 'src/app/main/cache/cache.service';
 
 @Component({
     selector: 'app-add-user',
@@ -107,11 +106,11 @@ export class AddUserComponent implements OnInit {
      */
     isAlreadyMember = false;
 
-    constructor(private _cache: CacheService,
-                private _dialog: MatDialog,
-                private _projects: ProjectsService,
-                private _users: UsersService,
-                private _formBuilder: FormBuilder) {
+    constructor (private _cache: CacheService,
+        private _dialog: MatDialog,
+        private _projects: ProjectsService,
+        private _users: UsersService,
+        private _formBuilder: FormBuilder) {
     }
 
     ngOnInit() {
@@ -210,11 +209,11 @@ export class AddUserComponent implements OnInit {
             'username': new FormControl({
                 value: '', disabled: false
             }, [
-                existingNamesValidator(this.existingUsernames),
-                existingNamesValidator(this.existingUsernameInProject),
-                existingNamesValidator(this.existingEmails),
-                existingNamesValidator(this.existingEmailInProject)
-            ])
+                    existingNamesValidator(this.existingUsernames),
+                    existingNamesValidator(this.existingUsernameInProject),
+                    existingNamesValidator(this.existingEmails),
+                    existingNamesValidator(this.existingEmailInProject)
+                ])
         });
 
         this.filteredUsers = this.selectUserForm.controls['username'].valueChanges
