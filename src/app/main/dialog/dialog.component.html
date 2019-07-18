@@ -127,9 +127,9 @@
 
     <!-- Ontology editor: customize and add source type -->
     <div *ngSwitchCase="'addSourceType'">
-        <app-dialog-header [title]="data.name" [subtitle]="'Customize this source type'" (close)="dialogRef.close()">
+        <app-dialog-header [title]="data.name" [subtitle]="'Customize source type'" (close)="dialogRef.close()">
         </app-dialog-header>
-        <app-source-type-form></app-source-type-form>
+        <app-source-type-form [iri]="data.project"></app-source-type-form>
     </div>
 
     <!-- Unknown method (or not yet defined) -->

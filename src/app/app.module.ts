@@ -67,6 +67,7 @@ import { PermissionComponent } from './project/permission/permission.component';
 import { AddGroupComponent } from './project/permission/add-group/add-group.component';
 import { AddSourceTypeComponent } from './project/ontology/add-source-type/add-source-type.component';
 import { SourceTypeFormComponent } from './project/ontology/source-type-form/source-type-form.component';
+import { SourceTypePropertyComponent } from './project/ontology/source-type-form/source-type-property/source-type-property.component';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -134,7 +135,8 @@ export function initializeApp(appInitService: AppInitService) {
         PermissionComponent,
         AddGroupComponent,
         AddSourceTypeComponent,
-        SourceTypeFormComponent
+        SourceTypeFormComponent,
+        SourceTypePropertyComponent
     ],
     imports: [
         AppRoutingModule,

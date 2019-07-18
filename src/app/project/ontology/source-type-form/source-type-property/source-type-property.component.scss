@@ -1,0 +1,9 @@
+.mat-form-field {
+  margin: 0 2px;
+}
+
+.cdk-drag-preview {
+  .mat-form-field {
+    display: none !important;
+  }
+}

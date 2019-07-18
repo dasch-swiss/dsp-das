@@ -79,6 +79,10 @@ export class AddSourceTypeComponent implements OnInit {
     ngOnInit() {
 
         this.buildForm();
+
+        // just for developing / less clicks to see the source type form
+        this.selectedSourceType = this.sourceTypes[0];
+        this.openDialog('addSourceType');
     }
 
     buildForm() {
@@ -128,7 +132,10 @@ export class AddSourceTypeComponent implements OnInit {
         this.selectSourceTypeForm = this._formBuilder.group({
             'type': new FormControl({
                 value: '', disabled: false
-            }, [])
+            }, []),
+            'permission': new FormControl({
+                value: 0, disabled: false
+            })
         });
 
         this.filteredSourceTypes = this.selectSourceTypeForm.controls['type'].valueChanges
@@ -193,21 +200,23 @@ export class AddSourceTypeComponent implements OnInit {
     addSourceType(val: string) {
         // add to ontology
         console.log(val);
+        this.selectedSourceType = this.sourceTypes.find(st => {
+            return st.iri === val;
+        });
+        console.log(this.selectedSourceType);
         this.openDialog('addSourceType');
     }
 
 
     openDialog(mode: string): void {
         const dialogConfig: MatDialogConfig = {
-            width: '560px',
+            width: '720px',
             position: {
                 top: '112px'
             },
-            data: { project: this.projectcode, name: this.selectSourceTypeForm.controls['type'], mode: mode }
+            data: { project: this.selectedSourceType.iri, name: this.selectedSourceType.label, mode: mode }
         };
 
-
-        console.log(this.selectSourceTypeForm.controls['type']);
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
 
         dialogRef.afterClosed().subscribe(result => {

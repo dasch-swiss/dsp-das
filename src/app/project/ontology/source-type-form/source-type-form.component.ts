@@ -1,5 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { SourceTypePropertyComponent } from './source-type-property/source-type-property.component';
 
 @Component({
     selector: 'app-source-type-form',
@@ -14,7 +16,24 @@ export class SourceTypeFormComponent implements OnInit {
 
     sourceType: any;
 
+    properties: any[];
+
+
+    /**
+     * default, base source type iri
+     */
+    @Input() iri: string;
+
+    /**
+     * emit event, when closing dialog
+     */
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
+
+    /**
+     * reference to the component controlling the property selection
+     */
+    @ViewChildren('property') propertyComponents: QueryList<SourceTypePropertyComponent>;
+
     /**
      * success of sending data
      */
@@ -43,7 +62,6 @@ export class SourceTypeFormComponent implements OnInit {
         },
     };
 
-
     constructor (private _fb: FormBuilder) { }
 
     ngOnInit() {
@@ -51,6 +69,16 @@ export class SourceTypeFormComponent implements OnInit {
     }
 
     buildForm() {
+
+        this.properties = [
+            {
+                label: '',
+                type: '',
+                cardinality: '',
+                order: '0',
+                permissions: ''
+            }
+        ];
         this.form = this._fb.group({
             'label': new FormControl({
                 value: '', disabled: false
@@ -61,6 +89,32 @@ export class SourceTypeFormComponent implements OnInit {
 
         this.loading = false;
     }
+
+    // properties
+    addNewProperty() {
+        this.properties.push(
+            {
+                label: '',
+                type: '',
+                cardinality: '',
+                order: '0',
+                permissions: ''
+            }
+        );
+
+        console.log(this.properties);
+    }
+
+    deleteProperty(index: number) {
+        this.properties.splice(index, 1);
+    }
+
+    drop(event: CdkDragDrop<string[]>) {
+        moveItemInArray(this.properties, event.previousIndex, event.currentIndex);
+    }
+
+
+    // submit, reset form
 
     submitData() {
         this.loading = true;
