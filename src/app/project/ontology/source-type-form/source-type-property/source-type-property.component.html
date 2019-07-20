@@ -1,12 +1,51 @@
-<mat-form-field class="small-field">
-    <input matInput placeholder="Property label *" [formControl]="form.controls['label']">
-</mat-form-field>
-<mat-form-field class="ultra-small-field">
-    <input matInput placeholder="Property type" [formControl]="form.controls['label']">
-</mat-form-field>
-<mat-form-field class="ultra-small-field">
-    <input matInput placeholder="Cardinality" [formControl]="form.controls['label']">
-</mat-form-field>
-<mat-form-field class="small-field">
-    <input matInput placeholder="Property permissions" [formControl]="form.controls['label']">
-</mat-form-field>
+<form *ngIf="!loading" [formGroup]="propertyForm" class="form-content project-data">
+    <!-- Property label -->
+    <mat-form-field class="small-field">
+        <input matInput placeholder="Property label *" formControlName="label">
+    </mat-form-field>
+
+    <!-- Property value type and gui element  -->
+    <mat-form-field class="small-field">
+        <mat-label>Property type</mat-label>
+
+        <mat-select formControlName="type">
+            <mat-select-trigger>
+                {{propertyForm.controls['type'].value}}
+            </mat-select-trigger>
+            <mat-optgroup *ngFor="let type of valueTypes" [label]="type.label">
+                <mat-option *ngFor="let ele of type.elements" [value]="type.label + ': ' + ele.label">
+                    <span *ngIf="ele.label === 'Integer' || ele.label === 'Floating'; else defaultIcons">
+                        <mat-icon [svgIcon]="ele.icon"></mat-icon>
+                    </span>
+                    <ng-template #defaultIcons>
+                        <mat-icon>{{ele.icon}}</mat-icon>
+                    </ng-template>
+                    {{ele.label}}
+                </mat-option>
+            </mat-optgroup>
+        </mat-select>
+
+    </mat-form-field>
+
+    <!-- TODO: additional mat-form-field for settings depending on the type selection -->
+
+    <br>
+    <!-- new line for cardinality, splited into two elements; and permissions -->
+
+    <!-- Cardinality -->
+    <div class="small-field">
+        <mat-slide-toggle formControlName="multiple">
+            Multiple values?
+        </mat-slide-toggle>
+    </div>
+
+    <div class="small-field">
+        <mat-slide-toggle formControlName="required">
+            Required field?
+        </mat-slide-toggle>
+    </div>
+
+    <!-- Permissions -->
+    <mat-form-field class="small-field">
+        <input matInput placeholder="Property permissions" formControlName="permission">
+    </mat-form-field>

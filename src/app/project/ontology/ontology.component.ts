@@ -6,6 +6,7 @@ import { Session } from '@knora/authentication';
 import { Project, ProjectsService, ApiServiceError, OntologyService } from '@knora/core';
 import { ResourceTypeComponent } from './resource-type/resource-type.component';
 import { CacheService } from 'src/app/main/cache/cache.service';
+import { AddSourceTypeComponent } from './add-source-type/add-source-type.component';
 
 @Directive({
     selector: '[add-host]'
@@ -43,6 +44,8 @@ export class OntologyComponent implements OnInit {
     @ViewChild('ontologyEditor', { read: ViewContainerRef }) ontologyEditor: ViewContainerRef;
 
     @ViewChild(AddToDirective) addToHost: AddToDirective;
+
+    @ViewChild('addSourceTypeComponent') addSourceType: AddSourceTypeComponent;
 
     constructor (private _cache: CacheService,
         private _projectsService: ProjectsService,
@@ -139,6 +142,10 @@ export class OntologyComponent implements OnInit {
         this.loading = true;
 
         // do something
+
+        if (this.addSourceType) {
+            this.addSourceType.buildForm();
+        }
 
         this.loading = false;
 

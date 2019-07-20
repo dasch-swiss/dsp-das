@@ -1,23 +1,21 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { SourceTypePropertyComponent } from './source-type-property/source-type-property.component';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ChangeDetectorRef, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators, Form } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { SourceTypeFormService } from './source-type-form.service';
 
 @Component({
     selector: 'app-source-type-form',
     templateUrl: './source-type-form.component.html',
     styleUrls: ['./source-type-form.component.scss']
 })
-export class SourceTypeFormComponent implements OnInit {
+export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     loading: boolean = true;
 
     errorMessage: any;
 
-    sourceType: any;
-
-    properties: any[];
-
+    // sourceType: any;
 
     /**
      * default, base source type iri
@@ -32,7 +30,7 @@ export class SourceTypeFormComponent implements OnInit {
     /**
      * reference to the component controlling the property selection
      */
-    @ViewChildren('property') propertyComponents: QueryList<SourceTypePropertyComponent>;
+    // @ViewChildren('property') propertyComponents: QueryList<SourceTypePropertyComponent>;
 
     /**
      * success of sending data
@@ -48,9 +46,18 @@ export class SourceTypeFormComponent implements OnInit {
     };
 
     /**
-     * form group, errors and validation messages
+     * form group, form array (for properties) errors and validation messages
      */
-    form: FormGroup;
+    sourceTypeForm: FormGroup;
+
+    sourceTypeFormSub: Subscription;
+
+    properties: FormArray;
+
+    loadingNewProp: boolean = false;
+
+    // form validation status
+    formValid: boolean = false;
 
     formErrors = {
         'label': ''
@@ -62,62 +69,92 @@ export class SourceTypeFormComponent implements OnInit {
         },
     };
 
-    constructor (private _fb: FormBuilder) { }
+    constructor (
+        private _cdr: ChangeDetectorRef,
+        private _fb: FormBuilder,
+        private _sourceTypeFormService: SourceTypeFormService
+    ) { }
 
     ngOnInit() {
-        this.buildForm();
+
+        this._sourceTypeFormService.resetProperties();
+
+        this.sourceTypeFormSub = this._sourceTypeFormService.sourceTypeForm$
+            .subscribe(sourceType => {
+                this.sourceTypeForm = sourceType;
+
+                // this.properties = new FormArray([]);
+                this.properties = this.sourceTypeForm.get('properties') as FormArray;
+            });
+        // load one first property line
+        this.addProperty();
+
+        this.sourceTypeForm.statusChanges.subscribe((data) => {
+
+            this.formValid = (this.sourceTypeForm.valid && this.properties.valid);
+        });
+
+        this.loading = false;
+
+    }
+
+    ngOnDestroy() {
+        this.sourceTypeFormSub.unsubscribe();
+    }
+
+    ngAfterViewChecked() {
+        this._cdr.detectChanges();
     }
 
     buildForm() {
 
-        this.properties = [
-            {
-                label: '',
-                type: '',
-                cardinality: '',
-                order: '0',
-                permissions: ''
-            }
-        ];
-        this.form = this._fb.group({
+        this._sourceTypeFormService.resetProperties();
+
+        this.sourceTypeForm = this._fb.group({
             'label': new FormControl({
                 value: '', disabled: false
             }, [
                     Validators.required
-                ])
+                ]
+            ),
+            'permission': new FormControl({
+                value: '', disabled: false
+            }, [
+                    Validators.required
+                ]
+            )
+
         });
 
         this.loading = false;
     }
 
-    // properties
-    addNewProperty() {
-        this.properties.push(
-            {
-                label: '',
-                type: '',
-                cardinality: '',
-                order: '0',
-                permissions: ''
-            }
-        );
-
-        console.log(this.properties);
+    addProperty() {
+        this._sourceTypeFormService.addProperty();
     }
 
-    deleteProperty(index: number) {
-        this.properties.splice(index, 1);
+
+    removeProperty(index: number) {
+        this._sourceTypeFormService.removeProperty(index);
+    }
+
+    handlePropertyData(data: any) {
+        console.log(data);
     }
 
     drop(event: CdkDragDrop<string[]>) {
-        moveItemInArray(this.properties, event.previousIndex, event.currentIndex);
+        // moveItemInArray(this.properties, event.previousIndex, event.currentIndex);
     }
-
 
     // submit, reset form
 
     submitData() {
         this.loading = true;
+        // TODO: submit data
+        console.log('form value:', this.sourceTypeForm.value);
+
+        // close the dialog box
+        this.closeMessage();
     }
 
     /**
@@ -135,6 +172,8 @@ export class SourceTypeFormComponent implements OnInit {
     }
 
     closeMessage() {
+        this.sourceTypeForm.reset();
+        this.sourceTypeFormSub.unsubscribe();
         this.closeDialog.emit();
     }
 }

@@ -1,9 +1,13 @@
-.mat-form-field {
-  margin: 0 2px;
+:host {
+  margin: 12px 0 0 20px;
+
+  form {
+    margin: 0;
+    width: 100%;
+  }
 }
 
-.cdk-drag-preview {
-  .mat-form-field {
-    display: none !important;
-  }
+.small-field {
+  margin: 0 2px;
+  display: inline-flex;
 }

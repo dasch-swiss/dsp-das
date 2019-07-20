@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { AutocompleteItem, ProjectsService, KnoraConstants } from '@knora/core';
 import { Observable } from 'rxjs';
@@ -132,7 +132,9 @@ export class AddSourceTypeComponent implements OnInit {
         this.selectSourceTypeForm = this._formBuilder.group({
             'type': new FormControl({
                 value: '', disabled: false
-            }, []),
+            }, [
+                    Validators.required
+                ]),
             'permission': new FormControl({
                 value: 0, disabled: false
             })
