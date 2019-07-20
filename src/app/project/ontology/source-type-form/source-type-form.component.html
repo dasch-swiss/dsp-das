@@ -8,8 +8,8 @@
     <!-- content -->
     <form *ngIf="!loading" [formGroup]="sourceTypeForm" class="form-content project-data" (ngSubmit)="submitData()">
 
-        <!-- long name -->
-        <mat-form-field class="large-field">
+        <!-- label -->
+        <mat-form-field class="medium-field">
             <input matInput placeholder="Label *" formControlName="label">
             <mat-hint *ngIf="formErrors.label">
                 {{ formErrors.label }}
@@ -17,16 +17,22 @@
         </mat-form-field>
 
         <!-- TODO: add permissions of source type -->
-        <!--
-        <mat-form-field class="large-field">
+        <mat-form-field class="medium-field">
             <mat-label>Who is able to do what with this source type?</mat-label>
-            <mat-select [formControl]="sourceTypeForm.controls['permission']">
+            <mat-select formControlName="permission">
                 <mat-option [value]="1">All</mat-option>
                 <mat-option [value]="2">Project</mat-option>
                 <mat-option [value]="3">User</mat-option>
             </mat-select>
         </mat-form-field>
- -->
+
+        <br>
+        <!-- description -->
+        <mat-form-field class="medium-field">
+            <textarea matInput placeholder="Description" formControlName="description"></textarea>
+        </mat-form-field>
+
+
         <mat-divider></mat-divider>
 
         <h3 class="mat-body subtitle">Define the metadata for this source type</h3>
@@ -35,8 +41,7 @@
         <!-- one line, with "add" icon to add additional properties -->
         <div cdkDropList class="properties-list" (cdkDropListDropped)="drop($event)">
             <div cdkDrag class="property-line"
-                 *ngFor="let prop of properties?.controls; let last = last; let i = index;" [cdkDragDisabled]="last"
-                 [class.last]="last">
+                 *ngFor="let prop of properties?.controls; let last = last; let i = index;">
 
                 <div class="drag-n-drop-placeholder" *cdkDragPlaceholder></div>
 
@@ -59,7 +64,6 @@
             </div>
 
         </div>
-
 
         <mat-divider></mat-divider>
 

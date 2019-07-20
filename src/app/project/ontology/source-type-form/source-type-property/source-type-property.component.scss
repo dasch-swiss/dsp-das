@@ -7,7 +7,16 @@
   }
 }
 
+.large-field,
+.medium-field,
 .small-field {
   margin: 0 2px;
   display: inline-flex;
+}
+
+.index {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: small;
+  margin-left: -12px;
+  margin-right: 6px;
 }

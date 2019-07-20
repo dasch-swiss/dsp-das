@@ -12,7 +12,7 @@ import { SourceTypeForm } from './_models/source-type-form.model';
 export class SourceTypeFormService {
 
     private sourceTypeForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(this._fb.group(
-        new SourceTypeForm(new SourceType('', ''))
+        new SourceTypeForm(new SourceType('', '', ''))
     ));
 
     sourceTypeForm$: Observable<FormGroup> = this.sourceTypeForm.asObservable();
@@ -23,7 +23,7 @@ export class SourceTypeFormService {
     resetProperties() {
 
         const currentSourceType = this._fb.group(
-            new SourceTypeForm(new SourceType('', ''))
+            new SourceTypeForm(new SourceType('', '', ''))
         );
 
         this.sourceTypeForm.next(currentSourceType);
@@ -35,7 +35,7 @@ export class SourceTypeFormService {
 
         currentProperties.push(
             this._fb.group(
-                new PropertyForm(new Property('', '', false, false, ''))
+                new PropertyForm(new Property('', {}, false, false, ''))
             )
         );
 

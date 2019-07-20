@@ -92,37 +92,37 @@ export class AddSourceTypeComponent implements OnInit {
         this.sourceTypes = [
             {
                 iri: KnoraConstants.StillImageFileValue,
-                name: '',
+                name: 'StillImageRepresentation',
                 label: 'Still Image'
             },
             {
                 iri: KnoraConstants.MovingImageFileValue,
-                name: '',
+                name: 'MovingImageRepresentation',
                 label: 'Moving Image'
             },
             {
                 iri: KnoraConstants.AudioFileValue,
-                name: '',
+                name: 'AudioRepresentation',
                 label: 'Audio'
             },
             {
                 iri: KnoraConstants.DDDFileValue,
-                name: '',
+                name: 'DDDRepresentation',
                 label: 'RTI Image'
             },
             {
                 iri: KnoraConstants.TextFileValue,
-                name: '',
+                name: 'TextRepresentation',
                 label: 'Text'
             },
             {
                 iri: KnoraConstants.Resource,
-                name: '',
+                name: 'Resource',
                 label: 'Object without file representation (metadata only)'
             },
             {
                 iri: KnoraConstants.DocumentFileValue,
-                name: '',
+                name: 'DocumentRepresentation',
                 label: 'Document (Word, PDF, etc.)'
             }
         ];
@@ -213,6 +213,7 @@ export class AddSourceTypeComponent implements OnInit {
     openDialog(mode: string): void {
         const dialogConfig: MatDialogConfig = {
             width: '720px',
+            maxHeight: '90vh',
             position: {
                 top: '112px'
             },

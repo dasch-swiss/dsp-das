@@ -3,6 +3,7 @@ import { SourceType } from './source-type.model';
 
 export class SourceTypeForm {
     label = new FormControl();
+    description = new FormControl();
     permission = new FormControl();
     properties = new FormArray([]);
 
@@ -10,6 +11,11 @@ export class SourceTypeForm {
 
         this.label.setValue(sourceType.label);
         this.label.setValidators([Validators.required]);
+
+        this.description.setValue(sourceType.description);
+
+        this.permission.setValue(sourceType.permission);
+
         /*
                 this.label.setValue(sourceType.label);
                 this.label.setValidators([Validators.required]); */

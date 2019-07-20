@@ -1,8 +1,11 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ChangeDetectorRef, AfterViewInit, AfterViewChecked } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators, Form } from '@angular/forms';
+import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { SourceTypeFormService } from './source-type-form.service';
+
+// nested form components; solution from here:
+// https://medium.com/@joshblf/dynamic-nested-reactive-forms-in-angular-654c1d4a769a
 
 @Component({
     selector: 'app-source-type-form',
@@ -86,12 +89,13 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
                 // this.properties = new FormArray([]);
                 this.properties = this.sourceTypeForm.get('properties') as FormArray;
             });
+
         // load one first property line
         this.addProperty();
 
         this.sourceTypeForm.statusChanges.subscribe((data) => {
 
-            this.formValid = (this.sourceTypeForm.valid && this.properties.valid);
+            this.formValid = this.sourceTypeForm.valid && this.properties.valid;
         });
 
         this.loading = false;
@@ -108,31 +112,29 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
     buildForm() {
 
+        this.loading = true;
+        this.formValid = false;
+
         this._sourceTypeFormService.resetProperties();
 
-        this.sourceTypeForm = this._fb.group({
-            'label': new FormControl({
-                value: '', disabled: false
-            }, [
-                    Validators.required
-                ]
-            ),
-            'permission': new FormControl({
-                value: '', disabled: false
-            }, [
-                    Validators.required
-                ]
-            )
+        this.sourceTypeFormSub = this._sourceTypeFormService.sourceTypeForm$
+            .subscribe(sourceType => {
+                this.sourceTypeForm = sourceType;
 
-        });
+                // this.properties = new FormArray([]);
+                this.properties = this.sourceTypeForm.get('properties') as FormArray;
+            });
+
+        // load one first property line
+        this.addProperty();
 
         this.loading = false;
     }
 
     addProperty() {
         this._sourceTypeFormService.addProperty();
+        this.formValid = !this.properties.valid;
     }
-
 
     removeProperty(index: number) {
         this._sourceTypeFormService.removeProperty(index);
@@ -143,7 +145,12 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     }
 
     drop(event: CdkDragDrop<string[]>) {
-        // moveItemInArray(this.properties, event.previousIndex, event.currentIndex);
+
+        // set sort order for child component
+        moveItemInArray(this.properties.controls, event.previousIndex, event.currentIndex);
+
+        // set sort order in form value
+        moveItemInArray(this.sourceTypeForm.value.properties, event.previousIndex, event.currentIndex);
     }
 
     // submit, reset form
@@ -151,24 +158,55 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     submitData() {
         this.loading = true;
         // TODO: submit data
-        console.log('form value:', this.sourceTypeForm.value);
+        // build JSON similar tho Knora-PY JSON from Lukas
+        // and submit data
+        console.log('sourceTypeForm:', this.sourceTypeForm.value);
+
+
+        const resourceProperties: any = [];
+        let i = 0;
+        for (const prop of this.sourceTypeForm.value.properties) {
+            const newProp: any = {
+                value: prop.type.value,
+                gui_element: prop.type.gui_ele,
+                gui_order: i,
+                cardinality: this.setCardinality(prop.multiple, prop.requirerd),
+                gui_attr: 'TODO: implement gui attributes'
+            };
+
+            resourceProperties.push(newProp);
+
+            i++;
+        }
+
+        console.log(resourceProperties);
 
         // close the dialog box
         this.closeMessage();
     }
 
+    setCardinality(multiple: boolean, required: boolean): string {
+        // result should be:
+        // "1", "0-1", "1-n", "0-n"
+        if (multiple && required) {
+            return '1-n';
+        } else if (multiple && !required) {
+            return '0-n';
+        } else if (!multiple && required) {
+            return '1';
+        } else {
+            return '0-1';
+        }
+    }
+
+
     /**
      * Reset the form
      */
     resetForm(ev: Event, sourceType?: any) {
-        ev.preventDefault();
-
-        // project = (project ? project : new Project());
 
         this.buildForm();
 
-        // TODO: fix "set value" for keywords field
-        //        this.form.controls['keywords'].setValue(this.keywords);
     }
 
     closeMessage() {

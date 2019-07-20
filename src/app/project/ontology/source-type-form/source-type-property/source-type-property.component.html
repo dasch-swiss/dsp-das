@@ -1,4 +1,5 @@
 <form *ngIf="!loading" [formGroup]="propertyForm" class="form-content project-data">
+    <span class="index">{{index + 1}}) &nbsp;</span>
     <!-- Property label -->
     <mat-form-field class="small-field">
         <input matInput placeholder="Property label *" formControlName="label">
@@ -6,15 +7,17 @@
 
     <!-- Property value type and gui element  -->
     <mat-form-field class="small-field">
-        <mat-label>Property type</mat-label>
+        <mat-label>Property type *</mat-label>
 
         <mat-select formControlName="type">
             <mat-select-trigger>
-                {{propertyForm.controls['type'].value}}
+                {{propertyForm.controls['type'].value.group}}:&nbsp;
+                {{propertyForm.controls['type'].value.label}}
             </mat-select-trigger>
             <mat-optgroup *ngFor="let type of valueTypes" [label]="type.label">
-                <mat-option *ngFor="let ele of type.elements" [value]="type.label + ': ' + ele.label">
-                    <span *ngIf="ele.label === 'Integer' || ele.label === 'Floating'; else defaultIcons">
+                <mat-option *ngFor="let ele of type.elements" [value]="ele"
+                            (onSelectionChange)="updateAttributeField(ele)">
+                    <span *ngIf="ele.label === 'Integer' || ele.label === 'Decimal'; else defaultIcons">
                         <mat-icon [svgIcon]="ele.icon"></mat-icon>
                     </span>
                     <ng-template #defaultIcons>
@@ -28,6 +31,7 @@
     </mat-form-field>
 
     <!-- TODO: additional mat-form-field for settings depending on the type selection -->
+
 
     <br>
     <!-- new line for cardinality, splited into two elements; and permissions -->

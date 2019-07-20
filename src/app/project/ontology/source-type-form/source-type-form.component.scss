@@ -8,6 +8,12 @@
     width: 100%;
   }
 
+  .large-field,
+  .medium-field,
+  .small-field {
+    margin: 0 2px;
+  }
+
   .form-action {
     margin-top: 48px;
   }
@@ -25,7 +31,8 @@
     @include box-shadow();
   }
 
-  &.last {
+  &:last-child {
+    border: none;
     margin-left: 8px;
   }
 
@@ -88,10 +95,6 @@ button {
 
 .cdk-drag-animating {
   //   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-.property-line:last-child {
-  border: none;
 }
 
 .properties-list.cdk-drop-list-dragging .property-line:not(.cdk-drag-placeholder) {

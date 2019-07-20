@@ -1,8 +1,7 @@
-import { Component, Inject, Input, OnDestroy, OnInit, Output, EventEmitter, AfterViewChecked, AfterViewInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material';
-import { Property } from '@knora/core';
+import { DomSanitizer } from '@angular/platform-browser';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 const resolvedPromise = Promise.resolve(null);
@@ -26,13 +25,6 @@ export class SourceTypePropertyComponent implements OnInit {
     required = new FormControl();
     permission = new FormControl();
 
-    @Input() properties: any[];
-
-    // parent FormGroup
-    @Input() formGroup: FormGroup;
-
-    @Output() submitDataToParent: EventEmitter<any> = new EventEmitter<any>();
-
     // TODO: move it into a main json file and optimize it: set iris of main class
     valueTypes: any[] = [
         {
@@ -41,12 +33,23 @@ export class SourceTypePropertyComponent implements OnInit {
                 {
                     icon: 'short_text',
                     label: 'Short',
-                    id: ''
+                    value: 'TextValue',
+                    gui_ele: 'Input',
+                    group: 'Text'   // this information is redundant, but I can't solve it with the group label above
                 },
                 {
                     icon: 'subject',
                     label: 'Paragraph',
-                    id: ''
+                    value: 'TextValue',
+                    gui_ele: 'Textarea',
+                    group: 'Text'
+                },
+                {
+                    icon: 'line_style',
+                    label: 'Editor',
+                    value: 'TextValue/richtext',
+                    gui_ele: 'Richtext',
+                    group: 'Text'
                 }
             ]
         },
@@ -56,22 +59,30 @@ export class SourceTypePropertyComponent implements OnInit {
                 {
                     icon: 'radio_button_checked',
                     label: 'Multiple choice',
-                    id: ''
+                    value: 'ListValue',
+                    gui_ele: 'Radio',
+                    group: 'List'
                 },
                 {
                     icon: 'check_box',
                     label: 'Checkboxes',
-                    id: ''
+                    value: 'ListValue',
+                    gui_ele: 'Checkbox',
+                    group: 'List'
                 },
                 {
                     icon: 'arrow_drop_down_circle',
                     label: 'Dropdown',
-                    id: ''
+                    value: 'ListValue',
+                    gui_ele: 'Dropdown',
+                    group: 'List'
                 },
                 {
                     icon: 'toggle_off',
                     label: 'On / Off',
-                    id: ''
+                    value: 'BooleanValue',
+                    gui_ele: 'Toggle',
+                    group: 'List'
                 }
             ]
         },
@@ -81,12 +92,30 @@ export class SourceTypePropertyComponent implements OnInit {
                 {
                     icon: 'calendar_today',
                     label: 'Date',
-                    id: ''
+                    value: 'DateValue',
+                    gui_ele: 'Datepicker',
+                    group: 'Date / Time'
+                },
+                {
+                    icon: 'date_range',
+                    label: 'Period',
+                    value: 'DateValue',
+                    gui_ele: 'Datepicker',
+                    group: 'Date / Time'
                 },
                 {
                     icon: 'access_time',
                     label: 'Time',
-                    id: ''
+                    value: 'IntervalValue',
+                    gui_ele: 'Time',
+                    group: 'Date / Time'
+                },
+                {
+                    icon: 'timelapse',
+                    label: 'Duration',
+                    value: 'IntervalValue',
+                    gui_ele: 'Number',
+                    group: 'Date / Time'
                 }
             ]
         },
@@ -96,32 +125,16 @@ export class SourceTypePropertyComponent implements OnInit {
                 {
                     icon: 'integer_icon',
                     label: 'Integer',
-                    id: ''
+                    value: 'IntValue',
+                    gui_ele: 'Number',
+                    group: 'Number'
                 },
                 {
-                    icon: 'floating_icon',
-                    label: 'Floating',
-                    id: ''
-                }
-            ]
-        },
-        {
-            label: 'Color',
-            elements: [
-                {
-                    icon: 'color_lens',
-                    label: 'Color',
-                    id: ''
-                }
-            ]
-        },
-        {
-            label: 'Location',
-            elements: [
-                {
-                    icon: 'map',
-                    label: 'Geoname',
-                    id: ''
+                    icon: 'decimal_icon',
+                    label: 'Decimal',
+                    value: 'DecimalValue',
+                    gui_ele: 'Number',
+                    group: 'Number'
                 }
             ]
         },
@@ -129,26 +142,64 @@ export class SourceTypePropertyComponent implements OnInit {
             label: 'Link',
             elements: [
                 {
-                    icon: 'http',
-                    label: 'External URL',
-                    id: ''
+                    icon: 'link',
+                    label: 'Other resource e.g. Person',
+                    value: 'LinkValue',
+                    gui_ele: 'Autocomplete',
+                    group: 'Link'
                 },
                 {
-                    icon: 'link',
-                    label: 'Link to other source',
-                    id: ''
+                    icon: 'compare_arrows',
+                    label: 'External resource',
+                    value: 'ExternalResValue',
+                    gui_ele: 'Input',
+                    group: 'Link'
+                },
+                {
+                    icon: 'http',
+                    label: 'External URL',
+                    value: 'UriValue',
+                    gui_ele: 'Url',
+                    group: 'Link'
+                }
+            ]
+        },
+        {
+            label: 'Location',
+            elements: [
+                {
+                    icon: 'place',
+                    label: 'Place',
+                    value: 'GeonameValue',
+                    gui_ele: 'Geonames',
+                    group: 'Location'
+                }
+            ]
+        },
+        {
+            label: 'Shape',
+            elements: [
+                {
+                    icon: 'color_lens',
+                    label: 'Color',
+                    value: 'ColorValue',
+                    gui_ele: 'Colorpicker',
+                    group: 'Shape'
+                },
+                {
+                    icon: 'format_shapes',
+                    label: 'Geometry',
+                    value: 'GeomValue',
+                    gui_ele: 'Geometry',
+                    group: 'Shape'
                 }
             ]
         }
     ];
 
+
     // index of the given property (unique)
     // index: number;
-
-    // unique name for this property to be used in the parent FormGroup
-    propIndex: string;
-
-    propForm: FormGroup;
 
     constructor (
         @Inject(FormBuilder) private _fb: FormBuilder,
@@ -161,59 +212,38 @@ export class SourceTypePropertyComponent implements OnInit {
             this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/integer-icon.svg')
         );
         this._matIconRegistry.addSvgIcon(
-            'floating_icon',
-            this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/floating-icon.svg')
+            'decimal_icon',
+            this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/decimal-icon.svg')
         );
     }
 
     ngOnInit() {
 
-        // build a form for the property selection
-        /*
-        this.propForm = this._fb.group({
-            'label': new FormControl({
-                value: '', disabled: false
-            }, [
-                    Validators.required
-                ]
-            ),
-            'type': new FormControl({
-                value: '', disabled: false
-            }, [
-                    Validators.required
-                ]
-            ),
-            'multiple': new FormControl({
-                value: '', disabled: false
-            }),
-            'required': new FormControl({
-                value: '', disabled: false
-            }),
-            'permission': new FormControl({
-                value: '', disabled: false
-            }, [
-                    Validators.required
-                ]
-            )
-        });
-        */
+        this.propertyForm.patchValue({ type: this.valueTypes[0].elements[0] });
 
-        // update the selected property
-        /*
-        this.propForm.valueChanges.subscribe((data) => {
-            if (this.propForm.valid) {
-                this.submitDataToParent.emit(data);
-            }
-        });
-        */
+    }
 
-        /*
-                resolvedPromise.then(() => {
-                    this.propIndex = 'prop_' + this.index;
+    updateAttributeField(type: any) {
 
-                    // add form to the parent form group
-                    this.formGroup.addControl(this.propIndex, this.propForm);
-                }); */
+        // depending on the selected property type,
+        // we have to define gui element attributes
+        // e.g. iri of list or connected resource type
+        switch (type.value) {
+            case 'ListValue':
+
+                break;
+
+            case 'LinkValue':
+
+                break;
+
+            default:
+
+
+
+
+        }
+
     }
 
 }

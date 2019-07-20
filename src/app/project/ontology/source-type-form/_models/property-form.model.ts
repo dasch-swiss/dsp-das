@@ -23,6 +23,7 @@ export class PropertyForm {
         this.required.setValue(property.required);
 
         this.permission.setValue(property.permission);
-        this.permission.setValidators([Validators.required]);
+        // TODO: permission is not implemented yet
+        // this.permission.setValidators([Validators.required]);
     }
 }
