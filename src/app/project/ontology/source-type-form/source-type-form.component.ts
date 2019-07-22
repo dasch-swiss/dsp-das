@@ -7,6 +7,7 @@ import { SourceTypeFormService } from './source-type-form.service';
 // nested form components; solution from here:
 // https://medium.com/@joshblf/dynamic-nested-reactive-forms-in-angular-654c1d4a769a
 
+
 @Component({
     selector: 'app-source-type-form',
     templateUrl: './source-type-form.component.html',
@@ -214,4 +215,159 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         this.sourceTypeFormSub.unsubscribe();
         this.closeDialog.emit();
     }
+
+    // TODO: submit data
+    // we have to implement the following jsonLD objects and paths to post data
+
+    /*
+
+    ontology (should already be implemented in knora-ui core module)
+
+    post /v2/ontologies
+
+    ontology = {
+        "knora-api:ontologyName": onto_name,
+        "knora-api:attachedToProject": {
+            "@id": project_iri
+        },
+        "rdfs:label": label,
+        "@context": {
+            "rdfs": 'http://www.w3.org/2000/01/rdf-schema#',
+            "knora-api": 'http://api.knora.org/ontology/knora-api/v2#'
+        }
+    }
+
+    *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
+    *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
+
+    cardinality
+
+    post: /v2/ontologies/cardinalities
+
+    cardinality = {
+        "@id": onto_iri,
+        "@type": "owl:Ontology",
+        "knora-api:lastModificationDate": last_onto_date,
+        "@graph": [{
+            "@id": class_iri,
+            "@type": "owl:Class",
+            "rdfs:subClassOf": {
+                "@type": "owl:Restriction",
+                occurrence[0]: occurrence[1],
+                "owl:onProperty": {
+                    "@id": prop_iri
+                }
+            }
+        }],
+        "@context": {
+            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+            "knora-api": "http://api.knora.org/ontology/knora-api/v2#",
+            "owl": "http://www.w3.org/2002/07/owl#",
+            "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            onto_name: onto_iri + "#"
+        }
+    }
+
+    switcher = {
+        "1": ("owl:cardinality", 1),
+        "0-1": ("owl:maxCardinality", 1),
+        "0-n": ("owl:minCardinality", 0),
+        "1-n": ("owl:minCardinality", 1)
+    }
+
+    *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
+    *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
+
+    property
+
+    post: /v2/ontologies/properties
+
+    property = {
+        "@id": onto_iri,
+        "@type": "owl:Ontology",
+        "knora-api:lastModificationDate": last_onto_date,
+        "@graph": [
+            propdata
+        ],
+        "@context": {
+            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+            "knora-api": "http://api.knora.org/ontology/knora-api/v2#",
+            "salsah-gui": "http://api.knora.org/ontology/salsah-gui/v2#",
+            "owl": "http://www.w3.org/2002/07/owl#",
+            "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            onto_name: onto_iri + "#"
+        }
+    }
+
+    propdata = {
+        "@id": onto_name + ":" + prop_name,
+        "@type": "owl:ObjectProperty",
+        "rdfs:label": labels,
+        "rdfs:comment": comments,
+        "rdfs:subPropertyOf": super_props,
+        "salsah-gui:guiElement": {
+            "@id": gui_element
+        }
+    }
+
+    super_props:
+
+    "hasValue",
+    "hasLinkTo",
+    "hasColor",
+    "hasComment",
+    "hasGeometry",
+    "isPartOf",
+    "isRegionOf",
+    "isAnnotationOf",
+    "seqnum"
+
+    *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
+    *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
+
+    resource class ( = "source type" in the simple user interface)
+
+    post: /v2/ontologies/classes
+
+    res_class = {
+        "@id": onto_iri,
+        "@type": "owl:Ontology",
+        "knora-api:lastModificationDate": last_onto_date,
+        "@graph": [{
+            "@id": onto_name + ":" + class_name,
+            "@type": "owl:Class",
+            "rdfs:label": labels,
+            "rdfs:comment": comments,
+            "rdfs:subClassOf": {
+                "@id": super_class
+            }
+        }],
+        "@context": {
+            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+            "knora-api": "http://api.knora.org/ontology/knora-api/v2#",
+            "owl": "http://www.w3.org/2002/07/owl#",
+            "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            onto_name: onto_iri + "#"
+        }
+    }
+
+    super_class:
+
+    "Resource",
+    "StillImageRepresentation",
+    "TextRepresentation",
+    "AudioRepresentation",
+    "DDDRepresentation",
+    "DocumentRepresentation",
+    "MovingImageRepresentation",
+    "Annotation",
+    "LinkObj",
+    "Region"
+
+
+    */
+
 }

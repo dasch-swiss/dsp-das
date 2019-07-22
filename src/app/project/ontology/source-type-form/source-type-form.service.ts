@@ -1,10 +1,101 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { FormGroup, FormBuilder, FormArray, Form } from '@angular/forms';
-import { Property } from './_models/property.model';
-import { SourceType } from './_models/source-type.model';
-import { PropertyForm } from './_models/property-form.model';
-import { SourceTypeForm } from './_models/source-type-form.model';
+import { FormGroup, FormBuilder, FormArray, Form, FormControl, Validators } from '@angular/forms';
+
+// property data structure
+export class Property {
+
+    label: string;
+    type: any;
+    multiple: boolean;
+    required: boolean;
+    permission: string;
+
+    constructor (
+        label?: string,
+        type?: any,
+        multiple?: boolean,
+        required?: boolean,
+        permission?: string
+    ) {
+        this.label = label;
+        this.type = type;
+        this.multiple = multiple;
+        this.required = required;
+        this.permission = permission;
+    }
+}
+
+
+// property form controls
+export class PropertyForm {
+    label = new FormControl();
+    type = new FormControl();
+    multiple = new FormControl();
+    required = new FormControl();
+    permission = new FormControl();
+
+    constructor (
+        property: Property
+    ) {
+        this.label.setValue(property.label);
+        this.label.setValidators([Validators.required]);
+
+        this.type.setValue(property.type);
+        this.type.setValidators([Validators.required]);
+
+        this.multiple.setValue(property.multiple);
+
+        this.required.setValue(property.required);
+
+        this.permission.setValue(property.permission);
+        // TODO: permission is not implemented yet
+        // this.permission.setValidators([Validators.required]);
+    }
+}
+
+// source type data structure
+export class SourceType {
+    label: string;
+    description: string;
+    permission: string;
+    properties: Property[];
+
+    constructor (label: string, description: string, permission: string, properties?: Property[]) {
+        this.label = label;
+        this.description = description;
+        this.permission = permission;
+        this.properties = properties;
+    }
+}
+
+
+// source type form controls
+export class SourceTypeForm {
+    label = new FormControl();
+    description = new FormControl();
+    permission = new FormControl();
+    properties = new FormArray([]);
+
+    constructor (sourceType: SourceType) {
+
+        this.label.setValue(sourceType.label);
+        this.label.setValidators([Validators.required]);
+
+        this.description.setValue(sourceType.description);
+
+        this.permission.setValue(sourceType.permission);
+
+        /*
+                this.label.setValue(sourceType.label);
+                this.label.setValidators([Validators.required]); */
+
+
+        if (sourceType.properties) {
+            this.properties.setValue([sourceType.properties]);
+        }
+    }
+}
 
 @Injectable({
     providedIn: 'root'

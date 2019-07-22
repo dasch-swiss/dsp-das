@@ -1,6 +1,9 @@
 <div *ngIf="projectAdmin" class="content large middle">
 
-    <!-- add user to the project -->
+    <!-- select ontology or create new ontology first -->
+
+
+    <!-- add source type to the ontology -->
     <app-add-source-type *ngIf="project?.status && sysAdmin" [projectcode]="projectcode" (refreshParent)="refresh()"
                          #addSourceTypeComponent></app-add-source-type>
 
