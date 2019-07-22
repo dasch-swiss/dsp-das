@@ -3,16 +3,23 @@ import { ApplicationRef, Component, ComponentFactoryResolver, Directive, Injecto
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Session } from '@knora/authentication';
-import { Project, ProjectsService, ApiServiceError, OntologyService } from '@knora/core';
+import { Project, ProjectsService, ApiServiceError, OntologyService, ApiServiceResult, OntologyInfoShort } from '@knora/core';
 import { ResourceTypeComponent } from './resource-type/resource-type.component';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { AddSourceTypeComponent } from './add-source-type/add-source-type.component';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Directive({
     selector: '[add-host]'
 })
 export class AddToDirective {
     constructor (public viewContainerRef: ViewContainerRef) { }
+}
+
+export interface OntologyInfo {
+    id: string;
+    label: string;
+    project: string;
 }
 
 @Component({
@@ -37,7 +44,10 @@ export class OntologyComponent implements OnInit {
     project: Project;
 
     // ontologies
-    ontologies: any[];
+    ontologies: OntologyInfo[] = [];
+
+    // selected ontology
+    currentOntology: string;
 
     sourcetypes = ['Text', 'Image', 'Video'];
 
@@ -52,13 +62,16 @@ export class OntologyComponent implements OnInit {
         private _ontologyService: OntologyService,
         private _titleService: Title,
         private _route: ActivatedRoute,
-        private _componentFactoryResolver: ComponentFactoryResolver,
-        private _appRef: ApplicationRef,
-        private _injector: Injector) {
+        private _componentFactoryResolver: ComponentFactoryResolver) {
 
         // get the shortcode of the current project
         this._route.parent.paramMap.subscribe((params: Params) => {
             this.projectcode = params.get('shortcode');
+        });
+
+        // get ontology iri from route
+        this._route.params.subscribe((params: Params) => {
+            this.currentOntology = params.id;
         });
 
         // set the page title
@@ -97,15 +110,29 @@ export class OntologyComponent implements OnInit {
 
                 // get the ontologies for this project
                 this._ontologyService.getProjectOntologies(encodeURI(result.id)).subscribe(
-                    (ontologies: any) => {
-                        console.log(ontologies);
+                    (ontologies: ApiServiceResult) => {
+
+                        if (ontologies.body['@graph'] && ontologies.body['@graph'].length > 0) {
+
+                            for (const ontology of ontologies.body['@graph']) {
+                                const info: OntologyInfo = {
+                                    id: ontology['@id'],
+                                    label: ontology['rdfs:label'],
+                                    project: ontology['knora-api:attachedToProject']['@id']
+                                };
+
+                                this.ontologies.push(info);
+                            }
+                        }
                     },
                     (error: ApiServiceError) => {
                         console.error(error);
                     }
                 );
 
+
                 this.loading = false;
+
             },
             (error: ApiServiceError) => {
                 console.error(error);
@@ -162,5 +189,7 @@ export class OntologyComponent implements OnInit {
                 }
                 */
     }
+
+
 
 }

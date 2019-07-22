@@ -134,10 +134,7 @@ export class AddSourceTypeComponent implements OnInit {
                 value: '', disabled: false
             }, [
                     Validators.required
-                ]),
-            'permission': new FormControl({
-                value: 0, disabled: false
-            })
+                ])
         });
 
         this.filteredSourceTypes = this.selectSourceTypeForm.controls['type'].valueChanges

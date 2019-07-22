@@ -28,7 +28,7 @@ import { BoardComponent } from './project/board/board.component';
 import { AddUserComponent } from './project/collaboration/add-user/add-user.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
 import { SelectGroupComponent } from './project/collaboration/select-group/select-group.component';
-import { OntologyListComponent } from './project/ontology-list/ontology-list.component';
+import { OntologyListComponent } from './project/ontology/ontology-list/ontology-list.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
 import { AddToDirective } from './project/ontology/ontology.component';
 import { PropertyItemComponent } from './project/ontology/property-item/property-item.component';

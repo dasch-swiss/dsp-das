@@ -1,11 +1,12 @@
 <div *ngIf="projectAdmin" class="content large middle">
 
     <!-- select ontology or create new ontology first -->
-
+    <app-ontology-list *ngIf="project?.status && sysAdmin && !currentOntology" [ontologies]="ontologies">
+    </app-ontology-list>
 
     <!-- add source type to the ontology -->
-    <app-add-source-type *ngIf="project?.status && sysAdmin" [projectcode]="projectcode" (refreshParent)="refresh()"
-                         #addSourceTypeComponent></app-add-source-type>
+    <app-add-source-type *ngIf="project?.status && sysAdmin && currentOntology" [projectcode]="projectcode"
+                         (refreshParent)="refresh()" #addSourceTypeComponent></app-add-source-type>
 
     <!-- <mat-divider *ngIf="project?.status" ></mat-divider> -->
 
