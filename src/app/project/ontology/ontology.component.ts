@@ -1,13 +1,12 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { ApplicationRef, Component, ComponentFactoryResolver, Directive, Injector, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentFactoryResolver, Directive, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Session } from '@knora/authentication';
-import { Project, ProjectsService, ApiServiceError, OntologyService, ApiServiceResult, OntologyInfoShort } from '@knora/core';
-import { ResourceTypeComponent } from './resource-type/resource-type.component';
+import { ApiServiceError, ApiServiceResult, OntologyService, Project, ProjectsService } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { AddSourceTypeComponent } from './add-source-type/add-source-type.component';
-import { forEach } from '@angular/router/src/utils/collection';
+import { ResourceTypeComponent } from './resource-type/resource-type.component';
 
 @Directive({
     selector: '[add-host]'
@@ -118,6 +117,8 @@ export class OntologyComponent implements OnInit {
                 this._ontologyService.getProjectOntologies(encodeURI(result.id)).subscribe(
                     (ontologies: ApiServiceResult) => {
 
+                        console.log(ontologies);
+
                         if (ontologies.body['@graph'] && ontologies.body['@graph'].length > 0) {
 
                             for (const ontology of ontologies.body['@graph']) {
@@ -129,6 +130,14 @@ export class OntologyComponent implements OnInit {
 
                                 this.ontologies.push(info);
                             }
+                        } else if (ontologies.body['@id'] && ontologies.body['rdfs:label']) {
+                            this.ontologies = [
+                                {
+                                    id: ontologies.body['@id'],
+                                    label: ontologies.body['rdfs:label'],
+                                    project: ontologies.body['knora-api:attachedToProject']['@id']
+                                }
+                            ];
                         }
                     },
                     (error: ApiServiceError) => {
@@ -177,7 +186,7 @@ export class OntologyComponent implements OnInit {
     refresh(): void {
         // referesh the component
         this.loading = true;
-        console.log('refresh');
+
         // do something
 
         if (this.addSourceType) {
