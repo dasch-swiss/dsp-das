@@ -1,62 +1,65 @@
-@import '~@angular/material/theming';
-@import '../../../assets/style/config';
+@import "~@angular/material/theming";
+@import "../../../assets/style/config";
+
+$width: 200px;
 
 .ontology-editor {
-    height: calc(100vh - #{$header-height} - #{$tab-bar-margin} - 49px);
+  border: 1px dotted $primary_200;
+  height: calc(100vh - #{$header-height} - #{$tab-bar-margin} - 300px);
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($width, 1fr));
 }
 
-.resource-type {
-    width: 240px;
-    min-height: 240px;
-    height: auto;
-    position: relative;
-    top: 48px;
-    left: 48px;
-    @include mat-elevation-transition;
-    @include mat-elevation(2);
+.resource-class {
+  width: 180px;
+  min-height: 240px;
+  height: auto;
+  position: relative;
+  top: 48px;
+  left: 48px;
+  @include mat-elevation-transition;
+  @include mat-elevation(2);
+  padding: 12px;
 
-    &:active {
-      @include mat-elevation(8);
-    }
+  background-color: #fff;
+
+  &:active {
+    @include mat-elevation(8);
+  }
 }
-
-
-
 
 .ontology-container {
-    // display: flex;
-    // flex-direction: row;
-    width: 100%;
+  // display: flex;
+  // flex-direction: row;
+  width: 100%;
 
-    .ontology-editor {
-        overflow: hidden;
+  .ontology-editor {
+    overflow: hidden;
+  }
+
+  .ontology-default-elements {
+    width: 220px;
+    // TODO: fix height
+    height: 100vh;
+    position: fixed;
+    right: 0;
+    top: 0;
+    padding: 72px 6px 6px;
+    background: rgb(255, 255, 255);
+
+    .list-item {
+      border: 1px solid black;
+      padding: 6px;
+      margin: 6px;
     }
 
-    .ontology-default-elements {
-        width: 220px;
-        // TODO: fix height
-        height: 100vh;
-        position: fixed;
-        right: 0;
-        top: 0;
-        padding: 72px 6px 6px;
-        background: rgb(255, 255, 255);
+    ul {
+      padding-inline-start: 0;
 
-        .list-item {
-            border: 1px solid black;
-            padding: 6px;
-            margin: 6px;
-        }
-
-        ul {
-            padding-inline-start: 0;
-
-            li {
-                list-style-type: none;
-
-            }
-        }
-
+      li {
+        list-style-type: none;
+      }
     }
-
+  }
 }

@@ -1,7 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CacheService } from 'src/app/main/cache/cache.service';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { OntologyInfo } from '../ontology.component';
-import { Router, ActivatedRoute } from '@angular/router';
+import { OntologyService } from '@knora/core';
 
 
 @Component({
@@ -14,6 +19,12 @@ export class OntologyListComponent implements OnInit {
     loading: boolean;
 
     @Input() ontologies: OntologyInfo[];
+
+    @Input() selected?: string;
+
+    @Input() projectcode: string;
+
+    @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
 
     ontologyForm: FormGroup;
 
@@ -29,20 +40,20 @@ export class OntologyListComponent implements OnInit {
     };
 
     constructor (
-        private _route: ActivatedRoute,
+        private _cache: CacheService,
+        private _ontologyService: OntologyService,
+        private _dialog: MatDialog,
         private _router: Router,
-        private _formBuilder: FormBuilder) {
+        private _fb: FormBuilder) {
     }
 
     ngOnInit() {
 
         this.loading = true;
 
-        console.log(this.ontologies);
-
-        this.ontologyForm = this._formBuilder.group({
+        this.ontologyForm = this._fb.group({
             ontology: new FormControl({
-                value: '', disabled: false
+                value: this.selected, disabled: false
             }, [
                     Validators.required
                 ])
@@ -56,7 +67,6 @@ export class OntologyListComponent implements OnInit {
 
     onValueChanged(data?: any) {
 
-
         if (!this.ontologyForm) {
             return;
         }
@@ -64,18 +74,33 @@ export class OntologyListComponent implements OnInit {
         // go to page with this id
         // this._router.navigateByUrl(this._router.url.replace(id, data.ontology));
 
-        if (data.ontology === 'new') {
-            // TODO: open dialog box and set name for new ontology
-            // go to route with this ontology name
+        if (data.ontology !== 'createOntology') {
+            this.refreshParent.emit(data.ontology);
+            this.openOntology(data.ontology);
         }
-        const id = encodeURIComponent(data.ontology);
-
-
 
     }
 
     openOntology(id: string) {
-        this._router.navigate([id], { relativeTo: this._route });
+        const goto = 'project/' + this.projectcode + '/ontologies/' + encodeURIComponent(id);
+        this._router.navigate([goto]);
+    }
+
+    // when select "create new ontology", it opens ontology form in dialog box
+    openDialog(mode: string): void {
+        const dialogConfig: MatDialogConfig = {
+            width: '560px',
+            position: {
+                top: '112px'
+            },
+            data: { project: this.projectcode, mode: mode }
+        };
+
+        const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
+
+        dialogRef.afterClosed().subscribe(result => {
+
+        });
     }
 
 }

@@ -17,7 +17,7 @@ export class SelectGroupComponent implements OnInit {
     // send data only, when the selection has changed
     sendData: boolean = false;
 
-    // project iri
+    // project short code
     @Input() projectcode: string;
 
     // project iri
@@ -37,10 +37,10 @@ export class SelectGroupComponent implements OnInit {
 
     groupCtrl = new FormControl();
 
-    constructor(
+    constructor (
         private _cache: CacheService,
         private _groupsService: GroupsService
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.groupCtrl.setValue(this.permissions);

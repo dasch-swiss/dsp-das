@@ -65,10 +65,7 @@ export class ProjectComponent implements OnInit {
             this.loading = true;
             // set the cache here:
             // current project data, project members and project groups
-            this._cache.get(
-                this.projectcode,
-                this._projectsService.getProjectByShortcode(this.projectcode)
-            );
+            this._cache.get(this.projectcode, this._projectsService.getProjectByShortcode(this.projectcode));
 
             // get information about the logged-in user, if one is logged-in
             if (localStorage.getItem('session')) {
@@ -83,53 +80,44 @@ export class ProjectComponent implements OnInit {
                 this.projectAdmin = this.sysAdmin;
             }
             // get the project data from cache
-            this._cache
-                .get(
-                    this.projectcode,
-                    this._projectsService.getProjectByShortcode(
-                        this.projectcode
-                    )
-                )
-                .subscribe(
-                    (result: Project) => {
-                        this.project = result;
+            this._cache.get(this.projectcode, this._projectsService.getProjectByShortcode(this.projectcode)).subscribe(
+                (result: Project) => {
+                    this.project = result;
 
-                        if (!this.project.status) {
-                            this.color = 'warn';
-                        }
-
-                        this.navigation[0].label =
-                            'Project: ' + result.shortname.toUpperCase();
-
-                        // is logged-in user projectAdmin?
-                        if (this.session) {
-                            this.projectAdmin = this.sysAdmin ? this.sysAdmin : (this.session.user.projectAdmin.some(e => e === this.project.id));
-                        }
-
-
-
-                        // set the cache for project members and groups
-                        if (this.projectAdmin) {
-                            this._cache.get(
-                                'members_of_' + this.projectcode,
-                                this._projectsService.getProjectMembersByShortcode(
-                                    this.projectcode
-                                )
-                            );
-                            this._cache.get(
-                                'groups_of_' + this.projectcode,
-                                this._groupsService.getAllGroups()
-                            );
-                        }
-
-                        this.loading = false;
-                    },
-                    (error: ApiServiceError) => {
-                        console.error(error);
-                        this.error = true;
-                        this.loading = false;
+                    if (!this.project.status) {
+                        this.color = 'warn';
                     }
-                );
+
+                    this.navigation[0].label =
+                        'Project: ' + result.shortname.toUpperCase();
+
+                    // is logged-in user projectAdmin?
+                    if (this.session) {
+                        this.projectAdmin = this.sysAdmin ? this.sysAdmin : (this.session.user.projectAdmin.some(e => e === this.project.id));
+                    }
+
+                    // set the cache for project members and groups
+                    if (this.projectAdmin) {
+                        this._cache.get(
+                            'members_of_' + this.projectcode,
+                            this._projectsService.getProjectMembersByShortcode(
+                                this.projectcode
+                            )
+                        );
+                        this._cache.get(
+                            'groups_of_' + this.projectcode,
+                            this._groupsService.getAllGroups()
+                        );
+                    }
+
+                    this.loading = false;
+                },
+                (error: ApiServiceError) => {
+                    console.error(error);
+                    this.error = true;
+                    this.loading = false;
+                }
+            );
         } else {
             // shortcode isn't valid
             // TODO: show an error page

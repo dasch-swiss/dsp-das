@@ -71,9 +71,8 @@ export class AddSourceTypeComponent implements OnInit {
      */
     selectedSourceType: AutocompleteItem;
 
-    constructor (private _cache: CacheService,
+    constructor (
         private _dialog: MatDialog,
-        private _projects: ProjectsService,
         private _formBuilder: FormBuilder) { }
 
     ngOnInit() {
@@ -82,7 +81,7 @@ export class AddSourceTypeComponent implements OnInit {
 
         // just for developing / less clicks to see the source type form
         this.selectedSourceType = this.sourceTypes[0];
-        this.openDialog('addSourceType');
+        // this.openDialog('addSourceType');
     }
 
     buildForm() {

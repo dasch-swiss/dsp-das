@@ -1,20 +1,31 @@
-<div *ngIf="projectAdmin" class="content large middle">
+<kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
+
+<div *ngIf="projectAdmin && !loading" class="content large middle">
 
     <!-- select ontology or create new ontology first -->
-    <app-ontology-list *ngIf="project?.status && sysAdmin && !currentOntology" [ontologies]="ontologies">
+    <app-ontology-list *ngIf="project?.status && sysAdmin" [ontologies]="ontologies" [projectcode]="projectcode"
+                       (refreshParent)="resetOntology($event)" [selected]="ontologyIri">
     </app-ontology-list>
 
+    <mat-divider *ngIf="ontologyIri"></mat-divider>
+
     <!-- add source type to the ontology -->
-    <app-add-source-type *ngIf="project?.status && sysAdmin && currentOntology" [projectcode]="projectcode"
+    <app-add-source-type *ngIf="project?.status && sysAdmin && ontologyIri" [projectcode]="projectcode"
                          (refreshParent)="refresh()" #addSourceTypeComponent></app-add-source-type>
 
     <!-- <mat-divider *ngIf="project?.status" ></mat-divider> -->
 
-    <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
 
-    <div *ngIf="!loading" class="content">
+
+    <div *ngIf="!loading && ontology" class="content ontology-editor">
 
         <!-- list of source types -->
+        <span *ngFor="let resClass of ontology['@graph']">
+            <div *ngIf="resClass['@type'] === 'owl:Class'" class="resource-class" cdkDrag
+                 cdkDragBoundary=".ontology-editor">
+                {{resClass['rdfs:label']}}
+            </div>
+        </span>
 
     </div>
 

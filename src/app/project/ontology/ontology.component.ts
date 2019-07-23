@@ -46,8 +46,11 @@ export class OntologyComponent implements OnInit {
     // ontologies
     ontologies: OntologyInfo[] = [];
 
+    // ontology JSON-LD object
+    ontology: any;
+
     // selected ontology
-    currentOntology: string;
+    ontologyIri: string = undefined;
 
     sourcetypes = ['Text', 'Image', 'Video'];
 
@@ -70,13 +73,16 @@ export class OntologyComponent implements OnInit {
         });
 
         // get ontology iri from route
-        this._route.params.subscribe((params: Params) => {
-            this.currentOntology = params.id;
-        });
+        if (this._route.snapshot.params.id) {
+            this.ontologyIri = decodeURIComponent(this._route.snapshot.params.id);
+        }
 
         // set the page title
-        this._titleService.setTitle('Project ' + this.projectcode + ' | Collaboration');
-        this._titleService.setTitle('Ontology Editor');
+        if (this.ontologyIri) {
+            this._titleService.setTitle('Project ' + this.projectcode + ' | Ontology Editor');
+        } else {
+            this._titleService.setTitle('Project ' + this.projectcode + ' | Ontologies');
+        }
     }
 
     ngOnInit() {
@@ -130,6 +136,10 @@ export class OntologyComponent implements OnInit {
                     }
                 );
 
+                if (this.ontologyIri !== undefined) {
+                    this.getOntology(this.ontologyIri);
+                }
+
 
                 this.loading = false;
 
@@ -167,7 +177,7 @@ export class OntologyComponent implements OnInit {
     refresh(): void {
         // referesh the component
         this.loading = true;
-
+        console.log('refresh');
         // do something
 
         if (this.addSourceType) {
@@ -190,6 +200,33 @@ export class OntologyComponent implements OnInit {
                 */
     }
 
+    getOntology(id?: string) {
+
+        if (!id) {
+            return;
+        }
+
+        this.loading = true;
+
+        this._cache.get('currentOntology', this._ontologyService.getAllEntityDefinitionsForOntologies(id));
+        this._cache.get('currentOntology', this._ontologyService.getAllEntityDefinitionsForOntologies(id)).subscribe(
+            (ontologyResponse: any) => {
+                this.ontology = ontologyResponse.body;
+                this.ontologyIri = ontologyResponse.body['@id'];
+                console.log(this.ontology);
+                this.loading = false;
+            },
+            (error: any) => {
+                // console.error(error);
+            }
+        );
+
+    }
+
+    resetOntology(id: string) {
+        this._cache.del('currentOntology');
+        this.getOntology(id);
+    }
 
 
 }

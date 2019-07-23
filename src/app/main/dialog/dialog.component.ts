@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
+// TODO: refactor this ugly interface ... name = main iri?! makes no sense
 export interface DialogData {
     mode: string;
     name?: string;      // main iri
@@ -16,14 +17,14 @@ export interface DialogData {
 export class DialogComponent implements OnInit {
 
 
-    constructor(
+    constructor (
         public dialogRef: MatDialogRef<DialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData
     ) { }
 
-    ngOnInit() {}
+    ngOnInit() { }
 
     closeDialog(data: any): void {
-      this.dialogRef.close();
+        this.dialogRef.close();
     }
 }

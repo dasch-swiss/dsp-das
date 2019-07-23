@@ -125,6 +125,13 @@
         </mat-dialog-actions>
     </div>
 
+    <!-- Ontology editor: create new ontology -->
+    <div *ngSwitchCase="'createOntology'">
+        <app-dialog-header [title]="'Data model'" [subtitle]="'Create new'" (close)="dialogRef.close()">
+        </app-dialog-header>
+        <app-ontology-form [projectcode]="data.project" (closeDialog)="dialogRef.close()"></app-ontology-form>
+    </div>
+
     <!-- Ontology editor: customize and add source type -->
     <div *ngSwitchCase="'addSourceType'">
         <app-dialog-header [title]="data.name" [subtitle]="'Customize source type'" (close)="dialogRef.close()">
