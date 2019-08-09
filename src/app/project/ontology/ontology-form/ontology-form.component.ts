@@ -62,8 +62,6 @@ export class OntologyFormComponent implements OnInit {
             (result: Project) => {
                 this.project = result;
 
-                this.ontologyLabel += this.project.shortname + ' ontology (data model): ';
-
                 this.buildForm();
             },
             (error: ApiServiceError) => {
@@ -77,6 +75,9 @@ export class OntologyFormComponent implements OnInit {
     }
 
     buildForm() {
+
+        this.ontologyLabel = this.project.shortname + ' ontology (data model): ';
+
         this.ontologyForm = this._fb.group({
             name: new FormControl({
                 value: '', disabled: false
@@ -175,6 +176,8 @@ export class OntologyFormComponent implements OnInit {
      * Reset the form
      */
     resetForm(ev: Event, sourceType?: any) {
+
+        this.ontologyLabel = this.project.shortname + ' ontology (data model): ';
 
         this.buildForm();
 

@@ -129,7 +129,7 @@
     <div *ngSwitchCase="'createOntology'">
         <app-dialog-header [title]="'Data model'" [subtitle]="'Create new'" (close)="dialogRef.close()">
         </app-dialog-header>
-        <app-ontology-form [projectcode]="data.project" (closeDialog)="dialogRef.close()"></app-ontology-form>
+        <app-ontology-form [projectcode]="data.project" (closeDialog)="dialogRef.close(data)"></app-ontology-form>
     </div>
 
     <!-- Ontology editor: customize and add source type -->

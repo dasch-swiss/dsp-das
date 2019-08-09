@@ -1,23 +1,25 @@
 <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
 
-<div *ngIf="projectAdmin && !loading" class="content large middle">
+<div *ngIf="projectAdmin && !loading">
 
-    <!-- select ontology or create new ontology first -->
-    <app-ontology-list *ngIf="project?.status && sysAdmin" [ontologies]="ontologies" [projectcode]="projectcode"
-                       (refreshParent)="resetOntology($event)" [selected]="ontologyIri">
-    </app-ontology-list>
+    <div class="content large middle">
 
-    <mat-divider *ngIf="ontologyIri"></mat-divider>
+        <!-- select ontology or create new ontology first -->
+        <app-ontology-list *ngIf="project?.status && sysAdmin" [ontologies]="ontologies" [projectcode]="projectcode"
+                           (refreshParent)="resetOntology($event)" [selected]="ontologyIri">
+        </app-ontology-list>
 
-    <!-- add source type to the ontology -->
-    <app-add-source-type *ngIf="project?.status && sysAdmin && ontologyIri" [projectcode]="projectcode"
-                         (refreshParent)="refresh()" #addSourceTypeComponent></app-add-source-type>
+        <!-- <mat-divider *ngIf="ontologyIri"></mat-divider> -->
 
-    <!-- <mat-divider *ngIf="project?.status" ></mat-divider> -->
+    </div>
 
 
+    <div *ngIf="!loading && ontology" class="ontology-editor">
 
-    <div *ngIf="!loading && ontology" class="content ontology-editor">
+        <!-- add source type to the ontology -->
+        <app-add-source-type *ngIf="project?.status && sysAdmin && ontologyIri" [projectcode]="projectcode"
+                             class="add-source-type" (refreshParent)="refresh()" #addSourceTypeComponent>
+        </app-add-source-type>
 
         <!-- list of source types -->
         <span *ngFor="let resClass of ontology['@graph']">

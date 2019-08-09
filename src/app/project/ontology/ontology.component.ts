@@ -117,8 +117,6 @@ export class OntologyComponent implements OnInit {
                 this._ontologyService.getProjectOntologies(encodeURI(result.id)).subscribe(
                     (ontologies: ApiServiceResult) => {
 
-                        console.log(ontologies);
-
                         if (ontologies.body['@graph'] && ontologies.body['@graph'].length > 0) {
 
                             for (const ontology of ontologies.body['@graph']) {
@@ -130,7 +128,11 @@ export class OntologyComponent implements OnInit {
 
                                 this.ontologies.push(info);
                             }
+
+                            this.loading = false;
+
                         } else if (ontologies.body['@id'] && ontologies.body['rdfs:label']) {
+                            // only one ontology
                             this.ontologies = [
                                 {
                                     id: ontologies.body['@id'],
@@ -138,6 +140,10 @@ export class OntologyComponent implements OnInit {
                                     project: ontologies.body['knora-api:attachedToProject']['@id']
                                 }
                             ];
+
+                            this.ontologyIri = ontologies.body['@id'];
+                            this.getOntology(this.ontologyIri);
+
                         }
                     },
                     (error: ApiServiceError) => {
@@ -150,7 +156,7 @@ export class OntologyComponent implements OnInit {
                 }
 
 
-                this.loading = false;
+
 
             },
             (error: ApiServiceError) => {

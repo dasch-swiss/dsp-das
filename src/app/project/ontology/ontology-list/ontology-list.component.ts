@@ -51,6 +51,12 @@ export class OntologyListComponent implements OnInit {
 
         this.loading = true;
 
+        console.log(this.selected);
+
+        if (this.selected) {
+            this.openOntology(this.selected);
+        }
+
         this.ontologyForm = this._fb.group({
             ontology: new FormControl({
                 value: this.selected, disabled: false
@@ -99,7 +105,8 @@ export class OntologyListComponent implements OnInit {
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
 
         dialogRef.afterClosed().subscribe(result => {
-
+            // update the list of ontologies
+            this.refreshParent.emit();
         });
     }
 

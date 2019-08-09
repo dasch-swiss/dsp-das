@@ -6,9 +6,13 @@ $width: 200px;
 .ontology-editor {
   border: 1px dotted $primary_200;
   height: calc(100vh - #{$header-height} - #{$tab-bar-margin} - 300px);
-  width: 100%;
+  width: 98vw;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax($width, 1fr));
+
+  // set position of it
+  position: relative;
+  margin: 0 auto;
 }
 
 .resource-class {
@@ -28,7 +32,7 @@ $width: 200px;
     @include mat-elevation(8);
   }
 }
-
+/*
 .ontology-container {
   // display: flex;
   // flex-direction: row;
@@ -62,4 +66,10 @@ $width: 200px;
       }
     }
   }
+}
+ */
+
+.add-source-type {
+  grid-column-start: last-col;
+  margin: 6px 6px 6px -120px;
 }

@@ -1,3 +1,14 @@
+<button mat-raised-button color="primary" [matMenuTriggerFor]="beforeMenu">
+    Add source type&nbsp;
+    <mat-icon>add</mat-icon>
+</button>
+<mat-menu #beforeMenu="matMenu" xPosition="before">
+    <button mat-menu-item *ngFor="let type of filteredSourceTypes | async" (click)="addSourceType(type?.iri)">
+        {{ type?.label }}
+    </button>
+</mat-menu>
+
+<!--
 <div class="app-toolbar transparent">
     <div class="app-toolbar-row">
         <h3 class="mat-body subtitle">Edit your data model</h3>
@@ -9,7 +20,7 @@
 
             <form [formGroup]="selectSourceTypeForm" class="form" *ngIf="!loading">
 
-                <!-- auto complete list to select source types -->
+                <!-- auto complete list to select source types --
                 <div class="form-content">
                     <mat-form-field class="large-field select-source-type">
 
@@ -33,13 +44,13 @@
                         <mat-hint *ngIf="selectSourceTypeErrors.type">
                             {{ selectSourceTypeErrors.type }}
                         </mat-hint>
-                        -->
+                        --
 
                     </mat-form-field>
                     <!--
                     <button mat-stroked-button [disabled]="!selectSourceTypeForm.valid" class="add-new"
                             (click)="openDialog('addSourceType')">Customize and add it</button>
-                    -->
+                    --
 
                 </div>
 
@@ -49,3 +60,4 @@
         <span class="fill-remaining-space"></span>
     </div>
 </div>
+-->
