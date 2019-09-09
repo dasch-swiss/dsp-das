@@ -2,12 +2,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { existingNamesValidator } from '@knora/action';
-import { Session } from '@knora/authentication';
 import { ApiServiceError, AutocompleteItem, Project, ProjectsService, User, UsersService } from '@knora/core';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { CacheService } from 'src/app/main/cache/cache.service';
+import { CacheService } from '../../../main/cache/cache.service';
 
 @Component({
     selector: 'app-add-user',
@@ -209,11 +208,11 @@ export class AddUserComponent implements OnInit {
             'username': new FormControl({
                 value: '', disabled: false
             }, [
-                    existingNamesValidator(this.existingUsernames),
-                    existingNamesValidator(this.existingUsernameInProject),
-                    existingNamesValidator(this.existingEmails),
-                    existingNamesValidator(this.existingEmailInProject)
-                ])
+                existingNamesValidator(this.existingUsernames),
+                existingNamesValidator(this.existingUsernameInProject),
+                existingNamesValidator(this.existingEmails),
+                existingNamesValidator(this.existingEmailInProject)
+            ])
         });
 
         this.filteredUsers = this.selectUserForm.controls['username'].valueChanges
@@ -309,11 +308,11 @@ export class AddUserComponent implements OnInit {
 
                                     // update own user profile, if the added user is the same as the logged-in user
                                     // get logged-in user name
-                                    const session: Session = JSON.parse(localStorage.getItem('session'));
-                                    if (add.username === session.user.name) {
-                                        this._cache.del(add.username);
-                                        this._cache.get(add.username, this._users.getUserByUsername(add.username));
-                                    }
+                                    // const session: Session = JSON.parse(localStorage.getItem('session'));
+                                    // if (add.username === session.user.name) {
+                                    this._cache.del(add.username);
+                                    this._cache.get(add.username, this._users.getUserByUsername(add.username));
+                                    // }
                                     this.loading = false;
 
                                 },

@@ -1,6 +1,6 @@
-# Knora User Interface | Research Layer
+# Knora User Interface | Research Layer (KUIRL)
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/992ee9b16ce34edcae77478b2be597cd)](https://app.codacy.com/app/dhlab-basel/Kuirl?utm_source=github.com&utm_medium=referral&utm_content=dhlab-basel/Kuirl&utm_campaign=Badge_Grade_Dashboard)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ddfe61cdc2a14c3b89e34d2f49cd64fa)](https://www.codacy.com/app/dhlab-basel/Kuirl?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dhlab-basel/Kuirl&amp;utm_campaign=Badge_Grade)
 [![Build Status](https://travis-ci.com/dhlab-basel/Kuirl.svg?branch=master)](https://travis-ci.com/dhlab-basel/Kuirl)
 [![CircleCI](https://circleci.com/gh/dhlab-basel/Kuirl.svg?style=svg)](https://circleci.com/gh/dhlab-basel/Kuirl)
 
@@ -10,9 +10,9 @@ Humanities DaSCH, which uses the Knora server application in the backend.
 It's a system for annotation and linkage of sources in arts and humanities.
 
 This project was generated with
-[Angular CLI](https://github.com/angular/angular-cli) version 7.0.4.
+[Angular CLI](https://github.com/angular/angular-cli) version 8.0.6 and [Node](https://nodejs.org/en/) version 10.13.0.
 
-**Required version of Knora: [v8.0.0](https://github.com/dhlab-basel/Knora/releases/tag/v8.0.0)**
+**Required version of Knora: ^[9.0.0](https://github.com/dhlab-basel/Knora/releases/tag/v9.0.0)**
 
 Developed by the [DaSCH Team](https://dasch.swiss) in Basel.
 

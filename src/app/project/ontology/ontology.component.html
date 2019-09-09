@@ -1,6 +1,6 @@
 <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
 
-<div *ngIf="projectAdmin && !loading">
+<div *ngIf="projectAdmin && !loading desktop-only">
 
     <div class="content large middle">
 
@@ -40,7 +40,7 @@
 
 <!--
 
-<div class="content ontology-editor drag-drop-boundary">
+<div class="content ontology-editor drag-drop-boundary desktop-only">
 
     <mat-card class="resource-type" cdkDragBoundary=".drag-drop-boundary" cdkDrag>
         Create your data model: add the first source type here
@@ -89,3 +89,7 @@
     </div>
 </div>
 -->
+
+<div class="mobile-only">
+    <kui-message [message]="{status: 415, statusText: 'This content is not supported on small devices.'}"></kui-message>
+</div>

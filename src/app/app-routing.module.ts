@@ -6,9 +6,9 @@ import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.compon
 import { ErrorComponent } from './main/error/error.component';
 import { LoginComponent } from './main/login/login.component';
 import { MainComponent } from './main/main.component';
-// project
 import { BoardComponent } from './project/board/board.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
+import { ListComponent } from './project/list/list.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
 import { PermissionComponent } from './project/permission/permission.component';
 import { ProjectComponent } from './project/project.component';
@@ -20,7 +20,6 @@ import { DashboardComponent } from './user/dashboard/dashboard.component';
 import { UserComponent } from './user/user.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
-// workspace
 import { AdvancedSearchComponent } from './workspace/search/advanced-search/advanced-search.component';
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 
@@ -69,6 +68,11 @@ const routes: Routes = [
             {
                 path: 'ontologies/:id',
                 component: OntologyComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'lists',
+                component: ListComponent,
                 canActivate: [AuthGuard]
             },
             {

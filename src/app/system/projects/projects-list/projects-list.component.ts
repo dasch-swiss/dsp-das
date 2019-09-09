@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Session } from '@knora/authentication';
 import { ApiServiceError, KnoraConstants, Project, ProjectsService, User } from '@knora/core';
@@ -20,7 +20,7 @@ export class ProjectsListComponent implements OnInit {
     sysAdmin: boolean = false;
     projectAdmin: boolean = false;
 
-    // List of default, knora-specific projects, which are not able to be deleted or to be editied
+    // list of default, knora-specific projects, which are not able to be deleted or to be editied
     doNotDelete: string[] = [
         KnoraConstants.SystemProjectIRI,
         KnoraConstants.DefaultSharedOntologyIRI

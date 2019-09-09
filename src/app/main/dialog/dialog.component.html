@@ -1,4 +1,4 @@
-<div [ngSwitch]="data.mode">
+<div [ngSwitch]="data.mode" class="dialog-content">
 
     <!-- all about USER -->
     <!-- Create new user profile -->
@@ -21,7 +21,7 @@
     <div *ngSwitchCase="'editPassword'">
         <app-dialog-header [title]="data.name" [subtitle]="'appLabels.form.user.title.password' | translate"
                            (close)="dialogRef.close()"></app-dialog-header>
-        <app-user-password [username]="data.name" (closeDialog)="dialogRef.close()"></app-user-password>
+        <app-password-form [username]="data.name" (closeDialog)="dialogRef.close()"></app-password-form>
     </div>
 
     <!-- Delete user -->
@@ -29,6 +29,8 @@
         <app-dialog-header [title]="data.name" [subtitle]="'Delete user'" (close)="dialogRef.close()">
         </app-dialog-header>
         Do you want to delete this user?
+
+        <!-- TODO: create a mat dialog actions component with the following buttons: Cancel to reset and OK to confirm action -->
         <mat-dialog-actions>
             <button mat-button mat-dialog-close class="cancel-button center" [mat-dialog-close]="false">
                 Cancel
@@ -75,6 +77,13 @@
         </mat-dialog-actions>
     </div>
 
+    <!-- Manage user project membership -->
+    <div *ngSwitchCase="'manageProjectMembership'">
+        <app-dialog-header [title]="data.name" [subtitle]="'Manage project membership'" (close)="dialogRef.close()">
+        </app-dialog-header>
+        <app-membership [username]="data.name" (closeDialog)="dialogRef.close()"></app-membership>
+    </div>
+
     <!-- all about PROJECT -->
     <!-- Create project -->
     <div *ngSwitchCase="'createProject'">
@@ -119,6 +128,54 @@
             </button>
             <span class="fill-remaining-space"></span>
             <button mat-button mat-raised-button [color]="'primary'" class="confirm-button center"
+                    [mat-dialog-close]="true">
+                OK
+            </button>
+        </mat-dialog-actions>
+    </div>
+
+    <!-- all about LISTS -->
+
+    <!-- Preview list nodes -->
+    <div *ngSwitchCase="'showList'">
+        <app-dialog-header [title]="data.title" [subtitle]="'Preview list'" (close)="dialogRef.close()">
+        </app-dialog-header>
+        <app-list-items [iri]="data.id"></app-list-items>
+    </div>
+
+    <!-- Create new list -->
+    <div *ngSwitchCase="'createList'">
+        <app-dialog-header [title]="data.title" [subtitle]="'Create new'" (close)="dialogRef.close()">
+        </app-dialog-header>
+        <app-list-info-form [projectcode]="data.project" (closeDialog)="dialogRef.close()"
+                            (updateParent)="replaceTitle($event)"></app-list-info-form>
+    </div>
+
+    <!-- Edit list nodes -->
+    <div *ngSwitchCase="'editListItems'">
+        <app-dialog-header [title]="data.title" [subtitle]="'Edit list items'" (close)="dialogRef.close()">
+        </app-dialog-header>
+        <app-list-items-form [iri]="data.id" [projectcode]="data.project"></app-list-items-form>
+    </div>
+
+    <!-- Update list info -->
+    <div *ngSwitchCase="'editListInfo'">
+        <app-dialog-header [title]="data.title" [subtitle]="'Edit list info'" (close)="dialogRef.close()">
+        </app-dialog-header>
+        <app-list-info-form [iri]="data.id" [projectcode]="data.project"></app-list-info-form>
+    </div>
+
+    <!-- Delete list -->
+    <div *ngSwitchCase="'deleteList'">
+        <app-dialog-header [title]="data.title" [subtitle]="'appLabels.form.lists.title.delete' | translate"
+                           (close)="dialogRef.close()"></app-dialog-header>
+        Do you want to delete this list?
+        <mat-dialog-actions>
+            <button mat-button mat-dialog-close class="cancel-button center" [mat-dialog-close]="false">
+                Cancel
+            </button>
+            <span class="fill-remaining-space"></span>
+            <button mat-button mat-raised-button [color]="'warn'" class="confirm-button center"
                     [mat-dialog-close]="true">
                 OK
             </button>
