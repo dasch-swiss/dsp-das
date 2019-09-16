@@ -57,7 +57,7 @@ export class OntologyComponent implements OnInit {
 
     @ViewChild(AddToDirective, { static: false }) addToHost: AddToDirective;
 
-    @ViewChild('addSourceTypeComponent') addSourceType: AddSourceTypeComponent;
+    @ViewChild('addSourceTypeComponent', { static: false }) addSourceType: AddSourceTypeComponent;
 
     constructor (private _cache: CacheService,
         private _projectsService: ProjectsService,
