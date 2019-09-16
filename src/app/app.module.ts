@@ -34,12 +34,10 @@ import { SelectGroupComponent } from './project/collaboration/select-group/selec
 import { ListInfoFormComponent } from './project/list/list-info-form/list-info-form.component';
 import { ListItemFormComponent } from './project/list/list-item-form/list-item-form.component';
 import { ListItemComponent } from './project/list/list-item/list-item.component';
-import { ListItemsFormComponent } from './project/list/list-items-form/list-items-form.component';
-import { ListItemsComponent } from './project/list/list-items/list-items.component';
 import { ListComponent } from './project/list/list.component';
-import { ListsListComponent } from './project/list/lists-list/lists-list.component';
 import { AddSourceTypeComponent } from './project/ontology/add-source-type/add-source-type.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
+import { OntologyListComponent } from './project/ontology/ontology-list/ontology-list.component';
 import { AddToDirective, OntologyComponent } from './project/ontology/ontology.component';
 import { PropertyItemComponent } from './project/ontology/property-item/property-item.component';
 import { PropertyListComponent } from './project/ontology/property-list/property-list.component';
@@ -75,7 +73,6 @@ import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
 import { AdvancedSearchComponent } from './workspace/search/advanced-search/advanced-search.component';
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
-import { OntologyListComponent } from './project/ontology/ontology-list/ontology-list.component';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -147,10 +144,7 @@ export function initializeApp(appInitService: AppInitService) {
         SourceTypePropertyComponent,
         OntologyFormComponent,
         ListComponent,
-        ListsListComponent,
         ListInfoFormComponent,
-        ListItemsComponent,
-        ListItemsFormComponent,
         ListItemComponent,
         ListItemFormComponent,
         MembershipComponent
