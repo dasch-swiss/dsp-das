@@ -44,12 +44,8 @@ import { ResourceListComponent } from './project/ontology/resource-list/resource
 import { ResourceTypeComponent } from './project/ontology/resource-type/resource-type.component';
 import { SelectItemComponent } from './project/ontology/select-item/select-item.component';
 import { SelectListComponent } from './project/ontology/select-list/select-list.component';
-import { AddGroupComponent } from './project/permission/add-group/add-group.component';
-import { PermissionComponent } from './project/permission/permission.component';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ProjectComponent } from './project/project.component';
-import { GroupsListComponent } from './system/groups/groups-list/groups-list.component';
-import { GroupsComponent } from './system/groups/groups.component';
 import { ProjectsListComponent } from './system/projects/projects-list/projects-list.component';
 import { ProjectsComponent } from './system/projects/projects.component';
 import { StatusComponent } from './system/status/status.component';
@@ -69,6 +65,9 @@ import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
 import { AdvancedSearchComponent } from './workspace/search/advanced-search/advanced-search.component';
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
+import { GroupComponent } from './project/group/group.component';
+import { GroupFormComponent } from './project/group/group-form/group-form.component';
+import { GroupListComponent } from './project/group/group-list/group-list.component';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -131,15 +130,14 @@ export function initializeApp(appInitService: AppInitService) {
         GridComponent,
         CookiePolicyComponent,
         InfoMenuComponent,
-        GroupsComponent,
-        GroupsListComponent,
-        PermissionComponent,
-        AddGroupComponent,
         ListComponent,
         ListInfoFormComponent,
         ListItemComponent,
         ListItemFormComponent,
-        MembershipComponent
+        MembershipComponent,
+        GroupComponent,
+        GroupFormComponent,
+        GroupListComponent
     ],
     imports: [
         AppRoutingModule,

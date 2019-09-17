@@ -27,8 +27,7 @@ import { UsersComponent } from './system/users/users.component';
 import { StatusComponent } from './system/status/status.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
-import { GroupsComponent } from './system/groups/groups.component';
-import { PermissionComponent } from './project/permission/permission.component';
+import { GroupComponent } from './project/group/group.component';
 import { ListComponent } from './project/list/list.component';
 
 const routes: Routes = [
@@ -65,7 +64,7 @@ const routes: Routes = [
             },
             {
                 path: 'permissions',
-                component: PermissionComponent,
+                component: GroupComponent,
                 canActivate: [AuthGuard]
             },
             {

@@ -4,14 +4,14 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Session } from '@knora/authentication';
 import { Group, Project, ProjectsService } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { AddGroupComponent } from './add-group/add-group.component';
+import { GroupFormComponent } from './group-form/group-form.component';
 
 @Component({
-  selector: 'app-permission',
-  templateUrl: './permission.component.html',
-  styleUrls: ['./permission.component.scss']
+  selector: 'app-group',
+  templateUrl: './group.component.html',
+  styleUrls: ['./group.component.scss']
 })
-export class PermissionComponent implements OnInit {
+export class GroupComponent implements OnInit {
 
   // loading for progess indicator
   loading: boolean;
@@ -30,13 +30,12 @@ export class PermissionComponent implements OnInit {
   // project members
   projectGroups: Group[] = [];
 
-  @ViewChild('addGroupComponent', { static: false }) addGroup: AddGroupComponent;
+  @ViewChild('groupFormComponent', { static: false }) groupForm: GroupFormComponent;
 
-  constructor (private _cache: CacheService,
+  constructor(private _cache: CacheService,
     private _projectsService: ProjectsService,
     private _route: ActivatedRoute,
     private _titleService: Title) {
-
     // get the shortcode of the current project
     this._route.parent.paramMap.subscribe((params: Params) => {
       this.projectcode = params.get('shortcode');
@@ -44,7 +43,6 @@ export class PermissionComponent implements OnInit {
 
     // set the page title
     this._titleService.setTitle('Project ' + this.projectcode + ' | Permission Groups');
-
   }
 
   ngOnInit() {
@@ -56,9 +54,7 @@ export class PermissionComponent implements OnInit {
 
     // default value for projectAdmin
     this.projectAdmin = this.sysAdmin;
-
   }
-
 
   /**
    * build the list of members
@@ -78,8 +74,8 @@ export class PermissionComponent implements OnInit {
     this.initList();
 
     // refresh child component: add user
-    if (this.addGroup) {
-      this.addGroup.buildForm();
+    if (this.groupForm) {
+      this.groupForm.buildForm();
     }
   }
 
