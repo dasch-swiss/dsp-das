@@ -1,1 +1,9 @@
-<p>group-list works!</p>
+<div *ngFor="let g of projectGroupsList">
+    <p>Name: {{g.name}}</p>
+
+    <p>Description: {{g.description}}</p>
+
+    <p>Part of project: {{g.project.shortname}}</p>
+
+    <p>Status: {{g.status}}</p>
+</div>

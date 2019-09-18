@@ -9,6 +9,8 @@ export class GroupFormComponent implements OnInit {
 
   @Input() projectcode: string;
 
+  /* @Input() iri?: string; */
+
   @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }

@@ -2,9 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Session } from '@knora/authentication';
-import { Group, Project, ProjectsService } from '@knora/core';
+import { Group, Project, ProjectsService, ApiServiceError, GroupsService, AutocompleteItem } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { GroupFormComponent } from './group-form/group-form.component';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-group',
@@ -32,7 +34,10 @@ export class GroupComponent implements OnInit {
 
   @ViewChild('groupFormComponent', { static: false }) groupForm: GroupFormComponent;
 
-  constructor(private _cache: CacheService,
+  constructor(
+    private _dialog: MatDialog,
+    private _cache: CacheService,
+    private _groupsService: GroupsService,
     private _projectsService: ProjectsService,
     private _route: ActivatedRoute,
     private _titleService: Title) {
@@ -54,14 +59,54 @@ export class GroupComponent implements OnInit {
 
     // default value for projectAdmin
     this.projectAdmin = this.sysAdmin;
+
+    // set the cache
+    this._cache.get(this.projectcode, this._projectsService.getProjectByShortcode(this.projectcode));
+
+    // get the project data from cache
+    this._cache.get(this.projectcode, this._projectsService.getProjectByShortcode(this.projectcode)).subscribe(
+      (result: Project) => {
+        this.project = result;
+
+        // is logged-in user projectAdmin?
+        this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
+
+        this.initList();
+
+        // get from cache: list of project members and groups
+        if (this.projectAdmin) {
+          // this.refresh();
+        }
+
+        this.loading = false;
+      },
+      (error: ApiServiceError) => {
+        console.error(error);
+        this.loading = false;
+      }
+    );
   }
 
   /**
-   * build the list of members
-   */
-  initList(): void {
+     * build the list of lists
+     */
+  initList() {
+    this._groupsService.getAllGroups().subscribe(
+      (response: Group[]) => {
+        for (const group of response) {
+          if (group.project.id === this.project.id) {
+            this.projectGroups = [group];
+            this.loading = false;
+          }
+        }
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );
 
   }
+
   /**
  * refresh list of members after adding a new user to the team
  */
@@ -77,6 +122,31 @@ export class GroupComponent implements OnInit {
     if (this.groupForm) {
       this.groupForm.buildForm();
     }
+  }
+
+  /**
+    * open dialog in every case of modification:
+    * edit group data, remove group from project etc.
+    *
+    */
+  openDialog(mode: string, name: string, iri?: string): void {
+    const dialogConfig: MatDialogConfig = {
+      width: '640px',
+      position: {
+        top: '112px'
+      },
+      data: { mode: mode, title: name, id: iri, project: this.project.id }
+    };
+
+    const dialogRef = this._dialog.open(
+      DialogComponent,
+      dialogConfig
+    );
+
+    dialogRef.afterClosed().subscribe(result => {
+      // update the view
+      this.refresh();
+    });
   }
 
 }
