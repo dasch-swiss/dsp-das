@@ -38,7 +38,7 @@
 
     .action {
       margin-top: 24px;
-      bottom: 0;
+      bottom: 16px;
       position: absolute;
       height: 24px;
       width: calc(100% - 60px);
@@ -66,5 +66,10 @@
 @media (max-width: map-get($grid-breakpoints, phone)) {
   .app-grid {
     margin: 50px -15px 0 0;
+    width: 100%;
+
+    .app-grid-item {
+      margin: 12px 0;
+    }
   }
 }

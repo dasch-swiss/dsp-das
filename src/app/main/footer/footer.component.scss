@@ -56,3 +56,23 @@ footer {
     margin-right: 12px;
   }
 }
+
+@media (max-width: 992px) {
+  footer .panel {
+    display: inline;
+
+    .box {
+      width: auto;
+      padding: 0;
+
+      p,
+      a {
+        text-align: center;
+      }
+
+      &.about p {
+        max-width: 100%;
+      }
+    }
+  }
+}

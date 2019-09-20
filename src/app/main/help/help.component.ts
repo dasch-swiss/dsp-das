@@ -71,6 +71,27 @@ export class HelpComponent implements OnInit {
         }
     ];
 
+    support: GridItem[] = [
+        {
+            title: 'Need more help?',
+            text: 'Did you had some issues by using our software. Let us know and get in contact with developers and users:',
+            url: 'https://discuss.dasch.swiss',
+            urlText: 'DaSCH Forum'
+        },
+        {
+            title: 'DaSCH infrastructure',
+            text: 'Wondering what the Data and Service Center for the Humanities DaSCH exactly is? Get more information on our Website:',
+            url: 'https://dasch.swiss',
+            urlText: 'dasch.swiss'
+        },
+        {
+            title: 'Contribute',
+            text: 'All our software code is open source and accessible on Github. If you want to improve the tools, feel free to contact us on:',
+            url: 'https://github.com/dasch-swiss',
+            urlText: 'Github'
+        }
+    ];
+
     constructor (@Inject(KuiCoreConfigToken) public config: KuiCoreConfig,
         private _domSanitizer: DomSanitizer,
         private _matIconRegistry: MatIconRegistry,
