@@ -1,1 +1,25 @@
-<p>group-form works!</p>
+<div class="no-shadow" *ngIf="!errorMessage; else errorMsg">
+
+    <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
+
+    <!-- success message after updating -->
+    <kui-message *ngIf="success" [message]="successMessage" [short]="true" (click)="closeMessage()"></kui-message>
+
+    <!-- form content -->
+    <form [formGroup]="form" class="form-content" (ngSubmit)="submitData()">
+        <mat-form-field class="large-field">
+            <input matInput [formControl]="form.controls['groupName']" placeholder="Group name *">
+        </mat-form-field>
+        <mat-form-field class="large-field">
+            <textarea matInput matTextareaAutosize [matAutosizeMinRows]="6" [matAutosizeMaxRows]="12" [formControl]="form.controls['groupDescription']" placeholder="Group description"></textarea>
+        </mat-form-field>
+        <button mat-raised-button type="submit" color="primary" [disabled]="!form.valid">
+            Create
+        </button>
+    </form>
+</div>
+
+<!-- in the case of an API error: show the error message -->
+<!-- <ng-template #errorMsg>
+    <kui-message *ngIf="errorMessage" [message]="errorMessage" [short]="true" (click)="closeMessage()"></kui-message>
+</ng-template> -->

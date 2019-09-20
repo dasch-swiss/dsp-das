@@ -108,8 +108,8 @@ export class GroupComponent implements OnInit {
   }
 
   /**
- * refresh list of members after adding a new user to the team
- */
+    * refresh list of members after adding a new user to the team
+    */
   refresh(): void {
     // referesh the component
     this.loading = true;
@@ -118,7 +118,7 @@ export class GroupComponent implements OnInit {
 
     this.initList();
 
-    // refresh child component: add user
+    // refresh child component: add group
     if (this.groupForm) {
       this.groupForm.buildForm();
     }

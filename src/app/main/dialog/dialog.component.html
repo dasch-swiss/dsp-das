@@ -158,7 +158,7 @@
     <div *ngSwitchCase="'createGroup'">
         <app-dialog-header [title]="data.title" [subtitle]="'Create new'" (close)="dialogRef.close()">
         </app-dialog-header>
-        <app-group-form (closeDialog)="dialogRef.close()"></app-group-form>
+        <app-group-form [projectcode]="data.project" [projectIri]="data.id" (closeDialog)="dialogRef.close()"></app-group-form>
     </div>
 
     <!-- Update group -->

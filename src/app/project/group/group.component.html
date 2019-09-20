@@ -24,7 +24,7 @@
                 <h2 class="mat-title">Permission groups</h2>
                 <span class="fill-remaining-space"></span>
                 <span class="app-toolbar-action button right">
-                    <button mat-flat-button [color]="'primary'" (click)="openDialog('createGroup', 'Group')">
+                    <button mat-flat-button [color]="'primary'" (click)="openDialog('createGroup', 'Group', project.id)">
                         Create new
                     </button>
                 </span>
@@ -48,7 +48,7 @@
                     </mat-panel-description>
                 </mat-expansion-panel-header>
 
-                <app-group-list *ngIf="!loading && project?.id" [group]="group" [projectcode]="projectcode" [projectIri]="project?.id">
+                <app-group-list *ngIf="!loading && group" [group]="group" [projectcode]="projectcode" [projectIri]="project?.id">
                 </app-group-list>
             </mat-expansion-panel>
 

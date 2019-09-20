@@ -13,12 +13,12 @@ export class GroupListComponent implements OnInit {
 
   @Input() projectIri: string;
 
-  @Input() group: Group;
+  @Input() group: Group[];
 
   loading: boolean;
 
   // default system groups and project specific groups
-  projectGroupsList: Group[] = [];
+  // projectGroupsList: Group[] = [];
 
   constructor(
     private _groupsService: GroupsService,
@@ -26,18 +26,18 @@ export class GroupListComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-
-    this.setList();
+    console.log('group from group component', this.group);
+    // this.setList();
   }
 
   /**
    * Set the list of groups for the targeted project
    */
   setList() {
-
-    this._groupsService.getAllGroups()
+    /* this._groupsService.getAllGroups()
       .subscribe(
         (result: Group[]) => {
+          console.log('result group list', result);
           for (const group of result) {
             if (group.project.id === this.projectIri) {
               this.projectGroupsList.push({
@@ -54,7 +54,7 @@ export class GroupListComponent implements OnInit {
         (error: ApiServiceError) => {
           console.error(error);
         }
-      );
+      ); */
   }
 
 }
