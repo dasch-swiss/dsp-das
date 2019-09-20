@@ -1,0 +1,36 @@
+<div class="help-page">
+    <section>
+        <div class="content large middle">
+            <h1 class="mat-display-1">Need help?</h1>
+            <h3 class="mat-subheading-2">Explore by section</h3>
+
+            <app-grid id="app-grid-documentation" [list]="docs"></app-grid>
+        </div>
+    </section>
+
+    <section class="darken-bg">
+        <div class="content large middle">
+            <h3 class="mat-subheading-2">Technical Information</h3>
+            <p class="mat-body-1">This web application and the data storage are software tools developed by the Data and
+                Service Center for Humanities DaSCH in Switzerland.</p>
+
+            <app-grid id="app-grid-tools" [list]="tools"></app-grid>
+
+        </div>
+    </section>
+
+    <section>
+        <div class="content large middle">
+            <h3 class="mat-subheading-2">Get more support</h3>
+            <p class="mat-body-1">Need more help or did you had some issues by using our software. Let us know and get
+                in contact on our </p>
+            <a mat-stroked-button href="https://discuss.dasch.swiss" class="middle">Community Forum</a>
+
+            <br><br>
+            <p class="mat-body-1">Wondering what the DaSCH exactly is? Read more on our Website</p>
+            <a mat-stroked-button href="https://dasch.swiss" class="middle">dasch.swiss</a>
+        </div>
+    </section>
+
+    <app-footer></app-footer>
+</div>
