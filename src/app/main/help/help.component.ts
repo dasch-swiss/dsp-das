@@ -60,7 +60,7 @@ export class HelpComponent implements OnInit {
         {
             title: 'Knora v',
             text: 'Framework to store, share, and work with primary sources in the humanities.',
-            url: 'https://github.com/dhlab-basel/Kuirl/releases/tag/v',
+            url: 'https://github.com/dhlab-basel/Knora/releases/tag/v',
             urlText: 'Release notes'
         },
         {
