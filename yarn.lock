@@ -344,10 +344,8 @@
   dependencies:
     tslib "^1.9.0"
 
-"@knora/search@9.3.0":
-  version "9.3.0"
-  resolved "https://registry.yarnpkg.com/@knora/search/-/search-9.3.0.tgz#0c81566cde6a207ca2b5f0cbd1cf5184c3ff0b8c"
-  integrity sha512-9yHtx2ATIQ0Yv7Yer8n0+UWUrIULrUai0gKbVUmTnirIfNxD/rKcGww9PU3QdAk4yQhGxkt+xdFEbtDGGeqMhA==
+"@knora/search@file:.yalc/@knora/search":
+  version "9.3.0-63f7137f"
   dependencies:
     tslib "^1.9.0"
 
