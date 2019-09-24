@@ -1,13 +1,14 @@
+import { CacheService } from 'src/app/main/cache/cache.service';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+
 import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { OntologyInfo } from '../ontology.component';
 import { OntologyService } from '@knora/core';
 
+import { OntologyInfo } from '../ontology.component';
 
 @Component({
     selector: 'app-ontology-list',

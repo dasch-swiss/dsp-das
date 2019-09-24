@@ -1,15 +1,16 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 
-import { BoardComponent } from './board.component';
-import { KuiActionModule } from '@knora/action';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterTestingModule } from '@angular/router/testing';
-import { KuiCoreModule, KuiCoreConfigToken, KuiCoreConfig } from '@knora/core';
 import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs';
+import { RouterTestingModule } from '@angular/router/testing';
+import { KuiActionModule } from '@knora/action';
 import { Session } from '@knora/authentication';
+import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
+
+import { BoardComponent } from './board.component';
 
 describe('BoardComponent', () => {
     let component: BoardComponent;

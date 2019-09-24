@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@knora/authentication';
+
 import { DesignQuestionComponent } from './dev/design-question/design-question.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { ErrorComponent } from './main/error/error.component';
@@ -20,7 +21,9 @@ import { DashboardComponent } from './user/dashboard/dashboard.component';
 import { UserComponent } from './user/user.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
-import { AdvancedSearchComponent } from './workspace/search/advanced-search/advanced-search.component';
+import {
+    AdvancedSearchComponent
+} from './workspace/search/advanced-search/advanced-search.component';
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 
 const routes: Routes = [

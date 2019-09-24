@@ -1,11 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {
-    ApiServiceError,
-    AutocompleteItem,
-    Group,
-    GroupsService
-} from '@knora/core';
+import { ApiServiceError, AutocompleteItem, Group, GroupsService } from '@knora/core';
+
 import { CacheService } from '../../../main/cache/cache.service';
 
 @Component({

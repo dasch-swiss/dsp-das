@@ -1,7 +1,11 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
+
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+    AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output
+} from '@angular/core';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+
 import { SourceTypeFormService } from './source-type-form.service';
 
 // nested form components; solution from here:

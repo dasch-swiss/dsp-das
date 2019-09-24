@@ -1,9 +1,11 @@
+import { CacheService } from 'src/app/main/cache/cache.service';
+
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Session } from '@knora/authentication';
 import { ApiServiceError, KnoraConstants, Project, ProjectsService, User } from '@knora/core';
-import { CacheService } from 'src/app/main/cache/cache.service';
+
 import { DialogComponent } from '../../../main/dialog/dialog.component';
 
 @Component({

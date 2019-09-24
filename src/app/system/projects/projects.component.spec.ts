@@ -1,13 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ProjectsComponent } from './projects.component';
-import { KuiActionModule } from '@knora/action';
-import { ProjectsListComponent } from './projects-list/projects-list.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { KuiCoreModule, KuiCoreConfigToken, KuiCoreConfig } from '@knora/core';
+import { KuiActionModule } from '@knora/action';
+import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
+
+import { ProjectsListComponent } from './projects-list/projects-list.component';
+import { ProjectsComponent } from './projects.component';
 
 describe('ProjectsComponent', () => {
   let component: ProjectsComponent;

@@ -1,10 +1,16 @@
+import { CacheService } from 'src/app/main/cache/cache.service';
+
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, ComponentFactoryResolver, Directive, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+    Component, ComponentFactoryResolver, Directive, OnInit, ViewChild, ViewContainerRef
+} from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Session } from '@knora/authentication';
-import { ApiServiceError, ApiServiceResult, OntologyService, Project, ProjectsService } from '@knora/core';
-import { CacheService } from 'src/app/main/cache/cache.service';
+import {
+    ApiServiceError, ApiServiceResult, OntologyService, Project, ProjectsService
+} from '@knora/core';
+
 import { AddSourceTypeComponent } from './add-source-type/add-source-type.component';
 import { ResourceTypeComponent } from './resource-type/resource-type.component';
 

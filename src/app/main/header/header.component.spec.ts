@@ -1,3 +1,5 @@
+import { UserMenuComponent } from 'src/app/user/user-menu/user-menu.component';
+
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -8,10 +10,10 @@ import { KuiActionModule } from '@knora/action';
 import { KuiCoreConfig, KuiCoreConfigToken } from '@knora/core';
 import { KuiSearchModule } from '@knora/search';
 import { TranslateModule } from '@ngx-translate/core';
-import { UserMenuComponent } from 'src/app/user/user-menu/user-menu.component';
+
+import { InfoMenuComponent } from '../info-menu/info-menu.component';
 import { SelectLanguageComponent } from '../select-language/select-language.component';
 import { HeaderComponent } from './header.component';
-import { InfoMenuComponent } from '../info-menu/info-menu.component';
 
 describe('HeaderComponent', () => {
     let component: HeaderComponent;

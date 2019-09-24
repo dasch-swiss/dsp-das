@@ -11,6 +11,7 @@ import { KuiSearchModule } from '@knora/search';
 import { KuiViewerModule } from '@knora/viewer';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 import { AppInitService } from './app-init.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -35,7 +36,9 @@ import { ListInfoFormComponent } from './project/list/list-info-form/list-info-f
 import { ListItemFormComponent } from './project/list/list-item-form/list-item-form.component';
 import { ListItemComponent } from './project/list/list-item/list-item.component';
 import { ListComponent } from './project/list/list.component';
-import { AddSourceTypeComponent } from './project/ontology/add-source-type/add-source-type.component';
+import {
+    AddSourceTypeComponent
+} from './project/ontology/add-source-type/add-source-type.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyListComponent } from './project/ontology/ontology-list/ontology-list.component';
 import { AddToDirective, OntologyComponent } from './project/ontology/ontology.component';
@@ -46,8 +49,12 @@ import { ResourceListComponent } from './project/ontology/resource-list/resource
 import { ResourceTypeComponent } from './project/ontology/resource-type/resource-type.component';
 import { SelectItemComponent } from './project/ontology/select-item/select-item.component';
 import { SelectListComponent } from './project/ontology/select-list/select-list.component';
-import { SourceTypeFormComponent } from './project/ontology/source-type-form/source-type-form.component';
-import { SourceTypePropertyComponent } from './project/ontology/source-type-form/source-type-property/source-type-property.component';
+import {
+    SourceTypeFormComponent
+} from './project/ontology/source-type-form/source-type-form.component';
+import {
+    SourceTypePropertyComponent
+} from './project/ontology/source-type-form/source-type-property/source-type-property.component';
 import { AddGroupComponent } from './project/permission/add-group/add-group.component';
 import { PermissionComponent } from './project/permission/permission.component';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
@@ -71,7 +78,9 @@ import { UserMenuComponent } from './user/user-menu/user-menu.component';
 import { UserComponent } from './user/user.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
-import { AdvancedSearchComponent } from './workspace/search/advanced-search/advanced-search.component';
+import {
+    AdvancedSearchComponent
+} from './workspace/search/advanced-search/advanced-search.component';
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 
 // translate: AoT requires an exported function for factories

@@ -1,12 +1,17 @@
+import { of } from 'rxjs';
+import { ErrorComponent } from 'src/app/main/error/error.component';
+
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatButtonModule, MatChipsModule, MatDialogModule, MatExpansionModule, MatIconModule, MatMenuModule, MatTooltipModule } from '@angular/material';
+import {
+    MatButtonModule, MatChipsModule, MatDialogModule, MatExpansionModule, MatIconModule,
+    MatMenuModule, MatTooltipModule
+} from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
 import { Session } from '@knora/authentication';
 import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
-import { of } from 'rxjs';
-import { ErrorComponent } from 'src/app/main/error/error.component';
+
 import { ListItemFormComponent } from './list-item-form/list-item-form.component';
 import { ListItemComponent } from './list-item/list-item.component';
 import { ListComponent } from './list.component';

@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { FormGroup, FormBuilder, FormArray, Form, FormControl, Validators } from '@angular/forms';
+
+import { Injectable } from '@angular/core';
+import { Form, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 // property data structure
 export class Property {

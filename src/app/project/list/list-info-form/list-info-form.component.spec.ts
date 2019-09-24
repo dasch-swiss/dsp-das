@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
 import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
 import { TranslateModule } from '@ngx-translate/core';
+
 import { ListItemFormComponent } from '../list-item-form/list-item-form.component';
 import { ListItemComponent } from '../list-item/list-item.component';
 import { ListInfoFormComponent } from './list-info-form.component';

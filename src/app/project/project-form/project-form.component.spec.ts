@@ -7,6 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
 import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
 import { TranslateModule } from '@ngx-translate/core';
+
 import { ProjectFormComponent } from './project-form.component';
 
 describe('ProjectFormComponent', () => {

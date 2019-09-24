@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { ProjectsService, Project, ApiServiceError, OntologyService } from '@knora/core';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ApiServiceError, OntologyService, Project, ProjectsService } from '@knora/core';
 
 export interface NewOntology {
     projectIri: string;

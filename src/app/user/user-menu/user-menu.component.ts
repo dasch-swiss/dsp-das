@@ -1,10 +1,12 @@
+import { AppGlobal } from 'src/app/app-global';
+import { CacheService } from 'src/app/main/cache/cache.service';
+
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '@knora/authentication';
-import { User, UsersService, ApiServiceError } from '@knora/core';
-import { AppGlobal } from 'src/app/app-global';
-import { CacheService } from 'src/app/main/cache/cache.service';
+import { ApiServiceError, User, UsersService } from '@knora/core';
+
 import { MenuItem } from '../../main/declarations/menu-item';
 
 @Component({

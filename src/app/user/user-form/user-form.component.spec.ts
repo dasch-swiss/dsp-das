@@ -8,6 +8,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
 import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
 import { TranslateModule } from '@ngx-translate/core';
+
 import { PasswordFormComponent } from './password-form/password-form.component';
 import { UserFormComponent } from './user-form.component';
 

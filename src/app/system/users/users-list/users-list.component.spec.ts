@@ -1,3 +1,8 @@
+import { of } from 'rxjs';
+import {
+    SelectGroupComponent
+} from 'src/app/project/collaboration/select-group/select-group.component';
+
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,14 +11,13 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
-import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
-import { SelectGroupComponent } from 'src/app/project/collaboration/select-group/select-group.component';
-import { UsersListComponent } from './users-list.component';
-import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs';
 import { Session } from '@knora/authentication';
+import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
+
+import { UsersListComponent } from './users-list.component';
 
 describe('UsersListComponent', () => {
     let component: UsersListComponent;

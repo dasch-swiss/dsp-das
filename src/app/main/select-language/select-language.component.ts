@@ -1,6 +1,7 @@
+import { Subscription } from 'rxjs';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LanguageService } from '@knora/core';
-import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({

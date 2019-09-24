@@ -1,10 +1,15 @@
+import { AppGlobal } from 'src/app/app-global';
+
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { existingNamesValidator } from '@knora/action';
 import { Session } from '@knora/authentication';
-import { ApiServiceError, KnoraConstants, Project, ProjectsService, StringLiteral, User, UsersService, Utils } from '@knora/core';
-import { AppGlobal } from 'src/app/app-global';
+import {
+    ApiServiceError, KnoraConstants, Project, ProjectsService, StringLiteral, User, UsersService,
+    Utils
+} from '@knora/core';
+
 import { CacheService } from '../../main/cache/cache.service';
 
 @Component({

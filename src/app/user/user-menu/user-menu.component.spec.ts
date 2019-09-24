@@ -7,6 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
 import { Session } from '@knora/authentication';
 import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
+
 import { UserMenuComponent } from './user-menu.component';
 
 describe('UserMenuComponent', () => {

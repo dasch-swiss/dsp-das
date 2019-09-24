@@ -1,3 +1,7 @@
+import { of } from 'rxjs';
+import { ErrorComponent } from 'src/app/main/error/error.component';
+import { UsersListComponent } from 'src/app/system/users/users-list/users-list.component';
+
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -13,9 +17,7 @@ import { KuiActionModule } from '@knora/action';
 import { Session } from '@knora/authentication';
 import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { of } from 'rxjs';
-import { ErrorComponent } from 'src/app/main/error/error.component';
-import { UsersListComponent } from 'src/app/system/users/users-list/users-list.component';
+
 import { AddUserComponent } from './add-user/add-user.component';
 import { CollaborationComponent } from './collaboration.component';
 import { SelectGroupComponent } from './select-group/select-group.component';

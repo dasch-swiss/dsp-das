@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router, Params } from '@angular/router';
-import { ApiServiceError, Project, ProjectsService, User } from '@knora/core';
-import { CacheService } from '../../main/cache/cache.service';
-import { Session } from '@knora/authentication';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+
+import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Session } from '@knora/authentication';
+import { ApiServiceError, Project, ProjectsService, User } from '@knora/core';
+
+import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
     selector: 'app-board',

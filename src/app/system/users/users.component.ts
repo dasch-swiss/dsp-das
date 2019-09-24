@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersService, User, ApiServiceError } from '@knora/core';
-import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { ApiServiceError, User, UsersService } from '@knora/core';
 
 @Component({
     selector: 'app-users',

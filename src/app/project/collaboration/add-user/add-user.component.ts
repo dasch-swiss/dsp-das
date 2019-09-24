@@ -1,11 +1,15 @@
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { existingNamesValidator } from '@knora/action';
-import { ApiServiceError, AutocompleteItem, Project, ProjectsService, User, UsersService } from '@knora/core';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import {
+    ApiServiceError, AutocompleteItem, Project, ProjectsService, User, UsersService
+} from '@knora/core';
+
 import { CacheService } from '../../../main/cache/cache.service';
 
 @Component({

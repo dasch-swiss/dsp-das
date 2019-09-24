@@ -8,6 +8,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
 import { KuiAuthenticationModule } from '@knora/authentication';
 import { KuiCoreConfig, KuiCoreConfigToken } from '@knora/core';
+
 import { GridComponent } from './grid/grid.component';
 import { MainComponent } from './main.component';
 

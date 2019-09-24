@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
 import { Observable, of, Subject, throwError } from 'rxjs';
-import { ApiServiceError } from '@knora/core';
 
+import { Injectable } from '@angular/core';
+import { ApiServiceError } from '@knora/core';
 
 interface CacheContent {
     expiry: number;

@@ -7,8 +7,8 @@ import { KuiActionModule } from '@knora/action';
 import { KuiAuthenticationModule, Session } from '@knora/authentication';
 import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { PasswordFormComponent } from './password-form.component';
 
+import { PasswordFormComponent } from './password-form.component';
 
 describe('PasswordFormComponent', () => {
     let component: PasswordFormComponent;

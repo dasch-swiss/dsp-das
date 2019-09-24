@@ -9,11 +9,12 @@ import { KuiActionModule } from '@knora/action';
 import { KuiCoreConfig, KuiCoreConfigToken } from '@knora/core';
 import { KuiSearchModule } from '@knora/search';
 import { TranslateModule } from '@ngx-translate/core';
+
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './main/header/header.component';
+import { InfoMenuComponent } from './main/info-menu/info-menu.component';
 import { SelectLanguageComponent } from './main/select-language/select-language.component';
 import { UserMenuComponent } from './user/user-menu/user-menu.component';
-import { InfoMenuComponent } from './main/info-menu/info-menu.component';
 
 describe('AppComponent', () => {
     beforeEach(async(() => {

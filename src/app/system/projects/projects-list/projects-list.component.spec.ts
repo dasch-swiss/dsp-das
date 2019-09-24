@@ -3,11 +3,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { KuiActionModule } from '@knora/action';
-import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
-import { ProjectsListComponent } from './projects-list.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import { KuiActionModule } from '@knora/action';
 import { Session } from '@knora/authentication';
+import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
+
+import { ProjectsListComponent } from './projects-list.component';
 
 describe('ProjectsListComponent', () => {
     let component: ProjectsListComponent;

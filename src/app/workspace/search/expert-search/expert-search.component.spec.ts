@@ -10,6 +10,7 @@ import { KuiCoreConfig, KuiCoreConfigToken } from '@knora/core';
 import { KuiSearchModule } from '@knora/search';
 import { KuiViewerModule } from '@knora/viewer';
 import { TranslateModule } from '@ngx-translate/core';
+
 import { ExpertSearchComponent } from './expert-search.component';
 
 xdescribe('ExpertSearchComponent', () => {

@@ -3,6 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
+
 import { SelectGroupComponent } from './select-group.component';
 
 describe('SelectGroupComponent', () => {

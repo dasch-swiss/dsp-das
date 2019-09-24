@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ApiServiceError, ListNode, ListNodeUpdatePayload, ListsService, StringLiteral } from '@knora/core';
+import {
+    ApiServiceError, ListNode, ListNodeUpdatePayload, ListsService, StringLiteral
+} from '@knora/core';
 
 @Component({
     selector: 'app-list-item-form',

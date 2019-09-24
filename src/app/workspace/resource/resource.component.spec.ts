@@ -3,8 +3,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
 import { KuiViewerModule } from '@knora/viewer';
-import { ResourceComponent } from './resource.component';
 
+import { ResourceComponent } from './resource.component';
 
 describe('ResourceComponent', () => {
     let component: ResourceComponent;

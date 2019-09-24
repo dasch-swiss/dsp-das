@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { User, UsersService } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
+
+import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Session } from '@knora/authentication';
+import { User, UsersService } from '@knora/core';
 
 @Component({
   selector: 'app-dashboard',

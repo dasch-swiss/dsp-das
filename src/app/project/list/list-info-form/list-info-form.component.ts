@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ApiServiceError, List, ListCreatePayload, ListInfo, ListInfoUpdatePayload, ListsService, Project, StringLiteral } from '@knora/core';
+import {
+    ApiServiceError, List, ListCreatePayload, ListInfo, ListInfoUpdatePayload, ListsService,
+    Project, StringLiteral
+} from '@knora/core';
 
 @Component({
     selector: 'app-list-info-form',

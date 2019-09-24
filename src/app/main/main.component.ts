@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '@knora/authentication';
 import { ApiServiceError, KnoraConstants, Project, ProjectsService } from '@knora/core';
+
 import { GridItem } from './grid/grid.component';
 
 @Component({

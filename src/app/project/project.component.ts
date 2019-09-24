@@ -1,16 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import {
-    ApiServiceError,
-    GroupsService,
-    Project,
-    ProjectsService
-} from '@knora/core';
+import { Session } from '@knora/authentication';
+import { ApiServiceError, GroupsService, Project, ProjectsService } from '@knora/core';
+
+import { AppGlobal } from '../app-global';
 import { CacheService } from '../main/cache/cache.service';
 import { MenuItem } from '../main/declarations/menu-item';
-import { AppGlobal } from '../app-global';
-import { Session } from '@knora/authentication';
 
 @Component({
     selector: 'app-project',

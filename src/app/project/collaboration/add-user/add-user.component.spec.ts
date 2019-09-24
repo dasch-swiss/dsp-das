@@ -8,6 +8,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
 import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
 import { TranslateModule } from '@ngx-translate/core';
+
 import { AddUserComponent } from './add-user.component';
 
 describe('AddUserComponent', () => {

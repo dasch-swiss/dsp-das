@@ -1,3 +1,7 @@
+import {
+    SelectGroupComponent
+} from 'src/app/project/collaboration/select-group/select-group.component';
+
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,7 +13,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
 import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
-import { SelectGroupComponent } from 'src/app/project/collaboration/select-group/select-group.component';
+
 import { UsersListComponent } from './users-list/users-list.component';
 import { UsersComponent } from './users.component';
 

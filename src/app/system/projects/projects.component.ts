@@ -1,17 +1,13 @@
+import { AdminPermissions } from 'src/app/main/declarations/admin-permissions';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { Session } from '@knora/authentication';
-import {
-    ApiServiceError,
-    Project,
-    ProjectsService,
-    User,
-    UsersService
-} from '@knora/core';
+import { ApiServiceError, Project, ProjectsService, User, UsersService } from '@knora/core';
+
 import { CacheService } from '../../main/cache/cache.service';
-import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { AdminPermissions } from 'src/app/main/declarations/admin-permissions';
 
 /**
  * projects component handles the list of projects

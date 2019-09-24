@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Session } from '@knora/authentication';
 import { ApiServiceError, Project, ProjectsService, User } from '@knora/core';
+
 import { CacheService } from '../../main/cache/cache.service';
 import { AddUserComponent } from './add-user/add-user.component';
 

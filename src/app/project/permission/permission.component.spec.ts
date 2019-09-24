@@ -1,3 +1,7 @@
+import { of } from 'rxjs';
+import { ErrorComponent } from 'src/app/main/error/error.component';
+import { GroupsListComponent } from 'src/app/system/groups/groups-list/groups-list.component';
+
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -5,12 +9,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
 import { Session } from '@knora/authentication';
 import { KuiCoreConfig, KuiCoreConfigToken } from '@knora/core';
-import { of } from 'rxjs';
-import { ErrorComponent } from 'src/app/main/error/error.component';
-import { GroupsListComponent } from 'src/app/system/groups/groups-list/groups-list.component';
+
 import { AddGroupComponent } from './add-group/add-group.component';
 import { PermissionComponent } from './permission.component';
-
 
 describe('PermissionComponent', () => {
   let component: PermissionComponent;

@@ -1,9 +1,10 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { CacheService } from 'src/app/main/cache/cache.service';
+
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { KuiMessageData } from '@knora/action';
 import { AuthenticationService } from '@knora/authentication';
 import { ApiServiceError, User, UsersService, Utils } from '@knora/core';
-import { CacheService } from 'src/app/main/cache/cache.service';
 
 @Component({
     selector: 'app-password-form',

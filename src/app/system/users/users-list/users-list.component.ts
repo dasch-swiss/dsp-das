@@ -1,10 +1,14 @@
+import { CacheService } from 'src/app/main/cache/cache.service';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AuthenticationService, Session } from '@knora/authentication';
-import { ApiServiceError, Group, KnoraConstants, PermissionData, Project, ProjectsService, User, UsersService } from '@knora/core';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import {
+    ApiServiceError, Group, KnoraConstants, PermissionData, Project, ProjectsService, User,
+    UsersService
+} from '@knora/core';
 
 @Component({
     selector: 'app-users-list',

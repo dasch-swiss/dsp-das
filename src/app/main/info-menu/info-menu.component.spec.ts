@@ -5,8 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
-import { InfoMenuComponent } from './info-menu.component';
 
+import { InfoMenuComponent } from './info-menu.component';
 
 describe('InfoMenuComponent', () => {
   let component: InfoMenuComponent;

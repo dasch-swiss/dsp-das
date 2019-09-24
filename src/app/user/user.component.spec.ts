@@ -14,6 +14,7 @@ import { KuiActionModule } from '@knora/action';
 import { Session } from '@knora/authentication';
 import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
 import { TranslateModule } from '@ngx-translate/core';
+
 import { ErrorComponent } from '../main/error/error.component';
 import { ProjectsListComponent } from '../system/projects/projects-list/projects-list.component';
 import { ProjectsComponent } from '../system/projects/projects.component';

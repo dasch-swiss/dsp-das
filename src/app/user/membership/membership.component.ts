@@ -1,10 +1,14 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { ApiServiceError, User, UsersService, ProjectsService, PermissionData, KnoraConstants, Project, AutocompleteItem } from '@knora/core';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { Session } from '@knora/authentication';
-import { Router } from '@angular/router';
-import { FormControl } from '@angular/forms';
 import { AppGlobal } from 'src/app/app-global';
+import { CacheService } from 'src/app/main/cache/cache.service';
+
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Session } from '@knora/authentication';
+import {
+    ApiServiceError, AutocompleteItem, KnoraConstants, PermissionData, Project, ProjectsService,
+    User, UsersService
+} from '@knora/core';
 
 @Component({
     selector: 'app-membership',

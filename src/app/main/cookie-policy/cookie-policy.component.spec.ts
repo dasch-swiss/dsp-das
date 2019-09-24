@@ -1,9 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Location } from '@angular/common';
-import { CookiePolicyComponent } from './cookie-policy.component';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+
+import { CookiePolicyComponent } from './cookie-policy.component';
 
 describe('CookiePolicyComponent', () => {
   let component: CookiePolicyComponent;
