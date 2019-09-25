@@ -37,7 +37,7 @@ export class HelpComponent implements OnInit {
         {
             icon: 'edit',
             title: 'Research tools',
-            text: 'NOT YET IMPLEMENTED -- Get more information about data handling, search methods and how to use the research tools.',
+            text: 'NOT FULLY IMPLEMENTED - Get more information about data handling, search methods and how to use the research tools.',
             url: 'https://docs.dasch.swiss/user-guide/data',
             urlText: 'Open Documentation'
         },
@@ -53,7 +53,7 @@ export class HelpComponent implements OnInit {
     tools: GridItem[] = [
         {
             title: '(s)Kuirl ',
-            text: 'This is the tool in the front-end you are using right now. Knora\'s generic web application.',
+            text: 'This is the tool of the user interface you are using right now. Knora\'s generic web application.',
             url: 'https://github.com/dhlab-basel/Kuirl/releases/tag/v',
             urlText: 'Release notes'
         },
@@ -74,7 +74,7 @@ export class HelpComponent implements OnInit {
     support: GridItem[] = [
         {
             title: 'Need more help?',
-            text: 'Did you had some issues by using our software. Let us know and get in contact with developers and users:',
+            text: 'Have you had some issues by using our software? Let us know and get in contact with developers and users:',
             url: 'https://discuss.dasch.swiss',
             urlText: 'DaSCH Forum'
         },
