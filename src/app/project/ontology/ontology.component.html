@@ -16,18 +16,18 @@
 
     <div *ngIf="!loading && ontology" class="ontology-editor">
 
-        <!-- add source type to the ontology -->
+        <!-- button to define and add new source type to the ontology -->
         <app-add-source-type *ngIf="project?.status && sysAdmin && ontologyIri" [projectcode]="projectcode"
                              class="add-source-type" (refreshParent)="refresh()" #addSourceTypeComponent>
         </app-add-source-type>
 
         <!-- list of source types -->
-        <span *ngFor="let resClass of ontology['@graph']">
+        <div *ngFor="let resClass of ontology['@graph']">
             <div *ngIf="resClass['@type'] === 'owl:Class'" class="resource-class" cdkDrag
                  cdkDragBoundary=".ontology-editor">
                 {{resClass['rdfs:label']}}
             </div>
-        </span>
+        </div>
 
     </div>
 
@@ -91,5 +91,6 @@
 -->
 
 <div class="mobile-only">
-    <kui-message [message]="{status: 415, statusText: 'This content is not supported on small devices.'}"></kui-message>
+    <kui-message [message]="{status: 415, statusText: 'This content is not supported on small devices.'}">
+    </kui-message>
 </div>

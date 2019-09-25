@@ -52,7 +52,7 @@ export class AddUserComponent implements OnInit {
      */
     validationMessages = {
         'username': {
-            'existingName': 'This user is already a member of the project. You can\'t add him.'
+            'existingName': 'This user is already a member of the project. You can\'t add him / her.'
         }
     };
 

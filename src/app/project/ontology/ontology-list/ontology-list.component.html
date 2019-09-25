@@ -1,24 +1,24 @@
 <div class="app-toolbar transparent">
     <div class="app-toolbar-row">
-        <h3 class="mat-body subtitle">Edit your data model
+        <h3 class="mat-body subtitle">Work on data model
         </h3>
     </div>
     <div class="app-toolbar-row">
         <h2 class="mat-title">
-            This project has {{ontologies.length}}
-            <!-- | i18nPlural: itemPluralMapping['ontology']}} -->
+            {{ontologies.length ? 'Select from the list' : 'No data model defined yet'}}
         </h2>
         <span class="fill-remaining-space"></span>
         <span class="app-toolbar-action">
 
-            <form [formGroup]="ontologyForm" class="form" *ngIf="!loading && ontologies">
+            <form [formGroup]="ontologyForm" class="form" *ngIf="!loading && ontologies.length">
 
-                <!-- auto complete list to select source types -->
+                <!-- list to select ontology -->
                 <div class="form-content">
                     <mat-form-field class="large-field select-ontology">
 
                         <mat-label>
-                            <span *ngIf="ontologies.length > 0">Select from list...</span>
+                            <span *ngIf="ontologies.length > 0">Project has
+                                {{ontologies.length | i18nPlural: itemPluralMapping['ontology']}}</span>
                             <span *ngIf="ontologies.length === 0">Create one</span>
                         </mat-label>
 
@@ -40,6 +40,11 @@
                 </div>
 
             </form>
+
+            <button mat-raised-button color="primary" class="create-data-model-btn" *ngIf="!ontologies.length"
+                    (click)="openDialog('createOntology')">
+                Create your first data model
+            </button>
 
         </span>
         <span class="fill-remaining-space"></span>

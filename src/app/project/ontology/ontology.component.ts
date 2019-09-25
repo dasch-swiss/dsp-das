@@ -150,6 +150,11 @@ export class OntologyComponent implements OnInit {
                             this.ontologyIri = ontologies.body['@id'];
                             this.getOntology(this.ontologyIri);
 
+                            this.loading = false;
+                        } else {
+                            // none ontology defined yet
+                            this.ontologies = [];
+                            this.loading = false;
                         }
                     },
                     (error: ApiServiceError) => {
