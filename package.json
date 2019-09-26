@@ -9,7 +9,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build-prod": "ng build --prod --build-optimizer",
-    "test-ci": "ng test --watch=false --browsers=ChromeHeadless"
+    "test-ci": "ng test --watch=false --browsers=ChromeHeadless",
+    "yalc-add-modules": "rm -rf .yalc/@knora && yalc add @knora/action && yalc add @knora/authentication && yalc add @knora/core && yalc add @knora/search && yalc add @knora/viewer && yarn install --prod=false"
   },
   "private": true,
   "dependencies": {
