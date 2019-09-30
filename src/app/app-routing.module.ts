@@ -29,11 +29,16 @@ import { ResourceComponent } from './workspace/resource/resource.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { GroupComponent } from './project/group/group.component';
 import { ListComponent } from './project/list/list.component';
+import { HelpComponent } from './main/help/help.component';
 
 const routes: Routes = [
     {
         path: '',
         component: MainComponent
+    },
+    {
+        path: 'help',
+        component: HelpComponent
     },
     {
         path: 'login',
