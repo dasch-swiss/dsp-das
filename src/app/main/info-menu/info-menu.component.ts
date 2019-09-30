@@ -27,7 +27,7 @@ export class InfoMenuComponent implements OnInit {
         {
             label: '',
             icon: 'kuirl_icon',
-            route: 'https://github.com/dhlab-basel/Kuirl/releases/tag/v' + this.appVersion
+            route: 'https://github.com/dasch-swiss/knora-app/releases/tag/v' + this.appVersion
         },
         {
             label: 'Knora v',
