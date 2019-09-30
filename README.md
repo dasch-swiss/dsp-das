@@ -1,8 +1,9 @@
 # Knora app
 
-<!-->
+<!--
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ddfe61cdc2a14c3b89e34d2f49cd64fa)](https://www.codacy.com/app/dasch-swiss/knora-app?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dasch-swiss/knora-app&amp;utm_campaign=Badge_Grade)
 -->
+
 [![Build Status](https://travis-ci.com/dasch-swiss/knora-app.svg?branch=master)](https://travis-ci.com/dasch-swiss/knora-app)
 [![CircleCI](https://circleci.com/gh/dasch-swiss/knora-app.svg?style=svg)](https://circleci.com/gh/dasch-swiss/knora-app)
 
