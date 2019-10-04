@@ -22,7 +22,6 @@ import { DialogComponent } from './main/dialog/dialog.component';
 import { ErrorComponent } from './main/error/error.component';
 import { GridComponent } from './main/grid/grid.component';
 import { HeaderComponent } from './main/header/header.component';
-import { InfoMenuComponent } from './main/info-menu/info-menu.component';
 import { LoginComponent } from './main/login/login.component';
 import { MainComponent } from './main/main.component';
 import { SelectLanguageComponent } from './main/select-language/select-language.component';
@@ -131,7 +130,10 @@ export function initializeApp(appInitService: AppInitService) {
         DialogHeaderComponent,
         GridComponent,
         CookiePolicyComponent,
-        InfoMenuComponent,
+        GroupsComponent,
+        GroupsListComponent,
+        PermissionComponent,
+        AddGroupComponent,
         ListComponent,
         ListInfoFormComponent,
         ListItemComponent,
@@ -177,9 +179,7 @@ export function initializeApp(appInitService: AppInitService) {
         {
             provide: KuiCoreConfigToken,
             useFactory: () => AppInitService.coreConfig
-        },
-        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: WithCredentialsInterceptor, multi: true }
+        }
     ],
     bootstrap: [AppComponent]
 })
