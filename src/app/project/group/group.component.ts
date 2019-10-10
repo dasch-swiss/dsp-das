@@ -7,6 +7,7 @@ import { CacheService } from 'src/app/main/cache/cache.service';
 import { GroupFormComponent } from './group-form/group-form.component';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { KuiMessageData } from '@knora/action';
 
 @Component({
   selector: 'app-group',
@@ -31,6 +32,15 @@ export class GroupComponent implements OnInit {
 
   // project members
   projectGroups: Group[] = [];
+
+  // short message to indicate that no group has been defined for the project
+  errorMessageNoGroup: KuiMessageData = {
+    status: 200,
+    statusMsg: 'Success',
+    statusText: 'No group has been defined in this project.',
+    type: 'Note',
+    footnote: 'Close it'
+  };
 
   @ViewChild('groupFormComponent', { static: false }) groupForm: GroupFormComponent;
 
@@ -71,7 +81,7 @@ export class GroupComponent implements OnInit {
         // is logged-in user projectAdmin?
         this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
 
-        this.initList();
+        this.initList(); console.log('projectGroups', this.projectGroups);
 
         // get from cache: list of project members and groups
         if (this.projectAdmin) {

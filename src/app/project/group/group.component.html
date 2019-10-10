@@ -1,10 +1,5 @@
 <div *ngIf="projectAdmin" class="content large middle">
 
-    <!-- add group -->
-    <!-- <app-group-form *ngIf="project?.status && sysAdmin" [projectcode]="projectcode" (refreshParent)="refresh()" #groupFormComponent></app-group-form> -->
-
-    <!-- <mat-divider *ngIf="project?.status" ></mat-divider> -->
-
     <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
 
     <div *ngIf="!loading" class="content">
@@ -31,35 +26,41 @@
             </div>
         </div>
 
-        <!-- list of active lists -->
-        <mat-accordion class="group-list">
+        <!-- list of active groups -->
+        <div *ngIf="projectGroups.length > 0; else noGroup">
+            <mat-accordion class="group-list">
 
-            <mat-expansion-panel *ngFor="let group of projectGroups; let i = index" class="list" (closed)="openPanel = -1" (afterExpand)="openPanel = i" [expanded]="projectGroups.length === 1 || openPanel === i">
-                <mat-expansion-panel-header>
-                    <mat-panel-title [matTooltip]="group.name" matTooltipPosition="above">
-                        {{group.name}}
-                    </mat-panel-title>
-                    <mat-panel-description class="shorten-text" [matTooltip]="group.description" matTooltipPosition="above">
-                        {{group.description | kuiTruncate:[64]}}
-                        <span class="fill-remaining-space"></span>
-                        <button mat-stroked-button *ngIf="openPanel === i">
-                            Edit info
-                        </button>
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
+                <mat-expansion-panel *ngFor="let group of projectGroups; let i = index" class="list" (closed)="openPanel = -1" (afterExpand)="openPanel = i" [expanded]="projectGroups.length === 1 || openPanel === i">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title [matTooltip]="group.name" matTooltipPosition="above">
+                            {{group.name}}
+                        </mat-panel-title>
+                        <mat-panel-description class="shorten-text" [matTooltip]="group.description" matTooltipPosition="above">
+                            {{group.description | kuiTruncate:[64]}}
+                            <span class="fill-remaining-space"></span>
+                            <button mat-stroked-button *ngIf="openPanel === i">
+                                Edit info
+                            </button>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
 
-                <app-group-list *ngIf="!loading && group" [group]="group" [projectcode]="projectcode" [projectIri]="project?.id">
-                </app-group-list>
-            </mat-expansion-panel>
+                    <app-group-list *ngIf="!loading && group" [group]="group" [projectcode]="projectcode" [projectIri]="project?.id">
+                    </app-group-list>
+                </mat-expansion-panel>
 
-        </mat-accordion>
+            </mat-accordion>
+        </div>
+
+        <!-- in case no group has been defined -->
+        <ng-template #noGroup>
+            <kui-message *ngIf="errorMessageNoGroup" [message]="errorMessageNoGroup" [short]="true"></kui-message>
+        </ng-template>
 
     </div>
 
 </div>
 
 <!-- ERROR MESSAGE -->
-
 <div *ngIf="!projectAdmin" class="content large middle">
     <app-error [status]="403"></app-error>
 </div>
