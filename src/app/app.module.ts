@@ -130,10 +130,6 @@ export function initializeApp(appInitService: AppInitService) {
         DialogHeaderComponent,
         GridComponent,
         CookiePolicyComponent,
-        GroupsComponent,
-        GroupsListComponent,
-        PermissionComponent,
-        AddGroupComponent,
         ListComponent,
         ListInfoFormComponent,
         ListItemComponent,
@@ -141,7 +137,7 @@ export function initializeApp(appInitService: AppInitService) {
         MembershipComponent,
         GroupComponent,
         GroupFormComponent,
-        GroupListComponent
+        GroupListComponent,
         HelpComponent,
         FooterComponent
     ],
