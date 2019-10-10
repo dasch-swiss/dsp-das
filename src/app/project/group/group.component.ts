@@ -81,12 +81,7 @@ export class GroupComponent implements OnInit {
         // is logged-in user projectAdmin?
         this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
 
-        this.initList(); console.log('projectGroups', this.projectGroups);
-
-        // get from cache: list of project members and groups
-        if (this.projectAdmin) {
-          // this.refresh();
-        }
+        this.initList();
 
         this.loading = false;
       },
@@ -106,6 +101,8 @@ export class GroupComponent implements OnInit {
         for (const group of response) {
           if (group.project.id === this.project.id) {
             this.projectGroups = [group];
+            this.loading = false;
+          } else {
             this.loading = false;
           }
         }

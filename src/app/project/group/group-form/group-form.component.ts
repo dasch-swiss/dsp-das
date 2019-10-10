@@ -51,7 +51,6 @@ export class GroupFormComponent implements OnInit {
 
   ngOnInit() {
     this.buildForm(this.group);
-    console.log('form value', this.form.value);
 
     this._projectService.getProjectByIri(this.projectIri).subscribe(
       (projectData: Project) => {
@@ -61,6 +60,7 @@ export class GroupFormComponent implements OnInit {
   }
 
   buildForm(group?: Group): void {
+    /* TODO: pass Project object or projectIRI but then another Group class must be created */
     this.form = this._formBuilder.group({
       groupName: new FormControl(
         {
@@ -78,18 +78,14 @@ export class GroupFormComponent implements OnInit {
       'status': [true],
       'selfjoin': [false]
     });
-
-    console.log('build form value', this.form.value);
   }
 
   submitData() {
-    this.loading = true;
-
-
+    console.log('submit data');
+    this.closeMessage();
   }
 
   closeMessage() {
-    console.log('close message group');
     this.closeDialog.emit(this.group);
   }
 }

@@ -13,7 +13,7 @@
         <mat-form-field class="large-field">
             <textarea matInput matTextareaAutosize [matAutosizeMinRows]="6" [matAutosizeMaxRows]="12" [formControl]="form.controls['groupDescription']" placeholder="Group description"></textarea>
         </mat-form-field>
-        <button mat-raised-button type="submit" color="primary" [disabled]="!form.valid">
+        <button mat-raised-button type="submit" color="primary" [disabled]="!form.valid" (click)="submitData()">
             Create
         </button>
     </form>
