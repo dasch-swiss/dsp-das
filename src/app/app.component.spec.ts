@@ -23,7 +23,6 @@ describe('AppComponent', () => {
                 AppComponent,
                 HeaderComponent,
                 SelectLanguageComponent,
-                InfoMenuComponent,
                 UserMenuComponent
             ],
             imports: [

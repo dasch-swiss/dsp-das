@@ -24,7 +24,6 @@ describe('HeaderComponent', () => {
             declarations: [
                 HeaderComponent,
                 SelectLanguageComponent,
-                InfoMenuComponent,
                 UserMenuComponent
             ],
             imports: [

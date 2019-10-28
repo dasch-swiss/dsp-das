@@ -1,11 +1,11 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KuiActionModule } from '@knora/action';
-import { KuiAuthenticationModule } from '@knora/authentication';
+import { KuiAuthenticationModule, JwtInterceptor, WithCredentialsInterceptor } from '@knora/authentication';
 import { KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
 import { KuiSearchModule } from '@knora/search';
 import { KuiViewerModule } from '@knora/viewer';
@@ -23,7 +23,6 @@ import { DialogComponent } from './main/dialog/dialog.component';
 import { ErrorComponent } from './main/error/error.component';
 import { GridComponent } from './main/grid/grid.component';
 import { HeaderComponent } from './main/header/header.component';
-import { InfoMenuComponent } from './main/info-menu/info-menu.component';
 import { LoginComponent } from './main/login/login.component';
 import { MainComponent } from './main/main.component';
 import { SelectLanguageComponent } from './main/select-language/select-language.component';
@@ -82,6 +81,8 @@ import {
     AdvancedSearchComponent
 } from './workspace/search/advanced-search/advanced-search.component';
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
+import { HelpComponent } from './main/help/help.component';
+import { FooterComponent } from './main/footer/footer.component';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -143,7 +144,6 @@ export function initializeApp(appInitService: AppInitService) {
         DialogHeaderComponent,
         GridComponent,
         CookiePolicyComponent,
-        InfoMenuComponent,
         GroupsComponent,
         GroupsListComponent,
         PermissionComponent,
@@ -156,7 +156,9 @@ export function initializeApp(appInitService: AppInitService) {
         ListInfoFormComponent,
         ListItemComponent,
         ListItemFormComponent,
-        MembershipComponent
+        MembershipComponent,
+        HelpComponent,
+        FooterComponent
     ],
     imports: [
         AppRoutingModule,

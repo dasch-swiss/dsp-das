@@ -1,8 +1,8 @@
 <mat-toolbar>
     <span class="logo">
         <button mat-button routerLink="/" class="main-toolbar-button home-button">
-            <!-- <mat-icon svgIcon="kuirl_banner" class="large"></mat-icon> -->
-            <mat-icon svgIcon="kuirl_icon" class="small"></mat-icon>
+            <!-- <mat-icon svgIcon="knora_app_banner" class="large"></mat-icon> -->
+            <mat-icon svgIcon="knora_app_icon" class="small"></mat-icon>
             <!-- {{appName}} -->
         </button>
     </span>
@@ -38,9 +38,12 @@
 
     <!-- action tools: info menu, select language, login button, user menu -->
     <span class="action">
-        <app-info-menu class="info-menu-button"></app-info-menu>
+        <button mat-button [routerLink]="'/help'" class="main-toolbar-button help"> Help </button>
+
         <app-select-language></app-select-language>
-        <button mat-raised-button color="primary" *ngIf="!session" class="login-button" (click)="goToLogin()">LOGIN</button>
+
+        <button mat-raised-button color="primary" *ngIf="!session" class="login-button"
+                (click)="goToLogin()">LOGIN</button>
         <app-user-menu *ngIf="session"></app-user-menu>
     </span>
 
@@ -48,6 +51,7 @@
 
 <!-- search-panel (in phone version) -->
 <div class="search-panel-phone" *ngIf="show">
-    <kui-fulltext-search class="kui-fulltext-search" [route]="'/search'" [projectfilter]="true" (showState)="show=$event">
+    <kui-fulltext-search class="kui-fulltext-search" [route]="'/search'" [projectfilter]="true"
+                         (showState)="show=$event">
     </kui-fulltext-search>
 </div>
