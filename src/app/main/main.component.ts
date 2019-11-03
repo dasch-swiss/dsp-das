@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '@knora/authentication';
-import { ApiServiceError, KnoraConstants, Project, ProjectsService } from '@knora/core';
+import { ApiServiceError, KnoraConstants, Project, ProjectsService, KnoraApiConnectionToken } from '@knora/core';
 import { GridItem } from './grid/grid.component';
+import { KnoraApiConnection } from '@knora/api';
 
 @Component({
     selector: 'app-main',
@@ -62,7 +63,8 @@ export class MainComponent implements OnInit {
         }
     ];
 
-    constructor (
+    constructor(
+        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _auth: AuthenticationService,
         private _projectsService: ProjectsService,
         private _router: Router,
@@ -93,11 +95,11 @@ export class MainComponent implements OnInit {
 
     loadProjects() {
         this.loading = true;
-        this._projectsService.getAllProjects().subscribe(
-            (result: Project[]) => {
+        this.knoraApiConnection.admin.projectsEndpoint.getProjects().subscribe(
+            (response: ApiResponseData<ProjectsResponse>) => {
                 const sliceLength: number = 160;
 
-                for (const project of result) {
+                for (const project of response.body.projects) {
                     // disable default test projects
 
                     if (!this.disabledProjects.includes(project.id) && project.status) {

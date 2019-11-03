@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { GridItem } from '../grid/grid.component';
-import { KuiCoreConfigToken, KuiCoreConfig } from '@knora/core';
+import { KuiCoreConfigToken, KuiCoreConfig, KuiConfigToken, KuiConfig } from '@knora/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
 import { HttpResponse, HttpClient } from '@angular/common/http';
@@ -92,7 +92,7 @@ export class HelpComponent implements OnInit {
         }
     ];
 
-    constructor (@Inject(KuiCoreConfigToken) public config: KuiCoreConfig,
+    constructor(@Inject(KuiConfigToken) public config: KuiConfig,
         private _domSanitizer: DomSanitizer,
         private _matIconRegistry: MatIconRegistry,
         private _http: HttpClient) {
@@ -111,7 +111,7 @@ export class HelpComponent implements OnInit {
     ngOnInit() {
 
         // set knora-app version
-        this.tools[0].title = this.config.name + ' v' + this.appVersion;
+        this.tools[0].title = this.config.app.name + ' v' + this.appVersion;
         this.tools[0].url += this.appVersion;
 
         this._http.get(this.config.api + '/admin/projects', { observe: 'response' })
