@@ -1,7 +1,11 @@
 {
-  "ontologyIRI": "http://0.0.0.0:3333",
-  "apiURL": "http://0.0.0.0:3333",
-  "iiifURL": "http://0.0.0.0:1024",
-  "appURL": "http://localhost:4200",
-  "appName": "Knora app"
-}
+    "api": {
+        "protocol": "http",
+        "host": "0.0.0.0",
+        "port": 3333
+    },
+    "app": {
+        "name": "Knora-APP",
+        "url": "localhost:4200"
+    }
+  }

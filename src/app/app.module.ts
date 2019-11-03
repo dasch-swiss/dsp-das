@@ -5,8 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KuiActionModule } from '@knora/action';
-import { KuiAuthenticationModule, JwtInterceptor, WithCredentialsInterceptor } from '@knora/authentication';
-import { KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
+import { KuiAuthenticationModule } from '@knora/authentication';
+import { KuiCoreModule, KuiConfigToken, KnoraApiConnectionToken } from '@knora/core';
 import { KuiSearchModule } from '@knora/search';
 import { KuiViewerModule } from '@knora/viewer';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -173,11 +173,12 @@ export function initializeApp(appInitService: AppInitService) {
             useFactory: initializeApp,
             deps: [AppInitService],
             multi: true
+        }, {
+            provide: KuiConfigToken, useFactory: () => AppInitService.knoraUiConfig
         },
         {
-            provide: KuiCoreConfigToken,
-            useFactory: () => AppInitService.coreConfig
-        }
+            provide: KnoraApiConnectionToken, useFactory: () => AppInitService.knoraApiConnection
+        },
     ],
     bootstrap: [AppComponent]
 })
