@@ -51,7 +51,7 @@ export class MainComponent implements OnInit {
             text: 'When data changes, Knora preserves past versions, so you can still view and cite them.'
         },
         {
-            icon: 'perm_identity',
+            icon: 'lock',
             title: 'Control Access',
             text: 'You decide who can view and change each item of data in your project.'
         },
@@ -62,14 +62,14 @@ export class MainComponent implements OnInit {
         }
     ];
 
-    constructor (
+    constructor(
         private _auth: AuthenticationService,
         private _projectsService: ProjectsService,
         private _router: Router,
         private _titleService: Title
     ) {
         // set the page title
-        this._titleService.setTitle('Knora User Interface | Research Layer');
+        this._titleService.setTitle('Knora App | DaSCH\'s generic research interface');
 
         // check if a session is active and valid
         if (JSON.parse(localStorage.getItem('session'))) {
