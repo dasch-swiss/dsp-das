@@ -90,8 +90,6 @@ export class ProjectComponent implements OnInit {
                 (response: ApiResponseData<ProjectResponse>) => {
                     this.project = response.body.project;
 
-                    console.log(this.project);
-
                     if (!this.project.status) {
                         this.color = 'warn';
                     }
@@ -108,16 +106,8 @@ export class ProjectComponent implements OnInit {
 
                     // set the cache for project members and groups
                     if (this.projectAdmin) {
-                        this._cache.get(
-                            'members_of_' + this.projectcode,
-                            this._projectsService.getProjectMembersByShortcode(
-                                this.projectcode
-                            )
-                        );
-                        this._cache.get(
-                            'groups_of_' + this.projectcode,
-                            this._groupsService.getAllGroups()
-                        );
+                        this._cache.get('members_of_' + this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectMembersByShortcode(this.projectcode));
+                        this._cache.get('groups_of_' + this.projectcode, this.knoraApiConnection.admin.groupsEndpoint.getGroups());
                     }
 
                     this.loading = false;
