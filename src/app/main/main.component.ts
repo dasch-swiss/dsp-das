@@ -5,7 +5,6 @@ import { AuthenticationService } from '@knora/authentication';
 import { ApiServiceError, KnoraConstants, KnoraApiConnectionToken } from '@knora/core';
 import { GridItem } from './grid/grid.component';
 import { KnoraApiConnection, ApiResponseData } from '@knora/api';
-import { ProjectResponse } from '@knora/api/src/models/admin/project-response';
 import { ProjectsResponse } from '@knora/api/src/models/admin/projects-response';
 
 @Component({

@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router, Params } from '@angular/router';
-import { ApiServiceError, Project, ProjectsService, User } from '@knora/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { ApiServiceError, Project, User, KnoraApiConnectionToken } from '@knora/core';
 import { CacheService } from '../../main/cache/cache.service';
 import { Session } from '@knora/authentication';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { KnoraApiConnection, ApiResponseData } from '@knora/api';
+import { ProjectResponse } from '@knora/api/src/models/admin/project-response';
+import { ReadProject } from '@knora/api/src/models/admin/read-project';
 
 @Component({
     selector: 'app-board',
@@ -26,7 +29,7 @@ export class BoardComponent implements OnInit {
     projectcode: string;
 
     // project data
-    project: Project;
+    project: ReadProject;
 
     projectMembers: User[] = [];
 
@@ -49,11 +52,11 @@ export class BoardComponent implements OnInit {
         }
     };
 
-    constructor (
+    constructor(
+        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _dialog: MatDialog,
         private _route: ActivatedRoute,
-        private _projectsService: ProjectsService,
         private _titleService: Title
     ) {
         // get the shortcode of the current project
@@ -82,12 +85,12 @@ export class BoardComponent implements OnInit {
 
     getProject() {
         // set the cache
-        this._cache.get(this.projectcode, this._projectsService.getProjectByShortcode(this.projectcode));
+        this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
 
         // get project data from cache
-        this._cache.get(this.projectcode, this._projectsService.getProjectByShortcode(this.projectcode)).subscribe(
-            (result: any) => {
-                this.project = result;
+        this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode)).subscribe(
+            (response: ApiResponseData<ProjectResponse>) => {
+                this.project = response.body.project;
                 this.loading = false;
             },
             (error: ApiServiceError) => {
