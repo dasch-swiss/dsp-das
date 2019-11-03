@@ -1,11 +1,11 @@
-import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthenticationService } from '@knora/authentication';
-import { User, UsersService, ApiServiceError } from '@knora/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, LogoutResponse, UserResponse } from '@knora/api';
+import { ReadUser } from '@knora/api/src/models/admin/read-user';
+import { KnoraApiConnectionToken } from '@knora/core';
 import { AppGlobal } from 'src/app/app-global';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { MenuItem } from '../../main/declarations/menu-item';
+import { SessionService } from '@knora/authentication';
 
 @Component({
     selector: 'app-user-menu',
@@ -13,7 +13,7 @@ import { MenuItem } from '../../main/declarations/menu-item';
     styleUrls: ['./user-menu.component.scss']
 })
 export class UserMenuComponent implements OnInit {
-    user: User;
+    user: ReadUser;
 
     username: string;
 
@@ -21,12 +21,10 @@ export class UserMenuComponent implements OnInit {
 
     navigation: MenuItem[];
 
-    constructor (
-        private _auth: AuthenticationService,
-        private _usersService: UsersService,
+    constructor(
+        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _cache: CacheService,
-        private _location: Location,
-        private _router: Router
+        private _session: SessionService
     ) { }
 
     ngOnInit() {
@@ -34,27 +32,31 @@ export class UserMenuComponent implements OnInit {
         this.username = JSON.parse(localStorage.getItem('session')).user.name;
         this.sysAdmin = JSON.parse(localStorage.getItem('session')).user.sysAdmin;
 
-        this._cache.get(this.username, this._usersService.getUserByUsername(this.username));
-        this._cache.get(this.username, this._usersService.getUserByUsername(this.username)).subscribe(
-            (result: User) => {
-                this.user = result;
+        this._cache.get(this.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(this.username));
+        this._cache.get(this.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(
+            (response: ApiResponseData<UserResponse>) => {
+                this.user = response.body.user;
             },
-            (error: ApiServiceError) => {
+            (error: ApiResponseError) => {
                 console.error(error);
             }
         );
     }
 
     logout() {
-        this._auth.logout().subscribe(
-            (result: any) => {
+        this.knoraApiConnection.v2.auth.logout().subscribe(
+            (response: ApiResponseData<LogoutResponse>) => {
                 // console.log(result);
+                // destroy cache
                 this._cache.destroy();
+
+                // destroy (knora-ui) session
+                this._session.destroySession();
 
                 // reload the page
                 window.location.reload();
             },
-            (error: any) => {
+            (error: ApiResponseError) => {
                 console.error(error);
             }
         );
