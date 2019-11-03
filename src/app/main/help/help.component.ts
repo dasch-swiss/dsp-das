@@ -1,11 +1,9 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { GridItem } from '../grid/grid.component';
-import { KuiCoreConfigToken, KuiCoreConfig } from '@knora/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material';
-import { HttpResponse, HttpClient } from '@angular/common/http';
-
-
+import { DomSanitizer } from '@angular/platform-browser';
+import { KuiConfig, KuiConfigToken } from '@knora/core';
+import { GridItem } from '../grid/grid.component';
 
 declare let require: any;
 const { version: appVersion } = require('../../../../package.json');
@@ -92,7 +90,8 @@ export class HelpComponent implements OnInit {
         }
     ];
 
-    constructor (@Inject(KuiCoreConfigToken) public config: KuiCoreConfig,
+    constructor(
+        @Inject(KuiConfigToken) public kuiConfig: KuiConfig,
         private _domSanitizer: DomSanitizer,
         private _matIconRegistry: MatIconRegistry,
         private _http: HttpClient) {
@@ -111,13 +110,19 @@ export class HelpComponent implements OnInit {
     ngOnInit() {
 
         // set knora-app version
-        this.tools[0].title = this.config.name + ' v' + this.appVersion;
+        this.tools[0].title = this.kuiConfig.app.name + ' v' + this.appVersion;
         this.tools[0].url += this.appVersion;
 
-        this._http.get(this.config.api + '/admin/projects', { observe: 'response' })
+        const apiUrl: string = (this.kuiConfig.api.protocol + '://' + this.kuiConfig.api.host) +
+            (this.kuiConfig.api.port !== null ? ':' + this.kuiConfig.api.port : '') +
+            (this.kuiConfig.api.path ? '/' + this.kuiConfig.api.path : '');
+
+        console.log(apiUrl);
+        this._http.get(apiUrl + '/admin/projects', { observe: 'response' })
             .subscribe(
                 (resp: HttpResponse<any>) => {
                     // console.log('Stackoverflow', resp.headers.get('Server'));
+
                     this.readVersion(resp.headers.get('Server'));
                     this.apiStatus = true;
 

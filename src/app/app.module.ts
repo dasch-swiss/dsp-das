@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -174,11 +174,13 @@ export function initializeApp(appInitService: AppInitService) {
             deps: [AppInitService],
             multi: true
         }, {
-            provide: KuiConfigToken, useFactory: () => AppInitService.knoraUiConfig
+            provide: KuiConfigToken,
+            useFactory: () => AppInitService.knoraUiConfig
         },
         {
-            provide: KnoraApiConnectionToken, useFactory: () => AppInitService.knoraApiConnection
-        },
+            provide: KnoraApiConnectionToken,
+            useFactory: () => AppInitService.knoraApiConnection
+        }
     ],
     bootstrap: [AppComponent]
 })
