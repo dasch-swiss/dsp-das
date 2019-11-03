@@ -1,21 +1,15 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import {
-    ApiServiceError,
-    GroupsService,
-    Project,
-    ProjectsService,
-    KnoraApiConnectionToken
-} from '@knora/core';
-import { CacheService } from '../main/cache/cache.service';
-import { MenuItem } from '../main/declarations/menu-item';
-import { AppGlobal } from '../app-global';
-import { Session } from '@knora/authentication';
-
-import { KnoraApiConnection, ApiResponseData } from '@knora/api';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection } from '@knora/api';
 import { ProjectResponse } from '@knora/api/src/models/admin/project-response';
 import { ReadProject } from '@knora/api/src/models/admin/read-project';
+import { Session } from '@knora/authentication';
+import { KnoraApiConnectionToken } from '@knora/core';
+import { AppGlobal } from '../app-global';
+import { CacheService } from '../main/cache/cache.service';
+import { MenuItem } from '../main/declarations/menu-item';
+
 
 @Component({
     selector: 'app-project',
@@ -51,8 +45,6 @@ export class ProjectComponent implements OnInit {
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _route: ActivatedRoute,
-        private _projectsService: ProjectsService,
-        private _groupsService: GroupsService,
         private _titleService: Title
     ) {
         // get the shortcode of the current project
@@ -112,7 +104,7 @@ export class ProjectComponent implements OnInit {
 
                     this.loading = false;
                 },
-                (error: ApiServiceError) => {
+                (error: ApiResponseError) => {
                     console.error(error);
                     this.error = true;
                     this.loading = false;
