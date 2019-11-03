@@ -11,11 +11,11 @@ export class AppComponent implements OnInit {
 
     session: boolean = false;
 
-    constructor(private _titleService: Title,
+    constructor (private _titleService: Title,
         private _auth: AuthenticationService) {
 
         // set the page title
-        this._titleService.setTitle('Knora App | DaSCH\'s generic research interface');
+        this._titleService.setTitle('Knora User Interface | Research Layer');
 
         this.session = this._auth.session();
     }

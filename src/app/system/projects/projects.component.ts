@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Inject } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Session } from '@knora/authentication';
 import {
@@ -6,22 +6,19 @@ import {
     Project,
     ProjectsService,
     User,
-    UsersService,
-    KnoraApiConnectionToken,
-    ProjectsResponse
+    UsersService
 } from '@knora/core';
 import { CacheService } from '../../main/cache/cache.service';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { AdminPermissions } from 'src/app/main/declarations/admin-permissions';
-import { KnoraApiConnection, ApiResponseData } from '@knora/api';
 
 /**
  * projects component handles the list of projects
  * It's used in user-profile, on system-projects
  * but also on the landing page
  *
- * We display two lists: one with active projects
+ * We build to lists: one with active projects
  * and another one with already archived (inactive) projects
  *
  */
@@ -61,8 +58,7 @@ export class ProjectsComponent implements OnInit {
     // list of archived (deleted) projects
     inactive: Project[] = [];
 
-    constructor(
-        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
+    constructor (
         private _cache: CacheService,
         private _dialog: MatDialog,
         private _projectsService: ProjectsService,
@@ -124,16 +120,14 @@ export class ProjectsComponent implements OnInit {
         } else {
 
             // logged-in user is system admin (or guest): show all projects
-            this.knoraApiConnection.admin.projectsEndpoint.getProjects().subscribe(
-                (response: ApiResponseData<ProjectsResponse>) => {
-
-                    console.log(response);
+            this._projectsService.getAllProjects().subscribe(
+                (projects: Project[]) => {
 
                     // reset the lists:
                     this.active = [];
                     this.inactive = [];
 
-                    for (const item of response.body.projects) {
+                    for (const item of projects) {
                         if (item.status === true) {
                             this.active.push(item);
                         } else {
