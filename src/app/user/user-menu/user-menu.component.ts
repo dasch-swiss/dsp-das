@@ -1,11 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, LogoutResponse, UserResponse } from '@knora/api';
-import { ReadUser } from '@knora/api/src/models/admin/read-user';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, LogoutResponse, ReadUser, UserResponse } from '@knora/api';
+import { SessionService } from '@knora/authentication';
 import { KnoraApiConnectionToken } from '@knora/core';
 import { AppGlobal } from 'src/app/app-global';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { MenuItem } from '../../main/declarations/menu-item';
-import { SessionService } from '@knora/authentication';
 
 @Component({
     selector: 'app-user-menu',

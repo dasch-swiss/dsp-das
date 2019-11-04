@@ -6,9 +6,7 @@ import { CacheService } from '../../main/cache/cache.service';
 import { Session } from '@knora/authentication';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { KnoraApiConnection, ApiResponseData } from '@knora/api';
-import { ProjectResponse } from '@knora/api/src/models/admin/project-response';
-import { ReadProject } from '@knora/api/src/models/admin/read-project';
+import { KnoraApiConnection, ApiResponseData, ReadProject, ProjectResponse } from '@knora/api';
 
 @Component({
     selector: 'app-board',

@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { UsersService } from '@knora/core';
+import { UsersService, KnoraApiConnectionToken } from '@knora/core';
 import { CacheService } from '../main/cache/cache.service';
 import { MenuItem } from '../main/declarations/menu-item';
 import { AppGlobal } from '../app-global';
 import { Session } from '@knora/authentication';
 import { MatDialog } from '@angular/material/dialog';
+import { KnoraApiConnection } from '@knora/api';
 
 @Component({
     selector: 'app-user',
@@ -27,11 +28,11 @@ export class UserComponent implements OnInit {
 
     navigation: MenuItem[] = AppGlobal.userNav;
 
-    constructor(private _cache: CacheService,
-                private _dialog: MatDialog,
-                private _route: ActivatedRoute,
-                private _usersService: UsersService,
-                private _titleService: Title) {
+    constructor(
+        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
+        private _cache: CacheService,
+        private _route: ActivatedRoute,
+        private _titleService: Title) {
 
         // get the activated route; we need it for the viewer switch
         this.route = this._route.pathFromRoot[1].snapshot.url[0].path;
@@ -63,7 +64,7 @@ export class UserComponent implements OnInit {
         /**
          * set the cache here for current/logged-in user
          */
-        this._cache.get(this.session.user.name, this._usersService.getUserByUsername(this.session.user.name));
+        this._cache.get(this.session.user.name, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(this.session.user.name));
         this.loading = false;
 
     }

@@ -1,10 +1,11 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { ApiServiceError, User, UsersService, ProjectsService, PermissionData, KnoraConstants, Project, AutocompleteItem } from '@knora/core';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { Session } from '@knora/authentication';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectsResponse, ReadUser, UserResponse } from '@knora/api';
+import { Session } from '@knora/authentication';
+import { AutocompleteItem, KnoraApiConnectionToken, KnoraConstants, PermissionData } from '@knora/core';
 import { AppGlobal } from 'src/app/app-global';
+import { CacheService } from 'src/app/main/cache/cache.service';
 
 @Component({
     selector: 'app-membership',
@@ -19,7 +20,7 @@ export class MembershipComponent implements OnInit {
 
     @Input() username: string;
 
-    user: User;
+    user: ReadUser;
 
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
@@ -34,10 +35,9 @@ export class MembershipComponent implements OnInit {
         }
     };
 
-    constructor (
+    constructor(
+        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _cache: CacheService,
-        private _usersService: UsersService,
-        private _projectsService: ProjectsService,
         private _router: Router
     ) { }
 
@@ -45,22 +45,21 @@ export class MembershipComponent implements OnInit {
 
         this.loading = true;
 
-        // set / get user from cache
-        this._cache.get(this.username, this._usersService.getUserByUsername(this.username));
+        // set the cache
+        this._cache.get(this.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(this.username));
 
-        this._cache.get(this.username, this._usersService.getUserByUsername(this.username)).subscribe(
-            (result: User) => {
-                this.user = result;
+        // get from cache
+        this._cache.get(this.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(
+            (response: ApiResponseData<UserResponse>) => {
+                this.user = response.body.user;
                 this.initNewProjects();
                 this.loading = false;
             },
-            (error: ApiServiceError) => {
+            (error: ApiResponseError) => {
                 console.error(error);
                 this.loading = false;
             }
         );
-
-
 
     }
 
@@ -68,10 +67,10 @@ export class MembershipComponent implements OnInit {
 
         this.projects = [];
         // get all projects and filter by projects where the user is already member of
-        this._projectsService.getAllProjects().subscribe(
-            (response: Project[]) => {
+        this.knoraApiConnection.admin.projectsEndpoint.getProjects().subscribe(
+            (response: ApiResponseData<ProjectsResponse>) => {
 
-                for (const p of response) {
+                for (const p of response.body.projects) {
 
                     if (p.id !== KnoraConstants.SystemProjectIRI && p.id !== KnoraConstants.DefaultSharedOntologyIRI && p.status === true) {
                         // get index example:
@@ -101,7 +100,7 @@ export class MembershipComponent implements OnInit {
 
                 this.loading = false;
             },
-            (error: ApiServiceError) => {
+            (error: ApiResponseError) => {
                 console.error(error);
             }
         );
@@ -114,7 +113,7 @@ export class MembershipComponent implements OnInit {
         const projectcode: string = iri.replace(AppGlobal.iriProjectsBase, '');
 
         // reset the cache of project members
-        this._cache.get('members_of_' + projectcode, this._projectsService.getProjectMembersByShortcode(projectcode));
+        this._cache.get('members_of_' + projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectMembersByShortcode(projectcode));
 
     }
 
@@ -127,18 +126,18 @@ export class MembershipComponent implements OnInit {
 
         this.loading = true;
 
-        this._usersService.removeUserFromProject(this.user.id, iri).subscribe(
-            (result: User) => {
-                this.user = result;
+        this.knoraApiConnection.admin.usersEndpoint.removeUserFromProjectMembership(this.user.id, iri).subscribe(
+            (response: ApiResponseData<UserResponse>) => {
+                this.user = response.body.user;
                 // set new user cache
                 this._cache.del(this.username);
-                this._cache.get(this.username, this._usersService.getUserByUsername(this.username));
+                this._cache.get(this.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(this.username));
                 this.initNewProjects();
                 // this.updateProjectCache(iri);
                 this.loading = false;
 
             },
-            (error: ApiServiceError) => {
+            (error: ApiResponseError) => {
                 console.error(error);
                 this.loading = false;
             }
@@ -150,17 +149,17 @@ export class MembershipComponent implements OnInit {
 
         this.loading = true;
 
-        this._usersService.addUserToProject(this.user.id, iri).subscribe(
-            (result: User) => {
-                this.user = result;
+        this.knoraApiConnection.admin.usersEndpoint.addUserToProjectMembership(this.user.id, iri).subscribe(
+            (response: ApiResponseData<UserResponse>) => {
+                this.user = response.body.user;
                 // set new user cache
                 this._cache.del(this.username);
-                this._cache.get(this.username, this._usersService.getUserByUsername(this.username));
+                this._cache.get(this.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(this.username));
                 this.initNewProjects();
                 // this.updateProjectCache(iri);
                 this.loading = false;
             },
-            (error: ApiServiceError) => {
+            (error: ApiResponseError) => {
                 console.error(error);
                 this.loading = false;
             }

@@ -1,9 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection } from '@knora/api';
-import { ProjectResponse } from '@knora/api/src/models/admin/project-response';
-import { ReadProject } from '@knora/api/src/models/admin/read-project';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject } from '@knora/api';
 import { Session } from '@knora/authentication';
 import { KnoraApiConnectionToken } from '@knora/core';
 import { AppGlobal } from '../app-global';
@@ -86,15 +84,12 @@ export class ProjectComponent implements OnInit {
                         this.color = 'warn';
                     }
 
-                    this.navigation[0].label =
-                        'Project: ' + response.body.project.shortname.toUpperCase();
+                    this.navigation[0].label = 'Project: ' + response.body.project.shortname.toUpperCase();
 
                     // is logged-in user projectAdmin?
                     if (this.session) {
                         this.projectAdmin = this.sysAdmin ? this.sysAdmin : (this.session.user.projectAdmin.some(e => e === this.project.id));
                     }
-
-
 
                     // set the cache for project members and groups
                     if (this.projectAdmin) {

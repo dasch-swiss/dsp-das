@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from '@knora/authentication';
 import { ApiServiceError, KnoraConstants, KnoraApiConnectionToken } from '@knora/core';
 import { GridItem } from './grid/grid.component';
-import { KnoraApiConnection, ApiResponseData } from '@knora/api';
-import { ProjectsResponse } from '@knora/api/src/models/admin/projects-response';
+import { KnoraApiConnection, ApiResponseData, ProjectsResponse } from '@knora/api';
 
 @Component({
     selector: 'app-main',
