@@ -97,20 +97,17 @@ export class AccountComponent implements OnInit {
     }
 
     activateUser(id: string) {
-        // TODO: method is missing to reactivate user
-        // this.knoraApiConnection.admin.usersEndpoint.activateUser(id).subscribe(
-        //     (response: ApiResponseData<UserResponse>) => {
 
-        // TODO: replace with new method asap it's available
-        // this._usersService.activateUser(id).subscribe(
-        //     (result: User) => {
-        //         // console.log('refresh parent after activate', result);
-        //         this.refreshParent.emit();
-        //     },
-        //     (error: ApiServiceError) => {
-        //         // this.errorMessage = error;
-        //         console.error(error);
-        //     }
-        // );
+        this.knoraApiConnection.admin.usersEndpoint.updateUserStatus(id, true).subscribe(
+            (response: ApiResponseData<UserResponse>) => {
+
+                // console.log('refresh parent after activate', result);
+                this.refreshParent.emit();
+            },
+            (error: ApiResponseError) => {
+                // this.errorMessage = error;
+                console.error(error);
+            }
+        );
     }
 }
