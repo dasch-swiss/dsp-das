@@ -5,10 +5,13 @@ $width: 200px;
 
 .ontology-editor {
   border: 1px dotted $primary_200;
+  background: $primary_200;
   height: calc(100vh - #{$header-height} - #{$tab-bar-margin} - 300px);
   width: 98vw;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax($width, 1fr));
+  //   display: grid;
+  //   grid-template-columns: repeat(auto-fill, minmax($width, 1fr));
+  //   grid-column-gap: 12px;
+  //   grid-row-gap: 12px;
 
   // set position of it
   position: relative;
@@ -17,14 +20,15 @@ $width: 200px;
 
 .resource-class {
   width: 180px;
-  min-height: 240px;
+  min-height: 60px;
   height: auto;
   position: relative;
-  top: 48px;
-  left: 48px;
+  //   top: 48px;
+  //   left: 48px;
   @include mat-elevation-transition;
   @include mat-elevation(2);
   padding: 12px;
+  margin: 12px;
 
   background-color: #fff;
 
@@ -70,6 +74,7 @@ $width: 200px;
  */
 
 .add-source-type {
-  grid-column-start: last-col;
-  margin: 6px 6px 6px -120px;
+  position: absolute;
+  right: 12px;
+  top: 12px;
 }

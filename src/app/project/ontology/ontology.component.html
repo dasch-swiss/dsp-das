@@ -14,7 +14,7 @@
     </div>
 
 
-    <div *ngIf="!loading && ontology" class="ontology-editor">
+    <div *ngIf="!loading && ontology" class="ontology-editor drag-drop-stop">
 
         <!-- button to define and add new source type to the ontology -->
         <app-add-source-type *ngIf="project?.status && sysAdmin && ontologyIri" [projectcode]="projectcode"
@@ -22,11 +22,9 @@
         </app-add-source-type>
 
         <!-- list of source types -->
-        <div *ngFor="let resClass of ontology['@graph']">
-            <div *ngIf="resClass['@type'] === 'owl:Class'" class="resource-class" cdkDrag
-                 cdkDragBoundary=".ontology-editor">
-                {{resClass['rdfs:label']}}
-            </div>
+        <div *ngFor="let resClass of ontology['@graph'] | kuiFilter: '@type' : 'owl:Class'; let i = index"
+             class="resource-class" cdkDrag cdkDragBoundary=".drag-drop-stop">
+            {{i}} {{resClass['rdfs:label']}}
         </div>
 
     </div>

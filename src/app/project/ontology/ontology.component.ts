@@ -18,7 +18,7 @@ import { ResourceTypeComponent } from './resource-type/resource-type.component';
     selector: '[add-host]'
 })
 export class AddToDirective {
-    constructor (public viewContainerRef: ViewContainerRef) { }
+    constructor(public viewContainerRef: ViewContainerRef) { }
 }
 
 export interface OntologyInfo {
@@ -59,13 +59,15 @@ export class OntologyComponent implements OnInit {
 
     sourcetypes = ['Text', 'Image', 'Video'];
 
+    filterargs = { '@type': 'owl:Class' };
+
     @ViewChild('ontologyEditor', { read: ViewContainerRef, static: false }) ontologyEditor: ViewContainerRef;
 
     @ViewChild(AddToDirective, { static: false }) addToHost: AddToDirective;
 
     @ViewChild('addSourceTypeComponent', { static: false }) addSourceType: AddSourceTypeComponent;
 
-    constructor (private _cache: CacheService,
+    constructor(private _cache: CacheService,
         private _projectsService: ProjectsService,
         private _ontologyService: OntologyService,
         private _titleService: Title,
@@ -252,6 +254,11 @@ export class OntologyComponent implements OnInit {
     resetOntology(id: string) {
         this._cache.del('currentOntology');
         this.getOntology(id);
+    }
+
+    filterOwlClass(owlClass: any) {
+        console.log(owlClass);
+        return (owlClass['@type'] === 'owl:class');
     }
 
 
