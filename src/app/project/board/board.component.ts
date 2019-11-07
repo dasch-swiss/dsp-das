@@ -1,12 +1,12 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
-import { ApiServiceError, Project, User, KnoraApiConnectionToken } from '@knora/core';
-import { CacheService } from '../../main/cache/cache.service';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject, ReadUser } from '@knora/api';
 import { Session } from '@knora/authentication';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { KnoraApiConnectionToken } from '@knora/core';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { KnoraApiConnection, ApiResponseData, ReadProject, ProjectResponse } from '@knora/api';
+import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
     selector: 'app-board',
@@ -29,7 +29,7 @@ export class BoardComponent implements OnInit {
     // project data
     project: ReadProject;
 
-    projectMembers: User[] = [];
+    projectMembers: ReadUser[] = [];
 
     // i18n setup
     itemPluralMapping = {
@@ -91,7 +91,7 @@ export class BoardComponent implements OnInit {
                 this.project = response.body.project;
                 this.loading = false;
             },
-            (error: ApiServiceError) => {
+            (error: ApiResponseError) => {
                 console.error(error);
             }
         );

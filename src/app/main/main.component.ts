@@ -1,10 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { AuthenticationService } from '@knora/authentication';
-import { ApiServiceError, KnoraConstants, KnoraApiConnectionToken } from '@knora/core';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectsResponse } from '@knora/api';
+import { SessionService } from '@knora/authentication';
+import { KnoraApiConnectionToken, KnoraConstants } from '@knora/core';
 import { GridItem } from './grid/grid.component';
-import { KnoraApiConnection, ApiResponseData, ProjectsResponse } from '@knora/api';
 
 @Component({
     selector: 'app-main',
@@ -14,7 +14,7 @@ import { KnoraApiConnection, ApiResponseData, ProjectsResponse } from '@knora/ap
 export class MainComponent implements OnInit {
 
     loading: boolean;
-    errorMessage: ApiServiceError;
+    errorMessage: ApiResponseError;
 
     showCookieBanner: boolean = true;
 
@@ -65,7 +65,7 @@ export class MainComponent implements OnInit {
 
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
-        private _auth: AuthenticationService,
+        private _session: SessionService,
         private _router: Router,
         private _titleService: Title
     ) {
@@ -75,9 +75,9 @@ export class MainComponent implements OnInit {
         // check if a session is active and valid
         if (JSON.parse(localStorage.getItem('session'))) {
             // there's an acitve session, but is it still valid?
-            this.session = this._auth.session();
+            this.session = this._session.validateSession();
 
-            if (this._auth.session()) {
+            if (this.session) {
                 this._router.navigate(['dashboard']);
             }
         }
@@ -120,7 +120,7 @@ export class MainComponent implements OnInit {
 
                 this.loading = false;
             },
-            (error: ApiServiceError) => {
+            (error: ApiResponseError) => {
                 console.error(error);
                 this.errorMessage = error;
                 this.loading = false;
