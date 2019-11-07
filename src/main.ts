@@ -17,7 +17,7 @@ function bootstrapFailed(result: any) {
 fetch(`config/config.${environment.name}.json`)
     .then(response => response.json())
     .then(config => {
-        if (!config || !config['api']) {
+        if (!config || !config['knora']) {
             bootstrapFailed(config);
             return;
         }

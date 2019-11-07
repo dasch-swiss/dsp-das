@@ -175,7 +175,7 @@ export function initializeApp(appInitService: AppInitService) {
             multi: true
         }, {
             provide: KuiConfigToken,
-            useFactory: () => AppInitService.knoraUiConfig
+            useFactory: () => AppInitService.kuiConfig
         },
         {
             provide: KnoraApiConnectionToken,

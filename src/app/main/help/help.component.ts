@@ -2,11 +2,11 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
-import { KuiConfig, KuiConfigToken } from '@knora/core';
+import { KuiConfig, KuiConfigToken, CoreService } from '@knora/core';
 import { GridItem } from '../grid/grid.component';
 
 declare let require: any;
-const { version: appVersion } = require('../../../../package.json');
+const { version: appVersion, name: appName } = require('../../../../package.json');
 
 @Component({
     selector: 'app-help',
@@ -18,11 +18,10 @@ export class HelpComponent implements OnInit {
     loading: boolean = true;
 
     appVersion: string = appVersion;
+
     apiVersion: string;
-    akkaVersion: string;
 
     apiStatus: boolean;
-
 
     docs: GridItem[] = [
         {
@@ -91,7 +90,8 @@ export class HelpComponent implements OnInit {
     ];
 
     constructor(
-        @Inject(KuiConfigToken) public kuiConfig: KuiConfig,
+        @Inject(KuiConfigToken) private kuiConfig: KuiConfig,
+        private _coreService: CoreService,
         private _domSanitizer: DomSanitizer,
         private _matIconRegistry: MatIconRegistry,
         private _http: HttpClient) {
@@ -113,9 +113,7 @@ export class HelpComponent implements OnInit {
         this.tools[0].title = this.kuiConfig.app.name + ' v' + this.appVersion;
         this.tools[0].url += this.appVersion;
 
-        const apiUrl: string = (this.kuiConfig.api.protocol + '://' + this.kuiConfig.api.host) +
-            (this.kuiConfig.api.port !== null ? ':' + this.kuiConfig.api.port : '') +
-            (this.kuiConfig.api.path ? '/' + this.kuiConfig.api.path : '');
+        const apiUrl: string = this._coreService.getKnoraApiURL();
 
         console.log(apiUrl);
         this._http.get(apiUrl + '/admin/projects', { observe: 'response' })
@@ -146,7 +144,7 @@ export class HelpComponent implements OnInit {
         const versions: string[] = v.split(' ');
 
         this.apiVersion = versions[0].split('/')[1].substring(0, 5);
-        this.akkaVersion = versions[1].split('/')[1];
+        // this.akkaVersion = versions[1].split('/')[1];
 
         this.tools[1].title += this.apiVersion;
         this.tools[1].url += this.apiVersion;

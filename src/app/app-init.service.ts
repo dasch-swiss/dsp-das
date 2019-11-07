@@ -7,7 +7,7 @@ export class AppInitService {
 
     static knoraApiConnection: KnoraApiConnection;
 
-    static knoraUiConfig: KuiConfig;
+    static kuiConfig: KuiConfig;
 
     constructor() {
     }
@@ -15,22 +15,19 @@ export class AppInitService {
     Init() {
 
         return new Promise<void>((resolve, reject) => {
-            // console.log('AppInitService.init() called');
-            // do your initialisation stuff here
 
-            const data = window['tempConfigStorage'] as KuiConfig;
+            // init knora-ui configuration
+            AppInitService.kuiConfig = window['tempConfigStorage'] as KuiConfig;
 
-            AppInitService.knoraUiConfig = data;
-
-            const config: KnoraApiConfig = new KnoraApiConfig(
-                AppInitService.knoraUiConfig.api.protocol,
-                AppInitService.knoraUiConfig.api.host,
-                AppInitService.knoraUiConfig.api.port
+            // init knora-api configuration
+            const knoraApiConfig: KnoraApiConfig = new KnoraApiConfig(
+                AppInitService.kuiConfig.knora.apiProtocol,
+                AppInitService.kuiConfig.knora.apiHost,
+                AppInitService.kuiConfig.knora.apiPort
             );
 
-            AppInitService.knoraApiConnection = new KnoraApiConnection(config);
-
-            // console.log('AppInitService: finished');
+            // set knora-api connection configuration
+            AppInitService.knoraApiConnection = new KnoraApiConnection(knoraApiConfig);
 
             resolve();
         });
