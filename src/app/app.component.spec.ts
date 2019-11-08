@@ -6,7 +6,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
-import { KuiCoreConfig, KuiCoreConfigToken } from '@knora/core';
+import { KnoraApiConnection } from '@knora/api';
+import { KnoraApiConnectionToken } from '@knora/core';
 import { KuiSearchModule } from '@knora/search';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppComponent } from './app.component';
@@ -36,8 +37,8 @@ describe('AppComponent', () => {
             ],
             providers: [
                 {
-                    provide: KuiCoreConfigToken,
-                    useValue: KuiCoreConfig
+                    provide: KnoraApiConnectionToken,
+                    useValue: KnoraApiConnection
                 }
             ]
         }).compileComponents();
