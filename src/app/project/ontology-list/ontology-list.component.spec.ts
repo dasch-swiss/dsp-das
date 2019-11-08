@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { OntologyListComponent } from './ontology-list.component';
-import { KuiCoreModule, KuiCoreConfigToken, KuiCoreConfig } from '@knora/core';
+import { KuiCoreModule, KuiConfigToken, KuiCoreConfig } from '@knora/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
@@ -15,8 +15,8 @@ describe('OntologyListComponent', () => {
         TestBed.configureTestingModule({
             declarations: [OntologyListComponent],
             imports: [
-              KuiCoreModule,
-              RouterTestingModule
+                KuiCoreModule,
+                RouterTestingModule
             ],
             providers: [
                 {
@@ -34,7 +34,7 @@ describe('OntologyListComponent', () => {
                     }
                 },
                 {
-                    provide: KuiCoreConfigToken,
+                    provide: KuiConfigToken,
                     useValue: KuiCoreConfig
                 }
             ]

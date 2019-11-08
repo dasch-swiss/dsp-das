@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { KuiCoreConfig, KuiCoreConfigToken } from '@knora/core';
+import { KuiCoreConfig, KuiConfigToken } from '@knora/core';
 import { KuiSearchModule } from '@knora/search';
 import { KuiViewerModule } from '@knora/viewer';
 import { TranslateModule } from '@ngx-translate/core';
@@ -35,7 +35,7 @@ xdescribe('ExpertSearchComponent', () => {
                     provide: ActivatedRoute
                 },
                 {
-                    provide: KuiCoreConfigToken,
+                    provide: KuiConfigToken,
                     useValue: KuiCoreConfig
                 }
             ]

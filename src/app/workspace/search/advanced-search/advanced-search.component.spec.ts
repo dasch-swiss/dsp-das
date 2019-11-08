@@ -6,7 +6,7 @@ import { KuiSearchModule } from '@knora/search';
 import { KuiViewerModule } from '@knora/viewer';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { KuiCoreConfigToken, KuiCoreConfig } from '@knora/core';
+import { KuiConfigToken, KuiCoreConfig } from '@knora/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AdvancedSearchComponent', () => {
@@ -28,7 +28,7 @@ describe('AdvancedSearchComponent', () => {
                     provide: ActivatedRoute
                 },
                 {
-                    provide: KuiCoreConfigToken,
+                    provide: KuiConfigToken,
                     useValue: KuiCoreConfig
                 }
             ]

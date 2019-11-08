@@ -3,7 +3,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
-import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
+import { KuiCoreConfig, KuiConfigToken, KuiCoreModule } from '@knora/core';
 import { ErrorComponent } from '../main/error/error.component';
 import { ProjectComponent } from './project.component';
 
@@ -23,7 +23,7 @@ describe('ProjectComponent', () => {
             ],
             providers: [
                 {
-                    provide: KuiCoreConfigToken,
+                    provide: KuiConfigToken,
                     useValue: KuiCoreConfig
                 }
             ]

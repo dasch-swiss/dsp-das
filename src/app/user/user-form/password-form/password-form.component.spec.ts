@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { KuiActionModule } from '@knora/action';
 import { KuiAuthenticationModule, Session } from '@knora/authentication';
-import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
+import { KuiCoreConfig, KuiConfigToken, KuiCoreModule } from '@knora/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { PasswordFormComponent } from './password-form.component';
 
@@ -42,7 +42,7 @@ describe('PasswordFormComponent', () => {
             ],
             providers: [
                 {
-                    provide: KuiCoreConfigToken,
+                    provide: KuiConfigToken,
                     useValue: KuiCoreConfig
                 }
             ]

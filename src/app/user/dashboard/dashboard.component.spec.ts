@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { KuiActionModule } from '@knora/action';
 import { Session } from '@knora/authentication';
-import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
+import { KuiCoreConfig, KuiConfigToken, KuiCoreModule } from '@knora/core';
 import { ProjectsListComponent } from 'src/app/system/projects/projects-list/projects-list.component';
 import { ProjectsComponent } from 'src/app/system/projects/projects.component';
 import { DashboardComponent } from './dashboard.component';
@@ -40,7 +40,7 @@ describe('DashboardComponent', () => {
             ],
             providers: [
                 {
-                    provide: KuiCoreConfigToken,
+                    provide: KuiConfigToken,
                     useValue: KuiCoreConfig
                 }
             ]

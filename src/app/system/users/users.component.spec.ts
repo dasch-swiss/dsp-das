@@ -8,7 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
-import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
+import { KuiCoreConfig, KuiConfigToken, KuiCoreModule } from '@knora/core';
 import { SelectGroupComponent } from 'src/app/project/collaboration/select-group/select-group.component';
 import { UsersListComponent } from './users-list/users-list.component';
 import { UsersComponent } from './users.component';
@@ -38,7 +38,7 @@ describe('UsersComponent', () => {
             ],
             providers: [
                 {
-                    provide: KuiCoreConfigToken,
+                    provide: KuiConfigToken,
                     useValue: KuiCoreConfig
                 }
             ]

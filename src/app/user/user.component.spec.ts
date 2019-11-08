@@ -12,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
 import { Session } from '@knora/authentication';
-import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
+import { KuiCoreConfig, KuiConfigToken, KuiCoreModule } from '@knora/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ErrorComponent } from '../main/error/error.component';
 import { ProjectsListComponent } from '../system/projects/projects-list/projects-list.component';
@@ -90,7 +90,7 @@ describe('UserComponent', () => {
                     }
                 },
                 {
-                    provide: KuiCoreConfigToken,
+                    provide: KuiConfigToken,
                     useValue: KuiCoreConfig
                 }
             ]

@@ -147,8 +147,11 @@ export class ProjectsListComponent implements OnInit {
     }
 
     activateProject(id: string) {
+        // hack because of issue #100 in knora-api-js-lib
         const data: UpdateProjectRequest = {
-            status: true
+            status: true,
+            keywords: [],
+            description: []
         };
         this.knoraApiConnection.admin.projectsEndpoint.updateProject(id, data).subscribe(
             (response: ApiResponseData<ProjectResponse>) => {
