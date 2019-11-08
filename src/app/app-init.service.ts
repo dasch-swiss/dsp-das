@@ -9,8 +9,7 @@ export class AppInitService {
 
     static kuiConfig: KuiConfig;
 
-    constructor() {
-    }
+    constructor() { }
 
     Init() {
 

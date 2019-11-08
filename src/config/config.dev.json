@@ -3,6 +3,8 @@
         "apiProtocol": "http",
         "apiHost": "0.0.0.0",
         "apiPort": 3333,
+        "apiPath": "",
+        "jsonWebToken": "",
         "logErrors": true
 
     },
@@ -10,4 +12,4 @@
         "name": "Knora-APP",
         "url": "localhost:4200"
     }
-  }
+}
