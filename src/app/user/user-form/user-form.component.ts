@@ -1,12 +1,12 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Inject } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { existingNamesValidator } from '@knora/action';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadUser, UserResponse, UsersResponse } from '@knora/api';
 import { Session } from '@knora/authentication';
-import { ApiServiceError, KnoraConstants, Project, ProjectsService, StringLiteral, User, Utils, KnoraApiConnectionToken } from '@knora/core';
+import { KnoraApiConnectionToken, KnoraConstants, StringLiteral, Utils } from '@knora/core';
 import { AppGlobal } from 'src/app/app-global';
 import { CacheService } from '../../main/cache/cache.service';
-import { ReadUser, KnoraApiConnection, ApiResponseData, UserResponse, UsersResponse, ApiResponseError, ProjectResponse } from '@knora/api';
 
 @Component({
     selector: 'app-user-form',

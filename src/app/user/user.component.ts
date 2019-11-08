@@ -1,13 +1,12 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { UsersService, KnoraApiConnectionToken } from '@knora/core';
+import { KnoraApiConnection } from '@knora/api';
+import { Session } from '@knora/authentication';
+import { KnoraApiConnectionToken } from '@knora/core';
+import { AppGlobal } from '../app-global';
 import { CacheService } from '../main/cache/cache.service';
 import { MenuItem } from '../main/declarations/menu-item';
-import { AppGlobal } from '../app-global';
-import { Session } from '@knora/authentication';
-import { MatDialog } from '@angular/material/dialog';
-import { KnoraApiConnection } from '@knora/api';
 
 @Component({
     selector: 'app-user',

@@ -96,17 +96,6 @@ export class BoardComponent implements OnInit {
             }
         );
 
-        /*
-        this._cache.get('members_of_' + this.projectcode, this._projectsService.getProjectMembersByShortcode(this.projectcode)).subscribe(
-            (result: User[]) => {
-                this.projectMembers = result;
-            },
-            (error: ApiServiceError) => {
-                console.error(error);
-            }
-        );
-        */
-
         this.loading = false;
     }
 
