@@ -312,7 +312,6 @@ export class ProjectFormComponent implements OnInit {
             this.knoraApiConnection.admin.projectsEndpoint.updateProject(this.projectcode, this.form.value).subscribe(
                 (response: ApiResponseData<ProjectResponse>) => {
 
-                    //                    console.log(result);
                     this.project = response.body.project;
                     this.buildForm(this.project);
 

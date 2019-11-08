@@ -112,8 +112,8 @@ export class ProjectsListComponent implements OnInit {
 
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result === true) {
+        dialogRef.afterClosed().subscribe(response => {
+            if (response === true) {
                 // get the mode
                 switch (mode) {
                     case 'deleteProject':

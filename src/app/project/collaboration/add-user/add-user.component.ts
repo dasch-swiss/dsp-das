@@ -127,7 +127,7 @@ export class AddUserComponent implements OnInit {
         // set the cache
         this._cache.get('allUsers', this.knoraApiConnection.admin.usersEndpoint.getUsers());
 
-        // get all users; results from cache
+        // get all users; response from cache
         this._cache.get('allUsers', this.knoraApiConnection.admin.usersEndpoint.getUsers()).subscribe(
             (response: ApiResponseData<UsersResponse>) => {
 
@@ -138,7 +138,7 @@ export class AddUserComponent implements OnInit {
                 this._cache.del('members_of_' + this.projectcode);
                 this._cache.get('members_of_' + this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectMembersByShortcode(this.projectcode));
 
-                // get all members of this project; results from cache
+                // get all members of this project; response from cache
                 this._cache.get('members_of_' + this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectMembersByShortcode(this.projectcode)).subscribe(
                     (res: ApiResponseData<MembersResponse>) => {
                         for (const m of res.body.members) {

@@ -181,7 +181,7 @@ export class ListComponent implements OnInit {
             dialogConfig
         );
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe(response => {
             // update the view
             this.refresh();
         });

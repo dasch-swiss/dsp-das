@@ -288,10 +288,9 @@ export class UsersListComponent implements OnInit {
             this._usersService
                 .removeUserFromSystemAdmin(id)
                 .subscribe(
-                    (result: User) => {
-                        // console.log(result);
+                    (response: User) => {
                         // if this user is not the logged-in user
-                        if (this.session.user.name !== result.username) {
+                        if (this.session.user.name !== response.username) {
                             this.refreshParent.emit();
                         }
                     },
@@ -304,8 +303,8 @@ export class UsersListComponent implements OnInit {
             this._usersService
                 .addUserToSystemAdmin(id)
                 .subscribe(
-                    (result: User) => {
-                        // console.log(result);
+                    (response: User) => {
+                        // console.log(response);
                         this.refreshParent.emit();
                     },
                     (error: ApiServiceError) => {

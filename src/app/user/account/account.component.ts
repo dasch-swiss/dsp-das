@@ -63,8 +63,8 @@ export class AccountComponent implements OnInit {
             dialogConfig
         );
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result === true) {
+        dialogRef.afterClosed().subscribe(response => {
+            if (response === true) {
                 // get the mode
                 switch (mode) {
                     case 'deleteUser':
@@ -85,7 +85,8 @@ export class AccountComponent implements OnInit {
     deleteUser(id: string) {
         this.knoraApiConnection.admin.usersEndpoint.deleteUser(id).subscribe(
             (response: ApiResponseData<UserResponse>) => {
-                // console.log('refresh parent after delete', result);
+
+                // console.log('refresh parent after delete', response);
                 this.refreshParent.emit();
             },
             (error: ApiResponseError) => {
@@ -101,7 +102,7 @@ export class AccountComponent implements OnInit {
         this.knoraApiConnection.admin.usersEndpoint.updateUserStatus(id, true).subscribe(
             (response: ApiResponseData<UserResponse>) => {
 
-                // console.log('refresh parent after activate', result);
+                // console.log('refresh parent after activate', response);
                 this.refreshParent.emit();
             },
             (error: ApiResponseError) => {

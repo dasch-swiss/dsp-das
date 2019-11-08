@@ -81,7 +81,7 @@ export class ProfileComponent implements OnInit {
 
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe(response => {
             // update the view
             this.getUser();
         });

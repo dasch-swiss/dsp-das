@@ -45,7 +45,7 @@ export class UserMenuComponent implements OnInit {
     logout() {
         this.knoraApiConnection.v2.auth.logout().subscribe(
             (response: ApiResponseData<LogoutResponse>) => {
-                // console.log(result);
+
                 // destroy cache
                 this._cache.destroy();
 

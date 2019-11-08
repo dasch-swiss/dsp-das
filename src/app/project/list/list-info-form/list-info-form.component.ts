@@ -81,7 +81,7 @@ export class ListInfoFormComponent implements OnInit {
         statusText: "You have successfully updated list's info."
     };
 
-    constructor (
+    constructor(
         private _listsService: ListsService) {
     }
 
@@ -189,6 +189,7 @@ export class ListInfoFormComponent implements OnInit {
                 labels: this.labels,
                 comments: this.comments
             };
+            // TODO: replace by knora-api-js-lib service as soon it's available for lists
             this._listsService.updateListInfo(listInfoUpdateData).subscribe(
                 (result: ListInfo) => {
                     this.success = true;

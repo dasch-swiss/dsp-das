@@ -150,7 +150,7 @@ export class ProjectsComponent implements OnInit {
             dialogConfig
         );
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe(response => {
             // update the view
         });
     }

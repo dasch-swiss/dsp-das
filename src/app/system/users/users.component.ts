@@ -41,7 +41,7 @@ export class UsersComponent implements OnInit {
                 for (const u of response.body.users) {
                     // get permission for each user
                     // by default, permission is not shown in the
-                    // api result of user's list
+                    // api response of user's list
                     this.knoraApiConnection.admin.usersEndpoint.getUserByIri(u.id).subscribe(
                         (res: ApiResponseData<UserResponse>) => {
                             u.permissions = res.body.user.permissions;
