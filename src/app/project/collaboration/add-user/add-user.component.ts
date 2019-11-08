@@ -2,8 +2,8 @@ import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { existingNamesValidator } from '@knora/action';
-import { KnoraApiConnection, ReadProject, ReadUser, UsersResponse, ApiResponseData, UserResponse, ApiResponseError, MembersResponse } from '@knora/api';
-import { ApiServiceError, AutocompleteItem, KnoraApiConnectionToken } from '@knora/core';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, MembersResponse, ReadProject, ReadUser, UserResponse, UsersResponse } from '@knora/api';
+import { AutocompleteItem, KnoraApiConnectionToken } from '@knora/core';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';

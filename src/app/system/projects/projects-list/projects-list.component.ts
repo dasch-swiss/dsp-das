@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadUser, UpdateProjectRequest } from '@knora/api';
 import { Session } from '@knora/authentication';
-import { ApiServiceError, KnoraApiConnectionToken, KnoraConstants } from '@knora/core';
+import { KnoraApiConnectionToken, KnoraConstants } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
 
@@ -157,7 +157,7 @@ export class ProjectsListComponent implements OnInit {
                 this._cache.del(response.body.project.shortcode);
                 this._cache.get(response.body.project.shortcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(response.body.project.shortcode));
             },
-            (error: ApiServiceError) => {
+            (error: ApiResponseError) => {
                 // this.errorMessage = error;
                 console.error(error);
             }
