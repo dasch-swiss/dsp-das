@@ -110,7 +110,7 @@ export class MembershipComponent implements OnInit {
         // TODO: update cache of project
 
         // get shortcode from iri; not the best way right now
-        const projectcode: string = iri.replace(AppGlobal.iriProjectsBase, '');
+        const projectcode: string = iri.replace(KnoraConstants.iriProjectsBase, '');
 
         // reset the cache of project members
         this._cache.get('members_of_' + projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectMembersByShortcode(projectcode));

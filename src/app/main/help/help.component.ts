@@ -2,8 +2,10 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
-import { KuiConfig, KuiConfigToken, CoreService } from '@knora/core';
+import { KuiConfig, KuiConfigToken, KnoraApiConfigToken } from '@knora/core';
 import { GridItem } from '../grid/grid.component';
+import { AppInitService } from 'src/app/app-init.service';
+import { KnoraApiConfig } from '@knora/api';
 
 declare let require: any;
 const { version: appVersion, name: appName } = require('../../../../package.json');
@@ -50,7 +52,7 @@ export class HelpComponent implements OnInit {
     tools: GridItem[] = [
         {
             title: 'Knora app ',
-            text: 'This is the tool of the user interface you are using right now. Knora\'s generic web application.',
+            text: 'This is the tool of the user interface you are using right now. DaSCH\'s generic web application.',
             url: 'https://github.com/dasch-swiss/knora-app/releases/tag/v',
             urlText: 'Release notes'
         },
@@ -76,7 +78,7 @@ export class HelpComponent implements OnInit {
             urlText: 'DaSCH Forum'
         },
         {
-            title: 'DaSCH infrastructure',
+            title: 'DaSCH Infrastructure',
             text: 'Wondering what the Data and Service Center for the Humanities DaSCH exactly is? Get more information on our Website:',
             url: 'https://dasch.swiss',
             urlText: 'dasch.swiss'
@@ -91,7 +93,7 @@ export class HelpComponent implements OnInit {
 
     constructor(
         @Inject(KuiConfigToken) private kuiConfig: KuiConfig,
-        private _coreService: CoreService,
+        @Inject(KnoraApiConfigToken) private knoraApiConfig: KnoraApiConfig,
         private _domSanitizer: DomSanitizer,
         private _matIconRegistry: MatIconRegistry,
         private _http: HttpClient) {
@@ -113,7 +115,7 @@ export class HelpComponent implements OnInit {
         this.tools[0].title = this.kuiConfig.app.name + ' v' + this.appVersion;
         this.tools[0].url += this.appVersion;
 
-        const apiUrl: string = this._coreService.getKnoraApiURL();
+        const apiUrl: string = this.knoraApiConfig.apiUrl;
 
         console.log(apiUrl);
         this._http.get(apiUrl + '/admin/projects', { observe: 'response' })
@@ -143,13 +145,10 @@ export class HelpComponent implements OnInit {
         // read and set version of knora
         const versions: string[] = v.split(' ');
 
-        this.apiVersion = versions[0].split('/')[1].substring(0, 5);
-        // this.akkaVersion = versions[1].split('/')[1];
+        this.apiVersion = versions[0].split('/')[1];
 
         this.tools[1].title += this.apiVersion;
         this.tools[1].url += this.apiVersion;
-        // this.versions[2].label += this.akkaVersion;
-        // this.versions[2].route += this.akkaVersion;
 
         this.loading = false;
 
