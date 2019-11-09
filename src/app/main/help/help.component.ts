@@ -2,10 +2,9 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
-import { KuiConfig, KuiConfigToken, KnoraApiConfigToken } from '@knora/core';
-import { GridItem } from '../grid/grid.component';
-import { AppInitService } from 'src/app/app-init.service';
 import { KnoraApiConfig } from '@knora/api';
+import { KnoraApiConfigToken, KuiConfig, KuiConfigToken } from '@knora/core';
+import { GridItem } from '../grid/grid.component';
 
 declare let require: any;
 const { version: appVersion, name: appName } = require('../../../../package.json');
@@ -117,7 +116,6 @@ export class HelpComponent implements OnInit {
 
         const apiUrl: string = this.knoraApiConfig.apiUrl;
 
-        console.log(apiUrl);
         this._http.get(apiUrl + '/admin/projects', { observe: 'response' })
             .subscribe(
                 (resp: HttpResponse<any>) => {

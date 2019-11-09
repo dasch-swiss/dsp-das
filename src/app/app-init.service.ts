@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { KnoraApiConfig, KnoraApiConnection } from '@knora/api';
 import { KuiConfig } from '@knora/core';
-import { KnoraApiConnection, KnoraApiConfig } from '@knora/api';
 
 @Injectable()
 export class AppInitService {
