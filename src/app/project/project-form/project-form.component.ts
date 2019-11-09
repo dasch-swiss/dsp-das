@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Router } from '@angular/router';
 import { existingNamesValidator } from '@knora/action';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ProjectsResponse, ReadProject, UpdateProjectRequest, UserResponse } from '@knora/api';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ProjectsResponse, ReadProject, UpdateProjectRequest, UserResponse, Project } from '@knora/api';
 import { KnoraApiConnectionToken } from '@knora/core';
 import { CacheService } from '../../main/cache/cache.service';
 
@@ -131,8 +131,11 @@ export class ProjectFormComponent implements OnInit {
             // create new project
             this.knoraApiConnection.admin.projectsEndpoint.getProjects().subscribe(
                 (response: ApiResponseData<ProjectsResponse>) => {
+
                     for (const project of response.body.projects) {
+
                         this.existingShortNames.push(new RegExp('(?:^|\W)' + project.shortname.toLowerCase() + '(?:$|\W)'));
+
                         if (project.shortcode !== null) {
                             this.existingShortcodes.push(new RegExp('(?:^|\W)' + project.shortcode.toLowerCase() + '(?:$|\W)'));
                         }
@@ -147,7 +150,14 @@ export class ProjectFormComponent implements OnInit {
             if (this.project === undefined) {
                 this.project = new ReadProject();
                 this.project.status = true;
+                this.project.description = [
+                    {
+                        'language': 'en',
+                        'value': ''
+                    }
+                ];
             }
+
             this.buildForm(this.project);
 
             this.loading = false;
@@ -156,8 +166,8 @@ export class ProjectFormComponent implements OnInit {
             // edit mode
             this.sysAdmin = JSON.parse(localStorage.getItem('session')).user.sysAdmin;
             this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode).subscribe(
-                (respnse: ApiResponseData<ProjectResponse>) => {
-                    this.project = respnse.body.project;
+                (response: ApiResponseData<ProjectResponse>) => {
+                    this.project = response.body.project;
 
                     this.buildForm(this.project);
 
@@ -222,9 +232,7 @@ export class ProjectFormComponent implements OnInit {
             'logo': new FormControl({
                 value: project.logo, disabled: disabled
             }),
-            'id': [project.id],
             'status': [true],
-            'selfjoin': [false],
             'keywords': new FormControl({
                 value: [], disabled: disabled
             })          // must be empty (even in edit mode), because of the mat-chip-list
@@ -308,8 +316,11 @@ export class ProjectFormComponent implements OnInit {
 
 
         if (this.projectcode) {
+            const projectInfo: UpdateProjectRequest = this.form.value;
+
+            console.log(projectInfo);
             // edit / update project data
-            this.knoraApiConnection.admin.projectsEndpoint.updateProject(this.projectcode, this.form.value).subscribe(
+            this.knoraApiConnection.admin.projectsEndpoint.updateProject(this.project.id, projectInfo).subscribe(
                 (response: ApiResponseData<ProjectResponse>) => {
 
                     this.project = response.body.project;
@@ -337,7 +348,9 @@ export class ProjectFormComponent implements OnInit {
             );
         } else {
             // create new project
-            this.knoraApiConnection.admin.projectsEndpoint.createProject(this.form.value).subscribe(
+            const projectData: Project = this.form.value;
+
+            this.knoraApiConnection.admin.projectsEndpoint.createProject(projectData).subscribe(
                 (projectResponse: ApiResponseData<ProjectResponse>) => {
                     this.project = projectResponse.body.project;
                     this.buildForm(this.project);
