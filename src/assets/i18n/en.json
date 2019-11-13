@@ -8,7 +8,7 @@
     "list": {
       "title": {
         "active": "Active",
-        "inactive": "Archived"
+        "inactive": "Deactivated"
       }
     },
     "frameworkForListings": {
@@ -121,9 +121,9 @@
           "edit": "Update project",
           "profile": "Research project",
           "editSuccess": "You have successfully updated this project.",
-          "delete": "Archive project",
+          "delete": "Deactivate project",
           "deleteHint": "You're sure to delete this project?",
-          "deleteButton": "Archive project now",
+          "deleteButton": "Deactivate project now",
           "activate": "Do you want to reactivate?",
           "activateButton": "Reactivate project now",
           "formWizard": {
@@ -151,7 +151,7 @@
       },
       "lists": {
         "title": {
-            "delete": "Delete list"
+          "delete": "Delete list"
         }
       }
     }
