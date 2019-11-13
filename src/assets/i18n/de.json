@@ -63,8 +63,8 @@
           "new": "Neuen Benutzer erstellen",
           "edit": "Benutzer anpassen",
           "editSuccess": "Das Profil wurde erfolgreich aktualisiert",
-          "delete": "Benutzer löschen",
-          "deleteHint": "Bist du sicher, dass du diesen Benutzer löschen willst?",
+          "delete": "Benutzer deaktivieren",
+          "deleteHint": "Bist du sicher, dass du diesen Benutzer deaktivieren willst?",
           "password": "Passwort ändern",
           "passwordSuccess": "Du hast das Passwort erfolgreich geändert.",
           "formWizard": {
@@ -97,8 +97,8 @@
           "new": "Projekt erstellen",
           "edit": "Projekt aktualisieren",
           "editSuccess": "Das Projekt wurde erfolgreich aktualisiert",
-          "delete": "Projekt löschen",
-          "deleteHint": "Möchtest du das Projekt wirklich löschen?",
+          "delete": "Projekt deaktivieren",
+          "deleteHint": "Möchtest du das Projekt wirklich deaktivieren?",
           "formWizard": {
             "step_1": "Projektdaten",
             "step_2": "Mitlgieder hinzufügen",
