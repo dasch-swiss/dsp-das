@@ -95,7 +95,7 @@
             "step_4": "Confirm",
             "more": "Add more users"
           },
-          "add2project": "Add member",
+          "add2project": "Add user member",
           "select": "Select from list...",
           "create": "or create new one",
           "deleted": "already deleted"
