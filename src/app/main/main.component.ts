@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectsResponse } from '@knora/api';
-import { SessionService } from '@knora/authentication';
 import { KnoraApiConnectionToken, KnoraConstants } from '@knora/core';
 import { GridItem } from './grid/grid.component';
 
@@ -65,21 +64,16 @@ export class MainComponent implements OnInit {
 
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
-        private _session: SessionService,
         private _router: Router,
         private _titleService: Title
     ) {
         // set the page title
         this._titleService.setTitle('Knora App | DaSCH\'s generic research interface');
 
-        // check if a session is active and valid
-        if (JSON.parse(localStorage.getItem('session'))) {
-            // there's an acitve session, but is it still valid?
-            this.session = this._session.validateSession();
 
-            if (this.session) {
-                this._router.navigate(['dashboard']);
-            }
+        // check if a session is active
+        if (JSON.parse(localStorage.getItem('session'))) {
+            this._router.navigate(['dashboard']);
         }
     }
 

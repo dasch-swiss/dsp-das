@@ -11,7 +11,7 @@ import { SessionService } from '@knora/authentication';
 })
 export class HeaderComponent {
 
-    session: boolean;
+    session: boolean = false;
     show: boolean = false;
 
     constructor(
@@ -33,6 +33,7 @@ export class HeaderComponent {
         );
 
         // logged-in user? show user menu or login button
+
         this._router.events.forEach((event) => {
             if (event instanceof NavigationStart) {
                 this.session = this._session.validateSession();
