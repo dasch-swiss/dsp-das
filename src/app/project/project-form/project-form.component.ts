@@ -428,11 +428,8 @@ export class ProjectFormComponent implements OnInit {
      */
     activate(id: string) {
         // hack because of issue #100 in knora-api-js-lib
-        const data: UpdateProjectRequest = {
-            status: true,
-            keywords: [],
-            description: []
-        };
+        const data: UpdateProjectRequest = new UpdateProjectRequest();
+        data.status = true;
 
         this.knoraApiConnection.admin.projectsEndpoint.updateProject(id, data).subscribe(
             (response: ApiResponseData<ProjectResponse>) => {
