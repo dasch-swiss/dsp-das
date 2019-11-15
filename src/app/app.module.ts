@@ -79,7 +79,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 
 export function initializeApp(appInitService: AppInitService) {
     return (): Promise<any> => {
-        return appInitService.Init();
+        return appInitService.init();
     };
 }
 
