@@ -54,7 +54,6 @@ export class ProfileComponent implements OnInit {
         this._cache.get(this.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(
             (response: ApiResponseData<UserResponse>) => {
 
-                console.log(response);
                 this.user = response.body.user;
 
                 // set the page title
