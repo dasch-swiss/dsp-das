@@ -16,7 +16,6 @@ export class AppComponent implements OnInit {
         // set the page title
         this._titleService.setTitle('Knora App | DaSCH\'s generic user interface');
 
-        // this.session = this._session.validateSession();
     }
 
     ngOnInit() {
