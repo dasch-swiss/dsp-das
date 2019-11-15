@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, LogoutResponse, ReadUser, UserResponse } from '@knora/api';
-import { SessionService } from '@knora/authentication';
-import { KnoraApiConnectionToken } from '@knora/core';
+import { KnoraApiConnectionToken, SessionService } from '@knora/core';
 import { AppGlobal } from 'src/app/app-global';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { MenuItem } from '../../main/declarations/menu-item';

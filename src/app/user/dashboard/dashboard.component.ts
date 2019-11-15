@@ -1,8 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ReadUser, UserResponse } from '@knora/api';
-import { Session } from '@knora/authentication';
-import { KnoraApiConnectionToken } from '@knora/core';
+import { KnoraApiConnectionToken, Session } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
 
 @Component({

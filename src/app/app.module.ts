@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KuiActionModule } from '@knora/action';
-import { KuiAuthenticationModule } from '@knora/authentication';
 import { KuiCoreModule, KuiConfigToken, KnoraApiConfigToken, KnoraApiConnectionToken } from '@knora/core';
 import { KuiSearchModule } from '@knora/search';
 import { KuiViewerModule } from '@knora/viewer';
@@ -150,7 +149,6 @@ export function initializeApp(appInitService: AppInitService) {
         FlexLayoutModule,
         HttpClientModule,
         KuiActionModule,
-        KuiAuthenticationModule,
         KuiCoreModule,
         KuiSearchModule,
         KuiViewerModule,

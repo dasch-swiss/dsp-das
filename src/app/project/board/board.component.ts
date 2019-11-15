@@ -3,8 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject, ReadUser } from '@knora/api';
-import { Session } from '@knora/authentication';
-import { KnoraApiConnectionToken } from '@knora/core';
+import { KnoraApiConnectionToken, Session } from '@knora/core';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { CacheService } from '../../main/cache/cache.service';
 

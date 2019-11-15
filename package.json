@@ -32,7 +32,6 @@
     "@angular/router": "~8.2.7",
     "@knora/action": "file:.yalc/@knora/action",
     "@knora/api": "file:.yalc/@knora/api",
-    "@knora/authentication": "file:.yalc/@knora/authentication",
     "@knora/core": "file:.yalc/@knora/core",
     "@knora/search": "file:.yalc/@knora/search",
     "@knora/viewer": "file:.yalc/@knora/viewer",

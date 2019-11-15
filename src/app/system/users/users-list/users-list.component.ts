@@ -2,8 +2,7 @@ import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, GroupsResponse, KnoraApiConnection, Permissions, ProjectResponse, ReadProject, ReadUser, UserResponse } from '@knora/api';
-import { Session, SessionService } from '@knora/authentication';
-import { KnoraApiConnectionToken, KnoraConstants, User } from '@knora/core';
+import { KnoraApiConnectionToken, KnoraConstants, Session, SessionService } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 

@@ -2,8 +2,7 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, MembersResponse, ProjectResponse, ReadProject, ReadUser } from '@knora/api';
-import { Session } from '@knora/authentication';
-import { KnoraApiConnectionToken } from '@knora/core';
+import { KnoraApiConnectionToken, Session } from '@knora/core';
 import { CacheService } from '../../main/cache/cache.service';
 import { AddUserComponent } from './add-user/add-user.component';
 

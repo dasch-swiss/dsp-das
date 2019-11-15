@@ -788,35 +788,30 @@
     to-fast-properties "^2.0.0"
 
 "@knora/action@file:.yalc/@knora/action":
-  version "9.4.1-2eb8c420"
+  version "9.4.1-ce0f53a2"
   dependencies:
     tslib "^1.9.0"
 
 "@knora/api@file:.yalc/@knora/api":
-  version "1.0.0-63c6c029"
+  version "1.0.0-64ecb7fb"
   dependencies:
     "@types/jsonld" "^1.5.0"
     json2typescript "^1.2.3"
     jsonld "^1.8.0"
     rxjs "^6.5.3"
 
-"@knora/authentication@file:.yalc/@knora/authentication":
-  version "9.4.1-5baec6f4"
-  dependencies:
-    tslib "^1.9.0"
-
 "@knora/core@file:.yalc/@knora/core":
-  version "9.4.1-ae794b8a"
+  version "9.4.1-e454cfdd"
   dependencies:
     tslib "^1.9.0"
 
 "@knora/search@file:.yalc/@knora/search":
-  version "9.4.1-073bc62d"
+  version "9.4.1-c6a1b8dc"
   dependencies:
     tslib "^1.9.0"
 
 "@knora/viewer@file:.yalc/@knora/viewer":
-  version "9.4.1-82068187"
+  version "9.4.1-c94588d9"
   dependencies:
     tslib "^1.9.0"
 

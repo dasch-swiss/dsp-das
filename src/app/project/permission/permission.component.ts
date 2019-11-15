@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ReadGroup, ReadProject } from '@knora/api';
-import { Session } from '@knora/authentication';
+import { Session } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { AddGroupComponent } from './add-group/add-group.component';
 

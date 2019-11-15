@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationStart, Router } from '@angular/router';
-import { SessionService } from '@knora/authentication';
+import { SessionService } from '@knora/core';
 
 @Component({
     selector: 'app-header',

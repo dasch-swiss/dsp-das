@@ -2,9 +2,7 @@ import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectsResponse, ReadUser, UserResponse } from '@knora/api';
-import { Session } from '@knora/authentication';
-import { AutocompleteItem, KnoraApiConnectionToken, KnoraConstants, PermissionData } from '@knora/core';
-import { AppGlobal } from 'src/app/app-global';
+import { AutocompleteItem, KnoraApiConnectionToken, KnoraConstants, PermissionData, Session } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
 
 @Component({

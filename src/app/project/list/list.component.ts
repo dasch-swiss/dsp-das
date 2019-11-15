@@ -1,13 +1,12 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Session } from '@knora/authentication';
-import { ApiServiceError, ListNode, ListsService, StringLiteral, KnoraApiConnectionToken } from '@knora/core';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { MatDialog, MatDialogConfig } from '@angular/material';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject } from '@knora/api';
+import { KnoraApiConnectionToken, ListNode, ListsService, StringLiteral, Session } from '@knora/core';
 import { AppGlobal } from 'src/app/app-global';
-import { KnoraApiConnection, ReadProject, ApiResponseData, ProjectResponse, ApiResponseError } from '@knora/api';
+import { CacheService } from 'src/app/main/cache/cache.service';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 
 @Component({
     selector: 'app-list',

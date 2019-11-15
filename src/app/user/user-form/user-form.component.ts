@@ -3,8 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute } from '@angular/router';
 import { existingNamesValidator } from '@knora/action';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadUser, UserResponse, UsersResponse } from '@knora/api';
-import { Session } from '@knora/authentication';
-import { KnoraApiConnectionToken, KnoraConstants, StringLiteral, Utils } from '@knora/core';
+import { KnoraApiConnectionToken, KnoraConstants, StringLiteral, Utils, Session } from '@knora/core';
 import { AppGlobal } from 'src/app/app-global';
 import { CacheService } from '../../main/cache/cache.service';
 
