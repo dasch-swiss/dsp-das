@@ -2,7 +2,7 @@ import { Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output } fro
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { existingNamesValidator } from '@knora/action';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadUser, UserResponse, UsersResponse } from '@knora/api';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadUser, UserResponse, UsersResponse, UpdateUserRequest, User } from '@knora/api';
 import { KnoraApiConnectionToken, KnoraConstants, StringLiteral, Utils, Session } from '@knora/core';
 import { AppGlobal } from 'src/app/app-global';
 import { CacheService } from '../../main/cache/cache.service';
@@ -341,7 +341,15 @@ export class UserFormComponent implements OnInit, OnChanges {
 
         if (this.username) {
             // edit mode: update user data
-            this.knoraApiConnection.admin.usersEndpoint.updateUserBasicInformation(this.user.id, this.form.value).subscribe(
+            // username doesn't seem to be optional in @knora/api usersEndpoint type UpdateUserRequest.
+            // but a user can't change the username, the field is disabled, so it's not a value in this form.
+            // we have to make a small hack here.
+            const userData: UpdateUserRequest = this.form.value;
+            userData.username = this.username;
+
+            console.log(this.form.value);
+            console.log(userData);
+            this.knoraApiConnection.admin.usersEndpoint.updateUserBasicInformation(this.user.id, userData).subscribe(
                 (response: ApiResponseData<UserResponse>) => {
                     this.user = response.body.user;
                     this.buildForm(this.user);
@@ -374,8 +382,16 @@ export class UserFormComponent implements OnInit, OnChanges {
             );
         } else {
             // new: create user
-            this.knoraApiConnection.admin.usersEndpoint.createUser(this.form.value).subscribe(
+            console.log(this.form.value);
+            let userData: User = new User();
+            userData = this.form.value;
+
+            console.log(userData);
+            this.knoraApiConnection.admin.usersEndpoint.createUser(userData).subscribe(
                 (response: ApiResponseData<UserResponse>) => {
+
+
+
                     this.user = response.body.user;
                     this.buildForm(this.user);
 

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { existingNamesValidator } from '@knora/action';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, MembersResponse, ReadProject, ReadUser, UserResponse, UsersResponse } from '@knora/api';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, MembersResponse, ReadProject, ReadUser, UserResponse, UsersResponse, ProjectResponse } from '@knora/api';
 import { AutocompleteItem, KnoraApiConnectionToken } from '@knora/core';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -295,11 +295,13 @@ export class AddUserComponent implements OnInit {
 
                     this.loading = true;
 
+                    console.log('psc', this.projectcode);
+
                     // get project iri by projectcode
                     this._cache.get(this.projectcode).subscribe(
-                        (p: ReadProject) => {
+                        (p: ApiResponseData<ProjectResponse>) => {
                             // add user to project
-                            this.knoraApiConnection.admin.usersEndpoint.addUserToProjectMembership(this.selectedUser.id, p.id).subscribe(
+                            this.knoraApiConnection.admin.usersEndpoint.addUserToProjectMembership(this.selectedUser.id, p.body.project.id).subscribe(
                                 (userAdded: ApiResponseData<UserResponse>) => {
 
                                     // successful post

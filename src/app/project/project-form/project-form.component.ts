@@ -233,6 +233,7 @@ export class ProjectFormComponent implements OnInit {
                 value: project.logo, disabled: disabled
             }),
             'status': [true],
+            'selfjoin': [false],
             'keywords': new FormControl({
                 value: [], disabled: disabled
             })          // must be empty (even in edit mode), because of the mat-chip-list
@@ -350,7 +351,9 @@ export class ProjectFormComponent implements OnInit {
             // create new project
             const projectData: Project = this.form.value;
 
-            this.knoraApiConnection.admin.projectsEndpoint.createProject(projectData).subscribe(
+            console.log(projectData);
+
+            this.knoraApiConnection.admin.projectsEndpoint.createProject(this.form.value).subscribe(
                 (projectResponse: ApiResponseData<ProjectResponse>) => {
                     this.project = projectResponse.body.project;
                     this.buildForm(this.project);
@@ -381,6 +384,7 @@ export class ProjectFormComponent implements OnInit {
 
                 },
                 (error: ApiResponseError) => {
+                    console.error(error);
                     this.errorMessage = error;
                     this.loading = false;
                 }
