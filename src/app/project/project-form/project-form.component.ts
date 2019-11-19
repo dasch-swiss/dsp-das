@@ -378,8 +378,9 @@ export class ProjectFormComponent implements OnInit {
             let i = 0;
             for (const d of this.description) {
                 projectData.description[i] = new StringLiteral();
-                projectData.description[i].language = d.language;
-                projectData.description[i].value = d.value;
+                projectData.description[i] = d;
+                // projectData.description[i].language = d.language;
+                // projectData.description[i].value = d.value;
                 i++;
             }
 
