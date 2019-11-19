@@ -149,10 +149,6 @@ export class ProjectsListComponent implements OnInit {
         // hack because of issue #100 in knora-api-js-lib
         const data: UpdateProjectRequest = new UpdateProjectRequest();
         data.status = true;
-        data.description = [{
-            'language': 'de',
-            'value': 'leer'
-        }];
 
         this.knoraApiConnection.admin.projectsEndpoint.updateProject(id, data).subscribe(
             (response: ApiResponseData<ProjectResponse>) => {
