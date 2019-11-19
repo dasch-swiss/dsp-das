@@ -7,14 +7,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
 import { KnoraApiConnection, KnoraApiConfig } from '@knora/api';
-import { KuiAuthenticationModule } from '@knora/authentication';
 import { KnoraApiConnectionToken, KnoraApiConfigToken } from '@knora/core';
 import { AppInitService } from '../app-init.service';
 import { FooterComponent } from './footer/footer.component';
 import { GridComponent } from './grid/grid.component';
 import { MainComponent } from './main.component';
 
-fdescribe('MainComponent', () => {
+describe('MainComponent', () => {
     let component: MainComponent;
     let fixture: ComponentFixture<MainComponent>;
 
@@ -23,7 +22,6 @@ fdescribe('MainComponent', () => {
             declarations: [MainComponent, FooterComponent, GridComponent],
             imports: [
                 KuiActionModule,
-                KuiAuthenticationModule,
                 MatButtonModule,
                 MatIconModule,
                 MatFormFieldModule,
@@ -54,7 +52,7 @@ fdescribe('MainComponent', () => {
         fixture.detectChanges();
     });
 
-    fit('should create', inject([KnoraApiConfigToken], (KnoraApiConfig: KnoraApiConfig) => {
+    it('should create', () => {
         expect(component).toBeTruthy();
     });
 });

@@ -3,8 +3,7 @@ import { MatButtonModule, MatChipsModule, MatDialogModule, MatExpansionModule, M
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
-import { Session } from '@knora/authentication';
-import { KuiCoreConfig, KuiConfigToken, KuiCoreModule } from '@knora/core';
+import { KuiConfigToken, KuiCoreConfig, KuiCoreModule, Session } from '@knora/core';
 import { of } from 'rxjs';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { ListItemFormComponent } from './list-item-form/list-item-form.component';

@@ -6,14 +6,13 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
-import { KuiCoreConfig, KuiConfigToken, KuiCoreModule } from '@knora/core';
+import { KuiConfigToken, KuiCoreConfig, KuiCoreModule, Session } from '@knora/core';
+import { of } from 'rxjs';
 import { SelectGroupComponent } from 'src/app/project/collaboration/select-group/select-group.component';
 import { UsersListComponent } from './users-list.component';
-import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs';
-import { Session } from '@knora/authentication';
 
 describe('UsersListComponent', () => {
     let component: UsersListComponent;

@@ -3,11 +3,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { KuiActionModule } from '@knora/action';
-import { KuiCoreConfig, KuiConfigToken, KuiCoreModule } from '@knora/core';
-import { ProjectsListComponent } from './projects-list.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Session } from '@knora/authentication';
+import { KuiActionModule } from '@knora/action';
+import { KuiConfigToken, KuiCoreConfig, KuiCoreModule, Session } from '@knora/core';
+import { ProjectsListComponent } from './projects-list.component';
 
 // exclude test because of issue #100 in knora-api-js-lib
 xdescribe('ProjectsListComponent', () => {

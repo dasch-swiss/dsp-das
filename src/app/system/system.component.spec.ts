@@ -3,7 +3,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
-import { Session } from '@knora/authentication';
+import { Session } from '@knora/core';
 import { ErrorComponent } from '../main/error/error.component';
 import { SystemComponent } from './system.component';
 

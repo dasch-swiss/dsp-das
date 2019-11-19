@@ -5,8 +5,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
-import { Session } from '@knora/authentication';
-import { KuiCoreConfig, KuiConfigToken, KuiCoreModule } from '@knora/core';
+import { KuiConfigToken, KuiCoreConfig, KuiCoreModule, Session } from '@knora/core';
 import { UserMenuComponent } from './user-menu.component';
 
 describe('UserMenuComponent', () => {
