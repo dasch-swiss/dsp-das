@@ -344,11 +344,13 @@ export class UserFormComponent implements OnInit, OnChanges {
             // username doesn't seem to be optional in @knora/api usersEndpoint type UpdateUserRequest.
             // but a user can't change the username, the field is disabled, so it's not a value in this form.
             // we have to make a small hack here.
-            const userData: UpdateUserRequest = this.form.value;
-            userData.username = this.username;
+            const userData: UpdateUserRequest = new UpdateUserRequest();
+            // userData.username = this.form.value.username;
+            userData.familyName = this.form.value.familyName;
+            userData.givenName = this.form.value.givenName;
+            // userData.email = this.form.value.email;
+            userData.lang = this.form.value.lang;
 
-            console.log(this.form.value);
-            console.log(userData);
             this.knoraApiConnection.admin.usersEndpoint.updateUserBasicInformation(this.user.id, userData).subscribe(
                 (response: ApiResponseData<UserResponse>) => {
                     this.user = response.body.user;
@@ -382,15 +384,18 @@ export class UserFormComponent implements OnInit, OnChanges {
             );
         } else {
             // new: create user
-            console.log(this.form.value);
-            let userData: User = new User();
-            userData = this.form.value;
+            const userData: User = new User();
+            userData.username = this.form.value.username;
+            userData.familyName = this.form.value.familyName;
+            userData.givenName = this.form.value.givenName;
+            userData.email = this.form.value.email;
+            userData.password = this.form.value.password;
+            userData.systemAdmin = this.form.value.systemAdmin;
+            userData.status = this.form.value.status;
+            userData.lang = this.form.value.lang;
 
-            console.log(userData);
             this.knoraApiConnection.admin.usersEndpoint.createUser(userData).subscribe(
                 (response: ApiResponseData<UserResponse>) => {
-
-
 
                     this.user = response.body.user;
                     this.buildForm(this.user);
