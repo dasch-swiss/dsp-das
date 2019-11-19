@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Router } from '@angular/router';
 import { existingNamesValidator } from '@knora/action';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ProjectsResponse, ReadProject, UpdateProjectRequest, UserResponse, Project } from '@knora/api';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ProjectsResponse, ReadProject, UpdateProjectRequest, UserResponse, Project, StringLiteral } from '@knora/api';
 import { KnoraApiConnectionToken } from '@knora/core';
 import { CacheService } from '../../main/cache/cache.service';
 
@@ -41,6 +41,7 @@ export class ProjectFormComponent implements OnInit {
     ];
     shortcodeRegex = /^[0-9A-Fa-f]+$/;
 
+    description: StringLiteral[];
     /**
      * some restrictions and rules for
      * description, shortcode, shortname and keywords
@@ -150,12 +151,6 @@ export class ProjectFormComponent implements OnInit {
             if (this.project === undefined) {
                 this.project = new ReadProject();
                 this.project.status = true;
-                this.project.description = [
-                    {
-                        'language': 'en',
-                        'value': ''
-                    }
-                ];
             }
 
             this.buildForm(this.project);
@@ -191,6 +186,10 @@ export class ProjectFormComponent implements OnInit {
         // edit mode is true, when a project id (iri) exists
         const editMode: boolean = (!!project.id);
 
+        if (!editMode) {
+            this.description = [new StringLiteral()];
+        }
+
         // disabled is true, if project status is false (= archived);
         const disabled: boolean = (project.id !== undefined && !project.status);
 
@@ -221,11 +220,11 @@ export class ProjectFormComponent implements OnInit {
                 existingNamesValidator(this.existingShortcodes),
                 Validators.pattern(this.shortcodeRegex)
             ]),
-            'description': new FormControl({
-                value: project.description[0].value, disabled: disabled
-            }, [
-                Validators.maxLength(this.descriptionMaxLength)
-            ]),
+            // 'description': new FormControl({
+            //     value: project.description[0].value, disabled: disabled
+            // }, [
+            //     Validators.maxLength(this.descriptionMaxLength)
+            // ]),
             //            'institution': new FormControl({
             //                value: project.institution, disabled: disabled
             //            }),
@@ -269,6 +268,10 @@ export class ProjectFormComponent implements OnInit {
         });
     }
 
+    getStringLiteral(data: StringLiteral[]) {
+        this.description = data;
+    }
+
     addKeyword(event: MatChipInputEvent): void {
         const input = event.input;
         const value = event.value;
@@ -310,18 +313,30 @@ export class ProjectFormComponent implements OnInit {
         // b) update description field / multi language preparation
         // FIXME: this is a quick (hardcoded) hack:
         // TODO: create multi language input fields
-        this.form.controls['description'].setValue([{
-            'language': 'en',
-            'value': this.form.controls['description'].value
-        }]);
+        // this.form.controls['description'].setValue([{
+        //     'language': 'en',
+        //     'value': this.form.controls['description'].value
+        // }]);
 
 
         if (this.projectcode) {
-            const projectInfo: UpdateProjectRequest = this.form.value;
+            const projectData: UpdateProjectRequest = new UpdateProjectRequest();
+            projectData.description = [new StringLiteral()];
+            // projectData.description = this.description;
+            projectData.keywords = this.form.value.keywords;
+            projectData.longname = this.form.value.longname;
+            projectData.status = true;
 
-            console.log(projectInfo);
+            let i = 0;
+            for (const d of this.description) {
+                projectData.description[i] = new StringLiteral();
+                projectData.description[i].language = d.language;
+                projectData.description[i].value = d.value;
+                i++;
+            }
+
             // edit / update project data
-            this.knoraApiConnection.admin.projectsEndpoint.updateProject(this.project.id, projectInfo).subscribe(
+            this.knoraApiConnection.admin.projectsEndpoint.updateProject(this.project.id, projectData).subscribe(
                 (response: ApiResponseData<ProjectResponse>) => {
 
                     this.project = response.body.project;
@@ -349,11 +364,26 @@ export class ProjectFormComponent implements OnInit {
             );
         } else {
             // create new project
-            const projectData: Project = this.form.value;
+            const projectData: Project = new Project();
 
-            console.log(projectData);
+            projectData.shortcode = this.form.value.shortcode;
+            projectData.shortname = this.form.value.shortname;
+            projectData.longname = this.form.value.longname;
+            projectData.keywords = this.form.value.keywords;
+            projectData.description = [new StringLiteral()];
+            // projectData.description = this.description;
+            projectData.status = true;
+            projectData.selfjoin = false;
 
-            this.knoraApiConnection.admin.projectsEndpoint.createProject(this.form.value).subscribe(
+            let i = 0;
+            for (const d of this.description) {
+                projectData.description[i] = new StringLiteral();
+                projectData.description[i].language = d.language;
+                projectData.description[i].value = d.value;
+                i++;
+            }
+
+            this.knoraApiConnection.admin.projectsEndpoint.createProject(projectData).subscribe(
                 (projectResponse: ApiResponseData<ProjectResponse>) => {
                     this.project = projectResponse.body.project;
                     this.buildForm(this.project);
@@ -464,9 +494,18 @@ export class ProjectFormComponent implements OnInit {
         // update the cache
         this._cache.del(this.projectcode);
         this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
-        this.buildForm(this.project);
-        window.location.reload();
-        this.loading = false;
+        this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode)).subscribe(
+            (response: ApiResponseData<ProjectResponse>) => {
+                this.project = response.body.project;
+                this.buildForm(this.project);
+                window.location.reload();
+                this.loading = false;
+            },
+            (error: ApiResponseError) => {
+                console.error(error);
+                this.loading = false;
+            }
+        );
     }
 
     /**
@@ -476,6 +515,7 @@ export class ProjectFormComponent implements OnInit {
         ev.preventDefault();
 
         project = (project ? project : new ReadProject());
+        this.description = project.description;
 
         this.buildForm(project);
 
