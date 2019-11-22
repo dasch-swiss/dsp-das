@@ -25,7 +25,7 @@
     </div>
 
     <!-- content: list -->
-    <table class="table more-space-bottom" [class.deactivate]="!status">
+    <table class="table more-space-bottom" [class.deactivated]="!status">
 
         <tr class="table-entry" *ngFor="let project of list | kuiSortBy: sortBy; let last = last" [class.no-border]="last">
             <!-- logo -->
@@ -101,7 +101,7 @@
 
 
     <mat-list>
-        <mat-list-item *ngFor="let project of projects | kuiSortBy: sortBy" class="link" [class.deactivate]="group.key === 'deactivate'"
+        <mat-list-item *ngFor="let project of projects | kuiSortBy: sortBy" class="link" [class.deactivated]="group.key === 'deactivate'"
                        (click)="setProject(project.id, project.id)">
             <mat-icon mat-list-icon>
                 <span *ngIf="group.key === 'active'">inbox</span>
