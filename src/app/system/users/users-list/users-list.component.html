@@ -25,7 +25,7 @@
     </div>
 
     <!-- content: list -->
-    <table class="table more-space-bottom" [class.deactivate]="!status">
+    <table class="table more-space-bottom" [class.deactivated]="!status">
         <tr class="table-entry" *ngFor="let user of list | kuiSortBy: sortBy; let last = last" [class.no-border]="last">
             <!-- avatar -->
             <td class="avatar-cell">
@@ -97,7 +97,7 @@
                     </button>
                     <!-- delete / reactivate user -->
                     <button mat-menu-item *ngIf="user.status && sysAdmin && !projectcode" (click)="openDialog('deleteUser', user.username, user.id)">
-                        Deactivate user
+                        Suspend user
                     </button>
                     <button mat-menu-item *ngIf="!user.status && sysAdmin && !projectcode" (click)="openDialog('activateUser', user.username, user.id)">
                         Reactivate user
