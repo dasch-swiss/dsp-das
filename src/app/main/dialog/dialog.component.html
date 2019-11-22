@@ -23,9 +23,9 @@
 
     <!-- Delete user -->
     <div *ngSwitchCase="'deleteUser'">
-        <app-dialog-header [title]="data.name" [subtitle]="'Deactivate user'" (close)="dialogRef.close()">
+        <app-dialog-header [title]="data.name" [subtitle]="'Suspend user'" (close)="dialogRef.close()">
         </app-dialog-header>
-        Do you want to deactivate this user?
+        Do you want to suspend this user?
 
         <!-- TODO: create a mat dialog actions component with the following buttons: Cancel to reset and OK to confirm action -->
         <mat-dialog-actions>
@@ -59,7 +59,7 @@
     <div *ngSwitchCase="'removeFromProject'">
         <app-dialog-header [title]="data.name" [subtitle]="'Remove user from Project'" (close)="dialogRef.close()">
         </app-dialog-header>
-        Do you want to remove this user from the project?
+        Do you want to suspend this user from the project?
         <mat-dialog-actions>
             <button mat-button mat-dialog-close class="cancel-button center" [mat-dialog-close]="false">
                 Cancel
