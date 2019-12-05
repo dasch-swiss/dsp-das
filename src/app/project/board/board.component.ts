@@ -33,17 +33,14 @@ export class BoardComponent implements OnInit {
     // i18n setup
     itemPluralMapping = {
         member: {
-            // '=0': '0 Members',
-            '=1': '1 Member',
-            other: '# Members'
+            '=1': '1 User',
+            other: '# Users'
         },
         ontology: {
-            // '=0': '0 Ontologies',
             '=1': '1 Ontology',
             other: '# Ontologies'
         },
         keyword: {
-            // '=0': '0 Keywords',
             '=1': '1 Keyword',
             other: '# Keywords'
         }

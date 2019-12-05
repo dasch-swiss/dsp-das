@@ -222,9 +222,8 @@ export class ProjectFormComponent implements OnInit {
             ]),
             // 'description': new FormControl({
             //     value: project.description[0].value, disabled: disabled
-            // }, [
-            //     Validators.maxLength(this.descriptionMaxLength)
-            // ]),
+            // }, [Validators.maxLength(this.descriptionMaxLength)]
+            // ),
             //            'institution': new FormControl({
             //                value: project.institution, disabled: disabled
             //            }),
@@ -424,7 +423,7 @@ export class ProjectFormComponent implements OnInit {
     }
 
     /**
-     * Delete / archive project
+     * Deactivate project
      * @param id Project Iri
      */
     delete(id: string) {

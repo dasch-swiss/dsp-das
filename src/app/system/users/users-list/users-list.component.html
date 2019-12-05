@@ -26,7 +26,7 @@
     </div>
 
     <!-- content: list -->
-    <table class="table more-space-bottom" [class.archived]="!status">
+    <table class="table more-space-bottom" [class.deactivated]="!status">
         <tr class="table-entry" *ngFor="let user of list | kuiSortBy: sortBy; let last = last" [class.no-border]="last">
             <!-- avatar -->
             <td class="avatar-cell">

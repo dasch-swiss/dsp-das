@@ -13,7 +13,7 @@ import { CacheService } from '../../main/cache/cache.service';
  * but also on the landing page
  *
  * We build to lists: one with active projects
- * and another one with already archived (inactive) projects
+ * and another one with already deactivate (inactive) projects
  *
  */
 @Component({
