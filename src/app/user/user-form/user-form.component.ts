@@ -144,6 +144,10 @@ export class UserFormComponent implements OnInit, OnChanges {
      */
     languagesList: StringLiteral[] = AppGlobal.languagesList;
 
+    // permissions of logged-in user
+    session: Session;
+    sysAdmin: boolean = false;
+
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _route: ActivatedRoute,
@@ -161,6 +165,11 @@ export class UserFormComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.loading = true;
+
+        // get information about the logged-in user
+        this.session = JSON.parse(localStorage.getItem('session'));
+        // is the logged-in user system admin?
+        this.sysAdmin = this.session.user.sysAdmin;
 
         if (this.username) {
             /**

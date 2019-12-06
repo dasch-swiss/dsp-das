@@ -87,9 +87,7 @@ export class CollaborationComponent implements OnInit {
                 this.project = response.body.project;
 
                 // is logged-in user projectAdmin?
-                this.projectAdmin = this.sysAdmin
-                    ? this.sysAdmin
-                    : this.session.user.projectAdmin.some(e => e === this.project.id);
+                this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
 
                 // get from cache: list of project members and groups
                 if (this.projectAdmin) {
