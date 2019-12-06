@@ -6,8 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
-import { KnoraApiConnection, KnoraApiConfig } from '@knora/api';
-import { KnoraApiConnectionToken, KnoraApiConfigToken } from '@knora/core';
+import { KnoraApiConfig, KnoraApiConnection } from '@knora/api';
+import { KnoraApiConfigToken, KnoraApiConnectionToken } from '@knora/core';
 import { AppInitService } from '../app-init.service';
 import { FooterComponent } from './footer/footer.component';
 import { GridComponent } from './grid/grid.component';
@@ -16,6 +16,8 @@ import { MainComponent } from './main.component';
 describe('MainComponent', () => {
     let component: MainComponent;
     let fixture: ComponentFixture<MainComponent>;
+
+    const config = new KnoraApiConfig('http', '0.0.0.0', 3333);
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -33,11 +35,11 @@ describe('MainComponent', () => {
                 AppInitService,
                 {
                     provide: KnoraApiConfigToken,
-                    useValue: KnoraApiConfig
+                    useValue: config
                 },
                 {
                     provide: KnoraApiConnectionToken,
-                    useValue: KnoraApiConnection
+                    useValue: new KnoraApiConnection(config)
                 }
             ]
         }).compileComponents();

@@ -19,6 +19,8 @@ fdescribe('HeaderComponent', () => {
     let component: HeaderComponent;
     let fixture: ComponentFixture<HeaderComponent>;
 
+    const config = new KnoraApiConfig('http', '0.0.0.0', 3333);
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -42,13 +44,12 @@ fdescribe('HeaderComponent', () => {
                 AppInitService,
                 {
                     provide: KnoraApiConfigToken,
-                    useValue: KnoraApiConfig
+                    useValue: config
                 },
                 {
                     provide: KnoraApiConnectionToken,
-                    useValue: KnoraApiConnection
+                    useValue: new KnoraApiConnection(config)
                 }
-
             ]
         }).compileComponents();
     }));
