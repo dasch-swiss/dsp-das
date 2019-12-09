@@ -2,8 +2,8 @@ import { Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output } fro
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { existingNamesValidator } from '@knora/action';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadUser, UserResponse, UsersResponse, UpdateUserRequest, User } from '@knora/api';
-import { KnoraApiConnectionToken, KnoraConstants, StringLiteral, Utils, Session } from '@knora/core';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadUser, UserResponse, UsersResponse, UpdateUserRequest, User, StringLiteral, Constants } from '@knora/api';
+import { KnoraApiConnectionToken, Utils, Session } from '@knora/core';
 import { AppGlobal } from 'src/app/app-global';
 import { CacheService } from '../../main/cache/cache.service';
 
@@ -242,9 +242,9 @@ export class UserFormComponent implements OnInit, OnChanges {
      */
     buildForm(user: ReadUser): boolean {
         // get info about system admin permission
-        if (user.id && user.permissions.groupsPerProject[KnoraConstants.SystemProjectIRI]) {
+        if (user.id && user.permissions.groupsPerProject[Constants.SystemProjectIRI]) {
             // this user is member of the system project. does he has admin rights?
-            this.sysAdminPermission = user.permissions.groupsPerProject[KnoraConstants.SystemProjectIRI].includes(KnoraConstants.SystemAdminGroupIRI);
+            this.sysAdminPermission = user.permissions.groupsPerProject[Constants.SystemProjectIRI].includes(Constants.SystemAdminGroupIRI);
         }
 
         // if user is defined, we're in the edit mode

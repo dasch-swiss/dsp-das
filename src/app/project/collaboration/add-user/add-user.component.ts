@@ -2,12 +2,13 @@ import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { existingNamesValidator } from '@knora/action';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, MembersResponse, ReadProject, ReadUser, UserResponse, UsersResponse, ProjectResponse } from '@knora/api';
-import { AutocompleteItem, KnoraApiConnectionToken } from '@knora/core';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, MembersResponse, ProjectResponse, ReadUser, UserResponse, UsersResponse } from '@knora/api';
+import { KnoraApiConnectionToken } from '@knora/core';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { CacheService } from '../../../main/cache/cache.service';
+import { CacheService } from 'src/app/main/cache/cache.service';
+import { AutocompleteItem } from 'src/app/main/declarations/autocomplete-item';
 
 @Component({
     selector: 'app-add-user',

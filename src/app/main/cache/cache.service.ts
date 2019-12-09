@@ -31,7 +31,7 @@ export class CacheService {
     get(key: string, fallback?: Observable<any>, maxAge?: number): Observable<any> | Subject<any> {
 
         if (this.hasValidCachedValue(key)) {
-            // console.log(`%c Getting from cache by key: ${key}`, 'color: green');
+            console.log(`%c Getting from cache by key: ${key}`, 'color: green');
             // console.log(`%c Cache returns:` + JSON.stringify(this.cache.get(key).value), 'color: green');
             // console.log(`%c Cache returns typeof:` + (typeof of(this.cache.get(key).value)), 'color: green');
 
@@ -44,7 +44,7 @@ export class CacheService {
         }
 
         if (this.inFlightObservables.has(key)) {
-            // console.log(`%c inFlightObservables has key: ${key}`, 'color: orange');
+            console.log(`%c inFlightObservables has key: ${key}`, 'color: orange');
             // console.log(`%c inFlightObservables returns:` + JSON.stringify(this.inFlightObservables.get(key)), 'color: orange');
             // console.log(`%c inFlightObservables returns typeof:` + (typeof this.inFlightObservables.get(key)), 'color: orange');
 
@@ -56,7 +56,7 @@ export class CacheService {
             fallback.subscribe(
                 (value: any) => {
                     this.set(key, value, maxAge);
-                    // console.log(`%c Calling api for key: ${key}`, 'color: purple');
+                    console.log(`%c Calling api for key: ${key}`, 'color: purple');
                     // console.log(`%c Calling api returns:` + JSON.stringify(value), 'color: purple');
                     // console.log(`%c Calling api returns typeof:` + (typeof value), 'color: purple');
 

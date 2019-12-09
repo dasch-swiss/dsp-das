@@ -1,5 +1,5 @@
 import { MenuItem } from './main/declarations/menu-item';
-import { StringLiteral } from '@knora/core';
+import { StringLiteral } from '@knora/api';
 
 export class AppGlobal {
 

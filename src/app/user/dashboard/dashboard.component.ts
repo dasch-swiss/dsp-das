@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ReadUser, UserResponse } from '@knora/api';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ReadUser, UserResponse, Constants } from '@knora/api';
 import { KnoraApiConnectionToken, Session } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
 
@@ -37,6 +37,11 @@ export class DashboardComponent implements OnInit {
     }
 
     ngOnInit() {
+
+        console.log(Constants.SystemProjectIRI);
+        console.log(Constants.SystemAdminGroupIRI);
+        console.log(Constants.ProjectAdminGroupIRI);
+        console.log(Constants.ProjectMemberGroupIRI);
 
         this.loading = true;
 

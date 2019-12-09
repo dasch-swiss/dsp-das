@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ApiServiceError, List, ListNode, ListsService, StringLiteral } from '@knora/core';
+import { ListsService } from '@knora/core';
+import { StringLiteral } from '@knora/api';
+import { List, ListNode, ApiServiceError } from '@knora/core/lib/declarations';
 
 @Component({
     selector: 'app-list-item',

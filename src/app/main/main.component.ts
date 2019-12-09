@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectsResponse } from '@knora/api';
-import { KnoraApiConnectionToken, KnoraConstants } from '@knora/core';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectsResponse, Constants } from '@knora/api';
+import { KnoraApiConnectionToken } from '@knora/core';
 import { GridItem } from './grid/grid.component';
 
 @Component({
@@ -22,8 +22,8 @@ export class MainComponent implements OnInit {
     session: boolean = false;
 
     disabledProjects: string[] = [
-        KnoraConstants.SystemProjectIRI,
-        KnoraConstants.DefaultSharedOntologyIRI,
+        Constants.SystemProjectIRI,
+        Constants.DefaultSharedOntologyIRI,
         'http://rdfh.ch/projects/0001'
     ];
 

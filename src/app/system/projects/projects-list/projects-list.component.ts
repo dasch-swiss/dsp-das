@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadUser, UpdateProjectRequest } from '@knora/api';
-import { KnoraApiConnectionToken, KnoraConstants, Session } from '@knora/core';
+import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, ProjectResponse, ReadUser, UpdateProjectRequest } from '@knora/api';
+import { KnoraApiConnectionToken, Session } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
 
@@ -22,8 +22,8 @@ export class ProjectsListComponent implements OnInit {
 
     // list of default, knora-specific projects, which are not able to be deleted or to be editied
     doNotDelete: string[] = [
-        KnoraConstants.SystemProjectIRI,
-        KnoraConstants.DefaultSharedOntologyIRI
+        Constants.SystemProjectIRI,
+        Constants.DefaultSharedOntologyIRI
     ];
 
     // list of users: status active or inactive (deleted)

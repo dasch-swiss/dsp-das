@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ApiServiceError, ListNode, ListNodeUpdatePayload, ListsService, StringLiteral } from '@knora/core';
+import { ListNode, StringLiteral } from '@knora/api';
+import { ListsService } from '@knora/core';
+import { ApiServiceError, ListNodeUpdatePayload } from '@knora/core/lib/declarations';
 
 @Component({
     selector: 'app-list-item-form',
@@ -76,8 +78,8 @@ export class ListItemFormComponent implements OnInit {
         if (this.parentIri) {
             // TODO: replace by knora-api-js-lib service as soon it's available for lists
             this._listsService.getListNodeInfo(this.parentIri).subscribe(
-                (result: ListNode) => {
-                    this.placeholder += result.labels[0].value;
+                (response: ListNode) => {
+                    this.placeholder += response.label; // result.labels[0].value;
                     this.initComponent = false;
                 },
                 (error: ApiServiceError) => {

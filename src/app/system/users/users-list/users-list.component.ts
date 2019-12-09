@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, GroupsResponse, KnoraApiConnection, Permissions, ProjectResponse, ReadProject, ReadUser, UserResponse } from '@knora/api';
-import { KnoraApiConnectionToken, KnoraConstants, Session, SessionService } from '@knora/core';
+import { ApiResponseData, ApiResponseError, GroupsResponse, KnoraApiConnection, Permissions, ProjectResponse, ReadProject, ReadUser, UserResponse, Constants } from '@knora/api';
+import { KnoraApiConnectionToken, Session, SessionService } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 
@@ -43,7 +43,7 @@ export class UsersListComponent implements OnInit {
     //
     // project view
     // knora admin group iri
-    adminGroupIri: string = KnoraConstants.ProjectAdminGroupIRI;
+    adminGroupIri: string = Constants.ProjectAdminGroupIRI;
 
     // project shortcode; as identifier in project cache service
     projectcode: string;
@@ -137,7 +137,7 @@ export class UsersListComponent implements OnInit {
             // check if this user is project admin
             return (
                 permissions.groupsPerProject[this.project.id].indexOf(
-                    KnoraConstants.ProjectAdminGroupIRI
+                    Constants.ProjectAdminGroupIRI
                 ) > -1
             );
         } else {
@@ -157,8 +157,8 @@ export class UsersListComponent implements OnInit {
         const groupsPerProjectKeys: string[] = Object.keys(permissions.groupsPerProject);
 
         for (const key of groupsPerProjectKeys) {
-            if (key === KnoraConstants.SystemProjectIRI) {
-                admin = permissions.groupsPerProject[key].indexOf(KnoraConstants.SystemAdminGroupIRI) > -1;
+            if (key === Constants.SystemProjectIRI) {
+                admin = permissions.groupsPerProject[key].indexOf(Constants.SystemAdminGroupIRI) > -1;
             }
         }
 

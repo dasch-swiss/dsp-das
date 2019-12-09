@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectsResponse, ReadUser, UserResponse } from '@knora/api';
-import { AutocompleteItem, KnoraApiConnectionToken, KnoraConstants, PermissionData, Session } from '@knora/core';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectsResponse, ReadUser, UserResponse, Constants } from '@knora/api';
+import { KnoraApiConnectionToken, Session } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
+import { AutocompleteItem } from 'src/app/main/declarations/autocomplete-item';
+import { IPermissions } from '@knora/api/src/interfaces/models/admin/i-permissions';
 
 @Component({
     selector: 'app-membership',
@@ -70,7 +72,7 @@ export class MembershipComponent implements OnInit {
 
                 for (const p of response.body.projects) {
 
-                    if (p.id !== KnoraConstants.SystemProjectIRI && p.id !== KnoraConstants.DefaultSharedOntologyIRI && p.status === true) {
+                    if (p.id !== Constants.SystemProjectIRI && p.id !== Constants.DefaultSharedOntologyIRI && p.status === true) {
                         // get index example:
                         // myArray.findIndex(i => i.hello === "stevie");
                         if (this.user.projects.findIndex(i => i.id === p.id) === -1) {
@@ -108,7 +110,7 @@ export class MembershipComponent implements OnInit {
         // TODO: update cache of project
 
         // get shortcode from iri; not the best way right now
-        const projectcode: string = iri.replace(KnoraConstants.iriProjectsBase, '');
+        const projectcode: string = iri.replace('http://rdfh.ch/projects/', '');
 
         // reset the cache of project members
         this._cache.get('members_of_' + projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectMembersByShortcode(projectcode));
@@ -174,8 +176,8 @@ export class MembershipComponent implements OnInit {
      * @param  [iri] project id
      * @returns boolean
      */
-    userIsProjectAdmin(permissions: PermissionData, iri: string): boolean {
-        return (permissions.groupsPerProject[iri].indexOf(KnoraConstants.ProjectAdminGroupIRI) > -1);
+    userIsProjectAdmin(permissions: IPermissions, iri: string): boolean {
+        return (permissions.groupsPerProject[iri].indexOf(Constants.ProjectAdminGroupIRI) > -1);
     }
 
     openProject(shortcode: string) {

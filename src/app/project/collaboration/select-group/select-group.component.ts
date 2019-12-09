@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ApiResponseData, ApiResponseError, GroupsResponse, KnoraApiConnection } from '@knora/api';
-import { AutocompleteItem, KnoraApiConnectionToken } from '@knora/core';
-import { CacheService } from '../../../main/cache/cache.service';
+import { KnoraApiConnectionToken } from '@knora/core';
+import { CacheService } from 'src/app/main/cache/cache.service';
+import { AutocompleteItem } from 'src/app/main/declarations/autocomplete-item';
 
 @Component({
     selector: 'app-select-group',
