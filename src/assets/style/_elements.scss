@@ -251,6 +251,10 @@ a,
   &.active {
     color: $active;
   }
+
+  &.warning {
+    color: $accent_400;
+  }
 }
 
 // --------------------------------------

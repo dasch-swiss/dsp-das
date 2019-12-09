@@ -370,16 +370,11 @@ export class UserFormComponent implements OnInit, OnChanges {
                     );
                     if (session.user.name === this.username) {
                         // update logged in user session
-                        session.user.lang = this.form.controls[
-                            'lang'
-                        ].value;
-                        localStorage.setItem(
-                            'session',
-                            JSON.stringify(session)
-                        );
+                        session.user.lang = this.form.controls['lang'].value;
+                        localStorage.setItem('session', JSON.stringify(session));
                     }
 
-                    this._cache.set(this.username, response.body.user);
+                    this._cache.set(this.username, response);
 
                     this.success = true;
 
