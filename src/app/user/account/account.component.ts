@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ReadUser, UserResponse } from '@knora/api';
-import { KnoraApiConnectionToken } from '@knora/core';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, LogoutResponse, ReadUser, UserResponse } from '@knora/api';
+import { KnoraApiConnectionToken, SessionService } from '@knora/core';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { CacheService } from '../../main/cache/cache.service';
 
@@ -25,6 +25,7 @@ export class AccountComponent implements OnInit {
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _cache: CacheService,
+        private _session: SessionService,
         private _dialog: MatDialog,
         private _titleService: Title) {
         // set the page title
@@ -87,7 +88,23 @@ export class AccountComponent implements OnInit {
             (response: ApiResponseData<UserResponse>) => {
 
                 // console.log('refresh parent after delete', response);
-                this.refreshParent.emit();
+                // this action will deactivate own user account. The consequence is a logout
+                this.knoraApiConnection.v2.auth.logout().subscribe(
+                    (logoutResponse: ApiResponseData<LogoutResponse>) => {
+
+                        // destroy cache
+                        this._cache.destroy();
+
+                        // destroy (knora-ui) session
+                        this._session.destroySession();
+
+                        // reload the page
+                        window.location.reload();
+                    },
+                    (error: ApiResponseError) => {
+                        console.error(error);
+                    }
+                );
             },
             (error: ApiResponseError) => {
                 // this.errorMessage = error;
