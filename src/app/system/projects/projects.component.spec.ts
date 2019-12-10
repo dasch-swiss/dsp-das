@@ -1,13 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ProjectsComponent } from './projects.component';
-import { KuiActionModule } from '@knora/action';
-import { ProjectsListComponent } from './projects-list/projects-list.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { KuiCoreModule, KuiConfigToken, KuiCoreConfig } from '@knora/core';
+import { KuiActionModule } from '@knora/action';
+import { KnoraApiConnection } from '@knora/api';
+import { KnoraApiConfigToken, KnoraApiConnectionToken, KuiCoreModule } from '@knora/core';
+import { AppInitService } from 'src/app/app-init.service';
+import { TestConfig } from 'test.config';
+import { ProjectsListComponent } from './projects-list/projects-list.component';
+import { ProjectsComponent } from './projects.component';
 
 describe('ProjectsComponent', () => {
     let component: ProjectsComponent;
@@ -28,9 +30,14 @@ describe('ProjectsComponent', () => {
                 MatMenuModule
             ],
             providers: [
+                AppInitService,
                 {
-                    provide: KuiConfigToken,
-                    useValue: KuiCoreConfig
+                    provide: KnoraApiConfigToken,
+                    useValue: TestConfig.ApiConfig
+                },
+                {
+                    provide: KnoraApiConnectionToken,
+                    useValue: new KnoraApiConnection(TestConfig.ApiConfig)
                 }
             ]
         })

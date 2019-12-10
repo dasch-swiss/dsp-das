@@ -9,27 +9,17 @@ import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
-import { KuiConfigToken, KuiCoreConfig, KuiCoreModule, Session } from '@knora/core';
+import { KnoraApiConnection } from '@knora/api';
+import { KnoraApiConfigToken, KnoraApiConnectionToken, KuiCoreModule, Session } from '@knora/core';
 import { of } from 'rxjs';
+import { AppInitService } from 'src/app/app-init.service';
 import { SelectGroupComponent } from 'src/app/project/collaboration/select-group/select-group.component';
+import { TestConfig } from 'test.config';
 import { UsersListComponent } from './users-list.component';
 
 describe('UsersListComponent', () => {
     let component: UsersListComponent;
     let fixture: ComponentFixture<UsersListComponent>;
-
-    const shortcode = '0001';
-
-    const currentTestSession: Session = {
-        id: 1555226377250,
-        user: {
-            jwt: '',
-            lang: 'en',
-            name: 'root',
-            projectAdmin: [],
-            sysAdmin: false
-        }
-    };
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -54,16 +44,21 @@ describe('UsersListComponent', () => {
                             paramMap: of({
                                 get: (param: string) => {
                                     if (param === 'shortcode') {
-                                        return shortcode;
+                                        return TestConfig.ProjectCode;
                                     }
                                 }
                             })
                         }
                     }
                 },
+                AppInitService,
                 {
-                    provide: KuiConfigToken,
-                    useValue: KuiCoreConfig
+                    provide: KnoraApiConfigToken,
+                    useValue: TestConfig.ApiConfig
+                },
+                {
+                    provide: KnoraApiConnectionToken,
+                    useValue: new KnoraApiConnection(TestConfig.ApiConfig)
                 }
             ]
         }).compileComponents();
@@ -95,7 +90,7 @@ describe('UsersListComponent', () => {
     });
 
     beforeEach(() => {
-        localStorage.setItem('session', JSON.stringify(currentTestSession));
+        localStorage.setItem('session', JSON.stringify(TestConfig.CurrentSession));
 
         fixture = TestBed.createComponent(UsersListComponent);
         component = fixture.componentInstance;
@@ -104,7 +99,7 @@ describe('UsersListComponent', () => {
 
     it('should create', () => {
         expect<any>(localStorage.getItem('session')).toBe(
-            JSON.stringify(currentTestSession)
+            JSON.stringify(TestConfig.CurrentSession)
         );
         expect(component).toBeTruthy();
     });

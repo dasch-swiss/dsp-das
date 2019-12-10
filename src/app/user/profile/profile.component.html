@@ -15,7 +15,7 @@
         <ul class="user-profile-info">
             <br>
             <li>
-                <mat-icon>flag</mat-icon>{{user.lang}}
+                <mat-icon>language</mat-icon>{{user.lang}}
             </li>
             <!-- Show user's status (active / supsended): Not necessary anymore because we use profile componen for own user profile only. Probably we can open it for public uswer profile information
                 <li class="status text-only" [class.active]="user.status">
@@ -24,7 +24,7 @@
                 <span *ngIf="!user.status">Suspended</span>
             </li> -->
             <li class="status warning text-only" *ngIf="sysAdmin">
-                <mat-icon>info</mat-icon>
+                <mat-icon>verified_user</mat-icon>
                 <span>System admin</span>
             </li>
         </ul>
