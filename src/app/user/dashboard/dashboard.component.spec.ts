@@ -10,6 +10,7 @@ import { ProjectsListComponent } from 'src/app/system/projects/projects-list/pro
 import { ProjectsComponent } from 'src/app/system/projects/projects.component';
 import { TestConfig } from 'test.config';
 import { DashboardComponent } from './dashboard.component';
+import { MatChipsModule } from '@angular/material';
 
 describe('DashboardComponent', () => {
     let component: DashboardComponent;
@@ -26,6 +27,7 @@ describe('DashboardComponent', () => {
                 KuiActionModule,
                 KuiCoreModule,
                 MatButtonModule,
+                MatChipsModule,
                 MatIconModule,
                 MatMenuModule
             ],

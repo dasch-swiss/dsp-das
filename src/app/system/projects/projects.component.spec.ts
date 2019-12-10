@@ -10,6 +10,7 @@ import { AppInitService } from 'src/app/app-init.service';
 import { TestConfig } from 'test.config';
 import { ProjectsListComponent } from './projects-list/projects-list.component';
 import { ProjectsComponent } from './projects.component';
+import { MatChipsModule } from '@angular/material';
 
 describe('ProjectsComponent', () => {
     let component: ProjectsComponent;
@@ -25,6 +26,7 @@ describe('ProjectsComponent', () => {
                 KuiActionModule,
                 KuiCoreModule,
                 MatButtonModule,
+                MatChipsModule,
                 MatDialogModule,
                 MatIconModule,
                 MatMenuModule

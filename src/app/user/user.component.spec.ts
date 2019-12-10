@@ -24,6 +24,7 @@ import { CollectionListComponent } from './collection-list/collection-list.compo
 import { ProfileComponent } from './profile/profile.component';
 import { PasswordFormComponent } from './user-form/password-form/password-form.component';
 import { UserComponent } from './user.component';
+import { MatChipsModule } from '@angular/material';
 
 describe('UserComponent', () => {
     let component: UserComponent;
@@ -47,6 +48,7 @@ describe('UserComponent', () => {
                 KuiActionModule,
                 KuiCoreModule,
                 MatButtonModule,
+                MatChipsModule,
                 MatDialogModule,
                 MatDividerModule,
                 MatFormFieldModule,
