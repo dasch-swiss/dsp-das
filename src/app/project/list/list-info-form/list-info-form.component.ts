@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ApiServiceError, List, ListCreatePayload, ListInfo, ListInfoUpdatePayload, ListsService, Project, StringLiteral } from '@knora/core';
+import { List, ListInfo, ListInfoUpdatePayload, ListCreatePayload, ApiServiceError } from '@knora/core';
+import { ReadProject, StringLiteral } from '@knora/api';
+import { ListsService } from '@knora/core';
 
 @Component({
     selector: 'app-list-info-form',
@@ -22,7 +24,7 @@ export class ListInfoFormComponent implements OnInit {
 
     @Output() updateParent: EventEmitter<string> = new EventEmitter<string>();
 
-    project: Project;
+    project: ReadProject;
 
     list: ListInfo;
 
@@ -81,7 +83,7 @@ export class ListInfoFormComponent implements OnInit {
         statusText: "You have successfully updated list's info."
     };
 
-    constructor (
+    constructor(
         private _listsService: ListsService) {
     }
 
@@ -189,6 +191,7 @@ export class ListInfoFormComponent implements OnInit {
                 labels: this.labels,
                 comments: this.comments
             };
+            // TODO: replace by knora-api-js-lib service as soon it's available for lists
             this._listsService.updateListInfo(listInfoUpdateData).subscribe(
                 (result: ListInfo) => {
                     this.success = true;
