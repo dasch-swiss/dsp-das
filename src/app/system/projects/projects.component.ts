@@ -15,7 +15,7 @@ import { CacheService } from '../../main/cache/cache.service';
  * but also on the landing page
  *
  * We build to lists: one with active projects
- * and another one with already archived (inactive) projects
+ * and another one with already deactivate (inactive) projects
  *
  */
 @Component({
@@ -51,10 +51,10 @@ export class ProjectsComponent implements OnInit {
 
     // list of active projects
     active: Project[] = [];
-    // list of archived (deleted) projects
+    // list of deactivate projects
     inactive: Project[] = [];
 
-    constructor (
+    constructor(
         private _cache: CacheService,
         private _dialog: MatDialog,
         private _projectsService: ProjectsService,

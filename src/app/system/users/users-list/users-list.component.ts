@@ -39,8 +39,8 @@ export class UsersListComponent implements OnInit {
     // i18n plural mapping
     itemPluralMapping = {
         title: {
-            '=1': '1 Member',
-            other: '# Members'
+            '=1': '1 User',
+            other: '# Users'
         }
     };
 
@@ -79,7 +79,7 @@ export class UsersListComponent implements OnInit {
     // ... and sort by 'email'
     sortBy: string = 'email';
 
-    constructor (
+    constructor(
         private _auth: AuthenticationService,
         private _cache: CacheService,
         private _dialog: MatDialog,
