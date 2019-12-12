@@ -153,24 +153,6 @@
         </mat-dialog-actions>
     </div>
 
-    <!-- all about GROUPS -->
-    <!-- Create new group -->
-    <div *ngSwitchCase="'createGroup'">
-        <app-dialog-header [title]="data.title" [subtitle]="'Create new'" (close)="dialogRef.close()">
-        </app-dialog-header>
-        <app-group-form [projectcode]="data.project" [projectIri]="data.id" (closeDialog)="dialogRef.close()"></app-group-form>
-    </div>
-
-    <!-- Update group -->
-    <div *ngSwitchCase="'editGroup'">
-        <app-dialog-header [title]="data.title" [subtitle]="'Edit group'" (close)="dialogRef.close()">
-        </app-dialog-header>
-        <app-group-form></app-group-form>
-    </div>
-
-    <!-- Delete group -->
-    <!-- TODO -->
-
     <!-- Unknown method (or not yet defined) -->
     <!-- Default dialog content component -->
     <div *ngSwitchDefault>
