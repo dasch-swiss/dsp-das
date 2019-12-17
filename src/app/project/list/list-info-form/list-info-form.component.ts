@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { List, ListInfo, ListInfoUpdatePayload, ListCreatePayload, ApiServiceError } from '@knora/core';
-import { ReadProject, StringLiteral } from '@knora/api';
-import { ListsService } from '@knora/core';
+import { ApiResponseData, ApiResponseError, CreateListRequest, KnoraApiConnection, List, ListInfoResponse, ListNodeInfo, ListResponse, ReadProject, StringLiteral, UpdateListInfoRequest } from '@knora/api';
+import { KnoraApiConnectionToken } from '@knora/core';
 
 @Component({
     selector: 'app-list-info-form',
@@ -20,13 +19,13 @@ export class ListInfoFormComponent implements OnInit {
 
     @Input() projectIri: string;
 
-    @Output() closeDialog: EventEmitter<List | ListInfo> = new EventEmitter<List>();
+    @Output() closeDialog: EventEmitter<List | ListNodeInfo> = new EventEmitter<List>();
 
     @Output() updateParent: EventEmitter<string> = new EventEmitter<string>();
 
     project: ReadProject;
 
-    list: ListInfo;
+    list: ListNodeInfo;
 
     labels: StringLiteral[];
     comments: StringLiteral[];
@@ -83,8 +82,7 @@ export class ListInfoFormComponent implements OnInit {
         statusText: "You have successfully updated list's info."
     };
 
-    constructor(
-        private _listsService: ListsService) {
+    constructor(@Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection) {
     }
 
     ngOnInit() {
@@ -94,12 +92,12 @@ export class ListInfoFormComponent implements OnInit {
         // get list info in case of edit mode: this.iri is not undefined
         if (this.iri) {
             // edit mode, get list
-            this._listsService.getListInfo(this.iri).subscribe(
-                (response: ListInfo) => {
-                    this.list = response;
-                    this.buildForm(response);
+            this.knoraApiConnection.admin.listsEndpoint.getListInfo(this.iri).subscribe(
+                (response: ApiResponseData<ListInfoResponse>) => {
+                    this.list = response.body.listinfo;
+                    this.buildForm(response.body.listinfo);
                 },
-                (error: ApiServiceError) => {
+                (error: ApiResponseError) => {
                     console.error(error);
                 }
             );
@@ -110,124 +108,77 @@ export class ListInfoFormComponent implements OnInit {
         }
     }
 
-    buildForm(list?: ListInfo): void {
+    buildForm(list?: ListNodeInfo): void {
 
         this.loading = true;
         this.labels = [];
         this.comments = [];
-        // let label: string = '';
-        // let comment: string = '';
 
         if (list && list.id) {
             this.labels = list.labels;
             this.comments = list.comments;
-            //            label = list.labels[0].value;
-            //            language = list.labels[0].language;
-            // if (list.comments.length > 0) {
-            //     comment = list.comments[0].value;
-            // }
         }
 
-        /*
-        this.form = this._formBuilder.group({
-            label: new FormControl(
-                {
-                    value: this.labels,
-                    disabled: false
-                },
-                [Validators.required]
-            ),
-            comment: new FormControl(
-                {
-                    value: this.comments,
-                    disabled: false
-                }
-            ),
-            language: new FormControl(
-                {
-                    value: ,
-                    disabled: false
-                }
-            )
-        });
-        */
-
-        // this.form.valueChanges.subscribe(data => this.onValueChanged());
         setTimeout(() => {
-            // console.log(this.resource);
             this.loading = false;
         });
     }
-
-    /*
-    onValueChanged() {
-        if (!this.form) {
-            return;
-        }
-
-        const form = this.form;
-
-        Object.keys(this.formErrors).map(field => {
-            this.formErrors[field] = '';
-            const control = form.get(field);
-            if (control && control.dirty && !control.valid) {
-                const messages = this.validationMessages[field];
-                Object.keys(control.errors).map(key => {
-                    this.formErrors[field] += messages[key] + ' ';
-                });
-            }
-        });
-    }
-    */
 
     submitData(): void {
         this.loading = true;
 
         if (this.iri) {
             // edit mode: update list info
-            const listInfoUpdateData: ListInfoUpdatePayload = {
+            const listInfoUpdateData: UpdateListInfoRequest = {
                 projectIri: this.projectIri,
                 listIri: this.iri,
                 labels: this.labels,
                 comments: this.comments
             };
-            // TODO: replace by knora-api-js-lib service as soon it's available for lists
-            this._listsService.updateListInfo(listInfoUpdateData).subscribe(
-                (result: ListInfo) => {
+            this.knoraApiConnection.admin.listsEndpoint.updateListInfo(listInfoUpdateData).subscribe(
+                (result: ApiResponseData<ListInfoResponse>) => {
                     this.success = true;
                     this.loading = false;
-                    this.closeDialog.emit(result);
+                    this.closeDialog.emit(result.body.listinfo);
                 },
-                (error: ApiServiceError) => {
+                (error: ApiResponseError) => {
                     this.errorMessage = error;
                     this.loading = false;
                     this.success = false;
-                    // console.error(error);
                 }
             );
 
         } else {
             // new: create list
-            const listInfoData: ListCreatePayload = {
-                projectIri: this.projectIri,
-                labels: this.labels,
-                comments: this.comments
-            };
-            this._listsService.createList(listInfoData).subscribe(
-                (result: List) => {
-                    // console.log(result);
-                    // this.closeDialog.emit(result);
-                    this.newList = result;
+            const listInfoData: CreateListRequest = new CreateListRequest();
+            listInfoData.projectIri = this.projectIri;
 
-                    this.updateParent.emit(result.listinfo.labels[0].value + ' (' + result.listinfo.labels[0].language + ')');
+            // initialize labels
+            let i = 0;
+            for (const l of this.labels) {
+                listInfoData.labels[i] = new StringLiteral();
+                listInfoData.labels[i].language = l.language;
+                listInfoData.labels[i].value = l.value;
+                i++;
+            }
+            // initialize comments
+            let j = 0;
+            for (const c of this.comments) {
+                listInfoData.comments[j] = new StringLiteral();
+                listInfoData.comments[j].language = c.language;
+                listInfoData.comments[j].value = c.value;
+                j++;
+            }
+
+            this.knoraApiConnection.admin.listsEndpoint.createList(listInfoData).subscribe(
+                (result: ApiResponseData<ListResponse>) => {
+                    this.newList = result.body.list; console.log('new list? ', this.newList);
+
+                    this.updateParent.emit(result.body.list.listinfo.labels[0].value + ' (' + result.body.list.listinfo.labels[0].language + ')');
                     this.loading = false;
-                    // setTimeout(() => {
-                    //     // console.log(this.resource);
-                    //     this.initContent();
-                    // });
                     this.createList = true;
                 },
-                (error: ApiServiceError) => {
+                (error: ApiResponseError) => {
                     this.errorMessage = error;
                     this.loading = false;
                     this.success = false;
@@ -236,23 +187,16 @@ export class ListInfoFormComponent implements OnInit {
         }
     }
 
-    updateListInfo() {
-
-    }
-
     /**
      * Reset the form
      */
-    resetForm(ev: Event, list?: ListInfo) {
+    resetForm(ev: Event, list?: ListNodeInfo) {
 
         ev.preventDefault();
 
-        list = list ? list : new ListInfo();
+        list = list ? list : new ListNodeInfo();
 
         this.buildForm(list);
-
-
-
     }
 
     handleData(data: StringLiteral[], type: string) {
@@ -260,11 +204,6 @@ export class ListInfoFormComponent implements OnInit {
         switch (type) {
             case 'labels':
                 this.labels = data;
-                // if (data.length === 0) {
-                //     this.formErrors.label = this.validationMessages.label.required;
-                // } else {
-                //     this.formErrors.label = '';
-                // }
                 break;
 
             case 'comments':
