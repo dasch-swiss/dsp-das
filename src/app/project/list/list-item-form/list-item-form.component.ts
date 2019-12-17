@@ -79,7 +79,7 @@ export class ListItemFormComponent implements OnInit {
             // TODO: replace by knora-api-js-lib service as soon it's available for lists
             this._listsService.getListNodeInfo(this.parentIri).subscribe(
                 (response: ListNode) => {
-                    this.placeholder += response.label; // result.labels[0].value;
+                    this.placeholder += response.labels[0].value; // result.labels[0].value;
                     this.initComponent = false;
                 },
                 (error: ApiServiceError) => {
