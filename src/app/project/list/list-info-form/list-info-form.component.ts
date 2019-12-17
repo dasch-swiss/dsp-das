@@ -136,10 +136,10 @@ export class ListInfoFormComponent implements OnInit {
                 comments: this.comments
             };
             this.knoraApiConnection.admin.listsEndpoint.updateListInfo(listInfoUpdateData).subscribe(
-                (result: ApiResponseData<ListInfoResponse>) => {
+                (response: ApiResponseData<ListInfoResponse>) => {
                     this.success = true;
                     this.loading = false;
-                    this.closeDialog.emit(result.body.listinfo);
+                    this.closeDialog.emit(response.body.listinfo);
                 },
                 (error: ApiResponseError) => {
                     this.errorMessage = error;
@@ -171,10 +171,10 @@ export class ListInfoFormComponent implements OnInit {
             }
 
             this.knoraApiConnection.admin.listsEndpoint.createList(listInfoData).subscribe(
-                (result: ApiResponseData<ListResponse>) => {
-                    this.newList = result.body.list; console.log('new list? ', this.newList);
+                (response: ApiResponseData<ListResponse>) => {
+                    this.newList = response.body.list; console.log('new list? ', this.newList);
 
-                    this.updateParent.emit(result.body.list.listinfo.labels[0].value + ' (' + result.body.list.listinfo.labels[0].language + ')');
+                    this.updateParent.emit(response.body.list.listinfo.labels[0].value + ' (' + response.body.list.listinfo.labels[0].language + ')');
                     this.loading = false;
                     this.createList = true;
                 },

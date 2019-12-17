@@ -112,8 +112,9 @@ export class ListItemFormComponent implements OnInit {
 
             // send payload to knora's api
             this.knoraApiConnection.admin.listsEndpoint.createChildNode(listItem).subscribe(
-                (result: ApiResponseData<ListInfoResponse>) => {
-                    this.refreshParent.emit(result.body.listinfo);
+                (response: ApiResponseData<ListNodeInfoResponse>) => {
+                    this.refreshParent.emit(response.body.nodeinfo);
+                    this.loading = false;
                 },
                 (error: ApiResponseError) => {
                     console.error(error);
