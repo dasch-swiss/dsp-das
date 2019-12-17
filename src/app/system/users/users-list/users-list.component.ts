@@ -245,10 +245,18 @@ export class UsersListComponent implements OnInit {
                         // redirect to project page
                         // update the cache of logged-in user and the session
                         this._session.updateSession(this.session.user.jwt, this.session.user.name);
-                        // go to project page
-                        this._router.navigateByUrl('/refresh', { skipLocationChange: true }).then(
-                            () => this._router.navigate(['/project/' + this.projectcode])
-                        );
+
+                        if (this.sysAdmin) {
+                            // logged-in user is system admin:
+                            this.refreshParent.emit();
+                        } else {
+                            // logged-in user is NOT system admin:
+                            // go to project page and reload project admin interface
+                            this._router.navigateByUrl('/refresh', { skipLocationChange: true }).then(
+                                () => this._router.navigate(['/project/' + this.projectcode])
+                            );
+                        }
+
                     }
 
                 },
@@ -260,7 +268,14 @@ export class UsersListComponent implements OnInit {
             // false: user isn't project admin yet --> add admin rights
             this.knoraApiConnection.admin.usersEndpoint.addUserToProjectAdminMembership(id, this.project.id).subscribe(
                 (response: ApiResponseData<UserResponse>) => {
-                    this.refreshParent.emit();
+                    if (this.session.user.name !== response.body.user.username) {
+                        this.refreshParent.emit();
+                    } else {
+                        // the logged-in user (system admin) added himself as project admin
+                        // update the cache of logged-in user and the session
+                        this._session.updateSession(this.session.user.jwt, this.session.user.name);
+                        this.refreshParent.emit();
+                    }
                 },
                 (error: ApiResponseError) => {
                     console.error(error);
