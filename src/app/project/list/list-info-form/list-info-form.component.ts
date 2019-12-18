@@ -172,7 +172,7 @@ export class ListInfoFormComponent implements OnInit {
 
             this.knoraApiConnection.admin.listsEndpoint.createList(listInfoData).subscribe(
                 (response: ApiResponseData<ListResponse>) => {
-                    this.newList = response.body.list; console.log('new list? ', this.newList);
+                    this.newList = response.body.list;
 
                     this.updateParent.emit(response.body.list.listinfo.labels[0].value + ' (' + response.body.list.listinfo.labels[0].language + ')');
                     this.loading = false;
