@@ -150,12 +150,8 @@ export class ListInfoFormComponent implements OnInit {
                 j++;
             }
 
-            console.log('listInfoUpdateData (before):', listInfoUpdateData);
-
-
             this.knoraApiConnection.admin.listsEndpoint.updateListInfo(listInfoUpdateData).subscribe(
                 (response: ApiResponseData<ListInfoResponse>) => {
-                    console.log('listInfoUpdateData (after):', listInfoUpdateData);
                     this.success = true;
                     this.loading = false;
                     this.closeDialog.emit(response.body.listinfo);
