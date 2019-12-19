@@ -108,18 +108,18 @@ export class UsersListComponent implements OnInit {
             this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
 
             // get project information
-            this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode))
-                .subscribe(
-                    (response: ApiResponseData<ProjectResponse>) => {
-                        this.project = response.body.project;
-                        // is logged-in user projectAdmin?
-                        this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
+            this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode)).subscribe(
+                (response: ApiResponseData<ProjectResponse>) => {
+                    this.project = response.body.project;
+                    // is logged-in user projectAdmin?
+                    this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
+                    this.loading = false;
 
-                    },
-                    (error: ApiResponseError) => {
-                        console.error(error);
-                    }
-                );
+                },
+                (error: ApiResponseError) => {
+                    console.error(error);
+                }
+            );
         }
     }
 
@@ -379,8 +379,8 @@ export class UsersListComponent implements OnInit {
     removeUserFromProject(id: string): void {
         this.knoraApiConnection.admin.usersEndpoint.removeUserFromProjectMembership(id, this.project.id).subscribe(
             (response: ApiResponseData<UserResponse>) => {
-                this._cache.del(response.body.user.username);
-                this._cache.get(response.body.user.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(response.body.user.username));
+                // this._cache.del(response.body.user.username);
+                // this._cache.get(response.body.user.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(response.body.user.username));
                 this.refreshParent.emit();
             },
             (error: ApiResponseError) => {
