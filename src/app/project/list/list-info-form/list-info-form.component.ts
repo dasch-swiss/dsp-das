@@ -129,14 +129,33 @@ export class ListInfoFormComponent implements OnInit {
 
         if (this.iri) {
             // edit mode: update list info
-            const listInfoUpdateData: UpdateListInfoRequest = {
-                projectIri: this.projectIri,
-                listIri: this.iri,
-                labels: this.labels,
-                comments: this.comments
-            };
+            const listInfoUpdateData: UpdateListInfoRequest = new UpdateListInfoRequest();
+            listInfoUpdateData.projectIri = this.projectIri;
+            listInfoUpdateData.listIri = this.iri;
+
+            // initialize labels
+            let i = 0;
+            for (const l of this.labels) {
+                listInfoUpdateData.labels[i] = new StringLiteral();
+                listInfoUpdateData.labels[i].language = l.language;
+                listInfoUpdateData.labels[i].value = l.value;
+                i++;
+            }
+            // initialize comments
+            let j = 0;
+            for (const c of this.comments) {
+                listInfoUpdateData.comments[j] = new StringLiteral();
+                listInfoUpdateData.comments[j].language = c.language;
+                listInfoUpdateData.comments[j].value = c.value;
+                j++;
+            }
+
+            console.log('listInfoUpdateData (before):', listInfoUpdateData);
+
+
             this.knoraApiConnection.admin.listsEndpoint.updateListInfo(listInfoUpdateData).subscribe(
                 (response: ApiResponseData<ListInfoResponse>) => {
+                    console.log('listInfoUpdateData (after):', listInfoUpdateData);
                     this.success = true;
                     this.loading = false;
                     this.closeDialog.emit(response.body.listinfo);
