@@ -339,10 +339,11 @@ export class ProjectFormComponent implements OnInit {
                 (response: ApiResponseData<ProjectResponse>) => {
 
                     this.project = response.body.project;
+                    console.log(response.body.project);
                     this.buildForm(this.project);
 
                     // update cache
-                    this._cache.set(this.form.controls['shortcode'].value, response.body.project);
+                    this._cache.set(this.projectcode, response);
 
                     this.success = true;
 
@@ -377,9 +378,8 @@ export class ProjectFormComponent implements OnInit {
             let i = 0;
             for (const d of this.description) {
                 projectData.description[i] = new StringLiteral();
-                projectData.description[i] = d;
-                // projectData.description[i].language = d.language;
-                // projectData.description[i].value = d.value;
+                projectData.description[i].language = d.language;
+                projectData.description[i].value = d.value;
                 i++;
             }
 
