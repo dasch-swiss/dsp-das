@@ -19,10 +19,8 @@ addons:
 
 install:
   - yarn global add @angular/cli
-  - yarn global add yalc
-  - cd ~ && git clone -b master https://github.com/dasch-swiss/knora-api-js-lib.git && cd knora-api-js-lib && npm install && npm run yalc-publish
-  - cd ~ && git clone -b api-js-lib/develop https://github.com/dasch-swiss/knora-ui.git && cd knora-ui && yalc add @knora/api && yarn install && yarn build-and-publish-prod
   - cd $TRAVIS_BUILD_DIR
+  - yarn install
 
 script:
   - yarn yalc-add-modules

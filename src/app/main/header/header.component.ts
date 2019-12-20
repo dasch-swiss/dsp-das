@@ -37,7 +37,6 @@ export class HeaderComponent {
         this._router.events.forEach((event) => {
             // console.log('EVENT', event);
             if (event instanceof NavigationStart) {
-                // console.log('update session?');
                 this.session = this._session.validateSession();
             }
         });
