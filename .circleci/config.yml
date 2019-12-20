@@ -7,9 +7,6 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      - run: sudo npm install yalc -g
-      - run: cd ~ && git clone -b master https://github.com/dasch-swiss/knora-api-js-lib.git && cd knora-api-js-lib && npm install && npm run yalc-publish
-      - run: cd ~ && git clone -b master https://github.com/dasch-swiss/knora-ui.git && cd knora-ui && yalc add @knora/api && yarn install && yarn build-and-publish-prod
       - run: cd ~/repo
       - checkout
 
@@ -25,7 +22,6 @@ jobs:
               && yarn --version \
               && git --version
 
-      - run: yarn yalc-add-modules
       - run: yarn install
 
       - save_cache:

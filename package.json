@@ -1,6 +1,6 @@
 {
   "name": "knora-app",
-  "version": "1.6.3",
+  "version": "2.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/dasch-swiss/knora-app.git"
@@ -30,11 +30,11 @@
     "@angular/platform-browser": "~8.2.7",
     "@angular/platform-browser-dynamic": "~8.2.7",
     "@angular/router": "~8.2.7",
-    "@knora/action": "file:.yalc/@knora/action",
-    "@knora/api": "file:.yalc/@knora/api",
-    "@knora/core": "file:.yalc/@knora/core",
-    "@knora/search": "file:.yalc/@knora/search",
-    "@knora/viewer": "file:.yalc/@knora/viewer",
+    "@knora/action": "10.0.0",
+    "@knora/api": "0.1.1",
+    "@knora/core": "10.0.0",
+    "@knora/search": "10.0.0",
+    "@knora/viewer": "10.0.0",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
     "core-js": "^2.5.4",
