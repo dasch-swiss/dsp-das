@@ -787,31 +787,41 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@knora/action@file:.yalc/@knora/action":
-  version "9.4.1-ce0f53a2"
+"@knora/action@10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@knora/action/-/action-10.0.0.tgz#0103bc0b8b4a6d8a471e38b6c12a5180bfb76a49"
+  integrity sha512-Hy8u2AOBihU+VBqyC9Hk+AGfUv4Y0+6bf9ISk0Xqe7OWVhAdYhs7FxZE4x3aqgKyPD0BqwvXqOj800F3eTNl+Q==
   dependencies:
     tslib "^1.9.0"
 
-"@knora/api@file:.yalc/@knora/api":
-  version "1.0.0-64ecb7fb"
+"@knora/api@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@knora/api/-/api-0.1.1.tgz#cdf0a3b16e0f063626ff9b70e4de6d9dd501424a"
+  integrity sha512-Ac4/huGuEcvExfu46Gr/83Q5kOet81vFQQJVxZOA4JyhAC8opyGHThmcJrAQaSQW3eDn7lqnRT9+rVDJ3uVk3w==
   dependencies:
     "@types/jsonld" "^1.5.0"
     json2typescript "^1.2.3"
     jsonld "^1.8.0"
     rxjs "^6.5.3"
 
-"@knora/core@file:.yalc/@knora/core":
-  version "9.4.1-e454cfdd"
+"@knora/core@10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@knora/core/-/core-10.0.0.tgz#027844beb1c2ee6281fb457d291664fd3e10e8dd"
+  integrity sha512-Mcyn5RuT84uHYRDmscNxMQfhX+kWZVIFIFF9DAcL92zZiP78J7J9n4sl7D/XyqCubwuo/QQgh24B+B/28S/jOw==
   dependencies:
     tslib "^1.9.0"
 
-"@knora/search@file:.yalc/@knora/search":
-  version "9.4.1-c6a1b8dc"
+"@knora/search@10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@knora/search/-/search-10.0.0.tgz#89e453b2333c83fd66784354bcb7f5418cc1ce35"
+  integrity sha512-59k1XXlQMf2rMFyD0TwNlRsxkN1sRj3u9tBFMYsFf4TSRJYUSbQTpCjBico0bMNdfAraGNO6ysZYB59b2wZsfQ==
   dependencies:
     tslib "^1.9.0"
 
-"@knora/viewer@file:.yalc/@knora/viewer":
-  version "9.4.1-c94588d9"
+"@knora/viewer@10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@knora/viewer/-/viewer-10.0.0.tgz#5a862f97da7b53e6a5f1dff4cf4ddfbfcb8fd55f"
+  integrity sha512-LHxqiRtMbuWS6ftpgMj+7uF9x3fHy31K24V/LXqF26SLrZE4+LJJFO/lGTp3ieWbdyDhPHLe0VyeBPyEXTwXBg==
   dependencies:
     tslib "^1.9.0"
 
