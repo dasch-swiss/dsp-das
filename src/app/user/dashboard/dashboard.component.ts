@@ -38,11 +38,6 @@ export class DashboardComponent implements OnInit {
 
     ngOnInit() {
 
-        console.log(Constants.SystemProjectIRI);
-        console.log(Constants.SystemAdminGroupIRI);
-        console.log(Constants.ProjectAdminGroupIRI);
-        console.log(Constants.ProjectMemberGroupIRI);
-
         this.loading = true;
 
         // set the cache
