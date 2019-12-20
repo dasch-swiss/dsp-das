@@ -23,6 +23,5 @@ install:
   - yarn install
 
 script:
-  - yarn yalc-add-modules
   - yarn test-ci
   - docker build .
