@@ -20,6 +20,7 @@ addons:
 install:
   - yarn global add @angular/cli
   - cd $TRAVIS_BUILD_DIR
+  - yarn install
 
 script:
   - yarn test-ci
