@@ -3,12 +3,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule, MatInputModule } from '@angular/material';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
-import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
+import { KnoraApiConnection } from '@knora/api';
+import { KnoraApiConfigToken, KnoraApiConnectionToken, KuiCoreModule } from '@knora/core';
 import { TranslateModule } from '@ngx-translate/core';
-
+import { AppInitService } from 'src/app/app-init.service';
+import { TestConfig } from 'test.config';
 import { ListItemFormComponent } from '../list-item-form/list-item-form.component';
 import { ListItemComponent } from '../list-item/list-item.component';
 import { ListInfoFormComponent } from './list-info-form.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ListInfoFormComponent', () => {
     let component: ListInfoFormComponent;
@@ -22,6 +25,7 @@ describe('ListInfoFormComponent', () => {
                 ListItemFormComponent
             ],
             imports: [
+                HttpClientModule,
                 KuiActionModule,
                 KuiCoreModule,
                 MatIconModule,
@@ -31,9 +35,14 @@ describe('ListInfoFormComponent', () => {
                 TranslateModule.forRoot()
             ],
             providers: [
+                AppInitService,
                 {
-                    provide: KuiCoreConfigToken,
-                    useValue: KuiCoreConfig
+                    provide: KnoraApiConfigToken,
+                    useValue: TestConfig.ApiConfig
+                },
+                {
+                    provide: KnoraApiConnectionToken,
+                    useValue: new KnoraApiConnection(TestConfig.ApiConfig)
                 }
             ]
         })

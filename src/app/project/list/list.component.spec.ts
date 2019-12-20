@@ -1,6 +1,3 @@
-import { of } from 'rxjs';
-import { ErrorComponent } from 'src/app/main/error/error.component';
-
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import {
     MatButtonModule, MatChipsModule, MatDialogModule, MatExpansionModule, MatIconModule,
@@ -9,29 +6,20 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
-import { Session } from '@knora/authentication';
-import { KuiCoreConfig, KuiCoreConfigToken, KuiCoreModule } from '@knora/core';
-
+import { KnoraApiConnection } from '@knora/api';
+import { KnoraApiConfigToken, KnoraApiConnectionToken, KuiCoreModule, Session } from '@knora/core';
+import { of } from 'rxjs';
+import { AppInitService } from 'src/app/app-init.service';
+import { ErrorComponent } from 'src/app/main/error/error.component';
+import { TestConfig } from 'test.config';
 import { ListItemFormComponent } from './list-item-form/list-item-form.component';
 import { ListItemComponent } from './list-item/list-item.component';
 import { ListComponent } from './list.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ListComponent', () => {
     let component: ListComponent;
     let fixture: ComponentFixture<ListComponent>;
-
-    const shortcode = '0001';
-
-    const currentTestSession: Session = {
-        id: 1555226377250,
-        user: {
-            jwt: '',
-            lang: 'en',
-            name: 'root',
-            projectAdmin: [],
-            sysAdmin: false
-        }
-    };
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -42,6 +30,7 @@ describe('ListComponent', () => {
                 ErrorComponent
             ],
             imports: [
+                HttpClientModule,
                 KuiActionModule,
                 KuiCoreModule,
                 MatButtonModule,
@@ -61,16 +50,21 @@ describe('ListComponent', () => {
                             paramMap: of({
                                 get: (param: string) => {
                                     if (param === 'shortcode') {
-                                        return shortcode;
+                                        return TestConfig.ProjectCode;
                                     }
                                 }
                             })
                         }
                     }
                 },
+                AppInitService,
                 {
-                    provide: KuiCoreConfigToken,
-                    useValue: KuiCoreConfig
+                    provide: KnoraApiConfigToken,
+                    useValue: TestConfig.ApiConfig
+                },
+                {
+                    provide: KnoraApiConnectionToken,
+                    useValue: new KnoraApiConnection(TestConfig.ApiConfig)
                 }
             ]
         }).compileComponents();
@@ -101,7 +95,7 @@ describe('ListComponent', () => {
     });
 
     beforeEach(() => {
-        localStorage.setItem('session', JSON.stringify(currentTestSession));
+        localStorage.setItem('session', JSON.stringify(TestConfig.CurrentSession));
 
         fixture = TestBed.createComponent(ListComponent);
         component = fixture.componentInstance;
@@ -110,7 +104,7 @@ describe('ListComponent', () => {
 
     it('should create', () => {
         expect<any>(localStorage.getItem('session')).toBe(
-            JSON.stringify(currentTestSession)
+            JSON.stringify(TestConfig.CurrentSession)
         );
         expect(component).toBeTruthy();
     });

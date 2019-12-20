@@ -1,29 +1,40 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from '@knora/authentication';
-import { DesignQuestionComponent } from './dev/design-question/design-question.component';
-import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
+
+import { AuthGuard } from './main/guard/auth.guard';
 import { ErrorComponent } from './main/error/error.component';
 import { HelpComponent } from './main/help/help.component';
 import { LoginComponent } from './main/login/login.component';
 import { MainComponent } from './main/main.component';
+import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
+
+// project
 import { BoardComponent } from './project/board/board.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
 import { ListComponent } from './project/list/list.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
 import { PermissionComponent } from './project/permission/permission.component';
 import { ProjectComponent } from './project/project.component';
-import { ProjectsComponent } from './system/projects/projects.component';
-import { StatusComponent } from './system/status/status.component';
-import { SystemComponent } from './system/system.component';
-import { UsersComponent } from './system/users/users.component';
+
+// user
 import { DashboardComponent } from './user/dashboard/dashboard.component';
 import { UserComponent } from './user/user.component';
-import { ResourceComponent } from './workspace/resource/resource.component';
-import { ResultsComponent } from './workspace/results/results.component';
+
+
 import { AdvancedSearchComponent } from './workspace/search/advanced-search/advanced-search.component';
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
+import { ResourceComponent } from './workspace/resource/resource.component';
+import { ResultsComponent } from './workspace/results/results.component';
 
+// system
+import { SystemComponent } from './system/system.component';
+import { ProjectsComponent } from './system/projects/projects.component';
+import { UsersComponent } from './system/users/users.component';
+import { StatusComponent } from './system/status/status.component';
+import { GroupsComponent } from './system/groups/groups.component';
+
+// developer
+import { DesignQuestionComponent } from './dev/design-question/design-question.component';
 
 const routes: Routes = [
     {

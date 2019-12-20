@@ -1,12 +1,10 @@
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Session } from '@knora/authentication';
-import { ApiServiceError, Project, ProjectsService, User } from '@knora/core';
-
+import { ActivatedRoute, Params } from '@angular/router';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject, ReadUser } from '@knora/api';
+import { KnoraApiConnectionToken, Session } from '@knora/core';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
@@ -28,9 +26,9 @@ export class BoardComponent implements OnInit {
     projectcode: string;
 
     // project data
-    project: Project;
+    project: ReadProject;
 
-    projectMembers: User[] = [];
+    projectMembers: ReadUser[] = [];
 
     // i18n setup
     itemPluralMapping = {
@@ -49,10 +47,10 @@ export class BoardComponent implements OnInit {
     };
 
     constructor(
+        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _dialog: MatDialog,
         private _route: ActivatedRoute,
-        private _projectsService: ProjectsService,
         private _titleService: Title
     ) {
         // get the shortcode of the current project
@@ -81,15 +79,15 @@ export class BoardComponent implements OnInit {
 
     getProject() {
         // set the cache
-        this._cache.get(this.projectcode, this._projectsService.getProjectByShortcode(this.projectcode));
+        this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
 
         // get project data from cache
-        this._cache.get(this.projectcode, this._projectsService.getProjectByShortcode(this.projectcode)).subscribe(
-            (result: any) => {
-                this.project = result;
+        this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode)).subscribe(
+            (response: ApiResponseData<ProjectResponse>) => {
+                this.project = response.body.project;
                 this.loading = false;
             },
-            (error: ApiServiceError) => {
+            (error: ApiResponseError) => {
                 console.error(error);
             }
         );
@@ -108,7 +106,7 @@ export class BoardComponent implements OnInit {
 
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe(response => {
             // update the view
             this.getProject();
         });

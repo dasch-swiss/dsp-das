@@ -6,10 +6,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
-import { KuiCoreConfig, KuiCoreConfigToken } from '@knora/core';
+import { KnoraApiConnection } from '@knora/api';
+import { KnoraApiConfigToken, KnoraApiConnectionToken } from '@knora/core';
 import { KuiSearchModule } from '@knora/search';
 import { TranslateModule } from '@ngx-translate/core';
-
+import { TestConfig } from 'test.config';
+import { AppInitService } from './app-init.service';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './main/header/header.component';
 import { InfoMenuComponent } from './main/info-menu/info-menu.component';
@@ -17,6 +19,7 @@ import { SelectLanguageComponent } from './main/select-language/select-language.
 import { UserMenuComponent } from './user/user-menu/user-menu.component';
 
 describe('AppComponent', () => {
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -37,9 +40,14 @@ describe('AppComponent', () => {
                 TranslateModule.forRoot()
             ],
             providers: [
+                AppInitService,
                 {
-                    provide: KuiCoreConfigToken,
-                    useValue: KuiCoreConfig
+                    provide: KnoraApiConfigToken,
+                    useValue: TestConfig.ApiConfig
+                },
+                {
+                    provide: KnoraApiConnectionToken,
+                    useValue: new KnoraApiConnection(TestConfig.ApiConfig)
                 }
             ]
         }).compileComponents();

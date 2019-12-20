@@ -1,34 +1,21 @@
-import { of } from 'rxjs';
-import { ErrorComponent } from 'src/app/main/error/error.component';
-import { GroupsListComponent } from 'src/app/system/groups/groups-list/groups-list.component';
-
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
-import { Session } from '@knora/authentication';
-import { KuiCoreConfig, KuiCoreConfigToken } from '@knora/core';
-
+import { KnoraApiConnection } from '@knora/api';
+import { KnoraApiConfigToken, KnoraApiConnectionToken, Session } from '@knora/core';
+import { of } from 'rxjs';
+import { AppInitService } from 'src/app/app-init.service';
+import { ErrorComponent } from 'src/app/main/error/error.component';
+import { GroupsListComponent } from 'src/app/system/groups/groups-list/groups-list.component';
+import { TestConfig } from 'test.config';
 import { AddGroupComponent } from './add-group/add-group.component';
 import { PermissionComponent } from './permission.component';
 
 describe('PermissionComponent', () => {
     let component: PermissionComponent;
     let fixture: ComponentFixture<PermissionComponent>;
-
-    const shortcode = '0001';
-
-    const currentTestSession: Session = {
-        id: 1555226377250,
-        user: {
-            jwt: '',
-            lang: 'en',
-            name: 'root',
-            projectAdmin: [],
-            sysAdmin: false
-        }
-    };
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -51,16 +38,21 @@ describe('PermissionComponent', () => {
                             paramMap: of({
                                 get: (param: string) => {
                                     if (param === 'shortcode') {
-                                        return shortcode;
+                                        return TestConfig.ProjectCode;
                                     }
                                 }
                             })
                         }
                     }
                 },
+                AppInitService,
                 {
-                    provide: KuiCoreConfigToken,
-                    useValue: KuiCoreConfig
+                    provide: KnoraApiConfigToken,
+                    useValue: TestConfig.ApiConfig
+                },
+                {
+                    provide: KnoraApiConnectionToken,
+                    useValue: new KnoraApiConnection(TestConfig.ApiConfig)
                 }
             ]
         })
@@ -92,7 +84,7 @@ describe('PermissionComponent', () => {
     });
 
     beforeEach(() => {
-        localStorage.setItem('session', JSON.stringify(currentTestSession));
+        localStorage.setItem('session', JSON.stringify(TestConfig.CurrentSession));
 
         fixture = TestBed.createComponent(PermissionComponent);
         component = fixture.componentInstance;
@@ -101,7 +93,7 @@ describe('PermissionComponent', () => {
 
     it('should create', () => {
         expect<any>(localStorage.getItem('session')).toBe(
-            JSON.stringify(currentTestSession)
+            JSON.stringify(TestConfig.CurrentSession)
         );
         expect(component).toBeTruthy();
     });

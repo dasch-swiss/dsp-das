@@ -1,10 +1,9 @@
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { ApiServiceError, User, UsersService } from '@knora/core';
-
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, LogoutResponse, ReadUser, UserResponse } from '@knora/api';
+import { KnoraApiConnectionToken, SessionService } from '@knora/core';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
@@ -18,15 +17,17 @@ export class AccountComponent implements OnInit {
 
     @Input() username: string;
 
-    user: User;
+    user: ReadUser;
 
     // in case of modification
     @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private _cache: CacheService,
-                private _dialog: MatDialog,
-                private _usersService: UsersService,
-                private _titleService: Title) {
+    constructor(
+        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
+        private _cache: CacheService,
+        private _session: SessionService,
+        private _dialog: MatDialog,
+        private _titleService: Title) {
         // set the page title
         this._titleService.setTitle('Your account');
     }
@@ -35,14 +36,15 @@ export class AccountComponent implements OnInit {
         this.loading = true;
 
         // set the cache
-        this._cache.get(this.username, this._usersService.getUserByUsername(this.username));
+        this._cache.get(this.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(this.username));
 
-        this._cache.get(this.username, this._usersService.getUserByUsername(this.username)).subscribe(
-            (response: any) => {
-                this.user = response;
+        // get from cache
+        this._cache.get(this.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(
+            (response: ApiResponseData<UserResponse>) => {
+                this.user = response.body.user;
                 this.loading = false;
             },
-            (error: any) => {
+            (error: ApiResponseError) => {
                 console.error(error);
             }
         );
@@ -62,17 +64,17 @@ export class AccountComponent implements OnInit {
             dialogConfig
         );
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result === true) {
+        dialogRef.afterClosed().subscribe(response => {
+            if (response === true) {
                 // get the mode
                 switch (mode) {
                     case 'deleteUser':
                         this.deleteUser(id);
-                    break;
+                        break;
 
                     case 'activateUser':
                         this.activateUser(id);
-                    break;
+                        break;
                 }
             } else {
                 // update the view
@@ -82,12 +84,29 @@ export class AccountComponent implements OnInit {
     }
 
     deleteUser(id: string) {
-        this._usersService.deleteUser(id).subscribe(
-            (result: User) => {
-                // console.log('refresh parent after delete', result);
-                this.refreshParent.emit();
+        this.knoraApiConnection.admin.usersEndpoint.deleteUser(id).subscribe(
+            (response: ApiResponseData<UserResponse>) => {
+
+                // console.log('refresh parent after delete', response);
+                // this action will deactivate own user account. The consequence is a logout
+                this.knoraApiConnection.v2.auth.logout().subscribe(
+                    (logoutResponse: ApiResponseData<LogoutResponse>) => {
+
+                        // destroy cache
+                        this._cache.destroy();
+
+                        // destroy (knora-ui) session
+                        this._session.destroySession();
+
+                        // reload the page
+                        window.location.reload();
+                    },
+                    (error: ApiResponseError) => {
+                        console.error(error);
+                    }
+                );
             },
-            (error: ApiServiceError) => {
+            (error: ApiResponseError) => {
                 // this.errorMessage = error;
                 console.error(error);
             }
@@ -96,12 +115,14 @@ export class AccountComponent implements OnInit {
     }
 
     activateUser(id: string) {
-        this._usersService.activateUser(id).subscribe(
-            (result: User) => {
-                // console.log('refresh parent after activate', result);
+
+        this.knoraApiConnection.admin.usersEndpoint.updateUserStatus(id, true).subscribe(
+            (response: ApiResponseData<UserResponse>) => {
+
+                // console.log('refresh parent after activate', response);
                 this.refreshParent.emit();
             },
-            (error: ApiServiceError) => {
+            (error: ApiResponseError) => {
                 // this.errorMessage = error;
                 console.error(error);
             }
