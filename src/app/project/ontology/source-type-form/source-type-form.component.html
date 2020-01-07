@@ -41,12 +41,12 @@
         <!-- one line, with "add" icon to add additional properties -->
         <div cdkDropList class="properties-list" (cdkDropListDropped)="drop($event)">
             <div cdkDrag class="property-line"
-                 *ngFor="let prop of properties?.controls; let last = last; let i = index;">
+                *ngFor="let prop of properties?.controls; let last = last; let i = index;">
 
                 <div class="drag-n-drop-placeholder" *cdkDragPlaceholder></div>
 
                 <button *ngIf="properties.length > 1" cdkDragHandle mat-icon-button type="button"
-                        aria-label="Change order of properties" class="prefix drag-n-drop-line">
+                    aria-label="Change order of properties" class="prefix drag-n-drop-line">
                     <mat-icon>drag_indicator</mat-icon>
                 </button>
 
@@ -54,18 +54,16 @@
                 </app-source-type-property>
 
                 <button *ngIf="properties.length > 1" mat-icon-button type="button" color="warn"
-                        aria-label="Delete this property" class="suffix delete-line" (click)="removeProperty(i)">
+                    aria-label="Delete this property" class="suffix delete-line" (click)="removeProperty(i)">
                     <mat-icon>delete_outlined</mat-icon>
                 </button>
                 <button *ngIf="last" [disabled]="!properties.valid" mat-icon-button type="button" color="primary"
-                        aria-label="Add new property" class="add-new-line" (click)="addProperty()">
+                    aria-label="Add new property" class="add-new-line" (click)="addProperty()">
                     <mat-icon>add</mat-icon>
                 </button>
             </div>
 
         </div>
-
-        <mat-divider></mat-divider>
 
         <!-- action buttons -->
         <div class="form-panel form-action">

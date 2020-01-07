@@ -31,9 +31,9 @@
     @include box-shadow();
   }
 
-  &:last-child {
-    border: none;
-    margin-left: 8px;
+  &.cdk-drag-preview {
+    background-color: rgba(254, 254, 254, 1);
+    @include box-shadow();
   }
 
   .prefix {
