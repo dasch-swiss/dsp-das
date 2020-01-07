@@ -1,4 +1,4 @@
-<form *ngIf="!loading" [formGroup]="propertyForm" class="form-content project-data">
+<form [formGroup]="propertyForm" class="form-content project-data">
     <span class="index">{{index + 1}}) &nbsp;</span>
     <!-- Property label -->
     <mat-form-field class="small-field">
@@ -16,7 +16,7 @@
             </mat-select-trigger>
             <mat-optgroup *ngFor="let type of valueTypes" [label]="type.label">
                 <mat-option *ngFor="let ele of type.elements" [value]="ele"
-                            (onSelectionChange)="updateAttributeField(ele)">
+                    (onSelectionChange)="updateAttributeField(ele)">
                     <span *ngIf="ele.label === 'Integer' || ele.label === 'Decimal'; else defaultIcons">
                         <mat-icon [svgIcon]="ele.icon"></mat-icon>
                     </span>

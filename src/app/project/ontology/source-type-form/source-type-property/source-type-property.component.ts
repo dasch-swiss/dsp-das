@@ -201,7 +201,7 @@ export class SourceTypePropertyComponent implements OnInit {
     // index of the given property (unique)
     // index: number;
 
-    constructor (
+    constructor(
         @Inject(FormBuilder) private _fb: FormBuilder,
         private _domSanitizer: DomSanitizer,
         private _matIconRegistry: MatIconRegistry) {
@@ -219,7 +219,9 @@ export class SourceTypePropertyComponent implements OnInit {
 
     ngOnInit() {
 
-        this.propertyForm.patchValue({ type: this.valueTypes[0].elements[0] });
+        if (this.propertyForm) {
+            this.propertyForm.patchValue({ type: this.valueTypes[0].elements[0] });
+        }
 
     }
 
