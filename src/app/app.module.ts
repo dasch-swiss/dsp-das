@@ -82,6 +82,7 @@ import {
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 import { HelpComponent } from './main/help/help.component';
 import { FooterComponent } from './main/footer/footer.component';
+import { FilterPipe } from './dev/filter.pipe';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -157,7 +158,8 @@ export function initializeApp(appInitService: AppInitService) {
         ListItemFormComponent,
         MembershipComponent,
         HelpComponent,
-        FooterComponent
+        FooterComponent,
+        FilterPipe
     ],
     imports: [
         AppRoutingModule,

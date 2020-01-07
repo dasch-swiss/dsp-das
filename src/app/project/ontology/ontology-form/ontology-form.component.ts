@@ -1,9 +1,9 @@
-import { CacheService } from 'src/app/main/cache/cache.service';
-
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ApiServiceError, OntologyService, Project, ProjectsService } from '@knora/core';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject } from '@knora/api';
+import { KnoraApiConnectionToken, OntologyService } from '@knora/core';
+import { CacheService } from 'src/app/main/cache/cache.service';
 
 export interface NewOntology {
     projectIri: string;
@@ -26,7 +26,7 @@ export class OntologyFormComponent implements OnInit {
 
     @Output() closeDialog: EventEmitter<string> = new EventEmitter<string>();
 
-    project: Project;
+    project: ReadProject;
 
     ontologyForm: FormGroup;
 
@@ -51,21 +51,22 @@ export class OntologyFormComponent implements OnInit {
         }
     };
 
-    constructor (private _fb: FormBuilder,
-        private _router: Router,
+    constructor(
+        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _cache: CacheService,
-        private _projectsService: ProjectsService,
+        private _fb: FormBuilder,
+        private _router: Router,
         private _ontologyService: OntologyService) { }
 
     ngOnInit() {
 
-        this._cache.get(this.projectcode, this._projectsService.getProjectByShortcode(this.projectcode)).subscribe(
-            (result: Project) => {
-                this.project = result;
+        this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode)).subscribe(
+            (response: ApiResponseData<ProjectResponse>) => {
+                this.project = response.body.project;
 
                 this.buildForm();
             },
-            (error: ApiServiceError) => {
+            (error: ApiResponseError) => {
                 console.error(error);
                 this.loading = false;
             }
@@ -83,12 +84,12 @@ export class OntologyFormComponent implements OnInit {
             name: new FormControl({
                 value: '', disabled: false
             }, [
-                    Validators.required,
-                    Validators.minLength(this.nameMinLength),
-                    Validators.maxLength(this.nameMaxLength),
-                    // existingNamesValidator(this.existingShortNames),
-                    Validators.pattern(this.nameRegex)
-                ]),
+                Validators.required,
+                Validators.minLength(this.nameMinLength),
+                Validators.maxLength(this.nameMaxLength),
+                // existingNamesValidator(this.existingShortNames),
+                Validators.pattern(this.nameRegex)
+            ]),
             label: new FormControl({
                 value: this.ontologyLabel, disabled: true
             })

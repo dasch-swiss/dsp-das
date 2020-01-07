@@ -1,12 +1,11 @@
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import { AutocompleteItem, KnoraConstants, ProjectsService } from '@knora/core';
+import { Constants } from '@knora/api';
+import { AutocompleteItem } from '@knora/core';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 
 @Component({
     selector: 'app-add-source-type',
@@ -72,7 +71,7 @@ export class AddSourceTypeComponent implements OnInit {
      */
     selectedSourceType: AutocompleteItem;
 
-    constructor (
+    constructor(
         private _dialog: MatDialog,
         private _formBuilder: FormBuilder) { }
 
@@ -91,37 +90,37 @@ export class AddSourceTypeComponent implements OnInit {
         // TODO: make it better; at the moment it's hardcoded. And the IRIs are not correct. It should called/be "id"
         this.sourceTypes = [
             {
-                iri: KnoraConstants.StillImageFileValue,
+                iri: Constants.StillImageFileValue,
                 name: 'StillImageRepresentation',
                 label: 'Still Image'
             },
             {
-                iri: KnoraConstants.MovingImageFileValue,
+                iri: Constants.MovingImageFileValue,
                 name: 'MovingImageRepresentation',
                 label: 'Moving Image'
             },
             {
-                iri: KnoraConstants.AudioFileValue,
+                iri: Constants.AudioFileValue,
                 name: 'AudioRepresentation',
                 label: 'Audio'
             },
             {
-                iri: KnoraConstants.DDDFileValue,
+                iri: Constants.DDDFileValue,
                 name: 'DDDRepresentation',
                 label: 'RTI Image'
             },
             {
-                iri: KnoraConstants.TextFileValue,
+                iri: Constants.TextFileValue,
                 name: 'TextRepresentation',
                 label: 'Text'
             },
             {
-                iri: KnoraConstants.Resource,
+                iri: Constants.Resource,
                 name: 'Resource',
                 label: 'Object without file representation (metadata only)'
             },
             {
-                iri: KnoraConstants.DocumentFileValue,
+                iri: Constants.DocumentFileValue,
                 name: 'DocumentRepresentation',
                 label: 'Document (Word, PDF, etc.)'
             }
@@ -133,8 +132,8 @@ export class AddSourceTypeComponent implements OnInit {
             'type': new FormControl({
                 value: '', disabled: false
             }, [
-                    Validators.required
-                ])
+                Validators.required
+            ])
         });
 
         this.filteredSourceTypes = this.selectSourceTypeForm.controls['type'].valueChanges

@@ -2,17 +2,16 @@ import { CacheService } from 'src/app/main/cache/cache.service';
 
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
-    Component, ComponentFactoryResolver, Directive, OnInit, ViewChild, ViewContainerRef
+    Component, ComponentFactoryResolver, Directive, OnInit, ViewChild, ViewContainerRef, Inject
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Session } from '@knora/authentication';
-import {
-    ApiServiceError, ApiServiceResult, OntologyService, Project, ProjectsService
-} from '@knora/core';
+import { Session, KnoraApiConnectionToken } from '@knora/core';
+import { ApiServiceError, ApiServiceResult, OntologyService } from '@knora/core';
 
 import { AddSourceTypeComponent } from './add-source-type/add-source-type.component';
 import { ResourceTypeComponent } from './resource-type/resource-type.component';
+import { ReadProject, KnoraApiConnection, ApiResponseData, ProjectResponse, ApiResponseError } from '@knora/api';
 
 @Directive({
     selector: '[add-host]'
@@ -46,7 +45,7 @@ export class OntologyComponent implements OnInit {
     projectcode: string;
 
     // project data
-    project: Project;
+    project: ReadProject;
 
     // ontologies
     ontologies: OntologyInfo[] = [];
@@ -67,9 +66,10 @@ export class OntologyComponent implements OnInit {
 
     @ViewChild('addSourceTypeComponent', { static: false }) addSourceType: AddSourceTypeComponent;
 
-    constructor(private _cache: CacheService,
-        private _projectsService: ProjectsService,
+    constructor(
+        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _ontologyService: OntologyService,
+        private _cache: CacheService,
         private _titleService: Title,
         private _route: ActivatedRoute,
         private _componentFactoryResolver: ComponentFactoryResolver) {
@@ -104,25 +104,19 @@ export class OntologyComponent implements OnInit {
         this.projectAdmin = this.sysAdmin;
 
         // set the cache
-        this._cache.get(this.projectcode, this._projectsService.getProjectByShortcode(this.projectcode));
+        this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
 
         // get the project data from cache
-        this._cache.get(this.projectcode, this._projectsService.getProjectByShortcode(this.projectcode)).subscribe(
-            (result: Project) => {
-                this.project = result;
+        this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode)).subscribe(
+            (response: ApiResponseData<ProjectResponse>) => {
+                this.project = response.body.project;
 
                 // is logged-in user projectAdmin?
-                this.projectAdmin = this.sysAdmin
-                    ? this.sysAdmin
-                    : this.session.user.projectAdmin.some(e => e === this.project.id);
-
-                // get from cache: list of project members and groups
-                if (this.projectAdmin) {
-                    // this.refresh();
-                }
+                this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
 
                 // get the ontologies for this project
-                this._ontologyService.getProjectOntologies(encodeURI(result.id)).subscribe(
+                // get the ontologies for this project
+                this._ontologyService.getProjectOntologies(encodeURI(this.project.id)).subscribe(
                     (ontologies: ApiServiceResult) => {
 
                         if (ontologies.body['@graph'] && ontologies.body['@graph'].length > 0) {
@@ -168,11 +162,9 @@ export class OntologyComponent implements OnInit {
                     this.getOntology(this.ontologyIri);
                 }
 
-
-
-
+                this.loading = false;
             },
-            (error: ApiServiceError) => {
+            (error: ApiResponseError) => {
                 console.error(error);
                 this.loading = false;
             }
