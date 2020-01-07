@@ -296,8 +296,6 @@ export class AddUserComponent implements OnInit {
 
                     this.loading = true;
 
-                    console.log('psc', this.projectcode);
-
                     // get project iri by projectcode
                     this._cache.get(this.projectcode).subscribe(
                         (p: ApiResponseData<ProjectResponse>) => {
