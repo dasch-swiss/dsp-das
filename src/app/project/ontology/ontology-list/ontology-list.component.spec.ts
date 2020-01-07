@@ -1,4 +1,7 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatSelectModule } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@knora/api';
@@ -14,9 +17,18 @@ describe('OntologyListComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [OntologyListComponent],
+            declarations: [
+                OntologyListComponent
+            ],
             imports: [
+                HttpClientTestingModule,
                 KuiCoreModule,
+                MatDialogModule,
+                MatDividerModule,
+                MatFormFieldModule,
+                MatIconModule,
+                MatSelectModule,
+                ReactiveFormsModule,
                 RouterTestingModule
             ],
             providers: [

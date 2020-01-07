@@ -30,6 +30,9 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogHeaderComponent } from './dialog-header/dialog-header.component';
 import { DialogComponent } from './dialog.component';
+import { OntologyFormComponent } from 'src/app/project/ontology/ontology-form/ontology-form.component';
+import { SourceTypeFormComponent } from 'src/app/project/ontology/source-type-form/source-type-form.component';
+import { SourceTypePropertyComponent } from 'src/app/project/ontology/source-type-form/source-type-property/source-type-property.component';
 
 describe('DialogComponent', () => {
     let component: DialogComponent;
@@ -46,7 +49,10 @@ describe('DialogComponent', () => {
                 ProjectFormComponent,
                 ListItemComponent,
                 ListItemFormComponent,
-                ListInfoFormComponent
+                ListInfoFormComponent,
+                OntologyFormComponent,
+                SourceTypeFormComponent,
+                SourceTypePropertyComponent
             ],
             imports: [
                 KuiActionModule,

@@ -80,7 +80,7 @@ export class OntologyComponent implements OnInit {
         });
 
         // get ontology iri from route
-        if (this._route.snapshot.params.id) {
+        if (this._route.snapshot && this._route.snapshot.params.id) {
             this.ontologyIri = decodeURIComponent(this._route.snapshot.params.id);
         }
 

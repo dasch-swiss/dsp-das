@@ -1,25 +1,35 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddSourceTypeComponent } from './add-source-type.component';
+import { MatIconModule, MatMenuModule, MatDialogModule } from '@angular/material';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('AddSourceTypeComponent', () => {
-  let component: AddSourceTypeComponent;
-  let fixture: ComponentFixture<AddSourceTypeComponent>;
+    let component: AddSourceTypeComponent;
+    let fixture: ComponentFixture<AddSourceTypeComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ AddSourceTypeComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                AddSourceTypeComponent
+            ],
+            imports: [
+                MatDialogModule,
+                MatIconModule,
+                MatMenuModule,
+                ReactiveFormsModule
+            ]
+        })
+            .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(AddSourceTypeComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(AddSourceTypeComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

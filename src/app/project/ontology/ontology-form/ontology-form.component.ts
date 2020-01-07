@@ -11,7 +11,6 @@ export interface NewOntology {
     label: string;
 }
 
-
 @Component({
     selector: 'app-ontology-form',
     templateUrl: './ontology-form.component.html',
@@ -60,6 +59,10 @@ export class OntologyFormComponent implements OnInit {
 
     ngOnInit() {
 
+        // set the cache
+        this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
+
+        // get project
         this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode)).subscribe(
             (response: ApiResponseData<ProjectResponse>) => {
                 this.project = response.body.project;
@@ -95,8 +98,7 @@ export class OntologyFormComponent implements OnInit {
             })
         });
 
-        this.ontologyForm.valueChanges
-            .subscribe(data => this.onValueChanged(data));
+        this.ontologyForm.valueChanges.subscribe(data => this.onValueChanged(data));
     }
 
     onValueChanged(data?: any) {

@@ -1,13 +1,8 @@
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-
-import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import { ActivatedRoute, Router } from '@angular/router';
-import { OntologyService } from '@knora/core';
-
+import { Router } from '@angular/router';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { OntologyInfo } from '../ontology.component';
 
 @Component({
@@ -19,7 +14,7 @@ export class OntologyListComponent implements OnInit {
 
     loading: boolean;
 
-    @Input() ontologies: OntologyInfo[];
+    @Input() ontologies: OntologyInfo[] = [];
 
     @Input() selected?: string;
 
@@ -40,9 +35,7 @@ export class OntologyListComponent implements OnInit {
         }
     };
 
-    constructor (
-        private _cache: CacheService,
-        private _ontologyService: OntologyService,
+    constructor(
         private _dialog: MatDialog,
         private _router: Router,
         private _fb: FormBuilder) {
@@ -62,8 +55,8 @@ export class OntologyListComponent implements OnInit {
             ontology: new FormControl({
                 value: this.selected, disabled: false
             }, [
-                    Validators.required
-                ])
+                Validators.required
+            ])
         });
 
         this.loading = false;
