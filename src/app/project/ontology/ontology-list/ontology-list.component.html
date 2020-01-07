@@ -1,6 +1,9 @@
 <div class="app-toolbar transparent">
     <div class="app-toolbar-row">
-        <h3 class="mat-body subtitle">Work on data model
+        <h3 class="mat-body subtitle">
+            <span *ngIf="ontologies.length > 0">Project has
+                {{ontologies.length | i18nPlural: itemPluralMapping['ontology']}}</span>
+            <span *ngIf="ontologies.length === 0">Create new data model</span>
         </h3>
     </div>
     <div class="app-toolbar-row">
@@ -16,11 +19,11 @@
                 <div class="form-content">
                     <mat-form-field class="large-field select-ontology">
 
-                        <mat-label>
+                        <!-- <mat-label>
                             <span *ngIf="ontologies.length > 0">Project has
                                 {{ontologies.length | i18nPlural: itemPluralMapping['ontology']}}</span>
                             <span *ngIf="ontologies.length === 0">Create one</span>
-                        </mat-label>
+                        </mat-label> -->
 
                         <mat-select [formControl]="ontologyForm.controls['ontology']" [(value)]="selected">
                             <mat-select-trigger *ngIf="selected === 'createOntology'">

@@ -86,9 +86,9 @@ export class OntologyComponent implements OnInit {
 
         // set the page title
         if (this.ontologyIri) {
-            this._titleService.setTitle('Project ' + this.projectcode + ' | Ontology Editor');
+            this._titleService.setTitle('Project ' + this.projectcode + ' | Data model');
         } else {
-            this._titleService.setTitle('Project ' + this.projectcode + ' | Ontologies');
+            this._titleService.setTitle('Project ' + this.projectcode + ' | Data models');
         }
     }
 
