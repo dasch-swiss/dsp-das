@@ -99,8 +99,8 @@ export class UsersListComponent implements OnInit {
         // is the logged-in user system admin?
         this.sysAdmin = this.session.user.sysAdmin;
 
-        // default value for projectAdmin
-        this.projectAdmin = this.sysAdmin;
+        // is the logged-in user project admin?
+        this.projectAdmin = this.sysAdmin ? this.sysAdmin : (this.session.user.projectAdmin.some(e => e === this.project.id));
 
 
         if (this.projectcode) {
@@ -379,8 +379,6 @@ export class UsersListComponent implements OnInit {
     removeUserFromProject(id: string): void {
         this.knoraApiConnection.admin.usersEndpoint.removeUserFromProjectMembership(id, this.project.id).subscribe(
             (response: ApiResponseData<UserResponse>) => {
-                // this._cache.del(response.body.user.username);
-                // this._cache.get(response.body.user.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(response.body.user.username));
                 this.refreshParent.emit();
             },
             (error: ApiResponseError) => {

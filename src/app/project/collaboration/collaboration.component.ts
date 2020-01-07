@@ -72,11 +72,12 @@ export class CollaborationComponent implements OnInit {
 
         // get information about the logged-in user
         this.session = JSON.parse(localStorage.getItem('session'));
+
         // is the logged-in user system admin?
         this.sysAdmin = this.session.user.sysAdmin;
 
-        // default value for projectAdmin
-        this.projectAdmin = this.sysAdmin;
+        // is the logged-in user project admin?
+        this.projectAdmin = this.sysAdmin ? this.sysAdmin : (this.session.user.projectAdmin.some(e => e === this.project.id));
 
         // set the cache
         this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
