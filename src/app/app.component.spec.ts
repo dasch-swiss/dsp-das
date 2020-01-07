@@ -14,7 +14,6 @@ import { TestConfig } from 'test.config';
 import { AppInitService } from './app-init.service';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './main/header/header.component';
-import { InfoMenuComponent } from './main/info-menu/info-menu.component';
 import { SelectLanguageComponent } from './main/select-language/select-language.component';
 import { UserMenuComponent } from './user/user-menu/user-menu.component';
 
