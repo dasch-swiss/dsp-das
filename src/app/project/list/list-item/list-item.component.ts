@@ -30,6 +30,8 @@ export class ListItemComponent implements OnInit {
     ngOnInit() {
         this.loading = true;
 
+        console.log('list in list item', this.list);
+
         // in case of child node: do not run the following request
         if (!this.childNode) {
             this.knoraApiConnection.admin.listsEndpoint.getList(this.parentIri).subscribe(

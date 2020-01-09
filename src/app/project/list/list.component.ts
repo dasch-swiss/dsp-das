@@ -1,13 +1,21 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, Directive, Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject, ListNode, StringLiteral, ListsResponse, ListNodeInfo } from '@knora/api';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ListNodeInfo, ListsResponse, ProjectResponse, ReadProject, StringLiteral } from '@knora/api';
 import { KnoraApiConnectionToken, Session } from '@knora/core';
 import { AppGlobal } from 'src/app/app-global';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { ResourceTypeComponent } from '../ontology/resource-type/resource-type.component';
+
+@Directive({
+    selector: '[add-host]'
+})
+export class AddToDirective {
+    constructor(public viewContainerRef: ViewContainerRef) { }
+}
 
 @Component({
     selector: 'app-list',
@@ -58,6 +66,10 @@ export class ListComponent implements OnInit {
         }
     };
 
+    @ViewChild('listEditor', { read: ViewContainerRef, static: false }) listEditor: ViewContainerRef;
+
+    @ViewChild(AddToDirective, { static: false }) addToHost: AddToDirective;
+
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _dialog: MatDialog,
@@ -65,6 +77,7 @@ export class ListComponent implements OnInit {
         private _fb: FormBuilder,
         private _cache: CacheService,
         private _route: ActivatedRoute,
+        private _componentFactoryResolver: ComponentFactoryResolver,
         private _titleService: Title) {
 
         // get the shortcode of the current project
@@ -162,6 +175,18 @@ export class ListComponent implements OnInit {
         this.loading = true;
 
         this.initList();
+
+        this.openList(this.listIri);
+    }
+
+    loadComponent() {
+        const componentFactory = this._componentFactoryResolver.resolveComponentFactory(ResourceTypeComponent);
+        // this._componentFactoryResolver.resolveComponentFactory(ResourceTypeComponent);
+
+        // const viewContainerRef = this.ontologyEditor.
+        // viewContainerRef.clear();
+
+        this.listEditor.createComponent(componentFactory);
     }
 
     onValueChanged(data?: any) {
@@ -177,6 +202,10 @@ export class ListComponent implements OnInit {
 
     openList(id: string) {
 
+        this.list = undefined;
+
+        this.listIri = id;
+
         this.loadList = true;
 
         this.list = this.lists.find(i => i.id === id);
@@ -186,7 +215,10 @@ export class ListComponent implements OnInit {
         const goto = 'project/' + this.projectcode + '/lists/' + encodeURIComponent(id);
         this._router.navigate([goto]);
 
-        this.loadList = false;
+        setTimeout(() => {
+            // this.loading = false;
+            this.loadList = false;
+        });
 
     }
 

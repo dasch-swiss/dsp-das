@@ -45,11 +45,8 @@ export class OntologyListComponent implements OnInit {
 
         this.loading = true;
 
-        console.log(this.ontologies);
-
         if (this.ontologies.length === 1) {
             this.selected = this.ontologies[0].id;
-            console.log(this.selected);
         }
 
         if (this.selected) {

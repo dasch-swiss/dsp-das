@@ -147,7 +147,7 @@ export class OntologyComponent implements OnInit {
 
                             this.ontologyIri = ontologies.body['@id'];
 
-                            console.log('ontology id from main comp', this.ontologyIri)
+                            // console.log('ontology id from main comp', this.ontologyIri)
                             this.getOntology(this.ontologyIri);
 
                             this.loading = false;
@@ -237,7 +237,7 @@ export class OntologyComponent implements OnInit {
             (ontologyResponse: any) => {
                 this.ontology = ontologyResponse.body;
                 this.ontologyIri = ontologyResponse.body['@id'];
-                console.log(this.ontology);
+                // console.log(this.ontology);
                 this.loading = false;
             },
             (error: any) => {
