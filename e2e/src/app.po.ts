@@ -42,4 +42,22 @@ export class AppPage {
     return element(by.css('img[title="Universität Basel"]')).getText();
   }
 
+  getProjects() {
+    return element.all(by.css('section.projects .app-grid-item'));
+  }
+
+  getBEOLProjectTitle() {
+    const BEOLproject = this.getProjects().get(1);
+    return BEOLproject.element(by.css('h3'));
+  }
+
+  getReadMoreBtnOfBEOL() {
+    const BEOLproject = this.getProjects().get(1);
+    return BEOLproject.element(by.buttonText('Read more'));
+  }
+
+  getBEOLProjectPageTitle() {
+    return element(by.css('app-project h2')).getText();
+  }
+
 }
