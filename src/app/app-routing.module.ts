@@ -93,6 +93,11 @@ const routes: Routes = [
                 canActivate: [AuthGuard]
             },
             {
+                path: 'lists/:id',
+                component: ListComponent,
+                canActivate: [AuthGuard]
+            },
+            {
                 path: '**',
                 component: ErrorComponent,
                 data: { status: 404 }

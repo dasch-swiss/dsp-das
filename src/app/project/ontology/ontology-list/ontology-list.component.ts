@@ -59,9 +59,7 @@ export class OntologyListComponent implements OnInit {
         this.ontologyForm = this._fb.group({
             ontology: new FormControl({
                 value: this.selected, disabled: false
-            }, [
-                Validators.required
-            ])
+            })
         });
 
         this.loading = false;
