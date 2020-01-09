@@ -1,20 +1,14 @@
-<kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
+<div *ngIf="projectAdmin && ontologies" class="desktop-only">
 
-<div *ngIf="projectAdmin && !loading desktop-only">
-
-    <div class="content large middle">
-
-        <!-- select ontology or create new ontology first -->
-        <app-ontology-list *ngIf="project?.status && sysAdmin" [ontologies]="ontologies" [projectcode]="projectcode"
-            (refreshParent)="resetOntology($event)" [selected]="ontologyIri">
+    <!-- toolbar: select ontology -->
+    <div class="content large middle" *ngIf="!loading">
+        <app-ontology-list [ontologies]="ontologies" [projectcode]="projectcode" (refreshParent)="resetOntology($event)"
+            [selected]="ontologyIri">
         </app-ontology-list>
-
-        <!-- <mat-divider *ngIf="ontologyIri"></mat-divider> -->
-
     </div>
 
-
-    <div *ngIf="!loading && ontology" class="ontology-editor drag-drop-stop">
+    <!-- main content: overview shows resource classes of ontology -->
+    <div *ngIf="ontology && !loading" class="ontology-editor drag-drop-stop">
 
         <!-- button to define and add new source type to the ontology -->
         <app-add-source-type *ngIf="project?.status && sysAdmin && ontologyIri" [projectcode]="projectcode"
@@ -28,6 +22,8 @@
         </div>
 
     </div>
+
+    <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
 
 </div>
 

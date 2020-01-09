@@ -48,7 +48,7 @@ export class OntologyComponent implements OnInit {
     project: ReadProject;
 
     // ontologies
-    ontologies: OntologyInfo[] = [];
+    ontologies: OntologyInfo[];
 
     // ontology JSON-LD object
     ontology: any;
@@ -121,6 +121,8 @@ export class OntologyComponent implements OnInit {
 
                         if (ontologies.body['@graph'] && ontologies.body['@graph'].length > 0) {
 
+                            this.ontologies = [];
+
                             for (const ontology of ontologies.body['@graph']) {
                                 const info: OntologyInfo = {
                                     id: ontology['@id'],
@@ -144,6 +146,8 @@ export class OntologyComponent implements OnInit {
                             ];
 
                             this.ontologyIri = ontologies.body['@id'];
+
+                            console.log('ontology id from main comp', this.ontologyIri)
                             this.getOntology(this.ontologyIri);
 
                             this.loading = false;

@@ -6,7 +6,8 @@ $width: 200px;
 .ontology-editor {
   border: 1px dotted $primary_200;
   background: $primary_200;
-  //   height: calc(100vh - #{$header-height} - #{$tab-bar-margin} - 300px);
+  min-height: calc(100vh - #{$header-height} - #{$tab-bar-margin} - 300px);
+  max-width: 1280px;
   width: 98vw;
   //   display: grid;
   //   grid-template-columns: repeat(auto-fill, minmax($width, 1fr));
