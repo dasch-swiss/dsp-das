@@ -12,6 +12,8 @@ import { ApiServiceError, ApiServiceResult, OntologyService } from '@knora/core'
 import { AddSourceTypeComponent } from './add-source-type/add-source-type.component';
 import { ResourceTypeComponent } from './resource-type/resource-type.component';
 import { ReadProject, KnoraApiConnection, ApiResponseData, ProjectResponse, ApiResponseError } from '@knora/api';
+import { MatDialogConfig, MatDialog } from '@angular/material';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 
 @Directive({
     selector: '[add-host]'
@@ -71,6 +73,7 @@ export class OntologyComponent implements OnInit {
         private _ontologyService: OntologyService,
         private _cache: CacheService,
         private _titleService: Title,
+        private _dialog: MatDialog,
         private _route: ActivatedRoute,
         private _componentFactoryResolver: ComponentFactoryResolver) {
 
@@ -255,6 +258,26 @@ export class OntologyComponent implements OnInit {
     filterOwlClass(owlClass: any) {
         console.log(owlClass);
         return (owlClass['@type'] === 'owl:class');
+    }
+
+    openDialog(mode: string, name: string, iri?: string): void {
+        const dialogConfig: MatDialogConfig = {
+            width: '640px',
+            position: {
+                top: '112px'
+            },
+            data: { mode: mode, title: name, id: iri, project: this.project.id }
+        };
+
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
+        );
+
+        dialogRef.afterClosed().subscribe(() => {
+            // update the view
+            this.refresh();
+        });
     }
 
 

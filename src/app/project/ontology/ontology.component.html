@@ -10,6 +10,22 @@
     <!-- main content: overview shows resource classes of ontology -->
     <div *ngIf="ontology && !loading" class="ontology-editor drag-drop-stop">
 
+        <mat-toolbar>
+            <mat-toolbar-row>
+                <h3 class="mat-title" [matTooltip]="ontology.labels | kuiStringifyStringLiteral:'all'"
+                    matTooltipPosition="above">{{ontology.labels | kuiStringifyStringLiteral}}</h3>
+                <span class="fill-remaining-space"></span>
+                <p class="mat-body" [matTooltip]="ontology.comments | kuiStringifyStringLiteral"
+                    matTooltipPosition="above">
+                    {{ontology.comments | kuiStringifyStringLiteral | kuiTruncate:[64]}}</p>
+                <span class="fill-remaining-space"></span>
+                <button mat-stroked-button
+                    (click)="$event.stopPropagation(); openDialog('editOntologyInfo', ontology.labels[0].value, ontology.id)">
+                    Edit info
+                </button>
+            </mat-toolbar-row>
+        </mat-toolbar>
+
         <!-- button to define and add new source type to the ontology -->
         <app-add-source-type *ngIf="project?.status && sysAdmin && ontologyIri" [projectcode]="projectcode"
             class="add-source-type" (refreshParent)="refresh()" #addSourceTypeComponent>

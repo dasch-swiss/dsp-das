@@ -53,7 +53,21 @@
 
     <!-- main content: show selected list -->
     <div *ngIf="list && !loadList" class="list-editor" #listEditor>
-        <mat-divider></mat-divider>
+
+        <mat-toolbar>
+            <mat-toolbar-row>
+                <h3 class="mat-title" [matTooltip]="list.labels | kuiStringifyStringLiteral:'all'"
+                    matTooltipPosition="above">{{list.labels | kuiStringifyStringLiteral}}</h3>
+                <span class="fill-remaining-space"></span>
+                <p class="mat-body" [matTooltip]="list.comments | kuiStringifyStringLiteral" matTooltipPosition="above">
+                    {{list.comments | kuiStringifyStringLiteral | kuiTruncate:[64]}}</p>
+                <span class="fill-remaining-space"></span>
+                <button mat-stroked-button
+                    (click)="$event.stopPropagation(); openDialog('editListInfo', list.labels[0].value, list.id)">
+                    Edit info
+                </button>
+            </mat-toolbar-row>
+        </mat-toolbar>
 
         <app-list-item [list]="list" [parentIri]="list.id" [projectIri]="project.id" [projectcode]="projectcode">
         </app-list-item>

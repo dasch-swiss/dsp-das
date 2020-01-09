@@ -61,8 +61,8 @@ export class ListComponent implements OnInit {
     // i18n plural mapping
     itemPluralMapping = {
         list: {
-            '=1': '1 List',
-            other: '# Lists'
+            '=1': '1 list',
+            other: '# lists'
         }
     };
 
