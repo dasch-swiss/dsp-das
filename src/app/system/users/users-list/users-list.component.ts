@@ -99,10 +99,6 @@ export class UsersListComponent implements OnInit {
         // is the logged-in user system admin?
         this.sysAdmin = this.session.user.sysAdmin;
 
-        // is the logged-in user project admin?
-        this.projectAdmin = this.sysAdmin ? this.sysAdmin : (this.session.user.projectAdmin.some(e => e === this.project.id));
-
-
         if (this.projectcode) {
             // set the cache
             this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
