@@ -98,7 +98,7 @@ describe('help page', () => {
                     }
                 }
                 // perform here any actions needed on the new tab
-                expect(browser.driver.getCurrentUrl()).toMatch('https://github.com/dasch-swiss/sipi/releases/tag/v2.0.0');
+                expect(browser.driver.getCurrentUrl()).toMatch('https://github.com/dasch-swiss/Sipi/releases/tag/v2.0.0');
 
                 // close the new tab
                 browser.close();
