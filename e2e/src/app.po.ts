@@ -1,5 +1,4 @@
 import { browser, by, element } from 'protractor';
-import { dashCaseToCamelCase } from '@angular/compiler/src/util';
 
 export class AppPage {
   navigateTo() {
