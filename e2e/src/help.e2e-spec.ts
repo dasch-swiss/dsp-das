@@ -77,6 +77,38 @@ describe('help page', () => {
         });
     });
 
+    it('should route to sipi release note page', () => {
+        // const knoraAppVersion = '2.0.0';
+
+        browser.getWindowHandle().then(function (parentGUID) {
+            // click the link that opens in a new window
+            page.getSipiReleaseNotesButton().click();
+            browser.sleep(5000);
+            // get the all the session ids of the opened tabs
+            browser.getAllWindowHandles().then(function (allGUID) {
+                // console.log('Number of tabs opened: ' + allGUID.length);
+                // iterate through the tabs
+                for (const guid of allGUID) {
+                    // find the new browser tab
+                    if (guid !== parentGUID) {
+                        // switch to the tab
+                        browser.switchTo().window(guid);
+                        // break the loop
+                        break;
+                    }
+                }
+                // perform here any actions needed on the new tab
+                expect(browser.driver.getCurrentUrl()).toMatch('https://github.com/dasch-swiss/sipi/releases/tag/v2.0.0');
+
+                // close the new tab
+                browser.close();
+
+                // switch back to the parent tab
+                browser.switchTo().window(parentGUID);
+            });
+        });
+    });
+
     it('should route to the dasch forum', () => {
         browser.getWindowHandle().then(function (parentGUID) {
             // click the link that opens in a new window

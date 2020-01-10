@@ -17,33 +17,39 @@ export class HelpPage {
         return projManagementEl.element(by.css('.action .mat-button'));
     }
 
-    // TODO: grab the version number
     getKnoraAppReleaseNotesButton() {
-        const appGridProductEl = element.all(by.css('#app-grid-tools .app-grid-item'));
-        const knoraAppEl = appGridProductEl.get(0);
+        const appGridEl = element.all(by.css('#app-grid-tools .app-grid-item'));
+        const knoraAppEl = appGridEl.get(0);
 
         return knoraAppEl.element(by.css('.action .mat-button'));
+    }
+
+    getSipiReleaseNotesButton() {
+        const appGridEl = element.all(by.css('#app-grid-tools .app-grid-item'));
+        const sipiEl = appGridEl.get(2);
+
+        return sipiEl.element(by.css('.action .mat-button'));
     }
 
     getDaschForumButton() {
-        const appGridProductEl = element.all(by.css('#app-grid-tools .app-grid-item'));
-        const knoraAppEl = appGridProductEl.get(3);
+        const appGridEl = element.all(by.css('#app-grid-tools .app-grid-item'));
+        const daschForumEl = appGridEl.get(3);
 
-        return knoraAppEl.element(by.css('.action .mat-button'));
+        return daschForumEl.element(by.css('.action .mat-button'));
     }
 
     getDaschSwissButton() {
-        const appGridProductEl = element.all(by.css('#app-grid-tools .app-grid-item'));
-        const knoraAppEl = appGridProductEl.get(4);
+        const appGridEl = element.all(by.css('#app-grid-tools .app-grid-item'));
+        const daschSwissEl = appGridEl.get(4);
 
-        return knoraAppEl.element(by.css('.action .mat-button'));
+        return daschSwissEl.element(by.css('.action .mat-button'));
     }
 
     getGithubContributeButton() {
-        const appGridProductEl = element.all(by.css('#app-grid-tools .app-grid-item'));
-        const knoraAppEl = appGridProductEl.get(5);
+        const appGridEl = element.all(by.css('#app-grid-tools .app-grid-item'));
+        const githubEl = appGridEl.get(5);
 
-        return knoraAppEl.element(by.css('.action .mat-button'));
+        return githubEl.element(by.css('.action .mat-button'));
     }
 
 }
