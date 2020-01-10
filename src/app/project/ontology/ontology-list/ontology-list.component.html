@@ -44,14 +44,20 @@
                         </mat-select>
 
                     </mat-form-field>
-
-                    <button mat-raised-button color="primary" class="create-data-model-btn"
-                        (click)="openDialog('createOntology')">
-                        {{ontologies.length ? 'New data model' : 'Create your first data model'}}
-                    </button>
                 </div>
             </form>
         </span>
+
+
+        <span class="fill-remaining-space"></span>
+
+        <span class="app-toolbar-action" [class.select-form]="ontologies.length">
+            <button mat-raised-button color="primary" class="create-data-model-btn"
+                (click)="openDialog('createOntology')">
+                {{ontologies.length ? 'New data model' : 'Create your first data model'}}
+            </button>
+        </span>
+
     </div>
 
 </div>

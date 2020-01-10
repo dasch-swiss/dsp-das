@@ -240,7 +240,7 @@ export class OntologyComponent implements OnInit {
             (ontologyResponse: any) => {
                 this.ontology = ontologyResponse.body;
                 this.ontologyIri = ontologyResponse.body['@id'];
-                // console.log(this.ontology);
+                console.log(this.ontology);
                 this.loading = false;
             },
             (error: any) => {

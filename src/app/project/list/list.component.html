@@ -39,14 +39,19 @@
                             </mat-select>
                         </mat-form-field>
 
-                        <button mat-raised-button color="primary" class="create-list-btn"
-                            (click)="openDialog('createList', 'List', project.id)">
-                            {{lists.length ? 'Create new list' : 'Create your first list'}}
-                        </button>
+
                     </div>
                 </form>
             </span>
 
+            <span class="fill-remaining-space"></span>
+
+            <span class="app-toolbar-action" [class.select-form]="lists.length">
+                <button mat-raised-button color="primary" class="create-list-btn"
+                    (click)="openDialog('createList', 'List', project.id)">
+                    {{lists.length ? 'New list' : 'Create your first list'}}
+                </button>
+            </span>
         </div>
 
     </div>
@@ -54,7 +59,7 @@
     <!-- main content: show selected list -->
     <div *ngIf="list && !loadList" class="list-editor" #listEditor>
 
-        <mat-toolbar>
+        <mat-toolbar class="more-space-bottom">
             <mat-toolbar-row>
                 <h3 class="mat-title" [matTooltip]="list.labels | kuiStringifyStringLiteral:'all'"
                     matTooltipPosition="above">{{list.labels | kuiStringifyStringLiteral}}</h3>
