@@ -28,7 +28,7 @@ describe('login page', () => {
 
         // submit form to log in
         loginBtn.click().then(function () {
-            expect(browser.getCurrentUrl()).toMatch('/dashboard');
+            expect(browser.driver.getCurrentUrl()).toMatch('/dashboard');
         });
     });
 
