@@ -1,4 +1,4 @@
-import { AppPage } from './app.po';
+import { AppPage } from './page-objects/app.po';
 import { browser, element, by } from 'protractor';
 
 describe('logged out dashboard', () => {

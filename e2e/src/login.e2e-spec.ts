@@ -1,4 +1,4 @@
-import { LoginPage } from './login.po';
+import { LoginPage } from './page-objects/login.po';
 import { browser, by } from 'protractor';
 
 describe('login page', () => {
@@ -28,6 +28,7 @@ describe('login page', () => {
 
         // submit form to log in
         loginBtn.click().then(function () {
+            browser.waitForAngular();
             expect(browser.driver.getCurrentUrl()).toMatch('/dashboard');
         });
     });
