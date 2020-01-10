@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, Directive, Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Title } from '@angular/platform-browser';
@@ -8,14 +8,6 @@ import { KnoraApiConnectionToken, Session } from '@knora/core';
 import { AppGlobal } from 'src/app/app-global';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { ResourceTypeComponent } from '../ontology/resource-type/resource-type.component';
-
-@Directive({
-    selector: '[add-host]'
-})
-export class AddToDirective {
-    constructor(public viewContainerRef: ViewContainerRef) { }
-}
 
 @Component({
     selector: 'app-list',
@@ -66,10 +58,6 @@ export class ListComponent implements OnInit {
         }
     };
 
-    @ViewChild('listEditor', { read: ViewContainerRef, static: false }) listEditor: ViewContainerRef;
-
-    @ViewChild(AddToDirective, { static: false }) addToHost: AddToDirective;
-
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _dialog: MatDialog,
@@ -77,7 +65,6 @@ export class ListComponent implements OnInit {
         private _fb: FormBuilder,
         private _cache: CacheService,
         private _route: ActivatedRoute,
-        private _componentFactoryResolver: ComponentFactoryResolver,
         private _titleService: Title) {
 
         // get the shortcode of the current project
@@ -85,7 +72,7 @@ export class ListComponent implements OnInit {
             this.projectcode = params.get('shortcode');
         });
 
-        // get ontology iri from route
+        // get list iri from route
         if (this._route.snapshot && this._route.snapshot.params.id) {
             this.listIri = decodeURIComponent(this._route.snapshot.params.id);
         }
@@ -168,25 +155,19 @@ export class ListComponent implements OnInit {
         );
     }
 
+    // update view after closing dialog
     refresh(): void {
         // referesh the component
         this.loading = true;
 
         this.initList();
 
-        this.openList(this.listIri);
+        if (this.listIri) {
+            this.openList(this.listIri);
+        }
     }
 
-    loadComponent() {
-        const componentFactory = this._componentFactoryResolver.resolveComponentFactory(ResourceTypeComponent);
-        // this._componentFactoryResolver.resolveComponentFactory(ResourceTypeComponent);
-
-        // const viewContainerRef = this.ontologyEditor.
-        // viewContainerRef.clear();
-
-        this.listEditor.createComponent(componentFactory);
-    }
-
+    // update view after selecting a list from dropdown
     onValueChanged(data?: any) {
 
         if (!this.listForm) {
@@ -198,9 +179,8 @@ export class ListComponent implements OnInit {
 
     }
 
+    // open list by iri
     openList(id: string) {
-
-        this.list = undefined;
 
         this.listIri = id;
 
@@ -208,13 +188,10 @@ export class ListComponent implements OnInit {
 
         this.list = this.lists.find(i => i.id === id);
 
-        console.log(this.list);
-
         const goto = 'project/' + this.projectcode + '/lists/' + encodeURIComponent(id);
         this._router.navigate([goto]);
 
         setTimeout(() => {
-            // this.loading = false;
             this.loadList = false;
         });
 
