@@ -39,7 +39,7 @@ import {
 } from './project/ontology/add-source-type/add-source-type.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyListComponent } from './project/ontology/ontology-list/ontology-list.component';
-import { AddToDirective, OntologyComponent } from './project/ontology/ontology.component';
+import { OntologyComponent } from './project/ontology/ontology.component';
 import { PropertyItemComponent } from './project/ontology/property-item/property-item.component';
 import { PropertyListComponent } from './project/ontology/property-list/property-list.component';
 import { ResourceItemComponent } from './project/ontology/resource-item/resource-item.component';
@@ -106,7 +106,6 @@ export function initializeApp(appInitService: AppInitService) {
         AddUserComponent,
         OntologyComponent,
         OntologyListComponent,
-        AddToDirective,
         PropertyListComponent,
         PropertyItemComponent,
         ResourceListComponent,

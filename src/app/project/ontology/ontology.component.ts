@@ -1,26 +1,13 @@
-import { CacheService } from 'src/app/main/cache/cache.service';
-
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import {
-    Component, ComponentFactoryResolver, Directive, OnInit, ViewChild, ViewContainerRef, Inject
-} from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Session, KnoraApiConnectionToken } from '@knora/core';
-import { ApiServiceError, ApiServiceResult, OntologyService } from '@knora/core';
-
-import { AddSourceTypeComponent } from './add-source-type/add-source-type.component';
-import { ResourceTypeComponent } from './resource-type/resource-type.component';
-import { ReadProject, KnoraApiConnection, ApiResponseData, ProjectResponse, ApiResponseError } from '@knora/api';
-import { MatDialogConfig, MatDialog } from '@angular/material';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject } from '@knora/api';
+import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, OntologyService, Session } from '@knora/core';
+import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-
-@Directive({
-    selector: '[add-host]'
-})
-export class AddToDirective {
-    constructor(public viewContainerRef: ViewContainerRef) { }
-}
+import { AddSourceTypeComponent } from './add-source-type/add-source-type.component';
 
 export interface OntologyInfo {
     id: string;
@@ -64,7 +51,7 @@ export class OntologyComponent implements OnInit {
 
     @ViewChild('ontologyEditor', { read: ViewContainerRef, static: false }) ontologyEditor: ViewContainerRef;
 
-    @ViewChild(AddToDirective, { static: false }) addToHost: AddToDirective;
+    // @ViewChild(AddToDirective, { static: false }) addToHost: AddToDirective;
 
     @ViewChild('addSourceTypeComponent', { static: false }) addSourceType: AddSourceTypeComponent;
 
@@ -74,8 +61,8 @@ export class OntologyComponent implements OnInit {
         private _cache: CacheService,
         private _titleService: Title,
         private _dialog: MatDialog,
-        private _route: ActivatedRoute,
-        private _componentFactoryResolver: ComponentFactoryResolver) {
+        private _route: ActivatedRoute
+    ) {
 
         // get the shortcode of the current project
         this._route.parent.paramMap.subscribe((params: Params) => {
@@ -188,19 +175,7 @@ export class OntologyComponent implements OnInit {
         // this.appendComponentToBody(SelectListComponent);
     }
 
-    loadComponent() {
-        const componentFactory = this._componentFactoryResolver.resolveComponentFactory(ResourceTypeComponent);
-        // this._componentFactoryResolver.resolveComponentFactory(ResourceTypeComponent);
-
-        // const viewContainerRef = this.ontologyEditor.
-        // viewContainerRef.clear();
-
-        this.ontologyEditor.createComponent(componentFactory);
-    }
-
-    /**
- * refresh list of members after adding a new user to the team
- */
+    // update view after closing dialog box
     refresh(): void {
         // referesh the component
         this.loading = true;

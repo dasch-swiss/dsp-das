@@ -197,11 +197,11 @@ export class AddSourceTypeComponent implements OnInit {
 
     addSourceType(val: string) {
         // add to ontology
-        console.log(val);
+        // console.log(val);
         this.selectedSourceType = this.sourceTypes.find(st => {
             return st.iri === val;
         });
-        console.log(this.selectedSourceType);
+        // console.log(this.selectedSourceType);
         this.openDialog('addSourceType');
     }
 
