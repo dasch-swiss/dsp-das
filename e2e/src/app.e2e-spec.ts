@@ -10,7 +10,8 @@ fdescribe('logged out dashboard', () => {
 
     fit('should display welcome title', async () => {
         await page.navigateTo();
-        expect(await page.getMainTitle()).toEqual('BRING ALL TOGETHER AND SIMPLIFY YOUR RESEARCH');
+        const title = element(by.css('app-main h1'));
+        expect(await title.getText()).toEqual('BRING ALL TOGETHER AND SIMPLIFY YOUR RESEARCH');
     });
 
     it('should display help button', () => {
