@@ -11,13 +11,14 @@ exports.config = {
   capabilities: {
     browserName: 'chrome'
   },
+  seleniumAddress: 'http://localhost:4444/wd/hub',
   directConnect: true,
   baseUrl: 'http://localhost:4200/',
   framework: 'jasmine',
   SELENIUM_PROMISE_MANAGER: false,
   jasmineNodeOpts: {
     showColors: true,
-    defaultTimeoutInterval: 100000,
+    defaultTimeoutInterval: 50000,
     print: function () { }
   },
   onPrepare() {

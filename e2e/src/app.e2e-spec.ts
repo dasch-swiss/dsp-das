@@ -6,10 +6,10 @@ fdescribe('logged out dashboard', () => {
 
     beforeEach(() => {
         page = new AppPage();
-        page.navigateTo();
     });
 
     fit('should display welcome title', async () => {
+        await page.navigateTo();
         expect(await page.getMainTitle()).toEqual('BRING ALL TOGETHER AND SIMPLIFY YOUR RESEARCH');
     });
 
