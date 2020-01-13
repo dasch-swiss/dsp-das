@@ -35,6 +35,7 @@ jobs:
 
       # Run unit tests!
       - run: yarn ng test --watch=false --browsers=ChromeHeadless
+      - run: yarn ng e2e --protractor-config=./e2e/protractor-ci.conf.js
 
       # Store build artefacts on circle
       - store_artifacts:

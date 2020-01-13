@@ -24,4 +24,5 @@ install:
 
 script:
   - yarn test-ci
+  - yarn test-e2e-protractor
   - docker build .
