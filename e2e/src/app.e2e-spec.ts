@@ -6,20 +6,18 @@ fdescribe('logged out dashboard', () => {
 
     beforeEach(() => {
         page = new AppPage();
+        page.navigateTo();
     });
 
     fit('should display welcome title', async () => {
-        await page.navigateTo();
         expect(await page.getMainTitle()).toEqual('BRING ALL TOGETHER AND SIMPLIFY YOUR RESEARCH');
     });
 
     it('should display help button', () => {
-        page.navigateTo();
         expect(page.getHelpButton().getText()).toEqual('Help');
     });
 
     it('should route to help page', () => {
-        page.navigateTo();
         page.getHelpButton().click();
         expect(page.getHelpPageTitle()).toEqual('Need help?');
     });
@@ -47,8 +45,6 @@ fdescribe('logged out dashboard', () => {
     });
 
     it('should route to the dasch website and check the URL', () => {
-        browser.waitForAngularEnabled(false);
-
         browser.getWindowHandle().then(function (parentGUID) {
             // click the link that opens in a new window
             element(by.css('img[src="/assets/images/logo-unibas.jpg"]')).click();
@@ -72,7 +68,6 @@ fdescribe('logged out dashboard', () => {
                 // close the new tab
                 browser.close();
 
-                browser.waitForAngularEnabled(true);
                 // switch back to the parent tab
                 browser.switchTo().window(parentGUID);
             });
