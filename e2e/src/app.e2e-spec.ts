@@ -4,7 +4,7 @@ import { browser, element, by } from 'protractor';
 fdescribe('logged out dashboard', () => {
     let page: AppPage;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         page = new AppPage();
     });
 
