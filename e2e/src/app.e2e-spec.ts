@@ -8,9 +8,9 @@ fdescribe('logged out dashboard', () => {
         page = new AppPage();
     });
 
-    fit('should display welcome title', () => {
-        page.navigateTo();
-        expect(page.getMainTitle()).toEqual('BRING ALL TOGETHER AND SIMPLIFY YOUR RESEARCH');
+    fit('should display welcome title', async () => {
+        await page.navigateTo();
+        expect(await page.getMainTitle()).toEqual('BRING ALL TOGETHER AND SIMPLIFY YOUR RESEARCH');
     });
 
     it('should display help button', () => {
