@@ -1,37 +1,44 @@
 @import "~@angular/material/theming";
 @import "../../../assets/style/config";
 
-$width: 200px;
+$width: 304px;
 
 .ontology-editor {
+  width: 98vw;
+  max-width: 1280px;
+  min-height: calc(100vh - #{$header-height} - #{$tab-bar-margin} - 300px);
   border: 1px dotted $primary_200;
   background: $primary_200;
-  min-height: calc(100vh - #{$header-height} - #{$tab-bar-margin} - 300px);
-  max-width: 1280px;
-  width: 98vw;
-  //   display: grid;
-  //   grid-template-columns: repeat(auto-fill, minmax($width, 1fr));
-  //   grid-column-gap: 12px;
-  //   grid-row-gap: 12px;
-
-  // set position of it
   position: relative;
-  margin: 0 auto;
+  margin: 0 auto 60px auto;
+}
+
+.ontology-editor-canvas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($width, 1fr));
+  grid-column-gap: 12px;
+  grid-row-gap: 12px;
+  padding-top: 60px;
 }
 
 .resource-class {
-  width: 180px;
-  min-height: 60px;
+  min-height: 120px;
   height: auto;
   position: relative;
-  //   top: 48px;
-  //   left: 48px;
   @include mat-elevation-transition;
   @include mat-elevation(2);
   padding: 12px;
   margin: 12px;
 
   background-color: #fff;
+
+  li {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: -24px;
+    list-style-position: inside;
+  }
 
   &:active {
     @include mat-elevation(8);
@@ -77,5 +84,5 @@ $width: 200px;
 .add-source-type {
   position: absolute;
   right: 12px;
-  margin-top: 12px;
+  top: 80px;
 }

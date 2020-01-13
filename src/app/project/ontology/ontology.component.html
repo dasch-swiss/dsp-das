@@ -1,45 +1,60 @@
-<div *ngIf="projectAdmin && ontologies" class="desktop-only">
+<div *ngIf="projectAdmin" class="desktop-only">
+
+    <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
 
     <!-- toolbar: select ontology -->
-    <div class="content large middle" *ngIf="!loading">
+    <div class="content large middle" *ngIf="!loading && ontologies">
         <app-ontology-list [ontologies]="ontologies" [projectcode]="projectcode" (refreshParent)="resetOntology($event)"
             [selected]="ontologyIri">
         </app-ontology-list>
     </div>
 
     <!-- main content: overview shows resource classes of ontology -->
-    <div *ngIf="ontology && !loading" class="ontology-editor drag-drop-stop">
+    <div *ngIf="ontology && !loadOntology" class="ontology-editor drag-drop-stop">
 
         <mat-toolbar>
             <mat-toolbar-row>
-                <h3 class="mat-title" [matTooltip]="ontology.labels | kuiStringifyStringLiteral:'all'"
-                    matTooltipPosition="above">{{ontology.labels | kuiStringifyStringLiteral}}</h3>
+                <h3 class="mat-title" [matTooltip]="ontology.label">{{ontology['rdfs:label']}}</h3>
+
                 <span class="fill-remaining-space"></span>
-                <p class="mat-body" [matTooltip]="ontology.comments | kuiStringifyStringLiteral"
+                <!-- <p class="mat-body" [matTooltip]="ontology.comments | kuiStringifyStringLiteral"
                     matTooltipPosition="above">
-                    {{ontology.comments | kuiStringifyStringLiteral | kuiTruncate:[64]}}</p>
+                    {{ontology.comments | kuiStringifyStringLiteral | kuiTruncate:[64]}}</p> -->
                 <span class="fill-remaining-space"></span>
+
                 <button mat-stroked-button
-                    (click)="$event.stopPropagation(); openDialog('editOntologyInfo', ontology.labels[0].value, ontology.id)">
+                    (click)="$event.stopPropagation(); openDialog('editOntologyInfo', ontology.label, ontology.id)">
                     Edit info
                 </button>
             </mat-toolbar-row>
         </mat-toolbar>
 
-        <!-- button to define and add new source type to the ontology -->
-        <app-add-source-type *ngIf="project?.status && sysAdmin && ontologyIri" [projectcode]="projectcode"
-            class="add-source-type" (refreshParent)="refresh()" #addSourceTypeComponent>
-        </app-add-source-type>
+        <div #ontologyEditor class="ontology-editor-canvas" *ngIf="!loadOntology">
+            <!-- button to define and add new source type to the ontology -->
+            <app-add-source-type *ngIf="project?.status && sysAdmin && ontologyIri" [projectcode]="projectcode"
+                class="add-source-type" (refreshParent)="refresh()" #addSourceTypeComponent>
+            </app-add-source-type>
 
-        <!-- list of source types -->
-        <div *ngFor="let resClass of ontology['@graph'] | filter: '@type' : 'owl:Class'; let i = index"
-            class="resource-class" cdkDrag cdkDragBoundary=".drag-drop-stop">
-            {{i}} {{resClass['rdfs:label']}}
+            <!-- list of source types -->
+            <!-- <svg width="100%" height="1200" class="mySvg" (click)="clicked($event)"></svg> -->
+
+            <div *ngFor="let resClass of ontology['@graph'] | filter: '@type' : 'owl:Class'; let i = index"
+                class="resource-class" cdkDrag cdkDragBoundary=".drag-drop-stop">
+                <strong>{{resClass['rdfs:label']}}</strong>
+                <ul>
+                    <span *ngFor="let prop of resClass['rdfs:subClassOf']">
+                        <li *ngIf="prop['owl:onProperty']">
+                            {{prop['owl:onProperty']['@id']}}
+                        </li>
+                    </span>
+
+                </ul>
+            </div>
         </div>
 
-    </div>
+        <kui-progress-indicator *ngIf="loadOntology"></kui-progress-indicator>
 
-    <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
+    </div>
 
 </div>
 

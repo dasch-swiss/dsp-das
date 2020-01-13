@@ -1,10 +1,11 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentFactoryResolver, Inject, OnInit, ViewChild, ViewContainerRef, ElementRef, AfterViewInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject } from '@knora/api';
 import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, OntologyService, Session } from '@knora/core';
+
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { AddSourceTypeComponent } from './add-source-type/add-source-type.component';
@@ -13,6 +14,7 @@ export interface OntologyInfo {
     id: string;
     label: string;
     project: string;
+    graph?: any[];
 }
 
 @Component({
@@ -24,6 +26,8 @@ export class OntologyComponent implements OnInit {
 
     // loading for progess indicator
     loading: boolean;
+
+    loadOntology: boolean;
 
     // permissions of logged-in user
     session: Session;
@@ -49,7 +53,8 @@ export class OntologyComponent implements OnInit {
 
     filterargs = { '@type': 'owl:Class' };
 
-    @ViewChild('ontologyEditor', { read: ViewContainerRef, static: false }) ontologyEditor: ViewContainerRef;
+    // @ViewChild('ontologyEditor', { read: ViewContainerRef, static: false }) ontologyEditor: ViewContainerRef;
+    @ViewChild('ontologyEditor', { static: true }) ontologyEditor: ElementRef;
 
     // @ViewChild(AddToDirective, { static: false }) addToHost: AddToDirective;
 
@@ -61,8 +66,7 @@ export class OntologyComponent implements OnInit {
         private _cache: CacheService,
         private _titleService: Title,
         private _dialog: MatDialog,
-        private _route: ActivatedRoute
-    ) {
+        private _route: ActivatedRoute) {
 
         // get the shortcode of the current project
         this._route.parent.paramMap.subscribe((params: Params) => {
@@ -138,7 +142,7 @@ export class OntologyComponent implements OnInit {
                             this.ontologyIri = ontologies.body['@id'];
 
                             // console.log('ontology id from main comp', this.ontologyIri)
-                            this.getOntology(this.ontologyIri);
+                            this.resetOntology(this.ontologyIri);
 
                             this.loading = false;
                         } else {
@@ -165,17 +169,25 @@ export class OntologyComponent implements OnInit {
         );
     }
 
-    drop(event: CdkDragDrop<string[]>) {
-        console.log(event);
-    }
-
     addResourceType(id: string) {
         console.log(id);
         // this.ontologyEditor.nativeElement.insertAdjacentHTML('beforeend', ``);
         // this.appendComponentToBody(SelectListComponent);
     }
 
-    // update view after closing dialog box
+    // loadComponent() {
+    //     const componentFactory = this._componentFactoryResolver.resolveComponentFactory(ResourceTypeComponent);
+    //     // this._componentFactoryResolver.resolveComponentFactory(ResourceTypeComponent);
+
+    //     // const viewContainerRef = this.ontologyEditor.
+    //     // viewContainerRef.clear();
+
+    //     this.ontologyEditor.createComponent(componentFactory);
+    // }
+
+    /**
+ * refresh list of members after adding a new user to the team
+ */
     refresh(): void {
         // referesh the component
         this.loading = true;
@@ -187,19 +199,6 @@ export class OntologyComponent implements OnInit {
         }
 
         this.loading = false;
-
-        // update the cache
-
-        //        this._cache.del('members_of_' + this.projectcode);
-
-        //        this.initList();
-
-        // refresh child component: add user
-        /*
-                if (this.addUser) {
-                    this.addUser.buildForm();
-                }
-                */
     }
 
     getOntology(id?: string) {
@@ -208,15 +207,31 @@ export class OntologyComponent implements OnInit {
             return;
         }
 
-        this.loading = true;
+        this.loadOntology = true;
 
         this._cache.get('currentOntology', this._ontologyService.getAllEntityDefinitionsForOntologies(id));
         this._cache.get('currentOntology', this._ontologyService.getAllEntityDefinitionsForOntologies(id)).subscribe(
             (ontologyResponse: any) => {
+
                 this.ontology = ontologyResponse.body;
                 this.ontologyIri = ontologyResponse.body['@id'];
-                console.log(this.ontology);
-                this.loading = false;
+
+                // select graphs of type owl:Class ( = resource classes only)
+                const graph: any[] = [];
+
+                // could be used in the json-ld converter
+                // at the moment it's used in filter pipe
+                /*
+                for (const g of ontologyResponse.body['@graph']) {
+                    if (g['@type'] === 'owl:Class') {
+                        graph.push(g);
+                    }
+                }
+                */
+
+                setTimeout(() => {
+                    this.loadOntology = false;
+                });
             },
             (error: any) => {
                 // console.error(error);
