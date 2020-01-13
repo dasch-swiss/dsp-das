@@ -6,7 +6,7 @@ export class AppPage {
   }
 
   getMainTitle() {
-    return element(by.css('app-main h1')).getText();
+    return browser.driver.findElement(by.css('app-main h1')).getText();
   }
 
   getSubtitle() {

@@ -13,12 +13,12 @@ fdescribe('logged out dashboard', () => {
         expect(page.getMainTitle()).toEqual('BRING ALL TOGETHER AND SIMPLIFY YOUR RESEARCH');
     });
 
-    fit('should display help button', () => {
+    it('should display help button', () => {
         page.navigateTo();
         expect(page.getHelpButton().getText()).toEqual('Help');
     });
 
-    fit('should route to help page', () => {
+    it('should route to help page', () => {
         page.navigateTo();
         page.getHelpButton().click();
         expect(page.getHelpPageTitle()).toEqual('Need help?');
