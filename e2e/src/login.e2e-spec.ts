@@ -1,7 +1,7 @@
 import { LoginPage } from './page-objects/login.po';
 import { browser, by } from 'protractor';
 
-fdescribe('login page', () => {
+describe('login page', () => {
     let page: LoginPage;
 
     function performLogin() {
@@ -29,7 +29,7 @@ fdescribe('login page', () => {
         expect(page.getPageTitle()).toEqual('Login here');
     });
 
-    fit('should log in', () => {
+    it('should log in', () => {
 
         page.navigateToLogin();
 
@@ -58,7 +58,7 @@ fdescribe('login page', () => {
 
     });
 
-    fit('should log out', () => {
+    it('should log out', () => {
         // log out
         performLogout();
 
