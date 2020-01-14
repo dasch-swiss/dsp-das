@@ -14,7 +14,6 @@ import { FilterPipe } from 'src/app/dev/filter.pipe';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { AddSourceTypeComponent } from './add-source-type/add-source-type.component';
-import { OntologyListComponent } from './ontology-list/ontology-list.component';
 import { OntologyComponent } from './ontology.component';
 
 describe('OntologyComponent', () => {
@@ -25,7 +24,6 @@ describe('OntologyComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 OntologyComponent,
-                OntologyListComponent,
                 AddSourceTypeComponent,
                 ErrorComponent,
                 FilterPipe
