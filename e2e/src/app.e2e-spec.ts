@@ -4,14 +4,14 @@ import { browser, element, by } from 'protractor';
 fdescribe('logged out dashboard', () => {
     let page: AppPage;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         page = new AppPage();
     });
 
-    fit('should display welcome title', () => {
-        page.navigateTo();
-        const title = browser.driver.findElement(by.css('app-main h1'));
-        expect(title.getText()).toEqual('BRING ALL TOGETHER AND SIMPLIFY YOUR RESEARCH');
+    fit('should display welcome title', async () => {
+        await page.navigateTo();
+        const title = element(by.css('app-main h1'));
+        expect(await title.getText()).toEqual('BRING ALL TOGETHER AND SIMPLIFY YOUR RESEARCH');
     });
 
     it('should display help button', () => {
