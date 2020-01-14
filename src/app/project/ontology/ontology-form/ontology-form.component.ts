@@ -23,7 +23,9 @@ export class OntologyFormComponent implements OnInit {
     // project short code
     @Input() projectcode: string;
 
-    @Output() closeDialog: EventEmitter<string> = new EventEmitter<string>();
+    @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
+
+    @Output() updateParent: EventEmitter<string> = new EventEmitter<string>();
 
     project: ReadProject;
 
@@ -59,6 +61,8 @@ export class OntologyFormComponent implements OnInit {
 
     ngOnInit() {
 
+        this.loading = true;
+
         // set the cache
         this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
 
@@ -68,14 +72,14 @@ export class OntologyFormComponent implements OnInit {
                 this.project = response.body.project;
 
                 this.buildForm();
+
+                this.loading = false;
             },
             (error: ApiResponseError) => {
                 console.error(error);
                 this.loading = false;
             }
         );
-
-        this.loading = false;
 
     }
 
@@ -158,7 +162,9 @@ export class OntologyFormComponent implements OnInit {
                 // set cache for the new ontology
                 this._cache.get('currentOntology', this._ontologyService.getAllEntityDefinitionsForOntologies(ontology['@id']));
 
-                this.closeDialog.emit(ontology['@id']);
+                // this.updateParent.emit(ontology['@id']);
+
+                this.closeDialog.emit();
 
                 // go to correct route
                 const goto = 'project/' + this.projectcode + '/ontologies/' + encodeURIComponent(ontology['@id']);
@@ -185,10 +191,6 @@ export class OntologyFormComponent implements OnInit {
 
         this.buildForm();
 
-    }
-
-    closeMessage(id: string) {
-        this.closeDialog.emit(id);
     }
 
 }

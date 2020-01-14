@@ -82,8 +82,9 @@ export class ListInfoFormComponent implements OnInit {
         statusText: "You have successfully updated list's info."
     };
 
-    constructor(@Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection) {
-    }
+    constructor(
+        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection
+    ) { }
 
     ngOnInit() {
 

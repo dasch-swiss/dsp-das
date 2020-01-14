@@ -29,7 +29,7 @@ export interface DialogData {
 })
 export class DialogComponent implements OnInit {
 
-    constructor (
+    constructor(
         public dialogRef: MatDialogRef<DialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData
     ) { }

@@ -124,15 +124,14 @@ export class ListComponent implements OnInit {
                 this.loading = false;
             }
         );
-
-
-
     }
 
     /**
      * build the list of lists
      */
     initList(): void {
+
+        this.loading = true;
 
         this.knoraApiConnection.admin.listsEndpoint.getListsInProject(this.project.id).subscribe(
             (response: ApiResponseData<ListsResponse>) => {
@@ -153,18 +152,6 @@ export class ListComponent implements OnInit {
                 console.error(error);
             }
         );
-    }
-
-    // update view after closing dialog
-    refresh(): void {
-        // referesh the component
-        this.loading = true;
-
-        this.initList();
-
-        if (this.listIri) {
-            this.openList(this.listIri);
-        }
     }
 
     // update view after selecting a list from dropdown
@@ -218,7 +205,7 @@ export class ListComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(() => {
             // update the view
-            this.refresh();
+            this.initList();
         });
     }
 

@@ -172,14 +172,14 @@
     <div *ngSwitchCase="'createOntology'">
         <app-dialog-header [title]="'Data model'" [subtitle]="'Create new'" (close)="dialogRef.close()">
         </app-dialog-header>
-        <app-ontology-form [projectcode]="data.project" (closeDialog)="dialogRef.close(data)"></app-ontology-form>
+        <app-ontology-form [projectcode]="data.project" (closeDialog)="dialogRef.close()"></app-ontology-form>
     </div>
 
     <!-- Ontology editor: customize and add source type -->
     <div *ngSwitchCase="'addSourceType'">
         <app-dialog-header [title]="data.name" [subtitle]="'Customize source type'" (close)="dialogRef.close()">
         </app-dialog-header>
-        <app-source-type-form [iri]="data.project" (closeDialog)="dialogRef.close()"></app-source-type-form>
+        <app-source-type-form [iri]="data.id" (closeDialog)="dialogRef.close()"></app-source-type-form>
     </div>
 
     <!-- Unknown method (or not yet defined) -->
