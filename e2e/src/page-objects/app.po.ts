@@ -14,7 +14,7 @@ export class AppPage {
   }
 
   getHelpButton() {
-    return element(by.css('app-header mat-toolbar .action .mat-button .help'));
+    return element(by.buttonText('Help'));
   }
 
   getHelpPageTitle() {
@@ -42,7 +42,7 @@ export class AppPage {
   }
 
   getProjects() {
-    return element.all(by.css('section.projects .app-grid-item'));
+    return element.all(by.css('app-root .app-content app-main .landing-page section.projects .app-grid .app-grid-item'));
   }
 
   getBEOLProjectTitle() {

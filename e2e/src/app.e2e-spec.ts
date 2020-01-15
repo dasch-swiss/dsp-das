@@ -1,46 +1,73 @@
 import { AppPage } from './page-objects/app.po';
-import { browser, element, by } from 'protractor';
+import { browser, element, by, protractor } from 'protractor';
 
 fdescribe('landing page', () => {
     let page: AppPage;
 
     beforeEach(() => {
         page = new AppPage();
-        page.navigateTo();
     });
 
-    fit('should display welcome title', () => {
+    fit('should display welcome title', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
+        await browser.waitForAngularEnabled(true);
         expect(page.getMainTitle()).toEqual('BRING ALL TOGETHER AND SIMPLIFY YOUR RESEARCH');
     });
 
-    fit('should display help button', () => {
+    fit('should display help button', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
+        await browser.waitForAngularEnabled(true);
         expect(page.getHelpButton().getText()).toEqual('Help');
     });
 
-    fit('should route to help page', () => {
+    fit('should route to help page', async () => {
+        const EC = protractor.ExpectedConditions;
+        const isClickable = EC.elementToBeClickable(page.getHelpButton());
+
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
+        browser.wait(isClickable, 5000);
         page.getHelpButton().click();
+        await browser.waitForAngularEnabled(true);
         expect(page.getHelpPageTitle()).toEqual('Need help?');
     });
 
-    it('should display login button', () => {
+    fit('should display login button', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
+        await browser.waitForAngularEnabled(true);
         expect(page.getLoginButton().getText()).toEqual('LOGIN');
     });
 
-    it('should route to login page', () => {
+    fit('should route to login page', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
         page.getLoginButton().click();
+        await browser.waitForAngularEnabled(true);
         expect(page.getLoginPageTitle()).toEqual('Login here');
     });
 
-    it('should display accept button in the cookie banner', () => {
+    fit('should display accept button in the cookie banner', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
+        await browser.waitForAngularEnabled(true);
         expect(page.getAcceptCookieButton().getText()).toEqual('ACCEPT');
     });
 
-    it('should go back to home page', () => {
+    fit('should go back to home page', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
         page.getAcceptCookieButton().click();
+        await browser.waitForAngularEnabled(true);
         expect(page.getSubtitle()).toContain('a software framework for storing');
     });
 
-    it('should display dasch logo', () => {
+    fit('should display dasch logo', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
+        await browser.waitForAngularEnabled(true);
         expect(page.getUnibasLogo().getAttribute('class')).toEqual('logo logo-unibas');
     });
 
@@ -74,16 +101,25 @@ fdescribe('landing page', () => {
         });
     });
 
-    it('should display 5 dasch public projects', () => {
+    fit('should display 5 dasch public projects', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
+        await browser.waitForAngularEnabled(true);
         expect(page.getProjects().count()).toEqual(5);
     });
 
-    it('should get the name of the second project of the list (which is BEOL project)', () => {
+    fit('should get the name of the second project of the list (which is BEOL project)', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
+        await browser.waitForAngularEnabled(true);
         expect(page.getBEOLProjectTitle().getText()).toEqual('Bernoulli-Euler Online');
     });
 
-    it('should route to the beol page', () => {
+    fit('should route to the beol page', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
         page.getReadMoreBtnOfBEOL().click();
+        await browser.waitForAngularEnabled(true);
         expect(page.getBEOLProjectPageTitle()).toEqual('Bernoulli-Euler Online');
     });
 
