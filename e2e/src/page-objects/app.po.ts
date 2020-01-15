@@ -5,16 +5,16 @@ export class AppPage {
     return browser.get('/');
   }
 
-  /* getMainTitle() {
+  getMainTitle() {
     return element(by.css('app-main h1')).getText();
-  } */
+  }
 
   getSubtitle() {
     return element(by.css('app-main h2')).getText();
   }
 
   getHelpButton() {
-    return element(by.buttonText('Help'));
+    return element(by.css('app-header mat-toolbar .action .mat-button .help'));
   }
 
   getHelpPageTitle() {

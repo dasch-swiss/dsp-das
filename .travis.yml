@@ -15,19 +15,16 @@ cache:
   - node_modules
 
 addons:
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
+  chrome: stable
 
 install:
   - yarn global add @angular/cli
-  - yarn global add protractor
   - cd $TRAVIS_BUILD_DIR
   - yarn install
 
 script:
   - yarn test-ci
+  - yarn run webdriver-update
   - yarn test-e2e-protractor
+  - yarn build-prod
   - docker build .

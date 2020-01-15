@@ -1,24 +1,23 @@
 import { AppPage } from './page-objects/app.po';
 import { browser, element, by } from 'protractor';
 
-fdescribe('logged out dashboard', () => {
+fdescribe('landing page', () => {
     let page: AppPage;
 
-    beforeEach(async () => {
+    beforeEach(() => {
         page = new AppPage();
+        page.navigateTo();
     });
 
-    fit('should display welcome title', async () => {
-        await page.navigateTo();
-        const title = element(by.css('app-main h1'));
-        expect(await title.getText()).toEqual('BRING ALL TOGETHER AND SIMPLIFY YOUR RESEARCH');
+    fit('should display welcome title', () => {
+        expect(page.getMainTitle()).toEqual('BRING ALL TOGETHER AND SIMPLIFY YOUR RESEARCH');
     });
 
-    it('should display help button', () => {
+    fit('should display help button', () => {
         expect(page.getHelpButton().getText()).toEqual('Help');
     });
 
-    it('should route to help page', () => {
+    fit('should route to help page', () => {
         page.getHelpButton().click();
         expect(page.getHelpPageTitle()).toEqual('Need help?');
     });
