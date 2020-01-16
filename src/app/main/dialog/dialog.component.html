@@ -179,7 +179,8 @@
     <div *ngSwitchCase="'addSourceType'">
         <app-dialog-header [title]="data.name" [subtitle]="'Customize source type'" (close)="dialogRef.close()">
         </app-dialog-header>
-        <app-source-type-form [iri]="data.id" (closeDialog)="dialogRef.close()"></app-source-type-form>
+        <app-source-type-form [iri]="data.id" [subClassOf]="data.project" (closeDialog)="dialogRef.close()">
+        </app-source-type-form>
     </div>
 
     <!-- Unknown method (or not yet defined) -->

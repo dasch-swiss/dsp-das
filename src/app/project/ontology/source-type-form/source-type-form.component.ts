@@ -2,11 +2,15 @@ import { Subscription } from 'rxjs';
 
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
-    AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output
+    AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, Inject
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
 import { SourceTypeFormService } from './source-type-form.service';
+import { CacheService } from 'src/app/main/cache/cache.service';
+import { ApiServiceResult, KnoraApiConnectionToken, OntologyService, ApiServiceError } from '@knora/core';
+import { KnoraApiConnection } from '@knora/api';
+import { NewResourceClass } from '@knora/core/lib/declarations/api/v2/ontology/new-resource-class';
 
 // nested form components; solution from here:
 // https://medium.com/@joshblf/dynamic-nested-reactive-forms-in-angular-654c1d4a769a
@@ -30,10 +34,15 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
      */
     @Input() iri: string;
 
+    @Input() subClassOf: string;
+
     /**
      * emit event, when closing dialog
      */
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
+
+    // current ontology iri
+    ontology: any;
 
     /**
      * reference to the component controlling the property selection
@@ -77,7 +86,10 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         },
     };
 
-    constructor (
+    constructor(
+        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
+        private _ontologyService: OntologyService,
+        private _cache: CacheService,
         private _cdr: ChangeDetectorRef,
         private _fb: FormBuilder,
         private _sourceTypeFormService: SourceTypeFormService
@@ -85,18 +97,30 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
     ngOnInit() {
 
-        this._sourceTypeFormService.resetProperties();
+        this._cache.get('currentOntology').subscribe(
+            (response: ApiServiceResult) => {
+                this.ontology = response.body;
+                // TODO: how do we get the ontology name?
+            },
+            (error: any) => {
+                console.error(error);
+            }
+        );
 
-        this.sourceTypeFormSub = this._sourceTypeFormService.sourceTypeForm$
-            .subscribe(sourceType => {
-                this.sourceTypeForm = sourceType;
+        // this._sourceTypeFormService.resetProperties();
 
-                // this.properties = new FormArray([]);
-                this.properties = this.sourceTypeForm.get('properties') as FormArray;
-            });
+        // this.sourceTypeFormSub = this._sourceTypeFormService.sourceTypeForm$
+        //     .subscribe(sourceType => {
+        //         this.sourceTypeForm = sourceType;
+
+        //         // this.properties = new FormArray([]);
+        //         this.properties = this.sourceTypeForm.get('properties') as FormArray;
+        //     });
+
+        this.buildForm();
 
         // load one first property line
-        this.addProperty();
+        // this.addProperty();
 
         this.sourceTypeForm.statusChanges.subscribe((data) => {
 
@@ -125,10 +149,11 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         this.sourceTypeFormSub = this._sourceTypeFormService.sourceTypeForm$
             .subscribe(sourceType => {
                 this.sourceTypeForm = sourceType;
-
                 // this.properties = new FormArray([]);
                 this.properties = this.sourceTypeForm.get('properties') as FormArray;
             });
+
+        this.sourceTypeForm.controls['subClassOf'].setValue(this.subClassOf);
 
         // load one first property line
         this.addProperty();
@@ -162,12 +187,20 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
     submitData() {
         this.loading = true;
-        // TODO: submit data
-        // build JSON similar tho Knora-PY JSON from Lukas
-        // and submit data
+
+        this._ontologyService.createResourceClass(this.ontology, this.sourceTypeForm.value).subscribe(
+            (response: any) => {
+                console.log(response);
+            },
+            (error: ApiServiceError) => {
+                console.error(error);
+            }
+        );
+
+
         console.log('sourceTypeForm:', this.sourceTypeForm.value);
 
-
+        // TODO: build props
         const resourceProperties: any = [];
         let i = 0;
         for (const prop of this.sourceTypeForm.value.properties) {

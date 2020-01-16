@@ -12,7 +12,7 @@ export class Property {
     required: boolean;
     permission: string;
 
-    constructor (
+    constructor(
         label?: string,
         type?: any,
         multiple?: boolean,
@@ -36,7 +36,7 @@ export class PropertyForm {
     required = new FormControl();
     permission = new FormControl();
 
-    constructor (
+    constructor(
         property: Property
     ) {
         this.label.setValue(property.label);
@@ -58,14 +58,16 @@ export class PropertyForm {
 // source type data structure
 export class SourceType {
     label: string;
-    description: string;
+    comment: string;
     permission: string;
+    subClassOf: string;
     properties: Property[];
 
-    constructor (label: string, description: string, permission: string, properties?: Property[]) {
+    constructor(label: string, comment: string, permission: string, subClassOf: string, properties?: Property[]) {
         this.label = label;
-        this.description = description;
+        this.comment = comment;
         this.permission = permission;
+        this.subClassOf = subClassOf;
         this.properties = properties;
     }
 }
@@ -74,23 +76,21 @@ export class SourceType {
 // source type form controls
 export class SourceTypeForm {
     label = new FormControl();
-    description = new FormControl();
+    comment = new FormControl();
     permission = new FormControl();
+    subClassOf = new FormControl();
     properties = new FormArray([]);
 
-    constructor (sourceType: SourceType) {
+    constructor(sourceType: SourceType) {
 
         this.label.setValue(sourceType.label);
         this.label.setValidators([Validators.required]);
 
-        this.description.setValue(sourceType.description);
+        this.comment.setValue(sourceType.comment);
+
+        this.subClassOf.setValue(sourceType.subClassOf);
 
         this.permission.setValue(sourceType.permission);
-
-        /*
-                this.label.setValue(sourceType.label);
-                this.label.setValidators([Validators.required]); */
-
 
         if (sourceType.properties) {
             this.properties.setValue([sourceType.properties]);
@@ -104,18 +104,18 @@ export class SourceTypeForm {
 export class SourceTypeFormService {
 
     private sourceTypeForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(this._fb.group(
-        new SourceTypeForm(new SourceType('', '', ''))
+        new SourceTypeForm(new SourceType('', '', '', ''))
     ));
 
     sourceTypeForm$: Observable<FormGroup> = this.sourceTypeForm.asObservable();
 
-    constructor (private _fb: FormBuilder) { }
+    constructor(private _fb: FormBuilder) { }
 
     // reset
     resetProperties() {
 
         const currentSourceType = this._fb.group(
-            new SourceTypeForm(new SourceType('', '', ''))
+            new SourceTypeForm(new SourceType('', '', '', ''))
         );
 
         this.sourceTypeForm.next(currentSourceType);

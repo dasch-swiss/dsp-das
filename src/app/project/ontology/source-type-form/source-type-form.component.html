@@ -9,6 +9,10 @@
     <form *ngIf="!loading" [formGroup]="sourceTypeForm" class="form-content project-data" (ngSubmit)="submitData()">
 
         <!-- label -->
+        <mat-form-field class="large-field">
+            <input matInput placeholder="Subclass of *" formControlName="subClassOf" [value]="subClassOf">
+        </mat-form-field>
+
         <mat-form-field class="medium-field">
             <input matInput placeholder="Label *" formControlName="label">
             <mat-hint *ngIf="formErrors.label">
@@ -29,7 +33,7 @@
         <br>
         <!-- description -->
         <mat-form-field class="medium-field">
-            <textarea matInput placeholder="Description" formControlName="description"></textarea>
+            <textarea matInput placeholder="Description" formControlName="comment"></textarea>
         </mat-form-field>
 
 
