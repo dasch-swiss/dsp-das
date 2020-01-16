@@ -42,7 +42,7 @@ export class AppPage {
   }
 
   getProjects() {
-    return element.all(by.css('app-root .app-content app-main .landing-page section.projects .app-grid .app-grid-item'));
+    return element.all(by.css('section.projects app-grid.project-list .app-grid-item'));
   }
 
   getBEOLProjectTitle() {

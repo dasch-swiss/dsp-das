@@ -29,4 +29,5 @@ export class LoginPage {
     getLoginButton() {
         return element(by.css('kui-login-form form button'));
     }
+
 }

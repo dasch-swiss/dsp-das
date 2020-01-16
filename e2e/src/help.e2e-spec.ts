@@ -8,14 +8,21 @@ describe('help page', () => {
 
     beforeEach(() => {
         page = new HelpPage();
-        page.navigateTo();
     });
 
-    it('should display page title', () => {
+    it('should display page title', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
+        await browser.waitForAngularEnabled(true);
+
         expect(page.getPageTitle()).toEqual('Need help?');
     });
 
-    it('should route to project management documentation', () => {
+    it('should route to project management documentation', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
+        await browser.waitForAngularEnabled(true);
+
         browser.getWindowHandle().then(function (parentGUID) {
             // click the link that opens in a new window
             page.getProjManagementDocButton().click();
@@ -45,8 +52,10 @@ describe('help page', () => {
         });
     });
 
-    it('should route to knora-app release note page', () => {
-        // const knoraAppVersion = '2.0.0';
+    it('should route to knora-app release note page', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
+        await browser.waitForAngularEnabled(true);
 
         browser.getWindowHandle().then(function (parentGUID) {
             // click the link that opens in a new window
@@ -77,8 +86,10 @@ describe('help page', () => {
         });
     });
 
-    it('should route to sipi release note page', () => {
-        // const knoraAppVersion = '2.0.0';
+    it('should route to sipi release note page', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
+        await browser.waitForAngularEnabled(true);
 
         browser.getWindowHandle().then(function (parentGUID) {
             // click the link that opens in a new window
@@ -109,7 +120,11 @@ describe('help page', () => {
         });
     });
 
-    it('should route to the dasch forum', () => {
+    it('should route to the dasch forum', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
+        await browser.waitForAngularEnabled(true);
+
         browser.getWindowHandle().then(function (parentGUID) {
             // click the link that opens in a new window
             page.getDaschForumButton().click();
@@ -139,7 +154,11 @@ describe('help page', () => {
         });
     });
 
-    it('should route to the DaSCH website', () => {
+    it('should route to the DaSCH website', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
+        await browser.waitForAngularEnabled(true);
+
         browser.getWindowHandle().then(function (parentGUID) {
             // click the link that opens in a new window
             page.getDaschSwissButton().click();
@@ -169,7 +188,11 @@ describe('help page', () => {
         });
     });
 
-    it('should route to the dasch-swiss Github repo', () => {
+    it('should route to the dasch-swiss Github repo', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
+        await browser.waitForAngularEnabled(true);
+
         browser.getWindowHandle().then(function (parentGUID) {
             // click the link that opens in a new window
             page.getGithubContributeButton().click();

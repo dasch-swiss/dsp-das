@@ -1,28 +1,28 @@
 import { AppPage } from './page-objects/app.po';
 import { browser, element, by, protractor } from 'protractor';
 
-fdescribe('landing page', () => {
+describe('landing page', () => {
     let page: AppPage;
 
     beforeEach(() => {
         page = new AppPage();
     });
 
-    fit('should display welcome title', async () => {
+    it('should display welcome title', async () => {
         await browser.waitForAngularEnabled(false);
         page.navigateTo();
         await browser.waitForAngularEnabled(true);
         expect(page.getMainTitle()).toEqual('BRING ALL TOGETHER AND SIMPLIFY YOUR RESEARCH');
     });
 
-    fit('should display help button', async () => {
+    it('should display help button', async () => {
         await browser.waitForAngularEnabled(false);
         page.navigateTo();
         await browser.waitForAngularEnabled(true);
         expect(page.getHelpButton().getText()).toEqual('Help');
     });
 
-    fit('should route to help page', async () => {
+    it('should route to help page', async () => {
         const EC = protractor.ExpectedConditions;
         const isClickable = EC.elementToBeClickable(page.getHelpButton());
 
@@ -34,14 +34,14 @@ fdescribe('landing page', () => {
         expect(page.getHelpPageTitle()).toEqual('Need help?');
     });
 
-    fit('should display login button', async () => {
+    it('should display login button', async () => {
         await browser.waitForAngularEnabled(false);
         page.navigateTo();
         await browser.waitForAngularEnabled(true);
         expect(page.getLoginButton().getText()).toEqual('LOGIN');
     });
 
-    fit('should route to login page', async () => {
+    it('should route to login page', async () => {
         await browser.waitForAngularEnabled(false);
         page.navigateTo();
         page.getLoginButton().click();
@@ -49,14 +49,14 @@ fdescribe('landing page', () => {
         expect(page.getLoginPageTitle()).toEqual('Login here');
     });
 
-    fit('should display accept button in the cookie banner', async () => {
+    it('should display accept button in the cookie banner', async () => {
         await browser.waitForAngularEnabled(false);
         page.navigateTo();
         await browser.waitForAngularEnabled(true);
         expect(page.getAcceptCookieButton().getText()).toEqual('ACCEPT');
     });
 
-    fit('should go back to home page', async () => {
+    it('should go back to home page', async () => {
         await browser.waitForAngularEnabled(false);
         page.navigateTo();
         page.getAcceptCookieButton().click();
@@ -64,14 +64,18 @@ fdescribe('landing page', () => {
         expect(page.getSubtitle()).toContain('a software framework for storing');
     });
 
-    fit('should display dasch logo', async () => {
+    it('should display dasch logo', async () => {
         await browser.waitForAngularEnabled(false);
         page.navigateTo();
         await browser.waitForAngularEnabled(true);
         expect(page.getUnibasLogo().getAttribute('class')).toEqual('logo logo-unibas');
     });
 
-    it('should route to the dasch website and check the URL', () => {
+    it('should route to the dasch website and check the URL', async () => {
+        await browser.waitForAngularEnabled(false);
+        page.navigateTo();
+        await browser.waitForAngularEnabled(true);
+
         browser.getWindowHandle().then(function (parentGUID) {
             // click the link that opens in a new window
             element(by.css('img[src="/assets/images/logo-unibas.jpg"]')).click();
@@ -101,21 +105,21 @@ fdescribe('landing page', () => {
         });
     });
 
-    fit('should display 5 dasch public projects', async () => {
+    it('should display 5 dasch public projects', async () => {
         await browser.waitForAngularEnabled(false);
         page.navigateTo();
         await browser.waitForAngularEnabled(true);
         expect(page.getProjects().count()).toEqual(5);
     });
 
-    fit('should get the name of the second project of the list (which is BEOL project)', async () => {
+    it('should get the name of the second project of the list (which is BEOL project)', async () => {
         await browser.waitForAngularEnabled(false);
         page.navigateTo();
         await browser.waitForAngularEnabled(true);
         expect(page.getBEOLProjectTitle().getText()).toEqual('Bernoulli-Euler Online');
     });
 
-    fit('should route to the beol page', async () => {
+    it('should route to the beol page', async () => {
         await browser.waitForAngularEnabled(false);
         page.navigateTo();
         page.getReadMoreBtnOfBEOL().click();
