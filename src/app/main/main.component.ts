@@ -1,9 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectsResponse, Constants } from '@knora/api';
 import { KnoraApiConnectionToken } from '@knora/core';
 import { GridItem } from './grid/grid.component';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
     selector: 'app-main',
@@ -64,6 +65,7 @@ export class MainComponent implements OnInit {
 
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
+        @Inject(PLATFORM_ID) private platformId: Object,
         private _router: Router,
         private _titleService: Title
     ) {
@@ -72,8 +74,10 @@ export class MainComponent implements OnInit {
 
 
         // check if a session is active
-        if (JSON.parse(localStorage.getItem('session'))) {
-            this._router.navigate(['dashboard']);
+        if (isPlatformBrowser(this.platformId)) {
+            if (JSON.parse(localStorage.getItem('session'))) {
+                this._router.navigate(['dashboard']);
+            }
         }
     }
 

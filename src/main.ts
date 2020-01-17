@@ -27,9 +27,10 @@ fetch(`config/config.${environment.name}.json`)
 
         // console.log('config', config);
 
-
-        platformBrowserDynamic()
-            .bootstrapModule(AppModule)
-            .catch(err => bootstrapFailed(err));
+        document.addEventListener('DOMContentLoaded', () => {
+            platformBrowserDynamic()
+                .bootstrapModule(AppModule)
+                .catch(err => bootstrapFailed(err));
+        });
     })
     .catch(bootstrapFailed);

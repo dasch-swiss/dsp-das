@@ -144,7 +144,7 @@ export function initializeApp(appInitService: AppInitService) {
     ],
     imports: [
         AppRoutingModule,
-        BrowserModule,
+        BrowserModule.withServerTransition({ appId: 'serverApp' }),
         BrowserAnimationsModule,
         FlexLayoutModule,
         HttpClientModule,

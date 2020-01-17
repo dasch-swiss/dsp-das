@@ -18,7 +18,22 @@ export class AppInitService {
         return new Promise<void>((resolve, reject) => {
 
             // init knora-ui configuration
-            AppInitService.kuiConfig = window['tempConfigStorage'] as KuiConfig;
+            // appInitService.kuiConfig = window['tempConfigStorage'] as KuiConfig;
+
+            AppInitService.kuiConfig = {
+                'knora': {
+                    'apiProtocol': 'http',
+                    'apiHost': '0.0.0.0',
+                    'apiPort': 3333,
+                    'apiPath': '',
+                    'jsonWebToken': '',
+                    'logErrors': true
+                },
+                'app': {
+                    'name': 'Knora-APP',
+                    'url': '0.0.0.0:4200'
+                }
+            } as KuiConfig;
 
             // init knora-api configuration
             AppInitService.knoraApiConfig = new KnoraApiConfig(
