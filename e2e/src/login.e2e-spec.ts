@@ -71,6 +71,7 @@ describe('login page', () => {
 
     });
 
+    // TODO: find another solution to target the logout button
     xit('should log out', async () => {
 
         const username = page.getUsername();

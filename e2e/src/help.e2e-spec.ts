@@ -1,5 +1,5 @@
 import { HelpPage } from './page-objects/help.po';
-import { browser, element, by } from 'protractor';
+import { browser } from 'protractor';
 
 const { version: appVersion, name: appName } = require('../../package.json');
 
