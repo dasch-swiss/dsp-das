@@ -74,7 +74,7 @@
         <div #ontologyEditor class="ontology-editor-canvas" *ngIf="!loadOntology">
             <!-- button to define and add new source type to the ontology -->
             <app-add-source-type *ngIf="project?.status && sysAdmin && ontologyIri" [projectcode]="projectcode"
-                class="add-source-type" (refreshParent)="initList()" #addSourceTypeComponent>
+                class="add-source-type" (refreshParent)="resetOntology(ontologyIri)" #addSourceTypeComponent>
             </app-add-source-type>
 
             <!-- list of source types -->
@@ -85,7 +85,7 @@
                 <strong>{{resClass['rdfs:label']}}</strong>
                 <ul>
                     <span *ngFor="let prop of resClass['rdfs:subClassOf']">
-                        <li *ngIf="prop['owl:onProperty']">
+                        <li *ngIf="prop['salsah-gui:guiOrder']">
                             {{prop['owl:onProperty']['@id']}}
                         </li>
                     </span>

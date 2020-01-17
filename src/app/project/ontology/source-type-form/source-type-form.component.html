@@ -9,8 +9,8 @@
     <form *ngIf="!loading" [formGroup]="sourceTypeForm" class="form-content project-data" (ngSubmit)="submitData()">
 
         <!-- label -->
-        <mat-form-field class="large-field">
-            <input matInput placeholder="Subclass of *" formControlName="subClassOf" [value]="subClassOf">
+        <mat-form-field class="large-field hidden">
+            <input matInput placeholder="Subclass of *" formControlName="subClassOf" [value]="subClassOf" readonly>
         </mat-form-field>
 
         <mat-form-field class="medium-field">
@@ -21,8 +21,8 @@
         </mat-form-field>
 
         <!-- TODO: add permissions of source type -->
-        <mat-form-field class="medium-field">
-            <mat-label>Who is able to do what with this source type?</mat-label>
+        <mat-form-field class="small-field">
+            <mat-label>Permissions (NYI!)</mat-label>
             <mat-select formControlName="permission">
                 <mat-option [value]="1">All</mat-option>
                 <mat-option [value]="2">Project</mat-option>
@@ -32,8 +32,8 @@
 
         <br>
         <!-- description -->
-        <mat-form-field class="medium-field">
-            <textarea matInput placeholder="Description" formControlName="comment"></textarea>
+        <mat-form-field class="large-field">
+            <textarea matInput placeholder="Description" formControlName="comment" rows="4"></textarea>
         </mat-form-field>
 
 

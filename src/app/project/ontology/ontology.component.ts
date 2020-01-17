@@ -219,7 +219,12 @@ export class OntologyComponent implements OnInit {
         }
 
         const goto = 'project/' + this.projectcode + '/ontologies/' + encodeURIComponent(id);
-        this._router.navigate([goto]);
+        this._router.navigateByUrl(goto, { skipLocationChange: false });
+
+        // this._router.navigateByUrl('/refresh', { skipLocationChange: true }).then(
+        //     () => this._router.navigate([goto])
+        // );
+
 
         this.loadOntology = true;
 

@@ -1,20 +1,14 @@
-import { Subscription } from 'rxjs';
-
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import {
-    AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, Inject
-} from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-
-import { SourceTypeFormService } from './source-type-form.service';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { ApiServiceResult, KnoraApiConnectionToken, OntologyService, ApiServiceError } from '@knora/core';
 import { KnoraApiConnection } from '@knora/api';
-import { NewResourceClass } from '@knora/core/lib/declarations/api/v2/ontology/new-resource-class';
+import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, OntologyService, NewProperty } from '@knora/core';
+import { Subscription } from 'rxjs';
+import { CacheService } from 'src/app/main/cache/cache.service';
+import { SourceTypeFormService } from './source-type-form.service';
 
-// nested form components; solution from here:
+// nested form components; solution from:
 // https://medium.com/@joshblf/dynamic-nested-reactive-forms-in-angular-654c1d4a769a
-
 
 @Component({
     selector: 'app-source-type-form',
@@ -27,13 +21,14 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
     errorMessage: any;
 
-    // sourceType: any;
-
     /**
      * default, base source type iri
      */
     @Input() iri: string;
 
+    /**
+     * selected resource class is a subclass from knora base
+     */
     @Input() subClassOf: string;
 
     /**
@@ -41,7 +36,9 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
      */
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
-    // current ontology iri
+    /**
+     * current ontology; will get it from cache by key 'currentOntology'
+     */
     ontology: any;
 
     /**
@@ -107,20 +104,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
             }
         );
 
-        // this._sourceTypeFormService.resetProperties();
-
-        // this.sourceTypeFormSub = this._sourceTypeFormService.sourceTypeForm$
-        //     .subscribe(sourceType => {
-        //         this.sourceTypeForm = sourceType;
-
-        //         // this.properties = new FormArray([]);
-        //         this.properties = this.sourceTypeForm.get('properties') as FormArray;
-        //     });
-
         this.buildForm();
-
-        // load one first property line
-        // this.addProperty();
 
         this.sourceTypeForm.statusChanges.subscribe((data) => {
 
@@ -188,7 +172,8 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     submitData() {
         this.loading = true;
 
-        this._ontologyService.createResourceClass(this.ontology, this.sourceTypeForm.value).subscribe(
+        /* stopp creating new resource classes (at the moment)
+        this._ontologyService.addResourceClass(this.ontology, this.sourceTypeForm.value).subscribe(
             (response: any) => {
                 console.log(response);
             },
@@ -196,20 +181,21 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
                 console.error(error);
             }
         );
+        */
 
-
-        console.log('sourceTypeForm:', this.sourceTypeForm.value);
 
         // TODO: build props
-        const resourceProperties: any = [];
+        const resourceProperties: NewProperty[] = [];
         let i = 0;
         for (const prop of this.sourceTypeForm.value.properties) {
-            const newProp: any = {
-                value: prop.type.value,
-                gui_element: prop.type.gui_ele,
-                gui_order: i,
+            const newProp: NewProperty = {
+                label: prop.label,
+                comment: prop.label,
+                subPropertyOf: prop.type.subClassOf,
+                guiElement: prop.type.gui_ele,
+                guiOrder: i,
                 cardinality: this.setCardinality(prop.multiple, prop.requirerd),
-                gui_attr: 'TODO: implement gui attributes'
+                guiAttributes: []
             };
 
             resourceProperties.push(newProp);
@@ -218,6 +204,15 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         }
 
         console.log(resourceProperties);
+
+        this._ontologyService.addProperty(this.ontology, resourceProperties).subscribe(
+            (response: any) => {
+                console.log(response);
+            },
+            (error: ApiServiceError) => {
+                console.error(error);
+            }
+        );
 
         // close the dialog box
         this.closeMessage();
