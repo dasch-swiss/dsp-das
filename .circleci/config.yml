@@ -31,7 +31,7 @@ jobs:
 
       # Build the libraries
       - run: yarn add --force node-sass
-      - run: yarn build
+      - run: yarn build-prod
 
       # Run unit tests!
       - run: yarn ng test --watch=false --browsers=ChromeHeadless
