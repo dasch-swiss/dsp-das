@@ -328,5 +328,50 @@ export class OntologyComponent implements OnInit {
         });
     }
 
+    deleteSourceType(id: string, name: string) {
+
+        let iri: string;
+        let lastModificationDate: string;
+
+        this._cache.get('currentOntology', this._ontologyService.getAllEntityDefinitionsForOntologies(this.ontologyIri)).subscribe(
+            (response: any) => {
+                lastModificationDate = response.body['knora-api:lastModificationDate'];
+                iri = response.body['@id'] + '#' + id.split(':')[1];
+            },
+            (error: any) => {
+                console.error(error);
+            }
+        );
+
+        const dialogConfig: MatDialogConfig = {
+            width: '560px',
+            position: {
+                top: '112px'
+            },
+            data: { mode: 'deleteSourceType', title: name }
+        };
+
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
+        );
+
+        dialogRef.afterClosed().subscribe(answer => {
+            if (answer === true) {
+                // delete resource type and refresh the view
+                this._ontologyService.deleteResourceClass(iri, lastModificationDate).subscribe(
+                    (response: any) => {
+                        this.resetOntology(this.ontologyIri);
+                    },
+                    (error: ApiServiceError) => {
+                        // TODO: show message
+                        console.error(error);
+                    }
+                );
+
+            }
+        });
+    }
+
 
 }

@@ -74,11 +74,11 @@
         <div #ontologyEditor class="ontology-editor-canvas" *ngIf="!loadOntology">
             <!-- button to select and add new source type to the ontology -->
             <div class="add-source-type" *ngIf="project?.status && sysAdmin && ontologyIri">
-                <button mat-raised-button color="primary" [matMenuTriggerFor]="beforeMenu">
+                <button mat-raised-button color="primary" [matMenuTriggerFor]="addResClassMenu">
                     Add source type&nbsp;
                     <mat-icon>add</mat-icon>
                 </button>
-                <mat-menu #beforeMenu="matMenu" xPosition="before">
+                <mat-menu #addResClassMenu="matMenu" xPosition="before">
                     <button mat-menu-item *ngFor="let type of sourceTypes"
                         (click)="openSourceTypeForm('addSourceType', type)">
                         {{ type?.label }}
@@ -95,15 +95,32 @@
 
             <div *ngFor="let resClass of ontology['@graph'] | filter: '@type' : 'owl:Class'; let i = index"
                 class="resource-class" cdkDrag cdkDragBoundary=".drag-drop-stop">
-                <strong>{{resClass['rdfs:label']}}</strong>
-                <ul>
-                    <span *ngFor="let prop of resClass['rdfs:subClassOf']">
-                        <li *ngIf="prop['salsah-gui:guiOrder']">
-                            {{prop['owl:onProperty']['@id']}}
-                        </li>
-                    </span>
+                <mat-toolbar class="resource-class-header" cdkDragHandle>
+                    <mat-toolbar-row>
+                        <h4 mat-card-title>{{resClass['rdfs:label']}}</h4>
+                        <span class="fill-remaining-space"></span>
+                        <button mat-icon-button [matMenuTriggerFor]="resClassMenu">
+                            <mat-icon>more_horiz</mat-icon>
+                        </button>
+                        <mat-menu #resClassMenu="matMenu" xPosition="before">
+                            <button mat-menu-item
+                                (click)="openSourceTypeForm('editSourceType', {iri: resClass['@id'], name: '', label: resClass['rdfs:label']})">Edit</button>
+                            <button mat-menu-item
+                                (click)="deleteSourceType(resClass['@id'], resClass['rdfs:label'])">Delete</button>
+                        </mat-menu>
+                    </mat-toolbar-row>
+                </mat-toolbar>
+                <div class="resource-class-properties">
+                    <ul>
+                        <span *ngFor="let prop of resClass['rdfs:subClassOf']">
+                            <li *ngIf="prop['salsah-gui:guiOrder']">
+                                {{prop['owl:onProperty']['@id']}}
+                            </li>
+                        </span>
 
-                </ul>
+                    </ul>
+                </div>
+
             </div>
         </div>
 

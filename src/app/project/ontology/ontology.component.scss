@@ -47,15 +47,24 @@ $width: 304px;
   @include mat-elevation(2);
   padding: 12px;
   margin: 12px;
-
   background-color: #fff;
 
-  li {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-left: -24px;
-    list-style-position: inside;
+  .resource-class-header {
+    margin: -12px -12px 12px -12px;
+    width: calc(100% + 24px);
+    min-height: 48px !important;
+    height: 48px;
+    cursor: move;
+  }
+
+  .resource-class-properties {
+    li {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-left: -24px;
+      list-style-position: inside;
+    }
   }
 
   &:active {
