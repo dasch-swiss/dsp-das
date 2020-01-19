@@ -1,16 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
-/*
-// TODO: refactor this ugly interface ... name = main iri?! makes no sense
-export interface DialogData {
-    mode: string;       // switch on mode
-    name?: string;      // main iri
-    project?: string;   // second iri or connected iri
-    confirm?: boolean;
-}
-*/
-
 // TODO: replace the interface above with the following
 export interface DialogData {
     mode: string;       // switch mode
@@ -19,7 +9,7 @@ export interface DialogData {
     title?: string;
     subtitle?: string;
     comment?: string;
-    name?: string;      // deprecated; TODO: clean it up everywhere. Use title instead
+    name?: string;
 }
 
 @Component({
@@ -40,7 +30,11 @@ export class DialogComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    replaceTitle(title: string) {
-        this.data.title = title;
+    replaceTitle(heading: { title: string, subtitle?: string }) {
+        this.data.title = heading.title;
+
+        if (heading.subtitle) {
+            this.data.subtitle = heading.subtitle;
+        }
     }
 }

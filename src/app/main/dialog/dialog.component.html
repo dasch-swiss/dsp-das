@@ -177,9 +177,10 @@
 
     <!-- Ontology editor: customize and add source type -->
     <div *ngSwitchCase="'addSourceType'">
-        <app-dialog-header [title]="data.name" [subtitle]="'Customize source type'" (close)="dialogRef.close()">
+        <app-dialog-header [title]="data.title" [subtitle]="data.subtitle" (close)="dialogRef.close()">
         </app-dialog-header>
-        <app-source-type-form [iri]="data.id" [subClassOf]="data.project" (closeDialog)="dialogRef.close()">
+        <app-source-type-form [iri]="data.id" [subClassOf]="data.name" (closeDialog)="dialogRef.close()"
+            (updateParent)="replaceTitle($event)">
         </app-source-type-form>
     </div>
 
