@@ -1,9 +1,0 @@
-<button mat-raised-button color="primary" [matMenuTriggerFor]="beforeMenu">
-    Add source type&nbsp;
-    <mat-icon>add</mat-icon>
-</button>
-<mat-menu #beforeMenu="matMenu" xPosition="before">
-    <button mat-menu-item *ngFor="let type of sourceTypes" (click)="openDialog('addSourceType', type)">
-        {{ type?.label }}
-    </button>
-</mat-menu>

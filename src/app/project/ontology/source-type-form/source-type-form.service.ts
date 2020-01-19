@@ -56,44 +56,44 @@ export class PropertyForm {
 
 // source type data structure
 export class SourceType {
-    label: string;
-    comment: string;
+    // label: string;
+    // comment: string;
     permission: string;
-    subClassOf: string;
-    properties: Property[];
+    // subClassOf: string;
+    // properties: Property[];
 
-    constructor(label: string, comment: string, permission: string, subClassOf: string, properties?: Property[]) {
-        this.label = label;
-        this.comment = comment;
+    constructor(permission: string) {
+        // this.label = label;
+        // this.comment = comment;
         this.permission = permission;
-        this.subClassOf = subClassOf;
-        this.properties = properties;
+        // this.subClassOf = subClassOf;
+        // this.properties = properties;
     }
 }
 
 
 // source type form controls
 export class SourceTypeForm {
-    label = new FormControl();
-    comment = new FormControl();
+    // label = new FormControl();
+    // comment = new FormControl();
     permission = new FormControl();
-    subClassOf = new FormControl();
-    properties = new FormArray([]);
+    // subClassOf = new FormControl();
+    // properties = new FormArray([]);
 
     constructor(sourceType: SourceType) {
 
-        this.label.setValue(sourceType.label);
-        this.label.setValidators([Validators.required]);
+        // this.label.setValue(sourceType.label);
+        // this.label.setValidators([Validators.required]);
 
-        this.comment.setValue(sourceType.comment);
+        // this.comment.setValue(sourceType.comment);
 
-        this.subClassOf.setValue(sourceType.subClassOf);
+        // this.subClassOf.setValue(sourceType.subClassOf);
 
         this.permission.setValue(sourceType.permission);
 
-        if (sourceType.properties) {
-            this.properties.setValue([sourceType.properties]);
-        }
+        // if (sourceType.properties) {
+        //     this.properties.setValue([sourceType.properties]);
+        // }
     }
 }
 
@@ -103,7 +103,7 @@ export class SourceTypeForm {
 export class SourceTypeFormService {
 
     private sourceTypeForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(this._fb.group(
-        new SourceTypeForm(new SourceType('', '', '', ''))
+        new SourceTypeForm(new SourceType(''))
     ));
 
     sourceTypeForm$: Observable<FormGroup> = this.sourceTypeForm.asObservable();
@@ -114,7 +114,7 @@ export class SourceTypeFormService {
     resetProperties() {
 
         const currentSourceType = this._fb.group(
-            new SourceTypeForm(new SourceType('', '', '', ''))
+            new SourceTypeForm(new SourceType(''))
         );
 
         this.sourceTypeForm.next(currentSourceType);

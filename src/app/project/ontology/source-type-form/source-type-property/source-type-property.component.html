@@ -14,7 +14,7 @@
                 {{propertyForm.controls['type'].value.group}}:&nbsp;
                 {{propertyForm.controls['type'].value.label}}
             </mat-select-trigger>
-            <mat-optgroup *ngFor="let type of valueTypes" [label]="type.group">
+            <mat-optgroup *ngFor="let type of propertyTypes" [label]="type.group">
                 <mat-option *ngFor="let ele of type.elements" [value]="ele">
                     <span *ngIf="ele.label === 'Integer' || ele.label === 'Decimal'; else defaultIcons">
                         <mat-icon [svgIcon]="ele.icon"></mat-icon>

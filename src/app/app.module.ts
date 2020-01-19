@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -5,23 +6,25 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KuiActionModule } from '@knora/action';
-import { KuiCoreModule, KuiConfigToken, KnoraApiConfigToken, KnoraApiConnectionToken } from '@knora/core';
+import { KnoraApiConfigToken, KnoraApiConnectionToken, KuiConfigToken, KuiCoreModule } from '@knora/core';
 import { KuiSearchModule } from '@knora/search';
 import { KuiViewerModule } from '@knora/viewer';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-
 import { AppInitService } from './app-init.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DesignQuestionComponent } from './dev/design-question/design-question.component';
+import { FilterPipe } from './dev/filter.pipe';
 import { LoremIpsumComponent } from './dev/lorem-ipsum/lorem-ipsum.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { DialogHeaderComponent } from './main/dialog/dialog-header/dialog-header.component';
 import { DialogComponent } from './main/dialog/dialog.component';
 import { ErrorComponent } from './main/error/error.component';
+import { FooterComponent } from './main/footer/footer.component';
 import { GridComponent } from './main/grid/grid.component';
 import { HeaderComponent } from './main/header/header.component';
+import { HelpComponent } from './main/help/help.component';
 import { LoginComponent } from './main/login/login.component';
 import { MainComponent } from './main/main.component';
 import { SelectLanguageComponent } from './main/select-language/select-language.component';
@@ -34,9 +37,6 @@ import { ListInfoFormComponent } from './project/list/list-info-form/list-info-f
 import { ListItemFormComponent } from './project/list/list-item-form/list-item-form.component';
 import { ListItemComponent } from './project/list/list-item/list-item.component';
 import { ListComponent } from './project/list/list.component';
-import {
-    AddSourceTypeComponent
-} from './project/ontology/add-source-type/add-source-type.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
 import { PropertyItemComponent } from './project/ontology/property-item/property-item.component';
@@ -46,12 +46,8 @@ import { ResourceListComponent } from './project/ontology/resource-list/resource
 import { ResourceTypeComponent } from './project/ontology/resource-type/resource-type.component';
 import { SelectItemComponent } from './project/ontology/select-item/select-item.component';
 import { SelectListComponent } from './project/ontology/select-list/select-list.component';
-import {
-    SourceTypeFormComponent
-} from './project/ontology/source-type-form/source-type-form.component';
-import {
-    SourceTypePropertyComponent
-} from './project/ontology/source-type-form/source-type-property/source-type-property.component';
+import { SourceTypeFormComponent } from './project/ontology/source-type-form/source-type-form.component';
+import { SourceTypePropertyComponent } from './project/ontology/source-type-form/source-type-property/source-type-property.component';
 import { AddGroupComponent } from './project/permission/add-group/add-group.component';
 import { PermissionComponent } from './project/permission/permission.component';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
@@ -75,14 +71,8 @@ import { UserMenuComponent } from './user/user-menu/user-menu.component';
 import { UserComponent } from './user/user.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
-import {
-    AdvancedSearchComponent
-} from './workspace/search/advanced-search/advanced-search.component';
+import { AdvancedSearchComponent } from './workspace/search/advanced-search/advanced-search.component';
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
-import { HelpComponent } from './main/help/help.component';
-import { FooterComponent } from './main/footer/footer.component';
-import { FilterPipe } from './dev/filter.pipe';
-import { CommonModule } from '@angular/common';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -146,7 +136,6 @@ export function initializeApp(appInitService: AppInitService) {
         GroupsListComponent,
         PermissionComponent,
         AddGroupComponent,
-        AddSourceTypeComponent,
         SourceTypeFormComponent,
         SourceTypePropertyComponent,
         OntologyFormComponent,

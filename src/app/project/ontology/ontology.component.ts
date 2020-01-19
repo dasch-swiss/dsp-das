@@ -1,15 +1,14 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, ComponentFactoryResolver, Inject, OnInit, ViewChild, ViewContainerRef, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject } from '@knora/api';
 import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, OntologyService, Session } from '@knora/core';
-
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { AddSourceTypeComponent } from './add-source-type/add-source-type.component';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { DefaultSourceType, SourceTypes } from './default-data/source-types';
+
 
 export interface OntologyInfo {
     id: string;
@@ -62,13 +61,16 @@ export class OntologyComponent implements OnInit {
         }
     };
 
-    sourcetypes = ['Text', 'Image', 'Video'];
+    /**
+     * list of all default source types (sub class of)
+     */
+    sourceTypes: DefaultSourceType[] = SourceTypes.data;
 
     @ViewChild('ontologyEditor', { read: ViewContainerRef, static: false }) ontologyEditor: ViewContainerRef;
 
     // @ViewChild(AddToDirective, { static: false }) addToHost: AddToDirective;
 
-    @ViewChild('addSourceTypeComponent', { static: false }) addSourceType: AddSourceTypeComponent;
+    // @ViewChild('addSourceTypeComponent', { static: false }) addSourceType: AddSourceTypeComponent;
 
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
@@ -259,11 +261,11 @@ export class OntologyComponent implements OnInit {
 
     }
 
-    addResourceType(id: string) {
-        console.log(id);
-        // this.ontologyEditor.nativeElement.insertAdjacentHTML('beforeend', ``);
-        // this.appendComponentToBody(SelectListComponent);
-    }
+    // addResourceType(id: string) {
+    //     console.log(id);
+    //     // this.ontologyEditor.nativeElement.insertAdjacentHTML('beforeend', ``);
+    //     // this.appendComponentToBody(SelectListComponent);
+    // }
 
     // loadComponent() {
     //     const componentFactory = this._componentFactoryResolver.resolveComponentFactory(ResourceTypeComponent);
@@ -288,7 +290,7 @@ export class OntologyComponent implements OnInit {
         return (owlClass['@type'] === 'owl:class');
     }
 
-    openDialog(mode: string, name?: string, iri?: string): void {
+    openOntologyForm(mode: string, name?: string, iri?: string): void {
         const dialogConfig: MatDialogConfig = {
             width: '640px',
             position: {
@@ -305,6 +307,24 @@ export class OntologyComponent implements OnInit {
         dialogRef.afterClosed().subscribe(() => {
             // update the view
             this.initList();
+        });
+    }
+
+    openSourceTypeForm(mode: string, type: DefaultSourceType): void {
+        const dialogConfig: MatDialogConfig = {
+            width: '720px',
+            maxHeight: '90vh',
+            position: {
+                top: '112px'
+            },
+            data: { name: type.name, title: type.label, subtitle: 'Customize source type', mode: mode }
+        };
+
+        const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
+
+        dialogRef.afterClosed().subscribe(result => {
+            // update the view
+            this.resetOntology(this.ontologyIri);
         });
     }
 

@@ -1,8 +1,8 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { KnoraApiConnection } from '@knora/api';
-import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, OntologyService, NewProperty } from '@knora/core';
+import { KnoraApiConnection, StringLiteral } from '@knora/api';
+import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, OntologyService, NewProperty, NewResourceClass } from '@knora/core';
 import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { SourceTypeFormService } from './source-type-form.service';
@@ -37,6 +37,11 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
     /**
+     * update title and subtitle in dialog header (by switching from step 1 (source type) to step 2 (properties))
+     */
+    @Output() updateParent: EventEmitter<{ title: string, subtitle: string }> = new EventEmitter<{ title: string, subtitle: string }>();
+
+    /**
      * current ontology; will get it from cache by key 'currentOntology'
      */
     ontology: any;
@@ -59,16 +64,21 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         statusText: 'You have successfully updated the project data.'
     };
 
+    showSourceTypeForm: boolean = true;
     /**
      * form group, form array (for properties) errors and validation messages
      */
     sourceTypeForm: FormGroup;
 
+    sourceTypeLabels: StringLiteral[] = [];
+    sourceTypeComments: StringLiteral[] = [];
+
     sourceTypeFormSub: Subscription;
 
+    propertiesForm: FormGroup;
     properties: FormArray;
 
-    loadingNewProp: boolean = false;
+    // loadingNewProp: boolean = false;
 
     // form validation status
     formValid: boolean = false;
@@ -107,8 +117,10 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         this.buildForm();
 
         this.sourceTypeForm.statusChanges.subscribe((data) => {
+            console.log(data);
+            console.log(this.sourceTypeLabels);
 
-            this.formValid = this.sourceTypeForm.valid && this.properties.valid;
+            // this.sourceTypeFormValid = this.sourceTypeForm.valid;
         });
 
         this.loading = false;
@@ -123,10 +135,33 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         this._cdr.detectChanges();
     }
 
+    handleData(data: StringLiteral[], type: string) {
+
+        switch (type) {
+            case 'labels':
+                this.sourceTypeLabels = data;
+                break;
+
+            case 'comments':
+                this.sourceTypeComments = data;
+                break;
+        }
+    }
+
+    buildSourceTypeForm() {
+        this.loading = true;
+        this.sourceTypeLabels = [];
+        this.sourceTypeComments = [];
+
+        setTimeout(() => {
+            this.loading = false;
+        });
+    }
+
     buildForm() {
 
         this.loading = true;
-        this.formValid = false;
+        // this.formValid = false;
 
         this._sourceTypeFormService.resetProperties();
 
@@ -137,10 +172,10 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
                 this.properties = this.sourceTypeForm.get('properties') as FormArray;
             });
 
-        this.sourceTypeForm.controls['subClassOf'].setValue(this.subClassOf);
+        // this.sourceTypeForm.controls['subClassOf'].setValue(this.subClassOf);
 
         // load one first property line
-        this.addProperty();
+        // this.addProperty();
 
         this.loading = false;
     }
@@ -168,19 +203,52 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     }
 
     // submit, reset form
-
-    submitData() {
+    submitSourceType() {
         this.loading = true;
 
-        /* stopp creating new resource classes (at the moment)
-        this._ontologyService.addResourceClass(this.ontology, this.sourceTypeForm.value).subscribe(
+        if (!this.sourceTypeComments.length) {
+            this.sourceTypeComments = this.sourceTypeLabels;
+        }
+
+        const data: NewResourceClass = {
+            labels: this.sourceTypeLabels,
+            comments: this.sourceTypeComments,
+            subClassOf: this.subClassOf
+        };
+
+        console.log('submit data for sourceType:', data);
+
+        // first step: send source type data to knora and create source
+        this._ontologyService.addResourceClass(this.ontology, data).subscribe(
             (response: any) => {
                 console.log(response);
+                // go to next step: properties form
+                this.showSourceTypeForm = false;
+                // use response to go further with properties
+                this.updateParent.emit({ title: this.sourceTypeLabels[0].value, subtitle: 'Define the metadata for source type' });
+                this.loading = false;
             },
             (error: ApiServiceError) => {
                 console.error(error);
             }
         );
+    }
+
+    submitProperties() {
+
+        this.loading = true;
+
+        // submit properties (one by one)
+
+        this.loading = false;
+
+    }
+
+    submitData() {
+        this.loading = true;
+
+        /* stopp creating new resource classes (at the moment)
+
         */
 
 
@@ -236,6 +304,16 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     /**
      * Reset the form
      */
+    resetSourceTypeForm(ev: Event) {
+        ev.preventDefault();
+
+        // this.sourceTypeLabels = [];
+        // this.sourceTypeComments = [];
+
+        this.buildSourceTypeForm();
+    }
+
+
     resetForm(ev: Event, sourceType?: any) {
 
         this.buildForm();
