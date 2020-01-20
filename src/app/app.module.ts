@@ -39,13 +39,6 @@ import { ListItemComponent } from './project/list/list-item/list-item.component'
 import { ListComponent } from './project/list/list.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
-import { PropertyItemComponent } from './project/ontology/property-item/property-item.component';
-import { PropertyListComponent } from './project/ontology/property-list/property-list.component';
-import { ResourceItemComponent } from './project/ontology/resource-item/resource-item.component';
-import { ResourceListComponent } from './project/ontology/resource-list/resource-list.component';
-import { ResourceTypeComponent } from './project/ontology/resource-type/resource-type.component';
-import { SelectItemComponent } from './project/ontology/select-item/select-item.component';
-import { SelectListComponent } from './project/ontology/select-list/select-list.component';
 import { SourceTypeFormComponent } from './project/ontology/source-type-form/source-type-form.component';
 import { SourceTypePropertyComponent } from './project/ontology/source-type-form/source-type-property/source-type-property.component';
 import { AddGroupComponent } from './project/permission/add-group/add-group.component';
@@ -95,12 +88,6 @@ export function initializeApp(appInitService: AppInitService) {
         CollaborationComponent,
         AddUserComponent,
         OntologyComponent,
-        PropertyListComponent,
-        PropertyItemComponent,
-        ResourceListComponent,
-        ResourceItemComponent,
-        SelectListComponent,
-        SelectItemComponent,
         UserComponent,
         PasswordFormComponent,
         ProfileComponent,
@@ -117,7 +104,6 @@ export function initializeApp(appInitService: AppInitService) {
         SelectLanguageComponent,
         ProjectsComponent,
         SelectGroupComponent,
-        ResourceTypeComponent,
         DesignQuestionComponent,
         ResultsComponent,
         ResourceComponent,
@@ -170,7 +156,7 @@ export function initializeApp(appInitService: AppInitService) {
             }
         })
     ],
-    entryComponents: [DialogComponent, ResourceTypeComponent],
+    entryComponents: [DialogComponent],
     providers: [
         AppInitService,
         {
