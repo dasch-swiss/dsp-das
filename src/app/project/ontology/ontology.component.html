@@ -21,7 +21,7 @@
                 <span class="fill-remaining-space"></span>
 
                 <span class="app-toolbar-action" [class.select-form]="ontologies.length">
-                    <form [formGroup]="ontologyForm" class="form" *ngIf="!loading">
+                    <form [formGroup]="ontologyForm" class="form" *ngIf="!loading && ontologies.length > 1">
 
                         <!-- list to select ontology -->
                         <div class="form-content">
