@@ -6,102 +6,117 @@
     <kui-message *ngIf="success" [message]="successMessage" [short]="true" (click)="closeMessage()"></kui-message>
 
     <!-- content: Step 1 = define resource type -->
-    <form *ngIf="!loading && showSourceTypeForm" [formGroup]="sourceTypeForm" class="form-content source-type-data"
-        (ngSubmit)="submitSourceType()">
+    <form [formGroup]="sourceTypeForm" class="form-content" (ngSubmit)="submitData()">
+        <div *ngIf="!loading && showSourceTypeForm" class="source-type-data">
 
-        <!-- label -->
-        <!-- <mat-form-field class="large-field hidden">
+            <!-- label -->
+            <!-- <mat-form-field class="large-field hidden">
             <input matInput placeholder="Subclass of *" formControlName="subClassOf" [value]="subClassOf" readonly>
         </mat-form-field> -->
 
-        <div class="medium-field string-literal-container">
-            <kui-string-literal-input [placeholder]="'Label *'" [value]="sourceTypeLabels"
-                (dataChanged)="handleData($event, 'labels')">
-            </kui-string-literal-input>
-            <mat-hint class="string-literal-error" *ngIf="formErrors.label">
-                {{ formErrors.label }}
-            </mat-hint>
-        </div>
+            <div class="medium-field string-literal-container">
+                <kui-string-literal-input [placeholder]="'Label *'" [value]="sourceTypeLabels"
+                    (dataChanged)="handleData($event, 'labels')">
+                </kui-string-literal-input>
+                <mat-hint class="string-literal-error" *ngIf="formErrors.label">
+                    {{ formErrors.label }}
+                </mat-hint>
+            </div>
 
-        <!-- <mat-form-field class="medium-field">
+            <!-- <mat-form-field class="medium-field">
             <input matInput placeholder="Label *" formControlName="label">
             <mat-hint *ngIf="formErrors.label">
                 {{ formErrors.label }}
             </mat-hint>
         </mat-form-field> -->
 
-        <!-- TODO: add permissions of source type -->
-        <mat-form-field class="small-field">
-            <mat-label>Permissions (NYI!)</mat-label>
-            <mat-select formControlName="permission">
-                <mat-option [value]="1">All</mat-option>
-                <mat-option [value]="2">Project</mat-option>
-                <mat-option [value]="3">User</mat-option>
-            </mat-select>
-        </mat-form-field>
+            <!-- TODO: add permissions of source type -->
+            <mat-form-field class="small-field">
+                <mat-label>Permissions (NYI!)</mat-label>
+                <mat-select formControlName="permission">
+                    <mat-option [value]="1">All</mat-option>
+                    <mat-option [value]="2">Project</mat-option>
+                    <mat-option [value]="3">User</mat-option>
+                </mat-select>
+            </mat-form-field>
 
-        <br>
-        <!-- description -->
-        <div class="large-field string-literal-container">
-            <kui-string-literal-input [placeholder]="'Description'" [value]="sourceTypeComments" [textarea]="true"
-                (dataChanged)="handleData($event, 'comments')"></kui-string-literal-input>
-        </div>
+            <br>
+            <!-- description -->
+            <div class="large-field string-literal-container">
+                <kui-string-literal-input [placeholder]="'Description'" [value]="sourceTypeComments" [textarea]="true"
+                    (dataChanged)="handleData($event, 'comments')"></kui-string-literal-input>
+            </div>
 
-        <!-- <mat-form-field class="large-field">
+            <!-- <mat-form-field class="large-field">
             <textarea matInput placeholder="Description" formControlName="comment" rows="4"></textarea>
         </mat-form-field> -->
 
-        <!-- action buttons -->
-        <div class="form-panel form-action">
-            <span>
-                <button mat-button type="reset" (click)="resetSourceTypeForm($event)">
-                    {{ 'appLabels.form.action.reset' | translate }}
-                </button>
-            </span>
-            <span class="fill-remaining-space"></span>
-            <span>
-                <button mat-raised-button type="submit" color="primary" [disabled]="!sourceTypeLabels.length">
-                    Next
-                </button>
-            </span>
+            <!-- action buttons -->
+            <div class="form-panel form-action">
+                <span>
+                    <button mat-button type="button" (click)="closeMessage()">
+                        {{ 'appLabels.form.action.cancel' | translate }}
+                    </button>
+                </span>
+                <span class="fill-remaining-space"></span>
+                <span>
+                    <button mat-raised-button type="button" color="primary" [disabled]="!sourceTypeLabels.length"
+                        (click)="nextStep()">
+                        Next
+                    </button>
+                </span>
+            </div>
         </div>
-    </form>
 
-    <!-- content: Step 2 = define properties for resource type -->
-    <form *ngIf="!loading && !showSourceTypeForm" [formGroup]="sourceTypeFormSub" class="form-content properties-form"
-        (ngSubmit)="submitProperties()">
 
-        <h3 class="mat-body subtitle">Define the metadata for this source type</h3>
+        <!-- content: Step 2 = define properties for resource type -->
+        <div *ngIf="!loading && !showSourceTypeForm" class="properties-form">
 
-        <!-- TODO: properties -->
-        <!-- one line, with "add" icon to add additional properties -->
-        <div cdkDropList class="properties-list" (cdkDropListDropped)="drop($event)">
-            <div cdkDrag class="property-line"
-                *ngFor="let prop of properties?.controls; let last = last; let i = index;">
+            <!-- TODO: properties -->
+            <!-- one line, with "add" icon to add additional properties -->
+            <div cdkDropList class="properties-list" (cdkDropListDropped)="drop($event)">
+                <div cdkDrag class="property-line"
+                    *ngFor="let prop of properties?.controls; let last = last; let i = index;">
 
-                <div class="drag-n-drop-placeholder" *cdkDragPlaceholder></div>
+                    <div class="drag-n-drop-placeholder" *cdkDragPlaceholder></div>
 
-                <button *ngIf="properties.length > 1" cdkDragHandle mat-icon-button type="button"
-                    aria-label="Change order of properties" class="prefix drag-n-drop-line">
-                    <mat-icon>drag_indicator</mat-icon>
-                </button>
+                    <button *ngIf="properties.length > 1" cdkDragHandle mat-icon-button type="button"
+                        aria-label="Change order of properties" class="prefix drag-n-drop-line">
+                        <mat-icon>drag_indicator</mat-icon>
+                    </button>
 
-                <app-source-type-property [propertyForm]="prop" [index]="i">
-                </app-source-type-property>
+                    <app-source-type-property [propertyForm]="prop" [index]="i">
+                    </app-source-type-property>
 
-                <button *ngIf="properties.length > 1" mat-icon-button type="button" color="warn"
-                    aria-label="Delete this property" class="suffix delete-line" (click)="removeProperty(i)">
-                    <mat-icon>delete_outlined</mat-icon>
-                </button>
-                <button *ngIf="last" [disabled]="!properties.valid" mat-icon-button type="button" color="primary"
-                    aria-label="Add new property" class="add-new-line" (click)="addProperty()">
-                    <mat-icon>add</mat-icon>
-                </button>
+                    <button *ngIf="properties.length > 1" mat-icon-button type="button" color="warn"
+                        aria-label="Delete this property" class="suffix delete-line" (click)="removeProperty(i)">
+                        <mat-icon>delete_outlined</mat-icon>
+                    </button>
+                    <button *ngIf="last" [disabled]="!properties.valid" mat-icon-button type="button" color="primary"
+                        aria-label="Add new property" class="add-new-line" (click)="addProperty()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+
+            </div>
+            <!-- action buttons -->
+            <div class="form-panel form-action">
+                <span>
+                    <button mat-button type="button" (click)="prevStep($event)">
+                        {{ 'appLabels.form.action.back' | translate }}
+                    </button>
+                </span>
+                <span class="fill-remaining-space"></span>
+                <span>
+                    <button mat-raised-button type="submit" color="primary" [disabled]="!formValid"
+                        (click)="submitData()">
+                        Submit
+                    </button>
+                </span>
             </div>
 
         </div>
     </form>
-
 
 </div>
 

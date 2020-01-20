@@ -60,14 +60,14 @@ export class SourceType {
     // comment: string;
     permission: string;
     // subClassOf: string;
-    // properties: Property[];
+    properties: Property[];
 
-    constructor(permission: string) {
+    constructor(permission: string, properties?: Property[]) {
         // this.label = label;
         // this.comment = comment;
         this.permission = permission;
         // this.subClassOf = subClassOf;
-        // this.properties = properties;
+        this.properties = properties;
     }
 }
 
@@ -78,7 +78,7 @@ export class SourceTypeForm {
     // comment = new FormControl();
     permission = new FormControl();
     // subClassOf = new FormControl();
-    // properties = new FormArray([]);
+    properties = new FormArray([]);
 
     constructor(sourceType: SourceType) {
 
@@ -91,9 +91,9 @@ export class SourceTypeForm {
 
         this.permission.setValue(sourceType.permission);
 
-        // if (sourceType.properties) {
-        //     this.properties.setValue([sourceType.properties]);
-        // }
+        if (sourceType.properties) {
+            this.properties.setValue([sourceType.properties]);
+        }
     }
 }
 
@@ -123,6 +123,8 @@ export class SourceTypeFormService {
     addProperty() {
         const currentSourceType = this.sourceTypeForm.getValue();
         const currentProperties = currentSourceType.get('properties') as FormArray;
+
+        console.log('currentProperties', currentProperties);
 
         currentProperties.push(
             this._fb.group(

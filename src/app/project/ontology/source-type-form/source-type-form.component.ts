@@ -31,6 +31,9 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
      */
     @Input() subClassOf: string;
 
+    @Input() name: string;
+    representation: string;
+
     /**
      * emit event, when closing dialog
      */
@@ -98,11 +101,13 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         private _ontologyService: OntologyService,
         private _cache: CacheService,
         private _cdr: ChangeDetectorRef,
-        private _fb: FormBuilder,
         private _sourceTypeFormService: SourceTypeFormService
     ) { }
 
     ngOnInit() {
+
+        // set file representation or default resource type as title
+        this.representation = this.name;
 
         this._cache.get('currentOntology').subscribe(
             (response: ApiServiceResult) => {
@@ -117,13 +122,14 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         this.buildForm();
 
         this.sourceTypeForm.statusChanges.subscribe((data) => {
-            console.log(data);
-            console.log(this.sourceTypeLabels);
 
-            // this.sourceTypeFormValid = this.sourceTypeForm.valid;
+            this.formValid = this.sourceTypeForm.valid && this.properties.valid;
+
         });
 
         this.loading = false;
+
+        this._cdr.detectChanges();
 
     }
 
@@ -161,7 +167,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     buildForm() {
 
         this.loading = true;
-        // this.formValid = false;
+        this.formValid = false;
 
         this._sourceTypeFormService.resetProperties();
 
@@ -174,10 +180,8 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
         // this.sourceTypeForm.controls['subClassOf'].setValue(this.subClassOf);
 
-        // load one first property line
-        // this.addProperty();
-
         this.loading = false;
+
     }
 
     addProperty() {
@@ -187,6 +191,11 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
     removeProperty(index: number) {
         this._sourceTypeFormService.removeProperty(index);
+    }
+
+    resetProperties() {
+        this._sourceTypeFormService.resetProperties();
+        this.addProperty();
     }
 
     handlePropertyData(data: any) {
@@ -203,35 +212,27 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     }
 
     // submit, reset form
-    submitSourceType() {
+    prevStep() {
         this.loading = true;
+        this.updateParent.emit({ title: this.representation, subtitle: 'Customize source type' });
+        this.showSourceTypeForm = true;
+        this.loading = false;
+    }
 
-        if (!this.sourceTypeComments.length) {
-            this.sourceTypeComments = this.sourceTypeLabels;
+    nextStep() {
+        this.loading = true;
+        // go to next step: properties form
+        this.showSourceTypeForm = false;
+
+        // use response to go further with properties
+        this.updateParent.emit({ title: this.sourceTypeLabels[0].value, subtitle: 'Define the metadata for source type' });
+
+        // load one first property line
+        if (!this.sourceTypeForm.value.properties.length) {
+            this.addProperty();
         }
 
-        const data: NewResourceClass = {
-            labels: this.sourceTypeLabels,
-            comments: this.sourceTypeComments,
-            subClassOf: this.subClassOf
-        };
-
-        console.log('submit data for sourceType:', data);
-
-        // first step: send source type data to knora and create source
-        this._ontologyService.addResourceClass(this.ontology, data).subscribe(
-            (response: any) => {
-                console.log(response);
-                // go to next step: properties form
-                this.showSourceTypeForm = false;
-                // use response to go further with properties
-                this.updateParent.emit({ title: this.sourceTypeLabels[0].value, subtitle: 'Define the metadata for source type' });
-                this.loading = false;
-            },
-            (error: ApiServiceError) => {
-                console.error(error);
-            }
-        );
+        this.loading = false;
     }
 
     submitProperties() {
@@ -247,9 +248,29 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     submitData() {
         this.loading = true;
 
-        /* stopp creating new resource classes (at the moment)
 
-        */
+        // first step: get data from first form: source type
+
+        if (!this.sourceTypeComments.length) {
+            this.sourceTypeComments = this.sourceTypeLabels;
+        }
+
+        const data: NewResourceClass = {
+            labels: this.sourceTypeLabels,
+            comments: this.sourceTypeComments,
+            subClassOf: this.subClassOf
+        };
+
+        // submit source type data to knora and create source type incl. cardinality
+        console.log('submit source type data:', data);
+        this._ontologyService.addResourceClass(this.ontology, data).subscribe(
+            (response: any) => {
+                console.log(response);
+            },
+            (error: ApiServiceError) => {
+                console.error(error);
+            }
+        );
 
 
         // TODO: build props
