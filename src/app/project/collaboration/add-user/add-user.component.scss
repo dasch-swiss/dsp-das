@@ -1,15 +1,33 @@
 @import "../../../../assets/style/responsive";
 
-.form-content {
-  display: contents;
+// .form-content {
+//   display: contents;
 
-  .select-user {
-    margin: 0 24px 0 0;
-  }
-}
+//   .select-user {
+//     margin: 0 24px 0 0;
+//   }
+// }
+
+// .app-toolbar-action {
+//   margin-top: -18px;
+// }
 
 .app-toolbar-action {
-  margin-top: -18px;
+  &.select-form {
+    margin-top: -18px;
+  }
+
+  .form-content {
+    display: contents;
+
+    .select-user {
+      margin: 0 24px 0 0;
+    }
+  }
+
+  .create-user-btn {
+    margin: 0 0 16px;
+  }
 }
 
 // phone devices

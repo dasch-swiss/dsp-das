@@ -6,12 +6,14 @@
         <h3 class="mat-body subtitle">Increase your team</h3>
     </div>
     <div class="app-toolbar-row toolbar-form">
-        <h2 class="mat-title">{{"appLabels.form.user.title.add2project" | translate}}</h2>
+        <h2 class="mat-title">
+            {{"appLabels.form.user.title.add2project" | translate}}
+        </h2>
+
         <span class="fill-remaining-space"></span>
 
-        <span class="app-toolbar-action">
+        <span class="app-toolbar-action select-form">
             <form [formGroup]="selectUserForm" class="form" *ngIf="!loading">
-
 
                 <!-- auto complete list to select user -->
                 <div class="form-content">
@@ -38,17 +40,31 @@
 
                     </mat-form-field>
 
-                    <button mat-stroked-button [disabled]="!selectUserForm.valid" class="add-new"
-                        (click)="openDialog('createUser')">Or create new one</button>
+                    <!-- <button mat-raised-button color="primary" [disabled]="!selectUserForm.valid" class="add-new"
+                        (click)="openDialog('createUser')">New user</button>
                     <button mat-button [disabled]="!selectUserForm.valid" class="add-new-mobile"
                         (click)="openDialog('createUser')">
                         <mat-icon>add_circle_outline</mat-icon>
-                    </button>
+                    </button> -->
 
                 </div>
 
             </form>
         </span>
+
+        <span class="fill-remaining-space"></span>
+
+        <span class="app-toolbar-action select-form">
+            <button mat-raised-button color="primary" [disabled]="!selectUserForm.valid" class="add-new create-user-btn"
+                (click)="openDialog('createUser')">New
+                user</button>
+            <button mat-button [disabled]="!selectUserForm.valid" class="add-new-mobile create-user-btn"
+                (click)="openDialog('createUser')">
+                <mat-icon>add_circle_outline</mat-icon>
+            </button>
+        </span>
+
+
 
     </div>
 </div>
