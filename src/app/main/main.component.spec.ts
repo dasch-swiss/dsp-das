@@ -1,4 +1,3 @@
-import { inject } from '@angular/core/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -7,8 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KuiActionModule } from '@knora/action';
-import { KnoraApiConfig, KnoraApiConnection, ApiResponseData, ProjectsResponse, Project, StringLiteral, ReadProject } from '@knora/api';
+import { KnoraApiConnection } from '@knora/api';
 import { KnoraApiConfigToken, KnoraApiConnectionToken } from '@knora/core';
+import { TestConfig } from 'test.config';
 import { AppInitService } from '../app-init.service';
 import { FooterComponent } from './footer/footer.component';
 import { GridComponent } from './grid/grid.component';
@@ -18,9 +18,6 @@ describe('MainComponent', () => {
     let component: MainComponent;
     let fixture: ComponentFixture<MainComponent>;
     let element: HTMLElement;
-
-    const config = new KnoraApiConfig('http', '0.0.0.0', 3333);
-    const knoraApiConnection = new KnoraApiConnection(config);
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -38,11 +35,11 @@ describe('MainComponent', () => {
                 AppInitService,
                 {
                     provide: KnoraApiConfigToken,
-                    useValue: config
+                    useValue: TestConfig.ApiConfig
                 },
                 {
                     provide: KnoraApiConnectionToken,
-                    useValue: knoraApiConnection
+                    useValue: new KnoraApiConnection(TestConfig.ApiConfig)
                 }
             ]
         }).compileComponents();
