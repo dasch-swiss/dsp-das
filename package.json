@@ -1,6 +1,6 @@
 {
   "name": "knora-app",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/dasch-swiss/knora-app.git"
@@ -12,13 +12,15 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build-prod": "ng build --prod --build-optimizer",
+    "build-prod": "ng build --prod=true --buildOptimizer=true --progress=true",
     "test-ci": "ng test --watch=false --browsers=ChromeHeadless",
     "yalc-add-modules": "rm -rf .yalc/@knora && yalc add @knora/api && yalc add @knora/action && yalc add @knora/core && yalc add @knora/search && yalc add @knora/viewer && yarn install --prod=false",
     "compile:server": "webpack --config webpack.server.config.js --progress --colors",
     "serve:ssr": "node dist/server",
     "build:ssr": "npm run build:client-and-server-bundles && npm run compile:server",
-    "build:client-and-server-bundles": "ng build --prod && ng run knora-app:server:production --bundleDependencies all"
+    "build:client-and-server-bundles": "ng build --prod && ng run knora-app:server:production --bundleDependencies all",
+    "test-e2e-protractor": "ng e2e --prod=true --protractor-config=./e2e/protractor-ci.conf.js --webdriver-update=false",
+    "webdriver-update": "webdriver-manager update --standalone false --gecko false --versions.chrome 2.37"
   },
   "private": true,
   "dependencies": {
