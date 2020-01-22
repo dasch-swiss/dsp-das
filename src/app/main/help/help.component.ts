@@ -58,7 +58,7 @@ export class HelpComponent implements OnInit {
         {
             title: 'Knora v',
             text: 'Framework to store, share, and work with primary sources in the humanities.',
-            url: 'https://github.com/dasch-swiss/Knora/releases/tag/v',
+            url: 'https://github.com/dasch-swiss/knora-api/releases/tag/v',
             urlText: 'Release notes'
         },
         {
