@@ -18,16 +18,17 @@ import { SourceTypeFormService } from './source-type-form.service';
 export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     /**
-     * selected resource class is a subclass from knora base (baseClassIri) e.g. knora-api:StillImageRepresentation
+     * selected resource class is a subclass from knora base (baseClassIri)
+     * e.g. knora-api:StillImageRepresentation
      */
     @Input() subClassOf: string;
 
     /**
      * name of resource class e.g. Still image
-     * this will be used to update source type form title
+     * this will be used to update title of source type form
      */
     @Input() name: string;
-    // store name as sourceTypeName on init; in this case it can be overwritten in the next / prev navigation
+    // store name as sourceTypeName on init; in this case it can't be overwritten in the next / prev navigation
     sourceTypeName: string;
 
     /**
@@ -40,56 +41,53 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
      */
     @Output() updateParent: EventEmitter<{ title: string, subtitle: string }> = new EventEmitter<{ title: string, subtitle: string }>();
 
-    /**
-     * current ontology; will get it from cache by key 'currentOntology'
-     */
+    // current ontology; will get it from cache by key 'currentOntology'; type: Json-LD
     ontology: any;
 
-    /**
-     * reference to the component controlling the property selection
-     */
+    // reference to the component controlling the property selection
     // @ViewChildren('property') propertyComponents: QueryList<SourceTypePropertyComponent>;
 
-    /**
-     * success of sending data
-     */
+    // success of sending data
     success = false;
 
-    /**
-     * message after successful post
-     */
+    // message after successful post
     successMessage: any = {
         status: 200,
-        statusText: 'You have successfully updated the project data.'
+        statusText: 'You have successfully updated the source type and all properties'
     };
 
+    // progress
     loading: boolean = true;
 
+    // in case of an error, show message
     errorMessage: any;
 
+    // two step form: which should be active?
     showSourceTypeForm: boolean = true;
-    /**
-     * form group, form array (for properties) errors and validation messages
-     */
+
+    // form group, form array (for properties) errors and validation messages
     sourceTypeForm: FormGroup;
 
+    // label and comment are stringLiterals
     sourceTypeLabels: StringLiteral[] = [];
     sourceTypeComments: StringLiteral[] = [];
 
+    // sub / second form of source type: properties form
     sourceTypeFormSub: Subscription;
 
-    propertiesForm: FormGroup;
+    // container for properties
     properties: FormArray;
-
-    // loadingNewProp: boolean = false;
 
     // form validation status
     formValid: boolean = false;
 
+    // form errors on the following fields:
+    // label is required
     formErrors = {
         'label': ''
     };
 
+    // in cas of form error: show message
     validationMessages = {
         'label': {
             'required': 'Label is required.'
