@@ -185,8 +185,8 @@
     <div *ngSwitchCase="'addSourceType'">
         <app-dialog-header [title]="data.title" [subtitle]="data.subtitle" (close)="dialogRef.close()">
         </app-dialog-header>
-        <app-source-type-form [iri]="data.id" [subClassOf]="data.name" [name]="data.title"
-            (closeDialog)="dialogRef.close()" (updateParent)="replaceTitle($event)">
+        <app-source-type-form [subClassOf]="data.name" [name]="data.title" (closeDialog)="dialogRef.close()"
+            (updateParent)="replaceTitle($event)">
         </app-source-type-form>
     </div>
 

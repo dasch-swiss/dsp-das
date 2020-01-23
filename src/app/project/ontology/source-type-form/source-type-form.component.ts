@@ -17,22 +17,18 @@ import { SourceTypeFormService } from './source-type-form.service';
 })
 export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-    loading: boolean = true;
-
-    errorMessage: any;
-
     /**
-     * default, base source type iri
-     */
-    @Input() iri: string;
-
-    /**
-     * selected resource class is a subclass from knora base
+     * selected resource class is a subclass from knora base (baseClassIri) e.g. knora-api:StillImageRepresentation
      */
     @Input() subClassOf: string;
 
+    /**
+     * name of resource class e.g. Still image
+     * this will be used to update source type form title
+     */
     @Input() name: string;
-    representation: string;
+    // store name as sourceTypeName on init; in this case it can be overwritten in the next / prev navigation
+    sourceTypeName: string;
 
     /**
      * emit event, when closing dialog
@@ -66,6 +62,10 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         status: 200,
         statusText: 'You have successfully updated the project data.'
     };
+
+    loading: boolean = true;
+
+    errorMessage: any;
 
     showSourceTypeForm: boolean = true;
     /**
@@ -106,8 +106,10 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
     ngOnInit() {
 
+        console.log('subClassOf', this.subClassOf);
+        console.log('name', this.name);
         // set file representation or default resource type as title
-        this.representation = this.name;
+        this.sourceTypeName = this.name;
 
         this._cache.get('currentOntology').subscribe(
             (response: ApiServiceResult) => {
@@ -141,29 +143,15 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         this._cdr.detectChanges();
     }
 
-    handleData(data: StringLiteral[], type: string) {
 
-        switch (type) {
-            case 'labels':
-                this.sourceTypeLabels = data;
-                break;
 
-            case 'comments':
-                this.sourceTypeComments = data;
-                break;
-        }
-    }
 
-    buildSourceTypeForm() {
-        this.loading = true;
-        this.sourceTypeLabels = [];
-        this.sourceTypeComments = [];
+    //
+    // form handling:
 
-        setTimeout(() => {
-            this.loading = false;
-        });
-    }
-
+    /**
+     * build form
+     */
     buildForm() {
 
         this.loading = true;
@@ -183,25 +171,29 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         this.loading = false;
 
     }
-
+    /**
+     * add property line
+     */
     addProperty() {
         this._sourceTypeFormService.addProperty();
         this.formValid = !this.properties.valid;
     }
-
+    /**
+     * delete property line
+     */
     removeProperty(index: number) {
         this._sourceTypeFormService.removeProperty(index);
     }
-
+    /**
+     * reset properties
+     */
     resetProperties() {
         this._sourceTypeFormService.resetProperties();
         this.addProperty();
     }
-
-    handlePropertyData(data: any) {
-        console.log(data);
-    }
-
+    /**
+     * drag and drop property line
+     */
     drop(event: CdkDragDrop<string[]>) {
 
         // set sort order for child component
@@ -210,15 +202,30 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         // set sort order in form value
         moveItemInArray(this.sourceTypeForm.value.properties, event.previousIndex, event.currentIndex);
     }
+    /**
+     * set stringLiterals for label or comment from kui-string-literal-input
+     * @param  {StringLiteral[]} data
+     * @param  {string} type
+     */
+    handleData(data: StringLiteral[], type: string) {
 
-    // submit, reset form
-    prevStep() {
-        this.loading = true;
-        this.updateParent.emit({ title: this.representation, subtitle: 'Customize source type' });
-        this.showSourceTypeForm = true;
-        this.loading = false;
+        switch (type) {
+            case 'labels':
+                this.sourceTypeLabels = data;
+                break;
+
+            case 'comments':
+                this.sourceTypeComments = data;
+                break;
+        }
     }
 
+    //
+    // form navigation:
+
+    /**
+     * Go to next step: from resource-class form forward to properties form
+     */
     nextStep() {
         this.loading = true;
         // go to next step: properties form
@@ -234,20 +241,47 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
         this.loading = false;
     }
-
-    submitProperties() {
-
+    /**
+     * Go to previous step: from properties form back to resource-class form
+     */
+    prevStep() {
         this.loading = true;
-
-        // submit properties (one by one)
-
+        this.updateParent.emit({ title: this.sourceTypeName, subtitle: 'Customize source type' });
+        this.showSourceTypeForm = true;
         this.loading = false;
-
     }
 
+    //
+    // submit
+
+    /**
+     * Submit data to create resource class with properties and cardinalities
+     */
     submitData() {
         this.loading = true;
 
+        // fix variables:
+
+        // - ontologyIri
+
+
+        // - ontologyLastModificationDate
+
+        // - classIri
+
+        // - baseClassIri
+
+        // for each property:
+        // - propertyIri
+        // - basePropertyIri
+        // - cardinality
+        // - subjectType    --> subclass of knora-api:Resource e.g. images:bild || images:person
+        // - objectType     --> literal datatype: e.g. xsd:string || knora-api:Date
+
+        // from salsah-gui-ontology
+        // - guiElementIri
+        // - guiAttribute
+        // - guiOrder
 
         // first step: get data from first form: source type
 
@@ -263,14 +297,14 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
         // submit source type data to knora and create source type incl. cardinality
         console.log('submit source type data:', data);
-        this._ontologyService.addResourceClass(this.ontology, data).subscribe(
-            (response: any) => {
-                console.log(response);
-            },
-            (error: ApiServiceError) => {
-                console.error(error);
-            }
-        );
+        // this._ontologyService.addResourceClass(this.ontology, data).subscribe(
+        //     (response: any) => {
+        //         console.log(response);
+        //     },
+        //     (error: ApiServiceError) => {
+        //         console.error(error);
+        //     }
+        // );
 
 
         // TODO: build props
@@ -306,7 +340,12 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         // close the dialog box
         this.closeMessage();
     }
-
+    /**
+     * Convert cardinality values (multiple? & required?) from form to string 1-0, 0-n, 1, 0-1
+     * @param  {boolean} multiple
+     * @param  {boolean} required
+     * @returns string
+     */
     setCardinality(multiple: boolean, required: boolean): string {
         // result should be:
         // "1", "0-1", "1-n", "0-n"
@@ -321,26 +360,9 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         }
     }
 
-
     /**
-     * Reset the form
+     * Close dialog box and reset all forms
      */
-    resetSourceTypeForm(ev: Event) {
-        ev.preventDefault();
-
-        // this.sourceTypeLabels = [];
-        // this.sourceTypeComments = [];
-
-        this.buildSourceTypeForm();
-    }
-
-
-    resetForm(ev: Event, sourceType?: any) {
-
-        this.buildForm();
-
-    }
-
     closeMessage() {
         this.sourceTypeForm.reset();
         this.sourceTypeFormSub.unsubscribe();
