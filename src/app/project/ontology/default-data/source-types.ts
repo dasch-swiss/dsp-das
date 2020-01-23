@@ -11,6 +11,11 @@ export class SourceTypes {
 
     public static data: DefaultSourceType[] = [
         {
+            iri: Constants.Resource,
+            name: 'knora-api:Resource',
+            label: 'Object without file representation (metadata only)'
+        },
+        {
             iri: Constants.StillImageFileValue,
             name: 'knora-api:StillImageRepresentation',
             label: 'Still Image'
@@ -26,24 +31,19 @@ export class SourceTypes {
             label: 'Audio'
         },
         {
-            iri: Constants.DDDFileValue,
-            name: 'knora-api:DDDRepresentation',
-            label: 'RTI Image'
-        },
-        {
             iri: Constants.TextFileValue,
             name: 'knora-api:TextRepresentation',
             label: 'Text'
         },
         {
-            iri: Constants.Resource,
-            name: 'knora-api:Resource',
-            label: 'Object without file representation (metadata only)'
-        },
-        {
             iri: Constants.DocumentFileValue,
             name: 'knora-api:DocumentRepresentation',
             label: 'Document (Word, PDF, etc.)'
+        },
+        {
+            iri: Constants.DDDFileValue,
+            name: 'knora-api:DDDRepresentation',
+            label: 'RTI Image'
         }
     ];
 
