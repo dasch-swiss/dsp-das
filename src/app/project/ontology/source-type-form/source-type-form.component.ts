@@ -100,19 +100,16 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         private _cache: CacheService,
         private _cdr: ChangeDetectorRef,
         private _sourceTypeFormService: SourceTypeFormService
-    ) { }
-
-    ngOnInit() {
-
-        console.log('subClassOf', this.subClassOf);
-        console.log('name', this.name);
+    ) {
         // set file representation or default resource type as title
         this.sourceTypeName = this.name;
+    }
+
+    ngOnInit() {
 
         this._cache.get('currentOntology').subscribe(
             (response: ApiServiceResult) => {
                 this.ontology = response.body;
-                // TODO: how do we get the ontology name?
             },
             (error: any) => {
                 console.error(error);
@@ -122,9 +119,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         this.buildForm();
 
         this.sourceTypeForm.statusChanges.subscribe((data) => {
-
             this.formValid = this.sourceTypeForm.valid && this.properties.valid;
-
         });
 
         this.loading = false;
@@ -140,9 +135,6 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     ngAfterViewChecked() {
         this._cdr.detectChanges();
     }
-
-
-
 
     //
     // form handling:
@@ -236,7 +228,6 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         if (!this.sourceTypeForm.value.properties.length) {
             this.addProperty();
         }
-
         this.loading = false;
     }
     /**
@@ -260,10 +251,9 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
         // fix variables:
 
-        // - ontologyIri
+        // - ontologyIri from this.ontology
 
-
-        // - ontologyLastModificationDate
+        // - ontologyLastModificationDate from this.ontology
 
         // - classIri
 
@@ -271,7 +261,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
         // for each property:
         // - propertyIri
-        // - basePropertyIri
+        // - basePropertyIri --> can be knora-api:hasValue, knora-api:hasLinkTo, or any of their subproperties, with the exception of file properties
         // - cardinality
         // - subjectType    --> subclass of knora-api:Resource e.g. images:bild || images:person
         // - objectType     --> literal datatype: e.g. xsd:string || knora-api:Date
@@ -287,53 +277,68 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
             this.sourceTypeComments = this.sourceTypeLabels;
         }
 
-        const data: NewResourceClass = {
+        // set resource class data
+        const resourceTypeData: NewResourceClass = {
             labels: this.sourceTypeLabels,
             comments: this.sourceTypeComments,
             subClassOf: this.subClassOf
         };
 
-        // submit source type data to knora and create source type incl. cardinality
-        console.log('submit source type data:', data);
-        // this._ontologyService.addResourceClass(this.ontology, data).subscribe(
-        //     (response: any) => {
-        //         console.log(response);
-        //     },
-        //     (error: ApiServiceError) => {
-        //         console.error(error);
-        //     }
-        // );
-
-
+        // set properties data
         // TODO: build props
-        const resourceProperties: NewProperty[] = [];
+        const resourcePropertyData: NewProperty[] = [];
         let i = 0;
         for (const prop of this.sourceTypeForm.value.properties) {
+            console.warn('prop from form:', prop);
             const newProp: NewProperty = {
                 label: prop.label,
                 comment: prop.label,
-                subPropertyOf: prop.type.subClassOf,
+                subPropOf: prop.type.subPropOf,
                 guiElement: prop.type.gui_ele,
                 guiOrder: i,
                 cardinality: this.setCardinality(prop.multiple, prop.requirerd),
                 guiAttributes: []
             };
-
-            resourceProperties.push(newProp);
-
+            resourcePropertyData.push(newProp);
             i++;
         }
 
-        console.log(resourceProperties);
 
-        this._ontologyService.addProperty(this.ontology, resourceProperties).subscribe(
-            (response: any) => {
-                console.log(response);
+
+        // submit source type data to knora and create source type incl. cardinality
+        // console.log('submit source type data:', resourceTypeData);
+
+        this._ontologyService.addResourceClass(this.ontology['@id'], this.ontology['knora-api:lastModificationDate'], resourceTypeData).subscribe(
+            (rtResponse: any) => {
+                console.log(rtResponse);
+
+                // set properties data
+                // TODO: build props
+                // const resourcePropertyData: NewProperty[] = [];
+                i = 0;
+                for (const propData of resourcePropertyData) {
+                    console.warn('prop from form:', propData);
+
+                    // TODO: update rtResponse['@id'] !!! wrong value
+                    this._ontologyService.addProperty(this.ontology['@id'], this.ontology['knora-api:lastModificationDate'], rtResponse['@id'], propData).subscribe(
+                        (rpResponse: any) => {
+                            console.log(rpResponse);
+                        },
+                        (error: ApiServiceError) => {
+                            console.error('failed on addProperty', error);
+                        }
+                    );
+
+                    i++;
+                }
+
+
             },
             (error: ApiServiceError) => {
-                console.error(error);
+                console.error('failed on addResourceClass', error);
             }
         );
+
 
         // close the dialog box
         this.closeMessage();

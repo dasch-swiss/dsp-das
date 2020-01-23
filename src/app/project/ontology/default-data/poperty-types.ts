@@ -7,7 +7,7 @@ export interface DefaultPropertyType {
 export interface DefaultValueType {
     icon: string;
     label: string;
-    subClassOf: string;
+    subPropOf: string;
     gui_ele: string;
     group: string;
 }
@@ -20,22 +20,22 @@ export class PropertyTypes {
                 {
                     icon: 'short_text',
                     label: 'Short',
-                    subClassOf: 'knora-api:TextValue',
-                    gui_ele: 'Input',
+                    subPropOf: 'knora-api:TextValue',
+                    gui_ele: 'salsah-gui:SimpleText',   // 'Input',
                     group: 'Text'       // redundant information, but we don't get the main group name after select type
                 },
                 {
                     icon: 'subject',
                     label: 'Paragraph',
-                    subClassOf: 'knora-api:TextValue',
-                    gui_ele: 'Textarea',
+                    subPropOf: 'knora-api:TextValue',
+                    gui_ele: 'salsah-gui:Textarea',
                     group: 'Text'
                 },
                 {
                     icon: 'line_style',
                     label: 'Editor',
-                    subClassOf: 'knora-api:TextValue/richtext',
-                    gui_ele: 'Richtext',
+                    subPropOf: 'knora-api:TextValue/richtext',
+                    gui_ele: 'salsah-gui:Richtext   ',
                     group: 'Text'
                 }
             ]
@@ -46,29 +46,29 @@ export class PropertyTypes {
                 {
                     icon: 'radio_button_checked',
                     label: 'Multiple choice',
-                    subClassOf: 'knora-api:ListValue',
-                    gui_ele: 'Radio',
+                    subPropOf: 'knora-api:ListValue',
+                    gui_ele: 'salsah-gui:Radio',
                     group: 'List'
                 },
                 {
                     icon: 'check_box',
                     label: 'Checkboxes',
-                    subClassOf: 'knora-api:ListValue',
-                    gui_ele: 'Checkbox',
+                    subPropOf: 'knora-api:ListValue',
+                    gui_ele: 'salsah-gui:Checkbox',
                     group: 'List'
                 },
                 {
                     icon: 'arrow_drop_down_circle',
                     label: 'Dropdown',
-                    subClassOf: 'knora-api:ListValue',
-                    gui_ele: 'Dropdown',
+                    subPropOf: 'knora-api:ListValue',
+                    gui_ele: 'salsah-gui:Pulldown',
                     group: 'List'
                 },
                 {
                     icon: 'toggle_off',
                     label: 'On / Off',
-                    subClassOf: 'knora-api:BooleanValue',
-                    gui_ele: 'Toggle',
+                    subPropOf: 'knora-api:BooleanValue',
+                    gui_ele: 'salsah-gui:Radio',    // 'Toggle',
                     group: 'List'
                 }
             ]
@@ -79,29 +79,29 @@ export class PropertyTypes {
                 {
                     icon: 'calendar_today',
                     label: 'Date',
-                    subClassOf: 'knora-api:DateValue',
-                    gui_ele: 'Datepicker',
+                    subPropOf: 'knora-api:DateValue',
+                    gui_ele: 'salsah-gui:Date',
                     group: 'Date / Time'
                 },
                 {
                     icon: 'date_range',
                     label: 'Period',
-                    subClassOf: 'knora-api:DateValue',
-                    gui_ele: 'Datepicker',
+                    subPropOf: 'knora-api:DateValue',
+                    gui_ele: 'salsah-gui:Date',
                     group: 'Date / Time'
                 },
                 {
                     icon: 'access_time',
                     label: 'Time',
-                    subClassOf: 'knora-api:IntervalValue',
-                    gui_ele: 'Time',
+                    subPropOf: 'knora-api:IntervalValue',
+                    gui_ele: 'salsah-gui:Interval',
                     group: 'Date / Time'
                 },
                 {
                     icon: 'timelapse',
                     label: 'Duration',
-                    subClassOf: 'knora-api:IntervalValue',
-                    gui_ele: 'Number',
+                    subPropOf: 'knora-api:IntervalValue',
+                    gui_ele: 'salsah-gui:Interval',
                     group: 'Date / Time'
                 }
             ]
@@ -112,15 +112,15 @@ export class PropertyTypes {
                 {
                     icon: 'integer_icon',
                     label: 'Integer',
-                    subClassOf: 'knora-api:IntValue',
-                    gui_ele: 'Number',
+                    subPropOf: 'knora-api:IntValue',
+                    gui_ele: 'salsah-gui:Spinbox',  // 'Number',
                     group: 'Number'
                 },
                 {
                     icon: 'decimal_icon',
                     label: 'Decimal',
-                    subClassOf: 'knora-api:DecimalValue',
-                    gui_ele: 'Number',
+                    subPropOf: 'knora-api:DecimalValue',
+                    gui_ele: 'salsah-gui:Spinbox',  // 'Number',
                     group: 'Number'
                 }
             ]
@@ -131,22 +131,22 @@ export class PropertyTypes {
                 {
                     icon: 'link',
                     label: 'Other resource e.g. Person',
-                    subClassOf: 'knora-api:LinkValue',
-                    gui_ele: 'Autocomplete',
+                    subPropOf: 'knora-api:LinkValue',
+                    gui_ele: 'salsah-gui:Searchbox',    // 'Autocomplete',
                     group: 'Link'
                 },
                 {
                     icon: 'compare_arrows',
                     label: 'External resource',
-                    subClassOf: 'knora-api:ExternalResValue',
-                    gui_ele: 'Input',
+                    subPropOf: 'knora-api:ExternalResValue',
+                    gui_ele: 'salsah-gui:SimpleText',
                     group: 'Link'
                 },
                 {
                     icon: 'http',
                     label: 'External URL',
-                    subClassOf: 'knora-api:UriValue',
-                    gui_ele: 'Url',
+                    subPropOf: 'knora-api:UriValue',
+                    gui_ele: 'salsah-gui:SimpleText',
                     group: 'Link'
                 }
             ]
@@ -157,8 +157,8 @@ export class PropertyTypes {
                 {
                     icon: 'place',
                     label: 'Place',
-                    subClassOf: 'knora-api:GeonameValue',
-                    gui_ele: 'Geonames',
+                    subPropOf: 'knora-api:GeonameValue',
+                    gui_ele: 'salsah-gui:Geonames',
                     group: 'Location'
                 }
             ]
@@ -169,8 +169,8 @@ export class PropertyTypes {
                 {
                     icon: 'color_lens',
                     label: 'Color',
-                    subClassOf: 'knora-api:ColorValue',
-                    gui_ele: 'Colorpicker',
+                    subPropOf: 'knora-api:ColorValue',
+                    gui_ele: 'salsah-gui:Colorpicker',
                     group: 'Shape'
                 }
             ]
