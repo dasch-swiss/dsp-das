@@ -66,7 +66,11 @@
 
                 <button mat-stroked-button
                     (click)="$event.stopPropagation(); openOntologyForm('editOntologyInfo', ontology.label, ontology.id)">
-                    Edit info
+                    Edit
+                </button>
+                &nbsp;
+                <button mat-stroked-button (click)="$event.stopPropagation(); deleteOntology(ontologyIri)">
+                    Delete
                 </button>
             </mat-toolbar-row>
         </mat-toolbar>

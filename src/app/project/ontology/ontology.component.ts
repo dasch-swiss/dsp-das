@@ -329,6 +329,61 @@ export class OntologyComponent implements OnInit {
         });
     }
 
+    deleteOntology(id: string) {
+
+        let name: string;
+        let iri: string;
+        let lastModificationDate: string;
+
+        this._cache.get('currentOntology', this._ontologyService.getAllEntityDefinitionsForOntologies(this.ontologyIri)).subscribe(
+            (response: any) => {
+                name = response.body['rdfs:label'];
+                iri = response.body['@id'];
+                lastModificationDate = response.body['knora-api:lastModificationDate'];
+            },
+            (error: any) => {
+                console.error(error);
+            }
+        );
+        const dialogConfig: MatDialogConfig = {
+            width: '560px',
+            position: {
+                top: '112px'
+            },
+            data: { mode: 'deleteOntology', title: name }
+        };
+
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
+        );
+
+        dialogRef.afterClosed().subscribe(answer => {
+            if (answer === true) {
+                // delete ontology and refresh the view
+                this.loading = true;
+                this.ontology = undefined;
+
+                this._ontologyService.deleteOntology(iri, lastModificationDate).subscribe(
+                    (response: any) => {
+                        // get the ontologies for this project
+                        const goto = 'project/' + this.projectcode + '/ontologies/';
+                        this._router.navigateByUrl(goto, { skipLocationChange: true });
+                        this.initList();
+                        this.loading = false;
+                    },
+                    (error: ApiServiceError) => {
+                        // TODO: show message
+                        console.error(error);
+                        this.loading = false;
+                    }
+                );
+
+            }
+        });
+
+    }
+
     deleteSourceType(id: string, name: string) {
 
         let iri: string;
@@ -336,8 +391,8 @@ export class OntologyComponent implements OnInit {
 
         this._cache.get('currentOntology', this._ontologyService.getAllEntityDefinitionsForOntologies(this.ontologyIri)).subscribe(
             (response: any) => {
-                lastModificationDate = response.body['knora-api:lastModificationDate'];
                 iri = response.body['@id'] + '#' + id.split(':')[1];
+                lastModificationDate = response.body['knora-api:lastModificationDate'];
             },
             (error: any) => {
                 console.error(error);
