@@ -100,12 +100,12 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         private _cache: CacheService,
         private _cdr: ChangeDetectorRef,
         private _sourceTypeFormService: SourceTypeFormService
-    ) {
-        // set file representation or default resource type as title
-        this.sourceTypeName = this.name;
-    }
+    ) { }
 
     ngOnInit() {
+
+        // set file representation or default resource type as title
+        this.sourceTypeName = this.name;
 
         this._cache.get('currentOntology').subscribe(
             (response: ApiServiceResult) => {
@@ -320,7 +320,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
                     console.warn('prop from form:', propData);
 
                     // TODO: update rtResponse['@id'] !!! wrong value
-                    this._ontologyService.addProperty(this.ontology['@id'], this.ontology['knora-api:lastModificationDate'], rtResponse['@id'], propData).subscribe(
+                    this._ontologyService.addProperty(this.ontology['@id'], rtResponse['knora-api:lastModificationDate'], rtResponse['@graph'][0]['@id'], propData).subscribe(
                         (rpResponse: any) => {
                             console.log(rpResponse);
                         },
@@ -341,7 +341,10 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
 
         // close the dialog box
-        this.closeMessage();
+        this.loading = false;
+
+        // show message to close dialog box
+        // this.closeMessage();
     }
     /**
      * Convert cardinality values (multiple? & required?) from form to string 1-0, 0-n, 1, 0-1

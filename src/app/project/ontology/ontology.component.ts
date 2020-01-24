@@ -238,7 +238,6 @@ export class OntologyComponent implements OnInit {
                 this.ontologyIri = ontologyResponse.body['@id'];
 
                 // select graphs of type owl:Class ( = resource classes only)
-                const graph: any[] = [];
 
                 // could be used in the json-ld converter
                 // at the moment it's used in filter pipe
@@ -279,6 +278,8 @@ export class OntologyComponent implements OnInit {
 
 
     resetOntology(id: string) {
+        this.loadOntology = true;
+
         this._cache.del('currentOntology');
         this.openOntology(id);
 
@@ -359,13 +360,17 @@ export class OntologyComponent implements OnInit {
         dialogRef.afterClosed().subscribe(answer => {
             if (answer === true) {
                 // delete resource type and refresh the view
+                this.loadOntology = true;
+
                 this._ontologyService.deleteResourceClass(iri, lastModificationDate).subscribe(
                     (response: any) => {
                         this.resetOntology(this.ontologyIri);
+                        this.loadOntology = false;
                     },
                     (error: ApiServiceError) => {
                         // TODO: show message
                         console.error(error);
+                        this.loadOntology = false;
                     }
                 );
 

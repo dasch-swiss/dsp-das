@@ -1,13 +1,13 @@
 <div class="no-shadow" *ngIf="!errorMessage; else errorMsg">
 
-    <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
+    <!-- <kui-progress-indicator *ngIf="loading"></kui-progress-indicator> -->
 
     <!-- success message after updating -->
     <kui-message *ngIf="success" [message]="successMessage" [short]="true" (click)="closeMessage()"></kui-message>
 
     <!-- content: Step 1 = define resource type -->
     <form [formGroup]="sourceTypeForm" class="form-content" (ngSubmit)="submitData()">
-        <div *ngIf="!loading && showSourceTypeForm" class="source-type-data">
+        <div *ngIf="showSourceTypeForm" class="source-type-data">
 
             <!-- label -->
             <!-- <mat-form-field class="large-field hidden">
@@ -70,7 +70,7 @@
 
 
         <!-- content: Step 2 = define properties for resource type -->
-        <div *ngIf="!loading && !showSourceTypeForm" class="properties-form">
+        <div *ngIf="!showSourceTypeForm" class="properties-form">
 
             <!-- TODO: properties -->
             <!-- one line, with "add" icon to add additional properties -->
@@ -110,7 +110,10 @@
                 <span>
                     <button mat-raised-button type="submit" color="primary" [disabled]="!formValid"
                         (click)="submitData()">
-                        Submit
+                        <kui-progress-indicator [color]="'white'" [status]="0" *ngIf="loading" class="login-progress">
+                        </kui-progress-indicator>
+                        <mat-icon *ngIf="errorMessage && !loading">close</mat-icon>
+                        {{errorMessage ? 'Failed' : 'Submit'}}
                     </button>
                 </span>
             </div>
