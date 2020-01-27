@@ -249,6 +249,8 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     submitData() {
         this.loading = true;
 
+        let lastModificationDate: string;
+
         // fix variables:
 
         // - ontologyIri from this.ontology
@@ -272,6 +274,8 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         // - guiOrder
 
         // first step: get data from first form: source type
+
+        lastModificationDate = this.ontology['knora-api:lastModificationDate'];
 
         if (!this.sourceTypeComments.length) {
             this.sourceTypeComments = this.sourceTypeLabels;
@@ -308,21 +312,37 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         // submit source type data to knora and create source type incl. cardinality
         // console.log('submit source type data:', resourceTypeData);
 
-        this._ontologyService.addResourceClass(this.ontology['@id'], this.ontology['knora-api:lastModificationDate'], resourceTypeData).subscribe(
-            (rtResponse: any) => {
-                console.log(rtResponse);
+        this._ontologyService.addResourceClass(this.ontology['@id'], lastModificationDate, resourceTypeData).subscribe(
+            (classResponse: any) => {
+                console.log(classResponse);
 
                 // set properties data
                 // TODO: build props
                 // const resourcePropertyData: NewProperty[] = [];
                 i = 0;
                 for (const propData of resourcePropertyData) {
-                    console.warn('prop from form:', propData);
+                    lastModificationDate = classResponse['knora-api:lastModificationDate'];
 
-                    // TODO: update rtResponse['@id'] !!! wrong value
-                    this._ontologyService.addProperty(this.ontology['@id'], rtResponse['knora-api:lastModificationDate'], rtResponse['@graph'][0]['@id'], propData).subscribe(
-                        (rpResponse: any) => {
-                            console.log(rpResponse);
+                    this._ontologyService.addProperty(this.ontology['@id'], classResponse['knora-api:lastModificationDate'], classResponse['@graph'][0]['@id'], propData).subscribe(
+                        (propertyResponse: any) => {
+                            console.log(propertyResponse);
+
+                            // update class with cardinality and gui-order
+                            this._ontologyService.setPropertyRestriction(
+                                this.ontology['@id'],
+                                lastModificationDate,
+                                classResponse['@graph'][0]['@id'],
+                                propertyResponse['@graph'][0]['@id'],
+                                propData.cardinality,
+                                propData.guiOrder).subscribe(
+                                    (cardinalityResponse: any) => {
+                                        console.log(cardinalityResponse);
+                                        lastModificationDate = cardinalityResponse['knora-api:lastModificationDate'];
+                                    },
+                                    (error: ApiServiceError) => {
+                                        console.error('failed on setPropertyRestriction', error);
+                                    }
+                                )
                         },
                         (error: ApiServiceError) => {
                             console.error('failed on addProperty', error);
