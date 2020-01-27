@@ -52,11 +52,11 @@
     </div>
 
     <!-- main content: overview shows resource classes of ontology -->
-    <div *ngIf="ontology" class="ontology-editor drag-drop-stop">
+    <div *ngIf="!loadOntology" class="ontology-editor drag-drop-stop">
 
         <mat-toolbar>
             <mat-toolbar-row>
-                <h3 class="mat-title" [matTooltip]="ontology.label">{{ontology['rdfs:label']}}</h3>
+                <h3 class="mat-title" [matTooltip]="ontologyIri">{{ontology?.id}}</h3>
 
                 <span class="fill-remaining-space"></span>
                 <!-- <p class="mat-body" [matTooltip]="ontology.comments | kuiStringifyStringLiteral"
@@ -65,17 +65,17 @@
                 <span class="fill-remaining-space"></span>
 
                 <button mat-stroked-button
-                    (click)="$event.stopPropagation(); openOntologyForm('editOntologyInfo', ontology.label, ontology.id)">
+                    (click)="$event.stopPropagation(); openOntologyForm('editOntologyInfo', ontology?.id, ontology?.id)">
                     Edit
                 </button>
                 &nbsp;
-                <button mat-stroked-button (click)="$event.stopPropagation(); deleteOntology(ontologyIri)">
+                <button mat-stroked-button (click)="$event.stopPropagation(); deleteOntology(ontology?.id)">
                     Delete
                 </button>
             </mat-toolbar-row>
         </mat-toolbar>
 
-        <div #ontologyEditor class="ontology-editor-canvas" *ngIf="!loadOntology">
+        <div #ontologyEditor class="ontology-editor-canvas">
             <!-- button to select and add new source type to the ontology -->
             <div class="add-source-type" *ngIf="project?.status && sysAdmin && ontologyIri">
                 <button mat-raised-button color="primary" [matMenuTriggerFor]="addResClassMenu">
@@ -97,28 +97,28 @@
             <!-- list of source types -->
             <!-- <svg width="100%" height="1200" class="mySvg" (click)="clicked($event)"></svg> -->
 
-            <div *ngFor="let resClass of ontology['@graph'] | filter: '@type' : 'owl:Class'; let i = index"
-                class="resource-class" cdkDrag cdkDragBoundary=".drag-drop-stop">
+            <div *ngFor="let resClass of ontology?.classes; let i = index" class="resource-class" cdkDrag
+                cdkDragBoundary=".drag-drop-stop">
                 <mat-toolbar class="resource-class-header" cdkDragHandle>
                     <mat-toolbar-row>
-                        <h4 mat-card-title>{{resClass['rdfs:label']}}</h4>
+                        <h4 mat-card-title>{{resClass.label}}</h4>
                         <span class="fill-remaining-space"></span>
                         <button mat-icon-button [matMenuTriggerFor]="resClassMenu">
                             <mat-icon>more_horiz</mat-icon>
                         </button>
                         <mat-menu #resClassMenu="matMenu" xPosition="before">
                             <button mat-menu-item
-                                (click)="openSourceTypeForm('editSourceType', {iri: resClass['@id'], name: '', label: resClass['rdfs:label']})">Edit</button>
+                                (click)="openSourceTypeForm('editSourceType', {iri: resClass.id, name: '', label: resClass.label})">Edit</button>
                             <button mat-menu-item
-                                (click)="deleteSourceType(resClass['@id'], resClass['rdfs:label'])">Delete</button>
+                                (click)="deleteSourceType(resClass.id, resClass.label)">Delete</button>
                         </mat-menu>
                     </mat-toolbar-row>
                 </mat-toolbar>
                 <div class="resource-class-properties">
                     <ul>
-                        <span *ngFor="let prop of resClass['rdfs:subClassOf']">
-                            <li *ngIf="prop['salsah-gui:guiOrder']">
-                                {{prop['owl:onProperty']['@id']}}
+                        <span *ngFor="let prop of resClass.propertiesList">
+                            <li *ngIf="prop.guiOrder">
+                                {{prop.propertyIndex}}
                             </li>
                         </span>
 
@@ -128,9 +128,8 @@
             </div>
         </div>
 
-        <kui-progress-indicator *ngIf="loadOntology"></kui-progress-indicator>
-
     </div>
+    <kui-progress-indicator *ngIf="loadOntology && !ontology"></kui-progress-indicator>
 
 </div>
 

@@ -122,8 +122,6 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
             this.formValid = this.sourceTypeForm.valid && this.properties.valid;
         });
 
-        this.loading = false;
-
         this._cdr.detectChanges();
 
     }
@@ -144,7 +142,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
      */
     buildForm() {
 
-        this.loading = true;
+        // this.loading = true;
         this.formValid = false;
 
         this._sourceTypeFormService.resetProperties();
@@ -158,7 +156,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
         // this.sourceTypeForm.controls['subClassOf'].setValue(this.subClassOf);
 
-        this.loading = false;
+        // this.loading = false;
 
     }
     /**
@@ -217,7 +215,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
      * Go to next step: from resource-class form forward to properties form
      */
     nextStep() {
-        this.loading = true;
+        // this.loading = true;
         // go to next step: properties form
         this.showSourceTypeForm = false;
 
@@ -228,16 +226,16 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         if (!this.sourceTypeForm.value.properties.length) {
             this.addProperty();
         }
-        this.loading = false;
+        // this.loading = false;
     }
     /**
      * Go to previous step: from properties form back to resource-class form
      */
     prevStep() {
-        this.loading = true;
+        // this.loading = true;
         this.updateParent.emit({ title: this.sourceTypeName, subtitle: 'Customize source type' });
         this.showSourceTypeForm = true;
-        this.loading = false;
+        // this.loading = false;
     }
 
     //
@@ -342,7 +340,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
                                     (error: ApiServiceError) => {
                                         console.error('failed on setPropertyRestriction', error);
                                     }
-                                )
+                                );
                         },
                         (error: ApiServiceError) => {
                             console.error('failed on addProperty', error);
@@ -352,6 +350,8 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
                     i++;
                 }
 
+                // close the dialog box
+                this.loading = false;
 
             },
             (error: ApiServiceError) => {
@@ -360,8 +360,6 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         );
 
 
-        // close the dialog box
-        this.loading = false;
 
         // show message to close dialog box
         // this.closeMessage();

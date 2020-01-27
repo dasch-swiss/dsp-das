@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject } from '@knora/api';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject, ReadOntology } from '@knora/api';
 import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, OntologyService, Session } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
@@ -44,7 +44,7 @@ export class OntologyComponent implements OnInit {
     ontologies: OntologyInfo[];
 
     // ontology JSON-LD object
-    ontology: any;
+    ontology: ReadOntology;
 
     // selected ontology
     ontologyIri: string = undefined;
@@ -90,6 +90,7 @@ export class OntologyComponent implements OnInit {
         // get ontology iri from route
         if (this._route.snapshot && this._route.snapshot.params.id) {
             this.ontologyIri = decodeURIComponent(this._route.snapshot.params.id);
+            console.log('should open', this.ontologyIri);
         }
 
         // set the page title
@@ -230,12 +231,13 @@ export class OntologyComponent implements OnInit {
 
         this.loadOntology = true;
 
-        this._cache.get('currentOntology', this._ontologyService.getAllEntityDefinitionsForOntologies(id));
-        this._cache.get('currentOntology', this._ontologyService.getAllEntityDefinitionsForOntologies(id)).subscribe(
-            (ontologyResponse: any) => {
+        this._cache.get('currentOntology', this.knoraApiConnection.v2.onto.getOntology(id));
+        this._cache.get('currentOntology', this.knoraApiConnection.v2.onto.getOntology(id)).subscribe(
+            (response: ApiResponseData<ReadOntology>) => {
+                console.log(response);
 
-                this.ontology = ontologyResponse.body;
-                this.ontologyIri = ontologyResponse.body['@id'];
+                this.ontology = response.body;
+                // this.ontologyIri = ontologyResponse.body.id;
 
                 // select graphs of type owl:Class ( = resource classes only)
 
@@ -331,15 +333,15 @@ export class OntologyComponent implements OnInit {
 
     deleteOntology(id: string) {
 
-        let name: string;
-        let iri: string;
-        let lastModificationDate: string;
+        console.log('deleteOntology', this.ontology);
+        let ontologyToDelete: ReadOntology;
+        // let name: string;
+        // let iri: string;
+        // let lastModificationDate: string;
 
-        this._cache.get('currentOntology', this._ontologyService.getAllEntityDefinitionsForOntologies(this.ontologyIri)).subscribe(
-            (response: any) => {
-                name = response.body['rdfs:label'];
-                iri = response.body['@id'];
-                lastModificationDate = response.body['knora-api:lastModificationDate'];
+        this._cache.get('currentOntology', this.knoraApiConnection.v2.onto.getOntology(id)).subscribe(
+            (response: ApiResponseData<ReadOntology>) => {
+                ontologyToDelete = response.body;
             },
             (error: any) => {
                 console.error(error);
@@ -350,7 +352,7 @@ export class OntologyComponent implements OnInit {
             position: {
                 top: '112px'
             },
-            data: { mode: 'deleteOntology', title: name }
+            data: { mode: 'deleteOntology', title: ontologyToDelete.id }    // <-- TODO: replace id by label as soon api-js-lib is updated #139
         };
 
         const dialogRef = this._dialog.open(
@@ -364,7 +366,7 @@ export class OntologyComponent implements OnInit {
                 this.loading = true;
                 this.ontology = undefined;
 
-                this._ontologyService.deleteOntology(iri, lastModificationDate).subscribe(
+                this._ontologyService.deleteOntology(ontologyToDelete.id, ontologyToDelete.lastModificationDate).subscribe(
                     (response: any) => {
                         // get the ontologies for this project
                         const goto = 'project/' + this.projectcode + '/ontologies/';
@@ -385,6 +387,18 @@ export class OntologyComponent implements OnInit {
     }
 
     deleteSourceType(id: string, name: string) {
+        console.log('deleteSourceType', this.ontology);
+
+        let ontologyWithSourceType: ReadOntology;
+
+        this._cache.get('currentOntology', this.knoraApiConnection.v2.onto.getOntology(this.ontology.id)).subscribe(
+            (response: ApiResponseData<ReadOntology>) => {
+                ontologyWithSourceType = response.body;
+            },
+            (error: any) => {
+                console.error(error);
+            }
+        );
 
         let iri: string;
         let lastModificationDate: string;
