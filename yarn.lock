@@ -794,10 +794,8 @@
   dependencies:
     tslib "^1.9.0"
 
-"@knora/api@0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@knora/api/-/api-0.1.1.tgz#cdf0a3b16e0f063626ff9b70e4de6d9dd501424a"
-  integrity sha512-Ac4/huGuEcvExfu46Gr/83Q5kOet81vFQQJVxZOA4JyhAC8opyGHThmcJrAQaSQW3eDn7lqnRT9+rVDJ3uVk3w==
+"@knora/api@file:.yalc/@knora/api":
+  version "0.1.0-914f0ce0"
   dependencies:
     "@types/jsonld" "^1.5.0"
     json2typescript "^1.2.3"
@@ -805,7 +803,7 @@
     rxjs "^6.5.3"
 
 "@knora/core@file:.yalc/@knora/core":
-  version "10.0.0-358989b9"
+  version "10.0.0-89564b73"
   dependencies:
     tslib "^1.9.0"
 
