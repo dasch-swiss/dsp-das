@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject } from '@knora/api';
 import { KnoraApiConnectionToken, OntologyService } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
+import { existingNamesValidator } from '@knora/action';
 
 export interface NewOntology {
     projectIri: string;
@@ -33,7 +34,22 @@ export class OntologyFormComponent implements OnInit {
 
     ontologyLabel: string = '';
 
-    nameRegex = /^[a-zA-Z]+\S*$/;
+    nameRegex = /^(?![v|V][0-9]).[a-zA-Z]\S*$/;
+
+    forbiddenNames: string[] = [
+        'knora',
+        'salsah',
+        'standoff',
+        'ontology',
+        'simple',
+        'shared'
+    ];
+
+    existingNames: [RegExp] = [
+        new RegExp('anEmptyRegularExpressionWasntPossible')
+    ];
+
+    // nameRegex = /^[\i-[:]][\c-[:]]*$/;
 
     nameMinLength = 3;
     nameMaxLength = 16;
@@ -47,8 +63,8 @@ export class OntologyFormComponent implements OnInit {
             'required': 'Name is required.',
             'minlength': 'Name must be at least ' + this.nameMinLength + ' characters long.',
             'maxlength': 'Name cannot be more than ' + this.nameMaxLength + ' characters long.',
-            'pattern': 'Name shouldn\'t start with a number; Spaces or special characters are not allowed.',
-            'existingName': 'This name is already taken.'
+            'pattern': 'Name shouldn\'t start with a number or v + number; Spaces or special characters are not allowed.',
+            'existingName': 'This name is not allowed.'
         }
     };
 
@@ -85,6 +101,16 @@ export class OntologyFormComponent implements OnInit {
 
     buildForm() {
 
+        for (const name of this.forbiddenNames) {
+
+            // if the user is already member of the project
+            // add the email to the list of existing
+            this.existingNames.push(
+                // new RegExp('^' + name + '\z')
+                new RegExp(name)
+            );
+        }
+
         this.ontologyLabel = this.project.shortname + ' ontology (data model): ';
 
         this.ontologyForm = this._fb.group({
@@ -94,7 +120,7 @@ export class OntologyFormComponent implements OnInit {
                 Validators.required,
                 Validators.minLength(this.nameMinLength),
                 Validators.maxLength(this.nameMaxLength),
-                // existingNamesValidator(this.existingShortNames),
+                existingNamesValidator(this.existingNames),
                 Validators.pattern(this.nameRegex)
             ]),
             label: new FormControl({

@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject, ReadOntology } from '@knora/api';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject, ReadOntology, ClassDefinition } from '@knora/api';
 import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, OntologyService, Session } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
@@ -13,8 +13,6 @@ import { DefaultSourceType, SourceTypes } from './default-data/source-types';
 export interface OntologyInfo {
     id: string;
     label: string;
-    project: string;
-    graph?: any[];
 }
 
 @Component({
@@ -24,9 +22,10 @@ export interface OntologyInfo {
 })
 export class OntologyComponent implements OnInit {
 
-    // loading for progess indicator
+    // general loading status for progess indicator
     loading: boolean;
 
+    // loading status during open-ontology-process
     loadOntology: boolean;
 
     // permissions of logged-in user
@@ -45,6 +44,8 @@ export class OntologyComponent implements OnInit {
 
     // ontology JSON-LD object
     ontology: ReadOntology;
+
+    ontoClasses: ClassDefinition[];
 
     // selected ontology
     ontologyIri: string = undefined;
@@ -90,7 +91,7 @@ export class OntologyComponent implements OnInit {
         // get ontology iri from route
         if (this._route.snapshot && this._route.snapshot.params.id) {
             this.ontologyIri = decodeURIComponent(this._route.snapshot.params.id);
-            console.log('should open', this.ontologyIri);
+            this.getOntology(this.ontologyIri);
         }
 
         // set the page title
@@ -132,10 +133,9 @@ export class OntologyComponent implements OnInit {
                     })
                 });
 
-                this.loading = false;
+                this.ontologyForm.valueChanges.subscribe(val => this.onValueChanged(val.ontology));
 
-                this.ontologyForm.valueChanges
-                    .subscribe(data => this.onValueChanged(data));
+                this.loading = false;
 
             },
             (error: ApiResponseError) => {
@@ -156,14 +156,13 @@ export class OntologyComponent implements OnInit {
             (ontologies: ApiServiceResult) => {
 
                 if (ontologies.body['@graph'] && ontologies.body['@graph'].length > 0) {
-
+                    // more than one ontology
                     this.ontologies = [];
 
                     for (const ontology of ontologies.body['@graph']) {
                         const info: OntologyInfo = {
                             id: ontology['@id'],
-                            label: ontology['rdfs:label'],
-                            project: ontology['knora-api:attachedToProject']['@id']
+                            label: ontology['rdfs:label']
                         };
 
                         this.ontologies.push(info);
@@ -176,15 +175,15 @@ export class OntologyComponent implements OnInit {
                     this.ontologies = [
                         {
                             id: ontologies.body['@id'],
-                            label: ontologies.body['rdfs:label'],
-                            project: ontologies.body['knora-api:attachedToProject']['@id']
+                            label: ontologies.body['rdfs:label']
                         }
                     ];
 
                     this.ontologyIri = ontologies.body['@id'];
 
-                    // console.log('ontology id from main comp', this.ontologyIri)
-                    this.resetOntology(this.ontologyIri);
+                    // open this ontology
+                    this.openOntologyRoute(this.ontologyIri);
+                    this.getOntology(this.ontologyIri);
 
                     this.loading = false;
                 } else {
@@ -193,9 +192,6 @@ export class OntologyComponent implements OnInit {
                     this.loading = false;
                 }
 
-                if (this.ontologyIri !== undefined) {
-                    this.openOntology(this.ontologyIri);
-                }
             },
             (error: ApiServiceError) => {
                 console.error(error);
@@ -204,39 +200,55 @@ export class OntologyComponent implements OnInit {
     }
 
     // update view after selecting an ontology from dropdown
-    onValueChanged(data?: any) {
+    onValueChanged(id: string) {
 
         if (!this.ontologyForm) {
             return;
         }
 
-        this.resetOntology(data.ontology);
+        // reset and open selected ontology
+        this.resetOntology(id);
 
     }
 
-    // open ontology by iri
-    openOntology(id: string) {
-
-        if (!id) {
-            return;
-        }
-
+    // open ontology route by iri
+    openOntologyRoute(id: string) {
         const goto = 'project/' + this.projectcode + '/ontologies/' + encodeURIComponent(id);
         this._router.navigateByUrl(goto, { skipLocationChange: false });
+    }
+
+    // get ontology
+    getOntology(id: string) {
 
         // this._router.navigateByUrl('/refresh', { skipLocationChange: true }).then(
         //     () => this._router.navigate([goto])
         // );
 
+        this.ontoClasses = [];
 
         this.loadOntology = true;
 
-        this._cache.get('currentOntology', this.knoraApiConnection.v2.onto.getOntology(id));
-        this._cache.get('currentOntology', this.knoraApiConnection.v2.onto.getOntology(id)).subscribe(
-            (response: ApiResponseData<ReadOntology>) => {
-                console.log(response);
+        // this._cache.get('currentOntology', this.knoraApiConnection.v2.onto.getOntology(id));
+        // this._cache.get('currentOntology', this.knoraApiConnection.v2.onto.getOntology(id))
+        this.knoraApiConnection.v2.onto.getOntology(id).subscribe(
+            (response: ReadOntology) => {
 
-                this.ontology = response.body;
+                console.log('ontology', response);
+
+                this.ontology = response;
+
+                const classKeys: string[] = Object.keys(response.classes);
+
+                for (const c of classKeys) {
+                    this.ontoClasses.push(this.ontology.classes[c]);
+                }
+
+
+                // console.log('classes', this.ontoClasses);
+                // }
+
+
+
                 // this.ontologyIri = ontologyResponse.body.id;
 
                 // select graphs of type owl:Class ( = resource classes only)
@@ -251,12 +263,16 @@ export class OntologyComponent implements OnInit {
                 }
                 */
 
-                setTimeout(() => {
-                    this.loadOntology = false;
-                });
+                this.loadOntology = false;
+                // setTimeout(() => {
+                //     // let ontoClasses = Object.keys(response.body.classes);
+
+
+                // }, 3000);
             },
             (error: any) => {
-                // console.error(error);
+                console.error(error);
+                this.loadOntology = false;
             }
         );
 
@@ -280,12 +296,11 @@ export class OntologyComponent implements OnInit {
 
 
     resetOntology(id: string) {
-        this.loadOntology = true;
 
-        this._cache.del('currentOntology');
-        this.openOntology(id);
+        this.ontology = undefined;
+        this.openOntologyRoute(id);
+        this.getOntology(id);
 
-        // TODO: get id: does it work after adding new ontology?
     }
 
     filterOwlClass(owlClass: any) {
@@ -327,32 +342,32 @@ export class OntologyComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             // update the view
-            this.resetOntology(this.ontologyIri);
+            this.getOntology(this.ontologyIri);
         });
     }
 
     deleteOntology(id: string) {
 
         console.log('deleteOntology', this.ontology);
-        let ontologyToDelete: ReadOntology;
+        // let ontologyToDelete: ReadOntology;
         // let name: string;
         // let iri: string;
         // let lastModificationDate: string;
 
-        this._cache.get('currentOntology', this.knoraApiConnection.v2.onto.getOntology(id)).subscribe(
-            (response: ApiResponseData<ReadOntology>) => {
-                ontologyToDelete = response.body;
-            },
-            (error: any) => {
-                console.error(error);
-            }
-        );
+        // this._cache.get('currentOntology', this.knoraApiConnection.v2.onto.getOntology(id)).subscribe(
+        //     (response: ReadOntology) => {
+        //         ontologyToDelete = response;
+        //     },
+        //     (error: any) => {
+        //         console.error(error);
+        //     }
+        // );
         const dialogConfig: MatDialogConfig = {
             width: '560px',
             position: {
                 top: '112px'
             },
-            data: { mode: 'deleteOntology', title: ontologyToDelete.id }    // <-- TODO: replace id by label as soon api-js-lib is updated #139
+            data: { mode: 'deleteOntology', title: this.ontology.label }
         };
 
         const dialogRef = this._dialog.open(
@@ -364,10 +379,11 @@ export class OntologyComponent implements OnInit {
             if (answer === true) {
                 // delete ontology and refresh the view
                 this.loading = true;
-                this.ontology = undefined;
+                this.loadOntology = true;
 
-                this._ontologyService.deleteOntology(ontologyToDelete.id, ontologyToDelete.lastModificationDate).subscribe(
+                this._ontologyService.deleteOntology(id, this.ontology.lastModificationDate).subscribe(
                     (response: any) => {
+                        this.ontology = undefined;
                         // get the ontologies for this project
                         const goto = 'project/' + this.projectcode + '/ontologies/';
                         this._router.navigateByUrl(goto, { skipLocationChange: true });
@@ -387,31 +403,33 @@ export class OntologyComponent implements OnInit {
     }
 
     deleteSourceType(id: string, name: string) {
-        console.log('deleteSourceType', this.ontology);
+        console.log('deleteSourceType: id', id);
+        console.log('deleteSourceType: label', name);
 
-        let ontologyWithSourceType: ReadOntology;
+        // let ontologyWithSourceType: ReadOntology;
+        // console.log('before caching', this.ontology);
 
-        this._cache.get('currentOntology', this.knoraApiConnection.v2.onto.getOntology(this.ontology.id)).subscribe(
-            (response: ApiResponseData<ReadOntology>) => {
-                ontologyWithSourceType = response.body;
-            },
-            (error: any) => {
-                console.error(error);
-            }
-        );
+        // this._cache.get('currentOntology', this.knoraApiConnection.v2.onto.getOntology(this.ontology.id)).subscribe(
+        //     (response: ReadOntology) => {
+        //         ontologyWithSourceType = response;
+        //     },
+        //     (error: any) => {
+        //         console.error(error);
+        //     }
+        // );
 
-        let iri: string;
-        let lastModificationDate: string;
+        // let iri: string;
+        // let lastModificationDate: string;
 
-        this._cache.get('currentOntology', this._ontologyService.getAllEntityDefinitionsForOntologies(this.ontologyIri)).subscribe(
-            (response: any) => {
-                iri = response.body['@id'] + '#' + id.split(':')[1];
-                lastModificationDate = response.body['knora-api:lastModificationDate'];
-            },
-            (error: any) => {
-                console.error(error);
-            }
-        );
+        // this._cache.get('currentOntology', this._ontologyService.getAllEntityDefinitionsForOntologies(this.ontologyIri)).subscribe(
+        //     (response: any) => {
+        //         iri = response.body['@id'] + '#' + id.split(':')[1];
+        //         lastModificationDate = response.body['knora-api:lastModificationDate'];
+        //     },
+        //     (error: any) => {
+        //         console.error(error);
+        //     }
+        // );
 
         const dialogConfig: MatDialogConfig = {
             width: '560px',
@@ -431,10 +449,9 @@ export class OntologyComponent implements OnInit {
                 // delete resource type and refresh the view
                 this.loadOntology = true;
 
-                this._ontologyService.deleteResourceClass(iri, lastModificationDate).subscribe(
+                this._ontologyService.deleteResourceClass(id, this.ontology.lastModificationDate).subscribe(
                     (response: any) => {
-                        this.resetOntology(this.ontologyIri);
-                        this.loadOntology = false;
+                        this.getOntology(this.ontologyIri);
                     },
                     (error: ApiServiceError) => {
                         // TODO: show message
