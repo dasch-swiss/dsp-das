@@ -1,7 +1,7 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { KnoraApiConnection, StringLiteral } from '@knora/api';
+import { KnoraApiConnection, StringLiteral, ReadOntology } from '@knora/api';
 import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, OntologyService, NewProperty, NewResourceClass } from '@knora/core';
 import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
@@ -57,7 +57,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     };
 
     // progress
-    loading: boolean = true;
+    loading: boolean;
 
     // in case of an error, show message
     errorMessage: any;
@@ -108,8 +108,9 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         this.sourceTypeName = this.name;
 
         this._cache.get('currentOntology').subscribe(
-            (response: ApiServiceResult) => {
-                this.ontology = response.body;
+            (response: ReadOntology) => {
+                this.ontology = response;
+                console.log(this.ontology);
             },
             (error: any) => {
                 console.error(error);
@@ -247,7 +248,8 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     submitData() {
         this.loading = true;
 
-        let lastModificationDate: string;
+        let lastModificationDate: string = this.ontology.lastModificationDate;
+
 
         // fix variables:
 
@@ -272,8 +274,6 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         // - guiOrder
 
         // first step: get data from first form: source type
-
-        lastModificationDate = this.ontology['knora-api:lastModificationDate'];
 
         if (!this.sourceTypeComments.length) {
             this.sourceTypeComments = this.sourceTypeLabels;
@@ -310,32 +310,35 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         // submit source type data to knora and create source type incl. cardinality
         // console.log('submit source type data:', resourceTypeData);
 
-        this._ontologyService.addResourceClass(this.ontology['@id'], lastModificationDate, resourceTypeData).subscribe(
+        this._ontologyService.addResourceClass(this.ontology.id, lastModificationDate, resourceTypeData).subscribe(
             (classResponse: any) => {
-                console.log(classResponse);
+                console.log('classResponse', classResponse);
 
                 // set properties data
                 // TODO: build props
                 // const resourcePropertyData: NewProperty[] = [];
+                lastModificationDate = classResponse['knora-api:lastModificationDate']['@value'];
+
                 i = 0;
                 for (const propData of resourcePropertyData) {
-                    lastModificationDate = classResponse['knora-api:lastModificationDate'];
 
-                    this._ontologyService.addProperty(this.ontology['@id'], classResponse['knora-api:lastModificationDate'], classResponse['@graph'][0]['@id'], propData).subscribe(
+                    this._ontologyService.addProperty(this.ontology.id, lastModificationDate, classResponse['@graph'][0]['@id'], propData).subscribe(
                         (propertyResponse: any) => {
-                            console.log(propertyResponse);
+                            console.log('propertyResponse', propertyResponse);
+                            lastModificationDate = propertyResponse['knora-api:lastModificationDate']['@value'];
 
                             // update class with cardinality and gui-order
                             this._ontologyService.setPropertyRestriction(
-                                this.ontology['@id'],
+                                this.ontology.id,
                                 lastModificationDate,
                                 classResponse['@graph'][0]['@id'],
                                 propertyResponse['@graph'][0]['@id'],
                                 propData.cardinality,
                                 propData.guiOrder).subscribe(
                                     (cardinalityResponse: any) => {
-                                        console.log(cardinalityResponse);
-                                        lastModificationDate = cardinalityResponse['knora-api:lastModificationDate'];
+                                        console.log('cardinalityResponse', cardinalityResponse);
+                                        lastModificationDate = cardinalityResponse['knora-api:lastModificationDate']['@value'];
+                                        i++;
                                     },
                                     (error: ApiServiceError) => {
                                         console.error('failed on setPropertyRestriction', error);
@@ -347,7 +350,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
                         }
                     );
 
-                    i++;
+                    // i++;
                 }
 
                 // close the dialog box

@@ -329,6 +329,10 @@ export class OntologyComponent implements OnInit {
     }
 
     openSourceTypeForm(mode: string, type: DefaultSourceType): void {
+
+        // set ontology cache
+        this._cache.set('currentOntology', this.ontology);
+
         const dialogConfig: MatDialogConfig = {
             width: '720px',
             maxHeight: '90vh',
@@ -349,6 +353,7 @@ export class OntologyComponent implements OnInit {
     deleteOntology(id: string) {
 
         console.log('deleteOntology', this.ontology);
+
         // let ontologyToDelete: ReadOntology;
         // let name: string;
         // let iri: string;
@@ -403,8 +408,6 @@ export class OntologyComponent implements OnInit {
     }
 
     deleteSourceType(id: string, name: string) {
-        console.log('deleteSourceType: id', id);
-        console.log('deleteSourceType: label', name);
 
         // let ontologyWithSourceType: ReadOntology;
         // console.log('before caching', this.ontology);
@@ -455,8 +458,8 @@ export class OntologyComponent implements OnInit {
                     },
                     (error: ApiServiceError) => {
                         // TODO: show message
+                        this.getOntology(this.ontologyIri);
                         console.error(error);
-                        this.loadOntology = false;
                     }
                 );
 

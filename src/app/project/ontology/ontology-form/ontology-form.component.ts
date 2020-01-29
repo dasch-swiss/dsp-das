@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { existingNamesValidator } from '@knora/action';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject } from '@knora/api';
 import { KnoraApiConnectionToken, OntologyService } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { existingNamesValidator } from '@knora/action';
 
 export interface NewOntology {
     projectIri: string;
@@ -48,8 +48,6 @@ export class OntologyFormComponent implements OnInit {
     existingNames: [RegExp] = [
         new RegExp('anEmptyRegularExpressionWasntPossible')
     ];
-
-    // nameRegex = /^[\i-[:]][\c-[:]]*$/;
 
     nameMinLength = 3;
     nameMaxLength = 16;
@@ -150,25 +148,6 @@ export class OntologyFormComponent implements OnInit {
 
             }
         });
-        // reset selected source types
-        // this.selectedSourceType = undefined;
-
-        // check if the form is valid
-
-        /* Object.keys(this.selectSourceTypeErrors).map(field => {
-
-            this.selectSourceTypeErrors[field] = '';
-            const control = this.selectSourceTypeForm.get(field);
-            if (control.value.length >= 2) {
-                if (control && control.dirty && !control.valid) {
-                    const messages = this.validationMessages[field];
-                    Object.keys(control.errors).map(key => {
-                        this.selectSourceTypeErrors[field] += messages[key] + ' ';
-                    });
-                }
-            }
-
-        }); */
 
     }
 
