@@ -394,6 +394,7 @@ export class OntologyComponent implements OnInit {
                         this._router.navigateByUrl(goto, { skipLocationChange: true });
                         this.initList();
                         this.loading = false;
+                        this.loadOntology = false;
                     },
                     (error: ApiServiceError) => {
                         // TODO: show message
