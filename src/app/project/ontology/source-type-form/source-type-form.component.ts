@@ -3,9 +3,10 @@ import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Inject, I
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { KnoraApiConnection, StringLiteral, ReadOntology } from '@knora/api';
 import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, OntologyService, NewProperty, NewResourceClass } from '@knora/core';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { SourceTypeFormService } from './source-type-form.service';
+import { flatMap, map } from 'rxjs/operators';
 
 // nested form components; solution from:
 // https://medium.com/@joshblf/dynamic-nested-reactive-forms-in-angular-654c1d4a769a
@@ -394,6 +395,15 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         this.sourceTypeForm.reset();
         this.sourceTypeFormSub.unsubscribe();
         this.closeDialog.emit();
+    }
+
+
+    getRecursive(ontologyIri: string, lmd: string, classIri: string, data: NewProperty): Observable<any> {
+        return this._ontologyService.addProperty(ontologyIri, lmd, classIri, data).pipe(
+            map(response => {
+                console.log(response);
+            })
+        );
     }
 
     // TODO: submit data
