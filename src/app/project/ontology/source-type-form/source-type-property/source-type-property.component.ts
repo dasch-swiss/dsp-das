@@ -29,6 +29,8 @@ export class SourceTypePropertyComponent implements OnInit {
     // selection of default property types
     propertyTypes: DefaultPropertyType[] = PropertyTypes.data;
 
+    showGuiAttr: boolean = false;
+
 
 
     selectTypeLabel: string; // = this.propertyTypes[0].group + ': ' + this.propertyTypes[0].elements[0].label;
@@ -69,16 +71,17 @@ export class SourceTypePropertyComponent implements OnInit {
         // depending on the selected property type,
         // we have to define gui element attributes
         // e.g. iri of list or connected resource type
-        switch (event.source.value.subClassOf) {
-            case 'ListValue':
-
+        switch (event.value.subPropOf) {
+            case 'knora-api:ListValue':
+                this.showGuiAttr = true;
                 break;
 
-            case 'LinkValue':
-
+            case 'knora-api:LinkValue':
+                this.showGuiAttr = true;
                 break;
 
             default:
+                this.showGuiAttr = false;
         }
 
 

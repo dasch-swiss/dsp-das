@@ -6,7 +6,7 @@
     <kui-message *ngIf="success" [message]="successMessage" [short]="true" (click)="closeMessage()"></kui-message>
 
     <!-- content: Step 1 = define resource type -->
-    <form [formGroup]="sourceTypeForm" class="form-content" (ngSubmit)="submitData()">
+    <form [formGroup]="sourceTypeForm" class="form-content">
         <div *ngIf="showSourceTypeForm" class="source-type-data">
 
             <!-- label -->
@@ -14,7 +14,7 @@
             <input matInput placeholder="Subclass of *" formControlName="subClassOf" [value]="subClassOf" readonly>
         </mat-form-field> -->
 
-            <div class="medium-field string-literal-container">
+            <div class="large-field string-literal-container">
                 <kui-string-literal-input [placeholder]="'Label *'" [value]="sourceTypeLabels"
                     (dataChanged)="handleData($event, 'labels')">
                 </kui-string-literal-input>
@@ -30,17 +30,6 @@
             </mat-hint>
         </mat-form-field> -->
 
-            <!-- TODO: add permissions of source type -->
-            <mat-form-field class="small-field">
-                <mat-label>Permissions (NYI!)</mat-label>
-                <mat-select formControlName="permission">
-                    <mat-option [value]="1">All</mat-option>
-                    <mat-option [value]="2">Project</mat-option>
-                    <mat-option [value]="3">User</mat-option>
-                </mat-select>
-            </mat-form-field>
-
-            <br>
             <!-- description -->
             <div class="large-field string-literal-container">
                 <kui-string-literal-input [placeholder]="'Description'" [value]="sourceTypeComments" [textarea]="true"
@@ -60,8 +49,8 @@
                 </span>
                 <span class="fill-remaining-space"></span>
                 <span>
-                    <button mat-raised-button type="button" color="primary" [disabled]="!sourceTypeLabels.length"
-                        (click)="nextStep()">
+                    <button mat-raised-button type="submit" color="primary" [disabled]="!sourceTypeLabels.length"
+                        (click)="nextStep($event)">
                         Next
                     </button>
                 </span>
@@ -108,7 +97,8 @@
                 </span>
                 <span class="fill-remaining-space"></span>
                 <span>
-                    <button mat-raised-button type="submit" color="primary" [disabled]="!formValid">
+                    <button mat-raised-button type="submit" color="primary" [disabled]="!formValid"
+                        (click)="submitData()">
                         <kui-progress-indicator [color]="'white'" [status]="0" *ngIf="loading" class="submit-progress">
                         </kui-progress-indicator>
                         <mat-icon *ngIf="errorMessage && !loading">close</mat-icon>

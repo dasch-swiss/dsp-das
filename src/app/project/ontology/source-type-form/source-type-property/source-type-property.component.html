@@ -30,9 +30,10 @@
     </mat-form-field>
 
     <!-- TODO: additional mat-form-field for settings depending on the type selection -->
-    <div class="small-field" *ngIf="propertyForm.controls['type'].value">
-        <div [ngSwitch]="propertyForm.controls['type'].value.subClassOf">
-            <div *ngSwitchCase="'ListValue'">Select list</div>
+    <div class="small-field" *ngIf="showGuiAttr">
+        <div [ngSwitch]="propertyForm.controls['type'].value.subPropOf">
+            <div *ngSwitchCase="'knora-api:ListValue'">Select list</div>
+            <div *ngSwitchCase="'knora-api:LinkValue'">Select source type</div>
             <div *ngSwitchDefault>Not yet implemented</div>
         </div>
     </div>
@@ -54,6 +55,6 @@
     </div>
 
     <!-- Permissions -->
-    <mat-form-field class="small-field">
+    <!-- <mat-form-field class="small-field">
         <input matInput placeholder="Property permissions" formControlName="permission">
-    </mat-form-field>
+    </mat-form-field> -->
