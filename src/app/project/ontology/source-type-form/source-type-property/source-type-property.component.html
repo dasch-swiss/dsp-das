@@ -12,21 +12,6 @@
         <input matInput placeholder="Property label *" formControlName="label">
     </mat-form-field>
 
-    <!-- Cardinality -->
-    <div class="small-field">
-        <mat-slide-toggle formControlName="multiple">
-            Multiple values?
-        </mat-slide-toggle>
-    </div>
-
-    <div class="small-field">
-        <mat-slide-toggle formControlName="required">
-            Required field?
-        </mat-slide-toggle>
-    </div>
-
-    <!-- new line for to select gui element and property type and set gui attributes -->
-
     <!-- Property value type and gui element  -->
     <mat-form-field class="small-field">
         <mat-label>Property type *</mat-label>
@@ -51,6 +36,23 @@
 
     </mat-form-field>
 
+    <br>
+
+    <!-- new line for cardinality and set gui attributes -->
+    <!-- Cardinality -->
+    <div class="small-field">
+        <mat-slide-toggle formControlName="multiple">
+            Multiple values?
+        </mat-slide-toggle>
+    </div>
+
+    <div class="small-field">
+        <mat-slide-toggle formControlName="required">
+            Required field?
+        </mat-slide-toggle>
+    </div>
+
+
     <!-- TODO: additional mat-form-field for settings depending on the type selection -->
     <div class="small-field" *ngIf="showGuiAttr">
         <div [ngSwitch]="propertyForm.controls['type'].value.subPropOf">
@@ -59,9 +61,6 @@
             <div *ngSwitchDefault>Not yet implemented</div>
         </div>
     </div>
-
-    <br>
-
 
 
     <!-- Permissions -->

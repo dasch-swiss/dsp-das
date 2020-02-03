@@ -233,8 +233,6 @@ export class OntologyComponent implements OnInit {
         this.knoraApiConnection.v2.onto.getOntology(id).subscribe(
             (response: ReadOntology) => {
 
-                console.log('ontology', response);
-
                 this.ontology = response;
 
                 const classKeys: string[] = Object.keys(response.classes);
@@ -242,33 +240,7 @@ export class OntologyComponent implements OnInit {
                 for (const c of classKeys) {
                     this.ontoClasses.push(this.ontology.classes[c]);
                 }
-
-
-                // console.log('classes', this.ontoClasses);
-                // }
-
-
-
-                // this.ontologyIri = ontologyResponse.body.id;
-
-                // select graphs of type owl:Class ( = resource classes only)
-
-                // could be used in the json-ld converter
-                // at the moment it's used in filter pipe
-                /*
-                for (const g of ontologyResponse.body['@graph']) {
-                    if (g['@type'] === 'owl:Class') {
-                        graph.push(g);
-                    }
-                }
-                */
-
                 this.loadOntology = false;
-                // setTimeout(() => {
-                //     // let ontoClasses = Object.keys(response.body.classes);
-
-
-                // }, 3000);
             },
             (error: any) => {
                 console.error(error);
@@ -277,23 +249,6 @@ export class OntologyComponent implements OnInit {
         );
 
     }
-
-    // addResourceType(id: string) {
-    //     console.log(id);
-    //     // this.ontologyEditor.nativeElement.insertAdjacentHTML('beforeend', ``);
-    //     // this.appendComponentToBody(SelectListComponent);
-    // }
-
-    // loadComponent() {
-    //     const componentFactory = this._componentFactoryResolver.resolveComponentFactory(ResourceTypeComponent);
-    //     // this._componentFactoryResolver.resolveComponentFactory(ResourceTypeComponent);
-
-    //     // const viewContainerRef = this.ontologyEditor.
-    //     // viewContainerRef.clear();
-
-    //     this.ontologyEditor.createComponent(componentFactory);
-    // }
-
 
     resetOntology(id: string) {
 
@@ -349,30 +304,20 @@ export class OntologyComponent implements OnInit {
             this.getOntology(this.ontologyIri);
         });
     }
-
-    deleteOntology(id: string) {
-
-        console.log('deleteOntology', this.ontology);
-
-        // let ontologyToDelete: ReadOntology;
-        // let name: string;
-        // let iri: string;
-        // let lastModificationDate: string;
-
-        // this._cache.get('currentOntology', this.knoraApiConnection.v2.onto.getOntology(id)).subscribe(
-        //     (response: ReadOntology) => {
-        //         ontologyToDelete = response;
-        //     },
-        //     (error: any) => {
-        //         console.error(error);
-        //     }
-        // );
+    /**
+     * Delete either ontology or sourcetype
+     *
+     * @param  {string} id
+     * @param  {string} mode Can be 'Ontology' or 'SourceType'
+     * @param  {string} title
+     */
+    delete(id: string, mode: string, title: string) {
         const dialogConfig: MatDialogConfig = {
             width: '560px',
             position: {
                 top: '112px'
             },
-            data: { mode: 'deleteOntology', title: this.ontology.label }
+            data: { mode: 'delete' + mode, title: title }
         };
 
         const dialogRef = this._dialog.open(
@@ -382,91 +327,48 @@ export class OntologyComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(answer => {
             if (answer === true) {
-                // delete ontology and refresh the view
-                this.loading = true;
+                // delete and refresh the view
                 this.loadOntology = true;
 
-                this._ontologyService.deleteOntology(id, this.ontology.lastModificationDate).subscribe(
-                    (response: any) => {
-                        this.ontology = undefined;
-                        // get the ontologies for this project
-                        const goto = 'project/' + this.projectcode + '/ontologies/';
-                        this._router.navigateByUrl(goto, { skipLocationChange: true });
-                        this.initList();
-                        this.loading = false;
-                        this.loadOntology = false;
-                    },
-                    (error: ApiServiceError) => {
-                        // TODO: show message
-                        console.error(error);
-                        this.loading = false;
-                    }
-                );
+                switch (mode) {
+                    case 'Ontology':
+                        this.loading = true;
+                        this._ontologyService.deleteOntology(id, this.ontology.lastModificationDate).subscribe(
+                            (response: any) => {
+                                this.ontology = undefined;
+                                // get the ontologies for this project
+                                const goto = 'project/' + this.projectcode + '/ontologies/';
+                                this._router.navigateByUrl(goto, { skipLocationChange: true });
+                                this.initList();
+                                this.loading = false;
+                                this.loadOntology = false;
+                            },
+                            (error: ApiServiceError) => {
+                                // TODO: show message
+                                console.error(error);
+                                this.loading = false;
+                            }
+                        );
+                        break;
 
-            }
-        });
+                    case 'SourceType':
+                        // delete resource type and refresh the view
+                        this.loadOntology = true;
 
-    }
-
-    deleteSourceType(id: string, name: string) {
-
-        // let ontologyWithSourceType: ReadOntology;
-        // console.log('before caching', this.ontology);
-
-        // this._cache.get('currentOntology', this.knoraApiConnection.v2.onto.getOntology(this.ontology.id)).subscribe(
-        //     (response: ReadOntology) => {
-        //         ontologyWithSourceType = response;
-        //     },
-        //     (error: any) => {
-        //         console.error(error);
-        //     }
-        // );
-
-        // let iri: string;
-        // let lastModificationDate: string;
-
-        // this._cache.get('currentOntology', this._ontologyService.getAllEntityDefinitionsForOntologies(this.ontologyIri)).subscribe(
-        //     (response: any) => {
-        //         iri = response.body['@id'] + '#' + id.split(':')[1];
-        //         lastModificationDate = response.body['knora-api:lastModificationDate'];
-        //     },
-        //     (error: any) => {
-        //         console.error(error);
-        //     }
-        // );
-
-        const dialogConfig: MatDialogConfig = {
-            width: '560px',
-            position: {
-                top: '112px'
-            },
-            data: { mode: 'deleteSourceType', title: name }
-        };
-
-        const dialogRef = this._dialog.open(
-            DialogComponent,
-            dialogConfig
-        );
-
-        dialogRef.afterClosed().subscribe(answer => {
-            if (answer === true) {
-                // delete resource type and refresh the view
-                this.loadOntology = true;
-
-                this._ontologyService.deleteResourceClass(id, this.ontology.lastModificationDate).subscribe(
-                    (response: any) => {
-                        this.getOntology(this.ontologyIri);
-                    },
-                    (error: ApiServiceError) => {
-                        // TODO: show message
-                        this.getOntology(this.ontologyIri);
-                        console.error(error);
-                    }
-                );
+                        this._ontologyService.deleteResourceClass(id, this.ontology.lastModificationDate).subscribe(
+                            (response: any) => {
+                                this.getOntology(this.ontologyIri);
+                            },
+                            (error: ApiServiceError) => {
+                                // TODO: show message
+                                this.getOntology(this.ontologyIri);
+                                console.error(error);
+                            }
+                        );
+                        break;
+                }
 
             }
         });
     }
-
-
 }

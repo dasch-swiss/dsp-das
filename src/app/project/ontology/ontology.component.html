@@ -69,7 +69,8 @@
                     Edit
                 </button>
                 &nbsp;
-                <button mat-stroked-button (click)="$event.stopPropagation(); deleteOntology(ontologyIri)">
+                <button mat-stroked-button
+                    (click)="$event.stopPropagation(); delete(ontologyIri, 'Ontology', ontology.label)">
                     Delete
                 </button>
             </mat-toolbar-row>
@@ -110,7 +111,7 @@
                             <button mat-menu-item
                                 (click)="openSourceTypeForm('editSourceType', {iri: resClass.id, name: '', label: resClass.label})">Edit</button>
                             <button mat-menu-item
-                                (click)="deleteSourceType(resClass.id, resClass.label)">Delete</button>
+                                (click)="delete(resClass.id, 'SourceType', resClass.label)">Delete</button>
                         </mat-menu>
                     </mat-toolbar-row>
                 </mat-toolbar>
