@@ -1,9 +1,31 @@
 <form [formGroup]="propertyForm" class="form-content project-data">
     <span class="index">{{index + 1}}) &nbsp;</span>
+
+    <!-- Property name; will be used for prop id -->
+    <!-- TODO: Autocomplete input with list of existing prop ids; by selecting one update the other fields and set them as disabled -->
+    <mat-form-field class="small-field">
+        <input matInput placeholder="Property name *" formControlName="name">
+    </mat-form-field>
+
     <!-- Property label -->
     <mat-form-field class="small-field">
         <input matInput placeholder="Property label *" formControlName="label">
     </mat-form-field>
+
+    <!-- Cardinality -->
+    <div class="small-field">
+        <mat-slide-toggle formControlName="multiple">
+            Multiple values?
+        </mat-slide-toggle>
+    </div>
+
+    <div class="small-field">
+        <mat-slide-toggle formControlName="required">
+            Required field?
+        </mat-slide-toggle>
+    </div>
+
+    <!-- new line for to select gui element and property type and set gui attributes -->
 
     <!-- Property value type and gui element  -->
     <mat-form-field class="small-field">
@@ -39,20 +61,8 @@
     </div>
 
     <br>
-    <!-- new line for cardinality, splited into two elements; and permissions -->
 
-    <!-- Cardinality -->
-    <div class="small-field">
-        <mat-slide-toggle formControlName="multiple">
-            Multiple values?
-        </mat-slide-toggle>
-    </div>
 
-    <div class="small-field">
-        <mat-slide-toggle formControlName="required">
-            Required field?
-        </mat-slide-toggle>
-    </div>
 
     <!-- Permissions -->
     <!-- <mat-form-field class="small-field">

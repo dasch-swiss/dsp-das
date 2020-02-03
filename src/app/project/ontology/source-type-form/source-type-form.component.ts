@@ -79,17 +79,18 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     // container for properties
     properties: FormArray;
 
-    // form validation status
-    formValid: boolean = false;
-
     // form errors on the following fields:
     // label is required
     formErrors = {
+        'name': '',
         'label': ''
     };
 
     // in cas of form error: show message
     validationMessages = {
+        'name': {
+            'required': 'Name is required.'
+        },
         'label': {
             'required': 'Label is required.'
         },
@@ -111,7 +112,6 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         this._cache.get('currentOntology').subscribe(
             (response: ReadOntology) => {
                 this.ontology = response;
-                console.log(this.ontology);
             },
             (error: any) => {
                 console.error(error);
@@ -120,9 +120,11 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
         this.buildForm();
 
-        this.sourceTypeForm.statusChanges.subscribe((data) => {
-            this.formValid = this.sourceTypeForm.valid && this.properties.valid;
-        });
+        /*
+            this.sourceTypeForm.statusChanges.subscribe((data) => {
+                // do something on form changes
+            });
+         */
 
         this._cdr.detectChanges();
 
@@ -144,29 +146,19 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
      */
     buildForm() {
 
-        // this.loading = true;
-        this.formValid = false;
-
         this._sourceTypeFormService.resetProperties();
 
         this.sourceTypeFormSub = this._sourceTypeFormService.sourceTypeForm$
             .subscribe(sourceType => {
                 this.sourceTypeForm = sourceType;
-                // this.properties = new FormArray([]);
                 this.properties = this.sourceTypeForm.get('properties') as FormArray;
             });
-
-        // this.sourceTypeForm.controls['subClassOf'].setValue(this.subClassOf);
-
-        // this.loading = false;
-
     }
     /**
      * add property line
      */
     addProperty() {
         this._sourceTypeFormService.addProperty();
-        this.formValid = !this.properties.valid;
     }
     /**
      * delete property line

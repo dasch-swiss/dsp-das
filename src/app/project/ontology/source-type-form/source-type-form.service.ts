@@ -5,39 +5,46 @@ import { BehaviorSubject, Observable } from 'rxjs';
 // property data structure
 export class Property {
 
+    name: string;
     label: string;
     type: any;
     multiple: boolean;
     required: boolean;
-    permission: string;
+    // permission: string;
 
     constructor(
+        name?: string,
         label?: string,
         type?: any,
         multiple?: boolean,
         required?: boolean,
-        permission?: string
+        // permission?: string
     ) {
+        this.name = name;
         this.label = label;
         this.type = type;
         this.multiple = multiple;
         this.required = required;
-        this.permission = permission;
+        // this.permission = permission;
     }
 }
 
 
 // property form controls
 export class PropertyForm {
+    name = new FormControl();
     label = new FormControl();
     type = new FormControl();
     multiple = new FormControl();
     required = new FormControl();
-    permission = new FormControl();
+    // permission = new FormControl();
 
     constructor(
         property: Property
     ) {
+        this.name.setValue(property.name);
+        this.name.setValidators([Validators.required]);
+
         this.label.setValue(property.label);
         this.label.setValidators([Validators.required]);
 
@@ -48,7 +55,7 @@ export class PropertyForm {
 
         this.required.setValue(property.required);
 
-        this.permission.setValue(property.permission);
+        // this.permission.setValue(property.permission);
         // TODO: permission is not implemented yet
         // this.permission.setValidators([Validators.required]);
     }
@@ -58,14 +65,14 @@ export class PropertyForm {
 export class SourceType {
     // label: string;
     // comment: string;
-    permission: string;
+    // permission: string;
     // subClassOf: string;
     properties: Property[];
 
     constructor(permission: string, properties?: Property[]) {
         // this.label = label;
         // this.comment = comment;
-        this.permission = permission;
+        // this.permission = permission;
         // this.subClassOf = subClassOf;
         this.properties = properties;
     }
@@ -76,7 +83,7 @@ export class SourceType {
 export class SourceTypeForm {
     // label = new FormControl();
     // comment = new FormControl();
-    permission = new FormControl();
+    // permission = new FormControl();
     // subClassOf = new FormControl();
     properties = new FormArray([]);
 
@@ -89,7 +96,7 @@ export class SourceTypeForm {
 
         // this.subClassOf.setValue(sourceType.subClassOf);
 
-        this.permission.setValue(sourceType.permission);
+        // this.permission.setValue(sourceType.permission);
 
         if (sourceType.properties) {
             this.properties.setValue([sourceType.properties]);
@@ -124,11 +131,9 @@ export class SourceTypeFormService {
         const currentSourceType = this.sourceTypeForm.getValue();
         const currentProperties = currentSourceType.get('properties') as FormArray;
 
-        console.log('currentProperties', currentProperties);
-
         currentProperties.push(
             this._fb.group(
-                new PropertyForm(new Property('', {}, false, false, ''))
+                new PropertyForm(new Property('', '', {}, false, false))
             )
         );
 

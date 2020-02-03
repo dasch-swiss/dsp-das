@@ -20,11 +20,12 @@ export class SourceTypePropertyComponent implements OnInit {
 
     @Output() deleteProperty: EventEmitter<number> = new EventEmitter();
 
+    name = new FormControl();
     label = new FormControl();
     type = new FormControl();
     multiple = new FormControl();
     required = new FormControl();
-    permission = new FormControl();
+    // permission = new FormControl();
 
     // selection of default property types
     propertyTypes: DefaultPropertyType[] = PropertyTypes.data;
