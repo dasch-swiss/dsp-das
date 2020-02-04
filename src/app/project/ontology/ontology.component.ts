@@ -234,16 +234,10 @@ export class OntologyComponent implements OnInit {
     // get ontology
     getOntology(id: string) {
 
-        // this._router.navigateByUrl('/refresh', { skipLocationChange: true }).then(
-        //     () => this._router.navigate([goto])
-        // );
-
         this.ontoClasses = [];
 
         this.loadOntology = true;
 
-        // this._cache.get('currentOntology', this.knoraApiConnection.v2.onto.getOntology(id));
-        // this._cache.get('currentOntology', this.knoraApiConnection.v2.onto.getOntology(id))
         this.knoraApiConnection.v2.onto.getOntology(id).subscribe(
             (response: ReadOntology) => {
 
@@ -267,6 +261,7 @@ export class OntologyComponent implements OnInit {
     resetOntology(id: string) {
 
         this.ontology = undefined;
+        this.ontoClasses = [];
         this.openOntologyRoute(id);
         this.getOntology(id);
 

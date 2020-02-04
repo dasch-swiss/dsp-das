@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { existingNamesValidator } from '@knora/action';
 
 // property data structure
 export class Property {
@@ -63,17 +64,11 @@ export class PropertyForm {
 
 // source type data structure
 export class SourceType {
-    // label: string;
-    // comment: string;
-    // permission: string;
-    // subClassOf: string;
+    name: string;
     properties: Property[];
 
-    constructor(permission: string, properties?: Property[]) {
-        // this.label = label;
-        // this.comment = comment;
-        // this.permission = permission;
-        // this.subClassOf = subClassOf;
+    constructor(name: string, properties?: Property[]) {
+        this.name = name;
         this.properties = properties;
     }
 }
@@ -81,22 +76,11 @@ export class SourceType {
 
 // source type form controls
 export class SourceTypeForm {
-    // label = new FormControl();
-    // comment = new FormControl();
-    // permission = new FormControl();
-    // subClassOf = new FormControl();
+    name = new FormControl();
     properties = new FormArray([]);
 
     constructor(sourceType: SourceType) {
-
-        // this.label.setValue(sourceType.label);
-        // this.label.setValidators([Validators.required]);
-
-        // this.comment.setValue(sourceType.comment);
-
-        // this.subClassOf.setValue(sourceType.subClassOf);
-
-        // this.permission.setValue(sourceType.permission);
+        this.name.setValue(sourceType.name);
 
         if (sourceType.properties) {
             this.properties.setValue([sourceType.properties]);

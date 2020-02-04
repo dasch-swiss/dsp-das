@@ -37,8 +37,6 @@ export class OntologyFormComponent implements OnInit {
 
     ontologyLabel: string = '';
 
-    nameRegexStart = /^([vV][0-9]|[0-9])*$/;
-    nameRegexUmlaut = /[\u00C0-\u017F]+\S*$/;
     nameRegex = /^(?![vV][0-9]|[0-9]|[\u00C0-\u017F]).[a-zA-Z0-9]+\S*$/;
 
     forbiddenNames: string[] = [
