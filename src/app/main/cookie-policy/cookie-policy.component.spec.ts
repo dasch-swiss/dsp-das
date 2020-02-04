@@ -16,7 +16,7 @@ describe('CookiePolicyComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CookiePolicyComponent ],
+      declarations: [CookiePolicyComponent],
       imports: [
         MatIconModule,
         MatButtonModule,
@@ -26,7 +26,7 @@ describe('CookiePolicyComponent', () => {
         { provide: Location, useValue: locationStub },
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -38,4 +38,6 @@ describe('CookiePolicyComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  // todo: check the title of the page
 });
