@@ -12,8 +12,8 @@ export class AppGlobal {
             icon: 'assignment'
         },
         {
-            label: 'Collaboration',
-            shortLabel: 'Collaboration',
+            label: 'Project members',
+            shortLabel: 'Members',
             route: 'collaboration',
             icon: 'group'
         },
@@ -39,13 +39,6 @@ export class AppGlobal {
 
     // user navigation
     public static userNav: MenuItem[] = [
-        /*
-        {
-            label: 'Dashboard',
-            route: '/dashboard',
-            icon: 'dashboard'
-        },
-        */
         {
             label: 'Dashboard',
             shortLabel: 'Dashboard',
