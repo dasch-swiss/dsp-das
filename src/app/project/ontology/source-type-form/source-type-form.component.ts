@@ -1,10 +1,10 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
-import { KnoraApiConnection, ReadOntology, StringLiteral } from '@knora/api';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ListsResponse, ReadOntology, StringLiteral, ReadListValue, ListNodeInfo } from '@knora/api';
 import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, NewProperty, NewResourceClass, OntologyService } from '@knora/core';
-import { Observable, Subscription, from } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { from, Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { SourceTypeFormService } from './source-type-form.service';
 
@@ -17,6 +17,11 @@ import { SourceTypeFormService } from './source-type-form.service';
     styleUrls: ['./source-type-form.component.scss']
 })
 export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChecked {
+
+    /**
+     * current project iri
+     */
+    @Input() projectIri: string;
 
     /**
      * selected resource class is a subclass from knora base (baseClassIri)
@@ -44,6 +49,9 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
     // current ontology; will get it from cache by key 'currentOntology'; type: Json-LD
     ontology: any;
+
+    // list of project specific lists (TODO: probably we have to add default knora lists?!)
+    lists: ListNodeInfo[];
 
     // reference to the component controlling the property selection
     // @ViewChildren('property') propertyComponents: QueryList<SourceTypePropertyComponent>;
@@ -119,6 +127,21 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         );
 
         this.buildForm();
+
+        // get all lists
+        this.knoraApiConnection.admin.listsEndpoint.getListsInProject(this.projectIri).subscribe(
+            (response: ApiResponseData<ListsResponse>) => {
+                console.log(response);
+                this.lists = response.body.lists;
+            },
+            (error: ApiResponseError) => {
+                console.error(error);
+            }
+        );
+
+        // get all ontology source types
+
+        // get all ontology properties
 
         /*
             this.sourceTypeForm.statusChanges.subscribe((data) => {

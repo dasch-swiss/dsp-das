@@ -7,6 +7,7 @@
 
     <!-- content: Step 1 = define resource type -->
     <form [formGroup]="sourceTypeForm" class="form-content">
+
         <div *ngIf="showSourceTypeForm" class="source-type-data">
 
             <!-- label -->
@@ -59,7 +60,7 @@
 
 
         <!-- content: Step 2 = define properties for resource type -->
-        <div *ngIf="!showSourceTypeForm" class="properties-form">
+        <div *ngIf="!showSourceTypeForm" class="properties-data">
 
             <!-- TODO: properties -->
             <!-- one line, with "add" icon to add additional properties -->

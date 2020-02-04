@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { existingNamesValidator } from '@knora/action';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject } from '@knora/api';
-import { KnoraApiConnectionToken, OntologyService } from '@knora/core';
+import { KnoraApiConnectionToken, OntologyService, ApiServiceError, ApiServiceResult } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
 
 export interface NewOntology {
@@ -24,6 +24,9 @@ export class OntologyFormComponent implements OnInit {
     // project short code
     @Input() projectcode: string;
 
+    // existing ontology names; name has to be unique
+    @Input() existingOntologyNames: string[];
+
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
     @Output() updateParent: EventEmitter<string> = new EventEmitter<string>();
@@ -34,7 +37,9 @@ export class OntologyFormComponent implements OnInit {
 
     ontologyLabel: string = '';
 
-    nameRegex = /^(?![v|V][0-9]).[a-zA-Z]\S*$/;
+    nameRegexStart = /^([vV][0-9]|[0-9])*$/;
+    nameRegexUmlaut = /[\u00C0-\u017F]+\S*$/;
+    nameRegex = /^(?![vV][0-9]|[0-9]|[\u00C0-\u017F]).[a-zA-Z0-9]+\S*$/;
 
     forbiddenNames: string[] = [
         'knora',
@@ -45,9 +50,7 @@ export class OntologyFormComponent implements OnInit {
         'shared'
     ];
 
-    existingNames: [RegExp] = [
-        new RegExp('anEmptyRegularExpressionWasntPossible')
-    ];
+    existingNames: [RegExp];
 
     nameMinLength = 3;
     nameMaxLength = 16;
@@ -61,8 +64,8 @@ export class OntologyFormComponent implements OnInit {
             'required': 'Name is required.',
             'minlength': 'Name must be at least ' + this.nameMinLength + ' characters long.',
             'maxlength': 'Name cannot be more than ' + this.nameMaxLength + ' characters long.',
-            'pattern': 'Name shouldn\'t start with a number or v + number; Spaces or special characters are not allowed.',
-            'existingName': 'This name is not allowed.'
+            'pattern': 'Name shouldn\'t start with a number or v + number and spaces or special characters are not allowed.',
+            'existingName': 'This name is not allowed or exists already.'
         }
     };
 
@@ -99,17 +102,27 @@ export class OntologyFormComponent implements OnInit {
 
     buildForm() {
 
-        for (const name of this.forbiddenNames) {
+        // reset existing names
+        this.existingNames = [
+            new RegExp('anEmptyRegularExpressionWasntPossible')
+        ];
 
-            // if the user is already member of the project
-            // add the email to the list of existing
+        // get all project ontologies and read the name
+        // name has to be unique; if it already exists
+        // show an error message
+        for (const name of this.existingOntologyNames) {
             this.existingNames.push(
-                // new RegExp('^' + name + '\z')
+                new RegExp('(?:^|W)' + name + '(?:$|W)')
+            )
+        }
+
+        for (const name of this.forbiddenNames) {
+            this.existingNames.push(
                 new RegExp(name)
             );
         }
 
-        this.ontologyLabel = this.project.shortname + ' ontology (data model): ';
+        this.ontologyLabel = this.project.shortname + ' data model: ';
 
         this.ontologyForm = this._fb.group({
             name: new FormControl({
@@ -135,7 +148,7 @@ export class OntologyFormComponent implements OnInit {
             return;
         }
 
-        this.ontologyLabel = this.project.shortname + ' ontology (data model): ' + data.name;
+        this.ontologyLabel = this.project.shortname + ' data model: ' + data.name;
 
         Object.keys(this.formErrors).map(field => {
             this.formErrors[field] = '';
@@ -197,5 +210,7 @@ export class OntologyFormComponent implements OnInit {
         this.buildForm();
 
     }
+
+
 
 }

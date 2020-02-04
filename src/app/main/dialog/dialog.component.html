@@ -172,7 +172,8 @@
     <div *ngSwitchCase="'createOntology'">
         <app-dialog-header [title]="'Data model'" [subtitle]="'Create new'" (close)="dialogRef.close()">
         </app-dialog-header>
-        <app-ontology-form [projectcode]="data.project" (closeDialog)="dialogRef.close()"></app-ontology-form>
+        <app-ontology-form [projectcode]="data.project" (closeDialog)="dialogRef.close()"
+            [existingOntologyNames]="data.existing"></app-ontology-form>
     </div>
 
     <div *ngSwitchCase="'editOntology'">
@@ -201,8 +202,8 @@
     <div *ngSwitchCase="'addSourceType'">
         <app-dialog-header [title]="data.title" [subtitle]="data.subtitle" (close)="dialogRef.close()">
         </app-dialog-header>
-        <app-source-type-form [subClassOf]="data.name" [name]="data.title" (closeDialog)="dialogRef.close()"
-            (updateParent)="replaceTitle($event)">
+        <app-source-type-form [subClassOf]="data.name" [name]="data.title" [projectIri]="data.project"
+            (closeDialog)="dialogRef.close()" (updateParent)="replaceTitle($event)">
         </app-source-type-form>
     </div>
 

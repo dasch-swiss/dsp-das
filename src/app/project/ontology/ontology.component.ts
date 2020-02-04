@@ -41,6 +41,8 @@ export class OntologyComponent implements OnInit {
 
     // ontologies
     ontologies: OntologyInfo[];
+    // existing project ontology names
+    existingOntologyNames: string[] = [];
 
     // ontology JSON-LD object
     ontology: ReadOntology;
@@ -152,8 +154,13 @@ export class OntologyComponent implements OnInit {
 
         this.loading = true;
 
+        // reset existing ontology names
+        this.existingOntologyNames = [];
+
         this._ontologyService.getProjectOntologies(encodeURI(this.project.id)).subscribe(
             (ontologies: ApiServiceResult) => {
+
+                let name: string;
 
                 if (ontologies.body['@graph'] && ontologies.body['@graph'].length > 0) {
                     // more than one ontology
@@ -166,6 +173,10 @@ export class OntologyComponent implements OnInit {
                         };
 
                         this.ontologies.push(info);
+
+                        // set list of existing names
+                        name = this.getOntologyName(ontology['@id']);
+                        this.existingOntologyNames.push(name);
                     }
 
                     this.loading = false;
@@ -180,6 +191,9 @@ export class OntologyComponent implements OnInit {
                     ];
 
                     this.ontologyIri = ontologies.body['@id'];
+                    // set list of existing name
+                    name = this.getOntologyName(this.ontologyIri);
+                    this.existingOntologyNames.push(name);
 
                     // open this ontology
                     this.openOntologyRoute(this.ontologyIri);
@@ -269,7 +283,7 @@ export class OntologyComponent implements OnInit {
             position: {
                 top: '112px'
             },
-            data: { mode: mode, title: name, id: iri, project: this.project.shortcode }
+            data: { mode: mode, title: name, id: iri, project: this.project.shortcode, existing: this.existingOntologyNames }
         };
 
         const dialogRef = this._dialog.open(
@@ -294,7 +308,7 @@ export class OntologyComponent implements OnInit {
             position: {
                 top: '112px'
             },
-            data: { name: type.name, title: type.label, subtitle: 'Customize source type', mode: mode }
+            data: { name: type.name, title: type.label, subtitle: 'Customize source type', mode: mode, project: this.project.id }
         };
 
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
@@ -370,5 +384,20 @@ export class OntologyComponent implements OnInit {
 
             }
         });
+    }
+
+    /**
+     * Get the ontolgoy name from ontology iri
+     *
+     * @param  {string} iri
+     * @returns string
+     */
+    private getOntologyName(iri: string): string {
+
+        const array = iri.split('/');
+
+        const pos = array.length - 2;
+
+        return array[pos].toLowerCase();
     }
 }
