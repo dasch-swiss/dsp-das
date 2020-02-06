@@ -58,8 +58,7 @@
         <!-- content: Step 2 = define properties for resource type -->
         <div *ngIf="!showSourceTypeForm" class="properties-data">
 
-            <!-- TODO: properties -->
-            <!-- one line, with "add" icon to add additional properties -->
+            <!-- propertiy: one line, with "add" icon to add additional properties -->
             <div cdkDropList class="properties-list" (cdkDropListDropped)="drop($event)">
                 <div cdkDrag class="property-line"
                     *ngFor="let prop of properties?.controls; let last = last; let i = index;">
@@ -71,8 +70,7 @@
                         <mat-icon>drag_indicator</mat-icon>
                     </button>
 
-                    <app-source-type-property [propertyForm]="prop" [index]="i">
-                    </app-source-type-property>
+                    <app-source-type-property [propertyForm]="prop" [index]="i"></app-source-type-property>
 
                     <button *ngIf="properties.length > 1" mat-icon-button type="button" color="warn"
                         aria-label="Delete this property" class="suffix delete-line" (click)="removeProperty(i)">

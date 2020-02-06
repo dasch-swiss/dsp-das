@@ -51,9 +51,6 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     // current ontology; will get it from cache by key 'currentOntology'
     ontology: ReadOntology;
 
-    // list of project specific lists (TODO: probably we have to add default knora lists?!)
-    lists: ListNodeInfo[];
-
     // success of sending data
     success = false;
 
@@ -96,13 +93,12 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     nameMaxLength = 16;
 
     // form errors on the following fields:
-    // label is required
     formErrors = {
         'name': '',
         'label': ''
     };
 
-    // in cas of form error: show message
+    // in case of form error: show message
     validationMessages = {
         'name': {
             'required': 'Name is required.',
@@ -120,7 +116,6 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _ontologyService: OntologyService,
         private _cache: CacheService,
-        private _fb: FormBuilder,
         private _cdr: ChangeDetectorRef,
         private _sourceTypeFormService: SourceTypeFormService
     ) { }
@@ -141,7 +136,6 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         this._cache.get('currentOntology').subscribe(
             (response: ReadOntology) => {
                 this.ontology = response;
-                console.log(response);
                 // get all ontology source types:
                 // can be used to select source type as gui attribute in link property,
                 // but also to avoid same name which should be unique
@@ -151,11 +145,6 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
                         new RegExp('(?:^|W)' + c.split('#')[1] + '(?:$|W)')
                     )
                 }
-                console.log(this.existingSourceTypeNames);
-
-
-
-                // get all ontology properties
             },
             (error: any) => {
                 console.error(error);
@@ -165,7 +154,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         // get all lists; will be used to set guit attribut in list property
         this.knoraApiConnection.admin.listsEndpoint.getListsInProject(this.projectIri).subscribe(
             (response: ApiResponseData<ListsResponse>) => {
-                this.lists = response.body.lists;
+                this._cache.set('currentOntologyLists', response.body.lists);
             },
             (error: ApiResponseError) => {
                 console.error(error);

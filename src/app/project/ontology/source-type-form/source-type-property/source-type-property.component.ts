@@ -3,6 +3,9 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatIconRegistry, MatSelectChange } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DefaultPropertyType, PropertyTypes } from '../../default-data/poperty-types';
+import { ListNodeInfo, ReadOntology, KnoraApiConnection, ApiResponseData, ListsResponse, ApiResponseError } from '@knora/api';
+import { KnoraApiConnectionToken, OntologyService } from '@knora/core';
+import { CacheService } from 'src/app/main/cache/cache.service';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 const resolvedPromise = Promise.resolve(null);
@@ -25,12 +28,17 @@ export class SourceTypePropertyComponent implements OnInit {
     type = new FormControl();
     multiple = new FormControl();
     required = new FormControl();
-    // permission = new FormControl();
 
     // selection of default property types
     propertyTypes: DefaultPropertyType[] = PropertyTypes.data;
 
     showGuiAttr: boolean = false;
+
+    // list of project specific lists (TODO: probably we have to add default knora lists?!)
+    lists: ListNodeInfo[];
+
+    // current ontology
+    ontology: ReadOntology;
 
 
 
@@ -43,7 +51,8 @@ export class SourceTypePropertyComponent implements OnInit {
     // index: number;
 
     constructor(
-        @Inject(FormBuilder) private _fb: FormBuilder,
+        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
+        private _cache: CacheService,
         private _domSanitizer: DomSanitizer,
         private _matIconRegistry: MatIconRegistry) {
 
@@ -65,6 +74,52 @@ export class SourceTypePropertyComponent implements OnInit {
             this.propertyForm.patchValue({ type: this.propertyTypes[0].elements[0] });
         }
 
+        this._cache.get('currentOntology').subscribe(
+            (response: ReadOntology) => {
+                this.ontology = response;
+            },
+            (error: any) => {
+                console.error(error);
+            }
+        );
+
+        this._cache.get('currentOntologyLists').subscribe(
+            (response: ListNodeInfo[]) => {
+                this.lists = response;
+            },
+            (error: any) => {
+                console.error(error);
+            }
+        );
+
+
+
+        // this._cache.get('currentOntology').subscribe(
+        //     (response: ReadOntology) => {
+        //         this.ontology = response;
+        //         console.log(response);
+        //         // get all ontology source types:
+        //         // can be used to select source type as gui attribute in link property,
+        //         // but also to avoid same name which should be unique
+        //         const classKeys: string[] = Object.keys(response.classes);
+        //         for (const c of classKeys) {
+        //             this.existingSourceTypeNames.push(
+        //                 new RegExp('(?:^|W)' + c.split('#')[1] + '(?:$|W)')
+        //             )
+        //         }
+        //         // get all ontology properties
+        //         const propKeys: string[] = Object.keys(response.properties);
+        //         for (const p of propKeys) {
+        //             this.existingPropertyNames.push(
+        //                 new RegExp('(?:^|W)' + p.split('#')[1] + '(?:$|W)')
+        //             )
+        //         }
+        //     },
+        //     (error: any) => {
+        //         console.error(error);
+        //     }
+        // );
+
     }
 
     updateAttributeField(event: MatSelectChange) {
@@ -74,10 +129,7 @@ export class SourceTypePropertyComponent implements OnInit {
         // e.g. iri of list or connected resource type
         switch (event.value.subPropOf) {
             case 'knora-api:ListValue':
-                this.showGuiAttr = true;
-                break;
-
-            case 'knora-api:LinkValue':
+            case 'knora-apiLinkValue':
                 this.showGuiAttr = true;
                 break;
 

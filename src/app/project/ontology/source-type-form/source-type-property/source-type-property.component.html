@@ -38,6 +38,8 @@
 
     <br>
 
+    <span class="empty-index"></span>
+
     <!-- new line for cardinality and set gui attributes -->
     <!-- Cardinality -->
     <div class="small-field">
@@ -56,9 +58,18 @@
     <!-- TODO: additional mat-form-field for settings depending on the type selection -->
     <div class="small-field" *ngIf="showGuiAttr">
         <div [ngSwitch]="propertyForm.controls['type'].value.subPropOf">
-            <div *ngSwitchCase="'knora-api:ListValue'">Select list</div>
+            <div *ngSwitchCase="'knora-api:ListValue'">
+                <mat-form-field>
+                    <mat-label>Select list</mat-label>
+                    <mat-select>
+                        <mat-option *ngFor="let list of lists" [value]="list.id">
+                            {{list.labels[0].value}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
             <div *ngSwitchCase="'knora-api:LinkValue'">Select source type</div>
-            <div *ngSwitchDefault>Not yet implemented</div>
+            <!-- <div *ngSwitchDefault>Not yet implemented</div> -->
         </div>
     </div>
 
