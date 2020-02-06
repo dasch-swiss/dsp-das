@@ -33,7 +33,7 @@
     "@angular/platform-browser-dynamic": "~8.2.7",
     "@angular/router": "~8.2.7",
     "@knora/action": "10.0.1",
-    "@knora/api": "file:.yalc/@knora/api",
+    "@knora/api": "^0.2.0",
     "@knora/core": "file:.yalc/@knora/core",
     "@knora/search": "10.0.1",
     "@knora/viewer": "10.0.1",
