@@ -1,7 +1,8 @@
 <div *ngIf="projectAdmin" class="content large middle">
-    <!-- toolbar: add user to the project -->
-    <app-add-user *ngIf="project?.status && (sysAdmin || projectAdmin)" [projectcode]="projectcode"
-        (refreshParent)="refresh()" #addUserComponent></app-add-user>
+    <!-- add user to the project -->
+    <app-add-user *ngIf="project?.status && (sysAdmin || projectAdmin)" [projectcode]="projectcode" (refreshParent)="refresh()" #addUserComponent></app-add-user>
+
+    <!-- <mat-divider *ngIf="project?.status" ></mat-divider> -->
 
     <!-- main content: list of project members -->
     <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
