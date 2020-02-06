@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatIconRegistry, MatSelectChange } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DefaultPropertyType, PropertyTypes } from '../../default-data/poperty-types';
@@ -134,6 +134,8 @@ export class SourceTypePropertyComponent implements OnInit {
 
     updateAttributeField(event: MatSelectChange) {
 
+        // reset value of guiAttr
+        this.propertyForm.controls['guiAttr'].setValue(undefined);
         // depending on the selected property type,
         // we have to define gui element attributes
         // e.g. iri of list or connected resource type
@@ -141,9 +143,15 @@ export class SourceTypePropertyComponent implements OnInit {
             case 'knora-api:ListValue':
             case 'knora-api:LinkValue':
                 this.showGuiAttr = true;
+                this.propertyForm.controls['guiAttr'].setValidators([
+                    Validators.required
+                ]);
+                this.propertyForm.controls['guiAttr'].updateValueAndValidity();
                 break;
 
             default:
+                this.propertyForm.controls['guiAttr'].clearValidators();
+                this.propertyForm.controls['guiAttr'].updateValueAndValidity();
                 this.showGuiAttr = false;
         }
 
