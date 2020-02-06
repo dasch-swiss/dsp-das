@@ -5,7 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ClassDefinition, KnoraApiConnection, ListNodeInfo, ReadOntology, ResourcePropertyDefinition } from '@knora/api';
 import { KnoraApiConnectionToken, AutocompleteItem } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { DefaultPropertyType, PropertyTypes } from '../../default-data/poperty-types';
+import { DefaultPropertyType, PropertyTypes, DefaultValueType } from '../../default-data/poperty-types';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
@@ -172,6 +172,8 @@ export class SourceTypePropertyComponent implements OnInit {
 
     updateAttributeField(event: MatSelectChange) {
 
+        console.log('updateAttrField');
+
         // reset value of guiAttr
         this.propertyForm.controls['guiAttr'].setValue(undefined);
         // depending on the selected property type,
@@ -193,8 +195,6 @@ export class SourceTypePropertyComponent implements OnInit {
                 this.showGuiAttr = false;
         }
 
-
-
     }
 
     /**
@@ -208,8 +208,28 @@ export class SourceTypePropertyComponent implements OnInit {
         console.log(typeof this.ontology.properties[option.value.iri]);
 
         if (this.ontology.properties[option.value.iri] instanceof ResourcePropertyDefinition) {
-            //            const tempProp: ResourcePropertyDefinition = this.ontology.properties[option.value.iri];
-            //            console.log('prop', tempProp);
+            const tempProp: any = this.ontology.properties[option.value.iri];
+
+            let obj: DefaultValueType;
+            // find gui ele from list of default property-types to set type value
+            for (let group of this.propertyTypes) {
+                obj = group.elements.find(i => i.gui_ele === 'salsah-gui:' + tempProp.guiElement.split('#')[1]);
+
+                if (obj) {
+                    this.propertyForm.controls['type'].setValue(obj);
+                    break;
+                }
+            }
+
+            switch (tempProp.guiElement) {
+                case 'http://api.knora.org/ontology/salsah-gui/v2#List':
+                    console.log('set attr to', tempProp.guiAttributes[0].split('hlist=<')[1].slice(0, -1));
+                    this.showGuiAttr = true;
+                    this.propertyForm.controls['guiAttr'].setValue(tempProp.guiAttributes[0].split('hlist=<')[1].slice(0, -1));
+                    this.propertyForm.controls['guiAttr'].disable();
+                    break;
+            }
+            // console.log('prop', tempProp.gui);
 
             //            this.propertyForm.controls['type'].setValue(tempProp.guiElement);
             // this.updateAttributeField()
