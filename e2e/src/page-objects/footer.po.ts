@@ -52,4 +52,9 @@ export class FooterPage {
     getFacebookLink() {
         return element(by.css('a[href*="https://facebook.com/dasch.swiss"]'));
     }
+
+    getBernoulistrasseMapLink() {
+        return element(by.css('a[href*="https://www.google.com/maps/place/Bernoullistrasse+32%2C+4056+Basel"]'));
+    }
+
 }
