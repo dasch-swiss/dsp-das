@@ -52,7 +52,7 @@
     </div>
 
     <!-- main content: overview shows resource classes of ontology -->
-    <div *ngIf="!loadOntology && ontology" class="ontology-editor drag-drop-stop">
+    <div *ngIf="ontology" class="ontology-editor drag-drop-stop">
 
         <mat-toolbar>
             <mat-toolbar-row>
@@ -76,7 +76,7 @@
             </mat-toolbar-row>
         </mat-toolbar>
 
-        <div #ontologyEditor class="ontology-editor-canvas">
+        <div #ontologyEditor class="ontology-editor-canvas" *ngIf="!loadOntology">
             <!-- button to select and add new source type to the ontology -->
             <div class="add-source-type" *ngIf="project?.status && sysAdmin && ontologyIri">
                 <button mat-raised-button color="primary" [matMenuTriggerFor]="addResClassMenu">
@@ -129,8 +129,8 @@
             </div>
         </div>
 
+        <kui-progress-indicator *ngIf="loadOntology"></kui-progress-indicator>
     </div>
-    <kui-progress-indicator *ngIf="loadOntology && !ontology"></kui-progress-indicator>
 
 </div>
 

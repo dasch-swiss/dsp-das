@@ -233,6 +233,7 @@ export class OntologyComponent implements OnInit {
 
     // get ontology
     getOntology(id: string) {
+        console.log('get ontology');
 
         this.ontoClasses = [];
 
@@ -243,10 +244,12 @@ export class OntologyComponent implements OnInit {
 
                 this.ontology = response;
 
-                const classKeys: string[] = Object.keys(response.classes);
+                if (!this.ontoClasses.length) {
+                    const classKeys: string[] = Object.keys(response.classes);
 
-                for (const c of classKeys) {
-                    this.ontoClasses.push(this.ontology.classes[c]);
+                    for (const c of classKeys) {
+                        this.ontoClasses.push(this.ontology.classes[c]);
+                    }
                 }
                 this.loadOntology = false;
             },
@@ -356,6 +359,7 @@ export class OntologyComponent implements OnInit {
                                 // TODO: show message
                                 console.error(error);
                                 this.loading = false;
+                                this.loadOntology = false;
                             }
                         );
                         break;

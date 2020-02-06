@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { existingNamesValidator } from '@knora/action';
 
 // property data structure
 export class Property {
@@ -11,6 +10,7 @@ export class Property {
     type: any;
     multiple: boolean;
     required: boolean;
+    guiAttr: string;
     // permission: string;
 
     constructor(
@@ -19,6 +19,7 @@ export class Property {
         type?: any,
         multiple?: boolean,
         required?: boolean,
+        guiAttr?: string
         // permission?: string
     ) {
         this.name = name;
@@ -26,6 +27,7 @@ export class Property {
         this.type = type;
         this.multiple = multiple;
         this.required = required;
+        this.guiAttr = guiAttr;
         // this.permission = permission;
     }
 }
@@ -38,6 +40,7 @@ export class PropertyForm {
     type = new FormControl();
     multiple = new FormControl();
     required = new FormControl();
+    guiAttr = new FormControl();
     // permission = new FormControl();
 
     constructor(
@@ -55,6 +58,8 @@ export class PropertyForm {
         this.multiple.setValue(property.multiple);
 
         this.required.setValue(property.required);
+
+        this.guiAttr.setValue(property.guiAttr);
 
         // this.permission.setValue(property.permission);
         // TODO: permission is not implemented yet

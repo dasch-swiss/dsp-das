@@ -136,6 +136,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         this._cache.get('currentOntology').subscribe(
             (response: ReadOntology) => {
                 this.ontology = response;
+
                 // get all ontology source types:
                 // can be used to select source type as gui attribute in link property,
                 // but also to avoid same name which should be unique

@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatIconRegistry, MatSelectChange } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DefaultPropertyType, PropertyTypes } from '../../default-data/poperty-types';
-import { ListNodeInfo, ReadOntology, KnoraApiConnection, ApiResponseData, ListsResponse, ApiResponseError } from '@knora/api';
+import { ListNodeInfo, ReadOntology, KnoraApiConnection, ApiResponseData, ListsResponse, ApiResponseError, ClassDefinition } from '@knora/api';
 import { KnoraApiConnectionToken, OntologyService } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
 
@@ -40,6 +40,8 @@ export class SourceTypePropertyComponent implements OnInit {
     // current ontology
     ontology: ReadOntology;
 
+    // resource types in this ontology
+    resourceTypes: ClassDefinition[] = [];
 
 
     selectTypeLabel: string; // = this.propertyTypes[0].group + ': ' + this.propertyTypes[0].elements[0].label;
@@ -77,6 +79,14 @@ export class SourceTypePropertyComponent implements OnInit {
         this._cache.get('currentOntology').subscribe(
             (response: ReadOntology) => {
                 this.ontology = response;
+
+                console.log(response);
+                // set list of resource types from response
+                const classKeys: string[] = Object.keys(response.classes);
+
+                for (const c of classKeys) {
+                    this.resourceTypes.push(this.ontology.classes[c]);
+                }
             },
             (error: any) => {
                 console.error(error);
@@ -129,7 +139,7 @@ export class SourceTypePropertyComponent implements OnInit {
         // e.g. iri of list or connected resource type
         switch (event.value.subPropOf) {
             case 'knora-api:ListValue':
-            case 'knora-apiLinkValue':
+            case 'knora-api:LinkValue':
                 this.showGuiAttr = true;
                 break;
 
