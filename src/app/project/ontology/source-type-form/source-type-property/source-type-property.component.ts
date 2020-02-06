@@ -1,14 +1,16 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatIconRegistry, MatSelectChange } from '@angular/material';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatIconRegistry, MatSelectChange, MatOption } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
-import { DefaultPropertyType, PropertyTypes } from '../../default-data/poperty-types';
-import { ListNodeInfo, ReadOntology, KnoraApiConnection, ApiResponseData, ListsResponse, ApiResponseError, ClassDefinition } from '@knora/api';
-import { KnoraApiConnectionToken, OntologyService } from '@knora/core';
+import { ClassDefinition, KnoraApiConnection, ListNodeInfo, ReadOntology, ResourcePropertyDefinition } from '@knora/api';
+import { KnoraApiConnectionToken, AutocompleteItem } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
+import { DefaultPropertyType, PropertyTypes } from '../../default-data/poperty-types';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
-const resolvedPromise = Promise.resolve(null);
+// const resolvedPromise = Promise.resolve(null);
 
 @Component({
     selector: 'app-source-type-property',
@@ -42,6 +44,11 @@ export class SourceTypePropertyComponent implements OnInit {
 
     // resource types in this ontology
     resourceTypes: ClassDefinition[] = [];
+
+    // list of existing properties
+    properties: AutocompleteItem[] = [];
+
+    filteredProperties: Observable<AutocompleteItem[]>;
 
 
     selectTypeLabel: string; // = this.propertyTypes[0].group + ': ' + this.propertyTypes[0].elements[0].label;
@@ -81,11 +88,23 @@ export class SourceTypePropertyComponent implements OnInit {
                 this.ontology = response;
 
                 console.log(response);
-                // set list of resource types from response
+                // set list of resource types from response; needed for linkValue
                 const classKeys: string[] = Object.keys(response.classes);
-
                 for (const c of classKeys) {
                     this.resourceTypes.push(this.ontology.classes[c]);
+                }
+
+                // set list of properties from response; needed for autocomplete to avoid same property name twice
+                const propKeys: string[] = Object.keys(response.properties);
+                let i: number = 0;
+                for (const p of propKeys) {
+                    this.properties[i] = {
+                        iri: this.ontology.properties[p].id,
+                        name: this.ontology.properties[p].id.split('#')[1],
+                        label: this.ontology.properties[p].label
+                    };
+                    i++;
+                    // this.properties.push(this.ontology.properties[p]);
                 }
             },
             (error: any) => {
@@ -101,6 +120,13 @@ export class SourceTypePropertyComponent implements OnInit {
                 console.error(error);
             }
         );
+        console.log(this.propertyForm);
+
+        this.filteredProperties = this.propertyForm.controls['name'].valueChanges
+            .pipe(
+                startWith(''),
+                map(prop => prop.length >= 2 ? this.filter(this.properties, prop) : [])
+            );
 
 
 
@@ -132,6 +158,18 @@ export class SourceTypePropertyComponent implements OnInit {
 
     }
 
+    /**
+     * filter a list while typing in auto complete input field
+     * @param list List of options
+     * @param name Value to filter by
+     * @returns Filtered list of options
+     */
+    filter(list: AutocompleteItem[], name: string) {
+        return list.filter(prop =>
+            prop.name.toLowerCase().includes(name.toLowerCase())
+        );
+    }
+
     updateAttributeField(event: MatSelectChange) {
 
         // reset value of guiAttr
@@ -156,6 +194,27 @@ export class SourceTypePropertyComponent implements OnInit {
         }
 
 
+
+    }
+
+    /**
+     * @param  {MatOption} option
+     */
+    updateFieldsDependingOnName(option: MatOption) {
+        this.propertyForm.controls['name'].setValue(option.value.name);
+        this.propertyForm.controls['label'].setValue(option.value.label);
+        this.propertyForm.controls['label'].disable();
+
+        console.log(typeof this.ontology.properties[option.value.iri]);
+
+        if (this.ontology.properties[option.value.iri] instanceof ResourcePropertyDefinition) {
+            //            const tempProp: ResourcePropertyDefinition = this.ontology.properties[option.value.iri];
+            //            console.log('prop', tempProp);
+
+            //            this.propertyForm.controls['type'].setValue(tempProp.guiElement);
+            // this.updateAttributeField()
+        }
+        this.propertyForm.controls['type'].disable();
 
     }
 

@@ -3,9 +3,25 @@
 
     <!-- Property name; will be used for prop id -->
     <!-- TODO: Autocomplete input with list of existing prop ids; by selecting one update the other fields and set them as disabled -->
-    <mat-form-field class="small-field">
+    <!-- <mat-form-field class="small-field">
         <input matInput placeholder="Property name *" formControlName="name">
+    </mat-form-field> -->
+    <mat-form-field class="small-field">
+        <input matInput placeholder="Property name *" formControlName="name" [matAutocomplete]="auto">
     </mat-form-field>
+
+
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="updateFieldsDependingOnName($event.option)">
+        <mat-option *ngFor="let prop of filteredProperties | async" [value]="prop">
+            {{ prop?.name }}
+        </mat-option>
+    </mat-autocomplete>
+
+
+    <!-- <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let option of properties" [value]="option.name">{{option.name}}
+        </mat-option>
+    </mat-autocomplete> -->
 
     <!-- Property label -->
     <mat-form-field class="small-field">

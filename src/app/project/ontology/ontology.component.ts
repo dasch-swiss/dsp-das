@@ -233,7 +233,6 @@ export class OntologyComponent implements OnInit {
 
     // get ontology
     getOntology(id: string) {
-        console.log('get ontology');
 
         this.ontoClasses = [];
 
