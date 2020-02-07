@@ -18,4 +18,15 @@ export class TestConfig {
             sysAdmin: false
         }
     };
+
+    public static SystemAdminSession: Session = {
+        id: 1555226377251,
+        user: {
+            jwt: '',
+            lang: 'en',
+            name: 'root',
+            projectAdmin: ['http://rdfh.ch/projects/0803'],
+            sysAdmin: true
+        }
+    };
 }
