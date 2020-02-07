@@ -128,34 +128,6 @@ export class SourceTypePropertyComponent implements OnInit {
                 map(prop => prop.length >= 2 ? this.filter(this.properties, prop) : [])
             );
 
-
-
-        // this._cache.get('currentOntology').subscribe(
-        //     (response: ReadOntology) => {
-        //         this.ontology = response;
-        //         console.log(response);
-        //         // get all ontology source types:
-        //         // can be used to select source type as gui attribute in link property,
-        //         // but also to avoid same name which should be unique
-        //         const classKeys: string[] = Object.keys(response.classes);
-        //         for (const c of classKeys) {
-        //             this.existingSourceTypeNames.push(
-        //                 new RegExp('(?:^|W)' + c.split('#')[1] + '(?:$|W)')
-        //             )
-        //         }
-        //         // get all ontology properties
-        //         const propKeys: string[] = Object.keys(response.properties);
-        //         for (const p of propKeys) {
-        //             this.existingPropertyNames.push(
-        //                 new RegExp('(?:^|W)' + p.split('#')[1] + '(?:$|W)')
-        //             )
-        //         }
-        //     },
-        //     (error: any) => {
-        //         console.error(error);
-        //     }
-        // );
-
     }
 
     /**
@@ -205,8 +177,6 @@ export class SourceTypePropertyComponent implements OnInit {
         this.propertyForm.controls['label'].setValue(option.value.label);
         this.propertyForm.controls['label'].disable();
 
-        console.log(typeof this.ontology.properties[option.value.iri]);
-
         if (this.ontology.properties[option.value.iri] instanceof ResourcePropertyDefinition) {
             const tempProp: any = this.ontology.properties[option.value.iri];
 
@@ -244,11 +214,12 @@ export class SourceTypePropertyComponent implements OnInit {
                     this.propertyForm.controls['guiAttr'].setValue(tempProp.objectType);
                     this.propertyForm.controls['guiAttr'].disable();
                     break;
-            }
-            // console.log('prop', tempProp.gui);
 
-            //            this.propertyForm.controls['type'].setValue(tempProp.guiElement);
-            // this.updateAttributeField()
+                default:
+                    this.showGuiAttr = false;
+
+            }
+
         }
         this.propertyForm.controls['type'].disable();
 
