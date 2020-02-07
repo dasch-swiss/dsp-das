@@ -222,10 +222,26 @@ export class SourceTypePropertyComponent implements OnInit {
             }
 
             switch (tempProp.guiElement) {
+                // prop type is a list
                 case 'http://api.knora.org/ontology/salsah-gui/v2#List':
-                    console.log('set attr to', tempProp.guiAttributes[0].split('hlist=<')[1].slice(0, -1));
+                case 'http://api.knora.org/ontology/salsah-gui/v2#Radio':
+                    // gui attribute value for lists looks as follow: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
+                    // get index from guiAttr array where value starts with hlist=
+                    let i = tempProp.guiAttributes.findIndex(element => element.includes('hlist'));
+
+                    // find content beteween pointy brackets to get list irir
+                    const re: RegExp = /\<([^)]+)\>/;
+                    const listIri = tempProp.guiAttributes[i].match(re)[1];
+
                     this.showGuiAttr = true;
-                    this.propertyForm.controls['guiAttr'].setValue(tempProp.guiAttributes[0].split('hlist=<')[1].slice(0, -1));
+                    this.propertyForm.controls['guiAttr'].setValue(listIri);
+                    this.propertyForm.controls['guiAttr'].disable();
+                    break;
+                // prop type is resource pointer
+                case 'http://api.knora.org/ontology/salsah-gui/v2#Searchbox':
+
+                    this.showGuiAttr = true;
+                    this.propertyForm.controls['guiAttr'].setValue(tempProp.objectType);
                     this.propertyForm.controls['guiAttr'].disable();
                     break;
             }
