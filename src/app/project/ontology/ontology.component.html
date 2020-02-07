@@ -118,7 +118,10 @@
                 <div class="resource-class-properties">
                     <ul>
                         <span *ngFor="let prop of resClass.propertiesList">
-                            <li *ngIf="prop.guiOrder >= 0 && ontology?.properties[prop.propertyIndex]">
+                            <!-- display only properties with guiOrder and they exist in list of properties
+                                and objectType is not a linkValue (otherwise we have the property twice) -->
+                            <li
+                                *ngIf="prop.guiOrder >= 0 && ontology?.properties[prop.propertyIndex] && ontology?.properties[prop.propertyIndex].objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue'">
                                 {{ontology?.properties[prop.propertyIndex].label}}
                             </li>
                         </span>
