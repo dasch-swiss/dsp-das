@@ -15,6 +15,7 @@ import { UserMenuComponent } from 'src/app/user/user-menu/user-menu.component';
 import { TestConfig } from 'test.config';
 import { SelectLanguageComponent } from '../select-language/select-language.component';
 import { HeaderComponent } from './header.component';
+import { By } from '@angular/platform-browser';
 
 describe('HeaderComponent', () => {
     let component: HeaderComponent;
@@ -62,4 +63,31 @@ describe('HeaderComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('should display the lamp icon button', () => {
+        const lampIconBtn = fixture.debugElement.query(By.css('button.home-button'));
+        expect(lampIconBtn).toBeDefined();
+    });
+
+    it('should display the link to the help page', () => {
+        const helpBtn = fixture.debugElement.query(By.css('button.help'));
+        expect(helpBtn).toBeDefined();
+
+        const helpBtnLabel = helpBtn.nativeElement.innerHTML;
+        expect(helpBtnLabel).toEqual('Help');
+    });
+
+    it('should display the login button', () => {
+        const loginBtn = fixture.debugElement.query(By.css('button.login-button'));
+        expect(loginBtn).toBeDefined();
+
+        const loginBtnLabel = loginBtn.nativeElement.innerHTML;
+        expect(loginBtnLabel).toEqual('LOGIN');
+    });
+
+    it('should display the search panel', () => {
+        const searchPanel = fixture.debugElement.query(By.css('kui-search-panel'));
+        expect(searchPanel).toBeDefined();
+    });
+
 });

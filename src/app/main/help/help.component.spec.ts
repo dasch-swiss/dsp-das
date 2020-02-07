@@ -51,4 +51,6 @@ describe('HelpComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    // all the buttons have been tested in e2e tests => see e2e/src/help.e2e-spec.ts
 });

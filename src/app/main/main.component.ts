@@ -58,7 +58,7 @@ export class MainComponent implements OnInit {
         },
         {
             icon: 'group',
-            title: 'Collaboration',
+            title: 'Project members',
             text: 'Form your team and let the knowledge grow out of your data and sources.'
         }
     ];
