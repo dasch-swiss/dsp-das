@@ -87,7 +87,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
     existingPropertyNames: [RegExp];
 
-    nameRegex = /^(?![0-9]).(?![\u00C0-\u017F]).[a-zA-Z0-9]+\S*$/;
+    nameRegex: RegExp = /^(?![0-9]).(?![\u00C0-\u017F]).[a-zA-Z0-9]+\S*$/;
 
     nameMinLength = 3;
     nameMaxLength = 16;
