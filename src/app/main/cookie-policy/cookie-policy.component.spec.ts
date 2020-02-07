@@ -1,3 +1,4 @@
+import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { Location } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,6 +10,7 @@ import { CookiePolicyComponent } from './cookie-policy.component';
 describe('CookiePolicyComponent', () => {
   let component: CookiePolicyComponent;
   let fixture: ComponentFixture<CookiePolicyComponent>;
+  let element: HTMLElement;
 
   const locationStub = {
     back: jasmine.createSpy('back')
@@ -32,6 +34,7 @@ describe('CookiePolicyComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CookiePolicyComponent);
     component = fixture.componentInstance;
+    element = fixture.nativeElement; // the HTML reference
     fixture.detectChanges();
   });
 
@@ -39,5 +42,13 @@ describe('CookiePolicyComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // todo: check the title of the page
+  it('should display the title "Cookie Policy for Knora web application"', () => {
+    const h1 = element.querySelector('h1');
+    expect(h1.textContent).toEqual('Cookie Policy for Knora web application');
+  });
+
+  it('should have goBack method and should call location.back', inject([Location], (loc: Location) => {
+    component.goBack();
+    expect(loc.back).toHaveBeenCalledTimes(1);
+  }));
 });
