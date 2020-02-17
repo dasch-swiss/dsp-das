@@ -343,6 +343,7 @@ export class OntologyComponent implements OnInit {
 
                 switch (mode) {
                     case 'Ontology':
+                        /* NOT YET IMPLEMENTED!!!
                         this.loading = true;
                         this._ontologyService.deleteOntology(id, this.ontology.lastModificationDate).subscribe(
                             (response: any) => {
@@ -361,12 +362,14 @@ export class OntologyComponent implements OnInit {
                                 this.loadOntology = false;
                             }
                         );
+                        */
                         break;
 
                     case 'SourceType':
                         // delete resource type and refresh the view
-                        this.loadOntology = true;
 
+                        /* NOT YET IMPLEMENTED!!!
+                        this.loadOntology = true;
                         this._ontologyService.deleteResourceClass(id, this.ontology.lastModificationDate).subscribe(
                             (response: any) => {
                                 this.getOntology(this.ontologyIri);
@@ -377,6 +380,7 @@ export class OntologyComponent implements OnInit {
                                 console.error(error);
                             }
                         );
+                        */
                         break;
                 }
 

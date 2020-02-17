@@ -936,8 +936,10 @@
     jsonld "^1.8.0"
     rxjs "^6.5.3"
 
-"@knora/core@file:.yalc/@knora/core":
-  version "10.0.1-2d9a8cce"
+"@knora/core@10.0.1":
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/@knora/core/-/core-10.0.1.tgz#80209e5244e3bd423a2fa265e66f12afb7ac00ce"
+  integrity sha512-4/6VVp5lsNfpZr748dW/WDtDD4H8xE/QSxPQsU7WZbGfAEmP0I43YtRoH6Q6+6pYXaHtFWoiTAqDq5SusqNPUg==
   dependencies:
     tslib "^1.9.0"
 

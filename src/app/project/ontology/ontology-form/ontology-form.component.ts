@@ -172,6 +172,7 @@ export class OntologyFormComponent implements OnInit {
             name: this.ontologyForm.controls['name'].value,
             label: this.ontologyLabel
         };
+        /* NOT YET IMPLEMENTED!!!
         this._ontologyService.createOntology(ontologyData).subscribe(
             (ontology: any) => {
 
@@ -196,6 +197,7 @@ export class OntologyFormComponent implements OnInit {
                 console.error(error);
             }
         );
+        */
     }
 
     /**

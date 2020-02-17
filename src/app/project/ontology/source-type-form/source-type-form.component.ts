@@ -1,13 +1,12 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormArray, FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ListsResponse, ReadOntology, StringLiteral, ReadListValue, ListNodeInfo } from '@knora/api';
-import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, NewProperty, NewResourceClass, OntologyService } from '@knora/core';
-import { from, Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { FormArray, FormGroup, Validators } from '@angular/forms';
+import { existingNamesValidator } from '@knora/action';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ListsResponse, ReadOntology, StringLiteral } from '@knora/api';
+import { KnoraApiConnectionToken, OntologyService } from '@knora/core';
+import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { SourceTypeFormService } from './source-type-form.service';
-import { existingNamesValidator } from '@knora/action';
 
 // nested form components; solution from:
 // https://medium.com/@joshblf/dynamic-nested-reactive-forms-in-angular-654c1d4a769a
@@ -349,8 +348,8 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
             this.sourceTypeComments = this.sourceTypeLabels;
         }
 
-        // set resource class data
-        const resourceTypeData: NewResourceClass = {
+        // set resource class data; should be: NewResourceClass
+        const resourceTypeData: any = {
             name: this.sourceTypeForm.controls['name'].value,
             labels: this.sourceTypeLabels,
             comments: this.sourceTypeComments,
@@ -384,6 +383,8 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         // submit source type data to knora and create source type incl. cardinality
         // console.log('submit source type data:', resourceTypeData);
         // let i: number = 0;
+
+        /* NOT YET IMPLEMENTED!!!
         this._ontologyService.addResourceClass(this.ontology.id, lastModificationDate, resourceTypeData).subscribe(
             (classResponse: ApiServiceResult) => {
                 console.log('classResponse', classResponse);
@@ -563,7 +564,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
             }
         );
 
-
+        */
 
         // show message to close dialog box
         // this.closeMessage();
@@ -597,6 +598,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         this.closeDialog.emit();
     }
 
+    /* addProperty: NOT YET IMPLEMENTED!!!
 
     recursivePost(ontologyIri: string, lmd: string, classIri: string, data: NewProperty): Observable<any> {
         return this._ontologyService.addProperty(ontologyIri, lmd, classIri, data).pipe(
@@ -604,7 +606,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
                 console.log('map response from addProperty', response);
             })
         );
-    }
+    } */
 
     // TODO: submit data
     // we have to implement the following jsonLD objects and paths to post data
