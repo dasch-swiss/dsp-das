@@ -40,13 +40,14 @@
                 </span>
 
                 <span class="fill-remaining-space"></span>
-
+                <!-- Disabled button to create new ontology
                 <span class="app-toolbar-action" [class.select-form]="ontologies.length">
                     <button mat-raised-button color="primary" class="create-data-model-btn"
-                        (click)="openOntologyForm('createOntology')" disabled>
+                        (click)="openOntologyForm('createOntology')">
                         {{ontologies.length ? 'New data model' : 'Create your first data model'}}
                     </button>
                 </span>
+                 -->
             </div>
         </div>
     </div>
@@ -79,8 +80,9 @@
 
         <div #ontologyEditor class="ontology-editor-canvas" *ngIf="!loadOntology">
             <!-- button to select and add new source type to the ontology -->
+            <!-- Disabled button to add new source class
             <div class="add-source-type" *ngIf="project?.status && sysAdmin && ontologyIri">
-                <button mat-raised-button color="primary" [matMenuTriggerFor]="addResClassMenu" disabled>
+                <button mat-raised-button color="primary" [matMenuTriggerFor]="addResClassMenu">
                     Add source type&nbsp;
                     <mat-icon>add</mat-icon>
                 </button>
@@ -91,6 +93,7 @@
                     </button>
                 </mat-menu>
             </div>
+            -->
 
             <!-- <app-add-source-type *ngIf="project?.status && sysAdmin && ontologyIri" [projectcode]="projectcode"
                 class="add-source-type" (refreshParent)="resetOntology(ontologyIri)" #addSourceTypeComponent>
@@ -107,6 +110,7 @@
                             {{resClass.label | kuiTruncate:['24']}}</h4>
                         <span class="fill-remaining-space"></span>
                         <button mat-icon-button [matMenuTriggerFor]="resClassMenu" disabled>
+                            <!-- TODO: enable menu in the next PR -->
                             <mat-icon>more_horiz</mat-icon>
                         </button>
                         <mat-menu #resClassMenu="matMenu" xPosition="before">
