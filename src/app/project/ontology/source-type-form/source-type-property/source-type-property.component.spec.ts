@@ -9,7 +9,7 @@ import { AppInitService } from 'src/app/app-init.service';
 import { TestConfig } from 'test.config';
 import { SourceTypePropertyComponent } from './source-type-property.component';
 
-describe('SourceTypePropertyComponent', () => {
+xdescribe('SourceTypePropertyComponent', () => {
     let component: SourceTypePropertyComponent;
     let fixture: ComponentFixture<SourceTypePropertyComponent>;
 
