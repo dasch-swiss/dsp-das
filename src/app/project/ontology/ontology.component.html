@@ -43,7 +43,7 @@
 
                 <span class="app-toolbar-action" [class.select-form]="ontologies.length">
                     <button mat-raised-button color="primary" class="create-data-model-btn"
-                        (click)="openOntologyForm('createOntology')">
+                        (click)="openOntologyForm('createOntology')" disabled>
                         {{ontologies.length ? 'New data model' : 'Create your first data model'}}
                     </button>
                 </span>
@@ -63,7 +63,7 @@
                     matTooltipPosition="above">
                     {{ontology.comments | kuiStringifyStringLiteral | kuiTruncate:[64]}}</p> -->
                 <span class="fill-remaining-space"></span>
-
+                <!-- Buttons to edit or delete the ontology
                 <button mat-stroked-button
                     (click)="$event.stopPropagation(); openOntologyForm('editOntologyInfo', ontology?.id, ontology?.id)">
                     Edit
@@ -73,13 +73,14 @@
                     (click)="$event.stopPropagation(); delete(ontologyIri, 'Ontology', ontology.label)">
                     Delete
                 </button>
+                -->
             </mat-toolbar-row>
         </mat-toolbar>
 
         <div #ontologyEditor class="ontology-editor-canvas" *ngIf="!loadOntology">
             <!-- button to select and add new source type to the ontology -->
             <div class="add-source-type" *ngIf="project?.status && sysAdmin && ontologyIri">
-                <button mat-raised-button color="primary" [matMenuTriggerFor]="addResClassMenu">
+                <button mat-raised-button color="primary" [matMenuTriggerFor]="addResClassMenu" disabled>
                     Add source type&nbsp;
                     <mat-icon>add</mat-icon>
                 </button>
@@ -102,9 +103,10 @@
                 cdkDragBoundary=".drag-drop-stop">
                 <mat-toolbar class="resource-class-header" cdkDragHandle>
                     <mat-toolbar-row>
-                        <h4 mat-card-title>{{resClass.label}}</h4>
+                        <h4 mat-card-title [matTooltip]="resClass.label" matTooltipPosition="above">
+                            {{resClass.label | kuiTruncate:['24']}}</h4>
                         <span class="fill-remaining-space"></span>
-                        <button mat-icon-button [matMenuTriggerFor]="resClassMenu">
+                        <button mat-icon-button [matMenuTriggerFor]="resClassMenu" disabled>
                             <mat-icon>more_horiz</mat-icon>
                         </button>
                         <mat-menu #resClassMenu="matMenu" xPosition="before">
