@@ -1,7 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatDividerModule, MatFormFieldModule, MatIconModule, MatMenuModule, MatOptionModule, MatSelectModule, MatToolbarModule, MatTooltipModule, MatDialogModule } from '@angular/material';
+import { MatDialogModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatMenuModule, MatOptionModule, MatSelectModule, MatToolbarModule, MatTooltipModule } from '@angular/material';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -13,7 +13,6 @@ import { AppInitService } from 'src/app/app-init.service';
 import { FilterPipe } from 'src/app/dev/filter.pipe';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
-import { AddSourceTypeComponent } from './add-source-type/add-source-type.component';
 import { OntologyComponent } from './ontology.component';
 
 describe('OntologyComponent', () => {
@@ -24,7 +23,6 @@ describe('OntologyComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 OntologyComponent,
-                AddSourceTypeComponent,
                 ErrorComponent,
                 FilterPipe
             ],
