@@ -10,7 +10,6 @@ import { KnoraApiConnection } from '@knora/api';
 import { KnoraApiConfigToken, KnoraApiConnectionToken, KuiCoreModule } from '@knora/core';
 import { of } from 'rxjs';
 import { AppInitService } from 'src/app/app-init.service';
-import { FilterPipe } from 'src/app/dev/filter.pipe';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { OntologyComponent } from './ontology.component';
@@ -23,8 +22,7 @@ describe('OntologyComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 OntologyComponent,
-                ErrorComponent,
-                FilterPipe
+                ErrorComponent
             ],
             imports: [
                 HttpClientTestingModule,
