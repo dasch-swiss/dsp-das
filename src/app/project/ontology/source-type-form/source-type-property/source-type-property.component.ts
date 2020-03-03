@@ -87,7 +87,6 @@ export class SourceTypePropertyComponent implements OnInit {
             (response: ReadOntology) => {
                 this.ontology = response;
 
-                console.log(response);
                 // set list of resource types from response; needed for linkValue
                 const classKeys: string[] = Object.keys(response.classes);
                 for (const c of classKeys) {
@@ -120,7 +119,6 @@ export class SourceTypePropertyComponent implements OnInit {
                 console.error(error);
             }
         );
-        console.log(this.propertyForm);
 
         this.filteredProperties = this.propertyForm.controls['name'].valueChanges
             .pipe(
@@ -143,8 +141,6 @@ export class SourceTypePropertyComponent implements OnInit {
     }
 
     updateAttributeField(event: MatSelectChange) {
-
-        console.log('updateAttrField');
 
         // reset value of guiAttr
         this.propertyForm.controls['guiAttr'].setValue(undefined);

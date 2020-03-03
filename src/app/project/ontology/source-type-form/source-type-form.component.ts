@@ -386,7 +386,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         // let i: number = 0;
         this._ontologyService.addResourceClass(this.ontology.id, lastModificationDate, resourceTypeData).subscribe(
             (classResponse: ApiServiceResult) => {
-                console.log('classResponse', classResponse);
+                // console.log('classResponse', classResponse);
 
                 // set properties data
                 lastModificationDate = classResponse['knora-api:lastModificationDate']['@value'];
@@ -397,7 +397,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
                 props.subscribe(
                     (prop: any) => {
-                        console.log(prop);
+                        // console.log(prop);
 
                     }
                 );
@@ -601,7 +601,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     recursivePost(ontologyIri: string, lmd: string, classIri: string, data: NewProperty): Observable<any> {
         return this._ontologyService.addProperty(ontologyIri, lmd, classIri, data).pipe(
             map(response => {
-                console.log('map response from addProperty', response);
+                // console.log('map response from addProperty', response);
             })
         );
     }
