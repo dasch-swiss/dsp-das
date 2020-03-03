@@ -100,7 +100,6 @@ export function initializeApp(appInitService: AppInitService) {
         SelectLanguageComponent,
         ProjectsComponent,
         SelectGroupComponent,
-        ResourceTypeComponent,
         ResultsComponent,
         ResourceComponent,
         ExpertSearchComponent,
@@ -127,8 +126,7 @@ export function initializeApp(appInitService: AppInitService) {
         ListItemFormComponent,
         MembershipComponent,
         HelpComponent,
-        FooterComponent,
-        FilterPipe
+        FooterComponent
     ],
     imports: [
         AppRoutingModule,
