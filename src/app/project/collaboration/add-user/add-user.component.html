@@ -18,7 +18,6 @@
                 <!-- auto complete list to select user -->
                 <div class="form-content">
                     <mat-form-field class="large-field select-user">
-                        <!--<span matPrefix><mat-icon>add</mat-icon>&nbsp;</span>-->
 
                         <input matInput [matAutocomplete]="user" [formControl]="selectUserForm.controls['username']"
                             [placeholder]="'appLabels.form.user.title.select' | translate">
@@ -40,13 +39,6 @@
 
                     </mat-form-field>
 
-                    <!-- <button mat-raised-button color="primary" [disabled]="!selectUserForm.valid" class="add-new"
-                        (click)="openDialog('createUser')">New user</button>
-                    <button mat-button [disabled]="!selectUserForm.valid" class="add-new-mobile"
-                        (click)="openDialog('createUser')">
-                        <mat-icon>add_circle_outline</mat-icon>
-                    </button> -->
-
                 </div>
 
             </form>
@@ -63,8 +55,6 @@
                 <mat-icon>add_circle_outline</mat-icon>
             </button>
         </span>
-
-
 
     </div>
 </div>
