@@ -13,7 +13,8 @@
 
                 <!-- name -->
                 <mat-form-field class="short-field">
-                    <input matInput [formControl]="resourceClassForm.controls['name']" [placeholder]="'Unique name *'">
+                    <input matInput [formControl]="resourceClassForm.controls['name']"
+                        [placeholder]="'Unique name (ID) *'">
                     <mat-hint *ngIf="formErrors.name">
                         {{ formErrors.name }}
                     </mat-hint>
