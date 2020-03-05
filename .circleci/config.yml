@@ -7,7 +7,10 @@ jobs:
     working_directory: ~/repo
 
     steps:
+      - run: sudo npm install yalc -g
+      - run: cd ~ && git clone -b wip/ontology-service https://github.com/dasch-swiss/knora-ui.git && cd knora-ui && yarn install && yarn build-and-publish-prod
       - run: cd ~/repo
+      - run: yalc add @knora/core
       - checkout
 
       # Download and cache dependencies

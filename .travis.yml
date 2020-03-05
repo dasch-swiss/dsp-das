@@ -19,7 +19,12 @@ addons:
 
 install:
   - yarn global add @angular/cli
+  # BEGIN: add unpublished module
+  - yarn global add yalc
+  - cd ~ && git clone -b wip/ontology-service https://github.com/dasch-swiss/knora-ui.git && cd knora-ui && yarn install && yarn build-and-publish-prod
+  # END of "adding unpublished module"
   - cd $TRAVIS_BUILD_DIR
+  - yalc add @knora/core
   - yarn install
 
 script:
