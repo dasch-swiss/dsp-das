@@ -63,7 +63,6 @@
                     matTooltipPosition="above">
                     {{ontology.comments | kuiStringifyStringLiteral | kuiTruncate:[64]}}</p> -->
                 <span class="fill-remaining-space"></span>
-
                 <button mat-stroked-button
                     (click)="$event.stopPropagation(); openOntologyForm('editOntologyInfo', ontology?.id, ontology?.id)">
                     Edit

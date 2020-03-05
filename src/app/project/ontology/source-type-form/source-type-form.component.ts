@@ -564,7 +564,6 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         );
 
 
-
         // show message to close dialog box
         // this.closeMessage();
     }

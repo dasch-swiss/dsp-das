@@ -39,7 +39,6 @@
                             </mat-select>
                         </mat-form-field>
 
-
                     </div>
                 </form>
             </span>
@@ -78,37 +77,6 @@
         </app-list-item>
 
     </div>
-
-
-    <!-- list of active lists -->
-    <!--
-        <mat-accordion class="lists-list">
-
-            <mat-expansion-panel *ngFor="let list of lists; let i = index" class="list" (closed)="openPanel = -1"
-                (afterExpand)="openPanel = i" [expanded]="lists.length === 1 || openPanel === i">
-                <mat-expansion-panel-header>
-                    <mat-panel-title [matTooltip]="list.labels | kuiStringifyStringLiteral:'all'"
-                        matTooltipPosition="above">
-                        {{list.labels | kuiStringifyStringLiteral}}
-                    </mat-panel-title>
-                    <mat-panel-description class="shorten-text" [matTooltip]="list.comments | kuiStringifyStringLiteral"
-                        matTooltipPosition="above">
-                        {{list.comments | kuiStringifyStringLiteral | kuiTruncate:[64]}}
-                        <span class="fill-remaining-space"></span>
-                        <button mat-stroked-button *ngIf="openPanel === i"
-                            (click)="$event.stopPropagation(); openDialog('editListInfo', list.labels[0].value, list.id)">
-                            Edit info
-                        </button>
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
-
-                <app-list-item *ngIf="!loading" [list]="list" [parentIri]="list.id" [projectIri]="project.id"
-                    [projectcode]="projectcode">
-                </app-list-item>
-            </mat-expansion-panel>
-
-        </mat-accordion>
-    -->
 
 </div>
 
