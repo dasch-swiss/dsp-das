@@ -8,9 +8,9 @@ jobs:
 
     steps:
       - run: sudo npm install yalc -g
-      - run: cd ~ && git clone -b wip/ontology-service https://github.com/dasch-swiss/knora-ui.git && cd knora-ui && yarn install && yarn build-and-publish-prod
+      - run: cd ~ && git clone -b wip/ontology-service https://github.com/dasch-swiss/knora-ui.git && cd knora-ui && yarn install && rm -rf dist/'@knora'/ && ng build @knora/core --prod && yalc publish dist/@knora/core
       - run: cd ~/repo
-      - run: yalc add @knora/core
+      - run: rm -rf .yalc/@knora && yalc add @knora/core && yarn install --prod=false
       - checkout
 
       # Download and cache dependencies
