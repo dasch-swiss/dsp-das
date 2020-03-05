@@ -2,12 +2,11 @@ version: 2
 jobs:
   build:
     docker:
-    # - image: angular/ngcontainer:latest
+    - image: angular/ngcontainer:latest
     - image: circleci/node:10-browsers
     working_directory: ~/repo
 
     steps:
-      - run: sudo npm install @angular/cli -g
       - run: sudo npm install yalc -g
       - run: cd ~ && git clone -b wip/ontology-service https://github.com/dasch-swiss/knora-ui.git && cd knora-ui && yarn install && rm -rf dist/'@knora'/ && ng build @knora/core --prod && yalc publish dist/@knora/core
       - run: cd ~/repo
