@@ -201,7 +201,7 @@ export class OntologyFormComponent implements OnInit {
     /**
      * Reset the form
      */
-    resetForm(ev: Event, sourceType?: any) {
+    resetForm(ev: Event, resourceClass?: any) {
 
         this.ontologyLabel = this.project.shortname + ' ontology (data model): ';
 

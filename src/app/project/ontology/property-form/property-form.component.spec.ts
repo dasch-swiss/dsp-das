@@ -7,17 +7,17 @@ import { KnoraApiConnection } from '@knora/api';
 import { KnoraApiConfigToken, KnoraApiConnectionToken } from '@knora/core';
 import { AppInitService } from 'src/app/app-init.service';
 import { TestConfig } from 'test.config';
-import { SourceTypePropertyComponent } from './source-type-property.component';
+import { PropertyFormComponent } from './property-form.component';
 
-xdescribe('SourceTypePropertyComponent', () => {
-    let component: SourceTypePropertyComponent;
-    let fixture: ComponentFixture<SourceTypePropertyComponent>;
+xdescribe('PropertyFormComponent', () => {
+    let component: PropertyFormComponent;
+    let fixture: ComponentFixture<PropertyFormComponent>;
 
     const formBuilder: FormBuilder = new FormBuilder();
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [SourceTypePropertyComponent],
+            declarations: [PropertyFormComponent],
             imports: [
                 BrowserAnimationsModule,
                 HttpClientTestingModule,
@@ -48,7 +48,7 @@ xdescribe('SourceTypePropertyComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(SourceTypePropertyComponent);
+        fixture = TestBed.createComponent(PropertyFormComponent);
         component = fixture.componentInstance;
 
         // pass in the form dynamically

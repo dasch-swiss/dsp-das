@@ -3,12 +3,11 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject, ReadOntology, ClassDefinition } from '@knora/api';
+import { ApiResponseData, ApiResponseError, ClassDefinition, KnoraApiConnection, ProjectResponse, ReadOntology, ReadProject } from '@knora/api';
 import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, OntologyService, Session } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { DefaultSourceType, SourceTypes } from './default-data/source-types';
-
+import { DefaultResourceClasses, ResourceClass } from './default-data/default-resource-classes';
 
 export interface OntologyInfo {
     id: string;
@@ -65,15 +64,15 @@ export class OntologyComponent implements OnInit {
     };
 
     /**
-     * list of all default source types (sub class of)
+     * list of all default resource classs (sub class of)
      */
-    sourceTypes: DefaultSourceType[] = SourceTypes.data;
+    resourceClasss: ResourceClass[] = DefaultResourceClasses.data;
 
     @ViewChild('ontologyEditor', { read: ViewContainerRef, static: false }) ontologyEditor: ViewContainerRef;
 
     // @ViewChild(AddToDirective, { static: false }) addToHost: AddToDirective;
 
-    // @ViewChild('addSourceTypeComponent', { static: false }) addSourceType: AddSourceTypeComponent;
+    // @ViewChild('addResourceClassComponent', { static: false }) addResourceClass: AddResourceClassComponent;
 
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
@@ -294,7 +293,7 @@ export class OntologyComponent implements OnInit {
         });
     }
 
-    openSourceTypeForm(mode: string, type: DefaultSourceType): void {
+    openResourceClassForm(mode: string, type: ResourceClass): void {
 
         // set ontology cache
         this._cache.set('currentOntology', this.ontology);
@@ -305,7 +304,7 @@ export class OntologyComponent implements OnInit {
             position: {
                 top: '112px'
             },
-            data: { name: type.name, title: type.label, subtitle: 'Customize source type', mode: mode, project: this.project.id }
+            data: { name: type.name, title: type.label, subtitle: 'Customize resource class', mode: mode, project: this.project.id }
         };
 
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
@@ -319,7 +318,7 @@ export class OntologyComponent implements OnInit {
      * Delete either ontology or sourcetype
      *
      * @param  {string} id
-     * @param  {string} mode Can be 'Ontology' or 'SourceType'
+     * @param  {string} mode Can be 'Ontology' or 'ResourceClass'
      * @param  {string} title
      */
     delete(id: string, mode: string, title: string) {
@@ -363,8 +362,8 @@ export class OntologyComponent implements OnInit {
                         );
                         break;
 
-                    case 'SourceType':
-                        // delete resource type and refresh the view
+                    case 'ResourceClass':
+                        // delete reresource class and refresh the view
                         this.loadOntology = true;
 
                         this._ontologyService.deleteResourceClass(id, this.ontology.lastModificationDate).subscribe(

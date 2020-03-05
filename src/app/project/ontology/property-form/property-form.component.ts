@@ -5,19 +5,19 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ClassDefinition, KnoraApiConnection, ListNodeInfo, ReadOntology, ResourcePropertyDefinition } from '@knora/api';
 import { KnoraApiConnectionToken, AutocompleteItem } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { DefaultPropertyType, PropertyTypes, DefaultValueType } from '../../default-data/poperty-types';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { Property, DefaultProperties, PropertyValue } from '../default-data/default-properties';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 // const resolvedPromise = Promise.resolve(null);
 
 @Component({
-    selector: 'app-source-type-property',
-    templateUrl: './source-type-property.component.html',
-    styleUrls: ['./source-type-property.component.scss']
+    selector: 'app-property-form',
+    templateUrl: './property-form.component.html',
+    styleUrls: ['./property-form.component.scss']
 })
-export class SourceTypePropertyComponent implements OnInit {
+export class PropertyFormComponent implements OnInit {
 
     @Input() propertyForm: FormGroup;
 
@@ -32,7 +32,7 @@ export class SourceTypePropertyComponent implements OnInit {
     required = new FormControl();
 
     // selection of default property types
-    propertyTypes: DefaultPropertyType[] = PropertyTypes.data;
+    propertyTypes: Property[] = DefaultProperties.data;
 
     showGuiAttr: boolean = false;
 
@@ -42,8 +42,8 @@ export class SourceTypePropertyComponent implements OnInit {
     // current ontology
     ontology: ReadOntology;
 
-    // resource types in this ontology
-    resourceTypes: ClassDefinition[] = [];
+    // reresource classs in this ontology
+    reresourceClasss: ClassDefinition[] = [];
 
     // list of existing properties
     properties: AutocompleteItem[] = [];
@@ -87,10 +87,10 @@ export class SourceTypePropertyComponent implements OnInit {
             (response: ReadOntology) => {
                 this.ontology = response;
 
-                // set list of resource types from response; needed for linkValue
+                // set list of reresource classs from response; needed for linkValue
                 const classKeys: string[] = Object.keys(response.classes);
                 for (const c of classKeys) {
-                    this.resourceTypes.push(this.ontology.classes[c]);
+                    this.reresourceClasss.push(this.ontology.classes[c]);
                 }
 
                 // set list of properties from response; needed for autocomplete to avoid same property name twice
@@ -146,7 +146,7 @@ export class SourceTypePropertyComponent implements OnInit {
         this.propertyForm.controls['guiAttr'].setValue(undefined);
         // depending on the selected property type,
         // we have to define gui element attributes
-        // e.g. iri of list or connected resource type
+        // e.g. iri of list or connected reresource class
         switch (event.value.subPropOf) {
             case 'knora-api:ListValue':
             case 'knora-api:LinkValue':
@@ -176,7 +176,7 @@ export class SourceTypePropertyComponent implements OnInit {
         if (this.ontology.properties[option.value.iri] instanceof ResourcePropertyDefinition) {
             const tempProp: any = this.ontology.properties[option.value.iri];
 
-            let obj: DefaultValueType;
+            let obj: PropertyValue;
             // find gui ele from list of default property-types to set type value
             for (let group of this.propertyTypes) {
                 obj = group.elements.find(i => i.gui_ele === 'salsah-gui:' + tempProp.guiElement.split('#')[1]);

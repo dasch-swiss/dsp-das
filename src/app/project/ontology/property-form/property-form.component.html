@@ -88,9 +88,9 @@
 
             <div *ngSwitchCase="'knora-api:LinkValue'">
                 <mat-form-field>
-                    <mat-label>Select resource type</mat-label>
+                    <mat-label>Select reresource class</mat-label>
                     <mat-select formControlName="guiAttr">
-                        <mat-option *ngFor="let item of resourceTypes" [value]="item.id">
+                        <mat-option *ngFor="let item of reresourceClasss" [value]="item.id">
                             {{item.label}}
                         </mat-option>
                     </mat-select>

@@ -67,8 +67,8 @@ export class PropertyForm {
     }
 }
 
-// source type data structure
-export class SourceType {
+// resource class data structure
+export class ResourceClass {
     name: string;
     properties: Property[];
 
@@ -79,16 +79,16 @@ export class SourceType {
 }
 
 
-// source type form controls
-export class SourceTypeForm {
+// resource class form controls
+export class ResourceClassForm {
     name = new FormControl();
     properties = new FormArray([]);
 
-    constructor(sourceType: SourceType) {
-        this.name.setValue(sourceType.name);
+    constructor(resourceClass: ResourceClass) {
+        this.name.setValue(resourceClass.name);
 
-        if (sourceType.properties) {
-            this.properties.setValue([sourceType.properties]);
+        if (resourceClass.properties) {
+            this.properties.setValue([resourceClass.properties]);
         }
     }
 }
@@ -96,29 +96,29 @@ export class SourceTypeForm {
 @Injectable({
     providedIn: 'root'
 })
-export class SourceTypeFormService {
+export class ResourceClassFormService {
 
-    private sourceTypeForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(this._fb.group(
-        new SourceTypeForm(new SourceType(''))
+    private resourceClassForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(this._fb.group(
+        new ResourceClassForm(new ResourceClass(''))
     ));
 
-    sourceTypeForm$: Observable<FormGroup> = this.sourceTypeForm.asObservable();
+    resourceClassForm$: Observable<FormGroup> = this.resourceClassForm.asObservable();
 
     constructor(private _fb: FormBuilder) { }
 
     // reset
     resetProperties() {
 
-        const currentSourceType = this._fb.group(
-            new SourceTypeForm(new SourceType(''))
+        const currentResourceClass = this._fb.group(
+            new ResourceClassForm(new ResourceClass(''))
         );
 
-        this.sourceTypeForm.next(currentSourceType);
+        this.resourceClassForm.next(currentResourceClass);
     }
 
     addProperty() {
-        const currentSourceType = this.sourceTypeForm.getValue();
-        const currentProperties = currentSourceType.get('properties') as FormArray;
+        const currentResourceClass = this.resourceClassForm.getValue();
+        const currentProperties = currentResourceClass.get('properties') as FormArray;
 
         currentProperties.push(
             this._fb.group(
@@ -126,14 +126,14 @@ export class SourceTypeFormService {
             )
         );
 
-        this.sourceTypeForm.next(currentSourceType);
+        this.resourceClassForm.next(currentResourceClass);
     }
 
     removeProperty(i: number) {
-        const currentSourceType = this.sourceTypeForm.getValue();
-        const currentProperties = currentSourceType.get('properties') as FormArray;
+        const currentResourceClass = this.resourceClassForm.getValue();
+        const currentProperties = currentResourceClass.get('properties') as FormArray;
 
         currentProperties.removeAt(i);
-        this.sourceTypeForm.next(currentSourceType);
+        this.resourceClassForm.next(currentResourceClass);
     }
 }

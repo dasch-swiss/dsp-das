@@ -6,18 +6,18 @@ import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, NewProperty
 import { from, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { SourceTypeFormService } from './source-type-form.service';
+import { ResourceClassFormService } from './resource-class-form.service';
 import { existingNamesValidator } from '@knora/action';
 
 // nested form components; solution from:
 // https://medium.com/@joshblf/dynamic-nested-reactive-forms-in-angular-654c1d4a769a
 
 @Component({
-    selector: 'app-source-type-form',
-    templateUrl: './source-type-form.component.html',
-    styleUrls: ['./source-type-form.component.scss']
+    selector: 'app-resource-class-form',
+    templateUrl: './resource-class-form.component.html',
+    styleUrls: ['./resource-class-form.component.scss']
 })
-export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     /**
      * current project iri
@@ -32,11 +32,11 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
     /**
      * name of resource class e.g. Still image
-     * this will be used to update title of source type form
+     * this will be used to update title of resource class form
      */
     @Input() name: string;
-    // store name as sourceTypeTitle on init; in this case it can't be overwritten in the next / prev navigation
-    sourceTypeTitle: string;
+    // store name as resourceClassTitle on init; in this case it can't be overwritten in the next / prev navigation
+    resourceClassTitle: string;
 
     /**
      * emit event, when closing dialog
@@ -44,7 +44,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
     /**
-     * update title and subtitle in dialog header (by switching from step 1 (source type) to step 2 (properties))
+     * update title and subtitle in dialog header (by switching from step 1 (resource class) to step 2 (properties))
      */
     @Output() updateParent: EventEmitter<{ title: string, subtitle: string }> = new EventEmitter<{ title: string, subtitle: string }>();
 
@@ -57,7 +57,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     // message after successful post
     successMessage: any = {
         status: 200,
-        statusText: 'You have successfully updated the source type and all properties'
+        statusText: 'You have successfully updated the resource class and all properties'
     };
 
     // progress
@@ -67,23 +67,23 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     errorMessage: any;
 
     // two step form: which should be active?
-    showSourceTypeForm: boolean = true;
+    showResourceClassForm: boolean = true;
 
     // form group, form array (for properties) errors and validation messages
-    sourceTypeForm: FormGroup;
+    resourceClassForm: FormGroup;
 
     // label and comment are stringLiterals
-    sourceTypeLabels: StringLiteral[] = [];
-    sourceTypeComments: StringLiteral[] = [];
+    resourceClassLabels: StringLiteral[] = [];
+    resourceClassComments: StringLiteral[] = [];
 
-    // sub / second form of source type: properties form
-    sourceTypeFormSub: Subscription;
+    // sub / second form of resource class: properties form
+    resourceClassFormSub: Subscription;
 
     // container for properties
     properties: FormArray;
 
-    // resource type name should be unique
-    existingSourceTypeNames: [RegExp];
+    // reresource class name should be unique
+    existingResourceClassNames: [RegExp];
 
     existingPropertyNames: [RegExp];
 
@@ -117,32 +117,32 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         private _ontologyService: OntologyService,
         private _cache: CacheService,
         private _cdr: ChangeDetectorRef,
-        private _sourceTypeFormService: SourceTypeFormService
+        private _resourceClassFormService: ResourceClassFormService
     ) { }
 
     ngOnInit() {
 
         // init existing names
-        this.existingSourceTypeNames = [
+        this.existingResourceClassNames = [
             new RegExp('anEmptyRegularExpressionWasntPossible')
         ];
         this.existingPropertyNames = [
             new RegExp('anEmptyRegularExpressionWasntPossible')
         ];
 
-        // set file representation or default resource type as title
-        this.sourceTypeTitle = this.name;
+        // set file representation or default reresource class as title
+        this.resourceClassTitle = this.name;
 
         this._cache.get('currentOntology').subscribe(
             (response: ReadOntology) => {
                 this.ontology = response;
 
-                // get all ontology source types:
-                // can be used to select source type as gui attribute in link property,
+                // get all ontology resource classs:
+                // can be used to select resource class as gui attribute in link property,
                 // but also to avoid same name which should be unique
                 const classKeys: string[] = Object.keys(response.classes);
                 for (const c of classKeys) {
-                    this.existingSourceTypeNames.push(
+                    this.existingResourceClassNames.push(
                         new RegExp('(?:^|W)' + c.split('#')[1] + '(?:$|W)')
                     )
                 }
@@ -164,7 +164,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
         this.buildForm();
 
-        // this.sourceTypeForm.statusChanges.subscribe((data) => {
+        // this.resourceClassForm.statusChanges.subscribe((data) => {
         //     // do something on form changes
         // });
 
@@ -173,7 +173,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     }
 
     ngOnDestroy() {
-        this.sourceTypeFormSub.unsubscribe();
+        this.resourceClassFormSub.unsubscribe();
     }
 
     ngAfterViewChecked() {
@@ -189,35 +189,35 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     buildForm() {
 
         // reset properties
-        this._sourceTypeFormService.resetProperties();
+        this._resourceClassFormService.resetProperties();
 
-        this.sourceTypeFormSub = this._sourceTypeFormService.sourceTypeForm$
-            .subscribe(sourceType => {
-                this.sourceTypeForm = sourceType;
-                this.properties = this.sourceTypeForm.get('properties') as FormArray;
+        this.resourceClassFormSub = this._resourceClassFormService.resourceClassForm$
+            .subscribe(resourceClass => {
+                this.resourceClassForm = resourceClass;
+                this.properties = this.resourceClassForm.get('properties') as FormArray;
             });
 
-        this.sourceTypeForm.controls['name'].setValidators([
+        this.resourceClassForm.controls['name'].setValidators([
             Validators.required,
             Validators.minLength(this.nameMinLength),
             Validators.maxLength(this.nameMaxLength),
-            existingNamesValidator(this.existingSourceTypeNames),
+            existingNamesValidator(this.existingResourceClassNames),
             Validators.pattern(this.nameRegex)
         ]);
-        this.sourceTypeForm.controls['name'].updateValueAndValidity();
+        this.resourceClassForm.controls['name'].updateValueAndValidity();
 
-        this.sourceTypeForm.valueChanges.subscribe(data => this.onValueChanged(data));
+        this.resourceClassForm.valueChanges.subscribe(data => this.onValueChanged(data));
     }
 
     onValueChanged(data?: any) {
 
-        if (!this.sourceTypeForm) {
+        if (!this.resourceClassForm) {
             return;
         }
 
         Object.keys(this.formErrors).map(field => {
             this.formErrors[field] = '';
-            const control = this.sourceTypeForm.get(field);
+            const control = this.resourceClassForm.get(field);
             if (control && control.dirty && !control.valid) {
                 const messages = this.validationMessages[field];
                 Object.keys(control.errors).map(key => {
@@ -233,19 +233,19 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
      * add property line
      */
     addProperty() {
-        this._sourceTypeFormService.addProperty();
+        this._resourceClassFormService.addProperty();
     }
     /**
      * delete property line
      */
     removeProperty(index: number) {
-        this._sourceTypeFormService.removeProperty(index);
+        this._resourceClassFormService.removeProperty(index);
     }
     /**
      * reset properties
      */
     resetProperties() {
-        this._sourceTypeFormService.resetProperties();
+        this._resourceClassFormService.resetProperties();
         this.addProperty();
     }
     /**
@@ -257,7 +257,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         moveItemInArray(this.properties.controls, event.previousIndex, event.currentIndex);
 
         // set sort order in form value
-        moveItemInArray(this.sourceTypeForm.value.properties, event.previousIndex, event.currentIndex);
+        moveItemInArray(this.resourceClassForm.value.properties, event.previousIndex, event.currentIndex);
     }
     /**
      * set stringLiterals for label or comment from kui-string-literal-input
@@ -268,11 +268,11 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
         switch (type) {
             case 'labels':
-                this.sourceTypeLabels = data;
+                this.resourceClassLabels = data;
                 break;
 
             case 'comments':
-                this.sourceTypeComments = data;
+                this.resourceClassComments = data;
                 break;
         }
     }
@@ -287,13 +287,13 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         ev.preventDefault();
         // this.loading = true;
         // go to next step: properties form
-        this.showSourceTypeForm = false;
+        this.showResourceClassForm = false;
 
         // use response to go further with properties
-        this.updateParent.emit({ title: this.sourceTypeForm.controls['name'].value, subtitle: 'Define the metadata for source type' });
+        this.updateParent.emit({ title: this.resourceClassForm.controls['name'].value, subtitle: 'Define the metadata for resource class' });
 
         // load one first property line
-        if (!this.sourceTypeForm.value.properties.length) {
+        if (!this.resourceClassForm.value.properties.length) {
             this.addProperty();
         }
         // this.loading = false;
@@ -304,8 +304,8 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     prevStep(ev: Event) {
         ev.preventDefault();
         // this.loading = true;
-        this.updateParent.emit({ title: this.sourceTypeTitle, subtitle: 'Customize source type' });
-        this.showSourceTypeForm = true;
+        this.updateParent.emit({ title: this.resourceClassTitle, subtitle: 'Customize resource class' });
+        this.showResourceClassForm = true;
         // this.loading = false;
     }
 
@@ -343,17 +343,17 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         // - guiAttribute
         // - guiOrder
 
-        // first step: get data from first form: source type
+        // first step: get data from first form: resource class
 
-        if (!this.sourceTypeComments.length) {
-            this.sourceTypeComments = this.sourceTypeLabels;
+        if (!this.resourceClassComments.length) {
+            this.resourceClassComments = this.resourceClassLabels;
         }
 
         // set resource class data
-        const resourceTypeData: NewResourceClass = {
-            name: this.sourceTypeForm.controls['name'].value,
-            labels: this.sourceTypeLabels,
-            comments: this.sourceTypeComments,
+        const reresourceClassData: NewResourceClass = {
+            name: this.resourceClassForm.controls['name'].value,
+            labels: this.resourceClassLabels,
+            comments: this.resourceClassComments,
             subClassOf: this.subClassOf
         };
 
@@ -361,7 +361,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         // TODO: build props
         // const resourcePropertyData: NewProperty[] = [];
         // let i = 0;
-        // for (const prop of this.sourceTypeForm.value.properties) {
+        // for (const prop of this.resourceClassForm.value.properties) {
         //     // console.warn('prop from form:', prop);
         //     const newProp: NewProperty = {
         //         label: prop.label,
@@ -381,10 +381,10 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
 
 
 
-        // submit source type data to knora and create source type incl. cardinality
-        // console.log('submit source type data:', resourceTypeData);
+        // submit resource class data to knora and create resource class incl. cardinality
+        // console.log('submit resource class data:', reresourceClassData);
         // let i: number = 0;
-        this._ontologyService.addResourceClass(this.ontology.id, lastModificationDate, resourceTypeData).subscribe(
+        this._ontologyService.addResourceClass(this.ontology.id, lastModificationDate, reresourceClassData).subscribe(
             (classResponse: ApiServiceResult) => {
                 // console.log('classResponse', classResponse);
 
@@ -393,7 +393,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
                 // console.log('lastModDate (class response)', lastModificationDate);
 
                 let c: number = 0;
-                const props = from(this.sourceTypeForm.value.properties);
+                const props = from(this.resourceClassForm.value.properties);
 
                 props.subscribe(
                     (prop: any) => {
@@ -486,8 +486,8 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
                 // );
 
                 // let i: number = 0;
-                // while (i < this.sourceTypeForm.value.properties.length) {
-                //     const prop = this.sourceTypeForm.value.properties[i];
+                // while (i < this.resourceClassForm.value.properties.length) {
+                //     const prop = this.resourceClassForm.value.properties[i];
 
                 //     const propData: NewProperty = {
                 //         label: prop.label,
@@ -591,8 +591,8 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
      * Close dialog box and reset all forms
      */
     closeMessage() {
-        this.sourceTypeForm.reset();
-        this.sourceTypeFormSub.unsubscribe();
+        this.resourceClassForm.reset();
+        this.resourceClassFormSub.unsubscribe();
         this.closeDialog.emit();
     }
 
@@ -716,7 +716,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
     *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
     *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
 
-    resource class ( = "source type" in the simple user interface)
+    resource class ( = "resource class" in the simple user interface)
 
     post: /v2/ontologies/classes
 

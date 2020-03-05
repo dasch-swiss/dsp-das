@@ -8,18 +8,18 @@ import { KnoraApiConfigToken, KnoraApiConnectionToken } from '@knora/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppInitService } from 'src/app/app-init.service';
 import { TestConfig } from 'test.config';
-import { SourceTypeFormComponent } from './source-type-form.component';
-import { SourceTypePropertyComponent } from './source-type-property/source-type-property.component';
+import { PropertyFormComponent } from '../property-form/property-form.component';
+import { ResourceClassFormComponent } from './resource-class-form.component';
 
-describe('SourceTypeFormComponent', () => {
-    let component: SourceTypeFormComponent;
-    let fixture: ComponentFixture<SourceTypeFormComponent>;
+describe('ResourceClassFormComponent', () => {
+    let component: ResourceClassFormComponent;
+    let fixture: ComponentFixture<ResourceClassFormComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                SourceTypeFormComponent,
-                SourceTypePropertyComponent
+                ResourceClassFormComponent,
+                PropertyFormComponent
             ],
             imports: [
                 HttpClientTestingModule,
@@ -51,7 +51,7 @@ describe('SourceTypeFormComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(SourceTypeFormComponent);
+        fixture = TestBed.createComponent(ResourceClassFormComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
