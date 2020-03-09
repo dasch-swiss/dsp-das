@@ -6,20 +6,14 @@
     <!-- <mat-form-field class="small-field">
         <input matInput placeholder="Property name (ID) *" formControlName="name">
     </mat-form-field> -->
-    <mat-form-field class="small-field">
-        <input matInput placeholder="Property name (ID) *" formControlName="name" [matAutocomplete]="auto">
+    <mat-form-field class="small-field hidden">
+        <input matInput placeholder="Property name (ID) *" formControlName="name">
     </mat-form-field>
-
+    <!--
 
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="updateFieldsDependingOnName($event.option)">
         <mat-option *ngFor="let prop of filteredProperties | async" [value]="prop">
             {{ prop?.name }}
-        </mat-option>
-    </mat-autocomplete>
-
-
-    <!-- <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let option of properties" [value]="option.name">{{option.name}}
         </mat-option>
     </mat-autocomplete> -->
 
@@ -52,25 +46,6 @@
 
     </mat-form-field>
 
-    <br>
-    <!-- empty placeholder to have the following elements on the same margin-->
-    <span class="empty-index"></span>
-
-    <!-- new line for cardinality and set gui attributes -->
-    <!-- Cardinality -->
-    <div class="small-field">
-        <mat-slide-toggle formControlName="multiple">
-            Multiple values?
-        </mat-slide-toggle>
-    </div>
-
-    <div class="small-field">
-        <mat-slide-toggle formControlName="required">
-            Required field?
-        </mat-slide-toggle>
-    </div>
-
-
     <!-- TODO: additional mat-form-field for settings depending on the type selection -->
     <div class="small-field" *ngIf="showGuiAttr">
         <div [ngSwitch]="propertyForm.controls['type'].value.subPropOf">
@@ -99,6 +74,27 @@
             <!-- <div *ngSwitchDefault>{{propertyForm.controls['type'].value.subPropOf}} not yet implemented</div> -->
         </div>
     </div>
+
+    <br>
+    <!-- empty placeholder to have the following elements on the same margin-->
+    <span class="empty-index"></span>
+
+    <!-- new line for cardinality and set gui attributes -->
+    <!-- Cardinality -->
+    <div class="small-field">
+        <mat-slide-toggle formControlName="multiple">
+            Multiple values?
+        </mat-slide-toggle>
+    </div>
+
+    <div class="small-field">
+        <mat-slide-toggle formControlName="required">
+            Required field?
+        </mat-slide-toggle>
+    </div>
+
+
+
 
 
     <!-- Permissions -->

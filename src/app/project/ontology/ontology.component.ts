@@ -8,6 +8,7 @@ import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, OntologySer
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { DefaultResourceClasses, ResourceClass } from './default-data/default-resource-classes';
+import { OntologyHelperService } from './ontology-helper.service';
 
 export interface OntologyInfo {
     id: string;
@@ -77,6 +78,7 @@ export class OntologyComponent implements OnInit {
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _ontologyService: OntologyService,
+        private _ontologyHelperService: OntologyHelperService,
         private _cache: CacheService,
         private _dialog: MatDialog,
         private _fb: FormBuilder,
@@ -174,7 +176,7 @@ export class OntologyComponent implements OnInit {
                         this.ontologies.push(info);
 
                         // set list of existing names
-                        name = this.getOntologyName(ontology['@id']);
+                        name = this._ontologyHelperService.getOntologyName(ontology['@id']);
                         this.existingOntologyNames.push(name);
                     }
 
@@ -191,7 +193,7 @@ export class OntologyComponent implements OnInit {
 
                     this.ontologyIri = ontologies.body['@id'];
                     // set list of existing name
-                    name = this.getOntologyName(this.ontologyIri);
+                    name = this._ontologyHelperService.getOntologyName(this.ontologyIri);
                     this.existingOntologyNames.push(name);
 
                     // open this ontology
@@ -383,18 +385,4 @@ export class OntologyComponent implements OnInit {
         });
     }
 
-    /**
-     * Get the ontolgoy name from ontology iri
-     *
-     * @param  {string} iri
-     * @returns string
-     */
-    private getOntologyName(iri: string): string {
-
-        const array = iri.split('/');
-
-        const pos = array.length - 2;
-
-        return array[pos].toLowerCase();
-    }
 }

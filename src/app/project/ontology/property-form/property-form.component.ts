@@ -8,6 +8,7 @@ import { CacheService } from 'src/app/main/cache/cache.service';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { Property, DefaultProperties, PropertyValue } from '../default-data/default-properties';
+import { OntologyHelperService } from '../ontology-helper.service';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 // const resolvedPromise = Promise.resolve(null);
@@ -61,6 +62,7 @@ export class PropertyFormComponent implements OnInit {
 
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
+        private _ontologyHelperService: OntologyHelperService,
         private _cache: CacheService,
         private _domSanitizer: DomSanitizer,
         private _matIconRegistry: MatIconRegistry) {
@@ -120,11 +122,15 @@ export class PropertyFormComponent implements OnInit {
             }
         );
 
-        this.filteredProperties = this.propertyForm.controls['name'].valueChanges
-            .pipe(
-                startWith(''),
-                map(prop => prop.length >= 2 ? this.filter(this.properties, prop) : [])
-            );
+        // set randomized string name for the class id (name)
+        const uniqueNameId: string = this._ontologyHelperService.setUniqueName(this.ontology.id);
+        this.propertyForm.controls['name'].setValue(uniqueNameId);
+
+        // this.filteredProperties = this.propertyForm.controls['name'].valueChanges
+        //     .pipe(
+        //         startWith(''),
+        //         map(prop => prop.length >= 2 ? this.filter(this.properties, prop) : [])
+        //     );
 
     }
 

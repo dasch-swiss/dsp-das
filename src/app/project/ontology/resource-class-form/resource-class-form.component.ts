@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ResourceClassFormService } from './resource-class-form.service';
 import { existingNamesValidator } from '@knora/action';
+import { OntologyHelperService } from '../ontology-helper.service';
 
 // nested form components; solution from:
 // https://medium.com/@joshblf/dynamic-nested-reactive-forms-in-angular-654c1d4a769a
@@ -115,6 +116,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _ontologyService: OntologyService,
+        private _ontologyHelperService: OntologyHelperService,
         private _cache: CacheService,
         private _cdr: ChangeDetectorRef,
         private _resourceClassFormService: ResourceClassFormService
@@ -163,6 +165,10 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         );
 
         this.buildForm();
+
+        // set randomized string name for the class id (name)
+        const uniqueNameId: string = this._ontologyHelperService.setUniqueName(this.ontology.id);
+        this.resourceClassForm.controls['name'].setValue(uniqueNameId);
 
         // this.resourceClassForm.statusChanges.subscribe((data) => {
         //     // do something on form changes

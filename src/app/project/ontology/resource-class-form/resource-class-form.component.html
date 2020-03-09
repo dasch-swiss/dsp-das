@@ -12,16 +12,13 @@
             <div class="center more-space-top">
 
                 <!-- name -->
-                <mat-form-field class="short-field">
+                <mat-form-field class="short-field hidden">
                     <input matInput [formControl]="resourceClassForm.controls['name']"
                         [placeholder]="'Unique name (ID) *'">
-                    <mat-hint *ngIf="formErrors.name">
-                        {{ formErrors.name }}
-                    </mat-hint>
                 </mat-form-field>
 
                 <!-- label -->
-                <div class="medium-field string-literal-container">
+                <div class="large-field string-literal-container">
                     <kui-string-literal-input [placeholder]="'Label *'" [value]="resourceClassLabels"
                         (dataChanged)="handleData($event, 'labels')">
                     </kui-string-literal-input>
