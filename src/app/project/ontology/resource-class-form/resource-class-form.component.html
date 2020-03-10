@@ -11,12 +11,6 @@
         <div *ngIf="showResourceClassForm" class="resource-class-data">
             <div class="center more-space-top">
 
-                <!-- name -->
-                <mat-form-field class="short-field hidden">
-                    <input matInput [formControl]="resourceClassForm.controls['name']"
-                        [placeholder]="'Unique name (ID) *'">
-                </mat-form-field>
-
                 <!-- label -->
                 <div class="large-field string-literal-container">
                     <kui-string-literal-input [placeholder]="'Label *'" [value]="resourceClassLabels"
@@ -43,8 +37,7 @@
                 </span>
                 <span class="fill-remaining-space"></span>
                 <span>
-                    <button mat-raised-button type="submit" color="primary"
-                        [disabled]="!(resourceClassLabels.length && this.resourceClassForm.controls['name'].value)"
+                    <button mat-raised-button type="submit" color="primary" [disabled]="!resourceClassLabels.length"
                         (click)="nextStep($event)">
                         Next
                     </button>
@@ -104,9 +97,6 @@
     </form>
 
 </div>
-
-
-
 
 <!-- in the case of an API error: show the error message -->
 <ng-template #errorMsg>

@@ -6,21 +6,22 @@
     <!-- <mat-form-field class="small-field">
         <input matInput placeholder="Property name (ID) *" formControlName="name">
     </mat-form-field> -->
+    <!-- name is a kind of ID, but it's a hidden field auto updated in case of already existing property selected by label -->
     <mat-form-field class="small-field hidden">
         <input matInput placeholder="Property name (ID) *" formControlName="name">
     </mat-form-field>
-    <!--
-
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="updateFieldsDependingOnName($event.option)">
-        <mat-option *ngFor="let prop of filteredProperties | async" [value]="prop">
-            {{ prop?.name }}
-        </mat-option>
-    </mat-autocomplete> -->
 
     <!-- Property label -->
     <mat-form-field class="small-field">
-        <input matInput placeholder="Property label *" formControlName="label">
+        <input matInput placeholder="Property label *" formControlName="label" [matAutocomplete]="auto">
     </mat-form-field>
+
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="updateFieldsDependingOnLabel($event.option)">
+        <mat-option *ngFor="let prop of filteredProperties | async" [value]="prop"
+            matTooltip="{{ prop?.label }} ({{prop?.name}})" matTooltipPosition="after">
+            {{ prop?.label }}
+        </mat-option>
+    </mat-autocomplete>
 
     <!-- Property value type and gui element  -->
     <mat-form-field class="small-field">
@@ -93,11 +94,11 @@
         </mat-slide-toggle>
     </div>
 
-
-
-
-
     <!-- Permissions -->
     <!-- <mat-form-field class="small-field">
         <input matInput placeholder="Property permissions" formControlName="permission">
     </mat-form-field> -->
+
+    <div class="small-field">
+        <button mat-button class="reset-button" type="reset" (click)="resetProperty($event)">Reset</button>
+    </div>

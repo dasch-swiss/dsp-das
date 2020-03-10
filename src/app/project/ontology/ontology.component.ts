@@ -8,7 +8,7 @@ import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, OntologySer
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { DefaultResourceClasses, ResourceClass } from './default-data/default-resource-classes';
-import { OntologyHelperService } from './ontology-helper.service';
+import { ResourceClassFormService } from './resource-class-form/resource-class-form.service';
 
 export interface OntologyInfo {
     id: string;
@@ -78,7 +78,7 @@ export class OntologyComponent implements OnInit {
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _ontologyService: OntologyService,
-        private _ontologyHelperService: OntologyHelperService,
+        private _ontologyHelperService: ResourceClassFormService,
         private _cache: CacheService,
         private _dialog: MatDialog,
         private _fb: FormBuilder,

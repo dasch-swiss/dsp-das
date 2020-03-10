@@ -1,14 +1,13 @@
-import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatIconRegistry, MatSelectChange, MatOption } from '@angular/material';
+import { MatIconRegistry, MatOption, MatSelectChange } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ClassDefinition, KnoraApiConnection, ListNodeInfo, ReadOntology, ResourcePropertyDefinition } from '@knora/api';
-import { KnoraApiConnectionToken, AutocompleteItem } from '@knora/core';
-import { CacheService } from 'src/app/main/cache/cache.service';
+import { ClassDefinition, ListNodeInfo, ReadOntology, ResourcePropertyDefinition } from '@knora/api';
+import { AutocompleteItem } from '@knora/core';
 import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
-import { Property, DefaultProperties, PropertyValue } from '../default-data/default-properties';
-import { OntologyHelperService } from '../ontology-helper.service';
+import { map, startWith } from 'rxjs/operators';
+import { CacheService } from 'src/app/main/cache/cache.service';
+import { DefaultProperties, Property, PropertyValue } from '../default-data/default-properties';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 // const resolvedPromise = Promise.resolve(null);
@@ -51,18 +50,10 @@ export class PropertyFormComponent implements OnInit {
 
     filteredProperties: Observable<AutocompleteItem[]>;
 
-
     selectTypeLabel: string; // = this.propertyTypes[0].group + ': ' + this.propertyTypes[0].elements[0].label;
     selectedGroup: string;
 
-
-
-    // index of the given property (unique)
-    // index: number;
-
     constructor(
-        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
-        private _ontologyHelperService: OntologyHelperService,
         private _cache: CacheService,
         private _domSanitizer: DomSanitizer,
         private _matIconRegistry: MatIconRegistry) {
@@ -80,6 +71,7 @@ export class PropertyFormComponent implements OnInit {
 
     ngOnInit() {
 
+
         if (this.propertyForm) {
             // init list of property types with first element
             this.propertyForm.patchValue({ type: this.propertyTypes[0].elements[0] });
@@ -89,23 +81,28 @@ export class PropertyFormComponent implements OnInit {
             (response: ReadOntology) => {
                 this.ontology = response;
 
-                // set list of reresource classs from response; needed for linkValue
+                // set various lists to select from
+                // a) in case of link value:
+                // set list of reresource classes from response; needed for linkValue
                 const classKeys: string[] = Object.keys(response.classes);
                 for (const c of classKeys) {
                     this.reresourceClasss.push(this.ontology.classes[c]);
                 }
 
-                // set list of properties from response; needed for autocomplete to avoid same property name twice
+                // b) in case of already existing label:
+                // set list of properties from response; needed for autocomplete in label to reuse existing property
                 const propKeys: string[] = Object.keys(response.properties);
-                let i: number = 0;
                 for (const p of propKeys) {
-                    this.properties[i] = {
-                        iri: this.ontology.properties[p].id,
-                        name: this.ontology.properties[p].id.split('#')[1],
-                        label: this.ontology.properties[p].label
-                    };
-                    i++;
-                    // this.properties.push(this.ontology.properties[p]);
+                    if (this.ontology.properties[p].objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue') {
+                        const existingProperty: AutocompleteItem = {
+                            iri: this.ontology.properties[p].id,
+                            name: this.ontology.properties[p].id.split('#')[1],
+                            label: this.ontology.properties[p].label
+                        };
+
+                        this.properties.push(existingProperty);
+                    }
+
                 }
             },
             (error: any) => {
@@ -113,6 +110,8 @@ export class PropertyFormComponent implements OnInit {
             }
         );
 
+        // c) in case of list value:
+        // set list of lists; needed for listValue
         this._cache.get('currentOntologyLists').subscribe(
             (response: ListNodeInfo[]) => {
                 this.lists = response;
@@ -122,16 +121,11 @@ export class PropertyFormComponent implements OnInit {
             }
         );
 
-        // set randomized string name for the class id (name)
-        const uniqueNameId: string = this._ontologyHelperService.setUniqueName(this.ontology.id);
-        this.propertyForm.controls['name'].setValue(uniqueNameId);
-
-        // this.filteredProperties = this.propertyForm.controls['name'].valueChanges
-        //     .pipe(
-        //         startWith(''),
-        //         map(prop => prop.length >= 2 ? this.filter(this.properties, prop) : [])
-        //     );
-
+        this.filteredProperties = this.propertyForm.controls['label'].valueChanges
+            .pipe(
+                startWith(''),
+                map(prop => prop.length >= 1 ? this.filter(this.properties, prop) : [])
+            );
     }
 
     /**
@@ -174,8 +168,9 @@ export class PropertyFormComponent implements OnInit {
     /**
      * @param  {MatOption} option
      */
-    updateFieldsDependingOnName(option: MatOption) {
+    updateFieldsDependingOnLabel(option: MatOption) {
         this.propertyForm.controls['name'].setValue(option.value.name);
+
         this.propertyForm.controls['label'].setValue(option.value.label);
         this.propertyForm.controls['label'].disable();
 
@@ -225,6 +220,21 @@ export class PropertyFormComponent implements OnInit {
         }
         this.propertyForm.controls['type'].disable();
 
+    }
+
+    resetProperty(ev: Event) {
+        ev.preventDefault();
+
+        this.propertyForm.controls['name'].reset();
+        this.propertyForm.controls['label'].setValue('');
+        this.propertyForm.controls['label'].enable();
+        this.propertyForm.controls['type'].setValue(this.propertyTypes[0].elements[0]);
+        this.propertyForm.controls['type'].enable();
+        this.propertyForm.controls['guiAttr'].setValue(undefined);
+        this.propertyForm.controls['guiAttr'].enable();
+
+        this.propertyForm.controls['multiple'].reset();
+        this.propertyForm.controls['required'].reset();
     }
 
 }

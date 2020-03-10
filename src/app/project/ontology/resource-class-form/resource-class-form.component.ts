@@ -1,14 +1,12 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormArray, FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ListsResponse, ReadOntology, StringLiteral, ReadListValue, ListNodeInfo } from '@knora/api';
+import { FormArray, FormGroup } from '@angular/forms';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ListsResponse, ReadOntology, StringLiteral } from '@knora/api';
 import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, NewProperty, NewResourceClass, OntologyService } from '@knora/core';
 import { from, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ResourceClassFormService } from './resource-class-form.service';
-import { existingNamesValidator } from '@knora/action';
-import { OntologyHelperService } from '../ontology-helper.service';
 
 // nested form components; solution from:
 // https://medium.com/@joshblf/dynamic-nested-reactive-forms-in-angular-654c1d4a769a
@@ -88,26 +86,25 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     existingPropertyNames: [RegExp];
 
-    nameRegex: RegExp = /^(?![0-9]).(?![\u00C0-\u017F]).[a-zA-Z0-9]+\S*$/;
+    // nameRegex: RegExp = /^(?![0-9]).(?![\u00C0-\u017F]).[a-zA-Z0-9]+\S*$/;
 
-    nameMinLength = 3;
-    nameMaxLength = 16;
+    // nameMinLength = 3;
+    // nameMaxLength = 16;
 
     // form errors on the following fields:
     formErrors = {
-        'name': '',
         'label': ''
     };
 
     // in case of form error: show message
     validationMessages = {
-        'name': {
-            'required': 'Name is required.',
-            'minlength': 'Name must be at least ' + this.nameMinLength + ' characters long.',
-            'maxlength': 'Name cannot be more than ' + this.nameMaxLength + ' characters long.',
-            'pattern': 'Name shouldn\'t start with a number; Spaces and special characters are not allowed.',
-            'existingName': 'This name exists already.'
-        },
+        // 'name': {
+        //     'required': 'Name is required.',
+        //     'minlength': 'Name must be at least ' + this.nameMinLength + ' characters long.',
+        //     'maxlength': 'Name cannot be more than ' + this.nameMaxLength + ' characters long.',
+        //     'pattern': 'Name shouldn\'t start with a number; Spaces and special characters are not allowed.',
+        //     'existingName': 'This name exists already.'
+        // },
         'label': {
             'required': 'Label is required.'
         },
@@ -116,10 +113,9 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _ontologyService: OntologyService,
-        private _ontologyHelperService: OntologyHelperService,
+        private _resourceClassFormService: ResourceClassFormService,
         private _cache: CacheService,
         private _cdr: ChangeDetectorRef,
-        private _resourceClassFormService: ResourceClassFormService
     ) { }
 
     ngOnInit() {
@@ -167,8 +163,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         this.buildForm();
 
         // set randomized string name for the class id (name)
-        const uniqueNameId: string = this._ontologyHelperService.setUniqueName(this.ontology.id);
-        this.resourceClassForm.controls['name'].setValue(uniqueNameId);
+        // const uniqueNameId: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
+        // this.resourceClassForm.controls['name'].setValue(uniqueNameId);
 
         // this.resourceClassForm.statusChanges.subscribe((data) => {
         //     // do something on form changes
@@ -202,15 +198,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                 this.resourceClassForm = resourceClass;
                 this.properties = this.resourceClassForm.get('properties') as FormArray;
             });
-
-        this.resourceClassForm.controls['name'].setValidators([
-            Validators.required,
-            Validators.minLength(this.nameMinLength),
-            Validators.maxLength(this.nameMaxLength),
-            existingNamesValidator(this.existingResourceClassNames),
-            Validators.pattern(this.nameRegex)
-        ]);
-        this.resourceClassForm.controls['name'].updateValueAndValidity();
 
         this.resourceClassForm.valueChanges.subscribe(data => this.onValueChanged(data));
     }
@@ -296,7 +283,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         this.showResourceClassForm = false;
 
         // use response to go further with properties
-        this.updateParent.emit({ title: this.resourceClassForm.controls['name'].value, subtitle: 'Define the metadata for resource class' });
+        this.updateParent.emit({ title: this.resourceClassLabels[0].value, subtitle: 'Define the metadata for resource class' });
 
         // load one first property line
         if (!this.resourceClassForm.value.properties.length) {
@@ -355,9 +342,12 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             this.resourceClassComments = this.resourceClassLabels;
         }
 
+        // set resource class name / id
+        const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
+
         // set resource class data
         const reresourceClassData: NewResourceClass = {
-            name: this.resourceClassForm.controls['name'].value,
+            name: uniqueClassName,
             labels: this.resourceClassLabels,
             comments: this.resourceClassComments,
             subClassOf: this.subClassOf
@@ -410,7 +400,9 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
 
                 // for (let i = 0; i < props.length; i++) {
+                //     const uniquePropName: string = (props[i].name ? props[i].name : this._resourceClassFormService.setUniqueName(this.ontology.id));
                 //     const propData: NewProperty = {
+                //         name: uniquePropName,
                 //         label: props[i].label,
                 //         comment: props[i].label,
                 //         subPropOf: props[i].type.subPropOf,

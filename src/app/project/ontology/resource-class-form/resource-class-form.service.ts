@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 // property data structure
 export class Property {
-
     name: string;
     label: string;
     type: any;
@@ -47,7 +46,6 @@ export class PropertyForm {
         property: Property
     ) {
         this.name.setValue(property.name);
-        this.name.setValidators([Validators.required]);
 
         this.label.setValue(property.label);
         this.label.setValidators([Validators.required]);
@@ -69,11 +67,9 @@ export class PropertyForm {
 
 // resource class data structure
 export class ResourceClass {
-    name: string;
     properties: Property[];
 
-    constructor(name: string, properties?: Property[]) {
-        this.name = name;
+    constructor(properties?: Property[]) {
         this.properties = properties;
     }
 }
@@ -81,12 +77,9 @@ export class ResourceClass {
 
 // resource class form controls
 export class ResourceClassForm {
-    name = new FormControl();
     properties = new FormArray([]);
 
     constructor(resourceClass: ResourceClass) {
-        this.name.setValue(resourceClass.name);
-
         if (resourceClass.properties) {
             this.properties.setValue([resourceClass.properties]);
         }
@@ -99,23 +92,29 @@ export class ResourceClassForm {
 export class ResourceClassFormService {
 
     private resourceClassForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(this._fb.group(
-        new ResourceClassForm(new ResourceClass(''))
+        new ResourceClassForm(new ResourceClass())
     ));
 
     resourceClassForm$: Observable<FormGroup> = this.resourceClassForm.asObservable();
 
     constructor(private _fb: FormBuilder) { }
 
-    // reset
+    /**
+     * reset all properties
+     */
     resetProperties() {
 
         const currentResourceClass = this._fb.group(
-            new ResourceClassForm(new ResourceClass(''))
+            new ResourceClassForm(new ResourceClass())
         );
 
         this.resourceClassForm.next(currentResourceClass);
     }
 
+
+    /**
+     * add new property line
+     */
     addProperty() {
         const currentResourceClass = this.resourceClassForm.getValue();
         const currentProperties = currentResourceClass.get('properties') as FormArray;
@@ -128,12 +127,44 @@ export class ResourceClassFormService {
 
         this.resourceClassForm.next(currentResourceClass);
     }
-
+    /**
+     * delete property line by index i
+     *
+     * @param  {number} i
+     */
     removeProperty(i: number) {
         const currentResourceClass = this.resourceClassForm.getValue();
         const currentProperties = currentResourceClass.get('properties') as FormArray;
 
         currentProperties.removeAt(i);
         this.resourceClassForm.next(currentResourceClass);
+    }
+
+    /**
+     * Create a unique name (id) for resource classes or properties;
+     * The name starts with the three first character of ontology iri to avoid a start with a number (which is not allowed)
+     *
+     * @param  {string} ontologyIri
+     * @returns string
+     */
+    setUniqueName(ontologyIri: string): string {
+        const name: string = this.getOntologyName(ontologyIri).substring(0, 3) + Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8);
+
+        return name;
+    }
+
+    /**
+     * Get the ontolgoy name from ontology iri
+     *
+     * @param  {string} ontologyIri
+     * @returns string
+     */
+    getOntologyName(ontologyIri: string): string {
+
+        const array = ontologyIri.split('/');
+
+        const pos = array.length - 2;
+
+        return array[pos].toLowerCase();
     }
 }
