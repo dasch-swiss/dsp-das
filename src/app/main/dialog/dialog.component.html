@@ -229,6 +229,10 @@
         </mat-dialog-actions>
     </div>
 
+    <div *ngSwitchCase="'error'">
+        <kui-message [short]="true" [message]="data.title"></kui-message>
+    </div>
+
     <!-- Unknown method (or not yet defined) -->
     <!-- Default dialog content component -->
     <div *ngSwitchDefault>

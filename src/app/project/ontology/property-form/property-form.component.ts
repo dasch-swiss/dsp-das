@@ -124,19 +124,19 @@ export class PropertyFormComponent implements OnInit {
         this.filteredProperties = this.propertyForm.controls['label'].valueChanges
             .pipe(
                 startWith(''),
-                map(prop => prop.length >= 1 ? this.filter(this.properties, prop) : [])
+                map(prop => prop.length >= 2 ? this.filter(this.properties, prop) : [])
             );
     }
 
     /**
      * filter a list while typing in auto complete input field
      * @param list List of options
-     * @param name Value to filter by
+     * @param label Value to filter by
      * @returns Filtered list of options
      */
-    filter(list: AutocompleteItem[], name: string) {
+    filter(list: AutocompleteItem[], label: string) {
         return list.filter(prop =>
-            prop.name.toLowerCase().includes(name.toLowerCase())
+            prop.label.toLowerCase().includes(label.toLowerCase())
         );
     }
 

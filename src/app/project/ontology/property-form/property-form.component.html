@@ -13,15 +13,17 @@
 
     <!-- Property label -->
     <mat-form-field class="small-field">
-        <input matInput placeholder="Property label *" formControlName="label" [matAutocomplete]="auto">
+        <input matInput placeholder="Property label *" formControlName="label">
+        <!-- [matAutocomplete]="auto"> -->
     </mat-form-field>
 
+    <!-- TODO: select and reuse existing ObjectProperty doesn't work yet; s. https://github.com/dasch-swiss/knora-app/pull/229#issuecomment-598276151
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="updateFieldsDependingOnLabel($event.option)">
         <mat-option *ngFor="let prop of filteredProperties | async" [value]="prop"
             matTooltip="{{ prop?.label }} ({{prop?.name}})" matTooltipPosition="after">
             {{ prop?.label }}
         </mat-option>
-    </mat-autocomplete>
+    </mat-autocomplete> -->
 
     <!-- Property value type and gui element  -->
     <mat-form-field class="small-field">

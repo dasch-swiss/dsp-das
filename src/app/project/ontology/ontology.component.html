@@ -109,7 +109,7 @@
                         <mat-menu #resClassMenu="matMenu" xPosition="before">
                             <button mat-menu-item
                                 (click)="openResourceClassForm('editResourceClass', {iri: resClass.id, name: '', label: resClass.label})">Edit</button>
-                            <button mat-menu-item
+                            <button mat-menu-item [disabled]="resClass.propertiesList.length > 17"
                                 (click)="delete(resClass.id, 'ResourceClass', resClass.label)">Delete</button>
                         </mat-menu>
                     </mat-toolbar-row>

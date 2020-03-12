@@ -355,7 +355,7 @@ export class OntologyComponent implements OnInit {
                         this.loading = true;
                         this.loadOntology = true;
                         this._ontologyService.deleteOntology(id, this.ontology.lastModificationDate).subscribe(
-                            (response: any) => {
+                            (response: ApiServiceResult) => {
                                 this.ontologyIri = undefined;
                                 this.ontology = undefined;
                                 // get the ontologies for this project
@@ -378,13 +378,28 @@ export class OntologyComponent implements OnInit {
                         this.loadOntology = true;
 
                         this._ontologyService.deleteResourceClass(id, this.ontology.lastModificationDate).subscribe(
-                            (response: any) => {
+                            (response: ApiServiceResult) => {
                                 this.getOntology(this.ontologyIri);
                             },
                             (error: ApiServiceError) => {
-                                // TODO: show message
-                                this.getOntology(this.ontologyIri);
-                                console.error(error);
+                                console.error(error.errorInfo);
+
+                                const dialogErrorConfig: MatDialogConfig = {
+                                    width: '560px',
+                                    position: {
+                                        top: '112px'
+                                    },
+                                    data: { mode: 'error', title: 'Error: Not able to delete' }
+                                };
+
+                                const dialogErrorRef = this._dialog.open(
+                                    DialogComponent,
+                                    dialogErrorConfig
+                                );
+
+                                dialogErrorRef.afterClosed().subscribe(result => {
+                                    this.getOntology(this.ontologyIri);
+                                });
                             }
                         );
                         break;
@@ -392,6 +407,13 @@ export class OntologyComponent implements OnInit {
 
             }
         });
+    }
+
+    disableDeleteButton(properties: any): boolean {
+
+        console.log(properties);
+        return false;
+
     }
 
 }
