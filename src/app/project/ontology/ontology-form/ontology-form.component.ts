@@ -180,11 +180,8 @@ export class OntologyFormComponent implements OnInit {
 
                 // this.updateParent.emit(ontology['@id']);
 
-                this.closeDialog.emit();
-
-                // go to correct route
-                const goto = 'project/' + this.projectcode + '/ontologies/' + encodeURIComponent(ontology['@id']);
-                this._router.navigate([goto]);
+                // open new ontology after closing dialog
+                this.closeDialog.emit(ontology['@id']);
 
             },
             (error: any) => {

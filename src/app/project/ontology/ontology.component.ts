@@ -78,7 +78,7 @@ export class OntologyComponent implements OnInit {
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _ontologyService: OntologyService,
-        private _ontologyHelperService: ResourceClassFormService,
+        private _resourceClassFormService: ResourceClassFormService,
         private _cache: CacheService,
         private _dialog: MatDialog,
         private _fb: FormBuilder,
@@ -176,7 +176,7 @@ export class OntologyComponent implements OnInit {
                         this.ontologies.push(info);
 
                         // set list of existing names
-                        name = this._ontologyHelperService.getOntologyName(ontology['@id']);
+                        name = this._resourceClassFormService.getOntologyName(ontology['@id']);
                         this.existingOntologyNames.push(name);
                     }
 
@@ -193,7 +193,7 @@ export class OntologyComponent implements OnInit {
 
                     this.ontologyIri = ontologies.body['@id'];
                     // set list of existing name
-                    name = this._ontologyHelperService.getOntologyName(this.ontologyIri);
+                    name = this._resourceClassFormService.getOntologyName(this.ontologyIri);
                     this.existingOntologyNames.push(name);
 
                     // open this ontology
@@ -289,11 +289,21 @@ export class OntologyComponent implements OnInit {
             dialogConfig
         );
 
-        dialogRef.afterClosed().subscribe(() => {
-            // update the view
+        dialogRef.afterClosed().subscribe((ontologyId: string) => {
+
+            // reset view in any case
             this.initList();
+
+            // in case of new ontology, go to correct route and update the view
+            if (ontologyId) {
+                this.ontologyIri = ontologyId;
+                // reset and open selected ontology
+                this.ontologyForm.controls['ontology'].setValue(this.ontologyIri);
+            }
         });
     }
+
+
 
     openResourceClassForm(mode: string, type: ResourceClass): void {
 
@@ -340,20 +350,19 @@ export class OntologyComponent implements OnInit {
         dialogRef.afterClosed().subscribe(answer => {
             if (answer === true) {
                 // delete and refresh the view
-                this.loadOntology = true;
-
                 switch (mode) {
                     case 'Ontology':
                         this.loading = true;
+                        this.loadOntology = true;
                         this._ontologyService.deleteOntology(id, this.ontology.lastModificationDate).subscribe(
                             (response: any) => {
+                                this.ontologyIri = undefined;
                                 this.ontology = undefined;
                                 // get the ontologies for this project
-                                const goto = 'project/' + this.projectcode + '/ontologies/';
-                                this._router.navigateByUrl(goto, { skipLocationChange: true });
                                 this.initList();
-                                this.loading = false;
-                                this.loadOntology = false;
+                                // go to start page
+                                const goto = 'project/' + this.projectcode + '/ontologies/';
+                                this._router.navigateByUrl(goto, { skipLocationChange: false });
                             },
                             (error: ApiServiceError) => {
                                 // TODO: show message
