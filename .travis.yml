@@ -20,7 +20,7 @@ addons:
 install:
   - yarn global add @angular/cli
   - yarn global add yalc
-  - cd ~ && git clone -b wip/ontology-missing-prop https://github.com/dasch-swiss/knora-ui.git && cd knora-ui && yarn install && rm -rf dist/'@knora'/ && ng build @knora/core --prod && yalc publish dist/@knora/core
+  - cd ~ && git clone -b master https://github.com/dasch-swiss/knora-ui.git && cd knora-ui && yarn install && rm -rf dist/'@knora'/ && ng build @knora/core --prod && yalc publish dist/@knora/core
   - cd $TRAVIS_BUILD_DIR
   - rm -rf .yalc/@knora && yalc add @knora/core && yarn install --prod=false
   - yarn install
