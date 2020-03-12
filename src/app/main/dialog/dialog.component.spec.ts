@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material';
+import { MatAutocompleteModule, MatTooltipModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -60,6 +60,7 @@ describe('DialogComponent', () => {
                 MatListModule,
                 MatSelectModule,
                 MatSlideToggleModule,
+                MatTooltipModule,
                 MatTreeModule,
                 ReactiveFormsModule,
                 TranslateModule.forRoot()
