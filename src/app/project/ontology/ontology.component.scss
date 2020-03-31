@@ -31,6 +31,15 @@ $width: 304px;
   position: relative;
   margin: 0 auto 60px auto;
 }
+.ontology-viewer {
+    width: 98vw;
+    max-width: 1280px;
+    min-height: calc(100vh - #{$header-height} - #{$tab-bar-margin} - 300px);
+    border: 1px dotted $primary_200;
+    position: relative;
+    margin: 0 auto 60px auto;
+}
+
 
 .ontology-editor-canvas {
   display: grid;

@@ -40,6 +40,7 @@
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
     "core-js": "^2.5.4",
+    "d3-force-3d": "^2.1.0",
     "hammerjs": "^2.0.8",
     "jdnconvertiblecalendar": "^0.0.5",
     "jdnconvertiblecalendardateadapter": "^0.0.10",

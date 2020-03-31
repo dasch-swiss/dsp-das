@@ -1,0 +1,12 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { MatFormFieldModule, MatInputModule } from '@angular/material';
+import { RouterTestingModule } from '@angular/router/testing';
+import { KuiActionModule } from '@knora/action';
+import { KnoraApiConnection } from '@knora/api';
+import { KnoraApiConfigToken, KnoraApiConnectionToken, KuiCoreModule } from '@knora/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { AppInitService } from 'src/app/app-init.service';
+import { TestConfig } from 'test.config';
+import { OntologyVisualizerComponent } from './ontology-visualizer.component';

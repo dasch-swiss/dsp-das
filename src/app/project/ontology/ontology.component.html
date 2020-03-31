@@ -134,6 +134,9 @@
         <kui-progress-indicator *ngIf="loadOntology"></kui-progress-indicator>
     </div>
 
+    <div *ngIf="ontology" class="ontology-viewer">
+        <app-ontology-visualizer [ontology]="ontology" [ontologyIri]="ontologyIri" [ontoClasses]="ontoClasses"></app-ontology-visualizer>
+    </div>
 </div>
 
 <div *ngIf="!projectAdmin" class="content large middle">
