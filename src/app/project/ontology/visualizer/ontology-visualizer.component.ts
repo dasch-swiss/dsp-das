@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import {ApiResponseData, ApiResponseError, ClassDefinition, KnoraApiConnection, ProjectResponse, ReadOntology, ReadProject} from '@knora/api';
 import { KnoraApiConnectionToken, OntologyService, ApiServiceError, ApiServiceResult } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
+import { Node, Link, ForceDirectedGraph} from 'node_modules/d3-force-3d';
 
 export interface NewOntology {
     projectIri: string;
@@ -23,8 +24,9 @@ export class OntologyVisualizerComponent implements OnInit {
     @Input() ontologyIri: string = undefined;
     @Input() ontoClasses: ClassDefinition[];
 
-    nodes = [];
-    links = [];
+    nodes: Node[] = [];
+    links: Link[] = [];
+
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
         private _cache: CacheService,
@@ -85,13 +87,15 @@ export class OntologyVisualizerComponent implements OnInit {
         console.log(this.nodes);
         console.log('links');
         console.log(this.links);
+        const gData = { 'nodes': this.nodes, 'links': this.links};
+        return gData;
     }
-    ngOnInit() {
-        this.convertOntolologytoGraph();
-    }
-
     visualizeOntology() {
         this.loading = true;
+    }
+    ngOnInit() {
+        const gData = this.convertOntolologytoGraph();
+        console.log(JSON.stringify(gData, null, 4));
     }
 
 

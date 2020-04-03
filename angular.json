@@ -35,7 +35,9 @@
             "scripts": [
                 "node_modules/openseadragon/build/openseadragon/openseadragon.min.js",
                 "node_modules/svg-overlay/openseadragon-svg-overlay.js",
-                "node_modules/d3-force-3d/src/index.js"
+                "node_modules/d3-force-3d/src/index.js",
+                "node_modules/3d-force-graph/dist/3d-force-graph.min.js"
+
             ]
           },
           "configurations": {
