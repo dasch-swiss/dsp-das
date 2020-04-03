@@ -52,21 +52,26 @@ export class OntologyVisualizerComponent implements OnInit {
     }
     addOntoClassesToNodes() {
         for (const res of this.ontoClasses) {
-            const node = {'id': res.id, 'label': res.label, 'group': 'resource', 'class': 'native'}
+            const label = (res.label) ? res.label : res.id;
+            const node = {'id': res.id, 'label': label, 'group': 'resource', 'class': 'native'}
             this.nodes.push(node);
         }
     }
-    addObjectTypeToNodes(target: string, propID: string) {
+    addObjectTypeToNodes(targetID: string, propID: string): string {
+        let newNode: Node;
         // object Value is a literal
-        if (target.endsWith('Value')) {
-            const label = target.split('#', 2)[1];
-            const literalNode = {'id': propID + '_' + label, 'label': label, 'group': 'literal',  'class': label};
-            this.nodes.push(literalNode);
-        // object Value is a resource defined in another ontology
-        } else if (!this.isInNodes(target)) {
-            this.nodes.push({'id': target, 'label': target, 'group': 'resource', 'class': 'external'});
+        if (targetID.endsWith('Value')) {
+            const label = targetID.split('#', 2)[1];
+            targetID = propID + '_' + label
+            newNode = {'id': targetID, 'label': label, 'group': 'literal', 'class': label};
+            // object Value is a resource defined in another ontology
+        } else {
+            newNode = {'id': targetID, 'label': targetID, 'group': 'resource', 'class': 'external'};
         }
-
+        if (!this.isInNodes(targetID)) {
+            this.nodes.push(newNode);
+        }
+        return targetID;
     }
     convertOntolologytoGraph() {
         this.addOntoClassesToNodes();
@@ -76,8 +81,8 @@ export class OntologyVisualizerComponent implements OnInit {
                 if (prop.guiOrder >= 0 && this.ontology.properties[prop.propertyIndex] && this.ontology.properties[prop.propertyIndex].objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue') {
                     const target = this.ontology.properties[prop.propertyIndex].objectType;
                     const proplabel = this.ontology.properties[prop.propertyIndex].label;
-                    this.addObjectTypeToNodes(target, prop.propertyIndex)
-                    const link = {'source': res.id, 'target': target, 'label': proplabel}
+                    const targetID = this.addObjectTypeToNodes(target, prop.propertyIndex);
+                    const link = {'source': res.id, 'target': targetID, 'label': proplabel};
                     this.links.push(link);
 
                 }
