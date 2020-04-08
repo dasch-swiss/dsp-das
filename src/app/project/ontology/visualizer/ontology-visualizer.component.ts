@@ -50,21 +50,23 @@ export class OntologyVisualizerComponent implements OnInit {
             this.links.push(link);
         }
     }
-    addOntoClassesToNodes() {
+    addResourceClassesToNodes() {
+        console.log(this.ontology)
         for (const res of this.ontoClasses) {
             const label = (res.label) ? res.label : res.id;
             const node = {'id': res.id, 'label': label, 'group': 'resource', 'class': 'native'}
             this.nodes.push(node);
         }
     }
-    addObjectTypeToNodes(targetID: string, propID: string): string {
+    addObjectTypeToNodes(targetID: string, propID: string, resLabel: string): string {
         let newNode: Node;
         // object Value is a literal
         if (targetID.endsWith('Value')) {
-            const label = targetID.split('#', 2)[1];
-            targetID = propID + '_' + label
-            newNode = {'id': targetID, 'label': label, 'group': 'literal', 'class': label};
-            // object Value is a resource defined in another ontology
+            const type = targetID.split('#', 2)[1];
+            targetID = resLabel + '_' + propID.split('#', 2)[1];
+            console.log(targetID)
+            newNode = {'id': targetID, 'label': type, 'group': 'literal', 'class': type};
+        // object Value is a resource defined in another ontology
         } else {
             newNode = {'id': targetID, 'label': targetID, 'group': 'resource', 'class': 'external'};
         }
@@ -74,29 +76,22 @@ export class OntologyVisualizerComponent implements OnInit {
         return targetID;
     }
     convertOntolologytoGraph() {
-        this.addOntoClassesToNodes();
+        this.addResourceClassesToNodes();
         for (const res of this.ontoClasses) {
             this.getSubclassLinksAndExternalResources(res);
             for (const prop of res.propertiesList) {
                 if (prop.guiOrder >= 0 && this.ontology.properties[prop.propertyIndex] && this.ontology.properties[prop.propertyIndex].objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue') {
                     const target = this.ontology.properties[prop.propertyIndex].objectType;
                     const proplabel = this.ontology.properties[prop.propertyIndex].label;
-                    const targetID = this.addObjectTypeToNodes(target, prop.propertyIndex);
+                    const targetID = this.addObjectTypeToNodes(target, prop.propertyIndex, res.label);
                     const link = {'source': res.id, 'target': targetID, 'label': proplabel};
                     this.links.push(link);
 
                 }
             }
         }
-        console.log('nodes');
-        console.log(this.nodes);
-        console.log('links');
-        console.log(this.links);
         const gData = { 'nodes': this.nodes, 'links': this.links};
         return gData;
-    }
-    visualizeOntology() {
-        this.loading = true;
     }
     ngOnInit() {
         const gData = this.convertOntolologytoGraph();
