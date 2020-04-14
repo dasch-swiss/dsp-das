@@ -1,9 +1,8 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
-import { Router } from '@angular/router';
-import {ApiResponseData, ApiResponseError, ClassDefinition, KnoraApiConnection, ProjectResponse, ReadOntology, ReadProject} from '@knora/api';
-import { KnoraApiConnectionToken, OntologyService, ApiServiceError, ApiServiceResult } from '@knora/core';
-import { CacheService } from 'src/app/main/cache/cache.service';
+import {Component, Inject, Input, OnInit} from '@angular/core';
+import {ClassDefinition, KnoraApiConnection, ReadOntology} from '@knora/api';
+import { KnoraApiConnectionToken} from '@knora/core';
 import { Node, Link, ForceDirectedGraph} from 'node_modules/d3-force-3d';
+import { ResourceClassFormService } from '../resource-class-form/resource-class-form.service';
 
 export interface NewOntology {
     projectIri: string;
@@ -21,17 +20,14 @@ export class OntologyVisualizerComponent implements OnInit {
     loading: boolean;
     // ontology JSON-LD object
     @Input() ontology: ReadOntology;
-    @Input() ontologyIri: string = undefined;
     @Input() ontoClasses: ClassDefinition[];
-
+    ontoName: string;
     nodes: Node[] = [];
     links: Link[] = [];
 
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
-        private _cache: CacheService,
-        private _router: Router,
-        private _ontologyService: OntologyService) { }
+        private _resourceClassFormService: ResourceClassFormService) { }
 
     isInNodes(item: string) {
         for (const node of this.nodes) {
@@ -41,34 +37,40 @@ export class OntologyVisualizerComponent implements OnInit {
         }
         return false;
     }
+    createLabelFromIRI(iri: string) {
+        const resourceInfo = iri.split('#', 2);
+        const ontoName = this._resourceClassFormService.getOntologyName(resourceInfo[0]);
+        const type = resourceInfo[1];
+        return {'ontoName': ontoName, 'type': type, 'newLabel': ontoName + ':' + type};
+    }
     getSubclassLinksAndExternalResources(res: ClassDefinition): void {
         for (const item of res.subClassOf) {
             if (!this.isInNodes(item)) {
-                this.nodes.push({'id': item, 'label': item, 'group': 'resource', 'class': 'external'});
+                const nodeInfo = this.createLabelFromIRI(item);
+                this.nodes.push({'id': item, 'label': nodeInfo.newLabel, 'group': 'resource', 'class': 'external'});
             }
             const link = {'source': res.id, 'target': item, 'label': 'subClassOf'};
             this.links.push(link);
         }
     }
+
     addResourceClassesToNodes() {
-        console.log(this.ontology)
         for (const res of this.ontoClasses) {
-            const label = (res.label) ? res.label : res.id;
-            const node = {'id': res.id, 'label': label, 'group': 'resource', 'class': 'native'}
+            const resInfo =  this.createLabelFromIRI(res.id);
+            const node = {'id': res.id, 'label': resInfo.newLabel, 'group': 'resource', 'class': 'native'}
             this.nodes.push(node);
         }
     }
     addObjectTypeToNodes(targetID: string, propID: string, resLabel: string): string {
         let newNode: Node;
         // object Value is a literal
+        const nodeInfo = this.createLabelFromIRI(targetID);
         if (targetID.endsWith('Value')) {
-            const type = targetID.split('#', 2)[1];
             targetID = resLabel + '_' + propID.split('#', 2)[1];
-            console.log(targetID)
-            newNode = {'id': targetID, 'label': type, 'group': 'literal', 'class': type};
+            newNode = {'id': targetID, 'label': nodeInfo.newLabel, 'group': 'literal', 'class': nodeInfo.type};
         // object Value is a resource defined in another ontology
         } else {
-            newNode = {'id': targetID, 'label': targetID, 'group': 'resource', 'class': 'external'};
+            newNode = {'id': targetID, 'label': nodeInfo.newLabel, 'group': 'resource', 'class': 'external'};
         }
         if (!this.isInNodes(targetID)) {
             this.nodes.push(newNode);
@@ -90,14 +92,13 @@ export class OntologyVisualizerComponent implements OnInit {
                 }
             }
         }
-        const gData = { 'nodes': this.nodes, 'links': this.links};
-        return gData;
+        return { 'nodes': this.nodes, 'links': this.links};
     }
     ngOnInit() {
+        this.ontoName = this._resourceClassFormService.getOntologyName(this.ontology.id)
         const gData = this.convertOntolologytoGraph();
-        console.log(JSON.stringify(gData, null, 4));
+        const gData_json = JSON.stringify(gData, null, 4);
+        console.log(gData_json);
     }
-
-
 
 }
