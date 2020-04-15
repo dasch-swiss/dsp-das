@@ -3,13 +3,14 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { OnInit, Component, ViewChild, DebugElement } from '@angular/core';
 import { KuiActionModule } from '@knora/action';
-import {ClassDefinition, KnoraApiConnection, ReadOntology, ResourceClassDefinition} from '@knora/api';
+import {ClassDefinition, KnoraApiConnection, ReadOntology, ResourceClassDefinition, IHasProperty, ResourcePropertyDefinition} from '@knora/api';
 import { KnoraApiConfigToken, KnoraApiConnectionToken, KuiCoreModule } from '@knora/core';
 import { of } from 'rxjs';
 import { AppInitService } from 'src/app/app-init.service';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { OntologyVisualizerComponent } from './ontology-visualizer.component';
+import {PropertyDefinition} from '@knora/api/src/models/v2/ontologies/property-definition';
 
 fdescribe('OntologyVisualizerComponent', () => {
     let testHostComponent: OntologyVisualizerComponent;
@@ -25,6 +26,21 @@ fdescribe('OntologyVisualizerComponent', () => {
     testResourceClass1.label = 'Test Resource 1';
     testResourceClass1.propertiesList = [];
     testResourceClass1.subClassOf = ['http://api.knora.org/ontology/knora-api/v2#Resource', 'http://purl.org/ontology/bibo/testResource'];
+
+    const textValueProperty: IHasProperty = {
+        propertyIndex: 'http://www.knora.org/ontology/0000/testontology/v2#hasText',
+        guiOrder: 1,
+        isInherited: false,
+        cardinality: 1
+    };
+    testResourceClass1.propertiesList.push(textValueProperty);
+    const textValuePropertyDefinition = new ResourcePropertyDefinition();
+    textValuePropertyDefinition.objectType = 'http://api.knora.org/ontology/knora-api/v2#TextValue';
+    textValuePropertyDefinition.label = 'testText';
+    textValuePropertyDefinition.id = 'http://www.knora.org/ontology/0000/testontology/v2#hasText';
+    textValuePropertyDefinition.subjectType = 'http://www.knora.org/ontology/0000/testontology/v2#testResource1';
+    testOntology.properties['http://www.knora.org/ontology/0000/testontology/v2#hasText'] = textValuePropertyDefinition;
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -60,7 +76,7 @@ fdescribe('OntologyVisualizerComponent', () => {
     });
     it(`should check the component input (ontology and ontoClasses)`, async( () => {
         expect(testHostComponent.ontoClasses.length).toEqual(1);
-        expect(testHostComponent.ontoClasses[0].propertiesList.length).toEqual(0);
+        expect(testHostComponent.ontoClasses[0].propertiesList.length).toEqual(1);
         expect(testHostComponent.ontology.id).toMatch('http://www.knora.org/ontology/0000/testontology');
     }));
     it(`should get ontology prefix, resource label, and combination of both from class IRI`, async( () => {
@@ -70,7 +86,7 @@ fdescribe('OntologyVisualizerComponent', () => {
        expect(resLabelInfo.newLabel).toEqual(resLabelInfo.ontoName + ':' + resLabelInfo.type);
     }));
     it(`should convert resource classes defined in ontology to nodes`, async( () => {
-        expect(testHostComponent.nodes.length).toEqual(3);
+        expect(testHostComponent.nodes.length).toEqual(4);
         const nodeForTestResource1 = testHostComponent.nodes[0];
         expect(nodeForTestResource1['id']).toEqual('http://www.knora.org/ontology/0000/testontology/v2#testResource1');
         expect(nodeForTestResource1['label']).toEqual('testontology:testResource1');
@@ -98,7 +114,7 @@ fdescribe('OntologyVisualizerComponent', () => {
 
     }));
     it(`should create links defining subclass relations`, async( () => {
-        expect(testHostComponent.links.length).toEqual(2);
+        expect(testHostComponent.links.length).toEqual(3);
         const subClassofKnoraAPiResource = {
             'source': 'http://www.knora.org/ontology/0000/testontology/v2#testResource1',
             'target': 'http://api.knora.org/ontology/knora-api/v2#Resource',
@@ -113,5 +129,24 @@ fdescribe('OntologyVisualizerComponent', () => {
         expect(testHostComponent.links).toContain(subClassofBiboResource);
         expect(testHostComponent.links).toContain(subClassofKnoraAPiResource);
     }));
-
+    it(`should convert literal object type to a node`, async( () => {
+        const targetnodeID = testHostComponent.addObjectTypeToNodes('http://api.knora.org/ontology/knora-api/v2#TextValue',
+            'http://www.knora.org/ontology/0000/testontology/v2#hasText', 'Test Resource 1');
+        expect(targetnodeID).toEqual('Test Resource 1_hasText');
+        const textValueNode = {
+            'id': 'Test Resource 1_hasText',
+            'label': 'knora-api:TextValue',
+            'group': 'literal',
+            'class': 'TextValue'
+        };
+        expect(testHostComponent.nodes).toContain(textValueNode);
+    }));
+    it(`should convert property to link`, async( () => {
+        const textValueLink = {
+            'source': 'http://www.knora.org/ontology/0000/testontology/v2#testResource1',
+            'target': 'Test Resource 1_hasText',
+            'label': 'testText'
+        };
+        expect(testHostComponent.links).toContain(textValueLink);
+    }));
 });
