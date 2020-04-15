@@ -36,7 +36,7 @@ import { ListItemComponent } from './project/list/list-item/list-item.component'
 import { ListComponent } from './project/list/list.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
-import { OntologyVisualizerComponent } from './project/ontology/visualizer/ontology-visualizer.component';
+import { OntologyVisualizerComponent } from './project/ontology/ontology-visualizer/ontology-visualizer.component';
 import { ResourceClassFormComponent } from './project/ontology/resource-class-form/resource-class-form.component';
 import { PropertyFormComponent } from './project/ontology/property-form/property-form.component';
 import { AddGroupComponent } from './project/permission/add-group/add-group.component';
