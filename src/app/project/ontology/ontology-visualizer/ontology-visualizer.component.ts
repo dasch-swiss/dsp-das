@@ -21,7 +21,6 @@ export class OntologyVisualizerComponent implements OnInit {
     // ontology JSON-LD object
     @Input() ontology: ReadOntology;
     @Input() ontoClasses: ClassDefinition[];
-    ontoName: string;
     nodes: Node[] = [];
     links: Link[] = [];
 
@@ -39,9 +38,20 @@ export class OntologyVisualizerComponent implements OnInit {
     }
     createLabelFromIRI(iri: string) {
         const resourceInfo = iri.split('#', 2);
-        const ontoName = this._resourceClassFormService.getOntologyName(resourceInfo[0]);
-        const type = resourceInfo[1];
-        return {'ontoName': ontoName, 'type': type, 'newLabel': ontoName + ':' + type};
+        let ontoName: string;
+        let type: string;
+        let newLabel: string;
+        if (resourceInfo[1] !== undefined) {
+            type = resourceInfo[1];
+            ontoName = this._resourceClassFormService.getOntologyName(resourceInfo[0]);
+            newLabel = ontoName + ':' + type;
+        } else {
+            type = iri.split('/').pop();
+            ontoName = iri.replace(type, '');
+            newLabel = iri;
+        }
+
+        return {'ontoName': ontoName, 'type': type, 'newLabel': newLabel};
     }
     getSubclassLinksAndExternalResources(res: ClassDefinition): void {
         for (const item of res.subClassOf) {
@@ -95,7 +105,7 @@ export class OntologyVisualizerComponent implements OnInit {
         return { 'nodes': this.nodes, 'links': this.links};
     }
     ngOnInit() {
-        this.ontoName = this._resourceClassFormService.getOntologyName(this.ontology.id)
+        console.log(this.ontoClasses)
         const gData = this.convertOntolologytoGraph();
         const gData_json = JSON.stringify(gData, null, 4);
         console.log(gData_json);
