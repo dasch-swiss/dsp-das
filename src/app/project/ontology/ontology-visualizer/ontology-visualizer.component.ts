@@ -105,7 +105,6 @@ export class OntologyVisualizerComponent implements OnInit {
         return { 'nodes': this.nodes, 'links': this.links};
     }
     ngOnInit() {
-        console.log(this.ontoClasses)
         const gData = this.convertOntolologytoGraph();
         const gData_json = JSON.stringify(gData, null, 4);
         console.log(gData_json);

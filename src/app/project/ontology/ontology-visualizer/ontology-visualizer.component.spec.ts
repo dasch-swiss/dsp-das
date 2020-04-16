@@ -1,18 +1,15 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { OnInit, Component, ViewChild, DebugElement } from '@angular/core';
 import { KuiActionModule } from '@knora/action';
-import {ClassDefinition, KnoraApiConnection, ReadOntology, ResourceClassDefinition, IHasProperty, ResourcePropertyDefinition} from '@knora/api';
+import {KnoraApiConnection, ReadOntology, ResourceClassDefinition, IHasProperty, ResourcePropertyDefinition} from '@knora/api';
 import { KnoraApiConfigToken, KnoraApiConnectionToken, KuiCoreModule } from '@knora/core';
-import { of } from 'rxjs';
 import { AppInitService } from 'src/app/app-init.service';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { OntologyVisualizerComponent } from './ontology-visualizer.component';
-import {PropertyDefinition} from '@knora/api/src/models/v2/ontologies/property-definition';
 
-fdescribe('OntologyVisualizerComponent', () => {
+describe('OntologyVisualizerComponent', () => {
     let testHostComponent: OntologyVisualizerComponent;
     let testHostFixture: ComponentFixture<OntologyVisualizerComponent>;
     // test ontology
