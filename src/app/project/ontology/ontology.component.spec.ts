@@ -13,6 +13,7 @@ import { AppInitService } from 'src/app/app-init.service';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { OntologyComponent } from './ontology.component';
+import {OntologyVisualizerComponent} from './ontology-visualizer/ontology-visualizer.component';
 
 describe('OntologyComponent', () => {
     let component: OntologyComponent;
@@ -22,6 +23,7 @@ describe('OntologyComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 OntologyComponent,
+                OntologyVisualizerComponent,
                 ErrorComponent
             ],
             imports: [
