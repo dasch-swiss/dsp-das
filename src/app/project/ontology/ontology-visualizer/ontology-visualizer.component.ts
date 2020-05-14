@@ -1,7 +1,7 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
-import {ClassDefinition, KnoraApiConnection, ReadOntology} from '@knora/api';
-import { KnoraApiConnectionToken} from '@knora/core';
-import { Node, Link, ForceDirectedGraph} from 'node_modules/d3-force-3d';
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { ClassDefinition, KnoraApiConnection, ReadOntology } from '@knora/api';
+import { KnoraApiConnectionToken } from '@knora/core';
+import { Node, Link, ForceDirectedGraph } from 'node_modules/d3-force-3d';
 import { ResourceClassFormService } from '../resource-class-form/resource-class-form.service';
 
 export interface NewOntology {
@@ -16,11 +16,10 @@ export interface NewOntology {
     styleUrls: ['./ontology-visualizer.component.scss']
 })
 export class OntologyVisualizerComponent implements OnInit {
-
-    loading: boolean;
     // ontology JSON-LD object
     @Input() ontology: ReadOntology;
     @Input() ontoClasses: ClassDefinition[];
+    loading: boolean;
     nodes: Node[] = [];
     links: Link[] = [];
 
@@ -71,7 +70,7 @@ export class OntologyVisualizerComponent implements OnInit {
             this.nodes.push(node);
         }
     }
-    addObjectTypeToNodes(targetID: string, propID: string, resLabel: string): string {
+    addObjectTypeToNodes(source: string, targetID: string, propID: string, resLabel: string, propLabel: string): string {
         let newNode: Node;
         // object Value is a literal
         const nodeInfo = this.createLabelFromIRI(targetID);
@@ -79,6 +78,9 @@ export class OntologyVisualizerComponent implements OnInit {
             targetID = resLabel + '_' + propID.split('#', 2)[1];
             newNode = {'id': targetID, 'label': nodeInfo.newLabel, 'group': 'literal', 'class': nodeInfo.type};
         // object Value is a resource defined in another ontology
+        } else if (source === targetID) {
+            targetID = targetID + propLabel
+            newNode = {'id': targetID, 'label': nodeInfo.newLabel, 'group': 'resource', 'class': 'external'};
         } else {
             newNode = {'id': targetID, 'label': nodeInfo.newLabel, 'group': 'resource', 'class': 'external'};
         }
@@ -87,21 +89,34 @@ export class OntologyVisualizerComponent implements OnInit {
         }
         return targetID;
     }
+    checkForDetachedLinks(nodes: Node[], links: Link[]) {
+        for (const link of links) {
+            if (!this.isInNodes(link['source'])) {
+                throw new Error('The source of the link' + link['label'] + 'is not in nodes');
+            }
+            if (!this.isInNodes(link['target'])) {
+                throw new Error('The target of the link' + link['label'] + 'is not in nodes');
+            }
+        }
+    }
     convertOntolologytoGraph() {
         this.addResourceClassesToNodes();
         for (const res of this.ontoClasses) {
+            const source = res.id;
             this.getSubclassLinksAndExternalResources(res);
             for (const prop of res.propertiesList) {
-                if (prop.guiOrder >= 0 && this.ontology.properties[prop.propertyIndex] && this.ontology.properties[prop.propertyIndex].objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue') {
+                if (prop.guiOrder >= 0 && this.ontology.properties[prop.propertyIndex]
+                    && this.ontology.properties[prop.propertyIndex].objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue') {
                     const target = this.ontology.properties[prop.propertyIndex].objectType;
                     const proplabel = this.ontology.properties[prop.propertyIndex].label;
-                    const targetID = this.addObjectTypeToNodes(target, prop.propertyIndex, res.label);
-                    const link = {'source': res.id, 'target': targetID, 'label': proplabel};
+                    const targetID = this.addObjectTypeToNodes(source, target, prop.propertyIndex, res.label, proplabel);
+                    const link = {'source': source, 'target': targetID, 'label': proplabel};
                     this.links.push(link);
 
                 }
             }
         }
+        this.checkForDetachedLinks(this.nodes, this.links);
         return { 'nodes': this.nodes, 'links': this.links};
     }
     ngOnInit() {
