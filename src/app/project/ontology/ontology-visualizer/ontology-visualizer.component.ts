@@ -79,7 +79,7 @@ export class OntologyVisualizerComponent implements OnInit {
             newNode = {'id': targetID, 'label': nodeInfo.newLabel, 'group': 'literal', 'class': nodeInfo.type};
         // object Value is a resource defined in another ontology
         } else if (source === targetID) {
-            targetID = targetID + propLabel
+            targetID = targetID + propLabel;
             newNode = {'id': targetID, 'label': nodeInfo.newLabel, 'group': 'resource', 'class': 'external'};
         } else {
             newNode = {'id': targetID, 'label': nodeInfo.newLabel, 'group': 'resource', 'class': 'external'};
@@ -88,16 +88,6 @@ export class OntologyVisualizerComponent implements OnInit {
             this.nodes.push(newNode);
         }
         return targetID;
-    }
-    checkForDetachedLinks(nodes: Node[], links: Link[]) {
-        for (const link of links) {
-            if (!this.isInNodes(link['source'])) {
-                throw new Error('The source of the link' + link['label'] + 'is not in nodes');
-            }
-            if (!this.isInNodes(link['target'])) {
-                throw new Error('The target of the link' + link['label'] + 'is not in nodes');
-            }
-        }
     }
     convertOntolologytoGraph() {
         this.addResourceClassesToNodes();
@@ -116,7 +106,6 @@ export class OntologyVisualizerComponent implements OnInit {
                 }
             }
         }
-        this.checkForDetachedLinks(this.nodes, this.links);
         return { 'nodes': this.nodes, 'links': this.links};
     }
     ngOnInit() {
