@@ -58,7 +58,15 @@ export class OntologyVisualizerComponent implements OnInit {
                 const nodeInfo = this.createLabelFromIRI(item);
                 this.nodes.push({'id': item, 'label': nodeInfo.newLabel, 'group': 'resource', 'class': 'external'});
             }
-            const link = {'source': res.id, 'target': item, 'label': 'subClassOf'};
+            const source = res.id;
+            const target = item;
+            let rotation = 0;
+            let curvature = 0;
+            if (source === target) {
+                rotation = 1;
+                curvature = 0.5;
+            }
+            const link = {'source': res.id, 'target': item, 'label': 'subClassOf', 'rotation': rotation, 'curvature': curvature};
             this.links.push(link);
         }
     }
@@ -70,7 +78,7 @@ export class OntologyVisualizerComponent implements OnInit {
             this.nodes.push(node);
         }
     }
-    addObjectTypeToNodes(source: string, targetID: string, propID: string, resLabel: string, propLabel: string): string {
+    addObjectTypeToNodes(targetID: string, propID: string, resLabel: string): string {
         let newNode: Node;
         // object Value is a literal
         const nodeInfo = this.createLabelFromIRI(targetID);
@@ -78,9 +86,6 @@ export class OntologyVisualizerComponent implements OnInit {
             targetID = resLabel + '_' + propID.split('#', 2)[1];
             newNode = {'id': targetID, 'label': nodeInfo.newLabel, 'group': 'literal', 'class': nodeInfo.type};
         // object Value is a resource defined in another ontology
-        } else if (source === targetID) {
-            targetID = targetID + propLabel;
-            newNode = {'id': targetID, 'label': nodeInfo.newLabel, 'group': 'resource', 'class': 'external'};
         } else {
             newNode = {'id': targetID, 'label': nodeInfo.newLabel, 'group': 'resource', 'class': 'external'};
         }
@@ -97,10 +102,16 @@ export class OntologyVisualizerComponent implements OnInit {
             for (const prop of res.propertiesList) {
                 if (prop.guiOrder >= 0 && this.ontology.properties[prop.propertyIndex]
                     && this.ontology.properties[prop.propertyIndex].objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue') {
-                    const target = this.ontology.properties[prop.propertyIndex].objectType;
+                    const targetObject = this.ontology.properties[prop.propertyIndex].objectType;
                     const proplabel = this.ontology.properties[prop.propertyIndex].label;
-                    const targetID = this.addObjectTypeToNodes(source, target, prop.propertyIndex, res.label, proplabel);
-                    const link = {'source': source, 'target': targetID, 'label': proplabel};
+                    const target = this.addObjectTypeToNodes(targetObject, prop.propertyIndex, res.label);
+                    let rotation = 0;
+                    let curvature = 0;
+                    if (source === target) {
+                        rotation = 1;
+                        curvature = 0.5;
+                    }
+                    const link = {'source': source, 'target': target, 'label': proplabel, 'rotation': rotation, 'curvature': curvature};
                     this.links.push(link);
 
                 }
@@ -111,6 +122,7 @@ export class OntologyVisualizerComponent implements OnInit {
     ngOnInit() {
         const gData = this.convertOntolologytoGraph();
         const gData_json = JSON.stringify(gData, null, 4);
+        console.log(gData_json);
     }
 
 }
