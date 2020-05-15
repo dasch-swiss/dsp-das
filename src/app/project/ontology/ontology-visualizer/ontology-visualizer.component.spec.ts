@@ -38,6 +38,20 @@ describe('OntologyVisualizerComponent', () => {
     textValuePropertyDefinition.subjectType = 'http://www.knora.org/ontology/0000/testontology/v2#testResource1';
     testOntology.properties['http://www.knora.org/ontology/0000/testontology/v2#hasText'] = textValuePropertyDefinition;
 
+    const circularValueProperty: IHasProperty = {
+        propertyIndex: 'http://www.knora.org/ontology/0000/testontology/v2#hasCopy',
+        guiOrder: 1,
+        isInherited: false,
+        cardinality: 1
+    };
+    testResourceClass1.propertiesList.push(circularValueProperty);
+    const circularValuePropertyDefinition = new ResourcePropertyDefinition();
+    circularValuePropertyDefinition.objectType = 'http://www.knora.org/ontology/0000/testontology/v2#testResource1';
+    circularValuePropertyDefinition.label = 'textHasCopy';
+    circularValuePropertyDefinition.id = 'http://www.knora.org/ontology/0000/testontology/v2#hasCopy';
+    circularValuePropertyDefinition.subjectType = 'http://www.knora.org/ontology/0000/testontology/v2#testResource1';
+    testOntology.properties['http://www.knora.org/ontology/0000/testontology/v2#hasCopy'] = circularValuePropertyDefinition;
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -73,7 +87,7 @@ describe('OntologyVisualizerComponent', () => {
     });
     it(`should check the component input (ontology and ontoClasses)`, async( () => {
         expect(testHostComponent.ontoClasses.length).toEqual(1);
-        expect(testHostComponent.ontoClasses[0].propertiesList.length).toEqual(1);
+        expect(testHostComponent.ontoClasses[0].propertiesList.length).toEqual(2);
         expect(testHostComponent.ontology.id).toMatch('http://www.knora.org/ontology/0000/testontology');
     }));
     it(`should get ontology prefix, resource label, and combination of both from class IRI`, async( () => {
@@ -111,16 +125,20 @@ describe('OntologyVisualizerComponent', () => {
 
     }));
     it(`should create links defining subclass relations`, async( () => {
-        expect(testHostComponent.links.length).toEqual(3);
+        expect(testHostComponent.links.length).toEqual(4);
         const subClassofKnoraAPiResource = {
             'source': 'http://www.knora.org/ontology/0000/testontology/v2#testResource1',
             'target': 'http://api.knora.org/ontology/knora-api/v2#Resource',
-            'label': 'subClassOf'
+            'label': 'subClassOf',
+            'rotation': 0,
+            'curvature': 0
         };
         const subClassofBiboResource = {
             'source': 'http://www.knora.org/ontology/0000/testontology/v2#testResource1',
             'target': 'http://purl.org/ontology/bibo/testResource',
-            'label': 'subClassOf'
+            'label': 'subClassOf',
+            'rotation': 0,
+            'curvature': 0
         };
 
         expect(testHostComponent.links).toContain(subClassofBiboResource);
@@ -142,8 +160,20 @@ describe('OntologyVisualizerComponent', () => {
         const textValueLink = {
             'source': 'http://www.knora.org/ontology/0000/testontology/v2#testResource1',
             'target': 'Test Resource 1_hasText',
-            'label': 'testText'
+            'label': 'testText',
+            'rotation': 0,
+            'curvature': 0
         };
         expect(testHostComponent.links).toContain(textValueLink);
+    }));
+    it(`should convert property to a circular link`, async( () => {
+        const circularLink = {
+            'source': 'http://www.knora.org/ontology/0000/testontology/v2#testResource1',
+            'target': 'http://www.knora.org/ontology/0000/testontology/v2#testResource1',
+            'label': 'textHasCopy',
+            'rotation': 1,
+            'curvature': 0.5
+        };
+        expect(testHostComponent.links).toContain(circularLink);
     }));
 });

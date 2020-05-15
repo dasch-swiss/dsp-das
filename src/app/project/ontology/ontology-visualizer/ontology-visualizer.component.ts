@@ -1,7 +1,7 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
-import {ClassDefinition, KnoraApiConnection, ReadOntology} from '@knora/api';
-import { KnoraApiConnectionToken} from '@knora/core';
-import { Node, Link, ForceDirectedGraph} from 'node_modules/d3-force-3d';
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { ClassDefinition, KnoraApiConnection, ReadOntology } from '@knora/api';
+import { KnoraApiConnectionToken } from '@knora/core';
+import { Node, Link, ForceDirectedGraph } from 'node_modules/d3-force-3d';
 import { ResourceClassFormService } from '../resource-class-form/resource-class-form.service';
 
 export interface NewOntology {
@@ -16,11 +16,10 @@ export interface NewOntology {
     styleUrls: ['./ontology-visualizer.component.scss']
 })
 export class OntologyVisualizerComponent implements OnInit {
-
-    loading: boolean;
     // ontology JSON-LD object
     @Input() ontology: ReadOntology;
     @Input() ontoClasses: ClassDefinition[];
+    loading: boolean;
     nodes: Node[] = [];
     links: Link[] = [];
 
@@ -59,7 +58,15 @@ export class OntologyVisualizerComponent implements OnInit {
                 const nodeInfo = this.createLabelFromIRI(item);
                 this.nodes.push({'id': item, 'label': nodeInfo.newLabel, 'group': 'resource', 'class': 'external'});
             }
-            const link = {'source': res.id, 'target': item, 'label': 'subClassOf'};
+            const source = res.id;
+            const target = item;
+            let rotation = 0;
+            let curvature = 0;
+            if (source === target) {
+                rotation = 1;
+                curvature = 0.5;
+            }
+            const link = {'source': res.id, 'target': item, 'label': 'subClassOf', 'rotation': rotation, 'curvature': curvature};
             this.links.push(link);
         }
     }
@@ -90,13 +97,21 @@ export class OntologyVisualizerComponent implements OnInit {
     convertOntolologytoGraph() {
         this.addResourceClassesToNodes();
         for (const res of this.ontoClasses) {
+            const source = res.id;
             this.getSubclassLinksAndExternalResources(res);
             for (const prop of res.propertiesList) {
-                if (prop.guiOrder >= 0 && this.ontology.properties[prop.propertyIndex] && this.ontology.properties[prop.propertyIndex].objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue') {
-                    const target = this.ontology.properties[prop.propertyIndex].objectType;
+                if (prop.guiOrder >= 0 && this.ontology.properties[prop.propertyIndex]
+                    && this.ontology.properties[prop.propertyIndex].objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue') {
+                    const targetObject = this.ontology.properties[prop.propertyIndex].objectType;
                     const proplabel = this.ontology.properties[prop.propertyIndex].label;
-                    const targetID = this.addObjectTypeToNodes(target, prop.propertyIndex, res.label);
-                    const link = {'source': res.id, 'target': targetID, 'label': proplabel};
+                    const target = this.addObjectTypeToNodes(targetObject, prop.propertyIndex, res.label);
+                    let rotation = 0;
+                    let curvature = 0;
+                    if (source === target) {
+                        rotation = 1;
+                        curvature = 0.5;
+                    }
+                    const link = {'source': source, 'target': target, 'label': proplabel, 'rotation': rotation, 'curvature': curvature};
                     this.links.push(link);
 
                 }
@@ -107,6 +122,7 @@ export class OntologyVisualizerComponent implements OnInit {
     ngOnInit() {
         const gData = this.convertOntolologytoGraph();
         const gData_json = JSON.stringify(gData, null, 4);
+        console.log(gData_json);
     }
 
 }
