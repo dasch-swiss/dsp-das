@@ -926,15 +926,14 @@
   dependencies:
     tslib "^1.9.0"
 
-"@knora/api@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@knora/api/-/api-0.2.0.tgz#ce418b87c68b0f6381b9540bd61132aca983edb6"
-  integrity sha512-hNK1JJeBjXxUtO2LI8Bx5jJ1s+QGPUoo87ARETdxy5EbVIXbt2O4ohvuC0xZmhvm+2QpDI5tyPScYDjJ9543pg==
+"@knora/api@^1.0.0-rc.0":
+  version "1.0.0-rc.0"
+  resolved "https://registry.yarnpkg.com/@knora/api/-/api-1.0.0-rc.0.tgz#92cf8a64875f4802fd086e0a9b8ca044751f8b39"
+  integrity sha512-2G0Swjfig6x4uMs6K2ya0vkw8ttjb1CZIg2CptBJGymdCYaSHtxtFCiP0ihbQh/u5PMIJcjgcF4zAHZ1TCHFmA==
   dependencies:
     "@types/jsonld" "^1.5.0"
-    json2typescript "^1.2.3"
+    json2typescript "1.4.1"
     jsonld "^1.8.0"
-    rxjs "^6.5.3"
 
 "@knora/core@10.0.1":
   version "10.0.1"
@@ -4612,7 +4611,12 @@ json-stringify-safe@~5.0.1:
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
   integrity sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=
 
-json2typescript@^1.0.6, json2typescript@^1.2.3:
+json2typescript@1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/json2typescript/-/json2typescript-1.4.1.tgz#de4b8ef5044bce7a580ebd4fafbe75d807001016"
+  integrity sha512-l+gmzjK4klnIG4Nr9SdHlhc03e63ln6UN1AASTTufrRoG3MjR443HqGmx/1OMOb/xvp7Ztb7UKZIzxXyDjGSsw==
+
+json2typescript@^1.0.6:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/json2typescript/-/json2typescript-1.2.3.tgz#f6760f41fc6f606af5ea309368755518b32d353f"
   integrity sha512-XJzQXMXJgRgCSmz2nYzeUBCIq/+feVtOnLzwAOMplXgGFqsXVnOwL5IEjYKkbx2sjyRuMRIfY76elUVv7P6NsQ==
