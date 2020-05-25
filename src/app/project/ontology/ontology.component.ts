@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, ClassDefinition, KnoraApiConnection, ProjectResponse, ReadOntology, ReadProject } from '@knora/api';
+import { ApiResponseData, ApiResponseError, ClassDefinition, KnoraApiConnection, ProjectResponse, ReadOntology, ReadProject, OntologiesMetadata, OntologyMetadata } from '@knora/api';
 import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, OntologyService, Session } from '@knora/core';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
@@ -40,7 +40,7 @@ export class OntologyComponent implements OnInit {
     project: ReadProject;
 
     // ontologies
-    ontologies: OntologyInfo[];
+    ontologies: OntologyMetadata[];
     // existing project ontology names
     existingOntologyNames: string[] = [];
 
@@ -158,60 +158,77 @@ export class OntologyComponent implements OnInit {
         // reset existing ontology names
         this.existingOntologyNames = [];
 
-        this._ontologyService.getProjectOntologies(encodeURI(this.project.id)).subscribe(
-            (ontologies: ApiServiceResult) => {
+        this.knoraApiConnection.v2.onto.getOntologiesByProjectIri(this.project.id).subscribe(
+            (response: OntologiesMetadata) => {
+                this.ontologies = response.ontologies;
 
-                let name: string;
+                console.log(this.ontologies);
 
-                if (ontologies.body['@graph'] && ontologies.body['@graph'].length > 0) {
-                    // more than one ontology
-                    this.ontologies = [];
+                // TODO: set forbidden onto names here
 
-                    for (const ontology of ontologies.body['@graph']) {
-                        const info: OntologyInfo = {
-                            id: ontology['@id'],
-                            label: ontology['rdfs:label']
-                        };
-
-                        this.ontologies.push(info);
-
-                        // set list of existing names
-                        name = this._resourceClassFormService.getOntologyName(ontology['@id']);
-                        this.existingOntologyNames.push(name);
-                    }
-
-                    this.loading = false;
-
-                } else if (ontologies.body['@id'] && ontologies.body['rdfs:label']) {
-                    // only one ontology
-                    this.ontologies = [
-                        {
-                            id: ontologies.body['@id'],
-                            label: ontologies.body['rdfs:label']
-                        }
-                    ];
-
-                    this.ontologyIri = ontologies.body['@id'];
-                    // set list of existing name
-                    name = this._resourceClassFormService.getOntologyName(this.ontologyIri);
-                    this.existingOntologyNames.push(name);
-
-                    // open this ontology
-                    this.openOntologyRoute(this.ontologyIri);
-                    this.getOntology(this.ontologyIri);
-
-                    this.loading = false;
-                } else {
-                    // none ontology defined yet
-                    this.ontologies = [];
-                    this.loading = false;
-                }
+                this.loading = false;
 
             },
-            (error: ApiServiceError) => {
+            (error: ApiResponseError) => {
                 console.error(error);
+                this.loading = false;
             }
         );
+
+        // this._ontologyService.getProjectOntologies(encodeURI(this.project.id)).subscribe(
+        //     (ontologies: ApiServiceResult) => {
+
+        //         let name: string;
+
+        //         if (ontologies.body['@graph'] && ontologies.body['@graph'].length > 0) {
+        //             // more than one ontology
+        //             this.ontologies = [];
+
+        //             for (const ontology of ontologies.body['@graph']) {
+        //                 const info: OntologyInfo = {
+        //                     id: ontology['@id'],
+        //                     label: ontology['rdfs:label']
+        //                 };
+
+        //                 this.ontologies.push(info);
+
+        //                 // set list of existing names
+        //                 name = this._resourceClassFormService.getOntologyName(ontology['@id']);
+        //                 this.existingOntologyNames.push(name);
+        //             }
+
+        //             this.loading = false;
+
+        //         } else if (ontologies.body['@id'] && ontologies.body['rdfs:label']) {
+        //             // only one ontology
+        //             this.ontologies = [
+        //                 {
+        //                     id: ontologies.body['@id'],
+        //                     label: ontologies.body['rdfs:label']
+        //                 }
+        //             ];
+
+        //             this.ontologyIri = ontologies.body['@id'];
+        //             // set list of existing name
+        //             name = this._resourceClassFormService.getOntologyName(this.ontologyIri);
+        //             this.existingOntologyNames.push(name);
+
+        //             // open this ontology
+        //             this.openOntologyRoute(this.ontologyIri);
+        //             this.getOntology(this.ontologyIri);
+
+        //             this.loading = false;
+        //         } else {
+        //             // none ontology defined yet
+        //             this.ontologies = [];
+        //             this.loading = false;
+        //         }
+
+        //     },
+        //     (error: ApiServiceError) => {
+        //         console.error(error);
+        //     }
+        // );
     }
 
     // update view after selecting an ontology from dropdown
