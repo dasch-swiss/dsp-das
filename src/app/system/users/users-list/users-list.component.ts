@@ -284,8 +284,8 @@ export class UsersListComponent implements OnInit {
         }
     }
 
-    updateSystemAdminMembership(user: ReadUser): void {
-        this.knoraApiConnection.admin.usersEndpoint.updateUserSystemAdminMembership(user).subscribe(
+    updateSystemAdminMembership(user: ReadUser, systemAdmin: boolean): void {
+        this.knoraApiConnection.admin.usersEndpoint.updateUserSystemAdminMembership(user.id, systemAdmin).subscribe(
             (response: ApiResponseData<UserResponse>) => {
                 if (this.session.user.name !== user.username) {
                     this.refreshParent.emit();
