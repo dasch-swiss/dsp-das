@@ -69,7 +69,7 @@ export class OntologyComponent implements OnInit {
      */
     sourceTypes: DefaultSourceType[] = SourceTypes.data;
 
-    @ViewChild('ontologyEditor', { read: ViewContainerRef, static: false }) ontologyEditor: ViewContainerRef;
+    @ViewChild('ontologyEditor', { read: ViewContainerRef }) ontologyEditor: ViewContainerRef;
 
     // @ViewChild(AddToDirective, { static: false }) addToHost: AddToDirective;
 

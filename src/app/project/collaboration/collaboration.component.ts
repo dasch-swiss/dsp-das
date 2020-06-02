@@ -36,7 +36,7 @@ export class CollaborationComponent implements OnInit {
     // list of inactive (deleted) users
     inactive: ReadUser[] = [];
 
-    @ViewChild('addUserComponent', { static: false }) addUser: AddUserComponent;
+    @ViewChild('addUserComponent') addUser: AddUserComponent;
 
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
