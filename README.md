@@ -1,8 +1,8 @@
 # Knora app
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ddfe61cdc2a14c3b89e34d2f49cd64fa)](https://www.codacy.com/manual/dasch-swiss/Knora-app?utm_source=github.com&utm_medium=referral&utm_content=dasch-swiss/knora-app&utm_campaign=Badge_Grade)
-[![Build Status](https://travis-ci.com/dasch-swiss/knora-app.svg?branch=master)](https://travis-ci.com/dasch-swiss/knora-app)
-[![CircleCI](https://circleci.com/gh/dasch-swiss/knora-app.svg?style=svg)](https://circleci.com/gh/dasch-swiss/knora-app)
+[![GitHub version](https://badge.fury.io/gh/dasch-swiss%2Fknora-app.svg)](https://github.com/dasch-swiss/knora-app)
+[![CI](https://github.com/dasch-swiss/knora-app/workflows/CI/badge.svg)](https://github.com/dasch-swiss/knora-app/actions?query=workflow%3ACI)
+[![Docker](https://img.shields.io/docker/cloud/build/daschswiss/knora-app)](https://hub.docker.com/r/daschswiss/knora-app)
 
 This app is a simple user interface for the Data and Service Center for the
 Humanities DaSCH, which uses the Knora server application in the backend.
