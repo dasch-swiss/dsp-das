@@ -150,7 +150,6 @@ export function initializeApp(appInitService: AppInitService) {
             }
         })
     ],
-    entryComponents: [DialogComponent],
     providers: [
         AppInitService,
         {
