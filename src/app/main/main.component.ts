@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectsResponse, Constants } from '@knora/api';
-import { KnoraApiConnectionToken } from '@knora/core';
+import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, ProjectsResponse } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { GridItem } from './grid/grid.component';
 
 @Component({
@@ -63,7 +63,7 @@ export class MainComponent implements OnInit {
     ];
 
     constructor(
-        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _router: Router,
         private _titleService: Title
     ) {
@@ -88,7 +88,7 @@ export class MainComponent implements OnInit {
 
     loadProjects() {
         this.loading = true;
-        this.knoraApiConnection.admin.projectsEndpoint.getProjects().subscribe(
+        this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
             (response: ApiResponseData<ProjectsResponse>) => {
                 const sliceLength: number = 160;
 

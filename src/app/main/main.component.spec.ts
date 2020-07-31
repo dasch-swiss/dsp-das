@@ -5,9 +5,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterTestingModule } from '@angular/router/testing';
-import { KuiActionModule } from '@knora/action';
-import { KnoraApiConnection, ReadProject, ProjectResponse, ApiResponseData, ProjectsResponse } from '@knora/api';
-import { KnoraApiConfigToken, KnoraApiConnectionToken } from '@knora/core';
+import { DspActionModule, DspApiConfigToken, DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
+import { KnoraApiConnection, ReadProject, ProjectResponse, ApiResponseData, ProjectsResponse } from '@dasch-swiss/dsp-js';
 import { TestConfig } from 'test.config';
 import { AppInitService } from '../app-init.service';
 import { FooterComponent } from './footer/footer.component';
@@ -26,7 +25,7 @@ describe('MainComponent', () => {
         TestBed.configureTestingModule({
             declarations: [MainComponent, FooterComponent, GridComponent],
             imports: [
-                KuiActionModule,
+                DspActionModule,
                 MatButtonModule,
                 MatIconModule,
                 MatFormFieldModule,
@@ -37,18 +36,18 @@ describe('MainComponent', () => {
             providers: [
                 AppInitService,
                 {
-                    provide: KnoraApiConfigToken,
+                    provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig
                 },
                 {
-                    provide: KnoraApiConnectionToken,
+                    provide: DspApiConnectionToken,
                     useValue: new KnoraApiConnection(TestConfig.ApiConfig)
                 }
             ]
         }).compileComponents();
     }));
 
-    beforeEach(inject([KnoraApiConnectionToken], (knoraApiConn) => {
+    beforeEach(inject([DspApiConnectionToken], (knoraApiConn) => {
         projectSpy = spyOn(knoraApiConn.admin.projectsEndpoint, 'getProjects').and.callFake(
             () => {
                 const projectList = {
