@@ -11,7 +11,7 @@ import { of } from 'rxjs';
 import { AppInitService } from 'src/app/app-init.service';
 import { TestConfig } from 'test.config';
 import { BoardComponent } from './board.component';
-import { MatDividerModule } from '@angular/material';
+import { MatDividerModule } from '@angular/material/divider';
 
 describe('BoardComponent', () => {
     let component: BoardComponent;

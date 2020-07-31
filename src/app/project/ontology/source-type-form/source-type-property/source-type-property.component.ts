@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatIconRegistry, MatSelectChange, MatOption } from '@angular/material';
+import { MatOption } from '@angular/material/core';
+import { MatIconRegistry } from '@angular/material/icon';
+import { MatSelectChange } from '@angular/material/select';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ClassDefinition, KnoraApiConnection, ListNodeInfo, ReadOntology, ResourcePropertyDefinition } from '@knora/api';
 import { KnoraApiConnectionToken, AutocompleteItem } from '@knora/core';

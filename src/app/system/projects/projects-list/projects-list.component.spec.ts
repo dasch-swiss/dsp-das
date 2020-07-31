@@ -10,7 +10,7 @@ import { KnoraApiConfigToken, KnoraApiConnectionToken, KuiCoreModule } from '@kn
 import { AppInitService } from 'src/app/app-init.service';
 import { TestConfig } from 'test.config';
 import { ProjectsListComponent } from './projects-list.component';
-import { MatChipsModule } from '@angular/material';
+import { MatChipsModule } from '@angular/material/chips';
 
 // exclude test because of issue #100 in knora-api-js-lib
 describe('ProjectsListComponent', () => {

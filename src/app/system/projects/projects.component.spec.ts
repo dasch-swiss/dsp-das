@@ -10,7 +10,7 @@ import { AppInitService } from 'src/app/app-init.service';
 import { TestConfig } from 'test.config';
 import { ProjectsListComponent } from './projects-list/projects-list.component';
 import { ProjectsComponent } from './projects.component';
-import { MatChipsModule } from '@angular/material';
+import { MatChipsModule } from '@angular/material/chips';
 
 describe('ProjectsComponent', () => {
     let component: ProjectsComponent;
