@@ -30,7 +30,7 @@ export class PermissionComponent implements OnInit {
     // project members
     projectGroups: ReadGroup[] = [];
 
-    @ViewChild('addGroupComponent', { static: false }) addGroup: AddGroupComponent;
+    @ViewChild('addGroupComponent') addGroup: AddGroupComponent;
 
     constructor(
         @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
