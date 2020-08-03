@@ -4,8 +4,8 @@ import { MatOption } from '@angular/material/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatSelectChange } from '@angular/material/select';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ClassDefinition, KnoraApiConnection, ListNodeInfo, ReadOntology, ResourcePropertyDefinition } from '@knora/api';
-import { KnoraApiConnectionToken, AutocompleteItem } from '@knora/core';
+import { ClassDefinition, KnoraApiConnection, ListNodeInfo, ReadOntology, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken, AutocompleteItem } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DefaultPropertyType, PropertyTypes, DefaultValueType } from '../../default-data/poperty-types';
 import { Observable } from 'rxjs';
@@ -62,7 +62,7 @@ export class SourceTypePropertyComponent implements OnInit {
     // index: number;
 
     constructor(
-        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _domSanitizer: DomSanitizer,
         private _matIconRegistry: MatIconRegistry) {
