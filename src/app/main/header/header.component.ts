@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationStart, Router } from '@angular/router';
-import { SessionService } from '@knora/core';
+import { SessionService } from '@dasch-swiss/dsp-ui';
 
 @Component({
     selector: 'app-header',
@@ -37,7 +37,9 @@ export class HeaderComponent {
         this._router.events.forEach((event) => {
             // console.log('EVENT', event);
             if (event instanceof NavigationStart) {
-                this.session = this._session.validateSession();
+                this._session.isSessionValid().subscribe((response) => {
+                    this.session = response;
+                });
             }
         });
     }
