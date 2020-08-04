@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, ProjectResponse, ReadUser, UpdateProjectRequest } from '@knora/api';
-import { KnoraApiConnectionToken, Session } from '@knora/core';
+import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, ProjectResponse, ReadUser, UpdateProjectRequest } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken, Session, SortingService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
 
@@ -66,8 +66,9 @@ export class ProjectsListComponent implements OnInit {
     sortBy: string = 'shortname';
 
     constructor(
-        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
+        private _sortingService: SortingService,
         private _dialog: MatDialog,
         private _router: Router) { }
 
@@ -130,13 +131,17 @@ export class ProjectsListComponent implements OnInit {
         });
     }
 
+    sortList(key: any) {
+        this.list = this._sortingService.keySortByAlphabetical(this.list, key);
+    }
+
     deleteProject(id: string) {
-        this.knoraApiConnection.admin.projectsEndpoint.deleteProject(id).subscribe(
+        this._dspApiConnection.admin.projectsEndpoint.deleteProject(id).subscribe(
             (response: ApiResponseData<ProjectResponse>) => {
                 this.refreshParent.emit();
                 // update project cache
                 this._cache.del(response.body.project.shortcode);
-                this._cache.get(response.body.project.shortcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(response.body.project.shortcode));
+                this._cache.get(response.body.project.shortcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(response.body.project.shortcode));
             },
             (error: ApiResponseError) => {
                 // this.errorMessage = error;
@@ -150,12 +155,12 @@ export class ProjectsListComponent implements OnInit {
         const data: UpdateProjectRequest = new UpdateProjectRequest();
         data.status = true;
 
-        this.knoraApiConnection.admin.projectsEndpoint.updateProject(id, data).subscribe(
+        this._dspApiConnection.admin.projectsEndpoint.updateProject(id, data).subscribe(
             (response: ApiResponseData<ProjectResponse>) => {
                 this.refreshParent.emit();
                 // update project cache
                 this._cache.del(response.body.project.shortcode);
-                this._cache.get(response.body.project.shortcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(response.body.project.shortcode));
+                this._cache.get(response.body.project.shortcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(response.body.project.shortcode));
             },
             (error: ApiResponseError) => {
                 // this.errorMessage = error;

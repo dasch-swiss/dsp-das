@@ -1,8 +1,8 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ProjectsResponse, ReadProject, UserResponse } from '@knora/api';
-import { KnoraApiConnectionToken, Session } from '@knora/core';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ProjectsResponse, ReadProject, UserResponse } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken, Session } from '@dasch-swiss/dsp-ui';
 import { AdminPermissions } from 'src/app/main/declarations/admin-permissions';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { CacheService } from '../../main/cache/cache.service';
@@ -53,7 +53,7 @@ export class ProjectsComponent implements OnInit {
     inactive: ReadProject[] = [];
 
     constructor(
-        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _dialog: MatDialog,
         private _titleService: Title
@@ -82,12 +82,12 @@ export class ProjectsComponent implements OnInit {
 
         if (this.username) {
             // logged-in user view: get all projects, where the user is member of
-            this._cache.get(this.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(
+            this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(
                 (response: ApiResponseData<UserResponse>) => {
 
                     // get user's projects by iri
                     for (const project of response.body.user.projects) {
-                        this.knoraApiConnection.admin.projectsEndpoint.getProjectByIri(project.id).subscribe(
+                        this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(project.id).subscribe(
                             (projectResponse: ApiResponseData<ProjectResponse>) => {
                                 // this.projects.push(projectResponse);
                                 if (projectResponse.body.project.status === true) {
@@ -111,7 +111,7 @@ export class ProjectsComponent implements OnInit {
         } else {
 
             // logged-in user is system admin (or guest): show all projects
-            this.knoraApiConnection.admin.projectsEndpoint.getProjects().subscribe(
+            this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
                 (response: ApiResponseData<ProjectsResponse>) => {
 
                     // reset the lists:
