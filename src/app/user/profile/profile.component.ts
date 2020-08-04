@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ReadUser, UserResponse } from '@knora/api';
-import { KnoraApiConnectionToken } from '@knora/core';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ReadUser, UserResponse } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { CacheService } from '../../main/cache/cache.service';
 import { DialogComponent } from '../../main/dialog/dialog.component';
 
@@ -28,7 +28,7 @@ export class ProfileComponent implements OnInit {
     user: ReadUser;
 
     constructor(
-        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _dialog: MatDialog,
         private _titleService: Title) {
@@ -48,10 +48,10 @@ export class ProfileComponent implements OnInit {
         this.loading = true;
 
         // set the cache
-        this._cache.get(this.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(this.username));
+        this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username));
 
         // get from cache
-        this._cache.get(this.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(
+        this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(
             (response: ApiResponseData<UserResponse>) => {
 
                 this.user = response.body.user;

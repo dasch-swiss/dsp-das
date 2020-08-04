@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ReadUser, UserResponse, Constants } from '@knora/api';
-import { KnoraApiConnectionToken, Session } from '@knora/core';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ReadUser, UserResponse } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken, Session } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 
 @Component({
@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit {
     showSystemProjects: boolean = this.sysAdmin;
 
     constructor(
-        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _titleService: Title) {
         // get username
@@ -41,10 +41,10 @@ export class DashboardComponent implements OnInit {
         this.loading = true;
 
         // set the cache
-        this._cache.get(this.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(this.username));
+        this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username));
 
         // get from cache
-        this._cache.get(this.username, this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(
+        this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(
             (response: ApiResponseData<UserResponse>) => {
                 this.user = response.body.user;
                 this.loading = false;
