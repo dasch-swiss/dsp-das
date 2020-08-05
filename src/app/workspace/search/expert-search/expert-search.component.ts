@@ -55,7 +55,11 @@ export class ExpertSearchComponent implements OnInit {
         );
 
         this.loading = false;
+    }
 
+    openResource(id: string) {
+        // TODO: implement the redirection to the resource viewer
+        console.log('resource id', id);
     }
 
 }

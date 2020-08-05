@@ -14,7 +14,7 @@ export class AdvancedSearchComponent implements OnInit {
 
     gravsearchQuery: string;
 
-    constructor (private _cache: CacheService,
+    constructor(private _cache: CacheService,
         private _titleService: Title) {
         this._titleService.setTitle('Advanced search');
     }
@@ -54,6 +54,10 @@ export class AdvancedSearchComponent implements OnInit {
         );
 
         this.loading = false;
+    }
 
+    openResource(id: string) {
+        // TODO: implement the redirection to the resource viewer
+        console.log('resource id', id);
     }
 }

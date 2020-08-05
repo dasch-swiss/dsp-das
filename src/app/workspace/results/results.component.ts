@@ -13,8 +13,9 @@ export class ResultsComponent implements OnInit {
     searchMode: string;
 
     projectIri: string;
+    resIri: string;
 
-    constructor (private _route: ActivatedRoute,
+    constructor(private _route: ActivatedRoute,
         private _titleService: Title) {
         this._route.paramMap.subscribe((params: Params) => {
             // set the page title
@@ -23,6 +24,10 @@ export class ResultsComponent implements OnInit {
     }
 
     ngOnInit() {
+    }
+
+    openResource(id: string) {
+        this.resIri = id;
     }
 
 }
