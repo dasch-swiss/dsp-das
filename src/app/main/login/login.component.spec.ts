@@ -45,7 +45,7 @@ describe('LoginComponent', () => {
     });
 
     it('should define the login form', () => {
-        const loginForm = fixture.debugElement.query(By.css('app-login kui-login-form'));
+        const loginForm = fixture.debugElement.query(By.css('app-login dsp-login-form'));
         expect(loginForm).toBeDefined();
     });
 
