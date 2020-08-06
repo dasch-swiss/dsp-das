@@ -12,7 +12,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTreeModule } from '@angular/material/tree';
-import { KuiActionModule } from '@knora/action';
+import { DspActionModule } from '@dasch-swiss/dsp-ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { ListInfoFormComponent } from 'src/app/project/list/list-info-form/list-info-form.component';
 import { ListItemFormComponent } from 'src/app/project/list/list-item-form/list-item-form.component';
@@ -48,7 +48,7 @@ describe('DialogComponent', () => {
                 SourceTypePropertyComponent
             ],
             imports: [
-                KuiActionModule,
+                DspActionModule,
                 MatAutocompleteModule,
                 MatButtonModule,
                 MatChipsModule,
