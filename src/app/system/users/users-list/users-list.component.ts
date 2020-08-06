@@ -285,8 +285,8 @@ export class UsersListComponent implements OnInit {
         }
     }
 
-    updateSystemAdminMembership(user: ReadUser): void {
-        this._dspApiConnection.admin.usersEndpoint.updateUserSystemAdminMembership(user.id, user.systemAdmin).subscribe(
+    updateSystemAdminMembership(user: ReadUser, systemAdmin: boolean): void {
+        this._dspApiConnection.admin.usersEndpoint.updateUserSystemAdminMembership(user.id, systemAdmin).subscribe(
             (response: ApiResponseData<UserResponse>) => {
                 if (this.session.user.name !== user.username) {
                     this.refreshParent.emit();
@@ -296,37 +296,6 @@ export class UsersListComponent implements OnInit {
                 console.error(error);
             }
         );
-        /*
-            if (this.userIsSystemAdmin(permissions)) {
-            // true = user is already system admin --> remove from system admin rights
-
-            this._usersService
-                .removeUserFromSystemAdmin(id)
-                .subscribe(
-                    (response: User) => {
-                        // if this user is not the logged-in user
-                        if (this.session.user.name !== response.username) {
-                            this.refreshParent.emit();
-                        }
-                    },
-                    (error: ApiServiceError) => {
-                        console.error(error);
-                    }
-                );
-        } else {
-            // false: user isn't system admin yet --> add system admin rights
-            this._usersService
-                .addUserToSystemAdmin(id)
-                .subscribe(
-                    (response: User) => {
-                        // console.log(response);
-                        this.refreshParent.emit();
-                    },
-                    (error: ApiServiceError) => {
-                        console.error(error);
-                    }
-                );
-        } */
     }
 
     /**
