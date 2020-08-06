@@ -16,7 +16,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TestConfig } from 'test.config';
 import { ProjectFormComponent } from './project-form.component';
 
-// exclude test because of issue #100 in knora-api-js-lib
+// exclude test because of issue #100 in dsp-js
 describe('ProjectFormComponent', () => {
     let component: ProjectFormComponent;
     let fixture: ComponentFixture<ProjectFormComponent>;

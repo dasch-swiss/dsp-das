@@ -110,7 +110,7 @@ export class ListItemFormComponent implements OnInit {
             }
             listItem.comments = []; // TODO: comments are not yet implemented in the template
 
-            // send payload to knora's api
+            // send payload to dsp-api's api
             this._dspApiConnection.admin.listsEndpoint.createChildNode(listItem).subscribe(
                 (response: ApiResponseData<ListNodeInfoResponse>) => {
                     this.refreshParent.emit(response.body.nodeinfo);

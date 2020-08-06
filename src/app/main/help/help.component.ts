@@ -54,7 +54,7 @@ export class HelpComponent implements OnInit {
         {
             title: 'Knora app ',
             text: 'This is the tool of the user interface you are using right now. DaSCH\'s generic web application.',
-            url: 'https://github.com/dasch-swiss/knora-app/releases/tag/v',
+            url: 'https://github.com/dasch-swiss/dsp-app/releases/tag/v',
             urlText: 'Release notes'
         },
         {

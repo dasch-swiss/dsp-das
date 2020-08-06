@@ -20,7 +20,7 @@ export class ProjectsListComponent implements OnInit {
     sysAdmin: boolean = false;
     projectAdmin: boolean = false;
 
-    // list of default, knora-specific projects, which are not able to be deleted or to be editied
+    // list of default, dsp-specific projects, which are not able to be deleted or to be editied
     doNotDelete: string[] = [
         Constants.SystemProjectIRI,
         Constants.DefaultSharedOntologyIRI
@@ -151,7 +151,7 @@ export class ProjectsListComponent implements OnInit {
     }
 
     activateProject(id: string) {
-        // hack because of issue #100 in knora-api-js-lib
+        // hack because of issue #100 in dsp-js
         const data: UpdateProjectRequest = new UpdateProjectRequest();
         data.status = true;
 

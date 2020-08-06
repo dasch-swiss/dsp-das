@@ -16,7 +16,7 @@ import { TestConfig } from 'test.config';
 import { ProjectsListComponent } from './projects-list.component';
 import { MatChipsModule } from '@angular/material/chips';
 
-// exclude test because of issue #100 in knora-api-js-lib
+// exclude test because of issue #100 in dsp-js
 describe('ProjectsListComponent', () => {
     let component: ProjectsListComponent;
     let fixture: ComponentFixture<ProjectsListComponent>;

@@ -48,7 +48,7 @@ export class UserMenuComponent implements OnInit {
                 // destroy cache
                 this._cache.destroy();
 
-                // destroy (knora-ui) session
+                // destroy (dsp-ui) session
                 this._session.destroySession();
 
                 // reload the page

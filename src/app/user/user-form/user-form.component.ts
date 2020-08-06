@@ -353,7 +353,7 @@ export class UserFormComponent implements OnInit, OnChanges {
 
         if (this.username) {
             // edit mode: update user data
-            // username doesn't seem to be optional in @knora/api usersEndpoint type UpdateUserRequest.
+            // username doesn't seem to be optional in @dasch-swiss/dsp-js usersEndpoint type UpdateUserRequest.
             // but a user can't change the username, the field is disabled, so it's not a value in this form.
             // we have to make a small hack here.
             const userData: UpdateUserRequest = new UpdateUserRequest();

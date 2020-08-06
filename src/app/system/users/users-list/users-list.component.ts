@@ -46,7 +46,7 @@ export class UsersListComponent implements OnInit {
 
     //
     // project view
-    // knora admin group iri
+    // dsp-js admin group iri
     adminGroupIri: string = Constants.ProjectAdminGroupIRI;
 
     // project shortcode; as identifier in project cache service

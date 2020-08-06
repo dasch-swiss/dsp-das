@@ -470,7 +470,7 @@ export class ProjectFormComponent implements OnInit {
      * @param id Project Iri
      */
     activate(id: string) {
-        // hack because of issue #100 in knora-api-js-lib
+        // hack because of issue #100 in dsp-js
         const data: UpdateProjectRequest = new UpdateProjectRequest();
         data.status = true;
 
