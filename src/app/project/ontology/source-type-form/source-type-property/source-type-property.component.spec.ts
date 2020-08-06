@@ -9,9 +9,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { KnoraApiConnection } from '@knora/api';
-import { KnoraApiConfigToken, KnoraApiConnectionToken } from '@knora/core';
-import { AppInitService } from 'src/app/app-init.service';
+import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { AppInitService, DspApiConfigToken, DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { TestConfig } from 'test.config';
 import { SourceTypePropertyComponent } from './source-type-property.component';
 
@@ -41,11 +40,11 @@ xdescribe('SourceTypePropertyComponent', () => {
                 { provide: FormBuilder, useValue: formBuilder },
                 AppInitService,
                 {
-                    provide: KnoraApiConfigToken,
+                    provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig
                 },
                 {
-                    provide: KnoraApiConnectionToken,
+                    provide: DspApiConnectionToken,
                     useValue: new KnoraApiConnection(TestConfig.ApiConfig)
                 }
             ]

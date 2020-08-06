@@ -4,11 +4,15 @@ import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterTestingModule } from '@angular/router/testing';
-import { KuiActionModule } from '@knora/action';
-import { KnoraApiConnection } from '@knora/api';
-import { KnoraApiConfigToken, KnoraApiConnectionToken, KuiCoreModule } from '@knora/core';
+import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import {
+    AppInitService,
+    DspActionModule,
+    DspApiConfigToken,
+    DspApiConnectionToken,
+    DspCoreModule
+} from '@dasch-swiss/dsp-ui';
 import { TranslateModule } from '@ngx-translate/core';
-import { AppInitService } from 'src/app/app-init.service';
 import { TestConfig } from 'test.config';
 import { OntologyFormComponent } from './ontology-form.component';
 
@@ -25,8 +29,8 @@ describe('OntologyFormComponent', () => {
             ],
             imports: [
                 HttpClientTestingModule,
-                KuiActionModule,
-                KuiCoreModule,
+                DspActionModule,
+                DspCoreModule,
                 MatFormFieldModule,
                 MatInputModule,
                 ReactiveFormsModule,
@@ -38,11 +42,11 @@ describe('OntologyFormComponent', () => {
                 { provide: FormBuilder, useValue: formBuilder },
                 AppInitService,
                 {
-                    provide: KnoraApiConfigToken,
+                    provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig
                 },
                 {
-                    provide: KnoraApiConnectionToken,
+                    provide: DspApiConnectionToken,
                     useValue: new KnoraApiConnection(TestConfig.ApiConfig)
                 }
             ]

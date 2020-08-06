@@ -4,10 +4,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { RouterTestingModule } from '@angular/router/testing';
-import { KuiActionModule } from '@knora/action';
-import { KnoraApiConnection } from '@knora/api';
-import { KnoraApiConfigToken, KnoraApiConnectionToken } from '@knora/core';
-import { AppInitService } from 'src/app/app-init.service';
+import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import {
+    AppInitService,
+    DspActionModule,
+    DspApiConfigToken,
+    DspApiConnectionToken
+} from '@dasch-swiss/dsp-ui';
 import { TestConfig } from 'test.config';
 import { ListItemFormComponent } from '../list-item-form/list-item-form.component';
 import { ListItemComponent } from './list-item.component';
@@ -24,7 +27,7 @@ describe('ListItemComponent', () => {
             ],
             imports: [
                 HttpClientTestingModule,
-                KuiActionModule,
+                DspActionModule,
                 MatIconModule,
                 MatInputModule,
                 ReactiveFormsModule,
@@ -33,11 +36,11 @@ describe('ListItemComponent', () => {
             providers: [
                 AppInitService,
                 {
-                    provide: KnoraApiConfigToken,
+                    provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig
                 },
                 {
-                    provide: KnoraApiConnectionToken,
+                    provide: DspApiConnectionToken,
                     useValue: new KnoraApiConnection(TestConfig.ApiConfig)
                 }
             ]

@@ -9,11 +9,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { KuiActionModule } from '@knora/action';
-import { KnoraApiConnection } from '@knora/api';
-import { KnoraApiConfigToken, KnoraApiConnectionToken } from '@knora/core';
+import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import {
+    AppInitService,
+    DspActionModule,
+    DspApiConfigToken,
+    DspApiConnectionToken
+} from '@dasch-swiss/dsp-ui';
 import { TranslateModule } from '@ngx-translate/core';
-import { AppInitService } from 'src/app/app-init.service';
 import { TestConfig } from 'test.config';
 import { SourceTypeFormComponent } from './source-type-form.component';
 import { SourceTypePropertyComponent } from './source-type-property/source-type-property.component';
@@ -30,7 +33,7 @@ describe('SourceTypeFormComponent', () => {
             ],
             imports: [
                 HttpClientTestingModule,
-                KuiActionModule,
+                DspActionModule,
                 MatAutocompleteModule,
                 MatDividerModule,
                 MatFormFieldModule,
@@ -45,11 +48,11 @@ describe('SourceTypeFormComponent', () => {
             providers: [
                 AppInitService,
                 {
-                    provide: KnoraApiConfigToken,
+                    provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig
                 },
                 {
-                    provide: KnoraApiConnectionToken,
+                    provide: DspApiConnectionToken,
                     useValue: new KnoraApiConnection(TestConfig.ApiConfig)
                 }
             ]

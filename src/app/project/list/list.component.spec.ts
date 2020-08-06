@@ -12,11 +12,15 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { KuiActionModule } from '@knora/action';
-import { KnoraApiConnection } from '@knora/api';
-import { KnoraApiConfigToken, KnoraApiConnectionToken, KuiCoreModule } from '@knora/core';
+import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import {
+    AppInitService,
+    DspActionModule,
+    DspApiConfigToken,
+    DspApiConnectionToken,
+    DspCoreModule
+} from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
-import { AppInitService } from 'src/app/app-init.service';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { ListItemFormComponent } from './list-item-form/list-item-form.component';
@@ -37,8 +41,8 @@ describe('ListComponent', () => {
             ],
             imports: [
                 HttpClientModule,
-                KuiActionModule,
-                KuiCoreModule,
+                DspActionModule,
+                DspCoreModule,
                 MatButtonModule,
                 MatChipsModule,
                 MatDialogModule,
@@ -68,11 +72,11 @@ describe('ListComponent', () => {
                 },
                 AppInitService,
                 {
-                    provide: KnoraApiConfigToken,
+                    provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig
                 },
                 {
-                    provide: KnoraApiConnectionToken,
+                    provide: DspApiConnectionToken,
                     useValue: new KnoraApiConnection(TestConfig.ApiConfig)
                 }
             ]

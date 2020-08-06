@@ -4,11 +4,15 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { RouterTestingModule } from '@angular/router/testing';
-import { KuiActionModule } from '@knora/action';
-import { KnoraApiConnection } from '@knora/api';
-import { KnoraApiConfigToken, KnoraApiConnectionToken, KuiCoreModule } from '@knora/core';
+import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import {
+    AppInitService,
+    DspActionModule,
+    DspApiConfigToken,
+    DspApiConnectionToken,
+    DspCoreModule
+} from '@dasch-swiss/dsp-ui';
 import { TranslateModule } from '@ngx-translate/core';
-import { AppInitService } from 'src/app/app-init.service';
 import { TestConfig } from 'test.config';
 import { ProjectFormComponent } from './project-form.component';
 
@@ -21,8 +25,8 @@ describe('ProjectFormComponent', () => {
         TestBed.configureTestingModule({
             declarations: [ProjectFormComponent],
             imports: [
-                KuiActionModule,
-                KuiCoreModule,
+                DspActionModule,
+                DspCoreModule,
                 MatChipsModule,
                 MatIconModule,
                 MatInputModule,
@@ -33,11 +37,11 @@ describe('ProjectFormComponent', () => {
             providers: [
                 AppInitService,
                 {
-                    provide: KnoraApiConfigToken,
+                    provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig
                 },
                 {
-                    provide: KnoraApiConnectionToken,
+                    provide: DspApiConnectionToken,
                     useValue: new KnoraApiConnection(TestConfig.ApiConfig)
                 }
             ]
