@@ -7,11 +7,11 @@
             <mat-panel-description> </mat-panel-description>
         </mat-expansion-panel-header>
 
-        <dsp-advanced-search (gravsearchQuery)="setGravsearch($event)" #extendedSearch></dsp-advanced-search>
+        <dsp-advanced-search (search)="doSearch($event)"></dsp-advanced-search>
 
     </mat-expansion-panel>
 </div>
 
-<div class="content large middle" *ngIf="gravsearchQuery && !loading">
-    <dsp-list-view [search]="gravsearchQuery" (resourceSelected)="openResource($event)" #searchResults></dsp-list-view>
+<div class="content large middle" *ngIf="searchParams">
+    <dsp-list-view [search]="searchParams" (resourceSelected)="openResource($event)" #searchResults></dsp-list-view>
 </div>

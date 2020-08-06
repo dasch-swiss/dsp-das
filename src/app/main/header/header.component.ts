@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationStart, Router } from '@angular/router';
-import { SessionService } from '@dasch-swiss/dsp-ui';
+import { SearchParams, SessionService } from '@dasch-swiss/dsp-ui';
 
 @Component({
     selector: 'app-header',
@@ -13,6 +13,7 @@ export class HeaderComponent {
 
     session: boolean = false;
     show: boolean = false;
+    searchParams: SearchParams;
 
     constructor(
         private _session: SessionService,
@@ -61,6 +62,14 @@ export class HeaderComponent {
      */
     showSearchBar() {
         this.show = !this.show;
+    }
+
+    doSearch(search: SearchParams) {
+        // reset search params
+        this.searchParams = undefined;
+        // we can do the routing here or send the search param
+        // to (resource) list view directly
+        this.searchParams = search;
     }
 
 }

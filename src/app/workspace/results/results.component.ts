@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
+import { SearchParams } from '@dasch-swiss/dsp-ui';
 
 @Component({
     selector: 'app-results',
@@ -9,25 +10,27 @@ import { ActivatedRoute, Params } from '@angular/router';
 })
 export class ResultsComponent implements OnInit {
 
-    searchQuery: string;
-    searchMode: string;
+    searchParams: SearchParams;
 
-    projectIri: string;
     resIri: string;
 
-    constructor(private _route: ActivatedRoute,
-        private _titleService: Title) {
-        this._route.paramMap.subscribe((params: Params) => {
-            // set the page title
-            this._titleService.setTitle('Results found for "' + decodeURIComponent(params.get('q')) + '"');
-        });
+    constructor() {
     }
 
     ngOnInit() {
     }
 
     openResource(id: string) {
-        this.resIri = id;
+        // TODO: implement the redirection to the resource viewer
+        console.log('open ', id);
+    }
+
+    doSearch(search: SearchParams) {
+        // reset search params
+        this.searchParams = undefined;
+        // we can do the routing here or send the search param
+        // to (resource) list view directly
+        this.searchParams = search;
     }
 
 }
