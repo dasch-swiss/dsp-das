@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SearchParams } from '@dasch-swiss/dsp-ui';
 
 @Component({
@@ -14,23 +13,22 @@ export class ResultsComponent implements OnInit {
 
     resIri: string;
 
-    constructor() {
+    constructor(
+        private _route: ActivatedRoute,
+        private _router: Router
+    ) {
+        this._route.paramMap.subscribe((params: Params) => {
+            this.searchParams = {
+                query: decodeURIComponent(params.get('q')),
+                mode: 'fulltext'
+            };
+        });
     }
 
     ngOnInit() {
     }
 
     openResource(id: string) {
-        // TODO: implement the redirection to the resource viewer
-        console.log('open ', id);
+        this._router.navigate(['/resource/' + encodeURIComponent(id)]);
     }
-
-    doSearch(search: SearchParams) {
-        // reset search params
-        this.searchParams = undefined;
-        // we can do the routing here or send the search param
-        // to (resource) list view directly
-        this.searchParams = search;
-    }
-
 }
