@@ -70,6 +70,8 @@ export class HeaderComponent {
         // we can do the routing here or send the search param
         // to (resource) list view directly
         this.searchParams = search;
+
+        this._router.navigate(['/search/' + this.searchParams.mode + '/' + encodeURIComponent(this.searchParams.query)]);
     }
 
 }

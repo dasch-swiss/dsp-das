@@ -11,7 +11,7 @@
 
     <!-- search-panel (in desktop and tablet version) -->
     <span class="action searchbar-large-screen">
-        <dsp-search-panel [route]="'/search'" [projectfilter]="true" [expert]="false" [advanced]="false">
+        <dsp-search-panel [projectfilter]="true" [expert]="false" [advanced]="false" (search)="doSearch($event)">
         </dsp-search-panel>
     </span>
 
