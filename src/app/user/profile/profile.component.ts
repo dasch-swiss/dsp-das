@@ -2,7 +2,7 @@ import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ReadUser, UserResponse } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, SessionService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from '../../main/cache/cache.service';
 import { DialogComponent } from '../../main/dialog/dialog.component';
 
@@ -30,12 +30,13 @@ export class ProfileComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
+        private _session: SessionService,
         private _dialog: MatDialog,
         private _titleService: Title) {
 
         // get info about the logged-in user: does he have the right to change user's profile?
-        if (localStorage.getItem('session') && !this.loggedInUser) {
-            this.sysAdmin = JSON.parse(localStorage.getItem('session')).user.sysAdmin;
+        if (this._session.getSession() && !this.loggedInUser) {
+            this.sysAdmin = this._session.getSession().user.sysAdmin;
         }
 
     }

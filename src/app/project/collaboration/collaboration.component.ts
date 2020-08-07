@@ -2,7 +2,7 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, MembersResponse, ProjectResponse, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, Session } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from '../../main/cache/cache.service';
 import { AddUserComponent } from './add-user/add-user.component';
 
@@ -41,6 +41,7 @@ export class CollaborationComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
+        private _session: SessionService,
         private _route: ActivatedRoute,
         private _titleService: Title) {
 
@@ -69,7 +70,7 @@ export class CollaborationComponent implements OnInit {
         this.loading = true;
 
         // get information about the logged-in user
-        this.session = JSON.parse(localStorage.getItem('session'));
+        this.session = this._session.getSession();
 
         // is the logged-in user system admin?
         this.sysAdmin = this.session.user.sysAdmin;

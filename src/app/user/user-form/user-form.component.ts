@@ -2,7 +2,7 @@ import { Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output } fro
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, ProjectResponse, ReadUser, StringLiteral, UpdateUserRequest, User, UserResponse, UsersResponse } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, existingNamesValidator, Session } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, existingNamesValidator, Session, SessionService } from '@dasch-swiss/dsp-ui';
 import { AppGlobal } from 'src/app/app-global';
 import { CacheService } from '../../main/cache/cache.service';
 
@@ -154,6 +154,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _route: ActivatedRoute,
         private _cache: CacheService,
+        private _session: SessionService,
         private _formBuilder: FormBuilder
     ) {
         // get username from url
@@ -169,7 +170,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.loading = true;
 
         // get information about the logged-in user
-        this.session = JSON.parse(localStorage.getItem('session'));
+        this.session = this._session.getSession();
         // is the logged-in user system admin?
         this.sysAdmin = this.session.user.sysAdmin;
 
@@ -368,9 +369,7 @@ export class UserFormComponent implements OnInit, OnChanges {
                     this.user = response.body.user;
                     this.buildForm(this.user);
                     // update cache
-                    const session: Session = JSON.parse(
-                        localStorage.getItem('session')
-                    );
+                    const session: Session = this._session.getSession();
                     if (session.user.name === this.username) {
                         // update logged in user session
                         session.user.lang = this.form.controls['lang'].value;

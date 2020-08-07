@@ -4,7 +4,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ListNodeInfo, ListsResponse, ProjectResponse, ReadProject, StringLiteral } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, Session } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
 import { AppGlobal } from 'src/app/app-global';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
@@ -64,6 +64,7 @@ export class ListComponent implements OnInit {
         private _router: Router,
         private _fb: FormBuilder,
         private _cache: CacheService,
+        private _session: SessionService,
         private _route: ActivatedRoute,
         private _titleService: Title) {
 
@@ -90,7 +91,7 @@ export class ListComponent implements OnInit {
         this.loading = true;
 
         // get information about the logged-in user
-        this.session = JSON.parse(localStorage.getItem('session'));
+        this.session = this._session.getSession();
 
         // is the logged-in user system admin?
         this.sysAdmin = this.session.user.sysAdmin;

@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, Project, ProjectResponse, ProjectsResponse, ReadProject, StringLiteral, UpdateProjectRequest, UserResponse } from '@dasch-swiss/dsp-js';
-import { existingNamesValidator, DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
+import { existingNamesValidator, DspApiConnectionToken, SessionService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
@@ -119,6 +119,7 @@ export class ProjectFormComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
+        private _session: SessionService,
         private _router: Router,
         private _fb: FormBuilder) {
     }
@@ -159,7 +160,7 @@ export class ProjectFormComponent implements OnInit {
 
         } else {
             // edit mode
-            this.sysAdmin = JSON.parse(localStorage.getItem('session')).user.sysAdmin;
+            this.sysAdmin = this._session.getSession().user.sysAdmin;
             this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode).subscribe(
                 (response: ApiResponseData<ProjectResponse>) => {
                     this.project = response.body.project;
@@ -399,7 +400,7 @@ export class ProjectFormComponent implements OnInit {
 
                     // add logged-in user to the project
                     // who am I?
-                    this._dspApiConnection.admin.usersEndpoint.getUserByUsername(JSON.parse(localStorage.getItem('session')).user.name).subscribe(
+                    this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this._session.getSession().user.name).subscribe(
                         (userResponse: ApiResponseData<UserResponse>) => {
                             this._dspApiConnection.admin.usersEndpoint.addUserToProjectMembership(userResponse.body.user.id, projectResponse.body.project.id).subscribe(
                                 (response: ApiResponseData<UserResponse>) => {

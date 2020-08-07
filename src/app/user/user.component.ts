@@ -43,7 +43,7 @@ export class UserComponent implements OnInit {
         */
 
         // get session
-        this.session = JSON.parse(localStorage.getItem('session'));
+        this.session = this._session.getSession();
 
         // set the page title
         this._titleService.setTitle(this.session.user.name);

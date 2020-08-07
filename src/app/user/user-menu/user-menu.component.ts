@@ -27,8 +27,8 @@ export class UserMenuComponent implements OnInit {
 
     ngOnInit() {
         this.navigation = AppGlobal.userNav;
-        this.username = JSON.parse(localStorage.getItem('session')).user.name;
-        this.sysAdmin = JSON.parse(localStorage.getItem('session')).user.sysAdmin;
+        this.username = this._session.getSession().user.name;
+        this.sysAdmin = this._session.getSession().user.sysAdmin;
 
         this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username));
         this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(

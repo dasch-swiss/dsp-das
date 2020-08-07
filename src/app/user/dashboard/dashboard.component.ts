@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ReadUser, UserResponse } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, Session } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 
 @Component({
@@ -24,9 +24,10 @@ export class DashboardComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
+        private _session: SessionService,
         private _titleService: Title) {
         // get username
-        this.session = JSON.parse(localStorage.getItem('session'));
+        this.session = this._session.getSession();
         this.username = this.session.user.name;
         this.sysAdmin = this.session.user.sysAdmin;
 

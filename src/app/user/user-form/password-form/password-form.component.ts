@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, LoginResponse, ReadUser, UserResponse } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, DspMessageData } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, DspMessageData, SessionService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 
 @Component({
@@ -98,6 +98,7 @@ export class PasswordFormComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
+        private _session: SessionService,
         private _fb: FormBuilder
     ) { }
 
@@ -105,7 +106,7 @@ export class PasswordFormComponent implements OnInit {
 
         this.loading = true;
 
-        const session = JSON.parse(localStorage.getItem('session'));
+        const session = this._session.getSession();
 
         if (this.username) {
             // edit mode

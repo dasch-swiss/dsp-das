@@ -99,7 +99,7 @@ export class UsersListComponent implements OnInit {
     ngOnInit() {
 
         // get information about the logged-in user
-        this.session = JSON.parse(localStorage.getItem('session'));
+        this.session = this._session.getSession();
 
         // is the logged-in user system admin?
         this.sysAdmin = this.session.user.sysAdmin;

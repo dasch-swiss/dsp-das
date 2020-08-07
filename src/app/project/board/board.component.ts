@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, Session } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { CacheService } from '../../main/cache/cache.service';
 
@@ -49,6 +49,7 @@ export class BoardComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
+        private _session: SessionService,
         private _dialog: MatDialog,
         private _route: ActivatedRoute,
         private _titleService: Title
@@ -66,8 +67,8 @@ export class BoardComponent implements OnInit {
         this.loading = true;
 
         // get information about the logged-in user, if one is logged-in
-        if (localStorage.getItem('session')) {
-            this.session = JSON.parse(localStorage.getItem('session'));
+        if (this._session.getSession()) {
+            this.session = this._session.getSession();
             // is the logged-in user system admin?
             this.sysAdmin = this.session.user.sysAdmin;
 

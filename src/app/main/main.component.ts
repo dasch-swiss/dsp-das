@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, ProjectsResponse } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, SessionService } from '@dasch-swiss/dsp-ui';
 import { GridItem } from './grid/grid.component';
 
 @Component({
@@ -64,6 +64,7 @@ export class MainComponent implements OnInit {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _session: SessionService,
         private _router: Router,
         private _titleService: Title
     ) {
@@ -72,7 +73,7 @@ export class MainComponent implements OnInit {
 
 
         // check if a session is active
-        if (JSON.parse(localStorage.getItem('session'))) {
+        if (this._session.getSession()) {
             this._router.navigate(['dashboard']);
         }
     }

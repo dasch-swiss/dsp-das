@@ -2,7 +2,7 @@ import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, ProjectResponse, ReadUser, UpdateProjectRequest } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, Session, SortingService } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, Session, SortingService, SessionService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
 
@@ -68,13 +68,14 @@ export class ProjectsListComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
+        private _session: SessionService,
         private _sortingService: SortingService,
         private _dialog: MatDialog,
         private _router: Router) { }
 
     ngOnInit() {
         // get information about the logged-in user
-        this.session = JSON.parse(localStorage.getItem('session'));
+        this.session = this._session.getSession();
 
         // is the logged-in user system admin?
         this.sysAdmin = this.session.user.sysAdmin;

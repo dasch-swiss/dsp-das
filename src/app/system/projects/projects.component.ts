@@ -2,7 +2,7 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ProjectsResponse, ReadProject, UserResponse } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, Session } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
 import { AdminPermissions } from 'src/app/main/declarations/admin-permissions';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { CacheService } from '../../main/cache/cache.service';
@@ -55,6 +55,7 @@ export class ProjectsComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
+        private _session: SessionService,
         private _dialog: MatDialog,
         private _titleService: Title
     ) {
@@ -68,7 +69,7 @@ export class ProjectsComponent implements OnInit {
 
     ngOnInit() {
 
-        this.session = JSON.parse(localStorage.getItem('session'));
+        this.session = this._session.getSession();
 
         this.initList();
     }

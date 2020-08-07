@@ -48,7 +48,7 @@ export class ProjectComponent implements OnInit {
         this.projectcode = this._route.snapshot.params.shortcode;
 
         // get session
-        this.session = JSON.parse(localStorage.getItem('session'));
+        this.session = this._session.getSession();
 
         // set the page title
         this._titleService.setTitle('Project ' + this.projectcode);
@@ -84,7 +84,7 @@ export class ProjectComponent implements OnInit {
                     // is logged-in user projectAdmin?
                     if (this.session) {
                         this._session.setSession(this.session.user.jwt, this.session.user.name, 'username');
-                        this.session = JSON.parse(localStorage.getItem('session'));
+                        this.session = this._session.getSession();
 
                         // is the logged-in user system admin?
                         this.sysAdmin = this.session.user.sysAdmin;
