@@ -8,13 +8,6 @@
         <p class="menu-title">
             {{username}}
         </p>
-        <!--
-        <span class="menu-action">
-            <button mat-icon-button>
-                <mat-icon>close</mat-icon>
-            </button>
-        </span>
-        -->
     </div>
 
     <!-- menu items -->
@@ -42,16 +35,6 @@
         </mat-list>
 
     </div>
-    <!--
-        <mat-grid-list cols="2" gutterSize="6px">
-            <mat-grid-tile *ngFor="let item of items">
-                <button mat-button [routerLink]="item.route">
-                    <mat-icon>{{item.icon}}</mat-icon>
-                    <br>
-                    {{item.label}}
-                </button>
-            </mat-grid-tile>
-        </mat-grid-list>-->
 
     <div class="menu-footer border-top">
         <button mat-button class="menu-action logout" (click)="logout()">
