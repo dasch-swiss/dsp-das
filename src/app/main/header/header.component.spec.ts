@@ -90,7 +90,7 @@ describe('HeaderComponent', () => {
     });
 
     it('should display the search panel', () => {
-        const searchPanel = fixture.debugElement.query(By.css('kui-search-panel'));
+        const searchPanel = fixture.debugElement.query(By.css('dsp-search-panel'));
         expect(searchPanel).toBeDefined();
     });
 

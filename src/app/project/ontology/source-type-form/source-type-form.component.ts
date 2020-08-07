@@ -256,7 +256,7 @@ export class SourceTypeFormComponent implements OnInit, OnDestroy, AfterViewChec
         moveItemInArray(this.sourceTypeForm.value.properties, event.previousIndex, event.currentIndex);
     }
     /**
-     * set stringLiterals for label or comment from kui-string-literal-input
+     * set stringLiterals for label or comment from dsp-string-literal-input
      * @param  {StringLiteral[]} data
      * @param  {string} type
      */
