@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { SearchParams } from '@dasch-swiss/dsp-ui';
-import { CacheService } from 'src/app/main/cache/cache.service';
+import { Router } from '@angular/router';
+import { SearchParams, AdvancedSearchParamsService, AdvancedSearchParams } from '@dasch-swiss/dsp-ui';
 
 
 @Component({
@@ -18,27 +18,15 @@ export class AdvancedSearchComponent implements OnInit {
     searchParams: SearchParams;
 
     constructor(
-        private _cache: CacheService,
-        private _titleService: Title
+        private _titleService: Title,
+        private _router: Router
     ) {
         this._titleService.setTitle('Advanced search');
     }
 
     ngOnInit() {
-
-        // TODO: find another solution
-        /* if (this._cache.has('gravsearch')) {
-            // reload the results
-            this._cache.get('gravsearch').subscribe(
-                (cachedQuery: string) => {
-                    this.gravsearchQuery = cachedQuery;
-                    this.loading = false;
-                },
-                (error: any) => {
-                    console.error(error);
-                }
-            );
-        } */
+        // TODO: if gravsearch query exists in the advanced-search cache (AdvancedSearchParamsService), get it and reload the results
+        // otherwise empty (throw message)
     }
 
     doSearch(search: SearchParams) {
@@ -50,7 +38,6 @@ export class AdvancedSearchComponent implements OnInit {
     }
 
     openResource(id: string) {
-        // TODO: implement the redirection to the resource viewer
-        console.log('resource id', id);
+        this._router.navigate(['/resource/' + encodeURIComponent(id)]);
     }
 }

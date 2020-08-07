@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { SearchParams } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 
@@ -18,7 +19,8 @@ export class ExpertSearchComponent implements OnInit {
 
     constructor(
         private _cache: CacheService,
-        private _titleService: Title
+        private _titleService: Title,
+        private _router: Router
     ) {
         this._titleService.setTitle('Expert search');
     }
@@ -41,7 +43,6 @@ export class ExpertSearchComponent implements OnInit {
     }
 
     doSearch(search: SearchParams) {
-        console.log('click Search');
         // reset search params
         this.searchParams = undefined;
         // we can do the routing here or send the search param
@@ -50,8 +51,7 @@ export class ExpertSearchComponent implements OnInit {
     }
 
     openResource(id: string) {
-        // TODO: implement the redirection to the resource viewer
-        console.log('resource id', id);
+        this._router.navigate(['/resource/' + encodeURIComponent(id)]);
     }
 
 }
