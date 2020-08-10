@@ -2,7 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterTestingModule } from '@angular/router/testing';
-import { DspActionModule } from '@dasch-swiss/dsp-ui';
+import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { DspActionModule, DspApiConnectionToken, SessionService } from '@dasch-swiss/dsp-ui';
 import { TestConfig } from 'test.config';
 import { ErrorComponent } from '../main/error/error.component';
 import { SystemComponent } from './system.component';
@@ -19,6 +20,13 @@ describe('SystemComponent', () => {
                 MatIconModule,
                 MatTabsModule,
                 RouterTestingModule
+            ],
+            providers: [
+                SessionService,
+                {
+                    provide: DspApiConnectionToken,
+                    useValue: new KnoraApiConnection(TestConfig.ApiConfig)
+                }
             ]
         }).compileComponents();
     }));

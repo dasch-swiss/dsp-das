@@ -7,7 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { DspActionModule, DspApiConfigToken, DspApiConnectionToken, AppInitService } from '@dasch-swiss/dsp-ui';
+import { AppInitService, DspActionModule, DspApiConnectionToken, SessionService } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
 import { TestConfig } from 'test.config';
 import { FooterComponent } from './footer/footer.component';
@@ -34,10 +34,11 @@ describe('MainComponent', () => {
             ],
             providers: [
                 AppInitService,
-                {
+                SessionService,
+                /* {
                     provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig
-                },
+                }, */
                 {
                     provide: DspApiConnectionToken,
                     useValue: new KnoraApiConnection(TestConfig.ApiConfig)
