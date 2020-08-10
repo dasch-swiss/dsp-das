@@ -7,7 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { AppInitService, DspActionModule, DspApiConnectionToken, SessionService } from '@dasch-swiss/dsp-ui';
+import { AppInitService, DspActionModule, DspApiConnectionToken, SessionService, DspApiConfigToken } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
 import { TestConfig } from 'test.config';
 import { FooterComponent } from './footer/footer.component';
@@ -35,10 +35,10 @@ describe('MainComponent', () => {
             providers: [
                 AppInitService,
                 SessionService,
-                /* {
+                {
                     provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig
-                }, */
+                },
                 {
                     provide: DspApiConnectionToken,
                     useValue: new KnoraApiConnection(TestConfig.ApiConfig)
@@ -46,6 +46,30 @@ describe('MainComponent', () => {
             ]
         }).compileComponents();
     }));
+
+    // mock sessionStorage
+    beforeEach(() => {
+        let store = {};
+
+        spyOn(sessionStorage, 'getItem').and.callFake(
+            (key: string): string => {
+                return store[key] || null;
+            }
+        );
+        spyOn(sessionStorage, 'removeItem').and.callFake(
+            (key: string): void => {
+                delete store[key];
+            }
+        );
+        spyOn(sessionStorage, 'setItem').and.callFake(
+            (key: string, value: string): string => {
+                return (store[key] = <any>value);
+            }
+        );
+        spyOn(sessionStorage, 'clear').and.callFake(() => {
+            store = {};
+        });
+    });
 
     beforeEach(inject([DspApiConnectionToken], (knoraApiConn) => {
         projectSpy = spyOn(knoraApiConn.admin.projectsEndpoint, 'getProjects').and.callFake(
@@ -134,6 +158,8 @@ describe('MainComponent', () => {
                 return of(projectList);
             });
 
+        sessionStorage.setItem('cookieBanner', JSON.stringify(TestConfig.CurrentSession));
+
         fixture = TestBed.createComponent(MainComponent);
         component = fixture.componentInstance;
         element = fixture.nativeElement; // the HTML reference
@@ -141,6 +167,10 @@ describe('MainComponent', () => {
     }));
 
     it('should create', () => {
+        expect<any>(sessionStorage.getItem('cookieBanner')).toBe(
+            JSON.stringify(TestConfig.CurrentSession)
+        );
+
         expect(component).toBeTruthy();
         expect(projectSpy).toHaveBeenCalledTimes(1);
     });
