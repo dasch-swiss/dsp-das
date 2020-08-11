@@ -52,13 +52,13 @@ export class HelpComponent implements OnInit {
 
     tools: GridItem[] = [
         {
-            title: 'Knora app ',
+            title: 'DSP-APP ',
             text: 'This is the tool of the user interface you are using right now. DaSCH\'s generic web application.',
             url: 'https://github.com/dasch-swiss/dsp-app/releases/tag/v',
             urlText: 'Release notes'
         },
         {
-            title: 'Knora v',
+            title: 'DSP-API v13.0.0-rc.11',
             text: 'Framework to store, share, and work with primary sources in the humanities.',
             url: 'https://github.com/dasch-swiss/knora-api/releases/tag/v',
             urlText: 'Release notes'
@@ -115,9 +115,9 @@ export class HelpComponent implements OnInit {
         this.tools[0].title = this.appName + ' v' + this.appVersion;
         this.tools[0].url += this.appVersion;
 
-        const apiUrl: string = this._dspApiConfig.apiUrl;
+        // const apiUrl: string = this._dspApiConfig.apiUrl;
 
-        this._http.get(apiUrl + '/admin/projects', { observe: 'response' })
+        /* this._http.get(apiUrl + '/admin/projects', { observe: 'response' })
             .subscribe(
                 (resp: HttpResponse<any>) => {
 
@@ -130,10 +130,11 @@ export class HelpComponent implements OnInit {
                     console.error(error);
                     this.apiStatus = false;
                 }
-            );
+            ); */
     }
 
-    readVersion(v: string) {
+    // TODO: to reactivate when @subotic fixes the bug in dsp-api (see https://dasch.myjetbrains.com/youtrack/issue/DSP-537)
+    /* readVersion(v: string) {
 
         if (!v) {
             return;
@@ -151,6 +152,6 @@ export class HelpComponent implements OnInit {
 
         this.loading = false;
 
-    }
+    } */
 
 }
