@@ -4,7 +4,7 @@ import { Session } from '@dasch-swiss/dsp-ui';
 export class TestConfig {
 
     public static ApiConfig = new KnoraApiConfig('http', '0.0.0.0', 3333);
-    public static AppConfig = { name: 'Knora app', url: '0.0.0.0:4200' };
+    public static AppConfig = { name: 'DSP-APP', url: '0.0.0.0:4200' };
 
     public static ProjectCode = '0001';
 

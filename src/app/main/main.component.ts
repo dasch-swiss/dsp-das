@@ -33,7 +33,7 @@ export class MainComponent implements OnInit {
         {
             icon: 'all_inclusive',
             title: 'Longevity of Humanities Data',
-            text: 'Knora keeps data accessible, citable, and reusable, even as technologies change.'
+            text: 'DSP-API keeps data accessible, citable, and reusable, even as technologies change.'
         },
         {
             icon: 'search',
@@ -43,12 +43,12 @@ export class MainComponent implements OnInit {
         {
             icon: 'share',
             title: 'Ensures Consistency',
-            text: 'You define your data model, and Knora ensures that your data is consistent with it.'
+            text: 'You define your data model, and DSP-API ensures that your data is consistent with it.'
         },
         {
             icon: 'history',
             title: 'History',
-            text: 'When data changes, Knora preserves past versions, so you can still view and cite them.'
+            text: 'When data changes, DSP-API preserves past versions, so you can still view and cite them.'
         },
         {
             icon: 'lock',
@@ -69,7 +69,7 @@ export class MainComponent implements OnInit {
         private _titleService: Title
     ) {
         // set the page title
-        this._titleService.setTitle('Knora App | DaSCH\'s generic research interface');
+        this._titleService.setTitle('DSP-APP | DaSCH\'s generic research interface');
 
 
         // check if a session is active

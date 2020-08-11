@@ -20,7 +20,7 @@
                 <h1 class="mat-display-2 app-headline">bring everything together and simplify your research</h1>
                 <h2 class="mat-title">This is the generic web application of the Data and Service Center for the
                     Humanities
-                    DaSCH. It's the user interface research layer of Knora &ndash; a software framework for storing,
+                    DaSCH. It's the user interface research layer of DSP-API &ndash; a software framework for storing,
                     sharing, and working with primary sources and all kind of data in your research project in
                     the Humanities.
                 </h2>
@@ -32,7 +32,7 @@
     <!-- features: almost the same as in dsp-api -->
     <section class="features">
         <div class="content large middle">
-            <h2 class="mat-title">The web application offers all features from Knora on a user-friendly platform.</h2>
+            <h2 class="mat-title">The web application offers all features from DSP-API on a user-friendly platform.</h2>
             <app-grid [list]="features"></app-grid>
         </div>
     </section>
@@ -74,7 +74,7 @@
                 <div *ngSwitchCase="'edition'">
                     <h2 class="mat-title">Uh-oh, you should contact a team working on critical editions.</h2>
                     <mat-divider class="more-space-bottom"></mat-divider>
-                    <h4 class="mat-subheading-2">Another tool based on Knora and designed to work on editions already
+                    <h4 class="mat-subheading-2">Another tool based on DSP-API and designed to work on editions already
                         exists. You should contact NIE-INE.
                     </h4>
                     <mat-divider class="more-space-bottom"></mat-divider>
@@ -87,7 +87,7 @@
     <!-- list of projects -->
     <section class="projects">
         <div class="content large middle">
-            <h2 class="mat-title">The following projects have already stored their data in Knora</h2>
+            <h2 class="mat-title">The following projects have already stored their data in DSP-API</h2>
             <dsp-progress-indicator [color]="'primary'" *ngIf="loading && !errorMessage"></dsp-progress-indicator>
             <div *ngIf="!loading">
                 <app-grid class="project-list" [list]="projects"></app-grid>
