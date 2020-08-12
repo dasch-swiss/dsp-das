@@ -71,7 +71,15 @@ export class HeaderComponent {
         // to (resource) list view directly
         this.searchParams = search;
 
-        this._router.navigate(['/search/' + this.searchParams.mode + '/' + encodeURIComponent(this.searchParams.query)]);
+        let doSearchRoute = '/search/' + this.searchParams.mode + '/' + encodeURIComponent(this.searchParams.query);
+
+        if (this.searchParams.filter.limitToProject) {
+            doSearchRoute += '/' + encodeURIComponent(this.searchParams.filter.limitToProject);
+        }
+
+        this._router.navigate([doSearchRoute]);
     }
 
 }
+
+
