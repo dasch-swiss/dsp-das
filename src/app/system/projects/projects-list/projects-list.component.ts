@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, ProjectResponse, ReadUser, UpdateProjectRequest } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, ProjectResponse, ReadUser, UpdateProjectRequest, StoredProject } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, Session, SortingService, SessionService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
@@ -30,7 +30,7 @@ export class ProjectsListComponent implements OnInit {
     @Input() status: boolean;
 
     // list of projects: depending on the parent
-    @Input() list: ReadUser[];
+    @Input() list: StoredProject[];
 
     // enable the button to create new project
     @Input() createNew: boolean = false;

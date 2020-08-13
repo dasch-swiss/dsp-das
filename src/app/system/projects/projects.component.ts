@@ -1,7 +1,7 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ProjectsResponse, ReadProject, UserResponse } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ProjectsResponse, ReadProject, UserResponse, StoredProject } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
 import { AdminPermissions } from 'src/app/main/declarations/admin-permissions';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
@@ -48,9 +48,9 @@ export class ProjectsComponent implements OnInit {
     permissions: AdminPermissions;
 
     // list of active projects
-    active: ReadProject[] = [];
+    active: StoredProject[] = [];
     // list of archived (deleted) projects
-    inactive: ReadProject[] = [];
+    inactive: StoredProject[] = [];
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -86,21 +86,12 @@ export class ProjectsComponent implements OnInit {
             this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(
                 (response: ApiResponseData<UserResponse>) => {
 
-                    // get user's projects by iri
-                    for (const project of response.body.user.projects) {
-                        this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(project.id).subscribe(
-                            (projectResponse: ApiResponseData<ProjectResponse>) => {
-                                // this.projects.push(projectResponse);
-                                if (projectResponse.body.project.status === true) {
-                                    this.active.push(projectResponse.body.project);
-                                } else {
-                                    this.inactive.push(projectResponse.body.project);
-                                }
-                            },
-                            (projectError: ApiResponseError) => {
-                                console.error(projectError);
-                            }
-                        );
+                    for(let project of response.body.user.projects) {
+                        if (project.status === true) {
+                            this.active.push(project);
+                        } else {
+                            this.inactive.push(project);
+                        }
                     }
 
                     this.loading = false;
