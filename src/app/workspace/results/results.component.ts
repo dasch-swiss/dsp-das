@@ -17,11 +17,19 @@ export class ResultsComponent implements OnInit {
         private _route: ActivatedRoute,
         private _router: Router
     ) {
+
         this._route.paramMap.subscribe((params: Params) => {
             this.searchParams = {
                 query: decodeURIComponent(params.get('q')),
                 mode: 'fulltext'
             };
+            // get the project iri if exists
+            if (params.get('project')) {
+                this.searchParams.filter = {
+                    limitToProject: decodeURIComponent(params.get('project'))
+                };
+            }
+
         });
     }
 

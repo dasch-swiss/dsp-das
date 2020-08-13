@@ -67,17 +67,22 @@ export class HeaderComponent {
     doSearch(search: SearchParams) {
         // reset search params
         this.searchParams = undefined;
+
         // we can do the routing here or send the search param
         // to (resource) list view directly
         this.searchParams = search;
 
-        let doSearchRoute = '/search/' + this.searchParams.mode + '/' + encodeURIComponent(this.searchParams.query);
+        if(this.searchParams.mode && this.searchParams.query) {
 
-        if (this.searchParams.filter.limitToProject) {
-            doSearchRoute += '/' + encodeURIComponent(this.searchParams.filter.limitToProject);
+            let doSearchRoute = '/search/' + this.searchParams.mode + '/' + encodeURIComponent(this.searchParams.query);
+
+            if (this.searchParams.filter && this.searchParams.filter.limitToProject) {
+                doSearchRoute += '/' + encodeURIComponent(this.searchParams.filter.limitToProject);
+            }
+
+            this._router.navigate([doSearchRoute]);
         }
 
-        this._router.navigate([doSearchRoute]);
     }
 
 }
