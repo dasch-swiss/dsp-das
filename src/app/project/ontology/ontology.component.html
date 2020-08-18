@@ -1,4 +1,5 @@
 <div *ngIf="projectAdmin" class="desktop-only">
+    <dsp-message [medium]="true" [message]="{status: 206, statusText: 'The ontology/data model editor is not yet fully implemented. The functionality is still work in progress.'}"></dsp-message>
 
     <dsp-progress-indicator *ngIf="loading"></dsp-progress-indicator>
 

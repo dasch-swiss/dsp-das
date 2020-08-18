@@ -3,12 +3,11 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, ClassDefinition, KnoraApiConnection, ProjectResponse, ReadOntology, ReadProject, OntologyMetadata, OntologiesMetadata, UpdateOntology, DeleteOntologyResponse } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, ClassDefinition, DeleteOntologyResponse, KnoraApiConnection, OntologiesMetadata, OntologyMetadata, ProjectResponse, ReadOntology, ReadProject, UpdateOntology } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { DefaultResourceClasses, ResourceClass } from './default-data/default-resource-classes';
-import { ResourceClassFormService } from './resource-class-form/resource-class-form.service';
 
 export interface OntologyInfo {
     id: string;
