@@ -54,7 +54,7 @@
     <!-- main content: overview shows resource classes of ontology -->
     <div *ngIf="ontology" class="ontology-editor drag-drop-stop">
 
-        <mat-toolbar>
+        <mat-toolbar class="ontology-editor-header">
             <mat-toolbar-row>
                 <h3 class="mat-title" [matTooltip]="ontology.id">{{ontology?.label}}</h3>
 
@@ -63,6 +63,13 @@
                     matTooltipPosition="above">
                     {{ontology.comments | kuiStringifyStringLiteral | kuiTruncate:[64]}}</p> -->
                 <span class="fill-remaining-space"></span>
+                <span class="switch-list-label">Display as&nbsp;</span>
+                <button mat-button (click)="toggleView('grid')" [class.active]="view === 'grid'">
+                    <mat-icon>view_module</mat-icon> Grid
+                </button>
+                <button mat-button (click)="toggleView('graph')" [class.active]="view === 'graph'">
+                    <mat-icon>scatter_plot</mat-icon> Graph
+                </button>
                 <button mat-stroked-button
                     (click)="$event.stopPropagation(); openOntologyForm('editOntologyInfo', ontology?.id, ontology?.id)">
                     Edit
@@ -75,7 +82,7 @@
             </mat-toolbar-row>
         </mat-toolbar>
 
-        <div #ontologyEditor class="ontology-editor-canvas" *ngIf="!loadOntology">
+        <div #ontologyEditor *ngIf="!loadOntology && view === 'grid'" class="ontology-editor-canvas">
             <!-- button to select and add new resource class to the ontology -->
             <div class="add-resource-class" *ngIf="project?.status && sysAdmin && ontologyIri">
                 <button mat-raised-button color="primary" [matMenuTriggerFor]="addResClassMenu">
@@ -132,12 +139,13 @@
             </div>
         </div>
 
+        <div *ngIf="view === 'graph'" class="ontology-viewer">
+            <app-ontology-visualizer [ontology]="ontology" [ontoClasses]="ontoClasses"></app-ontology-visualizer>
+        </div>
+
         <dsp-progress-indicator *ngIf="loadOntology"></dsp-progress-indicator>
     </div>
 
-    <div *ngIf="ontology" class="ontology-viewer">
-        <app-ontology-visualizer [ontology]="ontology" [ontoClasses]="ontoClasses"></app-ontology-visualizer>
-    </div>
 </div>
 
 <div *ngIf="!projectAdmin" class="content large middle">

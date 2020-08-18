@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, ClassDefinition, KnoraApiConnection, ProjectResponse, ReadOntology, ReadProject, OntologyMetadata, OntologiesMetadata } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, ClassDefinition, KnoraApiConnection, ProjectResponse, ReadOntology, ReadProject, OntologyMetadata, OntologiesMetadata, UpdateOntology, DeleteOntologyResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
@@ -54,6 +54,9 @@ export class OntologyComponent implements OnInit {
 
     // form to select ontology from list
     ontologyForm: FormGroup;
+
+    // display resource classes as grid or as graph
+    view: 'grid' | 'graph' = 'grid';
 
     // i18n setup
     itemPluralMapping = {
@@ -397,6 +400,25 @@ export class OntologyComponent implements OnInit {
                     case 'Ontology':
                         this.loading = true;
                         this.loadOntology = true;
+                        const ontology = new UpdateOntology();
+                        ontology.id = this.ontology.id;
+                        ontology.lastModificationDate = this.ontology.lastModificationDate;
+                        this._dspApiConnection.v2.onto.deleteOntology(ontology).subscribe(
+                            (response: DeleteOntologyResponse) => {
+                                this.loading = false;
+                                this.loadOntology = false;
+                                // get the ontologies for this project
+                                this.initList();
+                                // go to project ontology page
+                                const goto = 'project/' + this.projectcode + '/ontologies/';
+                                this._router.navigateByUrl(goto, { skipLocationChange: false });
+                            },
+                            (error: ApiResponseError) => {
+                                console.error(error);
+                                this.loading = false;
+                                this.loadOntology = false;
+                            }
+                        );
                         // TODO: replace by js-lib ontologiesEndpoint
                         // this._ontologyService.deleteOntology(id, this.ontology.lastModificationDate).subscribe(
                         //     (response: ApiServiceResult) => {
@@ -459,6 +481,14 @@ export class OntologyComponent implements OnInit {
         console.log(properties);
         return false;
 
+    }
+
+    /**
+     *
+     * @param view 'grid' | ' graph'
+     */
+    toggleView(view: 'grid' | 'graph') {
+        this.view = view;
     }
 
 }
