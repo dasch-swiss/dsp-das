@@ -18,8 +18,8 @@
 
         <div class="form-panel form-action">
             <span>
-                <button mat-button type="button" (click)="resetForm($event)">
-                    {{ 'appLabels.form.action.reset' | translate }}
+                <button mat-button type="button" (click)="closeDialog.emit()">
+                    {{ 'appLabels.form.action.cancel' | translate }}
                 </button>
             </span>
             <span class="fill-remaining-space"></span>

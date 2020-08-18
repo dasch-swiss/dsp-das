@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, ClassDefinition, KnoraApiConnection, ProjectResponse, ReadOntology, ReadProject, OntologyMetadata } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, ClassDefinition, KnoraApiConnection, ProjectResponse, ReadOntology, ReadProject, OntologyMetadata, OntologiesMetadata } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
@@ -157,6 +157,16 @@ export class OntologyComponent implements OnInit {
 
         // reset existing ontology names
         this.existingOntologyNames = [];
+
+        this._dspApiConnection.v2.onto.getOntologiesByProjectIri(this.project.id).subscribe(
+            (response: OntologiesMetadata) => {
+                this.ontologies = response.ontologies;
+                this.loading = false;
+            },
+            (error: ApiResponseError) => {
+                console.error(error);
+            }
+        )
 
         // this.knoraApiConnection.v2.onto.getOntologiesByProjectIri(this.project.id).subscribe(
         //     (response: OntologiesMetadata) => {

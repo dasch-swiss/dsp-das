@@ -1,7 +1,7 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { ClassDefinition, KnoraApiConnection, ReadOntology } from '@knora/api';
-import { KnoraApiConnectionToken } from '@knora/core';
-import { Node, Link, ForceDirectedGraph } from 'node_modules/d3-force-3d';
+import { ClassDefinition, KnoraApiConnection, ReadOntology } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
+import { Link, Node } from 'node_modules/d3-force-3d';
 import { ResourceClassFormService } from '../resource-class-form/resource-class-form.service';
 
 export interface NewOntology {
@@ -24,7 +24,7 @@ export class OntologyVisualizerComponent implements OnInit {
     links: Link[] = [];
 
     constructor(
-        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _resourceClassFormService: ResourceClassFormService) { }
 
     isInNodes(item: string) {
