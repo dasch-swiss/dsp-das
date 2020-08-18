@@ -1,6 +1,6 @@
 <div *ngIf="projectAdmin" class="desktop-only">
 
-    <kui-progress-indicator *ngIf="loading"></kui-progress-indicator>
+    <dsp-progress-indicator *ngIf="loading"></dsp-progress-indicator>
 
     <!-- toolbar: select ontology -->
     <div class="content large middle" *ngIf="!loading && ontologies">
@@ -101,7 +101,8 @@
                 cdkDragBoundary=".drag-drop-stop">
                 <mat-toolbar class="resource-class-header" cdkDragHandle>
                     <mat-toolbar-row>
-                        <h4 mat-card-title>{{resClass.label}}</h4>
+                        <h4 mat-card-title [matTooltip]="resClass.label" matTooltipPosition="above">
+                            {{resClass.label | dspTruncate: 24}}</h4>
                         <span class="fill-remaining-space"></span>
                         <button mat-icon-button [matMenuTriggerFor]="resClassMenu">
                             <mat-icon>more_horiz</mat-icon>
@@ -131,7 +132,7 @@
             </div>
         </div>
 
-        <kui-progress-indicator *ngIf="loadOntology"></kui-progress-indicator>
+        <dsp-progress-indicator *ngIf="loadOntology"></dsp-progress-indicator>
     </div>
 
     <div *ngIf="ontology" class="ontology-viewer">
@@ -145,6 +146,6 @@
 
 
 <div class="mobile-only">
-    <kui-message [message]="{status: 415, statusText: 'This content is not supported on small devices.'}">
-    </kui-message>
+    <dsp-message [message]="{status: 415, statusText: 'This content is not supported on small devices.'}">
+    </dsp-message>
 </div>

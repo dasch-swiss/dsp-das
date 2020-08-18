@@ -10,7 +10,7 @@ describe('ResourceClassFormService', () => {
     }));
 
     it('should be created', () => {
-        const service: ResourceClassFormService = TestBed.get(ResourceClassFormService);
+        const service: ResourceClassFormService = TestBed.inject(ResourceClassFormService);
         expect(service).toBeTruthy();
     });
 });

@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { MatDialog, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, ClassDefinition, KnoraApiConnection, ProjectResponse, ReadOntology, ReadProject, OntologiesMetadata, OntologyMetadata } from '@knora/api';
-import { ApiServiceError, ApiServiceResult, KnoraApiConnectionToken, OntologyService, Session } from '@knora/core';
+import { ApiResponseData, ApiResponseError, ClassDefinition, KnoraApiConnection, ProjectResponse, ReadOntology, ReadProject, OntologyMetadata } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { DefaultResourceClasses, ResourceClass } from './default-data/default-resource-classes';
@@ -69,17 +69,17 @@ export class OntologyComponent implements OnInit {
      */
     resourceClasss: ResourceClass[] = DefaultResourceClasses.data;
 
-    @ViewChild('ontologyEditor', { read: ViewContainerRef, static: false }) ontologyEditor: ViewContainerRef;
+    @ViewChild('ontologyEditor', { read: ViewContainerRef }) ontologyEditor: ViewContainerRef;
 
     // @ViewChild(AddToDirective, { static: false }) addToHost: AddToDirective;
 
     // @ViewChild('addResourceClassComponent', { static: false }) addResourceClass: AddResourceClassComponent;
 
     constructor(
-        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
-        private _ontologyService: OntologyService,
-        private _resourceClassFormService: ResourceClassFormService,
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        // private _ontologyService: OntologyService,
         private _cache: CacheService,
+        private _session: SessionService,
         private _dialog: MatDialog,
         private _fb: FormBuilder,
         private _titleService: Title,
@@ -109,7 +109,7 @@ export class OntologyComponent implements OnInit {
         this.loading = true;
 
         // get information about the logged-in user
-        this.session = JSON.parse(localStorage.getItem('session'));
+        this.session = this._session.getSession();
         // is the logged-in user system admin?
         this.sysAdmin = this.session.user.sysAdmin;
 
@@ -117,10 +117,10 @@ export class OntologyComponent implements OnInit {
         this.projectAdmin = this.sysAdmin;
 
         // set the cache
-        this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
+        this._cache.get(this.projectcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
 
         // get the project data from cache
-        this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode)).subscribe(
+        this._cache.get(this.projectcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode)).subscribe(
             (response: ApiResponseData<ProjectResponse>) => {
                 this.project = response.body.project;
 
@@ -158,9 +158,24 @@ export class OntologyComponent implements OnInit {
         // reset existing ontology names
         this.existingOntologyNames = [];
 
-        this.knoraApiConnection.v2.onto.getOntologiesByProjectIri(this.project.id).subscribe(
-            (response: OntologiesMetadata) => {
-                this.ontologies = response.ontologies;
+        // this.knoraApiConnection.v2.onto.getOntologiesByProjectIri(this.project.id).subscribe(
+        //     (response: OntologiesMetadata) => {
+        //         this.ontologies = response.ontologies;
+        // TODO: replace _ontologyService and ApiServiceError
+        /* this._ontologyService.getProjectOntologies(encodeURI(this.project.id)).subscribe(
+            (ontologies: ApiServiceResult) => {
+
+                let name: string;
+
+                if (ontologies.body['@graph'] && ontologies.body['@graph'].length > 0) {
+                    // more than one ontology
+                    this.ontologies = [];
+
+                    for (const ontology of ontologies.body['@graph']) {
+                        const info: OntologyInfo = {
+                            id: ontology['@id'],
+                            label: ontology['rdfs:label']
+                        };
 
                 console.log(this.ontologies);
 
@@ -229,6 +244,7 @@ export class OntologyComponent implements OnInit {
         //         console.error(error);
         //     }
         // );
+        */
     }
 
     // update view after selecting an ontology from dropdown
@@ -256,7 +272,7 @@ export class OntologyComponent implements OnInit {
 
         this.loadOntology = true;
 
-        this.knoraApiConnection.v2.onto.getOntology(id).subscribe(
+        this._dspApiConnection.v2.onto.getOntology(id).subscribe(
             (response: ReadOntology) => {
 
                 this.ontology = response;
@@ -371,54 +387,56 @@ export class OntologyComponent implements OnInit {
                     case 'Ontology':
                         this.loading = true;
                         this.loadOntology = true;
-                        this._ontologyService.deleteOntology(id, this.ontology.lastModificationDate).subscribe(
-                            (response: ApiServiceResult) => {
-                                this.ontologyIri = undefined;
-                                this.ontology = undefined;
-                                // get the ontologies for this project
-                                this.initList();
-                                // go to start page
-                                const goto = 'project/' + this.projectcode + '/ontologies/';
-                                this._router.navigateByUrl(goto, { skipLocationChange: false });
-                            },
-                            (error: ApiServiceError) => {
-                                // TODO: show message
-                                console.error(error);
-                                this.loading = false;
-                                this.loadOntology = false;
-                            }
-                        );
+                        // TODO: replace by js-lib ontologiesEndpoint
+                        // this._ontologyService.deleteOntology(id, this.ontology.lastModificationDate).subscribe(
+                        //     (response: ApiServiceResult) => {
+                        //         this.ontologyIri = undefined;
+                        //         this.ontology = undefined;
+                        //         // get the ontologies for this project
+                        //         this.initList();
+                        //         // go to start page
+                        //         const goto = 'project/' + this.projectcode + '/ontologies/';
+                        //         this._router.navigateByUrl(goto, { skipLocationChange: false });
+                        //     },
+                        //     (error: ApiServiceError) => {
+                        //         // TODO: show message
+                        //         console.error(error);
+                        //         this.loading = false;
+                        //         this.loadOntology = false;
+                        //     }
+                        // );
                         break;
 
                     case 'ResourceClass':
                         // delete reresource class and refresh the view
                         this.loadOntology = true;
 
-                        this._ontologyService.deleteResourceClass(id, this.ontology.lastModificationDate).subscribe(
-                            (response: ApiServiceResult) => {
-                                this.getOntology(this.ontologyIri);
-                            },
-                            (error: ApiServiceError) => {
-                                console.error(error.errorInfo);
+                        // TODO: replace by js-lib OntologiesEndpoint
+                        // this._ontologyService.deleteResourceClass(id, this.ontology.lastModificationDate).subscribe(
+                        //     (response: ApiServiceResult) => {
+                        //         this.getOntology(this.ontologyIri);
+                        //     },
+                        //     (error: ApiServiceError) => {
+                        //         console.error(error.errorInfo);
 
-                                const dialogErrorConfig: MatDialogConfig = {
-                                    width: '560px',
-                                    position: {
-                                        top: '112px'
-                                    },
-                                    data: { mode: 'error', title: 'Error: Not able to delete' }
-                                };
+                        //         const dialogErrorConfig: MatDialogConfig = {
+                        //             width: '560px',
+                        //             position: {
+                        //                 top: '112px'
+                        //             },
+                        //             data: { mode: 'error', title: 'Error: Not able to delete' }
+                        //         };
 
-                                const dialogErrorRef = this._dialog.open(
-                                    DialogComponent,
-                                    dialogErrorConfig
-                                );
+                        //         const dialogErrorRef = this._dialog.open(
+                        //             DialogComponent,
+                        //             dialogErrorConfig
+                        //         );
 
-                                dialogErrorRef.afterClosed().subscribe(result => {
-                                    this.getOntology(this.ontologyIri);
-                                });
-                            }
-                        );
+                        //         dialogErrorRef.afterClosed().subscribe(result => {
+                        //             this.getOntology(this.ontologyIri);
+                        //         });
+                        //     }
+                        // );
                         break;
                 }
 

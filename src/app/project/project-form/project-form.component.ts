@@ -3,9 +3,8 @@ import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Router } from '@angular/router';
-import { existingNamesValidator } from '@knora/action';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ProjectsResponse, ReadProject, UpdateProjectRequest, UserResponse, Project, StringLiteral } from '@knora/api';
-import { KnoraApiConnectionToken } from '@knora/core';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, Project, ProjectResponse, ProjectsResponse, ReadProject, StringLiteral, UpdateProjectRequest, UserResponse } from '@dasch-swiss/dsp-js';
+import { existingNamesValidator, DspApiConnectionToken, SessionService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
@@ -15,15 +14,25 @@ import { CacheService } from '../../main/cache/cache.service';
 })
 export class ProjectFormComponent implements OnInit {
 
-    loading: boolean = true;
+    /**
+     * Param of project form component:
+     * Optional projectcode; if exists we are in edit mode
+     * otherwise we build empty form to create new project
+     */
+    @Input() projectcode?: string;
 
-    errorMessage: any;
-
-    @Input() projectcode: string;
-
+    /**
+     * Output of project form component:
+     * emits info to parent that dialog box was closed
+     */
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
     project: ReadProject;
+    description: StringLiteral[];
+
+    loading = true;
+
+    errorMessage: any;
 
     // is the logged-in user system admin?
     sysAdmin: boolean = false;
@@ -41,7 +50,6 @@ export class ProjectFormComponent implements OnInit {
     ];
     shortcodeRegex = /^[0-9A-Fa-f]+$/;
 
-    description: StringLiteral[];
     /**
      * some restrictions and rules for
      * description, shortcode, shortname and keywords
@@ -85,8 +93,7 @@ export class ProjectFormComponent implements OnInit {
         'longname': '',
         'shortcode': '',
         'description': ''
-        //        'institution': '',
-        //        'keywords': '',
+        // 'institution': ''
     };
 
     validationMessages = {
@@ -111,27 +118,44 @@ export class ProjectFormComponent implements OnInit {
             'required': 'A description is required.',
             'maxlength': 'Description cannot be more than ' + this.descriptionMaxLength + ' characters long.'
         }
-        //        'institution': {},
-        //        'keywords': {
-        //            'required': 'At least one keyword is required.'
-        //        }
+        // 'institution': {}
     };
 
     constructor(
-        @Inject(KnoraApiConnectionToken) private knoraApiConnection: KnoraApiConnection,
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
+        private _session: SessionService,
         private _router: Router,
         private _fb: FormBuilder) {
     }
 
     ngOnInit() {
 
-        // get a list of all projects and create an array of the short names, but only in "create new" mode
-        // the short name should be unique and with the array list, we can prevent
-        // to have the same short name; proof it with the ForbiddenName directive
-        if (!this.projectcode) {
+        // if projectcode exists, we are in edit mode
+        // otherwise create new project
+        if(this.projectcode) {
+            // edit existing project
+            // get origin project data first
+            this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode).subscribe(
+                (response: ApiResponseData<ProjectResponse>) => {
+                    // save the origin project data in case of reset
+                    this.project = response.body.project;
+
+                    this.buildForm(this.project);
+
+                    this.loading = false;
+                },
+                (error: ApiResponseError) => {
+                    this.errorMessage = error;
+                }
+            );
+
+        } else {
             // create new project
-            this.knoraApiConnection.admin.projectsEndpoint.getProjects().subscribe(
+
+            // to avoid dublicate shortcodes or shortnames
+            // we have to create a list of already exisiting short codes and names
+            this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
                 (response: ApiResponseData<ProjectsResponse>) => {
 
                     for (const project of response.body.projects) {
@@ -149,58 +173,43 @@ export class ProjectFormComponent implements OnInit {
                 }
             );
 
-            if (this.project === undefined) {
-                this.project = new ReadProject();
-                this.project.status = true;
-            }
+            this.project = new ReadProject();
+            this.project.status = true;
 
             this.buildForm(this.project);
 
             this.loading = false;
 
-        } else {
-            // edit mode
-            this.sysAdmin = JSON.parse(localStorage.getItem('session')).user.sysAdmin;
-            this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode).subscribe(
-                (response: ApiResponseData<ProjectResponse>) => {
-                    this.project = response.body.project;
-
-                    this.buildForm(this.project);
-
-                    this.loading = false;
-                },
-                (error: ApiResponseError) => {
-                    this.errorMessage = error;
-                }
-            );
         }
     }
 
     /**
+     * Build form with project data
+     * Project data contains exising data (edit mode)
+     * or no data (create mode) => new ReadProject()
      *
-     * @param project Project data: "empty" means "create new project",
-     * but if there are project data, it means edit mode
+     * @param project
      */
     buildForm(project: ReadProject): void {
         // if project is defined, we're in the edit mode
         // otherwise "create new project" mode is active
-        // edit mode is true, when a project id (iri) exists
-        const editMode: boolean = (!!project.id);
+        // edit mode is true, when a projectcode exists
 
-        if (!editMode) {
+        // disabled is true, if project status is false (= archived);
+        const disabled: boolean = (!project.status);
+
+        // separate description
+        if (!this.projectcode) {
             this.description = [new StringLiteral()];
             this.formErrors['description'] = '';
         }
-
-        // disabled is true, if project status is false (= archived);
-        const disabled: boolean = (project.id !== undefined && !project.status);
 
         // separate list of keywords
         this.keywords = project.keywords;
 
         this.form = this._fb.group({
             'shortname': new FormControl({
-                value: project.shortname, disabled: editMode
+                value: project.shortname, disabled: (this.projectcode)
             }, [
                 Validators.required,
                 Validators.minLength(this.shortnameMinLength),
@@ -214,7 +223,7 @@ export class ProjectFormComponent implements OnInit {
                 Validators.required
             ]),
             'shortcode': new FormControl({
-                value: project.shortcode, disabled: (editMode && project.shortcode !== null)
+                value: project.shortcode, disabled: ((this.projectcode) && project.shortcode !== null)
             }, [
                 Validators.required,
                 Validators.minLength(this.shortcodeMinLength),
@@ -222,24 +231,15 @@ export class ProjectFormComponent implements OnInit {
                 existingNamesValidator(this.existingShortcodes),
                 Validators.pattern(this.shortcodeRegex)
             ]),
-            // 'description': new FormControl({
-            //     value: project.description,
-            //     disabled: disabled
-            // }, [
-            //     Validators.maxLength(this.descriptionMaxLength),
-            //     Validators.required
-            // ]),
-            //            'institution': new FormControl({
-            //                value: project.institution, disabled: disabled
-            //            }),
             'logo': new FormControl({
                 value: project.logo, disabled: disabled
             }),
             'status': [true],
             'selfjoin': [false],
             'keywords': new FormControl({
+                // must be empty (even in edit mode), because of the mat-chip-list
                 value: [], disabled: disabled
-            })          // must be empty (even in edit mode), because of the mat-chip-list
+            })
         });
 
         this.form.valueChanges
@@ -247,9 +247,9 @@ export class ProjectFormComponent implements OnInit {
     }
 
     /**
+     * This method is for the form error handling
      *
      * @param data Data which changed.
-     * This method is for the form error handling
      */
     onValueChanged(data?: any) {
 
@@ -272,9 +272,12 @@ export class ProjectFormComponent implements OnInit {
         });
     }
 
+    /**
+     * Gets string literal
+     * @param data
+     */
     getStringLiteral(data: StringLiteral[]) {
         this.description = data;
-
         if (!this.description.length) {
             this.formErrors['description'] = this.validationMessages['description'].required;
         } else {
@@ -302,7 +305,6 @@ export class ProjectFormComponent implements OnInit {
     }
 
     removeKeyword(keyword: any): void {
-
         const index = this.keywords.indexOf(keyword);
 
         if (index >= 0) {
@@ -346,9 +348,10 @@ export class ProjectFormComponent implements OnInit {
             }
 
             // edit / update project data
-            this.knoraApiConnection.admin.projectsEndpoint.updateProject(this.project.id, projectData).subscribe(
+            this._dspApiConnection.admin.projectsEndpoint.updateProject(this.project.id, projectData).subscribe(
                 (response: ApiResponseData<ProjectResponse>) => {
 
+                    // this.originProject = response.body.project;
                     this.project = response.body.project;
                     this.buildForm(this.project);
 
@@ -358,13 +361,6 @@ export class ProjectFormComponent implements OnInit {
                     this.success = true;
 
                     this.loading = false;
-
-                    // redirect to project page
-                    /*
-                    this._router.navigateByUrl('/project', {skipLocationChange: true}).then(() =>
-                        this._router.navigate(['/project/' + this.form.controls['shortcode'].value])
-                    );
-                    */
 
                 },
                 (error: ApiResponseError) => {
@@ -393,20 +389,20 @@ export class ProjectFormComponent implements OnInit {
                 i++;
             }
 
-            this.knoraApiConnection.admin.projectsEndpoint.createProject(projectData).subscribe(
+            this._dspApiConnection.admin.projectsEndpoint.createProject(projectData).subscribe(
                 (projectResponse: ApiResponseData<ProjectResponse>) => {
                     this.project = projectResponse.body.project;
                     this.buildForm(this.project);
 
                     // add logged-in user to the project
                     // who am I?
-                    this.knoraApiConnection.admin.usersEndpoint.getUserByUsername(JSON.parse(localStorage.getItem('session')).user.name).subscribe(
+                    this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this._session.getSession().user.name).subscribe(
                         (userResponse: ApiResponseData<UserResponse>) => {
-                            this.knoraApiConnection.admin.usersEndpoint.addUserToProjectMembership(userResponse.body.user.id, projectResponse.body.project.id).subscribe(
+                            this._dspApiConnection.admin.usersEndpoint.addUserToProjectMembership(userResponse.body.user.id, projectResponse.body.project.id).subscribe(
                                 (response: ApiResponseData<UserResponse>) => {
 
                                     this.loading = false;
-                                    this.closeMessage();
+                                    this.closeDialog.emit();
                                     // redirect to (new) project page
                                     this._router.navigateByUrl('/project', { skipLocationChange: true }).then(() =>
                                         this._router.navigate(['/project/' + this.form.controls['shortcode'].value])
@@ -441,7 +437,7 @@ export class ProjectFormComponent implements OnInit {
         // TODO: "are you sure?"-dialog
 
         // if true
-        this.knoraApiConnection.admin.projectsEndpoint.deleteProject(id).subscribe(
+        this._dspApiConnection.admin.projectsEndpoint.deleteProject(id).subscribe(
             (response: ApiResponseData<ProjectResponse>) => {
                 // reload page
                 this.loading = true;
@@ -471,11 +467,11 @@ export class ProjectFormComponent implements OnInit {
      * @param id Project Iri
      */
     activate(id: string) {
-        // hack because of issue #100 in knora-api-js-lib
+        // hack because of issue #100 in dsp-js
         const data: UpdateProjectRequest = new UpdateProjectRequest();
         data.status = true;
 
-        this.knoraApiConnection.admin.projectsEndpoint.updateProject(id, data).subscribe(
+        this._dspApiConnection.admin.projectsEndpoint.updateProject(id, data).subscribe(
             (response: ApiResponseData<ProjectResponse>) => {
                 // reload page
                 this.loading = true;
@@ -503,8 +499,8 @@ export class ProjectFormComponent implements OnInit {
         this.loading = true;
         // update the cache
         this._cache.del(this.projectcode);
-        this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
-        this._cache.get(this.projectcode, this.knoraApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode)).subscribe(
+        this._cache.get(this.projectcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
+        this._cache.get(this.projectcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode)).subscribe(
             (response: ApiResponseData<ProjectResponse>) => {
                 this.project = response.body.project;
                 this.buildForm(this.project);
@@ -519,6 +515,8 @@ export class ProjectFormComponent implements OnInit {
     }
 
     /**
+     * @deprecated Maybe we can reactivate later.
+     *
      * Reset the form
      */
     resetForm(ev: Event, project?: ReadProject) {
@@ -533,7 +531,4 @@ export class ProjectFormComponent implements OnInit {
         //        this.form.controls['keywords'].setValue(this.keywords);
     }
 
-    closeMessage() {
-        this.closeDialog.emit();
-    }
 }

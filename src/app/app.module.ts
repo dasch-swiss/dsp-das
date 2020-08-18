@@ -1,17 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { KuiActionModule } from '@knora/action';
-import { KnoraApiConfigToken, KnoraApiConnectionToken, KuiConfigToken, KuiCoreModule } from '@knora/core';
-import { KuiSearchModule } from '@knora/search';
-import { KuiViewerModule } from '@knora/viewer';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { AppInitService } from './app-init.service';
+
+import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import {
+    AppInitService,
+    DspActionModule,
+    DspApiConfigToken,
+    DspApiConnectionToken,
+    DspCoreModule,
+    DspSearchModule,
+    DspViewerModule
+} from '@dasch-swiss/dsp-ui';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
@@ -65,16 +71,11 @@ import { ResultsComponent } from './workspace/results/results.component';
 import { AdvancedSearchComponent } from './workspace/search/advanced-search/advanced-search.component';
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 
+import { environment } from '../environments/environment';
+
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
-    return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json');
-    // return new TranslateHttpLoader(httpClient);
-}
-
-export function initializeApp(appInitService: AppInitService) {
-    return (): Promise<any> => {
-        return appInitService.init();
-    };
+    return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json')
 }
 
 @NgModule({
@@ -135,12 +136,11 @@ export function initializeApp(appInitService: AppInitService) {
         BrowserModule,
         BrowserAnimationsModule,
         CommonModule,
-        FlexLayoutModule,
         HttpClientModule,
-        KuiActionModule,
-        KuiCoreModule,
-        KuiSearchModule,
-        KuiViewerModule,
+        DspCoreModule,
+        DspViewerModule,
+        DspActionModule,
+        DspSearchModule,
         MaterialModule,
         ReactiveFormsModule,
         FormsModule,
@@ -152,26 +152,25 @@ export function initializeApp(appInitService: AppInitService) {
             }
         })
     ],
-    entryComponents: [DialogComponent],
     providers: [
-        AppInitService,
         {
             provide: APP_INITIALIZER,
-            useFactory: initializeApp,
+            useFactory: (appInitService: AppInitService) =>
+                (): Promise<void> => {
+                    return appInitService.Init('config', environment);
+                },
             deps: [AppInitService],
             multi: true
         },
         {
-            provide: KuiConfigToken,
-            useFactory: () => AppInitService.kuiConfig
+            provide: DspApiConfigToken,
+            useFactory: (appInitService: AppInitService) => appInitService.dspApiConfig,
+            deps: [AppInitService]
         },
         {
-            provide: KnoraApiConfigToken,
-            useFactory: () => AppInitService.knoraApiConfig
-        },
-        {
-            provide: KnoraApiConnectionToken,
-            useFactory: () => AppInitService.knoraApiConnection
+            provide: DspApiConnectionToken,
+            useFactory: (appInitService: AppInitService) => new KnoraApiConnection(appInitService.dspApiConfig),
+            deps: [AppInitService]
         }
     ],
     bootstrap: [AppComponent]
