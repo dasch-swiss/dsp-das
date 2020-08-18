@@ -90,7 +90,7 @@
                     <mat-icon>add</mat-icon>
                 </button>
                 <mat-menu #addResClassMenu="matMenu" xPosition="before">
-                    <button mat-menu-item *ngFor="let type of resourceClasss"
+                    <button mat-menu-item *ngFor="let type of resourceClass"
                         (click)="openResourceClassForm('addResourceClass', type)">
                         {{ type?.label }}
                     </button>

@@ -70,7 +70,7 @@ export class OntologyComponent implements OnInit {
     /**
      * list of all default resource classs (sub class of)
      */
-    resourceClasss: ResourceClass[] = DefaultResourceClasses.data;
+    resourceClass: ResourceClass[] = DefaultResourceClasses.data;
 
     @ViewChild('ontologyEditor', { read: ViewContainerRef }) ontologyEditor: ViewContainerRef;
 
@@ -419,29 +419,27 @@ export class OntologyComponent implements OnInit {
                                 this.loadOntology = false;
                             }
                         );
-                        // TODO: replace by js-lib ontologiesEndpoint
-                        // this._ontologyService.deleteOntology(id, this.ontology.lastModificationDate).subscribe(
-                        //     (response: ApiServiceResult) => {
-                        //         this.ontologyIri = undefined;
-                        //         this.ontology = undefined;
-                        //         // get the ontologies for this project
-                        //         this.initList();
-                        //         // go to start page
-                        //         const goto = 'project/' + this.projectcode + '/ontologies/';
-                        //         this._router.navigateByUrl(goto, { skipLocationChange: false });
-                        //     },
-                        //     (error: ApiServiceError) => {
-                        //         // TODO: show message
-                        //         console.error(error);
-                        //         this.loading = false;
-                        //         this.loadOntology = false;
-                        //     }
-                        // );
+
                         break;
 
                     case 'ResourceClass':
                         // delete reresource class and refresh the view
                         this.loadOntology = true;
+                        const resClass = new UpdateOntology();
+                        resClass.id = this.resourceClass[0].iri;
+                        resClass.lastModificationDate = this.ontology.lastModificationDate;
+
+
+                        this._dspApiConnection.v2.onto.deleteResourceClass(ontology).subscribe(
+                            (response: OntologyMetadata) => {
+                                this.loading = false;
+                                this.getOntology(this.ontologyIri);
+                            },
+                            (error: ApiResponseError) => {
+                                console.error(error);
+                                this.loading = false;
+                            }
+                        );
 
                         // TODO: replace by js-lib OntologiesEndpoint
                         // this._ontologyService.deleteResourceClass(id, this.ontology.lastModificationDate).subscribe(
