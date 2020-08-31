@@ -13,7 +13,7 @@ import SpriteText from 'three-spritetext';
 })
 export class VisualizerComponent implements OnInit, AfterViewInit {
     @ViewChild('graphcontainer', {read: ElementRef}) graphcontainer: ElementRef;
-    @Input() ontoInfo: { nodes: any[]; links: any[] };
+    @Input() graphInfo;
     graph = ForceGraph3D();
     dimension = '3';
     showLinkLabel = false;
@@ -66,7 +66,7 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
         return middlePos;
     }
     ngOnInit(): void {
-        const gData = {'nodes': this.ontoInfo.nodes, 'links': this.ontoInfo.links};
+        const gData = {'nodes': this.graphInfo.nodes, 'links': this.graphInfo.links};
         this.graph.graphData(gData);
         this.graph.width(1280);
         // node design

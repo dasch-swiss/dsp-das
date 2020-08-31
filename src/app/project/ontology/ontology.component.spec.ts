@@ -37,7 +37,6 @@ describe('OntologyComponent', () => {
             declarations: [
                 OntologyComponent,
                 OntologyVisualizerComponent,
-                VisualizerComponent,
                 ErrorComponent
             ],
             imports: [

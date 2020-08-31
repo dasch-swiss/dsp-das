@@ -131,8 +131,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         ListItemFormComponent,
         MembershipComponent,
         HelpComponent,
-        FooterComponent,
-        VisualizerComponent
+        FooterComponent
     ],
     imports: [
         AppRoutingModule,

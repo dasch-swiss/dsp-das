@@ -19,7 +19,7 @@ export class OntologyVisualizerComponent implements OnInit {
     // ontology JSON-LD object
     @Input() ontology: ReadOntology;
     @Input() ontoClasses: ClassDefinition[];
-    @Output() gData: { nodes: any[]; links: any[] };
+    @Output() graphInfo;
     loading: boolean;
     nodes: Node[] = [];
     links: Link[] = [];
@@ -121,7 +121,7 @@ export class OntologyVisualizerComponent implements OnInit {
         return { 'nodes': this.nodes, 'links': this.links};
     }
     ngOnInit() {
-        this.gData = this.convertOntolologytoGraph();
+        this.graphInfo = this.convertOntolologytoGraph();
     }
 
 }
