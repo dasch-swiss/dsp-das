@@ -25,7 +25,8 @@ import { of } from 'rxjs';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { OntologyComponent } from './ontology.component';
-import {OntologyVisualizerComponent} from './ontology-visualizer/ontology-visualizer.component';
+import { OntologyVisualizerComponent } from './ontology-visualizer/ontology-visualizer.component';
+import { VisualizerComponent } from './ontology-visualizer/visualizer/visualizer.component';
 
 describe('OntologyComponent', () => {
     let component: OntologyComponent;
@@ -36,6 +37,7 @@ describe('OntologyComponent', () => {
             declarations: [
                 OntologyComponent,
                 OntologyVisualizerComponent,
+                VisualizerComponent,
                 ErrorComponent
             ],
             imports: [
