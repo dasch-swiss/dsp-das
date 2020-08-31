@@ -1,12 +1,10 @@
 import {Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input} from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
-import { MatSlider } from '@angular/material/slider';
 
 import ForceGraph3D from '3d-force-graph';
 import * as THREE from 'three';
 import SpriteText from 'three-spritetext';
-import {ClassDefinition} from '@dasch-swiss/dsp-js';
 
 @Component({
   selector: 'app-visualizer',
@@ -70,6 +68,7 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         const gData = {'nodes': this.ontoInfo.nodes, 'links': this.ontoInfo.links};
         this.graph.graphData(gData);
+        this.graph.width(1280);
         // node design
         this.graph.nodeLabel('label');
         this.graph.nodeAutoColorBy('class');
@@ -106,6 +105,10 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
         this.graph.linkWidth(1.5);
         const linkForce: any = this.graph.d3Force('link');
         linkForce.distance(this.linkDistance);
+        // fit to canvas when engine stops
+        this.graph.d3Force('center', null);
+        this.graph.onEngineStop(() => this.graph.zoomToFit(400));
+        this.graph.showNavInfo(false);
     }
     ngAfterViewInit() {
         this.graph(this.graphcontainer.nativeElement);
