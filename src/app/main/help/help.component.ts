@@ -133,7 +133,6 @@ export class HelpComponent implements OnInit {
             );
     }
 
-    // TODO: to reactivate when @subotic fixes the bug in dsp-api (see https://dasch.myjetbrains.com/youtrack/issue/DSP-537)
     readVersion(v: string) {
 
         if (!v) {
