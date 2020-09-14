@@ -1,6 +1,6 @@
 # Changelog
 
-## Next Release
+## v3.0.0 (Next Release)
 
 ### Breaking changes
 
@@ -49,7 +49,7 @@
 - [#248](https://github.com/dasch-swiss/knora-app/issues/248) Upgrade knora-api-js-lib to v0.2.0
 - [#100](https://github.com/dasch-swiss/knora-app/issues/100) Project admin should be able to add existing users to its project
 
-### Bug Fixes
+### Bug fixes
 
 - [#245](https://github.com/dasch-swiss/knora-app/issues/245) Broken link to Knora release notes page on GitHub
 - [#220](https://github.com/dasch-swiss/knora-app/issues/220) Wrong redirection after removing myself as project admin in project collaboration
