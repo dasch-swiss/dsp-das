@@ -45,7 +45,7 @@ We built the user guidelines and developer documentation with [MkDocs](https://w
 
 ## Publish a new version to DockerHub
 
-A new version will be published with each github release as it's part of Github actions' workflow. To make a new release, go to <https://github.com/dasch-swiss/dsp-app/releases> and update the draft called "[Next release](https://github.com/dasch-swiss/dsp-app/releases/tag/next-release)" by changing:
+A new version will be published with each github release as it's part of Github actions' workflow. To make a new release, go to <https://github.com/dasch-swiss/dsp-app/releases> and update the draft called "Next release" by changing:
 
 - the tag version and the release title (same name) with the version number, e.g. `v3.0.0` or `v3.0.0-rc.0`
 - If this is a pre-release, check the box "This is a pre-release"
