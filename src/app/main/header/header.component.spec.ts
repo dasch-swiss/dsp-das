@@ -107,4 +107,14 @@ describe('HeaderComponent', () => {
         expect(message).toBeTruthy();
     });
 
+    it('should unsubscribe from from changes on destruction', () => {
+
+        expect(component.componentCommsSubscription.closed).toBe(false);
+
+        fixture.destroy();
+
+        expect(component.componentCommsSubscription.closed).toBe(true);
+
+    });
+
 });

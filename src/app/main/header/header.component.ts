@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationStart, Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit{
+export class HeaderComponent implements OnInit, OnDestroy{
 
     session: boolean = false;
     show: boolean = false;
@@ -60,6 +60,13 @@ export class HeaderComponent implements OnInit{
     ngOnInit() {
         this.componentCommsSubscription = this._componentCommsService.on(
             Events.LoginSuccess, () => this.showMessage = true);
+    }
+
+    ngOnDestroy() {
+        // unsubscribe from the ValueOperationEventService when component is destroyed
+        if (this.componentCommsSubscription !== undefined) {
+            this.componentCommsSubscription.unsubscribe();
+        }
     }
 
     /**
