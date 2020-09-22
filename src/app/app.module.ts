@@ -4,9 +4,6 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import {
     AppInitService,
@@ -17,7 +14,9 @@ import {
     DspSearchModule,
     DspViewerModule
 } from '@dasch-swiss/dsp-ui';
-
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
@@ -41,11 +40,11 @@ import { ListItemFormComponent } from './project/list/list-item-form/list-item-f
 import { ListItemComponent } from './project/list/list-item/list-item.component';
 import { ListComponent } from './project/list/list.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
-import { OntologyComponent } from './project/ontology/ontology.component';
 import { OntologyVisualizerComponent } from './project/ontology/ontology-visualizer/ontology-visualizer.component';
 import { VisualizerComponent } from './project/ontology/ontology-visualizer/visualizer/visualizer.component';
-import { ResourceClassFormComponent } from './project/ontology/resource-class-form/resource-class-form.component';
+import { OntologyComponent } from './project/ontology/ontology.component';
 import { PropertyFormComponent } from './project/ontology/property-form/property-form.component';
+import { ResourceClassFormComponent } from './project/ontology/resource-class-form/resource-class-form.component';
 import { AddGroupComponent } from './project/permission/add-group/add-group.component';
 import { PermissionComponent } from './project/permission/permission.component';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
@@ -71,8 +70,6 @@ import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
 import { AdvancedSearchComponent } from './workspace/search/advanced-search/advanced-search.component';
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
-
-import { environment } from '../environments/environment';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {

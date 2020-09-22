@@ -8,7 +8,7 @@ import {
     Params,
     Router
 } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
     selector: 'app-resource',

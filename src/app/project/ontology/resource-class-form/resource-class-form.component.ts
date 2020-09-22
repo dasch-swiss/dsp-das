@@ -1,9 +1,28 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+    AfterViewChecked,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output
+} from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
-import { ApiResponseData, ApiResponseError, CreateResourceClass, KnoraApiConnection, ListsResponse, ReadOntology, ResourceClassDefinitionWithAllLanguages, StringLiteral } from '@dasch-swiss/dsp-js';
+import {
+    ApiResponseData,
+    ApiResponseError,
+    CreateResourceClass,
+    KnoraApiConnection,
+    ListsResponse,
+    ReadOntology,
+    ResourceClassDefinitionWithAllLanguages,
+    StringLiteral
+} from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/internal/Subscription';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ResourceClassFormService } from './resource-class-form.service';
 
@@ -360,82 +379,82 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
                 //         console.log('prop from form', prop);
 
-                        /* TODO: select and reuse existing ObjectProperty doesn't work yet; s. https://github.com/dasch-swiss/knora-app/pull/229#issuecomment-598276151
-                         if (prop.name) {
-                            // const propertyId: string = this._resourceClassFormService.getOntologyName(this.ontology.id) + ':' + prop.name;
-                            // property exists already; update class with prop cardinality and gui-order only
-                            // update class with cardinality and gui-order
-                            this._ontologyService.setPropertyRestriction(
-                                this.ontology.id,
-                                lastModificationDate,
-                                classResponse['@graph'][0]['@id'],
-                                this._resourceClassFormService.getOntologyName(this.ontology.id) + ':' + prop.name,
-                                this.setCardinality(prop.multiple, prop.requirerd),
-                                c
-                            ).subscribe(
-                                (cardinalityResponse: any) => {
-                                    lastModificationDate = cardinalityResponse['knora-api:lastModificationDate']['@value'];
+                /* TODO: select and reuse existing ObjectProperty doesn't work yet; s. https://github.com/dasch-swiss/knora-app/pull/229#issuecomment-598276151
+                 if (prop.name) {
+                    // const propertyId: string = this._resourceClassFormService.getOntologyName(this.ontology.id) + ':' + prop.name;
+                    // property exists already; update class with prop cardinality and gui-order only
+                    // update class with cardinality and gui-order
+                    this._ontologyService.setPropertyRestriction(
+                        this.ontology.id,
+                        lastModificationDate,
+                        classResponse['@graph'][0]['@id'],
+                        this._resourceClassFormService.getOntologyName(this.ontology.id) + ':' + prop.name,
+                        this.setCardinality(prop.multiple, prop.requirerd),
+                        c
+                    ).subscribe(
+                        (cardinalityResponse: any) => {
+                            lastModificationDate = cardinalityResponse['knora-api:lastModificationDate']['@value'];
 
-                                    // close the dialog box
-                                    this.loading = false;
-                                    this.closeDialog.emit();
-                                },
-                                (error: ApiServiceError) => {
-                                    console.error('failed on setPropertyRestriction', error);
-                                }
-                            );
-                        } else {
-                        */
-                        // create new property
-                        // property data
-                        // const propData: NewProperty = {
-                        //     name: this._resourceClassFormService.setUniqueName(this.ontology.id),
-                        //     label: prop.label,
-                        //     comment: prop.label,
-                        //     subPropOf: prop.type.subPropOf,
-                        //     guiElement: prop.type.gui_ele,
-                        //     guiOrder: c,
-                        //     cardinality: this.setCardinality(prop.multiple, prop.requirerd),
-                        //     guiAttributes: []
-                        // };
+                            // close the dialog box
+                            this.loading = false;
+                            this.closeDialog.emit();
+                        },
+                        (error: ApiServiceError) => {
+                            console.error('failed on setPropertyRestriction', error);
+                        }
+                    );
+                } else {
+                */
+                // create new property
+                // property data
+                // const propData: NewProperty = {
+                //     name: this._resourceClassFormService.setUniqueName(this.ontology.id),
+                //     label: prop.label,
+                //     comment: prop.label,
+                //     subPropOf: prop.type.subPropOf,
+                //     guiElement: prop.type.gui_ele,
+                //     guiOrder: c,
+                //     cardinality: this.setCardinality(prop.multiple, prop.requirerd),
+                //     guiAttributes: []
+                // };
 
-                        // console.log('newProperty data', propData);
+                // console.log('newProperty data', propData);
 
-                        // // submit property data
-                        // this._ontologyService.addProperty(this.ontology.id, lastModificationDate, classResponse['@graph'][0]['@id'], propData).subscribe(
-                        //     (propResponse: ApiServiceResult) => {
-                        //         lastModificationDate = propResponse['knora-api:lastModificationDate']['@value'];
+                // // submit property data
+                // this._ontologyService.addProperty(this.ontology.id, lastModificationDate, classResponse['@graph'][0]['@id'], propData).subscribe(
+                //     (propResponse: ApiServiceResult) => {
+                //         lastModificationDate = propResponse['knora-api:lastModificationDate']['@value'];
 
-                        //         // update class with cardinality and gui-order
-                        //         this._ontologyService.setPropertyRestriction(
-                        //             this.ontology.id,
-                        //             lastModificationDate,
-                        //             classResponse['@graph'][0]['@id'],
-                        //             propResponse['@graph'][0]['@id'],
-                        //             propData.cardinality,
-                        //             propData.guiOrder
-                        //         ).subscribe(
-                        //             (cardinalityResponse: any) => {
-                        //                 lastModificationDate = cardinalityResponse['knora-api:lastModificationDate']['@value'];
+                //         // update class with cardinality and gui-order
+                //         this._ontologyService.setPropertyRestriction(
+                //             this.ontology.id,
+                //             lastModificationDate,
+                //             classResponse['@graph'][0]['@id'],
+                //             propResponse['@graph'][0]['@id'],
+                //             propData.cardinality,
+                //             propData.guiOrder
+                //         ).subscribe(
+                //             (cardinalityResponse: any) => {
+                //                 lastModificationDate = cardinalityResponse['knora-api:lastModificationDate']['@value'];
 
-                        //                 // TODO: submit next property; recursive method
+                //                 // TODO: submit next property; recursive method
 
-                        //                 // close the dialog box
-                        //                 this.loading = false;
-                        //                 this.closeDialog.emit();
-                        //             },
-                        //             (error: ApiServiceError) => {
-                        //                 console.error('failed on setPropertyRestriction', error);
-                        //             }
-                        //         );
-                        //     },
-                        //     (error: ApiServiceError) => {
-                        //         console.error('failed on addProperty', error);
-                        //     }
-                        // );
-                        // // }
+                //                 // close the dialog box
+                //                 this.loading = false;
+                //                 this.closeDialog.emit();
+                //             },
+                //             (error: ApiServiceError) => {
+                //                 console.error('failed on setPropertyRestriction', error);
+                //             }
+                //         );
+                //     },
+                //     (error: ApiServiceError) => {
+                //         console.error('failed on addProperty', error);
+                //     }
+                // );
+                // // }
 
-                        // c++;
+                // c++;
                 //     }
                 // );
 

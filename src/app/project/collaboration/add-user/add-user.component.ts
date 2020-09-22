@@ -3,11 +3,12 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, MembersResponse, ProjectResponse, ReadUser, UserResponse, UsersResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, existingNamesValidator } from '@dasch-swiss/dsp-ui';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
 import { map, startWith } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { AutocompleteItem } from 'src/app/main/declarations/autocomplete-item';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+
 
 @Component({
     selector: 'app-add-user',

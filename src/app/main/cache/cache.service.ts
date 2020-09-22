@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
-import { Observable, of, Subject, throwError } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
+import { of } from 'rxjs/internal/observable/of';
+import { throwError } from 'rxjs/internal/observable/throwError';
+import { Subject } from 'rxjs/internal/Subject';
 
 interface CacheContent {
     expiry: number;

@@ -1,6 +1,8 @@
-import { Subject, Subscription } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
+import { filter } from 'rxjs/internal/operators/filter';
+import { map } from 'rxjs/internal/operators/map';
+import { Subject } from 'rxjs/internal/Subject';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Injectable({
     providedIn: 'root'

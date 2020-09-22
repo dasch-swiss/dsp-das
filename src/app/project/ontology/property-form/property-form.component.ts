@@ -4,13 +4,18 @@ import { MatOption } from '@angular/material/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatSelectChange } from '@angular/material/select';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ClassDefinition, KnoraApiConnection, ListNodeInfo, ReadOntology, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import {
+    ClassDefinition,
+    KnoraApiConnection,
+    ListNodeInfo,
+    ReadOntology,
+    ResourcePropertyDefinition
+} from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
 import { map, startWith } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DefaultProperties, Property, PropertyValue } from '../default-data/default-properties';
-
 
 // TODO: should be removed and replaced by AutocompleteItem from dsp-ui
 /**

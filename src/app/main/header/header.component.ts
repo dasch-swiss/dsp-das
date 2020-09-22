@@ -3,15 +3,15 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationStart, Router } from '@angular/router';
 import { DspMessageData, SearchParams, SessionService } from '@dasch-swiss/dsp-ui';
+import { Subscription } from 'rxjs/internal/Subscription';
 import { ComponentCommunicationEventService, Events } from 'src/app/services/component-communication-event.service';
-import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit, OnDestroy{
+export class HeaderComponent implements OnInit, OnDestroy {
 
     session: boolean = false;
     show: boolean = false;
@@ -100,7 +100,7 @@ export class HeaderComponent implements OnInit, OnDestroy{
         // to (resource) list view directly
         this.searchParams = search;
 
-        if(this.searchParams.mode && this.searchParams.query) {
+        if (this.searchParams.mode && this.searchParams.query) {
 
             let doSearchRoute = '/search/' + this.searchParams.mode + '/' + encodeURIComponent(this.searchParams.query);
 
