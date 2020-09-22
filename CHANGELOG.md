@@ -1,6 +1,6 @@
 # Changelog
 
-## Next release (22/09/2020)
+## v3.0.0-rc.1 (22/09/2020)
 
 ## Enhancements
 
