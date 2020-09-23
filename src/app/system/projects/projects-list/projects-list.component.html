@@ -17,7 +17,8 @@
                 <dsp-sort-button *ngIf="list.length > 1"
                     [icon]="'sort_by_alpha'"
                     [sortProps]="sortProps"
-                    (sortKeyChange)="sortList($event)"></dsp-sort-button>
+                    (sortKeyChange)="sortList($event)">
+                </dsp-sort-button>
             </span>
             <h2 class="mat-title">{{list.length | i18nPlural: itemPluralMapping['project']}}</h2>
             <span class="fill-remaining-space"></span>
