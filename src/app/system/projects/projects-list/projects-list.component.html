@@ -17,6 +17,7 @@
                 <dsp-sort-button *ngIf="list.length > 1"
                     [icon]="'sort_by_alpha'"
                     [sortProps]="sortProps"
+                    [activeKey]="sortBy"
                     (sortKeyChange)="sortList($event)">
                 </dsp-sort-button>
             </span>
