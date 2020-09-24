@@ -26,6 +26,8 @@ export class HelpComponent implements OnInit {
 
     apiStatus: boolean;
 
+    sipiVersion = 'v3.0.0-rc.5'
+
     docs: GridItem[] = [
         {
             icon: 'assignment',
@@ -64,9 +66,9 @@ export class HelpComponent implements OnInit {
             urlText: 'Release notes'
         },
         {
-            title: 'Sipi v3.0.0-rc.5',
+            title: 'Sipi ',
             text: 'High-performance, IIIF compatible media storage server.',
-            url: 'https://github.com/dasch-swiss/Sipi/releases/tag/v3.0.0-rc.5',
+            url: 'https://github.com/dasch-swiss/Sipi/releases/tag/',
             urlText: 'Release notes'
         }
     ];
@@ -114,6 +116,10 @@ export class HelpComponent implements OnInit {
         // set dsp-app version
         this.tools[0].title = this.appName + ' v' + this.appVersion;
         this.tools[0].url += this.appVersion;
+
+        // set dsp-sipi version
+        this.tools[2].title += this.sipiVersion;
+        this.tools[2].url += this.sipiVersion;
 
         const apiUrl: string = this._dspApiConfig.apiUrl;
 
