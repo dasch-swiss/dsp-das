@@ -16,7 +16,7 @@ const { version: appVersion, name: appName } = require('../../../../package.json
 })
 export class HelpComponent implements OnInit {
 
-    loading: boolean = true;
+    loading = true;
 
     appVersion: string = appVersion;
 
@@ -26,7 +26,7 @@ export class HelpComponent implements OnInit {
 
     apiStatus: boolean;
 
-    sipiVersion = 'v3.0.0-rc.5'
+    sipiVersion = 'v3.0.0-rc.5';
 
     docs: GridItem[] = [
         {
