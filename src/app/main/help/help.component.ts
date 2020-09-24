@@ -60,13 +60,13 @@ export class HelpComponent implements OnInit {
         {
             title: 'DSP-API ',
             text: 'Framework to store, share, and work with primary resources in the humanities.',
-            url: 'https://github.com/dasch-swiss/knora-api/releases/tag/v',
+            url: 'https://github.com/dasch-swiss/knora-api/releases/tag/',
             urlText: 'Release notes'
         },
         {
-            title: 'Sipi v2.0.0',
+            title: 'Sipi v3.0.0-rc.5',
             text: 'High-performance, IIIF compatible media storage server.',
-            url: 'https://github.com/dasch-swiss/Sipi/releases/tag/v2.0.0',
+            url: 'https://github.com/dasch-swiss/Sipi/releases/tag/v3.0.0-rc.5',
             urlText: 'Release notes'
         }
     ];
@@ -143,8 +143,8 @@ export class HelpComponent implements OnInit {
         const versions: string[] = v.split(' ');
         const dspApi: string = versions[0].split('/')[1];
 
-        // keep version number as x.y.z format (no extra suffix e.g. -SNAPSHOT)
-        this.apiVersion = dspApi.split('-')[0];
+        // keep whole version number incl. -rc.xy
+        this.apiVersion = dspApi;
 
         this.tools[1].title += this.apiVersion;
         this.tools[1].url += this.apiVersion;
