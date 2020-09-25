@@ -201,7 +201,7 @@
     </div>
 
     <div *ngSwitchCase="'editResourceClass'">
-        <app-dialog-header [title]="data.title" [subtitle]="data.subtitle" (close)="dialogRef.close()">
+        <app-dialog-header [title]="data.title" [subtitle]="data.subtitle">
         </app-dialog-header>
         The component{{data.mode}} is not implemented yet.
         <mat-dialog-actions>
