@@ -96,24 +96,19 @@ export class ProjectsListComponent implements OnInit {
     }
 
     /**
-     * Navigate to the project board page
+     * Navigate to the project pages (e.g. board, collaboration or ontology)
      *
      * @param code
+     * @param page
      */
-    gotoProjectBoard(code: string) {
+    openProjectPage(code: string, page: 'collaboration' | 'ontologies' | 'lists') {
         this._router.navigateByUrl('/refresh', { skipLocationChange: true }).then(
-            () => this._router.navigate(['/project/' + code])
-        );
-    }
-
-    /**
-     * Navigate to the collaboration / project members page
-     *
-     * @param code
-     */
-    gotoProjectProjectMembers(code: string) {
-        this._router.navigateByUrl('/refresh', { skipLocationChange: true }).then(
-            () => this._router.navigate(['/project/' + code + '/collaboration'])
+            () => {
+                if (page) {
+                    this._router.navigate(['/project/' + code + '/' + page]);
+                } else {
+                    this._router.navigate(['/project/' + code]); // project board
+                }}
         );
     }
 

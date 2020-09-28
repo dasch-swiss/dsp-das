@@ -43,10 +43,10 @@
             </td>
             <td class="table-info">
                 <!-- Longname hidden on phone devices -->
-                <h5 class="mat-subheading-2 link info-longname" (click)="gotoProjectBoard(project.shortcode)">
+                <h5 class="mat-subheading-2 link info-longname" (click)="openProjectPage(project.shortcode)">
                     {{project.longname}}
                 </h5>
-                <p class="mat-subheading-1 link" (click)="gotoProjectBoard(project.shortcode)">
+                <p class="mat-subheading-1 link" (click)="openProjectPage(project.shortcode)">
                     {{project.shortcode}} | {{project.shortname}}
                 </p>
             </td>
@@ -67,7 +67,7 @@
                         (click)="openDialog('editProject', project.shortname, project.shortcode)">
                         Edit project information
                     </button>
-                    <button mat-menu-item *ngIf="status" (click)="gotoProjectProjectMembers(project.shortcode)">
+                    <button mat-menu-item *ngIf="status" (click)="openProjectPage(project.shortcode, 'collaboration')">
                         Manage project members
                     </button>
                     <!-- disable the deactivate-button for the following two projects:
