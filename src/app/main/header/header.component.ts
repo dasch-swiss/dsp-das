@@ -38,25 +38,14 @@ export class HeaderComponent implements OnInit, OnDestroy{
         private _componentCommsService: ComponentCommunicationEventService) {
 
         // create tool icons to use them in mat-icons
-        // knora-app icon with text
-        this._matIconRegistry.addSvgIcon(
-            'dsp_app_banner',
-            this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/knora-app-banner.svg')
-        );
-        // knora-app icon (for smaller screens)
-        this._matIconRegistry.addSvgIcon(
-            'dsp_app_icon',
-            this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/knora-app-icon.svg')
-        );
+        // dasch icon
         this._matIconRegistry.addSvgIcon(
             'dasch_icon_black',
             this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/dasch-icon-black.svg')
         );
 
         // logged-in user? show user menu or login button
-
         this._router.events.forEach((event) => {
-            // console.log('EVENT', event);
             if (event instanceof NavigationStart) {
                 this._session.isSessionValid().subscribe((response) => {
                     this.session = response;

@@ -102,8 +102,8 @@ export class HelpComponent implements OnInit {
 
         // create tool icons to use them in mat-icons
         this._matIconRegistry.addSvgIcon(
-            'knora_app_icon',
-            this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/knora-app-icon.svg')
+            'dsp_app_icon',
+            this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/dsp-app-icon.svg')
         );
         this._matIconRegistry.addSvgIcon(
             'knora_icon',
