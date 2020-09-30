@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -73,6 +73,7 @@ import { AdvancedSearchComponent } from './workspace/search/advanced-search/adva
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 
 import { environment } from '../environments/environment';
+import { ErrorInterceptor } from './main/interceptor/error.interceptor';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -173,6 +174,11 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
             provide: DspApiConnectionToken,
             useFactory: (appInitService: AppInitService) => new KnoraApiConnection(appInitService.dspApiConfig),
             deps: [AppInitService]
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: ErrorInterceptor,
+            multi: true
         }
     ],
     bootstrap: [AppComponent]

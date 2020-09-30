@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
 
     session = false;
 
-    noError:boolean;
+    noError:boolean = true;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -31,7 +31,9 @@ export class AppComponent implements OnInit {
                 this.noError = true;
             },
             (error: ApiResponseError) => {
-                this.noError = false;
+                if (error.status >= 500 && error.status < 600) {
+                    this.noError = false;
+                }
             }
         );
 
