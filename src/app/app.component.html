@@ -1,4 +1,4 @@
-<div class="app">
+<div class="app" *ngIf="noError;else error">
 
     <div class="app-header">
         <app-header></app-header>
@@ -9,3 +9,7 @@
     </div>
 
 </div>
+
+<ng-template #error>
+    <app-error [status]="503"></app-error>
+</ng-template>
