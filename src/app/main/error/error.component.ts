@@ -11,11 +11,15 @@ export class ErrorComponent implements OnInit {
     @Input() status?: number = 404;
 
     constructor(private _titleService: Title) {
-        // set the page title
-        this._titleService.setTitle('Oops error');
+
     }
 
     ngOnInit() {
+        // set the page title
+        this._titleService.setTitle('DSP | Error ' + this.status);
     }
 
+    reload() {
+        window.location.reload();
+    }
 }

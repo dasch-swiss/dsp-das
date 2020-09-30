@@ -38,6 +38,10 @@
 
 }
 
+.action {
+    margin-top: 72px;
+}
+
 // mobile device: phone
 @media (max-width: map-get($grid-breakpoints, phone)) {
   .image {
