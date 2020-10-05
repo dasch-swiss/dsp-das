@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-error',
@@ -10,16 +11,27 @@ export class ErrorComponent implements OnInit {
 
     @Input() status?: number = 404;
 
-    constructor(private _titleService: Title) {
+    constructor(
+        private _titleService: Title,
+        private _route: ActivatedRoute
+    ) {
 
     }
 
     ngOnInit() {
+
+        this._route.data.subscribe(data => {
+            this.status = data.status;
+        })
+
         // set the page title
         this._titleService.setTitle('DSP | Error ' + this.status);
     }
 
     reload() {
-        window.location.reload();
+        // TODO: activate as soon the error handling is
+        // implemented (ak)
+        // window.location.reload();
     }
+
 }

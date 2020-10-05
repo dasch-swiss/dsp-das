@@ -17,26 +17,8 @@
         </div>
     </div>
 
-    <!-- error 503: Service unavailable -->
-    <div *ngSwitchCase="503" class="container">
-        <div class="image">
-            <img class="error-image" src="/assets/images/dsp-error-503.svg" />
-        </div>
-        <div class="text error-message">
-            <h2 class="mat-title">ERROR 503</h2>
-            <h1 class="mat-headline">Service unavailable</h1>
-            <p>The DaSCH Service Platform is not available at the moment.<br>
-                Please come back in a few minutes and try to <a (click)="reload()">reload the page</a>.
-            </p>
-            <button mat-button class="action" routerLink="/">
-                <mat-icon>mail_outline</mat-icon> Otherwise contact the DSP developer team
-            </button>
-
-        </div>
-    </div>
-
-    <!-- default error: 404 not found -->
-    <div *ngSwitchDefault class="container">
+    <!-- error 404: Not found -->
+    <div *ngSwitchCase="404" class="container">
         <div class="image">
             <img class="error-image" src="/assets/images/dsp-error-404.svg" />
         </div>
@@ -50,6 +32,29 @@
                 <mat-icon>keyboard_backspace</mat-icon> Please go back to the start page.
             </button>
         </div>
+    </div>
+
+    <!-- error 503: Service unavailable -->
+    <div *ngSwitchCase="503" class="container">
+        <div class="image">
+            <img class="error-image" src="/assets/images/dsp-error-503.svg" />
+        </div>
+        <div class="text error-message">
+            <h2 class="mat-title">ERROR 503</h2>
+            <h1 class="mat-headline">Service unavailable</h1>
+            <p>The DaSCH Service Platform is not available at the moment.<br>
+                Please come back in a few minutes and try to <a (click)="reload()">reload the page</a>.
+            </p>
+            <button mat-button class="action" routerLink="/">
+                <mat-icon>mail_outline</mat-icon> Contact DSP support
+            </button>
+
+        </div>
+    </div>
+
+    <!-- default error from dsp-ui -->
+    <div *ngSwitchDefault class="container">
+        <dsp-message [message]="{status: status}"></dsp-message>
     </div>
 
 </div>
