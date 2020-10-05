@@ -123,7 +123,7 @@ export class HelpComponent implements OnInit {
 
         const apiUrl: string = this._dspApiConfig.apiUrl;
 
-        this._http.get(apiUrl + '/admin/projects', { observe: 'response' })
+        this._http.get(apiUrl + '/health', { observe: 'response' })
             .subscribe(
                 (resp: HttpResponse<any>) => {
 
