@@ -4,6 +4,7 @@
             <mat-icon matPrefix svgIcon="dasch_icon_black" class="small"></mat-icon>
             <h1 class="mat-headline desktop-only">DaSCH Service Platform</h1>
             <h1 class="mat-headline mobile-only">DSP</h1>
+            <p class="mat-caption right app-version">{{appVersion}}</p>
         </button>
     </span>
 
@@ -11,8 +12,8 @@
 
     <!-- search-panel (in desktop and tablet version) -->
     <span class="action searchbar-large-screen">
-        <dsp-search-panel [projectfilter]="true" [expert]="false" [advanced]="false" (search)="doSearch($event)">
-        </dsp-search-panel>
+        <dsp-fulltext-search [projectfilter]="true" (search)="doSearch($event)">
+        </dsp-fulltext-search>
          <!-- advanced and expert search (in desktop and tablet version) -->
          <span class="other-search-link">
             <button mat-button color="primary" class="advanced-search-link" routerLink="/search/advanced">
