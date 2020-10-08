@@ -10,7 +10,7 @@ export class ExternalLinksDirective implements OnChanges {
     @HostBinding('attr.rel') relAttr = '';
     @HostBinding('attr.target') targetAttr = '';
     @HostBinding('attr.href') hrefAttr = '';
-    @HostBinding('style.color') fontColor = 'primary';
+    @HostBinding('class') class = 'external-link';
 
     // to check if we are running on the server, give a token value
     constructor(@Inject(PLATFORM_ID) private platformId: string) { }
