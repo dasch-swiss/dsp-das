@@ -4,34 +4,36 @@ import { By } from '@angular/platform-browser';
 import { ExternalLinksDirective } from './external-links.directive';
 
 @Component({
-    template: `<a href="http://dasch.swiss/">{{ label }}</a>`
+    template: `
+        <a class="external" href="http://dasch.swiss/">{{ externalLinkLabel }}</a>
+        <a class="internal" href="http://localhost:4200/resource/http%253A%252F%252Frdfh.ch%252F0001%252FLOV-6aLYQFW15jwdyS51Yw">{{ internalLinkLabel }}</a>
+        `
 })
-class TestExternalLinkComponent {
+class TestLinkHostComponent {
 
-    label = 'DaSCH website';
-
+    externalLinkLabel = 'DaSCH website';
+    internalLinkLabel = 'Resource link';
     constructor() { }
 }
 
 describe('ExternalLinksDirective', () => {
 
-    let testHostComponent: TestExternalLinkComponent;
-    let testHostFixture: ComponentFixture<TestExternalLinkComponent>;
-    let linkEl: DebugElement;
+    let testHostComponent: TestLinkHostComponent;
+    let testHostFixture: ComponentFixture<TestLinkHostComponent>;
+    let extLinkEl: DebugElement;
+    let intLinkEl: DebugElement;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ExternalLinksDirective,
-                TestExternalLinkComponent
+                TestLinkHostComponent
             ]
         });
 
-        testHostFixture = TestBed.createComponent(TestExternalLinkComponent);
+        testHostFixture = TestBed.createComponent(TestLinkHostComponent);
         testHostComponent = testHostFixture.componentInstance;
         testHostFixture.detectChanges();
-
-        linkEl = testHostFixture.debugElement.query(By.css('a[href]'));
 
         expect(testHostComponent).toBeTruthy();
 
@@ -41,22 +43,21 @@ describe('ExternalLinksDirective', () => {
         expect(testHostComponent).toBeTruthy();
     });
 
-    it('should get the correct attributes', () => {
+    it('should get the correct attributes for an external link', () => {
         expect(testHostComponent).toBeTruthy();
+        extLinkEl = testHostFixture.debugElement.query(By.css('.external'));
 
-        expect(linkEl.attributes.rel).toEqual('noopener');
-        expect(linkEl.attributes.target).toEqual('_blank');
-        expect(linkEl.attributes.href).toEqual('http://dasch.swiss/');
+        expect(extLinkEl.attributes.rel).toEqual('noopener');
+        expect(extLinkEl.attributes.target).toEqual('_blank');
+        expect(extLinkEl.attributes.href).toEqual('http://dasch.swiss/');
     });
 
-    it('should react to clicking on an external link', () => {
+    it('should get the correct attributes for an internal link', () => {
         expect(testHostComponent).toBeTruthy();
+        intLinkEl = testHostFixture.debugElement.query(By.css('.internal'));
 
-        linkEl.nativeElement.click();
-
-        testHostFixture.detectChanges();
-
-        expect(linkEl.attributes.href).toEqual('http://dasch.swiss/');
-        expect(testHostComponent.label).toEqual('DaSCH website');
+        expect(intLinkEl.attributes.rel).toBeFalsy();
+        expect(intLinkEl.attributes.target).toBeFalsy();
+        expect(intLinkEl.attributes.href).toEqual('http://localhost:4200/resource/http%253A%252F%252Frdfh.ch%252F0001%252FLOV-6aLYQFW15jwdyS51Yw');
     });
 });
