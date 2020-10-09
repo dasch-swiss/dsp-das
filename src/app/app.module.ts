@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -73,7 +73,9 @@ import { AdvancedSearchComponent } from './workspace/search/advanced-search/adva
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 
 import { environment } from '../environments/environment';
-import { ErrorInterceptor } from './main/interceptor/error.interceptor';
+import { ErrorInterceptor } from './main/error/interceptor/error.interceptor';
+import { FullframeErrorComponent } from './main/error/fullframe-error/fullframe-error.component';
+import { GlobalErrorHandler } from './main/error/service/global-error-handler';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -132,7 +134,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         ListItemFormComponent,
         MembershipComponent,
         HelpComponent,
-        FooterComponent
+        FooterComponent,
+        FullframeErrorComponent
     ],
     imports: [
         AppRoutingModule,
@@ -179,6 +182,10 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
             provide: HTTP_INTERCEPTORS,
             useClass: ErrorInterceptor,
             multi: true
+        },
+        {
+            provide: ErrorHandler,
+            useClass: GlobalErrorHandler
         }
     ],
     bootstrap: [AppComponent]

@@ -116,7 +116,7 @@ export class MainComponent implements OnInit {
                 this.loading = false;
             },
             (error: ApiResponseError) => {
-                console.error(error);
+                // console.error(error);
                 this.errorMessage = error;
                 this.loading = false;
             }

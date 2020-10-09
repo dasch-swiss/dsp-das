@@ -25,14 +25,15 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         // test the api connection
-        // TODO: will be replaced by api healt request
         this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
             (response: ApiResponseData<ProjectsResponse>) => {
                 this.noError = true;
             },
             (error: ApiResponseError) => {
-                if (error.status >= 500 && error.status < 600) {
-                    this.noError = false;
+                const status = (error.status === 0 ? 503 : error.status);
+                if (status >= 500 && status < 600) {
+                    // this.noError = false;
+                    console.warn('SERVER ERROR')
                 }
             }
         );
