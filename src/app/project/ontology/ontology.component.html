@@ -88,6 +88,7 @@
         <div #ontologyEditor *ngIf="!loadOntology && view === 'grid'" class="ontology-editor-canvas">
             <!-- button to select and add new resource class to the ontology -->
             <div class="add-resource-class" *ngIf="project?.status && sysAdmin && ontologyIri">
+                <!-- TODO: will be reactivated with the improvements of ontology editor
                 <button mat-raised-button color="primary" [matMenuTriggerFor]="addResClassMenu">
                     Add resource class&nbsp;
                     <mat-icon>add</mat-icon>
@@ -98,6 +99,7 @@
                         {{ type?.label }}
                     </button>
                 </mat-menu>
+                -->
             </div>
 
             <!-- <app-add-resource-class *ngIf="project?.status && sysAdmin && ontologyIri" [projectcode]="projectcode"
