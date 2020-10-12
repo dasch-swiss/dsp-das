@@ -43,10 +43,12 @@
                 <span class="fill-remaining-space"></span>
 
                 <span class="app-toolbar-action" [class.select-form]="ontologies.length">
+                    <!-- disable the "Create new ontology" button; TODO: reactivate on ontology-editor improvementx
                     <button mat-raised-button color="primary" class="create-data-model-btn"
                         (click)="openOntologyForm('createOntology')">
                         {{ontologies.length ? 'New data model' : 'Create your first data model'}}
                     </button>
+                    -->
                 </span>
             </div>
         </div>
