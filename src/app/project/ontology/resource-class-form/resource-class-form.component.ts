@@ -364,6 +364,10 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
                 console.log(classResponse);
 
+                // close the dialog box
+                this.loading = false;
+                this.closeDialog.emit();
+
                 // prepare last modification date and properties data
                 // lastModificationDate = classResponse.
 
