@@ -236,8 +236,7 @@
         <app-dialog-header [title]="'appLabels.form.resource.title.profile' | translate"
             [subtitle]="'appLabels.form.project.title.new' | translate">
         </app-dialog-header>
-        The component <b>{{data.mode}}</b> is not implemented yet.
-        <!-- TODO: <app-resource-form (closeDialog)="dialogRef.close()"></app-resource-form> -->
+        <app-new-resource-form (closeDialog)="dialogRef.close()"></app-new-resource-form>
         <mat-dialog-actions>
             <button mat-button mat-dialog-close class="cancel-button center" [mat-dialog-close]="false">
                 Cancel
