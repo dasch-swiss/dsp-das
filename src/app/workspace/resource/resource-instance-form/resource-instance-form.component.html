@@ -1,1 +1,45 @@
-<p>resource-instance-form works!</p>
+<form *ngIf="selectResourceForm" [formGroup]="selectResourceForm" class="form-content" (ngSubmit)="submitData()">
+
+    <!-- select project -->
+    <div *ngIf="usersProjects?.length > 0">
+       <app-select-project
+            [formGroup]="selectResourceForm"
+            [usersProjects]="usersProjects"
+            (projectSelected)="selectOntology($event)">
+        </app-select-project>
+    </div>
+
+    <!-- select ontology -->
+    <span>
+        <div *ngIf="usersProjects?.length > 0">
+            <app-select-ontology
+                 [formGroup]="selectResourceForm"
+                 [ontologiesMetadata]="ontologiesMetadata"
+                 (ontologySelected)="selectResourceClasses($event)">
+             </app-select-ontology>
+         </div>
+    </span>
+    <!-- select resource -->
+        <!-- <span>
+            <mat-form-field class="large-field">
+                <mat-select placeholder="Select a resource class" formControlName="resourceClasses" class="select-resource-classes">
+                    <mat-option *ngFor="let res of resourceClasses" [value]="res.id">{{ res.label }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </span> -->
+
+    <!-- action buttons: cancel and next -->
+    <!-- <div class="form-panel large-field">
+        <span>
+            <button mat-button type="button" (click)="closeDialog.emit()">
+                {{ 'appLabels.form.action.cancel' | translate }}
+            </button>
+        </span>
+        <span class="fill-remaining-space"></span>
+        <button mat-button type="submit" color="primary" [disabled]="!selectResourceForm.valid">
+            {{ 'appLabels.form.action.next' | translate}}
+        </button>
+    </div> -->
+
+</form>
+

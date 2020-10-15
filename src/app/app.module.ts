@@ -75,6 +75,8 @@ import { ExpertSearchComponent } from './workspace/search/expert-search/expert-s
 
 import { environment } from '../environments/environment';
 import { ExternalLinksDirective } from './main/directive/external-links.directive';
+import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
+import { SelectOntologyComponent } from './workspace/resource/resource-instance-form/select-ontology/select-ontology.component';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -135,7 +137,9 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         HelpComponent,
         FooterComponent,
         ExternalLinksDirective,
-        ResourceInstanceFormComponent
+        ResourceInstanceFormComponent,
+        SelectProjectComponent,
+        SelectOntologyComponent
     ],
     imports: [
         AppRoutingModule,
