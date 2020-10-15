@@ -68,13 +68,13 @@ import { UserFormComponent } from './user/user-form/user-form.component';
 import { UserMenuComponent } from './user/user-menu/user-menu.component';
 import { UserComponent } from './user/user.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
+import { ResourceInstanceFormComponent } from './workspace/resource/resource-instance-form/resource-instance-form.component';
 import { ResultsComponent } from './workspace/results/results.component';
 import { AdvancedSearchComponent } from './workspace/search/advanced-search/advanced-search.component';
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 
 import { environment } from '../environments/environment';
 import { ExternalLinksDirective } from './main/directive/external-links.directive';
-import { NewResourceFormComponent } from './workspace/new-resource-form/new-resource-form.component';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -135,7 +135,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         HelpComponent,
         FooterComponent,
         ExternalLinksDirective,
-        NewResourceFormComponent
+        ResourceInstanceFormComponent
     ],
     imports: [
         AppRoutingModule,

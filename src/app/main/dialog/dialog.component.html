@@ -236,7 +236,7 @@
         <app-dialog-header [title]="'appLabels.form.resource.title.profile' | translate"
             [subtitle]="'appLabels.form.project.title.new' | translate">
         </app-dialog-header>
-        <app-new-resource-form (closeDialog)="dialogRef.close()"></app-new-resource-form>
+        <app-resource-instance-form (closeDialog)="dialogRef.close()"></app-resource-instance-form>
         <mat-dialog-actions>
             <button mat-button mat-dialog-close class="cancel-button center" [mat-dialog-close]="false">
                 Cancel
