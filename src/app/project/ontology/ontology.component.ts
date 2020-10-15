@@ -19,7 +19,7 @@ import {
 import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { DefaultResourceClasses, ResourceClass } from './default-data/default-resource-classes';
+import { DefaultResourceClasses, DefaultClass } from './default-data/default-resource-classes';
 import { ResourceClassFormService } from './resource-class-form/resource-class-form.service';
 
 export interface OntologyInfo {
@@ -81,7 +81,7 @@ export class OntologyComponent implements OnInit {
     /**
      * list of all default resource classs (sub class of)
      */
-    resourceClass: ResourceClass[] = DefaultResourceClasses.data;
+    resourceClass: DefaultClass[] = DefaultResourceClasses.data;
 
     @ViewChild('ontologyEditor', { read: ViewContainerRef }) ontologyEditor: ViewContainerRef;
 
@@ -294,7 +294,7 @@ export class OntologyComponent implements OnInit {
 
 
 
-    openResourceClassForm(mode: string, type: ResourceClass): void {
+    openResourceClassForm(mode: string, type: DefaultClass): void {
 
         // set ontology cache
         this._cache.set('currentOntology', this.ontology);
@@ -305,7 +305,7 @@ export class OntologyComponent implements OnInit {
             position: {
                 top: '112px'
             },
-            data: { name: type.name, title: type.label, subtitle: 'Customize resource class', mode: mode, project: this.project.id }
+            data: { name: type.iri, title: type.label, subtitle: 'Customize resource class', mode: mode, project: this.project.id }
         };
 
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
