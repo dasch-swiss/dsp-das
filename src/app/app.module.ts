@@ -74,6 +74,7 @@ import { ExpertSearchComponent } from './workspace/search/expert-search/expert-s
 
 import { environment } from '../environments/environment';
 import { ExternalLinksDirective } from './main/directive/external-links.directive';
+import { NewResourceFormComponent } from './workspace/new-resource-form/new-resource-form.component';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -133,7 +134,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         MembershipComponent,
         HelpComponent,
         FooterComponent,
-        ExternalLinksDirective
+        ExternalLinksDirective,
+        NewResourceFormComponent
     ],
     imports: [
         AppRoutingModule,
