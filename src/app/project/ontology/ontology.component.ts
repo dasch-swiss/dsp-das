@@ -8,6 +8,7 @@ import {
     ApiResponseError,
     ClassDefinition,
     DeleteOntologyResponse,
+    DeleteResourceClass,
     KnoraApiConnection,
     OntologiesMetadata,
     OntologyMetadata,
@@ -368,12 +369,12 @@ export class OntologyComponent implements OnInit {
                     case 'ResourceClass':
                         // delete reresource class and refresh the view
                         this.loadOntology = true;
-                        const resClass = new UpdateOntology();
-                        resClass.id = this.resourceClass[0].iri;
+                        const resClass: DeleteResourceClass = new DeleteResourceClass();
+                        resClass.id = id;
                         resClass.lastModificationDate = this.ontology.lastModificationDate;
 
 
-                        this._dspApiConnection.v2.onto.deleteResourceClass(ontology).subscribe(
+                        this._dspApiConnection.v2.onto.deleteResourceClass(resClass).subscribe(
                             (response: OntologyMetadata) => {
                                 this.loading = false;
                                 this.getOntology(this.ontologyIri);
