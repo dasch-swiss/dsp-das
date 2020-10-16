@@ -22,6 +22,7 @@ import { AppComponent } from './app.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { DialogHeaderComponent } from './main/dialog/dialog-header/dialog-header.component';
 import { DialogComponent } from './main/dialog/dialog.component';
+import { ExternalLinksDirective } from './main/directive/external-links.directive';
 import { ErrorComponent } from './main/error/error.component';
 import { FooterComponent } from './main/footer/footer.component';
 import { GridComponent } from './main/grid/grid.component';
@@ -128,7 +129,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         ListItemFormComponent,
         MembershipComponent,
         HelpComponent,
-        FooterComponent
+        FooterComponent,
+        ExternalLinksDirective
     ],
     imports: [
         AppRoutingModule,

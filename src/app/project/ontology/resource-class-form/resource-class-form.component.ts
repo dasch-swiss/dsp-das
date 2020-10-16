@@ -14,12 +14,14 @@ import { FormArray, FormGroup } from '@angular/forms';
 import {
     ApiResponseData,
     ApiResponseError,
+    Constants,
     CreateResourceClass,
     KnoraApiConnection,
     ListsResponse,
     ReadOntology,
     ResourceClassDefinitionWithAllLanguages,
-    StringLiteral
+    StringLiteral,
+    UpdateOntology
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -346,21 +348,23 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
 
         // set resource class data
-        const reresourceClassData: CreateResourceClass = {
-            ontology: {
-                id: this.ontology.id,
-                lastModificationDate: this.ontology.lastModificationDate
-            },
+        const resourceClassData = new UpdateOntology<CreateResourceClass>();
+
+        resourceClassData.id = this.ontology.id;
+        resourceClassData.lastModificationDate = this.ontology.lastModificationDate;
+
+        resourceClassData.entity = {
             name: uniqueClassName,
-            labels: this.resourceClassLabels,
-            comments: this.resourceClassComments,
+            label: this.resourceClassLabels,
+            type: Constants.IsResourceClass,
+            comment: this.resourceClassComments,
             subClassOf: [this.subClassOf]
         };
 
         // submit resource class data to knora and create resource class incl. cardinality
-        // console.log('submit resource class data:', reresourceClassData);
+        // console.log('submit resource class data:', resourceClassData);
         // let i: number = 0;
-        this._dspApiConnection.v2.onto.createResourceClass(reresourceClassData).subscribe(
+        this._dspApiConnection.v2.onto.createResourceClass(resourceClassData).subscribe(
             (classResponse: ResourceClassDefinitionWithAllLanguages) => {
 
                 console.log(classResponse);

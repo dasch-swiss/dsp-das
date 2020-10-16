@@ -1,5 +1,5 @@
 <div *ngIf="projectAdmin" class="desktop-only">
-    <dsp-message [medium]="true" [message]="{status: 206, statusText: 'The ontology/data model editor is not yet fully implemented. The functionality is still work in progress.'}"></dsp-message>
+    <!-- <dsp-message [medium]="true" [message]="{status: 206, statusText: 'The ontology/data model editor is not yet fully implemented. The functionality is still work in progress.'}"></dsp-message> -->
 
     <dsp-progress-indicator *ngIf="loading"></dsp-progress-indicator>
 
@@ -14,7 +14,7 @@
                     <span *ngIf="ontologies.length > 0">
                         Project has {{ontologies.length | i18nPlural: itemPluralMapping['ontology']}}
                     </span>
-                    <span *ngIf="ontologies.length === 0">
+                    <span *ngIf="ontologies.length === 0 || !ontologies">
                         It seems there's no data model defined yet
                     </span>
                 </h2>
@@ -86,6 +86,7 @@
         <div #ontologyEditor *ngIf="!loadOntology && view === 'grid'" class="ontology-editor-canvas">
             <!-- button to select and add new resource class to the ontology -->
             <div class="add-resource-class" *ngIf="project?.status && sysAdmin && ontologyIri">
+                <!-- TODO: will be reactivated with the improvements of ontology editor
                 <button mat-raised-button color="primary" [matMenuTriggerFor]="addResClassMenu">
                     Add resource class&nbsp;
                     <mat-icon>add</mat-icon>
@@ -96,6 +97,7 @@
                         {{ type?.label }}
                     </button>
                 </mat-menu>
+                -->
             </div>
 
             <!-- <app-add-resource-class *ngIf="project?.status && sysAdmin && ontologyIri" [projectcode]="projectcode"
