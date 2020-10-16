@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnChanges, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ApiResponseData, ApiResponseError, ClassDefinition, Constants, KnoraApiConnection, OntologiesMetadata, ResourceClassDefinition, StoredProject, UserResponse } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, ClassDefinition, Constants, KnoraApiConnection, OntologiesMetadata, PropertyDefinition, ResourceClassDefinition, ResourcePropertyDefinition, StoredProject, UserResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 
@@ -10,6 +10,10 @@ type Constructor<T> = { new(...args: any[]): T };
 const typeGuard = <T>(o: any, className: Constructor<T>): o is T => {
     return o instanceof className;
 };
+
+export interface Properties {
+    [index: string]: ResourcePropertyDefinition;
+}
 
 @Component({
     selector: 'app-resource-instance-form',
@@ -23,7 +27,7 @@ export class ResourceInstanceFormComponent implements OnInit {
 
     // forms
     selectResourceForm: FormGroup;
-    form: FormGroup;
+    // form: FormGroup;
 
     session: Session;
     username: string;
@@ -33,6 +37,9 @@ export class ResourceInstanceFormComponent implements OnInit {
     selectedOntology: string;
     activeResourceClass: ResourceClassDefinition;
     resourceClasses: ResourceClassDefinition[];
+    properties: Properties;
+
+    errorMessage: string;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -71,7 +78,6 @@ export class ResourceInstanceFormComponent implements OnInit {
 
                     for (const project of response.body.user.projects) {
                         this.usersProjects.push(project);
-                        console.log('this.usersProjects', this.usersProjects);
                     }
                 },
                 (error: ApiResponseError) => {
@@ -83,17 +89,21 @@ export class ResourceInstanceFormComponent implements OnInit {
 
     selectOntology(projectIri: string) {
 
-        this._dspApiConnection.v2.onto.getOntologiesByProjectIri(projectIri).subscribe(
-            (response: OntologiesMetadata) => {
-                // filter out system ontologies
-                response.ontologies = response.ontologies.filter(onto => onto.attachedToProject !== Constants.SystemProjectIRI);
+        if (projectIri) {
+            this._dspApiConnection.v2.onto.getOntologiesByProjectIri(projectIri).subscribe(
+                (response: OntologiesMetadata) => {
+                    // filter out system ontologies
+                    response.ontologies = response.ontologies.filter(onto => onto.attachedToProject !== Constants.SystemProjectIRI);
 
-                this.ontologiesMetadata = response; console.log('projectOntologies', this.ontologiesMetadata);
-            },
-            (error: ApiResponseError) => {
-                console.error(error);
-            }
-        );
+                    this.ontologiesMetadata = response;
+                },
+                (error: ApiResponseError) => {
+                    console.error(error);
+                }
+            );
+        } else {
+            this.errorMessage = 'You are not part of any project.';
+        }
     }
 
     selectResourceClasses(ontologyIri: string) {
@@ -104,19 +114,45 @@ export class ResourceInstanceFormComponent implements OnInit {
         // reset specified properties
         // this.activeProperties = [];
 
-        this.selectedOntology = ontologyIri;
+        if (ontologyIri) {
+            this.selectedOntology = ontologyIri;
 
-        this._dspApiConnection.v2.ontologyCache.getOntology(ontologyIri).subscribe(
-            onto => {
+            this._dspApiConnection.v2.ontologyCache.getOntology(ontologyIri).subscribe(
+                onto => {
 
-                this.resourceClasses = this._makeResourceClassesArray(onto.get(ontologyIri).classes);
+                    this.resourceClasses = this._makeResourceClassesArray(onto.get(ontologyIri).classes);
 
-                // this.properties = this._makeResourceProperties(onto.get(ontologyIri).properties);
-            },
-            err => {
-                console.error(err);
-            }
+                    // this.properties = this._makeResourceProperties(onto.get(ontologyIri).properties);
+                },
+                (error: ApiResponseError) => {
+                    console.error(error);
+                }
         );
+        } else {
+            this.errorMessage = 'No ontology defined for the selected project.';
+        }
+    }
+
+    selectProperties(resourceClassIri: string) {
+
+        if (resourceClassIri) {
+            // if the client undoes the selection of a resource class, use the active ontology as a fallback
+            if (resourceClassIri === null) {
+                this.selectResourceClasses(this.selectedOntology);
+            } else {
+
+                this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).subscribe(
+                    onto => {
+                        this.activeResourceClass = onto.classes[resourceClassIri]; console.log('activeResourceClass', this.activeResourceClass);
+
+                        this.properties = this._makeResourceProperties(onto.properties);
+
+                    }
+                );
+            }
+        } else {
+            this.errorMessage = 'No resource class defined for the selected ontology.';
+        }
     }
 
     /**
@@ -138,6 +174,28 @@ export class ResourceInstanceFormComponent implements OnInit {
             }
         );
 
+    }
+
+    /**
+     * Given a map of property definitions,
+     * returns a map of resource property definitions.
+     *
+     * @param propertyDefs a map of property definitions
+     */
+    private _makeResourceProperties(propertyDefs: { [index: string]: PropertyDefinition }): Properties {
+        const resProps: Properties = {};
+
+        const propIris = Object.keys(propertyDefs);
+
+        propIris.filter(
+            (propIri: string) => {
+                return typeGuard(propertyDefs[propIri], ResourcePropertyDefinition);
+            }
+        ).forEach((propIri: string) => {
+            resProps[propIri] = (propertyDefs[propIri] as ResourcePropertyDefinition);
+        });
+
+        return resProps;
     }
 
 }

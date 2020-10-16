@@ -2,7 +2,7 @@
 
     <!-- select project -->
     <div *ngIf="usersProjects?.length > 0">
-       <app-select-project
+        <app-select-project
             [formGroup]="selectResourceForm"
             [usersProjects]="usersProjects"
             (projectSelected)="selectOntology($event)">
@@ -11,35 +11,37 @@
 
     <!-- select ontology -->
     <span>
-        <div *ngIf="usersProjects?.length > 0">
+        <div *ngIf="ontologiesMetadata?.ontologies.length > 0">
             <app-select-ontology
-                 [formGroup]="selectResourceForm"
-                 [ontologiesMetadata]="ontologiesMetadata"
-                 (ontologySelected)="selectResourceClasses($event)">
-             </app-select-ontology>
-         </div>
+                [formGroup]="selectResourceForm"
+                [ontologiesMetadata]="ontologiesMetadata"
+                (ontologySelected)="selectResourceClasses($event)">
+            </app-select-ontology>
+        </div>
     </span>
+
     <!-- select resource -->
-        <!-- <span>
-            <mat-form-field class="large-field">
-                <mat-select placeholder="Select a resource class" formControlName="resourceClasses" class="select-resource-classes">
-                    <mat-option *ngFor="let res of resourceClasses" [value]="res.id">{{ res.label }}</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </span> -->
+    <span *ngIf="resourceClasses?.length > 0">
+        <app-select-resource-class
+            [formGroup]="selectResourceForm"
+            [resourceClassDefinitions]="resourceClasses"
+            (resourceClassSelected)="selectProperties($event)">
+        </app-select-resource-class>
+    </span>
+
+    <b>{{errorMessage}}</b>
 
     <!-- action buttons: cancel and next -->
-    <!-- <div class="form-panel large-field">
+    <div class="form-panel large-field">
         <span>
             <button mat-button type="button" (click)="closeDialog.emit()">
                 {{ 'appLabels.form.action.cancel' | translate }}
             </button>
         </span>
         <span class="fill-remaining-space"></span>
-        <button mat-button type="submit" color="primary" [disabled]="!selectResourceForm.valid">
+        <button mat-button type="submit" color="primary" [disabled]="!selectResourceForm.valid || !activeResourceClass">
             {{ 'appLabels.form.action.next' | translate}}
         </button>
-    </div> -->
+    </div>
 
 </form>
-
