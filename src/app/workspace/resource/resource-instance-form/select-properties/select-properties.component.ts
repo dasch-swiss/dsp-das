@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { Constants, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { Constants, ReadResource, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { BaseValueDirective } from 'src/app/base-value.component';
 
 export interface Properties {
@@ -16,6 +16,8 @@ export class SelectPropertiesComponent {
     @ViewChild('createVal') createValueComponent: BaseValueDirective;
 
     @Input() propertiesAsArray: Array<ResourcePropertyDefinition>;
+
+    parentResource = new ReadResource();
 
     mode = 'create';
     constants = Constants;
