@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
     ApiResponseData,
@@ -17,7 +17,6 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, Session, SessionService, SortingService, ValueOperationEventService, ValueTypeService } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
-import { BaseValueDirective } from 'src/app/base-value.component';
 import { CacheService } from 'src/app/main/cache/cache.service';
 
 // https://dev.to/krumpet/generic-type-guard-in-typescript-258l
@@ -39,20 +38,15 @@ export interface Properties {
 })
 export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
-    @ViewChild('createVal') createValueComponent: BaseValueDirective;
-
     // output to close dialog
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
     // forms
     selectResourceForm: FormGroup;
-    formTwo: FormGroup;
+    form: FormGroup;
 
     session: Session;
     username: string;
-
-    constants = Constants;
-    mode = 'create';
 
     showNextStepForm: boolean;
 
@@ -88,7 +82,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
         // parent form is empty, it gets passed to the child components
         this.selectResourceForm = this._fb.group({});
-        this.formTwo = this._fb.group({});
+        this.form = this._fb.group({});
 
         // initialize projects to be used for the project selection in the creation form
         this.initializeProjects();
@@ -96,7 +90,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
         // boolean to show onl the first step of the form (= selectResourceForm)
         this.showNextStepForm = true;
 
-        if(this.propertiesAsArray) {
+        // since simple text values and rich text values share the same object type 'TextValue',
+        // we need to use the ValueTypeService in order to assign it the correct object type for the ngSwitch in the template
+        if (this.propertiesAsArray) {
             for (const prop of this.propertiesAsArray) {
                 if (prop) {
                     if (prop.objectType === 'http://api.knora.org/ontology/knora-api/v2#TextValue') {
@@ -116,7 +112,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     nextStep() {
         this.showNextStepForm = !this.showNextStepForm;
-        console.log('next step');
     }
 
     submitData() {
@@ -214,7 +209,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
      */
     getResourceLabel(label: string) {
         this.resourceLabel = label;
-        // console.log('label', this.resourceLabel);
     }
 
     /**
@@ -230,7 +224,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                 this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).subscribe(
                     onto => {
                         this.selectedResourceClass = onto.classes[resourceClassIri];
-                        console.log('selectedResourceClass', this.selectedResourceClass);
+                        // console.log('selectedResourceClass', this.selectedResourceClass);
 
                         this.properties = this._makeResourceProperties(onto.properties);
                         // console.log('properties', this.properties);
@@ -304,13 +298,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
         // sort properties by label (ascending)
         this.propertiesAsArray = this._sortingService.keySortByAlphabetical(propsArray, 'label');
-    }
-
-    /**
-     * Called from the template when the user clicks on the cancel button
-     */
-    hideAddValueForm() {
-        console.log('hideAddValueForm');
     }
 
 }

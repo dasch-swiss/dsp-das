@@ -52,29 +52,13 @@
 
 </form>
 
-<form *ngIf="formTwo && !showNextStepForm" [formGroup]="formTwo" class="resource-instance-form stepTwo form-content" (ngSubmit)="submitData()">
+<form *ngIf="form && !showNextStepForm" [formGroup]="form" class="resource-instance-form stepTwo form-content" (ngSubmit)="submitData()">
 
     <!-- fill in properties -->
-    <div *ngFor="let prop of propertiesAsArray">
-            <span [ngSwitch]="prop.objectType">
-                <dsp-text-value-as-string #createVal *ngSwitchCase="'ReadTextValueAsString'" [mode]="mode"></dsp-text-value-as-string>
-                <dsp-text-value-as-html #createVal *ngSwitchCase="'ReadTextValueAsHtml'" [mode]="mode"></dsp-text-value-as-html>
-                <dsp-text-value-as-xml #createVal *ngSwitchCase="'ReadTextValueAsXml'" [mode]="mode"></dsp-text-value-as-xml>
-                <dsp-int-value #createVal *ngSwitchCase="constants.IntValue" [mode]="mode"></dsp-int-value>
-                <dsp-boolean-value #createVal *ngSwitchCase="constants.BooleanValue" [mode]="mode"></dsp-boolean-value>
-                <dsp-uri-value #createVal *ngSwitchCase="constants.UriValue" [mode]="mode"></dsp-uri-value>
-                <dsp-decimal-value #createVal *ngSwitchCase="constants.DecimalValue" [mode]="mode"></dsp-decimal-value>
-                <dsp-color-value #createVal *ngSwitchCase="constants.ColorValue" [mode]="mode"></dsp-color-value>
-                <dsp-interval-value #createVal *ngSwitchCase="constants.IntervalValue" [mode]="mode"></dsp-interval-value>
-                <dsp-time-value #createVal *ngSwitchCase="constants.TimeValue" [mode]="mode"></dsp-time-value>
-                <dsp-geoname-value #createVal *ngSwitchCase="constants.GeonameValue" [mode]="mode"></dsp-geoname-value>
-                <!-- <dsp-link-value #createVal *ngSwitchCase="constants.LinkValue" [mode]="mode"
-                            [parentResource]="parentResource" [propIri]="resourcePropertyDefinition.id"></dsp-link-value> -->
-                <dsp-date-value #createVal *ngSwitchCase="constants.DateValue" [mode]="mode"></dsp-date-value>
-                <dsp-list-value #createVal *ngSwitchCase="constants.ListValue" [mode]="mode"
-                            [propertyDef]="prop"></dsp-list-value>
-            </span>
-    </div>
+    <app-select-properties
+        [propertiesAsArray]="propertiesAsArray"
+        class="select-properties">
+    </app-select-properties>
 
     <!-- action buttons: cancel and save -->
     <div class="form-panel large-field">
@@ -85,7 +69,7 @@
         </span>
         <span class="fill-remaining-space"></span>
         <span>
-            <button mat-raised-button type="submit" color="primary" [disabled]="!formTwo.valid">
+            <button mat-raised-button type="submit" color="primary" [disabled]="!form.valid">
                 {{ 'appLabels.form.action.submit' | translate}}
             </button>
         </span>
