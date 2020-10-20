@@ -122,7 +122,7 @@ export class HeaderComponent implements OnInit, OnDestroy{
 
     openDialog(mode: string, name?: string, iri?: string): void {
         const dialogConfig: MatDialogConfig = {
-            width: '640px',
+            width: '740px',
             position: {
                 top: '112px'
             },
