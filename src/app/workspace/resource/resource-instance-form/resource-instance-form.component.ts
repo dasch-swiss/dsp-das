@@ -5,6 +5,7 @@ import {
     ApiResponseError,
     ClassDefinition,
     Constants,
+    CreateResource,
     KnoraApiConnection,
     OntologiesMetadata,
     PropertyDefinition,
@@ -14,8 +15,7 @@ import {
     StoredProject,
     UserResponse
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, Session, SessionService, SortingService } from '@dasch-swiss/dsp-ui';
-import { Events, ValueOperationEventService } from '@dasch-swiss/dsp-ui/lib/viewer/services/value-operation-event.service';
+import { DspApiConnectionToken, Events, Session, SessionService, SortingService, ValueOperationEventService } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
 
@@ -50,10 +50,12 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     showNextStepForm: boolean;
 
     usersProjects: StoredProject[];
+    selectedProject: string;
     ontologiesMetadata: OntologiesMetadata;
     selectedOntology: string;
     resourceClasses: ResourceClassDefinition[];
     selectedResourceClass: ResourceClassDefinition;
+    resource: ReadResource;
     resourceLabel: string;
     properties: Properties;
     propertiesAsArray: Array<ResourcePropertyDefinition>; // properties as an Array structure
@@ -67,7 +69,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
         private _cache: CacheService,
         private _session: SessionService,
         private _fb: FormBuilder,
-        private _sortingService: SortingService
+        private _sortingService: SortingService,
+        private _valueOperationEventService: ValueOperationEventService
     ) {
         this.session = this._session.getSession();
         this.username = this.session.user.name;
@@ -78,12 +81,15 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
         // parent form is empty, it gets passed to the child components
         this.selectResourceForm = this._fb.group({});
+        this.form = this._fb.group({});
 
         // initialize projects to be used for the project selection in the creation form
         this.initializeProjects();
 
         this.showNextStepForm = true;
 
+        // listen for the AddValue event to be emitted and call hideAddValueForm()
+        this.valueOperationEventSubscription = this._valueOperationEventService.on(Events.ValueAdded, () => this.hideAddValueForm());
     }
 
     ngOnDestroy() {
@@ -100,6 +106,24 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     submitData() {
         console.log('submit form');
+
+        const createResource = new CreateResource();
+
+        createResource.label = this.resourceLabel; console.log('label', this.resourceLabel);
+
+        createResource.type = this.selectedResourceClass.id; console.log('type', this.selectedResourceClass.id);
+
+        createResource.attachedToProject = this.selectedProject; console.log('project', this.selectedProject);
+
+        // createResource.properties = ;
+
+        /* this._dspApiConnection.v2.res.createResource(createResource).subscribe(
+            (res: ReadResource) => {
+                this.resource = res;
+            }
+        ); */
+
+        // navigate to the resource viewer
     }
 
     /**
@@ -128,8 +152,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
      * @param projectIri
      */
     selectOntologies(projectIri: string) {
-
         if (projectIri) {
+            this.selectedProject = projectIri;
+
             this._dspApiConnection.v2.onto.getOntologiesByProjectIri(projectIri).subscribe(
                 (response: OntologiesMetadata) => {
                     // filter out system ontologies
@@ -264,6 +289,13 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
         // sort properties by label (ascending)
         this.propertiesAsArray = this._sortingService.keySortByAlphabetical(propsArray, 'label');
+    }
+
+    /**
+     * Called from the template when the user clicks on the cancel button
+     */
+    hideAddValueForm() {
+        console.log('hideAddValueForm');
     }
 
 }

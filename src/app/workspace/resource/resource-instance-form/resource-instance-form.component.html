@@ -1,4 +1,4 @@
-<form *ngIf="selectResourceForm && this.showNextStepForm" [formGroup]="selectResourceForm" class="resource-instance-form stepOne form-content" (ngSubmit)="nextStep()">
+<form *ngIf="selectResourceForm && showNextStepForm" [formGroup]="selectResourceForm" class="resource-instance-form stepOne form-content" (ngSubmit)="nextStep()">
 
     <!-- select one project -->
     <div *ngIf="usersProjects?.length > 0">
@@ -50,4 +50,31 @@
         </span>
     </div>
 
+</form>
+
+<form *ngIf="form && !showNextStepForm" [formGroup]="form" class="resource-instance-form stepTwo form-content" (ngSubmit)="submitData()">
+
+    <!-- fill in properties -->
+    <div *ngFor="let prop of propertiesAsArray">
+        <dsp-add-value
+            #addValue
+            class="add-value"
+            [resourcePropertyDefinition]="selectedResourceClass">
+        </dsp-add-value>
+    </div>
+
+    <!-- action buttons: cancel and save -->
+    <div class="form-panel large-field">
+        <span>
+            <button mat-button type="button" (click)="closeDialog.emit()">
+                {{ 'appLabels.form.action.cancel' | translate }}
+            </button>
+        </span>
+        <span class="fill-remaining-space"></span>
+        <span>
+            <button mat-raised-button type="submit" color="primary" [disabled]="!form.valid">
+                {{ 'appLabels.form.action.submit' | translate}}
+            </button>
+        </span>
+    </div>
 </form>
