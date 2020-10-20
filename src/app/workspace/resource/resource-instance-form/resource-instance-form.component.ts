@@ -1,7 +1,22 @@
-import { Component, EventEmitter, Inject, OnChanges, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ApiResponseData, ApiResponseError, ClassDefinition, Constants, KnoraApiConnection, OntologiesMetadata, PropertyDefinition, ResourceClassDefinition, ResourcePropertyDefinition, StoredProject, UserResponse } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import {
+    ApiResponseData,
+    ApiResponseError,
+    ClassDefinition,
+    Constants,
+    KnoraApiConnection,
+    OntologiesMetadata,
+    PropertyDefinition,
+    ReadResource,
+    ResourceClassDefinition,
+    ResourcePropertyDefinition,
+    StoredProject,
+    UserResponse
+} from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken, Session, SessionService, SortingService } from '@dasch-swiss/dsp-ui';
+import { Events, ValueOperationEventService } from '@dasch-swiss/dsp-ui/lib/viewer/services/value-operation-event.service';
+import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
 
 // https://dev.to/krumpet/generic-type-guard-in-typescript-258l
@@ -20,24 +35,30 @@ export interface Properties {
     templateUrl: './resource-instance-form.component.html',
     styleUrls: ['./resource-instance-form.component.scss']
 })
-export class ResourceInstanceFormComponent implements OnInit {
+export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     // output to close dialog
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
     // forms
     selectResourceForm: FormGroup;
-    // form: FormGroup;
+    form: FormGroup;
 
     session: Session;
     username: string;
 
-    usersProjects: StoredProject[] = []; // TODO: enlever = []
+    showNextStepForm: boolean;
+
+    usersProjects: StoredProject[];
     ontologiesMetadata: OntologiesMetadata;
     selectedOntology: string;
-    activeResourceClass: ResourceClassDefinition;
     resourceClasses: ResourceClassDefinition[];
+    selectedResourceClass: ResourceClassDefinition;
+    resourceLabel: string;
     properties: Properties;
+    propertiesAsArray: Array<ResourcePropertyDefinition>; // properties as an Array structure
+
+    valueOperationEventSubscription: Subscription;
 
     errorMessage: string;
 
@@ -45,7 +66,8 @@ export class ResourceInstanceFormComponent implements OnInit {
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _session: SessionService,
-        private _fb: FormBuilder
+        private _fb: FormBuilder,
+        private _sortingService: SortingService
     ) {
         this.session = this._session.getSession();
         this.username = this.session.user.name;
@@ -60,6 +82,20 @@ export class ResourceInstanceFormComponent implements OnInit {
         // initialize projects to be used for the project selection in the creation form
         this.initializeProjects();
 
+        this.showNextStepForm = true;
+
+    }
+
+    ngOnDestroy() {
+        // unsubscribe from the event bus when component is destroyed
+        if (this.valueOperationEventSubscription !== undefined) {
+            this.valueOperationEventSubscription.unsubscribe();
+        }
+    }
+
+    nextStep() {
+        this.showNextStepForm = !this.showNextStepForm;
+        console.log('next step');
     }
 
     submitData() {
@@ -67,7 +103,7 @@ export class ResourceInstanceFormComponent implements OnInit {
     }
 
     /**
-     * Get the user's project
+     * Get the user's project(s)
      */
     initializeProjects(): void {
         this.usersProjects = [];
@@ -87,7 +123,11 @@ export class ResourceInstanceFormComponent implements OnInit {
         }
     }
 
-    selectOntology(projectIri: string) {
+    /**
+     * Get all the ontologies of the selected project
+     * @param projectIri
+     */
+    selectOntologies(projectIri: string) {
 
         if (projectIri) {
             this._dspApiConnection.v2.onto.getOntologiesByProjectIri(projectIri).subscribe(
@@ -106,23 +146,18 @@ export class ResourceInstanceFormComponent implements OnInit {
         }
     }
 
+    /**
+     * Get all the resource classes of the selected ontology
+     * @param ontologyIri
+     */
     selectResourceClasses(ontologyIri: string) {
-
-        // reset active resource class definition
-        this.activeResourceClass = undefined;
-
-        // reset specified properties
-        // this.activeProperties = [];
 
         if (ontologyIri) {
             this.selectedOntology = ontologyIri;
 
             this._dspApiConnection.v2.ontologyCache.getOntology(ontologyIri).subscribe(
                 onto => {
-
-                    this.resourceClasses = this._makeResourceClassesArray(onto.get(ontologyIri).classes);
-
-                    // this.properties = this._makeResourceProperties(onto.get(ontologyIri).properties);
+                        this.resourceClasses = this._makeResourceClassesArray(onto.get(ontologyIri).classes);
                 },
                 (error: ApiResponseError) => {
                     console.error(error);
@@ -133,20 +168,34 @@ export class ResourceInstanceFormComponent implements OnInit {
         }
     }
 
-    selectProperties(resourceClassIri: string) {
+    /**
+     * Get the resource label typed in the form in select-resource-class
+     * @param label
+     */
+    getResourceLabel(label: string) {
+        this.resourceLabel = label;
+        // console.log('label', this.resourceLabel);
+    }
 
+    /**
+     * Get all the properties of the selected resource class
+     * @param resourceClassIri
+     */
+    selectProperties(resourceClassIri: string) {
         if (resourceClassIri) {
             // if the client undoes the selection of a resource class, use the active ontology as a fallback
             if (resourceClassIri === null) {
                 this.selectResourceClasses(this.selectedOntology);
             } else {
-
                 this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).subscribe(
                     onto => {
-                        this.activeResourceClass = onto.classes[resourceClassIri]; console.log('activeResourceClass', this.activeResourceClass);
+                        this.selectedResourceClass = onto.classes[resourceClassIri];
+                        // console.log('selectedResourceClass', this.selectedResourceClass);
 
                         this.properties = this._makeResourceProperties(onto.properties);
+                        // console.log('properties', this.properties);
 
+                        this.convertPropObjectAsArray();
                     }
                 );
             }
@@ -196,6 +245,25 @@ export class ResourceInstanceFormComponent implements OnInit {
         });
 
         return resProps;
+    }
+
+    private convertPropObjectAsArray() {
+        // represent the properties as an array to be accessed by the template
+        const propsArray = [];
+
+        for (const propIri in this.properties) {
+            if (this.properties.hasOwnProperty(propIri)) {
+                const prop = this.properties[propIri];
+
+                // only list editable props that are not link value props
+                if (prop.isEditable && !prop.isLinkValueProperty) {
+                    propsArray.push(this.properties[propIri]);
+                }
+            }
+        }
+
+        // sort properties by label (ascending)
+        this.propertiesAsArray = this._sortingService.keySortByAlphabetical(propsArray, 'label');
     }
 
 }

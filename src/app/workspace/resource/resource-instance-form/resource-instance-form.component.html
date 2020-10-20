@@ -1,15 +1,15 @@
-<form *ngIf="selectResourceForm" [formGroup]="selectResourceForm" class="form-content" (ngSubmit)="submitData()">
+<form *ngIf="selectResourceForm && this.showNextStepForm" [formGroup]="selectResourceForm" class="resource-instance-form stepOne form-content" (ngSubmit)="nextStep()">
 
-    <!-- select project -->
+    <!-- select one project -->
     <div *ngIf="usersProjects?.length > 0">
         <app-select-project
             [formGroup]="selectResourceForm"
             [usersProjects]="usersProjects"
-            (projectSelected)="selectOntology($event)">
+            (projectSelected)="selectOntologies($event)">
         </app-select-project>
     </div>
 
-    <!-- select ontology -->
+    <!-- select one ontology -->
     <span>
         <div *ngIf="ontologiesMetadata?.ontologies.length > 0">
             <app-select-ontology
@@ -20,16 +20,19 @@
         </div>
     </span>
 
-    <!-- select resource -->
+    <!-- select one resource -->
     <span *ngIf="resourceClasses?.length > 0">
         <app-select-resource-class
             [formGroup]="selectResourceForm"
             [resourceClassDefinitions]="resourceClasses"
-            (resourceClassSelected)="selectProperties($event)">
+            (resourceClassSelected)="selectProperties($event)"
+            (resourceLabel)="getResourceLabel($event)">
         </app-select-resource-class>
     </span>
 
-    <b>{{errorMessage}}</b>
+    <p *ngIf="errorMessage">
+        <b>{{errorMessage}}</b>
+    </p>
 
     <!-- action buttons: cancel and next -->
     <div class="form-panel large-field">
@@ -39,9 +42,12 @@
             </button>
         </span>
         <span class="fill-remaining-space"></span>
-        <button mat-button type="submit" color="primary" [disabled]="!selectResourceForm.valid || !activeResourceClass">
-            {{ 'appLabels.form.action.next' | translate}}
-        </button>
+        <span>
+            <button mat-raised-button type="submit" color="primary" [disabled]="!selectResourceForm.valid || !selectedResourceClass"
+                (click)="nextStep($event)">
+                Next
+            </button>
+        </span>
     </div>
 
 </form>

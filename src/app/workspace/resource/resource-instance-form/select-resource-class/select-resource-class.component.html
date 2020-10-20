@@ -5,4 +5,8 @@
             <mat-option *ngFor="let res of resourceClassDefinitions" [value]="res.id">{{ res.label }}</mat-option>
         </mat-select>
     </mat-form-field>
+    <mat-form-field class="large-field">
+        <mat-label>Resource class label</mat-label>
+        <input matInput formControlName="label" [value]="label">
+    </mat-form-field>
 </span>

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ResourceClassDefinition } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 
@@ -16,6 +16,10 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy {
 
     @Output() resourceClassSelected = new EventEmitter<string>();
 
+    @Output() resourceLabel = new EventEmitter<string>();
+
+    label: string;
+
     form: FormGroup;
 
     resourceChangesSubscription: Subscription;
@@ -26,16 +30,23 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy {
 
         // build a form for the named graph selection
         this.form = this._fb.group({
-            resources: ['null, Validators.required']
+            resources: ['null', Validators.required],
+            label: ['']
         });
 
-        // emit Iri of the project when selected
+        // emit Iri of the resource when selected
         this.resourceChangesSubscription = this.form.valueChanges.subscribe((data) => {
             this.resourceClassSelected.emit(data.resources);
         });
 
+        // emit label of the resource when selected
+        this.resourceChangesSubscription = this.form.valueChanges.subscribe((data) => {
+            this.resourceLabel.emit(data.label);
+        });
+
         // add form to the parent form group
         this.formGroup.addControl('resources', this.form);
+        this.formGroup.addControl('label', this.form);
     }
 
     ngOnDestroy() {
