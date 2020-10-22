@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { Constants, ReadResource, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
-import { BaseValueDirective } from 'src/app/base-value.component';
+import { BaseValueComponent } from 'src/app/base-value.component';
 
 export interface Properties {
     [index: string]: ResourcePropertyDefinition;
@@ -13,7 +13,7 @@ export interface Properties {
 })
 export class SelectPropertiesComponent {
 
-    @ViewChild('createVal') createValueComponent: BaseValueDirective;
+    @ViewChild('createVal') createValueComponent: BaseValueComponent;
 
     @Input() propertiesAsArray: Array<ResourcePropertyDefinition>;
 

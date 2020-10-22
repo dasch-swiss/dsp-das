@@ -4,7 +4,7 @@ import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from
 import { Subscription } from 'rxjs';
 
 @Directive()
-export abstract class BaseValueDirective {
+export abstract class BaseValueComponent {
 
     shouldShowComment = false;
 
