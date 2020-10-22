@@ -41,6 +41,11 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     // output to close dialog
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
+    /**
+     * update title and subtitle in dialog header (by switching from step 1 (resource class) to step 2 (properties))
+     */
+    @Output() updateParent: EventEmitter<{ title: string, subtitle: string }> = new EventEmitter<{ title: string, subtitle: string }>();
+
     // forms
     selectResourceForm: FormGroup;
     form: FormGroup;
@@ -110,8 +115,23 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Go to the next form page: from project/onto/resource selections to properties form
+     */
     nextStep() {
         this.showNextStepForm = !this.showNextStepForm;
+
+        // use response to go further with properties
+        this.updateParent.emit({ title: this.resourceLabel, subtitle: 'Define the properties for the resource class' });
+    }
+
+    /**
+     * Go to previous step: from properties form back to project/onto/resource selections
+     */
+    prevStep(ev: Event) {
+        ev.preventDefault();
+        this.updateParent.emit({ title: this.resourceLabel, subtitle: 'Create new resource class' });
+        this.showNextStepForm = true;
     }
 
     submitData() {
@@ -224,10 +244,10 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                 this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).subscribe(
                     onto => {
                         this.selectedResourceClass = onto.classes[resourceClassIri];
-                        // console.log('selectedResourceClass', this.selectedResourceClass);
+                        console.log('selectedResourceClass', this.selectedResourceClass);
 
                         this.properties = this._makeResourceProperties(onto.properties);
-                        // console.log('properties', this.properties);
+                        console.log('properties', this.properties);
 
                         this.convertPropObjectAsArray();
                     }
