@@ -7,13 +7,12 @@
                         [class.label-info]="prop.comment"
                         [matTooltip]="prop.comment"
                         matTooltipPosition="above">
-                        {{prop.label}}
+                        {{prop.label}} ({{prop.objectType}})
                     </h3>
                 </div>
                 <div class="property-value">
                     <span [ngSwitch]="prop.objectType">
                         <dsp-text-value-as-string #createVal *ngSwitchCase="'ReadTextValueAsString'" [mode]="mode"></dsp-text-value-as-string>
-                        <dsp-text-value-as-html #createVal *ngSwitchCase="'ReadTextValueAsHtml'" [mode]="mode"></dsp-text-value-as-html>
                         <dsp-text-value-as-xml #createVal *ngSwitchCase="'ReadTextValueAsXml'" [mode]="mode"></dsp-text-value-as-xml>
                         <dsp-int-value #createVal *ngSwitchCase="constants.IntValue" [mode]="mode"></dsp-int-value>
                         <dsp-boolean-value #createVal *ngSwitchCase="constants.BooleanValue" [mode]="mode"></dsp-boolean-value>
@@ -28,6 +27,9 @@
                         <dsp-date-value #createVal *ngSwitchCase="constants.DateValue" [mode]="mode"></dsp-date-value>
                         <dsp-list-value #createVal *ngSwitchCase="constants.ListValue" [mode]="mode"
                                     [propertyDef]="prop"></dsp-list-value>
+                        <span *ngSwitchDefault>
+                            <p>Cannot match any value component.</p>
+                        </span>
                     </span>
                 </div>
             </div>

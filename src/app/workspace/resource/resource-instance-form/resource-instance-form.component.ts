@@ -10,6 +10,7 @@ import {
     OntologiesMetadata,
     PropertyDefinition,
     ReadResource,
+    ResourceClassAndPropertyDefinitions,
     ResourceClassDefinition,
     ResourcePropertyDefinition,
     StoredProject,
@@ -65,6 +66,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     resourceLabel: string;
     properties: Properties;
     propertiesAsArray: Array<ResourcePropertyDefinition>; // properties as an Array structure
+    ontologyInfo: ResourceClassAndPropertyDefinitions;
 
     valueOperationEventSubscription: Subscription;
 
@@ -97,7 +99,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
         // since simple text values and rich text values share the same object type 'TextValue',
         // we need to use the ValueTypeService in order to assign it the correct object type for the ngSwitch in the template
-        if (this.propertiesAsArray) {
+        // TODO: remove when it is fixed in child component
+        /* if (this.propertiesAsArray) {
             for (const prop of this.propertiesAsArray) {
                 if (prop) {
                     if (prop.objectType === 'http://api.knora.org/ontology/knora-api/v2#TextValue') {
@@ -105,7 +108,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                     }
                 }
             }
-        }
+        } */
     }
 
     ngOnDestroy() {
@@ -243,6 +246,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
             } else {
                 this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).subscribe(
                     onto => {
+                        this.ontologyInfo = onto;
                         this.selectedResourceClass = onto.classes[resourceClassIri];
                         console.log('selectedResourceClass', this.selectedResourceClass);
 
@@ -310,7 +314,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                 const prop = this.properties[propIri];
 
                 // only list editable props that are not link value props
-                if (prop.isEditable && !prop.isLinkValueProperty) {
+                if (prop.isEditable && !prop.isLinkProperty) {
                     propsArray.push(this.properties[propIri]);
                 }
             }
