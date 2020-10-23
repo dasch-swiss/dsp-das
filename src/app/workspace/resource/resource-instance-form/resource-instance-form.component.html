@@ -1,3 +1,4 @@
+<!-- Step1: form to select one project, one ontology, one resource with label -->
 <form *ngIf="selectResourceForm && showNextStepForm" [formGroup]="selectResourceForm" class="resource-instance-form stepOne form-content" (ngSubmit)="nextStep()">
 
     <!-- select one project -->
@@ -43,7 +44,7 @@
         </span>
         <span class="fill-remaining-space"></span>
         <span>
-            <button mat-raised-button type="submit" color="primary" [disabled]="!selectResourceForm.valid || !selectedResourceClass"
+            <button mat-raised-button type="button" color="primary" [disabled]="!selectResourceForm.valid || !selectedResourceClass"
                 (click)="nextStep($event)">
                 Next
             </button>
@@ -52,16 +53,18 @@
 
 </form>
 
+<!-- Step2: create property values and submit data -->
 <form *ngIf="form && !showNextStepForm" [formGroup]="form" class="resource-instance-form stepTwo form-content" (ngSubmit)="submitData()">
 
-    <!-- fill in properties -->
+    <!-- create property values -->
     <app-select-properties
         [ontologyInfo]="ontologyInfo"
+        [resourceClass]="selectedResourceClass"
         [propertiesAsArray]="propertiesAsArray"
         class="select-properties">
     </app-select-properties>
 
-    <!-- action buttons: cancel and save -->
+    <!-- action buttons: previous, reset and save -->
     <div class="form-panel large-field">
         <span>
             <button mat-button type="button" (click)="prevStep($event)">
