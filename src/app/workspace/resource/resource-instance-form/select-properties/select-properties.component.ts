@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { Constants, ReadResource, ResourceClassAndPropertyDefinitions, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { CardinalityUtil, ReadResource, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ValueTypeService } from '@dasch-swiss/dsp-ui';
-import { BaseValueComponent } from 'src/app/base-value.component';
+import { SwitchPropertiesComponent } from './switch-properties/switch-properties.component';
 
 export interface Properties {
     [index: string]: ResourcePropertyDefinition;
@@ -14,16 +14,19 @@ export interface Properties {
 })
 export class SelectPropertiesComponent implements OnInit {
 
-    @ViewChild('createVal') createValueComponent: BaseValueComponent;
+    @ViewChild('switchProp') switchPropertiesComponent: SwitchPropertiesComponent;
 
     @Input() propertiesAsArray: Array<ResourcePropertyDefinition>;
 
     @Input() ontologyInfo: ResourceClassAndPropertyDefinitions;
 
+    @Input() resourceClass: ResourceClassDefinition;
+
     parentResource = new ReadResource();
 
-    mode = 'create';
-    constants = Constants;
+    propId: string;
+    addButtonIsVisible: boolean;
+    addValueFormIsVisible: boolean;
 
     constructor(private _valueTypeService: ValueTypeService) { }
 
@@ -39,7 +42,31 @@ export class SelectPropertiesComponent implements OnInit {
             }
         }
 
-        this.parentResource.entityInfo = this.ontologyInfo;
+            this.parentResource.entityInfo = this.ontologyInfo;
+    }
+
+    /**
+     * Given a resource property, check if an add button should be displayed under the property values
+     *
+     * @param prop the resource property
+     */
+    addValueIsAllowed(prop: ResourcePropertyDefinition): any {
+
+        const isAllowed = CardinalityUtil.createValueForPropertyAllowed(
+            prop.id, 0, this.ontologyInfo.classes[this.resourceClass.id]);
+
+        // check if:
+        // cardinality allows for a value to be added
+        return isAllowed;
+    }
+
+    /**
+     * Called from the template when the user clicks on the add button
+     */
+    showAddValueForm(prop: ResourcePropertyDefinition) {
+        console.log('showAddValueForm');
+        this.propId = prop.id;
+        this.addValueFormIsVisible = true;
     }
 
 }
