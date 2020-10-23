@@ -16,7 +16,7 @@ import {
     StoredProject,
     UserResponse
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, Session, SessionService, SortingService, ValueOperationEventService, ValueTypeService } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, Session, SessionService, SortingService, ValueOperationEventService } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
 
@@ -77,8 +77,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
         private _cache: CacheService,
         private _session: SessionService,
         private _fb: FormBuilder,
-        private _sortingService: SortingService,
-        private _valueTypeService: ValueTypeService
+        private _sortingService: SortingService
     ) {
         this.session = this._session.getSession();
         this.username = this.session.user.name;
@@ -97,18 +96,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
         // boolean to show onl the first step of the form (= selectResourceForm)
         this.showNextStepForm = true;
 
-        // since simple text values and rich text values share the same object type 'TextValue',
-        // we need to use the ValueTypeService in order to assign it the correct object type for the ngSwitch in the template
-        // TODO: remove when it is fixed in child component
-        /* if (this.propertiesAsArray) {
-            for (const prop of this.propertiesAsArray) {
-                if (prop) {
-                    if (prop.objectType === 'http://api.knora.org/ontology/knora-api/v2#TextValue') {
-                        prop.objectType = this._valueTypeService.getTextValueClass(prop);
-                    }
-                }
-            }
-        } */
     }
 
     ngOnDestroy() {
@@ -156,7 +143,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
             }
         ); */
 
-        // navigate to the resource viewer
+        // navigate to the resource viewer page
     }
 
     /**
@@ -247,11 +234,12 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                 this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).subscribe(
                     onto => {
                         this.ontologyInfo = onto;
+
                         this.selectedResourceClass = onto.classes[resourceClassIri];
-                        console.log('selectedResourceClass', this.selectedResourceClass);
+                        // console.log('selectedResourceClass', this.selectedResourceClass);
 
                         this.properties = this._makeResourceProperties(onto.properties);
-                        console.log('properties', this.properties);
+                        // console.log('properties', this.properties);
 
                         this.convertPropObjectAsArray();
                     }
