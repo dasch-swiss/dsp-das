@@ -81,11 +81,13 @@ export class ProjectsListComponent implements OnInit {
         this.sysAdmin = this.session.user.sysAdmin;
 
         // sort list by defined key
-        if(localStorage.getItem('sortProjectsBy')) {
+        if (localStorage.getItem('sortProjectsBy')) {
             this.sortBy = localStorage.getItem('sortProjectsBy');
         } else {
             localStorage.setItem('sortProjectsBy', this.sortBy);
         }
+
+        this.sortList(this.sortBy);
     }
 
     /**
