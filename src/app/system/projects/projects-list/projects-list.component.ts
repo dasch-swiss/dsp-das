@@ -87,7 +87,9 @@ export class ProjectsListComponent implements OnInit {
             localStorage.setItem('sortProjectsBy', this.sortBy);
         }
 
-        this.sortList(this.sortBy);
+        if (this.list) {
+            this.sortList(this.sortBy);
+        }
     }
 
     /**
