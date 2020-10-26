@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
     ApiResponseData,
     ApiResponseError,
@@ -75,6 +76,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
+        private _router: Router,
         private _session: SessionService,
         private _fb: FormBuilder,
         private _sortingService: SortingService
@@ -137,13 +139,17 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
         // createResource.properties = ;
 
-        /* this._dspApiConnection.v2.res.createResource(createResource).subscribe(
+        this._dspApiConnection.v2.res.createResource(createResource).subscribe(
             (res: ReadResource) => {
                 this.resource = res;
+                console.log('create resource', this.resource);
             }
-        ); */
+        );
 
         // navigate to the resource viewer page
+        /* this._router.navigateByUrl('/resource', { skipLocationChange: true }).then(() =>
+            this._router.navigate(['/resource/' + this.resource.id])
+        ); */
     }
 
     /**
