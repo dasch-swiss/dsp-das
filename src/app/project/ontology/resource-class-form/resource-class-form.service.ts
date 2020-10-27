@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { PropertyType } from '../default-data/default-properties';
 
 // property data structure
 export class Property {
     name: string;
     label: string;
-    type: any;
+    type: PropertyType;
     multiple: boolean;
     required: boolean;
     guiAttr: string;
@@ -148,7 +149,7 @@ export class ResourceClassFormService {
      * @returns string
      */
     setUniqueName(ontologyIri: string): string {
-        const name: string = this.getOntologyName(ontologyIri).substring(0, 3) + Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8);
+        const name: string = this.getOntologyName(ontologyIri).substring(0, 3) + Math.random().toString(36).substring(2, 4) + Math.random().toString(36).substring(2, 4);
 
         return name;
     }

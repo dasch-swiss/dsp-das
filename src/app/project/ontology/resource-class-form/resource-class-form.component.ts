@@ -11,6 +11,7 @@ import {
     ListsResponse,
     ReadOntology,
     ResourceClassDefinitionWithAllLanguages,
+    ResourcePropertyDefinitionWithAllLanguages,
     StringLiteral,
     UpdateOntology
 } from '@dasch-swiss/dsp-js';
@@ -18,7 +19,7 @@ import { StringLiteralV2 } from '@dasch-swiss/dsp-js/src/models/v2/string-litera
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { ResourceClassFormService } from './resource-class-form.service';
+import { Property, ResourceClassFormService } from './resource-class-form.service';
 
 // nested form components; solution from:
 // https://medium.com/@joshblf/dynamic-nested-reactive-forms-in-angular-654c1d4a769a
@@ -247,7 +248,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         moveItemInArray(this.resourceClassForm.value.properties, event.previousIndex, event.currentIndex);
     }
     /**
-     * set stringLiterals for label or comment from kui-string-literal-input
+     * set stringLiterals for label or comment from dsp-string-literal-input
      * @param  {StringLiteral[]} data
      * @param  {string} type
      */
@@ -305,13 +306,15 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     submitData() {
         this.loading = true;
 
+        let lastModificationDate = this.ontology.lastModificationDate;
+
         // set resource class name / id
         const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
 
         const onto = new UpdateOntology<CreateResourceClass>();
 
         onto.id = this.ontology.id;
-        onto.lastModificationDate = this.ontology.lastModificationDate;
+        onto.lastModificationDate = lastModificationDate;
 
         const newResClass = new CreateResourceClass();
 
@@ -363,21 +366,83 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         this._dspApiConnection.v2.onto.createResourceClass(onto).subscribe(
             (classResponse: ResourceClassDefinitionWithAllLanguages) => {
 
-                console.log(classResponse);
-                console.log('this.properties', this.properties);
+
+                console.log('classResponse', classResponse);
 
 
                 // post prop data; one by one
                 const props = this.resourceClassForm.value.properties;
-                console.log('props', props);
-                props.forEach(prop => {
+
+                props.map(async (prop: Property) => {
+
+                // });
+                // for(let i = 0; i < props.length; i++){
+                // // for (let prop: Property of props) {
+                //     const prop = props[i];
+
+                    // reset lastModificationDate
+                    lastModificationDate = undefined;
+
+                    console.log('map prop', prop);
+
                     // set resource property name / id
-                    // const uniquePropName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
+                    const uniquePropName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
 
-                    // const onto = new UpdateOntology<CreateResourceProperty>();
+                    // get last modification date
+                    // TODO: could be replaced as soon task DSP-915 is implemented and released in DSP-JS-lib
+                    this._dspApiConnection.v2.onto.getOntology(this.ontology.id).subscribe(
+                        (ontologyResponse: ReadOntology) => {
 
-                    // onto.id = this.ontology.id;
-                    // onto.lastModificationDate = this.ontology.lastModificationDate;
+                            lastModificationDate = ontologyResponse.lastModificationDate;
+
+                            const onto = new UpdateOntology<CreateResourceProperty>();
+
+                            onto.id = this.ontology.id;
+                            onto.lastModificationDate = lastModificationDate;
+
+                            // prepare payload for property
+                            const newResProp = new CreateResourceProperty();
+                            newResProp.name = uniquePropName;
+                            // TODO: update prop.label and use StringLiteralInput in property-form
+                            newResProp.label = [{"value": prop.label}];
+                            if (prop.guiAttr) {
+                                newResProp.guiAttributes = [prop.guiAttr];
+                            }
+                            newResProp.guiElement = prop.type.gui_ele;
+                            newResProp.subPropertyOf = [prop.type.subPropOf];
+                            if (prop.type.subPropOf === Constants.HasLinkTo) {
+                                newResProp.objectType = prop.guiAttr;
+                                newResProp.subjectType = classResponse.id;
+                            } else {
+                                newResProp.objectType = prop.type.objectType;
+                            }
+
+
+                            // newResProp.guiElement = "http://api.knora.org/ontology/salsah-gui/v2#SimpleText";
+                            // newResProp.guiAttributes = ["size=80", "maxlength=100"];
+
+                            onto.entity = newResProp;
+
+                            console.log('submit prop with lmd', lastModificationDate);
+
+                            if (lastModificationDate) {
+                                this._dspApiConnection.v2.onto.createResourceProperty(onto).subscribe(
+                                    (propResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+
+                                        console.log('new resource property created', propResponse);
+                                    }
+                                );
+                            }
+
+
+                        },
+                        (error: any) => {
+                            console.error(error);
+                        }
+                    );
+
+
+
 
                     // const newResProp = new CreateResourceProperty();
 

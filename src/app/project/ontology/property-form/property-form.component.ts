@@ -4,12 +4,12 @@ import { MatOption } from '@angular/material/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatSelectChange } from '@angular/material/select';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ClassDefinition, KnoraApiConnection, ListNodeInfo, ReadOntology, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { ClassDefinition, Constants, KnoraApiConnection, ListNodeInfo, PropertyDefinition, ReadOntology, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { DefaultProperties, Property, PropertyValue } from '../default-data/default-properties';
+import { DefaultProperties, Property, PropertyType } from '../default-data/default-properties';
 
 
 // TODO: should be removed and replaced by AutocompleteItem from dsp-ui
@@ -66,6 +66,8 @@ export class PropertyFormComponent implements OnInit {
 
     selectTypeLabel: string; // = this.propertyTypes[0].group + ': ' + this.propertyTypes[0].elements[0].label;
     selectedGroup: string;
+
+    Constants = Constants;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -162,9 +164,9 @@ export class PropertyFormComponent implements OnInit {
         // depending on the selected property type,
         // we have to define gui element attributes
         // e.g. iri of list or connected reresource class
-        switch (event.value.subPropOf) {
-            case 'knora-api:ListValue':
-            case 'knora-api:LinkValue':
+        switch (event.value.objectType) {
+            case Constants.ListValue:
+            case Constants.Resource:
                 this.showGuiAttr = true;
                 this.propertyForm.controls['guiAttr'].setValidators([
                     Validators.required
@@ -191,8 +193,9 @@ export class PropertyFormComponent implements OnInit {
 
         if (this.ontology.properties[option.value.iri] instanceof ResourcePropertyDefinition) {
             const tempProp: any = this.ontology.properties[option.value.iri];
+            console.log(tempProp);
 
-            let obj: PropertyValue;
+            let obj: PropertyType;
             // find gui ele from list of default property-types to set type value
             for (let group of this.propertyTypes) {
                 obj = group.elements.find(i => i.gui_ele === 'salsah-gui:' + tempProp.guiElement.split('#')[1]);
@@ -203,6 +206,7 @@ export class PropertyFormComponent implements OnInit {
                 }
             }
 
+            console.log(tempProp.guiElement);
             switch (tempProp.guiElement) {
                 // prop type is a list
                 case 'http://api.knora.org/ontology/salsah-gui/v2#List':

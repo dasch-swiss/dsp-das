@@ -51,9 +51,8 @@
 
     <!-- TODO: additional mat-form-field for settings depending on the type selection -->
     <div class="small-field" *ngIf="showGuiAttr">
-        <div [ngSwitch]="propertyForm.controls['type'].value.subPropOf">
-
-            <div *ngSwitchCase="'knora-api:ListValue'">
+        <div [ngSwitch]="propertyForm.controls['type'].value.objectType">
+            <div *ngSwitchCase="Constants.ListValue">
                 <mat-form-field>
                     <mat-label>Select list</mat-label>
                     <mat-select formControlName="guiAttr">
@@ -64,7 +63,7 @@
                 </mat-form-field>
             </div>
 
-            <div *ngSwitchCase="'knora-api:LinkValue'">
+            <div *ngSwitchCase="Constants.Resource">
                 <mat-form-field>
                     <mat-label>Select reresource class</mat-label>
                     <mat-select formControlName="guiAttr">

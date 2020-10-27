@@ -186,7 +186,7 @@ export class OntologyComponent implements OnInit {
 
                 // in case project has only one ontology: open this ontology
                 // because there will be no form to select ontlogy
-                if(response.ontologies.length === 1) {
+                if (response.ontologies.length === 1) {
                     // open this ontology
                     this.openOntologyRoute(this.ontologies[0].id);
                     this.getOntology(this.ontologies[0].id);
@@ -326,13 +326,13 @@ export class OntologyComponent implements OnInit {
     }
 
     /**
-     * Delete either ontology or sourcetype
-     *
-     * @param  {string} id
-     * @param  {string} mode Can be 'Ontology' or 'ResourceClass'
-     * @param  {string} title
-     */
-    delete(id: string, mode: string, title: string) {
+    * Delete either ontology or sourcetype
+    *
+    * @param id
+    * @param mode Can be 'Ontology' or 'ResourceClass'
+    * @param title
+    */
+    delete(id: string, mode: 'Ontology' | 'ResourceClass', title: string) {
         const dialogConfig: MatDialogConfig = {
             width: '560px',
             position: {
@@ -393,7 +393,7 @@ export class OntologyComponent implements OnInit {
                                 this.loading = false;
                             }
                         );
-                    break;
+                        break;
                 }
 
             }
