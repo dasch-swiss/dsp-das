@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Constants, ReadResource, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { BaseValueComponent } from 'src/app/base-value.component';
 
@@ -15,18 +16,22 @@ export class SwitchPropertiesComponent implements OnInit, AfterViewInit {
 
     @Input() parentResource: ReadResource;
 
+    @Input() parentForm: FormGroup;
+
+    @Input() formName: string;
+
     mode = 'create';
     constants = Constants;
 
     constructor() { }
 
     ngOnInit(): void {
-        console.log('prop', this.property);
+        // console.log('prop', this.property);
     }
 
     ngAfterViewInit() {
-        console.log('createValueComponent', this.createValueComponent);
-        this.saveNewValue();
+        // console.log('createValueComponent', this.createValueComponent);
+        // this.saveNewValue();
     }
 
     saveNewValue() {

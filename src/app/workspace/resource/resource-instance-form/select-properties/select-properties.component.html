@@ -14,7 +14,9 @@
                     <app-switch-properties
                         #switchProp
                         [property]="prop"
-                        [parentResource]="parentResource">
+                        [parentResource]="parentResource"
+                        [parentForm]="parentForm"
+                        [formName]="prop.label">
                     </app-switch-properties>
                     <!-- Add button -->
                     <!-- <div *ngIf="addValueIsAllowed(prop)">

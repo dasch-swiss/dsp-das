@@ -54,13 +54,14 @@
 </form>
 
 <!-- Step2: create property values and submit data -->
-<form *ngIf="form && !showNextStepForm" [formGroup]="form" class="resource-instance-form stepTwo form-content" (ngSubmit)="submitData()">
+<form *ngIf="propertiesParentForm && !showNextStepForm" [formGroup]="propertiesParentForm" class="resource-instance-form stepTwo form-content" (ngSubmit)="submitData()">
 
     <!-- create property values -->
     <app-select-properties
         [ontologyInfo]="ontologyInfo"
         [resourceClass]="selectedResourceClass"
         [propertiesAsArray]="propertiesAsArray"
+        [parentForm]="propertiesParentForm"
         class="select-properties">
     </app-select-properties>
 
@@ -76,7 +77,7 @@
         </button>
         <span class="fill-remaining-space"></span>
         <span>
-            <button mat-raised-button type="submit" color="primary" [disabled]="!form.valid">
+            <button mat-raised-button type="submit" color="primary" [disabled]="!propertiesParentForm.valid">
                 {{ 'appLabels.form.action.submit' | translate}}
             </button>
         </span>

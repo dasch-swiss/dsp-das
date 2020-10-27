@@ -50,7 +50,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     // forms
     selectResourceForm: FormGroup;
-    form: FormGroup;
+    propertiesParentForm: FormGroup;
 
     session: Session;
     username: string;
@@ -90,7 +90,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
         // parent form is empty, it gets passed to the child components
         this.selectResourceForm = this._fb.group({});
-        this.form = this._fb.group({});
+        this.propertiesParentForm = this._fb.group({});
 
         // initialize projects to be used for the project selection in the creation form
         this.initializeProjects();

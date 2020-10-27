@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { CardinalityUtil, ReadResource, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ValueTypeService } from '@dasch-swiss/dsp-ui';
 import { SwitchPropertiesComponent } from './switch-properties/switch-properties.component';
@@ -22,11 +23,15 @@ export class SelectPropertiesComponent implements OnInit {
 
     @Input() resourceClass: ResourceClassDefinition;
 
+    @Input() parentForm: FormGroup;
+
     parentResource = new ReadResource();
 
     propId: string;
     addButtonIsVisible: boolean;
     addValueFormIsVisible: boolean;
+
+    index = 0;
 
     constructor(private _valueTypeService: ValueTypeService) { }
 
@@ -67,6 +72,19 @@ export class SelectPropertiesComponent implements OnInit {
         console.log('showAddValueForm');
         this.propId = prop.id;
         this.addValueFormIsVisible = true;
+    }
+
+    /**
+     * Given a resource property, returns the label if one exists plus an index
+     * If the property does not have a label, it returns 'Untitled FormGroup' plus an index
+     *
+     * Used to create the FormGroup name to add to the parent FormGroup because each name needs to be unique
+     *
+     * @param prop the resource property
+     */
+    getFormControlName(prop: ResourcePropertyDefinition): string {
+        this.index += 1;
+        return prop.label ? prop.label + this.index : 'Untitled FormGroup' + this.index;
     }
 
 }
