@@ -6,6 +6,7 @@ import {
     ApiResponseError,
     Constants,
     CreateResourceClass,
+    CreateResourceProperty,
     KnoraApiConnection,
     ListsResponse,
     ReadOntology,
@@ -363,6 +364,34 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             (classResponse: ResourceClassDefinitionWithAllLanguages) => {
 
                 console.log(classResponse);
+                console.log('this.properties', this.properties);
+
+
+                // post prop data; one by one
+                const props = this.resourceClassForm.value.properties;
+                console.log('props', props);
+                props.forEach(prop => {
+                    // set resource property name / id
+                    // const uniquePropName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
+
+                    // const onto = new UpdateOntology<CreateResourceProperty>();
+
+                    // onto.id = this.ontology.id;
+                    // onto.lastModificationDate = this.ontology.lastModificationDate;
+
+                    // const newResProp = new CreateResourceProperty();
+
+                    // newResProp.name = uniquePropName
+                    // newResProp.label = prop;
+                    // newResProp.comment = this.resourceClassComments;
+                    // newResProp. = [this.subClassOf];
+
+                    // onto.entity = newResClass;
+                });
+
+                // this._dspApiConnection.v2.onto.createResourceProperty()
+
+
 
                 // close the dialog box
                 this.loading = false;
@@ -511,7 +540,5 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     //     );
     // }
 
-    // TODO: submit data
-    // we have to implement the following jsonLD objects and paths to post data
 
 }
