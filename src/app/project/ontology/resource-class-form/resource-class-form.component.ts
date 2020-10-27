@@ -280,6 +280,10 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         // use response to go further with properties
         this.updateParent.emit({ title: this.resourceClassLabels[0].value, subtitle: 'Define the metadata for resource class' });
 
+        const testStr = this.resourceClassLabels[0].value;
+
+        console.log(testStr.normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').toLowerCase());
+
         // load one first property line
         if (!this.resourceClassForm.value.properties.length) {
             this.addProperty();
@@ -386,7 +390,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                     console.log('map prop', prop);
 
                     // set resource property name / id
-                    const uniquePropName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
+                    const uniquePropName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, prop.label);
 
                     // get last modification date
                     // TODO: could be replaced as soon task DSP-915 is implemented and released in DSP-JS-lib

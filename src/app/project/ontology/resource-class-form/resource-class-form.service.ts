@@ -143,15 +143,22 @@ export class ResourceClassFormService {
 
     /**
      * Create a unique name (id) for resource classes or properties;
-     * The name starts with the three first character of ontology iri to avoid a start with a number (which is not allowed)
      *
-     * @param  {string} ontologyIri
-     * @returns string
+     * @param ontologyIri
+     * @param [label]
+     * @returns unique name
      */
-    setUniqueName(ontologyIri: string): string {
-        const name: string = this.getOntologyName(ontologyIri).substring(0, 3) + Math.random().toString(36).substring(2, 4) + Math.random().toString(36).substring(2, 4);
+    setUniqueName(ontologyIri: string, label?: string): string {
 
-        return name;
+        if (label) {
+            // build name from label
+            // normalize and replace spaces and special chars
+            return label.normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/[\u00a0-\u024f]/g, "").replace(/\s+/g, '-').toLowerCase();
+        } else {
+            // build randomized name
+            // The name starts with the three first character of ontology iri to avoid a start with a number followed by randomized string
+            return this.getOntologyName(ontologyIri).substring(0, 3) + Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5);
+        }
     }
 
     /**
