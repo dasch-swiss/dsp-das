@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { CardinalityUtil, ReadResource, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ValueTypeService } from '@dasch-swiss/dsp-ui';
@@ -15,7 +15,7 @@ export interface Properties {
 })
 export class SelectPropertiesComponent implements OnInit {
 
-    @ViewChild('switchProp') switchPropertiesComponent: SwitchPropertiesComponent;
+    @ViewChildren('switchProp') switchPropertiesComponent: QueryList<SwitchPropertiesComponent>;
 
     @Input() propertiesAsArray: Array<ResourcePropertyDefinition>;
 
@@ -27,11 +27,11 @@ export class SelectPropertiesComponent implements OnInit {
 
     parentResource = new ReadResource();
 
+    index = 0;
+
     propId: string;
     addButtonIsVisible: boolean;
     addValueFormIsVisible: boolean;
-
-    index = 0;
 
     constructor(private _valueTypeService: ValueTypeService) { }
 
@@ -47,7 +47,7 @@ export class SelectPropertiesComponent implements OnInit {
             }
         }
 
-            this.parentResource.entityInfo = this.ontologyInfo;
+        this.parentResource.entityInfo = this.ontologyInfo;
     }
 
     /**
@@ -72,19 +72,6 @@ export class SelectPropertiesComponent implements OnInit {
         console.log('showAddValueForm');
         this.propId = prop.id;
         this.addValueFormIsVisible = true;
-    }
-
-    /**
-     * Given a resource property, returns the label if one exists plus an index
-     * If the property does not have a label, it returns 'Untitled FormGroup' plus an index
-     *
-     * Used to create the FormGroup name to add to the parent FormGroup because each name needs to be unique
-     *
-     * @param prop the resource property
-     */
-    getFormControlName(prop: ResourcePropertyDefinition): string {
-        this.index += 1;
-        return prop.label ? prop.label + this.index : 'Untitled FormGroup' + this.index;
     }
 
 }

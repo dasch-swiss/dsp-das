@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -7,6 +7,7 @@ import {
     ClassDefinition,
     Constants,
     CreateResource,
+    CreateValue,
     KnoraApiConnection,
     OntologiesMetadata,
     PropertyDefinition,
@@ -20,6 +21,7 @@ import {
 import { DspApiConnectionToken, Session, SessionService, SortingService, ValueOperationEventService } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
+import { SelectPropertiesComponent } from './select-properties/select-properties.component';
 
 // https://dev.to/krumpet/generic-type-guard-in-typescript-258l
 type Constructor<T> = { new(...args: any[]): T };
@@ -48,6 +50,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
      */
     @Output() updateParent: EventEmitter<{ title: string, subtitle: string }> = new EventEmitter<{ title: string, subtitle: string }>();
 
+    @ViewChild('selectProps') selectPropertiesComponent: SelectPropertiesComponent;
+
     // forms
     selectResourceForm: FormGroup;
     propertiesParentForm: FormGroup;
@@ -72,6 +76,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     valueOperationEventSubscription: Subscription;
 
     errorMessage: string;
+
+    propertiesObj = {};
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -137,7 +143,21 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
         createResource.attachedToProject = this.selectedProject; console.log('project', this.selectedProject);
 
-        // createResource.properties = ;
+        console.log(this.propertiesParentForm);
+
+        this.selectPropertiesComponent.switchPropertiesComponent.forEach((child) => {
+            console.log('child: ', child);
+            const createVal = child.createValueComponent.getNewValue();
+            const iri = child.property.id;
+
+            if (createVal instanceof CreateValue) {
+                this.propertiesObj[iri] = [createVal];
+            }
+
+        });
+
+        console.log('propObj: ', this.propertiesObj);
+        createResource.properties = this.propertiesObj;
 
         this._dspApiConnection.v2.res.createResource(createResource).subscribe(
             (res: ReadResource) => {
