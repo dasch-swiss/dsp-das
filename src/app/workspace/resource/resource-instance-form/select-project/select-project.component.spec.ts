@@ -31,8 +31,6 @@ class TestHostComponent implements OnInit {
     usersProjects: StoredProject[] = [];
     selectedProjIri: string;
 
-    valueFormControl: FormControl;
-
     constructor(@Inject(FormBuilder) private _fb: FormBuilder) {
     }
 
@@ -83,7 +81,7 @@ describe('SelectProjectComponent', () => {
         expect(testHostComponent.form.contains('projects')).toBe(true);
     });
 
-    it('should initialise the ontologies\' metadata', () => {
+    it('should initialise the projects', () => {
 
         expect(testHostComponent.selectProject.usersProjects).toBeDefined();
         expect(testHostComponent.selectProject.usersProjects.length).toEqual(8);
