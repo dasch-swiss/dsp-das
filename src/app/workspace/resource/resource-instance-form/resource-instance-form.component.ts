@@ -18,7 +18,7 @@ import {
     StoredProject,
     UserResponse
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, Session, SessionService, SortingService, ValueOperationEventService } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, Session, SessionService, SortingService } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { SelectPropertiesComponent } from './select-properties/select-properties.component';
@@ -37,8 +37,7 @@ export interface Properties {
 @Component({
     selector: 'app-resource-instance-form',
     templateUrl: './resource-instance-form.component.html',
-    styleUrls: ['./resource-instance-form.component.scss'],
-    providers: [ValueOperationEventService]
+    styleUrls: ['./resource-instance-form.component.scss']
 })
 export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
@@ -146,7 +145,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
         console.log(this.propertiesParentForm);
 
         this.selectPropertiesComponent.switchPropertiesComponent.forEach((child) => {
-            console.log('child: ', child);
             const createVal = child.createValueComponent.getNewValue();
             const iri = child.property.id;
 
@@ -163,13 +161,14 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
             (res: ReadResource) => {
                 this.resource = res;
                 console.log('create resource', this.resource);
+
+                // navigate to the resource viewer page
+                this._router.navigateByUrl('/resource', { skipLocationChange: true }).then(() =>
+                    this._router.navigate(['/resource/' + this.resource.id])
+                );
             }
         );
 
-        // navigate to the resource viewer page
-        /* this._router.navigateByUrl('/resource', { skipLocationChange: true }).then(() =>
-            this._router.navigate(['/resource/' + this.resource.id])
-        ); */
     }
 
     /**
@@ -191,6 +190,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                 }
             );
         }
+
     }
 
     /**
