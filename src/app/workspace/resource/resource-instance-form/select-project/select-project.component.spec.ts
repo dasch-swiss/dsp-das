@@ -46,7 +46,7 @@ class TestHostComponent implements OnInit {
     }
 }
 
-fdescribe('SelectProjectComponent', () => {
+describe('SelectProjectComponent', () => {
     let testHostComponent: TestHostComponent;
     let testHostFixture: ComponentFixture<TestHostComponent>;
     let loader: HarnessLoader;
