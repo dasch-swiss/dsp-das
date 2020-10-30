@@ -18,6 +18,7 @@ import {
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { OntologyVisualizerComponent } from './ontology-visualizer.component';
+import { VisualizerComponent } from './visualizer/visualizer.component';
 
 describe('OntologyVisualizerComponent', () => {
     let testHostComponent: OntologyVisualizerComponent;
@@ -66,6 +67,7 @@ describe('OntologyVisualizerComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 OntologyVisualizerComponent,
+                VisualizerComponent,
                 ErrorComponent
             ],
             imports: [
