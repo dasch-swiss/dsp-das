@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { SearchParams, AdvancedSearchParamsService, AdvancedSearchParams } from '@dasch-swiss/dsp-ui';
+import { SearchParams } from '@dasch-swiss/dsp-ui';
 
 
 @Component({

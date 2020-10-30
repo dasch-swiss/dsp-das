@@ -155,14 +155,6 @@ const routes: Routes = [
         path: 'search',
         children: [
             {
-                path: 'advanced',
-                component: AdvancedSearchComponent
-            },
-            {
-                path: 'expert',
-                component: ExpertSearchComponent
-            },
-            {
                 path: ':mode/:q/:project',
                 component: ResultsComponent
             },
