@@ -16,6 +16,9 @@ $grid-breakpoints: (
   .fill-remaining-space.desktop-only {
     display: flex;
   }
+  .content.large.middle.desktop-only {
+    display: block;
+  }
   .mobile-only,
   .nav-link-mobile {
     display: none;
