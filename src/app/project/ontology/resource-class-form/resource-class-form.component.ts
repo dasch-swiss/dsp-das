@@ -273,32 +273,24 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
      */
     nextStep(ev: Event) {
         ev.preventDefault();
-        // this.loading = true;
         // go to next step: properties form
         this.showResourceClassForm = false;
 
         // use response to go further with properties
         this.updateParent.emit({ title: this.resourceClassLabels[0].value, subtitle: 'Define the metadata for resource class' });
 
-        const testStr = this.resourceClassLabels[0].value;
-
-        console.log(testStr.normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').toLowerCase());
-
         // load one first property line
         if (!this.resourceClassForm.value.properties.length) {
             this.addProperty();
         }
-        // this.loading = false;
     }
     /**
      * Go to previous step: from properties form back to resource-class form
      */
     prevStep(ev: Event) {
         ev.preventDefault();
-        // this.loading = true;
         this.updateParent.emit({ title: this.resourceClassTitle, subtitle: 'Customize resource class' });
         this.showResourceClassForm = true;
-        // this.loading = false;
     }
 
     //
@@ -310,15 +302,13 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     submitData() {
         this.loading = true;
 
-        let lastModificationDate = this.ontology.lastModificationDate;
-
         // set resource class name / id
         const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
 
         const onto = new UpdateOntology<CreateResourceClass>();
 
         onto.id = this.ontology.id;
-        onto.lastModificationDate = lastModificationDate;
+        onto.lastModificationDate = this.ontology.lastModificationDate;
 
         const newResClass = new CreateResourceClass();
 
@@ -368,103 +358,50 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         // console.log('submit resource class data:', resourceClassData);
         // let i: number = 0;
         this._dspApiConnection.v2.onto.createResourceClass(onto).subscribe(
-            (classResponse: ResourceClassDefinitionWithAllLanguages) => {
+            async (classResponse: ResourceClassDefinitionWithAllLanguages) => {
 
 
-                console.log('classResponse', classResponse);
+                // console.log('classResponse', classResponse);
 
+                // reset lastModificationDate
+                // this.lastModificationDate = undefined;
 
                 // post prop data; one by one
-                const props = this.resourceClassForm.value.properties;
+                // const props = this.resourceClassForm.value.properties;
 
-                props.map(async (prop: Property) => {
+                this.processArray(this.resourceClassForm.value.properties, classResponse.id);
+
+                // this.getLastModificationDate(this.ontology.id);
+
+                // await this.createProp(props, classResponse.id);
+
+
+
+                // props.map(async (prop: Property) => {
 
                 // });
                 // for(let i = 0; i < props.length; i++){
                 // // for (let prop: Property of props) {
-                //     const prop = props[i];
-
-                    // reset lastModificationDate
-                    lastModificationDate = undefined;
-
-                    console.log('map prop', prop);
-
-                    // set resource property name / id
-                    const uniquePropName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, prop.label);
-
-                    // get last modification date
-                    // TODO: could be replaced as soon task DSP-915 is implemented and released in DSP-JS-lib
-                    this._dspApiConnection.v2.onto.getOntology(this.ontology.id).subscribe(
-                        (ontologyResponse: ReadOntology) => {
-
-                            lastModificationDate = ontologyResponse.lastModificationDate;
-
-                            const onto = new UpdateOntology<CreateResourceProperty>();
-
-                            onto.id = this.ontology.id;
-                            onto.lastModificationDate = lastModificationDate;
-
-                            // prepare payload for property
-                            const newResProp = new CreateResourceProperty();
-                            newResProp.name = uniquePropName;
-                            // TODO: update prop.label and use StringLiteralInput in property-form
-                            newResProp.label = [{"value": prop.label}];
-                            if (prop.guiAttr) {
-                                newResProp.guiAttributes = [prop.guiAttr];
-                            }
-                            newResProp.guiElement = prop.type.gui_ele;
-                            newResProp.subPropertyOf = [prop.type.subPropOf];
-                            if (prop.type.subPropOf === Constants.HasLinkTo) {
-                                newResProp.objectType = prop.guiAttr;
-                                newResProp.subjectType = classResponse.id;
-                            } else {
-                                newResProp.objectType = prop.type.objectType;
-                            }
-
-
-                            // newResProp.guiElement = "http://api.knora.org/ontology/salsah-gui/v2#SimpleText";
-                            // newResProp.guiAttributes = ["size=80", "maxlength=100"];
-
-                            onto.entity = newResProp;
-
-                            console.log('submit prop with lmd', lastModificationDate);
-
-                            if (lastModificationDate) {
-                                this._dspApiConnection.v2.onto.createResourceProperty(onto).subscribe(
-                                    (propResponse: ResourcePropertyDefinitionWithAllLanguages) => {
-
-                                        console.log('new resource property created', propResponse);
-                                    }
-                                );
-                            }
-
-
-                        },
-                        (error: any) => {
-                            console.error(error);
-                        }
-                    );
 
 
 
 
-                    // const newResProp = new CreateResourceProperty();
 
-                    // newResProp.name = uniquePropName
-                    // newResProp.label = prop;
-                    // newResProp.comment = this.resourceClassComments;
-                    // newResProp. = [this.subClassOf];
+                // const newResProp = new CreateResourceProperty();
 
-                    // onto.entity = newResClass;
-                });
+                // newResProp.name = uniquePropName
+                // newResProp.label = prop;
+                // newResProp.comment = this.resourceClassComments;
+                // newResProp. = [this.subClassOf];
+
+                // onto.entity = newResClass;
+                // };
 
                 // this._dspApiConnection.v2.onto.createResourceProperty()
 
 
 
-                // close the dialog box
-                this.loading = false;
-                this.closeDialog.emit();
+
 
                 // prepare last modification date and properties data
                 // lastModificationDate = classResponse.
@@ -480,82 +417,82 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
                 //         console.log('prop from form', prop);
 
-                        /* TODO: select and reuse existing ObjectProperty doesn't work yet; s. https://github.com/dasch-swiss/knora-app/pull/229#issuecomment-598276151
-                         if (prop.name) {
-                            // const propertyId: string = this._resourceClassFormService.getOntologyName(this.ontology.id) + ':' + prop.name;
-                            // property exists already; update class with prop cardinality and gui-order only
-                            // update class with cardinality and gui-order
-                            this._ontologyService.setPropertyRestriction(
-                                this.ontology.id,
-                                lastModificationDate,
-                                classResponse['@graph'][0]['@id'],
-                                this._resourceClassFormService.getOntologyName(this.ontology.id) + ':' + prop.name,
-                                this.setCardinality(prop.multiple, prop.requirerd),
-                                c
-                            ).subscribe(
-                                (cardinalityResponse: any) => {
-                                    lastModificationDate = cardinalityResponse['knora-api:lastModificationDate']['@value'];
+                /* TODO: select and reuse existing ObjectProperty doesn't work yet; s. https://github.com/dasch-swiss/knora-app/pull/229#issuecomment-598276151
+                 if (prop.name) {
+                    // const propertyId: string = this._resourceClassFormService.getOntologyName(this.ontology.id) + ':' + prop.name;
+                    // property exists already; update class with prop cardinality and gui-order only
+                    // update class with cardinality and gui-order
+                    this._ontologyService.setPropertyRestriction(
+                        this.ontology.id,
+                        lastModificationDate,
+                        classResponse['@graph'][0]['@id'],
+                        this._resourceClassFormService.getOntologyName(this.ontology.id) + ':' + prop.name,
+                        this.setCardinality(prop.multiple, prop.requirerd),
+                        c
+                    ).subscribe(
+                        (cardinalityResponse: any) => {
+                            lastModificationDate = cardinalityResponse['knora-api:lastModificationDate']['@value'];
 
-                                    // close the dialog box
-                                    this.loading = false;
-                                    this.closeDialog.emit();
-                                },
-                                (error: ApiServiceError) => {
-                                    console.error('failed on setPropertyRestriction', error);
-                                }
-                            );
-                        } else {
-                        */
-                        // create new property
-                        // property data
-                        // const propData: NewProperty = {
-                        //     name: this._resourceClassFormService.setUniqueName(this.ontology.id),
-                        //     label: prop.label,
-                        //     comment: prop.label,
-                        //     subPropOf: prop.type.subPropOf,
-                        //     guiElement: prop.type.gui_ele,
-                        //     guiOrder: c,
-                        //     cardinality: this.setCardinality(prop.multiple, prop.requirerd),
-                        //     guiAttributes: []
-                        // };
+                            // close the dialog box
+                            this.loading = false;
+                            this.closeDialog.emit();
+                        },
+                        (error: ApiServiceError) => {
+                            console.error('failed on setPropertyRestriction', error);
+                        }
+                    );
+                } else {
+                */
+                // create new property
+                // property data
+                // const propData: NewProperty = {
+                //     name: this._resourceClassFormService.setUniqueName(this.ontology.id),
+                //     label: prop.label,
+                //     comment: prop.label,
+                //     subPropOf: prop.type.subPropOf,
+                //     guiElement: prop.type.gui_ele,
+                //     guiOrder: c,
+                //     cardinality: this.setCardinality(prop.multiple, prop.requirerd),
+                //     guiAttributes: []
+                // };
 
-                        // console.log('newProperty data', propData);
+                // console.log('newProperty data', propData);
 
-                        // // submit property data
-                        // this._ontologyService.addProperty(this.ontology.id, lastModificationDate, classResponse['@graph'][0]['@id'], propData).subscribe(
-                        //     (propResponse: ApiServiceResult) => {
-                        //         lastModificationDate = propResponse['knora-api:lastModificationDate']['@value'];
+                // // submit property data
+                // this._ontologyService.addProperty(this.ontology.id, lastModificationDate, classResponse['@graph'][0]['@id'], propData).subscribe(
+                //     (propResponse: ApiServiceResult) => {
+                //         lastModificationDate = propResponse['knora-api:lastModificationDate']['@value'];
 
-                        //         // update class with cardinality and gui-order
-                        //         this._ontologyService.setPropertyRestriction(
-                        //             this.ontology.id,
-                        //             lastModificationDate,
-                        //             classResponse['@graph'][0]['@id'],
-                        //             propResponse['@graph'][0]['@id'],
-                        //             propData.cardinality,
-                        //             propData.guiOrder
-                        //         ).subscribe(
-                        //             (cardinalityResponse: any) => {
-                        //                 lastModificationDate = cardinalityResponse['knora-api:lastModificationDate']['@value'];
+                //         // update class with cardinality and gui-order
+                //         this._ontologyService.setPropertyRestriction(
+                //             this.ontology.id,
+                //             lastModificationDate,
+                //             classResponse['@graph'][0]['@id'],
+                //             propResponse['@graph'][0]['@id'],
+                //             propData.cardinality,
+                //             propData.guiOrder
+                //         ).subscribe(
+                //             (cardinalityResponse: any) => {
+                //                 lastModificationDate = cardinalityResponse['knora-api:lastModificationDate']['@value'];
 
-                        //                 // TODO: submit next property; recursive method
+                //                 // TODO: submit next property; recursive method
 
-                        //                 // close the dialog box
-                        //                 this.loading = false;
-                        //                 this.closeDialog.emit();
-                        //             },
-                        //             (error: ApiServiceError) => {
-                        //                 console.error('failed on setPropertyRestriction', error);
-                        //             }
-                        //         );
-                        //     },
-                        //     (error: ApiServiceError) => {
-                        //         console.error('failed on addProperty', error);
-                        //     }
-                        // );
-                        // // }
+                //                 // close the dialog box
+                //                 this.loading = false;
+                //                 this.closeDialog.emit();
+                //             },
+                //             (error: ApiServiceError) => {
+                //                 console.error('failed on setPropertyRestriction', error);
+                //             }
+                //         );
+                //     },
+                //     (error: ApiServiceError) => {
+                //         console.error('failed on addProperty', error);
+                //     }
+                // );
+                // // }
 
-                        // c++;
+                // c++;
                 //     }
                 // );
 
@@ -596,6 +533,85 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         this.resourceClassForm.reset();
         this.resourceClassFormSub.unsubscribe();
         this.closeDialog.emit();
+    }
+
+    async createProp(prop: Property, classIri: string) {
+
+
+        console.log('map prop', prop);
+
+        // set resource property name / id
+        const uniquePropName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, prop.label);
+
+        const onto = new UpdateOntology<CreateResourceProperty>();
+
+        onto.id = this.ontology.id;
+
+
+        // prepare payload for property
+        const newResProp = new CreateResourceProperty();
+        newResProp.name = uniquePropName;
+        // TODO: update prop.label and use StringLiteralInput in property-form
+        newResProp.label = [{ "value": prop.label }];
+        if (prop.guiAttr) {
+            newResProp.guiAttributes = [prop.guiAttr];
+        }
+        newResProp.guiElement = prop.type.gui_ele;
+        newResProp.subPropertyOf = [prop.type.subPropOf];
+        if (prop.type.subPropOf === Constants.HasLinkTo) {
+            newResProp.objectType = prop.guiAttr;
+            newResProp.subjectType = classIri;
+        } else {
+            newResProp.objectType = prop.type.objectType;
+        }
+
+
+        // newResProp.guiElement = "http://api.knora.org/ontology/salsah-gui/v2#SimpleText";
+        // newResProp.guiAttributes = ["size=80", "maxlength=100"];
+
+        onto.entity = newResProp;
+
+
+        // get last modification date
+        await this.delay();
+        this._dspApiConnection.v2.onto.getOntology(this.ontology.id).subscribe(
+            (ontologyResponse: ReadOntology) => {
+
+                console.log('submit prop with lmd', ontologyResponse.lastModificationDate);
+                onto.lastModificationDate = ontologyResponse.lastModificationDate;
+                this._dspApiConnection.v2.onto.createResourceProperty(onto).subscribe(
+                    (propResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+
+                        console.log('new resource property created', propResponse);
+                    }
+                );
+            }
+        );
+
+
+    }
+
+    // getLastModificationDate(ontologyIri: string) {
+    //     this._dspApiConnection.v2.onto.getOntology(ontologyIri).subscribe(
+    //         (ontologyResponse: ReadOntology) => {
+    //             this.lastModificationDate = ontologyResponse.lastModificationDate;
+    //         }
+    //     );
+    // }
+
+    async processArray(props: Property[], classIri: string) {
+        props.forEach(async (prop: Property) => {
+
+            await this.createProp(prop, classIri);
+        })
+        console.log('Done!');
+        // close the dialog box
+        this.loading = false;
+        this.closeDialog.emit();
+    }
+
+    delay() {
+        return new Promise(resolve => setTimeout(resolve, 1200));
     }
 
 
