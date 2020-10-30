@@ -121,10 +121,6 @@ describe('SelectPropertiesComponent', () => {
         testHostFixture = TestBed.createComponent(TestSelectPropertiesParentComponent);
         testHostComponent = testHostFixture.componentInstance;
         testHostFixture.detectChanges();
-
-    });
-
-    it('should create', () => {
         expect(testHostComponent).toBeTruthy();
     });
 
