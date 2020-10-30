@@ -1,4 +1,3 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,7 +18,6 @@ describe('HelpComponent', () => {
         TestBed.configureTestingModule({
             declarations: [HelpComponent, FooterComponent, GridComponent],
             imports: [
-                HttpClientTestingModule,
                 MatButtonModule,
                 MatIconModule,
                 MatSnackBarModule,
