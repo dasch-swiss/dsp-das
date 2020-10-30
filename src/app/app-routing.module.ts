@@ -20,9 +20,7 @@ import { ProjectComponent } from './project/project.component';
 import { DashboardComponent } from './user/dashboard/dashboard.component';
 import { UserComponent } from './user/user.component';
 
-
-import { AdvancedSearchComponent } from './workspace/search/advanced-search/advanced-search.component';
-import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
+// search results and resource viewer
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
 
