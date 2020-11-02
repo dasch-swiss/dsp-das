@@ -1,16 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ApiResponseData, MockUsers, StoredProject, UserResponse, UsersEndpointAdmin } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, MockProjects, MockUsers, StoredProject, UserResponse, UsersEndpointAdmin } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
-import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
 import { CacheService } from 'src/app/main/cache/cache.service';
-
 import { ResourceInstanceFormComponent } from './resource-instance-form.component';
+
 
 /**
  * Test host component to simulate parent component.
@@ -69,39 +68,15 @@ describe('ResourceInstanceFormComponent', () => {
                     provide: SessionService,
                     useValue: sessionServiceSpy
                 },
-                // {
-                //     provide: CacheService,
-                //     useValue: cacheServiceSpy
-                // }
+                {
+                    provide: CacheService,
+                    useValue: cacheServiceSpy
+                }
             ]
         })
         .compileComponents();
 
     }));
-
-    // mock localStorage
-    beforeEach(() => {
-        let store = {};
-
-        spyOn(localStorage, 'getItem').and.callFake(
-            (key: string): string => {
-                return store[key] || null;
-            }
-        );
-        spyOn(localStorage, 'removeItem').and.callFake(
-            (key: string): void => {
-                delete store[key];
-            }
-        );
-        spyOn(localStorage, 'setItem').and.callFake(
-            (key: string, value: string): string => {
-                return (store[key] = <any>value);
-            }
-        );
-        spyOn(localStorage, 'clear').and.callFake(() => {
-            store = {};
-        });
-    });
 
     beforeEach(() => {
         const sessionSpy = TestBed.inject(SessionService);
@@ -119,9 +94,23 @@ describe('ResourceInstanceFormComponent', () => {
                     }
                 };
 
-                console.log(session);
-
                 return session;
+            }
+        );
+
+        const cacheSpy = TestBed.inject(CacheService);
+
+        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
+            () => {
+                const response: UserResponse = new UserResponse();
+
+                const project = MockProjects.mockProject();
+
+                response.user.projects = new Array<StoredProject>();
+
+                response.user.projects.push(project.body.project);
+
+                return of(ApiResponseData.fromAjaxResponse({response} as AjaxResponse));
             }
         );
 
@@ -129,11 +118,7 @@ describe('ResourceInstanceFormComponent', () => {
         testHostComponent = testHostFixture.componentInstance;
         testHostFixture.detectChanges();
 
-    });
-
-    it('should create', () => {
         const dspConnSpy = TestBed.inject(DspApiConnectionToken);
-        console.log(dspConnSpy);
 
         (dspConnSpy.admin.usersEndpoint as jasmine.SpyObj<UsersEndpointAdmin>).getUserByUsername.and.callFake(
             () => {
@@ -142,21 +127,9 @@ describe('ResourceInstanceFormComponent', () => {
                 return of(loggedInUser);
             }
         );
+    });
 
-        // const cacheSpy = TestBed.inject(CacheService);
-
-        // (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
-        //     () => {
-        //         console.log('beepity boopity');
-
-        //         const response: UserResponse = new UserResponse();
-
-        //         response.user.projects = new Array<StoredProject>();
-
-        //         return of(ApiResponseData.fromAjaxResponse({response} as AjaxResponse));
-        //     }
-        // );
-
-        expect(testHostComponent).toBeTruthy();
+    it('should initialize the usersProjects array', () => {
+        expect(testHostComponent.resourceInstanceFormComponent.usersProjects.length).toEqual(1);
     });
 });
