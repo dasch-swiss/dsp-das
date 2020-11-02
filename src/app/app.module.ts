@@ -70,8 +70,6 @@ import { UserComponent } from './user/user.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResourceInstanceFormComponent } from './workspace/resource/resource-instance-form/resource-instance-form.component';
 import { ResultsComponent } from './workspace/results/results.component';
-import { AdvancedSearchComponent } from './workspace/search/advanced-search/advanced-search.component';
-import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 
 import { environment } from '../environments/environment';
 import { ExternalLinksDirective } from './main/directive/external-links.directive';
@@ -112,8 +110,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         SelectGroupComponent,
         ResultsComponent,
         ResourceComponent,
-        ExpertSearchComponent,
-        AdvancedSearchComponent,
         DashboardComponent,
         DialogComponent,
         SystemComponent,
