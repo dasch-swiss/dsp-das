@@ -82,7 +82,7 @@ describe('SelectOntologyComponent', () => {
 
     it('should initialise the ontologies metadata', () => {
         expect(testHostComponent.selectOntology.ontologiesMetadata.ontologies).toBeDefined();
-        expect(testHostComponent.selectOntology.ontologiesMetadata.ontologies.length).toEqual(15);
+        expect(testHostComponent.selectOntology.ontologiesMetadata.ontologies.length).toEqual(14);
     });
 
     it('should init the MatSelect and MatOptions correctly', async () => {
@@ -97,7 +97,7 @@ describe('SelectOntologyComponent', () => {
 
         const options = await select.getOptions();
 
-        expect(options.length).toEqual(15);
+        expect(options.length).toEqual(14);
 
         const option1 = await options[0].getText();
 
