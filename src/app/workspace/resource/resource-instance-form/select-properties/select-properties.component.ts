@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { CardinalityUtil, ReadResource, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
-import { ValueTypeService } from '@dasch-swiss/dsp-ui';
+import { ValueService } from '@dasch-swiss/dsp-ui';
 import { SwitchPropertiesComponent } from './switch-properties/switch-properties.component';
 
 export interface Properties {
@@ -33,7 +33,7 @@ export class SelectPropertiesComponent implements OnInit {
     addButtonIsVisible: boolean;
     addValueFormIsVisible: boolean;
 
-    constructor(private _valueTypeService: ValueTypeService) { }
+    constructor(private _valueService: ValueService) { }
 
     ngOnInit() {
 
@@ -41,7 +41,7 @@ export class SelectPropertiesComponent implements OnInit {
             for (const prop of this.propertiesAsArray) {
                 if (prop) {
                     if (prop.objectType === 'http://api.knora.org/ontology/knora-api/v2#TextValue') {
-                        prop.objectType = this._valueTypeService.getTextValueClass(prop);
+                        prop.objectType = this._valueService.getTextValueClass(prop);
                     }
                 }
             }
