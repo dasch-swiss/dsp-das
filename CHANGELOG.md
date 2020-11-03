@@ -1,6 +1,41 @@
 # Changelog
 
-## v3.0.0-rc.2 (12/10/2020)
+## v3.0.0-rc.4 (03/11/2020)
+
+## Dependencies
+
+- #327 Update dsp dependencies
+
+---
+
+## v3.0.0-rc.3 (02/11/2020)
+
+## Enhancements
+
+- #326 Update dsp dependencies
+- #322 DSP-860: Ontology editor: Create resource class
+- #319 DSP-859 Ontology editor: Create ontology
+- #320 DSP-850 Navigation and dialog box to create a new resource
+
+## Styling
+
+- #326 Update dsp dependencies
+
+## Bug fixes
+
+- #323 DSP-908 - Project List Sorting Fix
+
+## Dependencies
+
+- #326 Update dsp dependencies
+
+## Maintenance
+
+- #325 DSP-920 Renaming default github branch to "main"
+
+---
+
+## v3.0.0-rc.2 (13/10/2020)
 
 ## Enhancements
 
@@ -16,9 +51,15 @@
 
 ## Bug fixes
 
+- #303 DSP-329 Fix sort button
 - #313 DSP-674 Replace search-panel with fulltext-search
 - #306 DSP-700 Fix broken link to project
 - #304 DSP-666 Fix issue with version number
+
+## Dependencies
+
+- #318 Update dependencies
+- #317 Update js-lib and ui-lib
 
 ## Maintenance
 
