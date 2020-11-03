@@ -1,6 +1,6 @@
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { Component, DebugElement, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, DebugElement, EventEmitter, Inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
@@ -47,6 +47,7 @@ class TestHostComponent implements OnInit {
 class MockSelectProjectComponent implements OnInit {
     @Input() formGroup: FormGroup;
     @Input() usersProjects: StoredProject[];
+    @Output() projectSelected = new EventEmitter<string>();
 
     form: FormGroup;
 
@@ -68,6 +69,7 @@ class MockSelectProjectComponent implements OnInit {
 class MockSelectOntologyComponent implements OnInit {
     @Input() formGroup: FormGroup;
     @Input() ontologiesMetadata: OntologiesMetadata;
+    @Output() ontologySelected = new EventEmitter<string>();
 
     form: FormGroup;
 
@@ -231,19 +233,22 @@ describe('ResourceInstanceFormComponent', () => {
 
         (dspConnSpy.v2.onto as jasmine.SpyObj<OntologiesEndpointV2>).getOntologiesByProjectIri.and.callFake(
             () => {
-
                 const anythingOnto = MockOntology.mockOntologiesMetadata();
                 return of(anythingOnto);
             }
         );
 
-        testHostComponent.resourceInstanceFormComponent.selectOntologies('http://0.0.0.0:3333/ontology/0001/anything/v2');
+        const selectProjectComp = resourceInstanceFormComponentDe.query(By.directive(MockSelectProjectComponent));
+
+        (selectProjectComp.componentInstance as MockSelectProjectComponent).projectSelected.emit('http://0.0.0.0:3333/ontology/0001/anything/v2');
 
         testHostFixture.detectChanges();
 
-        const comp = resourceInstanceFormComponentDe.query(By.directive(MockSelectOntologyComponent));
+        const selectOntoComp = resourceInstanceFormComponentDe.query(By.directive(MockSelectOntologyComponent));
 
-        expect((comp.componentInstance as MockSelectOntologyComponent).ontologiesMetadata.ontologies.length).toEqual(10);
+        expect((selectOntoComp.componentInstance as MockSelectOntologyComponent).ontologiesMetadata.ontologies.length).toEqual(10);
+
+        expect(dspConnSpy.v2.onto.getOntologiesByProjectIri).toHaveBeenCalledTimes(1);
     });
 
     it('should show the select resource class component', () => {
@@ -262,12 +267,18 @@ describe('ResourceInstanceFormComponent', () => {
             }
         );
 
-        testHostComponent.resourceInstanceFormComponent.selectResourceClasses('http://0.0.0.0:3333/ontology/0001/anything/v2');
+        testHostComponent.resourceInstanceFormComponent.ontologiesMetadata = MockOntology.mockOntologiesMetadata();
 
         testHostFixture.detectChanges();
 
-        const comp = resourceInstanceFormComponentDe.query(By.directive(MockSelectResourceClassComponent));
+        const selectOntoComp = resourceInstanceFormComponentDe.query(By.directive(MockSelectOntologyComponent));
 
-        expect((comp.componentInstance as MockSelectResourceClassComponent).resourceClassDefinitions.length).toEqual(8);
+        (selectOntoComp.componentInstance as MockSelectOntologyComponent).ontologySelected.emit('http://0.0.0.0:3333/ontology/0001/anything/v2');
+
+        testHostFixture.detectChanges();
+
+        const selectResourceClassComp = resourceInstanceFormComponentDe.query(By.directive(MockSelectResourceClassComponent));
+
+        expect((selectResourceClassComp.componentInstance as MockSelectResourceClassComponent).resourceClassDefinitions.length).toEqual(8);
     });
 });
