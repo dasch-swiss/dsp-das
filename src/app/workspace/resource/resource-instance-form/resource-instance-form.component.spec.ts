@@ -1,6 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { Component, DebugElement, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSelectHarness } from '@angular/material/select/testing';
+import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ApiResponseData, MockProjects, MockUsers, StoredProject, UserResponse, UsersEndpointAdmin } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
@@ -9,6 +16,7 @@ import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ResourceInstanceFormComponent } from './resource-instance-form.component';
+import { SelectProjectComponent } from './select-project/select-project.component';
 
 
 /**
@@ -29,9 +37,32 @@ class TestHostComponent implements OnInit {
 
 }
 
+/**
+ * Mock select-project component to use in tests.
+ */
+@Component({
+    selector: `app-select-project`
+})
+class MockSelectProjectComponent implements OnInit {
+    @Input() formGroup: FormGroup;
+    @Input() usersProjects: StoredProject[];
+
+    form: FormGroup;
+
+    constructor(@Inject(FormBuilder) private _fb: FormBuilder) { }
+
+    ngOnInit() {
+        this.form = this._fb.group({
+            projects: [null, Validators.required]
+        });
+    }
+}
+
 describe('ResourceInstanceFormComponent', () => {
     let testHostComponent: TestHostComponent;
     let testHostFixture: ComponentFixture<TestHostComponent>;
+    let resourceInstanceFormComponentDe: DebugElement;
+    let loader: HarnessLoader;
 
     beforeEach(async(() => {
         const dspConnSpy = {
@@ -52,11 +83,15 @@ describe('ResourceInstanceFormComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 ResourceInstanceFormComponent,
-                TestHostComponent
+                TestHostComponent,
+                MockSelectProjectComponent
             ],
             imports: [
                 RouterTestingModule,
                 ReactiveFormsModule,
+                MatSelectModule,
+                MatOptionModule,
+                BrowserAnimationsModule,
                 TranslateModule.forRoot()
             ],
             providers: [
@@ -79,6 +114,7 @@ describe('ResourceInstanceFormComponent', () => {
     }));
 
     beforeEach(() => {
+
         const sessionSpy = TestBed.inject(SessionService);
 
         (sessionSpy as jasmine.SpyObj<SessionService>).getSession.and.callFake(
@@ -116,6 +152,7 @@ describe('ResourceInstanceFormComponent', () => {
 
         testHostFixture = TestBed.createComponent(TestHostComponent);
         testHostComponent = testHostFixture.componentInstance;
+        loader = TestbedHarnessEnvironment.loader(testHostFixture);
         testHostFixture.detectChanges();
 
         const dspConnSpy = TestBed.inject(DspApiConnectionToken);
@@ -127,9 +164,22 @@ describe('ResourceInstanceFormComponent', () => {
                 return of(loggedInUser);
             }
         );
+
+        const hostCompDe = testHostFixture.debugElement;
+
+        resourceInstanceFormComponentDe = hostCompDe.query(By.directive(ResourceInstanceFormComponent));
     });
 
     it('should initialize the usersProjects array', () => {
         expect(testHostComponent.resourceInstanceFormComponent.usersProjects.length).toEqual(1);
+    });
+
+    it('should show the select properties component', async () => {
+
+        console.log(resourceInstanceFormComponentDe);
+
+        const comp = resourceInstanceFormComponentDe.query(By.directive(MockSelectProjectComponent));
+
+        expect((comp.componentInstance as MockSelectProjectComponent).usersProjects.length).toEqual(1);
     });
 });
