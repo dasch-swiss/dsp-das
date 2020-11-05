@@ -1,7 +1,19 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
-import { ApiResponseData, ApiResponseError, CreateResourceClass, KnoraApiConnection, ListsResponse, ReadOntology, ResourceClassDefinitionWithAllLanguages, StringLiteral } from '@dasch-swiss/dsp-js';
+import {
+    ApiResponseData,
+    ApiResponseError,
+    Constants,
+    CreateResourceClass,
+    KnoraApiConnection,
+    ListsResponse,
+    ReadOntology,
+    ResourceClassDefinitionWithAllLanguages,
+    StringLiteral,
+    UpdateOntology
+} from '@dasch-swiss/dsp-js';
+import { StringLiteralV2 } from '@dasch-swiss/dsp-js/src/models/v2/string-literal-v2';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
@@ -71,8 +83,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     resourceClassForm: FormGroup;
 
     // label and comment are stringLiterals
-    resourceClassLabels: StringLiteral[] = [];
-    resourceClassComments: StringLiteral[] = [];
+    resourceClassLabels: StringLiteralV2[] = [];
+    resourceClassComments: StringLiteralV2[] = [];
 
     // sub / second form of resource class: properties form
     resourceClassFormSub: Subscription;
@@ -292,8 +304,24 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     submitData() {
         this.loading = true;
 
-        let lastModificationDate: string = this.ontology.lastModificationDate;
+        // set resource class name / id
+        const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
 
+        const onto = new UpdateOntology<CreateResourceClass>();
+
+        onto.id = this.ontology.id;
+        onto.lastModificationDate = this.ontology.lastModificationDate;
+
+        const newResClass = new CreateResourceClass();
+
+        newResClass.name = uniqueClassName
+        newResClass.label = this.resourceClassLabels;
+        newResClass.comment = this.resourceClassComments;
+        newResClass.subClassOf = [this.subClassOf];
+
+        onto.entity = newResClass;
+
+        // knora-api:error: "org.knora.webapi.exceptions.BadRequestException: One or more specified base classes are invalid: http://www.knora.org/ontology/knora-base#StillImageFileValue"
 
         // fix variables:
 
@@ -319,32 +347,26 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
         // first step: get data from first form: resource class
 
-        if (!this.resourceClassComments.length) {
-            this.resourceClassComments = this.resourceClassLabels;
-        }
+        // TODO: if no comment, reuse the label as comment
+        // if (!this.resourceClassComments.length) {
+        //     this.resourceClassComments = this.resourceClassLabels;
+        // }
 
-        // set resource class name / id
-        const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
 
-        // set resource class data
-        const reresourceClassData: CreateResourceClass = {
-            ontology: {
-                id: this.ontology.id,
-                lastModificationDate: this.ontology.lastModificationDate
-            },
-            name: uniqueClassName,
-            labels: this.resourceClassLabels,
-            comments: this.resourceClassComments,
-            subClassOf: [this.subClassOf]
-        };
+
+
 
         // submit resource class data to knora and create resource class incl. cardinality
-        // console.log('submit resource class data:', reresourceClassData);
+        // console.log('submit resource class data:', resourceClassData);
         // let i: number = 0;
-        this._dspApiConnection.v2.onto.createResourceClass(reresourceClassData).subscribe(
+        this._dspApiConnection.v2.onto.createResourceClass(onto).subscribe(
             (classResponse: ResourceClassDefinitionWithAllLanguages) => {
 
                 console.log(classResponse);
+
+                // close the dialog box
+                this.loading = false;
+                this.closeDialog.emit();
 
                 // prepare last modification date and properties data
                 // lastModificationDate = classResponse.

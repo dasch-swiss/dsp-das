@@ -33,8 +33,8 @@ jobs:
     name: Update next release draft
     needs: build-test
     runs-on: ubuntu-latest
-    # Drafts your next Release notes as Pull Requests are merged into "master"
-    if: github.ref == 'refs/heads/master'
+    # Drafts your next Release notes as Pull Requests are merged into "main" branch
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: release-drafter/release-drafter@v5
         env:
@@ -53,9 +53,22 @@ jobs:
           fetch-depth: 50
       - name: Get previous tag
         id: previoustag
-        uses: "WyriHaximus/github-action-get-previous-tag@master"
+        uses: "WyriHaximus/github-action-get-previous-tag@1.0.0"
       - name: Update version in package.json
         run: npm version ${{steps.previoustag.outputs.tag}} --git-tag-version=false --commit-hooks=false
+      - name: Update CHANGELOG
+        uses: lakto/gren-changelog-action@v0.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          options: '--override'
+      - name: Attach CHANGELOG to release assets
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GH_TOKEN }}
+          file: CHANGELOG.md
+          tag: ${{ github.ref }}
+          overwrite: true
       - name: Build and publish image
         run: |
           echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin

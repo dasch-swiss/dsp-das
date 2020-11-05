@@ -21,7 +21,8 @@ import { UserMenuComponent } from 'src/app/user/user-menu/user-menu.component';
 import { TestConfig } from 'test.config';
 import { SelectLanguageComponent } from '../select-language/select-language.component';
 import { HeaderComponent } from './header.component';
-import { ComponentCommunicationEventService, EmitEvent, Events } from 'src/app/services/component-communication-event.service';
+import { ComponentCommunicationEventService, EmitEvent, Events } from 'src/app/main/services/component-communication-event.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('HeaderComponent', () => {
     let component: HeaderComponent;
@@ -36,6 +37,7 @@ describe('HeaderComponent', () => {
                 UserMenuComponent
             ],
             imports: [
+                BrowserAnimationsModule,
                 HttpClientModule,
                 DspActionModule,
                 DspCoreModule,
@@ -95,8 +97,8 @@ describe('HeaderComponent', () => {
         expect(loginBtnLabel).toEqual('LOGIN');
     });
 
-    it('should display the search panel', () => {
-        const searchPanel = fixture.debugElement.query(By.css('dsp-search-panel'));
+    it('should display fulltext-search', () => {
+        const searchPanel = fixture.debugElement.query(By.css('dsp-fulltext-search-panel'));
         expect(searchPanel).toBeDefined();
     });
 

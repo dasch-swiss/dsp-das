@@ -76,8 +76,13 @@ a {
   color: $primary;
 }
 
+.external-link {
+  color: $primary_400 !important;
+}
+
 a,
-.link {
+.link,
+.external-link {
   cursor: pointer;
   text-decoration: none;
 }
@@ -91,6 +96,18 @@ a,
   .main-toolbar-button {
     height: $header-height;
     border-radius: 0;
+  }
+
+  // override dsp-ui search panel style
+  .dsp-search-panel .mobile-only .dsp-fulltext-search-button {
+    height: $header-height;
+    border-radius: 0;
+    margin-top: 4px;
+  }
+  .dsp-fulltext-search-mobile-panel .dsp-fulltext-search-button {
+    height: auto !important;
+    border-radius: $border-radius !important;
+    margin-top: 0 !important;
   }
 }
 
