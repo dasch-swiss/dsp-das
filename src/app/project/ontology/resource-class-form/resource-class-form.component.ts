@@ -601,7 +601,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     async processArray(props: Property[], classIri: string) {
         props.forEach(async (prop: Property) => {
-
             await this.createProp(prop, classIri);
         })
         console.log('Done!');
