@@ -163,6 +163,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                 this._router.navigateByUrl('/resource', { skipLocationChange: true }).then(() =>
                     this._router.navigate(['/resource/' + encodeURIComponent(this.resource.id)])
                 );
+
+                this.closeDialog.emit();
             }
         );
 
