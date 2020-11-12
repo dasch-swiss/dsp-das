@@ -36,6 +36,11 @@ export class SelectOntologyComponent implements OnInit, OnDestroy {
             this.ontologySelected.emit(data.ontologies);
         });
 
+        // if there is only one ontology to choose from, select it automatically
+        if (this.ontologiesMetadata.ontologies.length === 1) {
+            this.form.controls.ontologies.setValue(this.ontologiesMetadata.ontologies[0].id);
+        }
+
         resolvedPromise.then(() => {
             // add form to the parent form group
             this.formGroup.addControl('ontologies', this.form);

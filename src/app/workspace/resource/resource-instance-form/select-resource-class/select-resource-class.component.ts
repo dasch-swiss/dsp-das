@@ -46,6 +46,11 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy {
             this.resourceLabel.emit(data.label);
         });
 
+        // if there is only one Resource Class Definition to choose from, select it automatically
+        if (this.resourceClassDefinitions.length === 1) {
+            this.form.controls.resources.setValue(this.resourceClassDefinitions[0].id);
+        }
+
         resolvedPromise.then(() => {
             // add form to the parent form group
             this.formGroup.addControl('resources', this.form);

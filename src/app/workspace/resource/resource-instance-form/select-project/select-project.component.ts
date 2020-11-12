@@ -37,6 +37,11 @@ export class SelectProjectComponent implements OnInit, OnDestroy {
         // add form to the parent form group
         this.formGroup.addControl('projects', this.form);
 
+        // if there is only one project to choose from, select it automatically
+        if (this.usersProjects.length === 1) {
+            this.form.controls.projects.setValue(this.usersProjects[0].id);
+        }
+
     }
 
     ngOnDestroy() {
