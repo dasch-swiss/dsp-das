@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StoredProject } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 
@@ -26,7 +26,7 @@ export class SelectProjectComponent implements OnInit, OnDestroy {
 
         // build a form for the named graph selection
         this.form = this._fb.group({
-            projects: ['null, Validators.required']
+            projects: [null, Validators.required]
         });
 
         // emit Iri of the project when selected
