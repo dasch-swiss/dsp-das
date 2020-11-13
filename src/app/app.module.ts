@@ -68,6 +68,7 @@ import { UserFormComponent } from './user/user-form/user-form.component';
 import { UserMenuComponent } from './user/user-menu/user-menu.component';
 import { UserComponent } from './user/user.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
+import { ResourceInstanceFormComponent } from './workspace/resource/resource-instance-form/resource-instance-form.component';
 import { ResultsComponent } from './workspace/results/results.component';
 
 import { environment } from '../environments/environment';
@@ -75,6 +76,11 @@ import { ErrorInterceptor } from './main/error/interceptor/error.interceptor';
 import { FullframeErrorComponent } from './main/error/fullframe-error/fullframe-error.component';
 import { GlobalErrorHandler } from './main/error/service/global-error-handler';
 import { ExternalLinksDirective } from './main/directive/external-links.directive';
+import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
+import { SelectOntologyComponent } from './workspace/resource/resource-instance-form/select-ontology/select-ontology.component';
+import { SelectResourceClassComponent } from './workspace/resource/resource-instance-form/select-resource-class/select-resource-class.component';
+import { SelectPropertiesComponent } from './workspace/resource/resource-instance-form/select-properties/select-properties.component';
+import { SwitchPropertiesComponent } from './workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties.component';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -133,7 +139,13 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         HelpComponent,
         FooterComponent,
         FullframeErrorComponent,
-        ExternalLinksDirective
+        ExternalLinksDirective,
+        ResourceInstanceFormComponent,
+        SelectProjectComponent,
+        SelectOntologyComponent,
+        SelectResourceClassComponent,
+        SelectPropertiesComponent,
+        SwitchPropertiesComponent
     ],
     imports: [
         AppRoutingModule,
