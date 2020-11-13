@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
     IHasProperty,
@@ -74,6 +75,7 @@ describe('OntologyVisualizerComponent', () => {
                 ErrorComponent
             ],
             imports: [
+                BrowserAnimationsModule,
                 HttpClientTestingModule,
                 DspActionModule,
                 DspCoreModule,
