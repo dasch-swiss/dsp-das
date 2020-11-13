@@ -1,6 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
@@ -8,9 +9,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
@@ -24,9 +25,8 @@ import {
 import { of } from 'rxjs';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
-import { OntologyComponent } from './ontology.component';
 import { OntologyVisualizerComponent } from './ontology-visualizer/ontology-visualizer.component';
-import { VisualizerComponent } from './ontology-visualizer/visualizer/visualizer.component';
+import { OntologyComponent } from './ontology.component';
 
 describe('OntologyComponent', () => {
     let component: OntologyComponent;
@@ -51,6 +51,7 @@ describe('OntologyComponent', () => {
                 MatMenuModule,
                 MatOptionModule,
                 MatSelectModule,
+                MatSnackBarModule,
                 MatToolbarModule,
                 MatTooltipModule,
                 ReactiveFormsModule,
