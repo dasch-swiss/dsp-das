@@ -21,6 +21,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { TestConfig } from 'test.config';
+import { ErrorComponent } from '../../main/error/error.component';
 import { UsersListComponent } from '../../system/users/users-list/users-list.component';
 import { AddUserComponent } from './add-user/add-user.component';
 import { CollaborationComponent } from './collaboration.component';
@@ -36,7 +37,8 @@ describe('CollaborationComponent', () => {
                 CollaborationComponent,
                 AddUserComponent,
                 UsersListComponent,
-                SelectGroupComponent
+                SelectGroupComponent,
+                ErrorComponent
             ],
             imports: [
                 BrowserAnimationsModule,

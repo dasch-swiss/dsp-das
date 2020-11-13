@@ -23,6 +23,7 @@ import {
 } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
 import { TestConfig } from 'test.config';
+import { ErrorComponent } from '../../main/error/error.component';
 import { OntologyComponent } from './ontology.component';
 
 describe('OntologyComponent', () => {
@@ -32,7 +33,8 @@ describe('OntologyComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                OntologyComponent
+                OntologyComponent,
+                ErrorComponent
             ],
             imports: [
                 DspActionModule,

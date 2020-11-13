@@ -14,7 +14,10 @@ describe('SystemComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [SystemComponent, ErrorComponent],
+            declarations: [
+                SystemComponent,
+                ErrorComponent
+            ],
             imports: [
                 DspActionModule,
                 MatIconModule,
