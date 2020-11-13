@@ -14,6 +14,9 @@ export class SelectProjectComponent implements OnInit, OnDestroy {
 
     @Input() usersProjects: StoredProject[];
 
+    // optional input to provide the component with a pre-selected project
+    @Input() selectedProject?: string;
+
     @Output() projectSelected = new EventEmitter<string>();
 
     form: FormGroup;
@@ -40,6 +43,11 @@ export class SelectProjectComponent implements OnInit, OnDestroy {
         // if there is only one project to choose from, select it automatically
         if (this.usersProjects.length === 1) {
             this.form.controls.projects.setValue(this.usersProjects[0].id);
+        }
+
+        // check if there is a pre-selected project, if so, set the value of the form control to this value
+        if (this.selectedProject) {
+            this.form.controls.projects.setValue(this.selectedProject);
         }
 
     }
