@@ -1,8 +1,8 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-
 import { SelectLanguageComponent } from './select-language.component';
 
 const TRANSLATIONS_EN = require('../../../assets/i18n/en.json');
@@ -19,6 +19,7 @@ describe('SelectLanguageComponent', () => {
         TestBed.configureTestingModule({
             declarations: [SelectLanguageComponent],
             imports: [
+                BrowserAnimationsModule,
                 HttpClientTestingModule,
                 MatMenuModule,
                 TranslateModule.forRoot()

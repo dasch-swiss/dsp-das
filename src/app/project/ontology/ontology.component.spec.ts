@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
@@ -40,6 +41,7 @@ describe('OntologyComponent', () => {
                 ErrorComponent
             ],
             imports: [
+                BrowserAnimationsModule,
                 HttpClientTestingModule,
                 DspActionModule,
                 DspCoreModule,
