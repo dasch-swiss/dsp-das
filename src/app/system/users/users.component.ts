@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ReadUser, UserResponse, UsersResponse } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, NotificationService } from '@dasch-swiss/dsp-ui';
 
 @Component({
     selector: 'app-users',
@@ -17,6 +17,7 @@ export class UsersComponent implements OnInit {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _notification: NotificationService,
         private _titleService: Title
     ) {
         // set the page title
@@ -47,7 +48,7 @@ export class UsersComponent implements OnInit {
                             u.permissions = res.body.user.permissions;
                         },
                         (error: ApiResponseError) => {
-                            console.error(error);
+                            this._notification.openSnackBar(error);
                         }
                     );
 
@@ -61,7 +62,7 @@ export class UsersComponent implements OnInit {
                 this.loading = false;
             },
             (error: ApiResponseError) => {
-                console.error(error);
+                this._notification.openSnackBar(error);
             }
         );
     }

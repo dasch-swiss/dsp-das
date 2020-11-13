@@ -1,16 +1,15 @@
-import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatSelectChange } from '@angular/material/select';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ClassDefinition, KnoraApiConnection, ListNodeInfo, ReadOntology, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
+import { ApiResponseError, ClassDefinition, ListNodeInfo, ReadOntology, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { NotificationService } from '@dasch-swiss/dsp-ui';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DefaultProperties, Property, PropertyValue } from '../default-data/default-properties';
-
 
 // TODO: should be removed and replaced by AutocompleteItem from dsp-ui
 /**
@@ -68,10 +67,10 @@ export class PropertyFormComponent implements OnInit {
     selectedGroup: string;
 
     constructor(
-        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _domSanitizer: DomSanitizer,
-        private _matIconRegistry: MatIconRegistry) {
+        private _matIconRegistry: MatIconRegistry,
+        private _notification: NotificationService) {
 
         // special icons for property type
         this._matIconRegistry.addSvgIcon(
@@ -120,8 +119,8 @@ export class PropertyFormComponent implements OnInit {
 
                 }
             },
-            (error: any) => {
-                console.error(error);
+            (error: ApiResponseError) => {
+                this._notification.openSnackBar(error);
             }
         );
 
@@ -131,8 +130,8 @@ export class PropertyFormComponent implements OnInit {
             (response: ListNodeInfo[]) => {
                 this.lists = response;
             },
-            (error: any) => {
-                console.error(error);
+            (error: ApiResponseError) => {
+                this._notification.openSnackBar(error);
             }
         );
 

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, LogoutResponse, ReadUser, UserResponse } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, SessionService } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, NotificationService, SessionService } from '@dasch-swiss/dsp-ui';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { CacheService } from '../../main/cache/cache.service';
 
@@ -25,8 +25,9 @@ export class AccountComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
-        private _session: SessionService,
         private _dialog: MatDialog,
+        private _notification: NotificationService,
+        private _session: SessionService,
         private _titleService: Title) {
         // set the page title
         this._titleService.setTitle('Your account');
@@ -45,7 +46,8 @@ export class AccountComponent implements OnInit {
                 this.loading = false;
             },
             (error: ApiResponseError) => {
-                console.error(error);
+                this._notification.openSnackBar(error);
+                this.loading = false;
             }
         );
     }
@@ -102,13 +104,12 @@ export class AccountComponent implements OnInit {
                         window.location.reload();
                     },
                     (error: ApiResponseError) => {
-                        console.error(error);
+                        this._notification.openSnackBar(error);
                     }
                 );
             },
             (error: ApiResponseError) => {
-                // this.errorMessage = error;
-                console.error(error);
+                this._notification.openSnackBar(error);
             }
         );
 
@@ -123,8 +124,7 @@ export class AccountComponent implements OnInit {
                 this.refreshParent.emit();
             },
             (error: ApiResponseError) => {
-                // this.errorMessage = error;
-                console.error(error);
+                this._notification.openSnackBar(error);
             }
         );
     }

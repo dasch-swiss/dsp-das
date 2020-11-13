@@ -2,7 +2,7 @@ import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, MembersResponse, ProjectResponse, ReadUser, UserResponse, UsersResponse } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, existingNamesValidator } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, existingNamesValidator, NotificationService } from '@dasch-swiss/dsp-ui';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
@@ -52,11 +52,6 @@ export class AddUserComponent implements OnInit {
             'existingName': 'This user is already a member of the project. You can\'t add him / her.'
         }
     };
-
-    /**
-     * message in case of an API error
-     */
-    errorMessage: any = undefined;
 
     /**
      * list of all users
@@ -110,6 +105,7 @@ export class AddUserComponent implements OnInit {
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _dialog: MatDialog,
+        private _notification: NotificationService,
         private _formBuilder: FormBuilder) {
     }
 
@@ -188,16 +184,16 @@ export class AddUserComponent implements OnInit {
                             }
                         });
                     },
-                    (err: any) => {
-                        console.error(err);
+                    (error: ApiResponseError) => {
+                        this._notification.openSnackBar(error);
                     }
                 );
 
                 this.loading = false;
 
             },
-            (error: any) => {
-                console.error(error);
+            (error: ApiResponseError) => {
+                this._notification.openSnackBar(error);
             }
         );
 
@@ -313,13 +309,13 @@ export class AddUserComponent implements OnInit {
                                     this.loading = false;
 
                                 },
-                                (error: any) => {
-                                    console.error(error);
+                                (error: ApiResponseError) => {
+                                    this._notification.openSnackBar(error);
                                 }
                             );
                         },
-                        (error: any) => {
-                            console.error(error);
+                        (error: ApiResponseError) => {
+                            this._notification.openSnackBar(error);
                         }
                     );
                 }
@@ -328,14 +324,14 @@ export class AddUserComponent implements OnInit {
             (error: ApiResponseError) => {
                 if (error.status === 404) {
                     // case c) user doesn't exist
-                    // create new user user-profile
+                    // create new user-profile
                     this.selectedUser = new ReadUser();
 
                     this.selectedUser.email = val;
 
                 } else {
                     // api error
-                    this.errorMessage = error;
+                    this._notification.openSnackBar(error);
                 }
 
             }

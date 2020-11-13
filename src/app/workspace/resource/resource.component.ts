@@ -9,6 +9,7 @@ import {
     Router
 } from '@angular/router';
 import { ReadProject } from '@dasch-swiss/dsp-js';
+import { NotificationService } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -25,9 +26,10 @@ export class ResourceComponent implements OnInit, OnDestroy {
     navigationSubscription: Subscription;
 
     constructor(
+        private _location: Location,
+        private _notification: NotificationService,
         private _route: ActivatedRoute,
-        private _router: Router,
-        private _location: Location) {
+        private _router: Router) {
 
         this._route.paramMap.subscribe((params: Params) => {
             this.resourceIri = decodeURIComponent(params.get('id'));
@@ -51,7 +53,8 @@ export class ResourceComponent implements OnInit, OnDestroy {
                 // hide loading indicator
 
                 // present error to user
-                console.error(event.error);
+                // console.error(event.error);
+                this._notification.openSnackBar(event.error);
             }
         });
     }

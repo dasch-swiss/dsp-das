@@ -17,10 +17,10 @@ import {
     ReadProject,
     UpdateOntology
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, NotificationService, Session, SessionService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { DefaultResourceClasses, DefaultClass } from './default-data/default-resource-classes';
+import { DefaultClass, DefaultResourceClasses } from './default-data/default-resource-classes';
 import { ResourceClassFormService } from './resource-class-form/resource-class-form.service';
 
 export interface OntologyInfo {
@@ -92,14 +92,15 @@ export class OntologyComponent implements OnInit {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
-        private _resourceClassFormService: ResourceClassFormService,
         private _cache: CacheService,
-        private _session: SessionService,
         private _dialog: MatDialog,
         private _fb: FormBuilder,
-        private _titleService: Title,
+        private _notification: NotificationService,
+        private _resourceClassFormService: ResourceClassFormService,
         private _route: ActivatedRoute,
-        private _router: Router) {
+        private _router: Router,
+        private _session: SessionService,
+        private _titleService: Title) {
 
         // get the shortcode of the current project
         this._route.parent.paramMap.subscribe((params: Params) => {
@@ -157,7 +158,7 @@ export class OntologyComponent implements OnInit {
 
             },
             (error: ApiResponseError) => {
-                console.error(error);
+                this._notification.openSnackBar(error);
                 this.loading = false;
             }
         );
@@ -199,7 +200,7 @@ export class OntologyComponent implements OnInit {
                 // s. youtrack issue DSP-863
                 this.ontologies = [];
 
-                console.error(error);
+                this._notification.openSnackBar(error);
             }
         )
     }
@@ -244,7 +245,7 @@ export class OntologyComponent implements OnInit {
                 this.loadOntology = false;
             },
             (error: any) => {
-                console.error(error);
+                this._notification.openSnackBar(error);
                 this.loadOntology = false;
             }
         );
@@ -367,7 +368,7 @@ export class OntologyComponent implements OnInit {
                                 this._router.navigateByUrl(goto, { skipLocationChange: false });
                             },
                             (error: ApiResponseError) => {
-                                console.error(error);
+                                this._notification.openSnackBar(error);
                                 this.loading = false;
                                 this.loadOntology = false;
                             }
@@ -389,7 +390,7 @@ export class OntologyComponent implements OnInit {
                                 this.getOntology(this.ontologyIri);
                             },
                             (error: ApiResponseError) => {
-                                console.error(error);
+                                this._notification.openSnackBar(error);
                                 this.loading = false;
                             }
                         );

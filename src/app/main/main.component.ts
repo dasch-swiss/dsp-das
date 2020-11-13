@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, ProjectsResponse } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, SessionService } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, NotificationService, SessionService } from '@dasch-swiss/dsp-ui';
 import { GridItem } from './grid/grid.component';
 
 @Component({
@@ -13,7 +13,7 @@ import { GridItem } from './grid/grid.component';
 export class MainComponent implements OnInit {
 
     loading: boolean;
-    errorMessage: ApiResponseError;
+    error: boolean;
 
     showCookieBanner: boolean = true;
 
@@ -64,6 +64,7 @@ export class MainComponent implements OnInit {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _notification: NotificationService,
         private _session: SessionService,
         private _router: Router,
         private _titleService: Title
@@ -116,8 +117,7 @@ export class MainComponent implements OnInit {
                 this.loading = false;
             },
             (error: ApiResponseError) => {
-                // console.error(error);
-                this.errorMessage = error;
+                this._notification.openSnackBar(error);
                 this.loading = false;
             }
         );

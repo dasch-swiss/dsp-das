@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
+import { NotificationService } from '@dasch-swiss/dsp-ui';
 import { Observable, of, Subject, throwError } from 'rxjs';
 
 interface CacheContent {
@@ -20,6 +21,10 @@ export class CacheService {
     private cache: Map<string, CacheContent> = new Map<string, CacheContent>();
     private inFlightObservables: Map<string, Subject<any>> = new Map<string, Subject<any>>();
     readonly DEFAULT_MAX_AGE: number = 3600000;  // 3600000ms => 1 Stunde
+
+    constructor(private _notification: NotificationService) {
+
+    }
 
     /**
      * Gets the value from cache if the key is provided.
@@ -63,7 +68,7 @@ export class CacheService {
                 },
                 (error: ApiResponseError) => {
                     // api service error
-                    console.error(error);
+                    this._notification.openSnackBar(error);
                 });
 
         } else {

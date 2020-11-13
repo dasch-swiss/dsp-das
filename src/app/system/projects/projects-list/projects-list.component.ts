@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, ProjectResponse, ReadUser, UpdateProjectRequest, StoredProject } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, Session, SortingService, SessionService } from '@dasch-swiss/dsp-ui';
+import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, ProjectResponse, StoredProject, UpdateProjectRequest } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken, NotificationService, Session, SessionService, SortingService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
 
@@ -68,6 +68,7 @@ export class ProjectsListComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
+        private _notification: NotificationService,
         private _session: SessionService,
         private _sortingService: SortingService,
         private _dialog: MatDialog,
@@ -167,8 +168,7 @@ export class ProjectsListComponent implements OnInit {
                 this._cache.get(response.body.project.shortcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(response.body.project.shortcode));
             },
             (error: ApiResponseError) => {
-                // this.errorMessage = error;
-                console.error(error);
+                this._notification.openSnackBar(error);
             }
         );
     }
@@ -186,8 +186,7 @@ export class ProjectsListComponent implements OnInit {
                 this._cache.get(response.body.project.shortcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(response.body.project.shortcode));
             },
             (error: ApiResponseError) => {
-                // this.errorMessage = error;
-                console.error(error);
+                this._notification.openSnackBar(error);
             }
         );
     }

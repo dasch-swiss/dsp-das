@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ApiResponseData, ApiResponseError, CreateChildNodeRequest, KnoraApiConnection, ListNodeInfo, ListNodeInfoResponse, StringLiteral } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, NotificationService } from '@dasch-swiss/dsp-ui';
 
 @Component({
     selector: 'app-list-item-form',
@@ -51,7 +51,8 @@ export class ListItemFormComponent implements OnInit {
     updateData: boolean = false;
 
     constructor(
-        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _notification: NotificationService
     ) { }
 
     ngOnInit() {
@@ -70,7 +71,7 @@ export class ListItemFormComponent implements OnInit {
                     this.initComponent = false;
                 },
                 (error: ApiResponseError) => {
-                    console.error(error);
+                    this._notification.openSnackBar(error);
                 }
             );
         }
@@ -117,7 +118,7 @@ export class ListItemFormComponent implements OnInit {
                     this.loading = false;
                 },
                 (error: ApiResponseError) => {
-                    console.error(error);
+                    this._notification.openSnackBar(error);
                 }
             );
         }

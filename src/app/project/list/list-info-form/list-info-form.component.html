@@ -1,52 +1,43 @@
-<div *ngIf="!errorMessage; else errorMsg">
+<dsp-progress-indicator *ngIf="loading"></dsp-progress-indicator>
 
-    <dsp-progress-indicator *ngIf="loading"></dsp-progress-indicator>
+<!-- success message after updating -->
+<dsp-message *ngIf="success" [message]="successMessage" [short]="true"></dsp-message>
 
-    <!-- success message after updating -->
-    <dsp-message *ngIf="success" [message]="successMessage" [short]="true"></dsp-message>
+<div *ngIf="!loading && !createList" class="form-content list-info">
 
-    <div *ngIf="!loading && !createList" class="form-content list-info">
-
-        <!-- list label -->
-        <dsp-string-literal-input [placeholder]="'List label'" [value]="labels"
-            (dataChanged)="handleData($event, 'labels')">
-        </dsp-string-literal-input>
-        <!-- TODO: we should support mat hint in the string literal input        <mat-hint *ngIf="formErrors.label">
+    <!-- list label -->
+    <dsp-string-literal-input [placeholder]="'List label'" [value]="labels"
+        (dataChanged)="handleData($event, 'labels')">
+    </dsp-string-literal-input>
+    <!-- TODO: we should support mat hint in the string literal input        <mat-hint *ngIf="formErrors.label">
             {{ formErrors.label }}
         </mat-hint> -->
 
-        <br><br>
+    <br><br>
 
-        <!-- list description / comment -->
-        <dsp-string-literal-input [textarea]="true" [placeholder]="'List description'" [value]="comments"
-            (dataChanged)="handleData($event, 'comments')" [language]="labels.length ? labels[0].language : 'en'">
-        </dsp-string-literal-input>
+    <!-- list description / comment -->
+    <dsp-string-literal-input [textarea]="true" [placeholder]="'List description'" [value]="comments"
+        (dataChanged)="handleData($event, 'comments')" [language]="labels.length ? labels[0].language : 'en'">
+    </dsp-string-literal-input>
 
-        <div class="form-panel form-action">
-            <span>
-                <button mat-button type="button" (click)="closeDialog.emit(list)">
-                    {{ 'appLabels.form.action.cancel' | translate }}
-                </button>
-            </span>
-            <span class="fill-remaining-space"></span>
-            <span>
-                <button mat-raised-button type="submit" color="primary" [disabled]="labels.length === 0"
-                    (click)="submitData()">
-                    {{ iri ? 'Update' : 'Next' }}
-                </button>
-            </span>
-        </div>
+    <div class="form-panel form-action">
+        <span>
+            <button mat-button type="button" (click)="closeDialog.emit(list)">
+                {{ 'appLabels.form.action.cancel' | translate }}
+            </button>
+        </span>
+        <span class="fill-remaining-space"></span>
+        <span>
+            <button mat-raised-button type="submit" color="primary" [disabled]="labels.length === 0"
+                (click)="submitData()">
+                {{ iri ? 'Update' : 'Next' }}
+            </button>
+        </span>
     </div>
-
-    <div class="create-list-items" *ngIf="!loading && createList && newList">
-        <app-list-item [projectcode]="projectcode" [projectIri]="projectIri" [parentIri]="newList.listinfo.id"
-            [language]="labels[0].language">
-        </app-list-item>
-    </div>
-
 </div>
 
-<!-- in the case of an API error: show the error message -->
-<ng-template #errorMsg>
-    <dsp-message *ngIf="errorMessage" [message]="errorMessage"></dsp-message>
-</ng-template>
+<div class="create-list-items" *ngIf="!loading && createList && newList">
+    <app-list-item [projectcode]="projectcode" [projectIri]="projectIri" [parentIri]="newList.listinfo.id"
+        [language]="labels[0].language">
+    </app-list-item>
+</div>

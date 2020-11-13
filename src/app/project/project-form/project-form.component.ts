@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, Project, ProjectResponse, ProjectsResponse, ReadProject, StringLiteral, UpdateProjectRequest, UserResponse } from '@dasch-swiss/dsp-js';
-import { existingNamesValidator, DspApiConnectionToken, SessionService } from '@dasch-swiss/dsp-ui';
+import { existingNamesValidator, DspApiConnectionToken, SessionService, NotificationService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
@@ -31,8 +31,6 @@ export class ProjectFormComponent implements OnInit {
     description: StringLiteral[];
 
     loading = true;
-
-    errorMessage: any;
 
     // is the logged-in user system admin?
     sysAdmin: boolean = false;
@@ -124,6 +122,7 @@ export class ProjectFormComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
+        private _notification: NotificationService,
         private _session: SessionService,
         private _router: Router,
         private _fb: FormBuilder) {
@@ -146,7 +145,7 @@ export class ProjectFormComponent implements OnInit {
                     this.loading = false;
                 },
                 (error: ApiResponseError) => {
-                    this.errorMessage = error;
+                    this._notification.openSnackBar(error);
                 }
             );
 
@@ -168,8 +167,7 @@ export class ProjectFormComponent implements OnInit {
                     }
                 },
                 (error: ApiResponseError) => {
-                    console.error(error);
-                    this.errorMessage = error;
+                    this._notification.openSnackBar(error);
                 }
             );
 
@@ -364,7 +362,7 @@ export class ProjectFormComponent implements OnInit {
 
                 },
                 (error: ApiResponseError) => {
-                    this.errorMessage = error;
+                    this._notification.openSnackBar(error);
                     this.loading = false;
                 }
             );
@@ -408,20 +406,19 @@ export class ProjectFormComponent implements OnInit {
                                         this._router.navigate(['/project/' + this.form.controls['shortcode'].value])
                                     );
                                 },
-                                (error: any) => {
-                                    console.error(error);
+                                (error: ApiResponseError) => {
+                                    this._notification.openSnackBar(error);
                                 }
                             );
                         },
-                        (error: any) => {
-                            console.error(error);
+                        (error: ApiResponseError) => {
+                            this._notification.openSnackBar(error);
                         }
                     );
 
                 },
                 (error: ApiResponseError) => {
-                    console.error(error);
-                    this.errorMessage = error;
+                    this._notification.openSnackBar(error);
                     this.loading = false;
                 }
             );
@@ -444,15 +441,7 @@ export class ProjectFormComponent implements OnInit {
                 this.refresh();
             },
             (error: ApiResponseError) => {
-                // const message: MessageData = error;
-                console.error(error);
-                /*
-                const errorRef = this._dialog.open(MessageDialogComponent, <MatDialogConfig>{
-                    data: {
-                        message: message
-                    }
-                });
-                */
+                this._notification.openSnackBar(error);
             }
         );
 
@@ -478,15 +467,7 @@ export class ProjectFormComponent implements OnInit {
                 this.refresh();
             },
             (error: ApiResponseError) => {
-                // const message: MessageData = error;
-                console.error(error);
-                /*
-                const errorRef = this._dialog.open(MessageDialogComponent, <MatDialogConfig>{
-                    data: {
-                        message: message
-                    }
-                });
-                */
+                this._notification.openSnackBar(error);
             }
         );
     }
@@ -508,7 +489,7 @@ export class ProjectFormComponent implements OnInit {
                 this.loading = false;
             },
             (error: ApiResponseError) => {
-                console.error(error);
+                this._notification.openSnackBar(error);
                 this.loading = false;
             }
         );

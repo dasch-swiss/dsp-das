@@ -14,7 +14,7 @@ import {
     UpdateOntology
 } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/dsp-js/src/models/v2/string-literal-v2';
-import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, NotificationService } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ResourceClassFormService } from './resource-class-form.service';
@@ -73,8 +73,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     // progress
     loading: boolean;
 
-    // in case of an error, show message
-    errorMessage: any;
+    // in case of an api error
+    error: boolean;
 
     // two step form: which should be active?
     showResourceClassForm: boolean = true;
@@ -114,6 +114,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _notification: NotificationService,
         private _resourceClassFormService: ResourceClassFormService,
         private _cache: CacheService,
         private _cdr: ChangeDetectorRef,
@@ -146,8 +147,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                     )
                 }
             },
-            (error: any) => {
-                console.error(error);
+            (error: ApiResponseError) => {
+                this._notification.openSnackBar(error);
             }
         );
 
@@ -157,7 +158,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                 this._cache.set('currentOntologyLists', response.body.lists);
             },
             (error: ApiResponseError) => {
-                console.error(error);
+                this._notification.openSnackBar(error);
             }
         );
 
@@ -463,7 +464,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
             },
             (error: ApiResponseError) => {
-                console.error('failed on addResourceClass', error);
+                this._notification.openSnackBar(error);
+                // console.error('failed on addResourceClass', error);
             }
         );
 
