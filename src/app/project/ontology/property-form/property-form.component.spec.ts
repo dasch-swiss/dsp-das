@@ -1,4 +1,3 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -8,7 +7,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { AppInitService, DspApiConfigToken, DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { TestConfig } from 'test.config';
@@ -24,8 +22,6 @@ xdescribe('PropertyFormComponent', () => {
         TestBed.configureTestingModule({
             declarations: [PropertyFormComponent],
             imports: [
-                BrowserAnimationsModule,
-                HttpClientTestingModule,
                 MatAutocompleteModule,
                 MatFormFieldModule,
                 MatIconModule,

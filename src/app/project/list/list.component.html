@@ -1,4 +1,4 @@
-<div *ngIf="projectAdmin" class="content large middle desktop-only">
+<div *ngIf="projectAdmin; else errorMsg" class="content large middle desktop-only">
 
     <dsp-progress-indicator *ngIf="loading"></dsp-progress-indicator>
 
@@ -80,9 +80,11 @@
 
 </div>
 
-<div *ngIf="!projectAdmin" class="content large middle">
-    <app-error [status]="403"></app-error>
-</div>
+<ng-template #errorMsg>
+    <div class="content large middle">
+        <app-error [status]="403"></app-error>
+    </div>
+</ng-template>
 
 <div class="mobile-only">
     <dsp-message [message]="{status: 415, statusText: 'This content is not supported on small devices.'}">

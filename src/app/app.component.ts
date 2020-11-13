@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectsResponse } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, HealthResponse, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 
 @Component({
@@ -10,9 +10,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 })
 export class AppComponent implements OnInit {
 
-    session = false;
-
-    noError:boolean = true;
+    apiErrorStatus: number;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -25,15 +23,15 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         // test the api connection
-        this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
-            (response: ApiResponseData<ProjectsResponse>) => {
-                this.noError = true;
+        this._dspApiConnection.system.healthEndpoint.getHealthStatus().subscribe(
+            (response: ApiResponseData<HealthResponse>) => {
+                this.apiErrorStatus = undefined;
             },
             (error: ApiResponseError) => {
                 const status = (error.status === 0 ? 503 : error.status);
                 if (status >= 500 && status < 600) {
-                    // this.noError = false;
-                    console.warn('SERVER ERROR')
+                    this.apiErrorStatus = status;
+                    console.log('status', status)
                 }
             }
         );

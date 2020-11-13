@@ -1,4 +1,4 @@
-<div *ngIf="projectAdmin" class="content large middle">
+<div *ngIf="projectAdmin; else errorMsg" class="content large middle">
 
     <!-- add group to the project -->
     <app-add-group *ngIf="project?.status && sysAdmin" [projectcode]="projectcode" (refreshParent)="refresh()"
@@ -20,6 +20,8 @@
 
 </div>
 
-<div *ngIf="!projectAdmin" class="content large middle">
-    <app-error [status]="403"></app-error>
-</div>
+<ng-template #errorMsg>
+    <div class="content large middle">
+        <app-error [status]="403"></app-error>
+    </div>
+</ng-template>

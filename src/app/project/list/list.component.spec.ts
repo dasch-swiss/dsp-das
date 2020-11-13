@@ -10,7 +10,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
@@ -22,7 +21,6 @@ import {
     DspCoreModule
 } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
-import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { ListItemFormComponent } from './list-item-form/list-item-form.component';
 import { ListItemComponent } from './list-item/list-item.component';
@@ -37,11 +35,9 @@ describe('ListComponent', () => {
             declarations: [
                 ListComponent,
                 ListItemComponent,
-                ListItemFormComponent,
-                ErrorComponent
+                ListItemFormComponent
             ],
             imports: [
-                BrowserAnimationsModule,
                 HttpClientModule,
                 DspActionModule,
                 DspCoreModule,

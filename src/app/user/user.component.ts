@@ -74,7 +74,6 @@ export class UserComponent implements OnInit {
     refresh() {
         this.loading = true;
         setTimeout(() => {
-            // console.log(this.resource);
             this.initContent();
         }, 500);
     }

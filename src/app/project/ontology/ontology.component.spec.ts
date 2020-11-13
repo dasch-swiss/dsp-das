@@ -1,4 +1,3 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -12,7 +11,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
@@ -24,9 +22,7 @@ import {
     DspCoreModule
 } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
-import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
-import { OntologyVisualizerComponent } from './ontology-visualizer/ontology-visualizer.component';
 import { OntologyComponent } from './ontology.component';
 
 describe('OntologyComponent', () => {
@@ -36,13 +32,9 @@ describe('OntologyComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                OntologyComponent,
-                OntologyVisualizerComponent,
-                ErrorComponent
+                OntologyComponent
             ],
             imports: [
-                BrowserAnimationsModule,
-                HttpClientTestingModule,
                 DspActionModule,
                 DspCoreModule,
                 MatCardModule,

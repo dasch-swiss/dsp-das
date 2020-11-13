@@ -10,7 +10,6 @@ import {
     DspApiConnectionToken
 } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
-import { ErrorComponent } from 'src/app/main/error/error.component';
 import { GroupsListComponent } from 'src/app/system/groups/groups-list/groups-list.component';
 import { TestConfig } from 'test.config';
 import { AddGroupComponent } from './add-group/add-group.component';
@@ -25,8 +24,7 @@ describe('PermissionComponent', () => {
             declarations: [
                 PermissionComponent,
                 AddGroupComponent,
-                GroupsListComponent,
-                ErrorComponent
+                GroupsListComponent
             ],
             imports: [
                 HttpClientTestingModule,

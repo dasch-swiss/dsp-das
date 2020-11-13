@@ -15,14 +15,15 @@ export class ErrorComponent implements OnInit {
         private _titleService: Title,
         private _route: ActivatedRoute
     ) {
-
+        this._route.data.subscribe(data => {
+            console.log(data);
+            // this.status = data.status;
+        });
     }
 
     ngOnInit() {
 
-        this._route.data.subscribe(data => {
-            this.status = data.status;
-        })
+
 
         // set the page title
         this._titleService.setTitle('DSP | Error ' + this.status);
