@@ -104,12 +104,14 @@ export class ProjectComponent implements OnInit {
                 },
                 (error: ApiResponseError) => {
                     this._notification.openSnackBar(error);
+                    this.error = true;
                     this.loading = false;
                 }
             );
         } else {
             // shortcode isn't valid
             // TODO: show an error page
+
         }
     }
 

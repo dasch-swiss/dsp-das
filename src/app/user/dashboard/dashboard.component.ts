@@ -53,6 +53,7 @@ export class DashboardComponent implements OnInit {
             },
             (error: ApiResponseError) => {
                 this._notification.openSnackBar(error);
+                this.loading = false;
             }
         );
 

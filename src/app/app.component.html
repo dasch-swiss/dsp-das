@@ -1,4 +1,4 @@
-<div class="app"> <!-- *ngIf="apiErrorStatus; else error"-->
+<div class="app" *ngIf="!apiErrorStatus; else error">
 
     <div class="app-header">
         <app-header></app-header>
@@ -10,7 +10,6 @@
 
 </div>
 
-<!-- <ng-template #error>
-    Diese Fehlermeldung sollte erscheinen:
+<ng-template #error>
     <app-error [status]="apiErrorStatus"></app-error>
-</ng-template> -->
+</ng-template>
