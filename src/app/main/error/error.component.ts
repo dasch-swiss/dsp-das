@@ -22,9 +22,6 @@ export class ErrorComponent implements OnInit {
     }
 
     ngOnInit() {
-
-
-
         // set the page title
         this._titleService.setTitle('DSP | Error ' + this.status);
     }

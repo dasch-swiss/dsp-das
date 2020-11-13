@@ -15,6 +15,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { TestConfig } from 'test.config';
 import { AppComponent } from './app.component';
+import { ErrorComponent } from './main/error/error.component';
 import { HeaderComponent } from './main/header/header.component';
 import { SelectLanguageComponent } from './main/select-language/select-language.component';
 import { UserMenuComponent } from './user/user-menu/user-menu.component';
@@ -27,7 +28,8 @@ describe('AppComponent', () => {
                 AppComponent,
                 HeaderComponent,
                 SelectLanguageComponent,
-                UserMenuComponent
+                UserMenuComponent,
+                ErrorComponent
             ],
             imports: [
                 MatIconModule,

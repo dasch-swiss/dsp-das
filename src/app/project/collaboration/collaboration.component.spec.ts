@@ -20,8 +20,8 @@ import {
 } from '@dasch-swiss/dsp-ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
-import { UsersListComponent } from 'src/app/system/users/users-list/users-list.component';
 import { TestConfig } from 'test.config';
+import { UsersListComponent } from '../../system/users/users-list/users-list.component';
 import { AddUserComponent } from './add-user/add-user.component';
 import { CollaborationComponent } from './collaboration.component';
 import { SelectGroupComponent } from './select-group/select-group.component';

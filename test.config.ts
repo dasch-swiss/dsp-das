@@ -7,6 +7,7 @@ export class TestConfig {
     public static AppConfig = { name: 'DSP-APP', url: '0.0.0.0:4200' };
 
     public static ProjectCode = '0001';
+    public static OntologyIri = 'http://0.0.0.0:3333/ontology/0001/anything/v2'
 
     public static CurrentSession: Session = {
         id: 1555226377250,

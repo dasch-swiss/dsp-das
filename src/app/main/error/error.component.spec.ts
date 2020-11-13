@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatIconModule } from '@angular/material/icon';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DspActionModule } from '@dasch-swiss/dsp-ui';
 import { ErrorComponent } from './error.component';
@@ -12,6 +13,7 @@ describe('ErrorComponent', () => {
             declarations: [ErrorComponent],
             imports: [
                 DspActionModule,
+                MatIconModule,
                 RouterTestingModule
             ]
         })
