@@ -73,6 +73,8 @@ import { ResultsComponent } from './workspace/results/results.component';
 import { environment } from '../environments/environment';
 import { ExternalLinksDirective } from './main/directive/external-links.directive';
 
+import { AngularSplitModule } from 'angular-split';
+
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
     return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json')
@@ -150,7 +152,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
                 useFactory: HttpLoaderFactory,
                 deps: [HttpClient]
             }
-        })
+        }),
+        AngularSplitModule.forRoot()
     ],
     providers: [
         {
