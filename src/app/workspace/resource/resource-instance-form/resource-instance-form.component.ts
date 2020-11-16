@@ -23,6 +23,7 @@ import { DspApiConnectionToken, Session, SessionService, SortingService } from '
 import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { SelectPropertiesComponent } from './select-properties/select-properties.component';
+import { SelectResourceClassComponent } from './select-resource-class/select-resource-class.component';
 
 // https://dev.to/krumpet/generic-type-guard-in-typescript-258l
 type Constructor<T> = { new(...args: any[]): T };
@@ -51,6 +52,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     @Output() updateParent: EventEmitter<{ title: string, subtitle: string }> = new EventEmitter<{ title: string, subtitle: string }>();
 
     @ViewChild('selectProps') selectPropertiesComponent: SelectPropertiesComponent;
+    @ViewChild('selectResourceClass') selectResourceClassComponent: SelectResourceClassComponent;
 
     // forms
     selectResourceForm: FormGroup;
@@ -250,6 +252,12 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
                 // reset selectedResourceClass since it will be invalid
                 this.selectedResourceClass = undefined;
+                this.resourceLabel = undefined;
+
+                // if there is already a select-resource-class component (i.e. the user clicked the back button), reset the resource label
+                if (this.selectResourceClassComponent) {
+                    this.selectResourceClassComponent.form.controls.label.setValue(null);
+                }
 
                 // remove the form control to ensure the parent Formgroups validity is correct
                 // this will be added to the parent Formgroup again when the select-resource-class OnInit method is called

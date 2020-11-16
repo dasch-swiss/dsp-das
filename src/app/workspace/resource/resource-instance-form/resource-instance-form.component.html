@@ -26,6 +26,7 @@
     <!-- select one resource -->
     <span *ngIf="resourceClasses?.length > 0">
         <app-select-resource-class
+            #selectResourceClass
             [formGroup]="selectResourceForm"
             [resourceClassDefinitions]="resourceClasses"
             [selectedResourceClass]="selectedResourceClass"
