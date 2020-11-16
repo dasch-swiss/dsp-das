@@ -287,28 +287,27 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
         // reset errorMessage, it will be reassigned in the else clause if needed
         this.errorMessage = undefined;
 
-        if (resourceClassIri) {
-            // if the client undoes the selection of a resource class, use the active ontology as a fallback
-            if (resourceClassIri === null) {
-                this.selectResourceClasses(this.selectedOntology);
-            } else {
-                this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).subscribe(
-                    onto => {
-                        this.ontologyInfo = onto;
+        // if the client undoes the selection of a resource class, use the active ontology as a fallback
+        if (resourceClassIri === null) {
+            this.selectResourceClasses(this.selectedOntology);
+        } else if (resourceClassIri) {
+            this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).subscribe(
+                onto => {
+                    this.ontologyInfo = onto;
 
-                        this.selectedResourceClass = onto.classes[resourceClassIri];
-                        // console.log('selectedResourceClass', this.selectedResourceClass);
+                    this.selectedResourceClass = onto.classes[resourceClassIri];
+                    // console.log('selectedResourceClass', this.selectedResourceClass);
 
-                        this.properties = this._makeResourceProperties(onto.properties);
-                        // console.log('properties', this.properties);
+                    this.properties = this._makeResourceProperties(onto.properties);
+                    // console.log('properties', this.properties);
 
-                        this.convertPropObjectAsArray();
-                    }
-                );
-            }
+                    this.convertPropObjectAsArray();
+                }
+            );
         } else {
             this.errorMessage = 'No resource class defined for the selected ontology.';
         }
+
     }
 
     /**
