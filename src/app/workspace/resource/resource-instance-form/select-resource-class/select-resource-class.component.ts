@@ -43,13 +43,13 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy {
         });
 
         // emit Iri of the resource when selected
-        this.resourceChangesSubscription = this.form.valueChanges.subscribe((data) => {
-            this.resourceClassSelected.emit(data.resources);
+        this.resourceChangesSubscription = this.form.controls.resources.valueChanges.subscribe((data) => {
+            this.resourceClassSelected.emit(data);
         });
 
         // emit label of the resource when selected
-        this.resourceChangesSubscription = this.form.valueChanges.subscribe((data) => {
-            this.resourceLabel.emit(data.label);
+        this.resourceChangesSubscription = this.form.controls.label.valueChanges.subscribe((data) => {
+            this.resourceLabel.emit(data);
         });
 
         // if there is only one Resource Class Definition to choose from, select it automatically
