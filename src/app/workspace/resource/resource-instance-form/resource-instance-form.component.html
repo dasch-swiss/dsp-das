@@ -6,6 +6,7 @@
         <app-select-project
             [formGroup]="selectResourceForm"
             [usersProjects]="usersProjects"
+            [systemAdmin]="systemAdmin"
             (projectSelected)="selectOntologies($event)">
         </app-select-project>
     </div>

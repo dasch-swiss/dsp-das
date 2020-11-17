@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { StoredProject } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, KnoraApiConnection, ProjectsResponse, StoredProject } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,13 +15,17 @@ export class SelectProjectComponent implements OnInit, OnDestroy {
 
     @Input() usersProjects: StoredProject[];
 
+    @Input() systemAdmin: boolean;
+
     @Output() projectSelected = new EventEmitter<string>();
 
     form: FormGroup;
 
     projectChangesSubscription: Subscription;
 
-    constructor(@Inject(FormBuilder) private _fb: FormBuilder) { }
+    constructor(
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        @Inject(FormBuilder) private _fb: FormBuilder) { }
 
     ngOnInit(): void {
 
@@ -40,6 +45,14 @@ export class SelectProjectComponent implements OnInit, OnDestroy {
         // if there is only one project to choose from, select it automatically
         if (this.usersProjects.length === 1) {
             this.form.controls.projects.setValue(this.usersProjects[0].id);
+        }
+
+        // if the user is system admin, show all projects in the select dropdown
+        if (this.systemAdmin === true) {
+            this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
+                (response: ApiResponseData<ProjectsResponse>) => {
+                    this.usersProjects = response.body.projects;
+                });
         }
 
     }

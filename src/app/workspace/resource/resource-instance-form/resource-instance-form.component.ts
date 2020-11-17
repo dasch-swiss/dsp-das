@@ -57,6 +57,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     session: Session;
     username: string;
+    systemAdmin: boolean;
 
     showNextStepForm: boolean;
 
@@ -88,6 +89,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     ) {
         this.session = this._session.getSession();
         this.username = this.session.user.name;
+        this.systemAdmin = this.session.user.sysAdmin;
     }
 
 
