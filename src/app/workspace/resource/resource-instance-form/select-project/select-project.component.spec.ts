@@ -22,6 +22,7 @@ import { SelectProjectComponent } from './select-project.component';
             #selectProject
             [formGroup]="form"
             [usersProjects]="usersProjects"
+            [systemAdmin]="systemAdmin"
             (projectSelected)="selectProjects($event)">
         </app-select-project>`
 })
@@ -31,6 +32,7 @@ class TestHostComponent implements OnInit {
 
     form: FormGroup;
     usersProjects: StoredProject[] = [];
+    systemAdmin: boolean;
     selectedProjIri: string;
 
     constructor(@Inject(FormBuilder) private _fb: FormBuilder) {
@@ -38,6 +40,7 @@ class TestHostComponent implements OnInit {
 
     ngOnInit() {
         this.usersProjects = MockProjects.mockProjects().body.projects;
+        this.systemAdmin = true;
         this.form = this._fb.group({});
     }
 
@@ -99,6 +102,7 @@ describe('SelectProjectComponent', () => {
 
         expect(testHostComponent.selectProject.usersProjects).toBeDefined();
         expect(testHostComponent.selectProject.usersProjects.length).toEqual(8);
+        expect(testHostComponent.selectProject.systemAdmin).toBe(true);
 
     });
 
