@@ -60,11 +60,11 @@ export class SelectProjectComponent implements OnInit, OnDestroy {
                 (response: ApiResponseData<ProjectsResponse>) => {
                     this.usersProjects = response.body.projects;
                 });
+        }
 
         // check if there is a pre-selected project, if so, set the value of the form control to this value
         if (this.selectedProject) {
             this.form.controls.projects.setValue(this.selectedProject);
-
         }
 
     }
