@@ -4,6 +4,8 @@ import { ApiResponseData, KnoraApiConnection, ProjectsResponse, StoredProject } 
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 
+const resolvedPromise = Promise.resolve(null);
+
 @Component({
     selector: 'app-select-project',
     templateUrl: './select-project.component.html',
@@ -16,6 +18,9 @@ export class SelectProjectComponent implements OnInit, OnDestroy {
     @Input() usersProjects: StoredProject[];
 
     @Input() systemAdmin: boolean;
+
+    // optional input to provide the component with a pre-selected project
+    @Input() selectedProject?: string;
 
     @Output() projectSelected = new EventEmitter<string>();
 
@@ -39,8 +44,10 @@ export class SelectProjectComponent implements OnInit, OnDestroy {
             this.projectSelected.emit(data.projects);
         });
 
-        // add form to the parent form group
-        this.formGroup.addControl('projects', this.form);
+        resolvedPromise.then(() => {
+            // add form to the parent form group
+            this.formGroup.addControl('projects', this.form);
+        });
 
         // if there is only one project to choose from, select it automatically
         if (this.usersProjects.length === 1) {
@@ -53,6 +60,11 @@ export class SelectProjectComponent implements OnInit, OnDestroy {
                 (response: ApiResponseData<ProjectsResponse>) => {
                     this.usersProjects = response.body.projects;
                 });
+
+        // check if there is a pre-selected project, if so, set the value of the form control to this value
+        if (this.selectedProject) {
+            this.form.controls.projects.setValue(this.selectedProject);
+
         }
 
     }
