@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { CardinalityUtil, ReadResource, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ValueService } from '@dasch-swiss/dsp-ui';
@@ -13,7 +13,7 @@ export interface Properties {
   templateUrl: './select-properties.component.html',
   styleUrls: ['./select-properties.component.scss']
 })
-export class SelectPropertiesComponent implements OnInit {
+export class SelectPropertiesComponent implements OnInit, AfterViewInit {
 
     @ViewChildren('switchProp') switchPropertiesComponent: QueryList<SwitchPropertiesComponent>;
 
@@ -29,6 +29,10 @@ export class SelectPropertiesComponent implements OnInit {
 
     index = 0;
 
+    // this is used as a general example
+    // TODO: use a key value pair to store the amount of select-property components for each property
+    valuesArray = [];
+
     propId: string;
     addButtonIsVisible: boolean;
     addValueFormIsVisible: boolean;
@@ -36,7 +40,7 @@ export class SelectPropertiesComponent implements OnInit {
     constructor(private _valueService: ValueService) { }
 
     ngOnInit() {
-
+        this.valuesArray.push(new SwitchPropertiesComponent());
         if (this.propertiesAsArray) {
             for (const prop of this.propertiesAsArray) {
                 if (prop) {
@@ -48,6 +52,10 @@ export class SelectPropertiesComponent implements OnInit {
         }
 
         this.parentResource.entityInfo = this.ontologyInfo;
+    }
+
+    ngAfterViewInit() {
+        console.log(this.parentForm);
     }
 
     /**
@@ -72,6 +80,11 @@ export class SelectPropertiesComponent implements OnInit {
         console.log('showAddValueForm');
         this.propId = prop.id;
         this.addValueFormIsVisible = true;
+
+        // TODO: use the prop.id to add a component to the key value pair
+        this.valuesArray.push(new SwitchPropertiesComponent());
+        console.log('parent form: ', this.parentForm);
     }
 
 }
+

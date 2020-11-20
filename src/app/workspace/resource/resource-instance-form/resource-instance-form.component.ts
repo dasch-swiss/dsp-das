@@ -144,17 +144,26 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
         createResource.attachedToProject = this.selectedProject; // console.log('project', this.selectedProject);
 
+        // TODO: define key value pair with iri and an array of values for each iri
+
         this.selectPropertiesComponent.switchPropertiesComponent.forEach((child) => {
             const createVal = child.createValueComponent.getNewValue();
             const iri = child.property.id;
-
             if (createVal instanceof CreateValue) {
+                // TODO: add the value to the iri in the key value pair
+
+                // TODO: move this outside of the foreach
                 this.propertiesObj[iri] = [createVal];
             }
 
         });
 
-        // console.log('propObj: ', this.propertiesObj);
+        // TODO: loop through the key value pair and for each iri, add the array of values
+        // keyValues.foreach(iri => {
+        //     this.propertiesObj[iri] = values array for this iri;
+        // });
+
+        console.log('propObj: ', this.propertiesObj);
         createResource.properties = this.propertiesObj;
 
         this._dspApiConnection.v2.res.createResource(createResource).subscribe(
