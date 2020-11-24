@@ -17,8 +17,6 @@ export class SelectProjectComponent implements OnInit, OnDestroy {
 
     @Input() usersProjects: StoredProject[];
 
-    @Input() systemAdmin: boolean;
-
     // optional input to provide the component with a pre-selected project
     @Input() selectedProject?: string;
 
@@ -52,14 +50,6 @@ export class SelectProjectComponent implements OnInit, OnDestroy {
         // if there is only one project to choose from, select it automatically
         if (this.usersProjects.length === 1) {
             this.form.controls.projects.setValue(this.usersProjects[0].id);
-        }
-
-        // if the user is system admin, show all projects in the select dropdown
-        if (this.systemAdmin === true) {
-            this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
-                (response: ApiResponseData<ProjectsResponse>) => {
-                    this.usersProjects = response.body.projects;
-                });
         }
 
         // check if there is a pre-selected project, if so, set the value of the form control to this value

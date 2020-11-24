@@ -10,7 +10,7 @@ import {
     CreateValue,
     KnoraApiConnection,
     OntologiesMetadata,
-    OntologyMetadata,
+    ProjectsResponse,
     PropertyDefinition,
     ReadResource,
     ResourceClassAndPropertyDefinitions,
@@ -60,7 +60,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     session: Session;
     username: string;
-    systemAdmin: boolean;
 
     showNextStepForm: boolean;
 
@@ -92,7 +91,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     ) {
         this.session = this._session.getSession();
         this.username = this.session.user.name;
-        this.systemAdmin = this.session.user.sysAdmin;
     }
 
 
@@ -140,11 +138,11 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
         const createResource = new CreateResource();
 
-        createResource.label = this.resourceLabel; // console.log('label', this.resourceLabel);
+        createResource.label = this.resourceLabel;
 
-        createResource.type = this.selectedResourceClass.id; // console.log('type', this.selectedResourceClass.id);
+        createResource.type = this.selectedResourceClass.id;
 
-        createResource.attachedToProject = this.selectedProject; // console.log('project', this.selectedProject);
+        createResource.attachedToProject = this.selectedProject;
 
         this.selectPropertiesComponent.switchPropertiesComponent.forEach((child) => {
             const createVal = child.createValueComponent.getNewValue();
@@ -156,13 +154,11 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
         });
 
-        // console.log('propObj: ', this.propertiesObj);
         createResource.properties = this.propertiesObj;
 
         this._dspApiConnection.v2.res.createResource(createResource).subscribe(
             (res: ReadResource) => {
                 this.resource = res;
-                // console.log('create resource', this.resource);
 
                 // navigate to the resource viewer page
                 this._router.navigateByUrl('/resource', { skipLocationChange: true }).then(() =>
@@ -181,13 +177,23 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     initializeProjects(): void {
         this.usersProjects = [];
 
-        if (this.username) {
+        if (this.username && this.session.user.sysAdmin === false) {
             this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(
                 (response: ApiResponseData<UserResponse>) => {
 
                     for (const project of response.body.user.projects) {
                         this.usersProjects.push(project);
+                        console.log('usersProjects', this.usersProjects);
                     }
+                },
+                (error: ApiResponseError) => {
+                    console.error(error);
+                }
+            );
+        } else if (this.session.user.sysAdmin === true) {
+            this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
+                (response: ApiResponseData<ProjectsResponse>) => {
+                    this.usersProjects = response.body.projects;
                 },
                 (error: ApiResponseError) => {
                     console.error(error);
