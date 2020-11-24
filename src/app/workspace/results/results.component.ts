@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SearchParams } from '@dasch-swiss/dsp-ui';
-import {ReadProject} from '@dasch-swiss/dsp-js';
+import { ReadProject } from '@dasch-swiss/dsp-js';
 
 @Component({
     selector: 'app-results',
