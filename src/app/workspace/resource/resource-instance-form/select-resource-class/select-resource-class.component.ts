@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ResourceClassDefinition } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
@@ -10,7 +10,7 @@ const resolvedPromise = Promise.resolve(null);
     templateUrl: './select-resource-class.component.html',
     styleUrls: ['./select-resource-class.component.scss']
 })
-export class SelectResourceClassComponent implements OnInit, OnDestroy {
+export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @Input() formGroup: FormGroup;
 
@@ -52,16 +52,6 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy {
             this.resourceLabel.emit(data);
         });
 
-        // if there is only one Resource Class Definition to choose from, select it automatically
-        if (this.resourceClassDefinitions.length === 1) {
-            this.form.controls.resources.setValue(this.resourceClassDefinitions[0].id);
-        }
-
-        resolvedPromise.then(() => {
-            // add form to the parent form group
-            this.formGroup.addControl('resources', this.form);
-        });
-
         // check if there is a pre-selected ResourceClassDefinition, if so, set the value of the form control to this value
         if (this.selectedResourceClass) {
             this.form.controls.resources.setValue(this.selectedResourceClass.id);
@@ -70,6 +60,20 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy {
         // check if there is a pre-chosen label, if so, set the value of the form control to this value
         if (this.chosenResourceLabel) {
             this.form.controls.label.setValue(this.chosenResourceLabel);
+        }
+
+        resolvedPromise.then(() => {
+            // add form to the parent form group
+            this.formGroup.addControl('resources', this.form);
+        });
+
+    }
+
+    ngAfterViewInit() {
+        // if there is only one Resource Class Definition to choose from, select it automatically
+        // more info: https://indepth.dev/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error
+        if (this.resourceClassDefinitions.length === 1) {
+            Promise.resolve(null).then(() => this.form.controls.resources.setValue(this.resourceClassDefinitions[0].id));
         }
     }
 
