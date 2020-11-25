@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Params } from '@angular/router';
 import { SearchParams } from '@dasch-swiss/dsp-ui';
 
 @Component({
@@ -13,9 +14,11 @@ export class ResultsComponent implements OnInit {
 
     resIri: string;
 
+    resourceIri: string;
+
     constructor(
         private _route: ActivatedRoute,
-        private _router: Router
+        private _titleService: Title
     ) {
 
         this._route.paramMap.subscribe((params: Params) => {
@@ -31,12 +34,16 @@ export class ResultsComponent implements OnInit {
             }
 
         });
+
+        // set the page title
+        this._titleService.setTitle('Search results for ' + this.searchParams.mode + ' search');
     }
 
     ngOnInit() {
     }
 
     openResource(id: string) {
-        this._router.navigate(['/resource/' + encodeURIComponent(id)]);
+        this.resourceIri = id;
     }
+
 }

@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import {
     ActivatedRoute,
     NavigationEnd,
@@ -8,7 +9,7 @@ import {
     Params,
     Router
 } from '@angular/router';
-import { ReadProject } from '@dasch-swiss/dsp-js';
+import { ReadLinkValue, ReadProject } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 
@@ -17,9 +18,9 @@ import { Subscription } from 'rxjs';
     templateUrl: './resource.component.html',
     styleUrls: ['./resource.component.scss']
 })
-export class ResourceComponent implements OnInit, OnDestroy {
+export class ResourceComponent implements OnDestroy {
 
-    resourceIri: string;
+    @Input() resourceIri: string;
 
     refresh: boolean;
 
@@ -29,13 +30,18 @@ export class ResourceComponent implements OnInit, OnDestroy {
         private _location: Location,
         private _notification: NotificationService,
         private _route: ActivatedRoute,
-        private _router: Router) {
+        private _router: Router,
+        private _titleService: Title) {
 
-        this._route.paramMap.subscribe((params: Params) => {
-            this.resourceIri = decodeURIComponent(params.get('id'));
-        });
+        if (!this.resourceIri) {
+            this._route.paramMap.subscribe((params: Params) => {
+                this.resourceIri = decodeURIComponent(params.get('id'));
+            });
+        }
 
         this._router.events.subscribe((event) => {
+
+            this._titleService.setTitle('Resource view');
 
             if (event instanceof NavigationStart) {
                 // show loading indicator
@@ -56,18 +62,8 @@ export class ResourceComponent implements OnInit, OnDestroy {
                 // console.error(event.error);
                 this._notification.openSnackBar(event.error);
             }
-        });
-    }
 
-    ngOnInit() {
-        /*
-        this.navigationSubscription = this._route.paramMap.subscribe((params: ParamMap) => {
-          this.refresh = true;
-          // this.getResource(params.get('id'));
-          this.refresh = false;
         });
-        */
-
     }
 
     ngOnDestroy() {
@@ -83,5 +79,9 @@ export class ResourceComponent implements OnInit, OnDestroy {
     // open project in new tab
     openProject(project: ReadProject){
         window.open('/project/' + project.shortcode, "_blank");
+    }
+
+    openResource(linkValue: ReadLinkValue) {
+        window.open('/resource/' + encodeURIComponent(linkValue.linkedResource.id), "_blank");
     }
 }

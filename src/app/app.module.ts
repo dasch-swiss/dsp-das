@@ -76,6 +76,8 @@ import { SelectResourceClassComponent } from './workspace/resource/resource-inst
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
 
+import { AngularSplitModule } from 'angular-split';
+
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
     return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json')
@@ -159,7 +161,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
                 useFactory: HttpLoaderFactory,
                 deps: [HttpClient]
             }
-        })
+        }),
+        AngularSplitModule.forRoot()
     ],
     providers: [
         {
