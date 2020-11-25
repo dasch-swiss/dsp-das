@@ -183,7 +183,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
                     for (const project of response.body.user.projects) {
                         this.usersProjects.push(project);
-                        console.log('usersProjects', this.usersProjects);
                     }
                 },
                 (error: ApiResponseError) => {
