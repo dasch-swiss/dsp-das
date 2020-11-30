@@ -11,7 +11,6 @@
                     </h3>
                 </div>
                 <div class="property-value large-field">
-                    <!-- TODO: use the key value pair to figure out how many components to make for each prop -->
                     <div *ngFor="let val of propertyValuesKeyValuePair[prop.id]; let i=index">
                         <app-switch-properties
                             #switchProp
@@ -23,11 +22,11 @@
                     </div>
                     <!-- Add button -->
                     <!-- TODO: uncomment this and ensure the button only appears if the cardinality of the property allows it -->
-                    <!-- <div *ngIf="addValueIsAllowed(prop)">
+                    <div *ngIf="addValueIsAllowed(prop)">
                         <button type="button" class="create" (click)="showAddValueForm(prop)" title="Add a new value">
                             <mat-icon>add_box</mat-icon>
                         </button>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>

@@ -31,9 +31,7 @@ export class SelectPropertiesComponent implements OnInit, AfterViewInit {
 
     propertyValuesKeyValuePair = {}; // { [index: string]: [number] }
 
-    propId: string;
     addButtonIsVisible: boolean;
-    addValueFormIsVisible: boolean;
 
     constructor(private _valueService: ValueService) { }
 
@@ -78,9 +76,6 @@ export class SelectPropertiesComponent implements OnInit, AfterViewInit {
      * Called from the template when the user clicks on the add button
      */
     showAddValueForm(prop: ResourcePropertyDefinition) {
-        this.propId = prop.id;
-        this.addValueFormIsVisible = true;
-
         // get the length of the corresponding property values array
         const length = this.propertyValuesKeyValuePair[prop.id].length;
 
@@ -94,6 +89,7 @@ export class SelectPropertiesComponent implements OnInit, AfterViewInit {
     /**
      * Returns a simple array of incremented numbers
      * Used to generate a new array when reassigning an array to a value in the propertyValuesKeyValuePair object
+     * https://lishman.io/using-ngfor-to-repeat-n-times-in-angular
      *
      * @param n number of elements you would like in the array
      */

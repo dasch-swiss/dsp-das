@@ -150,18 +150,16 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
             const createVal = child.createValueComponent.getNewValue();
             const iri = child.property.id;
             if (createVal instanceof CreateValue) {
-                // TODO: add the value to the iri in the key value pair
-
-                // TODO: move this outside of the foreach
-                this.propertiesObj[iri] = [createVal];
+                if (this.propertiesObj[iri]) {
+                    // if a key already exists, add the createVal to the array
+                    this.propertiesObj[iri].push(createVal);
+                } else {
+                    // if no key exists, add one and add the createVal as the first value of the array
+                    this.propertiesObj[iri] = [createVal];
+                }
             }
 
         });
-
-        // TODO: loop through the key value pair and for each iri, add the array of values
-        // keyValues.foreach(iri => {
-        //     this.propertiesObj[iri] = values array for this iri;
-        // });
 
         console.log('propObj: ', this.propertiesObj);
         createResource.properties = this.propertiesObj;
