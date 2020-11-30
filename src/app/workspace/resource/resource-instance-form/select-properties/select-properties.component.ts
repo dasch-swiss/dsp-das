@@ -29,9 +29,7 @@ export class SelectPropertiesComponent implements OnInit, AfterViewInit {
 
     index = 0;
 
-    // this is used as a general example
-    // TODO: use a key value pair to store the amount of select-property components for each property
-    valuesArray = [];
+    propertyValuesKeyValuePair = {}; // { [index: string]: [number] }
 
     propId: string;
     addButtonIsVisible: boolean;
@@ -40,13 +38,16 @@ export class SelectPropertiesComponent implements OnInit, AfterViewInit {
     constructor(private _valueService: ValueService) { }
 
     ngOnInit() {
-        this.valuesArray.push(new SwitchPropertiesComponent());
+        console.log(this.propertiesAsArray);
         if (this.propertiesAsArray) {
             for (const prop of this.propertiesAsArray) {
                 if (prop) {
                     if (prop.objectType === 'http://api.knora.org/ontology/knora-api/v2#TextValue') {
                         prop.objectType = this._valueService.getTextValueClass(prop);
                     }
+
+                    // each property will have at least one value so add one by default
+                    this.propertyValuesKeyValuePair[prop.id] = [0];
                 }
             }
         }
@@ -77,13 +78,27 @@ export class SelectPropertiesComponent implements OnInit, AfterViewInit {
      * Called from the template when the user clicks on the add button
      */
     showAddValueForm(prop: ResourcePropertyDefinition) {
-        console.log('showAddValueForm');
         this.propId = prop.id;
         this.addValueFormIsVisible = true;
 
-        // TODO: use the prop.id to add a component to the key value pair
-        this.valuesArray.push(new SwitchPropertiesComponent());
+        // get the length of the corresponding property values array
+        const length = this.propertyValuesKeyValuePair[prop.id].length;
+
+        // reassign the array to a new array with a length of the current length plus 1
+        this.propertyValuesKeyValuePair[prop.id] = this.createValueArrayForProperty(length + 1);
+
+        console.log('propertyValues: ', this.propertyValuesKeyValuePair);
         console.log('parent form: ', this.parentForm);
+    }
+
+    /**
+     * Returns a simple array of incremented numbers
+     * Used to generate a new array when reassigning an array to a value in the propertyValuesKeyValuePair object
+     *
+     * @param n number of elements you would like in the array
+     */
+    private createValueArrayForProperty(n: number): number[] {
+        return [...Array(n).keys()];
     }
 
 }

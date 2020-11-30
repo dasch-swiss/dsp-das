@@ -12,7 +12,7 @@
                 </div>
                 <div class="property-value large-field">
                     <!-- TODO: use the key value pair to figure out how many components to make for each prop -->
-                    <div *ngFor="let num of valuesArray; let i=index">
+                    <div *ngFor="let val of propertyValuesKeyValuePair[prop.id]; let i=index">
                         <app-switch-properties
                             #switchProp
                             [property]="prop"
