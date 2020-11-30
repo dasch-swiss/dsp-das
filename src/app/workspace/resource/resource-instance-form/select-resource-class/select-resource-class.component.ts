@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ResourceClassDefinition } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
@@ -10,7 +10,7 @@ const resolvedPromise = Promise.resolve(null);
     templateUrl: './select-resource-class.component.html',
     styleUrls: ['./select-resource-class.component.scss']
 })
-export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterViewInit {
+export class SelectResourceClassComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
 
     @Input() formGroup: FormGroup;
 
@@ -32,7 +32,7 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterVie
 
     resourceChangesSubscription: Subscription;
 
-    constructor(@Inject(FormBuilder) private _fb: FormBuilder) { }
+    constructor(@Inject(FormBuilder) private _fb: FormBuilder) {}
 
     ngOnInit(): void {
 
@@ -45,11 +45,17 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterVie
         // emit Iri of the resource when selected
         this.resourceChangesSubscription = this.form.controls.resources.valueChanges.subscribe((data) => {
             this.resourceClassSelected.emit(data);
+            console.log('resourceClassSelected', this.resourceClassSelected);
         });
 
         // emit label of the resource when selected
         this.resourceChangesSubscription = this.form.controls.label.valueChanges.subscribe((data) => {
             this.resourceLabel.emit(data);
+        });
+
+        resolvedPromise.then(() => {
+            // add form to the parent form group
+            this.formGroup.addControl('resources', this.form);
         });
 
         // check if there is a pre-selected ResourceClassDefinition, if so, set the value of the form control to this value
@@ -62,19 +68,24 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterVie
             this.form.controls.label.setValue(this.chosenResourceLabel);
         }
 
-        resolvedPromise.then(() => {
-            // add form to the parent form group
-            this.formGroup.addControl('resources', this.form);
-        });
-
     }
+
+    ngOnChanges(changes: SimpleChanges) {
+
+        if (changes) {
+            console.log('changes', changes);
+        }
+    }
+
 
     ngAfterViewInit() {
         // if there is only one Resource Class Definition to choose from, select it automatically
         // more info: https://indepth.dev/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error
+        // console.log('resourceClassDefinitions[0].id', this.resourceClassDefinitions[0].id);
         if (this.resourceClassDefinitions.length === 1) {
             Promise.resolve(null).then(() => this.form.controls.resources.setValue(this.resourceClassDefinitions[0].id));
         }
+
     }
 
     ngOnDestroy() {

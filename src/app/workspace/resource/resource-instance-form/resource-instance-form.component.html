@@ -15,6 +15,7 @@
     <span>
         <div *ngIf="ontologiesMetadata?.ontologies.length > 0">
             <app-select-ontology
+                #selectOntology
                 [formGroup]="selectResourceForm"
                 [ontologiesMetadata]="ontologiesMetadata"
                 [selectedOntology]="selectedOntology"
