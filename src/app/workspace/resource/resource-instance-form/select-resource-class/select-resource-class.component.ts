@@ -39,7 +39,7 @@ export class SelectResourceClassComponent implements OnInit, OnChanges, OnDestro
         // build a form for the named graph selection
         this.form = this._fb.group({
             resources: [null, Validators.required],
-            label: [null]
+            label: [null, Validators.required]
         });
 
         // emit Iri of the resource when selected
@@ -51,6 +51,8 @@ export class SelectResourceClassComponent implements OnInit, OnChanges, OnDestro
         // emit label of the resource when selected
         this.resourceChangesSubscription = this.form.controls.label.valueChanges.subscribe((data) => {
             this.resourceLabel.emit(data);
+            this.formGroup.removeControl('resources');
+            this.formGroup.addControl('resources', this.form);
         });
 
         resolvedPromise.then(() => {
