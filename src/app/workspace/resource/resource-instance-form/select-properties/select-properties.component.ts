@@ -65,7 +65,10 @@ export class SelectPropertiesComponent implements OnInit, AfterViewInit {
     addValueIsAllowed(prop: ResourcePropertyDefinition): any {
 
         const isAllowed = CardinalityUtil.createValueForPropertyAllowed(
-            prop.id, 0, this.ontologyInfo.classes[this.resourceClass.id]);
+            prop.id,
+            this.propertyValuesKeyValuePair[prop.id].length,
+            this.ontologyInfo.classes[this.resourceClass.id]
+        );
 
         // check if:
         // cardinality allows for a value to be added
