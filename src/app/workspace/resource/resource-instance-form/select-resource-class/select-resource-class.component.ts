@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    EventEmitter,
+    Inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ResourceClassDefinition } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
@@ -10,7 +19,7 @@ const resolvedPromise = Promise.resolve(null);
     templateUrl: './select-resource-class.component.html',
     styleUrls: ['./select-resource-class.component.scss']
 })
-export class SelectResourceClassComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
+export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @Input() formGroup: FormGroup;
 
@@ -75,18 +84,10 @@ export class SelectResourceClassComponent implements OnInit, OnChanges, OnDestro
 
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-
-        if (changes) {
-            console.log('changes', changes);
-        }
-    }
-
 
     ngAfterViewInit() {
         // if there is only one Resource Class Definition to choose from, select it automatically
         // more info: https://indepth.dev/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error
-        // console.log('resourceClassDefinitions[0].id', this.resourceClassDefinitions[0].id);
         if (this.resourceClassDefinitions.length === 1) {
             Promise.resolve(null).then(() => this.form.controls.resources.setValue(this.resourceClassDefinitions[0].id));
         }

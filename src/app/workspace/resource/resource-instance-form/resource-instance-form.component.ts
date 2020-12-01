@@ -19,7 +19,12 @@ import {
     StoredProject,
     UserResponse
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, Session, SessionService, SortingService } from '@dasch-swiss/dsp-ui';
+import {
+    DspApiConnectionToken,
+    Session,
+    SessionService,
+    SortingService
+} from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { SelectOntologyComponent } from './select-ontology/select-ontology.component';
@@ -105,29 +110,11 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
         this.selectResourceForm = this._fb.group({});
         this.propertiesParentForm = this._fb.group({});
 
-        // if form status changes, re-run validation
-        this.valueOperationEventSubscription = this.selectResourceForm.statusChanges.subscribe((data) => {
-            this.formValid = this._validateForm();
-        });
-
         // initialize projects to be used for the project selection in the creation form
         this.initializeProjects();
 
         // boolean to show only the first step of the form (= selectResourceForm)
         this.showNextStepForm = true;
-
-    }
-
-    /**
-     * @ignore
-     * Validates form and returns its status (boolean).
-     */
-    private _validateForm(): boolean {
-        console.log('fff', this.selectResourceForm.status);
-
-
-        // check that either a resource class is selected or at least one property is specified
-        return this.selectResourceForm.valid && this.selectResourceClassComponent !== undefined;
 
     }
 
@@ -282,7 +269,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
                 // reset selectedResourceClass since it will be invalid
                 this.selectedResourceClass = undefined;
-                // console.log('selectedResourceClass = undefined', this.selectedResourceClass);
+
                 this.resourceLabel = undefined;
 
                 // remove the form control to ensure the parent Formgroups validity is correct
@@ -332,7 +319,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
      * @param resourceClassIri
      */
     selectProperties(resourceClassIri: string) {
-        // console.log('resourceClassIri', resourceClassIri);
 
         // reset errorMessage, it will be reassigned in the else clause if needed
         this.errorMessage = undefined;
@@ -346,10 +332,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                     this.ontologyInfo = onto;
 
                     this.selectedResourceClass = onto.classes[resourceClassIri];
-                    // console.log('selectedResourceClass', this.selectedResourceClass);
 
                     this.properties = this._makeResourceProperties(onto.properties);
-                    // console.log('properties', this.properties);
 
                     this.convertPropObjectAsArray();
 

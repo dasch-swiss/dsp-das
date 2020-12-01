@@ -69,7 +69,6 @@ export class SelectPropertiesComponent implements OnInit {
      * Called from the template when the user clicks on the add button
      */
     showAddValueForm(prop: ResourcePropertyDefinition) {
-        console.log('showAddValueForm');
         this.propId = prop.id;
         this.addValueFormIsVisible = true;
     }
