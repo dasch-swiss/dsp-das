@@ -62,7 +62,7 @@ export class SelectPropertiesComponent implements OnInit, AfterViewInit {
      *
      * @param prop the resource property
      */
-    addValueIsAllowed(prop: ResourcePropertyDefinition): any {
+    addValueIsAllowed(prop: ResourcePropertyDefinition): boolean {
 
         const isAllowed = CardinalityUtil.createValueForPropertyAllowed(
             prop.id,
