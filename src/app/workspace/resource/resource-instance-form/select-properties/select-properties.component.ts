@@ -110,4 +110,4 @@ export class SelectPropertiesComponent implements OnInit {
         return arrayToFilter;
 
     }
-
+}
