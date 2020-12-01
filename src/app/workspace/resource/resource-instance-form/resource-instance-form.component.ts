@@ -10,7 +10,7 @@ import {
     CreateValue,
     KnoraApiConnection,
     OntologiesMetadata,
-    OntologyMetadata,
+    ProjectsResponse,
     PropertyDefinition,
     ReadResource,
     ResourceClassAndPropertyDefinitions,
@@ -19,9 +19,15 @@ import {
     StoredProject,
     UserResponse
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, Session, SessionService, SortingService } from '@dasch-swiss/dsp-ui';
+import {
+    DspApiConnectionToken,
+    Session,
+    SessionService,
+    SortingService
+} from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
+import { SelectOntologyComponent } from './select-ontology/select-ontology.component';
 import { SelectPropertiesComponent } from './select-properties/select-properties.component';
 import { SelectResourceClassComponent } from './select-resource-class/select-resource-class.component';
 
@@ -53,10 +59,14 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     @ViewChild('selectProps') selectPropertiesComponent: SelectPropertiesComponent;
     @ViewChild('selectResourceClass') selectResourceClassComponent: SelectResourceClassComponent;
+    @ViewChild('selectOntology') selectOntologyComponent: SelectOntologyComponent;
 
     // forms
     selectResourceForm: FormGroup;
     propertiesParentForm: FormGroup;
+
+    // form validation status
+    formValid = false;
 
     session: Session;
     username: string;
@@ -182,13 +192,22 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     initializeProjects(): void {
         this.usersProjects = [];
 
-        if (this.username) {
+        if (this.username && this.session.user.sysAdmin === false) {
             this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(
                 (response: ApiResponseData<UserResponse>) => {
 
                     for (const project of response.body.user.projects) {
                         this.usersProjects.push(project);
                     }
+                },
+                (error: ApiResponseError) => {
+                    console.error(error);
+                }
+            );
+        } else if (this.session.user.sysAdmin === true) {
+            this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
+                (response: ApiResponseData<ProjectsResponse>) => {
+                    this.usersProjects = response.body.projects;
                 },
                 (error: ApiResponseError) => {
                     console.error(error);
@@ -255,22 +274,32 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
                 // reset selectedResourceClass since it will be invalid
                 this.selectedResourceClass = undefined;
-                this.resourceLabel = undefined;
 
-                // if there is already a select-resource-class component (i.e. the user clicked the back button), reset the resource label
-                if (this.selectResourceClassComponent) {
-                    this.selectResourceClassComponent.form.controls.label.setValue(null);
-                }
+                this.resourceLabel = undefined;
 
                 // remove the form control to ensure the parent Formgroups validity is correct
                 // this will be added to the parent Formgroup again when the select-resource-class OnInit method is called
                 this.selectResourceForm.removeControl('resources');
 
+                // if there is already a select-resource-class component (i.e. the user clicked the back button), reset the resource & label
+                if (this.selectResourceClassComponent) {
+                    this.selectResourceClassComponent.form.controls.resources.setValue(null);
+                    this.selectResourceClassComponent.form.controls.label.setValue(null);
+
+                    // since the component already exists, we need to add the control back here as it is normally done in the OnInit of the component
+                    this.selectResourceForm.addControl('resources', this.selectResourceClassComponent.form);
+                }
+
                 this.selectedOntology = ontologyIri;
 
                 this._dspApiConnection.v2.ontologyCache.getOntology(ontologyIri).subscribe(
                     onto => {
-                            this.resourceClasses = this._makeResourceClassesArray(onto.get(ontologyIri).classes);
+                        this.resourceClasses = this._makeResourceClassesArray(onto.get(ontologyIri).classes);
+
+                        if (this.selectResourceClassComponent && this.resourceClasses.length === 1) {
+                            // since the component already exists, the ngAfterInit method of the component will not be called so we must assign the value here manually
+                            this.selectResourceClassComponent.form.controls.resources.setValue(this.resourceClasses[0].id);
+                        }
                     },
                     (error: ApiResponseError) => {
                         console.error(error);
@@ -295,6 +324,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
      * @param resourceClassIri
      */
     selectProperties(resourceClassIri: string) {
+
         // reset errorMessage, it will be reassigned in the else clause if needed
         this.errorMessage = undefined;
 
@@ -307,12 +337,11 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                     this.ontologyInfo = onto;
 
                     this.selectedResourceClass = onto.classes[resourceClassIri];
-                    // console.log('selectedResourceClass', this.selectedResourceClass);
 
                     this.properties = this._makeResourceProperties(onto.properties);
-                    // console.log('properties', this.properties);
 
                     this.convertPropObjectAsArray();
+
                 }
             );
         } else {
