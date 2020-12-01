@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { CardinalityUtil, ReadResource, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ValueService } from '@dasch-swiss/dsp-ui';
@@ -13,7 +13,7 @@ export interface Properties {
   templateUrl: './select-properties.component.html',
   styleUrls: ['./select-properties.component.scss']
 })
-export class SelectPropertiesComponent implements OnInit, AfterViewInit {
+export class SelectPropertiesComponent implements OnInit {
 
     @ViewChildren('switchProp') switchPropertiesComponent: QueryList<SwitchPropertiesComponent>;
 
@@ -36,7 +36,6 @@ export class SelectPropertiesComponent implements OnInit, AfterViewInit {
     constructor(private _valueService: ValueService) { }
 
     ngOnInit() {
-        console.log(this.propertiesAsArray);
         if (this.propertiesAsArray) {
             for (const prop of this.propertiesAsArray) {
                 if (prop) {
@@ -57,26 +56,17 @@ export class SelectPropertiesComponent implements OnInit, AfterViewInit {
         this.parentResource.entityInfo = this.ontologyInfo;
     }
 
-    ngAfterViewInit() {
-        console.log(this.parentForm);
-    }
-
     /**
      * Given a resource property, check if an add button should be displayed under the property values
      *
      * @param prop the resource property
      */
     addValueIsAllowed(prop: ResourcePropertyDefinition): boolean {
-
-        const isAllowed = CardinalityUtil.createValueForPropertyAllowed(
+        return CardinalityUtil.createValueForPropertyAllowed(
             prop.id,
             this.propertyValuesKeyValuePair[prop.id].length,
             this.ontologyInfo.classes[this.resourceClass.id]
         );
-
-        // check if:
-        // cardinality allows for a value to be added
-        return isAllowed;
     }
 
     /**
@@ -93,9 +83,6 @@ export class SelectPropertiesComponent implements OnInit, AfterViewInit {
         // add a new element to the corresponding filtered property values array as well.
         // if this array contains more than one element, the delete button with be shown
         this.propertyValuesKeyValuePair[prop.id + '-filtered'].push(length);
-
-        console.log('propertyValues: ', this.propertyValuesKeyValuePair);
-        console.log('parent form: ', this.parentForm);
     }
 
     deleteValue(prop: ResourcePropertyDefinition, index: number) {

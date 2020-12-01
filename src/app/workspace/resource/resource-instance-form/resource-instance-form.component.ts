@@ -138,13 +138,11 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
         const createResource = new CreateResource();
 
-        createResource.label = this.resourceLabel; // console.log('label', this.resourceLabel);
+        createResource.label = this.resourceLabel;
 
-        createResource.type = this.selectedResourceClass.id; // console.log('type', this.selectedResourceClass.id);
+        createResource.type = this.selectedResourceClass.id;
 
-        createResource.attachedToProject = this.selectedProject; // console.log('project', this.selectedProject);
-
-        // TODO: define key value pair with iri and an array of values for each iri
+        createResource.attachedToProject = this.selectedProject;
 
         this.selectPropertiesComponent.switchPropertiesComponent.forEach((child) => {
             const createVal = child.createValueComponent.getNewValue();
@@ -161,13 +159,11 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
         });
 
-        console.log('propObj: ', this.propertiesObj);
         createResource.properties = this.propertiesObj;
 
         this._dspApiConnection.v2.res.createResource(createResource).subscribe(
             (res: ReadResource) => {
                 this.resource = res;
-                // console.log('create resource', this.resource);
 
                 // navigate to the resource viewer page
                 this._router.navigateByUrl('/resource', { skipLocationChange: true }).then(() =>
