@@ -42,12 +42,10 @@
                 <span class="fill-remaining-space"></span>
 
                 <span class="app-toolbar-action" [class.select-form]="ontologies.length">
-                    <!-- NOT YET IMPLEMENTED! Commented for release 2020.1
                     <button mat-raised-button color="primary" class="create-data-model-btn"
                         (click)="openOntologyForm('createOntology')">
                         {{ontologies.length ? 'New data model' : 'Create your first data model'}}
                     </button>
-                    -->
                 </span>
             </div>
         </div>
@@ -72,22 +70,22 @@
                 <button mat-button (click)="toggleView('graph')" [class.active]="view === 'graph'">
                     <mat-icon>scatter_plot</mat-icon> Graph
                 </button>
-                <button mat-stroked-button
+                <button mat-stroked-button [disabled]="!ontology.lastModificationDate"
                     (click)="$event.stopPropagation(); openOntologyForm('editOntology', ontology.id)">
                     Edit
                 </button>
                 &nbsp;
-                <button mat-stroked-button
+                <button mat-stroked-button [disabled]="!ontology.lastModificationDate"
                     (click)="$event.stopPropagation(); delete(ontologyIri, 'Ontology', ontology.label)">
                     Delete
                 </button>
             </mat-toolbar-row>
         </mat-toolbar>
 
+        <p *ngIf="!ontology.lastModificationDate" class="note warning center">This ontology can't be edited because of missing "lastModificationDate"!</p>
         <div #ontologyEditor *ngIf="!loadOntology && view === 'grid'" class="ontology-editor-canvas">
             <!-- button to select and add new resource class to the ontology -->
-            <!-- NOT YET IMPLEMENTED! Commented for release 2020.1
-            <div class="add-resource-class" *ngIf="project?.status && (sysAdmin || projectAdmin) && ontologyIri">
+            <div class="add-resource-class" *ngIf="project?.status && (sysAdmin || projectAdmin) && ontologyIri && ontology.lastModificationDate">
                 <button mat-raised-button color="primary" [matMenuTriggerFor]="addResClassMenu">
                     Add resource class&nbsp;
                     <mat-icon>add</mat-icon>
@@ -99,7 +97,7 @@
                     </button>
                 </mat-menu>
             </div>
-            -->
+
 
             <!-- list of resource classs -->
             <div *ngFor="let resClass of ontoClasses; let i = index" class="resource-class" cdkDrag
