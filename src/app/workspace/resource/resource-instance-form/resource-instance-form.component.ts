@@ -285,20 +285,29 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                 // console.log('selectedResourceClass = undefined', this.selectedResourceClass);
                 this.resourceLabel = undefined;
 
-                // if there is already a select-resource-class component (i.e. the user clicked the back button), reset the resource label
-                if (this.selectResourceClassComponent) {
-                    this.selectResourceClassComponent.form.controls.label.setValue(null);
-                }
-
                 // remove the form control to ensure the parent Formgroups validity is correct
                 // this will be added to the parent Formgroup again when the select-resource-class OnInit method is called
                 this.selectResourceForm.removeControl('resources');
+
+                // if there is already a select-resource-class component (i.e. the user clicked the back button), reset the resource & label
+                if (this.selectResourceClassComponent) {
+                    this.selectResourceClassComponent.form.controls.resources.setValue(null);
+                    this.selectResourceClassComponent.form.controls.label.setValue(null);
+
+                    // since the component already exists, we need to add the control back here as it is normally done in the OnInit of the component
+                    this.selectResourceForm.addControl('resources', this.selectResourceClassComponent.form);
+                }
 
                 this.selectedOntology = ontologyIri;
 
                 this._dspApiConnection.v2.ontologyCache.getOntology(ontologyIri).subscribe(
                     onto => {
-                            this.resourceClasses = this._makeResourceClassesArray(onto.get(ontologyIri).classes);
+                        this.resourceClasses = this._makeResourceClassesArray(onto.get(ontologyIri).classes);
+
+                        if (this.selectResourceClassComponent && this.resourceClasses.length === 1) {
+                            // since the component already exists, the ngAfterInit method of the component will not be called so we must assign the value here manually
+                            this.selectResourceClassComponent.form.controls.resources.setValue(this.resourceClasses[0].id);
+                        }
                     },
                     (error: ApiResponseError) => {
                         console.error(error);

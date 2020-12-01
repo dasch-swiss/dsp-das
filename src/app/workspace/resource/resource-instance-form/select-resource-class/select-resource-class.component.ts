@@ -32,6 +32,8 @@ export class SelectResourceClassComponent implements OnInit, OnChanges, OnDestro
 
     resourceChangesSubscription: Subscription;
 
+    labelChangesSubscription: Subscription;
+
     constructor(@Inject(FormBuilder) private _fb: FormBuilder) {}
 
     ngOnInit(): void {
@@ -45,11 +47,12 @@ export class SelectResourceClassComponent implements OnInit, OnChanges, OnDestro
         // emit Iri of the resource when selected
         this.resourceChangesSubscription = this.form.controls.resources.valueChanges.subscribe((data) => {
             this.resourceClassSelected.emit(data);
-            console.log('resourceClassSelected', this.resourceClassSelected);
+            this.formGroup.removeControl('resources');
+            this.formGroup.addControl('resources', this.form);
         });
 
-        // emit label of the resource when selected
-        this.resourceChangesSubscription = this.form.controls.label.valueChanges.subscribe((data) => {
+        // emit label of the resource any time it is changed
+        this.labelChangesSubscription = this.form.controls.label.valueChanges.subscribe((data) => {
             this.resourceLabel.emit(data);
             this.formGroup.removeControl('resources');
             this.formGroup.addControl('resources', this.form);
@@ -93,6 +96,10 @@ export class SelectResourceClassComponent implements OnInit, OnChanges, OnDestro
     ngOnDestroy() {
         if (this.resourceChangesSubscription !== undefined) {
             this.resourceChangesSubscription.unsubscribe();
+        }
+
+        if (this.labelChangesSubscription !== undefined) {
+            this.labelChangesSubscription.unsubscribe();
         }
     }
 
