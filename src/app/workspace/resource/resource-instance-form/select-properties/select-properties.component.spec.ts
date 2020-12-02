@@ -2,6 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild } from '@angular/c
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { By } from '@angular/platform-browser';
 import { MockOntology, PropertyDefinition, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { SortingService } from '@dasch-swiss/dsp-ui';
 import { Properties, SelectPropertiesComponent } from './select-properties.component';
@@ -103,6 +104,7 @@ describe('SelectPropertiesComponent', () => {
     let testHostComponent: TestSelectPropertiesParentComponent;
     let testHostFixture: ComponentFixture<TestSelectPropertiesParentComponent>;
 
+
     beforeEach(async(() => {
 
         TestBed.configureTestingModule({
@@ -132,4 +134,73 @@ describe('SelectPropertiesComponent', () => {
     it('should create a value component for each property', () => {
         expect(testHostComponent.selectPropertiesComponent.switchPropertiesComponent.length).toEqual(propArrayLength);
     });
+
+    it('should create a key value pair object', () => {
+        const propsArray = [];
+
+        const keyValuePair = testHostComponent.selectPropertiesComponent.propertyValuesKeyValuePair;
+        for (const propIri in keyValuePair) {
+            if (keyValuePair.hasOwnProperty(propIri)) {
+                propsArray.push(keyValuePair[propIri]);
+            }
+        }
+
+        // each property has two entries in the keyValuePair object
+        expect(propsArray.length).toEqual(propArrayLength * 2);
+    });
+
+    describe('Add/Delete functionality', () => {
+        let hostComponentDe;
+        let selectPropertiesComponentDe;
+        let addButtons;
+        let addButtonNativeElement;
+
+        beforeEach(() => {
+            testHostFixture = TestBed.createComponent(TestSelectPropertiesParentComponent);
+            testHostComponent = testHostFixture.componentInstance;
+            hostComponentDe = testHostFixture.debugElement;
+            selectPropertiesComponentDe = hostComponentDe.query(By.directive(SelectPropertiesComponent));
+            testHostFixture.detectChanges();
+
+            addButtons = selectPropertiesComponentDe.queryAll(By.css('.create'));
+            addButtonNativeElement = addButtons[0].nativeElement;
+            // if this fails, that likely means the property has a cardinality of 0-1 meaning the plus button should not be shown
+            expect(addButtonNativeElement).toBeDefined();
+
+            expect(testHostComponent).toBeTruthy();
+        });
+
+        it('should add a new form to the value when the add button is clicked', () => {
+
+            addButtonNativeElement.click();
+
+            expect(testHostComponent.selectPropertiesComponent.propertyValuesKeyValuePair[testHostComponent.propertiesAsArray[0].id].length).toEqual(2);
+        });
+
+        it('should delete a form from the value when the delete button is clicked', () => {
+            addButtonNativeElement.click();
+            testHostFixture.detectChanges();
+
+            expect(testHostComponent.selectPropertiesComponent.propertyValuesKeyValuePair[testHostComponent.propertiesAsArray[0].id].length).toEqual(2);
+            let deleteButtons = selectPropertiesComponentDe.queryAll(By.css('.delete'));
+
+            const deleteButtonNativeElement = deleteButtons[0].nativeElement;
+
+            expect(deleteButtonNativeElement).toBeDefined();
+
+            deleteButtonNativeElement.click();
+
+            testHostFixture.detectChanges();
+
+            const expectedArray = [undefined, 1];
+
+            expect(testHostComponent.selectPropertiesComponent.propertyValuesKeyValuePair[testHostComponent.propertiesAsArray[0].id]).toEqual(expectedArray);
+
+            deleteButtons = selectPropertiesComponentDe.queryAll(By.css('.delete'));
+
+            expect(deleteButtons).toEqual([]);
+        });
+    });
+
+
 });

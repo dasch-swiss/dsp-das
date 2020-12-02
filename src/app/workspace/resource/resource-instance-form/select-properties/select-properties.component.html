@@ -26,7 +26,8 @@
                                 <button *ngIf="propertyValuesKeyValuePair[prop.id + '-filtered'].length !== 1"
                                     type="button"
                                     title="Delete this value"
-                                    (click)="deleteValue(prop, i)">
+                                    (click)="deleteValue(prop, i)"
+                                    class="delete">
                                     <mat-icon>delete</mat-icon>
                                 </button>
                             </div>
