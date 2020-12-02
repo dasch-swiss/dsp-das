@@ -2,7 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild } from '@angular/c
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MockOntology, PropertyDefinition, ResourceClassAndPropertyDefinitions, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { MockOntology, PropertyDefinition, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { SortingService } from '@dasch-swiss/dsp-ui';
 import { Properties, SelectPropertiesComponent } from './select-properties.component';
 import { SwitchPropertiesComponent } from './switch-properties/switch-properties.component';
@@ -25,6 +25,7 @@ template: `
     <app-select-properties
     #selectProps
     [ontologyInfo]="ontoInfo"
+    [resourceClass]="selectedResourceClass"
     [propertiesAsArray]="propertiesAsArray"
     [parentForm]="propertiesParentForm">
     </app-select-properties>`
@@ -37,6 +38,8 @@ class TestSelectPropertiesParentComponent implements OnInit {
 
     properties: Properties;
 
+    selectedResourceClass: ResourceClassDefinition;
+
     propertiesAsArray: Array<ResourcePropertyDefinition>;
 
     propertiesParentForm: FormGroup;
@@ -48,6 +51,8 @@ class TestSelectPropertiesParentComponent implements OnInit {
         this.propertiesParentForm = this._fb.group({});
 
         this.ontoInfo = MockOntology.mockIResourceClassAndPropertyDefinitions('http://0.0.0.0:3333/ontology/0001/anything/v2#Thing');
+
+        this.selectedResourceClass = this.ontoInfo.classes['http://0.0.0.0:3333/ontology/0001/anything/v2#Thing'];
 
         this.properties = this._makeResourceProperties(this.ontoInfo.properties);
 
