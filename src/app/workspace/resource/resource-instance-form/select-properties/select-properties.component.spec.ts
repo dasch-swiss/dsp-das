@@ -152,8 +152,6 @@ describe('SelectPropertiesComponent', () => {
     describe('Add/Delete functionality', () => {
         let hostComponentDe;
         let selectPropertiesComponentDe;
-        let addButtons;
-        let addButtonNativeElement;
 
         beforeEach(() => {
             testHostFixture = TestBed.createComponent(TestSelectPropertiesParentComponent);
@@ -162,15 +160,15 @@ describe('SelectPropertiesComponent', () => {
             selectPropertiesComponentDe = hostComponentDe.query(By.directive(SelectPropertiesComponent));
             testHostFixture.detectChanges();
 
-            addButtons = selectPropertiesComponentDe.queryAll(By.css('.create'));
-            addButtonNativeElement = addButtons[0].nativeElement;
-            // if this fails, that likely means the property has a cardinality of 0-1 meaning the plus button should not be shown
-            expect(addButtonNativeElement).toBeDefined();
-
             expect(testHostComponent).toBeTruthy();
         });
 
         it('should add a new form to the value when the add button is clicked', () => {
+            const addButtons = selectPropertiesComponentDe.queryAll(By.css('.create'));
+            const addButtonNativeElement = addButtons[0].nativeElement;
+
+            // if this fails, that likely means the property has a cardinality of 0-1 meaning the plus button should not be shown
+            expect(addButtonNativeElement).toBeDefined();
 
             addButtonNativeElement.click();
 
@@ -178,10 +176,11 @@ describe('SelectPropertiesComponent', () => {
         });
 
         it('should delete a form from the value when the delete button is clicked', () => {
-            addButtonNativeElement.click();
+            testHostComponent.selectPropertiesComponent.propertyValuesKeyValuePair[testHostComponent.propertiesAsArray[0].id] = [0, 1];
+            testHostComponent.selectPropertiesComponent.propertyValuesKeyValuePair[testHostComponent.propertiesAsArray[0].id + '-filtered'] = [0, 1];
+
             testHostFixture.detectChanges();
 
-            expect(testHostComponent.selectPropertiesComponent.propertyValuesKeyValuePair[testHostComponent.propertiesAsArray[0].id].length).toEqual(2);
             let deleteButtons = selectPropertiesComponentDe.queryAll(By.css('.delete'));
 
             const deleteButtonNativeElement = deleteButtons[0].nativeElement;
