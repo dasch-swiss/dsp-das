@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Cardinality } from '@dasch-swiss/dsp-js';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PropertyType } from '../default-data/default-properties';
 
@@ -174,5 +175,29 @@ export class ResourceClassFormService {
         const pos = array.length - 2;
 
         return array[pos].toLowerCase();
+    }
+
+    /**
+     * Convert cardinality values (multiple? & required?) from form to DSP-JS cardinality enum 1-n, 0-n, 1, 0-1
+     * @param  {boolean} multiple
+     * @param  {boolean} required
+     * @returns Cardinality
+     */
+    translateCardinality(multiple: boolean, required: boolean): Cardinality {
+
+        if (multiple && required) {
+            // Cardinality 1-n (at least one)
+            return Cardinality._1_n;
+        } else if (multiple && !required) {
+            // Cardinality 0-n (may have many)
+            return Cardinality._0_n;
+        } else if (!multiple && required) {
+            // Cardinality 1 (required)
+            return Cardinality._1;
+        } else {
+            // Cardinality 0-1 (optional)
+            return Cardinality._0_1;
+        }
+
     }
 }
