@@ -360,6 +360,8 @@ export class OntologyComponent implements OnInit {
                             (response: DeleteOntologyResponse) => {
                                 this.loading = false;
                                 this.loadOntology = false;
+                                // reset current ontology
+                                this.ontology = undefined;
                                 // get the ontologies for this project
                                 this.initList();
                                 // go to project ontology page
