@@ -13,11 +13,13 @@ import {
     ResourceClassDefinitionWithAllLanguages,
     ResourcePropertyDefinitionWithAllLanguages,
     StringLiteral,
-    UpdateOntology
+    UpdateOntology,
+    UpdateOntologyResourceClassCardinality
 } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/dsp-js/src/models/v2/string-literal-v2';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
-import { Subscription } from 'rxjs';
+import { from, of, Subscription } from 'rxjs';
+import { concatMap } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { Property, ResourceClassFormService } from './resource-class-form.service';
 
@@ -114,6 +116,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         },
     };
 
+    lastModificationDate: string;
+
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _resourceClassFormService: ResourceClassFormService,
@@ -138,15 +142,21 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             (response: ReadOntology) => {
                 this.ontology = response;
 
+                this.lastModificationDate = this.ontology.lastModificationDate;
+
                 // get all ontology resource classs:
                 // can be used to select resource class as gui attribute in link property,
                 // but also to avoid same name which should be unique
                 const classKeys: string[] = Object.keys(response.classes);
+                console.log(classKeys);
                 for (const c of classKeys) {
                     this.existingResourceClassNames.push(
                         new RegExp('(?:^|W)' + c.split('#')[1] + '(?:$|W)')
                     )
                 }
+
+                const propKeys: string[] = Object.keys(response.properties);
+                console.log(propKeys);
             },
             (error: any) => {
                 console.error(error);
@@ -180,9 +190,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     //
     // form handling:
 
-    /**
-     * build form
-     */
     buildForm() {
 
         // reset properties
@@ -303,12 +310,12 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         this.loading = true;
 
         // set resource class name / id
-        const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
+        const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, this.resourceClassLabels[0].value);
 
         const onto = new UpdateOntology<CreateResourceClass>();
 
         onto.id = this.ontology.id;
-        onto.lastModificationDate = this.ontology.lastModificationDate;
+        onto.lastModificationDate = this.lastModificationDate;
 
         const newResClass = new CreateResourceClass();
 
@@ -319,57 +326,22 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
         onto.entity = newResClass;
 
-        // knora-api:error: "org.knora.webapi.exceptions.BadRequestException: One or more specified base classes are invalid: http://www.knora.org/ontology/knora-base#StillImageFileValue"
-
-        // fix variables:
-
-        // - ontologyIri from this.ontology
-
-        // - ontologyLastModificationDate from this.ontology
-
-        // - classIri
-
-        // - baseClassIri
-
-        // for each property:
-        // - propertyIri
-        // - basePropertyIri --> can be knora-api:hasValue, knora-api:hasLinkTo, or any of their subproperties, with the exception of file properties
-        // - cardinality
-        // - subjectType    --> subclass of knora-api:Resource e.g. images:bild || images:person
-        // - objectType     --> literal datatype: e.g. xsd:string || knora-api:Date
-
-        // from salsah-gui-ontology
-        // - guiElementIri
-        // - guiAttribute
-        // - guiOrder
-
-        // first step: get data from first form: resource class
-
-        // TODO: if no comment, reuse the label as comment
-        // if (!this.resourceClassComments.length) {
-        //     this.resourceClassComments = this.resourceClassLabels;
-        // }
-
-
-
-
-
         // submit resource class data to knora and create resource class incl. cardinality
         // console.log('submit resource class data:', resourceClassData);
         // let i: number = 0;
         this._dspApiConnection.v2.onto.createResourceClass(onto).subscribe(
-            async (classResponse: ResourceClassDefinitionWithAllLanguages) => {
-
-
-                // console.log('classResponse', classResponse);
-
-                // reset lastModificationDate
-                // this.lastModificationDate = undefined;
+            (classResponse: ResourceClassDefinitionWithAllLanguages) => {
+                console.log('classResponse', classResponse);
+                // need lmd from classResponse
+                this.lastModificationDate = classResponse.lastModificationDate;
 
                 // post prop data; one by one
                 // const props = this.resourceClassForm.value.properties;
 
-                this.processArray(this.resourceClassForm.value.properties, classResponse.id);
+                this.submitProps(this.resourceClassForm.value.properties, classResponse.id);
+
+                console.warn('when will this console.log run?')
+
 
                 // this.getLastModificationDate(this.ontology.id);
 
@@ -506,25 +478,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         // show message to close dialog box
         // this.closeMessage();
     }
-    /**
-     * Convert cardinality values (multiple? & required?) from form to string 1-0, 0-n, 1, 0-1
-     * @param  {boolean} multiple
-     * @param  {boolean} required
-     * @returns string
-     */
-    setCardinality(multiple: boolean, required: boolean): string {
-        // result should be:
-        // "1", "0-1", "1-n", "0-n"
-        if (multiple && required) {
-            return '1-n';
-        } else if (multiple && !required) {
-            return '0-n';
-        } else if (!multiple && required) {
-            return '1';
-        } else {
-            return '0-1';
-        }
-    }
 
     /**
      * Close dialog box and reset all forms
@@ -535,94 +488,113 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         this.closeDialog.emit();
     }
 
-    async createProp(prop: Property, classIri: string) {
+    submitProps(props: Property[], classIri: string) {
+        console.log(props);
 
+        let i = 1;
 
-        console.log('map prop', prop);
+        from(props)
+            .pipe(concatMap(
+                (prop: Property) => {
+                    // console.log('first pipe operator...waiting...', this.lastModificationDate);
+                    // submit prop
+                    console.log('prepare and submit prop', prop)
+                    this.createProp(prop, classIri, i);
+                    return new Promise(resolve => setTimeout(() => resolve(prop), 1200));
+                }
+            ))
+            .pipe(concatMap(
+                (prop: Property) => {
+                    i++;
+                    console.log('do sth. with prop response', prop);
+                    return of(prop);
+                }
+            ))
+            .subscribe(
+                (prop: Property) => {
+                    // this.getOntology(this.ontologyId);
+                    if (i === props.length) {
+                        console.log('created; reset ontology cache', prop)
 
-        // set resource property name / id
-        const uniquePropName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, prop.label);
-
-        const onto = new UpdateOntology<CreateResourceProperty>();
-
-        onto.id = this.ontology.id;
-
-
-        // prepare payload for property
-        const newResProp = new CreateResourceProperty();
-        newResProp.name = uniquePropName;
-        // TODO: update prop.label and use StringLiteralInput in property-form
-        newResProp.label = [{ "value": prop.label }];
-        if (prop.guiAttr) {
-            newResProp.guiAttributes = [prop.guiAttr];
-        }
-        newResProp.guiElement = prop.type.gui_ele;
-        newResProp.subPropertyOf = [prop.type.subPropOf];
-        if (prop.type.subPropOf === Constants.HasLinkTo) {
-            newResProp.objectType = prop.guiAttr;
-            newResProp.subjectType = classIri;
-        } else {
-            newResProp.objectType = prop.type.objectType;
-        }
-
-
-        // newResProp.guiElement = "http://api.knora.org/ontology/salsah-gui/v2#SimpleText";
-        // newResProp.guiAttributes = ["size=80", "maxlength=100"];
-
-        onto.entity = newResProp;
-
-
-        // get last modification date
-        await this.delay();
-        this._dspApiConnection.v2.onto.getOntology(this.ontology.id).subscribe(
-            (ontologyResponse: ReadOntology) => {
-
-                console.log('submit prop with lmd', ontologyResponse.lastModificationDate);
-                onto.lastModificationDate = ontologyResponse.lastModificationDate;
-                this._dspApiConnection.v2.onto.createResourceProperty(onto).subscribe(
-                    (propResponse: ResourcePropertyDefinitionWithAllLanguages) => {
-
-                        console.log('new resource property created', propResponse);
+                        // close the dialog box
+                        this.loading = false;
+                        this.closeDialog.emit();
                     }
-                );
+                }
+            );
+
+    }
+
+    createProp(prop: Property, classIri: string, index: number) {
+        return new Promise((resolve, reject) => {
+            // set resource property name / id
+            const uniquePropName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, prop.label);
+
+            const onto = new UpdateOntology<CreateResourceProperty>();
+
+            onto.id = this.ontology.id;
+
+            // prepare payload for property
+            const newResProp = new CreateResourceProperty();
+            newResProp.name = uniquePropName;
+            // TODO: update prop.label and use StringLiteralInput in property-form
+            newResProp.label = [{ "value": prop.label }];
+            if (prop.guiAttr) {
+                newResProp.guiAttributes = [prop.guiAttr];
+            }
+            newResProp.guiElement = prop.type.gui_ele;
+            newResProp.subPropertyOf = [prop.type.subPropOf];
+            if (prop.type.subPropOf === Constants.HasLinkTo) {
+                newResProp.objectType = prop.guiAttr;
+                newResProp.subjectType = classIri;
+            } else {
+                newResProp.objectType = prop.type.objectType;
+            }
+
+            onto.lastModificationDate = this.lastModificationDate;
+
+            onto.entity = newResProp;
+
+            this._dspApiConnection.v2.onto.createResourceProperty(onto).subscribe(
+                (response: ResourcePropertyDefinitionWithAllLanguages) => {
+                    console.log(index);
+                    this.lastModificationDate = response.lastModificationDate;
+                    // update cardinality
+                    this.setCardinality(response.id, classIri, prop.multiple, prop.required, index);
+                },
+                (error: ApiResponseError) => {
+                    console.error(error);
+                }
+            )
+        })
+    }
+
+    setCardinality(propIri: string, classIri: string, multiple: boolean, required: boolean, index: number) {
+
+        const addCard = new UpdateOntologyResourceClassCardinality();
+
+        addCard.lastModificationDate = this.lastModificationDate;
+
+        addCard.id = this.ontology.id;
+
+        const cardinality = this._resourceClassFormService.translateCardinality(multiple, required);
+
+        addCard.cardinalities = [
+            {
+                propertyIndex: propIri,
+                cardinality: cardinality,
+                resourceClass: classIri,
+                guiOrder: index
+            }
+        ];
+
+
+        this._dspApiConnection.v2.onto.addCardinalityToResourceClass(addCard).subscribe(
+            (res: ResourceClassDefinitionWithAllLanguages) => {
+                this.lastModificationDate = res.lastModificationDate;
             }
         );
 
-
     }
-
-    // getLastModificationDate(ontologyIri: string) {
-    //     this._dspApiConnection.v2.onto.getOntology(ontologyIri).subscribe(
-    //         (ontologyResponse: ReadOntology) => {
-    //             this.lastModificationDate = ontologyResponse.lastModificationDate;
-    //         }
-    //     );
-    // }
-
-    async processArray(props: Property[], classIri: string) {
-        props.forEach(async (prop: Property) => {
-            await this.createProp(prop, classIri);
-        })
-        console.log('Done!');
-        // close the dialog box
-        this.loading = false;
-        this.closeDialog.emit();
-    }
-
-    delay() {
-        return new Promise(resolve => setTimeout(resolve, 1200));
-    }
-
-
-    // recursivePost(ontologyIri: string, lmd: string, classIri: string, data: NewProperty): Observable<any> {
-    //     return this._ontologyService.addProperty(ontologyIri, lmd, classIri, data).pipe(
-    //         tap(res => console.log('First post result', res)),
-    //         concatMap( this.recursivePost()))
-    //         map(response => {
-    //             // console.log('map response from addProperty', response);
-    //         })
-    //     );
-    // }
-
 
 }
