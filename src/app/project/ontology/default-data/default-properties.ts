@@ -151,14 +151,14 @@ export class DefaultProperties {
                     gui_ele: Constants.SalsahGui + Constants.Delimiter + 'Searchbox',    // 'Autocomplete',
                     group: 'Link'
                 },
-                {
-                    icon: 'compare_arrows',
-                    label: 'External resource',
-                    subPropOf: Constants.HasValue,
-                    objectType: Constants.UriValue,
-                    gui_ele: Constants.SalsahGui + Constants.Delimiter + 'SimpleText',
-                    group: 'Link'
-                },
+                // {
+                //     icon: 'compare_arrows',
+                //     label: 'External resource',
+                //     subPropOf: Constants.HasValue,
+                //     objectType: Constants.UriValue,
+                //     gui_ele: Constants.SalsahGui + Constants.Delimiter + 'SimpleText',
+                //     group: 'Link'
+                // },
                 {
                     icon: 'http',
                     label: 'External URL',
