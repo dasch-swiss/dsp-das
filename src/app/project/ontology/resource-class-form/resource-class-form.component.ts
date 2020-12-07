@@ -331,13 +331,11 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         // let i: number = 0;
         this._dspApiConnection.v2.onto.createResourceClass(onto).subscribe(
             (classResponse: ResourceClassDefinitionWithAllLanguages) => {
-                console.log('classResponse', classResponse);
+                // console.log('classResponse', classResponse);
                 // need lmd from classResponse
                 this.lastModificationDate = classResponse.lastModificationDate;
 
                 // post prop data; one by one
-                // const props = this.resourceClassForm.value.properties;
-
                 this.submitProps(this.resourceClassForm.value.properties, classResponse.id);
 
             },
@@ -361,16 +359,13 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     }
 
     submitProps(props: Property[], classIri: string) {
-        console.log(props);
 
         let i = 1;
-
         from(props)
             .pipe(concatMap(
                 (prop: Property) => {
-                    // console.log('first pipe operator...waiting...', this.lastModificationDate);
                     // submit prop
-                    console.log('prepare and submit prop', prop);
+                    // console.log('first pipe operator...waiting...prepare and submit prop', prop);
                     if (prop.iri) {
                         // the defined prop exists already in this ontology. We can proceed with cardinality.
                         this.setCardinality(prop.iri, classIri, prop.multiple, prop.required, i);
@@ -384,7 +379,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             .pipe(concatMap(
                 (prop: Property) => {
                     i++;
-                    console.log('do sth. with prop response', prop);
+                    // console.log('second pipe operator; do sth. with prop response', prop);
                     return of(prop);
                 }
             ))
@@ -393,7 +388,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                     // this.getOntology(this.ontologyId);
 
                     if (i > props.length) {
-                        console.log('created; reset ontology cache', prop)
+                        // console.log('at the end: created', prop)
+                        // TODO: reset ontology cache
 
                         // close the dialog box
                         this.loading = false;
@@ -460,11 +456,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
             onto.entity = newResProp;
 
-            console.log(onto);
-
             this._dspApiConnection.v2.onto.createResourceProperty(onto).subscribe(
                 (response: ResourcePropertyDefinitionWithAllLanguages) => {
-                    console.log(index);
                     this.lastModificationDate = response.lastModificationDate;
                     // update cardinality
                     this.setCardinality(response.id, classIri, prop.multiple, prop.required, index);

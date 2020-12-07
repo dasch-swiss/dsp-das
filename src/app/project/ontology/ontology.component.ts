@@ -262,7 +262,6 @@ export class OntologyComponent implements OnInit {
     }
 
     filterOwlClass(owlClass: any) {
-        // console.log(owlClass);
         return (owlClass['@type'] === 'owl:class');
     }
 

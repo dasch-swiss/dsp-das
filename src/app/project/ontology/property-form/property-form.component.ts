@@ -185,7 +185,6 @@ export class PropertyFormComponent implements OnInit {
      * @param {MatOption} option
      */
     updateFieldsDependingOnLabel(option: MatOption) {
-        console.log(option)
         this.propertyForm.controls['iri'].setValue(option.value.iri);
 
         this.propertyForm.controls['label'].setValue(option.value.label);
