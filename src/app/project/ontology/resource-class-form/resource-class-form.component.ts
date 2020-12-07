@@ -17,7 +17,7 @@ import {
     UpdateOntologyResourceClassCardinality
 } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/dsp-js/src/models/v2/string-literal-v2';
-import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, NotificationService } from '@dasch-swiss/dsp-ui';
 import { from, of, Subscription } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
@@ -120,6 +120,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _notification: NotificationService,
         private _resourceClassFormService: ResourceClassFormService,
         private _cache: CacheService,
         private _cdr: ChangeDetectorRef,
@@ -157,8 +158,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                 const propKeys: string[] = Object.keys(response.properties);
 
             },
-            (error: any) => {
-                console.error(error);
+            (error: ApiResponseError) => {
+                this._notification.openSnackBar(error);
             }
         );
 
@@ -168,7 +169,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                 this._cache.set('currentOntologyLists', response.body.lists);
             },
             (error: ApiResponseError) => {
-                console.error(error);
+                this._notification.openSnackBar(error);
             }
         );
 
@@ -341,7 +342,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
             },
             (error: ApiResponseError) => {
-                console.error('failed on addResourceClass', error);
+                this._notification.openSnackBar(error);
             }
         );
 
@@ -370,7 +371,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                     // console.log('first pipe operator...waiting...', this.lastModificationDate);
                     // submit prop
                     console.log('prepare and submit prop', prop);
-                    if(prop.iri) {
+                    if (prop.iri) {
                         // the defined prop exists already in this ontology. We can proceed with cardinality.
                         this.setCardinality(prop.iri, classIri, prop.multiple, prop.required, i);
                     } else {
@@ -443,7 +444,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                         // I suggest to use default values; we do not support this guiAttr in DSP-App
                         newResProp.guiAttributes = ['width=100%'];
                         break;
-                    }
+                }
             }
             newResProp.guiElement = prop.type.gui_ele;
             newResProp.subPropertyOf = [prop.type.subPropOf];
@@ -469,7 +470,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                     this.setCardinality(response.id, classIri, prop.multiple, prop.required, index);
                 },
                 (error: ApiResponseError) => {
-                    console.error(error);
+                    this._notification.openSnackBar(error);
                 }
             );
         })
