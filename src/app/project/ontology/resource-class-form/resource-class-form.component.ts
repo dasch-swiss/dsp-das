@@ -428,7 +428,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                     case Constants.SalsahGui + Constants.Delimiter + 'List':
                     case Constants.SalsahGui + Constants.Delimiter + 'Pulldown':
                     case Constants.SalsahGui + Constants.Delimiter + 'Radio':
-                        newResProp.guiAttributes = ['hlist=' + prop.guiAttr];
+                        newResProp.guiAttributes = ['hlist=<' + prop.guiAttr + '>'];
                         break;
                     case Constants.SalsahGui + Constants.Delimiter + 'SimpleText':
                         // TODO: could have two guiAttr fields: size and maxlength
