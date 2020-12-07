@@ -39,7 +39,7 @@ export class PropertyFormComponent implements OnInit {
 
     @Output() deleteProperty: EventEmitter<number> = new EventEmitter();
 
-    name = new FormControl();
+    iri = new FormControl();
     label = new FormControl();
     type = new FormControl();
     multiple = new FormControl();
@@ -87,7 +87,6 @@ export class PropertyFormComponent implements OnInit {
     }
 
     ngOnInit() {
-
 
         if (this.propertyForm) {
             // init list of property types with first element
@@ -141,7 +140,7 @@ export class PropertyFormComponent implements OnInit {
         this.filteredProperties = this.propertyForm.controls['label'].valueChanges
             .pipe(
                 startWith(''),
-                map(prop => prop.length >= 2 ? this.filter(this.properties, prop) : [])
+                map(prop => prop.length >= 0 ? this.filter(this.properties, prop) : [])
             );
     }
 
@@ -183,22 +182,21 @@ export class PropertyFormComponent implements OnInit {
     }
 
     /**
-     * @param  {MatOption} option
+     * @param {MatOption} option
      */
     updateFieldsDependingOnLabel(option: MatOption) {
-        this.propertyForm.controls['name'].setValue(option.value.name);
+        this.propertyForm.controls['iri'].setValue(option.value.iri);
 
         this.propertyForm.controls['label'].setValue(option.value.label);
         this.propertyForm.controls['label'].disable();
 
         if (this.ontology.properties[option.value.iri] instanceof ResourcePropertyDefinition) {
             const tempProp: any = this.ontology.properties[option.value.iri];
-            console.log(tempProp);
 
             let obj: PropertyType;
             // find gui ele from list of default property-types to set type value
             for (let group of this.propertyTypes) {
-                obj = group.elements.find(i => i.gui_ele === 'salsah-gui:' + tempProp.guiElement.split('#')[1]);
+                obj = group.elements.find(i => i.gui_ele === tempProp.guiElement);
 
                 if (obj) {
                     this.propertyForm.controls['type'].setValue(obj);
@@ -206,11 +204,10 @@ export class PropertyFormComponent implements OnInit {
                 }
             }
 
-            console.log(tempProp.guiElement);
             switch (tempProp.guiElement) {
                 // prop type is a list
-                case 'http://api.knora.org/ontology/salsah-gui/v2#List':
-                case 'http://api.knora.org/ontology/salsah-gui/v2#Radio':
+                case Constants.SalsahGui + Constants.Delimiter + 'List':
+                case Constants.SalsahGui + Constants.Delimiter + 'Radio':
                     // gui attribute value for lists looks as follow: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
                     // get index from guiAttr array where value starts with hlist=
                     let i = tempProp.guiAttributes.findIndex(element => element.includes('hlist'));
@@ -224,7 +221,7 @@ export class PropertyFormComponent implements OnInit {
                     this.propertyForm.controls['guiAttr'].disable();
                     break;
                 // prop type is resource pointer
-                case 'http://api.knora.org/ontology/salsah-gui/v2#Searchbox':
+                case Constants.SalsahGui + Constants.Delimiter + 'Searchbox':
 
                     this.showGuiAttr = true;
                     this.propertyForm.controls['guiAttr'].setValue(tempProp.objectType);
@@ -244,7 +241,7 @@ export class PropertyFormComponent implements OnInit {
     resetProperty(ev: Event) {
         ev.preventDefault();
 
-        this.propertyForm.controls['name'].reset();
+        this.propertyForm.controls['iri'].reset();
         this.propertyForm.controls['label'].setValue('');
         this.propertyForm.controls['label'].enable();
         this.propertyForm.controls['type'].setValue(this.propertyTypes[0].elements[0]);

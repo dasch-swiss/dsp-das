@@ -6,7 +6,7 @@ import { PropertyType } from '../default-data/default-properties';
 
 // property data structure
 export class Property {
-    name: string;
+    iri: string;
     label: string;
     type: PropertyType;
     multiple: boolean;
@@ -15,7 +15,7 @@ export class Property {
     // permission: string;
 
     constructor(
-        name?: string,
+        iri?: string,
         label?: string,
         type?: any,
         multiple?: boolean,
@@ -23,7 +23,7 @@ export class Property {
         guiAttr?: string
         // permission?: string
     ) {
-        this.name = name;
+        this.iri = iri;
         this.label = label;
         this.type = type;
         this.multiple = multiple;
@@ -36,7 +36,7 @@ export class Property {
 
 // property form controls
 export class PropertyForm {
-    name = new FormControl();
+    iri = new FormControl();
     label = new FormControl();
     type = new FormControl();
     multiple = new FormControl();
@@ -47,7 +47,7 @@ export class PropertyForm {
     constructor(
         property: Property
     ) {
-        this.name.setValue(property.name);
+        this.iri.setValue(property.iri);
 
         this.label.setValue(property.label);
         this.label.setValidators([Validators.required]);
@@ -154,7 +154,7 @@ export class ResourceClassFormService {
         if (label) {
             // build name from label
             // normalize and replace spaces and special chars
-            return label.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[\u00a0-\u024f]/g, '').replace(/[\])}[{(]/g, '').replace(/\s+/g, '-').toLowerCase();
+            return label.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[\u00a0-\u024f]/g, '').replace(/[\])}[{(]/g, '').replace(/\s+/g, '-').replace(/\//g, '-').toLowerCase();
         } else {
             // build randomized name
             // The name starts with the three first character of ontology iri to avoid a start with a number followed by randomized string

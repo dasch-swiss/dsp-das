@@ -148,7 +148,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                 // can be used to select resource class as gui attribute in link property,
                 // but also to avoid same name which should be unique
                 const classKeys: string[] = Object.keys(response.classes);
-                console.log(classKeys);
                 for (const c of classKeys) {
                     this.existingResourceClassNames.push(
                         new RegExp('(?:^|W)' + c.split('#')[1] + '(?:$|W)')
@@ -156,7 +155,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                 }
 
                 const propKeys: string[] = Object.keys(response.properties);
-                console.log(propKeys);
+
             },
             (error: any) => {
                 console.error(error);
@@ -279,7 +278,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
      * Go to next step: from resource-class form forward to properties form
      */
     nextStep(ev: Event) {
-        ev.preventDefault();
+
         // go to next step: properties form
         this.showResourceClassForm = false;
 
@@ -340,134 +339,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
                 this.submitProps(this.resourceClassForm.value.properties, classResponse.id);
 
-                console.warn('when will this console.log run?')
-
-
-                // this.getLastModificationDate(this.ontology.id);
-
-                // await this.createProp(props, classResponse.id);
-
-
-
-                // props.map(async (prop: Property) => {
-
-                // });
-                // for(let i = 0; i < props.length; i++){
-                // // for (let prop: Property of props) {
-
-
-
-
-
-                // const newResProp = new CreateResourceProperty();
-
-                // newResProp.name = uniquePropName
-                // newResProp.label = prop;
-                // newResProp.comment = this.resourceClassComments;
-                // newResProp. = [this.subClassOf];
-
-                // onto.entity = newResClass;
-                // };
-
-                // this._dspApiConnection.v2.onto.createResourceProperty()
-
-
-
-
-
-                // prepare last modification date and properties data
-                // lastModificationDate = classResponse.
-
-                // ['knora-api:lastModificationDate']['@value'];
-                // const props = from(this.resourceClassForm.value.properties);
-
-                // let c: number = 0;
-
-                // post prop data; one by one
-                // props.subscribe(
-                //     (prop: any) => {
-
-                //         console.log('prop from form', prop);
-
-                /* TODO: select and reuse existing ObjectProperty doesn't work yet; s. https://github.com/dasch-swiss/knora-app/pull/229#issuecomment-598276151
-                 if (prop.name) {
-                    // const propertyId: string = this._resourceClassFormService.getOntologyName(this.ontology.id) + ':' + prop.name;
-                    // property exists already; update class with prop cardinality and gui-order only
-                    // update class with cardinality and gui-order
-                    this._ontologyService.setPropertyRestriction(
-                        this.ontology.id,
-                        lastModificationDate,
-                        classResponse['@graph'][0]['@id'],
-                        this._resourceClassFormService.getOntologyName(this.ontology.id) + ':' + prop.name,
-                        this.setCardinality(prop.multiple, prop.requirerd),
-                        c
-                    ).subscribe(
-                        (cardinalityResponse: any) => {
-                            lastModificationDate = cardinalityResponse['knora-api:lastModificationDate']['@value'];
-
-                            // close the dialog box
-                            this.loading = false;
-                            this.closeDialog.emit();
-                        },
-                        (error: ApiServiceError) => {
-                            console.error('failed on setPropertyRestriction', error);
-                        }
-                    );
-                } else {
-                */
-                // create new property
-                // property data
-                // const propData: NewProperty = {
-                //     name: this._resourceClassFormService.setUniqueName(this.ontology.id),
-                //     label: prop.label,
-                //     comment: prop.label,
-                //     subPropOf: prop.type.subPropOf,
-                //     guiElement: prop.type.gui_ele,
-                //     guiOrder: c,
-                //     cardinality: this.setCardinality(prop.multiple, prop.requirerd),
-                //     guiAttributes: []
-                // };
-
-                // console.log('newProperty data', propData);
-
-                // // submit property data
-                // this._ontologyService.addProperty(this.ontology.id, lastModificationDate, classResponse['@graph'][0]['@id'], propData).subscribe(
-                //     (propResponse: ApiServiceResult) => {
-                //         lastModificationDate = propResponse['knora-api:lastModificationDate']['@value'];
-
-                //         // update class with cardinality and gui-order
-                //         this._ontologyService.setPropertyRestriction(
-                //             this.ontology.id,
-                //             lastModificationDate,
-                //             classResponse['@graph'][0]['@id'],
-                //             propResponse['@graph'][0]['@id'],
-                //             propData.cardinality,
-                //             propData.guiOrder
-                //         ).subscribe(
-                //             (cardinalityResponse: any) => {
-                //                 lastModificationDate = cardinalityResponse['knora-api:lastModificationDate']['@value'];
-
-                //                 // TODO: submit next property; recursive method
-
-                //                 // close the dialog box
-                //                 this.loading = false;
-                //                 this.closeDialog.emit();
-                //             },
-                //             (error: ApiServiceError) => {
-                //                 console.error('failed on setPropertyRestriction', error);
-                //             }
-                //         );
-                //     },
-                //     (error: ApiServiceError) => {
-                //         console.error('failed on addProperty', error);
-                //     }
-                // );
-                // // }
-
-                // c++;
-                //     }
-                // );
-
             },
             (error: ApiResponseError) => {
                 console.error('failed on addResourceClass', error);
@@ -498,8 +369,14 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                 (prop: Property) => {
                     // console.log('first pipe operator...waiting...', this.lastModificationDate);
                     // submit prop
-                    console.log('prepare and submit prop', prop)
-                    this.createProp(prop, classIri, i);
+                    console.log('prepare and submit prop', prop);
+                    if(prop.iri) {
+                        // the defined prop exists already in this ontology. We can proceed with cardinality.
+                        this.setCardinality(prop.iri, classIri, prop.multiple, prop.required, i);
+                    } else {
+                        // the defined prop does not exist yet. We have to create it.
+                        this.createProp(prop, classIri, i);
+                    }
                     return new Promise(resolve => setTimeout(() => resolve(prop), 1200));
                 }
             ))
@@ -513,7 +390,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             .subscribe(
                 (prop: Property) => {
                     // this.getOntology(this.ontologyId);
-                    if (i === props.length) {
+
+                    if (i > props.length) {
                         console.log('created; reset ontology cache', prop)
 
                         // close the dialog box
@@ -527,6 +405,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     createProp(prop: Property, classIri: string, index: number) {
         return new Promise((resolve, reject) => {
+
             // set resource property name / id
             const uniquePropName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, prop.label);
 
@@ -540,10 +419,35 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             // TODO: update prop.label and use StringLiteralInput in property-form
             newResProp.label = [{ "value": prop.label }];
             if (prop.guiAttr) {
-                newResProp.guiAttributes = [prop.guiAttr];
+                switch (prop.type.gui_ele) {
+
+                    case Constants.SalsahGui + Constants.Delimiter + 'Colorpicker':
+                        newResProp.guiAttributes = ['ncolors=' + prop.guiAttr];
+                        break;
+                    case Constants.SalsahGui + Constants.Delimiter + 'List':
+                    case Constants.SalsahGui + Constants.Delimiter + 'Pulldown':
+                    case Constants.SalsahGui + Constants.Delimiter + 'Radio':
+                        newResProp.guiAttributes = ['hlist=' + prop.guiAttr];
+                        break;
+                    case Constants.SalsahGui + Constants.Delimiter + 'SimpleText':
+                        // TODO: could have two guiAttr fields: size and maxlength
+                        // I suggest to use default value for size; we do not support this guiAttr in DSP-App
+                        newResProp.guiAttributes = ['maxlength=' + prop.guiAttr];
+                        break;
+                    case Constants.SalsahGui + Constants.Delimiter + 'Spinbox':
+                        // TODO: could have two guiAttr fields: min and max
+                        newResProp.guiAttributes = ['min=' + prop.guiAttr, 'max=' + prop.guiAttr];
+                        break;
+                    case Constants.SalsahGui + Constants.Delimiter + 'Textarea':
+                        // TODO: could have four guiAttr fields: width, cols, rows, wrap
+                        // I suggest to use default values; we do not support this guiAttr in DSP-App
+                        newResProp.guiAttributes = ['width=100%'];
+                        break;
+                    }
             }
             newResProp.guiElement = prop.type.gui_ele;
             newResProp.subPropertyOf = [prop.type.subPropOf];
+
             if (prop.type.subPropOf === Constants.HasLinkTo) {
                 newResProp.objectType = prop.guiAttr;
                 newResProp.subjectType = classIri;
@@ -555,6 +459,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
             onto.entity = newResProp;
 
+            console.log(onto);
+
             this._dspApiConnection.v2.onto.createResourceProperty(onto).subscribe(
                 (response: ResourcePropertyDefinitionWithAllLanguages) => {
                     console.log(index);
@@ -565,7 +471,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                 (error: ApiResponseError) => {
                     console.error(error);
                 }
-            )
+            );
         })
     }
 

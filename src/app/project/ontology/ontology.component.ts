@@ -309,7 +309,7 @@ export class OntologyComponent implements OnInit {
         this._cache.set('currentOntology', this.ontology);
 
         const dialogConfig: MatDialogConfig = {
-            width: '720px',
+            width: '840px',
             maxHeight: '90vh',
             position: {
                 top: '112px'
@@ -393,6 +393,7 @@ export class OntologyComponent implements OnInit {
                             (error: ApiResponseError) => {
                                 console.error(error);
                                 this.loading = false;
+                                this.loadOntology = false;
                             }
                         );
                         break;

@@ -59,26 +59,45 @@
                 <h3 class="mat-title" [matTooltip]="ontology.id">{{ontology?.label}}</h3>
 
                 <span class="fill-remaining-space"></span>
-                <!-- <p class="mat-body" [matTooltip]="ontology.comments | kuiStringifyStringLiteral"
+                <span class="ontology-info">
+                    <p class="mat-caption space-reducer">Last modification date</p>
+                    <p class="mat-body" [matTooltip]="'Last modification date: ' + ontology.lastModificationDate"
                     matTooltipPosition="above">
-                    {{ontology.comments | kuiStringifyStringLiteral | kuiTruncate:[64]}}</p> -->
+                    {{ontology.lastModificationDate | date:'medium'}}</p>
+                </span>
                 <span class="fill-remaining-space"></span>
-                <span class="switch-list-label">Display as&nbsp;</span>
-                <button mat-button (click)="toggleView('grid')" [class.active]="view === 'grid'">
-                    <mat-icon>view_module</mat-icon> Grid
-                </button>
-                <button mat-button (click)="toggleView('graph')" [class.active]="view === 'graph'">
-                    <mat-icon>scatter_plot</mat-icon> Graph
-                </button>
-                <button mat-stroked-button [disabled]="!ontology.lastModificationDate"
-                    (click)="$event.stopPropagation(); openOntologyForm('editOntology', ontology.id)">
-                    Edit
-                </button>
-                &nbsp;
-                <button mat-stroked-button [disabled]="!ontology.lastModificationDate"
+
+                <!-- toggle view -->
+                <span class="ontology-actions">
+                    <p class="mat-caption space-reducer">Display as</p>
+                    <button mat-button [class.active]="view === 'grid'" (click)="toggleView('grid')" >
+                        <mat-icon>view_module</mat-icon>
+                        Grid
+                    </button>
+                    <button mat-button [class.active]="view === 'graph'" (click)="toggleView('graph')" >
+                        <mat-icon>scatter_plot</mat-icon>
+                        Graph
+                    </button>
+                </span>
+
+                <!-- edit options -->
+                <span class="ontology-actions">
+                    <p class="mat-caption space-reducer">Ontology configuration</p>
+                    <!-- TODO: remove following span as soon edit mode is implemented; it's only for tooltip to use with disabled button  -->
+                    <span [matTooltip]="'Edit ontology is not yet implemented'" matTooltipPosition="above">
+                        <button mat-button [disabled]="!ontology.lastModificationDate" [disabled]="true"
+                        (click)="$event.stopPropagation(); openOntologyForm('editOntology', ontology.id)">
+                            <!-- <mat-icon>edit</mat-icon> -->
+                            Edit
+                        </button>
+                    </span>
+                    <button mat-button [disabled]="!ontology.lastModificationDate"
                     (click)="$event.stopPropagation(); delete(ontologyIri, 'Ontology', ontology.label)">
-                    Delete
-                </button>
+                        <!-- <mat-icon>delete</mat-icon> -->
+                        Delete
+                    </button>
+                </span>
+
             </mat-toolbar-row>
         </mat-toolbar>
 
@@ -112,7 +131,8 @@
                         </button>
                         <mat-menu #resClassMenu="matMenu" xPosition="before">
                             <button mat-menu-item
-                                (click)="openResourceClassForm('editResourceClass', {iri: resClass.id, name: '', label: resClass.label})">Edit</button>
+                                [disabled]="true"
+                                (click)="openResourceClassForm('editResourceClass', {iri: resClass.id, name: '', label: resClass.label})">Edit (not yet implemented)</button>
                             <button mat-menu-item
                                 (click)="delete(resClass.id, 'ResourceClass', resClass.label)">Delete</button>
                         </mat-menu>
@@ -133,6 +153,8 @@
                 </div>
 
             </div>
+
+
         </div>
 
         <div *ngIf="view === 'graph'" class="ontology-viewer">
