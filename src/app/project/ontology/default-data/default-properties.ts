@@ -77,7 +77,7 @@ export class DefaultProperties {
                     label: 'On / Off',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.BooleanValue,
-                    gui_ele: Constants.SalsahGui + Constants.Delimiter + 'Radio',    // 'Toggle',
+                    gui_ele: Constants.SalsahGui + Constants.Delimiter + 'Checkbox',    // 'Toggle',
                     group: 'List'
                 }
             ]
