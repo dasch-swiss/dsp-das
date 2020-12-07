@@ -69,7 +69,8 @@
                 </mat-form-field>
             </div>
 
-            <div *ngSwitchCase="propertyForm.controls['type'].value.objectType === Constants.IntValue || propertyForm.controls['type'].value.objectType === Constants.DecimalValue ? propertyForm.controls['type'].value.objectType : ''">
+            <div
+                *ngSwitchCase="propertyForm.controls['type'].value.objectType === Constants.IntValue || propertyForm.controls['type'].value.objectType === Constants.DecimalValue ? propertyForm.controls['type'].value.objectType : ''">
                 <mat-form-field>
                     <mat-label>Define range</mat-label>
                     <input matInput placeholder="min">
