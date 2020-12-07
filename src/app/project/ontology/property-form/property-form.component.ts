@@ -185,18 +185,19 @@ export class PropertyFormComponent implements OnInit {
      * @param {MatOption} option
      */
     updateFieldsDependingOnLabel(option: MatOption) {
+        console.log(option)
         this.propertyForm.controls['iri'].setValue(option.value.iri);
 
         this.propertyForm.controls['label'].setValue(option.value.label);
         this.propertyForm.controls['label'].disable();
 
         if (this.ontology.properties[option.value.iri] instanceof ResourcePropertyDefinition) {
-            const tempProp: any = this.ontology.properties[option.value.iri];
+            const tempProp: any | ResourcePropertyDefinition = this.ontology.properties[option.value.iri];
 
             let obj: PropertyType;
             // find gui ele from list of default property-types to set type value
             for (let group of this.propertyTypes) {
-                obj = group.elements.find(i => i.gui_ele === tempProp.guiElement);
+                obj = group.elements.find(i => i.gui_ele === tempProp.guiElement && i.objectType === tempProp.objectType);
 
                 if (obj) {
                     this.propertyForm.controls['type'].setValue(obj);
@@ -212,7 +213,7 @@ export class PropertyFormComponent implements OnInit {
                     // get index from guiAttr array where value starts with hlist=
                     let i = tempProp.guiAttributes.findIndex(element => element.includes('hlist'));
 
-                    // find content beteween pointy brackets to get list irir
+                    // find content beteween pointy brackets to get list iri
                     const re: RegExp = /\<([^)]+)\>/;
                     const listIri = tempProp.guiAttributes[i].match(re)[1];
 
