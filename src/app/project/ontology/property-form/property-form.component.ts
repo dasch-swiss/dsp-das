@@ -67,6 +67,8 @@ export class PropertyFormComponent implements OnInit {
     selectTypeLabel: string; // = this.propertyTypes[0].group + ': ' + this.propertyTypes[0].elements[0].label;
     selectedGroup: string;
 
+    existingProperty: boolean;
+
     Constants = Constants;
 
     constructor(
@@ -235,11 +237,13 @@ export class PropertyFormComponent implements OnInit {
 
         }
         this.propertyForm.controls['type'].disable();
+        this.existingProperty = true;
 
     }
 
     resetProperty(ev: Event) {
         ev.preventDefault();
+        this.existingProperty = false;
 
         this.propertyForm.controls['iri'].reset();
         this.propertyForm.controls['label'].setValue('');

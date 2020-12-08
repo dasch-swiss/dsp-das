@@ -10,10 +10,13 @@
     <!-- Property label -->
     <mat-form-field class="small-field">
         <input matInput placeholder="Property label *" formControlName="label" [matAutocomplete]="auto">
+        <mat-hint *ngIf="existingProperty">
+            Already existing property.
+        </mat-hint>
     </mat-form-field>
 
     <!-- TODO: select and reuse existing ObjectProperty doesn't work yet; s. https://github.com/dasch-swiss/knora-app/pull/229#issuecomment-598276151 -->
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="updateFieldsDependingOnLabel($event.option)">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="updateFieldsDependingOnLabel($event.option)" [matTooltip]="existingProperty ? 'Visible' : null">
         <mat-option *ngFor="let prop of filteredProperties | async" [value]="prop"
             matTooltip="Label: {{ prop?.label }} (Name as part of id: {{prop?.name}})" matTooltipPosition="after">
             {{ prop?.label }}
@@ -41,7 +44,9 @@
                 </mat-option>
             </mat-optgroup>
         </mat-select>
-
+        <mat-hint *ngIf="existingProperty">
+            You can re-use but not edit.
+        </mat-hint>
     </mat-form-field>
 
     <!-- TODO: additional mat-form-field for settings depending on the type selection -->
