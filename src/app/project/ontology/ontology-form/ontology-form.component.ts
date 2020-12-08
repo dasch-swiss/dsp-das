@@ -137,7 +137,6 @@ export class OntologyFormComponent implements OnInit {
             label: new FormControl({
                 value: this.ontologyLabel, disabled: false
             }, [
-                Validators.required,
                 Validators.minLength(this.nameMinLength)
             ])
         });
@@ -173,7 +172,7 @@ export class OntologyFormComponent implements OnInit {
         // const something: number = Math.floor(Math.random() * Math.floor(9999));
 
         const ontologyData = new CreateOntology();
-        ontologyData.label = this.project.shortname + ': ' + this.ontologyLabel;
+        ontologyData.label = this.project.shortname + ': ' + (this.ontologyLabel ? this.ontologyLabel : this.ontologyForm.controls['name'].value);
         ontologyData.name = this.ontologyForm.controls['name'].value;
         ontologyData.attachedToProject = this.project.id;
 
