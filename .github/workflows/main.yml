@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Send notification to google chat (just a test)
-        uses: lakto/google-chat-notification@master
+        uses: lakto/actions-chat@master
         with:
           url: ${{ secrets.GOOGLE_CHAT_DSP_RELEASES_WEBHOOK_URL }}
       - name: Install dependencies
