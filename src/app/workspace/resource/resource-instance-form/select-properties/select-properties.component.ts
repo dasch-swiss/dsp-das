@@ -17,7 +17,7 @@ export class SelectPropertiesComponent implements OnInit {
 
     @ViewChildren('switchProp') switchPropertiesComponent: QueryList<SwitchPropertiesComponent>;
 
-    @Input() propertiesAsArray: Array<ResourcePropertyDefinition>;
+    @Input() properties: ResourcePropertyDefinition[];
 
     @Input() ontologyInfo: ResourceClassAndPropertyDefinitions;
 
@@ -36,8 +36,8 @@ export class SelectPropertiesComponent implements OnInit {
     constructor(private _valueService: ValueService) { }
 
     ngOnInit() {
-        if (this.propertiesAsArray) {
-            for (const prop of this.propertiesAsArray) {
+        if (this.properties) {
+            for (const prop of this.properties) {
                 if (prop) {
                     if (prop.objectType === 'http://api.knora.org/ontology/knora-api/v2#TextValue') {
                         prop.objectType = this._valueService.getTextValueClass(prop);
