@@ -28,6 +28,10 @@ jobs:
         run: |
           npm run webdriver-update
           npm run test-e2e-protractor
+      - name: Send notification to google chat (just a test)
+        uses: delivery-much/actions-chat@v1
+        with:
+          url: ${{ secrets.GOOGLE_CHAT_DSP_RELEASES_WEBHOOK_URL }}
 
   update_release_draft:
     name: Update next release draft
@@ -73,3 +77,7 @@ jobs:
         run: |
           echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
           make publish-dsp-app-image
+      - name: Send notification to google chat
+        uses: delivery-much/actions-chat@v1
+        with:
+          url: ${{ secrets.GOOGLE_CHAT_DSP_RELEASES_WEBHOOK_URL }}
