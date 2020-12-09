@@ -18,6 +18,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Send notification to google chat (just a test)
+        uses: lakto/google-chat-notification@master
+        with:
+          url: ${{ secrets.GOOGLE_CHAT_DSP_RELEASES_WEBHOOK_URL }}
       - name: Install dependencies
         run: npm install
       - name: Build app in prod mode
@@ -28,10 +32,6 @@ jobs:
         run: |
           npm run webdriver-update
           npm run test-e2e-protractor
-      - name: Send notification to google chat (just a test)
-        uses: CommonMarvel/google-chat-notification@v1.1.1
-        with:
-          url: ${{ secrets.GOOGLE_CHAT_DSP_RELEASES_WEBHOOK_URL }}
 
   update_release_draft:
     name: Update next release draft
