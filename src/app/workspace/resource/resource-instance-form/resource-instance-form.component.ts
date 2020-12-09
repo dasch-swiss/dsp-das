@@ -280,7 +280,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                 this._dspApiConnection.v2.ontologyCache.getOntology(ontologyIri).subscribe(
                         (onto: Map<string, ReadOntology>) => {
                             this.resourceClasses = onto.get(ontologyIri).getClassDefinitionsByType(ResourceClassDefinition);
-                            console.log('this.resourceClasses', this.resourceClasses);
 
                             if (this.selectResourceClassComponent && this.resourceClasses.length === 1) {
                                 // since the component already exists, the ngAfterInit method of the component will not be called so we must assign the value here manually
@@ -324,9 +323,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
                     this.selectedResourceClass = onto.classes[resourceClassIri];
 
-                    this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition);
-                    console.log('this.properties', this.properties);
-
+                    // filter out all props that cannot be edited or are link props
+                    this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition).filter(prop => prop.isEditable && !prop.isLinkProperty);
                 }
             );
         } else {
