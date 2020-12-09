@@ -29,7 +29,7 @@ jobs:
           npm run webdriver-update
           npm run test-e2e-protractor
       - name: Send notification to google chat (just a test)
-        uses: delivery-much/actions-chat@v1
+        uses: CommonMarvel/google-chat-notification@v1.1.1
         with:
           url: ${{ secrets.GOOGLE_CHAT_DSP_RELEASES_WEBHOOK_URL }}
 
