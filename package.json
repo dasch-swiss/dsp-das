@@ -12,6 +12,8 @@
         "e2e": "ng e2e",
         "build": "ng build",
         "build-prod": "ng build --prod=true",
+        "build-dsp-ui": "ng build dsp-ui-lib",
+        "build-dsp-js": "ng build dsp-js-lib",
         "test-ci": "ng test --watch=false --browsers=ChromeHeadless",
         "test-local": "ng test",
         "test-e2e-protractor": "ng e2e --prod=true --protractor-config=./e2e/protractor-ci.conf.js --webdriver-update=false",
@@ -33,7 +35,7 @@
         "@angular/router": "~9.1.12",
         "@ckeditor/ckeditor5-angular": "^1.2.3",
         "@dasch-swiss/dsp-js": "v1.0.0-rc.19",
-        "@dasch-swiss/dsp-ui": "1.0.0-rc.13",
+        "@dasch-swiss/dsp-ui": "file:dsp_lib/dsp-ui/dist/@dasch-swiss/dsp-ui/",
         "@ngx-translate/core": "^13.0.0",
         "@ngx-translate/http-loader": "^6.0.0",
         "angular-split": "^4.0.0",
@@ -60,6 +62,7 @@
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "~0.901.12",
+        "@angular-devkit/build-ng-packagr": "^0.1002.0",
         "@angular/cli": "~9.1.12",
         "@angular/compiler-cli": "~9.1.12",
         "@angular/language-service": "~9.1.12",
@@ -77,8 +80,10 @@
         "karma-coverage-istanbul-reporter": "~3.0.3",
         "karma-jasmine": "~3.3.1",
         "karma-jasmine-html-reporter": "^1.5.4",
+        "ng-packagr": "^11.0.3",
         "protractor": "^7.0.0",
         "ts-node": "~8.4.1",
+        "tsickle": "^0.39.1",
         "tslint": "~5.20.0",
         "typescript": "3.8.3"
     }
