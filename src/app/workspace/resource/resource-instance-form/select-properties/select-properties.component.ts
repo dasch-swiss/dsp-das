@@ -1,6 +1,6 @@
-import { Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { CardinalityUtil, ReadResource, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { Cardinality, CardinalityUtil, IHasProperty, ReadResource, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ValueService } from '@dasch-swiss/dsp-ui';
 import { SwitchPropertiesComponent } from './switch-properties/switch-properties.component';
 
@@ -17,7 +17,7 @@ export class SelectPropertiesComponent implements OnInit {
 
     @ViewChildren('switchProp') switchPropertiesComponent: QueryList<SwitchPropertiesComponent>;
 
-    @Input() propertiesAsArray: Array<ResourcePropertyDefinition>;
+    @Input() properties: ResourcePropertyDefinition[];
 
     @Input() ontologyInfo: ResourceClassAndPropertyDefinitions;
 
@@ -33,11 +33,15 @@ export class SelectPropertiesComponent implements OnInit {
 
     addButtonIsVisible: boolean;
 
+    isRequiredProp: boolean;
+
     constructor(private _valueService: ValueService) { }
 
     ngOnInit() {
-        if (this.propertiesAsArray) {
-            for (const prop of this.propertiesAsArray) {
+        // console.log('resourceClass', this.resourceClass.propertiesList);
+        // console.log('properties', this.properties);
+        if (this.properties) {
+            for (const prop of this.properties) {
                 if (prop) {
                     if (prop.objectType === 'http://api.knora.org/ontology/knora-api/v2#TextValue') {
                         prop.objectType = this._valueService.getTextValueClass(prop);
@@ -49,12 +53,17 @@ export class SelectPropertiesComponent implements OnInit {
                     // each property will also have a filtered array to be used when deleting a value.
                     // see the deleteValue method below for more info
                     this.propertyValuesKeyValuePair[prop.id + '-filtered'] = [0];
+
+                     // check the cardinality to know if the prop is required or not
+                     this.isPropRequired(prop.id);
+                     this.propertyValuesKeyValuePair[prop.id + '-cardinality'] = [this.isRequiredProp ? 1 : 0];
                 }
             }
         }
 
         this.parentResource.entityInfo = this.ontologyInfo;
     }
+
 
     /**
      * Given a resource property, check if an add button should be displayed under the property values
@@ -67,6 +76,25 @@ export class SelectPropertiesComponent implements OnInit {
             this.propertyValuesKeyValuePair[prop.id].length,
             this.ontologyInfo.classes[this.resourceClass.id]
         );
+    }
+
+    isPropRequired(propId: string): void {
+        if (this.resourceClass !== undefined && propId) {
+            this.resourceClass.propertiesList.filter(
+                (card: IHasProperty) => {
+                    if (card.propertyIndex === propId) {
+                        // cardinality 1 or 1-N
+                        if (card.cardinality === Cardinality._1 || card.cardinality === Cardinality._1_n) {
+                            this.isRequiredProp = true;
+                        } else {
+                            this.isRequiredProp = false;
+                        }
+                    } else {
+                        console.log('false');
+                    }
+                }
+            );
+        }
     }
 
     /**

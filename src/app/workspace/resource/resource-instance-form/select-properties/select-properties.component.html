@@ -1,6 +1,6 @@
 <div class="properties-container">
     <div class="properties">
-        <div *ngFor="let prop of propertiesAsArray; let last = last;" [class.border-bottom]="!last">
+        <div *ngFor="let prop of properties; let last = last;" [class.border-bottom]="!last">
             <div class="property" *ngIf="!prop.isLinkProperty || prop">
                 <div class="property-label">
                     <h3 class="label mat-subheading-1"
@@ -8,7 +8,11 @@
                         [matTooltip]="prop.comment"
                         matTooltipPosition="above">
                         {{prop.label}}
+                        <p *ngIf="propertyValuesKeyValuePair[prop.id + '-cardinality'][0] === 1" class="propIsRequired">
+                            *
+                        </p>
                     </h3>
+
                 </div>
                 <div class="property-value large-field">
                     <div *ngFor="let val of propertyValuesKeyValuePair[prop.id]; let i=index">
