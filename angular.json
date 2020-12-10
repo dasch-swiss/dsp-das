@@ -148,6 +148,20 @@
                     }
                 }
             }
+        },
+        "dsp-ui-lib": {
+          "root": "dsp_lib",
+          "sourceRoot": "dsp_lib/dsp-ui/projects/dsp-ui/src",
+          "projectType": "library",
+          "architect": {
+            "build": {
+              "builder": "@angular-devkit/build-ng-packagr:build",
+              "options": {
+                "tsConfig": "dsp_lib/dsp-ui/tsconfig.json",
+                "project": "dsp_lib/dsp-ui/projects/dsp-ui/ng-package.json"
+              }
+            }
+          }
         }
     },
     "defaultProject": "dsp-app"

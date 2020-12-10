@@ -1,0 +1,8 @@
+[submodule "dsp_lib/dsp-js"]
+	path = dsp_lib/dsp-js
+	url = https://github.com/dasch-swiss/dsp-js-lib.git
+	branch = main
+[submodule "dsp_lib/dsp-ui"]
+	path = dsp_lib/dsp-ui
+	url = https://github.com/dasch-swiss/dsp-ui-lib.git
+	branch = main
