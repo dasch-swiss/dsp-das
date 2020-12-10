@@ -44,9 +44,6 @@ class TestSelectPropertiesParentComponent implements OnInit {
         this.selectedResourceClass = this.ontoInfo.classes['http://0.0.0.0:3333/ontology/0001/anything/v2#Thing'];
 
         this.properties = this.ontoInfo.getPropertyDefinitionsByType(ResourcePropertyDefinition).filter(prop => prop.isEditable && !prop.isLinkProperty);
-
-        // sort by label
-        this.properties = this._sortingService.keySortByAlphabetical(this.properties, 'label');
     }
 
 }
@@ -125,12 +122,12 @@ describe('SelectPropertiesComponent', () => {
             addButtonNativeElement.click();
 
             // if this fails, that likely means the property has a cardinality of 0-1 and thus could not add another value.
-            expect(testHostComponent.selectPropertiesComponent.propertyValuesKeyValuePair[testHostComponent.properties[0].id].length).toEqual(2);
+            expect(testHostComponent.selectPropertiesComponent.propertyValuesKeyValuePair[testHostComponent.properties[1].id].length).toEqual(2);
         });
 
         it('should delete a form from the value when the delete button is clicked', () => {
-            testHostComponent.selectPropertiesComponent.propertyValuesKeyValuePair[testHostComponent.properties[0].id] = [0, 1];
-            testHostComponent.selectPropertiesComponent.propertyValuesKeyValuePair[testHostComponent.properties[0].id + '-filtered'] = [0, 1];
+            testHostComponent.selectPropertiesComponent.propertyValuesKeyValuePair[testHostComponent.properties[1].id] = [0, 1];
+            testHostComponent.selectPropertiesComponent.propertyValuesKeyValuePair[testHostComponent.properties[1].id + '-filtered'] = [0, 1];
 
             testHostFixture.detectChanges();
 
@@ -146,7 +143,7 @@ describe('SelectPropertiesComponent', () => {
 
             const expectedArray = [undefined, 1];
 
-            expect(testHostComponent.selectPropertiesComponent.propertyValuesKeyValuePair[testHostComponent.properties[0].id]).toEqual(expectedArray);
+            expect(testHostComponent.selectPropertiesComponent.propertyValuesKeyValuePair[testHostComponent.properties[1].id]).toEqual(expectedArray);
 
             deleteButtons = selectPropertiesComponentDe.queryAll(By.css('.delete'));
 
