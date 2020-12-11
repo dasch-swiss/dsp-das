@@ -18,8 +18,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install @angular/cli global
-        run: npm install -g @angular/cli@latest
+      - name: Install dev dependencies
+        run: npm install -D
       - name: Pull DSP libraries
         run: git submodule update --init --recursive
       - name: Build DSP libraries
