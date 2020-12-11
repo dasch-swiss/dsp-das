@@ -4,10 +4,6 @@ import { CardinalityUtil, ReadResource, ResourceClassAndPropertyDefinitions, Res
 import { ValueService } from '@dasch-swiss/dsp-ui';
 import { SwitchPropertiesComponent } from './switch-properties/switch-properties.component';
 
-export interface Properties {
-    [index: string]: ResourcePropertyDefinition;
-}
-
 @Component({
   selector: 'app-select-properties',
   templateUrl: './select-properties.component.html',
