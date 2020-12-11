@@ -18,6 +18,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Build DSP libraries
+        run: npm run build-dsp-ui
       - name: Install dependencies
         run: npm install
       - name: Build app in prod mode
