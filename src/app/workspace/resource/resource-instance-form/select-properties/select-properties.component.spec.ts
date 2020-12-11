@@ -3,10 +3,19 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
-import { MockOntology, PropertyDefinition, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import {
+    MockOntology,
+    ResourceClassAndPropertyDefinitions,
+    ResourceClassDefinition,
+    ResourcePropertyDefinition
+} from '@dasch-swiss/dsp-js';
 import { SortingService } from '@dasch-swiss/dsp-ui';
-import { Properties, SelectPropertiesComponent } from './select-properties.component';
+import { SelectPropertiesComponent } from './select-properties.component';
 import { SwitchPropertiesComponent } from './switch-properties/switch-properties.component';
+
+export interface Properties {
+    [index: string]: ResourcePropertyDefinition;
+}
 
 /**
  * Test host component to simulate parent component.
@@ -33,8 +42,7 @@ class TestSelectPropertiesParentComponent implements OnInit {
 
     propertiesParentForm: FormGroup;
 
-    constructor(private _fb: FormBuilder,
-                private _sortingService: SortingService) { }
+    constructor(private _fb: FormBuilder) { }
 
     ngOnInit() {
         this.propertiesParentForm = this._fb.group({});
