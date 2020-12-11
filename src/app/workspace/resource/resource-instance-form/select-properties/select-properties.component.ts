@@ -4,10 +4,6 @@ import { Cardinality, CardinalityUtil, IHasProperty, ReadResource, ResourceClass
 import { ValueService } from '@dasch-swiss/dsp-ui';
 import { SwitchPropertiesComponent } from './switch-properties/switch-properties.component';
 
-export interface Properties {
-    [index: string]: ResourcePropertyDefinition;
-}
-
 @Component({
   selector: 'app-select-properties',
   templateUrl: './select-properties.component.html',
@@ -38,8 +34,6 @@ export class SelectPropertiesComponent implements OnInit {
     constructor(private _valueService: ValueService) { }
 
     ngOnInit() {
-        // console.log('resourceClass', this.resourceClass.propertiesList);
-        // console.log('properties', this.properties);
         if (this.properties) {
             for (const prop of this.properties) {
                 if (prop) {
