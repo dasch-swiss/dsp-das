@@ -9,13 +9,8 @@ import {
     ResourceClassDefinition,
     ResourcePropertyDefinition
 } from '@dasch-swiss/dsp-js';
-import { SortingService } from '@dasch-swiss/dsp-ui';
 import { SelectPropertiesComponent } from './select-properties.component';
 import { SwitchPropertiesComponent } from './switch-properties/switch-properties.component';
-
-export interface Properties {
-    [index: string]: ResourcePropertyDefinition;
-}
 
 /**
  * Test host component to simulate parent component.
