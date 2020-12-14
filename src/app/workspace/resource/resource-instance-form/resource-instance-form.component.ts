@@ -351,7 +351,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                     this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition).filter(prop => prop.isEditable && !prop.isLinkProperty);
 
                     // notifies the user that the select resource has got 0 property yet defined.
-                    if ((!this.selectPropertiesComponent || this.selectOntologyComponent.form.controls.resources.valueChanges ) && this.properties.length === 0) {
+                    if (!this.selectPropertiesComponent && this.properties.length === 0) {
                         this.errorMessage = 'No property defined for the select resource.';
                     }
                 },
