@@ -185,6 +185,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                         this.usersProjects.push(project);
                     }
 
+                    // notifies the user that he/she is not part of any project
                     if (this.usersProjects.length === 0) {
                         this.errorMessage = 'You are not part of any activated project.';
                     }
@@ -242,6 +243,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
                         this.ontologiesMetadata = response;
 
+                        // notifies the user that the select project has got 0 data model yet defined.
                         if (!this.selectOntologyComponent && response.ontologies.length === 0) {
                             this.errorMessage = 'No data model defined for the select project.';
                         }
@@ -300,7 +302,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                                 this.selectResourceClassComponent.form.controls.resources.setValue(this.resourceClasses[0].id);
                             }
 
-                            if (!this.selectResourceClassComponent && this.resourceClasses.length === 0) {
+                            // notifies the user that the select ontology has got 0 resource class yet defined.
+                            if ((!this.selectResourceClassComponent || this.selectOntologyComponent.form.controls.ontologies.valueChanges) && this.resourceClasses.length === 0) {
                                 this.errorMessage = 'No resource defined for the select ontology.';
                             }
                     },
@@ -344,7 +347,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                     // filter out all props that cannot be edited or are link props
                     this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition).filter(prop => prop.isEditable && !prop.isLinkProperty);
 
-                    if (!this.selectPropertiesComponent && this.properties.length === 0) {
+                    // notifies the user that the select resource has got 0 property yet defined.
+                    if ((!this.selectPropertiesComponent || this.selectOntologyComponent.form.controls.resources.valueChanges ) && this.properties.length === 0) {
                         this.errorMessage = 'No property defined for the select resource.';
                     }
                 },
