@@ -37,9 +37,9 @@
         </app-select-resource-class>
     </span>
 
-    <p *ngIf="errorMessage">
-        <b>{{errorMessage}}</b>
-    </p>
+    <span *ngIf="errorMessage">
+        <p class="errorIfNoElement"><b>{{errorMessage}}</b></p>
+    </span>
 
     <!-- action buttons: cancel and next -->
     <div class="form-panel large-field">
