@@ -166,6 +166,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                 );
 
                 this.closeDialog.emit();
+            },
+            (error: ApiResponseError) => {
+                console.error(error);
             }
         );
 
