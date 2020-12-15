@@ -2,9 +2,6 @@
     <mat-form-field *ngIf="resourceClassDefinitions.length === 1" class="large-field selected-res-class">
         <mat-label>Select a resource *</mat-label>
         <input matInput disabled value="{{resourceClassDefinitions[0].label}}" class="res-label">
-        <mat-error *ngIf="form.controls.resources.hasError('required')">
-            <span class="custom-error-message">A resource must be selected.</span>
-        </mat-error>
     </mat-form-field>
     <mat-form-field *ngIf="resourceClassDefinitions.length > 1" class="large-field">
         <mat-label>Select a resource *</mat-label>

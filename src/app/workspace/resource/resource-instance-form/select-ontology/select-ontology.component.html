@@ -2,9 +2,6 @@
     <mat-form-field *ngIf="ontologiesMetadata.ontologies.length === 1" class="large-field selected-ontology">
         <mat-label>Select a data model *</mat-label>
         <input matInput disabled value="{{ontologiesMetadata.ontologies[0].label}}" class="onto-label">
-        <mat-error *ngIf="form.controls.ontologies.hasError('required')">
-            <span class="custom-error-message">A data model must be selected.</span>
-        </mat-error>
     </mat-form-field>
     <mat-form-field *ngIf="ontologiesMetadata.ontologies.length > 1" class="large-field selected-ontologies">
         <mat-label>Select a data model *</mat-label>
