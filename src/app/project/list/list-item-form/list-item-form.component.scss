@@ -13,8 +13,14 @@
 }
 .add-node-btn,
 .edit-node-btn,
-.progress-indicator {
+.progress-indicator
+.update-success-btn {
   margin: 0 0 0 8px;
+}
+
+.update-success-btn {
+  color: green !important;
+  cursor: default;
 }
 
 .new-list-item {

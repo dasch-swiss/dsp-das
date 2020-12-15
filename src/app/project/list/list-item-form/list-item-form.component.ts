@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ApiResponseData, ApiResponseError, CreateChildNodeRequest, KnoraApiConnection, ListNodeInfo, ListNodeInfoResponse, StringLiteral } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, CreateChildNodeRequest, KnoraApiConnection, ListNodeInfo, ListNodeInfoResponse, StringLiteral, UpdateChildNodeLabelsRequest } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 
 @Component({
@@ -50,6 +50,9 @@ export class ListItemFormComponent implements OnInit {
 
     updateData: boolean = false;
 
+    updateSuccessful: boolean = false;
+    updateFailed: boolean = false;
+
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection
     ) { }
@@ -87,6 +90,31 @@ export class ListItemFormComponent implements OnInit {
         if (this.iri && this.updateData) {
             // edit mode
             // TODO: update node method not yet implemented; Waiting for Knora API
+            console.log(this.iri);
+            const childLabels: UpdateChildNodeLabelsRequest = new UpdateChildNodeLabelsRequest();
+            // initialize labels
+            let i = 0;
+            for (const l of this.labels) {
+                childLabels.labels[i] = new StringLiteral();
+                childLabels.labels[i].language = l.language;
+                childLabels.labels[i].value = l.value;
+                i++;
+            }
+
+            console.log('labels: ', childLabels.labels);
+
+            // send payload to dsp-api's api
+            this._dspApiConnection.admin.listsEndpoint.updateChildLabels(this.iri, childLabels).subscribe(
+                (response: ApiResponseData<ListNodeInfoResponse>) => {
+                    console.log('SUCCESS: ', response);
+                    this.loading = false;
+                    this.updateSuccessful = true;
+                },
+                (error: ApiResponseError) => {
+                    console.error(error);
+                    this.updateFailed = true;
+                }
+            );
 
             // TODO: remove setTimeout after testing position of progress indicator
             setTimeout(() => {
@@ -131,6 +159,8 @@ export class ListItemFormComponent implements OnInit {
     }
 
     toggleBtn(show: boolean) {
+        this.updateFailed = false;
+        this.updateSuccessful = false;
         this.updateData = show;
     }
 }
