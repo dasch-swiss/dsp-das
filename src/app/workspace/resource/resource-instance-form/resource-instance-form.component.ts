@@ -190,7 +190,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
                     // notifies the user that he/she is not part of any project
                     if (this.usersProjects.length === 0) {
-                        this.errorMessage = 'You are not part of any activated project.';
+                        this.errorMessage = 'You are not a part of any active projects.';
                     }
                 },
                 (error: ApiResponseError) => {
@@ -246,9 +246,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
                         this.ontologiesMetadata = response;
 
-                        // notifies the user that the select project has got 0 data model yet defined.
+                        // notifies the user that the selected project does not have any data models defined yet.
                         if (!this.selectOntologyComponent && response.ontologies.length === 0) {
-                            this.errorMessage = 'No data model defined for the select project.';
+                            this.errorMessage = 'No data models defined for the select project.';
                         }
                     },
                     (error: ApiResponseError) => {
@@ -257,7 +257,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                 );
             }
         } else {
-            this.errorMessage = 'You are not part of any activated project.';
+            this.errorMessage = 'You are not a part of any active projects.';
         }
     }
 
@@ -305,9 +305,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                                 this.selectResourceClassComponent.form.controls.resources.setValue(this.resourceClasses[0].id);
                             }
 
-                            // notifies the user that the select ontology has got 0 resource class yet defined.
+                            // notifies the user that the selected ontology does not have any resource classes defined yet.
                             if ((!this.selectResourceClassComponent || this.selectOntologyComponent.form.controls.ontologies.valueChanges) && this.resourceClasses.length === 0) {
-                                this.errorMessage = 'No resource defined for the select ontology.';
+                                this.errorMessage = 'No resources defined for the selected ontology.';
                             }
                     },
                     (error: ApiResponseError) => {
@@ -350,9 +350,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                     // filter out all props that cannot be edited or are link props
                     this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition).filter(prop => prop.isEditable && !prop.isLinkProperty);
 
-                    // notifies the user that the select resource has got 0 property yet defined.
+                    // notifies the user that the selected resource does not have any properties defined yet.
                     if (!this.selectPropertiesComponent && this.properties.length === 0) {
-                        this.errorMessage = 'No property defined for the select resource.';
+                        this.errorMessage = 'No properties defined for the selected resource.';
                     }
                 },
                 (error: ApiResponseError) => {
