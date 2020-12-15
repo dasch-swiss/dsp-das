@@ -75,8 +75,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     errorMessage: any;
 
-    isNextBtnDisabled: boolean = false;
-
     propertiesObj = {};
 
     constructor(
@@ -339,9 +337,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
         // reset errorMessage, it will be reassigned in the else clause if needed
         this.errorMessage = undefined;
 
-        this.selectResourceClassComponent.form.controls['label'].enable();
-        this.isNextBtnDisabled = false;
-
         // if the client undoes the selection of a resource class, use the active ontology as a fallback
         if (resourceClassIri === null) {
             this.selectResourceClasses(this.selectedOntology);
@@ -358,12 +353,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                     // notifies the user that the selected resource does not have any properties defined yet.
                     if (!this.selectPropertiesComponent && this.properties.length === 0) {
                         this.errorMessage = 'No properties defined for the selected resource.';
-                        // reset the form field in case there is already a label previously entered
-                        this.selectResourceClassComponent.form.controls['label'].setValue(null);
-                        // disable the resource label form field
-                        this.selectResourceClassComponent.form.controls['label'].disable();
-                        // force to disable the next button (even though the form status is valid)
-                        this.isNextBtnDisabled = true;
                     }
                 },
                 (error: ApiResponseError) => {
