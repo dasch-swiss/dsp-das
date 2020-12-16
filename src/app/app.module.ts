@@ -78,6 +78,12 @@ import { SelectOntologyComponent } from './workspace/resource/resource-instance-
 import { SelectResourceClassComponent } from './workspace/resource/resource-instance-form/select-resource-class/select-resource-class.component';
 import { SelectPropertiesComponent } from './workspace/resource/resource-instance-form/select-properties/select-properties.component';
 import { SwitchPropertiesComponent } from './workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties.component';
+import { ProjectTabViewComponent } from './project/board/project-tab-view/project-tab-view.component';
+import { DatasetTabViewComponent } from './project/board/dataset-tab-view/dataset-tab-view.component';
+import { AttributionTabViewComponent } from './project/board/attribution-tab-view/attribution-tab-view.component';
+import { TermsTabViewComponent } from './project/board/terms-tab-view/terms-tab-view.component';
+import { ContactsTabViewComponent } from './project/board/contacts-tab-view/contacts-tab-view.component';
+import {ClipboardModule} from 'ngx-clipboard';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -141,7 +147,12 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         SelectOntologyComponent,
         SelectResourceClassComponent,
         SelectPropertiesComponent,
-        SwitchPropertiesComponent
+        SwitchPropertiesComponent,
+        ProjectTabViewComponent,
+        DatasetTabViewComponent,
+        AttributionTabViewComponent,
+        TermsTabViewComponent,
+        ContactsTabViewComponent
     ],
     imports: [
         AppRoutingModule,
@@ -162,7 +173,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
                 useFactory: HttpLoaderFactory,
                 deps: [HttpClient]
             }
-        })
+        }),
+        ClipboardModule
     ],
     providers: [
         {

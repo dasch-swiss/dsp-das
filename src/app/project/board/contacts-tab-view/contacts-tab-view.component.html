@@ -1,0 +1,32 @@
+<h1>Contact</h1>
+
+<div class="contact-contents tab-contents">
+    <p>If you have any questions, please contact us on </p>
+
+    <div style="margin-top: 40px;">
+        <h3> {{ contactDetails['jobTitle'] }} {{ contactDetails['givenName'] }} {{contactDetails['familyName'] }} </h3>
+
+        <section class="address">
+            <h4>Address:</h4>
+            <address>
+                {{ contactDetails['address']['streetAddress'] }} <br>
+                {{ contactDetails['address']['postalCode'] }} {{ contactDetails['address']['addressLocality'] }}
+            </address>
+        </section>
+
+        <section class="email">
+            <h4>Email:</h4>
+            <a href="mailto:{{ contactDetails['email'] }}"> {{ contactDetails['email'] }} </a>
+        </section>
+
+        <section class="member">
+            <h4>Member of:</h4>
+            <a href="{{ contactDetails['memberOf'] }}" target="_blank"> {{ contactDetails['memberOf'] }} </a>
+        </section>
+
+        <section class="member">
+            <h4>sameAs:</h4>
+            <a href="{{ contactDetails['sameAs']['value'] }}" target="_blank"> {{ contactDetails['sameAs']['value'] }} </a>
+        </section>
+    </div>
+</div>

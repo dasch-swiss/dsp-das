@@ -1,0 +1,23 @@
+.grant-contact {
+
+  p {
+    margin-top: 1px;
+  }
+
+  .funder-contents {
+    margin-left: 55px;
+
+    .email, .address {
+      margin-top: 12px;
+    }
+  }
+}
+
+.mat-icon-text {
+  display: flex;
+  align-items: center;
+
+  .mat-icon {
+    margin-right: 8px;
+  }
+}

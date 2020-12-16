@@ -1,0 +1,38 @@
+<h1>Attribution</h1>
+
+<p>The following people are involved in making of dataset.</p>
+
+<div class="tab-contents" style="margin-top: 40px;">
+
+    <mat-card class="attribution-entry" *ngFor="let entry of attribution | keyvalue;">
+
+        <h3 style="color: brown"> {{ entry.value['role'] | titlecase }} </h3>
+        <div class="contact-contents" style="margin-top: 20px;">
+            <h3> {{ people[entry.key]['givenName'] }} {{people[entry.key]['familyName'] }} </h3>
+
+            <section class="job-title">
+                <p> Job title: {{ people[entry.key]['jobTitle'] }} </p>
+            </section>
+
+            <section class="address">
+                <h4>Address:</h4>
+                <address>
+                    {{ people[entry.key]['address']['streetAddress'] }} <br>
+                    {{ people[entry.key]['address']['postalCode'] }} {{ people[entry.key]['address']['addressLocality'] }}
+                </address>
+            </section>
+
+            <section class="email">
+                <h4>Email:</h4>
+                <a href="mailto:{{ people[entry.key]['email'] }}"> {{ people[entry.key]['email'] }} </a>
+            </section>
+
+            <section class="member">
+                <h4>Member of:</h4>
+                <a href="{{ people[entry.key]['memberOf'] }}" target="_blank"> {{ people[entry.key]['memberOf'] }} </a>
+            </section>
+        </div>
+
+    </mat-card>
+
+</div>
