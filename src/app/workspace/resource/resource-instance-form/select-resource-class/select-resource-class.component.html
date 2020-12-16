@@ -12,5 +12,8 @@
     <mat-form-field class="large-field resLabel">
         <mat-label>Resource label</mat-label>
         <input matInput formControlName="label" [value]="label" class="label">
+        <mat-error *ngIf="form.controls.label.hasError('pattern')">
+            <span class="custom-error-message">Your label must contain and start with at least one character or one number. Special characters allowed.</span>
+        </mat-error>
     </mat-form-field>
 </span>
