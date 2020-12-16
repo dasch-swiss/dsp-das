@@ -39,7 +39,7 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterVie
 
     form: FormGroup;
 
-    checkPattern = '^\d*[a-zA-Z0-9_]+( [a-zA-Z0-9@_.]+)*$';
+    checkPattern = '^\d*[a-zA-Z0-9 ][ a-zA-Z0-9@_.]*$';
 
     resourceChangesSubscription: Subscription;
 
@@ -64,7 +64,7 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterVie
 
         // emit label of the resource any time it is changed
         this.labelChangesSubscription = this.form.controls.label.valueChanges.subscribe((data) => {
-            this.resourceLabel.emit(data);
+            this.resourceLabel.emit(data.trim());
             this.formGroup.removeControl('resources');
             this.formGroup.addControl('resources', this.form);
         });
