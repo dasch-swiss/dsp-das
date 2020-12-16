@@ -149,6 +149,20 @@
                 }
             }
         },
+        "dsp-js-lib": {
+          "root": "dsp_lib",
+          "sourceRoot": "dsp_lib/dsp-js/src",
+          "projectType": "library",
+          "architect": {
+            "build": {
+              "builder": "@angular-devkit/build-ng-packagr:build",
+              "options": {
+                "tsConfig": "dsp_lib/dsp-js/tsconfig.json",
+                "project": "dsp_lib/dsp-ui/projects/dsp-ui/ng-package.json"
+              }
+            }
+          }
+        },
         "dsp-ui-lib": {
           "root": "dsp_lib",
           "sourceRoot": "dsp_lib/dsp-ui/projects/dsp-ui/src",
