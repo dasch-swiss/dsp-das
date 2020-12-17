@@ -23,7 +23,13 @@ class TestHostBoardComponent {
             'givenName': 'Stewart',
             'jobTitle': 'Dr.',
             'memberOf': 'http://ns.dasch.swiss/test-dasch',
-            'sameAs': {'type': 'https://schema.org/URL', 'value': 'https://orcid.org/0000-0002-1825-0097'}
+            'sameAs': {'type': 'https://schema.org/URL', 'value': 'https://orcid.org/0000-0002-1825-0097'},
+            'organisation':  {
+                'address': {'addressLocality': 'Toronto', 'postalCode': '40000', 'streetAddress': 'University of Toronto Street'},
+                'email': '/info@universityoftoronto.ca',
+                'name': 'University of Toronto',
+                'url': {'type': 'https://schema.org/URL', 'value': 'http://www.utoronto.ca/'}
+            }
         },
         'dataManagementPlan': {'url': {'type': 'https://schema.org/URL', 'value': 'https://snf.ch'}, 'isAvailable': false},
         'description': 'Dies ist ein Testprojekt...alle Properties wurden verwendet, um diese zu testen',
@@ -31,12 +37,26 @@ class TestHostBoardComponent {
         'endDate': '2001-01-26',
         'funder': 'http://ns.dasch.swiss/test-funder',
         'grant': {
-            'funder': {
-                'address': {'addressLocality': 'Toronto', 'postalCode': '40000', 'streetAddress': 'University of Toronto Street'},
-                'email': '/info@universityoftoronto.ca',
-                'name': 'University of Toronto',
-                'url': {'type': 'https://schema.org/URL', 'value': 'http://www.utoronto.ca/'}
-            }, 'name': 'Prof. test test, Prof. test Harbtestrecht', 'number': '0123456789', 'url': {'type': 'https://schema.org/URL', 'value': 'http://p3.snf.ch/testproject'}
+            'funder': [
+                {
+                    'address': {'addressLocality': 'Toronto', 'postalCode': '40000', 'streetAddress': 'University of Toronto Street'},
+                    'email': '/info@universityoftoronto.ca',
+                    'name': 'University of Toronto',
+                    'url': {'type': 'https://schema.org/URL', 'value': 'http://www.utoronto.ca/'}
+                },
+                {
+                    'address': {'addressLocality': 'Basel', 'postalCode': '4000', 'streetAddress': 'Teststrasse'},
+                    'email': 'lauren.berry@unibas.ch',
+                    'familyName': 'Berry',
+                    'givenName': 'Lauren',
+                    'jobTitle': 'Dr.',
+                    'organisation':  {
+                        'address': {'addressLocality': 'Toronto', 'postalCode': '40000', 'streetAddress': 'University of Toronto Street'},
+                        'email': 'info@universityoftoronto.ca',
+                        'name': 'University of Toronto',
+                        'url': 'http://www.utoronto.ca/'
+                    }
+                }], 'name': 'Test Grant Name', 'number': '0123456789', 'url': {'type': 'https://schema.org/URL', 'value': 'http://p3.snf.ch/testproject'}
         },
         'keywords': ['science', 'mathematics', 'history of science', 'history of mathematics'],
         'name': 'Testprojektname (test)',

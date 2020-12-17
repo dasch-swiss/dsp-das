@@ -181,46 +181,23 @@ section {
     }
   }
 
-  ::ng-deep .contact-contents {
+  ::ng-deep .person  {
 
-    h3 {
+    h4 {
+      margin-bottom: 6px;
+      margin-top: 6px;
+      display: inline-block;
+    }
+
+    p {
+      margin-top: 0px;
       margin-bottom: 8px;
     }
 
-    .address {
-
-      margin-top: 20px;
-
-      h4 {
-        margin-bottom: 5px;
-        margin-top: 5px;
-      }
-
-      p {
-        margin-top: 0px;
-        margin-bottom: 8px;
-      }
-    }
-
-    .email, .member {
-      h4 {
-        display: inline-block;
-        margin-bottom: 0px;
-        margin-top: 15px;
-      }
-
-      a, p {
-        display: inline-block;
-        margin-left: 8px;
-      }
-    }
-
-    .job-title {
-      font-style: italic;
-      color: $primary_700;
-
-      p {
-        margin-top: 5px;
+    .sub-details {
+      margin-top: 10px;
+      .contents {
+        margin-left: 35px;
       }
     }
   }

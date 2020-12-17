@@ -43,34 +43,32 @@
 
                     <!-- #################### template for dataManagementPlan ################# -->
                     <div *ngSwitchCase="'grant'">
-                        <div class="contact-contents grant-contact">
+
+                        <div class="person">
                             <p> {{ metadata['grant']['name'] }} </p>
-                            <div class="mat-icon-text">
+                            <div *ngIf="metadata['grant']['number']" class="mat-icon-text">
                                 <mat-icon aria-hidden="false" aria-label="Call" class="small">call</mat-icon>
                                 <a href="tel:{{ metadata['grant']['number'] }}"> {{ metadata['grant']['number'] }} </a>
                             </div>
 
-                            <div class="member">
+                            <div *ngIf="metadata['grant']['url']['value']">
                                 <h4>URL:</h4>
                                 <a href="{{ metadata['grant']['url']['value'] }}" target="_blank"> {{ metadata['grant']['url']['value'] }} </a>
                             </div>
 
-                            <h4 style="margin-bottom: 5px;">Funder:</h4>
-                            <div class="funder-contents">
-                                <a href="{{ metadata['grant']['url']['value'] }}" target="_blank"> {{ metadata['grant']['name'] }} </a>
-                                <section class="address">
-                                    <h4>Address:</h4>
-                                    <address>
-                                        {{ metadata['grant']['funder']['address']['streetAddress'] }} <br>
-                                        {{ metadata['grant']['funder']['address']['postalCode'] }} {{ metadata['grant']['funder']['address']['addressLocality'] }}
-                                    </address>
-                                </section>
-                                <section class="email mat-icon-text">
-                                    <mat-icon aria-hidden="false" aria-label="Email" class="small">email</mat-icon>
-                                    <a href="mailto:{{ metadata['grant']['funder']['email'] }}"> {{ metadata['grant']['funder']['email'] }} </a>
-                                </section>
+                            <div class="sub-details">
+                                <h4>Funder(s):</h4>
+                                <mat-card *ngFor="let entry of metadata['grant']['funder'] | keyvalue;" class="funder-entry">
+                                    <div *ngIf="metadata['grant']['funder'][entry.key]['name']">
+                                        <app-organisation-template  [organisation]="metadata['grant']['funder'][entry.key]"></app-organisation-template>
+                                    </div>
+                                    <div *ngIf="metadata['grant']['funder'][entry.key]['givenName']">
+                                        <app-person-template [person]="metadata['grant']['funder'][entry.key]"></app-person-template>
+                                    </div>
+                                </mat-card>
                             </div>
                         </div>
+
                     </div>
 
                     <!-- #################### template for dataManagementPlan ################# -->

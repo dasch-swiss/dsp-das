@@ -1,17 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ContactsTabViewComponent } from './contacts-tab-view.component';
+import { PersonTemplateComponent } from './person-template.component';
 import { Component, ViewChild } from '@angular/core';
+
 
 /**
  * Test host component to simulate parent component.
  */
 @Component({
-    selector: 'app-board-host-component',
-    template: '<app-contacts-tab-view [contactDetails]="contactDetails"></app-contacts-tab-view>'
+    selector: 'app-contact-host-component',
+    template: '<app-person-template [person]="contactDetails"></app-person-template>'
 })
-class TestHostBoardComponent {
+class TestHostContactComponent {
 
-    @ViewChild('contactsTabView') contactsTabView: ContactsTabViewComponent;
+    @ViewChild('personView') personView: PersonTemplateComponent;
 
     // input parameters
     contactDetails = {
@@ -21,26 +22,26 @@ class TestHostBoardComponent {
         'givenName': 'Stewart',
         'jobTitle': 'Dr.',
         'memberOf': 'http://ns.dasch.swiss/test-dasch',
-        'sameAs': {'type': 'https://schema.org/URL', 'value': 'https://orcid.org/0000-0002-1825-0097'}
+        'sameAs': 'https://orcid.org/0000-0002-1825-0097'
     };
 }
 
-describe('ContactsTabViewComponent', () => {
-    let testHostComponent: TestHostBoardComponent;
-    let testHostFixture: ComponentFixture<TestHostBoardComponent>;
+describe('PersonTemplateComponent', () => {
+    let testHostComponent: TestHostContactComponent;
+    let testHostFixture: ComponentFixture<TestHostContactComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                TestHostBoardComponent,
-                ContactsTabViewComponent
+                TestHostContactComponent,
+                PersonTemplateComponent
             ]
         })
             .compileComponents();
     }));
 
     beforeEach(() => {
-        testHostFixture = TestBed.createComponent(TestHostBoardComponent);
+        testHostFixture = TestBed.createComponent(TestHostContactComponent);
         testHostComponent = testHostFixture.componentInstance;
         testHostFixture.detectChanges();
     });

@@ -86,6 +86,9 @@ import { ContactsTabViewComponent } from './project/board/contacts-tab-view/cont
 import { ClipboardModule } from 'ngx-clipboard';
 
 import { AngularSplitModule } from 'angular-split';
+import { PersonTemplateComponent } from './project/board/person-template/person-template.component';
+import { AddressTemplateComponent } from './project/board/address-template/address-template.component';
+import { OrganisationTemplateComponent } from './project/board/organisation-template/organisation-template.component';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -154,7 +157,10 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         DatasetTabViewComponent,
         AttributionTabViewComponent,
         TermsTabViewComponent,
-        ContactsTabViewComponent
+        ContactsTabViewComponent,
+        PersonTemplateComponent,
+        AddressTemplateComponent,
+        OrganisationTemplateComponent
     ],
     imports: [
         AppRoutingModule,
