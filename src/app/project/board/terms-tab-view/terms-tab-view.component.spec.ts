@@ -1,25 +1,45 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TermsTabViewComponent } from './terms-tab-view.component';
+import { Component, ViewChild } from '@angular/core';
+
+/**
+ * Test host component to simulate parent component.
+ */
+@Component({
+    selector: 'app-board-host-component',
+    template: '<app-terms-tab-view [conditions]="conditionsOfAccess" [license]="license"></app-terms-tab-view>'
+})
+class TestHostBoardComponent {
+
+    @ViewChild('termsTabView') termsTabView: TermsTabViewComponent;
+
+    // input parameters
+    conditionsOfAccess = 'Open Access';
+    license = {'type': 'https://schema.org/URL', 'value': 'https://creativecommons.org/licenses/by/3.0'};
+}
 
 describe('TermsTabViewComponent', () => {
-  let component: TermsTabViewComponent;
-  let fixture: ComponentFixture<TermsTabViewComponent>;
+    let testHostComponent: TestHostBoardComponent;
+    let testHostFixture: ComponentFixture<TestHostBoardComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TermsTabViewComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                TestHostBoardComponent,
+                TermsTabViewComponent
+            ]
+        })
+            .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TermsTabViewComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        testHostFixture = TestBed.createComponent(TestHostBoardComponent);
+        testHostComponent = testHostFixture.componentInstance;
+        testHostFixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(testHostComponent).toBeTruthy();
+    });
 });
+
