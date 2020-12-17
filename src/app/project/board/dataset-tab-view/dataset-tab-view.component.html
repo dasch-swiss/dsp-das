@@ -5,16 +5,16 @@
 <div class="properties-container">
     <div class="properties">
         <div *ngFor="let prop of metadata | keyvalue; let last = last; let i = index;" [class.border-bottom]="!last">
-            <div class="property" *ngIf="excludeKeys.indexOf(prop.key) < 0;">
+            <div *ngIf="excludeKeys.indexOf(prop.key) < 0;" class="property">
                 <div class="property-label">
                     <h3 class="label mat-subheading-1">
-                        {{prop.key}}
+                        {{ prop.key }}
                     </h3>
                 </div>
-                <div class="property-value" *ngIf="templateKeys.indexOf(prop.key) < 0;">
-                    {{prop.value}}
+                <div *ngIf="templateKeys.indexOf(prop.key) < 0;" class="property-value">
+                    {{ prop.value }}
                 </div>
-                <div class="property-value" *ngIf="templateKeys.indexOf(prop.key) > -1;">
+                <div *ngIf="templateKeys.indexOf(prop.key) > -1;" class="property-value">
                     <div *ngIf="dateKeys.indexOf(prop.key) < 0;">
                         <a href="{{ metadata[prop.key]['value'] }}" target="_blank"> {{ metadata[prop.key]['value'] }} </a>
                     </div>

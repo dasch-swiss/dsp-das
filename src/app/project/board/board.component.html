@@ -24,7 +24,7 @@
         <div class="app-toolbar transparent more-space-bottom">
             <div class="app-toolbar-row">
                 <h3 class="mat-body subtitle">
-                    Project {{project.shortcode}} | {{project.shortname | uppercase}}
+                    Project {{ project.shortcode }} | {{ project.shortname | uppercase }}
                 </h3>
                 <span class="fill-remaining-space"></span>
                 <span class="app-toolbar-action">
@@ -36,13 +36,14 @@
             </div>
             <div class="app-toolbar-row">
                 <h2 class="mat-title">
-                    {{project.longname}}
+                    {{ project.longname }}
                 </h2>
                 <span class="fill-remaining-space"></span>
                 <span class="app-toolbar-action">
-                <button mat-icon-button class="right"
+                <button mat-icon-button
+                        *ngIf="projectAdmin && project.status"
                         (click)="openDialog('editProject', project.shortname, project.shortcode)"
-                        *ngIf="projectAdmin && project.status">
+                        class="right">
                     <mat-icon>edit</mat-icon>
                 </button>
             </span>
@@ -107,8 +108,16 @@
             <div class="metadata-box">
                 <h3>Dataset(s)</h3>
                 <div>
-                    <mat-radio-group aria-label="Select a dataset" name="datasetsList"  fxLayout="column" (change)="updateDataset($event)">
-                        <mat-radio-button name="datasetsList" *ngFor="let ds of datasetOptions" [checked]="ds.checked" [value]="ds.id">
+                    <mat-radio-group
+                        aria-label="Select a dataset"
+                        name="datasetsList"
+                        fxLayout="column"
+                        (change)="updateDataset($event)">
+                        <mat-radio-button
+                            *ngFor="let ds of datasetOptions"
+                            name="datasetsList"
+                            [checked]="ds.checked"
+                            [value]="ds.id">
                             {{ ds.name }}
                         </mat-radio-button>
                     </mat-radio-group>
@@ -169,7 +178,7 @@
             <div class="metadata-box">
                 <h3>Download metadata</h3>
                 <div class="sidenav-prop-text">
-                    <a href class="download-metadata" *ngFor="let dformat of metadataDownloadFormats"> {{ dformat }} </a>
+                    <a href *ngFor="let dformat of metadataDownloadFormats" class="download-metadata"> {{ dformat }} </a>
                 </div>
             </div>
         </div>

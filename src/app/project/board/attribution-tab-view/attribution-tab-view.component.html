@@ -4,11 +4,11 @@
 
 <div class="tab-contents" style="margin-top: 40px;">
 
-    <mat-card class="attribution-entry" *ngFor="let entry of attribution | keyvalue;">
+    <mat-card *ngFor="let entry of attribution | keyvalue;" class="attribution-entry">
 
         <h3 style="color: brown"> {{ entry.value['role'] | titlecase }} </h3>
         <div class="contact-contents" style="margin-top: 20px;">
-            <h3> {{ people[entry.key]['givenName'] }} {{people[entry.key]['familyName'] }} </h3>
+            <h3> {{ people[entry.key]['givenName'] }} {{ people[entry.key]['familyName'] }} </h3>
 
             <section class="job-title">
                 <p> Job title: {{ people[entry.key]['jobTitle'] }} </p>
