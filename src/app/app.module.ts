@@ -83,11 +83,13 @@ import { DatasetTabViewComponent } from './project/board/dataset-tab-view/datase
 import { AttributionTabViewComponent } from './project/board/attribution-tab-view/attribution-tab-view.component';
 import { TermsTabViewComponent } from './project/board/terms-tab-view/terms-tab-view.component';
 import { ContactsTabViewComponent } from './project/board/contacts-tab-view/contacts-tab-view.component';
-import {ClipboardModule} from 'ngx-clipboard';
+import { ClipboardModule } from 'ngx-clipboard';
+
+import { AngularSplitModule } from 'angular-split';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
-    return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json')
+    return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json');
 }
 
 @NgModule({
@@ -174,7 +176,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
                 deps: [HttpClient]
             }
         }),
-        ClipboardModule
+        ClipboardModule,
+        AngularSplitModule.forRoot()
     ],
     providers: [
         {

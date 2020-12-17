@@ -15,6 +15,7 @@
     <span>
         <div *ngIf="ontologiesMetadata?.ontologies.length > 0">
             <app-select-ontology
+                #selectOntology
                 [formGroup]="selectResourceForm"
                 [ontologiesMetadata]="ontologiesMetadata"
                 [selectedOntology]="selectedOntology"
@@ -36,9 +37,9 @@
         </app-select-resource-class>
     </span>
 
-    <p *ngIf="errorMessage">
-        <b>{{errorMessage}}</b>
-    </p>
+    <span *ngIf="errorMessage">
+        <p class="errorIfNoElement"><b>{{errorMessage}}</b></p>
+    </span>
 
     <!-- action buttons: cancel and next -->
     <div class="form-panel large-field">
@@ -49,8 +50,8 @@
         </span>
         <span class="fill-remaining-space"></span>
         <span>
-            <button mat-raised-button type="button" color="primary" [disabled]="!selectResourceForm.valid || !selectedResourceClass || !resourceLabel"
-                (click)="nextStep($event)" class="form-next">
+            <button mat-raised-button type="button" color="primary" [disabled]="!selectResourceForm.valid || this.errorMessage"
+                (click)="nextStep()" class="form-next">
                 Next
             </button>
         </span>
@@ -66,7 +67,7 @@
         #selectProps
         [ontologyInfo]="ontologyInfo"
         [resourceClass]="selectedResourceClass"
-        [propertiesAsArray]="propertiesAsArray"
+        [properties]="properties"
         [parentForm]="propertiesParentForm"
         class="select-properties">
     </app-select-properties>

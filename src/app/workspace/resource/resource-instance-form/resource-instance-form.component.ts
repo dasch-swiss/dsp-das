@@ -4,14 +4,13 @@ import { Router } from '@angular/router';
 import {
     ApiResponseData,
     ApiResponseError,
-    ClassDefinition,
     Constants,
     CreateResource,
     CreateValue,
     KnoraApiConnection,
     OntologiesMetadata,
-    OntologyMetadata,
-    PropertyDefinition,
+    ProjectsResponse,
+    ReadOntology,
     ReadResource,
     ResourceClassAndPropertyDefinitions,
     ResourceClassDefinition,
@@ -19,22 +18,16 @@ import {
     StoredProject,
     UserResponse
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, Session, SessionService, SortingService } from '@dasch-swiss/dsp-ui';
+import {
+    DspApiConnectionToken,
+    Session,
+    SessionService
+} from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
+import { SelectOntologyComponent } from './select-ontology/select-ontology.component';
 import { SelectPropertiesComponent } from './select-properties/select-properties.component';
 import { SelectResourceClassComponent } from './select-resource-class/select-resource-class.component';
-
-// https://dev.to/krumpet/generic-type-guard-in-typescript-258l
-type Constructor<T> = { new(...args: any[]): T };
-
-const typeGuard = <T>(o: any, className: Constructor<T>): o is T => {
-    return o instanceof className;
-};
-
-export interface Properties {
-    [index: string]: ResourcePropertyDefinition;
-}
 
 @Component({
     selector: 'app-resource-instance-form',
@@ -53,10 +46,14 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     @ViewChild('selectProps') selectPropertiesComponent: SelectPropertiesComponent;
     @ViewChild('selectResourceClass') selectResourceClassComponent: SelectResourceClassComponent;
+    @ViewChild('selectOntology') selectOntologyComponent: SelectOntologyComponent;
 
     // forms
     selectResourceForm: FormGroup;
     propertiesParentForm: FormGroup;
+
+    // form validation status
+    formValid = false;
 
     session: Session;
     username: string;
@@ -71,13 +68,12 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     selectedResourceClass: ResourceClassDefinition;
     resource: ReadResource;
     resourceLabel: string;
-    properties: Properties;
-    propertiesAsArray: Array<ResourcePropertyDefinition>; // properties as an Array structure
+    properties: ResourcePropertyDefinition[];
     ontologyInfo: ResourceClassAndPropertyDefinitions;
 
     valueOperationEventSubscription: Subscription;
 
-    errorMessage: string;
+    errorMessage: any;
 
     propertiesObj = {};
 
@@ -86,8 +82,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
         private _cache: CacheService,
         private _router: Router,
         private _session: SessionService,
-        private _fb: FormBuilder,
-        private _sortingService: SortingService
+        private _fb: FormBuilder
     ) {
         this.session = this._session.getSession();
         this.username = this.session.user.name;
@@ -122,7 +117,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
         this.showNextStepForm = !this.showNextStepForm;
 
         // use response to go further with properties
-        this.updateParent.emit({ title: this.resourceLabel, subtitle: 'Define the properties for the resource class' });
+        this.updateParent.emit({ title: this.resourceLabel, subtitle: 'Define the properties of the resource' });
     }
 
     /**
@@ -130,7 +125,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
      */
     prevStep(ev: Event) {
         ev.preventDefault();
-        this.updateParent.emit({ title: this.resourceLabel, subtitle: 'Create new resource class' });
+        this.updateParent.emit({ title: this.resourceLabel, subtitle: 'Create new resource' });
         this.showNextStepForm = true;
     }
 
@@ -138,29 +133,32 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
         const createResource = new CreateResource();
 
-        createResource.label = this.resourceLabel; // console.log('label', this.resourceLabel);
+        createResource.label = this.resourceLabel;
 
-        createResource.type = this.selectedResourceClass.id; // console.log('type', this.selectedResourceClass.id);
+        createResource.type = this.selectedResourceClass.id;
 
-        createResource.attachedToProject = this.selectedProject; // console.log('project', this.selectedProject);
+        createResource.attachedToProject = this.selectedProject;
 
         this.selectPropertiesComponent.switchPropertiesComponent.forEach((child) => {
             const createVal = child.createValueComponent.getNewValue();
             const iri = child.property.id;
-
             if (createVal instanceof CreateValue) {
-                this.propertiesObj[iri] = [createVal];
+                if (this.propertiesObj[iri]) {
+                    // if a key already exists, add the createVal to the array
+                    this.propertiesObj[iri].push(createVal);
+                } else {
+                    // if no key exists, add one and add the createVal as the first value of the array
+                    this.propertiesObj[iri] = [createVal];
+                }
             }
 
         });
 
-        // console.log('propObj: ', this.propertiesObj);
         createResource.properties = this.propertiesObj;
 
         this._dspApiConnection.v2.res.createResource(createResource).subscribe(
             (res: ReadResource) => {
                 this.resource = res;
-                // console.log('create resource', this.resource);
 
                 // navigate to the resource viewer page
                 this._router.navigateByUrl('/resource', { skipLocationChange: true }).then(() =>
@@ -168,6 +166,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                 );
 
                 this.closeDialog.emit();
+            },
+            (error: ApiResponseError) => {
+                console.error(error);
             }
         );
 
@@ -179,13 +180,27 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     initializeProjects(): void {
         this.usersProjects = [];
 
-        if (this.username) {
+        if (this.username && this.session.user.sysAdmin === false) {
             this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(
                 (response: ApiResponseData<UserResponse>) => {
 
                     for (const project of response.body.user.projects) {
                         this.usersProjects.push(project);
                     }
+
+                    // notifies the user that he/she is not part of any project
+                    if (this.usersProjects.length === 0) {
+                        this.errorMessage = 'You are not a part of any active projects.';
+                    }
+                },
+                (error: ApiResponseError) => {
+                    console.error(error);
+                }
+            );
+        } else if (this.session.user.sysAdmin === true) {
+            this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
+                (response: ApiResponseData<ProjectsResponse>) => {
+                    this.usersProjects = response.body.projects;
                 },
                 (error: ApiResponseError) => {
                     console.error(error);
@@ -204,6 +219,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
             // if this method is called with the same value as the current selectedProject, there is no need to do anything
             if (projectIri !== this.selectedProject) {
                 // any time the project is changed:
+
+                // reset any error message
+                this.errorMessage = undefined;
 
                 // reset the selected ontology because it will be invalid
                 this.selectedOntology = undefined;
@@ -227,6 +245,11 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                         response.ontologies = response.ontologies.filter(onto => onto.attachedToProject !== Constants.SystemProjectIRI);
 
                         this.ontologiesMetadata = response;
+
+                        // notifies the user that the selected project does not have any data models defined yet.
+                        if (!this.selectOntologyComponent && response.ontologies.length === 0) {
+                            this.errorMessage = 'No data models defined for the select project.';
+                        }
                     },
                     (error: ApiResponseError) => {
                         console.error(error);
@@ -234,7 +257,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                 );
             }
         } else {
-            this.errorMessage = 'You are not part of any project.';
+            this.errorMessage = 'You are not a part of any active projects.';
         }
     }
 
@@ -250,24 +273,42 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
             // if this method is called with the same value as the current selectedOntology, there is no need to do anything
             if (ontologyIri !== this.selectedOntology) {
 
+                // reset any error message
+                this.errorMessage = undefined;
+
                 // reset selectedResourceClass since it will be invalid
                 this.selectedResourceClass = undefined;
-                this.resourceLabel = undefined;
 
-                // if there is already a select-resource-class component (i.e. the user clicked the back button), reset the resource label
-                if (this.selectResourceClassComponent) {
-                    this.selectResourceClassComponent.form.controls.label.setValue(null);
-                }
+                this.resourceLabel = undefined;
 
                 // remove the form control to ensure the parent Formgroups validity is correct
                 // this will be added to the parent Formgroup again when the select-resource-class OnInit method is called
                 this.selectResourceForm.removeControl('resources');
 
+                // if there is already a select-resource-class component (i.e. the user clicked the back button), reset the resource & label
+                if (this.selectResourceClassComponent) {
+                    this.selectResourceClassComponent.form.controls.resources.setValue(null);
+                    this.selectResourceClassComponent.form.controls.label.setValue(null);
+
+                    // since the component already exists, we need to add the control back here as it is normally done in the OnInit of the component
+                    this.selectResourceForm.addControl('resources', this.selectResourceClassComponent.form);
+                }
+
                 this.selectedOntology = ontologyIri;
 
                 this._dspApiConnection.v2.ontologyCache.getOntology(ontologyIri).subscribe(
-                    onto => {
-                            this.resourceClasses = this._makeResourceClassesArray(onto.get(ontologyIri).classes);
+                        (onto: Map<string, ReadOntology>) => {
+                            this.resourceClasses = onto.get(ontologyIri).getClassDefinitionsByType(ResourceClassDefinition);
+
+                            if (this.selectResourceClassComponent && this.resourceClasses.length === 1) {
+                                // since the component already exists, the ngAfterInit method of the component will not be called so we must assign the value here manually
+                                this.selectResourceClassComponent.form.controls.resources.setValue(this.resourceClasses[0].id);
+                            }
+
+                            // notifies the user that the selected ontology does not have any resource classes defined yet.
+                            if ((!this.selectResourceClassComponent || this.selectOntologyComponent.form.controls.ontologies.valueChanges) && this.resourceClasses.length === 0) {
+                                this.errorMessage = 'No resources defined for the selected ontology.';
+                            }
                     },
                     (error: ApiResponseError) => {
                         console.error(error);
@@ -292,6 +333,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
      * @param resourceClassIri
      */
     selectProperties(resourceClassIri: string) {
+
         // reset errorMessage, it will be reassigned in the else clause if needed
         this.errorMessage = undefined;
 
@@ -300,84 +342,27 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
             this.selectResourceClasses(this.selectedOntology);
         } else if (resourceClassIri) {
             this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).subscribe(
-                onto => {
+                (onto: ResourceClassAndPropertyDefinitions) => {
                     this.ontologyInfo = onto;
 
                     this.selectedResourceClass = onto.classes[resourceClassIri];
-                    // console.log('selectedResourceClass', this.selectedResourceClass);
 
-                    this.properties = this._makeResourceProperties(onto.properties);
-                    // console.log('properties', this.properties);
+                    // filter out all props that cannot be edited or are link props
+                    this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition).filter(prop => prop.isEditable && !prop.isLinkProperty);
 
-                    this.convertPropObjectAsArray();
+                    // notifies the user that the selected resource does not have any properties defined yet.
+                    if (!this.selectPropertiesComponent && this.properties.length === 0) {
+                        this.errorMessage = 'No properties defined for the selected resource.';
+                    }
+                },
+                (error: ApiResponseError) => {
+                    console.error(error);
                 }
             );
         } else {
             this.errorMessage = 'No resource class defined for the selected ontology.';
         }
 
-    }
-
-    /**
-     * Given a map of class definitions,
-     * returns an array of resource class definitions.
-     *
-     * @param classDefs a map of class definitions
-     */
-    private _makeResourceClassesArray(classDefs: { [index: string]: ClassDefinition }): ResourceClassDefinition[] {
-
-        const classIris = Object.keys(classDefs);
-
-        // get resource class defs
-        return classIris.filter(resClassIri => {
-            return typeGuard(classDefs[resClassIri], ResourceClassDefinition);
-        }).map(
-            (resClassIri: string) => {
-                return classDefs[resClassIri] as ResourceClassDefinition;
-            }
-        );
-
-    }
-
-    /**
-     * Given a map of property definitions,
-     * returns a map of resource property definitions.
-     *
-     * @param propertyDefs a map of property definitions
-     */
-    private _makeResourceProperties(propertyDefs: { [index: string]: PropertyDefinition }): Properties {
-        const resProps: Properties = {};
-
-        const propIris = Object.keys(propertyDefs);
-
-        propIris.filter(
-            (propIri: string) => {
-                return typeGuard(propertyDefs[propIri], ResourcePropertyDefinition);
-            }
-        ).forEach((propIri: string) => {
-            resProps[propIri] = (propertyDefs[propIri] as ResourcePropertyDefinition);
-        });
-
-        return resProps;
-    }
-
-    private convertPropObjectAsArray() {
-        // represent the properties as an array to be accessed by the template
-        const propsArray = [];
-
-        for (const propIri in this.properties) {
-            if (this.properties.hasOwnProperty(propIri)) {
-                const prop = this.properties[propIri];
-
-                // only list editable props that are not link value props
-                if (prop.isEditable && !prop.isLinkProperty) {
-                    propsArray.push(this.properties[propIri]);
-                }
-            }
-        }
-
-        // sort properties by label (ascending)
-        this.propertiesAsArray = this._sortingService.keySortByAlphabetical(propsArray, 'label');
     }
 
 }

@@ -96,7 +96,9 @@ export class BoardComponent implements OnInit {
                 this.project = response.body.project;
 
                 // is logged-in user projectAdmin?
-                this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
+                if (this._session.getSession()) {
+                    this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
+                }
 
                 this.datasetIdentifier = this.project['id'];
 
