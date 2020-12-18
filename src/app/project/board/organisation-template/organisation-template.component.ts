@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
 
         <div>
             <div *ngIf="organisation['name']">
-                <h4 style="font-size: 95%;">Organisation: </h4>
+                <h4 class="metadata-title">Organisation: </h4>
                 {{ organisation['name'] }}
             </div>
 
@@ -22,7 +22,8 @@ import { Component, Input } from '@angular/core';
 
             <app-address-template *ngIf="organisation['address']" [address]="organisation['address']"></app-address-template>
         </div>
-    `
+    `,
+    styles: ['.metadata-title { font-size: 95%; }']
 })
 export class OrganisationTemplateComponent {
 

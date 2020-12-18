@@ -1,6 +1,13 @@
-<h1>Selected dataset: {{ metadata['title'] }} </h1>
+<div *ngIf="noOfDatasets > 1">
+    <h1>Selected dataset: {{ metadata['title'] }} </h1>
+    <p class="note">Click on the radio button in the right side panel to change the dataset.</p>
+</div>
 
-<p class="note">Click on the radio button in side panel to change the dataset.</p>
+<div *ngIf="noOfDatasets == 1">
+    <p class="note">Default dataset is displayed, to change it click on the radio button in the right side panel. </p>
+</div>
+
+
 
 <div class="properties-container">
     <div class="properties">

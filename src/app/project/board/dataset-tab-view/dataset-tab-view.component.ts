@@ -10,6 +10,9 @@ export class DatasetTabViewComponent {
     // metadata input object
     @Input() metadata: object;
 
+    // number of datasets available for this project
+    @Input() noOfDatasets: number;
+
     // metadata keys that we do not want to display
     excludeKeys = ['project', 'qualifiedAttribution'];
 

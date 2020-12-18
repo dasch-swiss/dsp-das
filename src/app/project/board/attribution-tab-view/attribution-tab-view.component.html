@@ -1,12 +1,12 @@
 <h1>Attribution</h1>
 
-<p>The following people are involved in making of dataset.</p>
+<p>The following people are involved in creation of the dataset:</p>
 
-<div class="tab-contents" style="margin-top: 40px;">
+<div class="tab-contents">
 
     <mat-card *ngFor="let entry of attribution | keyvalue;" class="attribution-entry">
 
-        <h3 style="color: brown"> {{ entry.value['role'] | titlecase }} </h3>
+        <h3 class="color-for-role"> {{ entry.value['role'] | titlecase }} </h3>
 
         <app-person-template [person]="people[entry.key]"></app-person-template>
 

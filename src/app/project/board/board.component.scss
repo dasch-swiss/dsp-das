@@ -63,6 +63,7 @@ section {
 
   .right-info {
     flex: 30%;
+    max-width: 400px;
   }
 
   .column {
@@ -80,6 +81,20 @@ section {
 
   .tab-contents {
     margin-top: 20px;
+  }
+
+  .display-inline-block {
+    display: inline-block;
+  }
+
+  .copy-to-clipboard {
+    display: inline-block;
+    float: right;
+
+    button {
+      cursor: pointer;
+      border: none;
+    }
   }
 
   .mat-radio-button {

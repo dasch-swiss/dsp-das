@@ -154,7 +154,7 @@ export class BoardComponent implements OnInit {
                             'url': {'type': 'https://schema.org/URL', 'value': 'http://www.utoronto.ca/'}
                         }
                     },
-                    'dataManagementPlan': {'url': {'type': 'https://schema.org/URL', 'value': 'https://snf.ch'}, 'isAvailable': false},
+                    'dataManagementPlan': {'url': {'type': 'https://schema.org/URL', 'value': 'https://snf.ch'}, 'isAvailable': true},
                     'description': 'Dies ist ein Testprojekt...alle Properties wurden verwendet, um diese zu testen',
                     'discipline': {'name': 'SKOS UNESCO Nomenclature', 'url': 'http://skos.um.es/unesco6/11'},
                     'endDate': '2001-01-26',
