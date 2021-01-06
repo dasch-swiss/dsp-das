@@ -24,7 +24,8 @@
                                     [property]="prop"
                                     [parentResource]="parentResource"
                                     [parentForm]="parentForm"
-                                    [formName]="prop.label + '_' + i">
+                                    [formName]="prop.label + '_' + i"
+                                    [isRequiredProp]="propertyValuesKeyValuePair[prop.id + '-cardinality']">
                                 </app-switch-properties>
                             </div>
                             <div class="buttons">
