@@ -41,7 +41,7 @@ export class BoardComponent implements OnInit {
     license: object;
     contactDetails: object;
     projectDescription: string;
-    datasetOptions: object;
+    datasetOptions: object[];
     howToCite: string;
     datasetIdentifier: string;
     publicationDate: string;
