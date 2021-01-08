@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.0.1](https://www.github.com/dasch-swiss/dsp-app/compare/v3.0.0...v3.0.1) (2021-01-08)
+
+
+### Maintenance
+
+* update pr template (DSP-1189) ([#353](https://www.github.com/dasch-swiss/dsp-app/issues/353)) ([f348e70](https://www.github.com/dasch-swiss/dsp-app/commit/f348e70c4fa4dc0aeb2573aba4e1aa62fc1725a6))
+
 ## [3.0.0](https://www.github.com/dasch-swiss/dsp-app/compare/v2.0.1...v3.0.0) (2020-12-18)
 
 
