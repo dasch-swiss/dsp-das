@@ -14,7 +14,6 @@ import { GridItem } from './grid/grid.component';
 export class MainComponent implements OnInit {
 
     loading: boolean;
-    errorMessage: ApiResponseError;
 
     showCookieBanner: boolean = true;
 
@@ -119,8 +118,6 @@ export class MainComponent implements OnInit {
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
-                console.error(error);
-                this.errorMessage = error;
                 this.loading = false;
             }
         );
