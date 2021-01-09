@@ -17,6 +17,8 @@ export interface ErrorMsg {
 })
 export class ErrorComponent implements OnInit {
 
+    @Input() status: number;
+
     // default error messages
     errorMessages: ErrorMsg[] = [
         {
@@ -64,9 +66,6 @@ export class ErrorComponent implements OnInit {
 
     // error message that will be shown in template
     errorMessage: ErrorMsg;
-
-
-    @Input() status: number;
 
     constructor(
         private _titleService: Title,
