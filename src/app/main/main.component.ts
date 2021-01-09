@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, ProjectsResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, SessionService } from '@dasch-swiss/dsp-ui';
+import { ErrorHandlerService } from './error/error-handler.service';
 import { GridItem } from './grid/grid.component';
 
 @Component({
@@ -64,6 +65,7 @@ export class MainComponent implements OnInit {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _errorHandler: ErrorHandlerService,
         private _session: SessionService,
         private _router: Router,
         private _titleService: Title
@@ -116,6 +118,7 @@ export class MainComponent implements OnInit {
                 this.loading = false;
             },
             (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
                 console.error(error);
                 this.errorMessage = error;
                 this.loading = false;
