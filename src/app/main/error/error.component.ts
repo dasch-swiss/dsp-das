@@ -32,7 +32,7 @@ export class ErrorComponent implements OnInit {
         {
             status: 403,
             message: "Forbidden",
-            description: `This is not the content you were looking for.<br>
+            description: `Invalid Permissions.<br>
             Your request was valid but you do not have the<br>
             necessary permissions to access it.`,
             action: 'goback',
@@ -41,8 +41,7 @@ export class ErrorComponent implements OnInit {
         {
             status: 404,
             message: "Not found",
-            description: `This is not the content you were looking for.<br>
-            But we couldn't find anything with this request.`,
+            description: `The content you were looking for cannot be found.`,
             action: 'goback',
             image: 'dsp-error-404.svg'
         },
@@ -50,7 +49,7 @@ export class ErrorComponent implements OnInit {
             status: 500,
             message: "Internal Server Error",
             description: `The DaSCH Service Platform is not available at the moment.<br>
-            An error has occured in a server side script, a no more specific message is suitable.`,
+            An error has occured in a server side script.`,
             action: 'reload',
             image: 'dsp-error-500.svg'
         },
