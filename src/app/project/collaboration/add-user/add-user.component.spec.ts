@@ -4,6 +4,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import {
@@ -25,6 +26,7 @@ describe('AddUserComponent', () => {
         TestBed.configureTestingModule({
             declarations: [AddUserComponent],
             imports: [
+                BrowserAnimationsModule,
                 DspActionModule,
                 DspCoreModule,
                 MatAutocompleteModule,

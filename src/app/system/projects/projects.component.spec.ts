@@ -1,8 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import {
     AppInitService,
@@ -14,7 +16,6 @@ import {
 import { TestConfig } from 'test.config';
 import { ProjectsListComponent } from './projects-list/projects-list.component';
 import { ProjectsComponent } from './projects.component';
-import { MatChipsModule } from '@angular/material/chips';
 
 describe('ProjectsComponent', () => {
     let component: ProjectsComponent;
@@ -27,6 +28,7 @@ describe('ProjectsComponent', () => {
                 ProjectsListComponent
             ],
             imports: [
+                BrowserAnimationsModule,
                 DspActionModule,
                 DspCoreModule,
                 MatButtonModule,

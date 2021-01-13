@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import {
     AppInitService,
@@ -33,8 +34,9 @@ describe('ResourceClassFormComponent', () => {
                 PropertyFormComponent
             ],
             imports: [
-                HttpClientTestingModule,
+                BrowserAnimationsModule,
                 DspActionModule,
+                HttpClientTestingModule,
                 MatAutocompleteModule,
                 MatDividerModule,
                 MatFormFieldModule,

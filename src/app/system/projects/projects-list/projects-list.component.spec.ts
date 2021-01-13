@@ -1,8 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import {
@@ -14,7 +16,6 @@ import {
 } from '@dasch-swiss/dsp-ui';
 import { TestConfig } from 'test.config';
 import { ProjectsListComponent } from './projects-list.component';
-import { MatChipsModule } from '@angular/material/chips';
 
 // exclude test because of issue #100 in dsp-js
 describe('ProjectsListComponent', () => {
@@ -25,6 +26,7 @@ describe('ProjectsListComponent', () => {
         TestBed.configureTestingModule({
             declarations: [ProjectsListComponent],
             imports: [
+                BrowserAnimationsModule,
                 DspActionModule,
                 DspCoreModule,
                 MatButtonModule,
