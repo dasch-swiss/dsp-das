@@ -9,6 +9,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { AppInitService, DspActionModule, DspApiConfigToken, DspApiConnectionToken, DspCoreModule } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { AttributionTabViewComponent } from './attribution-tab-view/attribution-tab-view.component';
 import { BoardComponent } from './board.component';
@@ -25,6 +27,8 @@ describe('BoardComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 BoardComponent,
+                DialogComponent,
+                ErrorComponent,
                 AttributionTabViewComponent,
                 ContactsTabViewComponent,
                 DatasetTabViewComponent,

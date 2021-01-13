@@ -12,6 +12,7 @@ import {
     DspCoreModule
 } from '@dasch-swiss/dsp-ui';
 import { TestConfig } from 'test.config';
+import { DialogComponent } from '../main/dialog/dialog.component';
 import { ErrorComponent } from '../main/error/error.component';
 import { ProjectComponent } from './project.component';
 
@@ -23,6 +24,7 @@ describe('ProjectComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 ProjectComponent,
+                DialogComponent,
                 ErrorComponent
             ],
             imports: [

@@ -14,6 +14,8 @@ import {
     DspApiConnectionToken,
     DspCoreModule
 } from '@dasch-swiss/dsp-ui';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { ProjectsListComponent } from './projects-list.component';
 
@@ -24,7 +26,11 @@ describe('ProjectsListComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ProjectsListComponent],
+            declarations: [
+                ProjectsListComponent,
+                DialogComponent,
+                ErrorComponent
+            ],
             imports: [
                 BrowserAnimationsModule,
                 DspActionModule,

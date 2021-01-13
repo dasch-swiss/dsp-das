@@ -23,6 +23,7 @@ import {
     DspCoreModule
 } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { OntologyVisualizerComponent } from './ontology-visualizer/ontology-visualizer.component';
@@ -37,6 +38,7 @@ describe('OntologyComponent', () => {
             declarations: [
                 OntologyComponent,
                 OntologyVisualizerComponent,
+                DialogComponent,
                 ErrorComponent
             ],
             imports: [

@@ -22,6 +22,7 @@ import {
     DspCoreModule
 } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { ListItemFormComponent } from './list-item-form/list-item-form.component';
@@ -38,6 +39,7 @@ describe('ListComponent', () => {
                 ListComponent,
                 ListItemComponent,
                 ListItemFormComponent,
+                DialogComponent,
                 ErrorComponent
             ],
             imports: [

@@ -18,6 +18,8 @@ import {
     DspCoreModule
 } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorComponent } from 'src/app/main/error/error.component';
 import { SelectGroupComponent } from 'src/app/project/collaboration/select-group/select-group.component';
 import { TestConfig } from 'test.config';
 import { UsersListComponent } from './users-list.component';
@@ -28,7 +30,12 @@ describe('UsersListComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [UsersListComponent, SelectGroupComponent],
+            declarations: [
+                UsersListComponent,
+                SelectGroupComponent,
+                DialogComponent,
+                ErrorComponent
+            ],
             imports: [
                 BrowserAnimationsModule,
                 DspActionModule,

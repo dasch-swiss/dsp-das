@@ -1,5 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -11,6 +12,7 @@ import {
     DspApiConnectionToken
 } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { GroupsListComponent } from 'src/app/system/groups/groups-list/groups-list.component';
 import { TestConfig } from 'test.config';
@@ -27,11 +29,13 @@ describe('PermissionComponent', () => {
                 PermissionComponent,
                 AddGroupComponent,
                 GroupsListComponent,
+                DialogComponent,
                 ErrorComponent
             ],
             imports: [
                 BrowserAnimationsModule,
                 DspActionModule,
+                MatIconModule,
                 HttpClientTestingModule,
                 RouterTestingModule
             ],

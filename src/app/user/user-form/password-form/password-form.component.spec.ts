@@ -4,6 +4,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import {
     AppInitService,
@@ -13,6 +14,8 @@ import {
     DspCoreModule
 } from '@dasch-swiss/dsp-ui';
 import { TranslateModule } from '@ngx-translate/core';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { PasswordFormComponent } from './password-form.component';
 
@@ -23,7 +26,9 @@ describe('PasswordFormComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                PasswordFormComponent
+                PasswordFormComponent,
+                DialogComponent,
+                ErrorComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -33,6 +38,7 @@ describe('PasswordFormComponent', () => {
                 MatInputModule,
                 MatFormFieldModule,
                 ReactiveFormsModule,
+                RouterTestingModule,
                 TranslateModule.forRoot()
             ],
             providers: [

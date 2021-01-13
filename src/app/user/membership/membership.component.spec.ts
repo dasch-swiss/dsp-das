@@ -15,6 +15,8 @@ import {
     DspApiConnectionToken,
     DspCoreModule
 } from '@dasch-swiss/dsp-ui';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { MembershipComponent } from './membership.component';
 
@@ -25,7 +27,9 @@ describe('MembershipComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                MembershipComponent
+                MembershipComponent,
+                DialogComponent,
+                ErrorComponent
             ],
             imports: [
                 BrowserAnimationsModule,

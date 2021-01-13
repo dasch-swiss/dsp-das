@@ -12,6 +12,8 @@ import {
     DspApiConfigToken,
     DspApiConnectionToken
 } from '@dasch-swiss/dsp-ui';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { ListItemFormComponent } from '../list-item-form/list-item-form.component';
 import { ListItemComponent } from './list-item.component';
@@ -24,7 +26,9 @@ describe('ListItemComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 ListItemComponent,
-                ListItemFormComponent
+                ListItemFormComponent,
+                DialogComponent,
+                ErrorComponent
             ],
             imports: [
                 BrowserAnimationsModule,

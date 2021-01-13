@@ -16,6 +16,8 @@ import {
     DspApiConnectionToken,
     DspCoreModule
 } from '@dasch-swiss/dsp-ui';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorComponent } from 'src/app/main/error/error.component';
 import { SelectGroupComponent } from 'src/app/project/collaboration/select-group/select-group.component';
 import { TestConfig } from 'test.config';
 import { UsersListComponent } from './users-list/users-list.component';
@@ -30,7 +32,9 @@ describe('UsersComponent', () => {
             declarations: [
                 UsersComponent,
                 UsersListComponent,
-                SelectGroupComponent
+                SelectGroupComponent,
+                DialogComponent,
+                ErrorComponent
             ],
             imports: [
                 BrowserAnimationsModule,

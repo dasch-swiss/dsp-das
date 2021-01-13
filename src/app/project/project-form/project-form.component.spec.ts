@@ -14,6 +14,8 @@ import {
     DspCoreModule
 } from '@dasch-swiss/dsp-ui';
 import { TranslateModule } from '@ngx-translate/core';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { ProjectFormComponent } from './project-form.component';
 
@@ -24,7 +26,11 @@ describe('ProjectFormComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ProjectFormComponent],
+            declarations: [
+                ProjectFormComponent,
+                DialogComponent,
+                ErrorComponent
+            ],
             imports: [
                 BrowserAnimationsModule,
                 DspActionModule,

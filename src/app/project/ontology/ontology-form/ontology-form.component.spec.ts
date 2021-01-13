@@ -14,6 +14,8 @@ import {
     DspCoreModule
 } from '@dasch-swiss/dsp-ui';
 import { TranslateModule } from '@ngx-translate/core';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { OntologyFormComponent } from './ontology-form.component';
 
@@ -26,7 +28,9 @@ describe('OntologyFormComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                OntologyFormComponent
+                OntologyFormComponent,
+                DialogComponent,
+                ErrorComponent
             ],
             imports: [
                 BrowserAnimationsModule,

@@ -207,7 +207,7 @@ class MockCreateIntValueComponent implements OnInit {
     updateCommentVisibility(): void { }
 }
 
-describe('ResourceInstanceFormComponent', () => {
+fdescribe('ResourceInstanceFormComponent', () => {
     let testHostComponent: TestHostComponent;
     let testHostFixture: ComponentFixture<TestHostComponent>;
     let resourceInstanceFormComponentDe: DebugElement;

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -13,6 +12,8 @@ import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { AppInitService, DspActionModule, DspApiConfigToken, DspApiConnectionToken, SessionService } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
 import { TestConfig } from 'test.config';
+import { DialogComponent } from './dialog/dialog.component';
+import { ErrorComponent } from './error/error.component';
 import { FooterComponent } from './footer/footer.component';
 import { GridComponent } from './grid/grid.component';
 import { MainComponent } from './main.component';
@@ -25,10 +26,15 @@ describe('MainComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [MainComponent, FooterComponent, GridComponent],
+            declarations: [
+                MainComponent,
+                FooterComponent,
+                GridComponent,
+                DialogComponent,
+                ErrorComponent
+            ],
             imports: [
                 BrowserAnimationsModule,
-                CommonModule,
                 DspActionModule,
                 MatButtonModule,
                 MatDividerModule,

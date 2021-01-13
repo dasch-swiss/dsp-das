@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import {
     AppInitService,
@@ -19,6 +19,8 @@ import {
     DspApiConnectionToken
 } from '@dasch-swiss/dsp-ui';
 import { TranslateModule } from '@ngx-translate/core';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { PropertyFormComponent } from '../property-form/property-form.component';
 import { ResourceClassFormComponent } from './resource-class-form.component';
@@ -31,10 +33,11 @@ describe('ResourceClassFormComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 ResourceClassFormComponent,
-                PropertyFormComponent
+                PropertyFormComponent,
+                DialogComponent,
+                ErrorComponent
             ],
             imports: [
-                BrowserAnimationsModule,
                 DspActionModule,
                 HttpClientTestingModule,
                 MatAutocompleteModule,
@@ -47,6 +50,7 @@ describe('ResourceClassFormComponent', () => {
                 MatSlideToggleModule,
                 MatTooltipModule,
                 ReactiveFormsModule,
+                RouterTestingModule,
                 TranslateModule.forRoot()
             ],
             providers: [

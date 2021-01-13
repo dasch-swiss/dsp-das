@@ -15,6 +15,8 @@ import {
     DspCoreModule
 } from '@dasch-swiss/dsp-ui';
 import { TranslateModule } from '@ngx-translate/core';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
 import { AddUserComponent } from './add-user.component';
 
@@ -24,7 +26,11 @@ describe('AddUserComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [AddUserComponent],
+            declarations: [
+                AddUserComponent,
+                DialogComponent,
+                ErrorComponent
+            ],
             imports: [
                 BrowserAnimationsModule,
                 DspActionModule,

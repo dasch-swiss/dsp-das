@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -28,7 +27,6 @@ xdescribe('PropertyFormComponent', () => {
             declarations: [PropertyFormComponent],
             imports: [
                 BrowserAnimationsModule,
-                CommonModule,
                 HttpClientTestingModule,
                 MatAutocompleteModule,
                 MatDialogModule,
