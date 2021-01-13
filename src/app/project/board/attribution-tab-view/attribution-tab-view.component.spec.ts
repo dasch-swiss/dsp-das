@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { PersonTemplateComponent } from '../person-template/person-template.component';
 
 import { AttributionTabViewComponent } from './attribution-tab-view.component';
 
@@ -8,7 +9,7 @@ describe('AttributionTabViewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AttributionTabViewComponent ]
+      declarations: [ AttributionTabViewComponent, PersonTemplateComponent ]
     })
     .compileComponents();
   }));
