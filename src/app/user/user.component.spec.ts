@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -49,6 +50,7 @@ describe('UserComponent', () => {
                 PasswordFormComponent
             ],
             imports: [
+                CommonModule,
                 DspActionModule,
                 DspCoreModule,
                 MatButtonModule,

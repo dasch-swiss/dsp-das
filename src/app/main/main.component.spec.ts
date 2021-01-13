@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -27,6 +28,7 @@ describe('MainComponent', () => {
             declarations: [MainComponent, FooterComponent, GridComponent],
             imports: [
                 BrowserAnimationsModule,
+                CommonModule,
                 DspActionModule,
                 MatButtonModule,
                 MatDividerModule,

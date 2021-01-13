@@ -1,6 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ProjectTabViewComponent } from './project-tab-view.component';
+import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatIconModule } from '@angular/material/icon';
+import { ProjectTabViewComponent } from './project-tab-view.component';
 
 /**
  * Test host component to simulate parent component.
@@ -95,6 +97,10 @@ describe('ProjectTabViewComponent', () => {
             declarations: [
                 TestHostBoardComponent,
                 ProjectTabViewComponent
+            ],
+            imports: [
+                CommonModule,
+                MatIconModule
             ]
         })
             .compileComponents();
