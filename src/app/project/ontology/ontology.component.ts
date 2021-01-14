@@ -304,10 +304,11 @@ export class OntologyComponent implements OnInit {
     /**
      * Opens resource class form
      * @param mode
-     * @param subClassOf
+     * @param resClassInfo (could be subClassOf (create mode) or resource class itself (edit mode))
      */
-    openResourceClassForm(mode: 'createResourceClass' | 'editResourceClass', subClassOf: DefaultClass): void {
+    openResourceClassForm(mode: 'createResourceClass' | 'editResourceClass', resClassInfo: DefaultClass): void {
 
+        console.log(resClassInfo);
         // set ontology cache
         this._cache.set('currentOntology', this.ontology);
 
@@ -317,7 +318,7 @@ export class OntologyComponent implements OnInit {
             position: {
                 top: '112px'
             },
-            data: { name: subClassOf.iri, title: subClassOf.label, subtitle: 'Customize resource class', mode: mode, project: this.project.id }
+            data: { id: resClassInfo.iri, title: resClassInfo.label, subtitle: 'Customize resource class', mode: mode, project: this.project.id }
         };
 
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);

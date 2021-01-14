@@ -195,20 +195,16 @@
     <!-- Ontology editor: customize and add resource class -->
     <div *ngSwitchCase="'addResourceClass'">
         <app-dialog-header [title]="data.title" [subtitle]="data.subtitle"></app-dialog-header>
-        <app-resource-class-form [subClassOf]="data.name" [name]="data.title" [projectIri]="data.project"
+        <app-resource-class-form [iri]="data.id" [name]="data.title" [projectIri]="data.project"
             (closeDialog)="dialogRef.close()" (updateParent)="replaceTitle($event)">
         </app-resource-class-form>
     </div>
 
     <div *ngSwitchCase="'editResourceClass'">
-        <app-dialog-header [title]="data.title" [subtitle]="data.subtitle">
-        </app-dialog-header>
-        <p class="todo" [innerHtml]="notYetImplemented"></p>
-        <mat-dialog-actions>
-            <button mat-button mat-dialog-close class="cancel-button center" [mat-dialog-close]="false">
-                Cancel
-            </button>
-        </mat-dialog-actions>
+        <app-dialog-header [title]="data.title" [subtitle]="data.subtitle"></app-dialog-header>
+        <app-resource-class-form [iri]="data.id" [name]="data.title" [projectIri]="data.project" [edit]="true"
+            (closeDialog)="dialogRef.close()">
+        </app-resource-class-form>
     </div>
 
     <div *ngSwitchCase="'deleteResourceClass'">

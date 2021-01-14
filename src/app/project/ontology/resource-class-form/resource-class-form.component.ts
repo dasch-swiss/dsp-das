@@ -10,6 +10,7 @@ import {
     KnoraApiConnection,
     ListsResponse,
     ReadOntology,
+    ResourceClassAndPropertyDefinitions,
     ResourceClassDefinitionWithAllLanguages,
     ResourcePropertyDefinitionWithAllLanguages,
     StringLiteral,
@@ -40,10 +41,11 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     @Input() projectIri: string;
 
     /**
-     * selected resource class is a subclass from knora base (baseClassIri)
+     * create mode: iri selected resource class is a subclass from knora base (baseClassIri)
+     * edit mode: iri of resource class
      * e.g. knora-api:StillImageRepresentation
      */
-    @Input() subClassOf: string;
+    @Input() iri: string;
 
     /**
      * name of resource class e.g. Still image
@@ -52,6 +54,11 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     @Input() name: string;
     // store name as resourceClassTitle on init; in this case it can't be overwritten in the next / prev navigation
     resourceClassTitle: string;
+
+    /**
+     * edit mode (true); otherwise create mode
+     */
+    @Input() edit: boolean;
 
     /**
      * emit event, when closing dialog
@@ -137,7 +144,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             new RegExp('anEmptyRegularExpressionWasntPossible')
         ];
 
-        // set file representation or default reresource class as title
+        // set file representation or default resource class as title
         this.resourceClassTitle = this.name;
 
         this._cache.get('currentOntology').subscribe(
@@ -193,16 +200,38 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     buildForm() {
 
-        // reset properties
-        this._resourceClassFormService.resetProperties();
+        if (this.edit) {
+            // get resource class info
+            this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.iri).subscribe(
+                (response: ResourceClassAndPropertyDefinitions) => {
+                    console.log(response)
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
 
-        this.resourceClassFormSub = this._resourceClassFormService.resourceClassForm$
+            )
+
+            this.resourceClassFormSub = this._resourceClassFormService.resourceClassForm$
             .subscribe(resourceClass => {
                 this.resourceClassForm = resourceClass;
                 this.properties = this.resourceClassForm.get('properties') as FormArray;
             });
 
         this.resourceClassForm.valueChanges.subscribe(data => this.onValueChanged(data));
+        } else {
+            // reset properties
+            this._resourceClassFormService.resetProperties();
+
+            this.resourceClassFormSub = this._resourceClassFormService.resourceClassForm$
+                .subscribe(resourceClass => {
+                    this.resourceClassForm = resourceClass;
+                    this.properties = this.resourceClassForm.get('properties') as FormArray;
+                });
+
+            this.resourceClassForm.valueChanges.subscribe(data => this.onValueChanged(data));
+        }
+
     }
 
     onValueChanged(data?: any) {
@@ -307,47 +336,52 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     /**
      * Submit data to create resource class with properties and cardinalities
      */
-    submitData() {
+    submitData(ev?: any) {
+
         this.loading = true;
+        console.log(ev);
 
-        // set resource class name / id
-        const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, this.resourceClassLabels[0].value);
+        if (this.edit) {
+            // edit mode
+            console.warn('edit edit edit');
+        } else {
+            // create mode
+            // set resource class name / id
+            const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, this.resourceClassLabels[0].value);
 
-        const onto = new UpdateOntology<CreateResourceClass>();
+            const onto = new UpdateOntology<CreateResourceClass>();
 
-        onto.id = this.ontology.id;
-        onto.lastModificationDate = this.lastModificationDate;
+            onto.id = this.ontology.id;
+            onto.lastModificationDate = this.lastModificationDate;
 
-        const newResClass = new CreateResourceClass();
+            const newResClass = new CreateResourceClass();
 
-        newResClass.name = uniqueClassName
-        newResClass.label = this.resourceClassLabels;
-        newResClass.comment = this.resourceClassComments;
-        newResClass.subClassOf = [this.subClassOf];
+            newResClass.name = uniqueClassName
+            newResClass.label = this.resourceClassLabels;
+            newResClass.comment = this.resourceClassComments;
+            newResClass.subClassOf = [this.iri];
 
-        onto.entity = newResClass;
+            onto.entity = newResClass;
 
-        // submit resource class data to knora and create resource class incl. cardinality
-        // console.log('submit resource class data:', resourceClassData);
-        // let i: number = 0;
-        this._dspApiConnection.v2.onto.createResourceClass(onto).subscribe(
-            (classResponse: ResourceClassDefinitionWithAllLanguages) => {
-                // console.log('classResponse', classResponse);
-                // need lmd from classResponse
-                this.lastModificationDate = classResponse.lastModificationDate;
+            // submit resource class data to knora and create resource class incl. cardinality
+            // console.log('submit resource class data:', resourceClassData);
+            // let i: number = 0;
+            this._dspApiConnection.v2.onto.createResourceClass(onto).subscribe(
+                (classResponse: ResourceClassDefinitionWithAllLanguages) => {
+                    // console.log('classResponse', classResponse);
+                    // need lmd from classResponse
+                    this.lastModificationDate = classResponse.lastModificationDate;
 
-                // post prop data; one by one
-                this.submitProps(this.resourceClassForm.value.properties, classResponse.id);
+                    // post prop data; one by one
+                    this.submitProps(this.resourceClassForm.value.properties, classResponse.id);
 
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-            }
-        );
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
+        }
 
-
-        // show message to close dialog box
-        // this.closeMessage();
     }
 
     /**

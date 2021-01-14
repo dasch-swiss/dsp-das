@@ -102,8 +102,9 @@
             </mat-toolbar-row>
         </mat-toolbar>
 
-        <p *ngIf="!ontology.lastModificationDate" class="note warning center">This ontology can't be edited because of
-            missing "lastModificationDate"!</p>
+        <p *ngIf="!ontology.lastModificationDate" class="note warning center">
+            This ontology can't be edited because of missing "lastModificationDate"!
+        </p>
         <div #ontologyEditor *ngIf="!loadOntology && view === 'grid'" class="ontology-editor-canvas">
             <!-- button to select and add new resource class to the ontology -->
             <div class="add-resource-class"
@@ -133,9 +134,10 @@
                             <mat-icon>more_horiz</mat-icon>
                         </button>
                         <mat-menu #resClassMenu="matMenu" xPosition="before">
-                            <button mat-menu-item [disabled]="true"
-                                (click)="openResourceClassForm('editResourceClass', {iri: resClass.id, name: '', label: resClass.label})">Edit
-                                (not yet implemented)</button>
+                            <button mat-menu-item
+                                (click)="openResourceClassForm('editResourceClass', {iri: resClass.id, label: resClass.label})">
+                                Edit resource class
+                            </button>
                             <button mat-menu-item
                                 (click)="delete(resClass.id, 'ResourceClass', resClass.label)">Delete</button>
                         </mat-menu>
