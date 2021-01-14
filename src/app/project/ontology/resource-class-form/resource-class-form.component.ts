@@ -17,10 +17,11 @@ import {
     UpdateOntologyResourceClassCardinality
 } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/dsp-js/src/models/v2/string-literal-v2';
-import { DspApiConnectionToken, NotificationService } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { from, of, Subscription } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
+import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { Property, ResourceClassFormService } from './resource-class-form.service';
 
 // nested form components; solution from:
@@ -77,8 +78,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     // progress
     loading: boolean;
 
-    // in case of an error, show message
-    errorMessage: any;
+    // in case of an error
+    error: boolean;
 
     // two step form: which should be active?
     showResourceClassForm: boolean = true;
@@ -120,10 +121,10 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
-        private _notification: NotificationService,
-        private _resourceClassFormService: ResourceClassFormService,
         private _cache: CacheService,
         private _cdr: ChangeDetectorRef,
+        private _errorHandler: ErrorHandlerService,
+        private _resourceClassFormService: ResourceClassFormService
     ) { }
 
     ngOnInit() {
@@ -159,7 +160,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
             },
             (error: ApiResponseError) => {
-                this._notification.openSnackBar(error);
+                this._errorHandler.showMessage(error);
             }
         );
 
@@ -169,7 +170,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                 this._cache.set('currentOntologyLists', response.body.lists);
             },
             (error: ApiResponseError) => {
-                this._notification.openSnackBar(error);
+                this._errorHandler.showMessage(error);
             }
         );
 
@@ -340,7 +341,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
             },
             (error: ApiResponseError) => {
-                this._notification.openSnackBar(error);
+                this._errorHandler.showMessage(error);
             }
         );
 
@@ -418,24 +419,24 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             if (prop.guiAttr) {
                 switch (prop.type.gui_ele) {
 
-                    case Constants.SalsahGui + Constants.Delimiter + 'Colorpicker':
+                    case Constants.SalsahGui + Constants.HashDelimiter + 'Colorpicker':
                         newResProp.guiAttributes = ['ncolors=' + prop.guiAttr];
                         break;
-                    case Constants.SalsahGui + Constants.Delimiter + 'List':
-                    case Constants.SalsahGui + Constants.Delimiter + 'Pulldown':
-                    case Constants.SalsahGui + Constants.Delimiter + 'Radio':
+                    case Constants.SalsahGui + Constants.HashDelimiter + 'List':
+                    case Constants.SalsahGui + Constants.HashDelimiter + 'Pulldown':
+                    case Constants.SalsahGui + Constants.HashDelimiter + 'Radio':
                         newResProp.guiAttributes = ['hlist=<' + prop.guiAttr + '>'];
                         break;
-                    case Constants.SalsahGui + Constants.Delimiter + 'SimpleText':
+                    case Constants.SalsahGui + Constants.HashDelimiter + 'SimpleText':
                         // TODO: could have two guiAttr fields: size and maxlength
                         // I suggest to use default value for size; we do not support this guiAttr in DSP-App
                         newResProp.guiAttributes = ['maxlength=' + prop.guiAttr];
                         break;
-                    case Constants.SalsahGui + Constants.Delimiter + 'Spinbox':
+                    case Constants.SalsahGui + Constants.HashDelimiter + 'Spinbox':
                         // TODO: could have two guiAttr fields: min and max
                         newResProp.guiAttributes = ['min=' + prop.guiAttr, 'max=' + prop.guiAttr];
                         break;
-                    case Constants.SalsahGui + Constants.Delimiter + 'Textarea':
+                    case Constants.SalsahGui + Constants.HashDelimiter + 'Textarea':
                         // TODO: could have four guiAttr fields: width, cols, rows, wrap
                         // I suggest to use default values; we do not support this guiAttr in DSP-App
                         newResProp.guiAttributes = ['width=100%'];
@@ -463,7 +464,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                     this.setCardinality(response.id, classIri, prop.multiple, prop.required, index);
                 },
                 (error: ApiResponseError) => {
-                    this._notification.openSnackBar(error);
+                    this._errorHandler.showMessage(error);
                 }
             );
         })

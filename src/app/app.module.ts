@@ -54,7 +54,6 @@ import { GroupsListComponent } from './system/groups/groups-list/groups-list.com
 import { GroupsComponent } from './system/groups/groups.component';
 import { ProjectsListComponent } from './system/projects/projects-list/projects-list.component';
 import { ProjectsComponent } from './system/projects/projects.component';
-import { StatusComponent } from './system/status/status.component';
 import { SystemComponent } from './system/system.component';
 import { UsersListComponent } from './system/users/users-list/users-list.component';
 import { UsersComponent } from './system/users/users.component';
@@ -78,12 +77,21 @@ import { SelectOntologyComponent } from './workspace/resource/resource-instance-
 import { SelectResourceClassComponent } from './workspace/resource/resource-instance-form/select-resource-class/select-resource-class.component';
 import { SelectPropertiesComponent } from './workspace/resource/resource-instance-form/select-properties/select-properties.component';
 import { SwitchPropertiesComponent } from './workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties.component';
+import { ProjectTabViewComponent } from './project/board/project-tab-view/project-tab-view.component';
+import { DatasetTabViewComponent } from './project/board/dataset-tab-view/dataset-tab-view.component';
+import { AttributionTabViewComponent } from './project/board/attribution-tab-view/attribution-tab-view.component';
+import { TermsTabViewComponent } from './project/board/terms-tab-view/terms-tab-view.component';
+import { ContactsTabViewComponent } from './project/board/contacts-tab-view/contacts-tab-view.component';
+import { ClipboardModule } from 'ngx-clipboard';
 
 import { AngularSplitModule } from 'angular-split';
+import { PersonTemplateComponent } from './project/board/person-template/person-template.component';
+import { AddressTemplateComponent } from './project/board/address-template/address-template.component';
+import { OrganisationTemplateComponent } from './project/board/organisation-template/organisation-template.component';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
-    return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json')
+    return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json');
 }
 
 @NgModule({
@@ -116,7 +124,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         DialogComponent,
         SystemComponent,
         UsersComponent,
-        StatusComponent,
         UsersListComponent,
         DialogHeaderComponent,
         GridComponent,
@@ -143,7 +150,15 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         SelectOntologyComponent,
         SelectResourceClassComponent,
         SelectPropertiesComponent,
-        SwitchPropertiesComponent
+        SwitchPropertiesComponent,
+        ProjectTabViewComponent,
+        DatasetTabViewComponent,
+        AttributionTabViewComponent,
+        TermsTabViewComponent,
+        ContactsTabViewComponent,
+        PersonTemplateComponent,
+        AddressTemplateComponent,
+        OrganisationTemplateComponent
     ],
     imports: [
         AppRoutingModule,
@@ -165,6 +180,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
                 deps: [HttpClient]
             }
         }),
+        ClipboardModule,
         AngularSplitModule.forRoot()
     ],
     providers: [

@@ -4,11 +4,20 @@ import { MatOption } from '@angular/material/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatSelectChange } from '@angular/material/select';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ClassDefinition, Constants, KnoraApiConnection, ListNodeInfo, ReadOntology, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import {
+    ApiResponseError,
+    ClassDefinition,
+    Constants,
+    KnoraApiConnection,
+    ListNodeInfo,
+    ReadOntology,
+    ResourcePropertyDefinition
+} from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
+import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { DefaultProperties, Property, PropertyType } from '../default-data/default-properties';
 
 
@@ -75,7 +84,9 @@ export class PropertyFormComponent implements OnInit {
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _domSanitizer: DomSanitizer,
-        private _matIconRegistry: MatIconRegistry) {
+        private _errorHandler: ErrorHandlerService,
+        private _matIconRegistry: MatIconRegistry
+    ) {
 
         // special icons for property type
         this._matIconRegistry.addSvgIcon(
@@ -123,8 +134,8 @@ export class PropertyFormComponent implements OnInit {
 
                 }
             },
-            (error: any) => {
-                console.error(error);
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
             }
         );
 
@@ -134,8 +145,8 @@ export class PropertyFormComponent implements OnInit {
             (response: ListNodeInfo[]) => {
                 this.lists = response;
             },
-            (error: any) => {
-                console.error(error);
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
             }
         );
 
@@ -208,8 +219,8 @@ export class PropertyFormComponent implements OnInit {
 
             switch (tempProp.guiElement) {
                 // prop type is a list
-                case Constants.SalsahGui + Constants.Delimiter + 'List':
-                case Constants.SalsahGui + Constants.Delimiter + 'Radio':
+                case Constants.SalsahGui + Constants.HashDelimiter + 'List':
+                case Constants.SalsahGui + Constants.HashDelimiter + 'Radio':
                     // gui attribute value for lists looks as follow: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
                     // get index from guiAttr array where value starts with hlist=
                     let i = tempProp.guiAttributes.findIndex(element => element.includes('hlist'));
@@ -223,7 +234,7 @@ export class PropertyFormComponent implements OnInit {
                     this.propertyForm.controls['guiAttr'].disable();
                     break;
                 // prop type is resource pointer
-                case Constants.SalsahGui + Constants.Delimiter + 'Searchbox':
+                case Constants.SalsahGui + Constants.HashDelimiter + 'Searchbox':
 
                     this.showGuiAttr = true;
                     this.propertyForm.controls['guiAttr'].setValue(tempProp.objectType);
