@@ -72,7 +72,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     resourceLabel: string;
     properties: ResourcePropertyDefinition[];
     ontologyInfo: ResourceClassAndPropertyDefinitions;
-    hasFileValue: string[];
+    hasFileValue: string[] = [];
 
     valueOperationEventSubscription: Subscription;
 
