@@ -66,7 +66,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     ontologiesMetadata: OntologiesMetadata;
     selectedOntology: string;
     resourceClasses: ResourceClassDefinition[];
-    selectedResourceClass: ResourceClassDefinitionWithPropertyDefinition;
+    selectedResourceClass: ResourceClassDefinition;
     resource: ReadResource;
     resourceLabel: string;
     properties: ResourcePropertyDefinition[];
@@ -352,7 +352,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                     // filter out all props that cannot be edited or are link props
                     this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition).filter(prop => prop.isEditable && !prop.isLinkProperty);
 
-                    const hasBinary = this._hasBinaryRepresentation(this.selectedResourceClass);
+                    const hasBinary = this._hasBinaryRepresentation(this.properties);
 
                     console.log(hasBinary);
 
@@ -377,16 +377,16 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
      *
      * Returns the file value type or an empty array.
      *
-     * @param resourceClass the resource class to check for binary file value types.
+     * @param properties the properties to check for binary file value types.
      */
-    private _hasBinaryRepresentation(resourceClass: ResourceClassDefinitionWithPropertyDefinition): string[] {
+    private _hasBinaryRepresentation(properties: ResourcePropertyDefinition[]): string[] {
 
         const binaryTypes = [Constants.StillImageFileValue, Constants.AudioFileValue, Constants.DocumentFileValue, Constants.MovingImageFileValue];
 
-        return resourceClass.propertiesList.filter(
-          prop => binaryTypes.includes(prop.propertyDefinition.objectType)
+        return properties.filter(
+          prop => binaryTypes.includes(prop.objectType)
         ).map(
-            prop => prop.propertyDefinition.objectType
+            prop => prop.objectType
         );
 
     }
