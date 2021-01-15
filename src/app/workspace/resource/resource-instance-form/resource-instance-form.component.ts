@@ -13,7 +13,7 @@ import {
     ReadOntology,
     ReadResource,
     ResourceClassAndPropertyDefinitions,
-    ResourceClassDefinition,
+    ResourceClassDefinition, ResourceClassDefinitionWithPropertyDefinition,
     ResourcePropertyDefinition,
     StoredProject,
     UserResponse
@@ -66,7 +66,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     ontologiesMetadata: OntologiesMetadata;
     selectedOntology: string;
     resourceClasses: ResourceClassDefinition[];
-    selectedResourceClass: ResourceClassDefinition;
+    selectedResourceClass: ResourceClassDefinitionWithPropertyDefinition;
     resource: ReadResource;
     resourceLabel: string;
     properties: ResourcePropertyDefinition[];
@@ -352,6 +352,10 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                     // filter out all props that cannot be edited or are link props
                     this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition).filter(prop => prop.isEditable && !prop.isLinkProperty);
 
+                    const hasBinary = this._hasBinaryRepresentation(this.selectedResourceClass);
+
+                    console.log(hasBinary);
+
                     // notifies the user that the selected resource does not have any properties defined yet.
                     if (!this.selectPropertiesComponent && this.properties.length === 0) {
                         this.errorMessage = 'No properties defined for the selected resource.';
@@ -364,6 +368,26 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
         } else {
             this.errorMessage = 'No resource class defined for the selected ontology.';
         }
+
+    }
+
+    /**
+     *
+     * Determines whether the selected resource class has a binary Representation (image etc.).
+     *
+     * Returns the file value type or an empty array.
+     *
+     * @param resourceClass the resource class to check for binary file value types.
+     */
+    private _hasBinaryRepresentation(resourceClass: ResourceClassDefinitionWithPropertyDefinition): string[] {
+
+        const binaryTypes = [Constants.StillImageFileValue, Constants.AudioFileValue, Constants.DocumentFileValue, Constants.MovingImageFileValue];
+
+        return resourceClass.propertiesList.filter(
+          prop => binaryTypes.includes(prop.propertyDefinition.objectType)
+        ).map(
+            prop => prop.propertyDefinition.objectType
+        );
 
     }
 
