@@ -72,6 +72,8 @@ import { ResultsComponent } from './workspace/results/results.component';
 
 import { environment } from '../environments/environment';
 import { ExternalLinksDirective } from './main/directive/external-links.directive';
+import { InvalidControlScrollContainerDirective } from './main/directive/invalid-control-scroll-container.directive';
+import { InvalidControlScrollDirective } from './main/directive/invalid-control-scroll.directive';
 import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
 import { SelectOntologyComponent } from './workspace/resource/resource-instance-form/select-ontology/select-ontology.component';
 import { SelectResourceClassComponent } from './workspace/resource/resource-instance-form/select-resource-class/select-resource-class.component';
@@ -145,6 +147,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         HelpComponent,
         FooterComponent,
         ExternalLinksDirective,
+        InvalidControlScrollContainerDirective,
+        InvalidControlScrollDirective,
         ResourceInstanceFormComponent,
         SelectProjectComponent,
         SelectOntologyComponent,

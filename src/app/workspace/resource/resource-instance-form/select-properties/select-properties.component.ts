@@ -83,8 +83,6 @@ export class SelectPropertiesComponent implements OnInit {
                         } else {
                             this.isRequiredProp = false;
                         }
-                    } else {
-                        console.log('false');
                     }
                 }
             );
