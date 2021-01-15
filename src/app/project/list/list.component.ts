@@ -211,6 +211,11 @@ export class ListComponent implements OnInit {
             data: { mode: mode, title: name, id: iri, project: this.project.id }
         };
 
+        console.log('mode: ', mode);
+        console.log('name: ', name);
+        console.log('iri: ', iri);
+        console.log('project: ', this.project.id);
+
         const dialogRef = this._dialog.open(
             DialogComponent,
             dialogConfig

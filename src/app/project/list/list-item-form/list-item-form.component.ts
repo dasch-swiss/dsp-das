@@ -1,5 +1,7 @@
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {
     ApiResponseData,
     ApiResponseError,
@@ -7,15 +9,39 @@ import {
     KnoraApiConnection,
     ListNodeInfo,
     ListNodeInfoResponse,
-    StringLiteral
+    StringLiteral,
+    UpdateChildNodeLabelsRequest
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 
 @Component({
     selector: 'app-list-item-form',
     templateUrl: './list-item-form.component.html',
-    styleUrls: ['./list-item-form.component.scss']
+    styleUrls: ['./list-item-form.component.scss'],
+    animations: [
+        // the fade-in/fade-out animation.
+        // https://www.kdechant.com/blog/angular-animations-fade-in-and-fade-out
+        trigger('simpleFadeAnimation', [
+
+          // the "in" style determines the "resting" state of the element when it is visible.
+          state('in', style({opacity: 1})),
+
+          // fade in when created.
+          transition(':enter', [
+            // the styles start from this point when the element appears
+            style({opacity: 0}),
+            // and animate toward the "in" state above
+            animate(150)
+          ]),
+
+          // fade out when destroyed.
+          transition(':leave',
+            // fading out uses a different syntax, with the "style" being passed into animate()
+            animate(150, style({opacity: 0})))
+        ])
+      ]
 })
 export class ListItemFormComponent implements OnInit {
 
@@ -62,9 +88,12 @@ export class ListItemFormComponent implements OnInit {
     updateSuccessful: boolean = false;
     updateFailed: boolean = false;
 
+    showActionBubble: boolean = false;
+
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: ErrorHandlerService
+        private _errorHandler: ErrorHandlerService,
+        private _dialog: MatDialog
     ) { }
 
     ngOnInit() {
@@ -173,4 +202,42 @@ export class ListItemFormComponent implements OnInit {
         this.updateSuccessful = false;
         this.updateData = show;
     }
+
+    mouseEnter() {
+        this.showActionBubble = true;
+    }
+
+    mouseLeave() {
+        this.showActionBubble = false;
+    }
+
+    /**
+    * open dialog in every case of modification:
+    * edit list data, remove list from project etc.
+    *
+    */
+   openDialog(mode: string, name: string, iri?: string): void {
+    const dialogConfig: MatDialogConfig = {
+        width: '640px',
+        position: {
+            top: '112px'
+        },
+        data: { mode: mode, title: name, id: iri, project: this.projectIri }
+    };
+
+    console.log('mode: ', mode);
+    console.log('name: ', name);
+    console.log('iri: ', iri);
+    console.log('project: ', this.projectIri);
+
+    const dialogRef = this._dialog.open(
+        DialogComponent,
+        dialogConfig
+    );
+
+    dialogRef.afterClosed().subscribe(() => {
+        // update the view
+        // this.initList();
+    });
+}
 }
