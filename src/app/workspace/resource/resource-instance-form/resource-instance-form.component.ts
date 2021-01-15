@@ -21,7 +21,7 @@ import {
 import {
     DspApiConnectionToken,
     Session,
-    SessionService
+    SessionService, UploadFileComponent
 } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
@@ -48,6 +48,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     @ViewChild('selectProps') selectPropertiesComponent: SelectPropertiesComponent;
     @ViewChild('selectResourceClass') selectResourceClassComponent: SelectResourceClassComponent;
     @ViewChild('selectOntology') selectOntologyComponent: SelectOntologyComponent;
+    @ViewChild('upload') uploadFileComponent?: UploadFileComponent;
 
     // forms
     selectResourceForm: FormGroup;
@@ -71,6 +72,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     resourceLabel: string;
     properties: ResourcePropertyDefinition[];
     ontologyInfo: ResourceClassAndPropertyDefinitions;
+    hasFileValue: string[];
 
     valueOperationEventSubscription: Subscription;
 
@@ -352,9 +354,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                     // filter out all props that cannot be edited or are link props
                     this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition).filter(prop => prop.isEditable && !prop.isLinkProperty);
 
-                    const hasBinary = this._hasBinaryRepresentation(this.properties);
+                    this.hasFileValue = this._hasBinaryRepresentation(this.properties);
 
-                    console.log(hasBinary);
+                    console.log(this);
 
                     // notifies the user that the selected resource does not have any properties defined yet.
                     if (!this.selectPropertiesComponent && this.properties.length === 0) {
@@ -383,8 +385,12 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
         const binaryTypes = [Constants.StillImageFileValue, Constants.AudioFileValue, Constants.DocumentFileValue, Constants.MovingImageFileValue];
 
+        this.properties = properties.filter(
+            prop => !binaryTypes.includes(prop.objectType)
+        );
+
         return properties.filter(
-          prop => binaryTypes.includes(prop.objectType)
+            prop => binaryTypes.includes(prop.objectType)
         ).map(
             prop => prop.objectType
         );
