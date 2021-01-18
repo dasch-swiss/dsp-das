@@ -1,24 +1,14 @@
-import { Directive, ElementRef, HostListener, Optional } from '@angular/core';
+import { Directive, ElementRef, HostListener } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
-import { fromEvent } from 'rxjs/internal/observable/fromEvent';
-import { debounceTime } from 'rxjs/internal/operators/debounceTime';
-import { take } from 'rxjs/internal/operators/take';
-
-import { InvalidControlScrollContainerDirective } from "./invalid-control-scroll-container.directive";
 
 @Directive({
   selector: '[appInvalidControlScroll]'
 })
 export class InvalidControlScrollDirective {
 
-    private get containerEl(): any {
-        return this._scrollContainerDir ? this._scrollContainerDir.containerEl : window;
-      }
-
     constructor(
         private _el: ElementRef,
-        private _formGroupDir: FormGroupDirective,
-        @Optional() private _scrollContainerDir: InvalidControlScrollContainerDirective
+        private _formGroupDir: FormGroupDirective
     ) { }
 
     @HostListener("ngSubmit") submitData() {
@@ -32,18 +22,11 @@ export class InvalidControlScrollDirective {
             "form .ng-invalid"
         );
 
-        this.containerEl.scrollIntoView({
+        firstInvalidControl.scrollIntoView({
             behavior: "smooth",
-            block: "start",
-            inline: "start"
+            block: "nearest",
+            inline: "nearest"
         });
-
-        fromEvent(this.containerEl, "scrollIntoView")
-            .pipe(
-                debounceTime(100),
-                take(1)
-            )
-            .subscribe(() => firstInvalidControl.focus());
     }
 
 }
