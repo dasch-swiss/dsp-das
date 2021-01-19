@@ -48,9 +48,10 @@ export class SelectPropertiesComponent implements OnInit {
                     // see the deleteValue method below for more info
                     this.propertyValuesKeyValuePair[prop.id + '-filtered'] = [0];
 
-                     // check the cardinality to know if the prop is required or not
-                     this.isPropRequired(prop.id);
-                     this.propertyValuesKeyValuePair[prop.id + '-cardinality'] = [this.isRequiredProp ? 1 : 0];
+                    // each property will also have a cardinality array to be used when marking a field as required
+                    // see the isPropRequired method below for more info
+                    this.isPropRequired(prop.id);
+                    this.propertyValuesKeyValuePair[prop.id + '-cardinality'] = [this.isRequiredProp ? 1 : 0];
                 }
             }
         }
@@ -72,6 +73,13 @@ export class SelectPropertiesComponent implements OnInit {
         );
     }
 
+    /**
+     * Check the cardinality of a property
+     * If the cardinality is 1 or 1-N, the property will be marked as required
+     * If the cardinality is 0-1 or 0-N, the property will not be required
+     *
+     * @param propId property id
+     */
     isPropRequired(propId: string): boolean {
         if (this.resourceClass !== undefined && propId) {
             this.resourceClass.propertiesList.filter(
@@ -80,7 +88,7 @@ export class SelectPropertiesComponent implements OnInit {
                         // cardinality 1 or 1-N
                         if (card.cardinality === Cardinality._1 || card.cardinality === Cardinality._1_n) {
                             this.isRequiredProp = true;
-                        } else {
+                        } else { // cardinality 0-1 or 0-N
                             this.isRequiredProp = false;
                         }
                     }
