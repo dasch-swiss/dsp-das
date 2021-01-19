@@ -28,7 +28,8 @@ export class SwitchPropertiesComponent implements OnInit {
     constructor() { }
 
     ngOnInit(): void {
-        // convert from boolean (1/0) to boolean (true/false)
+        // the input isRequiredProp provided by KeyValuePair is stored as a number
+        // a conversion from a number to a boolean is required by the input valueRequiredValidator
         this.isRequiredProp = !!+this.isRequiredProp;
     }
 
