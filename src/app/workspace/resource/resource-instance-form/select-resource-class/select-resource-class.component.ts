@@ -39,7 +39,7 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterVie
 
     form: FormGroup;
 
-    checkPattern = '^\d*[a-zA-Z0-9_]+( [a-zA-Z0-9@_.]+)*$';
+    checkPattern = '^\d*[a-zA-Z0-9àäâçéèêöôùüûÀÄÇÉÈÖÚÛÙÜ_]+( [a-zA-Z0-9àäâçéèêöôùüûÀÄÇÉÈÖÚÛÙÜ@_.]+)*$';
 
     resourceChangesSubscription: Subscription;
 
