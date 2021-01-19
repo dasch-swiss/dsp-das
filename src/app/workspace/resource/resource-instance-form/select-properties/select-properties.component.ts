@@ -72,7 +72,7 @@ export class SelectPropertiesComponent implements OnInit {
         );
     }
 
-    isPropRequired(propId: string): void {
+    isPropRequired(propId: string): boolean {
         if (this.resourceClass !== undefined && propId) {
             this.resourceClass.propertiesList.filter(
                 (card: IHasProperty) => {
@@ -86,6 +86,7 @@ export class SelectPropertiesComponent implements OnInit {
                     }
                 }
             );
+            return this.isRequiredProp;
         }
     }
 
