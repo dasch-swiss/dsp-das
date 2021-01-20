@@ -54,7 +54,6 @@ import { GroupsListComponent } from './system/groups/groups-list/groups-list.com
 import { GroupsComponent } from './system/groups/groups.component';
 import { ProjectsListComponent } from './system/projects/projects-list/projects-list.component';
 import { ProjectsComponent } from './system/projects/projects.component';
-import { StatusComponent } from './system/status/status.component';
 import { SystemComponent } from './system/system.component';
 import { UsersListComponent } from './system/users/users-list/users-list.component';
 import { UsersComponent } from './system/users/users.component';
@@ -73,6 +72,7 @@ import { ResultsComponent } from './workspace/results/results.component';
 
 import { environment } from '../environments/environment';
 import { ExternalLinksDirective } from './main/directive/external-links.directive';
+import { InvalidControlScrollDirective } from './main/directive/invalid-control-scroll.directive';
 import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
 import { SelectOntologyComponent } from './workspace/resource/resource-instance-form/select-ontology/select-ontology.component';
 import { SelectResourceClassComponent } from './workspace/resource/resource-instance-form/select-resource-class/select-resource-class.component';
@@ -125,7 +125,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         DialogComponent,
         SystemComponent,
         UsersComponent,
-        StatusComponent,
         UsersListComponent,
         DialogHeaderComponent,
         GridComponent,
@@ -147,6 +146,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         HelpComponent,
         FooterComponent,
         ExternalLinksDirective,
+        InvalidControlScrollDirective,
         ResourceInstanceFormComponent,
         SelectProjectComponent,
         SelectOntologyComponent,

@@ -1,13 +1,20 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatRadioChange } from '@angular/material/radio';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectResponse, ReadProject } from '@dasch-swiss/dsp-js';
+import {
+    ApiResponseData,
+    ApiResponseError,
+    KnoraApiConnection,
+    ProjectResponse,
+    ReadProject
+} from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { CacheService } from '../../main/cache/cache.service';
-import { MatRadioChange } from '@angular/material/radio';
 import { ClipboardService } from 'ngx-clipboard';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { CacheService } from '../../main/cache/cache.service';
 import { IDataset } from './dataset-metadata';
 
 export interface DatasetRadioOption {
@@ -59,6 +66,7 @@ export class BoardComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
+        private _errorHandler: ErrorHandlerService,
         private _session: SessionService,
         private _dialog: MatDialog,
         private _route: ActivatedRoute,
@@ -109,7 +117,7 @@ export class BoardComponent implements OnInit {
                 this.loading = false;
             },
             (error: ApiResponseError) => {
-                console.error(error);
+                this._errorHandler.showMessage(error);
             }
         );
 
@@ -421,6 +429,7 @@ export class BoardComponent implements OnInit {
     openDialog(mode: string, name: string, id?: string): void {
         const dialogConfig: MatDialogConfig = {
             width: '560px',
+            maxHeight: '80vh',
             position: {
                 top: '112px'
             },
