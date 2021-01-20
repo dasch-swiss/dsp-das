@@ -5,6 +5,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {
     ApiResponseData,
     ApiResponseError,
+    ChildNodeInfo,
     CreateChildNodeRequest,
     KnoraApiConnection,
     ListNodeInfo,
@@ -171,5 +172,16 @@ export class ListItemFormComponent implements OnInit {
             DialogComponent,
             dialogConfig
         );
+
+        dialogRef.afterClosed().subscribe((data: ChildNodeInfo) => {
+            // update the view if data was passed back
+            // data is only passed back when clicking the 'update' button
+            // console.log(data);
+            if (data) {
+                this.refreshParent.emit(data as ListNodeInfo);
+                this.labels = data.labels;
+                // console.log('labels: ', this.labels);
+            }
+        });
     }
 }
