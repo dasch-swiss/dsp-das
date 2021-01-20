@@ -54,7 +54,6 @@ export class ListItemComponent implements OnInit {
                 }
             );
         }
-
     }
 
     showChildren(id: string): boolean {
