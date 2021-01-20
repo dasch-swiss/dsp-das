@@ -5,6 +5,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {
     ApiResponseData,
     ApiResponseError,
+    ChildNodeInfo,
     CreateChildNodeRequest,
     KnoraApiConnection,
     ListNodeInfo,
@@ -85,9 +86,6 @@ export class ListItemFormComponent implements OnInit {
 
     updateData: boolean = false;
 
-    updateSuccessful: boolean = false;
-    updateFailed: boolean = false;
-
     showActionBubble: boolean = false;
 
     constructor(
@@ -129,31 +127,31 @@ export class ListItemFormComponent implements OnInit {
         if (this.iri && this.updateData) {
             // edit mode
             // TODO: update node method not yet implemented; Waiting for Knora API
-            console.log(this.iri);
-            const childLabels: UpdateChildNodeLabelsRequest = new UpdateChildNodeLabelsRequest();
-            // initialize labels
-            let i = 0;
-            for (const l of this.labels) {
-                childLabels.labels[i] = new StringLiteral();
-                childLabels.labels[i].language = l.language;
-                childLabels.labels[i].value = l.value;
-                i++;
-            }
+            // console.log(this.iri);
+            // const childLabels: UpdateChildNodeLabelsRequest = new UpdateChildNodeLabelsRequest();
+            // // initialize labels
+            // let i = 0;
+            // for (const l of this.labels) {
+            //     childLabels.labels[i] = new StringLiteral();
+            //     childLabels.labels[i].language = l.language;
+            //     childLabels.labels[i].value = l.value;
+            //     i++;
+            // }
 
-            console.log('labels: ', childLabels.labels);
+            // console.log('labels: ', childLabels.labels);
 
-            // send payload to dsp-api's api
-            this._dspApiConnection.admin.listsEndpoint.updateChildLabels(this.iri, childLabels).subscribe(
-                (response: ApiResponseData<ListNodeInfoResponse>) => {
-                    console.log('SUCCESS: ', response);
-                    this.loading = false;
-                    this.updateSuccessful = true;
-                },
-                (error: ApiResponseError) => {
-                    console.error(error);
-                    this.updateFailed = true;
-                }
-            );
+            // // send payload to dsp-api's api
+            // this._dspApiConnection.admin.listsEndpoint.updateChildLabels(this.iri, childLabels).subscribe(
+            //     (response: ApiResponseData<ListNodeInfoResponse>) => {
+            //         console.log('SUCCESS: ', response);
+            //         this.loading = false;
+            //         this.updateSuccessful = true;
+            //     },
+            //     (error: ApiResponseError) => {
+            //         console.error(error);
+            //         this.updateFailed = true;
+            //     }
+            // );
 
             // TODO: remove setTimeout after testing position of progress indicator
             setTimeout(() => {
@@ -198,8 +196,6 @@ export class ListItemFormComponent implements OnInit {
     }
 
     toggleBtn(show: boolean) {
-        this.updateFailed = false;
-        this.updateSuccessful = false;
         this.updateData = show;
     }
 
@@ -225,19 +221,25 @@ export class ListItemFormComponent implements OnInit {
         data: { mode: mode, title: name, id: iri, project: this.projectIri }
     };
 
-    console.log('mode: ', mode);
-    console.log('name: ', name);
-    console.log('iri: ', iri);
-    console.log('project: ', this.projectIri);
+    // console.log('mode: ', mode);
+    // console.log('name: ', name);
+    // console.log('iri: ', iri);
+    // console.log('project: ', this.projectIri);
 
     const dialogRef = this._dialog.open(
         DialogComponent,
         dialogConfig
     );
 
-    dialogRef.afterClosed().subscribe(() => {
-        // update the view
-        // this.initList();
+    dialogRef.afterClosed().subscribe((data: ChildNodeInfo) => {
+        // update the view if data was passed back
+        // data is only passed back when clicking the 'update' button
+        console.log(data);
+        if (data) {
+            this.refreshParent.emit(data as ListNodeInfo);
+            this.labels = data.labels;
+            console.log('labels: ', this.labels);
+        }
     });
 }
 }

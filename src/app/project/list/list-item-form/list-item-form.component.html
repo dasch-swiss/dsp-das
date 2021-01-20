@@ -17,9 +17,8 @@
     *ngIf="!(parentIri && projectIri) && labels"
     (mouseenter)="mouseEnter()"
     (mouseleave)="mouseLeave()">
-    <!-- TODO: at the moment (2019-09-12) we can't modify a node; the api doesn't support it; this is why we set the input to readonly -->
     <dsp-string-literal-input class="list-item-label"
-        [placeholder]="labels | dspStringifyStringLiteral:'all' | dspTruncate: 128" [value]="labels" [readonly]="false"
+        [placeholder]="labels | dspStringifyStringLiteral:'all' | dspTruncate: 128" [value]="labels" [readonly]="true"
         (dataChanged)="handleData($event)" [language]="language" (touched)="toggleBtn($event)">
     </dsp-string-literal-input>
     <div class="action-bubble" *ngIf="showActionBubble" [@simpleFadeAnimation]="'in'">

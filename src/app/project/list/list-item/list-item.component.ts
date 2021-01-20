@@ -2,6 +2,7 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import {
     ApiResponseData,
     ApiResponseError,
+    ChildNodeInfo,
     KnoraApiConnection,
     ListNode,
     ListResponse
@@ -72,19 +73,29 @@ export class ListItemComponent implements OnInit {
     }
 
     updateView(data: ListNode, firstNode: boolean = false) {
-
         this.loading = true;
-        // update the view by updating the existing list
-        if (firstNode) {
-            // in case of new child node, we have to use the children from list
-            const index: number = this.list.findIndex(item => item.id === this.expandedNode);
-            this.list[index].children.push(data);
-
+        // console.log('data: ', data);
+        if (data instanceof ChildNodeInfo) {
+            // const index: number = this.list.findIndex(item => item.position === data.position);
+            // console.log('index: ', index);
+            this.list[data.position].labels = data.labels;
+            this.list[data.position].comments = data.comments;
+            console.log('list: ', this.list);
         } else {
-            this.list.push(data);
+            // update the view by updating the existing list
+            if (firstNode) {
+                // in case of new child node, we have to use the children from list
+                const index: number = this.list.findIndex(item => item.id === this.expandedNode);
+                this.list[index].children.push(data);
+
+            } else {
+                this.list.push(data);
+            }
+
+            data.children = [];
         }
 
-        data.children = [];
+
 
     }
 

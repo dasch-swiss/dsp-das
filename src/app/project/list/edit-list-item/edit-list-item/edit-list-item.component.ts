@@ -109,8 +109,8 @@ export class EditListItemComponent implements OnInit {
         const childNodeUpdateData: UpdateChildNodeRequest = new UpdateChildNodeRequest();
         childNodeUpdateData.projectIri = this.projectIri;
         childNodeUpdateData.listIri = this.iri;
-        childNodeUpdateData.labels = this.list.labels.length > 0 ? this.list.labels : undefined;
-        childNodeUpdateData.comments = this.list.comments.length > 0 ? this.list.comments : undefined;
+        childNodeUpdateData.labels = this.labels;
+        childNodeUpdateData.comments = this.comments.length > 0 ? this.comments : undefined;
 
         console.log('childNodeUpdateData: ', childNodeUpdateData);
 
