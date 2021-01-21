@@ -8,11 +8,11 @@
 
         <h3 class="color-for-role"> {{ attribution.role | titlecase }} </h3>
 
-        <div *ngIf="attribution.agent.familyName">
+        <div *ngIf="getAgentType(attribution.agent) === 'person'">
             <app-person-template [person]="attribution.agent"></app-person-template>
         </div>
 
-        <div *ngIf="attribution.agent.url">
+        <div *ngIf="getAgentType(attribution.agent) === 'organisation'">
             <app-organisation-template [organisation]="attribution.agent"></app-organisation-template>
         </div>
 

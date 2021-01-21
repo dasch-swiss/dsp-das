@@ -1,4 +1,4 @@
-/* Interface to for url type */
+/* Interface for url type */
 export interface UrlProperty {
     type: string;
     value: string;
