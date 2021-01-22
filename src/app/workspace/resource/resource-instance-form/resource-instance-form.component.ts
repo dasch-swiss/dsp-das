@@ -385,10 +385,16 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
         const binaryTypes = [Constants.StillImageFileValue, Constants.AudioFileValue, Constants.DocumentFileValue, Constants.MovingImageFileValue];
 
+        // remove file value properties from property list
         this.properties = properties.filter(
             prop => !binaryTypes.includes(prop.objectType)
         );
 
+        // TODO: add a FormControl representing the file value to propertiesParentForm
+        // TODO: react to UploadFileComponent's Outputs: fileUpload and cancelUpload (see https://github.com/dasch-swiss/dsp-ui-lib/pull/264)
+        // TODO: add a CreateStillImageFileValue on fileUpload and remove it on cancelUpload
+
+        // return the file value property, if any
         return properties.filter(
             prop => binaryTypes.includes(prop.objectType)
         ).map(
