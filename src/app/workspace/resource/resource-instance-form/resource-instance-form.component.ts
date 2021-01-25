@@ -158,12 +158,12 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
             // check for file values
             if (this.selectPropertiesComponent.hasFileValue.length === 1) {
-                const filename = this.selectPropertiesComponent.uploadFileComponent.fileControl.value.internalFilename;
 
-                const fileValue = new CreateStillImageFileValue();
-                fileValue.filename = filename;
+                const fileValue = this.selectPropertiesComponent.uploadFileComponent.getNewValue();
 
-                createResource.properties[this.selectPropertiesComponent.hasFileValue[0].id] = [fileValue];
+                if (fileValue instanceof CreateValue) {
+                    createResource.properties[this.selectPropertiesComponent.hasFileValue[0].id] = [fileValue];
+                }
 
             }
 
