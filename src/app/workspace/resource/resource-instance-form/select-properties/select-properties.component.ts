@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Cardinality, CardinalityUtil, IHasProperty, ReadResource, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
-import { ValueService } from '@dasch-swiss/dsp-ui';
+import { Cardinality, CardinalityUtil, Constants, IHasProperty, ReadResource, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { UploadFileComponent, ValueService } from '@dasch-swiss/dsp-ui';
 import { SwitchPropertiesComponent } from './switch-properties/switch-properties.component';
 
 @Component({
@@ -10,6 +10,8 @@ import { SwitchPropertiesComponent } from './switch-properties/switch-properties
   styleUrls: ['./select-properties.component.scss']
 })
 export class SelectPropertiesComponent implements OnInit {
+
+    @ViewChild('upload') uploadFileComponent?: UploadFileComponent;
 
     @ViewChildren('switchProp') switchPropertiesComponent: QueryList<SwitchPropertiesComponent>;
 
@@ -31,9 +33,14 @@ export class SelectPropertiesComponent implements OnInit {
 
     isRequiredProp: boolean;
 
+    hasFileValue: ResourcePropertyDefinition[] = [];
+
     constructor(private _valueService: ValueService) { }
 
     ngOnInit() {
+
+        this.hasFileValue = this._hasBinaryRepresentation(this.properties);
+
         if (this.properties) {
             for (const prop of this.properties) {
                 if (prop) {
@@ -137,6 +144,30 @@ export class SelectPropertiesComponent implements OnInit {
         });
 
         return arrayToFilter;
+
+    }
+
+    /**
+     *
+     * Determines whether the selected resource class has a binary Representation (image etc.).
+     *
+     * Returns the file value type or an empty array.
+     *
+     * @param properties the properties to check for binary file value types.
+     */
+    private _hasBinaryRepresentation(properties: ResourcePropertyDefinition[]): ResourcePropertyDefinition[] {
+
+        const binaryTypes = [Constants.StillImageFileValue, Constants.AudioFileValue, Constants.DocumentFileValue, Constants.MovingImageFileValue];
+
+        // remove file value properties from property list
+        this.properties = properties.filter(
+            prop => !binaryTypes.includes(prop.objectType)
+        );
+
+        // return the file value property, if any
+        return properties.filter(
+            prop => binaryTypes.includes(prop.objectType)
+        );
 
     }
 }

@@ -5,7 +5,7 @@ import {
     ApiResponseData,
     ApiResponseError,
     Constants,
-    CreateResource,
+    CreateResource, CreateStillImageFileValue,
     CreateValue,
     KnoraApiConnection,
     OntologiesMetadata,
@@ -13,16 +13,12 @@ import {
     ReadOntology,
     ReadResource,
     ResourceClassAndPropertyDefinitions,
-    ResourceClassDefinition, ResourceClassDefinitionWithPropertyDefinition,
+    ResourceClassDefinition,
     ResourcePropertyDefinition,
     StoredProject,
     UserResponse
 } from '@dasch-swiss/dsp-js';
-import {
-    DspApiConnectionToken,
-    Session,
-    SessionService, UploadFileComponent
-} from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
@@ -48,7 +44,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     @ViewChild('selectProps') selectPropertiesComponent: SelectPropertiesComponent;
     @ViewChild('selectResourceClass') selectResourceClassComponent: SelectResourceClassComponent;
     @ViewChild('selectOntology') selectOntologyComponent: SelectOntologyComponent;
-    @ViewChild('upload') uploadFileComponent?: UploadFileComponent;
 
     // forms
     selectResourceForm: FormGroup;
@@ -72,7 +67,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     resourceLabel: string;
     properties: ResourcePropertyDefinition[];
     ontologyInfo: ResourceClassAndPropertyDefinitions;
-    hasFileValue: string[] = [];
 
     valueOperationEventSubscription: Subscription;
 
@@ -161,6 +155,19 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
             });
 
             createResource.properties = this.propertiesObj;
+
+            // check for file values
+            if (this.selectPropertiesComponent.hasFileValue.length === 1) {
+                const filename = this.selectPropertiesComponent.uploadFileComponent.fileControl.value.internalFilename;
+
+                const fileValue = new CreateStillImageFileValue();
+                fileValue.filename = filename;
+
+                createResource.properties[this.selectPropertiesComponent.hasFileValue[0].id] = [fileValue];
+
+            }
+
+            console.log(createResource.properties);
 
             this._dspApiConnection.v2.res.createResource(createResource).subscribe(
                 (res: ReadResource) => {
@@ -359,10 +366,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                     // filter out all props that cannot be edited or are link props
                     this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition).filter(prop => prop.isEditable && !prop.isLinkProperty);
 
-                    this.hasFileValue = this._hasBinaryRepresentation(this.properties);
-
-                    console.log(this);
-
                     // notifies the user that the selected resource does not have any properties defined yet.
                     if (!this.selectPropertiesComponent && this.properties.length === 0) {
                         this.errorMessage = 'No properties defined for the selected resource.';
@@ -375,36 +378,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
         } else {
             this.errorMessage = 'No resource class defined for the selected ontology.';
         }
-
-    }
-
-    /**
-     *
-     * Determines whether the selected resource class has a binary Representation (image etc.).
-     *
-     * Returns the file value type or an empty array.
-     *
-     * @param properties the properties to check for binary file value types.
-     */
-    private _hasBinaryRepresentation(properties: ResourcePropertyDefinition[]): string[] {
-
-        const binaryTypes = [Constants.StillImageFileValue, Constants.AudioFileValue, Constants.DocumentFileValue, Constants.MovingImageFileValue];
-
-        // remove file value properties from property list
-        this.properties = properties.filter(
-            prop => !binaryTypes.includes(prop.objectType)
-        );
-
-        // TODO: add a FormControl representing the file value to propertiesParentForm
-        // TODO: react to UploadFileComponent's Outputs: fileUpload and cancelUpload (see https://github.com/dasch-swiss/dsp-ui-lib/pull/264)
-        // TODO: add a CreateStillImageFileValue on fileUpload and remove it on cancelUpload
-
-        // return the file value property, if any
-        return properties.filter(
-            prop => binaryTypes.includes(prop.objectType)
-        ).map(
-            prop => prop.objectType
-        );
 
     }
 
