@@ -12,7 +12,7 @@
                 <!-- label -->
                 <div class="large-field string-literal-container">
                     <dsp-string-literal-input [placeholder]="'Label *'" [value]="resourceClassLabels"
-                        (enter)="nextStep($event)"
+                        (enter)="(edit ? submitData($event) : nextStep($event))"
                         (dataChanged)="handleData($event, 'labels')">
                     </dsp-string-literal-input>
                     <mat-hint class="string-literal-error" *ngIf="formErrors.label">

@@ -232,7 +232,7 @@ export class OntologyComponent implements OnInit {
 
         this.loadOntology = true;
 
-        this._dspApiConnection.v2.onto.getOntology(id).subscribe(
+        this._dspApiConnection.v2.onto.getOntology(id, true).subscribe(
             (response: ReadOntology) => {
 
                 this.ontology = response;
@@ -311,6 +311,7 @@ export class OntologyComponent implements OnInit {
         console.log(resClassInfo);
         // set ontology cache
         this._cache.set('currentOntology', this.ontology);
+        console.log(this.ontology);
 
         const dialogConfig: MatDialogConfig = {
             width: '840px',

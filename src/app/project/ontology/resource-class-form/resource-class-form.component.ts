@@ -4,13 +4,13 @@ import { FormArray, FormGroup } from '@angular/forms';
 import {
     ApiResponseData,
     ApiResponseError,
+    ClassDefinition,
     Constants,
     CreateResourceClass,
     CreateResourceProperty,
     KnoraApiConnection,
     ListsResponse,
     ReadOntology,
-    ResourceClassAndPropertyDefinitions,
     ResourceClassDefinitionWithAllLanguages,
     ResourcePropertyDefinitionWithAllLanguages,
     StringLiteral,
@@ -202,20 +202,26 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
         if (this.edit) {
             // get resource class info
-            this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.iri).subscribe(
-                (response: ResourceClassAndPropertyDefinitions) => {
-                    console.log(response)
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
+            // console.log(this.ontology.classes[this.iri])
+            // console.log(this.ontology.getClassDefinitionsByType())
 
-            )
+            const resourceClasses: ResourceClassDefinitionWithAllLanguages[] = this.ontology.getClassDefinitionsByType(ResourceClassDefinitionWithAllLanguages);
+
+            Object.keys(resourceClasses).forEach(key => {
+                if (resourceClasses[key].id === this.iri) {
+                    this.resourceClassLabels = resourceClasses[key].labels;
+                    this.resourceClassComments = resourceClasses[key].comments;
+                }
+            });
+            // console.log(resourceClass.find());
+
+            // this.resourceClassLabels = this.ontology.classes[this.iri].labels;
+            // this.resourceClassComments = this.ontology.classes[this.iri].comments;
 
             this.resourceClassFormSub = this._resourceClassFormService.resourceClassForm$
             .subscribe(resourceClass => {
                 this.resourceClassForm = resourceClass;
-                this.properties = this.resourceClassForm.get('properties') as FormArray;
+                // this.properties = this.resourceClassForm.get('properties') as FormArray;
             });
 
         this.resourceClassForm.valueChanges.subscribe(data => this.onValueChanged(data));
@@ -344,6 +350,10 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         if (this.edit) {
             // edit mode
             console.warn('edit edit edit');
+
+            // TODO: wait for an updated version of js-lib with UpdateResourceClass method
+
+
         } else {
             // create mode
             // set resource class name / id
