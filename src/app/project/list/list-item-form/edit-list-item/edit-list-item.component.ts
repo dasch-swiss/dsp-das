@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { ApiResponseData, ApiResponseError, ChildNodeInfoResponse, KnoraApiConnection, List, ListNodeInfo, ListNodeInfoResponse, ReadProject, StringLiteral, UpdateChildNodeRequest } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, ChildNodeInfoResponse, KnoraApiConnection, List, ListNodeInfo, ListNodeInfoResponse, StringLiteral, UpdateChildNodeRequest } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 
 @Component({
@@ -17,28 +16,13 @@ export class EditListItemComponent implements OnInit {
 
     @Output() closeDialog: EventEmitter<List | ListNodeInfo> = new EventEmitter<List>();
 
-    project: ReadProject;
-
     list: ListNodeInfo;
 
     labels: StringLiteral[];
     comments: StringLiteral[];
 
-    /**
-     * by adding new list, it starts with the list info and the next section is "creating the list";
-     * true after adding list
-     *
-     */
-    createList: boolean = false;
-    newList: List;
-
     nameMinLength = 3;
     nameMaxLength = 16;
-
-    /**
-     * form group for the form controller
-     */
-    form: FormGroup;
 
     /**
      * error checking on the following fields
