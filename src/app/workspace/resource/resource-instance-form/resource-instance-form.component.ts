@@ -5,7 +5,7 @@ import {
     ApiResponseData,
     ApiResponseError,
     Constants,
-    CreateResource, CreateStillImageFileValue,
+    CreateResource,
     CreateValue,
     KnoraApiConnection,
     OntologiesMetadata,
@@ -166,8 +166,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                 }
 
             }
-
-            console.log(createResource.properties);
 
             this._dspApiConnection.v2.res.createResource(createResource).subscribe(
                 (res: ReadResource) => {
