@@ -349,6 +349,9 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             // update label and comment
             // in two PUT requests
 
+            // TODO: submit value only if the value has changed
+
+
             // label
             const onto4Label = new UpdateOntology<UpdateResourceClassLabel>();
             onto4Label.id = this.ontology.id;
