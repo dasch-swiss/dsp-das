@@ -1,4 +1,5 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { U } from '@angular/cdk/keycodes';
 import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 import {
@@ -15,7 +16,9 @@ import {
     ResourcePropertyDefinitionWithAllLanguages,
     StringLiteral,
     UpdateOntology,
-    UpdateOntologyResourceClassCardinality
+    UpdateOntologyResourceClassCardinality,
+    UpdateResourceClassComment,
+    UpdateResourceClassLabel
 } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/dsp-js/src/models/v2/string-literal-v2';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
@@ -114,13 +117,17 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     // form errors on the following fields:
     formErrors = {
-        'label': ''
+        'label': '',
+        'comment': ''
     };
 
     // in case of form error: show message
     validationMessages = {
         'label': {
             'required': 'Label is required.'
+        },
+        'comment': {
+            'required': 'Comment is required.'
         },
     };
 
@@ -202,9 +209,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
         if (this.edit) {
             // get resource class info
-            // console.log(this.ontology.classes[this.iri])
-            // console.log(this.ontology.getClassDefinitionsByType())
-
             const resourceClasses: ResourceClassDefinitionWithAllLanguages[] = this.ontology.getClassDefinitionsByType(ResourceClassDefinitionWithAllLanguages);
 
             Object.keys(resourceClasses).forEach(key => {
@@ -213,18 +217,13 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                     this.resourceClassComments = resourceClasses[key].comments;
                 }
             });
-            // console.log(resourceClass.find());
-
-            // this.resourceClassLabels = this.ontology.classes[this.iri].labels;
-            // this.resourceClassComments = this.ontology.classes[this.iri].comments;
 
             this.resourceClassFormSub = this._resourceClassFormService.resourceClassForm$
             .subscribe(resourceClass => {
                 this.resourceClassForm = resourceClass;
-                // this.properties = this.resourceClassForm.get('properties') as FormArray;
             });
 
-        this.resourceClassForm.valueChanges.subscribe(data => this.onValueChanged(data));
+            this.resourceClassForm.valueChanges.subscribe(data => this.onValueChanged(data));
         } else {
             // reset properties
             this._resourceClassFormService.resetProperties();
@@ -345,14 +344,54 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     submitData(ev?: any) {
 
         this.loading = true;
-        console.log(ev);
 
         if (this.edit) {
-            // edit mode
-            console.warn('edit edit edit');
+            // update label and comment
+            // in two PUT requests
 
-            // TODO: wait for an updated version of js-lib with UpdateResourceClass method
+            // label
+            const onto4Label = new UpdateOntology<UpdateResourceClassLabel>();
+            onto4Label.id = this.ontology.id;
+            onto4Label.lastModificationDate = this.lastModificationDate;
 
+            const updateLabel = new UpdateResourceClassLabel();
+            updateLabel.id = this.iri;
+            updateLabel.labels = this.resourceClassLabels;
+            onto4Label.entity = updateLabel;
+
+            // comment
+            const onto4Comment = new UpdateOntology<UpdateResourceClassComment>();
+            onto4Comment.id = this.ontology.id;
+
+            const updateComment = new UpdateResourceClassComment();
+            updateComment.id = this.iri;
+            updateComment.comments = this.resourceClassComments;
+            onto4Comment.entity = updateComment;
+
+            this._dspApiConnection.v2.onto.updateResourceClass(onto4Label).subscribe(
+                (classResponse: ResourceClassDefinitionWithAllLanguages) => {
+                    this.lastModificationDate = classResponse.lastModificationDate;
+
+                    onto4Comment.lastModificationDate = this.lastModificationDate;
+                    console.log(onto4Comment);
+                    this._dspApiConnection.v2.onto.updateResourceClass(onto4Comment).subscribe(
+                        (classResponse: ResourceClassDefinitionWithAllLanguages) => {
+                            this.lastModificationDate = classResponse.lastModificationDate;
+
+                            // close the dialog box
+                            this.loading = false;
+                            this.closeDialog.emit();
+                        },
+                        (error: ApiResponseError) => {
+                            this._errorHandler.showMessage(error);
+                        }
+                    )
+
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
 
         } else {
             // create mode
