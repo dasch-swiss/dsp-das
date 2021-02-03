@@ -76,8 +76,11 @@
             <!-- action buttons -->
             <div class="form-panel form-action">
                 <span>
-                    <button mat-button type="button" (click)="prevStep($event)">
+                    <button *ngIf="!edit" mat-button type="button" (click)="prevStep($event)">
                         {{ 'appLabels.form.action.back' | translate }}
+                    </button>
+                    <button *ngIf="edit" mat-button type="button" (click)="closeDialog.emit()">
+                        {{ 'appLabels.form.action.cancel' | translate }}
                     </button>
                 </span>
                 <span class="fill-remaining-space"></span>

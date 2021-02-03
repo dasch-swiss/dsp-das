@@ -53,6 +53,19 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     // store name as resourceClassTitle on init; in this case it can't be overwritten in the next / prev navigation
     resourceClassTitle: string;
 
+    // two step form: which should be active?
+    /**
+     * two step form: which should be active?
+     * true => step 1 shows label and comment of resource class
+     * false => step 2 shows list of properties of resource class
+     */
+    @Input() showResourceClassForm: boolean = true;
+
+    /**
+     * edit mode (true); otherwise create mode
+    */
+     @Input() edit: boolean;
+
     /**
      * emit event, when closing dialog
      */
@@ -80,9 +93,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     // in case of an error
     error: boolean;
-
-    // two step form: which should be active?
-    showResourceClassForm: boolean = true;
 
     // form group, form array (for properties) errors and validation messages
     resourceClassForm: FormGroup;
@@ -164,7 +174,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             }
         );
 
-        // get all lists; will be used to set guit attribut in list property
+        // get all lists; will be used to set gui attribute in list property
         this._dspApiConnection.admin.listsEndpoint.getListsInProject(this.projectIri).subscribe(
             (response: ApiResponseData<ListsResponse>) => {
                 this._cache.set('currentOntologyLists', response.body.lists);
@@ -285,7 +295,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         this.showResourceClassForm = false;
 
         // use response to go further with properties
-        this.updateParent.emit({ title: this.resourceClassLabels[0].value, subtitle: 'Define the metadata for resource class' });
+        this.updateParent.emit({ title: this.resourceClassLabels[0].value, subtitle: 'Define the metadata fields for the resource class' });
 
         // load one first property line
         if (!this.resourceClassForm.value.properties.length) {
@@ -297,7 +307,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
      */
     prevStep(ev: Event) {
         ev.preventDefault();
-        this.updateParent.emit({ title: this.resourceClassTitle, subtitle: 'Customize resource class' });
+        this.updateParent.emit({ title: this.resourceClassTitle, subtitle: 'Customize the resource class' });
         this.showResourceClassForm = true;
     }
 
