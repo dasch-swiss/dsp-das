@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentCommunicationEventService, EmitEvent, Events } from 'src/app/main/services/component-communication-event.service';
@@ -8,11 +8,11 @@ import { ComponentCommunicationEventService, EmitEvent, Events } from 'src/app/m
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
     returnUrl: string;
 
-    constructor (private _titleService: Title,
+    constructor(private _titleService: Title,
         private _route: ActivatedRoute,
         private _router: Router,
         private _componentCommsService: ComponentCommunicationEventService) {
@@ -23,15 +23,25 @@ export class LoginComponent implements OnInit {
         this.returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/';
     }
 
-    ngOnInit() {
+    login(status: boolean) {
+
+        // go to the dashboard:
+        if (status) {
+            // go to the previous route; if it's not the help page
+            if (this.returnUrl !== 'help') {
+                this._router.navigate([this.returnUrl]);
+            } else {
+                // otherwise go to the dashboard
+                this._router.navigate(['dashboard']);
+            }
+            this._componentCommsService.emit(new EmitEvent(Events.LoginSuccess, true));
+        }
     }
 
-    refresh(status: boolean) {
-
-        // go to previous route:
+    logout(status: boolean) {
         if (status) {
-            this._router.navigate([this.returnUrl]);
-            this._componentCommsService.emit(new EmitEvent(Events.LoginSuccess, true));
+            // reload the page
+            window.location.reload();
         }
     }
 
