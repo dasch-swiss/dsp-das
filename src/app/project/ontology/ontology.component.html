@@ -144,6 +144,9 @@
                                     <button mat-menu-item [disabled]="true"
                                         (click)="openResourceClassForm('editResourceClass', {iri: resClass.id, name: '', label: resClass.label})">Edit
                                         (not yet implemented)</button>
+                                    <button mat-menu-item (click)="updateCard(resClass)">
+                                        Update list of properties
+                                    </button>
                                     <button mat-menu-item
                                         (click)="delete(resClass.id, 'ResourceClass', resClass.label)">Delete</button>
                                 </mat-menu>

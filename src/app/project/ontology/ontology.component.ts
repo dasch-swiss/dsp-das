@@ -320,7 +320,39 @@ export class OntologyComponent implements OnInit {
             data: { name: subClassOf.iri, title: subClassOf.label, subtitle: 'Customize resource class', mode: mode, project: this.project.id }
         };
 
-        const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+            // update the view
+            this.getOntology(this.ontologyIri);
+        });
+    }
+
+
+    /**
+     * Updates cardinality
+     * @param subClassOf resource class
+     */
+    updateCard(subClassOf: DefaultClass) {
+
+        console.log(subClassOf)
+
+        const dialogConfig: MatDialogConfig = {
+            width: '560px',
+            maxHeight: '80vh',
+            position: {
+                top: '112px'
+            },
+            data: { mode: 'updateCardinality', id: subClassOf.iri, title: subClassOf.label, subtitle: 'Update the metadata fields of resource class', project: this.project.id}
+        };
+
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
+        );
 
         dialogRef.afterClosed().subscribe(result => {
             // update the view
