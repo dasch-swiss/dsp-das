@@ -1,5 +1,12 @@
 # Changelog
 
+### [4.0.1](https://www.github.com/dasch-swiss/dsp-app/compare/v4.0.0...v4.0.1) (2021-02-03)
+
+
+### Maintenance
+
+* bumps DSP-JS to 1.3.0 and DSP-UI to 1.2.1 ([#374](https://www.github.com/dasch-swiss/dsp-app/issues/374)) ([7b795ee](https://www.github.com/dasch-swiss/dsp-app/commit/7b795ee56026fa3a9e2f44e9c43a4d3502b5d764))
+
 ## [4.0.0](https://www.github.com/dasch-swiss/dsp-app/compare/v3.0.0...v4.0.0) (2021-01-28)
 
 
