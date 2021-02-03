@@ -8,6 +8,7 @@ import {
     ChildNodeInfo,
     CreateChildNodeRequest,
     KnoraApiConnection,
+    ListInfoResponse,
     ListNodeInfo,
     ListNodeInfoResponse,
     StringLiteral
@@ -97,8 +98,13 @@ export class ListItemFormComponent implements OnInit {
         // it can be used in the input placeholder
         if (this.parentIri) {
             this._dspApiConnection.admin.listsEndpoint.getListNodeInfo(this.parentIri).subscribe(
-                (response: ApiResponseData<ListNodeInfoResponse>) => {
-                    this.placeholder += response.body.nodeinfo.labels[0].value;
+                (response: ApiResponseData<ListNodeInfoResponse | ListInfoResponse>) => {
+                    if (response.body instanceof ListInfoResponse) { // root node
+                        this.placeholder += response.body.listinfo.labels[0].value;
+                    } else { // child node
+                        this.placeholder += response.body.nodeinfo.labels[0].value;
+                    }
+
                     this.initComponent = false;
                 },
                 (error: ApiResponseError) => {
@@ -176,11 +182,9 @@ export class ListItemFormComponent implements OnInit {
         dialogRef.afterClosed().subscribe((data: ChildNodeInfo) => {
             // update the view if data was passed back
             // data is only passed back when clicking the 'update' button
-            // console.log(data);
             if (data) {
                 this.refreshParent.emit(data as ListNodeInfo);
                 this.labels = data.labels;
-                // console.log('labels: ', this.labels);
             }
         });
     }

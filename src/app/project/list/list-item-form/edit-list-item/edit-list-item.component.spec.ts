@@ -1,8 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ApiResponseData, ListNodeInfoResponse, ListsEndpointAdmin, UpdateChildNodeRequest } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, ProgressIndicatorComponent } from '@dasch-swiss/dsp-ui';
+import { DspActionModule, DspApiConnectionToken, ProgressIndicatorComponent } from '@dasch-swiss/dsp-ui';
+import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
 import { EditListItemComponent } from './edit-list-item.component';
@@ -31,6 +33,8 @@ class TestHostComponent implements OnInit {
 describe('EditListItemComponent', () => {
     let testHostComponent: TestHostComponent;
     let testHostFixture: ComponentFixture<TestHostComponent>;
+    let editListItemComponentDe: DebugElement;
+    let formInvalidMessageDe: DebugElement;
 
     beforeEach(async(() => {
 
@@ -44,10 +48,12 @@ describe('EditListItemComponent', () => {
             declarations: [
                 EditListItemComponent,
                 TestHostComponent,
-                ProgressIndicatorComponent
+                ProgressIndicatorComponent,
             ],
             imports: [
                 BrowserAnimationsModule,
+                DspActionModule,
+                TranslateModule.forRoot()
             ],
             providers: [
                 {
@@ -77,6 +83,10 @@ describe('EditListItemComponent', () => {
         testHostFixture.detectChanges();
 
         expect(testHostComponent).toBeTruthy();
+
+        const hostCompDe = testHostFixture.debugElement;
+        editListItemComponentDe = hostCompDe.query(By.directive(EditListItemComponent));
+        expect(editListItemComponentDe).toBeTruthy();
     });
 
     it('should assign labels and comments', () => {
@@ -95,6 +105,9 @@ describe('EditListItemComponent', () => {
         expect(testHostComponent.editListItem.saveButtonDisabled).toBeFalsy();
         testHostComponent.editListItem.handleData([], 'labels');
         expect(testHostComponent.editListItem.saveButtonDisabled).toBeTruthy();
+        testHostFixture.detectChanges();
+        formInvalidMessageDe = editListItemComponentDe.query(By.css('span.invalid-form'));
+        expect(formInvalidMessageDe.nativeElement.innerText).toEqual('A label is required.');
     });
 
     it('should update comments when the value changes', () => {

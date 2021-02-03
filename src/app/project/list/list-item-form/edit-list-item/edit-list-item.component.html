@@ -8,6 +8,7 @@
         [value]="labels"
         (dataChanged)="handleData($event, 'labels')">
     </dsp-string-literal-input>
+    <span class="invalid-form" *ngIf="formInvalidMessage">{{ formInvalidMessage }}</span>
 
     <br><br>
 

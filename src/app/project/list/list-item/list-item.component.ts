@@ -74,11 +74,10 @@ export class ListItemComponent implements OnInit {
     updateView(data: ListNode, firstNode: boolean = false) {
 
         this.loading = true;
-        // console.log('data: ', data);
+
         if (data instanceof ChildNodeInfo) {
             this.list[data.position].labels = data.labels;
             this.list[data.position].comments = data.comments;
-            console.log('list: ', this.list);
         } else {
             // update the view by updating the existing list
             if (firstNode) {

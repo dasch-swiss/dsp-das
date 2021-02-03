@@ -21,27 +21,14 @@ export class EditListItemComponent implements OnInit {
     labels: StringLiteral[];
     comments: StringLiteral[];
 
-    nameMinLength = 3;
-    nameMaxLength = 16;
-
     /**
      * error checking on the following fields
      */
     formErrors = {
-        label: ''
-    };
-
-    /**
-     * error hints
-     */
-    validationMessages = {
         label: {
-            'required': 'Name is required.',
-            'minlength': 'Name must be at least ' + this.nameMinLength + ' characters long.',
-            'maxlength': 'Name cannot be more than ' + this.nameMaxLength + ' characters long.'
+            'required': 'A label is required.'
         }
     };
-
 
     /**
      * in case of an API error
@@ -49,6 +36,8 @@ export class EditListItemComponent implements OnInit {
     errorMessage: any;
 
     saveButtonDisabled = false;
+
+    formInvalidMessage: string;
 
     constructor(@Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection) { }
 
@@ -69,7 +58,6 @@ export class EditListItemComponent implements OnInit {
 
     buildForm(list: ListNodeInfo): void {
 
-        this.loading = true;
         this.labels = [];
         this.comments = [];
 
@@ -78,9 +66,7 @@ export class EditListItemComponent implements OnInit {
             this.comments = list.comments;
         }
 
-        setTimeout(() => {
-            this.loading = false;
-        });
+        this.loading = false;
     }
 
     handleData(data: StringLiteral[], type: string) {
@@ -95,24 +81,22 @@ export class EditListItemComponent implements OnInit {
         }
 
         if (this.labels.length === 0) {
-            // error, don't let user submit
-            // show error message
+            // invalid form, don't let user submit
             this.saveButtonDisabled = true;
+            this.formInvalidMessage = this.formErrors.label.required;
         } else {
             this.saveButtonDisabled = false;
+            this.formInvalidMessage = null;
         }
     }
 
     updateChildNode() {
 
-        // console.log('list: ', this.list);
         const childNodeUpdateData: UpdateChildNodeRequest = new UpdateChildNodeRequest();
         childNodeUpdateData.projectIri = this.projectIri;
         childNodeUpdateData.listIri = this.iri;
         childNodeUpdateData.labels = this.labels;
         childNodeUpdateData.comments = this.comments.length > 0 ? this.comments : [];
-
-        // console.log('childNodeUpdateData: ', childNodeUpdateData);
 
         this._dspApiConnection.admin.listsEndpoint.updateChildNode(childNodeUpdateData).subscribe(
             (response: ApiResponseData<ChildNodeInfoResponse>) => {
@@ -120,7 +104,6 @@ export class EditListItemComponent implements OnInit {
                 this.closeDialog.emit(response.body.nodeinfo);
             },
             (error: ApiResponseError) => {
-                console.log('ERROR NODE UPDATE');
                 this.errorMessage = error;
                 this.loading = false;
             }
