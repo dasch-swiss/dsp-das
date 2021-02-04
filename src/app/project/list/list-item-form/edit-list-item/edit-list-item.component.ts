@@ -16,8 +16,10 @@ export class EditListItemComponent implements OnInit {
 
     @Output() closeDialog: EventEmitter<List | ListNodeInfo> = new EventEmitter<List>();
 
-    list: ListNodeInfo;
+    // the list node being edited
+    listNode: ListNodeInfo;
 
+    // local arrays to use when updating the list node
     labels: StringLiteral[];
     comments: StringLiteral[];
 
@@ -47,7 +49,7 @@ export class EditListItemComponent implements OnInit {
         // get list
         this._dspApiConnection.admin.listsEndpoint.getListNodeInfo(this.iri).subscribe(
             (response: ApiResponseData<ListNodeInfoResponse>) => {
-                this.list = response.body.nodeinfo;
+                this.listNode = response.body.nodeinfo;
                 this.buildForm(response.body.nodeinfo);
             },
             (error: ApiResponseError) => {
@@ -56,19 +58,31 @@ export class EditListItemComponent implements OnInit {
         );
     }
 
-    buildForm(list: ListNodeInfo): void {
+    /**
+     * Separates the labels and comments of a list node into two local arrays.
+     *
+     * @param listNode info about a list node
+     */
+    buildForm(listNode: ListNodeInfo): void {
 
         this.labels = [];
         this.comments = [];
 
-        if (list && list.id) {
-            this.labels = list.labels;
-            this.comments = list.comments;
+        if (listNode && listNode.id) {
+            this.labels = listNode.labels;
+            this.comments = listNode.comments;
         }
 
         this.loading = false;
     }
 
+    /**
+     * Called from the template any time the labels or comments are changed to update the local arrays.
+     * At least one label is required. Otherwise, the 'update' button will be disabled.
+     *
+     * @param data the data that was changed
+     * @param type the type of data that was changed
+     */
     handleData(data: StringLiteral[], type: string) {
         switch (type) {
             case 'labels':
@@ -90,8 +104,11 @@ export class EditListItemComponent implements OnInit {
         }
     }
 
+    /**
+     * Called from the template when the 'update' button is clicked.
+     * Sends a request to DSP-API to update the list node with the data inside the two local arrays.
+     */
     updateChildNode() {
-
         const childNodeUpdateData: UpdateChildNodeRequest = new UpdateChildNodeRequest();
         childNodeUpdateData.projectIri = this.projectIri;
         childNodeUpdateData.listIri = this.iri;
