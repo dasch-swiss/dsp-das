@@ -114,6 +114,10 @@ export class ListItemFormComponent implements OnInit {
         }
     }
 
+    /**
+     * Called from the template when the plus button is clicked.
+     * Sends the info to make a new child node to DSP-API and refreshes the UI to show the newly added node at the end of the list.
+     */
     createChildNode() {
 
         if (!this.labels.length) {
@@ -150,6 +154,12 @@ export class ListItemFormComponent implements OnInit {
         );
     }
 
+    /**
+     * Called from the template any time the label changes.
+     * Currently only implemented for labels because entering comments is not yet supported.
+     *
+     * @param data the data that was changed.
+     */
     handleData(data: StringLiteral[]) {
         // this shouldn't run on the init...
         if (!this.initComponent) {
@@ -157,14 +167,27 @@ export class ListItemFormComponent implements OnInit {
         }
     }
 
+    /**
+     * Show action bubble with various CRUD buttons when hovered over.
+     */
     mouseEnter() {
         this.showActionBubble = true;
     }
 
+    /**
+     * Hide action bubble with various CRUD buttons when not hovered over.
+     */
     mouseLeave() {
         this.showActionBubble = false;
     }
 
+    /**
+     * Called when the 'edit' button is clicked.
+     *
+     * @param mode mode to tell DialogComponent which part of the template to show.
+     * @param name label of the node; for now this is always the first label in the array.
+     * @param iri iri of the node.
+     */
     openDialog(mode: string, name: string, iri?: string): void {
         const dialogConfig: MatDialogConfig = {
             width: '640px',
@@ -174,6 +197,7 @@ export class ListItemFormComponent implements OnInit {
             data: { mode: mode, title: name, id: iri, project: this.projectIri }
         };
 
+        // open the dialog box
         const dialogRef = this._dialog.open(
             DialogComponent,
             dialogConfig
