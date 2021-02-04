@@ -201,7 +201,7 @@
     <!-- Ontology editor: customize and add resource class -->
     <div *ngSwitchCase="'addResourceClass'">
         <app-dialog-header [title]="data.title" [subtitle]="data.subtitle"></app-dialog-header>
-        <app-resource-class-form [subClassOf]="data.name" [name]="data.title" [projectIri]="data.project"
+        <app-resource-class-form [iri]="data.id" [name]="data.title" [projectIri]="data.project"
             (closeDialog)="dialogRef.close()" (updateParent)="replaceTitle($event)">
         </app-resource-class-form>
     </div>
@@ -235,7 +235,7 @@
     <div *ngSwitchCase="'updateCardinality'">
         <app-dialog-header [title]="data.title" [subtitle]="data.subtitle">
         </app-dialog-header>
-        <app-resource-class-form [subClassOf]="data.name" [name]="data.title" [projectIri]="data.project"
+        <app-resource-class-form [iri]="data.id" [name]="data.title" [projectIri]="data.project"
             [showResourceClassForm]="false" [edit]="true" (closeDialog)="dialogRef.close()" (updateParent)="replaceTitle($event)">
         </app-resource-class-form>
     </div>

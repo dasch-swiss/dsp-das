@@ -4,12 +4,16 @@ import { FormArray, FormGroup } from '@angular/forms';
 import {
     ApiResponseData,
     ApiResponseError,
+    ClassDefinition,
     Constants,
     CreateResourceClass,
     CreateResourceProperty,
+    IHasProperty,
     KnoraApiConnection,
     ListsResponse,
+    PropertyDefinition,
     ReadOntology,
+
     ResourceClassDefinitionWithAllLanguages,
     ResourcePropertyDefinitionWithAllLanguages,
     StringLiteral,
@@ -40,10 +44,11 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     @Input() projectIri: string;
 
     /**
-     * selected resource class is a subclass from knora base (baseClassIri)
+     * create mode: iri selected resource class is a subclass from knora base (baseClassIri)
+     * edit mode: iri of resource class
      * e.g. knora-api:StillImageRepresentation
      */
-    @Input() subClassOf: string;
+    @Input() iri: string;
 
     /**
      * name of resource class e.g. Still image
@@ -64,7 +69,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     /**
      * edit mode (true); otherwise create mode
     */
-     @Input() edit: boolean;
+    @Input() edit: boolean;
 
     /**
      * emit event, when closing dialog
@@ -206,12 +211,46 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         // reset properties
         this._resourceClassFormService.resetProperties();
 
-        this.resourceClassFormSub = this._resourceClassFormService.resourceClassForm$
-            .subscribe(resourceClass => {
-                this.resourceClassForm = resourceClass;
-                this.properties = this.resourceClassForm.get('properties') as FormArray;
+        if (this.edit) {
+            // get resource class and property definition first
+
+            // get list of ontology properties
+            const ontoProperties: PropertyDefinition[] = this.ontology.getAllPropertyDefinitions();
+            // Object.keys(ontoProperties).forEach(key => {
+            //     if (ontoProperties[key].id === ontoClasses[key]. .iri) {
+
+            //         console.warn('you want to edit the card. of', ontoClasses[key]);
+            //         this._resourceClassFormService.setProperties(ontoClasses[key]);
+
+            //         this.resourceClassFormSub = this._resourceClassFormService.resourceClassForm$
+            //         .subscribe(resourceClass => {
+            //             this.resourceClassForm = resourceClass;
+            //             this.properties = this.resourceClassForm.get('properties') as FormArray;
+            //         });
+            //     }
+            // });
+            // find prop cardinality in resource class
+            const ontoClasses: ClassDefinition[] = this.ontology.getAllClassDefinitions();
+            Object.keys(ontoClasses).forEach(key => {
+                if (ontoClasses[key].id === this.iri) {
+
+                    this._resourceClassFormService.setProperties(ontoClasses[key], ontoProperties);
+
+                    this.resourceClassFormSub = this._resourceClassFormService.resourceClassForm$
+                        .subscribe(resourceClass => {
+                            this.resourceClassForm = resourceClass;
+                            this.properties = this.resourceClassForm.get('properties') as FormArray;
+                        });
+                }
             });
 
+        } else {
+            this.resourceClassFormSub = this._resourceClassFormService.resourceClassForm$
+                .subscribe(resourceClass => {
+                    this.resourceClassForm = resourceClass;
+                    this.properties = this.resourceClassForm.get('properties') as FormArray;
+                });
+        }
         this.resourceClassForm.valueChanges.subscribe(data => this.onValueChanged(data));
     }
 
@@ -320,40 +359,50 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     submitData() {
         this.loading = true;
 
-        // set resource class name / id
-        const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, this.resourceClassLabels[0].value);
 
-        const onto = new UpdateOntology<CreateResourceClass>();
-
-        onto.id = this.ontology.id;
-        onto.lastModificationDate = this.lastModificationDate;
-
-        const newResClass = new CreateResourceClass();
-
-        newResClass.name = uniqueClassName
-        newResClass.label = this.resourceClassLabels;
-        newResClass.comment = this.resourceClassComments;
-        newResClass.subClassOf = [this.subClassOf];
-
-        onto.entity = newResClass;
 
         // submit resource class data to knora and create resource class incl. cardinality
         // console.log('submit resource class data:', resourceClassData);
         // let i: number = 0;
-        this._dspApiConnection.v2.onto.createResourceClass(onto).subscribe(
-            (classResponse: ResourceClassDefinitionWithAllLanguages) => {
-                // console.log('classResponse', classResponse);
-                // need lmd from classResponse
-                this.lastModificationDate = classResponse.lastModificationDate;
+        if (this.edit) {
+            // edit mode
+            console.log(this.lastModificationDate);
+            // post prop data; one by one
+            this.submitProps(this.resourceClassForm.value.properties, this.iri);
 
-                // post prop data; one by one
-                this.submitProps(this.resourceClassForm.value.properties, classResponse.id);
+        } else {
+            // create mode
+            // set resource class name / id
+            const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, this.resourceClassLabels[0].value);
 
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-            }
-        );
+            const onto = new UpdateOntology<CreateResourceClass>();
+
+            onto.id = this.ontology.id;
+            onto.lastModificationDate = this.lastModificationDate;
+
+            const newResClass = new CreateResourceClass();
+
+            newResClass.name = uniqueClassName
+            newResClass.label = this.resourceClassLabels;
+            newResClass.comment = this.resourceClassComments;
+            newResClass.subClassOf = [this.iri];
+
+            onto.entity = newResClass;
+            this._dspApiConnection.v2.onto.createResourceClass(onto).subscribe(
+                (classResponse: ResourceClassDefinitionWithAllLanguages) => {
+                    // console.log('classResponse', classResponse);
+                    // need lmd from classResponse
+                    this.lastModificationDate = classResponse.lastModificationDate;
+
+                    // post prop data; one by one
+                    this.submitProps(this.resourceClassForm.value.properties, classResponse.id);
+
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
+        }
 
 
         // show message to close dialog box
@@ -371,43 +420,48 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     submitProps(props: Property[], classIri: string) {
 
-        let i = 1;
-        from(props)
-            .pipe(concatMap(
-                (prop: Property) => {
-                    // submit prop
-                    // console.log('first pipe operator...waiting...prepare and submit prop', prop);
-                    if (prop.iri) {
-                        // the defined prop exists already in this ontology. We can proceed with cardinality.
-                        this.setCardinality(prop.iri, classIri, prop.multiple, prop.required, i);
-                    } else {
-                        // the defined prop does not exist yet. We have to create it.
-                        this.createProp(prop, classIri, i);
+        if (this.edit) {
+            this.replaceCardinality(props, classIri);
+        } else {
+            let i = 1;
+            from(props)
+                .pipe(concatMap(
+                    (prop: Property) => {
+                        // submit prop
+                        // console.log('first pipe operator...waiting...prepare and submit prop', prop);
+                        if (prop.iri) {
+                            // the defined prop exists already in this ontology. We can proceed with cardinality.
+                            this.setCardinality(prop.iri, classIri, prop.multiple, prop.required, i);
+                        } else {
+                            // the defined prop does not exist yet. We have to create it.
+                            this.createProp(prop, classIri, i);
+                        }
+                        return new Promise(resolve => setTimeout(() => resolve(prop), 1200));
                     }
-                    return new Promise(resolve => setTimeout(() => resolve(prop), 1200));
-                }
-            ))
-            .pipe(concatMap(
-                (prop: Property) => {
-                    i++;
-                    // console.log('second pipe operator; do sth. with prop response', prop);
-                    return of(prop);
-                }
-            ))
-            .subscribe(
-                (prop: Property) => {
-                    // this.getOntology(this.ontologyId);
-
-                    if (i > props.length) {
-                        // console.log('at the end: created', prop)
-                        // TODO: reset ontology cache
-
-                        // close the dialog box
-                        this.loading = false;
-                        this.closeDialog.emit();
+                ))
+                .pipe(concatMap(
+                    (prop: Property) => {
+                        i++;
+                        // console.log('second pipe operator; do sth. with prop response', prop);
+                        return of(prop);
                     }
-                }
-            );
+                ))
+                .subscribe(
+                    (prop: Property) => {
+                        // this.getOntology(this.ontologyId);
+
+                        if (i > props.length) {
+                            // console.log('at the end: created', prop)
+                            // TODO: reset ontology cache
+
+                            // close the dialog box
+                            this.loading = false;
+                            this.closeDialog.emit();
+                        }
+                    }
+                );
+        }
+
 
     }
 
@@ -482,11 +536,15 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     setCardinality(propIri: string, classIri: string, multiple: boolean, required: boolean, index: number) {
 
+        const onto = new UpdateOntology<UpdateOntologyResourceClassCardinality>();
+
+        onto.lastModificationDate = this.lastModificationDate;
+
+        onto.id = this.ontology.id;
+
         const addCard = new UpdateOntologyResourceClassCardinality();
 
-        addCard.lastModificationDate = this.lastModificationDate;
-
-        addCard.id = this.ontology.id;
+        addCard.id = classIri;
 
         const cardinality = this._resourceClassFormService.translateCardinality(multiple, required);
 
@@ -494,18 +552,75 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             {
                 propertyIndex: propIri,
                 cardinality: cardinality,
-                resourceClass: classIri,
                 guiOrder: index
             }
         ];
 
+        onto.entity = addCard;
 
-        this._dspApiConnection.v2.onto.addCardinalityToResourceClass(addCard).subscribe(
+        if (this.edit) {
+
+            this._dspApiConnection.v2.onto.replaceCardinalityOfResourceClass(onto).subscribe(
+                (res: ResourceClassDefinitionWithAllLanguages) => {
+                    this.lastModificationDate = res.lastModificationDate;
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            )
+
+        } else {
+            this._dspApiConnection.v2.onto.addCardinalityToResourceClass(onto).subscribe(
+                (res: ResourceClassDefinitionWithAllLanguages) => {
+                    this.lastModificationDate = res.lastModificationDate;
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
+        }
+
+    }
+
+    replaceCardinality(props: Property[], classIri: string) {
+        const onto = new UpdateOntology<UpdateOntologyResourceClassCardinality>();
+
+        onto.lastModificationDate = this.lastModificationDate;
+
+        console.log(this.lastModificationDate);
+
+        onto.id = this.ontology.id;
+
+        const addCard = new UpdateOntologyResourceClassCardinality();
+
+        addCard.id = classIri;
+
+        addCard.cardinalities = [];
+
+        props.forEach((prop, index) => {
+            const propCard: IHasProperty = {
+                propertyIndex: prop.iri,
+                cardinality: this._resourceClassFormService.translateCardinality(prop.multiple, prop.required),
+                guiOrder: index + 1
+            }
+
+            addCard.cardinalities.push(propCard);
+        });
+
+        onto.entity = addCard;
+
+        this._dspApiConnection.v2.onto.replaceCardinalityOfResourceClass(onto).subscribe(
             (res: ResourceClassDefinitionWithAllLanguages) => {
+                console.log('result', res);
                 this.lastModificationDate = res.lastModificationDate;
+                // close the dialog box
+                this.loading = false;
+                this.closeDialog.emit();
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
             }
         );
-
     }
 
 }

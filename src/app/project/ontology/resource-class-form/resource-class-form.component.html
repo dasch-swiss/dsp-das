@@ -60,7 +60,7 @@
                         <mat-icon>drag_indicator</mat-icon>
                     </button>
 
-                    <app-property-form [propertyForm]="prop" [index]="i"></app-property-form>
+                    <app-property-form [propertyForm]="prop" [index]="i" [ontology]="ontology"></app-property-form>
 
                     <button *ngIf="properties.length > 1" mat-icon-button type="button" color="warn"
                         aria-label="Delete this property" class="suffix delete-line" (click)="removeProperty(i)">
@@ -85,12 +85,12 @@
                 </span>
                 <span class="fill-remaining-space"></span>
                 <span>
-                    <button mat-raised-button type="submit" color="primary" [disabled]="!properties.valid"
+                    <button mat-raised-button type="submit" color="primary" [disabled]="!properties?.valid"
                         (click)="submitData()">
                         <dsp-progress-indicator [color]="'white'" [status]="0" *ngIf="loading" class="submit-progress">
                         </dsp-progress-indicator>
                         <mat-icon *ngIf="error && !loading">close</mat-icon>
-                        {{error ? 'Failed' : 'Submit'}}
+                        {{error ? 'Failed' : (edit ? 'Update' : 'Submit')}}
                     </button>
                 </span>
             </div>

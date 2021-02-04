@@ -46,6 +46,8 @@ export class PropertyFormComponent implements OnInit {
 
     @Input() index: number;
 
+    @Input() ontology?: ReadOntology;
+
     @Output() deleteProperty: EventEmitter<number> = new EventEmitter();
 
     iri = new FormControl();
@@ -63,7 +65,7 @@ export class PropertyFormComponent implements OnInit {
     lists: ListNodeInfo[];
 
     // current ontology
-    ontology: ReadOntology;
+    // ontology: ReadOntology;
 
     // reresource classs in this ontology
     reresourceClasss: ClassDefinition[] = [];
@@ -104,6 +106,18 @@ export class PropertyFormComponent implements OnInit {
         if (this.propertyForm) {
             // init list of property types with first element
             this.propertyForm.patchValue({ type: this.propertyTypes[0].elements[0] });
+
+            if (this.propertyForm.value.label) {
+
+                const existingProp: AutocompleteItem = {
+                    iri: this.propertyForm.value.iri,
+                    label: this.propertyForm.value.label,
+                    name: ''
+                }
+
+                // edit mode: this prop value exists already
+                this.updateFieldsDependingOnLabel(existingProp);
+            }
         }
 
         this._cache.get('currentOntology').subscribe(
@@ -197,14 +211,14 @@ export class PropertyFormComponent implements OnInit {
     /**
      * @param {MatOption} option
      */
-    updateFieldsDependingOnLabel(option: MatOption) {
-        this.propertyForm.controls['iri'].setValue(option.value.iri);
+    updateFieldsDependingOnLabel(option: AutocompleteItem) {
+        this.propertyForm.controls['iri'].setValue(option.iri);
 
-        this.propertyForm.controls['label'].setValue(option.value.label);
+        this.propertyForm.controls['label'].setValue(option.label);
         this.propertyForm.controls['label'].disable();
 
-        if (this.ontology.properties[option.value.iri] instanceof ResourcePropertyDefinition) {
-            const tempProp: any | ResourcePropertyDefinition = this.ontology.properties[option.value.iri];
+        if (this.ontology.properties[option.iri] instanceof ResourcePropertyDefinition) {
+            const tempProp: any | ResourcePropertyDefinition = this.ontology.properties[option.iri];
 
             let obj: PropertyType;
             // find gui ele from list of default property-types to set type value

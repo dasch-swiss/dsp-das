@@ -15,6 +15,7 @@ import {
     ProjectResponse,
     ReadOntology,
     ReadProject,
+    ResourceClassDefinition,
     UpdateOntology
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
@@ -312,12 +313,13 @@ export class OntologyComponent implements OnInit {
         this._cache.set('currentOntology', this.ontology);
 
         const dialogConfig: MatDialogConfig = {
+            disableClose: true,
             width: '840px',
             maxHeight: '90vh',
             position: {
                 top: '112px'
             },
-            data: { name: subClassOf.iri, title: subClassOf.label, subtitle: 'Customize resource class', mode: mode, project: this.project.id }
+            data: { id: subClassOf.iri, title: subClassOf.label, subtitle: 'Customize resource class', mode: mode, project: this.project.id }
         };
 
         const dialogRef = this._dialog.open(
@@ -336,17 +338,19 @@ export class OntologyComponent implements OnInit {
      * Updates cardinality
      * @param subClassOf resource class
      */
-    updateCard(subClassOf: DefaultClass) {
+    updateCard(subClassOf: ResourceClassDefinition) {
 
-        console.log(subClassOf)
+        // set ontology cache
+        this._cache.set('currentOntology', this.ontology);
 
         const dialogConfig: MatDialogConfig = {
-            width: '560px',
-            maxHeight: '80vh',
+            disableClose: true,
+            width: '840px',
+            maxHeight: '90vh',
             position: {
                 top: '112px'
             },
-            data: { mode: 'updateCardinality', id: subClassOf.iri, title: subClassOf.label, subtitle: 'Update the metadata fields of resource class', project: this.project.id}
+            data: { mode: 'updateCardinality', id: subClassOf.id, title: subClassOf.label, subtitle: 'Update the metadata fields of resource class', project: this.project.id}
         };
 
         const dialogRef = this._dialog.open(
