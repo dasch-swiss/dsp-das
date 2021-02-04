@@ -18,7 +18,7 @@ import {
     ResourcePropertyDefinitionWithAllLanguages,
     StringLiteral,
     UpdateOntology,
-    UpdateOntologyResourceClassCardinality
+    UpdateResourceClassCardinality
 } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/dsp-js/src/models/v2/string-literal-v2';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
@@ -536,13 +536,13 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     setCardinality(propIri: string, classIri: string, multiple: boolean, required: boolean, index: number) {
 
-        const onto = new UpdateOntology<UpdateOntologyResourceClassCardinality>();
+        const onto = new UpdateOntology<UpdateResourceClassCardinality>();
 
         onto.lastModificationDate = this.lastModificationDate;
 
         onto.id = this.ontology.id;
 
-        const addCard = new UpdateOntologyResourceClassCardinality();
+        const addCard = new UpdateResourceClassCardinality();
 
         addCard.id = classIri;
 
@@ -583,7 +583,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     }
 
     replaceCardinality(props: Property[], classIri: string) {
-        const onto = new UpdateOntology<UpdateOntologyResourceClassCardinality>();
+        const onto = new UpdateOntology<UpdateResourceClassCardinality>();
 
         onto.lastModificationDate = this.lastModificationDate;
 
@@ -591,7 +591,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
         onto.id = this.ontology.id;
 
-        const addCard = new UpdateOntologyResourceClassCardinality();
+        const addCard = new UpdateResourceClassCardinality();
 
         addCard.id = classIri;
 
