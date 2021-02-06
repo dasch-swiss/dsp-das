@@ -66,12 +66,11 @@
                         aria-label="Delete this property" class="suffix delete-line" (click)="removeProperty(i)">
                         <mat-icon>delete_outlined</mat-icon>
                     </button>
-                    <button *ngIf="last" [disabled]="!properties.valid" mat-icon-button type="button" color="primary"
-                        aria-label="Add new property" class="add-new-line" (click)="addProperty()">
-                        <mat-icon>add</mat-icon>
-                    </button>
                 </div>
-
+                <button [disabled]="!properties.valid" mat-button type="button" color="primary"
+                    aria-label="Add new property" class="add-new-line" (click)="addProperty()">
+                    <mat-icon>add</mat-icon> Add property
+            </button>
             </div>
             <!-- action buttons -->
             <div class="form-panel form-action">
