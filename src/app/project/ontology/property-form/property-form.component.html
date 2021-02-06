@@ -67,7 +67,7 @@
                 <mat-form-field>
                     <mat-label>Select resource class</mat-label>
                     <mat-select formControlName="guiAttr">
-                        <mat-option *ngFor="let item of reresourceClasss" [value]="item.id" [disabled]="">
+                        <mat-option *ngFor="let item of reresourceClasss" [value]="item.id" [disabled]="(resClassIri === item.id)">
                             {{item.label}}
                         </mat-option>
                     </mat-select>

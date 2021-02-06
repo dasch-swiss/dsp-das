@@ -48,6 +48,8 @@ export class PropertyFormComponent implements OnInit {
 
     @Input() ontology?: ReadOntology;
 
+    @Input() resClassIri?: string;
+
     @Output() deleteProperty: EventEmitter<number> = new EventEmitter();
 
     iri = new FormControl();
