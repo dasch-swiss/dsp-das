@@ -158,9 +158,6 @@ export class PropertyFormComponent implements OnInit {
         this._cache.get('currentOntologyLists').subscribe(
             (response: ListNodeInfo[]) => {
                 this.lists = response;
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
             }
         );
 
