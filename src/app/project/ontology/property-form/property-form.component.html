@@ -65,9 +65,9 @@
 
             <div *ngSwitchCase="Constants.Resource">
                 <mat-form-field>
-                    <mat-label>Select reresource class</mat-label>
+                    <mat-label>Select resource class</mat-label>
                     <mat-select formControlName="guiAttr">
-                        <mat-option *ngFor="let item of reresourceClasss" [value]="item.id">
+                        <mat-option *ngFor="let item of reresourceClasss" [value]="item.id" [disabled]="">
                             {{item.label}}
                         </mat-option>
                     </mat-select>

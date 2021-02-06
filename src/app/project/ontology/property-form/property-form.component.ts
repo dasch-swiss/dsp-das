@@ -67,7 +67,7 @@ export class PropertyFormComponent implements OnInit {
     // current ontology
     // ontology: ReadOntology;
 
-    // reresource classs in this ontology
+    // resource classs in this ontology
     reresourceClasss: ClassDefinition[] = [];
 
     // list of existing properties
@@ -126,7 +126,7 @@ export class PropertyFormComponent implements OnInit {
 
                 // set various lists to select from
                 // a) in case of link value:
-                // set list of reresource classes from response; needed for linkValue
+                // set list of resource classes from response; needed for linkValue
                 const classKeys: string[] = Object.keys(response.classes);
                 for (const c of classKeys) {
                     this.reresourceClasss.push(this.ontology.classes[c]);
@@ -186,7 +186,7 @@ export class PropertyFormComponent implements OnInit {
         this.propertyForm.controls['guiAttr'].setValue(undefined);
         // depending on the selected property type,
         // we have to define gui element attributes
-        // e.g. iri of list or connected reresource class
+        // e.g. iri of list or connected resource class
         switch (event.value.objectType) {
             case Constants.ListValue:
             case Constants.Resource:

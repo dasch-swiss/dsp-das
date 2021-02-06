@@ -419,7 +419,7 @@ export class OntologyComponent implements OnInit {
                         break;
 
                     case 'ResourceClass':
-                        // delete reresource class and refresh the view
+                        // delete resource class and refresh the view
                         this.loadOntology = true;
                         const resClass: DeleteResourceClass = new DeleteResourceClass();
                         resClass.id = id;

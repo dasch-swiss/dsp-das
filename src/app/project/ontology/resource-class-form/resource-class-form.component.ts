@@ -112,7 +112,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     // container for properties
     properties: FormArray;
 
-    // reresource class name should be unique
+    // resource class name should be unique
     existingResourceClassNames: [RegExp];
 
     existingPropertyNames: [RegExp];
@@ -152,7 +152,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             new RegExp('anEmptyRegularExpressionWasntPossible')
         ];
 
-        // set file representation or default reresource class as title
+        // set file representation or default resource class as title
         this.resourceClassTitle = this.name;
 
         this._cache.get('currentOntology').subscribe(
