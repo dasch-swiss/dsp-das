@@ -352,8 +352,9 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             // create mode
             // submit resource class data to knora and create resource class incl. cardinality
 
-            // set resource class name / id
-            const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, this.resourceClassLabels[0].value);
+            // set resource class name / id: randomized string
+            const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
+            // OR const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, this.resourceClassLabels[0].value, 'class');
 
             const onto = new UpdateOntology<CreateResourceClass>();
 
@@ -438,8 +439,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     createProp(prop: Property, classIri?: string) {
         return new Promise((resolve, reject) => {
 
-            // set resource property name / id
-            const uniquePropName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, prop.label);
+            // set resource property name / id: randomized string
+            const uniquePropName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
 
             const onto = new UpdateOntology<CreateResourceProperty>();
 
@@ -487,7 +488,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             } else {
                 newResProp.objectType = prop.type.objectType;
             }
-
 
             onto.entity = newResProp;
 
