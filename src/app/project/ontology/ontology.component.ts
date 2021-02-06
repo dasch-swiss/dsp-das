@@ -10,6 +10,7 @@ import {
     DeleteOntologyResponse,
     DeleteResourceClass,
     KnoraApiConnection,
+    ListsResponse,
     OntologiesMetadata,
     OntologyMetadata,
     ProjectResponse,
@@ -309,8 +310,8 @@ export class OntologyComponent implements OnInit {
      */
     openResourceClassForm(mode: 'createResourceClass' | 'editResourceClass', subClassOf: DefaultClass): void {
 
-        // set ontology cache
-        this._cache.set('currentOntology', this.ontology);
+        // set cache for ontology and lists
+        this.setCache();
 
         const dialogConfig: MatDialogConfig = {
             disableClose: true,
@@ -340,8 +341,8 @@ export class OntologyComponent implements OnInit {
      */
     updateCard(subClassOf: ResourceClassDefinition) {
 
-        // set ontology cache
-        this._cache.set('currentOntology', this.ontology);
+        // set cache for ontology and lists
+        this.setCache();
 
         const dialogConfig: MatDialogConfig = {
             disableClose: true,
@@ -350,7 +351,7 @@ export class OntologyComponent implements OnInit {
             position: {
                 top: '112px'
             },
-            data: { mode: 'updateCardinality', id: subClassOf.id, title: subClassOf.label, subtitle: 'Update the metadata fields of resource class', project: this.project.id}
+            data: { mode: 'updateCardinality', id: subClassOf.id, title: subClassOf.label, subtitle: 'Update the metadata fields of resource class', project: this.project.id }
         };
 
         const dialogRef = this._dialog.open(
@@ -449,6 +450,25 @@ export class OntologyComponent implements OnInit {
      */
     toggleView(view: 'grid' | 'graph') {
         this.view = view;
+    }
+
+    setCache() {
+
+        // get all lists; will be used to set gui attribute in list property
+        this._dspApiConnection.admin.listsEndpoint.getListsInProject(this.project.id).subscribe(
+            (response: ApiResponseData<ListsResponse>) => {
+                this._cache.set('currentOntologyLists', response.body.lists);
+                console.log('set currentOntologyLists', response.body.lists);
+
+            },
+            (error: ApiResponseError) => {
+                console.error('currentOntologyLists', error)
+                this._errorHandler.showMessage(error);
+            }
+        );
+
+        // set cache for current ontology
+        this._cache.set('currentOntology', this.ontology);
     }
 
 }
