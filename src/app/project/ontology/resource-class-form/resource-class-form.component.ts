@@ -484,7 +484,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
             if (prop.type.subPropOf === Constants.HasLinkTo) {
                 newResProp.objectType = prop.guiAttr;
-                newResProp.subjectType = classIri;
+                // newResProp.subjectType = classIri;
             } else {
                 newResProp.objectType = prop.type.objectType;
             }

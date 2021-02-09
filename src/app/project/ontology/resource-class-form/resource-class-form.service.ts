@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Cardinality, IHasProperty, PropertyDefinition, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { Cardinality, Constants, IHasProperty, PropertyDefinition, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DefaultProperties, PropertyType } from '../default-data/default-properties';
 
@@ -133,44 +133,52 @@ export class ResourceClassFormService {
         // get cardinality and gui order and grab property definition
         resClass.propertiesList.forEach((prop: IHasProperty) => {
             if (prop.guiOrder >= 0) {
-                const property: Property = new Property();
-                property.iri = prop.propertyIndex;
-
-                // convert cardinality
-                switch(prop.cardinality) {
-                    case 0:
-                        property.multiple = false;
-                        property.required = true;
-                    break;
-                    case 1:
-                        property.multiple = false;
-                        property.required = false;
-                    break;
-                    case 2:
-                        property.multiple = true;
-                        property.required = false;
-                    break;
-                    case 3:
-                        property.multiple = true;
-                        property.required = true;
-                    break;
-                }
 
                 // get property definition
                 Object.keys(ontoProperties).forEach(key => {
-                    if (ontoProperties[key].id === property.iri) {
+                    if (ontoProperties[key].id === prop.propertyIndex && !ontoProperties[key].isLinkValueProperty) {
                         const propDef: ResourcePropertyDefinition = ontoProperties[key];
+
+                        const property: Property = new Property();
+                        // property.propDef = ontoProperties[key];
+
                         property.label = propDef.label;
+
+                        if(ontoProperties[key].isLinkProperty) {
+                            property.guiAttr = propDef.objectType;
+                        } else {
+                            property.guiAttr = propDef.guiAttributes[0];
+                        }
+                        property.iri = prop.propertyIndex;
+
+                        // convert cardinality
+                        switch (prop.cardinality) {
+                            case 0:
+                                property.multiple = false;
+                                property.required = true;
+                                break;
+                            case 1:
+                                property.multiple = false;
+                                property.required = false;
+                                break;
+                            case 2:
+                                property.multiple = true;
+                                property.required = false;
+                                break;
+                            case 3:
+                                property.multiple = true;
+                                property.required = true;
+                                break;
+                        }
 
                         // find property type in list of default properties
                         // just a test
                         // property.type = DefaultProperties.data[0].elements[0];
 
-                        property.guiAttr = propDef.guiAttributes[0];
+                        this.addProperty(property);
+
                     }
                 });
-
-                this.addProperty(property);
 
             }
 

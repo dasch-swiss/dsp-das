@@ -66,9 +66,6 @@ export class PropertyFormComponent implements OnInit {
     // list of project specific lists (TODO: probably we have to add default knora lists?!)
     lists: ListNodeInfo[];
 
-    // current ontology
-    // ontology: ReadOntology;
-
     // resource classs in this ontology
     reresourceClasss: ClassDefinition[] = [];
 
@@ -81,6 +78,8 @@ export class PropertyFormComponent implements OnInit {
     selectedGroup: string;
 
     existingProperty: boolean;
+
+    loading = false;
 
     Constants = Constants;
 
@@ -118,6 +117,7 @@ export class PropertyFormComponent implements OnInit {
                 }
 
                 // edit mode: this prop value exists already
+                this.loading = true;
                 this.updateFieldsDependingOnLabel(existingProp);
             }
         }
@@ -138,7 +138,8 @@ export class PropertyFormComponent implements OnInit {
                 // set list of properties from response; needed for autocomplete in label to reuse existing property
                 const propKeys: string[] = Object.keys(response.properties);
                 for (const p of propKeys) {
-                    if (this.ontology.properties[p].objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue') {
+                    const prop = this.ontology.properties[p];
+                    if (prop.objectType !== Constants.LinkValue && prop.objectType !== this.resClassIri) {
                         const existingProperty: AutocompleteItem = {
                             iri: this.ontology.properties[p].id,
                             name: this.ontology.properties[p].id.split('#')[1],
@@ -191,7 +192,7 @@ export class PropertyFormComponent implements OnInit {
         // e.g. iri of list or connected resource class
         switch (event.value.objectType) {
             case Constants.ListValue:
-            case Constants.Resource:
+            case Constants.LinkValue:
                 this.showGuiAttr = true;
                 this.propertyForm.controls['guiAttr'].setValidators([
                     Validators.required
@@ -213,8 +214,11 @@ export class PropertyFormComponent implements OnInit {
     updateFieldsDependingOnLabel(option: AutocompleteItem) {
         this.propertyForm.controls['iri'].setValue(option.iri);
 
+        // set label and disable the input
         this.propertyForm.controls['label'].setValue(option.label);
         this.propertyForm.controls['label'].disable();
+
+        // find corresponding property type
 
         if (this.ontology.properties[option.iri] instanceof ResourcePropertyDefinition) {
             const tempProp: any | ResourcePropertyDefinition = this.ontology.properties[option.iri];
@@ -222,7 +226,7 @@ export class PropertyFormComponent implements OnInit {
             let obj: PropertyType;
             // find gui ele from list of default property-types to set type value
             for (let group of this.propertyTypes) {
-                obj = group.elements.find(i => i.gui_ele === tempProp.guiElement && i.objectType === tempProp.objectType);
+                obj = group.elements.find(i => i.gui_ele === tempProp.guiElement && (i.objectType === tempProp.objectType || i.subPropOf === tempProp.subPropertyOf[0]));
 
                 if (obj) {
                     this.propertyForm.controls['type'].setValue(obj);
@@ -246,6 +250,7 @@ export class PropertyFormComponent implements OnInit {
                     this.propertyForm.controls['guiAttr'].setValue(listIri);
                     this.propertyForm.controls['guiAttr'].disable();
                     break;
+
                 // prop type is resource pointer
                 case Constants.SalsahGui + Constants.HashDelimiter + 'Searchbox':
 

@@ -458,11 +458,11 @@ export class OntologyComponent implements OnInit {
         this._dspApiConnection.admin.listsEndpoint.getListsInProject(this.project.id).subscribe(
             (response: ApiResponseData<ListsResponse>) => {
                 this._cache.set('currentOntologyLists', response.body.lists);
-                console.log('set currentOntologyLists', response.body.lists);
+                // console.log('set currentOntologyLists', response.body.lists);
 
             },
             (error: ApiResponseError) => {
-                console.error('currentOntologyLists', error)
+                // console.error('currentOntologyLists', error)
                 this._errorHandler.showMessage(error);
             }
         );

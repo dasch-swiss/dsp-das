@@ -84,7 +84,7 @@
 
                 <!-- edit options -->
                 <span class="ontology-actions">
-                    <p class="mat-caption space-reducer">Ontology configuration</p>
+                    <p class="mat-caption space-reducer">Data model configuration</p>
                     <!-- TODO: remove following span as soon edit mode is implemented; it's only for tooltip to use with disabled button  -->
                     <span [matTooltip]="'Edit ontology is not yet implemented'" matTooltipPosition="above">
                         <button mat-button [disabled]="!ontology.lastModificationDate" [disabled]="true"
@@ -142,13 +142,13 @@
                                 </button>
                                 <mat-menu #resClassMenu="matMenu" xPosition="before">
                                     <button mat-menu-item [disabled]="true"
-                                        (click)="openResourceClassForm('editResourceClass', {iri: resClass.id, name: '', label: resClass.label})">Edit
+                                        (click)="openResourceClassForm('editResourceClass', {iri: resClass.id, name: '', label: resClass.label})">Edit info
                                         (not yet implemented)</button>
                                     <button mat-menu-item (click)="updateCard(resClass)">
-                                        Update list of properties
+                                        Update corresponding properties
                                     </button>
                                     <button mat-menu-item
-                                        (click)="delete(resClass.id, 'ResourceClass', resClass.label)">Delete</button>
+                                        (click)="delete(resClass.id, 'ResourceClass', resClass.label)">Delete resource class</button>
                                 </mat-menu>
                             </mat-toolbar-row>
                         </mat-toolbar>
