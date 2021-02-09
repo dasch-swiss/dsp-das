@@ -106,10 +106,9 @@
         <div #ontologyEditor *ngIf="!loadOntology && view === 'grid'" class="ontology-editor-container">
 
             <div class="ontology-editor-subheader">
-                <p *ngIf="!ontology.lastModificationDate" class="note warning center">This ontology can't be edited
-                    because
-                    of
-                    missing "lastModificationDate"!</p>
+                <p *ngIf="!ontology.lastModificationDate" class="note warning center">
+                    This ontology can't be edited because of missing "lastModificationDate"!
+                </p>
                 <!-- button to select and add new resource class to the ontology -->
                 <div class="add-resource-class"
                     *ngIf="project?.status && (sysAdmin || projectAdmin) && ontologyIri && ontology.lastModificationDate">
@@ -137,18 +136,24 @@
                                 <h4 mat-card-title [matTooltip]="resClass.label" matTooltipPosition="above">
                                     {{resClass.label | dspTruncate: 24}}</h4>
                                 <span class="fill-remaining-space"></span>
-                                <button mat-icon-button [matMenuTriggerFor]="resClassMenu">
+                                <button mat-icon-button [matMenuTriggerFor]="resClassMenu"
+                                    [matTooltip]="(ontology.lastModificationDate ? null : 'This ontology can\'t be edited because of missing lastModificationDate!')"
+                                    matTooltipPosition="above">
                                     <mat-icon>more_horiz</mat-icon>
                                 </button>
                                 <mat-menu #resClassMenu="matMenu" xPosition="before">
-                                    <button mat-menu-item [disabled]="true"
-                                        (click)="openResourceClassForm('editResourceClass', {iri: resClass.id, name: '', label: resClass.label})">Edit info
-                                        (not yet implemented)</button>
-                                    <button mat-menu-item (click)="updateCard(resClass)">
+                                    <button mat-menu-item [disabled]="!ontology.lastModificationDate" [disabled]="true"
+                                        (click)="openResourceClassForm('editResourceClass', {iri: resClass.id, name: '', label: resClass.label})">
+                                        Edit info (not yet implemented)
+                                    </button>
+                                    <button mat-menu-item [disabled]="!ontology.lastModificationDate"
+                                        (click)="updateCard(resClass)">
                                         Update corresponding properties
                                     </button>
-                                    <button mat-menu-item
-                                        (click)="delete(resClass.id, 'ResourceClass', resClass.label)">Delete resource class</button>
+                                    <button mat-menu-item [disabled]="!ontology.lastModificationDate"
+                                        (click)="delete(resClass.id, 'ResourceClass', resClass.label)">
+                                        Delete resource class
+                                    </button>
                                 </mat-menu>
                             </mat-toolbar-row>
                         </mat-toolbar>
