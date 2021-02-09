@@ -2,13 +2,13 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import {
     ApiResponseData,
     ApiResponseError,
-    ChildNodeInfo,
     KnoraApiConnection,
     ListNode,
     ListResponse
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { ListNodeOperation } from '../list-item-form/list-item-form.component';
 
 @Component({
     selector: 'app-list-item',
@@ -81,25 +81,38 @@ export class ListItemComponent implements OnInit {
      * @param data info about the node; can be a root node or child node.
      * @param firstNode states whether or not the node is a new child node; defaults to false.
      */
-    updateView(data: ListNode, firstNode: boolean = false) {
+    updateView(data: ListNodeOperation, firstNode: boolean = false) {
 
-        if (data instanceof ChildNodeInfo) {
-            this.list[data.position].labels = data.labels;
-            this.list[data.position].comments = data.comments;
-        } else {
-            // update the view by updating the existing list
-            if (firstNode) {
-                // in case of new child node, we have to use the children from list
-                const index: number = this.list.findIndex(item => item.id === this.expandedNode);
-                this.list[index].children.push(data);
+        if (data instanceof ListNodeOperation) {
+            switch (data.operation) {
+                case 'create': {
+                    // update the view by updating the existing list
+                    if (firstNode) {
+                        // in case of new child node, we have to use the children from list
+                        const index: number = this.list.findIndex(item => item.id === this.expandedNode);
+                        this.list[index].children.push(data.listNode);
 
-            } else {
-                this.list.push(data);
+                    } else {
+                        this.list.push(data.listNode);
+                    }
+
+                    break;
+                }
+                case 'update': {
+                    this.list[data.listNode.position].labels = data.listNode.labels;
+                    this.list[data.listNode.position].comments = data.listNode.comments;
+                    break;
+                }
+                case 'delete': {
+                    this.list = data.listNode.children;
+                    break;
+                }
+                default: {
+                    break;
+                }
             }
-
-            data.children = [];
         }
-
+        // console.log(this.list);
     }
 
 }
