@@ -242,7 +242,21 @@ export class ListItemFormComponent implements OnInit {
                         this.refreshParent.emit(listNodeOperation);
                     },
                     (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
+                        if (error.status === 400) {
+                            const dialogConfig2: MatDialogConfig = {
+                                width: '640px',
+                                position: {
+                                    top: '112px'
+                                },
+                                data: { mode: 'deleteListNodeError'}
+                            };
+
+                            // open the dialog box
+                            this._dialog.open(DialogComponent, dialogConfig2);
+                        } else {
+                            this._errorHandler.showMessage(error);
+                        }
+
                     }
                 );
             }
