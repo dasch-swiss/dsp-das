@@ -150,6 +150,9 @@ export class OntologyComponent implements OnInit {
                 // get the ontologies for this project
                 this.initList();
 
+                // cache other things like ontology and lists
+                this.setCache();
+
                 this.ontologyForm = this._fb.group({
                     ontology: new FormControl({
                         value: this.ontologyIri, disabled: false

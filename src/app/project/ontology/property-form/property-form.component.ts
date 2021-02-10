@@ -178,8 +178,9 @@ export class PropertyFormComponent implements OnInit {
      * @returns Filtered list of options
      */
     filter(list: AutocompleteItem[], label: string) {
+        console.log(list)
         return list.filter(prop =>
-            prop.label.toLowerCase().includes(label.toLowerCase())
+            prop.label?.toLowerCase().includes(label.toLowerCase())
         );
     }
 
@@ -261,13 +262,10 @@ export class PropertyFormComponent implements OnInit {
 
                 default:
                     this.showGuiAttr = false;
-
             }
-
         }
         this.propertyForm.controls['type'].disable();
         this.existingProperty = true;
-
     }
 
     resetProperty(ev: Event) {
