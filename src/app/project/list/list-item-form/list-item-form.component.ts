@@ -245,7 +245,7 @@ export class ListItemFormComponent implements OnInit {
                     (error: ApiResponseError) => {
                         // if DSP-API returns a 400, it is likely that the list node is in use so we inform the user of this
                         if (error.status === 400) {
-                            const dialogConfig2: MatDialogConfig = {
+                            const errorDialogConfig: MatDialogConfig = {
                                 width: '640px',
                                 position: {
                                     top: '112px'
@@ -254,7 +254,7 @@ export class ListItemFormComponent implements OnInit {
                             };
 
                             // open the dialog box
-                            this._dialog.open(DialogComponent, dialogConfig2);
+                            this._dialog.open(DialogComponent, errorDialogConfig);
                         } else {
                             // use default error behavior
                             this._errorHandler.showMessage(error);
