@@ -9,6 +9,7 @@ import {
     ApiResponseError,
     KnoraApiConnection,
     ProjectResponse,
+    ProjectsMetadata,
     ReadProject
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
@@ -33,6 +34,7 @@ export class BoardComponent implements OnInit {
 
     // loading for progress indicator
     loading: boolean;
+    metadataLoading: boolean;
 
     // permissions of logged-in user
     session: Session;
@@ -50,6 +52,8 @@ export class BoardComponent implements OnInit {
     // variables to store metadata information
     // metadata received from backend
     metadata: object;
+
+    projectsMetadata: ProjectsMetadata;
 
     // list of all datasets
     datasets: IDataset[];
@@ -84,6 +88,7 @@ export class BoardComponent implements OnInit {
 
     ngOnInit() {
         this.loading = true;
+        this.metadataLoading = true;
 
         // get information about the logged-in user, if one is logged-in
         if (this._session.getSession()) {
@@ -95,9 +100,6 @@ export class BoardComponent implements OnInit {
 
         // get project info from backend
         this.getProject();
-
-        // get project and dataset metadata from backend
-        this.getProjectMetadata();
     }
 
     getProject() {
@@ -108,6 +110,10 @@ export class BoardComponent implements OnInit {
         this._cache.get(this.projectcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode)).subscribe(
             (response: ApiResponseData<ProjectResponse>) => {
                 this.project = response.body.project;
+                console.log(this.project);
+
+                // get project and dataset metadata from backend
+                this.getProjectMetadata();
 
                 // is logged-in user projectAdmin?
                 if (this._session.getSession()) {
@@ -382,6 +388,20 @@ export class BoardComponent implements OnInit {
                 }
             ]
         };
+
+        // get project metadata from cache
+        this.projectcode, this._dspApiConnection.v2.metadata.getProjectMetadata(this.project.id).subscribe(
+            (response: ProjectsMetadata) => {
+                this.projectsMetadata = response;
+                console.log(this.projectsMetadata);
+                this.metadataLoading = false;
+            },
+            (error: ApiResponseError) => {
+                console.log(error);
+            }
+        );
+
+        this.metadataLoading = false;
 
         // convert metadata to use IDataset interface
         this.datasets = this.metadata['projectsMetadata'] as IDataset[];

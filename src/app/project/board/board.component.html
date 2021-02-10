@@ -1,4 +1,4 @@
-<dsp-progress-indicator *ngIf="loading && !project"></dsp-progress-indicator>
+<dsp-progress-indicator *ngIf="metadataLoading && !projectsMetadata"></dsp-progress-indicator>
 
 <div *ngIf="!loading && project">
     <div class="content large middle">
@@ -51,7 +51,7 @@
         </div>
     </div>
 
-    <div class="project-info-container flex-panel" *ngIf="datasets">
+    <div class="project-info-container flex-panel" *ngIf="!metadataLoading && projectsMetadata">
 
         <div class="left-info column">
             <!-- description -->
@@ -197,5 +197,8 @@
             </div>
         </div>
 
+    </div>
+    <div *ngIf="!metadataLoading && !projectsMetadata">
+        <p class="note error center">Metadata is not available for the selected project.</p>
     </div>
 </div>
