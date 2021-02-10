@@ -1,6 +1,7 @@
 <div *ngIf="projectAdmin" class="desktop-only">
 
-    <p class="note warning center">This is a first version of the ontology editor. Some features may not work as intended.</p>
+    <p class="note warning center">This is a first version of the ontology editor. Some features may not work as
+        intended.</p>
     <dsp-progress-indicator *ngIf="loading"></dsp-progress-indicator>
 
     <!-- toolbar: select ontology -->
@@ -84,16 +85,15 @@
                 <!-- edit options -->
                 <span class="ontology-actions">
                     <p class="mat-caption space-reducer">Ontology configuration</p>
-                    <!-- TODO: remove following span as soon edit mode is implemented; it's only for tooltip to use with disabled button  -->
-                    <span [matTooltip]="'Edit ontology is not yet implemented'" matTooltipPosition="above">
-                        <button mat-button [disabled]="!ontology.lastModificationDate" [disabled]="true"
-                            (click)="$event.stopPropagation(); openOntologyForm('editOntology', ontology.id)">
-                            <!-- <mat-icon>edit</mat-icon> -->
-                            Edit
-                        </button>
-                    </span>
                     <button mat-button [disabled]="!ontology.lastModificationDate"
-                        (click)="$event.stopPropagation(); delete(ontologyIri, 'Ontology', ontology.label)">
+                        (click)="$event.stopPropagation(); openOntologyForm('editOntology', ontology.id)"
+                        [matTooltip]="'Edit data model info'" matTooltipPosition="above">
+                        <!-- <mat-icon>edit</mat-icon> -->
+                        Edit
+                    </button>
+                    <button mat-button [disabled]="!ontology.lastModificationDate"
+                        (click)="$event.stopPropagation(); delete(ontologyIri, 'Ontology', ontology.label)"
+                        [matTooltip]="'Delete data model'" matTooltipPosition="above">
                         <!-- <mat-icon>delete</mat-icon> -->
                         Delete
                     </button>
