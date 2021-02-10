@@ -96,11 +96,14 @@ export class ListItemComponent implements OnInit {
                     break;
                 }
                 case 'update': {
+                    // use the position from the response from DSP-API to find the correct node to update
                     this.list[data.listNode.position].labels = data.listNode.labels;
                     this.list[data.listNode.position].comments = data.listNode.comments;
                     break;
                 }
                 case 'delete': {
+                    // conveniently, the response returned by DSP-API contains the entire list without the delete node within its 'children'
+                    // we can just reassign the list to this
                     this.list = data.listNode.children;
                     break;
                 }

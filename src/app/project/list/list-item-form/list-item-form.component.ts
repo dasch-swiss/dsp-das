@@ -153,6 +153,7 @@ export class ListItemFormComponent implements OnInit {
         // send payload to dsp-api's api
         this._dspApiConnection.admin.listsEndpoint.createChildNode(childNode).subscribe(
             (response: ApiResponseData<ListNodeInfoResponse>) => {
+                // this needs to return a ListNode as opposed to a ListNodeInfo, so we make one
                 listNodeOperation.listNode = new ListNode();
                 listNodeOperation.listNode.hasRootNode = response.body.nodeinfo.hasRootNode;
                 listNodeOperation.listNode.id = response.body.nodeinfo.id;
@@ -242,6 +243,7 @@ export class ListItemFormComponent implements OnInit {
                         this.refreshParent.emit(listNodeOperation);
                     },
                     (error: ApiResponseError) => {
+                        // if DSP-API returns a 400, it is likely that the list node is in use so we inform the user of this
                         if (error.status === 400) {
                             const dialogConfig2: MatDialogConfig = {
                                 width: '640px',
@@ -254,6 +256,7 @@ export class ListItemFormComponent implements OnInit {
                             // open the dialog box
                             this._dialog.open(DialogComponent, dialogConfig2);
                         } else {
+                            // use default error behavior
                             this._errorHandler.showMessage(error);
                         }
 
