@@ -37,7 +37,6 @@ export class ListItemComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-
         // in case of parent node: do not run the following request
         if (!this.childNode) {
             this._dspApiConnection.admin.listsEndpoint.getList(this.parentIri).subscribe(
@@ -78,15 +77,14 @@ export class ListItemComponent implements OnInit {
     /**
      * Called when the 'refreshParent' event from ListItemFormComponent is triggered.
      *
-     * @param data info about the node; can be a root node or child node.
+     * @param data info about the operation that was performed on the node and should be reflected in the UI.
      * @param firstNode states whether or not the node is a new child node; defaults to false.
      */
     updateView(data: ListNodeOperation, firstNode: boolean = false) {
-
+        // update the view by updating the existing list
         if (data instanceof ListNodeOperation) {
             switch (data.operation) {
                 case 'create': {
-                    // update the view by updating the existing list
                     if (firstNode) {
                         // in case of new child node, we have to use the children from list
                         const index: number = this.list.findIndex(item => item.id === this.expandedNode);
@@ -95,7 +93,6 @@ export class ListItemComponent implements OnInit {
                     } else {
                         this.list.push(data.listNode);
                     }
-
                     break;
                 }
                 case 'update': {
@@ -112,7 +109,6 @@ export class ListItemComponent implements OnInit {
                 }
             }
         }
-        // console.log(this.list);
     }
 
 }
