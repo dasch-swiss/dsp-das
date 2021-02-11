@@ -51,10 +51,10 @@
         </div>
     </div>
 
-    <div class="project-info-container flex-panel" *ngIf="!metadataLoading && projectsMetadata">
-
+    <div class="project-info-container flex-panel" *ngIf="!metadataLoading && selectedDataset">
+<!--
         <div class="left-info column">
-            <!-- description -->
+            
             <section class="project description">
                 <h3>Description</h3>
                 <div [innerHtml]="selectedDataset.project.description"></div>
@@ -104,6 +104,7 @@
                 </mat-tab-group>
             </section>
         </div>
+    -->
         <div class="right-info column">
             <div class="metadata-box">
                 <h3>Dataset(s)</h3>
@@ -144,13 +145,13 @@
                             <div class="property-label display-inline-block">
                                 Persistent identifier
                             </div>
-                                <button mat-button class="btn-copy-to-clipboard" [cdkCopyToClipboard]="selectedDataset.project.id"
+                                <button mat-button class="btn-copy-to-clipboard" [cdkCopyToClipboard]="selectedProject.id"
                                 matTooltip="Copy persistent identifier" matTooltipPosition="below" (click)="copyToClipboard('Persistent identifier')">
                                 <mat-icon class="icon-arkurl">content_copy</mat-icon>
                             </button>
                         </div>
                         <div class="sidenav-prop-text property-value">
-                            <a href="{{ selectedDataset.project.id }}" target="_blank"> {{ selectedDataset.project.id }} </a>
+                            <a href="{{ selectedProject.id }}" target="_blank"> {{ selectedProject.id }} </a>
                         </div>
                     </div>
                     <div class="property">
@@ -158,7 +159,9 @@
                             License
                         </div>
                         <div class="sidenav-prop-text property-value">
-                            <a href="{{ selectedDataset.license.value }}" target="_blank"> {{ selectedDataset.license.value }} </a>
+                            <p class="license-entry" *ngFor="let license of selectedDataset.license">
+                                <a *ngIf="license.value" href="{{ license.value }}" target="_blank"> {{ license.value }} </a>
+                            </p>
                         </div>
                     </div>
                     <div class="property" *ngIf="selectedDataset.datePublished">
@@ -176,7 +179,7 @@
                 <h3>Keyword(s)</h3>
                 <div class="sidenav-prop-text">
                     <mat-chip-list>
-                        <mat-chip *ngFor="let kword of selectedDataset.project.keywords"> {{ kword }} </mat-chip>
+                        <mat-chip *ngFor="let kword of selectedProject.keywords"> {{ kword }} </mat-chip>
                     </mat-chip-list>
                 </div>
             </div>

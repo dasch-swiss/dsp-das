@@ -7,10 +7,16 @@ import { ActivatedRoute, Params } from '@angular/router';
 import {
     ApiResponseData,
     ApiResponseError,
+    DataManagementPlan,
+    Dataset,
+    Grant,
     KnoraApiConnection,
+    Organization,
+    Person,
     ProjectResponse,
     ProjectsMetadata,
-    ReadProject
+    ReadProject,
+    SingleProject
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
@@ -54,12 +60,16 @@ export class BoardComponent implements OnInit {
     metadata: object;
 
     projectsMetadata: ProjectsMetadata;
-
-    // list of all datasets
-    datasets: IDataset[];
+    datasetList: Dataset[] = [];
+    singleProjectList: SingleProject[] = [];
+    personList: Person[] = [];
+    organisationList: Organization[] = [];
+    grantList: Grant[] = [];
+    dataManagementPlanList: DataManagementPlan[] = [];
 
     // metadata displayed on current page is from selected dataset
-    selectedDataset: IDataset;
+    selectedDataset: Dataset;
+    selectedProject: SingleProject;
 
     // list of dataset names to display as radio buttons in right side column
     datasetOptions: DatasetRadioOption[];
@@ -395,6 +405,55 @@ export class BoardComponent implements OnInit {
                 this.projectsMetadata = response;
                 console.log(this.projectsMetadata);
                 this.metadataLoading = false;
+
+                // create list according to it's type
+                this.projectsMetadata.projectsMetadata.forEach((obj) => {
+                    if (obj instanceof Dataset) {
+                        this.datasetList.push(obj);
+                    }
+                    else if (obj instanceof SingleProject) {
+                        this.singleProjectList.push(obj);
+                    }
+                    else if (obj instanceof Person) {
+                        this.personList.push(obj);
+                    }
+                    else if (obj instanceof Organization) {
+                        this.organisationList.push(obj);
+                    }
+                    else if (obj instanceof Grant) {
+                        this.grantList.push(obj);
+                    }
+                    else if (obj instanceof DataManagementPlan) {
+                        this.dataManagementPlanList.push(obj);
+                    }
+                });
+
+                // by default display first dataset
+                this.selectedDataset = this.datasetList[0];
+
+                for (let proj of this.singleProjectList) {
+                    if (this.selectedDataset.project.id['@id'] === proj.id) {
+                        this.selectedProject = proj;
+                        break;
+                    }
+                };
+
+                console.log(this.selectedProject)
+
+                
+
+                const dsOptions = [];
+                // dataset options to display radio buttons for selection in right column
+                for (let idx = 0; idx < this.datasetList.length; idx++) {
+                    dsOptions.push({
+                        name: this.datasetList[idx].title,
+                        id: idx,
+                        checked: idx === 0 ? true : false
+                    });
+                }
+
+                this.datasetOptions = dsOptions;
+
             },
             (error: ApiResponseError) => {
                 console.log(error);
@@ -402,24 +461,6 @@ export class BoardComponent implements OnInit {
         );
 
         this.metadataLoading = false;
-
-        // convert metadata to use IDataset interface
-        this.datasets = this.metadata['projectsMetadata'] as IDataset[];
-
-        // by default display first dataset
-        this.selectedDataset = this.datasets[0];
-
-        const dsOptions = [];
-        // dataset options to display radio buttons for selection in right column
-        for (let idx = 0; idx < this.datasets.length; idx++) {
-            dsOptions.push({
-                name: this.datasets[idx].title,
-                id: idx,
-                checked: idx === 0 ? true : false
-            });
-        }
-
-        this.datasetOptions = dsOptions;
     }
 
     // download metadata
@@ -439,7 +480,7 @@ export class BoardComponent implements OnInit {
     }
 
     updateDataset(event: MatRadioChange) {
-        this.selectedDataset = this.datasets[event.value];
+        this.selectedDataset = this.datasetList[event.value];
     }
 
     // copy link to clipboard
