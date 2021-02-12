@@ -213,7 +213,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                 // edit mode: res class info (label and comment)
                 // get resource class info
                 const resourceClasses: ResourceClassDefinitionWithAllLanguages[] = this.ontology.getClassDefinitionsByType(ResourceClassDefinitionWithAllLanguages);
-                console.log(resourceClasses)
                 Object.keys(resourceClasses).forEach(key => {
                     if (resourceClasses[key].id === this.iri) {
                         this.resourceClassLabels = resourceClasses[key].labels;
