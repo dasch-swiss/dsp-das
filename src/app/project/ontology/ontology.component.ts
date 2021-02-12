@@ -237,7 +237,7 @@ export class OntologyComponent implements OnInit {
 
         this.loadOntology = true;
 
-        this._dspApiConnection.v2.onto.getOntology(id).subscribe(
+        this._dspApiConnection.v2.onto.getOntology(id, true).subscribe(
             (response: ReadOntology) => {
 
                 this.ontology = response;
