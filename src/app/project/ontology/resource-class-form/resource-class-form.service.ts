@@ -87,10 +87,8 @@ export class ResourceClassForm {
             this.properties.setControl
             resourceClass.properties.forEach(prop => {
                 this.properties[i] = new FormControl(prop);
-                // this.properties[i].setValue(prop);
                 i++;
             });
-            // this.properties.setValue([resourceClass.properties]);
         }
     }
 }
