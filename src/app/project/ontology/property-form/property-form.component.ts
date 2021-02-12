@@ -178,7 +178,6 @@ export class PropertyFormComponent implements OnInit {
      * @returns Filtered list of options
      */
     filter(list: AutocompleteItem[], label: string) {
-        console.log(list)
         return list.filter(prop =>
             prop.label?.toLowerCase().includes(label.toLowerCase())
         );
