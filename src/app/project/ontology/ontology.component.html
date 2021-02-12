@@ -142,9 +142,9 @@
                                     <mat-icon>more_horiz</mat-icon>
                                 </button>
                                 <mat-menu #resClassMenu="matMenu" xPosition="before">
-                                    <button mat-menu-item [disabled]="!ontology.lastModificationDate" [disabled]="true"
+                                    <button mat-menu-item [disabled]="!ontology.lastModificationDate"
                                         (click)="openResourceClassForm('editResourceClass', {iri: resClass.id, name: '', label: resClass.label})">
-                                        Edit info (not yet implemented)
+                                        Edit resource class info
                                     </button>
                                     <button mat-menu-item [disabled]="!ontology.lastModificationDate"
                                         (click)="updateCard(resClass)">

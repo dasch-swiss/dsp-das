@@ -122,7 +122,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     // form errors on the following fields:
     formErrors = {
-        'label': ''
+        'label': '',
+        'comment': ''
     };
 
     // in case of form error: show message
@@ -130,6 +131,9 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         'label': {
             'required': 'Label is required.'
         },
+        'comment': {
+            'required': 'Comment is required.'
+        }
     };
 
     lastModificationDate: string;
