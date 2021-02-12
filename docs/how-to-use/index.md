@@ -6,7 +6,7 @@ This is the documentation for the generic Knora Web Application of the Data and 
 
 ## Getting started
 
-DSP-APP is an intuitive, easy to use web-based application placed on top of [DSP-API](../developers/dsp-api/documentation/index.md) to directly use its powerful data management functionalities. With this modern web application, the researchers can create their data models, search, browse, and work with their qualitative data as easily as they could with a desktop data management tool. In addition, data models and data will automatically follow accepted standards, be interoperable, findable, and re-usable. Researchers and scholars with small to medium data sets (e.g. PhD research, pilot project, or proof of concept) have access to long-term accessibility to keep their research data alive, guaranteeing longevity of the data.
+DSP-APP is an intuitive, easy to use web-based application placed on top of [DSP-API](https://docs.dasch.swiss/developers/dsp-api/documentation/index.md) to directly use its powerful data management functionalities. With this modern web application, the researchers can create their data models, search, browse, and work with their qualitative data as easily as they could with a desktop data management tool. In addition, data models and data will automatically follow accepted standards, be interoperable, findable, and re-usable. Researchers and scholars with small to medium data sets (e.g. PhD research, pilot project, or proof of concept) have access to long-term accessibility to keep their research data alive, guaranteeing longevity of the data.
 
 ---
 

@@ -1,4 +1,4 @@
-# User Management
+# User Administration
 
 ![Get access to your user profile and more](../assets/images/usermenu-to-userprofile.png)*https://app2.dasch.swiss/dashboard - Get access to your user profile, collections and  account from the main user menu.*
 
