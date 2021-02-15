@@ -21,6 +21,7 @@ import { StringLiteralV2 } from '@dasch-swiss/dsp-js/src/models/v2/string-litera
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { from, of, Subscription } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
+import { AppGlobal } from 'src/app/app-global';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { Property, ResourceClassFormService } from './resource-class-form.service';
@@ -133,6 +134,11 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     };
 
     lastModificationDate: string;
+
+    // for the language selector
+    selectedLanguage = 'en';
+    languages: StringLiteral[] = AppGlobal.languagesList;
+
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,

@@ -46,6 +46,15 @@
 
         <!-- content: Step 2 = define properties for resource class -->
         <div *ngIf="!showResourceClassForm" class="properties-data">
+            <!-- default language selector -->
+            <mat-form-field class="properties-language">
+                <mat-label>Default language for property label</mat-label>
+                <mat-select [(value)]="selectedLanguage">
+                    <mat-option *ngFor="let option of languages" [value]="option.language">
+                        {{ option.value }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
             <!-- propertiy: one line, with "add" icon to add additional properties -->
             <div cdkDropList class="properties-list" (cdkDropListDropped)="drop($event)">
@@ -68,7 +77,7 @@
                         aria-label="Delete this property" class="suffix delete-line" (click)="removeProperty(i)">
                         <mat-icon>delete_outlined</mat-icon>
                     </button>
-                <!-- </div> -->
+                    <!-- </div> -->
                 </div>
                 <button [disabled]="!properties.valid" mat-button type="button" color="primary"
                     aria-label="Add new property" class="add-new-line" (click)="addProperty()">
