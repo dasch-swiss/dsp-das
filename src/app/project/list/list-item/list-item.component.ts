@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import {
     ApiResponseData,
     ApiResponseError,
@@ -29,6 +29,8 @@ export class ListItemComponent implements OnInit {
 
     @Input() language?: string;
 
+    @Output() refreshChildren: EventEmitter<ListNode[]> = new EventEmitter<ListNode[]>();
+
     expandedNode: string;
 
     constructor(
@@ -37,7 +39,7 @@ export class ListItemComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        // in case of parent node: do not run the following request
+        // in case of parent node: run the following request to get the entire list
         if (!this.childNode) {
             this._dspApiConnection.admin.listsEndpoint.getList(this.parentIri).subscribe(
                 (result: ApiResponseData<ListResponse>) => {
@@ -65,7 +67,6 @@ export class ListItemComponent implements OnInit {
      * @param id id of parent node for which the 'expand' button was clicked.
      */
     toggleChildren(id: string) {
-
         if (this.showChildren(id)) {
             this.expandedNode = undefined;
         } else {
@@ -102,9 +103,12 @@ export class ListItemComponent implements OnInit {
                     break;
                 }
                 case 'delete': {
-                    // conveniently, the response returned by DSP-API contains the entire list without the delete node within its 'children'
+                    // conveniently, the response returned by DSP-API contains the entire list without the deleted node within its 'children'
                     // we can just reassign the list to this
                     this.list = data.listNode.children;
+
+                    // emit the updated list of children to the parent node
+                    this.refreshChildren.emit(this.list);
                     break;
                 }
                 default: {
@@ -112,6 +116,16 @@ export class ListItemComponent implements OnInit {
                 }
             }
         }
+    }
+
+    /**
+     * updates the children of the parent node
+     *
+     * @param children the updated list of children nodes
+     * @param position the position of the parent node
+     */
+    updateParentNodeChildren(children: ListNode[], position: number) {
+        this.list[position].children = children;
     }
 
 }
