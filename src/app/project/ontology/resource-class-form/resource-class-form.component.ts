@@ -390,13 +390,13 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                 onto4Comment.entity = updateComment;
 
                 this._dspApiConnection.v2.onto.updateResourceClass(onto4Label).subscribe(
-                    (classResponse: ResourceClassDefinitionWithAllLanguages) => {
-                        this.lastModificationDate = classResponse.lastModificationDate;
+                    (classLabelResponse: ResourceClassDefinitionWithAllLanguages) => {
+                        this.lastModificationDate = classLabelResponse.lastModificationDate;
                         onto4Comment.lastModificationDate = this.lastModificationDate;
 
                         this._dspApiConnection.v2.onto.updateResourceClass(onto4Comment).subscribe(
-                            (classResponse: ResourceClassDefinitionWithAllLanguages) => {
-                                this.lastModificationDate = classResponse.lastModificationDate;
+                            (classCommentResponse: ResourceClassDefinitionWithAllLanguages) => {
+                                this.lastModificationDate = classCommentResponse.lastModificationDate;
 
                                 // close the dialog box
                                 this.loading = false;
