@@ -326,6 +326,9 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         // use response to go further with properties
         this.updateParent.emit({ title: this.resourceClassLabels[0].value, subtitle: 'Define the metadata fields for the resource class' });
 
+        // set default property language from res class label
+        this.resourceClassForm.controls.language.setValue(this.resourceClassLabels[0].language);
+
         // load one first property line
         if (!this.resourceClassForm.value.properties.length) {
             this.addProperty();
@@ -457,7 +460,12 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             const newResProp = new CreateResourceProperty();
             newResProp.name = uniquePropName;
             // TODO: update prop.label and use StringLiteralInput in property-form
-            newResProp.label = [{ "value": prop.label }];
+            newResProp.label = [
+                {
+                    'value': prop.label,
+                    'language': this.resourceClassForm.value['language']
+                }
+            ];
             if (prop.guiAttr) {
                 switch (prop.type.gui_ele) {
 

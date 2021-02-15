@@ -49,7 +49,7 @@
             <!-- default language selector -->
             <mat-form-field class="properties-language">
                 <mat-label>Default language for property label</mat-label>
-                <mat-select [(value)]="selectedLanguage">
+                <mat-select [formControl]="resourceClassForm.controls['language']" [value]="resourceClassForm.value['language']">
                     <mat-option *ngFor="let option of languages" [value]="option.language">
                         {{ option.value }}
                     </mat-option>
@@ -90,7 +90,7 @@
                     <button *ngIf="!edit" mat-button type="button" (click)="prevStep($event)">
                         {{ 'appLabels.form.action.back' | translate }}
                     </button>
-                    <button *ngIf="edit" mat-button type="button" (click)="closeDialog.emit()">
+                    <button mat-button type="button" (click)="closeDialog.emit()">
                         {{ 'appLabels.form.action.cancel' | translate }}
                     </button>
                 </span>
