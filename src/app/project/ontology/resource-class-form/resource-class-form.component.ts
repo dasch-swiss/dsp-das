@@ -435,7 +435,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
             const newResClass = new CreateResourceClass();
 
-            newResClass.name = uniqueClassName
+            newResClass.name = uniqueClassName;
             newResClass.label = this.resourceClassLabels;
             newResClass.comment = this.resourceClassComments;
             newResClass.subClassOf = [this.iri];
