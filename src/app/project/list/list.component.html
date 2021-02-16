@@ -70,6 +70,10 @@
                     (click)="$event.stopPropagation(); openDialog('editListInfo', list.labels[0].value, list.id)">
                     Edit info
                 </button>
+                <button mat-stroked-button class="delete"
+                    (click)="$event.stopPropagation(); openDialog('deleteList', list.labels[0].value, list.id)">
+                    Delete list
+                </button>
             </mat-toolbar-row>
         </mat-toolbar>
 
