@@ -1,9 +1,29 @@
+@import "~@angular/material/theming";
+@import "../../../../assets/style/config";
+
 .mat-list-item {
   height: 56px;
 }
 
-.info {
+.mat-list-icon.order {
+  color: $primary_700;
+  font-size: 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mat-line.title {
+  line-height: 1.8;
+  .mat-icon {
+    top: 4px;
+    position: relative;
+  }
+}
+
+
+.mat-line.info {
   font-size: small;
+  color: $primary_700;
 
   .mat-icon {
     width: 12px;
@@ -11,6 +31,5 @@
     font-size: small;
     top: 2px;
     position: relative;
-    margin-left: 8px;
   }
 }
