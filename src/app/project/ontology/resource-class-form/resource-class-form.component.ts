@@ -229,7 +229,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                     .subscribe(resourceClass => {
                         this.resourceClassForm = resourceClass;
                     });
-                this.resourceClassForm.valueChanges.subscribe(data => this.onValueChanged(data));
 
             } else {
                 // edit mode: res class cardinality
@@ -248,6 +247,9 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                                 this.resourceClassForm = resourceClass;
                                 this.properties = this.resourceClassForm.get('properties') as FormArray;
                             });
+
+                        // set default property language from resource class / first element
+                        this.resourceClassForm.controls.language.setValue(ontoClasses[key].labels[0].language);
                     }
                 });
             }
@@ -260,6 +262,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                     this.properties = this.resourceClassForm.get('properties') as FormArray;
                 });
         }
+
         this.resourceClassForm.valueChanges.subscribe(data => this.onValueChanged(data));
     }
 
