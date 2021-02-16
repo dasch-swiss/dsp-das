@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { IHasProperty, PropertyDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { IHasProperty, ResourcePropertyDefinition, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { Category, DefaultProperties, PropertyType } from '../default-data/default-properties';
-import { Property, ResourceClassFormService } from '../resource-class-form/resource-class-form.service';
+import { Property } from '../resource-class-form/resource-class-form.service';
 
 @Component({
     selector: 'app-property-info',
@@ -12,7 +12,7 @@ import { Property, ResourceClassFormService } from '../resource-class-form/resou
 })
 export class PropertyInfoComponent implements OnInit {
 
-    @Input() propDef: ResourcePropertyDefinition;
+    @Input() propDef: ResourcePropertyDefinitionWithAllLanguages;
 
     @Input() propCard: IHasProperty;
 
@@ -40,8 +40,8 @@ export class PropertyInfoComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        // console.log(this.propDef);
-        // console.log(this.propCard);
+        console.log(this.propDef);
+        console.log(this.propCard);
 
         // convert cardinality from js-lib convention to app convention
         switch (this.propCard.cardinality) {
@@ -64,16 +64,16 @@ export class PropertyInfoComponent implements OnInit {
         }
 
         // let obj: PropertyType;
-            // find gui ele from list of default property-types to set type value
-            for (let group of this.propertyTypes) {
-                this.propType = group.elements.find(i => i.gui_ele === this.propDef.guiElement && (i.objectType === this.propDef.objectType || i.subPropOf === this.propDef.subPropertyOf[0]));
+        // find gui ele from list of default property-types to set type value
+        for (let group of this.propertyTypes) {
+            this.propType = group.elements.find(i => i.gui_ele === this.propDef.guiElement && (i.objectType === this.propDef.objectType || i.subPropOf === this.propDef.subPropertyOf[0]));
 
-                if (this.propType) {
-                    // console.log(obj)
-                    // this.propertyForm.controls['type'].setValue(obj);
-                    break;
-                }
+            if (this.propType) {
+                // console.log(obj)
+                // this.propertyForm.controls['type'].setValue(obj);
+                break;
             }
+        }
 
     }
 
