@@ -52,12 +52,12 @@
     </div>
 
     <div class="project-info-container flex-panel" *ngIf="!metadataLoading && selectedDataset">
-<!--
+
         <div class="left-info column">
             
             <section class="project description">
                 <h3>Description</h3>
-                <div [innerHtml]="selectedDataset.project.description"></div>
+                <div [innerHtml]="selectedProject.description"></div>
             </section>
 
             <section>
@@ -67,9 +67,9 @@
                             <mat-icon class="tab-icon">perm_data_setting</mat-icon>
                             Project
                         </ng-template>
-                        <app-project-tab-view [metadata]="selectedDataset.project"></app-project-tab-view>
+                        <app-project-tab-view [selectedProject]="selectedProject" [subProperties]="subProperties"></app-project-tab-view>
                     </mat-tab>
-
+                    <!--
                     <mat-tab>
                         <ng-template mat-tab-label>
                             <mat-icon class="tab-icon">collections</mat-icon>
@@ -85,7 +85,7 @@
                         </ng-template>
                         <app-attribution-tab-view [attributions]="selectedDataset.qualifiedAttribution"></app-attribution-tab-view>
                     </mat-tab>
-
+                -->
                     <mat-tab>
                         <ng-template mat-tab-label>
                             <mat-icon class="tab-icon">receipt</mat-icon>
@@ -93,7 +93,7 @@
                         </ng-template>
                         <app-terms-tab-view [conditions]="selectedDataset.conditionsOfAccess" [license]="selectedDataset.license"></app-terms-tab-view>
                     </mat-tab>
-
+<!--
                     <mat-tab>
                         <ng-template mat-tab-label>
                             <mat-icon class="tab-icon">portrait</mat-icon>
@@ -101,10 +101,11 @@
                         </ng-template>
                         <app-contacts-tab-view [contactDetails]="selectedDataset.project.contactPoint"></app-contacts-tab-view>
                     </mat-tab>
+                    -->
                 </mat-tab-group>
             </section>
         </div>
-    -->
+
         <div class="right-info column">
             <div class="metadata-box">
                 <h3>Dataset(s)</h3>
@@ -159,8 +160,8 @@
                             License
                         </div>
                         <div class="sidenav-prop-text property-value">
-                            <p class="license-entry" *ngFor="let license of selectedDataset.license">
-                                <a *ngIf="license.value" href="{{ license.value }}" target="_blank"> {{ license.value }} </a>
+                            <p class="p-block" *ngFor="let license of selectedDataset.license">
+                                <a *ngIf="license.url" href="{{ license.url }}" target="_blank"> {{ license.url }} </a>
                             </p>
                         </div>
                     </div>

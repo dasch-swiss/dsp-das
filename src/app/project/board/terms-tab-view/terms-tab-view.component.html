@@ -9,7 +9,11 @@
 
     <section>
         <h3>License:</h3>
-        <img class="license-image" src="/assets/images/cc-license.png" />
-        <a href="{{ license['value'] }}" target="_blank"> {{ license['value'] }} </a>
+        <div *ngFor="let entry of license">
+            <p *ngIf="entry.url">
+                <img class="license-image" src="/assets/images/cc-license.png" />
+                <a href="{{ entry.url }}" target="_blank"> {{ entry.url }} </a>
+            </p>
+        </div>
     </section>
 </div>

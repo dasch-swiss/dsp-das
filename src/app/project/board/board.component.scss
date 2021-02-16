@@ -152,10 +152,10 @@ section {
     .property:not(:last-child) {
       margin-bottom: 20px;
     }
+  }
 
-    .license-entry {
-      margin-top: 5px;
-    }
+  ::ng-deep .p-block {
+    margin-top: 0px;
   }
 
   // grid

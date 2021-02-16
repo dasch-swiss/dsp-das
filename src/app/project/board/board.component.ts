@@ -1,3 +1,4 @@
+import { KeyValuePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
@@ -62,12 +63,7 @@ export class BoardComponent implements OnInit {
     projectsMetadata: ProjectsMetadata;
     datasetList: Dataset[] = [];
     singleProjectList: SingleProject[] = [];
-    personList: Person[] = [];
-    organisationList: Organization[] = [];
-    grantList: Grant[] = [];
-    dataManagementPlanList: DataManagementPlan[] = [];
-
-    // metadata displayed on current page is from selected dataset
+    subProperties = {};
     selectedDataset: Dataset;
     selectedProject: SingleProject;
 
@@ -120,7 +116,6 @@ export class BoardComponent implements OnInit {
         this._cache.get(this.projectcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode)).subscribe(
             (response: ApiResponseData<ProjectResponse>) => {
                 this.project = response.body.project;
-                console.log(this.project);
 
                 // get project and dataset metadata from backend
                 this.getProjectMetadata();
@@ -414,33 +409,10 @@ export class BoardComponent implements OnInit {
                     else if (obj instanceof SingleProject) {
                         this.singleProjectList.push(obj);
                     }
-                    else if (obj instanceof Person) {
-                        this.personList.push(obj);
-                    }
-                    else if (obj instanceof Organization) {
-                        this.organisationList.push(obj);
-                    }
-                    else if (obj instanceof Grant) {
-                        this.grantList.push(obj);
-                    }
-                    else if (obj instanceof DataManagementPlan) {
-                        this.dataManagementPlanList.push(obj);
+                    else {
+                        this.subProperties[obj.id] = obj;
                     }
                 });
-
-                // by default display first dataset
-                this.selectedDataset = this.datasetList[0];
-
-                for (let proj of this.singleProjectList) {
-                    if (this.selectedDataset.project.id['@id'] === proj.id) {
-                        this.selectedProject = proj;
-                        break;
-                    }
-                };
-
-                console.log(this.selectedProject)
-
-                
 
                 const dsOptions = [];
                 // dataset options to display radio buttons for selection in right column
@@ -454,6 +426,20 @@ export class BoardComponent implements OnInit {
 
                 this.datasetOptions = dsOptions;
 
+                // by default display first dataset
+                this.selectedDataset = this.datasetList[0];
+
+                // get selected project for this dataset
+                // note that dataset always contains only one SingleProject
+                for (let proj of this.singleProjectList) {
+                    if (this.selectedDataset.project.id === proj.id) {
+                        this.selectedProject = proj;
+                        break;
+                    }
+                };
+
+                console.log(this.selectedProject)
+
             },
             (error: ApiResponseError) => {
                 console.log(error);
@@ -461,6 +447,10 @@ export class BoardComponent implements OnInit {
         );
 
         this.metadataLoading = false;
+    }
+
+    getSubProperty(id: string) {
+        return this.subProperties[id];
     }
 
     // download metadata
