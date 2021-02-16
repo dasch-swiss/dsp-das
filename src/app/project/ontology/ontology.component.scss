@@ -77,7 +77,8 @@ $width: 304px;
   }
 
   .resource-class-properties {
-    li {
+    li.property-info {
+      list-style-type: none;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

@@ -1,0 +1,38 @@
+<!-- class="property-info" [matTooltip]="ontology?.properties[prop.propertyIndex].comment" matTooltipPosition="above">
+                                        {{ontology?.properties[prop.propertyIndex].label}} {{prop.cardinality}} -->
+
+<!-- <div *ngIf="propInfo" -->
+
+<mat-list-item [matTooltip]="propDef.comment" matTooltipPosition="above">
+        <span mat-list-icon *ngIf="propType.label === 'Integer' || propType.label === 'Decimal'; else defaultIcons">
+            <mat-icon mat-list-icon [svgIcon]="propType.icon"></mat-icon>
+        </span>
+        <ng-template #defaultIcons>
+            <mat-icon mat-list-icon>{{propType.icon}}</mat-icon>
+        </ng-template>
+
+    <div mat-line>{{propCard.guiOrder}} {{propDef?.label}}</div>
+    <div mat-line class="info">
+        <mat-icon>{{propInfo.multiple ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> multiple
+        <mat-icon>{{propInfo.required ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> required
+    </div>
+</mat-list-item>
+
+<!-- <p class="" >
+    <span class="title">{{propCard?.guiOrder}} {{propDef?.label}}</span>
+    <span class="fill-remaining-space"></span>
+    <span class="icon">
+        <mat-icon>{{propType.icon}}</mat-icon>
+    </span>
+</p>
+<p> -->
+
+
+    <!-- <mat-icon>{{propType.icon}}</mat-icon> {{propDef?.label}}<span class="info">{{propType.group}}:&nbsp;{{propType.label}}</span></span><br> -->
+    <!-- <span class="info cardinality">
+        <mat-icon>{{propInfo.multiple ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> multiple
+    </span>
+    <span class="info cardinality">
+        <mat-icon>{{propInfo.required ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> required
+    </span>
+</p> -->

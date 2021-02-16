@@ -157,19 +157,18 @@
                                 </mat-menu>
                             </mat-toolbar-row>
                         </mat-toolbar>
-                        <div class="resource-class-properties">
-                            <ul>
+                        <mat-list class="resource-class-properties">
                                 <span *ngFor="let prop of resClass.propertiesList">
-                                    <!-- display only properties with guiOrder and they exist in list of properties
-                                and objectType is not a linkValue (otherwise we have the property twice) -->
-                                    <li
-                                        *ngIf="prop.guiOrder >= 0 && ontology?.properties[prop.propertyIndex] && ontology?.properties[prop.propertyIndex].objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue'">
-                                        {{ontology?.properties[prop.propertyIndex].label}}
-                                    </li>
+                                    <!-- display only properties with guiOrder and if they exist in list of properties;
+                                         objectType is not a linkValue (otherwise we have the property twice) -->
+                                    <app-property-info
+                                        *ngIf="prop.guiOrder >= 0
+                                        && ontology?.properties[prop.propertyIndex]
+                                        && ontology?.properties[prop.propertyIndex].objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue'"
+                                        [propDef]="ontology?.properties[prop.propertyIndex]" [propCard]="prop">
+                                    </app-property-info>
                                 </span>
-
-                            </ul>
-                        </div>
+                        </mat-list>
 
                     </div>
 
