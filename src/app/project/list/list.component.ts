@@ -218,7 +218,7 @@ export class ListComponent implements OnInit {
         );
 
         dialogRef.afterClosed().subscribe((data) => {
-            if (typeof(data) === 'boolean' && data === true) {
+            if (mode === 'deleteList' && typeof(data) === 'boolean' && data === true) {
                 this._dspApiConnection.admin.listsEndpoint.deleteListNode(this.listIri).subscribe(
                     (res: ApiResponseData<DeleteListResponse>) => {
                         this.lists = this.lists.filter(list => list.id !== res.body.iri);
