@@ -150,9 +150,6 @@ export class OntologyComponent implements OnInit {
                 // get the ontologies for this project
                 this.initList();
 
-                // cache other things like ontology and lists
-                this.setCache();
-
                 this.ontologyForm = this._fb.group({
                     ontology: new FormControl({
                         value: this.ontologyIri, disabled: false
@@ -160,8 +157,6 @@ export class OntologyComponent implements OnInit {
                 });
 
                 this.ontologyForm.valueChanges.subscribe(val => this.onValueChanged(val.ontology));
-
-                this.loading = false;
 
             },
             (error: ApiResponseError) => {
@@ -200,14 +195,15 @@ export class OntologyComponent implements OnInit {
                     this.getOntology(this.ontologies[0].id);
                 }
 
-                this.loading = false;
+                // cache other things like ontology and lists
+                this.setCache();
             },
             (error: ApiResponseError) => {
                 // temporary solution. There's a bug in js-lib in case of 0 ontologies
                 // s. youtrack issue DSP-863
                 this.ontologies = [];
-
                 this._errorHandler.showMessage(error);
+                this.loading = false;
             }
         )
     }
@@ -242,6 +238,8 @@ export class OntologyComponent implements OnInit {
 
                 this.ontology = response;
 
+                this.setCache();
+
                 if (!this.ontoClasses.length) {
                     const classKeys: string[] = Object.keys(response.classes);
 
@@ -249,7 +247,6 @@ export class OntologyComponent implements OnInit {
                         this.ontoClasses.push(this.ontology.classes[c]);
                     }
                 }
-                this.loadOntology = false;
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
@@ -402,8 +399,6 @@ export class OntologyComponent implements OnInit {
                         ontology.lastModificationDate = this.ontology.lastModificationDate;
                         this._dspApiConnection.v2.onto.deleteOntology(ontology).subscribe(
                             (response: DeleteOntologyResponse) => {
-                                this.loading = false;
-                                this.loadOntology = false;
                                 // reset current ontology
                                 this.ontology = undefined;
                                 // get the ontologies for this project
@@ -457,21 +452,24 @@ export class OntologyComponent implements OnInit {
 
     setCache() {
 
+        // set cache for current ontology
+        this._cache.set('currentOntology', this.ontology);
+
         // get all lists; will be used to set gui attribute in list property
         this._dspApiConnection.admin.listsEndpoint.getListsInProject(this.project.id).subscribe(
             (response: ApiResponseData<ListsResponse>) => {
                 this._cache.set('currentOntologyLists', response.body.lists);
-                // console.log('set currentOntologyLists', response.body.lists);
 
+                this.loading = false;
+                this.loadOntology = false;
             },
             (error: ApiResponseError) => {
-                // console.error('currentOntologyLists', error)
                 this._errorHandler.showMessage(error);
+                this.loading = false;
+                this.loadOntology = false;
             }
         );
 
-        // set cache for current ontology
-        this._cache.set('currentOntology', this.ontology);
     }
 
 }
