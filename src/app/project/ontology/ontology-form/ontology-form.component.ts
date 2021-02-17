@@ -31,6 +31,9 @@ export class OntologyFormComponent implements OnInit {
     // project short code
     @Input() projectcode: string;
 
+    // ontology iri in case of edit
+    @Input() iri: string;
+
     // existing ontology names; name has to be unique
     @Input() existingOntologyNames: string[];
 
@@ -43,6 +46,7 @@ export class OntologyFormComponent implements OnInit {
     ontologyForm: FormGroup;
 
     ontologyLabel: string = '';
+    ontologyComment: string = '';
 
     nameRegex = /^(?![vV][0-9]|[0-9]|[\u00C0-\u017F]).[a-zA-Z0-9]+\S*$/;
 
@@ -147,7 +151,10 @@ export class OntologyFormComponent implements OnInit {
                 value: this.ontologyLabel, disabled: false
             }, [
                 Validators.minLength(this.nameMinLength)
-            ])
+            ]),
+            comment: new FormControl({
+                value: this.ontologyComment, disabled: false
+            })
         });
 
         this.ontologyForm.valueChanges.subscribe(data => this.onValueChanged(data));
