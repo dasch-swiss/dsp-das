@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Cardinality, Constants, IHasProperty, PropertyDefinition, ResourceClassDefinition, ResourcePropertyDefinition, StringLiteral } from '@dasch-swiss/dsp-js';
+import { Cardinality, IHasProperty, PropertyDefinition, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { DefaultProperties, PropertyType } from '../default-data/default-properties';
+import { PropertyType } from '../default-data/default-properties';
 
 // property data structure
 export class Property {
@@ -146,7 +146,7 @@ export class ResourceClassFormService {
 
                         property.label = propDef.label;
 
-                        if(ontoProperties[key].isLinkProperty) {
+                        if (ontoProperties[key].isLinkProperty) {
                             property.guiAttr = propDef.objectType;
                         } else {
                             property.guiAttr = propDef.guiAttributes[0];

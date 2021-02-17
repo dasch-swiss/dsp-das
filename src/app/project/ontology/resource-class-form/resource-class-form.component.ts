@@ -250,6 +250,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
                         // set default property language from resource class / first element
                         this.resourceClassForm.controls.language.setValue(ontoClasses[key].labels[0].language);
+                        this.resourceClassForm.controls.language.disable();
                     }
                 });
             }
@@ -523,6 +524,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     createProp(prop: Property, classIri?: string) {
         return new Promise((resolve, reject) => {
 
+            console.log('create prop', this.resourceClassForm.controls.language)
+
             // set resource property name / id: randomized string
             const uniquePropName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
 
@@ -538,7 +541,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             newResProp.label = [
                 {
                     'value': prop.label,
-                    'language': this.resourceClassForm.value['language']
+                    'language': this.resourceClassForm.controls.language.value
                 }
             ];
             if (prop.guiAttr) {
