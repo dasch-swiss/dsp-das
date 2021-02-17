@@ -524,8 +524,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     createProp(prop: Property, classIri?: string) {
         return new Promise((resolve, reject) => {
 
-            console.log('create prop', this.resourceClassForm.controls.language)
-
             // set resource property name / id: randomized string
             const uniquePropName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
 
