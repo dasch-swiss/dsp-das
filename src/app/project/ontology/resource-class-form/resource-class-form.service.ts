@@ -33,7 +33,6 @@ export class Property {
     }
 }
 
-
 // property form controls
 export class PropertyForm {
     iri = new FormControl();
@@ -77,7 +76,6 @@ export class ResourceClass {
         this.properties = properties;
     }
 }
-
 
 // resource class form controls
 export class ResourceClassForm {
