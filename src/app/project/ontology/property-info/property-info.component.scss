@@ -5,8 +5,11 @@
   height: 56px;
 }
 
-.mat-list-icon.order {
+.additional-info {
   color: $primary_700;
+}
+
+.mat-list-icon.order {
   font-size: 16px;
   height: 16px;
   width: 16px;
@@ -23,7 +26,6 @@
 
 .mat-line.info {
   font-size: small;
-  color: $primary_700;
 
   .mat-icon {
     width: 12px;
