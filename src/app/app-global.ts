@@ -19,8 +19,8 @@ export class AppGlobal {
             icon: 'group'
         },
         {
-            label: 'Permission groups',
-            shortLabel: 'Groups',
+            label: 'Permissions',
+            shortLabel: 'Permissions',
             route: 'permissions',
             icon: 'lock_open'
         },
