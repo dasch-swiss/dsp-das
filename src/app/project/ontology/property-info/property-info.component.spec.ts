@@ -1,8 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IHasProperty, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { PropertyInfoComponent } from './property-info.component';
 
@@ -64,8 +67,11 @@ describe('PropertyInfoComponent', () => {
                 PropertyInfoComponent
             ],
             imports: [
+                BrowserAnimationsModule,
+                MatDialogModule,
                 MatIconModule,
                 MatListModule,
+                MatSnackBarModule,
                 MatTooltipModule
             ]
         })
