@@ -6,16 +6,20 @@
 
     <mat-card *ngFor="let attribution of attributions" class="attribution-entry">
 
-        <h3 class="color-for-role"> {{ attribution.role | titlecase }} </h3>
-
-        <div *ngIf="getAgentType(attribution.agent) === 'person'">
-            <app-person-template [person]="attribution.agent"></app-person-template>
+        <div *ngFor="let role of attribution.role">
+            <h3 class="color-for-role"> {{ role | titlecase }} </h3>
         </div>
-
-        <div *ngIf="getAgentType(attribution.agent) === 'organisation'">
-            <app-organisation-template [organisation]="attribution.agent"></app-organisation-template>
+        <h4>Agent(s):</h4>
+        <div class="add-margin-left" *ngFor="let agent of attribution.agent">
+            <div [ngSwitch]="setAgent(agent)">
+                <div *ngSwitchCase="'person'">
+                    <app-person-template [person]="currentAgent" [subProperties]="subProperties"></app-person-template>
+                </div>
+                <div *ngSwitchCase="'organization'">
+                    <app-organisation-template [organisation]="currentAgent"></app-organisation-template>
+                </div>
+            </div>
         </div>
-
     </mat-card>
 
 </div>

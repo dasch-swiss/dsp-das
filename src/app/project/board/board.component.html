@@ -69,7 +69,7 @@
                         </ng-template>
                         <app-project-tab-view [selectedProject]="selectedProject" [subProperties]="subProperties"></app-project-tab-view>
                     </mat-tab>
-                    <!--
+
                     <mat-tab>
                         <ng-template mat-tab-label>
                             <mat-icon class="tab-icon">collections</mat-icon>
@@ -77,15 +77,15 @@
                         </ng-template>
                         <app-dataset-tab-view [metadata]="selectedDataset" [noOfDatasets]="datasetOptions.length"></app-dataset-tab-view>
                     </mat-tab>
-
+                    
                     <mat-tab>
                         <ng-template mat-tab-label>
                             <mat-icon class="tab-icon">assignment</mat-icon>
                             Attribution
                         </ng-template>
-                        <app-attribution-tab-view [attributions]="selectedDataset.qualifiedAttribution"></app-attribution-tab-view>
+                        <app-attribution-tab-view [attributions]="selectedDataset.qualifiedAttribution" [subProperties]="subProperties"></app-attribution-tab-view>
                     </mat-tab>
-                -->
+                
                     <mat-tab>
                         <ng-template mat-tab-label>
                             <mat-icon class="tab-icon">receipt</mat-icon>
@@ -93,15 +93,13 @@
                         </ng-template>
                         <app-terms-tab-view [conditions]="selectedDataset.conditionsOfAccess" [license]="selectedDataset.license"></app-terms-tab-view>
                     </mat-tab>
-<!--
                     <mat-tab>
                         <ng-template mat-tab-label>
                             <mat-icon class="tab-icon">portrait</mat-icon>
                             Contact
                         </ng-template>
-                        <app-contacts-tab-view [contactDetails]="selectedDataset.project.contactPoint"></app-contacts-tab-view>
+                        <app-contacts-tab-view [contactDetails]="selectedProject.contactPoint" [subProperties]="subProperties"></app-contacts-tab-view>
                     </mat-tab>
-                    -->
                 </mat-tab-group>
             </section>
         </div>

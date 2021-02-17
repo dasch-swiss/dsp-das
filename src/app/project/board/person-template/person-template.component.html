@@ -1,27 +1,40 @@
 <div class="person">
-    <h3> {{ person.givenName }} {{person.familyName }} </h3>
+    <h3> 
+        <span> {{ person.givenName }} </span>
+        <span *ngIf="person.familyName"> {{ person.familyName }} </span>
+    </h3>
 
     <div *ngIf="person.jobTitle">
         <h4>Job title:</h4>
-        <span> {{ person.jobTitle }} </span>
+        <div class="add-margin-left">
+            <p *ngFor="let title of person.jobTitle">
+                <span> {{ person.jobTitle }} </span>
+            </p>
+        </div>
     </div>
 
     <div *ngIf="person.sameAs">
-        <h4>sameAs:</h4>
-        <a href="{{ person.sameAs.value }}" target="_blank"> {{ person.sameAs.value }} </a>
+        <div class="add-margin-left" *ngIf="person.sameAs.url">
+            <h4>sameAs:</h4>
+            <a href="{{ person.sameAs.url }}" target="_blank"> {{ person.sameAs.url }} </a>
+        </div>
     </div>
 
     <div *ngIf="person.email">
         <h4>Email:</h4>
-        <a href="mailto:{{ person.email }}"> {{ person.email }} </a>
+        <div class="add-margin-left"  *ngFor="let em of person.email">
+            <a href="mailto:{{ em }}"> {{ em }} </a>
+        </div>
     </div>
 
     <app-address-template *ngIf="person.address" [address]="person.address"></app-address-template>
 
-    <div *ngIf="person.organisation" class="sub-details">
-        <h4>Member of:</h4>
-        <div class="contents">
-            <app-organisation-template  [organisation]="person.organisation"></app-organisation-template>
+    <div class="sub-details">
+        <h4>Member of organization(s):</h4>
+        <div class="add-margin-left">
+            <mat-card *ngFor="let org of organizationList">
+                <app-organisation-template  [organisation]="org"></app-organisation-template>
+            </mat-card>
         </div>
     </div>
 

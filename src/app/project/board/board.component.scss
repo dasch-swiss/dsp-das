@@ -158,6 +158,14 @@ section {
     margin-top: 0px;
   }
 
+  ::ng-deep .remove-top-margin {
+    margin-top: 0px;
+  }
+
+  ::ng-deep .add-margin-left {
+    margin-left: 35px;
+  }
+
   // grid
   ::ng-deep .properties-container {
     display: grid;
@@ -213,9 +221,6 @@ section {
 
     .sub-details {
       margin-top: 10px;
-      .contents {
-        margin-left: 35px;
-      }
     }
   }
 
