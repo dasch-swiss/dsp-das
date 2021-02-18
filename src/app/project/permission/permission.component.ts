@@ -2,9 +2,16 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import {
+    AdministrativePermission,
+    AdministrativePermissionsResponse,
     ApiResponseData,
     ApiResponseError,
+    DefaultObjectAccessPermission,
+    DefaultObjectAccessPermissionsResponse,
     KnoraApiConnection,
+    Permission,
+    ProjectPermission,
+    ProjectPermissionsResponse,
     ProjectResponse,
     ReadGroup,
     ReadProject
@@ -38,6 +45,17 @@ export class PermissionComponent implements OnInit {
     // project members
     projectGroups: ReadGroup[] = [];
 
+    allPermissions: ProjectPermission[] = [];
+
+    // administrative permissions
+    adminPermission: AdministrativePermission[] = [];
+    apHasPermission: Permission[] = [];
+
+    // default object access permissions
+    doaPermission: DefaultObjectAccessPermission[] = [];
+    doapHasPermission: Permission[] = [];
+
+
     @ViewChild('addGroupComponent') addGroup: AddGroupComponent;
 
     constructor(
@@ -54,7 +72,7 @@ export class PermissionComponent implements OnInit {
         });
 
         // set the page title
-        this._titleService.setTitle('Project ' + this.projectcode + ' | Permission Groups');
+        this._titleService.setTitle('Project ' + this.projectcode + ' | Permissions');
 
     }
 
@@ -62,9 +80,6 @@ export class PermissionComponent implements OnInit {
 
         // get information about the logged-in user
         this.session = this._session.getSession();
-
-        // is the logged-in user system admin?
-        this.sysAdmin = this.session.user.sysAdmin;
 
         // is the logged-in user system admin?
         this.sysAdmin = this.session.user.sysAdmin;
@@ -80,7 +95,9 @@ export class PermissionComponent implements OnInit {
                 // is logged-in user projectAdmin?
                 this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
 
-                this.initList();
+                this.getProjectPermissions(this.project.id);
+                this.getAdministrativePermissions(this.project.id);
+                this.getDefaultObjectAccessPermissions(this.project.id);
 
                 this.loading = false;
             },
@@ -92,28 +109,48 @@ export class PermissionComponent implements OnInit {
 
     }
 
-
-    /**
-     * build the list of members
-     */
-    initList(): void {
-
+    getProjectPermissions(projectIri: string) {
+        this._dspApiConnection.admin.permissionsEndpoint.getProjectPermissions(projectIri).subscribe(
+            (response: ApiResponseData<ProjectPermissionsResponse>)=> {
+                this.allPermissions = response.body.permissions;
+                console.log('getProjectPermissions response', this.allPermissions);
+        });
     }
-    /**
-   * refresh list of members after adding a new user to the team
-   */
-    refresh(): void {
-        // referesh the component
-        this.loading = true;
-        // update the cache
-        this._cache.del('members_of_' + this.projectcode);
 
-        this.initList();
+    getAdministrativePermissions(projectIri: string) {
+        this._dspApiConnection.admin.permissionsEndpoint.getAdministrativePermissions(projectIri).subscribe(
+            (response: ApiResponseData<AdministrativePermissionsResponse>)=> {
+                if (response) {
+                    this.adminPermission = response.body.administrative_permissions;
+                    console.log('getAdministrativePermissions response', this.adminPermission);
 
-        // refresh child component: add user
-        if (this.addGroup) {
-            this.addGroup.buildForm();
-        }
+                    for (const ap of this.adminPermission) {
+                        if (ap.forGroup) {
+                            this.apHasPermission = ap.hasPermissions;
+
+                            console.log(' admin hasPermissions: ', this.apHasPermission);
+                        }
+                    }
+                }
+        });
+    }
+
+    getDefaultObjectAccessPermissions(projectIri: string) {
+        this._dspApiConnection.admin.permissionsEndpoint.getDefaultObjectAccessPermissions(projectIri).subscribe(
+            (response: ApiResponseData<DefaultObjectAccessPermissionsResponse>)=> {
+                if (response) {
+                    this.doaPermission = response.body.defaultObjectAccessPermissions;
+                    console.log('getDefaultObjectAccessPermissions response', this.doaPermission);
+
+                        for (const doap of this.doaPermission) {
+                            if (doap.forGroup) {
+                                this.doapHasPermission = doap.hasPermissions;
+
+                                // console.log(doap.forGroup + ' hasPermissions: ', this.doapHasPermission);
+                            }
+                        }
+                }
+        });
     }
 
 }

@@ -1,0 +1,17 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto;
+  gap: 10px 10px;
+  justify-items: center;
+  align-items: center;
+  background-color: lightgray;
+}
+
+.grid-item {
+  margin: 0 0 24px 0;
+  box-sizing: border-box;
+  border: 1px solid magenta;
+  text-align: center;
+  background-color: lightslategray;
+}

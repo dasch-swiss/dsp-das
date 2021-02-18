@@ -1,8 +1,10 @@
 <div *ngIf="projectAdmin" class="content large middle">
 
+    PERMISSIONS MANAGER PAGE
+
     <!-- add group to the project -->
-    <app-add-group *ngIf="project?.status && sysAdmin" [projectcode]="projectcode" (refreshParent)="refresh()"
-        #addGroupComponent></app-add-group>
+    <!-- <app-add-group *ngIf="project?.status && sysAdmin" [projectcode]="projectcode" (refreshParent)="refresh()"
+        #addGroupComponent></app-add-group> -->
 
     <!-- <mat-divider *ngIf="project?.status" ></mat-divider> -->
 
@@ -10,14 +12,31 @@
 
     <div *ngIf="!loading" class="content">
 
-        <!-- list of active groups? -->
-        <app-groups-list></app-groups-list>
+       <!-- GRID -->
+        <div class="grid-container">
+            <div *ngFor="let doap of doaPermission" class="grid-item">
+                <div *ngIf="doap.forGroup">
+                    <p>{{doap?.forGroup}}</p>
+                    <div *ngFor="let permission of doap.hasPermissions" class="perm-item">
+                        <p>{{permission.name}} ({{permission.additionalInformation}})</p>
+                    </div>
+                </div>
+            </div>
+            <mat-divider></mat-divider>
+            <div *ngFor="let ap of adminPermission" class="grid-item">
+                <div *ngIf="ap.forGroup">
+                    <p>{{ap?.forGroup}}</p>
+                    <div *ngFor="let permission of ap.hasPermissions" class="perm-item">
+                        <span *ngIf="permission.name === 'ProjectResourceCreateAllPermission'">
+                            <p>{{permission.name}} ({{permission.additionalInformation}})</p>
+                        </span>
 
-        <!-- list of inactive groups -->
-
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
-
 </div>
 
 <div *ngIf="!projectAdmin" class="content large middle">
