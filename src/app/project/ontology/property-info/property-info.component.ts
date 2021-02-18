@@ -93,7 +93,6 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
             // get current ontology to get linked res class information
             this._cache.get('currentOntology').subscribe(
                 (response: ReadOntology) => {
-                    // console.log(this.propDef.objectType);
                     // get the base ontology of object type
                     const baseOnto = this.propDef.objectType.split('#')[0];
                     if (baseOnto !== response.id) {

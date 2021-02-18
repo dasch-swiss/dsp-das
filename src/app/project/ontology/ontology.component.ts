@@ -206,11 +206,8 @@ export class OntologyComponent implements OnInit {
                 const loadAndCache = async () => {
                     await this.asyncForEach(response.ontologies, async (onto: OntologyMetadata) => {
                         await waitFor(120);
-                        console.log('loading?', this.loading)
-                        console.log('onto?', onto);
                     });
                     if (this.ontologies.length === response.ontologies.length) {
-                        console.log('Done', this.ontologies);
                         this.setCache();
                     }
                 }
