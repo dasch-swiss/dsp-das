@@ -1,19 +1,15 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, resolveForwardRef, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ApiResponseData, ListNode, ListNodeInfo, ListResponse, ListsEndpointAdmin, RepositionChildNodeResponse, StringLiteral } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ListNode, ListNodeInfo, ListResponse, ListsEndpointAdmin, RepositionChildNodeResponse } from '@dasch-swiss/dsp-js';
 import {
     DspActionModule,
     DspApiConnectionToken
 } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { ErrorComponent } from 'src/app/main/error/error.component';
-import { ListItemFormComponent, ListNodeOperation } from '../list-item-form/list-item-form.component';
+import { ListNodeOperation } from '../list-item-form/list-item-form.component';
 import { ListItemComponent } from './list-item.component';
 
 /**
