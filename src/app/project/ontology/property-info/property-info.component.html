@@ -14,7 +14,7 @@
             {{propDef?.label}}
         </span>
         <!-- property is linked to a class or to a list: display connected class or list -->
-        <span class="attribute additional-info" *ngIf="propAttribute" [innerHTML]="'&rarr;' + propAttribute"></span>
+        <span class="attribute additional-info" *ngIf="propAttribute" [innerHTML]="'&rarr;&nbsp;' + propAttribute"></span>
     </div>
     <div mat-line class="info additional-info">
         <mat-icon>{{propInfo.multiple ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> multiple
