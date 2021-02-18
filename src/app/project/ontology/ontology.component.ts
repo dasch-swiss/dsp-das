@@ -72,7 +72,7 @@ export class OntologyComponent implements OnInit {
     ontologyForm: FormGroup;
 
     // display resource classes as grid or as graph
-    view: 'grid' | 'graph' = 'grid';
+    view: 'classes' | 'properties' | 'graph' = 'classes';
 
     // i18n setup
     itemPluralMapping = {
@@ -111,11 +111,17 @@ export class OntologyComponent implements OnInit {
             this.projectcode = params.get('shortcode');
         });
 
-        // get ontology iri from route
-        if (this._route.snapshot && this._route.snapshot.params.id) {
-            this.ontologyIri = decodeURIComponent(this._route.snapshot.params.id);
-            this.getOntology(this.ontologyIri);
+        if (this._route.snapshot) {
+            // get ontology iri from route
+            if (this._route.snapshot.params.id) {
+                this.ontologyIri = decodeURIComponent(this._route.snapshot.params.id);
+                this.getOntology(this.ontologyIri);
+            }
+            // get view from route: classes, properties or graph
+            this.view = (this._route.snapshot.params.view ? this._route.snapshot.params.view : 'classes');
         }
+
+        //
 
         // set the page title
         if (this.ontologyIri) {
@@ -196,7 +202,7 @@ export class OntologyComponent implements OnInit {
                 // because there will be no form to select ontlogy
                 if (response.ontologies.length === 1) {
                     // open this ontology
-                    this.openOntologyRoute(this.ontologies[0].id);
+                    this.openOntologyRoute(this.ontologies[0].id, this.view);
                     this.getOntology(this.ontologies[0].id);
                 }
 
@@ -224,9 +230,14 @@ export class OntologyComponent implements OnInit {
 
     }
 
-    // open ontology route by iri
-    openOntologyRoute(id: string) {
-        const goto = 'project/' + this.projectcode + '/ontologies/' + encodeURIComponent(id);
+    /**
+     * Opens ontology route by iri
+     * @param id ontology id/iri
+     * @param view 'classes' | 'properties' | ' graph'
+     */
+    openOntologyRoute(id: string, view: 'classes' | 'properties' | 'graph') {
+        this.view = view;
+        const goto = 'project/' + this.projectcode + '/ontologies/' + encodeURIComponent(id) + '/' + view;
         this._router.navigateByUrl(goto, { skipLocationChange: false });
     }
 
@@ -263,7 +274,7 @@ export class OntologyComponent implements OnInit {
 
         this.ontology = undefined;
         this.ontoClasses = [];
-        this.openOntologyRoute(id);
+        this.openOntologyRoute(id, this.view);
         this.getOntology(id);
 
     }
@@ -445,14 +456,6 @@ export class OntologyComponent implements OnInit {
 
             }
         });
-    }
-
-    /**
-     *
-     * @param view 'grid' | ' graph'
-     */
-    toggleView(view: 'grid' | 'graph') {
-        this.view = view;
     }
 
     setCache() {
