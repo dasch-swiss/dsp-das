@@ -132,55 +132,47 @@ export class ResourceClassFormService {
 
         // get cardinality and gui order and grab property definition
         resClass.propertiesList.forEach((prop: IHasProperty) => {
-            if (prop.guiOrder >= 0) {
 
-                // get property definition
-                Object.keys(ontoProperties).forEach(key => {
-                    if (ontoProperties[key].id === prop.propertyIndex && !ontoProperties[key].isLinkValueProperty) {
-                        const propDef: ResourcePropertyDefinition = ontoProperties[key];
+            // get property definition
+            Object.keys(ontoProperties).forEach(key => {
+                if (ontoProperties[key].id === prop.propertyIndex && !ontoProperties[key].isLinkValueProperty) {
+                    const propDef: ResourcePropertyDefinition = ontoProperties[key];
 
-                        const property: Property = new Property();
-                        // property.propDef = ontoProperties[key];
+                    const property: Property = new Property();
 
-                        property.label = propDef.label;
+                    property.label = propDef.label;
 
-                        if (ontoProperties[key].isLinkProperty) {
-                            property.guiAttr = propDef.objectType;
-                        } else {
-                            property.guiAttr = propDef.guiAttributes[0];
-                        }
-                        property.iri = prop.propertyIndex;
-
-                        // convert cardinality
-                        switch (prop.cardinality) {
-                            case 0:
-                                property.multiple = false;
-                                property.required = true;
-                                break;
-                            case 1:
-                                property.multiple = false;
-                                property.required = false;
-                                break;
-                            case 2:
-                                property.multiple = true;
-                                property.required = false;
-                                break;
-                            case 3:
-                                property.multiple = true;
-                                property.required = true;
-                                break;
-                        }
-
-                        // find property type in list of default properties
-                        // just a test
-                        // property.type = DefaultProperties.data[0].elements[0];
-
-                        this.addProperty(property);
-
+                    if (ontoProperties[key].isLinkProperty) {
+                        property.guiAttr = propDef.objectType;
+                    } else {
+                        property.guiAttr = propDef.guiAttributes[0];
                     }
-                });
+                    property.iri = prop.propertyIndex;
 
-            }
+                    // convert cardinality
+                    switch (prop.cardinality) {
+                        case 0:
+                            property.multiple = false;
+                            property.required = true;
+                            break;
+                        case 1:
+                            property.multiple = false;
+                            property.required = false;
+                            break;
+                        case 2:
+                            property.multiple = true;
+                            property.required = false;
+                            break;
+                        case 3:
+                            property.multiple = true;
+                            property.required = true;
+                            break;
+                    }
+
+                    this.addProperty(property);
+
+                }
+            });
 
         });
 
