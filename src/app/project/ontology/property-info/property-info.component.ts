@@ -87,12 +87,31 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
     }
 
     ngAfterContentInit() {
+
         if (this.propDef.isLinkProperty) {
             // this property is a link property to another resource class
             // get current ontology to get linked res class information
             this._cache.get('currentOntology').subscribe(
                 (response: ReadOntology) => {
-                    this.propAttribute = response.classes[this.propDef.objectType].label;
+                    // console.log(this.propDef.objectType);
+                    // get the base ontology of object type
+                    const baseOnto = this.propDef.objectType.split('#')[0];
+                    if (baseOnto !== response.id) {
+                        // get class info from another ontology
+                        this._cache.get('currentProjectOntologies').subscribe(
+                            (response: ReadOntology[]) => {
+                                const onto = response.find(i => i.id === baseOnto);
+                                if (!onto && this.propDef.objectType === Constants.Region) {
+                                    this.propAttribute = 'Region';
+                                } else {
+                                    this.propAttribute = onto.classes[this.propDef.objectType].label;
+                                }
+                            }
+                        )
+                    } else {
+                        this.propAttribute = response.classes[this.propDef.objectType].label;
+                    }
+
                 }
             );
         }

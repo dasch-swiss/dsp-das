@@ -7,6 +7,7 @@ import {
     ApiResponseData,
     ApiResponseError,
     ClassDefinition,
+    Constants,
     DeleteOntologyResponse,
     DeleteResourceClass,
     KnoraApiConnection,
@@ -55,17 +56,18 @@ export class OntologyComponent implements OnInit {
     // project data
     project: ReadProject;
 
-    // ontologies
-    ontologies: OntologyMetadata[];
+    // all project ontologies
+    ontologies: ReadOntology[] = [];
+
     // existing project ontology names
     existingOntologyNames: string[] = [];
 
-    // ontology JSON-LD object
+    // current/selected ontology
     ontology: ReadOntology;
 
     ontoClasses: ClassDefinition[];
 
-    // selected ontology
+    // selected ontology id
     ontologyIri: string = undefined;
 
     // form to select ontology from list
@@ -114,7 +116,6 @@ export class OntologyComponent implements OnInit {
         // get ontology iri from route
         if (this._route.snapshot && this._route.snapshot.params.id) {
             this.ontologyIri = decodeURIComponent(this._route.snapshot.params.id);
-            this.getOntology(this.ontologyIri);
         }
 
         // set the page title
@@ -166,6 +167,26 @@ export class OntologyComponent implements OnInit {
         );
     }
 
+
+    /**
+     * Asyncs for each: Get all ontologies of project as ReadOntology
+     * @param ontologies
+     * @param callback
+     */
+    async asyncForEach(ontologies: OntologyMetadata[], callback: any) {
+        for (let i = 0; i < ontologies.length; i++) {
+            // set list of already existing ontology names
+            // it will be used in ontology form
+            // because ontology name has to be unique
+            let name = this._resourceClassFormService.getOntologyName(ontologies[i].id);
+            this.existingOntologyNames.push(name);
+
+            // get each ontology
+            this.getOntology(ontologies[i].id, true);
+            await callback(ontologies[i]);
+        }
+    }
+
     /**
      * build the list of ontologies
      */
@@ -173,30 +194,36 @@ export class OntologyComponent implements OnInit {
 
         this.loading = true;
 
-        // reset existing ontology names
+        // reset existing ontology names and ontologies
         this.existingOntologyNames = [];
+        this.ontologies = [];
+
+        const waitFor = (ms: number) => new Promise(r => setTimeout(r, ms));
 
         this._dspApiConnection.v2.onto.getOntologiesByProjectIri(this.project.id).subscribe(
             (response: OntologiesMetadata) => {
-                this.ontologies = response.ontologies;
 
-                // get list of already existing ontology names
-                // name has to be unique
-                for (const ontology of response.ontologies) {
-                    let name = this._resourceClassFormService.getOntologyName(ontology.id);
-                    this.existingOntologyNames.push(name);
+                const loadAndCache = async () => {
+                    await this.asyncForEach(response.ontologies, async (onto: OntologyMetadata) => {
+                        await waitFor(120);
+                        console.log('loading?', this.loading)
+                        console.log('onto?', onto);
+                    });
+                    if (this.ontologies.length === response.ontologies.length) {
+                        console.log('Done', this.ontologies);
+                        this.setCache();
+                    }
                 }
+
+                loadAndCache();
 
                 // in case project has only one ontology: open this ontology
                 // because there will be no form to select ontlogy
                 if (response.ontologies.length === 1) {
                     // open this ontology
-                    this.openOntologyRoute(this.ontologies[0].id);
-                    this.getOntology(this.ontologies[0].id);
+                    this.openOntologyRoute(response.ontologies[0].id);
                 }
 
-                // cache other things like ontology and lists
-                this.setCache();
             },
             (error: ApiResponseError) => {
                 // temporary solution. There's a bug in js-lib in case of 0 ontologies
@@ -226,34 +253,39 @@ export class OntologyComponent implements OnInit {
         this._router.navigateByUrl(goto, { skipLocationChange: false });
     }
 
-    // get ontology
-    getOntology(id: string) {
-
-        this.ontoClasses = [];
-
-        this.loadOntology = true;
-
+    // get ontology info
+    getOntology(id: string, updateOntologiesList: boolean = false) {
         this._dspApiConnection.v2.onto.getOntology(id, true).subscribe(
             (response: ReadOntology) => {
 
-                this.ontology = response;
+                if (updateOntologiesList) {
+                    this.ontologies.push(response);
+                }
 
-                this.setCache();
+                // get current ontology as a separate part
+                if (response.id === this.ontologyIri) {
+                    this.ontology = response;
+                    // the ontology is the selected one
+                    // grab the onto class information to display
+                    this.ontoClasses = [];
 
-                if (!this.ontoClasses.length) {
                     const classKeys: string[] = Object.keys(response.classes);
-
+                    // create list of resource classes without standoff classes
                     for (const c of classKeys) {
-                        this.ontoClasses.push(this.ontology.classes[c]);
+                        const splittedSubClass = this.ontology.classes[c].subClassOf[0].split('#');
+
+                        if (splittedSubClass[0] !== Constants.StandoffOntology && splittedSubClass[1] !== 'StandoffTag' && splittedSubClass[1] !== 'StandoffLinkTag') {
+                            this.ontoClasses.push(this.ontology.classes[c]);
+                        }
                     }
                 }
+
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
                 this.loadOntology = false;
             }
         );
-
     }
 
     resetOntology(id: string) {
@@ -261,7 +293,8 @@ export class OntologyComponent implements OnInit {
         this.ontology = undefined;
         this.ontoClasses = [];
         this.openOntologyRoute(id);
-        this.getOntology(id);
+        this.initList();
+        // this.getOntology(id);
 
     }
 
@@ -330,7 +363,8 @@ export class OntologyComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             // update the view
-            this.getOntology(this.ontologyIri);
+            this.initList();
+            // this.getOntology(this.ontologyIri);
         });
     }
 
@@ -361,7 +395,8 @@ export class OntologyComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             // update the view
-            this.getOntology(this.ontologyIri);
+            this.initList();
+            // this.getOntology(this.ontologyIri);
         });
     }
 
@@ -427,7 +462,8 @@ export class OntologyComponent implements OnInit {
                         this._dspApiConnection.v2.onto.deleteResourceClass(resClass).subscribe(
                             (response: OntologyMetadata) => {
                                 this.loading = false;
-                                this.getOntology(this.ontologyIri);
+                                this.initList();
+                                // this.getOntology(this.ontologyIri);
                             },
                             (error: ApiResponseError) => {
                                 this._errorHandler.showMessage(error);
@@ -454,8 +490,10 @@ export class OntologyComponent implements OnInit {
 
         // set cache for current ontology
         this._cache.set('currentOntology', this.ontology);
+        this._cache.set('currentProjectOntologies', this.ontologies);
 
-        // get all lists; will be used to set gui attribute in list property
+        // get all lists from the project
+        // it will be used to set gui attribute in a list property
         this._dspApiConnection.admin.listsEndpoint.getListsInProject(this.project.id).subscribe(
             (response: ApiResponseData<ListsResponse>) => {
                 this._cache.set('currentOntologyLists', response.body.lists);
