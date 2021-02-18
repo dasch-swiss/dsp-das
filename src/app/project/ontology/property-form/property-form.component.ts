@@ -67,7 +67,7 @@ export class PropertyFormComponent implements OnInit {
     lists: ListNodeInfo[];
 
     // resource classs in this ontology
-    reresourceClasss: ClassDefinition[] = [];
+    resourceClass: ClassDefinition[] = [];
 
     // list of existing properties
     properties: AutocompleteItem[] = [];
@@ -131,7 +131,7 @@ export class PropertyFormComponent implements OnInit {
                 // set list of resource classes from response; needed for linkValue
                 const classKeys: string[] = Object.keys(response.classes);
                 for (const c of classKeys) {
-                    this.reresourceClasss.push(this.ontology.classes[c]);
+                    this.resourceClass.push(this.ontology.classes[c]);
                 }
 
                 // b) in case of already existing label:
