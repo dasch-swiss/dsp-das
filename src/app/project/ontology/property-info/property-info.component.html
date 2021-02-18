@@ -2,7 +2,7 @@
     <span mat-list-icon class="order additional-info">{{propCard.guiOrder}})</span>
 
     <div mat-line class="title">
-        <span class="icon" [matTooltip]="propType?.group + ': ' + propType?.label" matTooltipPosition="above">
+        <span class="icon" *ngIf="propType" [matTooltip]="propType?.group + ': ' + propType?.label" matTooltipPosition="above">
             <span *ngIf="propType?.label === 'Integer' || propType?.label === 'Decimal'; else defaultIcons">
                 <mat-icon [svgIcon]="propType?.icon"></mat-icon>
             </span>
