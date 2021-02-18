@@ -1,5 +1,5 @@
 <mat-list-item>
-    <span mat-list-icon class="order additional-info">{{propCard.guiOrder}})</span>
+    <span *ngIf="propCard.guiOrder >=0" mat-list-icon class="order additional-info">{{propCard.guiOrder}})</span>
 
     <div mat-line class="title">
         <span class="icon" *ngIf="propType" [matTooltip]="propType?.group + ': ' + propType?.label" matTooltipPosition="above">
