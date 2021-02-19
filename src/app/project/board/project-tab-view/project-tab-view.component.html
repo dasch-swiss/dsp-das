@@ -28,11 +28,19 @@
                         </p>
                     </div>
 
-                    <!-- template for funder 
+                    <!-- template for funder -->
                     <div *ngSwitchCase="'funder'">
-                        <a href="{{ selectedProject.funder.id }}" target="_blank"> {{ selectedProject.funder.id }} </a>
+                        <mat-card *ngFor="let funder of funders">
+                            <div [ngSwitch]="funderType">
+                                <div *ngSwitchCase="'person'">
+                                    <app-person-template [person]="funder" [subProperties]="subProperties"></app-person-template>
+                                </div>
+                                <div *ngSwitchCase="'organization'">
+                                    <app-organisation-template [organisation]="funder"></app-organisation-template>
+                                </div>
+                            </div>
+                        </mat-card>
                     </div>
-                    -->
 
                     <!-- template for keywords -->
                     <div *ngSwitchCase="'keywords'">
@@ -54,17 +62,34 @@
                         </div>
                     </div>
 
-                    <!-- template for grant 
+                    <!-- template for grant -->
                     <div *ngSwitchCase="'grant'">
-                        <span *ngIf="selectedProject.grant.name"> {{ selectedProject.grant.name }} </span>
-                        <p> Id: <a href="{{ selectedProject.grant.id }}" target="_blank"> {{ selectedProject.grant.id }} </a> </p>
-                        <p> URL: <a href="{{ selectedProject.grant.url.value }}" target="_blank"> {{ metaselectedProjectdata.grant.url.value }} </a></p>
-                        <p> Funder: <a href="{{ selectedProject.grant.funder.id }}" target="_blank"> {{ selectedProject.grant.funder.id }} </a></p>
-                        <div *ngIf="selectedProject.grant.number" class="mat-icon-text">
-                            <mat-icon aria-hidden="false" aria-label="Call" class="small">call</mat-icon>
-                            <a href="tel:{{ selectedProject.grant.number }}"> {{ selectedProject.grant.number }} </a>
-                        </div>
-                    </div> -->
+                        <mat-card *ngFor="let grant of grants">
+                            <p *ngIf="grant.name"> {{ grant.name }} </p>
+                            <div *ngIf="grant.url">
+                                URL(s):
+                                <p class="add-margin-left"  *ngFor="let entry of grant.url">
+                                    <a href="{{ entry.url }}" target="_blank"> {{ entry.url }} </a>
+                                </p>
+                            </div>
+                            <div *ngIf="grant.number" class="mat-icon-text">
+                                <mat-icon aria-hidden="false" aria-label="Call" class="small">call</mat-icon>
+                                <a href="tel:{{ grant.number }}"> {{ grant.number }} </a>
+                            </div>
+                            <div> Funder(s):
+                                <div class="add-margin-left" *ngFor="let funder of grant.funder">
+                                    <div [ngSwitch]="grant.funderType">
+                                        <div *ngSwitchCase="'person'">
+                                            <app-person-template [person]="funder" [subProperties]="subProperties"></app-person-template>
+                                        </div>
+                                        <div *ngSwitchCase="'organization'">
+                                            <app-organisation-template [organisation]="funder"></app-organisation-template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card>
+                    </div>
 
                     <!-- template for spatialCoverage -->
                     <div *ngSwitchCase="'spatialCoverage'">
