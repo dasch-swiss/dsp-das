@@ -25,16 +25,16 @@
         <div class="button-container">
             <button mat-button
                     *ngIf="position > 0"
-                    class="reposition up"
                     title="move up"
-                    (click)="$event.stopPropagation(); repositionNode('up')">
+                    (click)="$event.stopPropagation(); repositionNode('up')"
+                    class="reposition up">
                 <mat-icon>arrow_upward</mat-icon>
             </button>
             <button mat-button
                     *ngIf="!lastPosition"
-                    class="reposition down"
                     title="move down"
-                    (click)="$event.stopPropagation(); repositionNode('down')">
+                    (click)="$event.stopPropagation(); repositionNode('down')"
+                    class="reposition down">
                 <mat-icon>arrow_downward</mat-icon>
             </button>
             <button mat-button
