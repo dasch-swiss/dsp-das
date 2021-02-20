@@ -173,7 +173,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
                 this.lastModificationDate = this.ontology.lastModificationDate;
 
-                // get all ontology resource classs:
+                // get all ontology resource classes:
                 // can be used to select resource class as gui attribute in link property,
                 // but also to avoid same name which should be unique
                 const classKeys: string[] = Object.keys(response.classes);

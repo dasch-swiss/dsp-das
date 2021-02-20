@@ -66,7 +66,7 @@ export class PropertyFormComponent implements OnInit {
     // list of project specific lists (TODO: probably we have to add default knora lists?!)
     lists: ListNodeInfo[];
 
-    // resource classs in this ontology
+    // resource classes in this ontology
     resourceClass: ClassDefinition[] = [];
 
     // list of existing properties
