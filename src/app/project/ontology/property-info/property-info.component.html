@@ -4,10 +4,10 @@
     <div mat-line class="title">
         <span class="icon" *ngIf="propType" [matTooltip]="propType?.group + ': ' + propType?.label" matTooltipPosition="above">
             <span *ngIf="propType?.label === 'Integer' || propType?.label === 'Decimal'; else defaultIcons">
-                <mat-icon [svgIcon]="propType?.icon"></mat-icon>
+                <mat-icon class="type" [svgIcon]="propType?.icon"></mat-icon>
             </span>
             <ng-template #defaultIcons>
-                <mat-icon>{{propType?.icon}}</mat-icon>
+                <mat-icon class="type">{{propType?.icon}}</mat-icon>
             </ng-template>
         </span>
         <span class="label" [matTooltip]="propDef.comment" matTooltipPosition="above">
@@ -17,7 +17,7 @@
         <span class="attribute additional-info" *ngIf="propAttribute" [innerHTML]="'&rarr;&nbsp;' + propAttribute"></span>
     </div>
     <div mat-line class="info additional-info">
-        <mat-icon>{{propInfo.multiple ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> multiple
-        <mat-icon>{{propInfo.required ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> required
+        <mat-icon class="multiple">{{propInfo.multiple ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> multiple
+        <mat-icon class="required">{{propInfo.required ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> required
     </div>
 </mat-list-item>
