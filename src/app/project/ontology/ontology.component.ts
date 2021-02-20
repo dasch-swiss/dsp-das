@@ -115,7 +115,6 @@ export class OntologyComponent implements OnInit {
 
         // get ontology iri from route
         if (this._route.snapshot && this._route.snapshot.params.id) {
-            console.log('get onto iri')
             this.ontologyIri = decodeURIComponent(this._route.snapshot.params.id);
             // set the page title in case of only one project ontology
             this._titleService.setTitle('Project ' + this.projectcode + ' | Data model');
@@ -182,7 +181,6 @@ export class OntologyComponent implements OnInit {
 
             // get each ontology
             this.getOntology(ontologies[i].id, true);
-            console.log('get onto', i)
             await callback(ontologies[i]);
         }
     }
@@ -203,15 +201,9 @@ export class OntologyComponent implements OnInit {
         this._dspApiConnection.v2.onto.getOntologiesByProjectIri(this.project.id).subscribe(
             (response: OntologiesMetadata) => {
 
-                console.warn('INIT list of ontologies');
-
                 const loadAndCache = async () => {
                     await this.asyncForEach(response.ontologies, async (onto: OntologyMetadata) => {
-                        console.log('onto', onto);
                         await waitFor(200);
-                        console.error('after waiting')
-                        console.log('ReadOntology[] length', this.ontologies.length)
-                        console.log('OntologyMetadata[] length', response.ontologies.length)
                         if (this.ontologies.length === response.ontologies.length) {
                             this.setCache();
                         }
@@ -219,14 +211,12 @@ export class OntologyComponent implements OnInit {
                 }
 
                 if (!response.ontologies.length) {
-                    console.log('no ontologies')
                     this.setCache();
                 } else {
                     // in case project has only one ontology: open this ontology
                     // because there will be no form to select ontlogy
                     if (response.ontologies.length === 1) {
                         // open this ontology
-                        console.log('1 ontology')
                         this.openOntologyRoute(response.ontologies[0].id);
                         this.ontologyIri = response.ontologies[0].id;
                     }
@@ -270,13 +260,11 @@ export class OntologyComponent implements OnInit {
 
                 if (updateOntologiesList) {
                     this.ontologies.push(response);
-                    console.log('ontologies list', this.ontologies);
                 }
 
                 // get current ontology as a separate part
                 if (response.id === this.ontologyIri) {
                     this.ontology = response;
-                    console.log(JSON.stringify(response))
                     // the ontology is the selected one
                     // grab the onto class information to display
                     this.ontoClasses = [];
@@ -499,9 +487,6 @@ export class OntologyComponent implements OnInit {
     }
 
     setCache() {
-
-        console.log('set Cache and loading as false')
-
         // set cache for current ontology
         this._cache.set('currentOntology', this.ontology);
         this._cache.set('currentProjectOntologies', this.ontologies);
