@@ -121,8 +121,6 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
             // get current ontology lists to get linked list information
             this._cache.get('currentOntologyLists').subscribe(
                 (response: ListNodeInfo[]) => {
-                    console.log(JSON.stringify(response))
-                    console.log('-------------------------')
                     const re: RegExp = /\<([^)]+)\>/;
                     const listIri = this.propDef.guiAttributes[0].match(re)[1];
                     const listUrl = `/project/${this.projectcode}/lists/${encodeURIComponent(listIri)}`;
