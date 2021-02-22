@@ -36,6 +36,13 @@
   margin-bottom: 2px;
 }
 
+.properties-language {
+  margin-top: -$header-height;
+  margin-right: 0;
+  margin-left: auto;
+  display: table;
+}
+
 // properties
 .property-line {
   display: flex;
