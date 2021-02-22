@@ -1,17 +1,36 @@
 .grid-container {
   display: grid;
-  grid-template-columns: auto;
+  grid-template-columns: repeat(6, 1fr);;
   grid-template-rows: auto;
   gap: 10px 10px;
-  justify-items: center;
-  align-items: center;
-  background-color: lightgray;
+  // align-items: center;
+}
+
+.grid-column-label {
+  height: 36px;
+  box-sizing: border-box;
+  align-self: center;
+  text-align: center;
+
+  .column-label {
+    margin-top: 8px;
+    font-weight: 500;
+  }
 }
 
 .grid-item {
-  margin: 0 0 24px 0;
+  height: 48px;
   box-sizing: border-box;
-  border: 1px solid magenta;
+  align-self: center;
   text-align: center;
-  background-color: lightslategray;
+  background-color: rgb(145, 176, 211);
 }
+
+.page-subtitle {
+  margin: 40px 0 80px 0;
+
+  .subtitle-label {
+    text-align: center;
+  }
+}
+

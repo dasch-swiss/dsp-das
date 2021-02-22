@@ -1,12 +1,8 @@
 <div *ngIf="projectAdmin" class="content large middle">
 
-    PERMISSIONS MANAGER PAGE
-
-    <!-- add group to the project -->
-    <!-- <app-add-group *ngIf="project?.status && sysAdmin" [projectcode]="projectcode" (refreshParent)="refresh()"
-        #addGroupComponent></app-add-group> -->
-
-    <!-- <mat-divider *ngIf="project?.status" ></mat-divider> -->
+    <div class="page-subtitle">
+        <h4 class="subtitle-label subtitle">Specify the level of access for each user group.</h4>
+    </div>
 
     <dsp-progress-indicator *ngIf="loading"></dsp-progress-indicator>
 
@@ -14,7 +10,10 @@
 
        <!-- GRID -->
         <div class="grid-container">
-            <div *ngFor="let doap of doaPermission" class="grid-item">
+            <div *ngFor="let permission of columnLabels" class="grid-column-label">
+                <span class="column-label">{{permission.fullname}}</span>
+            </div>
+            <!-- <div *ngFor="let doap of doaPermission" class="grid-item">
                 <div *ngIf="doap.forGroup">
                     <p>{{doap?.forGroup}}</p>
                     <div *ngFor="let permission of doap.hasPermissions" class="perm-item">
@@ -33,7 +32,7 @@
 
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
 
     </div>

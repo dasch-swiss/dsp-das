@@ -55,6 +55,37 @@ export class PermissionComponent implements OnInit {
     doaPermission: DefaultObjectAccessPermission[] = [];
     doapHasPermission: Permission[] = [];
 
+    columnLabels: any[] = [
+        {
+            name: 'Group',
+            fullname: 'User group'
+        },
+        {
+            name: 'RV',
+            fullname: 'Restricted view'
+        },
+        {
+            name: 'V',
+            fullname: 'View'
+        },
+        {
+            name: 'C',
+            fullname: 'Create'
+        },
+        {
+            name: 'M',
+            fullname: 'Modify'
+        },
+        {
+            name: 'D',
+            fullname: 'Delete'
+        }
+    ];
+
+    permissionList: any[] = [
+
+    ]
+
 
     @ViewChild('addGroupComponent') addGroup: AddGroupComponent;
 
@@ -113,7 +144,7 @@ export class PermissionComponent implements OnInit {
         this._dspApiConnection.admin.permissionsEndpoint.getProjectPermissions(projectIri).subscribe(
             (response: ApiResponseData<ProjectPermissionsResponse>)=> {
                 this.allPermissions = response.body.permissions;
-                console.log('getProjectPermissions response', this.allPermissions);
+                // console.log('getProjectPermissions response', this.allPermissions);
         });
     }
 
@@ -122,13 +153,12 @@ export class PermissionComponent implements OnInit {
             (response: ApiResponseData<AdministrativePermissionsResponse>)=> {
                 if (response) {
                     this.adminPermission = response.body.administrative_permissions;
-                    console.log('getAdministrativePermissions response', this.adminPermission);
+                    // console.log('getAdministrativePermissions response', this.adminPermission);
 
                     for (const ap of this.adminPermission) {
                         if (ap.forGroup) {
                             this.apHasPermission = ap.hasPermissions;
-
-                            console.log(' admin hasPermissions: ', this.apHasPermission);
+                            console.log(ap.forGroup + ' admin hasPermissions: ', this.apHasPermission);
                         }
                     }
                 }
@@ -140,13 +170,12 @@ export class PermissionComponent implements OnInit {
             (response: ApiResponseData<DefaultObjectAccessPermissionsResponse>)=> {
                 if (response) {
                     this.doaPermission = response.body.defaultObjectAccessPermissions;
-                    console.log('getDefaultObjectAccessPermissions response', this.doaPermission);
+                    // console.log('getDefaultObjectAccessPermissions response', this.doaPermission);
 
                         for (const doap of this.doaPermission) {
                             if (doap.forGroup) {
                                 this.doapHasPermission = doap.hasPermissions;
-
-                                // console.log(doap.forGroup + ' hasPermissions: ', this.doapHasPermission);
+                                console.log(doap.forGroup + ' hasPermissions: ', this.doapHasPermission);
                             }
                         }
                 }
