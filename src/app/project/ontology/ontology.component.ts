@@ -260,7 +260,7 @@ export class OntologyComponent implements OnInit {
      * @param id ontology id/iri
      * @param view 'classes' | 'properties' | ' graph'
      */
-    openOntologyRoute(id: string, view: 'classes' | 'properties' | 'graph') {
+    openOntologyRoute(id: string, view: 'classes' | 'properties' | 'graph' = 'classes') {
         this.view = view;
         const goto = 'project/' + this.projectcode + '/ontologies/' + encodeURIComponent(id) + '/' + view;
         this._router.navigateByUrl(goto, { skipLocationChange: false });

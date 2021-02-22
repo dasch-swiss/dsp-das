@@ -51,6 +51,7 @@ $width: 340px;
   .ontology-editor-canvas {
     min-height: calc(100vh - #{$sub-header-height} - #{$header-height} - #{$tab-bar-margin} - 100px);
     background: $primary_200;
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
 
     .ontology-editor-grid {
       display: grid;
@@ -106,6 +107,10 @@ $width: 340px;
 
 .active {
   background-color: $black-12-opacity;
+}
+
+.note {
+  padding: 2px;
 }
 /*
 .ontology-container {

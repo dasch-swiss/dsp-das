@@ -63,7 +63,16 @@
                     <h3 class="mat-title space-reducer" [matTooltip]="ontology.id">{{ontology?.label}}</h3>
                     <p class="mat-caption" [matTooltip]="'Last modification date: ' + ontology.lastModificationDate"
                         matTooltipPosition="above">
-                        Updated on: {{ontology.lastModificationDate | date:'medium'}}</p>
+                        <span *ngIf="ontology.lastModificationDate; else noModificationDate">
+                            Updated on: {{ontology.lastModificationDate | date:'medium'}}
+                        </span>
+                        <ng-template #noModificationDate>
+                            <span class="note warning">
+                                <!-- <mat-icon>report</mat-icon> -->
+                                This data model can't be edited because of missing "lastModificationDate"!
+                            </span>
+                        </ng-template>
+                    </p>
                 </span>
 
                 <span class="fill-remaining-space"></span>
@@ -71,11 +80,13 @@
                 <!-- toggle view -->
                 <span class="ontology-actions">
                     <p class="mat-caption space-reducer">Display as</p>
-                    <button mat-button [class.active]="view === 'classes' || view === 'properties'" (click)="openOntologyRoute(ontology.id, 'classes')">
+                    <button mat-button [class.active]="view === 'classes' || view === 'properties'"
+                        (click)="openOntologyRoute(ontology.id, 'classes')">
                         <mat-icon>view_module</mat-icon>
                         Grid
                     </button>
-                    <button mat-button [class.active]="view === 'graph'" (click)="openOntologyRoute(ontology.id, 'graph')">
+                    <button mat-button [class.active]="view === 'graph'"
+                        (click)="openOntologyRoute(ontology.id, 'graph')">
                         <mat-icon>scatter_plot</mat-icon>
                         Graph
                     </button>
@@ -106,8 +117,10 @@
             class="ontology-editor-container">
             <mat-sidenav class="ontology-editor-sidenav" mode="side" position="end" opened>
                 <mat-list>
-                    <a mat-list-item routerLinkActive="active" [routerLink]="'../classes'" (click)="view = 'classes'">Classes</a>
-                    <a mat-list-item routerLinkActive="active" [routerLink]="'../properties'" (click)="view = 'properties'">Properties</a>
+                    <a mat-list-item routerLinkActive="active" [routerLink]="'../classes'"
+                        (click)="view = 'classes'">Classes</a>
+                    <a mat-list-item routerLinkActive="active" [routerLink]="'../properties'"
+                        (click)="view = 'properties'">Properties</a>
                 </mat-list>
             </mat-sidenav>
             <!-- <mat-sidenav-content>Main content</mat-sidenav-content> -->
