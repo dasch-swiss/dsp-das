@@ -189,7 +189,7 @@ export class OntologyComponent implements OnInit {
             // set list of already existing ontology names
             // it will be used in ontology form
             // because ontology name has to be unique
-            let name = this._resourceClassFormService.getOntologyName(ontologies[i].id);
+            const name = this._resourceClassFormService.getOntologyName(ontologies[i].id);
             this.existingOntologyNames.push(name);
 
             // get each ontology
@@ -221,7 +221,7 @@ export class OntologyComponent implements OnInit {
                             this.setCache();
                         }
                     });
-                }
+                };
 
                 if (!response.ontologies.length) {
                     this.setCache();
@@ -244,7 +244,7 @@ export class OntologyComponent implements OnInit {
                 this._errorHandler.showMessage(error);
                 this.loading = false;
             }
-        )
+        );
     }
 
     // update view after selecting an ontology from dropdown
