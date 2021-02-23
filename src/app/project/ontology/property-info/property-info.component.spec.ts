@@ -24,29 +24,29 @@ class SimpleTextHostComponent {
     @ViewChild('propertyInfo') propertyInfoComponent: PropertyInfoComponent;
 
     propertyCardinality: IHasProperty = {
-        propertyIndex: "http://0.0.0.0:3333/ontology/1111/Notizblogg/v2#notgkygty",
+        propertyIndex: 'http://0.0.0.0:3333/ontology/1111/Notizblogg/v2#notgkygty',
         cardinality: 0,
         guiOrder: 1,
         isInherited: false
     };
     propertyDefinition: ResourcePropertyDefinitionWithAllLanguages = {
-        "id": "http://0.0.0.0:3333/ontology/1111/Notizblogg/v2#notgkygty",
-        "subPropertyOf": ["http://api.knora.org/ontology/knora-api/v2#hasValue"],
-        "comment": "Beschreibt einen Namen",
-        "label": "Name",
-        "guiElement": "http://api.knora.org/ontology/salsah-gui/v2#SimpleText",
-        "objectType": "http://api.knora.org/ontology/knora-api/v2#TextValue",
-        "isLinkProperty": false,
-        "isLinkValueProperty": false,
-        "isEditable": true,
-        "guiAttributes": [],
-        "comments": [{
-            "language": "de",
-            "value": "Beschreibt einen Namen"
+        'id': 'http://0.0.0.0:3333/ontology/1111/Notizblogg/v2#notgkygty',
+        'subPropertyOf': ['http://api.knora.org/ontology/knora-api/v2#hasValue'],
+        'comment': 'Beschreibt einen Namen',
+        'label': 'Name',
+        'guiElement': 'http://api.knora.org/ontology/salsah-gui/v2#SimpleText',
+        'objectType': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+        'isLinkProperty': false,
+        'isLinkValueProperty': false,
+        'isEditable': true,
+        'guiAttributes': [],
+        'comments': [{
+            'language': 'de',
+            'value': 'Beschreibt einen Namen'
         }],
-        "labels": [{
-            "language": "de",
-            "value": "Name"
+        'labels': [{
+            'language': 'de',
+            'value': 'Name'
         }]
     };
 
@@ -64,35 +64,35 @@ class LinkHostComponent {
     @ViewChild('propertyInfo') propertyInfoComponent: PropertyInfoComponent;
 
     propertyCardinality: IHasProperty = {
-        "propertyIndex": "http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherThing",
-        "cardinality": 2,
-        "guiOrder": 1,
-        "isInherited": false
+        'propertyIndex': 'http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherThing',
+        'cardinality': 2,
+        'guiOrder': 1,
+        'isInherited': false
     };
     propertyDefinition: ResourcePropertyDefinitionWithAllLanguages = {
-        "id": "http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherThing",
-        "subPropertyOf": ["http://api.knora.org/ontology/knora-api/v2#hasLinkTo"],
-        "label": "Ein anderes Ding",
-        "guiElement": "http://api.knora.org/ontology/salsah-gui/v2#Searchbox",
-        "subjectType": "http://0.0.0.0:3333/ontology/0001/anything/v2#Thing",
-        "objectType": "http://0.0.0.0:3333/ontology/0001/anything/v2#Thing",
-        "isLinkProperty": true,
-        "isLinkValueProperty": false,
-        "isEditable": true,
-        "guiAttributes": [],
-        "comments": [],
-        "labels": [{
-            "language": "de",
-            "value": "Ein anderes Ding"
+        'id': 'http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherThing',
+        'subPropertyOf': ['http://api.knora.org/ontology/knora-api/v2#hasLinkTo'],
+        'label': 'Ein anderes Ding',
+        'guiElement': 'http://api.knora.org/ontology/salsah-gui/v2#Searchbox',
+        'subjectType': 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+        'objectType': 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+        'isLinkProperty': true,
+        'isLinkValueProperty': false,
+        'isEditable': true,
+        'guiAttributes': [],
+        'comments': [],
+        'labels': [{
+            'language': 'de',
+            'value': 'Ein anderes Ding'
         }, {
-            "language": "en",
-            "value": "Another thing"
+            'language': 'en',
+            'value': 'Another thing'
         }, {
-            "language": "fr",
-            "value": "Une autre chose"
+            'language': 'fr',
+            'value': 'Une autre chose'
         }, {
-            "language": "it",
-            "value": "Un'altra cosa"
+            'language': 'it',
+            'value': 'Un altra cosa'
         }]
     };
 
@@ -144,7 +144,7 @@ describe('PropertyInfoComponent', () => {
 
         (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
             () => {
-                let response: ReadOntology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
+                const response: ReadOntology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
                 return of(response);
             }
         );
@@ -178,9 +178,9 @@ describe('PropertyInfoComponent', () => {
         const multipleIcon: DebugElement = hostCompDe.query(By.css('.multiple'));
         const requiredIcon: DebugElement = hostCompDe.query(By.css('.required'));
 
-        // cardinality 0 means "no multiple values"
+        // cardinality 0 means 'no multiple values'
         expect(multipleIcon.nativeElement.innerText).toEqual('check_box_outline_blank');
-        // and cardinality 0 means also "required value"
+        // and cardinality 0 means also 'required value'
         expect(requiredIcon.nativeElement.innerText).toEqual('check_box');
 
     });
@@ -208,7 +208,7 @@ describe('PropertyInfoComponent', () => {
 
         const typeIcon: DebugElement = hostCompDe.query(By.css('.type'));
 
-        // expect "link" icon
+        // expect 'link' icon
         expect(typeIcon.nativeElement.innerText).toEqual('link');
     });
 
@@ -219,7 +219,7 @@ describe('PropertyInfoComponent', () => {
         const hostCompDe = linkHostFixture.debugElement;
 
         const attribute: DebugElement = hostCompDe.query(By.css('.attribute'));
-        // expect linked resource called "Thing"
+        // expect linked resource called 'Thing'
         expect(attribute.nativeElement.innerText).toContain('Thing');
     });
 
@@ -232,9 +232,9 @@ describe('PropertyInfoComponent', () => {
         const multipleIcon: DebugElement = hostCompDe.query(By.css('.multiple'));
         const requiredIcon: DebugElement = hostCompDe.query(By.css('.required'));
 
-        // cardinality 2 means "multiple values"
+        // cardinality 2 means 'multiple values'
         expect(multipleIcon.nativeElement.innerText).toEqual('check_box');
-        // and cardinality 2 means also "not required value"
+        // and cardinality 2 means also 'not required value'
         expect(requiredIcon.nativeElement.innerText).toEqual('check_box_outline_blank');
     });
 });
