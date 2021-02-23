@@ -16,7 +16,7 @@ Run `npm run build` to build the app. The build artifacts will be stored in the 
 
 ## Test
 
-The following tests (unit, e2e and lint) are part of the Github Actions (CI) workflow and has to be run successfully before code can be merged into main branch.
+The following tests (unit, e2e and lint) are part of the Github Actions (CI) workflow and has to be run successfully before the code can be merged into the main branch.
 
 ### Running unit tests
 
