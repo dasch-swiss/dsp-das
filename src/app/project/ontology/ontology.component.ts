@@ -15,12 +15,13 @@ import {
     OntologiesMetadata,
     OntologyMetadata,
     ProjectResponse,
+    PropertyDefinition,
     ReadOntology,
     ReadProject,
     ResourceClassDefinition,
     UpdateOntology
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, Session, SessionService, SortingService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
@@ -67,6 +68,8 @@ export class OntologyComponent implements OnInit {
 
     ontoClasses: ClassDefinition[];
 
+    ontoProperties: PropertyDefinition[];
+
     // selected ontology id
     ontologyIri: string = undefined;
 
@@ -105,6 +108,7 @@ export class OntologyComponent implements OnInit {
         private _route: ActivatedRoute,
         private _router: Router,
         private _session: SessionService,
+        private _sortingService: SortingService,
         private _titleService: Title
     ) {
 
@@ -226,7 +230,7 @@ export class OntologyComponent implements OnInit {
                     // because there will be no form to select ontlogy
                     if (response.ontologies.length === 1) {
                         // open this ontology
-                        this.openOntologyRoute(response.ontologies[0].id);
+                        this.openOntologyRoute(response.ontologies[0].id, this.view);
                         this.ontologyIri = response.ontologies[0].id;
                     }
                     loadAndCache();
@@ -287,10 +291,24 @@ export class OntologyComponent implements OnInit {
                     for (const c of classKeys) {
                         const splittedSubClass = this.ontology.classes[c].subClassOf[0].split('#');
 
-                        if (splittedSubClass[0] !== Constants.StandoffOntology && splittedSubClass[1] !== 'StandoffTag' && splittedSubClass[1] !== 'StandoffLinkTag') {
+                        if (splittedSubClass[0] !== Constants.StandoffOntology && splittedSubClass[1] !== 'StandoffTag' && splittedSubClass[1] !== 'StandoffLinkTag' && splittedSubClass[1] !== 'StandoffEventTag') {
                             this.ontoClasses.push(this.ontology.classes[c]);
                         }
                     }
+                    this.ontoClasses = this._sortingService.keySortByAlphabetical(this.ontoClasses, 'label');
+
+                    // grab the onto properties information to display
+                    this.ontoProperties = [];
+                    const propKeys: string[] = Object.keys(response.properties);
+                    // create list of resource classes without standoff classes
+                    for (const p of propKeys) {
+                        const standoff = (this.ontology.properties[p].subjectType ? this.ontology.properties[p].subjectType.includes('Standoff') : false);
+                        if (this.ontology.properties[p].objectType !== Constants.LinkValue && !standoff) {
+                            this.ontoProperties.push(this.ontology.properties[p]);
+                        }
+                    }
+
+                    this.ontoProperties = this._sortingService.keySortByAlphabetical(this.ontoProperties, 'label');
 
                     this.loadOntology = false;
                 }

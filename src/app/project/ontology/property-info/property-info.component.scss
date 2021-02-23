@@ -2,7 +2,13 @@
 @import "../../../../assets/style/config";
 
 .mat-list-item {
+  // background: #fff;
   height: 56px !important;
+  margin: 4px 0;
+  &:hover {
+    // background-color: darken(#fff, 15%);
+    background-color: $black-12-opacity;
+  }
 }
 
 .additional-info {
@@ -34,4 +40,8 @@
     top: 2px;
     position: relative;
   }
+}
+
+.not-used {
+  color: $warn;
 }
