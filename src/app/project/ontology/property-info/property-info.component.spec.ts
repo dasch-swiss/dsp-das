@@ -17,7 +17,7 @@ import { PropertyInfoComponent } from './property-info.component';
  * Property is of type simple text
  */
 @Component({
-    template: '<app-property-info #propertyInfo [propCard]="propertyCardinality" [propDef]="propertyDefinition"></app-property-info>'
+    template: `<app-property-info #propertyInfo [propCard]="propertyCardinality" [propDef]="propertyDefinition"></app-property-info>`
 })
 class SimpleTextHostComponent {
 
@@ -57,7 +57,7 @@ class SimpleTextHostComponent {
  * Property is of type resource link
  */
 @Component({
-    template: '<app-property-info #propertyInfo [propCard]="propertyCardinality" [propDef]="propertyDefinition"></app-property-info>'
+    template: `<app-property-info #propertyInfo [propCard]="propertyCardinality" [propDef]="propertyDefinition"></app-property-info>`
 })
 class LinkHostComponent {
 
@@ -103,42 +103,42 @@ class LinkHostComponent {
  * Property is of type list dropdown
  */
 @Component({
-    template: '<app-property-info #propertyInfo [propCard]="propertyCardinality" [propDef]="propertyDefinition"></app-property-info>'
+    template: `<app-property-info #propertyInfo [propCard]="propertyCardinality" [propDef]="propertyDefinition"></app-property-info>`
 })
 class ListHostComponent {
 
     @ViewChild('propertyInfo') propertyInfoComponent: PropertyInfoComponent;
 
     propertyCardinality: IHasProperty = {
-        "propertyIndex": "http://0.0.0.0:3333/ontology/0001/anything/v2#hasListItem",
-        "cardinality": 2,
-        "guiOrder": 0,
-        "isInherited": true
+        'propertyIndex': 'http://0.0.0.0:3333/ontology/0001/anything/v2#hasListItem',
+        'cardinality': 2,
+        'guiOrder': 0,
+        'isInherited': true
     };
     propertyDefinition: ResourcePropertyDefinitionWithAllLanguages = {
-        "id": "http://0.0.0.0:3333/ontology/0001/anything/v2#hasListItem",
-        "subPropertyOf": ["http://api.knora.org/ontology/knora-api/v2#hasValue"],
-        "label": "Listenelement",
-        "guiElement": "http://api.knora.org/ontology/salsah-gui/v2#List",
-        "subjectType": "http://0.0.0.0:3333/ontology/0001/anything/v2#Thing",
-        "objectType": "http://api.knora.org/ontology/knora-api/v2#ListValue",
-        "isLinkProperty": false,
-        "isLinkValueProperty": false,
-        "isEditable": true,
-        "guiAttributes": ["hlist=<http://rdfh.ch/lists/0001/treeList>"],
-        "comments": [],
-        "labels": [{
-            "language": "de",
-            "value": "Listenelement"
+        'id': 'http://0.0.0.0:3333/ontology/0001/anything/v2#hasListItem',
+        'subPropertyOf': ['http://api.knora.org/ontology/knora-api/v2#hasValue'],
+        'label': 'Listenelement',
+        'guiElement': 'http://api.knora.org/ontology/salsah-gui/v2#List',
+        'subjectType': 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+        'objectType': 'http://api.knora.org/ontology/knora-api/v2#ListValue',
+        'isLinkProperty': false,
+        'isLinkValueProperty': false,
+        'isEditable': true,
+        'guiAttributes': ['hlist=<http://rdfh.ch/lists/0001/treeList>'],
+        'comments': [],
+        'labels': [{
+            'language': 'de',
+            'value': 'Listenelement'
         }, {
-            "language": "en",
-            "value": "List element"
+            'language': 'en',
+            'value': 'List element'
         }, {
-            "language": "fr",
-            "value": "Elément de liste"
+            'language': 'fr',
+            'value': 'Elément de liste'
         }, {
-            "language": "it",
-            "value": "Elemento di lista"
+            'language': 'it',
+            'value': 'Elemento di lista'
         }]
     };
 
@@ -220,47 +220,47 @@ describe('PropertyInfoComponent', () => {
 
         (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
             (key = 'currentOntologyLists') => {
-                let response: ListNodeInfo[] = [{
-                    "comments": [],
-                    "id": "http://rdfh.ch/lists/0001/otherTreeList",
-                    "isRootNode": true,
-                    "labels": [{
-                        "language": "en",
-                        "value": "Tree list root"
+                const response: ListNodeInfo[] = [{
+                    'comments': [],
+                    'id': 'http://rdfh.ch/lists/0001/otherTreeList',
+                    'isRootNode': true,
+                    'labels': [{
+                        'language': 'en',
+                        'value': 'Tree list root'
                     }],
-                    "projectIri": "http://rdfh.ch/projects/0001"
+                    'projectIri': 'http://rdfh.ch/projects/0001'
                 }, {
-                    "comments": [{
-                        "language": "en",
-                        "value": "a list that is not in used in ontology or data"
+                    'comments': [{
+                        'language': 'en',
+                        'value': 'a list that is not in used in ontology or data'
                     }],
-                    "id": "http://rdfh.ch/lists/0001/notUsedList",
-                    "isRootNode": true,
-                    "labels": [{
-                        "language": "de",
-                        "value": "unbenutzte Liste"
+                    'id': 'http://rdfh.ch/lists/0001/notUsedList',
+                    'isRootNode': true,
+                    'labels': [{
+                        'language': 'de',
+                        'value': 'unbenutzte Liste'
                     }, {
-                        "language": "en",
-                        "value": "a list that is not used"
+                        'language': 'en',
+                        'value': 'a list that is not used'
                     }],
-                    "name": "notUsedList",
-                    "projectIri": "http://rdfh.ch/projects/0001"
+                    'name': 'notUsedList',
+                    'projectIri': 'http://rdfh.ch/projects/0001'
                 }, {
-                    "comments": [{
-                        "language": "en",
-                        "value": "Anything Tree List"
+                    'comments': [{
+                        'language': 'en',
+                        'value': 'Anything Tree List'
                     }],
-                    "id": "http://rdfh.ch/lists/0001/treeList",
-                    "isRootNode": true,
-                    "labels": [{
-                        "language": "de",
-                        "value": "Listenwurzel"
+                    'id': 'http://rdfh.ch/lists/0001/treeList',
+                    'isRootNode': true,
+                    'labels': [{
+                        'language': 'de',
+                        'value': 'Listenwurzel'
                     }, {
-                        "language": "en",
-                        "value": "Tree list root"
+                        'language': 'en',
+                        'value': 'Tree list root'
                     }],
-                    "name": "treelistroot",
-                    "projectIri": "http://rdfh.ch/projects/0001"
+                    'name': 'treelistroot',
+                    'projectIri': 'http://rdfh.ch/projects/0001'
                 }];
                 return of(response);
             }
