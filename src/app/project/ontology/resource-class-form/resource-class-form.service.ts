@@ -86,7 +86,7 @@ export class ResourceClassForm {
         this.language.setValue('en');
         if (resourceClass.properties) {
             let i = 0;
-            this.properties.setControl;
+            // this.properties.setControl;
             resourceClass.properties.forEach(prop => {
                 this.properties[i] = new FormControl(prop);
                 i++;
