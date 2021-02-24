@@ -70,7 +70,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.componentCommsSubscription = this._componentCommsService.on(
-            Events.LoginSuccess, () => this.showMessage = true);
+            Events.loginSuccess, () => this.showMessage = true);
     }
 
     ngOnDestroy() {

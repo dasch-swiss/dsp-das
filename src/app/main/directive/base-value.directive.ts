@@ -1,12 +1,11 @@
-import { Input, Directive } from '@angular/core';
-import { CreateValue, ReadValue, UpdateValue } from '@dasch-swiss/dsp-js';
+import { Directive, Input } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { CreateValue, ReadValue, UpdateValue } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 
 @Directive()
 export abstract class BaseValueDirective {
 
-    shouldShowComment = false;
 
     /**
      * value to be displayed, if any.
@@ -17,6 +16,8 @@ export abstract class BaseValueDirective {
      * sets the mode of the component.
      */
     @Input() mode: 'read' | 'update' | 'create' | 'search';
+
+    shouldShowComment = false;
 
     /**
      * formControl element for the value.
@@ -63,19 +64,13 @@ export abstract class BaseValueDirective {
      * @param commentFormControl FormControl of the current comment.
      */
     standardValidatorFunc: (val: any, comment: string, commentCtrl: FormControl)
-    => ValidatorFn = (initValue: any, initComment: string, commentFormControl: FormControl): ValidatorFn => (control: AbstractControl): { [key: string]: any } | null => {
+        => ValidatorFn = (initValue: any, initComment: string, commentFormControl: FormControl): ValidatorFn => (control: AbstractControl): { [key: string]: any } | null => {
 
-        const invalid = this.standardValueComparisonFunc(initValue, control.value)
-                    && (initComment === commentFormControl.value || (initComment === null && commentFormControl.value === ''));
+            const invalid = this.standardValueComparisonFunc(initValue, control.value)
+                && (initComment === commentFormControl.value || (initComment === null && commentFormControl.value === ''));
 
-        return invalid ? { valueNotChanged: { value: control.value } } : null;
-    };
-
-    /**
-     * returns the initially given value set via displayValue.
-     * Returns null if no value was given.
-     */
-    abstract getInitValue(): any;
+            return invalid ? { valueNotChanged: { value: control.value } } : null;
+        };
 
     /**
      * returns the initially given value comment set via displayValue.
@@ -142,6 +137,12 @@ export abstract class BaseValueDirective {
     toggleCommentVisibility(): void {
         this.shouldShowComment = !this.shouldShowComment;
     }
+
+    /**
+     * returns the initially given value set via displayValue.
+     * Returns null if no value was given.
+     */
+    abstract getInitValue(): any;
 
     /**
      * returns a value that is to be created.
