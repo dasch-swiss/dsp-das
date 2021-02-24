@@ -23,6 +23,7 @@ import { StringLiteralV2 } from '@dasch-swiss/dsp-js/src/models/v2/string-litera
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { from, of, Subscription } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
+import { AppGlobal } from 'src/app/app-global';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { Property, ResourceClassFormService } from './resource-class-form.service';
@@ -140,6 +141,11 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     lastModificationDate: string;
 
+    // for the language selector
+    selectedLanguage = 'en';
+    languages: StringLiteral[] = AppGlobal.languagesList;
+
+
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
@@ -167,7 +173,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
                 this.lastModificationDate = this.ontology.lastModificationDate;
 
-                // get all ontology resource classs:
+                // get all ontology resource classes:
                 // can be used to select resource class as gui attribute in link property,
                 // but also to avoid same name which should be unique
                 const classKeys: string[] = Object.keys(response.classes);
@@ -223,7 +229,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                     .subscribe(resourceClass => {
                         this.resourceClassForm = resourceClass;
                     });
-                this.resourceClassForm.valueChanges.subscribe(data => this.onValueChanged(data));
 
             } else {
                 // edit mode: res class cardinality
@@ -242,6 +247,10 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                                 this.resourceClassForm = resourceClass;
                                 this.properties = this.resourceClassForm.get('properties') as FormArray;
                             });
+
+                        // set default property language from resource class / first element
+                        this.resourceClassForm.controls.language.setValue(ontoClasses[key].labels[0].language);
+                        this.resourceClassForm.controls.language.disable();
                     }
                 });
             }
@@ -254,6 +263,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                     this.properties = this.resourceClassForm.get('properties') as FormArray;
                 });
         }
+
         this.resourceClassForm.valueChanges.subscribe(data => this.onValueChanged(data));
     }
 
@@ -343,6 +353,9 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         // use response to go further with properties
         this.updateParent.emit({ title: this.resourceClassLabels[0].value, subtitle: 'Define the metadata fields for the resource class' });
 
+        // set default property language from res class label
+        this.resourceClassForm.controls.language.setValue(this.resourceClassLabels[0].language);
+
         // load one first property line
         if (!this.resourceClassForm.value.properties.length) {
             this.addProperty();
@@ -405,7 +418,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                             (error: ApiResponseError) => {
                                 this._errorHandler.showMessage(error);
                             }
-                        )
+                        );
 
                     },
                     (error: ApiResponseError) => {
@@ -426,7 +439,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
             // set resource class name / id: randomized string
             const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
-            // OR const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, this.resourceClassLabels[0].value, 'class');
+            // or const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, this.resourceClassLabels[0].value, 'class');
 
             const onto = new UpdateOntology<CreateResourceClass>();
 
@@ -523,7 +536,12 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             const newResProp = new CreateResourceProperty();
             newResProp.name = uniquePropName;
             // TODO: update prop.label and use StringLiteralInput in property-form
-            newResProp.label = [{ "value": prop.label }];
+            newResProp.label = [
+                {
+                    'value': prop.label,
+                    'language': this.resourceClassForm.controls.language.value
+                }
+            ];
             if (prop.guiAttr) {
                 switch (prop.type.gui_ele) {
 
@@ -537,7 +555,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                         break;
                     case Constants.SalsahGui + Constants.HashDelimiter + 'SimpleText':
                         // TODO: could have two guiAttr fields: size and maxlength
-                        // I suggest to use default value for size; we do not support this guiAttr in DSP-App
+                        // we suggest to use default value for size; we do not support this guiAttr in DSP-App
                         newResProp.guiAttributes = ['maxlength=' + prop.guiAttr];
                         break;
                     case Constants.SalsahGui + Constants.HashDelimiter + 'Spinbox':
@@ -546,7 +564,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                         break;
                     case Constants.SalsahGui + Constants.HashDelimiter + 'Textarea':
                         // TODO: could have four guiAttr fields: width, cols, rows, wrap
-                        // I suggest to use default values; we do not support this guiAttr in DSP-App
+                        // we suggest to use default values; we do not support this guiAttr in DSP-App
                         newResProp.guiAttributes = ['width=100%'];
                         break;
                 }
@@ -574,7 +592,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                     this._errorHandler.showMessage(error);
                 }
             );
-        })
+        });
     }
 
     setCardinality(props: Property[], classIri: string) {
@@ -595,7 +613,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                 propertyIndex: prop.iri,
                 cardinality: this._resourceClassFormService.translateCardinality(prop.multiple, prop.required),
                 guiOrder: index + 1
-            }
+            };
 
             addCard.cardinalities.push(propCard);
         });

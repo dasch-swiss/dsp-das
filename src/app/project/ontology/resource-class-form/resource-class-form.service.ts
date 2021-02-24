@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Cardinality, Constants, IHasProperty, PropertyDefinition, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { Cardinality, IHasProperty, PropertyDefinition, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { DefaultProperties, PropertyType } from '../default-data/default-properties';
+import { PropertyType } from '../default-data/default-properties';
 
 // property data structure
 export class Property {
@@ -32,7 +32,6 @@ export class Property {
         // this.permission = permission;
     }
 }
-
 
 // property form controls
 export class PropertyForm {
@@ -69,22 +68,25 @@ export class PropertyForm {
 
 // resource class data structure
 export class ResourceClass {
+    language: string;
     properties: Property[];
 
-    constructor(properties?: Property[]) {
+    constructor(language: 'en' | 'de' | 'fr' | 'it' = 'en', properties?: Property[]) {
+        this.language = language;
         this.properties = properties;
     }
 }
 
-
 // resource class form controls
 export class ResourceClassForm {
+    language = new FormControl();
     properties = new FormArray([]);
 
     constructor(resourceClass: ResourceClass) {
+        this.language.setValue('en');
         if (resourceClass.properties) {
             let i = 0;
-            this.properties.setControl
+            // this.properties.setControl;
             resourceClass.properties.forEach(prop => {
                 this.properties[i] = new FormControl(prop);
                 i++;
@@ -130,55 +132,47 @@ export class ResourceClassFormService {
 
         // get cardinality and gui order and grab property definition
         resClass.propertiesList.forEach((prop: IHasProperty) => {
-            if (prop.guiOrder >= 0) {
 
-                // get property definition
-                Object.keys(ontoProperties).forEach(key => {
-                    if (ontoProperties[key].id === prop.propertyIndex && !ontoProperties[key].isLinkValueProperty) {
-                        const propDef: ResourcePropertyDefinition = ontoProperties[key];
+            // get property definition
+            Object.keys(ontoProperties).forEach(key => {
+                if (ontoProperties[key].id === prop.propertyIndex && !ontoProperties[key].isLinkValueProperty) {
+                    const propDef: ResourcePropertyDefinition = ontoProperties[key];
 
-                        const property: Property = new Property();
-                        // property.propDef = ontoProperties[key];
+                    const property: Property = new Property();
 
-                        property.label = propDef.label;
+                    property.label = propDef.label;
 
-                        if(ontoProperties[key].isLinkProperty) {
-                            property.guiAttr = propDef.objectType;
-                        } else {
-                            property.guiAttr = propDef.guiAttributes[0];
-                        }
-                        property.iri = prop.propertyIndex;
-
-                        // convert cardinality
-                        switch (prop.cardinality) {
-                            case 0:
-                                property.multiple = false;
-                                property.required = true;
-                                break;
-                            case 1:
-                                property.multiple = false;
-                                property.required = false;
-                                break;
-                            case 2:
-                                property.multiple = true;
-                                property.required = false;
-                                break;
-                            case 3:
-                                property.multiple = true;
-                                property.required = true;
-                                break;
-                        }
-
-                        // find property type in list of default properties
-                        // just a test
-                        // property.type = DefaultProperties.data[0].elements[0];
-
-                        this.addProperty(property);
-
+                    if (ontoProperties[key].isLinkProperty) {
+                        property.guiAttr = propDef.objectType;
+                    } else {
+                        property.guiAttr = propDef.guiAttributes[0];
                     }
-                });
+                    property.iri = prop.propertyIndex;
 
-            }
+                    // convert cardinality
+                    switch (prop.cardinality) {
+                        case 0:
+                            property.multiple = false;
+                            property.required = true;
+                            break;
+                        case 1:
+                            property.multiple = false;
+                            property.required = false;
+                            break;
+                        case 2:
+                            property.multiple = true;
+                            property.required = false;
+                            break;
+                        case 3:
+                            property.multiple = true;
+                            property.required = true;
+                            break;
+                    }
+
+                    this.addProperty(property);
+
+                }
+            });
 
         });
 
@@ -228,7 +222,7 @@ export class ResourceClassFormService {
             return type + '-' + label.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[\u00a0-\u024f]/g, '').replace(/[\])}[{(]/g, '').replace(/\s+/g, '-').replace(/\//g, '-').toLowerCase();
         } else {
             // build randomized name
-            // The name starts with the three first character of ontology iri to avoid a start with a number followed by randomized string
+            // the name starts with the three first character of ontology iri to avoid a start with a number followed by randomized string
             return this.getOntologyName(ontologyIri).substring(0, 3) + Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5);
         }
     }
@@ -257,16 +251,16 @@ export class ResourceClassFormService {
     translateCardinality(multiple: boolean, required: boolean): Cardinality {
 
         if (multiple && required) {
-            // Cardinality 1-n (at least one)
+            // cardinality 1-n (at least one)
             return Cardinality._1_n;
         } else if (multiple && !required) {
-            // Cardinality 0-n (may have many)
+            // cardinality 0-n (may have many)
             return Cardinality._0_n;
         } else if (!multiple && required) {
-            // Cardinality 1 (required)
+            // cardinality 1 (required)
             return Cardinality._1;
         } else {
-            // Cardinality 0-1 (optional)
+            // cardinality 0-1 (optional)
             return Cardinality._0_1;
         }
     }
