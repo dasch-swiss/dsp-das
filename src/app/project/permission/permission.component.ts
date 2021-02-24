@@ -21,6 +21,8 @@ import { AddGroupComponent } from './add-group/add-group.component';
 })
 export class PermissionComponent implements OnInit {
 
+    @ViewChild('addGroupComponent') addGroup: AddGroupComponent;
+
     // loading for progess indicator
     loading: boolean;
 
@@ -38,7 +40,6 @@ export class PermissionComponent implements OnInit {
     // project members
     projectGroups: ReadGroup[] = [];
 
-    @ViewChild('addGroupComponent') addGroup: AddGroupComponent;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
