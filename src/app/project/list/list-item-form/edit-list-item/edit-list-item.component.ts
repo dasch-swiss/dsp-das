@@ -1,5 +1,15 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { ApiResponseData, ApiResponseError, ChildNodeInfoResponse, KnoraApiConnection, List, ListNodeInfo, ListNodeInfoResponse, StringLiteral, UpdateChildNodeRequest } from '@dasch-swiss/dsp-js';
+import {
+    ApiResponseData,
+    ApiResponseError,
+    ChildNodeInfoResponse,
+    KnoraApiConnection,
+    List,
+    ListNodeInfo,
+    ListNodeInfoResponse,
+    StringLiteral,
+    UpdateChildNodeRequest
+} from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 
 @Component({
@@ -8,13 +18,14 @@ import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
     styleUrls: ['./edit-list-item.component.scss']
 })
 export class EditListItemComponent implements OnInit {
-    loading: boolean;
 
     @Input() iri: string;
 
     @Input() projectIri: string;
 
     @Output() closeDialog: EventEmitter<List | ListNodeInfo> = new EventEmitter<List>();
+
+    loading: boolean;
 
     // the list node being edited
     listNode: ListNodeInfo;

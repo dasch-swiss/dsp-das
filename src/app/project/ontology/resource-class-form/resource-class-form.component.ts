@@ -55,8 +55,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
      * this will be used to update title of resource class form
      */
     @Input() name: string;
-    // store name as resourceClassTitle on init; in this case it can't be overwritten in the next / prev navigation
-    resourceClassTitle: string;
 
     // two step form: which should be active?
     /**
@@ -80,6 +78,9 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
      * update title and subtitle in dialog header (by switching from step 1 (resource class) to step 2 (properties))
      */
     @Output() updateParent: EventEmitter<{ title: string; subtitle: string }> = new EventEmitter<{ title: string; subtitle: string }>();
+
+    // store name as resourceClassTitle on init; in this case it can't be overwritten in the next / prev navigation
+    resourceClassTitle: string;
 
     // current ontology; will get it from cache by key 'currentOntology'
     ontology: ReadOntology;

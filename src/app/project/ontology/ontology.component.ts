@@ -39,6 +39,8 @@ export interface OntologyInfo {
 })
 export class OntologyComponent implements OnInit {
 
+    @ViewChild('ontologyEditor', { read: ViewContainerRef }) ontologyEditor: ViewContainerRef;
+
     // general loading status for progess indicator
     loading: boolean;
 
@@ -88,8 +90,6 @@ export class OntologyComponent implements OnInit {
      * list of all default resource classes (sub class of)
      */
     resourceClass: DefaultClass[] = DefaultResourceClasses.data;
-
-    @ViewChild('ontologyEditor', { read: ViewContainerRef }) ontologyEditor: ViewContainerRef;
 
     // @ViewChild(AddToDirective, { static: false }) addToHost: AddToDirective;
 
