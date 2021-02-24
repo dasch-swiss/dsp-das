@@ -14,7 +14,7 @@ import { SelectResourceClassComponent } from './select-resource-class.component'
 import { By } from '@angular/platform-browser';
 
 /**
- * Test host component to simulate parent component.
+ * test host component to simulate parent component.
  */
 @Component({
     template: `
@@ -66,24 +66,24 @@ describe('SelectResourceClassComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-        declarations: [ SelectResourceClassComponent, TestHostComponent ],
-        imports: [
-            ReactiveFormsModule,
-            FormsModule,
-            BrowserAnimationsModule,
-            MatFormFieldModule,
-            MatSelectModule,
-            MatInputModule ]
+            declarations: [ SelectResourceClassComponent, TestHostComponent ],
+            imports: [
+                ReactiveFormsModule,
+                FormsModule,
+                BrowserAnimationsModule,
+                MatFormFieldModule,
+                MatSelectModule,
+                MatInputModule ]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     beforeEach(() => {
         testHostFixture = TestBed.createComponent(TestHostComponent);
-            testHostComponent = testHostFixture.componentInstance;
-            loader = TestbedHarnessEnvironment.loader(testHostFixture);
+        testHostComponent = testHostFixture.componentInstance;
+        loader = TestbedHarnessEnvironment.loader(testHostFixture);
 
-            testHostFixture.detectChanges();
+        testHostFixture.detectChanges();
     });
 
     it('should create', () => {

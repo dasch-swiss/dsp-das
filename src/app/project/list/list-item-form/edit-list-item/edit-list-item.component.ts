@@ -3,9 +3,9 @@ import { ApiResponseData, ApiResponseError, ChildNodeInfoResponse, KnoraApiConne
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 
 @Component({
-  selector: 'app-edit-list-item',
-  templateUrl: './edit-list-item.component.html',
-  styleUrls: ['./edit-list-item.component.scss']
+    selector: 'app-edit-list-item',
+    templateUrl: './edit-list-item.component.html',
+    styleUrls: ['./edit-list-item.component.scss']
 })
 export class EditListItemComponent implements OnInit {
     loading: boolean;
@@ -59,7 +59,7 @@ export class EditListItemComponent implements OnInit {
     }
 
     /**
-     * Separates the labels and comments of a list node into two local arrays.
+     * separates the labels and comments of a list node into two local arrays.
      *
      * @param listNode info about a list node
      */
@@ -77,7 +77,7 @@ export class EditListItemComponent implements OnInit {
     }
 
     /**
-     * Called from the template any time the labels or comments are changed to update the local arrays.
+     * called from the template any time the labels or comments are changed to update the local arrays.
      * At least one label is required. Otherwise, the 'update' button will be disabled.
      *
      * @param data the data that was changed
@@ -105,7 +105,7 @@ export class EditListItemComponent implements OnInit {
     }
 
     /**
-     * Called from the template when the 'update' button is clicked.
+     * called from the template when the 'update' button is clicked.
      * Sends a request to DSP-API to update the list node with the data inside the two local arrays.
      */
     updateChildNode() {

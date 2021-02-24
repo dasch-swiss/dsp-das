@@ -27,7 +27,7 @@ export class ExternalLinksDirective implements OnChanges {
     }
 
     /**
-     * Check if the link opens an external page
+     * check if the link opens an external page
      */
     private isLinkExternal() {
         return (

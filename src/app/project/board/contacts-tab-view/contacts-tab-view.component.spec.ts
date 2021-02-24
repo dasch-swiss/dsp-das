@@ -5,7 +5,7 @@ import { PersonTemplateComponent } from '../person-template/person-template.comp
 import { AddressTemplateComponent } from '../address-template/address-template.component';
 
 /**
- * Test host component to simulate parent component.
+ * test host component to simulate parent component.
  */
 @Component({
     selector: 'app-board-host-component',

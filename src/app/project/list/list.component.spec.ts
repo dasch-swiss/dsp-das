@@ -33,28 +33,28 @@ import { TestConfig } from 'test.config';
 import { ListComponent } from './list.component';
 
 /**
- * Test Host Component
+ * test Host Component
  */
 @Component({
-    template: `<app-list #listComponent></app-list>`
+    template: '<app-list #listComponent></app-list>'
 })
 class TestHostComponent {
     @ViewChild('listComponent') listComponent: ListComponent;
 }
 
 /**
- * Mock ListItem.
+ * mock ListItem.
  */
 @Component({
-    template: `<app-list-item></app-list-item>`
+    template: '<app-list-item></app-list-item>'
 })
 class MockListItemComponent { }
 
 /**
- * Mock ListItemForm.
+ * mock ListItemForm.
  */
 @Component({
-    template: `<app-list-item-form></app-list-item-form>`
+    template: '<app-list-item-form></app-list-item-form>'
 })
 class MockListItemFormComponent { }
 

@@ -29,8 +29,8 @@ export class UsersListComponent implements OnInit {
 
     // permissions of logged-in user
     session: Session;
-    sysAdmin: boolean = false;
-    projectAdmin: boolean = false;
+    sysAdmin = false;
+    projectAdmin = false;
 
     // list of users: status active or inactive (deleted)
     @Input() status: boolean;
@@ -39,7 +39,7 @@ export class UsersListComponent implements OnInit {
     @Input() list: ReadUser[];
 
     // enable the button to create new user
-    @Input() createNew: boolean = false;
+    @Input() createNew = false;
 
     // in case of modification
     @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
@@ -89,7 +89,7 @@ export class UsersListComponent implements OnInit {
     ];
 
     // ... and sort by 'username'
-    sortBy: string = 'username';
+    sortBy = 'username';
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -174,7 +174,7 @@ export class UsersListComponent implements OnInit {
      */
     userIsSystemAdmin(permissions: Permissions): boolean {
 
-        let admin: boolean = false;
+        let admin = false;
         const groupsPerProjectKeys: string[] = Object.keys(permissions.groupsPerProject);
 
         for (const key of groupsPerProjectKeys) {
@@ -396,7 +396,7 @@ export class UsersListComponent implements OnInit {
     }
 
     /**
-     * Reactivate user
+     * reactivate user
      *
      * @param id user's IRI
      */

@@ -13,7 +13,7 @@ import { ListNodeOperation } from '../list-item-form/list-item-form.component';
 import { ListItemComponent } from './list-item.component';
 
 /**
- * Test host component to simulate parent component.
+ * test host component to simulate parent component.
  */
 @Component({
     template: `
@@ -53,10 +53,10 @@ class TestHostComponent implements OnInit {
 }
 
 /**
- * Mock ListItemForm.
+ * mock ListItemForm.
  */
 @Component({
-    template: `<app-list-item-form></app-list-item-form>`
+    template: '<app-list-item-form></app-list-item-form>'
 })
 class MockListItemFormComponent { }
 
@@ -140,11 +140,11 @@ describe('ListItemComponent', () => {
     it('should update the view to show a newly created node', () => {
         const listNodeOperation: ListNodeOperation = new ListNodeOperation();
         listNodeOperation.listNode = {
-                children: [],
-                comments: [],
-                hasRootNode: 'http://rdfh.ch/lists/0001/otherTreeList',
-                id: 'http://rdfh.ch/lists/0001/otherTreeList04',
-                labels: [{value: 'Tree List Node 04', language: 'en'}]
+            children: [],
+            comments: [],
+            hasRootNode: 'http://rdfh.ch/lists/0001/otherTreeList',
+            id: 'http://rdfh.ch/lists/0001/otherTreeList04',
+            labels: [{value: 'Tree List Node 04', language: 'en'}]
         };
         listNodeOperation.operation = 'create';
 
@@ -156,12 +156,12 @@ describe('ListItemComponent', () => {
     it('should update the view to show an updated node', () => {
         const listNodeOperation: ListNodeOperation = new ListNodeOperation();
         listNodeOperation.listNode = {
-                children: undefined,
-                comments: [],
-                hasRootNode: 'http://rdfh.ch/lists/0001/otherTreeList',
-                id: 'http://rdfh.ch/lists/0001/otherTreeList01',
-                labels: [{value: 'Tree List Node 0123', language: 'en'}],
-                position: 0
+            children: undefined,
+            comments: [],
+            hasRootNode: 'http://rdfh.ch/lists/0001/otherTreeList',
+            id: 'http://rdfh.ch/lists/0001/otherTreeList01',
+            labels: [{value: 'Tree List Node 0123', language: 'en'}],
+            position: 0
         };
         listNodeOperation.operation = 'update';
 
@@ -175,19 +175,19 @@ describe('ListItemComponent', () => {
     it('should update the view to remove a deleted node', () => {
         const listNodeOperation: ListNodeOperation = new ListNodeOperation();
         listNodeOperation.listNode = {
-                children: [
-                    {
-                        comments: [],
-                        labels: [{value: 'Tree List Node 02', language: 'en'}],
-                        id: 'http://rdfh.ch/lists/0001/otherTreeList02',
-                        children: []
-                    }
-                ],
-                comments: [],
-                isRootNode: true,
-                id: 'http://rdfh.ch/lists/0001/otherTreeList01',
-                labels: [{value: 'Tree List Root', language: 'en'}],
-                projectIri: 'http://rdfh.ch/projects/0001'
+            children: [
+                {
+                    comments: [],
+                    labels: [{value: 'Tree List Node 02', language: 'en'}],
+                    id: 'http://rdfh.ch/lists/0001/otherTreeList02',
+                    children: []
+                }
+            ],
+            comments: [],
+            isRootNode: true,
+            id: 'http://rdfh.ch/lists/0001/otherTreeList01',
+            labels: [{value: 'Tree List Root', language: 'en'}],
+            projectIri: 'http://rdfh.ch/projects/0001'
         };
         listNodeOperation.operation = 'delete';
 

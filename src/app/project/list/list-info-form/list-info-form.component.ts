@@ -48,7 +48,7 @@ export class ListInfoFormComponent implements OnInit {
      * true after adding list
      *
      */
-    createList: boolean = false;
+    createList = false;
     newList: List;
 
     nameMinLength = 3;
@@ -212,7 +212,7 @@ export class ListInfoFormComponent implements OnInit {
     }
 
     /**
-     * Reset the form
+     * reset the form
      */
     resetForm(ev: Event, list?: ListNodeInfo) {
 

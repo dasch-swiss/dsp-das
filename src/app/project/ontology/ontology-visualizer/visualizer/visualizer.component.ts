@@ -14,9 +14,9 @@ export interface Coordinates {
 }
 
 @Component({
-  selector: 'app-visualizer',
-  templateUrl: './visualizer.component.html',
-  styleUrls: ['./visualizer.component.scss']
+    selector: 'app-visualizer',
+    templateUrl: './visualizer.component.html',
+    styleUrls: ['./visualizer.component.scss']
 })
 export class VisualizerComponent implements OnInit, AfterViewInit {
     @ViewChild('graphcontainer', {read: ElementRef}) graphcontainer: ElementRef;
@@ -32,21 +32,21 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
         if (this.showNodeLabel) {
             depthWrite = false;
         }
-        const sprite = new SpriteText(node[`label`], 1);
+        const sprite = new SpriteText(node['label'], 1);
         sprite.fontFace = 'Arial';
         sprite.fontWeight = 'bold';
         sprite.textHeight = 8;
         sprite.color = 'black';
         const geometricalWidth = sprite.text.length + 5;
         let geometry;
-        if (node[`group`] === 'literal') {
+        if (node['group'] === 'literal') {
             geometry = new THREE.BoxGeometry(geometricalWidth, 12, 10);
         } else {
             geometry = new THREE.SphereGeometry(10, geometricalWidth, 12);
             geometry.applyMatrix4(new THREE.Matrix4().makeScale(2, 1.0, 1.5));
         }
         const material = new THREE.MeshLambertMaterial({
-            color: node[`color`],
+            color: node['color'],
             depthWrite: depthWrite,
             transparent: false,
             opacity: 1
@@ -93,7 +93,7 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
         if (this.showLinkLabel === true) {
             this.graph.linkThreeObject(link => {
                 // extend link with text sprite
-                const sprite = new SpriteText(link[`label`]);
+                const sprite = new SpriteText(link['label']);
                 sprite.color = 'lightgrey';
                 sprite.textHeight = 3;
                 sprite.fontWeight = 'bold';

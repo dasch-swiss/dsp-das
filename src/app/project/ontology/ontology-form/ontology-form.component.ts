@@ -42,7 +42,7 @@ export class OntologyFormComponent implements OnInit {
 
     ontologyForm: FormGroup;
 
-    ontologyLabel: string = '';
+    ontologyLabel = '';
 
     nameRegex = /^(?![vV][0-9]|[0-9]|[\u00C0-\u017F]).[a-zA-Z0-9]+\S*$/;
 
@@ -201,7 +201,7 @@ export class OntologyFormComponent implements OnInit {
     }
 
     /**
-     * Reset the form
+     * reset the form
      */
     resetForm(ev: Event, resourceClass?: any) {
 

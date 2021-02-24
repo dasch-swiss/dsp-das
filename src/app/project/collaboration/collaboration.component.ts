@@ -27,8 +27,8 @@ export class CollaborationComponent implements OnInit {
 
     // permissions of logged-in user
     session: Session;
-    sysAdmin: boolean = false;
-    projectAdmin: boolean = false;
+    sysAdmin = false;
+    projectAdmin = false;
 
     // project shortcode; as identifier in project cache service
     projectcode: string;
@@ -63,7 +63,7 @@ export class CollaborationComponent implements OnInit {
         // set the page title
         this._titleService.setTitle('Project ' + this.projectcode + ' | Collaboration');
 
-        // TODO: go back to project page, if the logged-in user has no admin rights
+        // tODO: go back to project page, if the logged-in user has no admin rights
         // is the logged-in user a project admin?
         /*
         const session: Session = JSON.parse(

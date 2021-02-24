@@ -64,9 +64,7 @@ describe('MainComponent', () => {
         let store = {};
 
         spyOn(sessionStorage, 'getItem').and.callFake(
-            (key: string): string => {
-                return store[key] || null;
-            }
+            (key: string): string => store[key] || null
         );
         spyOn(sessionStorage, 'removeItem').and.callFake(
             (key: string): void => {
@@ -74,18 +72,14 @@ describe('MainComponent', () => {
             }
         );
         spyOn(sessionStorage, 'setItem').and.callFake(
-            (key: string, value: string): string => {
-                return (store[key] = <any>value);
-            }
+            (key: string, value: string): string => (store[key] = <any>value)
         );
         spyOn(sessionStorage, 'clear').and.callFake(() => {
             store = {};
         });
 
         spyOn(localStorage, 'getItem').and.callFake(
-            (key: string): string => {
-                return store[key] || null;
-            }
+            (key: string): string => store[key] || null
         );
         spyOn(localStorage, 'removeItem').and.callFake(
             (key: string): void => {
@@ -93,9 +87,7 @@ describe('MainComponent', () => {
             }
         );
         spyOn(localStorage, 'setItem').and.callFake(
-            (key: string, value: string): string => {
-                return (store[key] = <any>value);
-            }
+            (key: string, value: string): string => (store[key] = <any>value)
         );
         spyOn(localStorage, 'clear').and.callFake(() => {
             store = {};

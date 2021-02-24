@@ -22,7 +22,7 @@ export class PasswordFormComponent implements OnInit {
     // progress indicator
     loading: boolean;
 
-    // TODO: replace RegexPassword by CustomRegex.PASSWORD_REGEX from dsp-ui
+    // tODO: replace RegexPassword by CustomRegex.PASSWORD_REGEX from dsp-ui
     public readonly RegexPassword = /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/i;
 
     // in case of updating data: was it succesful or does it failed
@@ -67,7 +67,7 @@ export class PasswordFormComponent implements OnInit {
     // password form
     form: FormGroup;
 
-    matchingPasswords: boolean = false;
+    matchingPasswords = false;
 
     // in case of change not own password, we need a sys admin confirm password form
     confirmForm: FormGroup;
@@ -170,7 +170,9 @@ export class PasswordFormComponent implements OnInit {
             )
         });
 
-        this.confirmForm.valueChanges.subscribe(data => { this.onValueChanged(this.confirmForm, data); });
+        this.confirmForm.valueChanges.subscribe(data => {
+            this.onValueChanged(this.confirmForm, data);
+        });
 
         this.onValueChanged(this.confirmForm); // (re)set validation messages now
 
@@ -205,7 +207,7 @@ export class PasswordFormComponent implements OnInit {
                 [
                     Validators.required,
                     Validators.minLength(8),
-                    Validators.pattern(this.RegexPassword) // TODO: replace by CustomRegex.PASSWORD_REGEX from dsp-ui
+                    Validators.pattern(this.RegexPassword) // tODO: replace by CustomRegex.PASSWORD_REGEX from dsp-ui
                 ]
             ),
             confirmPassword: new FormControl(

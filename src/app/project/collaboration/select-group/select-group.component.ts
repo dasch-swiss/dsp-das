@@ -13,7 +13,7 @@ import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 })
 export class SelectGroupComponent implements OnInit {
     // send data only, when the selection has changed
-    sendData: boolean = false;
+    sendData = false;
 
     // project short code
     @Input() projectcode: string;

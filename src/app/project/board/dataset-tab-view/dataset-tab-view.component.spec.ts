@@ -4,7 +4,7 @@ import { Component, ViewChild } from '@angular/core';
 
 
 /**
- * Test host component to simulate parent component.
+ * test host component to simulate parent component.
  */
 @Component({
     selector: 'app-board-host-component',

@@ -61,7 +61,7 @@ export class PropertyForm {
         this.guiAttr.setValue(property.guiAttr);
 
         // this.permission.setValue(property.permission);
-        // TODO: permission is not implemented yet
+        // tODO: permission is not implemented yet
         // this.permission.setValidators([Validators.required]);
     }
 }
@@ -121,7 +121,7 @@ export class ResourceClassFormService {
     }
 
     /**
-     * Sets properties in case of update resource class' cardinalities
+     * sets properties in case of update resource class' cardinalities
      * @param resClass
      */
     setProperties(resClass: ResourceClassDefinition, ontoProperties: PropertyDefinition[]) {
@@ -208,7 +208,7 @@ export class ResourceClassFormService {
     }
 
     /**
-     * Create a unique name (id) for resource classes or properties;
+     * create a unique name (id) for resource classes or properties;
      *
      * @param ontologyIri
      * @param [label]
@@ -228,7 +228,7 @@ export class ResourceClassFormService {
     }
 
     /**
-     * Get the ontolgoy name from ontology iri
+     * get the ontolgoy name from ontology iri
      *
      * @param  {string} ontologyIri
      * @returns string
@@ -243,7 +243,7 @@ export class ResourceClassFormService {
     }
 
     /**
-     * Convert cardinality values (multiple? & required?) from form to DSP-JS cardinality enum 1-n, 0-n, 1, 0-1
+     * convert cardinality values (multiple? & required?) from form to DSP-JS cardinality enum 1-n, 0-n, 1, 0-1
      * @param  {boolean} multiple
      * @param  {boolean} required
      * @returns Cardinality

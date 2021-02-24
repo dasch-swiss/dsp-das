@@ -29,7 +29,7 @@ export class ProfileComponent implements OnInit {
 
     @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
 
-    sysAdmin: boolean = false;
+    sysAdmin = false;
 
     user: ReadUser;
 

@@ -31,8 +31,8 @@ export class ProjectsListComponent implements OnInit {
 
     // permissions of logged-in user
     session: Session;
-    sysAdmin: boolean = false;
-    projectAdmin: boolean = false;
+    sysAdmin = false;
+    projectAdmin = false;
 
     // list of default, dsp-specific projects, which are not able to be deleted or to be editied
     doNotDelete: string[] = [
@@ -47,7 +47,7 @@ export class ProjectsListComponent implements OnInit {
     @Input() list: StoredProject[];
 
     // enable the button to create new project
-    @Input() createNew: boolean = false;
+    @Input() createNew = false;
 
     // in case of modification
     @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
@@ -77,7 +77,7 @@ export class ProjectsListComponent implements OnInit {
     ];
 
     // ... and sort by 'longname'
-    sortBy: string = 'longname';
+    sortBy = 'longname';
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -123,7 +123,7 @@ export class ProjectsListComponent implements OnInit {
     }
 
     /**
-     * Navigate to the project pages (e.g. board, collaboration or ontology)
+     * navigate to the project pages (e.g. board, collaboration or ontology)
      *
      * @param code
      * @param page

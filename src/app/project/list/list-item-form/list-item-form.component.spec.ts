@@ -22,7 +22,7 @@ import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ListItemFormComponent, ListNodeOperation } from './list-item-form.component';
 
 /**
- * Test host component to simulate parent component.
+ * test host component to simulate parent component.
  */
 @Component({
     template: `

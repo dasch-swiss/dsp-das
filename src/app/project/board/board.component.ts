@@ -36,8 +36,8 @@ export class BoardComponent implements OnInit {
 
     // permissions of logged-in user
     session: Session;
-    sysAdmin: boolean = false;
-    projectAdmin: boolean = false;
+    sysAdmin = false;
+    projectAdmin = false;
 
     // project shortcode; as identifier in project cache service
     projectcode: string;
@@ -45,7 +45,7 @@ export class BoardComponent implements OnInit {
     // project data
     project: ReadProject;
 
-    color: string = 'primary';
+    color = 'primary';
 
     // variables to store metadata information
     // metadata received from backend
@@ -405,7 +405,7 @@ export class BoardComponent implements OnInit {
     // download metadata
     downloadMetadata() {
         const blob: Blob = new Blob([JSON.stringify(this.metadata)], {type: 'application/json'});
-        const fileName: string = 'metadata.json';
+        const fileName = 'metadata.json';
         const objectUrl: string = URL.createObjectURL(blob);
         const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
 

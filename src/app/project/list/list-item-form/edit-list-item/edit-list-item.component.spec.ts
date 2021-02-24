@@ -10,10 +10,10 @@ import { AjaxResponse } from 'rxjs/ajax';
 import { EditListItemComponent } from './edit-list-item.component';
 
 /**
- * Test host component to simulate parent component.
+ * test host component to simulate parent component.
  */
 @Component({
-    template: `<app-edit-list-item #editListItem [iri]="iri" [projectIri]="projectIri"></app-edit-list-item>`
+    template: '<app-edit-list-item #editListItem [iri]="iri" [projectIri]="projectIri"></app-edit-list-item>'
 })
 class TestHostComponent implements OnInit {
 

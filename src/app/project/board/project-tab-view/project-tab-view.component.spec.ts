@@ -9,7 +9,7 @@ import { PersonTemplateComponent } from '../person-template/person-template.comp
 import { ProjectTabViewComponent } from './project-tab-view.component';
 
 /**
- * Test host component to simulate parent component.
+ * test host component to simulate parent component.
  */
 @Component({
     selector: 'app-board-host-component',

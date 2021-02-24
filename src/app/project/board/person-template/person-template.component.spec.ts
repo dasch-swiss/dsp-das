@@ -5,7 +5,7 @@ import { AddressTemplateComponent } from '../address-template/address-template.c
 
 
 /**
- * Test host component to simulate parent component.
+ * test host component to simulate parent component.
  */
 @Component({
     selector: 'app-contact-host-component',

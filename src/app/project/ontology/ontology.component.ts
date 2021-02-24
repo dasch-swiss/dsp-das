@@ -47,8 +47,8 @@ export class OntologyComponent implements OnInit {
 
     // permissions of logged-in user
     session: Session;
-    sysAdmin: boolean = false;
-    projectAdmin: boolean = false;
+    sysAdmin = false;
+    projectAdmin = false;
 
     // project shortcode; as identifier in project cache service
     projectcode: string;
@@ -167,7 +167,7 @@ export class OntologyComponent implements OnInit {
 
 
     /**
-     * Asyncs for each: Get all ontologies of project as ReadOntology
+     * asyncs for each: Get all ontologies of project as ReadOntology
      * @param ontologies
      * @param callback
      */
@@ -304,7 +304,7 @@ export class OntologyComponent implements OnInit {
     }
 
     /**
-     * Opens ontology form
+     * opens ontology form
      * @param mode
      * @param [iri] only in edit mode
      */
@@ -337,7 +337,7 @@ export class OntologyComponent implements OnInit {
     }
 
     /**
-     * Opens resource class form
+     * opens resource class form
      * @param mode
      * @param resClassInfo (could be subClassOf (create mode) or resource class itself (edit mode))
      */
@@ -370,7 +370,7 @@ export class OntologyComponent implements OnInit {
 
 
     /**
-     * Updates cardinality
+     * updates cardinality
      * @param subClassOf resource class
      */
     updateCard(subClassOf: ResourceClassDefinition) {
@@ -401,7 +401,7 @@ export class OntologyComponent implements OnInit {
     }
 
     /**
-    * Delete either ontology or sourcetype
+    * delete either ontology or sourcetype
     *
     * @param id
     * @param mode Can be 'Ontology' or 'ResourceClass'
