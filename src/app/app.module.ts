@@ -93,7 +93,7 @@ import { EditListItemComponent } from './project/list/list-item-form/edit-list-i
 import { PropertyInfoComponent } from './project/ontology/property-info/property-info.component';
 
 // translate: AoT requires an exported function for factories
-export function HttpLoaderFactory(httpClient: HttpClient) {
+export function httpLoaderFactory(httpClient: HttpClient) {
     return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json');
 }
 
@@ -182,7 +182,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
+                useFactory: httpLoaderFactory,
                 deps: [HttpClient]
             }
         }),
@@ -193,9 +193,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         {
             provide: APP_INITIALIZER,
             useFactory: (appInitService: AppInitService) =>
-                (): Promise<void> => {
-                    return appInitService.Init('config', environment);
-                },
+                (): Promise<void> => appInitService.Init('config', environment),
             deps: [AppInitService],
             multi: true
         },
