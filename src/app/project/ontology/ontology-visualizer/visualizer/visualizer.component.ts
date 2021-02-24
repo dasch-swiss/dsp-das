@@ -130,12 +130,12 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
         }
     }
 
-    LinkLabelHandler(showlinkLabel: MatSlideToggle) {
+    linkLabelHandler(showlinkLabel: MatSlideToggle) {
         this.showLinkLabel = showlinkLabel.checked;
         this.ngOnInit(); // re-heat simulation
     }
 
-    NodeLabelHandler(showNodeLabel: MatSlideToggle) {
+    nodeLabelHandler(showNodeLabel: MatSlideToggle) {
         this.showNodeLabel = showNodeLabel.checked;
         this.ngOnInit(); // re-heat simulation
     }
