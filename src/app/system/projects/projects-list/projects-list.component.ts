@@ -26,6 +26,19 @@ import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
     styleUrls: ['./projects-list.component.scss']
 })
 export class ProjectsListComponent implements OnInit {
+
+    // list of users: status active or inactive (deleted)
+    @Input() status: boolean;
+
+    // list of projects: depending on the parent
+    @Input() list: StoredProject[];
+
+    // enable the button to create new project
+    @Input() createNew = false;
+
+    // in case of modification
+    @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
+
     // loading for progess indicator
     loading: boolean;
 
@@ -39,18 +52,6 @@ export class ProjectsListComponent implements OnInit {
         Constants.SystemProjectIRI,
         Constants.DefaultSharedOntologyIRI
     ];
-
-    // list of users: status active or inactive (deleted)
-    @Input() status: boolean;
-
-    // list of projects: depending on the parent
-    @Input() list: StoredProject[];
-
-    // enable the button to create new project
-    @Input() createNew = false;
-
-    // in case of modification
-    @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
 
     // i18n plural mapping
     itemPluralMapping = {

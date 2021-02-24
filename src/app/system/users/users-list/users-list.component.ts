@@ -24,13 +24,6 @@ import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
     styleUrls: ['./users-list.component.scss']
 })
 export class UsersListComponent implements OnInit {
-    // loading for progess indicator
-    loading: boolean;
-
-    // permissions of logged-in user
-    session: Session;
-    sysAdmin = false;
-    projectAdmin = false;
 
     // list of users: status active or inactive (deleted)
     @Input() status: boolean;
@@ -43,6 +36,14 @@ export class UsersListComponent implements OnInit {
 
     // in case of modification
     @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
+
+    // loading for progess indicator
+    loading: boolean;
+
+    // permissions of logged-in user
+    session: Session;
+    sysAdmin = false;
+    projectAdmin = false;
 
     // i18n plural mapping
     itemPluralMapping = {
