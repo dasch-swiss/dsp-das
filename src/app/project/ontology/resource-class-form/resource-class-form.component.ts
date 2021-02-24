@@ -543,7 +543,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                 }
             ];
             if (prop.guiAttr) {
-                switch (prop.type.gui_ele) {
+                switch (prop.type.guiEle) {
 
                     case Constants.SalsahGui + Constants.HashDelimiter + 'Colorpicker':
                         newResProp.guiAttributes = ['ncolors=' + prop.guiAttr];
@@ -569,7 +569,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                         break;
                 }
             }
-            newResProp.guiElement = prop.type.gui_ele;
+            newResProp.guiElement = prop.type.guiEle;
             newResProp.subPropertyOf = [prop.type.subPropOf];
 
             if (prop.type.subPropOf === Constants.HasLinkTo) {

@@ -226,7 +226,7 @@ export class PropertyFormComponent implements OnInit {
             let obj: PropertyType;
             // find gui ele from list of default property-types to set type value
             for (const group of this.propertyTypes) {
-                obj = group.elements.find(i => i.gui_ele === tempProp.guiElement && (i.objectType === tempProp.objectType || i.subPropOf === tempProp.subPropertyOf[0]));
+                obj = group.elements.find(i => i.guiEle === tempProp.guiElement && (i.objectType === tempProp.objectType || i.subPropOf === tempProp.subPropertyOf[0]));
 
                 if (obj) {
                     this.propertyForm.controls['type'].setValue(obj);

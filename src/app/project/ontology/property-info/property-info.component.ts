@@ -77,7 +77,7 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
         // find gui ele from list of default property-types to set type value
         if (this.propDef.guiElement) {
             for (const group of this.propertyTypes) {
-                this.propType = group.elements.find(i => i.gui_ele === this.propDef.guiElement && (i.objectType === this.propDef.objectType || i.subPropOf === this.propDef.subPropertyOf[0]));
+                this.propType = group.elements.find(i => i.guiEle === this.propDef.guiElement && (i.objectType === this.propDef.objectType || i.subPropOf === this.propDef.subPropertyOf[0]));
 
                 if (this.propType) {
                     break;
