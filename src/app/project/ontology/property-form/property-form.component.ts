@@ -81,7 +81,7 @@ export class PropertyFormComponent implements OnInit {
 
     loading = false;
 
-    Constants = Constants;
+    dspConstants = Constants;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
