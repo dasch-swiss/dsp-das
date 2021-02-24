@@ -61,7 +61,7 @@ export class PropertyForm {
         this.guiAttr.setValue(property.guiAttr);
 
         // this.permission.setValue(property.permission);
-        // tODO: permission is not implemented yet
+        // --> TODO permission is not implemented yet
         // this.permission.setValidators([Validators.required]);
     }
 }

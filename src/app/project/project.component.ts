@@ -111,7 +111,7 @@ export class ProjectComponent implements OnInit {
             );
         } else {
             // shortcode isn't valid
-            // tODO: show an error page
+            // --> TODO show an error page
         }
     }
 

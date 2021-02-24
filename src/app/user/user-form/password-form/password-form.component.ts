@@ -22,8 +22,8 @@ export class PasswordFormComponent implements OnInit {
     // progress indicator
     loading: boolean;
 
-    // tODO: replace RegexPassword by CustomRegex.PASSWORD_REGEX from dsp-ui
-    public readonly RegexPassword = /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/i;
+    // --> TODO replace regexPassword by CustomRegex.PASSWORD_REGEX from dsp-ui
+    public readonly regexPassword = /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/i;
 
     // in case of updating data: was it succesful or does it failed
     apiResponses: DspMessageData[] = [
@@ -207,7 +207,7 @@ export class PasswordFormComponent implements OnInit {
                 [
                     Validators.required,
                     Validators.minLength(8),
-                    Validators.pattern(this.RegexPassword) // tODO: replace by CustomRegex.PASSWORD_REGEX from dsp-ui
+                    Validators.pattern(this.regexPassword) // --> TODO replace by CustomRegex.PASSWORD_REGEX from dsp-ui
                 ]
             ),
             confirmPassword: new FormControl(

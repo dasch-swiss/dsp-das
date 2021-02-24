@@ -55,7 +55,7 @@ export class UserFormComponent implements OnInit, OnChanges {
 
     public readonly regexUsername = /^[a-zA-Z0-9]+$/;
 
-    // tODO: replace regexEmail by CustomRegex.EMAIL_REGEX from dsp-ui
+    // --> TODO replace regexEmail by CustomRegex.EMAIL_REGEX from dsp-ui
     public readonly regexEmail = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
     /**
@@ -231,7 +231,7 @@ export class UserFormComponent implements OnInit, OnChanges {
                     // const name: string = this._route.snapshot.queryParams['value'];
                     const newUser: ReadUser = new ReadUser();
 
-                    // tODO: replace this.regexEmail by CustomRegex.EMAIL_REGEX from dsp-ui
+                    // --> TODO replace this.regexEmail by CustomRegex.EMAIL_REGEX from dsp-ui
                     if (this.regexEmail.test(this.name)) {
                         newUser.email = this.name;
                     } else {
@@ -286,7 +286,7 @@ export class UserFormComponent implements OnInit, OnChanges {
                 },
                 [
                     Validators.required,
-                    Validators.pattern(this.regexEmail), // tODO: replace this.regexEmail by CustomRegex.EMAIL_REGEX from dsp-ui
+                    Validators.pattern(this.regexEmail), // --> TODO replace this.regexEmail by CustomRegex.EMAIL_REGEX from dsp-ui
                     existingNamesValidator(this.existingEmails)
                 ]
             ),

@@ -21,7 +21,7 @@ import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { DefaultProperties, Category, PropertyType } from '../default-data/default-properties';
 
 
-// tODO: should be removed and replaced by AutocompleteItem from dsp-ui
+// --> TODO should be removed and replaced by AutocompleteItem from dsp-ui
 /**
  * a list, which is used in the mat-autocomplete form field
  * contains objects with id and name. the id is usual the iri

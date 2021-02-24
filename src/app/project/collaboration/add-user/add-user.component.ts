@@ -283,7 +283,7 @@ export class AddUserComponent implements OnInit {
      */
     addUser(val: string) {
 
-        // tODO: add getUserByEmail
+        // --> TODO add getUserByEmail
         // you can type username or email. We have to check, what we have now
         this._dspApiConnection.admin.usersEndpoint.getUserByUsername(val).subscribe(
             (response: ApiResponseData<UserResponse>) => {

@@ -335,7 +335,7 @@ export class ProjectFormComponent implements OnInit {
 
         // b) update description field / multi language preparation
         // fIXME: this is a quick (hardcoded) hack:
-        // tODO: create multi language input fields
+        // --> TODO create multi language input fields
         // this.form.controls['description'].setValue([{
         //     'language': 'en',
         //     'value': this.form.controls['description'].value
@@ -444,7 +444,7 @@ export class ProjectFormComponent implements OnInit {
      */
     delete(id: string) {
         // ev.preventDefault();
-        // tODO: "are you sure?"-dialog
+        // --> TODO "are you sure?"-dialog
 
         // if true
         this._dspApiConnection.admin.projectsEndpoint.deleteProject(id).subscribe(
@@ -537,7 +537,7 @@ export class ProjectFormComponent implements OnInit {
 
         this.buildForm(project);
 
-        // tODO: fix "set value" for keywords field
+        // --> TODO fix "set value" for keywords field
         //        this.form.controls['keywords'].setValue(this.keywords);
     }
 

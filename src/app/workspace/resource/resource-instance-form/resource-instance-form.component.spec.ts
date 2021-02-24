@@ -529,12 +529,12 @@ describe('ResourceInstanceFormComponent', () => {
         expectedCreateResource.type = 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing';
         expectedCreateResource.properties = props;
 
-        // tODO: create a Router spy to mock the navigation
+        // --> TODO create a Router spy to mock the navigation
         testHostComponent.resourceInstanceFormComponent.submitData();
 
         expect(dspConnSpy.v2.res.createResource).toHaveBeenCalledTimes(1);
 
-        // tODO: check if the spy was called with the correct argument
+        // --> TODO check if the spy was called with the correct argument
         // expect(dspConnSpy.v2.res.createResource).toHaveBeenCalledWith(expectedCreateResource);
 
     });

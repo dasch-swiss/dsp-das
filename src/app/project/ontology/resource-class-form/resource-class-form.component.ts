@@ -120,7 +120,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     existingPropertyNames: [RegExp];
 
-    // tODO: move to knora-api-js-lib
+    // --> TODO move to knora-api-js-lib
     // nameRegex: RegExp = /^(?![0-9]).(?![\u00C0-\u017F]).[a-zA-Z0-9]+\S*$/;
 
     // form errors on the following fields:
@@ -535,7 +535,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             // prepare payload for property
             const newResProp = new CreateResourceProperty();
             newResProp.name = uniquePropName;
-            // tODO: update prop.label and use StringLiteralInput in property-form
+            // --> TODO update prop.label and use StringLiteralInput in property-form
             newResProp.label = [
                 {
                     'value': prop.label,
@@ -554,16 +554,16 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                         newResProp.guiAttributes = ['hlist=<' + prop.guiAttr + '>'];
                         break;
                     case Constants.SalsahGui + Constants.HashDelimiter + 'SimpleText':
-                        // tODO: could have two guiAttr fields: size and maxlength
+                        // --> TODO could have two guiAttr fields: size and maxlength
                         // we suggest to use default value for size; we do not support this guiAttr in DSP-App
                         newResProp.guiAttributes = ['maxlength=' + prop.guiAttr];
                         break;
                     case Constants.SalsahGui + Constants.HashDelimiter + 'Spinbox':
-                        // tODO: could have two guiAttr fields: min and max
+                        // --> TODO could have two guiAttr fields: min and max
                         newResProp.guiAttributes = ['min=' + prop.guiAttr, 'max=' + prop.guiAttr];
                         break;
                     case Constants.SalsahGui + Constants.HashDelimiter + 'Textarea':
-                        // tODO: could have four guiAttr fields: width, cols, rows, wrap
+                        // --> TODO could have four guiAttr fields: width, cols, rows, wrap
                         // we suggest to use default values; we do not support this guiAttr in DSP-App
                         newResProp.guiAttributes = ['width=100%'];
                         break;

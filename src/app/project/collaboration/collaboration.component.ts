@@ -63,7 +63,7 @@ export class CollaborationComponent implements OnInit {
         // set the page title
         this._titleService.setTitle('Project ' + this.projectcode + ' | Collaboration');
 
-        // tODO: go back to project page, if the logged-in user has no admin rights
+        // --> TODO go back to project page, if the logged-in user has no admin rights
         // is the logged-in user a project admin?
         /*
         const session: Session = JSON.parse(

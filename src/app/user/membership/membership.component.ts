@@ -15,7 +15,7 @@ import { CacheService } from 'src/app/main/cache/cache.service';
 import { AutocompleteItem } from 'src/app/main/declarations/autocomplete-item';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 
-// tODO: replace it by IPermissions from dsp-js
+// --> TODO replace it by IPermissions from dsp-js
 export interface IPermissions {
     groupsPerProject: any;
     administrativePermissionsPerProject: any;
@@ -122,7 +122,7 @@ export class MembershipComponent implements OnInit {
     }
 
     updateProjectCache(iri: string) {
-        // tODO: update cache of project
+        // --> TODO update cache of project
 
         // get shortcode from iri; not the best way right now
         const projectcode: string = iri.replace('http://rdfh.ch/projects/', '');
