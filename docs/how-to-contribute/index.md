@@ -30,11 +30,7 @@ Run `npm run test-e2e-protractor` to execute the end-to-end tests via [Protracto
 
 ### Running code linter
 
-Run `npm run lint` to execute the lint service via [tslint](https://palantir.github.io/tslint/).
-
-> :warning: **tslint is deprecated and will be replaced by eslint**
-> 
-> Get more info here: <https://dasch.myjetbrains.com/youtrack/issue/DSP-1260>
+Run `npm run lint-local` to execute the lint service via [ESLint](https://eslint.org). This command uses the `--fix` flag which fixes simple errors like redundant type if you have default value assigned. In the Github Actions (CI) workflow the linter runs as `npm run lint-ci`.
 
 ## Further help
 
