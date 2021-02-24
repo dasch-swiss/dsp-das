@@ -28,15 +28,15 @@ export interface IPermissions {
 })
 export class MembershipComponent implements OnInit {
 
+    @Input() username: string;
+
+    @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
+
     loading: boolean;
 
     session: Session;
 
-    @Input() username: string;
-
     user: ReadUser;
-
-    @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
     projects: AutocompleteItem[] = [];
     newProject = new FormControl();

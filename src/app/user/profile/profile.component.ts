@@ -20,14 +20,14 @@ import { DialogComponent } from '../../main/dialog/dialog.component';
 })
 export class ProfileComponent implements OnInit {
 
-    loading: boolean;
-    error: boolean;
-
     @Input() username: string;
 
     @Input() loggedInUser?: boolean = false;
 
     @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
+
+    loading: boolean;
+    error: boolean;
 
     sysAdmin = false;
 

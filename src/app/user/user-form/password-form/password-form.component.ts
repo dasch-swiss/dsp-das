@@ -19,6 +19,15 @@ import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 })
 export class PasswordFormComponent implements OnInit {
 
+    // update password for:
+    @Input() username: string;
+
+    // output to close dialog
+    @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
+
+    // in case of child component inside parent form
+    @Output() sendToParent: EventEmitter<string> = new EventEmitter<string>();
+
     // progress indicator
     loading: boolean;
 
@@ -44,17 +53,9 @@ export class PasswordFormComponent implements OnInit {
 
     showResponse: DspMessageData;
 
-    // update password for:
-    @Input() username: string;
     user: ReadUser;
 
     loggedInUserName: string;
-
-    // output to close dialog
-    @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
-
-    // in case of child component inside parent form
-    @Output() sendToParent: EventEmitter<string> = new EventEmitter<string>();
 
     // who is logged in?
     // loggedInUserName: string;
