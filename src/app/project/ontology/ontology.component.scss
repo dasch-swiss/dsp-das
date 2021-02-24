@@ -55,7 +55,6 @@ $width: 340px;
 
   .ontology-editor-canvas {
     min-height: calc(100vh - #{$sub-header-height} - #{$header-height} - #{$tab-bar-margin} - 100px);
-    // background: $primary_200;
     border-right: 1px solid rgba(0, 0, 0, 0.12);
 
     .ontology-editor-grid {
@@ -120,42 +119,6 @@ $width: 340px;
 .note {
   padding: 2px;
 }
-/*
-.ontology-container {
-  // display: flex;
-  // flex-direction: row;
-  width: 100%;
-
-  .ontology-editor {
-    overflow: hidden;
-  }
-
-  .ontology-default-elements {
-    width: 220px;
-    // TODO: fix height
-    height: 100vh;
-    position: fixed;
-    right: 0;
-    top: 0;
-    padding: 72px 6px 6px;
-    background: rgb(255, 255, 255);
-
-    .list-item {
-      border: 1px solid black;
-      padding: 6px;
-      margin: 6px;
-    }
-
-    ul {
-      padding-inline-start: 0;
-
-      li {
-        list-style-type: none;
-      }
-    }
-  }
-}
- */
 
 .add-resource-class {
   position: absolute;
@@ -177,6 +140,5 @@ $width: 340px;
 }
 
 button.space-reducer {
-  // max-height: 32px;
   margin: 0;
 }
