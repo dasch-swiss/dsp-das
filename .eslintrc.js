@@ -184,15 +184,6 @@ module.exports = {
                     "/"
                 ]
             }
-        ],
-        "@typescript-eslint/tslint/config": [
-            "error",
-            {
-                "rules": {
-                    "import-spacing": true,
-                    "whitespace": true
-                }
-            }
         ]
     }
 };
