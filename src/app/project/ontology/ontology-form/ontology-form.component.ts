@@ -26,7 +26,6 @@ export interface NewOntology {
 })
 export class OntologyFormComponent implements OnInit {
 
-    loading: boolean;
 
     // project short code
     @Input() projectcode: string;
@@ -37,6 +36,8 @@ export class OntologyFormComponent implements OnInit {
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
     @Output() updateParent: EventEmitter<string> = new EventEmitter<string>();
+
+    loading: boolean;
 
     project: ReadProject;
 
