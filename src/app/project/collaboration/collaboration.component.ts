@@ -22,6 +22,8 @@ import { AddUserComponent } from './add-user/add-user.component';
 })
 export class CollaborationComponent implements OnInit {
 
+    @ViewChild('addUserComponent') addUser: AddUserComponent;
+
     // loading for progess indicator
     loading: boolean;
 
@@ -44,8 +46,6 @@ export class CollaborationComponent implements OnInit {
     active: ReadUser[] = [];
     // list of inactive (deleted) users
     inactive: ReadUser[] = [];
-
-    @ViewChild('addUserComponent') addUser: AddUserComponent;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,

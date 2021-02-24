@@ -27,11 +27,6 @@ import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 export class AddUserComponent implements OnInit {
 
     /**
-     * status for the progress indicator
-     */
-    loading = true;
-
-    /**
      * project name to get existing team members
      * or to know where to add selected user
      */
@@ -41,6 +36,11 @@ export class AddUserComponent implements OnInit {
      * event emitter, when the selected user will be added to the list
      */
     @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
+
+    /**
+     * status for the progress indicator
+     */
+    loading = true;
 
     /**
      * form group
