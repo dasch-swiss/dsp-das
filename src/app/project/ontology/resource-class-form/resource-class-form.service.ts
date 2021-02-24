@@ -100,11 +100,12 @@ export class ResourceClassForm {
 })
 export class ResourceClassFormService {
 
-    resourceClassForm$: Observable<FormGroup> = this.resourceClassForm.asObservable();
 
-    private resourceClassForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(this._fb.group(
+    resourceClassForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(this._fb.group(
         new ResourceClassForm(new ResourceClass())
-    ));
+        ));
+
+    resourceClassForm$: Observable<FormGroup> = this.resourceClassForm.asObservable();
 
     constructor(private _fb: FormBuilder) { }
 
