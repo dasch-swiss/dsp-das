@@ -32,6 +32,12 @@ Run `npm run test-e2e-protractor` to execute the end-to-end tests via [Protracto
 
 Run `npm run lint-local` to execute the lint service via [ESLint](https://eslint.org). This command uses the `--fix` flag which fixes simple errors like redundant type if you have default value assigned. In the Github Actions (CI) workflow the linter runs as `npm run lint-ci`.
 
+To integrate ESLint with Visual Studio Code, do the following:
+
+* Install the [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) extension.
+* Create a task via the **Tasks: Configure Task** command and select `npm: lint-local`.
+* In the resulting `tasks.json` file, configure the problem matcher to be `$eslint-stylish`.
+
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
