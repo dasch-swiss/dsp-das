@@ -33,16 +33,6 @@ export class UserFormComponent implements OnInit, OnChanges {
     // => so, this component has to know who is who and who is doing what;
     // the form needs then some permission checks
 
-    public readonly regexUsername = /^[a-zA-Z0-9]+$/;
-
-    // tODO: replace regexEmail by CustomRegex.EMAIL_REGEX from dsp-ui
-    public readonly regexEmail = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-
-    /**
-     * status for the progress indicator
-     */
-    loading = true;
-
     /**
      * user iri, email or username: in case of edit
      *
@@ -58,18 +48,28 @@ export class UserFormComponent implements OnInit, OnChanges {
     @Input() name?: string;
 
     /**
+     * send user data to parent component;
+     * in case of dialog box?
+     */
+    @Output() closeDialog: EventEmitter<any> = new EventEmitter<ReadUser>();
+
+    public readonly regexUsername = /^[a-zA-Z0-9]+$/;
+
+    // tODO: replace regexEmail by CustomRegex.EMAIL_REGEX from dsp-ui
+    public readonly regexEmail = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+    /**
+     * status for the progress indicator
+     */
+    loading = true;
+
+    /**
      * user data
      */
     user: ReadUser;
 
     title: string;
     subtitle: string;
-
-    /**
-     * send user data to parent component;
-     * in case of dialog box?
-     */
-    @Output() closeDialog: EventEmitter<any> = new EventEmitter<ReadUser>();
 
     /**
      * define, if the user has system administration permission
