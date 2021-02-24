@@ -13,7 +13,7 @@ import { EditListItemComponent } from './edit-list-item.component';
  * Test host component to simulate parent component.
  */
 @Component({
-    template: `<app-edit-list-item #editListItem [iri]="iri" [projectIri]="projectIri"></app-edit-list-item>`
+    template: `<app-edit-list-item #editListItem [iri]="iri" [projectIri]="projectIri" [mode]="mode"></app-edit-list-item>`
 })
 class TestHostComponent implements OnInit {
 
@@ -22,6 +22,8 @@ class TestHostComponent implements OnInit {
     iri = 'http://rdfh.ch/lists/0001/otherTreeList01';
 
     projectIri = 'http://rdfh.ch/projects/0001';
+
+    mode = 'update';
 
     constructor() {}
 

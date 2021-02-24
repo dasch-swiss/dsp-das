@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { ApiResponseData, ApiResponseError, ChildNodeInfoResponse, KnoraApiConnection, List, ListNodeInfo, ListNodeInfoResponse, StringLiteral, UpdateChildNodeRequest } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, ChildNodeInfoResponse, CreateChildNodeRequest, KnoraApiConnection, List, ListNodeInfo, ListNodeInfoResponse, StringLiteral, UpdateChildNodeRequest } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 
 @Component({
@@ -13,6 +13,14 @@ export class EditListItemComponent implements OnInit {
     @Input() iri: string;
 
     @Input() projectIri: string;
+
+    @Input() mode: 'insert' | 'update';
+
+    @Input() position?: number;
+
+    @Input() projectCode?: string;
+
+    @Input() parentIri?: string;
 
     @Output() closeDialog: EventEmitter<List | ListNodeInfo> = new EventEmitter<List>();
 
@@ -46,16 +54,23 @@ export class EditListItemComponent implements OnInit {
     ngOnInit(): void {
         this.loading = true;
 
-        // get list
-        this._dspApiConnection.admin.listsEndpoint.getListNodeInfo(this.iri).subscribe(
-            (response: ApiResponseData<ListNodeInfoResponse>) => {
-                this.listNode = response.body.nodeinfo;
-                this.buildForm(response.body.nodeinfo);
-            },
-            (error: ApiResponseError) => {
-                console.error(error);
-            }
-        );
+        // if updating a node, get the existing node info
+        if (this.mode === 'update') {
+            this._dspApiConnection.admin.listsEndpoint.getListNodeInfo(this.iri).subscribe(
+                (response: ApiResponseData<ListNodeInfoResponse>) => {
+                    this.listNode = response.body.nodeinfo;
+                    this.buildForm(response.body.nodeinfo);
+                },
+                (error: ApiResponseError) => {
+                    console.error(error);
+                }
+            );
+        } else {
+            this.labels = [];
+            this.comments = [];
+
+            this.loading = false;
+        }
     }
 
     /**
@@ -117,6 +132,36 @@ export class EditListItemComponent implements OnInit {
 
         this._dspApiConnection.admin.listsEndpoint.updateChildNode(childNodeUpdateData).subscribe(
             (response: ApiResponseData<ChildNodeInfoResponse>) => {
+                this.loading = false;
+                this.closeDialog.emit(response.body.nodeinfo);
+            },
+            (error: ApiResponseError) => {
+                this.errorMessage = error;
+                this.loading = false;
+            }
+        );
+    }
+
+    insertChildNode() {
+        const createChildNodeRequest: CreateChildNodeRequest = new CreateChildNodeRequest();
+        console.log('projectIri: ', this.projectIri);
+        console.log('parentIri: ', this.parentIri);
+        console.log('listIri: ', this.iri);
+        console.log('projectCode: ', this.projectCode);
+        console.log('labels: ', this.labels);
+        console.log('comments: ', this.comments);
+
+        createChildNodeRequest.name = this.projectCode + '-' + Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
+        createChildNodeRequest.parentNodeIri = this.parentIri;
+        createChildNodeRequest.labels = this.labels;
+        createChildNodeRequest.comments = this.comments.length > 0 ? this.comments : [];
+        createChildNodeRequest.projectIri = this.projectIri;
+        createChildNodeRequest.position = this.position;
+
+        console.log('request: ', createChildNodeRequest);
+
+        this._dspApiConnection.admin.listsEndpoint.createChildNode(createChildNodeRequest).subscribe(
+            (response: ApiResponseData<ListNodeInfoResponse>) => {
                 this.loading = false;
                 this.closeDialog.emit(response.body.nodeinfo);
             },

@@ -10,6 +10,7 @@ import {
     KnoraApiConnection,
     ListInfoResponse,
     ListNode,
+    ListNodeInfo,
     ListNodeInfoResponse,
     RepositionChildNodeRequest,
     StringLiteral
@@ -19,7 +20,7 @@ import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 
 export class ListNodeOperation {
-    operation: 'create' | 'update' | 'delete' | 'reposition';
+    operation: 'create' | 'insert' | 'update' | 'delete' | 'reposition';
     listNode: ListNode;
 }
 
@@ -82,6 +83,8 @@ export class ListItemFormComponent implements OnInit {
     // is this node in the last position of the list
     @Input() lastPosition: boolean = false;
 
+    @Input() newNode: boolean = false;
+
     @Output() refreshParent: EventEmitter<ListNodeOperation> = new EventEmitter<ListNodeOperation>();
 
     loading: boolean;
@@ -107,7 +110,7 @@ export class ListItemFormComponent implements OnInit {
         }
 
         // it can be used in the input placeholder
-        if (this.parentIri) {
+        if (this.newNode) {
             this._dspApiConnection.admin.listsEndpoint.getListNodeInfo(this.parentIri).subscribe(
                 (response: ApiResponseData<ListNodeInfoResponse | ListInfoResponse>) => {
                     if (response.body instanceof ListInfoResponse) { // root node
@@ -211,12 +214,21 @@ export class ListItemFormComponent implements OnInit {
      * @param iri iri of the node.
      */
     openDialog(mode: string, name: string, iri?: string): void {
+
         const dialogConfig: MatDialogConfig = {
             width: '640px',
             position: {
                 top: '112px'
             },
-            data: { mode: mode, title: name, id: iri, project: this.projectIri }
+            data: {
+                mode: mode,
+                title: mode === 'editListNode' ? name : 'Insert new child node',
+                id: iri,
+                project: this.projectIri,
+                projectCode: this.projectcode,
+                parentIri: this.parentIri,
+                position: this.position
+            }
         };
 
         // open the dialog box
@@ -226,19 +238,24 @@ export class ListItemFormComponent implements OnInit {
         );
 
         dialogRef.afterClosed().subscribe((data: ChildNodeInfo | boolean) => {
-
+            console.log('closed: ', data);
             // init data to emit to parent
             const listNodeOperation = new ListNodeOperation();
+            if (mode === 'insertListNode' && data) {
+                console.log('inserted: ', (data as ListNodeInfo));
+                listNodeOperation.listNode = (data as ListNode);
+                listNodeOperation.operation = 'insert';
 
-            if (data instanceof ChildNodeInfo) { // update
+                this.refreshParent.emit(listNodeOperation);
+            } else if (mode === 'editListNode' && data) { // update
                 // the call to DSP-API to update the node is done in the child component
                 listNodeOperation.listNode = (data as ListNode);
                 listNodeOperation.operation = 'update';
 
                 // emit data to parent to update the view
                 this.refreshParent.emit(listNodeOperation);
-                this.labels = data.labels;
-            } else if (typeof(data) === 'boolean' && data === true) { // delete
+                this.labels = (data as ChildNodeInfo).labels;
+            } else if (mode === 'deleteListNode' && typeof(data) === 'boolean' && data === true) { // delete
                 // delete the node
                 this._dspApiConnection.admin.listsEndpoint.deleteListNode(iri).subscribe(
                     (response: ApiResponseData<DeleteListNodeResponse>) => {
