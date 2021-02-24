@@ -5,6 +5,7 @@ import {
     ApiResponseData,
     Constants,
     IHasProperty,
+    ListNodeInfo,
     ListsResponse,
     ReadOntology,
     ResourcePropertyDefinitionWithAllLanguages
@@ -75,7 +76,7 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
 
         // find gui ele from list of default property-types to set type value
         if (this.propDef.guiElement) {
-            for (let group of this.propertyTypes) {
+            for (const group of this.propertyTypes) {
                 this.propType = group.elements.find(i => i.gui_ele === this.propDef.guiElement && (i.objectType === this.propDef.objectType || i.subPropOf === this.propDef.subPropertyOf[0]));
 
                 if (this.propType) {
@@ -92,23 +93,23 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
             // this property is a link property to another resource class
             // get current ontology to get linked res class information
             this._cache.get('currentOntology').subscribe(
-                (response: ReadOntology) => {
+                (ontology: ReadOntology) => {
                     // get the base ontology of object type
                     const baseOnto = this.propDef.objectType.split('#')[0];
-                    if (baseOnto !== response.id) {
+                    if (baseOnto !== ontology.id) {
                         // get class info from another ontology
                         this._cache.get('currentProjectOntologies').subscribe(
-                            (response: ReadOntology[]) => {
-                                const onto = response.find(i => i.id === baseOnto);
+                            (ontologies: ReadOntology[]) => {
+                                const onto = ontologies.find(i => i.id === baseOnto);
                                 if (!onto && this.propDef.objectType === Constants.Region) {
                                     this.propAttribute = 'Region';
                                 } else {
                                     this.propAttribute = onto.classes[this.propDef.objectType].label;
                                 }
                             }
-                        )
+                        );
                     } else {
-                        this.propAttribute = response.classes[this.propDef.objectType].label;
+                        this.propAttribute = ontology.classes[this.propDef.objectType].label;
                     }
 
                 }
@@ -119,11 +120,12 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
             // this property is a list property
             // get current ontology lists to get linked list information
             this._cache.get('currentOntologyLists').subscribe(
-                (response: ApiResponseData<ListsResponse>) => {
+                (response: ListNodeInfo[]) => {
                     const re: RegExp = /\<([^)]+)\>/;
                     const listIri = this.propDef.guiAttributes[0].match(re)[1];
                     const listUrl = `/project/${this.projectcode}/lists/${encodeURIComponent(listIri)}`;
-                    this.propAttribute = `<a href="${listUrl}">${response[0].labels[0].value}</a>`;
+                    const list = response.find(i => i.id === listIri);
+                    this.propAttribute = `<a href="${listUrl}">${list.labels[0].value}</a>`;
                 }
             );
         }

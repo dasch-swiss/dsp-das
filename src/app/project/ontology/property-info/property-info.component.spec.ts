@@ -7,7 +7,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Constants, IHasProperty, MockOntology, ReadOntology, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { Constants, IHasProperty, ListNodeInfo, MockOntology, ReadOntology, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { PropertyInfoComponent } from './property-info.component';
@@ -17,36 +17,36 @@ import { PropertyInfoComponent } from './property-info.component';
  * Property is of type simple text
  */
 @Component({
-    template: '<app-property-info #propertyInfo [propCard]="propertyCardinality" [propDef]="propertyDefinition"></app-property-info>'
+    template: `<app-property-info #propertyInfo [propCard]="propertyCardinality" [propDef]="propertyDefinition"></app-property-info>`
 })
 class SimpleTextHostComponent {
 
     @ViewChild('propertyInfo') propertyInfoComponent: PropertyInfoComponent;
 
     propertyCardinality: IHasProperty = {
-        propertyIndex: "http://0.0.0.0:3333/ontology/1111/Notizblogg/v2#notgkygty",
+        propertyIndex: 'http://0.0.0.0:3333/ontology/1111/Notizblogg/v2#notgkygty',
         cardinality: 0,
         guiOrder: 1,
         isInherited: false
     };
     propertyDefinition: ResourcePropertyDefinitionWithAllLanguages = {
-        "id": "http://0.0.0.0:3333/ontology/1111/Notizblogg/v2#notgkygty",
-        "subPropertyOf": ["http://api.knora.org/ontology/knora-api/v2#hasValue"],
-        "comment": "Beschreibt einen Namen",
-        "label": "Name",
-        "guiElement": "http://api.knora.org/ontology/salsah-gui/v2#SimpleText",
-        "objectType": "http://api.knora.org/ontology/knora-api/v2#TextValue",
-        "isLinkProperty": false,
-        "isLinkValueProperty": false,
-        "isEditable": true,
-        "guiAttributes": [],
-        "comments": [{
-            "language": "de",
-            "value": "Beschreibt einen Namen"
+        'id': 'http://0.0.0.0:3333/ontology/1111/Notizblogg/v2#notgkygty',
+        'subPropertyOf': ['http://api.knora.org/ontology/knora-api/v2#hasValue'],
+        'comment': 'Beschreibt einen Namen',
+        'label': 'Name',
+        'guiElement': 'http://api.knora.org/ontology/salsah-gui/v2#SimpleText',
+        'objectType': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+        'isLinkProperty': false,
+        'isLinkValueProperty': false,
+        'isEditable': true,
+        'guiAttributes': [],
+        'comments': [{
+            'language': 'de',
+            'value': 'Beschreibt einen Namen'
         }],
-        "labels": [{
-            "language": "de",
-            "value": "Name"
+        'labels': [{
+            'language': 'de',
+            'value': 'Name'
         }]
     };
 
@@ -57,42 +57,88 @@ class SimpleTextHostComponent {
  * Property is of type resource link
  */
 @Component({
-    template: '<app-property-info #propertyInfo [propCard]="propertyCardinality" [propDef]="propertyDefinition"></app-property-info>'
+    template: `<app-property-info #propertyInfo [propCard]="propertyCardinality" [propDef]="propertyDefinition"></app-property-info>`
 })
 class LinkHostComponent {
 
     @ViewChild('propertyInfo') propertyInfoComponent: PropertyInfoComponent;
 
     propertyCardinality: IHasProperty = {
-        "propertyIndex": "http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherThing",
-        "cardinality": 2,
-        "guiOrder": 1,
-        "isInherited": false
+        'propertyIndex': 'http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherThing',
+        'cardinality': 2,
+        'guiOrder': 1,
+        'isInherited': false
     };
     propertyDefinition: ResourcePropertyDefinitionWithAllLanguages = {
-        "id": "http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherThing",
-        "subPropertyOf": ["http://api.knora.org/ontology/knora-api/v2#hasLinkTo"],
-        "label": "Ein anderes Ding",
-        "guiElement": "http://api.knora.org/ontology/salsah-gui/v2#Searchbox",
-        "subjectType": "http://0.0.0.0:3333/ontology/0001/anything/v2#Thing",
-        "objectType": "http://0.0.0.0:3333/ontology/0001/anything/v2#Thing",
-        "isLinkProperty": true,
-        "isLinkValueProperty": false,
-        "isEditable": true,
-        "guiAttributes": [],
-        "comments": [],
-        "labels": [{
-            "language": "de",
-            "value": "Ein anderes Ding"
+        'id': 'http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherThing',
+        'subPropertyOf': ['http://api.knora.org/ontology/knora-api/v2#hasLinkTo'],
+        'label': 'Ein anderes Ding',
+        'guiElement': 'http://api.knora.org/ontology/salsah-gui/v2#Searchbox',
+        'subjectType': 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+        'objectType': 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+        'isLinkProperty': true,
+        'isLinkValueProperty': false,
+        'isEditable': true,
+        'guiAttributes': [],
+        'comments': [],
+        'labels': [{
+            'language': 'de',
+            'value': 'Ein anderes Ding'
         }, {
-            "language": "en",
-            "value": "Another thing"
+            'language': 'en',
+            'value': 'Another thing'
         }, {
-            "language": "fr",
-            "value": "Une autre chose"
+            'language': 'fr',
+            'value': 'Une autre chose'
         }, {
-            "language": "it",
-            "value": "Un'altra cosa"
+            'language': 'it',
+            'value': 'Un altra cosa'
+        }]
+    };
+
+}
+
+/**
+ * Test host component to simulate parent component
+ * Property is of type list dropdown
+ */
+@Component({
+    template: `<app-property-info #propertyInfo [propCard]="propertyCardinality" [propDef]="propertyDefinition"></app-property-info>`
+})
+class ListHostComponent {
+
+    @ViewChild('propertyInfo') propertyInfoComponent: PropertyInfoComponent;
+
+    propertyCardinality: IHasProperty = {
+        'propertyIndex': 'http://0.0.0.0:3333/ontology/0001/anything/v2#hasListItem',
+        'cardinality': 2,
+        'guiOrder': 0,
+        'isInherited': true
+    };
+    propertyDefinition: ResourcePropertyDefinitionWithAllLanguages = {
+        'id': 'http://0.0.0.0:3333/ontology/0001/anything/v2#hasListItem',
+        'subPropertyOf': ['http://api.knora.org/ontology/knora-api/v2#hasValue'],
+        'label': 'Listenelement',
+        'guiElement': 'http://api.knora.org/ontology/salsah-gui/v2#List',
+        'subjectType': 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+        'objectType': 'http://api.knora.org/ontology/knora-api/v2#ListValue',
+        'isLinkProperty': false,
+        'isLinkValueProperty': false,
+        'isEditable': true,
+        'guiAttributes': ['hlist=<http://rdfh.ch/lists/0001/treeList>'],
+        'comments': [],
+        'labels': [{
+            'language': 'de',
+            'value': 'Listenelement'
+        }, {
+            'language': 'en',
+            'value': 'List element'
+        }, {
+            'language': 'fr',
+            'value': 'Elément de liste'
+        }, {
+            'language': 'it',
+            'value': 'Elemento di lista'
         }]
     };
 
@@ -104,6 +150,9 @@ describe('PropertyInfoComponent', () => {
 
     let linkHostComponent: LinkHostComponent;
     let linkHostFixture: ComponentFixture<LinkHostComponent>;
+
+    let listHostComponent: ListHostComponent;
+    let listHostFixture: ComponentFixture<ListHostComponent>;
 
     beforeEach(async(() => {
         const dspConnSpy = {
@@ -117,6 +166,7 @@ describe('PropertyInfoComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 LinkHostComponent,
+                ListHostComponent,
                 SimpleTextHostComponent,
                 PropertyInfoComponent
             ],
@@ -139,16 +189,6 @@ describe('PropertyInfoComponent', () => {
     }));
 
     beforeEach(() => {
-        // mock cache service for currentOntology
-        const cacheSpy = TestBed.inject(CacheService);
-
-        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
-            () => {
-                let response: ReadOntology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
-                return of(response);
-            }
-        );
-
         simpleTextHostFixture = TestBed.createComponent(SimpleTextHostComponent);
         simpleTextHostComponent = simpleTextHostFixture.componentInstance;
         simpleTextHostFixture.detectChanges();
@@ -157,11 +197,79 @@ describe('PropertyInfoComponent', () => {
     });
 
     beforeEach(() => {
+        // mock cache service for currentOntology
+        const cacheSpy = TestBed.inject(CacheService);
+
+        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
+            () => {
+                const response: ReadOntology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
+                return of(response);
+            }
+        );
+
         linkHostFixture = TestBed.createComponent(LinkHostComponent);
         linkHostComponent = linkHostFixture.componentInstance;
         linkHostFixture.detectChanges();
 
         expect(linkHostComponent).toBeTruthy();
+    });
+
+    beforeEach(() => {
+        // mock cache service for currentOntology
+        const cacheSpy = TestBed.inject(CacheService);
+
+        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
+            (key = 'currentOntologyLists') => {
+                const response: ListNodeInfo[] = [{
+                    'comments': [],
+                    'id': 'http://rdfh.ch/lists/0001/otherTreeList',
+                    'isRootNode': true,
+                    'labels': [{
+                        'language': 'en',
+                        'value': 'Tree list root'
+                    }],
+                    'projectIri': 'http://rdfh.ch/projects/0001'
+                }, {
+                    'comments': [{
+                        'language': 'en',
+                        'value': 'a list that is not in used in ontology or data'
+                    }],
+                    'id': 'http://rdfh.ch/lists/0001/notUsedList',
+                    'isRootNode': true,
+                    'labels': [{
+                        'language': 'de',
+                        'value': 'unbenutzte Liste'
+                    }, {
+                        'language': 'en',
+                        'value': 'a list that is not used'
+                    }],
+                    'name': 'notUsedList',
+                    'projectIri': 'http://rdfh.ch/projects/0001'
+                }, {
+                    'comments': [{
+                        'language': 'en',
+                        'value': 'Anything Tree List'
+                    }],
+                    'id': 'http://rdfh.ch/lists/0001/treeList',
+                    'isRootNode': true,
+                    'labels': [{
+                        'language': 'de',
+                        'value': 'Listenwurzel'
+                    }, {
+                        'language': 'en',
+                        'value': 'Tree list root'
+                    }],
+                    'name': 'treelistroot',
+                    'projectIri': 'http://rdfh.ch/projects/0001'
+                }];
+                return of(response);
+            }
+        );
+        listHostFixture = TestBed.createComponent(ListHostComponent);
+        listHostComponent = listHostFixture.componentInstance;
+        listHostFixture.detectChanges();
+
+        expect(listHostComponent).toBeTruthy();
     });
 
     it('should create an instance', () => {
@@ -178,9 +286,9 @@ describe('PropertyInfoComponent', () => {
         const multipleIcon: DebugElement = hostCompDe.query(By.css('.multiple'));
         const requiredIcon: DebugElement = hostCompDe.query(By.css('.required'));
 
-        // cardinality 0 means "no multiple values"
+        // cardinality 0 means 'no multiple values'
         expect(multipleIcon.nativeElement.innerText).toEqual('check_box_outline_blank');
-        // and cardinality 0 means also "required value"
+        // and cardinality 0 means also 'required value'
         expect(requiredIcon.nativeElement.innerText).toEqual('check_box');
 
     });
@@ -208,7 +316,7 @@ describe('PropertyInfoComponent', () => {
 
         const typeIcon: DebugElement = hostCompDe.query(By.css('.type'));
 
-        // expect "link" icon
+        // expect 'link' icon
         expect(typeIcon.nativeElement.innerText).toEqual('link');
     });
 
@@ -219,7 +327,7 @@ describe('PropertyInfoComponent', () => {
         const hostCompDe = linkHostFixture.debugElement;
 
         const attribute: DebugElement = hostCompDe.query(By.css('.attribute'));
-        // expect linked resource called "Thing"
+        // expect linked resource called 'Thing'
         expect(attribute.nativeElement.innerText).toContain('Thing');
     });
 
@@ -232,9 +340,20 @@ describe('PropertyInfoComponent', () => {
         const multipleIcon: DebugElement = hostCompDe.query(By.css('.multiple'));
         const requiredIcon: DebugElement = hostCompDe.query(By.css('.required'));
 
-        // cardinality 2 means "multiple values"
+        // cardinality 2 means 'multiple values'
         expect(multipleIcon.nativeElement.innerText).toEqual('check_box');
-        // and cardinality 2 means also "not required value"
+        // and cardinality 2 means also 'not required value'
         expect(requiredIcon.nativeElement.innerText).toEqual('check_box_outline_blank');
+    });
+
+    it('expect list property with connection to list "Listenwurzel"', () => {
+        expect(listHostComponent.propertyInfoComponent).toBeTruthy();
+        expect(listHostComponent.propertyInfoComponent.propDef).toBeDefined();
+
+        const hostCompDe = listHostFixture.debugElement;
+
+        const attribute: DebugElement = hostCompDe.query(By.css('.attribute'));
+        // expect list called "Listenwurzel"
+        expect(attribute.nativeElement.innerText).toContain('Listenwurzel');
     });
 });
