@@ -190,14 +190,7 @@ module.exports = {
             {
                 "rules": {
                     "import-spacing": true,
-                    "whitespace": [
-                        true,
-                        "check-branch",
-                        "check-decl",
-                        "check-operator",
-                        "check-separator",
-                        "check-type"
-                    ]
+                    "whitespace": true
                 }
             }
         ]
