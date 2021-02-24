@@ -8,7 +8,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "lint": "eslint --color --fix -c .eslintrc.js --ext .ts ./src/app",
+    "lint-ci": "eslint --color -c .eslintrc.js --ext .ts ./src/app",
+    "lint-local": "eslint --color --fix -c .eslintrc.js --ext .ts ./src/app",
     "e2e": "ng e2e",
     "build": "ng build",
     "build-prod": "ng build --prod=true",
