@@ -20,6 +20,8 @@ import { DspApiConnectionToken, Session, SessionService } from '@dasch-swiss/dsp
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { AddGroupComponent } from './add-group/add-group.component';
+import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 interface GroupPermission {
     groupName: string;
@@ -116,6 +118,8 @@ export class PermissionComponent implements OnInit {
 
     permissionList: GroupPermission[] = [];
 
+    perms: Permission[];
+
 
     @ViewChild('addGroupComponent') addGroup: AddGroupComponent;
 
@@ -156,9 +160,22 @@ export class PermissionComponent implements OnInit {
                 // is logged-in user projectAdmin?
                 this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
 
-                this.getProjectPermissions(this.project.id);
-                this.getAdministrativePermissions(this.project.id);
-                this.getDefaultObjectAccessPermissions(this.project.id);
+                const calls = [
+                    this._dspApiConnection.admin.permissionsEndpoint.getAdministrativePermissions(this.project.id).pipe(
+                        map((res: ApiResponseData<AdministrativePermissionsResponse>) => res.body)
+                    ),
+                    this._dspApiConnection.admin.permissionsEndpoint.getDefaultObjectAccessPermissions(this.project.id).pipe(
+                        map((res: ApiResponseData<DefaultObjectAccessPermissionsResponse>) => res.body)
+                    )
+                ];
+
+                forkJoin(calls).subscribe(
+                    (res:  [AdministrativePermissionsResponse, DefaultObjectAccessPermissionsResponse]) =>
+                    {
+                        console.log(res);
+                        this.perms = res[1].defaultObjectAccessPermissions[0].hasPermissions
+                    }
+                );
 
                 this.loading = false;
             },
@@ -168,81 +185,6 @@ export class PermissionComponent implements OnInit {
             }
         );
 
-    }
-
-    getProjectPermissions(projectIri: string) {
-        this._dspApiConnection.admin.permissionsEndpoint.getProjectPermissions(projectIri).subscribe(
-            (response: ApiResponseData<ProjectPermissionsResponse>)=> {
-                this.allPermissions = response.body.permissions;
-                console.log('getProjectPermissions response', this.allPermissions);
-        });
-    }
-
-    getAdministrativePermissions(projectIri: string) {
-        this._dspApiConnection.admin.permissionsEndpoint.getAdministrativePermissions(projectIri).subscribe(
-            (response: ApiResponseData<AdministrativePermissionsResponse>)=> {
-                if (response) {
-                    this.adminPermission = response.body.administrative_permissions;
-                    console.log('getAdministrativePermissions response', this.adminPermission);
-
-                    for (const ap of this.adminPermission) {
-                        if (ap.forGroup) {
-                            // this.apHasPermission = ap.hasPermissions;
-                            // console.log('ap.hasPermissions', ap.hasPermissions);
-
-                            for (const permission of ap.hasPermissions) {
-                                if (permission.name === "ProjectResourceCreateAllPermission") {
-                                    const apGroup: GroupPermission = {
-                                        'groupName': ap.forGroup,
-                                        'apName': permission.name,
-                                        'doapName': undefined,
-                                        'additionalInfo': permission.additionalInformation
-                                    };
-                                    // console.log(ap.forGroup + ' admin hasPermissions: ', this.apHasPermission);
-                                    this.permissionList.push(apGroup);
-                                    // console.log('permissionList in AP: ', this.permissionList);
-                                }
-                            }
-                        }
-                    }
-                }
-        });
-    }
-
-    getDefaultObjectAccessPermissions(projectIri: string) {
-        this._dspApiConnection.admin.permissionsEndpoint.getDefaultObjectAccessPermissions(projectIri).subscribe(
-            (response: ApiResponseData<DefaultObjectAccessPermissionsResponse>)=> {
-                if (response) {
-                    this.doaPermission = response.body.defaultObjectAccessPermissions;
-                    console.log('getDefaultObjectAccessPermissions response', this.doaPermission);
-
-                        for (const doap of this.doaPermission) {
-                            for (const item of this.permissionList) {
-
-                                if (doap.forGroup === item.groupName) {
-
-                                    // console.log(doap.forGroup + ' doap permissions: ' + doap.hasPermissions);
-                                    // console.log('permissionList in DOAP: ', this.permissionList);
-
-                                    /* for (const permission of doap.hasPermissions) {
-
-                                        if (permission.name !== "CR") {
-
-                                            const doapGroup: GroupPermission = {
-                                                'groupName': doap.forGroup,
-                                                'permissionName': permission.name,
-                                                'additionalInfo': permission.additionalInformation
-                                            };
-
-                                            this.permissionList.push(doapGroup);
-                                            // console.log('permissionList in AP: ', this.permissionList);
-                                        }
-                                    } */
-                                }
-                            }
-                        }
-                }
-        });
     }
 
 }
