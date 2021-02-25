@@ -70,7 +70,27 @@ module.exports = {
             }
         ],
         "@typescript-eslint/member-ordering": "error",
-        "@typescript-eslint/naming-convention": "error",
+        "@typescript-eslint/naming-convention": [
+            "error",
+            {
+                "selector": ["default"],
+                "format": ["camelCase", "PascalCase", "UPPER_CASE"],
+                "leadingUnderscore": "allow",
+                "trailingUnderscore": "allow"
+            },
+            {
+                "selector": ["classProperty", "classMethod"],
+                "modifiers": ["private"],
+                "format": ["camelCase"],
+                "leadingUnderscore": "require"
+            },
+            {
+                "selector": ["classProperty"],
+                "modifiers": ["readonly"],
+                "format": ["UPPER_CASE"],
+                "trailingUnderscore": "allow"
+            }
+        ],
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/no-empty-interface": "error",
         "@typescript-eslint/no-inferrable-types": [
