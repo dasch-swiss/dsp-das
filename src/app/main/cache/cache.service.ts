@@ -19,8 +19,8 @@ interface CacheContent {
  */
 export class CacheService {
     readonly defaultMaxAge: number = 3600000;  // 3600000ms => 1 Stunde
-    private cache: Map<string, CacheContent> = new Map<string, CacheContent>();
-    private inFlightObservables: Map<string, Subject<any>> = new Map<string, Subject<any>>();
+    private _cache: Map<string, CacheContent> = new Map<string, CacheContent>();
+    private _inFlightObservables: Map<string, Subject<any>> = new Map<string, Subject<any>>();
 
     constructor(
         private _errorHandler: ErrorHandlerService
@@ -39,22 +39,22 @@ export class CacheService {
             // console.log(`%c Cache returns typeof:` + (typeof of(this.cache.get(key).value)), 'color: green');
 
             // returns observable
-            return of(this.cache.get(key).value);
+            return of(this._cache.get(key).value);
         }
 
         if (!maxAge) {
             maxAge = this.defaultMaxAge;
         }
 
-        if (this.inFlightObservables.has(key)) {
+        if (this._inFlightObservables.has(key)) {
             // console.log(`%c inFlightObservables has key: ${key}`, 'color: orange');
             // console.log(`%c inFlightObservables returns:` + JSON.stringify(this.inFlightObservables.get(key)), 'color: orange');
             // console.log(`%c inFlightObservables returns typeof:` + (typeof this.inFlightObservables.get(key)), 'color: orange');
 
-            return this.inFlightObservables.get(key);
+            return this._inFlightObservables.get(key);
 
         } else if (fallback && fallback instanceof Observable) {
-            this.inFlightObservables.set(key, new Subject());
+            this._inFlightObservables.set(key, new Subject());
 
             fallback.subscribe(
                 (value: any) => {
@@ -81,7 +81,7 @@ export class CacheService {
      * Notifies all observers of the new value
      */
     set(key: string, value: any, maxAge: number = this.defaultMaxAge): void {
-        this.cache.set(key, { value: value, expiry: Date.now() + maxAge });
+        this._cache.set(key, { value: value, expiry: Date.now() + maxAge });
         this.notifyInFlightObservers(key, value);
     }
 
@@ -89,7 +89,7 @@ export class CacheService {
      * checks if the key exists in cache
      */
     has(key: string): boolean {
-        return this.cache.has(key);
+        return this._cache.has(key);
     }
 
     /**
@@ -97,7 +97,7 @@ export class CacheService {
      * @param key Key is the id of the content
      */
     del(key: string) {
-        this.cache.delete(key);
+        this._cache.delete(key);
     }
 
     /**
@@ -105,7 +105,7 @@ export class CacheService {
      */
     destroy() {
         sessionStorage.clear();
-        this.cache.clear();
+        this._cache.clear();
     }
 
     /**
@@ -113,15 +113,15 @@ export class CacheService {
      * in progress observables if observers exist.
      */
     private notifyInFlightObservers(key: string, value: any): void {
-        if (this.inFlightObservables.has(key)) {
-            const inFlight = this.inFlightObservables.get(key);
+        if (this._inFlightObservables.has(key)) {
+            const inFlight = this._inFlightObservables.get(key);
             const observersCount = inFlight.observers.length;
             if (observersCount) {
                 // console.log(`%cNotifying ${inFlight.observers.length} flight subscribers for ${key}`, 'color: blue');
                 inFlight.next(value);
             }
             inFlight.complete();
-            this.inFlightObservables.delete(key);
+            this._inFlightObservables.delete(key);
         }
     }
 
@@ -129,9 +129,9 @@ export class CacheService {
      * checks if the key exists and   has not expired.
      */
     private hasValidCachedValue(key: string): boolean {
-        if (this.cache.has(key)) {
-            if (this.cache.get(key).expiry < Date.now()) {
-                this.cache.delete(key);
+        if (this._cache.has(key)) {
+            if (this._cache.get(key).expiry < Date.now()) {
+                this._cache.delete(key);
                 return false;
             }
             return true;
