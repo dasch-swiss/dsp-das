@@ -171,7 +171,13 @@ export class BoardComponent implements OnInit {
 
             },
             (error: ApiResponseError) => {
-                console.log(error);
+                const message = 'Metadata is not available!';
+                const action = "Project metadata";
+                this._snackBar.open(message, action, {
+                    duration: 5000,
+                    horizontalPosition: 'center',
+                    verticalPosition: 'top'
+                });
             }
         );
 
