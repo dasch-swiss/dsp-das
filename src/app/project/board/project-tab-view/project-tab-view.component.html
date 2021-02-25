@@ -30,7 +30,7 @@
 
                     <!-- template for funder -->
                     <div *ngSwitchCase="'funder'">
-                        <mat-card *ngFor="let funder of funders">
+                        <div *ngFor="let funder of funders" class="funder">
                             <div [ngSwitch]="funderType">
                                 <div *ngSwitchCase="'person'">
                                     <app-person-template [person]="funder" [subProperties]="subProperties"></app-person-template>
@@ -39,7 +39,7 @@
                                     <app-organisation-template [organisation]="funder"></app-organisation-template>
                                 </div>
                             </div>
-                        </mat-card>
+                        </div>
                     </div>
 
                     <!-- template for keywords -->
@@ -64,31 +64,55 @@
 
                     <!-- template for grant -->
                     <div *ngSwitchCase="'grant'">
-                        <mat-card *ngFor="let grant of grants">
-                            <p *ngIf="grant.name"> {{ grant.name }} </p>
-                            <div *ngIf="grant.url">
-                                URL(s):
-                                <p class="add-margin-left"  *ngFor="let entry of grant.url">
-                                    <a href="{{ entry.url }}" target="_blank"> {{ entry.url }} </a>
-                                </p>
+                        <div *ngFor="let grant of grants" class="grant">
+                            <div class="metadata-property">
+                                <div class="property-label">
+                                    <p class="grant-name">
+                                        <span> {{ grant.name }} </span>
+                                    </p>
+                                </div>
                             </div>
-                            <div *ngIf="grant.number" class="mat-icon-text">
-                                <mat-icon aria-hidden="false" aria-label="Call" class="small">call</mat-icon>
-                                <a href="tel:{{ grant.number }}"> {{ grant.number }} </a>
+
+                            <div *ngIf="grant.url" class="metadata-property">
+                                <div class="property-label display-inline-block">
+                                    URL(s):
+                                </div>
+                                <div class="display-inline-block add-left-margin">
+                                    <span *ngFor="let entry of grant.url" class="comma">
+                                        <a href="{{ entry.url }}" target="_blank"> {{ entry.url }} </a>
+                                    </span>
+                                </div>
                             </div>
-                            <div> Funder(s):
-                                <div class="add-margin-left" *ngFor="let funder of grant.funder">
-                                    <div [ngSwitch]="grant.funderType">
-                                        <div *ngSwitchCase="'person'">
-                                            <app-person-template [person]="funder" [subProperties]="subProperties"></app-person-template>
-                                        </div>
-                                        <div *ngSwitchCase="'organization'">
-                                            <app-organisation-template [organisation]="funder"></app-organisation-template>
+
+                            <div *ngIf="grant.number" class="metadata-property">
+                                <div class="property-label display-inline-block">
+                                    Phone number:
+                                </div>
+                                <div class="display-inline-block add-left-margin">
+                                    <span>
+                                        <a href="tel:{{ grant.number }}"> {{ grant.number }} </a>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="metadata-property">
+                                <div class="property-label">
+                                    Funder(s):
+                                </div>
+                                <div class="add-left-margin">
+                                    <div *ngFor="let funder of grant.funder" class="sub-block">
+                                        <div [ngSwitch]="grant.funderType">
+                                            <div *ngSwitchCase="'person'">
+                                                <app-person-template [person]="funder" [subProperties]="subProperties"></app-person-template>
+                                            </div>
+                                            <div *ngSwitchCase="'organization'">
+                                                <app-organisation-template [organisation]="funder"></app-organisation-template>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </mat-card>
+                        </div>
                     </div>
 
                     <!-- template for spatialCoverage -->

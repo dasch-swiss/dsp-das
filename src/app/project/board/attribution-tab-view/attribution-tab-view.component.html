@@ -1,16 +1,19 @@
-<h1>Attribution</h1>
-
-<p>The following people are involved in the creation of the dataset:</p>
 
 <div class="tab-contents">
 
-    <mat-card *ngFor="let attribution of attributions" class="attribution-entry">
+    <p>The following people are involved in the creation of the dataset:</p>
 
-        <div *ngFor="let role of attribution.role">
-            <h3 class="color-for-role"> {{ role | titlecase }} </h3>
+    <mat-card *ngFor="let attribution of attributions" class="attribution-entry">
+        <div class="metadata-property">
+            <div class="property-label">
+                <p *ngFor="let role of attribution.role" class="color-for-role">
+                    {{ role | titlecase }}
+                </p>
+            </div>
         </div>
+
         <h4>Agent(s):</h4>
-        <div class="add-margin-left" *ngFor="let agent of attribution.agent">
+        <div *ngFor="let agent of attribution.agent" class="sub-block" >
             <div [ngSwitch]="setAgent(agent)">
                 <div *ngSwitchCase="'person'">
                     <app-person-template [person]="currentAgent" [subProperties]="subProperties"></app-person-template>
