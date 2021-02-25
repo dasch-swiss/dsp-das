@@ -1,3 +1,11 @@
+.page-subtitle {
+  margin: 40px 0 80px 0;
+
+  .subtitle-label {
+    text-align: center;
+  }
+}
+
 .grid-container {
   display: grid;
   grid-template-columns: repeat(6, 1fr);;
@@ -18,19 +26,28 @@
   }
 }
 
-.grid-item {
-  height: 48px;
+/* .grid-group-label {
+  height: 36px;
   box-sizing: border-box;
   align-self: center;
   text-align: center;
-  background-color: rgb(145, 176, 211);
-}
 
-.page-subtitle {
-  margin: 40px 0 80px 0;
-
-  .subtitle-label {
-    text-align: center;
+  .group-name {
+    margin-top: 8px;
+    font-weight: 400;
   }
-}
+  .permission-info {
+    margin-top: 8px;
+    color: red;
+  }
+} */
 
+
+.group-name {
+  margin-top: 8px;
+  font-weight: 500;
+}
+.permission-info {
+  // margin-top: 8px;
+  color: red;
+}

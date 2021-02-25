@@ -13,26 +13,11 @@
             <div *ngFor="let permission of columnLabels" class="grid-column-label">
                 <span class="column-label">{{permission.fullname}}</span>
             </div>
-            <!-- <div *ngFor="let doap of doaPermission" class="grid-item">
-                <div *ngIf="doap.forGroup">
-                    <p>{{doap?.forGroup}}</p>
-                    <div *ngFor="let permission of doap.hasPermissions" class="perm-item">
-                        <p>{{permission.name}} ({{permission.additionalInformation}})</p>
-                    </div>
-                </div>
-            </div>
-            <mat-divider></mat-divider>
-            <div *ngFor="let ap of adminPermission" class="grid-item">
-                <div *ngIf="ap.forGroup">
-                    <p>{{ap?.forGroup}}</p>
-                    <div *ngFor="let permission of ap.hasPermissions" class="perm-item">
-                        <span *ngIf="permission.name === 'ProjectResourceCreateAllPermission'">
-                            <p>{{permission.name}} ({{permission.additionalInformation}})</p>
-                        </span>
+        </div>
 
-                    </div>
-                </div>
-            </div> -->
+        <div *ngFor="let group of permissionList" class="grid-group-label">
+            <div class="group-name">{{group.groupName}}</div>
+            <div class="permission-info">{{group.apName}} + {{group.doapName}}</div>
         </div>
 
     </div>

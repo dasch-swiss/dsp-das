@@ -21,6 +21,13 @@ import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { AddGroupComponent } from './add-group/add-group.component';
 
+interface GroupPermission {
+    groupName: string;
+    apName: string;
+    doapName: string[];
+    additionalInfo: string;
+}
+
 @Component({
     selector: 'app-permission',
     templateUrl: './permission.component.html',
@@ -55,6 +62,7 @@ export class PermissionComponent implements OnInit {
     doaPermission: DefaultObjectAccessPermission[] = [];
     doapHasPermission: Permission[] = [];
 
+    // tab header labels: user group and the permission labels
     columnLabels: any[] = [
         {
             name: 'Group',
@@ -82,9 +90,31 @@ export class PermissionComponent implements OnInit {
         }
     ];
 
-    permissionList: any[] = [
+    // list of user groups
+    userGroups: any[] = [
+        {
+            name: 'SystemAdmin',
+            fullname: 'System Admin'
+        },
+        {
+            name: 'ProjectAdmin',
+            fullname: 'Project Admin'
+        },
+        {
+            name: 'ProjectMember',
+            fullname: 'Project Member'
+        },
+        {
+            name: 'KnownUser',
+            fullname: 'Known User'
+        },
+        {
+            name: 'UnknownUser',
+            fullname: 'Unknown User'
+        }
+    ];
 
-    ]
+    permissionList: GroupPermission[] = [];
 
 
     @ViewChild('addGroupComponent') addGroup: AddGroupComponent;
@@ -144,7 +174,7 @@ export class PermissionComponent implements OnInit {
         this._dspApiConnection.admin.permissionsEndpoint.getProjectPermissions(projectIri).subscribe(
             (response: ApiResponseData<ProjectPermissionsResponse>)=> {
                 this.allPermissions = response.body.permissions;
-                // console.log('getProjectPermissions response', this.allPermissions);
+                console.log('getProjectPermissions response', this.allPermissions);
         });
     }
 
@@ -153,12 +183,26 @@ export class PermissionComponent implements OnInit {
             (response: ApiResponseData<AdministrativePermissionsResponse>)=> {
                 if (response) {
                     this.adminPermission = response.body.administrative_permissions;
-                    // console.log('getAdministrativePermissions response', this.adminPermission);
+                    console.log('getAdministrativePermissions response', this.adminPermission);
 
                     for (const ap of this.adminPermission) {
                         if (ap.forGroup) {
-                            this.apHasPermission = ap.hasPermissions;
-                            console.log(ap.forGroup + ' admin hasPermissions: ', this.apHasPermission);
+                            // this.apHasPermission = ap.hasPermissions;
+                            // console.log('ap.hasPermissions', ap.hasPermissions);
+
+                            for (const permission of ap.hasPermissions) {
+                                if (permission.name === "ProjectResourceCreateAllPermission") {
+                                    const apGroup: GroupPermission = {
+                                        'groupName': ap.forGroup,
+                                        'apName': permission.name,
+                                        'doapName': undefined,
+                                        'additionalInfo': permission.additionalInformation
+                                    };
+                                    // console.log(ap.forGroup + ' admin hasPermissions: ', this.apHasPermission);
+                                    this.permissionList.push(apGroup);
+                                    // console.log('permissionList in AP: ', this.permissionList);
+                                }
+                            }
                         }
                     }
                 }
@@ -170,12 +214,31 @@ export class PermissionComponent implements OnInit {
             (response: ApiResponseData<DefaultObjectAccessPermissionsResponse>)=> {
                 if (response) {
                     this.doaPermission = response.body.defaultObjectAccessPermissions;
-                    // console.log('getDefaultObjectAccessPermissions response', this.doaPermission);
+                    console.log('getDefaultObjectAccessPermissions response', this.doaPermission);
 
                         for (const doap of this.doaPermission) {
-                            if (doap.forGroup) {
-                                this.doapHasPermission = doap.hasPermissions;
-                                console.log(doap.forGroup + ' hasPermissions: ', this.doapHasPermission);
+                            for (const item of this.permissionList) {
+
+                                if (doap.forGroup === item.groupName) {
+
+                                    // console.log(doap.forGroup + ' doap permissions: ' + doap.hasPermissions);
+                                    // console.log('permissionList in DOAP: ', this.permissionList);
+
+                                    /* for (const permission of doap.hasPermissions) {
+
+                                        if (permission.name !== "CR") {
+
+                                            const doapGroup: GroupPermission = {
+                                                'groupName': doap.forGroup,
+                                                'permissionName': permission.name,
+                                                'additionalInfo': permission.additionalInformation
+                                            };
+
+                                            this.permissionList.push(doapGroup);
+                                            // console.log('permissionList in AP: ', this.permissionList);
+                                        }
+                                    } */
+                                }
                             }
                         }
                 }
