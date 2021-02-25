@@ -28,13 +28,15 @@ enum Permissions {
 }
 
 @Component({
-    selector: 'app-display-permission',
+    selector: '[app-display-permission]',
     templateUrl: './display-permission.component.html',
     styleUrls: ['./display-permission.component.scss']
 })
 export class DisplayPermissionComponent implements OnChanges {
 
     @Input() displayPermission: 'RV' | 'V' | 'C' | 'M' | 'D' | 'CR';
+
+    @Input() role: string;
 
     grantedPermissions: Permissions[];
 
