@@ -216,11 +216,16 @@ export class OntologyComponent implements OnInit {
                     // in case project has only one ontology: open this ontology
                     // because there will be no form to select ontlogy
                     if (response.ontologies.length === 1) {
-                        // open this ontology
+                        // open this ontology and set cache
                         this.openOntologyRoute(response.ontologies[0].id);
                         this.ontologyIri = response.ontologies[0].id;
+                        this.getOntology(response.ontologies[0].id, true);
+                        this.setCache();
+                    } else {
+                        // more than one ontology
+                        // get all ontologies as ReadOntology and cache them
+                        loadAndCache();
                     }
-                    loadAndCache();
                 }
 
             },
