@@ -260,7 +260,7 @@ export class OntologyComponent implements OnInit {
     }
 
     /**
-     * Opens ontology route by iri
+     * opens ontology route by iri
      * @param id ontology id/iri
      * @param view 'classes' | 'properties' | ' graph'
      */
@@ -291,7 +291,10 @@ export class OntologyComponent implements OnInit {
                     for (const c of classKeys) {
                         const splittedSubClass = this.ontology.classes[c].subClassOf[0].split('#');
 
-                        if (splittedSubClass[0] !== Constants.StandoffOntology && splittedSubClass[1] !== 'StandoffTag' && splittedSubClass[1] !== 'StandoffLinkTag' && splittedSubClass[1] !== 'StandoffEventTag') {
+                        if (splittedSubClass[0] !== Constants.StandoffOntology &&
+                            splittedSubClass[1] !== 'StandoffTag' &&
+                            splittedSubClass[1] !== 'StandoffLinkTag' &&
+                            splittedSubClass[1] !== 'StandoffEventTag') {
                             this.ontoClasses.push(this.ontology.classes[c]);
                         }
                     }
