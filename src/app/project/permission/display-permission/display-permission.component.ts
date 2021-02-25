@@ -63,7 +63,7 @@ export class DisplayPermissionComponent implements OnChanges {
         // (slice does not return the element identified by the second arg 'end', so +1)
         return this.permissionHierarchy.slice(0, givenPermIndex + 1);
 
-    };
+    }
 
     ngOnChanges(): void {
         this.grantedPermissions = this.getAllPermissions(this.displayPermission);
