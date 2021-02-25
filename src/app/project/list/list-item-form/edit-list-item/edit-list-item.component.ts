@@ -144,12 +144,6 @@ export class EditListItemComponent implements OnInit {
 
     insertChildNode() {
         const createChildNodeRequest: CreateChildNodeRequest = new CreateChildNodeRequest();
-        console.log('projectIri: ', this.projectIri);
-        console.log('parentIri: ', this.parentIri);
-        console.log('listIri: ', this.iri);
-        console.log('projectCode: ', this.projectCode);
-        console.log('labels: ', this.labels);
-        console.log('comments: ', this.comments);
 
         createChildNodeRequest.name = this.projectCode + '-' + Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
         createChildNodeRequest.parentNodeIri = this.parentIri;
@@ -157,8 +151,6 @@ export class EditListItemComponent implements OnInit {
         createChildNodeRequest.comments = this.comments.length > 0 ? this.comments : [];
         createChildNodeRequest.projectIri = this.projectIri;
         createChildNodeRequest.position = this.position;
-
-        console.log('request: ', createChildNodeRequest);
 
         this._dspApiConnection.admin.listsEndpoint.createChildNode(createChildNodeRequest).subscribe(
             (response: ApiResponseData<ListNodeInfoResponse>) => {

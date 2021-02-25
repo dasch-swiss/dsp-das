@@ -238,11 +238,10 @@ export class ListItemFormComponent implements OnInit {
         );
 
         dialogRef.afterClosed().subscribe((data: ChildNodeInfo | boolean) => {
-            console.log('closed: ', data);
             // init data to emit to parent
             const listNodeOperation = new ListNodeOperation();
+
             if (mode === 'insertListNode' && data) {
-                console.log('inserted: ', (data as ListNodeInfo));
                 listNodeOperation.listNode = (data as ListNode);
                 listNodeOperation.operation = 'insert';
 

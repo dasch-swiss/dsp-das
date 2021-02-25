@@ -3,12 +3,12 @@ import {
     ApiResponseData,
     ApiResponseError,
     KnoraApiConnection,
+    ListChildNodeResponse,
     ListNode,
     ListResponse,
     RepositionChildNodeRequest,
     RepositionChildNodeResponse
 } from '@dasch-swiss/dsp-js';
-import { ListNodeResponse } from '@dasch-swiss/dsp-js/src/models/admin/list-node-response';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { ListNodeOperation } from '../list-item-form/list-item-form.component';
@@ -47,8 +47,6 @@ export class ListItemComponent implements OnInit {
             this._dspApiConnection.admin.listsEndpoint.getList(this.parentIri).subscribe(
                 (result: ApiResponseData<ListResponse>) => {
                     this.list = result.body.list.children;
-                    console.log('list: ', this.list);
-                    console.log('pparent iri: ', this.parentIri);
                     this.language = result.body.list.listinfo.labels[0].language;
                 },
                 (error: ApiResponseError) => {
@@ -102,11 +100,14 @@ export class ListItemComponent implements OnInit {
                 }
                 case 'insert': {
                     this._dspApiConnection.admin.listsEndpoint.getList(this.parentIri).subscribe(
-                        (result: ApiResponseData<ListResponse>) => {
-                            console.log('res: ', result);
-                            this.list = result.body.list.children;
-                            console.log('list: ', this.list);
-                            console.log('pparent iri: ', this.parentIri);
+                        (result: ApiResponseData<ListResponse | ListChildNodeResponse>) => {
+                            if (result.body instanceof ListResponse) {
+                                this.list = result.body.list.children; // root node
+                            } else {
+                                this.list = result.body.node.children; // child node
+                            }
+
+                            this.refreshChildren.emit(this.list);
                         },
                         (error: ApiResponseError) => {
                             this._errorHandler.showMessage(error);

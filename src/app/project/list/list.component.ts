@@ -188,8 +188,6 @@ export class ListComponent implements OnInit {
 
         this.list = this.lists.find(i => i.id === id);
 
-        console.log('DADDY LIST: ', this.list);
-
         const goto = 'project/' + this.projectcode + '/lists/' + encodeURIComponent(id);
         this._router.navigateByUrl(goto, { skipLocationChange: false });
 
