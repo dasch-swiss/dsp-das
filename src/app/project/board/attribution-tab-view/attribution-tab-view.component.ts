@@ -1,5 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { Attribution, Person, Organization, IId } from '@dasch-swiss/dsp-js';
+import { 
+    Attribution, 
+    Person, 
+    Organization, 
+    IId 
+} from '@dasch-swiss/dsp-js';
 
 @Component({
     selector: 'app-attribution-tab-view',

@@ -1,5 +1,12 @@
-import { Component, Input, OnInit, ɵConsole } from '@angular/core';
-import { SingleProject, DataManagementPlan, Person, Organization, IId, Grant } from '@dasch-swiss/dsp-js';
+import { Component, Input, OnInit } from '@angular/core';
+import { 
+    SingleProject, 
+    DataManagementPlan, 
+    Person, 
+    Organization, 
+    IId, 
+    Grant 
+} from '@dasch-swiss/dsp-js';
 
 @Component({
     selector: 'app-project-tab-view',
@@ -67,7 +74,6 @@ export class ProjectTabViewComponent implements OnInit {
             }
             this.funderType = this.getFunderType(this.funders[0]);
         }
-        console.log(this.funders, this.funderType);
     }
 
     getFunderType(funder: Person | Organization | IId) {
@@ -122,7 +128,6 @@ export class ProjectTabViewComponent implements OnInit {
 
             this.grants.push(tmpGrantObj);
         }
-        console.log(this.grants);
     }
 
 }
