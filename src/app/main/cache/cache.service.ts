@@ -18,7 +18,7 @@ interface CacheContent {
  * @class CacheService
  */
 export class CacheService {
-    readonly defaultMaxAge: number = 3600000;  // 3600000ms => 1 Stunde
+    readonly DEFAULT_MAX_AGE: number = 3600000;  // 3600000ms => 1 Stunde
     private _cache: Map<string, CacheContent> = new Map<string, CacheContent>();
     private _inFlightObservables: Map<string, Subject<any>> = new Map<string, Subject<any>>();
 
@@ -33,7 +33,7 @@ export class CacheService {
      */
     get(key: string, fallback?: Observable<any>, maxAge?: number): Observable<any> | Subject<any> {
 
-        if (this.hasValidCachedValue(key)) {
+        if (this._hasValidCachedValue(key)) {
             // console.log(`%c Getting from cache by key: ${key}`, 'color: green');
             // console.log(`%c Cache returns:` + JSON.stringify(this.cache.get(key).value), 'color: green');
             // console.log(`%c Cache returns typeof:` + (typeof of(this.cache.get(key).value)), 'color: green');
@@ -43,7 +43,7 @@ export class CacheService {
         }
 
         if (!maxAge) {
-            maxAge = this.defaultMaxAge;
+            maxAge = this.DEFAULT_MAX_AGE;
         }
 
         if (this._inFlightObservables.has(key)) {
@@ -80,9 +80,9 @@ export class CacheService {
      * sets the value with key in the cache
      * Notifies all observers of the new value
      */
-    set(key: string, value: any, maxAge: number = this.defaultMaxAge): void {
+    set(key: string, value: any, maxAge: number = this.DEFAULT_MAX_AGE): void {
         this._cache.set(key, { value: value, expiry: Date.now() + maxAge });
-        this.notifyInFlightObservers(key, value);
+        this._notifyInFlightObservers(key, value);
     }
 
     /**
@@ -112,7 +112,7 @@ export class CacheService {
      * publishes the value to all observers of the given
      * in progress observables if observers exist.
      */
-    private notifyInFlightObservers(key: string, value: any): void {
+    private _notifyInFlightObservers(key: string, value: any): void {
         if (this._inFlightObservables.has(key)) {
             const inFlight = this._inFlightObservables.get(key);
             const observersCount = inFlight.observers.length;
@@ -128,7 +128,7 @@ export class CacheService {
     /**
      * checks if the key exists and   has not expired.
      */
-    private hasValidCachedValue(key: string): boolean {
+    private _hasValidCachedValue(key: string): boolean {
         if (this._cache.has(key)) {
             if (this._cache.get(key).expiry < Date.now()) {
                 this._cache.delete(key);

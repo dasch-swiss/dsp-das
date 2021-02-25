@@ -53,10 +53,10 @@ export class UserFormComponent implements OnInit, OnChanges {
      */
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<ReadUser>();
 
-    public readonly regexUsername = /^[a-zA-Z0-9]+$/;
+    public readonly REGEX_USERNAME = /^[a-zA-Z0-9]+$/;
 
-    // --> TODO replace regexEmail by CustomRegex.EMAIL_REGEX from dsp-ui
-    public readonly regexEmail = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    // --> TODO replace REGEX_EMAIL by CustomRegex.EMAIL_REGEX from dsp-ui
+    public readonly REGEX_EMAIL = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
     /**
      * status for the progress indicator
@@ -231,8 +231,8 @@ export class UserFormComponent implements OnInit, OnChanges {
                     // const name: string = this._route.snapshot.queryParams['value'];
                     const newUser: ReadUser = new ReadUser();
 
-                    // --> TODO replace this.regexEmail by CustomRegex.EMAIL_REGEX from dsp-ui
-                    if (this.regexEmail.test(this.name)) {
+                    // --> TODO replace this.REGEX_EMAIL by CustomRegex.EMAIL_REGEX from dsp-ui
+                    if (this.REGEX_EMAIL.test(this.name)) {
                         newUser.email = this.name;
                     } else {
                         newUser.username = this.name;
@@ -286,7 +286,7 @@ export class UserFormComponent implements OnInit, OnChanges {
                 },
                 [
                     Validators.required,
-                    Validators.pattern(this.regexEmail), // --> TODO replace this.regexEmail by CustomRegex.EMAIL_REGEX from dsp-ui
+                    Validators.pattern(this.REGEX_EMAIL), // --> TODO replace this.REGEX_EMAIL by CustomRegex.EMAIL_REGEX from dsp-ui
                     existingNamesValidator(this.existingEmails)
                 ]
             ),
@@ -298,7 +298,7 @@ export class UserFormComponent implements OnInit, OnChanges {
                 [
                     Validators.required,
                     Validators.minLength(4),
-                    Validators.pattern(this.regexUsername),
+                    Validators.pattern(this.REGEX_USERNAME),
                     existingNamesValidator(this.existingUsernames)
                 ]
             ),

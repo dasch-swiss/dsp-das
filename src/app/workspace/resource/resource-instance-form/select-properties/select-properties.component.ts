@@ -1,6 +1,14 @@
-import { AfterViewInit, Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Cardinality, CardinalityUtil, IHasProperty, ReadResource, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import {
+    Cardinality,
+    CardinalityUtil,
+    IHasProperty,
+    ReadResource,
+    ResourceClassAndPropertyDefinitions,
+    ResourceClassDefinition,
+    ResourcePropertyDefinition
+} from '@dasch-swiss/dsp-js';
 import { ValueService } from '@dasch-swiss/dsp-ui';
 import { SwitchPropertiesComponent } from './switch-properties/switch-properties.component';
 
@@ -123,7 +131,7 @@ export class SelectPropertiesComponent implements OnInit {
         // update the filtered version of the corresponding property values array.
         // used in the template to calculate if the delete button should be shown.
         // e.i don't show the delete button if there is only one value
-        this.propertyValuesKeyValuePair[prop.id + '-filtered'] = this.filterValueArray(this.propertyValuesKeyValuePair[prop.id]);
+        this.propertyValuesKeyValuePair[prop.id + '-filtered'] = this._filterValueArray(this.propertyValuesKeyValuePair[prop.id]);
     }
 
     /**
@@ -131,8 +139,8 @@ export class SelectPropertiesComponent implements OnInit {
      *
      * @param arrayToFilter an array of number containing undefined elements you wish to filter
      */
-    private filterValueArray(arrayToFilter: number[]): number[] {
-        arrayToFilter = arrayToFilter.filter( element => element !== undefined);
+    private _filterValueArray(arrayToFilter: number[]): number[] {
+        arrayToFilter = arrayToFilter.filter(element => element !== undefined);
 
         return arrayToFilter;
 
