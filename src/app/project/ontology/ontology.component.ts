@@ -219,9 +219,8 @@ export class OntologyComponent implements OnInit {
                                     // get all information to display this ontology
                                     // with all classes, properties and connected lists
                                     this.loadOntology = true;
-                                    this.ontology = this.ontologies.find(onto => onto.id === this.ontologyIri);
-                                    this._cache.set('currentOntology', this.ontology);
                                     this.ontology = response;
+                                    this._cache.set('currentOntology', this.ontology);
 
                                     // grab the onto class information to display
                                     const allOntoClasses = response.getAllClassDefinitions();
@@ -231,9 +230,11 @@ export class OntologyComponent implements OnInit {
 
                                     // display only the classes which are not a subClass of Standoff
                                     allOntoClasses.forEach(resClass => {
-                                        const splittedSubClass = resClass.subClassOf[0].split('#');
-                                        if (!splittedSubClass[0].includes(Constants.StandoffOntology) && !splittedSubClass[1].includes('Standoff')) {
-                                            this.ontoClasses.push(resClass);
+                                        if (resClass.subClassOf.length) {
+                                            const splittedSubClass = resClass.subClassOf[0].split('#');
+                                            if (!splittedSubClass[0].includes(Constants.StandoffOntology) && !splittedSubClass[1].includes('Standoff')) {
+                                                this.ontoClasses.push(resClass);
+                                            }
                                         }
                                     });
                                     // sort classes by label
