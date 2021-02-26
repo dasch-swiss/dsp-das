@@ -201,7 +201,7 @@ export class OntologyComponent implements OnInit {
                         // get all information to display this ontology
                         // with all classes, properties and connected lists
                         this.loadOntology = true;
-                        this.ontology = this.ontologies.find(i => i.id === this.ontologyIri);
+                        this.ontology = this.ontologies.find(onto => onto.id === this.ontologyIri);
                         this._cache.set('currentOntology', this.ontology);
                         this.ontology = response;
 
