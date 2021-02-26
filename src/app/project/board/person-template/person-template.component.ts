@@ -20,14 +20,14 @@ export class PersonTemplateComponent implements OnInit {
         let isOrganizationType: boolean = false;
 
         // if it is [Organization]
-        if (this.person.memberOf[0] instanceof Organization){
+        if (this.person.memberOf[0] instanceof Organization) {
             isOrganizationType = true;
             this.organizationList = this.person.memberOf;
         }
 
         // if it is [Iid], get data for every organization
         if (!isOrganizationType) {
-            for (let entry of this.person.memberOf) {
+            for (const entry of this.person.memberOf) {
                 this.organizationList.push(this.subProperties[entry.id]);
             }
         }

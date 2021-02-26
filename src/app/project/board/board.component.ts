@@ -138,12 +138,10 @@ export class BoardComponent implements OnInit {
                     if (obj instanceof Dataset) {
                         this.datasetList.push(obj);
                     }
-                    else if (obj instanceof SingleProject) {
+                    if (obj instanceof SingleProject) {
                         this.singleProjectList.push(obj);
                     }
-                    else {
-                        this.subProperties[obj.id] = obj;
-                    }
+                    this.subProperties[obj.id] = obj;
                 });
 
                 const dsOptions = [];
@@ -161,7 +159,7 @@ export class BoardComponent implements OnInit {
                 // by default display first dataset
                 this.selectedDataset = this.datasetList[0];
 
-                // get project 
+                // get project
                 this.getProjectForDataset();
             },
             (error: ApiResponseError) => {
@@ -175,12 +173,12 @@ export class BoardComponent implements OnInit {
     getProjectForDataset() {
         // get selected project for this dataset
         // note that dataset always contains only one SingleProject
-        for (let proj of this.singleProjectList) {
+        for (const proj of this.singleProjectList) {
             if (this.selectedDataset.project.id === proj.id) {
                 this.selectedProject = proj;
                 break;
             }
-        };
+        }
     }
 
     getSubProperty(id: string) {

@@ -6,7 +6,7 @@ import { IId, Organization, Person } from '@dasch-swiss/dsp-js';
     templateUrl: './contacts-tab-view.component.html',
     styleUrls: ['./contacts-tab-view.component.scss']
 })
-export class ContactsTabViewComponent implements OnInit{
+export class ContactsTabViewComponent implements OnInit {
     // contact details
     @Input() contactDetails: Person[] | Organization[] | IId[];
 
@@ -20,18 +20,19 @@ export class ContactsTabViewComponent implements OnInit{
         if (this.contactDetails) {
             // check which type of array is present
             this.contactType = this.getContactType(this.contactDetails[0]);
-            
+
             // if contactType is person or organization
             if (this.contactType) {
                 this.contactsList = this.contactDetails;
+                return;
             }
-            else {
-                // if contactType is undefined, it means it contains the array of IId objects
-                for (let contact of this.contactDetails) {
-                    this.contactsList.push(this.subProperties[contact.id]);
-                }
-                this.contactType = this.getContactType(this.contactsList[0]);
+
+            // if contactType is undefined, it means it contains the array of IId objects
+            for (const contact of this.contactDetails) {
+                this.contactsList.push(this.subProperties[contact.id]);
             }
+            this.contactType = this.getContactType(this.contactsList[0]);
+
         }
     }
 
@@ -39,7 +40,7 @@ export class ContactsTabViewComponent implements OnInit{
         if (obj instanceof Person) {
             return 'person';
         }
-        else if (obj instanceof Organization) {
+        if (obj instanceof Organization) {
             return 'organization';
         }
         return undefined;

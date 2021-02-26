@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { 
-    SingleProject, 
-    DataManagementPlan, 
-    Person, 
-    Organization, 
-    IId, 
-    Grant 
+import {
+    SingleProject,
+    DataManagementPlan,
+    Person,
+    Organization,
+    IId,
+    Grant
 } from '@dasch-swiss/dsp-js';
 
 @Component({
@@ -27,7 +27,7 @@ export class ProjectTabViewComponent implements OnInit {
     dateKeys = ['startDate', 'endDate'];
 
     dmps: DataManagementPlan[] = [];
-    funders: Person[] | Organization [] = [];
+    funders: Person[] | Organization[] = [];
     funderType: string;
     grants = [];
 
@@ -48,58 +48,58 @@ export class ProjectTabViewComponent implements OnInit {
 
     }
 
-    getDMP(currenDmps) {
-        if (currenDmps instanceof DataManagementPlan){
+    getDMP(currenDmps: DataManagementPlan | IId[]) {
+        if (currenDmps instanceof DataManagementPlan) {
             return [currenDmps];
         }
-        else {
-            let tmp: DataManagementPlan[] = [];
-            for (let iid of currenDmps) {
-                tmp.push(this.subProperties[iid.id]);
-            }
-            return tmp;
+
+        const tmp: DataManagementPlan[] = [];
+        for (const iid of currenDmps) {
+            tmp.push(this.subProperties[iid.id]);
         }
+        return tmp;
     }
 
-    getFunders(flist) {
+    getFunders(flist: any[]) {
         // check if it is person, organization or IId
         this.funderType = this.getFunderType(flist[0]);
 
         if (this.funderType) {
             this.funders = flist;
+            return;
         }
-        else {
-            for (let funder of flist) {
-                this.funders.push(this.subProperties[funder.id]);
-            }
-            this.funderType = this.getFunderType(this.funders[0]);
+
+        for (const funder of flist) {
+            this.funders.push(this.subProperties[funder.id]);
         }
+        this.funderType = this.getFunderType(this.funders[0]);
     }
 
     getFunderType(funder: Person | Organization | IId) {
-        if (funder instanceof Person){
+        if (funder instanceof Person) {
             return 'person';
         }
-        else if (funder instanceof Organization){
+        if (funder instanceof Organization) {
             return 'organization';
         }
         return undefined;
     }
 
-    getGrants(glist) {
+    getGrants(glist: any[]) {
         let tmpGrants: Grant[] = [];
 
         if (glist[0] instanceof Grant) {
             tmpGrants = glist;
         }
         // if it is IId objects array, retrive it's details
+        // tslint:disable-next-line
         else {
-            for (let iid of glist) {
+            for (const iid of glist) {
                 tmpGrants.push(this.subProperties[iid.id]);
             }
         }
         // get funder details along with other details
-        for (let grant of tmpGrants) {
+        for (const grant of tmpGrants) {
             let tmpGrantObj: object;
 
             // checck if grant contains person, organization or IId objects
@@ -109,10 +109,11 @@ export class ProjectTabViewComponent implements OnInit {
                 // it is a person of organization object
                 flist = grant.funder;
             }
+            // tslint:disable-next-line
             else {
-                // it means it is a IId object. So we need to retrive the details 
+                // it means it is a IId object. So we need to retrive the details
                 // of every funder using the id provided here
-                for (let fund of grant.funder) {
+                for (const fund of grant.funder) {
                     flist.push(this.subProperties[fund.id]);
                 }
                 ftype = this.getFunderType(flist[0]);
@@ -121,9 +122,9 @@ export class ProjectTabViewComponent implements OnInit {
             tmpGrantObj = {
                 funder : flist,
                 funderType: ftype,
-                name: grant.name? grant.name : undefined,
-                number: grant.number? grant.number : undefined,
-                url: grant.url? grant.url : undefined
+                name: grant.name ? grant.name : undefined,
+                number: grant.number ? grant.number : undefined,
+                url: grant.url ? grant.url : undefined
             };
 
             this.grants.push(tmpGrantObj);

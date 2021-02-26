@@ -19,21 +19,20 @@ export class AttributionTabViewComponent {
         let atype = this.getAgentType(agent);
         if (atype) {
             this.currentAgent = agent;
+            return atype;
         }
-        else {
-            this.currentAgent = this.subProperties[agent.id];
-            atype = this.getAgentType(this.currentAgent);
-        }
+        this.currentAgent = this.subProperties[agent.id];
+        atype = this.getAgentType(this.currentAgent);
         return atype;
     }
 
     getAgentType (agent: Person | Organization | IId) {
-        if (agent instanceof Person){
+        if (agent instanceof Person) {
             return 'person';
         }
-        else if (agent instanceof Organization){
+        if (agent instanceof Organization) {
             return 'organisation';
-        } 
+        }
         return undefined;
     }
 
