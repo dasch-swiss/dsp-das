@@ -160,40 +160,41 @@
                         <mat-card-header class="resource-class-header" cdkDragHandle>
                             <!-- TODO: the res class icon is missing in ClassDefinition from DSP-JS-Lib; it has to be updated first DSP-1366 -->
                             <!-- <mat-icon mat-card-avatar class="example-header-image">{{resClass.icon}}</mat-icon> -->
-                                <mat-card-title [matTooltip]="resClass.comment" matTooltipPosition="above">
-                                    {{resClass.label | dspTruncate: 24}}
-                                </mat-card-title>
-                                <mat-card-subtitle>
-                                    {{resClass.subClassOf[0]}}
-                                     <!-- | translateSubclassOf}} -->
-                                    <!-- TODO: display sub class of {{resClass}} -->
-                                </mat-card-subtitle>
-                                <span class="fill-remaining-space"></span>
-                                <span
-                                    [matTooltip]="(ontology.lastModificationDate ? 'more' : 'This data model can\'t be edited because of missing lastModificationDate!')">
-                                    <button mat-icon-button [matMenuTriggerFor]="resClassMenu" [disabled]="!ontology.lastModificationDate">
-                                        <mat-icon>more_horiz</mat-icon>
-                                    </button>
-                                </span>
-                                <mat-menu #resClassMenu="matMenu" xPosition="before">
-                                    <button mat-menu-item (click)="openResourceClassForm('editResourceClass', {iri: resClass.id, name: '', label: resClass.label})">
-                                        Edit resource class info
-                                    </button>
-                                    <button mat-menu-item (click)="updateCard(resClass)">
-                                        Update corresponding properties
-                                    </button>
-                                    <button mat-menu-item (click)="delete(resClass.id, 'ResourceClass', resClass.label)">
-                                        Delete resource class
-                                    </button>
-                                </mat-menu>
-
+                            <mat-card-title [matTooltip]="resClass.comment" matTooltipPosition="above">
+                                {{resClass.label | dspTruncate: 24}}
+                            </mat-card-title>
+                            <mat-card-subtitle>
+                                {{resClass.subClassOf[0]}}
+                                <!-- | translateSubclassOf}} -->
+                                <!-- TODO: display sub class of {{resClass}} -->
+                            </mat-card-subtitle>
+                            <span class="resource-class-more"
+                                [matTooltip]="(ontology.lastModificationDate ? 'more' : 'This data model can\'t be edited because of missing lastModificationDate!')">
+                                <button mat-icon-button [matMenuTriggerFor]="resClassMenu"
+                                    [disabled]="!ontology.lastModificationDate">
+                                    <mat-icon>more_horiz</mat-icon>
+                                </button>
+                            </span>
+                            <mat-menu #resClassMenu="matMenu" xPosition="before">
+                                <button mat-menu-item
+                                    (click)="openResourceClassForm('editResourceClass', {iri: resClass.id, name: '', label: resClass.label})">
+                                    Edit resource class info
+                                </button>
+                                <button mat-menu-item (click)="updateCard(resClass)">
+                                    Update corresponding properties
+                                </button>
+                                <button mat-menu-item (click)="delete(resClass.id, 'ResourceClass', resClass.label)">
+                                    Delete resource class
+                                </button>
+                            </mat-menu>
                         </mat-card-header>
                         <mat-card-content>
                             <mat-list class="resource-class-properties">
                                 <span *ngFor="let prop of resClass.propertiesList">
                                     <!-- display only properties with guiOrder and if they exist in list of properties;
                                              objectType is not a linkValue (otherwise we have the property twice) -->
-                                    <app-property-info *ngIf="ontology?.properties[prop.propertyIndex]
+                                    <app-property-info
+                                        *ngIf="ontology?.properties[prop.propertyIndex]
                                             && ontology?.properties[prop.propertyIndex].objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue'
                                             && !ontology?.properties[prop.propertyIndex].subjectType?.includes('Standoff')"
                                         [propDef]="ontology?.properties[prop.propertyIndex]" [propCard]="prop"
@@ -201,13 +202,13 @@
                                     </app-property-info>
                                 </span>
                             </mat-list>
-                          </mat-card-content>
+                        </mat-card-content>
                         <!-- class card content with list of properties -->
-                        <mat-card-actions>
-                            <button mat-button (click)="collapsed=true">Collapse text</button>
-                            <button mat-button (click)="collapsed=false">Uncollapse text</button>
-                         </mat-card-actions>
-
+                        <mat-card-actions class="resource-class-footer">
+                            <button mat-button (click)="collapsed = !collapsed">
+                                {{collapsed ? "Collapse text" : "Uncollapse text"}}
+                            </button>
+                        </mat-card-actions>
                     </mat-card>
 
                 </div>

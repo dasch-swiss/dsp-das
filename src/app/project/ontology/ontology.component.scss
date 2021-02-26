@@ -91,6 +91,18 @@ $width: 340px;
     // min-height: 48px !important;
     // height: 48px;
     cursor: move;
+
+    .resource-class-more {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+
+  .resource-class-footer {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
   }
 
   .resource-class-properties {
