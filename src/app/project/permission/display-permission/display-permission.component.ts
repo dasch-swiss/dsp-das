@@ -27,6 +27,9 @@ enum Permissions {
     CR = 5,
 }
 
+// use an attribute selector because in a table row no additional eles can be added
+// (https://medium.com/javascript-everyday/when-to-use-an-attribute-selector-for-angular-components-7e788ba1bfe7)
+/* tslint:disable:component-selector */
 @Component({
     selector: '[app-display-permission]',
     templateUrl: './display-permission.component.html',

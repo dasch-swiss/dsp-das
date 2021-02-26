@@ -172,7 +172,7 @@ export class PermissionComponent implements OnInit {
 
     getProjectPermissions(projectIri: string) {
         this._dspApiConnection.admin.permissionsEndpoint.getProjectPermissions(projectIri).subscribe(
-            (response: ApiResponseData<ProjectPermissionsResponse>)=> {
+            (response: ApiResponseData<ProjectPermissionsResponse>) => {
                 this.allPermissions = response.body.permissions;
                 console.log('getProjectPermissions response', this.allPermissions);
         });
@@ -180,7 +180,7 @@ export class PermissionComponent implements OnInit {
 
     getAdministrativePermissions(projectIri: string) {
         this._dspApiConnection.admin.permissionsEndpoint.getAdministrativePermissions(projectIri).subscribe(
-            (response: ApiResponseData<AdministrativePermissionsResponse>)=> {
+            (response: ApiResponseData<AdministrativePermissionsResponse>) => {
                 if (response) {
                     this.adminPermission = response.body.administrative_permissions;
                     console.log('getAdministrativePermissions response', this.adminPermission);
@@ -191,7 +191,7 @@ export class PermissionComponent implements OnInit {
                             // console.log('ap.hasPermissions', ap.hasPermissions);
 
                             for (const permission of ap.hasPermissions) {
-                                if (permission.name === "ProjectResourceCreateAllPermission") {
+                                if (permission.name === 'ProjectResourceCreateAllPermission') {
                                     const apGroup: GroupPermission = {
                                         'groupName': ap.forGroup,
                                         'apName': permission.name,
@@ -211,7 +211,7 @@ export class PermissionComponent implements OnInit {
 
     getDefaultObjectAccessPermissions(projectIri: string) {
         this._dspApiConnection.admin.permissionsEndpoint.getDefaultObjectAccessPermissions(projectIri).subscribe(
-            (response: ApiResponseData<DefaultObjectAccessPermissionsResponse>)=> {
+            (response: ApiResponseData<DefaultObjectAccessPermissionsResponse>) => {
                 if (response) {
                     this.doaPermission = response.body.defaultObjectAccessPermissions;
                     console.log('getDefaultObjectAccessPermissions response', this.doaPermission);

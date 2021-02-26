@@ -22,7 +22,7 @@
 
         <table *ngIf="doaPermission[0]">
             <tr>
-                <th>Role</th><th>RV</th><th>V</th><th>C</th><th>M</th><th>D</th>
+                <th>Role</th><th>RV</th><th>V</th><th>C</th><th>U</th><th>D</th>
             </tr>
 
             <tr *ngFor="let doap of doaPermission[0].hasPermissions" app-display-permission [role]="doap.additionalInformation" [displayPermission]="doap.name"></tr>
