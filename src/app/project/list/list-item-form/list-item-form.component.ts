@@ -240,6 +240,7 @@ export class ListItemFormComponent implements OnInit {
             const listNodeOperation = new ListNodeOperation();
 
             if (mode === 'insertListNode' && data) {
+                // the call to DSP-API to insert the new node is done in the child component
                 listNodeOperation.listNode = (data as ListNode);
                 listNodeOperation.operation = 'insert';
 
