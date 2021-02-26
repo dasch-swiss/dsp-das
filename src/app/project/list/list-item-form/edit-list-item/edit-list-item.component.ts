@@ -1,5 +1,16 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { ApiResponseData, ApiResponseError, ChildNodeInfoResponse, CreateChildNodeRequest, KnoraApiConnection, List, ListNodeInfo, ListNodeInfoResponse, StringLiteral, UpdateChildNodeRequest } from '@dasch-swiss/dsp-js';
+import {
+    ApiResponseData,
+    ApiResponseError,
+    ChildNodeInfoResponse,
+    CreateChildNodeRequest,
+    KnoraApiConnection,
+    List,
+    ListNodeInfo,
+    ListNodeInfoResponse,
+    StringLiteral,
+    UpdateChildNodeRequest
+} from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 
 @Component({
