@@ -29,6 +29,12 @@ $width: 340px;
   border: 1px dotted $primary_200;
   position: relative;
   margin: 0 auto 60px auto;
+  z-index: 0;
+
+  .ontology-editor-header {
+    z-index: 1;
+    top: 122px;
+  }
 }
 .ontology-viewer {
   width: 98vw;
