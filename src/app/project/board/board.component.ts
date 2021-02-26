@@ -130,7 +130,7 @@ export class BoardComponent implements OnInit {
     }
 
     getProjectMetadata() {
-        // get project metadata from cache
+        // get project metadata from backend
         this.projectcode, this._dspApiConnection.v2.metadata.getProjectMetadata(this.project.id).subscribe(
             (response: ProjectsMetadata) => {
                 this.projectsMetadata = response;
@@ -166,18 +166,9 @@ export class BoardComponent implements OnInit {
 
                 // get project 
                 this.getProjectForDataset();
-
-                
-
             },
             (error: ApiResponseError) => {
-                const message = 'Metadata is not available!';
-                const action = "Project metadata";
-                this._snackBar.open(message, action, {
-                    duration: 5000,
-                    horizontalPosition: 'center',
-                    verticalPosition: 'top'
-                });
+                this._errorHandler.showMessage(error);
             }
         );
 
