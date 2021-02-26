@@ -211,19 +211,19 @@ export class OntologyComponent implements OnInit {
 
                         // get each ontology
                         this._dspApiConnection.v2.onto.getOntology(ontoMeta.id, true).subscribe(
-                            (response: ReadOntology) => {
-                                this.ontologies.push(response);
+                            (readOnto: ReadOntology) => {
+                                this.ontologies.push(readOnto);
 
                                 if (ontoMeta.id === this.ontologyIri) {
                                     // one ontology is selected:
                                     // get all information to display this ontology
                                     // with all classes, properties and connected lists
                                     this.loadOntology = true;
-                                    this.ontology = response;
+                                    this.ontology = readOnto;
                                     this._cache.set('currentOntology', this.ontology);
 
                                     // grab the onto class information to display
-                                    const allOntoClasses = response.getAllClassDefinitions();
+                                    const allOntoClasses = readOnto.getAllClassDefinitions();
 
                                     // reset the ontology classes
                                     this.ontoClasses = [];
@@ -242,7 +242,7 @@ export class OntologyComponent implements OnInit {
                                     this.ontoClasses = this._sortingService.keySortByAlphabetical(this.ontoClasses, 'label');
 
                                     // grab the onto properties information to display
-                                    const allOntoProperties = response.getAllPropertyDefinitions();
+                                    const allOntoProperties = readOnto.getAllPropertyDefinitions();
 
                                     // reset the ontology properties
                                     this.ontoProperties = [];
