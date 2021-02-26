@@ -16,13 +16,16 @@ export class PersonTemplateComponent implements OnInit {
     organizationList = [];
 
     ngOnInit() {
-        // check type
+        // check if members list is the list of [Organization] or [Iid]
         let isOrganizationType: boolean = false;
+
+        // if it is [Organization]
         if (this.person.memberOf[0] instanceof Organization){
             isOrganizationType = true;
             this.organizationList = this.person.memberOf;
         }
 
+        // if it is [Iid], get data for every organization
         if (!isOrganizationType) {
             for (let entry of this.person.memberOf) {
                 this.organizationList.push(this.subProperties[entry.id]);

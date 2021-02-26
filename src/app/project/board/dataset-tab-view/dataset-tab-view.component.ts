@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Dataset } from '@dasch-swiss/dsp-js';
+
 @Component({
     selector: 'app-dataset-tab-view',
     templateUrl: './dataset-tab-view.component.html',

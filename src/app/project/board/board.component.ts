@@ -51,9 +51,6 @@ export class BoardComponent implements OnInit {
     color: string = 'primary';
 
     // variables to store metadata information
-    // metadata received from backend
-    metadata: object;
-
     projectsMetadata: ProjectsMetadata;
     datasetList: Dataset[] = [];
     singleProjectList: SingleProject[] = [];
@@ -192,7 +189,7 @@ export class BoardComponent implements OnInit {
 
     // download metadata
     downloadMetadata() {
-        const blob: Blob = new Blob([JSON.stringify(this.metadata)], {type: 'application/json'});
+        const blob: Blob = new Blob([JSON.stringify(this.projectsMetadata)], {type: 'application/json'});
         const fileName: string = 'metadata.json';
         const objectUrl: string = URL.createObjectURL(blob);
         const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
@@ -206,6 +203,7 @@ export class BoardComponent implements OnInit {
         URL.revokeObjectURL(objectUrl);
     }
 
+    // update the selected dataset object
     updateDataset(event: MatRadioChange) {
         this.selectedDataset = this.datasetList[event.value];
         this.getProjectForDataset();

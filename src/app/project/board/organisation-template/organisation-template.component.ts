@@ -35,8 +35,7 @@ import { Organization } from '@dasch-swiss/dsp-js';
 
             <app-address-template *ngIf="organisation.address" [address]="organisation.address"></app-address-template>
         </div>
-    `,
-    styles: ['.metadata-title { font-size: 95%; }']
+    `
 })
 
 export class OrganisationTemplateComponent {

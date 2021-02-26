@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Person, Organization, IId } from '@dasch-swiss/dsp-js';
+import { IId, Organization, Person } from '@dasch-swiss/dsp-js';
 
 @Component({
     selector: 'app-contacts-tab-view',
