@@ -254,9 +254,7 @@ export class OntologyComponent implements OnInit {
             if (this.ontologies.length === ontologies.length) {
                 // all ontologies were fetched from the API; we can set the cache
                 this._cache.set('currentProjectOntologies', this.ontologies);
-                // await this.waitFor(200);
                 this.loading = false;
-                // this.loadOntology = false;
                 this.setCache();
             }
         });
@@ -506,9 +504,6 @@ export class OntologyComponent implements OnInit {
     }
 
     setCache() {
-        // set cache for current ontology
-        // this._cache.set('currentOntology', this.ontology);
-
         // get all lists from the project
         // it will be used to set gui attribute in a list property
         this._dspApiConnection.admin.listsEndpoint.getListsInProject(this.project.id).subscribe(
