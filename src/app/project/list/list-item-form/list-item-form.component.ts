@@ -10,9 +10,7 @@ import {
     KnoraApiConnection,
     ListInfoResponse,
     ListNode,
-    ListNodeInfo,
     ListNodeInfoResponse,
-    RepositionChildNodeRequest,
     StringLiteral
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
@@ -288,6 +286,10 @@ export class ListItemFormComponent implements OnInit {
         });
     }
 
+    /**
+     * Called from the template when either of the two reposition buttons is clicked
+     * @param direction in which direction the node should move
+     */
     repositionNode(direction: 'up' | 'down') {
         const listNodeOperation = new ListNodeOperation();
 

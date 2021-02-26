@@ -99,6 +99,7 @@ export class ListItemComponent implements OnInit {
                     break;
                 }
                 case 'insert': {
+                    // get the corresponding list from the API again and reassign the local list with its response
                     this._dspApiConnection.admin.listsEndpoint.getList(this.parentIri).subscribe(
                         (result: ApiResponseData<ListResponse | ListChildNodeResponse>) => {
                             if (result.body instanceof ListResponse) {
@@ -107,6 +108,7 @@ export class ListItemComponent implements OnInit {
                                 this.list = result.body.node.children; // child node
                             }
 
+                            // emit the updated list of children to the parent node
                             this.refreshChildren.emit(this.list);
                         },
                         (error: ApiResponseError) => {
@@ -136,6 +138,7 @@ export class ListItemComponent implements OnInit {
                     repositionRequest.position = data.listNode.position;
 
                     // since we don't have any way to know the parent IRI from the ListItemForm component, we need to do the API call here
+                    // --> TODO now we have the parent IRI within the ListItemForm component so we can move this logic there
                     this._dspApiConnection.admin.listsEndpoint.repositionChildNode(data.listNode.id, repositionRequest).subscribe(
                         (res: ApiResponseData<RepositionChildNodeResponse>) => {
                             this.list = res.body.node.children;

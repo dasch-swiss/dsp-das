@@ -12,15 +12,15 @@ export class EditListItemComponent implements OnInit {
 
     @Input() iri: string;
 
-    @Input() projectIri: string;
-
     @Input() mode: 'insert' | 'update';
+
+    @Input() parentIri?: string;
 
     @Input() position?: number;
 
     @Input() projectCode?: string;
 
-    @Input() parentIri?: string;
+    @Input() projectIri: string;
 
     @Output() closeDialog: EventEmitter<List | ListNodeInfo> = new EventEmitter<List>();
 
@@ -120,8 +120,8 @@ export class EditListItemComponent implements OnInit {
     }
 
     /**
-     * Called from the template when the 'update' button is clicked.
-     * Sends a request to DSP-API to update the list node with the data inside the two local arrays.
+     * Called from the template when the 'submit' button is clicked in update mode.
+     * Sends a request to DSP-API to update the list child node with the data inside the two local arrays.
      */
     updateChildNode() {
         const childNodeUpdateData: UpdateChildNodeRequest = new UpdateChildNodeRequest();
@@ -142,6 +142,10 @@ export class EditListItemComponent implements OnInit {
         );
     }
 
+    /**
+     * Called from the template when the 'submit' button is clicked in insert mode.
+     * Sends a request to DSP-API to insert a new list child node in the provided position.
+     */
     insertChildNode() {
         const createChildNodeRequest: CreateChildNodeRequest = new CreateChildNodeRequest();
 
