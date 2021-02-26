@@ -131,7 +131,7 @@ export class BoardComponent implements OnInit {
 
     getProjectMetadata() {
         // get project metadata from backend
-        this.projectcode, this._dspApiConnection.v2.metadata.getProjectMetadata(this.project.id).subscribe(
+        this._dspApiConnection.v2.metadata.getProjectMetadata(this.project.id).subscribe(
             (response: ProjectsMetadata) => {
                 this.projectsMetadata = response;
                 this.metadataLoading = false;

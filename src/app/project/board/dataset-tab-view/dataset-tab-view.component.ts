@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IDataset } from '../dataset-metadata';
-
+import { Dataset } from '@dasch-swiss/dsp-js';
 @Component({
     selector: 'app-dataset-tab-view',
     templateUrl: './dataset-tab-view.component.html',
@@ -9,7 +8,7 @@ import { IDataset } from '../dataset-metadata';
 export class DatasetTabViewComponent {
 
     // metadata input object
-    @Input() metadata: IDataset;
+    @Input() metadata: Dataset;
 
     // number of datasets available for this project
     @Input() noOfDatasets: number;
