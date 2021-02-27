@@ -10,13 +10,11 @@ export class TranslateSubclassOfPipe implements PipeTransform {
 
     transform(value: string): string {
         const defaultClass = this.defaultClasses.find(i => i.iri === value);
-        console.log(defaultClass);
-        console.log(value);
         if (defaultClass) {
             return defaultClass.label;
         } else {
             // the subClass is not a subClass of the default classes
-            // get name from iri
+            // get class name from iri
             const name = value.split('#')[1];
             if (name) {
                 return `Type ${name}`;
