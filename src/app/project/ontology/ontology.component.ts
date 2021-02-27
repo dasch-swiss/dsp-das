@@ -46,6 +46,9 @@ export class OntologyComponent implements OnInit {
     // loading status during open-ontology-process
     loadOntology: boolean;
 
+    // open / close res class card
+    expanded = false;
+
     // permissions of logged-in user
     session: Session;
     sysAdmin: boolean = false;
@@ -90,7 +93,7 @@ export class OntologyComponent implements OnInit {
     /**
      * list of all default resource classes (sub class of)
      */
-    resourceClass: DefaultClass[] = DefaultResourceClasses.data;
+    defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
 
     @ViewChild('ontologyEditor', { read: ViewContainerRef }) ontologyEditor: ViewContainerRef;
 

@@ -129,7 +129,7 @@
                             Add class
                         </button>
                         <mat-menu #addResClassMenu="matMenu" xPosition="before">
-                            <button mat-menu-item *ngFor="let type of resourceClass"
+                            <button mat-menu-item *ngFor="let type of defaultClasses"
                                 (click)="openResourceClassForm('addResourceClass', type)">
                                 {{ type?.label }}
                             </button>
@@ -152,6 +152,7 @@
             <mat-sidenav-content class="ontology-editor-canvas drag-drop-stop">
                 <div class="ontology-editor-grid" *ngIf="view === 'classes'">
 
+
                     <!-- list of resource classes -->
                     <!-- TODO: maybe it should be moved to an own component? -->
                     <mat-card *ngFor="let resClass of ontoClasses; let i = index" class="resource-class" cdkDrag
@@ -164,16 +165,27 @@
                                 {{resClass.label | dspTruncate: 24}}
                             </mat-card-title>
                             <mat-card-subtitle>
-                                {{resClass.subClassOf[0]}}
+                                <span *ngFor="let subClass of resClass.subClassOf">
+                                    {{subClass | translateSubclassOf}}
+                                </span>
+                                <!-- {{defaultClasses.find(i => i.iri === resClass.subClassOf[0])}} -->
                                 <!-- | translateSubclassOf}} -->
                                 <!-- TODO: display sub class of {{resClass}} -->
                             </mat-card-subtitle>
-                            <span class="resource-class-more"
-                                [matTooltip]="(ontology.lastModificationDate ? 'more' : 'This data model can\'t be edited because of missing lastModificationDate!')">
-                                <button mat-icon-button [matMenuTriggerFor]="resClassMenu"
-                                    [disabled]="!ontology.lastModificationDate">
-                                    <mat-icon>more_horiz</mat-icon>
-                                </button>
+                            <span class="resource-class-header-action">
+                                <span class="resource-class-more"
+                                    [matTooltip]="(ontology.lastModificationDate ? 'more' : 'This data model can\'t be edited because of missing lastModificationDate!')">
+                                    <button mat-icon-button [matMenuTriggerFor]="resClassMenu"
+                                        [disabled]="!ontology.lastModificationDate">
+                                        <mat-icon>more_horiz</mat-icon>
+                                    </button>
+                                </span>
+                                <span class="resource-class-size"
+                                    [matTooltip]="(expanded ? 'Collapse class' : 'Expand class')">
+                                    <button mat-icon-button (click)="expanded = !expanded">
+                                        <mat-icon>{{expanded ? "expand_less" : "expand_more"}}</mat-icon>
+                                    </button>
+                                </span>
                             </span>
                             <mat-menu #resClassMenu="matMenu" xPosition="before">
                                 <button mat-menu-item
@@ -190,23 +202,22 @@
                         </mat-card-header>
                         <mat-card-content>
                             <mat-list class="resource-class-properties">
-                                <span *ngFor="let prop of resClass.propertiesList">
+                                <span *ngFor="let prop of resClass.propertiesList; let i = index">
                                     <!-- display only properties with guiOrder and if they exist in list of properties;
                                              objectType is not a linkValue (otherwise we have the property twice) -->
-                                    <app-property-info
-                                        *ngIf="ontology?.properties[prop.propertyIndex]
+                                    <app-property-info *ngIf="ontology?.properties[prop.propertyIndex]
                                             && ontology?.properties[prop.propertyIndex].objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue'
-                                            && !ontology?.properties[prop.propertyIndex].subjectType?.includes('Standoff')"
-                                        [propDef]="ontology?.properties[prop.propertyIndex]" [propCard]="prop"
-                                        [projectcode]="projectcode">
+                                            && !ontology?.properties[prop.propertyIndex].subjectType?.includes('Standoff')
+                                            && expanded" [propDef]="ontology?.properties[prop.propertyIndex]"
+                                        [propCard]="prop" [projectcode]="projectcode">
                                     </app-property-info>
                                 </span>
                             </mat-list>
                         </mat-card-content>
                         <!-- class card content with list of properties -->
                         <mat-card-actions class="resource-class-footer">
-                            <button mat-button (click)="collapsed = !collapsed">
-                                {{collapsed ? "Collapse text" : "Uncollapse text"}}
+                            <button mat-button (click)="expanded = !expanded">
+                                {{expanded ? "Collapse class" : "Expand class"}}
                             </button>
                         </mat-card-actions>
                     </mat-card>

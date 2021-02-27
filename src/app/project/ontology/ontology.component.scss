@@ -91,11 +91,15 @@ $width: 340px;
     // min-height: 48px !important;
     // height: 48px;
     cursor: move;
+    margin-left: -12px;
 
-    .resource-class-more {
+    .resource-class-header-action {
       position: absolute;
       right: 0;
       top: 0;
+    }
+
+    .resource-class-more {
     }
   }
 
