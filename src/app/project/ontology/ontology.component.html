@@ -131,7 +131,7 @@
                         <mat-menu #addResClassMenu="matMenu" xPosition="before">
                             <button mat-menu-item *ngFor="let type of defaultClasses"
                                 (click)="openResourceClassForm('addResourceClass', type)">
-                                {{ type?.label }}
+                                <mat-icon>{{type.icons[0]}}</mat-icon> {{ type.label }}
                             </button>
                         </mat-menu>
                     </span>
@@ -152,6 +152,7 @@
             <mat-sidenav-content class="ontology-editor-canvas drag-drop-stop">
                 <div class="ontology-editor-grid" *ngIf="view === 'classes'">
 
+                    <!-- <app-resource-class-info *ngFor="let resClass of ontoClasses" [resourceClass]="resClass"></app-resource-class-info> -->
 
                     <!-- list of resource classes -->
                     <!-- TODO: maybe it should be moved to an own component? -->
@@ -165,8 +166,8 @@
                                 {{resClass.label | dspTruncate: 24}}
                             </mat-card-title>
                             <mat-card-subtitle>
-                                <span *ngFor="let subClass of resClass.subClassOf">
-                                    {{subClass | translateSubclassOf}}
+                                <span *ngFor="let subClass of resClass.subClassOf; let last = last">
+                                    {{subClass | translateSubclassOf}} <span *ngIf="!last">, </span>
                                 </span>
                                 <!-- {{defaultClasses.find(i => i.iri === resClass.subClassOf[0])}} -->
                                 <!-- | translateSubclassOf}} -->
