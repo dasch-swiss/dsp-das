@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Attribution, IId, Organization, Person } from '@dasch-swiss/dsp-js';
+import { DatasetMetadataService } from '../dataset-metadata.service';
 
 @Component({
     selector: 'app-attribution-tab-view',
@@ -14,26 +15,18 @@ export class AttributionTabViewComponent {
 
     currentAgent: Person | Organization | IId;
 
+    constructor(private _datasetMetadataService: DatasetMetadataService) {
+    }
+
     // return the type of agent to use correct template to display it
-    setAgent (agent: Person | Organization | IId) {
-        let atype = this.getAgentType(agent);
+    setAgent (agent: Person | Organization | IId): string {
+        let atype = this._datasetMetadataService.getContactType(agent);
         if (atype) {
             this.currentAgent = agent;
             return atype;
         }
         this.currentAgent = this.subProperties[agent.id];
-        atype = this.getAgentType(this.currentAgent);
+        atype = this._datasetMetadataService.getContactType(this.currentAgent);
         return atype;
     }
-
-    getAgentType (agent: Person | Organization | IId) {
-        if (agent instanceof Person) {
-            return 'person';
-        }
-        if (agent instanceof Organization) {
-            return 'organisation';
-        }
-        return undefined;
-    }
-
 }

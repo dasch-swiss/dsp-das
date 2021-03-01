@@ -26,7 +26,7 @@ import { Organization } from '@dasch-swiss/dsp-js';
 
             <div *ngIf="organisation.email" class="metadata-property">
                 <div class="property-label display-inline-block">
-                Email:
+                    Email:
                 </div>
                 <div class="display-inline-block add-left-margin">
                     <a href="mailto:{{ organisation.email }}"> {{ organisation.email }} </a>

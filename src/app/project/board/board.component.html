@@ -4,21 +4,21 @@
     <div class="content large middle">
         <!--  mobile version: status and edit icon displayed before the title -->
         <div class="app-toolbar-mobile">
-        <span class="app-toolbar-action-status">
-            <span [class.active]="project.status" class="badge status">
-                <span *ngIf="project.status">Active</span>
-                <span *ngIf="!project.status">Deactivated</span>
+            <span class="app-toolbar-action-status">
+                <span [class.active]="project.status" class="badge status">
+                    <span *ngIf="project.status">Active</span>
+                    <span *ngIf="!project.status">Deactivated</span>
+                </span>
             </span>
-        </span>
-        <span class="fill-remaining-space-action"></span>
-        <span class="app-toolbar-action-edit">
-            <button mat-icon-button
-                *ngIf="projectAdmin && project.status"
-                (click)="openDialog('editProject', project.shortname, project.shortcode)"
-                class="right">
-                <mat-icon>edit</mat-icon>
-            </button>
-        </span>
+            <span class="fill-remaining-space-action"></span>
+            <span class="app-toolbar-action-edit">
+                <button mat-icon-button
+                        *ngIf="projectAdmin && project.status"
+                        (click)="openDialog('editProject', project.shortname, project.shortcode)"
+                        class="right">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </span>
         </div>
 
         <!-- desktop and tablet version -->
@@ -53,9 +53,7 @@
     </div>
 
     <div class="project-info-container flex-panel" *ngIf="!metadataLoading && selectedDataset">
-
         <div class="left-info column">
-            
             <section class="project description">
                 <div class="metadata-property">
                     <div class="property-label">
@@ -84,7 +82,7 @@
                         </ng-template>
                         <app-dataset-tab-view [metadata]="selectedDataset" [noOfDatasets]="datasetOptions.length"></app-dataset-tab-view>
                     </mat-tab>
-                    
+
                     <mat-tab>
                         <ng-template mat-tab-label>
                             <mat-icon class="tab-icon">assignment</mat-icon>
@@ -92,7 +90,7 @@
                         </ng-template>
                         <app-attribution-tab-view [attributions]="selectedDataset.qualifiedAttribution" [subProperties]="subProperties"></app-attribution-tab-view>
                     </mat-tab>
-                
+
                     <mat-tab>
                         <ng-template mat-tab-label>
                             <mat-icon class="tab-icon">receipt</mat-icon>
@@ -118,19 +116,17 @@
                         Dataset(s)
                     </div>
                     <div class="sidenav-prop-text">
-                        <mat-radio-group
-                        aria-label="Select a dataset"
-                        name="datasetsList"
-                        fxLayout="column"
-                        (change)="updateDataset($event)">
-                        <mat-radio-button
-                            *ngFor="let ds of datasetOptions"
-                            name="datasetsList"
-                            [checked]="ds.checked"
-                            [value]="ds.id">
-                            {{ ds.name }}
-                        </mat-radio-button>
-                    </mat-radio-group>
+                        <mat-radio-group aria-label="Select a dataset"
+                                         name="datasetsList"
+                                         fxLayout="column"
+                                         (change)="updateDataset($event)">
+                            <mat-radio-button *ngFor="let ds of datasetOptions"
+                                              name="datasetsList"
+                                              [checked]="ds.checked"
+                                              [value]="ds.id">
+                                {{ ds.name }}
+                            </mat-radio-button>
+                        </mat-radio-group>
                     </div>
                 </div>
             </div>
@@ -139,12 +135,12 @@
                 <div class="metadata-property">
                     <div>
                         <div class="property-label display-inline-block">Cite as</div>
-                        <button mat-button 
-                            matTooltip="Copy citation url"
-                            matTooltipPosition="below"
-                            [cdkCopyToClipboard]="selectedDataset.howToCite"
-                            (click)="copyToClipboard('Citation link')"
-                            class="btn-copy-to-clipboard">
+                        <button mat-button
+                                matTooltip="Copy citation url"
+                                matTooltipPosition="below"
+                                [cdkCopyToClipboard]="selectedDataset.howToCite"
+                                (click)="copyToClipboard('Citation link')"
+                                class="btn-copy-to-clipboard">
                             <mat-icon [inline]="true" class="icon-arkurl">content_copy</mat-icon>
                         </button>
                     </div>
@@ -155,44 +151,44 @@
             </div>
 
             <div class="metadata-box">
-
-                    <div class="metadata-property">
-                        <div>
-                            <div class="property-label display-inline-block">
-                                Persistent identifier
-                            </div>
-                            <button mat-button 
+                <div class="metadata-property">
+                    <div>
+                        <div class="property-label display-inline-block">
+                            Persistent identifier
+                        </div>
+                        <button mat-button
                                 matTooltip="Copy persistent identifier"
                                 matTooltipPosition="below"
                                 [cdkCopyToClipboard]="selectedProject.id"
                                 (click)="copyToClipboard('Persistent identifier')"
                                 class="btn-copy-to-clipboard">
-                                <mat-icon [inline]="true" class="icon-arkurl">content_copy</mat-icon>
-                            </button>
-                        </div>
-                        <div class="sidenav-prop-text property-value">
-                            <a href="{{ selectedProject.id }}" target="_blank"> {{ selectedProject.id }} </a>
-                        </div>
+                            <mat-icon [inline]="true" class="icon-arkurl">content_copy</mat-icon>
+                        </button>
                     </div>
-                    <div class="metadata-property">
-                        <div class="property-label display-inline-block">
-                            License
-                        </div>
-                        <div class="sidenav-prop-text property-value">
-                            <p class="p-block" *ngFor="let license of selectedDataset.license">
-                                <a *ngIf="license.url" href="{{ license.url }}" target="_blank"> {{ license.url }} </a>
-                            </p>
-                        </div>
+                    <div class="sidenav-prop-text property-value">
+                        <a href="{{ selectedProject.id }}" target="_blank"> {{ selectedProject.id }} </a>
                     </div>
-                    <div class="metadata-property" *ngIf="selectedDataset.datePublished">
-                        <div class="property-label">
-                            Publication date
-                        </div>
-                        <div class="sidenav-prop-text property-value">
-                            {{ selectedDataset.datePublished | date:'MMMM d, yyyy' }}
-                        </div>
-                    </div>
+                </div>
 
+                <div class="metadata-property">
+                    <div class="property-label display-inline-block">
+                        License
+                    </div>
+                    <div class="sidenav-prop-text property-value">
+                        <p class="p-block" *ngFor="let license of selectedDataset.license">
+                            <a *ngIf="license.url" href="{{ license.url }}" target="_blank"> {{ license.url }} </a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="metadata-property" *ngIf="selectedDataset.datePublished">
+                    <div class="property-label">
+                        Publication date
+                    </div>
+                    <div class="sidenav-prop-text property-value">
+                        {{ selectedDataset.datePublished | date:'MMMM d, yyyy' }}
+                    </div>
+                </div>
             </div>
 
             <div class="metadata-box">
@@ -215,8 +211,8 @@
                     </div>
                     <div class="sidenav-prop-text">
                         <a [routerLink]="" (click)="downloadMetadata()">JSON</a>
-                    <!-- Functionality to be implemented -->
-                    <a href *ngFor="let dformat of metadataDownloadFormats" class="download-metadata"> {{ dformat }} </a>
+                        <!-- Functionality to be implemented -->
+                        <a href *ngFor="let dformat of metadataDownloadFormats" class="download-metadata"> {{ dformat }} </a>
                     </div>
                 </div>
             </div>

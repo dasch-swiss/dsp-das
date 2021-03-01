@@ -1,12 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
-    SingleProject,
     DataManagementPlan,
-    Person,
-    Organization,
-    IId,
-    Grant
+    Grant, IId, Organization, Person, SingleProject
 } from '@dasch-swiss/dsp-js';
+import { DatasetMetadataService } from '../dataset-metadata.service';
 
 @Component({
     selector: 'app-project-tab-view',
@@ -31,6 +28,9 @@ export class ProjectTabViewComponent implements OnInit {
     funderType: string;
     grants = [];
 
+    constructor(private _datasetMetadataService: DatasetMetadataService) {
+    }
+
     ngOnInit() {
 
         // get DMP
@@ -48,7 +48,7 @@ export class ProjectTabViewComponent implements OnInit {
 
     }
 
-    getDMP(currenDmps: DataManagementPlan | IId[]) {
+    getDMP(currenDmps: DataManagementPlan | IId[]): DataManagementPlan[] {
         if (currenDmps instanceof DataManagementPlan) {
             return [currenDmps];
         }
@@ -62,7 +62,7 @@ export class ProjectTabViewComponent implements OnInit {
 
     getFunders(flist: any[]) {
         // check if it is person, organization or IId
-        this.funderType = this.getFunderType(flist[0]);
+        this.funderType = this._datasetMetadataService.getContactType(flist[0]);
 
         if (this.funderType) {
             this.funders = flist;
@@ -72,17 +72,7 @@ export class ProjectTabViewComponent implements OnInit {
         for (const funder of flist) {
             this.funders.push(this.subProperties[funder.id]);
         }
-        this.funderType = this.getFunderType(this.funders[0]);
-    }
-
-    getFunderType(funder: Person | Organization | IId) {
-        if (funder instanceof Person) {
-            return 'person';
-        }
-        if (funder instanceof Organization) {
-            return 'organization';
-        }
-        return undefined;
+        this.funderType = this._datasetMetadataService.getContactType(this.funders[0]);
     }
 
     getGrants(glist: any[]) {
@@ -103,7 +93,7 @@ export class ProjectTabViewComponent implements OnInit {
             let tmpGrantObj: object;
 
             // checck if grant contains person, organization or IId objects
-            let ftype = this.getFunderType(grant.funder[0]);
+            let ftype = this._datasetMetadataService.getContactType(grant.funder[0]);
             let flist = [];
             if (ftype) {
                 // it is a person of organization object
@@ -116,7 +106,7 @@ export class ProjectTabViewComponent implements OnInit {
                 for (const fund of grant.funder) {
                     flist.push(this.subProperties[fund.id]);
                 }
-                ftype = this.getFunderType(flist[0]);
+                ftype = this._datasetMetadataService.getContactType(flist[0]);
             }
 
             tmpGrantObj = {

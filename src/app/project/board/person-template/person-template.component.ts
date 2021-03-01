@@ -17,7 +17,7 @@ export class PersonTemplateComponent implements OnInit {
 
     ngOnInit() {
         // check if members list is the list of [Organization] or [Iid]
-        let isOrganizationType: boolean = false;
+        let isOrganizationType = false;
 
         // if it is [Organization]
         if (this.person.memberOf[0] instanceof Organization) {

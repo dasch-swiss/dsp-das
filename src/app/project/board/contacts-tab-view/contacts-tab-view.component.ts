@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IId, Organization, Person } from '@dasch-swiss/dsp-js';
+import { DatasetMetadataService } from '../dataset-metadata.service';
 
 @Component({
     selector: 'app-contacts-tab-view',
@@ -15,11 +16,14 @@ export class ContactsTabViewComponent implements OnInit {
     contactsList = [];
     contactType: string;
 
+    constructor(private _datasetMetadataService: DatasetMetadataService) {
+    }
+
     ngOnInit() {
 
         if (this.contactDetails) {
             // check which type of array is present
-            this.contactType = this.getContactType(this.contactDetails[0]);
+            this.contactType = this._datasetMetadataService.getContactType(this.contactDetails[0]);
 
             // if contactType is person or organization
             if (this.contactType) {
@@ -31,18 +35,8 @@ export class ContactsTabViewComponent implements OnInit {
             for (const contact of this.contactDetails) {
                 this.contactsList.push(this.subProperties[contact.id]);
             }
-            this.contactType = this.getContactType(this.contactsList[0]);
+            this.contactType = this._datasetMetadataService.getContactType(this.contactsList[0]);
 
         }
-    }
-
-    getContactType(obj: Person | Organization | IId) {
-        if (obj instanceof Person) {
-            return 'person';
-        }
-        if (obj instanceof Organization) {
-            return 'organization';
-        }
-        return undefined;
     }
 }

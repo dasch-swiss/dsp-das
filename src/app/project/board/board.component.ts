@@ -131,6 +131,7 @@ export class BoardComponent implements OnInit {
         this._dspApiConnection.v2.metadata.getProjectMetadata(this.project.id).subscribe(
             (response: ProjectsMetadata) => {
                 this.projectsMetadata = response;
+
                 this.metadataLoading = false;
 
                 // create list according to it's type
@@ -181,7 +182,7 @@ export class BoardComponent implements OnInit {
         }
     }
 
-    getSubProperty(id: string) {
+    getSubProperty(id: string): object {
         return this.subProperties[id];
     }
 
