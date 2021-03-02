@@ -257,20 +257,18 @@ export class OntologyComponent implements OnInit {
                                     // sort properties by label
                                     // --> TODO: add sort functionallity to the gui
                                     this.ontoProperties = this._sortingService.keySortByAlphabetical(this.ontoProperties, 'label');
-                                    if (this.loadOntology) {
-                                        this.setCache();
-                                    }
+
+                                    this.loadOntology = false;
+                                }
+                                if (response.ontologies.length === this.ontologies.length) {
+                                    this._cache.set('currentProjectOntologies', this.ontologies);
+                                    this.setCache();
                                 }
                             },
                             (error: ApiResponseError) => {
                                 this._errorHandler.showMessage(error);
                             }
                         );
-
-                        if (index === array.length - 1) {
-                            this._cache.set('currentProjectOntologies', this.ontologies);
-                            this.setCache();
-                        }
 
                     });
 

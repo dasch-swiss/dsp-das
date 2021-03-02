@@ -3,7 +3,7 @@
     <dsp-progress-indicator *ngIf="loading"></dsp-progress-indicator>
 
     <!-- toolbar: select ontology -->
-    <div class="content large middle" *ngIf="!loading && ontologies">
+    <div class="content large middle" *ngIf="!loading">
         <div class="app-toolbar transparent more-space-bottom">
             <div class="app-toolbar-row toolbar-subtitle">
                 <h3 class="mat-body subtitle">Define your metadata</h3>
@@ -52,7 +52,7 @@
     </div>
 
     <!-- main content: overview shows resource classes of ontology -->
-    <div *ngIf="!loading && ontology" class="ontology-editor">
+    <div *ngIf="!loading && !loadOntology && ontology" class="ontology-editor">
 
         <mat-toolbar class="ontology-editor-header">
             <mat-toolbar-row>
