@@ -138,11 +138,11 @@ export class BoardComponent implements OnInit {
                 this.projectsMetadata.projectsMetadata.forEach((obj) => {
                     if (obj instanceof Dataset) {
                         this.datasetList.push(obj);
-                    }
-                    if (obj instanceof SingleProject) {
+                    } else if (obj instanceof SingleProject) {
                         this.singleProjectList.push(obj);
+                    } else {
+                        this.subProperties[obj.id] = obj;
                     }
-                    this.subProperties[obj.id] = obj;
                 });
 
                 const dsOptions = [];

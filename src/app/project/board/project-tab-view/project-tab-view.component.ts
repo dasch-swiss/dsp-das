@@ -3,7 +3,7 @@ import {
     DataManagementPlan,
     Grant, IId, Organization, Person, SingleProject
 } from '@dasch-swiss/dsp-js';
-import { DatasetMetadataService } from '../dataset-metadata.service';
+import { MetadataService } from '../dataset-metadata.service';
 
 @Component({
     selector: 'app-project-tab-view',
@@ -28,7 +28,7 @@ export class ProjectTabViewComponent implements OnInit {
     funderType: string;
     grants = [];
 
-    constructor(private _datasetMetadataService: DatasetMetadataService) {
+    constructor(private _metadataService: MetadataService) {
     }
 
     ngOnInit() {
@@ -62,7 +62,7 @@ export class ProjectTabViewComponent implements OnInit {
 
     getFunders(flist: any[]) {
         // check if it is person, organization or IId
-        this.funderType = this._datasetMetadataService.getContactType(flist[0]);
+        this.funderType = this._metadataService.getContactType(flist[0]);
 
         if (this.funderType) {
             this.funders = flist;
@@ -72,7 +72,7 @@ export class ProjectTabViewComponent implements OnInit {
         for (const funder of flist) {
             this.funders.push(this.subProperties[funder.id]);
         }
-        this.funderType = this._datasetMetadataService.getContactType(this.funders[0]);
+        this.funderType = this._metadataService.getContactType(this.funders[0]);
     }
 
     getGrants(glist: any[]) {
@@ -80,10 +80,8 @@ export class ProjectTabViewComponent implements OnInit {
 
         if (glist[0] instanceof Grant) {
             tmpGrants = glist;
-        }
-        // if it is IId objects array, retrive it's details
-        // tslint:disable-next-line
-        else {
+        } else {
+            // if it is IId objects array, retrive it's details
             for (const iid of glist) {
                 tmpGrants.push(this.subProperties[iid.id]);
             }
@@ -93,20 +91,18 @@ export class ProjectTabViewComponent implements OnInit {
             let tmpGrantObj: object;
 
             // checck if grant contains person, organization or IId objects
-            let ftype = this._datasetMetadataService.getContactType(grant.funder[0]);
+            let ftype = this._metadataService.getContactType(grant.funder[0]);
             let flist = [];
             if (ftype) {
                 // it is a person of organization object
                 flist = grant.funder;
-            }
-            // tslint:disable-next-line
-            else {
+            } else {
                 // it means it is a IId object. So we need to retrive the details
                 // of every funder using the id provided here
                 for (const fund of grant.funder) {
                     flist.push(this.subProperties[fund.id]);
                 }
-                ftype = this._datasetMetadataService.getContactType(flist[0]);
+                ftype = this._metadataService.getContactType(flist[0]);
             }
 
             tmpGrantObj = {
