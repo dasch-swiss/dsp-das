@@ -11,6 +11,9 @@ import { DefaultInfo } from '../default-data/default-resource-classes';
 })
 export class ResourceClassInfoComponent implements OnInit {
 
+    // open / close res class card
+    @Input() expanded = false;
+
     @Input() resourceClass: ClassDefinition;
 
     @Output() editResourceClass: EventEmitter<DefaultInfo> = new EventEmitter<DefaultInfo>();
@@ -18,9 +21,6 @@ export class ResourceClassInfoComponent implements OnInit {
     @Output() deleteResourceClass: EventEmitter<DefaultInfo> = new EventEmitter<DefaultInfo>();
 
     ontology: ReadOntology;
-
-    // open / close res class card
-    expanded = false;
 
     constructor(
         private _cache: CacheService
