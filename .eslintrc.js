@@ -156,7 +156,6 @@ module.exports = {
             "error",
             {
                 "allow": [
-                    "log",
                     "warn",
                     "dir",
                     "timeLog",
@@ -168,7 +167,6 @@ module.exports = {
                     "groupEnd",
                     "table",
                     "dirxml",
-                    "error",
                     "groupCollapsed",
                     "Console",
                     "profile",
