@@ -153,10 +153,9 @@ module.exports = {
         "no-bitwise": "error",
         "no-caller": "error",
         "no-console": [
-            "error",
+            "warn",
             {
                 "allow": [
-                    "warn",
                     "dir",
                     "timeLog",
                     "assert",
