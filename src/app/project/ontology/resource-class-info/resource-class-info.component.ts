@@ -2,6 +2,7 @@ import { EventEmitter, Input, Output } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { ApiResponseError, ClassDefinition, ReadOntology } from '@dasch-swiss/dsp-js';
 import { CacheService } from 'src/app/main/cache/cache.service';
+import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { DefaultInfo } from '../default-data/default-resource-classes';
 
 @Component({
@@ -23,7 +24,8 @@ export class ResourceClassInfoComponent implements OnInit {
     ontology: ReadOntology;
 
     constructor(
-        private _cache: CacheService
+        private _cache: CacheService,
+        private _errorHandler: ErrorHandlerService,
     ) { }
 
     ngOnInit(): void {
@@ -32,10 +34,9 @@ export class ResourceClassInfoComponent implements OnInit {
                 this.ontology = response;
             },
             (error: ApiResponseError) => {
-                console.error(error);
+                this._errorHandler.showMessage(error);
             }
-        )
-        // console.log(JSON.stringify(this.resourceClass));
+        );
     }
 
 }
