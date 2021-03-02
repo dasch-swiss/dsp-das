@@ -1,85 +1,72 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ClassDefinition, Constants, MockOntology, OntologiesEndpointV2, ReadOntology } from '@dasch-swiss/dsp-js';
-import { DspActionModule, DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
+import { By } from '@angular/platform-browser';
+import { ClassDefinition, Constants, MockOntology, ReadOntology } from '@dasch-swiss/dsp-js';
+import { DspActionModule, SortingService } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
+import { CacheService } from 'src/app/main/cache/cache.service';
+import { TranslateSubclassOfPipe } from '../translate-subclass-of.pipe';
 import { ResourceClassInfoComponent } from './resource-class-info.component';
 
-
 /**
- * Test host component to simulate parent component
+ * test host component to simulate parent component
  * Property is of type simple text
  */
 @Component({
-    template: `<app-resource-class-info #resClassInfo [resourceClass]="resClass" [ontology]="ontology"></app-resource-class-info>`
+    template: `<app-resource-class-info #resClassInfo [resourceClass]="resourceClass"></app-resource-class-info>`
 })
 class HostComponent implements OnInit {
 
     @ViewChild('resClassInfo') resourceClassInfoComponent: ResourceClassInfoComponent;
 
     // get ontology from DSP-JS-Lib test data
-    ontology: ReadOntology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
+    ontology: ReadOntology;
 
-    resClass: ClassDefinition;
+    resourceClass: ClassDefinition;
+
+    constructor(
+        private _cache: CacheService,
+        private _sortingService: SortingService
+    ) {
+
+    }
 
     ngOnInit() {
 
-        console.warn(this.ontology)
-        // grab the onto class information to display
-        const allOntoClasses = this.ontology.getAllClassDefinitions();
+        this._cache.get('currentOntology').subscribe(
+            (response: ReadOntology) => {
+                this.ontology = response;
 
-        // reset the ontology classes
-        const ontoClasses: ClassDefinition[] = [];
+                const allOntoClasses = response.getAllClassDefinitions();
+                // reset the ontology classes
+                let classesToDisplay = [];
 
-        // display only the classes which are not a subClass of Standoff
-        allOntoClasses.forEach(resClass => {
-            if (resClass.subClassOf.length) {
-                const splittedSubClass = resClass.subClassOf[0].split('#');
-                if (!splittedSubClass[0].includes(Constants.StandoffOntology) && !splittedSubClass[1].includes('Standoff')) {
-                    ontoClasses.push(resClass);
-                }
+                // display only the classes which are not a subClass of Standoff
+                allOntoClasses.forEach(resClass => {
+                    if (resClass.subClassOf.length) {
+                        const splittedSubClass = resClass.subClassOf[0].split('#');
+                        if (!splittedSubClass[0].includes(Constants.StandoffOntology) && !splittedSubClass[1].includes('Standoff')) {
+                            classesToDisplay.push(resClass);
+                        }
+                    }
+                });
+                classesToDisplay = this._sortingService.keySortByAlphabetical(classesToDisplay, 'label');
+                this.resourceClass = classesToDisplay[0];
             }
-        });
+        );
 
-        this.resClass = ontoClasses[0];
     }
-    // propertyCardinality: IHasProperty = {
-    //     propertyIndex: 'http://0.0.0.0:3333/ontology/1111/Notizblogg/v2#notgkygty',
-    //     cardinality: 0,
-    //     guiOrder: 1,
-    //     isInherited: false
-    // };
-    // propertyDefinition: ResourcePropertyDefinitionWithAllLanguages = {
-    //     'id': 'http://0.0.0.0:3333/ontology/1111/Notizblogg/v2#notgkygty',
-    //     'subPropertyOf': ['http://api.knora.org/ontology/knora-api/v2#hasValue'],
-    //     'comment': 'Beschreibt einen Namen',
-    //     'label': 'Name',
-    //     'guiElement': 'http://api.knora.org/ontology/salsah-gui/v2#SimpleText',
-    //     'objectType': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
-    //     'isLinkProperty': false,
-    //     'isLinkValueProperty': false,
-    //     'isEditable': true,
-    //     'guiAttributes': [],
-    //     'comments': [{
-    //         'language': 'de',
-    //         'value': 'Beschreibt einen Namen'
-    //     }],
-    //     'labels': [{
-    //         'language': 'de',
-    //         'value': 'Name'
-    //     }]
-    // };
 
 }
 
 
-fdescribe('ResourceClassInfoComponent', () => {
-    let component: ResourceClassInfoComponent;
-    let fixture: ComponentFixture<ResourceClassInfoComponent>;
+describe('ResourceClassInfoComponent', () => {
+    let hostComponent: HostComponent;
+    let hostFixture: ComponentFixture<HostComponent>;
 
     beforeEach(async(() => {
         const dspConnSpy = {
@@ -88,8 +75,12 @@ fdescribe('ResourceClassInfoComponent', () => {
             }
         };
 
+        const cacheServiceSpy = jasmine.createSpyObj('CacheService', ['get']);
+
         TestBed.configureTestingModule({
             declarations: [
+                HostComponent,
+                TranslateSubclassOfPipe,
                 ResourceClassInfoComponent
             ],
             imports: [
@@ -101,8 +92,8 @@ fdescribe('ResourceClassInfoComponent', () => {
             ],
             providers: [
                 {
-                    provide: DspApiConnectionToken,
-                    useValue: dspConnSpy
+                    provide: CacheService,
+                    useValue: cacheServiceSpy
                 }
             ]
         })
@@ -110,20 +101,36 @@ fdescribe('ResourceClassInfoComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ResourceClassInfoComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-        const dspConnSpy = TestBed.inject(DspApiConnectionToken);
+        // mock cache service for currentOntology
+        const cacheSpy = TestBed.inject(CacheService);
 
-        (dspConnSpy.v2.onto as jasmine.SpyObj<OntologiesEndpointV2>).getOntology.and.callFake(
+        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
             () => {
-                const ontology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
-                return of(ontology);
+                const response: ReadOntology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
+                return of(response);
             }
         );
+
+        hostFixture = TestBed.createComponent(HostComponent);
+        hostComponent = hostFixture.componentInstance;
+        hostFixture.detectChanges();
+
+        expect(hostComponent).toBeTruthy();
+
     });
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
+    it('expect title to be "Blue thing" and subclass of "Thing"', () => {
+        expect(hostComponent.resourceClassInfoComponent).toBeTruthy();
+        expect(hostComponent.resourceClassInfoComponent.resourceClass).toBeDefined();
+
+        const hostCompDe = hostFixture.debugElement;
+
+        const title: DebugElement = hostCompDe.query(By.css('mat-card-title'));
+
+        expect(title.nativeElement.innerText).toEqual('Blue thing');
+
+        const subtitle: DebugElement = hostCompDe.query(By.css('mat-card-subtitle'));
+
+        expect(subtitle.nativeElement.innerText).toEqual('Type Thing');
     });
 });
