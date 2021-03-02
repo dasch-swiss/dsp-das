@@ -361,9 +361,6 @@ export class OntologyComponent implements OnInit {
      */
     openResourceClassForm(mode: 'createResourceClass' | 'editResourceClass', resClassInfo: DefaultClass): void {
 
-        // set cache for ontology and lists
-        // this.setCache();
-
         const dialogConfig: MatDialogConfig = {
             disableClose: true,
             width: '840px',
@@ -391,9 +388,6 @@ export class OntologyComponent implements OnInit {
      * @param subClassOf resource class
      */
     updateCard(subClassOf: ResourceClassDefinition) {
-
-        // set cache for ontology and lists
-        // this.setCache();
 
         const dialogConfig: MatDialogConfig = {
             disableClose: true,
