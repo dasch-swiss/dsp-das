@@ -189,7 +189,7 @@ export class BoardComponent implements OnInit {
     // download metadata
     downloadMetadata() {
         const blob: Blob = new Blob([JSON.stringify(this.projectsMetadata)], {type: 'application/json'});
-        const fileName: string = 'metadata.json';
+        const fileName = 'metadata.json';
         const objectUrl: string = URL.createObjectURL(blob);
         const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
 

@@ -88,7 +88,6 @@ export class ProjectTabViewComponent implements OnInit {
         }
         // get funder details along with other details
         for (const grant of tmpGrants) {
-            let tmpGrantObj: object;
 
             // checck if grant contains person, organization or IId objects
             let ftype = this._metadataService.getContactType(grant.funder[0]);
@@ -105,7 +104,7 @@ export class ProjectTabViewComponent implements OnInit {
                 ftype = this._metadataService.getContactType(flist[0]);
             }
 
-            tmpGrantObj = {
+            const tmpGrantObj = {
                 funder : flist,
                 funderType: ftype,
                 name: grant.name ? grant.name : undefined,
