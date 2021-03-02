@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ResourceClassInfoComponent } from './resource-class-info.component';
 
-describe('ResourceClassInfoComponent', () => {
+fdescribe('ResourceClassInfoComponent', () => {
   let component: ResourceClassInfoComponent;
   let fixture: ComponentFixture<ResourceClassInfoComponent>;
 

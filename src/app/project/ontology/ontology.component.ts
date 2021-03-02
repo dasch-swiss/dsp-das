@@ -25,7 +25,7 @@ import { DspApiConnectionToken, Session, SessionService, SortingService } from '
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
-import { DefaultClass, DefaultResourceClasses } from './default-data/default-resource-classes';
+import { DefaultInfo, DefaultResourceClasses } from './default-data/default-resource-classes';
 import { ResourceClassFormService } from './resource-class-form/resource-class-form.service';
 
 export interface OntologyInfo {
@@ -45,9 +45,6 @@ export class OntologyComponent implements OnInit {
 
     // loading status during open-ontology-process
     loadOntology: boolean;
-
-    // open / close res class card
-    expanded = false;
 
     // permissions of logged-in user
     session: Session;
@@ -93,7 +90,7 @@ export class OntologyComponent implements OnInit {
     /**
      * list of all default resource classes (sub class of)
      */
-    defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
+    defaultClasses: DefaultInfo[] = DefaultResourceClasses.data;
 
     @ViewChild('ontologyEditor', { read: ViewContainerRef }) ontologyEditor: ViewContainerRef;
 
@@ -375,7 +372,7 @@ export class OntologyComponent implements OnInit {
      * @param mode
      * @param resClassInfo (could be subClassOf (create mode) or resource class itself (edit mode))
      */
-    openResourceClassForm(mode: 'createResourceClass' | 'editResourceClass', resClassInfo: DefaultClass): void {
+    openResourceClassForm(mode: 'createResourceClass' | 'editResourceClass', resClassInfo: DefaultInfo): void {
 
         // set cache for ontology and lists
         this.setCache();
@@ -435,20 +432,20 @@ export class OntologyComponent implements OnInit {
     }
 
     /**
-    * Delete either ontology or sourcetype
+    * Delete either ontology or resource class
     *
-    * @param id
     * @param mode Can be 'Ontology' or 'ResourceClass'
+    * @param id
     * @param title
     */
-    delete(id: string, mode: 'Ontology' | 'ResourceClass', title: string) {
+    delete(mode: 'Ontology' | 'ResourceClass', info: DefaultInfo) {
         const dialogConfig: MatDialogConfig = {
             width: '560px',
             maxHeight: '80vh',
             position: {
                 top: '112px'
             },
-            data: { mode: 'delete' + mode, title: title }
+            data: { mode: 'delete' + mode, title: info.label }
         };
 
         const dialogRef = this._dialog.open(
@@ -489,7 +486,7 @@ export class OntologyComponent implements OnInit {
                         // delete resource class and refresh the view
                         this.loadOntology = true;
                         const resClass: DeleteResourceClass = new DeleteResourceClass();
-                        resClass.id = id;
+                        resClass.id = info.iri;
                         resClass.lastModificationDate = this.ontology.lastModificationDate;
 
 

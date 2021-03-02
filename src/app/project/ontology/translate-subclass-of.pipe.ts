@@ -1,12 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DefaultClass, DefaultResourceClasses } from './default-data/default-resource-classes';
+import { DefaultInfo, DefaultResourceClasses } from './default-data/default-resource-classes';
 
 @Pipe({
     name: 'translateSubclassOf'
 })
 export class TranslateSubclassOfPipe implements PipeTransform {
 
-    defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
+    defaultClasses: DefaultInfo[] = DefaultResourceClasses.data;
 
     transform(value: string): string {
         const defaultClass = this.defaultClasses.find(i => i.iri === value);

@@ -1,6 +1,6 @@
 import { Constants } from '@dasch-swiss/dsp-js';
 
-export interface DefaultClass {
+export interface DefaultInfo {
     iri: string;
     label: string;
     icons?: string[];   // icons can be used to select one in the resource class form
@@ -8,7 +8,7 @@ export interface DefaultClass {
 
 export class DefaultResourceClasses {
 
-    public static data: DefaultClass[] = [
+    public static data: DefaultInfo[] = [
         {
             iri: Constants.Resource,
             label: 'Object without file representation (metadata only)',
