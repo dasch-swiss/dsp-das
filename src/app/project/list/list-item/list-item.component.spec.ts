@@ -214,12 +214,12 @@ describe('ListItemComponent', () => {
 
         const listNodeOperation: ListNodeOperation = new ListNodeOperation();
         listNodeOperation.listNode = {
-                children: undefined,
-                comments: [],
-                hasRootNode: 'http://rdfh.ch/lists/0001/otherTreeList',
-                id: 'http://rdfh.ch/lists/0001/otherTreeList04',
-                labels: [{value: 'Tree List Node 04 between node 01 and node 02', language: 'en'}],
-                position: 1
+            children: undefined,
+            comments: [],
+            hasRootNode: 'http://rdfh.ch/lists/0001/otherTreeList',
+            id: 'http://rdfh.ch/lists/0001/otherTreeList04',
+            labels: [{value: 'Tree List Node 04 between node 01 and node 02', language: 'en'}],
+            position: 1
         };
 
         listNodeOperation.operation = 'insert';

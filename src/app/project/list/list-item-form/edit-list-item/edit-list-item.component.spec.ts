@@ -10,10 +10,10 @@ import { AjaxResponse } from 'rxjs/ajax';
 import { EditListItemComponent } from './edit-list-item.component';
 
 /**
- * Test host component to simulate parent component for updating an existing child node.
+ * test host component to simulate parent component for updating an existing child node.
  */
 @Component({
-    template: `<app-edit-list-item #editListItem [iri]="iri" [mode]="mode" [projectIri]="projectIri"></app-edit-list-item>`
+    template: '<app-edit-list-item #editListItem [iri]="iri" [mode]="mode" [projectIri]="projectIri"></app-edit-list-item>'
 })
 class TestHostUpdateChildNodeComponent {
 
@@ -29,10 +29,10 @@ class TestHostUpdateChildNodeComponent {
 }
 
 /**
- * Test host component to simulate parent component for inserting a new child node.
+ * test host component to simulate parent component for inserting a new child node.
  */
 @Component({
-    template: `<app-edit-list-item #editListItem [iri]="iri" [mode]="mode" [parentIri]="parentIri" [position]="position" [projectCode]="projectCode" [projectIri]="projectIri"></app-edit-list-item>`
+    template: '<app-edit-list-item #editListItem [iri]="iri" [mode]="mode" [parentIri]="parentIri" [position]="position" [projectCode]="projectCode" [projectIri]="projectIri"></app-edit-list-item>'
 })
 class TestHostInsertChildNodeComponent {
 

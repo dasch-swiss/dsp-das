@@ -12,6 +12,7 @@ import {
     UpdateChildNodeRequest
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
+import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 
 @Component({
     selector: 'app-edit-list-item',
@@ -61,7 +62,10 @@ export class EditListItemComponent implements OnInit {
 
     formInvalidMessage: string;
 
-    constructor(@Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection) { }
+    constructor(
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _errorHandler: ErrorHandlerService
+    ) { }
 
     ngOnInit(): void {
         this.loading = true;
@@ -74,7 +78,7 @@ export class EditListItemComponent implements OnInit {
                     this.buildForm(response.body.nodeinfo);
                 },
                 (error: ApiResponseError) => {
-                    console.error(error);
+                    this._errorHandler.showMessage(error);
                 }
             );
         } else {
@@ -155,7 +159,7 @@ export class EditListItemComponent implements OnInit {
     }
 
     /**
-     * Called from the template when the 'submit' button is clicked in insert mode.
+     * called from the template when the 'submit' button is clicked in insert mode.
      * Sends a request to DSP-API to insert a new list child node in the provided position.
      */
     insertChildNode() {

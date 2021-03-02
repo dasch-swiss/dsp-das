@@ -81,7 +81,7 @@ export class ListItemFormComponent implements OnInit {
     // is this node in the last position of the list
     @Input() lastPosition = false;
 
-    @Input() newNode: boolean = false;
+    @Input() newNode = false;
 
     @Output() refreshParent: EventEmitter<ListNodeOperation> = new EventEmitter<ListNodeOperation>();
 
@@ -288,7 +288,7 @@ export class ListItemFormComponent implements OnInit {
     }
 
     /**
-     * Called from the template when either of the two reposition buttons is clicked
+     * called from the template when either of the two reposition buttons is clicked
      * @param direction in which direction the node should move
      */
     repositionNode(direction: 'up' | 'down') {

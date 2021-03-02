@@ -37,7 +37,7 @@ class TestLinkHostComponent implements OnInit {
     }
 
     onSubmit() {
-        console.log('form submitted');
+        console.warn('form submitted');
     }
 }
 
