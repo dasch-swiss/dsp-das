@@ -154,7 +154,6 @@
 
                     <app-resource-class-info *ngFor="let resClass of ontoClasses"
                         [resourceClass]="resClass"
-                        [ontology]="ontology"
                         (editResourceClass)="openResourceClassForm('editResourceClass', $event)"
                         (updateCardinality)="updateCard($event)"
                         (deleteResourceClass)="delete('ResourceClass', $event)">
