@@ -17,14 +17,6 @@ module.exports = {
         "es6": true,
         "node": true
     },
-    "ignorePatterns": [
-        ".github/",
-        ".idea/",
-        "node_modules/",
-        "dist/",
-        "tmp/",
-        "docs/assets/js/"
-    ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "project": "tsconfig.eslint.json",
