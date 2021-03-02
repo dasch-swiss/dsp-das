@@ -138,6 +138,21 @@
                     <mat-divider></mat-divider>
                     <a mat-list-item routerLinkActive="active" [routerLink]="'../properties'"
                         (click)="view = 'properties'">Properties</a>
+                    <span mat-list-item *ngIf="project?.status && (sysAdmin || projectAdmin) && ontologyIri"
+                        [matTooltip]="'This data model can\'t be edited because of missing \'lastModificationDate\'!'"
+                        [matTooltipDisabled]="ontology.lastModificationDate">
+                        <button mat-button [matMenuTriggerFor]="addResClassMenu"
+                            [disabled]="!ontology.lastModificationDate">
+                            <mat-icon>add</mat-icon>
+                            Add property
+                        </button>
+                        <mat-menu #addResClassMenu="matMenu" xPosition="before">
+                            <button mat-menu-item *ngFor="let type of resourceProperty"
+                                (click)="openResourceClassForm('addResourceClass', type)">
+                                {{ type?.label }}
+                            </button>
+                        </mat-menu>
+                    </span>
                 </mat-list>
             </mat-sidenav>
 
