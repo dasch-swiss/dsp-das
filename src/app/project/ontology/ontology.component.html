@@ -144,16 +144,13 @@
             <mat-sidenav-content class="ontology-editor-canvas drag-drop-stop">
                 <div class="ontology-editor-grid" *ngIf="view === 'classes'">
 
+                    <!-- list of resource classes -->
                     <app-resource-class-info *ngFor="let resClass of ontoClasses"
                         [resourceClass]="resClass"
                         (editResourceClass)="openResourceClassForm('editResourceClass', $event)"
                         (updateCardinality)="updateCard($event)"
                         (deleteResourceClass)="delete('ResourceClass', $event)">
                     </app-resource-class-info>
-
-                    <!-- list of resource classes -->
-                    <!-- TODO: maybe it should be moved to an own component? -->
-
 
                 </div>
                 <div class="ontology-editor-list" *ngIf="view === 'properties'">
@@ -182,7 +179,6 @@
 <div *ngIf="!projectAdmin" class="content large middle">
     <app-error [status]="403"></app-error>
 </div>
-
 
 <div class="mobile-only">
     <dsp-message [message]="{status: 415, statusText: 'This content is not supported on small devices.'}">

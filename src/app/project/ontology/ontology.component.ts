@@ -382,7 +382,6 @@ export class OntologyComponent implements OnInit {
         });
     }
 
-
     /**
      * Updates cardinality
      * @param subClassOf resource class
