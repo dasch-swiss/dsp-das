@@ -27,7 +27,7 @@ export class ListInfoFormComponent implements OnInit {
 
     @Input() iri?: string;
 
-    @Input() mode: 'create' | 'edit';
+    @Input() mode: 'create' | 'update';
 
     // project short code
     @Input() projectcode: string;
@@ -64,7 +64,7 @@ export class ListInfoFormComponent implements OnInit {
         this.loading = true;
 
         // get list info in case of edit mode
-        if (this.mode === 'edit') {
+        if (this.mode === 'update') {
             // edit mode, get list
             this._dspApiConnection.admin.listsEndpoint.getListInfo(this.iri).subscribe(
                 (response: ApiResponseData<ListInfoResponse>) => {
@@ -99,7 +99,7 @@ export class ListInfoFormComponent implements OnInit {
     submitData(): void {
         this.loading = true;
 
-        if (this.mode === 'edit') {
+        if (this.mode === 'update') {
             // edit mode: update list info
             const listInfoUpdateData: UpdateListInfoRequest = new UpdateListInfoRequest();
             listInfoUpdateData.projectIri = this.projectIri;
