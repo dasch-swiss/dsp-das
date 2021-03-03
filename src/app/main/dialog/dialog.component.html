@@ -297,5 +297,12 @@
         <app-dialog-header [title]="'Not yet implemented'" [subtitle]="'ERROR 400'" (close)="dialogRef.close()">
         </app-dialog-header>
         <p class="todo" [innerHtml]="notYetImplemented"></p>
+        <mat-dialog-actions>
+            <span class="fill-remaining-space"></span>
+            <button mat-button mat-dialog-close class="cancel-button center" [mat-dialog-close]="false">
+                OK
+            </button>
+            <span class="fill-remaining-space"></span>
+        </mat-dialog-actions>
     </div>
 </div>

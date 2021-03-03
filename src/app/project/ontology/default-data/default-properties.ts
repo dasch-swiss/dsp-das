@@ -1,11 +1,11 @@
 import { Constants } from '@dasch-swiss/dsp-js';
 
-export interface Category {
+export interface PropertyCategory {
     group: string;
-    elements: PropertyType[];
+    elements: DefaultProperty[];
 }
 
-export interface PropertyType {
+export interface DefaultProperty {
     icon: string;
     label: string;
     subPropOf: string;
@@ -15,7 +15,7 @@ export interface PropertyType {
 }
 
 export class DefaultProperties {
-    public static data: Category[] = [
+    public static data: PropertyCategory[] = [
         {
             group: 'Text',
             elements: [

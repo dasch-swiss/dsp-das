@@ -126,10 +126,10 @@
                         <button mat-button [matMenuTriggerFor]="addResClassMenu"
                             [disabled]="!ontology.lastModificationDate">
                             <mat-icon>add</mat-icon>
-                            Add class
+                            Create new class
                         </button>
                         <mat-menu #addResClassMenu="matMenu" xPosition="before">
-                            <button mat-menu-item *ngFor="let type of resourceClass"
+                            <button mat-menu-item *ngFor="let type of defaultClasses"
                                 (click)="openResourceClassForm('addResourceClass', type)">
                                 {{ type?.label }}
                             </button>
@@ -144,13 +144,21 @@
                         <button mat-button [matMenuTriggerFor]="addResClassMenu"
                             [disabled]="!ontology.lastModificationDate">
                             <mat-icon>add</mat-icon>
-                            Add property
+                            Create new property
                         </button>
                         <mat-menu #addResClassMenu="matMenu" xPosition="before">
-                            <button mat-menu-item *ngFor="let type of resourceProperty"
-                                (click)="openResourceClassForm('addResourceClass', type)">
-                                {{ type?.label }}
-                            </button>
+                            <div *ngFor="let type of defaultProperties; let last = last" [label]="type.group">
+                                <button mat-menu-item *ngFor="let ele of type.elements" [value]="ele" (click)="openPropertyForm('addProperty', ele)">
+                                    <span *ngIf="ele.label === 'Integer' || ele.label === 'Decimal'; else defaultIcons">
+                                        <mat-icon [svgIcon]="ele.icon"></mat-icon>
+                                    </span>
+                                    <ng-template #defaultIcons>
+                                        <mat-icon>{{ele.icon}}</mat-icon>
+                                    </ng-template>
+                                    {{ele.label}}
+                                </button>
+                                <mat-divider *ngIf="!last"></mat-divider>
+                            </div>
                         </mat-menu>
                     </span>
                 </mat-list>

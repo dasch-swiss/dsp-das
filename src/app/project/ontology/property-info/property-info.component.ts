@@ -10,7 +10,7 @@ import {
     ResourcePropertyDefinitionWithAllLanguages
 } from '@dasch-swiss/dsp-js';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { Category, DefaultProperties, PropertyType } from '../default-data/default-properties';
+import { PropertyCategory, DefaultProperties, DefaultProperty } from '../default-data/default-properties';
 import { Property } from '../resource-class-form/resource-class-form.service';
 
 @Component({
@@ -28,10 +28,10 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
 
     propInfo: Property = new Property();
 
-    propType: PropertyType;
+    propType: DefaultProperty;
 
     // list of default property types
-    propertyTypes: Category[] = DefaultProperties.data;
+    propertyTypes: PropertyCategory[] = DefaultProperties.data;
 
     propAttribute: string;
 

@@ -18,7 +18,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
-import { DefaultProperties, Category, PropertyType } from '../default-data/default-properties';
+import { DefaultProperties, PropertyCategory, DefaultProperty } from '../default-data/default-properties';
 
 
 // TODO: should be removed and replaced by AutocompleteItem from dsp-ui
@@ -59,7 +59,7 @@ export class PropertyFormComponent implements OnInit {
     required = new FormControl();
 
     // selection of default property types
-    propertyTypes: Category[] = DefaultProperties.data;
+    propertyTypes: PropertyCategory[] = DefaultProperties.data;
 
     showGuiAttr: boolean = false;
 
@@ -223,7 +223,7 @@ export class PropertyFormComponent implements OnInit {
         if (this.ontology.properties[option.iri] instanceof ResourcePropertyDefinition) {
             const tempProp: any | ResourcePropertyDefinition = this.ontology.properties[option.iri];
 
-            let obj: PropertyType;
+            let obj: DefaultProperty;
             // find gui ele from list of default property-types to set type value
             for (const group of this.propertyTypes) {
                 obj = group.elements.find(i => i.gui_ele === tempProp.guiElement && (i.objectType === tempProp.objectType || i.subPropOf === tempProp.subPropertyOf[0]));

@@ -25,6 +25,7 @@ import { DspApiConnectionToken, Session, SessionService, SortingService } from '
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { PropertyCategory, DefaultProperties, DefaultProperty } from './default-data/default-properties';
 import { DefaultClass, DefaultResourceClasses } from './default-data/default-resource-classes';
 import { ResourceClassFormService } from './resource-class-form/resource-class-form.service';
 
@@ -90,7 +91,8 @@ export class OntologyComponent implements OnInit {
     /**
      * list of all default resource classes (sub class of)
      */
-    resourceClass: DefaultClass[] = DefaultResourceClasses.data;
+    defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
+    defaultProperties: PropertyCategory[] = DefaultProperties.data;
 
     @ViewChild('ontologyEditor', { read: ViewContainerRef }) ontologyEditor: ViewContainerRef;
 
@@ -367,6 +369,34 @@ export class OntologyComponent implements OnInit {
                 top: '112px'
             },
             data: { id: resClassInfo.iri, title: resClassInfo.label, subtitle: 'Customize resource class', mode: mode, project: this.project.id }
+        };
+
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+            // update the view
+            this.initOntologiesList();
+        });
+    }
+
+    /**
+     * Opens property form
+     * @param mode
+     * @param propertyInfo (could be subClassOf (create mode) or resource class itself (edit mode))
+     */
+    openPropertyForm(mode: 'createProperty' | 'editProperty', propertyInfo: DefaultProperty): void {
+
+        const dialogConfig: MatDialogConfig = {
+            disableClose: true,
+            width: '840px',
+            maxHeight: '90vh',
+            position: {
+                top: '112px'
+            },
+            data: { title: propertyInfo.label, subtitle: 'Customize property', mode: mode, project: this.project.id }
         };
 
         const dialogRef = this._dialog.open(
