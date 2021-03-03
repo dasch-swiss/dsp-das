@@ -261,6 +261,7 @@ export class OntologyComponent implements OnInit {
                                     this.loadOntology = false;
                                 }
                                 if (response.ontologies.length === this.ontologies.length) {
+                                    this.ontologies = this._sortingService.keySortByAlphabetical(this.ontologies, 'label');
                                     this._cache.set('currentProjectOntologies', this.ontologies);
                                     this.setCache();
                                 }
