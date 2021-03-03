@@ -92,7 +92,6 @@ import { OrganisationTemplateComponent } from './project/board/organisation-temp
 import { EditListItemComponent } from './project/list/list-item-form/edit-list-item/edit-list-item.component';
 import { PropertyInfoComponent } from './project/ontology/property-info/property-info.component';
 import { ResourceClassInfoComponent } from './project/ontology/resource-class-info/resource-class-info.component';
-import { TranslateSubclassOfPipe } from './project/ontology/translate-subclass-of.pipe';
 
 // translate: AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -167,8 +166,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         OrganisationTemplateComponent,
         EditListItemComponent,
         PropertyInfoComponent,
-        ResourceClassInfoComponent,
-        TranslateSubclassOfPipe
+        ResourceClassInfoComponent
     ],
     imports: [
         AppRoutingModule,

@@ -9,7 +9,6 @@ import { ClassDefinition, Constants, MockOntology, ReadOntology } from '@dasch-s
 import { DspActionModule, SortingService } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { TranslateSubclassOfPipe } from '../translate-subclass-of.pipe';
 import { ResourceClassInfoComponent } from './resource-class-info.component';
 
 /**
@@ -80,7 +79,6 @@ describe('ResourceClassInfoComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 HostComponent,
-                TranslateSubclassOfPipe,
                 ResourceClassInfoComponent
             ],
             imports: [
@@ -131,6 +129,6 @@ describe('ResourceClassInfoComponent', () => {
 
         const subtitle: DebugElement = hostCompDe.query(By.css('mat-card-subtitle'));
 
-        expect(subtitle.nativeElement.innerText).toEqual('Type Thing');
+        expect(subtitle.nativeElement.innerText).toEqual('Thing');
     });
 });

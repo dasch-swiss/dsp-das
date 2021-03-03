@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiResponseError, ClassDefinition, ReadOntology } from '@dasch-swiss/dsp-js';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
-import { DefaultInfo } from '../default-data/default-resource-classes';
+import { DefaultInfo, DefaultResourceClasses } from '../default-data/default-resource-classes';
 
 @Component({
     selector: 'app-resource-class-info',
@@ -23,6 +23,11 @@ export class ResourceClassInfoComponent implements OnInit {
 
     ontology: ReadOntology;
 
+    subClassOfLabel = '';
+
+    // list of default classes
+    defaultClasses: DefaultInfo[] = DefaultResourceClasses.data;
+
     constructor(
         private _cache: CacheService,
         private _errorHandler: ErrorHandlerService,
@@ -32,11 +37,46 @@ export class ResourceClassInfoComponent implements OnInit {
         this._cache.get('currentOntology').subscribe(
             (response: ReadOntology) => {
                 this.ontology = response;
+                this.translateSubClassOfIri(this.resourceClass.subClassOf);
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
             }
         );
+    }
+
+    translateSubClassOfIri(classIris: string[]) {
+
+        classIris.forEach((iri, index) => {
+            // get ontology iri from class iri
+            const splittedIri = iri.split('#');
+            const ontologyIri = splittedIri[0];
+            const className = splittedIri[1];
+
+            this.subClassOfLabel += (index > 0 ? ', ' : '');
+
+            // find default class for the current class iri
+            const defaultClass = this.defaultClasses.find(i => i.iri === iri);
+            if (defaultClass) {
+                this.subClassOfLabel += defaultClass.label;
+            } else if (this.ontology.id === ontologyIri) {
+                // the class is not defined in the default classes
+                // but defined in the current ontology
+                // get class label from there
+                this.subClassOfLabel += this.ontology.classes[iri].label;
+            } else {
+                // the ontology iri of the upper class couldn't be found
+                // display the class name
+                console.log(iri)
+                if (className) {
+                    this.subClassOfLabel += className;
+                } else {
+                    // iri is not kind of [ontologyIri]#[className]
+                    this.subClassOfLabel += iri.split('/').filter(e => e).slice(-1);
+                }
+            }
+        });
+
     }
 
 }
