@@ -2,9 +2,6 @@
 
     <dsp-progress-indicator *ngIf="loading"></dsp-progress-indicator>
 
-    <!-- success message after updating -->
-    <dsp-message *ngIf="success" [message]="successMessage" [short]="true"></dsp-message>
-
     <div *ngIf="!loading && !createList" class="form-content list-info">
 
         <!-- list label -->

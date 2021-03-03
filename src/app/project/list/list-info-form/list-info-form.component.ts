@@ -27,6 +27,8 @@ export class ListInfoFormComponent implements OnInit {
 
     @Input() iri?: string;
 
+    @Input() mode: 'create' | 'edit';
+
     // project short code
     @Input() projectcode: string;
 
@@ -71,22 +73,10 @@ export class ListInfoFormComponent implements OnInit {
      */
     validationMessages = {
         label: {
-            'required': 'Name is required.',
-            'minlength': 'Name must be at least ' + this.nameMinLength + ' characters long.',
-            'maxlength': 'Name cannot be more than ' + this.nameMaxLength + ' characters long.'
+            'required': 'Label is required.',
+            'minlength': 'Label must be at least ' + this.nameMinLength + ' characters long.',
+            'maxlength': 'Label cannot be more than ' + this.nameMaxLength + ' characters long.'
         }
-    };
-
-    /**
-     * success of sending data
-     */
-    success = false;
-    /**
-     * message after successful post
-     */
-    successMessage: any = {
-        status: 200,
-        statusText: "You have successfully updated list's info."
     };
 
     constructor(
@@ -98,8 +88,8 @@ export class ListInfoFormComponent implements OnInit {
 
         this.loading = true;
 
-        // get list info in case of edit mode: this.iri is not undefined
-        if (this.iri) {
+        // get list info in case of edit mode
+        if (this.mode === 'edit') {
             // edit mode, get list
             this._dspApiConnection.admin.listsEndpoint.getListInfo(this.iri).subscribe(
                 (response: ApiResponseData<ListInfoResponse>) => {
@@ -136,39 +126,45 @@ export class ListInfoFormComponent implements OnInit {
     submitData(): void {
         this.loading = true;
 
-        if (this.iri) {
+        // create array of labels from the form
+        const labels = new Array<StringLiteral>();
+        let i = 0;
+        for (const l of this.labels) {
+            labels[i] = new StringLiteral();
+            labels[i].language = l.language;
+            labels[i].value = l.value;
+            i++;
+        }
+
+        // create array of comments from the form
+        const comments = new Array<StringLiteral>();
+        let j = 0;
+        for (const c of this.comments) {
+            comments[j] = new StringLiteral();
+            comments[j].language = c.language;
+            comments[j].value = c.value;
+            j++;
+        }
+
+        if (this.mode === 'edit') {
             // edit mode: update list info
             const listInfoUpdateData: UpdateListInfoRequest = new UpdateListInfoRequest();
             listInfoUpdateData.projectIri = this.projectIri;
             listInfoUpdateData.listIri = this.iri;
+            listInfoUpdateData.labels = this.labels;
+            listInfoUpdateData.comments = this.comments;
 
-            // initialize labels
-            let i = 0;
-            for (const l of this.labels) {
-                listInfoUpdateData.labels[i] = new StringLiteral();
-                listInfoUpdateData.labels[i].language = l.language;
-                listInfoUpdateData.labels[i].value = l.value;
-                i++;
-            }
-            // initialize comments
-            let j = 0;
-            for (const c of this.comments) {
-                listInfoUpdateData.comments[j] = new StringLiteral();
-                listInfoUpdateData.comments[j].language = c.language;
-                listInfoUpdateData.comments[j].value = c.value;
-                j++;
-            }
+            console.log('comments: ', comments);
+            console.log('this.comments: ', this.comments);
 
             this._dspApiConnection.admin.listsEndpoint.updateListInfo(listInfoUpdateData).subscribe(
                 (response: ApiResponseData<ListInfoResponse>) => {
-                    this.success = true;
                     this.loading = false;
                     this.closeDialog.emit(response.body.listinfo);
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
                     this.loading = false;
-                    this.success = false;
                 }
             );
 
@@ -176,23 +172,8 @@ export class ListInfoFormComponent implements OnInit {
             // new: create list
             const listInfoData: CreateListRequest = new CreateListRequest();
             listInfoData.projectIri = this.projectIri;
-
-            // initialize labels
-            let i = 0;
-            for (const l of this.labels) {
-                listInfoData.labels[i] = new StringLiteral();
-                listInfoData.labels[i].language = l.language;
-                listInfoData.labels[i].value = l.value;
-                i++;
-            }
-            // initialize comments
-            let j = 0;
-            for (const c of this.comments) {
-                listInfoData.comments[j] = new StringLiteral();
-                listInfoData.comments[j].language = c.language;
-                listInfoData.comments[j].value = c.value;
-                j++;
-            }
+            listInfoData.labels = labels;
+            listInfoData.comments = comments;
 
             this._dspApiConnection.admin.listsEndpoint.createList(listInfoData).subscribe(
                 (response: ApiResponseData<ListResponse>) => {
@@ -205,7 +186,6 @@ export class ListInfoFormComponent implements OnInit {
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
                     this.loading = false;
-                    this.success = false;
                 }
             );
         }
@@ -235,4 +215,5 @@ export class ListInfoFormComponent implements OnInit {
                 break;
         }
     }
+
 }
