@@ -67,7 +67,6 @@ export class ResourceClassInfoComponent implements OnInit {
             } else {
                 // the ontology iri of the upper class couldn't be found
                 // display the class name
-                console.log(iri)
                 if (className) {
                     this.subClassOfLabel += className;
                 } else {
