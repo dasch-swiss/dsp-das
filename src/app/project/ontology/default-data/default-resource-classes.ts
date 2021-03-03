@@ -3,7 +3,7 @@ import { Constants } from '@dasch-swiss/dsp-js';
 export interface DefaultInfo {
     iri: string;
     label: string;
-    icons?: string[];   // icons can be used to select one in the resource class form
+    icons?: string[];   // icons can be used to be selected in the resource class form
 }
 
 export class DefaultResourceClasses {

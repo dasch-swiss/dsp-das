@@ -202,7 +202,7 @@ export class OntologyComponent implements OnInit {
                         this.ontologyIri = response.ontologies[0].id;
                     }
 
-                    response.ontologies.forEach((ontoMeta, index, array) => {
+                    response.ontologies.forEach(ontoMeta => {
                         // set list of already existing ontology names
                         // it will be used in ontology form
                         // because ontology name has to be unique
@@ -212,6 +212,7 @@ export class OntologyComponent implements OnInit {
                         // get each ontology
                         this._dspApiConnection.v2.onto.getOntology(ontoMeta.id, true).subscribe(
                             (readOnto: ReadOntology) => {
+
                                 this.ontologies.push(readOnto);
 
                                 if (ontoMeta.id === this.ontologyIri) {
