@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 
@@ -19,7 +19,7 @@ export interface Coordinates {
     styleUrls: ['./visualizer.component.scss']
 })
 export class VisualizerComponent implements OnInit, AfterViewInit {
-    @ViewChild('graphcontainer', {read: ElementRef}) graphcontainer: ElementRef;
+    @ViewChild('graphcontainer', { read: ElementRef }) graphcontainer: ElementRef;
     @Input() graphInfo;
     graph = ForceGraph3D();
     dimension = '3';
@@ -73,7 +73,7 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
         return middlePos;
     }
     ngOnInit(): void {
-        const gData = {'nodes': this.graphInfo.nodes, 'links': this.graphInfo.links};
+        const gData = { 'nodes': this.graphInfo.nodes, 'links': this.graphInfo.links };
         this.graph.graphData(gData);
         this.graph.width(1280);
         // node design
@@ -99,7 +99,7 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
                 sprite.fontWeight = 'bold';
                 return sprite;
             });
-            this.graph.linkPositionUpdate((sprite, {start, end}) => {
+            this.graph.linkPositionUpdate((sprite, { start, end }) => {
                 // position sprite
                 Object.assign(sprite.position, this.calcMiddlePos(start, end));
                 return false;

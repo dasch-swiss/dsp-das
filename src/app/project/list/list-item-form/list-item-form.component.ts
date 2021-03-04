@@ -32,12 +32,12 @@ export class ListNodeOperation {
         trigger('simpleFadeAnimation', [
 
             // the "in" style determines the "resting" state of the element when it is visible.
-            state('in', style({opacity: 1})),
+            state('in', style({ opacity: 1 })),
 
             // fade in when created.
             transition(':enter', [
             // the styles start from this point when the element appears
-                style({opacity: 0}),
+                style({ opacity: 0 }),
                 // and animate toward the "in" state above
                 animate(150)
             ]),
@@ -45,7 +45,7 @@ export class ListNodeOperation {
             // fade out when destroyed.
             transition(':leave',
             // fading out uses a different syntax, with the "style" being passed into animate()
-                animate(150, style({opacity: 0})))
+                animate(150, style({ opacity: 0 })))
         ])
     ]
 })
@@ -271,7 +271,7 @@ export class ListItemFormComponent implements OnInit {
                                 position: {
                                     top: '112px'
                                 },
-                                data: { mode: 'deleteListNodeError'}
+                                data: { mode: 'deleteListNodeError' }
                             };
 
                             // open the dialog box

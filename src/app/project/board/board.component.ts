@@ -189,7 +189,7 @@ export class BoardComponent implements OnInit {
 
     // download metadata
     downloadMetadata() {
-        const blob: Blob = new Blob([JSON.stringify(this.projectsMetadata)], {type: 'application/json'});
+        const blob: Blob = new Blob([JSON.stringify(this.projectsMetadata)], { type: 'application/json' });
         const fileName = 'metadata.json';
         const objectUrl: string = URL.createObjectURL(blob);
         const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
@@ -227,7 +227,7 @@ export class BoardComponent implements OnInit {
             position: {
                 top: '112px'
             },
-            data: {mode: mode, title: name, project: id}
+            data: { mode: mode, title: name, project: id }
         };
 
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);

@@ -165,7 +165,7 @@ describe('SelectResourceClassComponent', () => {
 
     it('should emit the label of the resource class', async () => {
 
-        const inputElement = await loader.getHarness(MatInputHarness.with({selector: 'input.label'}));
+        const inputElement = await loader.getHarness(MatInputHarness.with({ selector: 'input.label' }));
 
         expect(await inputElement.getValue()).toEqual('');
         expect(testHostComponent.resLabel).toBeUndefined();

@@ -126,6 +126,10 @@ module.exports = {
         ],
         "constructor-super": "error",
         "curly": "error",
+        "object-curly-spacing": [
+            "error",
+            "always"
+        ],
         "eol-last": "error",
         "eqeqeq": [
             "error",

@@ -148,20 +148,20 @@ describe('ListItemFormComponent', () => {
 
                 const response = deleteListNodeResponse;
 
-                return of(ApiResponseData.fromAjaxResponse({response} as AjaxResponse));
+                return of(ApiResponseData.fromAjaxResponse({ response } as AjaxResponse));
             }
         );
 
         spyOn(testHostComponent.listItemForm.refreshParent, 'emit');
 
-        const deleteButton = await rootLoader.getHarness(MatButtonHarness.with({selector: '.delete'}));
+        const deleteButton = await rootLoader.getHarness(MatButtonHarness.with({ selector: '.delete' }));
         await deleteButton.click();
 
         const dialogHarnesses = await rootLoader.getAllHarnesses(MatDialogHarness);
 
         expect(dialogHarnesses.length).toEqual(1);
 
-        const confirmButton = await rootLoader.getHarness(MatButtonHarness.with({selector: '.confirm-button'}));
+        const confirmButton = await rootLoader.getHarness(MatButtonHarness.with({ selector: '.confirm-button' }));
 
         await confirmButton.click();
 

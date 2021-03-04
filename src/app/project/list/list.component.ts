@@ -234,7 +234,7 @@ export class ListComponent implements OnInit {
                                 position: {
                                     top: '112px'
                                 },
-                                data: { mode: 'deleteListNodeError'}
+                                data: { mode: 'deleteListNodeError' }
                             };
 
                             // open the dialog box

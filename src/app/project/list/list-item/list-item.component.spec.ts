@@ -44,7 +44,7 @@ class TestHostComponent implements OnInit {
             {
                 comments: [],
                 id: 'http://rdfh.ch/lists/0001/otherTreeList',
-                labels: [{value: 'Tree List Node', language: 'en'}],
+                labels: [{ value: 'Tree List Node', language: 'en' }],
                 isRootNode: true
             }
         ];
@@ -103,16 +103,16 @@ describe('ListItemComponent', () => {
                 const response = new ListResponse();
                 response.list.listinfo.id = 'http://rdfh.ch/lists/0001/otherTreeList';
                 response.list.listinfo.isRootNode = true;
-                response.list.listinfo.labels = [{value: 'Tree List Node Root', language: 'en'}];
+                response.list.listinfo.labels = [{ value: 'Tree List Node Root', language: 'en' }];
                 response.list.children = [
                     {
                         comments: [],
-                        labels: [{value: 'Tree List Node 01', language: 'en'}],
+                        labels: [{ value: 'Tree List Node 01', language: 'en' }],
                         id: 'http://rdfh.ch/lists/0001/otherTreeList01',
                         children: [
                             {
                                 comments: [],
-                                labels: [{value: 'Tree List Node 03', language: 'en'}],
+                                labels: [{ value: 'Tree List Node 03', language: 'en' }],
                                 id: 'http://rdfh.ch/lists/0001/otherTreeList03',
                                 children: []
                             }
@@ -120,12 +120,12 @@ describe('ListItemComponent', () => {
                     },
                     {
                         comments: [],
-                        labels: [{value: 'Tree List Node 02', language: 'en'}],
+                        labels: [{ value: 'Tree List Node 02', language: 'en' }],
                         id: 'http://rdfh.ch/lists/0001/otherTreeList02',
                         children: []
                     }
                 ];
-                return of(ApiResponseData.fromAjaxResponse({response} as AjaxResponse));
+                return of(ApiResponseData.fromAjaxResponse({ response } as AjaxResponse));
             }
         );
 
@@ -144,7 +144,7 @@ describe('ListItemComponent', () => {
             comments: [],
             hasRootNode: 'http://rdfh.ch/lists/0001/otherTreeList',
             id: 'http://rdfh.ch/lists/0001/otherTreeList04',
-            labels: [{value: 'Tree List Node 04', language: 'en'}]
+            labels: [{ value: 'Tree List Node 04', language: 'en' }]
         };
         listNodeOperation.operation = 'create';
 
@@ -160,7 +160,7 @@ describe('ListItemComponent', () => {
             comments: [],
             hasRootNode: 'http://rdfh.ch/lists/0001/otherTreeList',
             id: 'http://rdfh.ch/lists/0001/otherTreeList01',
-            labels: [{value: 'Tree List Node 0123', language: 'en'}],
+            labels: [{ value: 'Tree List Node 0123', language: 'en' }],
             position: 0
         };
         listNodeOperation.operation = 'update';
@@ -169,7 +169,7 @@ describe('ListItemComponent', () => {
 
         expect(testHostComponent.listItem.list.length).toEqual(2);
 
-        expect(testHostComponent.listItem.list[0].labels).toEqual([{value: 'Tree List Node 0123', language: 'en'}]);
+        expect(testHostComponent.listItem.list[0].labels).toEqual([{ value: 'Tree List Node 0123', language: 'en' }]);
     });
 
     it('should update the view to show an inserted node', () => {
@@ -180,16 +180,16 @@ describe('ListItemComponent', () => {
                 const response = new ListResponse();
                 response.list.listinfo.id = 'http://rdfh.ch/lists/0001/otherTreeList';
                 response.list.listinfo.isRootNode = true;
-                response.list.listinfo.labels = [{value: 'Tree List Node Root', language: 'en'}];
+                response.list.listinfo.labels = [{ value: 'Tree List Node Root', language: 'en' }];
                 response.list.children = [
                     {
                         comments: [],
-                        labels: [{value: 'Tree List Node 01', language: 'en'}],
+                        labels: [{ value: 'Tree List Node 01', language: 'en' }],
                         id: 'http://rdfh.ch/lists/0001/otherTreeList01',
                         children: [
                             {
                                 comments: [],
-                                labels: [{value: 'Tree List Node 03', language: 'en'}],
+                                labels: [{ value: 'Tree List Node 03', language: 'en' }],
                                 id: 'http://rdfh.ch/lists/0001/otherTreeList03',
                                 children: []
                             }
@@ -197,18 +197,18 @@ describe('ListItemComponent', () => {
                     },
                     {
                         comments: [],
-                        labels: [{value: 'Tree List Node 04 between node 01 and node 02', language: 'en'}],
+                        labels: [{ value: 'Tree List Node 04 between node 01 and node 02', language: 'en' }],
                         id: 'http://rdfh.ch/lists/0001/otherTreeList04',
                         children: []
                     },
                     {
                         comments: [],
-                        labels: [{value: 'Tree List Node 02', language: 'en'}],
+                        labels: [{ value: 'Tree List Node 02', language: 'en' }],
                         id: 'http://rdfh.ch/lists/0001/otherTreeList02',
                         children: []
                     }
                 ];
-                return of(ApiResponseData.fromAjaxResponse({response} as AjaxResponse));
+                return of(ApiResponseData.fromAjaxResponse({ response } as AjaxResponse));
             }
         );
 
@@ -218,7 +218,7 @@ describe('ListItemComponent', () => {
             comments: [],
             hasRootNode: 'http://rdfh.ch/lists/0001/otherTreeList',
             id: 'http://rdfh.ch/lists/0001/otherTreeList04',
-            labels: [{value: 'Tree List Node 04 between node 01 and node 02', language: 'en'}],
+            labels: [{ value: 'Tree List Node 04 between node 01 and node 02', language: 'en' }],
             position: 1
         };
 
@@ -228,7 +228,7 @@ describe('ListItemComponent', () => {
 
         expect(testHostComponent.listItem.list.length).toEqual(3);
 
-        expect(testHostComponent.listItem.list[1].labels).toEqual([{value: 'Tree List Node 04 between node 01 and node 02', language: 'en'}]);
+        expect(testHostComponent.listItem.list[1].labels).toEqual([{ value: 'Tree List Node 04 between node 01 and node 02', language: 'en' }]);
 
         expect(dspConnSpy.admin.listsEndpoint.getList).toHaveBeenCalledWith(testHostComponent.parentIri);
 
@@ -242,7 +242,7 @@ describe('ListItemComponent', () => {
             children: [
                 {
                     comments: [],
-                    labels: [{value: 'Tree List Node 02', language: 'en'}],
+                    labels: [{ value: 'Tree List Node 02', language: 'en' }],
                     id: 'http://rdfh.ch/lists/0001/otherTreeList02',
                     children: []
                 }
@@ -250,7 +250,7 @@ describe('ListItemComponent', () => {
             comments: [],
             isRootNode: true,
             id: 'http://rdfh.ch/lists/0001/otherTreeList01',
-            labels: [{value: 'Tree List Root', language: 'en'}],
+            labels: [{ value: 'Tree List Root', language: 'en' }],
             projectIri: 'http://rdfh.ch/projects/0001'
         };
         listNodeOperation.operation = 'delete';
@@ -259,7 +259,7 @@ describe('ListItemComponent', () => {
 
         expect(testHostComponent.listItem.list.length).toEqual(1);
 
-        expect(testHostComponent.listItem.list[0].labels).toEqual([{value: 'Tree List Node 02', language: 'en'}]);
+        expect(testHostComponent.listItem.list[0].labels).toEqual([{ value: 'Tree List Node 02', language: 'en' }]);
     });
 
     it('should reposition the node in position 1 to position 0', () => {
@@ -271,23 +271,23 @@ describe('ListItemComponent', () => {
                 const response = new RepositionChildNodeResponse();
                 response.node.id = 'http://rdfh.ch/lists/0001/otherTreeList';
                 response.node.isRootNode = true;
-                response.node.labels = [{value: 'Tree List Node Root', language: 'en'}];
+                response.node.labels = [{ value: 'Tree List Node Root', language: 'en' }];
                 response.node.children = [
                     {
                         comments: [],
-                        labels: [{value: 'Tree List Node 02', language: 'en'}],
+                        labels: [{ value: 'Tree List Node 02', language: 'en' }],
                         id: 'http://rdfh.ch/lists/0001/otherTreeList02',
                         children: [],
                         position: 0
                     },
                     {
                         comments: [],
-                        labels: [{value: 'Tree List Node 01', language: 'en'}],
+                        labels: [{ value: 'Tree List Node 01', language: 'en' }],
                         id: 'http://rdfh.ch/lists/0001/otherTreeList01',
                         children: [
                             {
                                 comments: [],
-                                labels: [{value: 'Tree List Node 03', language: 'en'}],
+                                labels: [{ value: 'Tree List Node 03', language: 'en' }],
                                 id: 'http://rdfh.ch/lists/0001/otherTreeList03',
                                 children: []
                             }
@@ -295,7 +295,7 @@ describe('ListItemComponent', () => {
                         position: 1
                     }
                 ];
-                return of(ApiResponseData.fromAjaxResponse({response} as AjaxResponse));
+                return of(ApiResponseData.fromAjaxResponse({ response } as AjaxResponse));
             }
         );
 
