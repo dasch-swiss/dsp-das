@@ -5,10 +5,10 @@ import { IUrl } from '@dasch-swiss/dsp-js';
     selector: 'app-url-template',
     template: `
         <div *ngIf="urls">
-            <div *ngIf="templateType == 'string'">
+            <div *ngIf="templateType === 'string'">
                 <p *ngFor="let str of urls" class="remove-top-margin"> {{ str }} </p>
             </div>
-            <div *ngIf="templateType == 'IUrl'">
+            <div *ngIf="templateType === 'IUrl'">
                 <div class="metadata-property">
                     <div *ngIf="displayLabel" class="property-label display-inline-block">
                         {{ label }}:
@@ -27,12 +27,11 @@ import { IUrl } from '@dasch-swiss/dsp-js';
 export class UrlTemplateComponent implements OnInit {
     @Input() urls: IUrl | IUrl[] | string[];
 
-    @Input() displayLabel ?: boolean = false;
+    @Input() label = 'URL(s)';
 
-    @Input() isPerson ?: boolean = false;
+    @Input() displayLabel = false;
 
     templateType: string;
-    label = 'URL(s)';
 
     ngOnInit() {
         if (!(this.urls instanceof Array)) {
@@ -40,10 +39,6 @@ export class UrlTemplateComponent implements OnInit {
         }
 
         this.templateType = this.getTemplateType(this.urls[0]);
-
-        if (this.isPerson) {
-            this.label = 'ORCID';
-        }
     }
 
     /**

@@ -11,7 +11,7 @@
     </div>
     
     <div *ngIf="person.sameAs">
-        <app-url-template [urls]="person.sameAs" [displayLabel]="true" [isPerson]="true"></app-url-template>
+        <app-url-template [urls]="person.sameAs" [displayLabel]="true" [label]="'ORCID'"></app-url-template>
     </div>
     
     <div *ngIf="person.email" class="metadata-property">
