@@ -34,13 +34,7 @@
             </mat-select-trigger>
             <mat-optgroup *ngFor="let type of propertyTypes" [label]="type.group">
                 <mat-option *ngFor="let ele of type.elements" [value]="ele">
-                    <span *ngIf="ele.label === 'Integer' || ele.label === 'Decimal'; else defaultIcons">
-                        <mat-icon [svgIcon]="ele.icon"></mat-icon>
-                    </span>
-                    <ng-template #defaultIcons>
-                        <mat-icon>{{ele.icon}}</mat-icon>
-                    </ng-template>
-                    {{ele.label}}
+                    <mat-icon>{{ele.icon}}</mat-icon> {{ele.label}}
                 </mat-option>
             </mat-optgroup>
         </mat-select>

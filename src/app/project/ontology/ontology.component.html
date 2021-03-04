@@ -149,13 +149,7 @@
                         <mat-menu #addResClassMenu="matMenu" xPosition="before">
                             <div *ngFor="let type of defaultProperties; let last = last" [label]="type.group">
                                 <button mat-menu-item *ngFor="let ele of type.elements" [value]="ele" (click)="openPropertyForm('addProperty', ele)">
-                                    <span *ngIf="ele.label === 'Integer' || ele.label === 'Decimal'; else defaultIcons">
-                                        <mat-icon [svgIcon]="ele.icon"></mat-icon>
-                                    </span>
-                                    <ng-template #defaultIcons>
-                                        <mat-icon>{{ele.icon}}</mat-icon>
-                                    </ng-template>
-                                    {{ele.label}}
+                                    <mat-icon>{{ele.icon}}</mat-icon> {{ele.label}}
                                 </button>
                                 <mat-divider *ngIf="!last"></mat-divider>
                             </div>

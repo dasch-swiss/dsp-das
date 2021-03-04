@@ -123,7 +123,7 @@ export class DefaultProperties {
             group: 'Number',
             elements: [
                 {
-                    icon: 'integer_icon',
+                    icon: 'money',
                     label: 'Integer',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.IntValue,
@@ -131,7 +131,7 @@ export class DefaultProperties {
                     group: 'Number'
                 },
                 {
-                    icon: 'decimal_icon',
+                    icon: 'functions',
                     label: 'Decimal',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.DecimalValue,
@@ -186,7 +186,7 @@ export class DefaultProperties {
             group: 'Shape',
             elements: [
                 {
-                    icon: 'color_lens',
+                    icon: 'palette',
                     label: 'Color',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.ColorValue,
