@@ -93,7 +93,9 @@ export class ListInfoFormComponent implements OnInit {
             this.comments = list.comments;
         }
 
-        this.loading = false;
+        setTimeout(() => {
+            this.loading = false;
+        });
     }
 
     submitData(): void {

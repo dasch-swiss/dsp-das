@@ -99,7 +99,9 @@ export class EditListItemComponent implements OnInit {
             this.comments = listNode.comments;
         }
 
-        this.loading = false;
+        setTimeout(() => {
+            this.loading = false;
+        });
     }
 
     /**

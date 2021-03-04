@@ -221,10 +221,11 @@ export class ListComponent implements OnInit {
         dialogRef.afterClosed().subscribe((data) => {
             switch (mode) {
                 case 'createList': {
-                    if (data as List) {
+                    if (data instanceof List) {
                         this.listIri = data.listinfo.id;
                         this.listForm.controls.list.setValue(this.listIri);
                         this.openList(this.listIri);
+                        this.initList();
                     }
                     break;
                 }
@@ -240,6 +241,7 @@ export class ListComponent implements OnInit {
                                 this.listIri = this.lists[0].id;
                                 this.listForm.controls.list.setValue(this.listIri);
                                 this.openList(this.listIri);
+                                this.initList();
                             },
                             (error: ApiResponseError) => {
                                 // if DSP-API returns a 400, it is likely that the list node is in use so we inform the user of this

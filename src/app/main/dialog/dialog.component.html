@@ -140,7 +140,7 @@
 
     <!-- Create new list -->
     <div *ngSwitchCase="'createList'">
-        <app-dialog-header [title]="data.title" [subtitle]="'Create new'"></app-dialog-header>
+        <app-dialog-header [title]="'Create new list'" [subtitle]=""></app-dialog-header>
         <app-list-info-form [projectcode]="data.project" [mode]="'create'" [projectIri]="data.id" (closeDialog)="dialogRef.close($event)">
         </app-list-info-form>
     </div>
@@ -156,7 +156,7 @@
     <div *ngSwitchCase="'editListInfo'">
         <app-dialog-header [title]="data.title" [subtitle]="'Edit list info'">
         </app-dialog-header>
-        <app-list-info-form [iri]="data.id" [mode]="'edit'" [projectIri]="data.project" (closeDialog)="dialogRef.close()">
+        <app-list-info-form [iri]="data.id" [mode]="'update'" [projectIri]="data.project" (closeDialog)="dialogRef.close()">
         </app-list-info-form>
     </div>
 
