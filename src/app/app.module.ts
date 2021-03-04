@@ -91,6 +91,7 @@ import { AddressTemplateComponent } from './project/board/address-template/addre
 import { OrganisationTemplateComponent } from './project/board/organisation-template/organisation-template.component';
 import { EditListItemComponent } from './project/list/list-item-form/edit-list-item/edit-list-item.component';
 import { PropertyInfoComponent } from './project/ontology/property-info/property-info.component';
+import { ResourceClassInfoComponent } from './project/ontology/resource-class-info/resource-class-info.component';
 import { UrlTemplateComponent } from './project/board/url-template/url-template.component';
 
 // translate: AoT requires an exported function for factories
@@ -166,6 +167,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         OrganisationTemplateComponent,
         EditListItemComponent,
         PropertyInfoComponent,
+        ResourceClassInfoComponent
         UrlTemplateComponent
     ],
     imports: [
