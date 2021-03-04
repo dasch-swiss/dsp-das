@@ -179,7 +179,6 @@ export class ResourceClassFormService {
 
     }
 
-
     /**
      * add new property line
      */

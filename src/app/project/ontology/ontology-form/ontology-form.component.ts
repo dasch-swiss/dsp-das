@@ -212,6 +212,4 @@ export class OntologyFormComponent implements OnInit {
 
     }
 
-
-
 }
