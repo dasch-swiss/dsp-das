@@ -3,12 +3,7 @@
 
     <div mat-line class="title">
         <span class="icon" *ngIf="propType" [matTooltip]="propType?.group + ': ' + propType?.label" matTooltipPosition="above">
-            <span *ngIf="propType?.label === 'Integer' || propType?.label === 'Decimal'; else defaultIcons">
-                <mat-icon class="type" [svgIcon]="propType?.icon"></mat-icon>
-            </span>
-            <ng-template #defaultIcons>
-                <mat-icon class="type">{{propType?.icon}}</mat-icon>
-            </ng-template>
+            <mat-icon class="type">{{propType?.icon}}</mat-icon>
         </span>
         <span class="label" [matTooltip]="propDef.comment" matTooltipPosition="above">
             {{propDef?.label}} <span *ngIf="!propDef.label">{{propDef.id}}</span>

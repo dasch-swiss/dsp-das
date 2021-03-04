@@ -1,6 +1,4 @@
 import { AfterContentInit, Component, Input, OnInit } from '@angular/core';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
 import {
     Constants,
     IHasProperty,
@@ -10,7 +8,7 @@ import {
     ResourcePropertyDefinitionWithAllLanguages
 } from '@dasch-swiss/dsp-js';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { PropertyCategory, DefaultProperties, DefaultProperty } from '../default-data/default-properties';
+import { DefaultProperties, DefaultProperty, PropertyCategory } from '../default-data/default-properties';
 import { Property } from '../resource-class-form/resource-class-form.service';
 
 @Component({
@@ -39,21 +37,8 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
     resClasses: ResourceClassDefinitionWithAllLanguages[] = [];
 
     constructor(
-        private _cache: CacheService,
-        private _domSanitizer: DomSanitizer,
-        private _matIconRegistry: MatIconRegistry
-    ) {
-
-        // special icons for property type
-        this._matIconRegistry.addSvgIcon(
-            'integer_icon',
-            this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/integer-icon.svg')
-        );
-        this._matIconRegistry.addSvgIcon(
-            'decimal_icon',
-            this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/decimal-icon.svg')
-        );
-    }
+        private _cache: CacheService
+    ) { }
 
     ngOnInit(): void {
         // convert cardinality from js-lib convention to app convention

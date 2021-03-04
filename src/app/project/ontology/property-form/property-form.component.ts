@@ -1,19 +1,16 @@
-import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
-import { MatIconRegistry } from '@angular/material/icon';
 import { MatSelectChange } from '@angular/material/select';
-import { DomSanitizer } from '@angular/platform-browser';
 import {
     ApiResponseError,
     ClassDefinition,
     Constants,
-    KnoraApiConnection,
+
     ListNodeInfo,
     ReadOntology,
     ResourcePropertyDefinition
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
@@ -83,23 +80,9 @@ export class PropertyFormComponent implements OnInit {
     Constants = Constants;
 
     constructor(
-        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
-        private _domSanitizer: DomSanitizer,
-        private _errorHandler: ErrorHandlerService,
-        private _matIconRegistry: MatIconRegistry
-    ) {
-
-        // special icons for property type
-        this._matIconRegistry.addSvgIcon(
-            'integer_icon',
-            this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/integer-icon.svg')
-        );
-        this._matIconRegistry.addSvgIcon(
-            'decimal_icon',
-            this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/decimal-icon.svg')
-        );
-    }
+        private _errorHandler: ErrorHandlerService
+    ) { }
 
     ngOnInit() {
 

@@ -123,7 +123,7 @@
                     <span mat-list-item *ngIf="project?.status && (sysAdmin || projectAdmin) && ontologyIri"
                         [matTooltip]="'This data model can\'t be edited because of missing \'lastModificationDate\'!'"
                         [matTooltipDisabled]="ontology.lastModificationDate">
-                        <button mat-button [matMenuTriggerFor]="addResClassMenu"
+                        <button mat-button *ngIf="view === 'classes'" [matMenuTriggerFor]="addResClassMenu"
                             [disabled]="!ontology.lastModificationDate">
                             <mat-icon>add</mat-icon>
                             Create new class
@@ -141,7 +141,7 @@
                     <span mat-list-item *ngIf="project?.status && (sysAdmin || projectAdmin) && ontologyIri"
                         [matTooltip]="'This data model can\'t be edited because of missing \'lastModificationDate\'!'"
                         [matTooltipDisabled]="ontology.lastModificationDate">
-                        <button mat-button [matMenuTriggerFor]="addResClassMenu"
+                        <button mat-button *ngIf="view === 'properties'" [matMenuTriggerFor]="addResClassMenu"
                             [disabled]="!ontology.lastModificationDate">
                             <mat-icon>add</mat-icon>
                             Create new property
