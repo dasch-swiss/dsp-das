@@ -1,5 +1,13 @@
 # Changelog
 
+### [4.3.2](https://www.github.com/dasch-swiss/dsp-app/compare/v4.3.1...v4.3.2) (2021-03-04)
+
+
+### Maintenance
+
+* **ontology:** improve ontology editor design (DSP-1376) ([#401](https://www.github.com/dasch-swiss/dsp-app/issues/401)) ([6de83b8](https://www.github.com/dasch-swiss/dsp-app/commit/6de83b801b0414311112e13e90298308c6c6df79))
+* **project landing page:** update metadata typings (DSP-1393) ([#407](https://www.github.com/dasch-swiss/dsp-app/issues/407)) ([b4f101b](https://www.github.com/dasch-swiss/dsp-app/commit/b4f101b0425f12919cfa071903fc788ea44aa561))
+
 ### [4.3.1](https://www.github.com/dasch-swiss/dsp-app/compare/v4.3.0...v4.3.1) (2021-03-03)
 
 
