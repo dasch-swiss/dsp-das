@@ -10,6 +10,7 @@ import {
     Constants,
     DeleteOntologyResponse,
     DeleteResourceClass,
+    DeleteResourceProperty,
     KnoraApiConnection,
     ListsResponse,
     OntologiesMetadata,
@@ -447,7 +448,7 @@ export class OntologyComponent implements OnInit {
     * @param id
     * @param title
     */
-    delete(mode: 'Ontology' | 'ResourceClass', info: DefaultClass) {
+    delete(mode: 'Ontology' | 'ResourceClass' | 'Property', info: DefaultClass) {
         const dialogConfig: MatDialogConfig = {
             width: '560px',
             maxHeight: '80vh',
@@ -497,6 +498,24 @@ export class OntologyComponent implements OnInit {
                         resClass.id = info.iri;
                         resClass.lastModificationDate = this.ontology.lastModificationDate;
                         this._dspApiConnection.v2.onto.deleteResourceClass(resClass).subscribe(
+                            (response: OntologyMetadata) => {
+                                this.loading = false;
+                                this.resetOntology(this.ontologyIri);
+                            },
+                            (error: ApiResponseError) => {
+                                this._errorHandler.showMessage(error);
+                                this.loading = false;
+                                this.loadOntology = false;
+                            }
+                        );
+                        break;
+                    case 'Property':
+                        // delete resource property and refresh the view
+                        this.loadOntology = true;
+                        const resProp: DeleteResourceProperty = new DeleteResourceProperty();
+                        resProp.id = info.iri;
+                        resProp.lastModificationDate = this.ontology.lastModificationDate;
+                        this._dspApiConnection.v2.onto.deleteResourceProperty(resProp).subscribe(
                             (response: OntologyMetadata) => {
                                 this.loading = false;
                                 this.resetOntology(this.ontologyIri);

@@ -1,5 +1,6 @@
-import { AfterContentInit, Component, Input, OnInit } from '@angular/core';
+import { AfterContentInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
+    ClassDefinition,
     Constants,
     IHasProperty,
     ListNodeInfo,
@@ -9,6 +10,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from '../default-data/default-properties';
+import { DefaultClass } from '../default-data/default-resource-classes';
 import { Property } from '../resource-class-form/resource-class-form.service';
 
 @Component({
@@ -23,6 +25,9 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
     @Input() propCard?: IHasProperty;
 
     @Input() projectcode: string;
+
+    @Output() editResourceProperty: EventEmitter<ResourcePropertyDefinitionWithAllLanguages> = new EventEmitter<ResourcePropertyDefinitionWithAllLanguages>();
+    @Output() deleteResourceProperty: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
 
     propInfo: Property = new Property();
 

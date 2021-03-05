@@ -38,13 +38,13 @@
             <button mat-button
                     class="edit"
                     title="edit"
-                    (click)="$event.stopPropagation(); openDialog('editListNode', labels[0].value, iri)">
+                    (click)="editResourceProperty.emit(propDef)">
                 <mat-icon>edit</mat-icon>
             </button>
-            <button mat-button
+            <button mat-button [disabled]="resClasses.length > 0"
                     class="delete"
                     title="delete"
-                    (click)="$event.stopPropagation(); openDialog('deleteListNode', labels[0].value, iri)">
+                    (click)="deleteResourceProperty.emit({iri: propDef.id, label: propDef.label})">
                 <mat-icon>delete</mat-icon>
             </button>
         </div>

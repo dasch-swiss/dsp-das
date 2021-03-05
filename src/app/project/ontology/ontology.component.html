@@ -175,7 +175,11 @@
                         <span *ngFor="let prop of ontoProperties">
                             <!-- display only properties with guiOrder and if they exist in list of properties;
                                      objectType is not a linkValue (otherwise we have the property twice) -->
-                            <app-property-info [propDef]="ontology?.properties[prop.id]" [projectcode]="projectcode">
+                            <app-property-info
+                                [propDef]="ontology?.properties[prop.id]"
+                                [projectcode]="projectcode"
+                                (editResourceProperty)="openPropertyForm('editProperty', $event)"
+                                (deleteResourceProperty)="delete('Property', $event)">
                             </app-property-info>
                         </span>
                         <!-- <mat-list-item *ngFor="let prop of ontoProperties">{{prop.label}}</mat-list-item> -->
