@@ -139,7 +139,7 @@ export class ListInfoFormComponent implements OnInit {
     }
 
     /**
-     * Reset the form
+     * reset the form
      */
     resetLists(ev: Event, list?: ListNodeInfo) {
 
