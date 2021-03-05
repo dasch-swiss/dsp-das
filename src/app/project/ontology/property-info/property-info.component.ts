@@ -48,7 +48,6 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
     ) { }
 
     ngOnInit(): void {
-        console.log(this.propDef);
 
         // convert cardinality from js-lib convention to app convention
         // if cardinality is defined; only in resource class view
