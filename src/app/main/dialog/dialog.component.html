@@ -278,6 +278,14 @@
         </app-resource-class-form>
     </div>
 
+    <div *ngSwitchCase="'editProperty'">
+        <app-dialog-header [title]="data.title" [subtitle]="data.subtitle">
+        </app-dialog-header>
+        <app-property-form [iri]="data.id" [name]="data.title" [projectIri]="data.project"
+            [showResourceClassForm]="false" [edit]="true" (closeDialog)="dialogRef.close()">
+        </app-property-form>
+    </div>
+
 
     <div *ngSwitchCase="'deleteProperty'">
         <app-dialog-header [title]="data.title" [subtitle]="'Delete property'"></app-dialog-header>

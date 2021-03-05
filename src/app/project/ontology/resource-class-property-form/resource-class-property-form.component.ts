@@ -5,7 +5,6 @@ import {
     ApiResponseError,
     ClassDefinition,
     Constants,
-
     ListNodeInfo,
     ReadOntology,
     ResourcePropertyDefinition
@@ -17,15 +16,12 @@ import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from '../default-data/default-properties';
 
-// https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
-// const resolvedPromise = Promise.resolve(null);
-
 @Component({
-    selector: 'app-property-form',
-    templateUrl: './property-form.component.html',
-    styleUrls: ['./property-form.component.scss']
+    selector: 'app-resource-class-property-form',
+    templateUrl: './resource-class-property-form.component.html',
+    styleUrls: ['./resource-class-property-form.component.scss']
 })
-export class PropertyFormComponent implements OnInit {
+export class ResourceClassPropertyFormComponent implements OnInit {
 
     @Input() propertyForm: FormGroup;
 
@@ -182,7 +178,7 @@ export class PropertyFormComponent implements OnInit {
     }
 
     /**
-     * @param {AutocompleteItem} option
+     * @param {MatOption} option
      */
     updateFieldsDependingOnLabel(option: AutocompleteItem) {
         this.propertyForm.controls['iri'].setValue(option.iri);
@@ -255,5 +251,6 @@ export class PropertyFormComponent implements OnInit {
         this.propertyForm.controls['multiple'].reset();
         this.propertyForm.controls['required'].reset();
     }
+
 
 }

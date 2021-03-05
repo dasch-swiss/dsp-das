@@ -33,17 +33,18 @@
 
         </span>
     </div>
-    <div class="action-bubble" *ngIf="!propCard">
+    <div class="action-bubble" *ngIf="!propCard && editable">
         <div class="button-container">
-            <button mat-button
+            <button mat-button [disabled]="!propDef.isEditable"
                     class="edit"
                     title="edit"
+                    [matTooltip]="'Edit property'"
                     (click)="editResourceProperty.emit(propDef)">
                 <mat-icon>edit</mat-icon>
             </button>
             <button mat-button [disabled]="resClasses.length > 0"
                     class="delete"
-                    title="delete"
+                    [matTooltip]="(resClasses.length > 0 ? 'The property can\'t be deleted because it\'s used in a class already' : 'Delete property')"
                     (click)="deleteResourceProperty.emit({iri: propDef.id, label: propDef.label})">
                 <mat-icon>delete</mat-icon>
             </button>

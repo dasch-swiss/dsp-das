@@ -26,6 +26,8 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
 
     @Input() projectcode: string;
 
+    @Input() editable = false;
+
     @Output() editResourceProperty: EventEmitter<ResourcePropertyDefinitionWithAllLanguages> = new EventEmitter<ResourcePropertyDefinitionWithAllLanguages>();
     @Output() deleteResourceProperty: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
 
@@ -33,10 +35,10 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
 
     propType: DefaultProperty;
 
+    propAttribute: string;
+
     // list of default property types
     propertyTypes: PropertyCategory[] = DefaultProperties.data;
-
-    propAttribute: string;
 
     // list of resource classes where the property is used
     resClasses: ResourceClassDefinitionWithAllLanguages[] = [];
@@ -46,6 +48,8 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
     ) { }
 
     ngOnInit(): void {
+        console.log(this.propDef);
+
         // convert cardinality from js-lib convention to app convention
         // if cardinality is defined; only in resource class view
         if (this.propCard) {

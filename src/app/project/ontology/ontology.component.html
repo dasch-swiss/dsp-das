@@ -178,6 +178,7 @@
                             <app-property-info
                                 [propDef]="ontology?.properties[prop.id]"
                                 [projectcode]="projectcode"
+                                [editable]="(ontology.lastModificationDate)"
                                 (editResourceProperty)="openPropertyForm('editProperty', $event)"
                                 (deleteResourceProperty)="delete('Property', $event)">
                             </app-property-info>

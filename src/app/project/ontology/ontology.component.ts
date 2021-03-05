@@ -393,7 +393,7 @@ export class OntologyComponent implements OnInit {
     openPropertyForm(mode: 'createProperty' | 'editProperty', propertyInfo: DefaultProperty): void {
 
         const dialogConfig: MatDialogConfig = {
-            disableClose: true,
+            disableClose: false,
             width: '840px',
             maxHeight: '90vh',
             position: {
