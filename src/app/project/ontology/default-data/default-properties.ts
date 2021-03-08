@@ -1,10 +1,27 @@
-import { Constants } from '@dasch-swiss/dsp-js';
+import { Constants, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 
+/**
+ * property object with all information to create or edit a property
+ */
+export interface PropertyInfoObject {
+    propDef: ResourcePropertyDefinitionWithAllLanguages;
+    propType: DefaultProperty;
+}
+
+/**
+ * property category can be
+ * text, list, data and time, number, link, location and shape
+ */
 export interface PropertyCategory {
     group: string;
     elements: DefaultProperty[];
 }
 
+/**
+ * own default property defined for the gui
+ * with this information we can build the correct
+ * property object to send it to the API
+ */
 export interface DefaultProperty {
     icon: string;
     label: string;

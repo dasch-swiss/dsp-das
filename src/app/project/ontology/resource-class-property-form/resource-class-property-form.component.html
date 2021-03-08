@@ -2,7 +2,7 @@
     <span class="index">{{index + 1}}) &nbsp;</span>
 
     <!-- Property name; will be used for prop id/iri -->
-    <!-- name is a kind of ID, but it's a hidden field auto updated in case of already existing property selected by label -->
+    <!-- name is a kind of ID, but it's a hidden field, auto updated in case of already existing property selected by label -->
     <mat-form-field class="small-field hidden">
         <input matInput placeholder="Property iri" formControlName="iri">
     </mat-form-field>
@@ -19,7 +19,7 @@
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="updateFieldsDependingOnLabel($event.option.value)" [matTooltip]="existingProperty ? 'Visible' : null">
         <mat-option *ngFor="let prop of filteredProperties | async" [value]="prop"
             matTooltip="Label: {{ prop?.label }} (Name is part of the id: {{prop?.name}})" matTooltipPosition="after">
-            {{ prop?.label }}
+            {{ prop?.labels | dspStringifyStringLiteral:'all' }}
         </mat-option>
     </mat-autocomplete>
 

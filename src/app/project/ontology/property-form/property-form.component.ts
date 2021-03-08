@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import {
     ApiResponseError,
@@ -8,7 +8,9 @@ import {
 
     ListNodeInfo,
     ReadOntology,
-    ResourcePropertyDefinition
+    ResourcePropertyDefinition,
+    ResourcePropertyDefinitionWithAllLanguages,
+    StringLiteral
 } from '@dasch-swiss/dsp-js';
 import { AutocompleteItem } from '@dasch-swiss/dsp-ui';
 import { Observable } from 'rxjs';
@@ -17,9 +19,6 @@ import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from '../default-data/default-properties';
 
-// https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
-// const resolvedPromise = Promise.resolve(null);
-
 @Component({
     selector: 'app-property-form',
     templateUrl: './property-form.component.html',
@@ -27,23 +26,50 @@ import { DefaultProperties, DefaultProperty, PropertyCategory } from '../default
 })
 export class PropertyFormComponent implements OnInit {
 
-    @Input() propertyForm: FormGroup;
+    /**
+    * only in edit mode: iri of resource property
+    */
+    @Input() iri: string;
 
-    @Input() index: number;
 
-    @Input() ontology?: ReadOntology;
+    /**
+     * name of resource class e.g. Still image
+     * this will be used to update title of resource class form
+     */
+    @Input() type: DefaultProperty;
 
-    @Input() resClassIri?: string;
+    @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
-    @Input() edit = false;
+    propDef: ResourcePropertyDefinitionWithAllLanguages;
 
-    @Output() deleteProperty: EventEmitter<number> = new EventEmitter();
+    // @Input()
+    /**
+     * form group, errors and validation messages
+     */
+    propertyForm: FormGroup;
 
-    iri = new FormControl();
-    label = new FormControl();
-    type = new FormControl();
-    multiple = new FormControl();
-    required = new FormControl();
+    formErrors = {
+        'label': ''
+    };
+
+    validationMessages = {
+        'label': {
+            'required': 'Label is required.',
+        }
+    };
+
+
+    edit = false;
+
+    ontology: ReadOntology;
+
+    // @Output() deleteProperty: EventEmitter<number> = new EventEmitter();
+
+    // iri = new FormControl();
+    // label = new FormControl();
+    // type = new FormControl();
+    // multiple = new FormControl();
+    // required = new FormControl();
 
     // selection of default property types
     propertyTypes: PropertyCategory[] = DefaultProperties.data;
@@ -68,23 +94,29 @@ export class PropertyFormComponent implements OnInit {
 
     loading = false;
 
+    error = false;
+
+    labels: StringLiteral[];
+    comments: StringLiteral[];
+
     dspConstants = Constants;
 
     constructor(
         private _cache: CacheService,
-        private _errorHandler: ErrorHandlerService
+        private _errorHandler: ErrorHandlerService,
+        private _fb: FormBuilder
     ) { }
 
     ngOnInit() {
 
-        if (this.propertyForm) {
+        if (this.iri) {
             // init list of property types with first element
             this.propertyForm.patchValue({ type: this.propertyTypes[0].elements[0] });
 
             if (this.propertyForm.value.label) {
 
                 const existingProp: AutocompleteItem = {
-                    iri: this.propertyForm.value.iri,
+                    iri: this.iri,
                     label: this.propertyForm.value.label,
                     name: ''
                 };
@@ -112,7 +144,7 @@ export class PropertyFormComponent implements OnInit {
                 const propKeys: string[] = Object.keys(response.properties);
                 for (const p of propKeys) {
                     const prop = this.ontology.properties[p];
-                    if (prop.objectType !== Constants.LinkValue && prop.objectType !== this.resClassIri) {
+                    if (prop.objectType !== Constants.LinkValue) {
                         const existingProperty: AutocompleteItem = {
                             iri: this.ontology.properties[p].id,
                             name: this.ontology.properties[p].id.split('#')[1],
@@ -142,6 +174,71 @@ export class PropertyFormComponent implements OnInit {
                 startWith(''),
                 map(prop => prop.length >= 0 ? this.filter(this.properties, prop) : [])
             );
+    }
+
+    buildForm() {
+        this.propertyForm = this._fb.group({
+            'label': new FormControl({
+                value: this.propDef.labels
+            }, [
+                Validators.required
+            ]),
+            'comment': new FormControl({
+                value: this.propDef.comment
+            }, [
+                Validators.required // --> TODO: really required???
+            ]),
+            'type': new FormControl({
+                value: this.type
+            }, [
+                Validators.required,
+            ]),
+            'attribute': new FormControl({
+                value: this.propDef.guiAttributes
+            })
+        });
+
+        this.propertyForm.valueChanges
+            .subscribe(data => this.onValueChanged(data));
+    }
+
+    /**
+     * this method is for the form error handling
+     *
+     * @param data Data which changed.
+     */
+    onValueChanged(data?: any) {
+
+        if (!this.propertyForm) {
+            return;
+        }
+
+        const form = this.propertyForm;
+
+        Object.keys(this.formErrors).map(field => {
+            this.formErrors[field] = '';
+            const control = form.get(field);
+            if (control && control.dirty && !control.valid) {
+                const messages = this.validationMessages[field];
+                Object.keys(control.errors).map(key => {
+                    this.formErrors[field] += messages[key] + ' ';
+                });
+
+            }
+        });
+    }
+
+    handleData(data: StringLiteral[], type: string) {
+
+        switch (type) {
+            case 'labels':
+                this.labels = data;
+                break;
+
+            case 'comments':
+                this.comments = data;
+                break;
+        }
     }
 
     /**
@@ -254,6 +351,10 @@ export class PropertyFormComponent implements OnInit {
 
         this.propertyForm.controls['multiple'].reset();
         this.propertyForm.controls['required'].reset();
+    }
+
+    submitData() {
+        // do something with your data
     }
 
 }

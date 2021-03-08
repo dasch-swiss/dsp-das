@@ -51,7 +51,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     @Input() iri: string;
 
     /**
-     * name of resource class e.g. Still image
+     * name of resource class type e.g. Still image
      * this will be used to update title of resource class form
      */
     @Input() name: string;

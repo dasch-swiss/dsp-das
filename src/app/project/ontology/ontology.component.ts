@@ -26,7 +26,7 @@ import { DspApiConnectionToken, Session, SessionService, SortingService } from '
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
-import { DefaultProperties, DefaultProperty, PropertyCategory } from './default-data/default-properties';
+import { DefaultProperties, DefaultProperty, PropertyCategory, PropertyInfoObject } from './default-data/default-properties';
 import { DefaultClass, DefaultResourceClasses } from './default-data/default-resource-classes';
 import { ResourceClassFormService } from './resource-class-form/resource-class-form.service';
 
@@ -390,7 +390,7 @@ export class OntologyComponent implements OnInit {
      * @param mode
      * @param propertyInfo (could be subClassOf (create mode) or resource class itself (edit mode))
      */
-    openPropertyForm(mode: 'createProperty' | 'editProperty', propertyInfo: DefaultProperty): void {
+    openPropertyForm(mode: 'createProperty' | 'editProperty', propertyInfo: PropertyInfoObject): void {
 
         const dialogConfig: MatDialogConfig = {
             disableClose: false,
@@ -399,7 +399,7 @@ export class OntologyComponent implements OnInit {
             position: {
                 top: '112px'
             },
-            data: { title: propertyInfo.label, subtitle: 'Customize property', mode: mode, project: this.project.id }
+            data: { title: propertyInfo.propDef.label, subtitle: 'Customize property', mode: mode, project: this.project.id }
         };
 
         const dialogRef = this._dialog.open(
