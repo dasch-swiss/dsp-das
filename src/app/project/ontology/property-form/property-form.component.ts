@@ -5,7 +5,6 @@ import {
     ApiResponseError,
     ClassDefinition,
     Constants,
-
     ListNodeInfo,
     ReadOntology,
     ResourcePropertyDefinition,
