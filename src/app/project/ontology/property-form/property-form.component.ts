@@ -1,3 +1,4 @@
+import { Inject } from '@angular/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
@@ -5,18 +6,23 @@ import {
     ApiResponseError,
     ClassDefinition,
     Constants,
+    KnoraApiConnection,
     ListNodeInfo,
+    PropertyDefinition,
     ReadOntology,
     ResourcePropertyDefinition,
     ResourcePropertyDefinitionWithAllLanguages,
-    StringLiteral
+    StringLiteral,
+    UpdateOntology,
+    UpdateResourcePropertyComment,
+    UpdateResourcePropertyLabel
 } from '@dasch-swiss/dsp-js';
-import { AutocompleteItem } from '@dasch-swiss/dsp-ui';
+import { AutocompleteItem, DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
-import { DefaultProperties, DefaultProperty, PropertyCategory } from '../default-data/default-properties';
+import { DefaultProperties, DefaultProperty, PropertyCategory, PropertyInfoObject } from '../default-data/default-properties';
 
 @Component({
     selector: 'app-property-form',
@@ -25,11 +31,12 @@ import { DefaultProperties, DefaultProperty, PropertyCategory } from '../default
 })
 export class PropertyFormComponent implements OnInit {
 
+    @Input() propertyInfo: PropertyInfoObject;
+
     /**
     * only in edit mode: iri of resource property
     */
     @Input() iri: string;
-
 
     /**
      * name of resource class e.g. Still image
@@ -41,7 +48,6 @@ export class PropertyFormComponent implements OnInit {
 
     propDef: ResourcePropertyDefinitionWithAllLanguages;
 
-    // @Input()
     /**
      * form group, errors and validation messages
      */
@@ -61,6 +67,7 @@ export class PropertyFormComponent implements OnInit {
     edit = false;
 
     ontology: ReadOntology;
+    lastModificationDate: string;
 
     // @Output() deleteProperty: EventEmitter<number> = new EventEmitter();
 
@@ -82,9 +89,9 @@ export class PropertyFormComponent implements OnInit {
     resourceClass: ClassDefinition[] = [];
 
     // list of existing properties
-    properties: AutocompleteItem[] = [];
+    existingProps: AutocompleteItem[] = [];
 
-    filteredProperties: Observable<AutocompleteItem[]>;
+    filteredProps: Observable<AutocompleteItem[]>;
 
     selectTypeLabel: string; // = this.propertyTypes[0].group + ': ' + this.propertyTypes[0].elements[0].label;
     selectedGroup: string;
@@ -101,6 +108,7 @@ export class PropertyFormComponent implements OnInit {
     dspConstants = Constants;
 
     constructor(
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _errorHandler: ErrorHandlerService,
         private _fb: FormBuilder
@@ -108,81 +116,107 @@ export class PropertyFormComponent implements OnInit {
 
     ngOnInit() {
 
-        if (this.iri) {
-            // init list of property types with first element
-            this.propertyForm.patchValue({ type: this.propertyTypes[0].elements[0] });
+        this.loading = true;
 
-            if (this.propertyForm.value.label) {
+        // this.buildForm();
+        // console.log(this.propertyInfo);
 
-                const existingProp: AutocompleteItem = {
-                    iri: this.iri,
-                    label: this.propertyForm.value.label,
-                    name: ''
-                };
+        // if property definition exists
+        // we are in edit mode: prepare form to edit label and/or comment
+        if (this.propertyInfo.propDef) {
+            this.labels = this.propertyInfo.propDef.labels;
+            this.comments = this.propertyInfo.propDef.comments;
 
-                // edit mode: this prop value exists already
-                this.loading = true;
-                this.updateFieldsDependingOnLabel(existingProp);
-            }
+            this.loading = false;
         }
+
+
+        //     // get property from current ontology
 
         this._cache.get('currentOntology').subscribe(
             (response: ReadOntology) => {
                 this.ontology = response;
-
-                // set various lists to select from
-                // a) in case of link value:
-                // set list of resource classes from response; needed for linkValue
-                const classKeys: string[] = Object.keys(response.classes);
-                for (const c of classKeys) {
-                    this.resourceClass.push(this.ontology.classes[c]);
-                }
-
-                // b) in case of already existing label:
-                // set list of properties from response; needed for autocomplete in label to reuse existing property
-                const propKeys: string[] = Object.keys(response.properties);
-                for (const p of propKeys) {
-                    const prop = this.ontology.properties[p];
-                    if (prop.objectType !== Constants.LinkValue) {
-                        const existingProperty: AutocompleteItem = {
-                            iri: this.ontology.properties[p].id,
-                            name: this.ontology.properties[p].id.split('#')[1],
-                            label: this.ontology.properties[p].label
-                        };
-
-                        this.properties.push(existingProperty);
-                    }
-
-                }
+                this.lastModificationDate = response.lastModificationDate;
             },
             (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
+                console.error(error);
             }
         );
 
-        // c) in case of list value:
-        // set list of lists; needed for listValue
-        this._cache.get('currentOntologyLists').subscribe(
-            (response: ListNodeInfo[]) => {
-                this.lists = response;
-            }
-        );
+        //     // init list of property types with first element
+        //     this.propertyForm.patchValue({ type: this.propertyTypes[0].elements[0] });
 
-        this.filteredProperties = this.propertyForm.controls['label'].valueChanges
-            .pipe(
-                startWith(''),
-                map(prop => prop.length >= 0 ? this.filter(this.properties, prop) : [])
-            );
+        //     if (this.propertyForm.value.label) {
+
+        //         const existingProp: AutocompleteItem = {
+        //             iri: this.propertyInfo.propDef.id,
+        //             label: this.propertyForm.value.label,
+        //             name: ''
+        //         };
+
+        //         // edit mode: this prop value exists already
+        //         this.loading = true;
+        //         this.updateFieldsDependingOnLabel(existingProp);
+        //     }
+        // }
+
+        // this._cache.get('currentOntology').subscribe(
+        //     (response: ReadOntology) => {
+        //         this.ontology = response;
+
+        //         // set various lists to select from
+        //         // a) in case of link value:
+        //         // set list of resource classes from response; needed for linkValue
+        //         const classKeys: string[] = Object.keys(response.classes);
+        //         for (const c of classKeys) {
+        //             this.resourceClass.push(this.ontology.classes[c]);
+        //         }
+
+        //         // b) in case of already existing label:
+        //         // set list of properties from response; needed for autocomplete in label to reuse existing property
+        //         const propKeys: string[] = Object.keys(response.properties);
+        //         for (const p of propKeys) {
+        //             const prop = this.ontology.properties[p];
+        //             if (prop.objectType !== Constants.LinkValue) {
+        //                 const existingProperty: AutocompleteItem = {
+        //                     iri: this.ontology.properties[p].id,
+        //                     name: this.ontology.properties[p].id.split('#')[1],
+        //                     label: this.ontology.properties[p].label
+        //                 };
+
+        //                 this.existingProps.push(existingProperty);
+        //             }
+
+        //         }
+        //     },
+        //     (error: ApiResponseError) => {
+        //         this._errorHandler.showMessage(error);
+        //     }
+        // );
+
+        // // c) in case of list value:
+        // // set list of lists; needed for listValue
+        // this._cache.get('currentOntologyLists').subscribe(
+        //     (response: ListNodeInfo[]) => {
+        //         this.lists = response;
+        //     }
+        // );
+
+        // this.filteredProps = this.propertyForm.controls['label'].valueChanges
+        //     .pipe(
+        //         startWith(''),
+        //         map(prop => prop.length >= 0 ? this.filter(this.existingProps, prop) : [])
+        //     );
     }
 
     buildForm() {
         this.propertyForm = this._fb.group({
-            'label': new FormControl({
-                value: this.propDef.labels
+            'labels': new FormControl({
+                value: this.propDef.label
             }, [
                 Validators.required
             ]),
-            'comment': new FormControl({
+            'comments': new FormControl({
                 value: this.propDef.comment
             }, [
                 Validators.required // --> TODO: really required???
@@ -354,6 +388,56 @@ export class PropertyFormComponent implements OnInit {
 
     submitData() {
         // do something with your data
+        if (this.propertyInfo.propDef) {
+            // edit mode: res property info (label and comment)
+            // label
+            const onto4Label = new UpdateOntology<UpdateResourcePropertyLabel>();
+            onto4Label.id = this.ontology.id;
+            onto4Label.lastModificationDate = this.lastModificationDate;
+
+            const updateLabel = new UpdateResourcePropertyLabel();
+            updateLabel.id = this.propertyInfo.propDef.id;
+            updateLabel.labels = this.labels;
+            onto4Label.entity = updateLabel;
+
+            // comment
+            const onto4Comment = new UpdateOntology<UpdateResourcePropertyComment>();
+            onto4Comment.id = this.ontology.id;
+
+            const updateComment = new UpdateResourcePropertyComment();
+            updateComment.id = this.propertyInfo.propDef.id;
+            updateComment.comments = this.comments;
+            onto4Comment.entity = updateComment;
+
+            this._dspApiConnection.v2.onto.updateResourceProperty(onto4Label).subscribe(
+                (classLabelResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+                    this.ontology.lastModificationDate = classLabelResponse.lastModificationDate;
+                    onto4Comment.lastModificationDate = this.ontology.lastModificationDate;
+
+                    this._dspApiConnection.v2.onto.updateResourceProperty(onto4Comment).subscribe(
+                        (classCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+                            this.ontology.lastModificationDate = classCommentResponse.lastModificationDate;
+
+                            // close the dialog box
+                            this.loading = false;
+                            this.closeDialog.emit();
+                        },
+                        (error: ApiResponseError) => {
+                            this._errorHandler.showMessage(error);
+                        }
+                    );
+
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
+
+        } else {
+            // create mode: new property incl. gui type and attribute
+            // submit property
+            // this.submitProps(this.resourceClassForm.value.properties, this.propertyInfo.propDef.id);
+        }
     }
 
 }

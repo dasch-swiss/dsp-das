@@ -4,7 +4,7 @@ import { Constants, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-sw
  * property object with all information to create or edit a property
  */
 export interface PropertyInfoObject {
-    propDef: ResourcePropertyDefinitionWithAllLanguages;
+    propDef?: ResourcePropertyDefinitionWithAllLanguages;
     propType: DefaultProperty;
 }
 

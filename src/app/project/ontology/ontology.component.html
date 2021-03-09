@@ -57,7 +57,8 @@
         <mat-toolbar class="ontology-editor-header">
             <mat-toolbar-row>
                 <span class="ontology-info">
-                    <h3 class="mat-title space-reducer" [matTooltip]="ontology.id" matTooltipPosition="above">{{ontology?.label}}</h3>
+                    <h3 class="mat-title space-reducer" [matTooltip]="ontology.id" matTooltipPosition="above">
+                        {{ontology?.label}}</h3>
                     <p class="mat-caption" [matTooltip]="'Last modification date: ' + ontology.lastModificationDate"
                         matTooltipPosition="above">
                         <span *ngIf="ontology.lastModificationDate; else noModificationDate">
@@ -120,20 +121,26 @@
                 <mat-list>
                     <a mat-list-item routerLinkActive="active" [routerLink]="'../classes'"
                         (click)="view = 'classes'">Classes</a>
-                    <span mat-list-item *ngIf="project?.status && (sysAdmin || projectAdmin) && ontologyIri"
-                        [matTooltip]="'This data model can\'t be edited because of missing \'lastModificationDate\'!'"
-                        [matTooltipDisabled]="ontology.lastModificationDate">
-                        <button mat-button *ngIf="view === 'classes'" [matMenuTriggerFor]="addResClassMenu"
-                            [disabled]="!ontology.lastModificationDate">
-                            <mat-icon>add</mat-icon>
-                            Create new class
+                    <span *ngIf="view === 'classes'">
+                        <button mat-button (click)="expandClasses = !expandClasses">
+                            <mat-icon>{{expandClasses ? 'compress' : 'expand'}}</mat-icon>
+                            {{expandClasses ? "Compress all" : "Expand all"}}
                         </button>
-                        <mat-menu #addResClassMenu="matMenu" xPosition="before">
-                            <button mat-menu-item *ngFor="let type of defaultClasses"
-                                (click)="openResourceClassForm('addResourceClass', type)">
-                                <mat-icon>{{type.icons[0]}}</mat-icon> {{ type.label }}
+                        <span mat-list-item *ngIf="project?.status && (sysAdmin || projectAdmin) && ontologyIri"
+                            [matTooltip]="'This data model can\'t be edited because of missing \'lastModificationDate\'!'"
+                            [matTooltipDisabled]="ontology.lastModificationDate">
+                            <button mat-button [matMenuTriggerFor]="addResClassMenu"
+                                [disabled]="!ontology.lastModificationDate">
+                                <mat-icon>add</mat-icon>
+                                Create new class
                             </button>
-                        </mat-menu>
+                            <mat-menu #addResClassMenu="matMenu" xPosition="before">
+                                <button mat-menu-item *ngFor="let type of defaultClasses"
+                                    (click)="openResourceClassForm('addResourceClass', type)">
+                                    <mat-icon>{{type.icons[0]}}</mat-icon> {{ type.label }}
+                                </button>
+                            </mat-menu>
+                        </span>
                     </span>
                     <mat-divider></mat-divider>
                     <a mat-list-item routerLinkActive="active" [routerLink]="'../properties'"
@@ -148,7 +155,8 @@
                         </button>
                         <mat-menu #addResClassMenu="matMenu" xPosition="before">
                             <div *ngFor="let type of defaultProperties; let last = last" [label]="type.group">
-                                <button mat-menu-item *ngFor="let ele of type.elements" [value]="ele" (click)="openPropertyForm('addProperty', ele)">
+                                <button mat-menu-item *ngFor="let ele of type.elements" [value]="ele"
+                                    (click)="openPropertyForm('createProperty', {propType: ele})">
                                     <mat-icon>{{ele.icon}}</mat-icon> {{ele.label}}
                                 </button>
                                 <mat-divider *ngIf="!last"></mat-divider>
@@ -162,8 +170,8 @@
                 <div class="ontology-editor-grid" *ngIf="view === 'classes'">
 
                     <!-- list of resource classes -->
-                    <app-resource-class-info *ngFor="let resClass of ontoClasses"
-                        [resourceClass]="resClass"
+                    <app-resource-class-info *ngFor="let resClass of ontoClasses" [resourceClass]="resClass"
+                        [expanded]="expandClasses"
                         (editResourceClass)="openResourceClassForm('editResourceClass', $event)"
                         (updateCardinality)="updateCard($event)"
                         (deleteResourceClass)="delete('ResourceClass', $event)">
@@ -175,9 +183,7 @@
                         <span *ngFor="let prop of ontoProperties">
                             <!-- display only properties with guiOrder and if they exist in list of properties;
                                      objectType is not a linkValue (otherwise we have the property twice) -->
-                            <app-property-info
-                                [propDef]="ontology?.properties[prop.id]"
-                                [projectcode]="projectcode"
+                            <app-property-info [propDef]="ontology?.properties[prop.id]" [projectcode]="projectcode"
                                 [editable]="(ontology.lastModificationDate)"
                                 (editResourceProperty)="openPropertyForm('editProperty', $event)"
                                 (deleteResourceProperty)="delete('Property', $event)">

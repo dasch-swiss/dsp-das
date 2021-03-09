@@ -71,6 +71,7 @@ export class OntologyComponent implements OnInit {
     ontology: ReadOntology;
 
     ontoClasses: ClassDefinition[];
+    expandClasses = false;
 
     ontoProperties: PropertyDefinition[];
 
@@ -392,14 +393,16 @@ export class OntologyComponent implements OnInit {
      */
     openPropertyForm(mode: 'createProperty' | 'editProperty', propertyInfo: PropertyInfoObject): void {
 
+        const title = (propertyInfo.propDef ? propertyInfo.propDef.label : propertyInfo.propType.label);
+
         const dialogConfig: MatDialogConfig = {
             disableClose: false,
-            width: '840px',
+            width: '640px',
             maxHeight: '90vh',
             position: {
                 top: '112px'
             },
-            data: { title: propertyInfo.propDef.label, subtitle: 'Customize property', mode: mode, project: this.project.id }
+            data: { propInfo: propertyInfo, title: title, subtitle: 'Customize property', mode: mode, project: this.project.id }
         };
 
         const dialogRef = this._dialog.open(

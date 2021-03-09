@@ -1,4 +1,4 @@
-<mat-list-item>
+<mat-list-item (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
     <span *ngIf="propCard && propCard.guiOrder >=0" mat-list-icon class="order additional-info">{{propCard.guiOrder}})</span>
 
     <div mat-line class="title">
@@ -6,10 +6,15 @@
             <mat-icon class="type">{{propType?.icon}}</mat-icon>
         </span>
         <span class="label" [matTooltip]="propDef.comment" matTooltipPosition="above">
-            {{propDef?.label}} <span *ngIf="!propDef.label">{{propDef.id}}</span>
+            {{propCard ? propDef?.label : propDef?.labels | dspStringifyStringLiteral:'all'}} <span *ngIf="!propDef.label">{{propDef.id}}</span>
         </span>
         <!-- property is linked to a class or to a list: display connected class or list -->
-        <span class="attribute additional-info" *ngIf="propAttribute" [innerHTML]="'&rarr;&nbsp;' + propAttribute"></span>
+        <span class="attribute additional-info"
+            *ngIf="propAttribute"
+            [matTooltip]="propAttributeComment"
+            matTooltipPosition="above"
+            [innerHTML]="'&rarr;&nbsp;' + propAttribute">
+        </span>
     </div>
     <div mat-line class="info additional-info">
         <!-- in case of res class: display cardinality -->
@@ -33,7 +38,7 @@
 
         </span>
     </div>
-    <div class="action-bubble" *ngIf="!propCard && editable">
+    <div class="action-bubble" *ngIf="!propCard && ontology?.lastModificationDate && showActionBubble" [@simpleFadeAnimation]="'in'">
         <div class="button-container">
             <button mat-button [disabled]="!propDef.isEditable"
                     class="edit"
