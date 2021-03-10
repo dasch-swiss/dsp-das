@@ -11,7 +11,7 @@ export class DefaultResourceClasses {
     public static data: DefaultClass[] = [
         {
             iri: Constants.Resource,
-            label: 'Object without file representation (metadata only)',
+            label: 'Object without representation',
             icons: [
                 'person',
                 'person_outline',

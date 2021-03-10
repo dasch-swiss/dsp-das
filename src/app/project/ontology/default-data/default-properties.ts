@@ -123,7 +123,7 @@ export class DefaultProperties {
                     label: 'Time',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.TimeValue,
-                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Interval',
+                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'TimeStamp',
                     group: 'Date / Time'
                 },
                 {
@@ -162,8 +162,16 @@ export class DefaultProperties {
             elements: [
                 {
                     icon: 'link',
-                    label: 'Other resource e.g. Person',
+                    label: 'Other resource class',
                     subPropOf: Constants.HasLinkTo,
+                    objectType: Constants.LinkValue,
+                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Searchbox',    // 'Autocomplete',
+                    group: 'Link'
+                },
+                {
+                    icon: 'picture_in_picture',
+                    label: 'Part of resource class',
+                    subPropOf: Constants.KnoraApiV2 + Constants.HashDelimiter + 'isPartOf',
                     objectType: Constants.LinkValue,
                     guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Searchbox',    // 'Autocomplete',
                     group: 'Link'
@@ -208,6 +216,14 @@ export class DefaultProperties {
                     subPropOf: Constants.HasValue,
                     objectType: Constants.ColorValue,
                     guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Colorpicker',
+                    group: 'Shape'
+                },
+                {
+                    icon: 'format_shapes',
+                    label: 'Geometry',
+                    subPropOf: Constants.HasValue,
+                    objectType: Constants.GeomValue,
+                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Geometry',
                     group: 'Shape'
                 }
             ]
