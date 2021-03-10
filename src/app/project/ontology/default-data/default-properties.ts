@@ -120,7 +120,7 @@ export class DefaultProperties {
                 },
                 {
                     icon: 'access_time',
-                    label: 'Time',
+                    label: 'Timestamp',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.TimeValue,
                     guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'TimeStamp',
@@ -162,7 +162,7 @@ export class DefaultProperties {
             elements: [
                 {
                     icon: 'link',
-                    label: 'Other resource class',
+                    label: 'Resource class',
                     subPropOf: Constants.HasLinkTo,
                     objectType: Constants.LinkValue,
                     guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Searchbox',    // 'Autocomplete',
