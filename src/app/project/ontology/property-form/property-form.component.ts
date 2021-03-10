@@ -81,6 +81,7 @@ export class PropertyFormComponent implements OnInit {
     propertyTypes: PropertyCategory[] = DefaultProperties.data;
 
     showGuiAttr = false;
+    guiAttrIcon = 'tune';
 
     // list of project specific lists (TODO: probably we have to add default knora lists?!)
     lists: ListNodeInfo[];
@@ -118,7 +119,6 @@ export class PropertyFormComponent implements OnInit {
 
         this.loading = true;
 
-        // this.buildForm();
         // console.log(this.propertyInfo);
 
         // if property definition exists
@@ -126,8 +126,6 @@ export class PropertyFormComponent implements OnInit {
         if (this.propertyInfo.propDef) {
             this.labels = this.propertyInfo.propDef.labels;
             this.comments = this.propertyInfo.propDef.comments;
-
-            this.loading = false;
         }
 
 
@@ -142,6 +140,8 @@ export class PropertyFormComponent implements OnInit {
                 console.error(error);
             }
         );
+
+        this.buildForm();
 
         //     // init list of property types with first element
         //     this.propertyForm.patchValue({ type: this.propertyTypes[0].elements[0] });
@@ -160,47 +160,47 @@ export class PropertyFormComponent implements OnInit {
         //     }
         // }
 
-        // this._cache.get('currentOntology').subscribe(
-        //     (response: ReadOntology) => {
-        //         this.ontology = response;
+        this._cache.get('currentOntology').subscribe(
+            (response: ReadOntology) => {
+                this.ontology = response;
 
-        //         // set various lists to select from
-        //         // a) in case of link value:
-        //         // set list of resource classes from response; needed for linkValue
-        //         const classKeys: string[] = Object.keys(response.classes);
-        //         for (const c of classKeys) {
-        //             this.resourceClass.push(this.ontology.classes[c]);
-        //         }
+                // set various lists to select from
+                // a) in case of link value:
+                // set list of resource classes from response; needed for linkValue
+                const classKeys: string[] = Object.keys(response.classes);
+                for (const c of classKeys) {
+                    this.resourceClass.push(this.ontology.classes[c]);
+                }
 
-        //         // b) in case of already existing label:
-        //         // set list of properties from response; needed for autocomplete in label to reuse existing property
-        //         const propKeys: string[] = Object.keys(response.properties);
-        //         for (const p of propKeys) {
-        //             const prop = this.ontology.properties[p];
-        //             if (prop.objectType !== Constants.LinkValue) {
-        //                 const existingProperty: AutocompleteItem = {
-        //                     iri: this.ontology.properties[p].id,
-        //                     name: this.ontology.properties[p].id.split('#')[1],
-        //                     label: this.ontology.properties[p].label
-        //                 };
+                // b) in case of already existing label:
+                // set list of properties from response; needed for autocomplete in label to reuse existing property
+                const propKeys: string[] = Object.keys(response.properties);
+                for (const p of propKeys) {
+                    const prop = this.ontology.properties[p];
+                    if (prop.objectType !== Constants.LinkValue) {
+                        const existingProperty: AutocompleteItem = {
+                            iri: this.ontology.properties[p].id,
+                            name: this.ontology.properties[p].id.split('#')[1],
+                            label: this.ontology.properties[p].label
+                        };
 
-        //                 this.existingProps.push(existingProperty);
-        //             }
+                        this.existingProps.push(existingProperty);
+                    }
 
-        //         }
-        //     },
-        //     (error: ApiResponseError) => {
-        //         this._errorHandler.showMessage(error);
-        //     }
-        // );
+                }
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+            }
+        );
 
-        // // c) in case of list value:
-        // // set list of lists; needed for listValue
-        // this._cache.get('currentOntologyLists').subscribe(
-        //     (response: ListNodeInfo[]) => {
-        //         this.lists = response;
-        //     }
-        // );
+        // c) in case of list value:
+        // set list of lists; needed for listValue
+        this._cache.get('currentOntologyLists').subscribe(
+            (response: ListNodeInfo[]) => {
+                this.lists = response;
+            }
+        );
 
         // this.filteredProps = this.propertyForm.controls['label'].valueChanges
         //     .pipe(
@@ -210,26 +210,30 @@ export class PropertyFormComponent implements OnInit {
     }
 
     buildForm() {
+        console.log(this.propertyInfo.propDef);
+
         this.propertyForm = this._fb.group({
             'labels': new FormControl({
-                value: this.propDef.label
+                value: this.propertyInfo.propDef.labels
             }, [
                 Validators.required
             ]),
             'comments': new FormControl({
-                value: this.propDef.comment
+                value: this.propertyInfo.propDef.comment
             }, [
                 Validators.required // --> TODO: really required???
             ]),
             'type': new FormControl({
-                value: this.type
+                value: this.propertyInfo.propType
             }, [
                 Validators.required,
             ]),
-            'attribute': new FormControl({
-                value: this.propDef.guiAttributes
+            'guiAttr': new FormControl({
+                value: this.propertyInfo.propDef.guiAttributes
             })
         });
+
+        this.updateAttributeField(this.propertyInfo.propType);
 
         this.propertyForm.valueChanges
             .subscribe(data => this.onValueChanged(data));
@@ -286,14 +290,14 @@ export class PropertyFormComponent implements OnInit {
         );
     }
 
-    updateAttributeField(event: MatSelectChange) {
+    updateAttributeField(type: DefaultProperty) {
 
         // reset value of guiAttr
         this.propertyForm.controls['guiAttr'].setValue(undefined);
         // depending on the selected property type,
         // we have to define gui element attributes
         // e.g. iri of list or connected resource class
-        switch (event.value.objectType) {
+        switch (type.objectType) {
             case Constants.ListValue:
             case Constants.LinkValue:
                 this.showGuiAttr = true;
@@ -309,81 +313,38 @@ export class PropertyFormComponent implements OnInit {
                 this.showGuiAttr = false;
         }
 
-    }
+        // set gui attribute value depending on gui element
+        switch (type.guiEle) {
+            // prop type is a list
+            case Constants.SalsahGui + Constants.HashDelimiter + 'List':
+            case Constants.SalsahGui + Constants.HashDelimiter + 'Radio':
+                // gui attribute value for lists looks as follow: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
+                // get index from guiAttr array where value starts with hlist=
+                const i = this.propertyInfo.propDef.guiAttributes.findIndex(element => element.includes('hlist'));
 
-    /**
-     * @param {AutocompleteItem} option
-     */
-    updateFieldsDependingOnLabel(option: AutocompleteItem) {
-        this.propertyForm.controls['iri'].setValue(option.iri);
+                // find content beteween pointy brackets to get list iri
+                const re = /\<([^)]+)\>/;
+                const listIri = this.propertyInfo.propDef.guiAttributes[i].match(re)[1];
 
-        // set label and disable the input
-        this.propertyForm.controls['label'].setValue(option.label);
-        this.propertyForm.controls['label'].disable();
+                this.showGuiAttr = true;
+                this.propertyForm.controls['guiAttr'].setValue(listIri);
+                this.propertyForm.controls['guiAttr'].disable();
+                break;
 
-        // find corresponding property type
+            // prop type is resource pointer
+            case Constants.SalsahGui + Constants.HashDelimiter + 'Searchbox':
 
-        if (this.ontology.properties[option.iri] instanceof ResourcePropertyDefinition) {
-            const tempProp: any | ResourcePropertyDefinition = this.ontology.properties[option.iri];
+                this.showGuiAttr = true;
+                this.propertyForm.controls['guiAttr'].setValue(this.propertyInfo.propDef.objectType);
+                this.propertyForm.controls['guiAttr'].disable();
+                break;
 
-            let obj: DefaultProperty;
-            // find gui ele from list of default property-types to set type value
-            for (const group of this.propertyTypes) {
-                obj = group.elements.find(i => i.guiEle === tempProp.guiElement && (i.objectType === tempProp.objectType || i.subPropOf === tempProp.subPropertyOf[0]));
-
-                if (obj) {
-                    this.propertyForm.controls['type'].setValue(obj);
-                    break;
-                }
-            }
-
-            switch (tempProp.guiElement) {
-                // prop type is a list
-                case Constants.SalsahGui + Constants.HashDelimiter + 'List':
-                case Constants.SalsahGui + Constants.HashDelimiter + 'Radio':
-                    // gui attribute value for lists looks as follow: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
-                    // get index from guiAttr array where value starts with hlist=
-                    const i = tempProp.guiAttributes.findIndex(element => element.includes('hlist'));
-
-                    // find content beteween pointy brackets to get list iri
-                    const re = /\<([^)]+)\>/;
-                    const listIri = tempProp.guiAttributes[i].match(re)[1];
-
-                    this.showGuiAttr = true;
-                    this.propertyForm.controls['guiAttr'].setValue(listIri);
-                    this.propertyForm.controls['guiAttr'].disable();
-                    break;
-
-                // prop type is resource pointer
-                case Constants.SalsahGui + Constants.HashDelimiter + 'Searchbox':
-
-                    this.showGuiAttr = true;
-                    this.propertyForm.controls['guiAttr'].setValue(tempProp.objectType);
-                    this.propertyForm.controls['guiAttr'].disable();
-                    break;
-
-                default:
-                    this.showGuiAttr = false;
-            }
+            default:
+                this.showGuiAttr = false;
         }
-        this.propertyForm.controls['type'].disable();
-        this.existingProperty = true;
-    }
 
-    resetProperty(ev: Event) {
-        ev.preventDefault();
-        this.existingProperty = false;
+        this.loading = false;
 
-        this.propertyForm.controls['iri'].reset();
-        this.propertyForm.controls['label'].setValue('');
-        this.propertyForm.controls['label'].enable();
-        this.propertyForm.controls['type'].setValue(this.propertyTypes[0].elements[0]);
-        this.propertyForm.controls['type'].enable();
-        this.propertyForm.controls['guiAttr'].setValue(undefined);
-        this.propertyForm.controls['guiAttr'].enable();
-
-        this.propertyForm.controls['multiple'].reset();
-        this.propertyForm.controls['required'].reset();
     }
 
     submitData() {

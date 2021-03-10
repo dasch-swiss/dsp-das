@@ -1,7 +1,7 @@
 <!-- content: Step 1 = define resource class -->
 <!-- <form [formGroup]="propertyForm"
 -->
-<div class="form-content" *ngIf="!loading">
+<form [formGroup]="propertyForm" class="form-content" *ngIf="!loading">
 
     <div class="center more-space-top">
 
@@ -17,9 +17,64 @@
 
         <!-- comment/description -->
         <div class="large-field string-literal-container more-space-top">
-            <dsp-string-literal-input [placeholder]="'Comment *'" [value]="propertyInfo.propDef.comments" [textarea]="true"
-                (dataChanged)="handleData($event, 'comments')"></dsp-string-literal-input>
+            <dsp-string-literal-input [placeholder]="'Comment *'" [value]="propertyInfo.propDef.comments"
+                [textarea]="true" (dataChanged)="handleData($event, 'comments')"></dsp-string-literal-input>
         </div>
+
+        <!-- property type -->
+        <mat-form-field *ngIf="propertyInfo.propType" class="large-field property-type more-space-top">
+            <span matPrefix class="property-type-icon">
+                <mat-icon>{{propertyInfo.propType?.icon}}</mat-icon>&nbsp;
+            </span>
+                <mat-label>Property type</mat-label>
+                <input matInput [value]="propertyInfo.propType.group + ': ' + propertyInfo.propType.label" [disabled]="true">
+        </mat-form-field>
+
+        <!-- depending on type: display gui attribute -->
+        <div *ngIf="showGuiAttr" [ngSwitch]="propertyInfo.propType.objectType">
+            <mat-form-field class="large-field property-type" *ngSwitchCase="dspConstants.ListValue">
+                <span matPrefix class="property-type-icon">
+                    <mat-icon>{{guiAttrIcon}}</mat-icon>&nbsp;
+                </span>
+                <mat-label>Select list</mat-label>
+                <mat-select formControlName="guiAttr">
+                    <mat-option *ngFor="let item of lists" [value]="item.id">
+                        {{item.labels[0].value}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="large-field property-type" *ngSwitchCase="dspConstants.LinkValue">
+                <span matPrefix class="property-type-icon">
+                    <mat-icon>{{guiAttrIcon}}</mat-icon>&nbsp;
+                </span>
+                <mat-label>Select resource class</mat-label>
+                <mat-select formControlName="guiAttr">
+                    <mat-option *ngFor="let item of resourceClass" [value]="item.id">
+                        {{item.label}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <!-- the gui-attribute for integer and decimal are not yet supported in the app -->
+            <mat-form-field class="large-field property-type"
+                *ngSwitchCase="propertyInfo.propType.objectType === dspConstants.IntValue || propertyInfo.propType.objectType === dspConstants.DecimalValue">
+                <span matPrefix class="property-type-icon">
+                    <mat-icon>{{guiAttrIcon}}</mat-icon>&nbsp;
+                </span>
+                <mat-label>Define range</mat-label>
+                <input matInput placeholder="min">
+                <input matInput placeholder="max">
+                <!-- <mat-select formControlName="guiAttr">
+                            <mat-option *ngFor="let item of resourceClass" [value]="item.id">
+                                {{item.label}}
+                            </mat-option>
+                        </mat-select> -->
+            </mat-form-field>
+
+            <!-- <div *ngSwitchDefault>{{propertyInfo.propType.subPropOf}} not yet implemented</div> -->
+        </div>
+
     </div>
 
     <!-- action buttons -->
@@ -36,5 +91,5 @@
             {{error ? 'Failed' : (edit ? 'Update' : 'Save')}}
         </button>
     </div>
-</div>
+</form>
 <!-- </form> -->
