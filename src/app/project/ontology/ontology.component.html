@@ -148,19 +148,23 @@
                     <span mat-list-item *ngIf="project?.status && (sysAdmin || projectAdmin) && ontologyIri"
                         [matTooltip]="'This data model can\'t be edited because of missing \'lastModificationDate\'!'"
                         [matTooltipDisabled]="ontology.lastModificationDate">
-                        <button mat-button *ngIf="view === 'properties'" [matMenuTriggerFor]="addResClassMenu"
+                        <button mat-button *ngIf="view === 'properties'" [matMenuTriggerFor]="addPropertyMenu"
                             [disabled]="!ontology.lastModificationDate">
                             <mat-icon>add</mat-icon>
                             Create new property
                         </button>
-                        <mat-menu #addResClassMenu="matMenu" xPosition="before">
-                            <div *ngFor="let type of defaultProperties; let last = last" [label]="type.group">
-                                <button mat-menu-item *ngFor="let ele of type.elements" [value]="ele"
-                                    (click)="openPropertyForm('createProperty', {propType: ele})">
-                                    <mat-icon>{{ele.icon}}</mat-icon> {{ele.label}}
-                                </button>
-                                <mat-divider *ngIf="!last"></mat-divider>
-                            </div>
+                        <mat-menu #addPropertyMenu="matMenu" xPosition="before" class="switch-nested-menu-arrows">
+                            <ng-container *ngFor="let type of defaultProperties">
+                                <button mat-menu-item [matMenuTriggerFor]="sub_menu">{{type.group}}</button>
+                                <mat-menu #sub_menu="matMenu">
+                                    <!-- <button *ngFor="let subItem of my_menu[mainItem]" mat-menu-item>{{ subItem }}</button> -->
+                                    <button mat-menu-item *ngFor="let ele of type.elements" [value]="ele"
+                                        (click)="openPropertyForm('createProperty', {propType: ele})">
+                                        <mat-icon>{{ele.icon}}</mat-icon> {{ele.label}}
+                                    </button>
+                                </mat-menu>
+                            </ng-container>
+
                         </mat-menu>
                     </span>
                 </mat-list>
