@@ -153,7 +153,7 @@ class ListHostComponent {
 
 }
 
-fdescribe('PropertyInfoComponent', () => {
+describe('PropertyInfoComponent', () => {
     let simpleTextHostComponent: SimpleTextHostComponent;
     let simpleTextHostFixture: ComponentFixture<SimpleTextHostComponent>;
 
