@@ -160,7 +160,7 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
                     const listUrl = `/project/${this.projectcode}/lists/${encodeURIComponent(listIri)}`;
                     const list = response.find(i => i.id === listIri);
                     this.propAttribute = `<a href="${listUrl}">${list.labels[0].value}</a>`;
-                    this.propAttributeComment = 'list.comments[0].value';
+                    this.propAttributeComment = (list.comments.length ? list.comments[0].value : null);
                 }
             );
         }
