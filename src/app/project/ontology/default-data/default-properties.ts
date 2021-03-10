@@ -168,14 +168,14 @@ export class DefaultProperties {
                     guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Searchbox',    // 'Autocomplete',
                     group: 'Link'
                 },
-                {
-                    icon: 'picture_in_picture',
-                    label: 'Part of resource class',
-                    subPropOf: Constants.KnoraApiV2 + Constants.HashDelimiter + 'isPartOf',
-                    objectType: Constants.LinkValue,
-                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Searchbox',    // 'Autocomplete',
-                    group: 'Link'
-                },
+                // {
+                //     icon: 'picture_in_picture',
+                //     label: 'Part of resource class',
+                //     subPropOf: Constants.KnoraApiV2 + Constants.HashDelimiter + 'isPartOf',
+                //     objectType: Constants.LinkValue,
+                //     guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Searchbox',    // 'Autocomplete',
+                //     group: 'Link'
+                // },
                 // {
                 //     icon: 'compare_arrows',
                 //     label: 'External resource',
