@@ -289,7 +289,6 @@ export class PropertyFormComponent implements OnInit {
                     const listIri = this.guiAttributes[i].match(re)[1];
 
                     this.propertyForm.controls['guiAttr'].setValue(listIri);
-
                     break;
 
                 // prop type is resource pointer
