@@ -268,32 +268,19 @@ export class PropertyFormComponent implements OnInit {
 
         // reset value of guiAttr
         this.propertyForm.controls['guiAttr'].setValue(undefined);
-        // depending on the selected property type,
-        // we have to define gui element attributes
-        // e.g. iri of list or connected resource class
-        switch (type.objectType) {
-            case Constants.ListValue:
-            case Constants.LinkValue:
-                this.showGuiAttr = true;
-                this.propertyForm.controls['guiAttr'].setValidators([
-                    Validators.required
-                ]);
-                this.propertyForm.controls['guiAttr'].updateValueAndValidity();
-                break;
 
-            default:
-                this.propertyForm.controls['guiAttr'].clearValidators();
-                this.propertyForm.controls['guiAttr'].updateValueAndValidity();
-                this.showGuiAttr = false;
-        }
 
         // set gui attribute value depending on gui element and existing property (edit mode)
         if (this.propertyInfo.propDef) {
+            // the gui attribute can't be changed (at the moment?);
+            // disable the input and set the validator as not required
+            this.propertyForm.controls['guiAttr'].disable();
 
             switch (type.guiEle) {
                 // prop type is a list
                 case Constants.SalsahGui + Constants.HashDelimiter + 'List':
                 case Constants.SalsahGui + Constants.HashDelimiter + 'Radio':
+                    this.showGuiAttr = true;
                     // gui attribute value for lists looks as follow: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
                     // get index from guiAttr array where value starts with hlist=
                     const i = this.guiAttributes.findIndex(element => element.includes('hlist'));
@@ -307,23 +294,35 @@ export class PropertyFormComponent implements OnInit {
 
                 // prop type is resource pointer
                 case Constants.SalsahGui + Constants.HashDelimiter + 'Searchbox':
-
+                    this.showGuiAttr = true;
                     this.propertyForm.controls['guiAttr'].setValue(this.propertyInfo.propDef.objectType);
-
                     break;
 
                 default:
                     this.showGuiAttr = false;
             }
 
-            // the gui attribute can't be changed (at the moment?);
-            // disable the input and set the validator as not required
-            this.propertyForm.controls['guiAttr'].disable();
-            this.propertyForm.controls['guiAttr'].clearValidators();
-            this.propertyForm.controls['guiAttr'].updateValueAndValidity();
 
+        } else {
+            // depending on the selected property type,
+            // we have to define gui element attributes
+            // e.g. iri of list or connected resource class
+            switch (type.objectType) {
+                case Constants.ListValue:
+                case Constants.LinkValue:
+                    this.showGuiAttr = true;
+                    this.propertyForm.controls['guiAttr'].setValidators([
+                        Validators.required
+                    ]);
+                    // this.propertyForm.controls['guiAttr'].updateValueAndValidity();
+                    this.propertyForm.updateValueAndValidity();
+                    break;
+
+                default:
+                    this.showGuiAttr = false;
+            }
         }
-        console.log(this.propertyForm);
+
 
         this.loading = false;
 
