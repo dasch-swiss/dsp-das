@@ -1,16 +1,12 @@
-import { Inject } from '@angular/core';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
 import {
     ApiResponseError,
     ClassDefinition,
     Constants,
     KnoraApiConnection,
     ListNodeInfo,
-    PropertyDefinition,
     ReadOntology,
-    ResourcePropertyDefinition,
     ResourcePropertyDefinitionWithAllLanguages,
     StringLiteral,
     UpdateOntology,
@@ -19,7 +15,6 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { AutocompleteItem, DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { DefaultProperties, DefaultProperty, PropertyCategory, PropertyInfoObject } from '../default-data/default-properties';
@@ -210,7 +205,6 @@ export class PropertyFormComponent implements OnInit {
     }
 
     buildForm() {
-        console.log(this.propertyInfo.propDef);
 
         this.propertyForm = this._fb.group({
             'labels': new FormControl({
