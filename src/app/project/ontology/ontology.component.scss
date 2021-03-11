@@ -78,6 +78,11 @@ $width: 340px;
     }
     .ontology-editor-list {
       margin: 16px;
+
+      &.properties {
+        width: 80%;
+        margin: 16px 10%;
+      }
     }
   }
 }
