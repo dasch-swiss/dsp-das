@@ -31,7 +31,7 @@
                 Property is used in:
                 <!-- <span>{{ resClasses.join(", ") }}</span> -->
                 <span *ngFor="let c of resClasses; let last = last">
-                    <span [matTooltip]="c.comment" matTooltipPosition="above">{{c.label}}</span>
+                    <span [matTooltip]="c.comment" matTooltipPosition="above" class="link" (click)="clickedOnClass.emit(c)">{{c.label}}</span>
                     <span *ngIf="!last">,&nbsp;</span>
                 </span>
             </span>

@@ -1,5 +1,5 @@
 <!-- content: Step 1 = define resource class -->
-<form [formGroup]="resourceClassForm" class="form-content">
+<form [formGroup]="resourceClassForm" class="form-content" *ngIf="ontology.lastModificationDate; else missingLastModificationDate">
 
     <div *ngIf="showResourceClassForm" class="resource-class-data">
         <div class="center more-space-top">
@@ -114,3 +114,20 @@
 
     </div>
 </form>
+<!-- in case the last modification date is not defined,
+    it's not possible to edit the resource class;
+    display message
+ -->
+<ng-template #missingLastModificationDate>
+    <p class="note warning center">The resource class can't be edited because of missing "lastModificationDate"!</p>
+
+    <app-resource-class-info [resourceClass]="ontology.classes[iri]" [expanded]="true" [projectCode]="projectCode"></app-resource-class-info>
+
+    <mat-dialog-actions>
+        <span class="fill-remaining-space"></span>
+        <button mat-button mat-dialog-close class="cancel-button center" [mat-dialog-close]="false">
+            close
+        </button>
+        <span class="fill-remaining-space"></span>
+    </mat-dialog-actions>
+</ng-template>
