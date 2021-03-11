@@ -5,6 +5,7 @@ import {
     IHasProperty,
     ListNodeInfo,
     ReadOntology,
+    ReadProject,
     ResourceClassDefinitionWithAllLanguages,
     ResourcePropertyDefinitionWithAllLanguages
 } from '@dasch-swiss/dsp-js';
@@ -51,10 +52,13 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
 
     @Input() propCard?: IHasProperty;
 
-    @Input() projectcode: string;
+    @Input() projectCode: string;
 
     @Output() editResourceProperty: EventEmitter<PropertyInfoObject> = new EventEmitter<PropertyInfoObject>();
     @Output() deleteResourceProperty: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
+
+    // submit res class iri ot open res class
+    @Output() clickedOnClass: EventEmitter<ResourceClassDefinitionWithAllLanguages> = new EventEmitter<ResourceClassDefinitionWithAllLanguages>();
 
     propInfo: Property = new Property();
 
@@ -64,6 +68,8 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
     propAttributeComment: string;
 
     ontology: ReadOntology;
+
+    project: ReadProject;
 
     // list of default property types
     propertyTypes: PropertyCategory[] = DefaultProperties.data;
@@ -157,7 +163,7 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
                 (response: ListNodeInfo[]) => {
                     const re = /\<([^)]+)\>/;
                     const listIri = this.propDef.guiAttributes[0].match(re)[1];
-                    const listUrl = `/project/${this.projectcode}/lists/${encodeURIComponent(listIri)}`;
+                    const listUrl = `/project/${this.projectCode}/lists/${encodeURIComponent(listIri)}`;
                     const list = response.find(i => i.id === listIri);
                     this.propAttribute = `<a href="${listUrl}">${list.labels[0].value}</a>`;
                     this.propAttributeComment = (list.comments.length ? list.comments[0].value : null);

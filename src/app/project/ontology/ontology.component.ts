@@ -56,7 +56,7 @@ export class OntologyComponent implements OnInit {
     projectAdmin = false;
 
     // project shortcode; as identifier in project cache service
-    projectcode: string;
+    projectCode: string;
 
     // project data
     project: ReadProject;
@@ -118,7 +118,7 @@ export class OntologyComponent implements OnInit {
 
         // get the shortcode of the current project
         this._route.parent.paramMap.subscribe((params: Params) => {
-            this.projectcode = params.get('shortcode');
+            this.projectCode = params.get('shortcode');
         });
 
         if (this._route.snapshot) {
@@ -132,10 +132,10 @@ export class OntologyComponent implements OnInit {
 
         // set the page title
         if (this.ontologyIri) {
-            this._titleService.setTitle('Project ' + this.projectcode + ' | Data model');
+            this._titleService.setTitle('Project ' + this.projectCode + ' | Data model');
         } else {
             // set the page title in case of more than one existing project ontologies
-            this._titleService.setTitle('Project ' + this.projectcode + ' | Data models');
+            this._titleService.setTitle('Project ' + this.projectCode + ' | Data models');
         }
     }
 
@@ -151,10 +151,10 @@ export class OntologyComponent implements OnInit {
         this.projectAdmin = this.sysAdmin;
 
         // set the project cache
-        this._cache.get(this.projectcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
+        this._cache.get(this.projectCode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectCode));
 
         // get the project data from cache
-        this._cache.get(this.projectcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode)).subscribe(
+        this._cache.get(this.projectCode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectCode)).subscribe(
             (response: ApiResponseData<ProjectResponse>) => {
                 this.project = response.body.project;
 
@@ -308,7 +308,7 @@ export class OntologyComponent implements OnInit {
      */
     openOntologyRoute(id: string, view: 'classes' | 'properties' | 'graph' = 'classes') {
         this.view = view;
-        const goto = 'project/' + this.projectcode + '/ontologies/' + encodeURIComponent(id) + '/' + view;
+        const goto = 'project/' + this.projectCode + '/ontologies/' + encodeURIComponent(id) + '/' + view;
         this._router.navigateByUrl(goto, { skipLocationChange: false });
     }
 
@@ -430,7 +430,7 @@ export class OntologyComponent implements OnInit {
             position: {
                 top: '112px'
             },
-            data: { mode: 'updateCardinality', id: subClassOf.id, title: subClassOf.label, subtitle: 'Update the metadata fields of resource class', project: this.project.id }
+            data: { mode: 'updateCardinality', id: subClassOf.id, title: subClassOf.label, subtitle: 'Update the metadata fields of resource class', project: this.projectCode }
         };
 
         const dialogRef = this._dialog.open(
@@ -483,7 +483,7 @@ export class OntologyComponent implements OnInit {
                                 // get the ontologies for this project
                                 this.initOntologiesList();
                                 // go to project ontology page
-                                const goto = 'project/' + this.projectcode + '/ontologies/';
+                                const goto = 'project/' + this.projectCode + '/ontologies/';
                                 this._router.navigateByUrl(goto, { skipLocationChange: false });
                             },
                             (error: ApiResponseError) => {

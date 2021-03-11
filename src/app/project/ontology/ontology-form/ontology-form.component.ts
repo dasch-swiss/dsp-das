@@ -28,7 +28,7 @@ export class OntologyFormComponent implements OnInit {
 
 
     // project short code
-    @Input() projectcode: string;
+    @Input() projectCode: string;
 
     // existing ontology names; name has to be unique
     @Input() existingOntologyNames: string[];
@@ -91,10 +91,10 @@ export class OntologyFormComponent implements OnInit {
         this.loading = true;
 
         // set the cache
-        this._cache.get(this.projectcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
+        this._cache.get(this.projectCode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectCode));
 
         // get project
-        this._cache.get(this.projectcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode)).subscribe(
+        this._cache.get(this.projectCode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectCode)).subscribe(
             (response: ApiResponseData<ProjectResponse>) => {
                 this.project = response.body.project;
 

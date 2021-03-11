@@ -17,6 +17,8 @@ export class ResourceClassInfoComponent implements OnInit {
 
     @Input() resourceClass: ClassDefinition;
 
+    @Input() projectCode: string;
+
     @Output() editResourceClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
     @Output() updateCardinality: EventEmitter<ClassDefinition> = new EventEmitter<ClassDefinition>();
     @Output() deleteResourceClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
