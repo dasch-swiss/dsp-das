@@ -4,6 +4,7 @@ import {
     ApiResponseError,
     ClassDefinition,
     Constants,
+    CreateResourceProperty,
     KnoraApiConnection,
     ListNodeInfo,
     ReadOntology,
@@ -18,6 +19,7 @@ import { Observable } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { DefaultProperties, DefaultProperty, PropertyCategory, PropertyInfoObject } from '../default-data/default-properties';
+import { ResourceClassFormService } from '../resource-class-form/resource-class-form.service';
 
 @Component({
     selector: 'app-property-form',
@@ -26,22 +28,13 @@ import { DefaultProperties, DefaultProperty, PropertyCategory, PropertyInfoObjec
 })
 export class PropertyFormComponent implements OnInit {
 
+    /**
+     * propertyInfo contains default property type information
+     * and in case of 'edit' mode also the ResourcePropertyDefintion
+     */
     @Input() propertyInfo: PropertyInfoObject;
 
-    /**
-    * only in edit mode: iri of resource property
-    */
-    @Input() iri: string;
-
-    /**
-     * name of resource class e.g. Still image
-     * this will be used to update title of resource class form
-     */
-    @Input() type: DefaultProperty;
-
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
-
-    propDef: ResourcePropertyDefinitionWithAllLanguages;
 
     /**
      * form group, errors and validation messages
@@ -49,17 +42,18 @@ export class PropertyFormComponent implements OnInit {
     propertyForm: FormGroup;
 
     formErrors = {
-        'label': ''
+        'label': '',
+        'guiAttr': ''
     };
 
     validationMessages = {
         'label': {
             'required': 'Label is required.',
+        },
+        'guiAttr': {
+            'required': 'Gui attribute is required.',
         }
     };
-
-
-    edit = false;
 
     ontology: ReadOntology;
     lastModificationDate: string;
@@ -98,8 +92,9 @@ export class PropertyFormComponent implements OnInit {
 
     error = false;
 
-    labels: StringLiteral[];
-    comments: StringLiteral[];
+    labels: StringLiteral[] = [];
+    comments: StringLiteral[] = [];
+    guiAttributes: string[] = [];
 
     dspConstants = Constants;
 
@@ -107,36 +102,25 @@ export class PropertyFormComponent implements OnInit {
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _errorHandler: ErrorHandlerService,
-        private _fb: FormBuilder
+        private _fb: FormBuilder,
+        private _resourceClassFormService: ResourceClassFormService
     ) { }
 
     ngOnInit() {
 
         this.loading = true;
 
-        // console.log(this.propertyInfo);
-
-        // if property definition exists
-        // we are in edit mode: prepare form to edit label and/or comment
-        if (this.propertyInfo.propDef) {
-            this.labels = this.propertyInfo.propDef.labels;
-            this.comments = this.propertyInfo.propDef.comments;
-        }
-
-
         //     // get property from current ontology
 
-        this._cache.get('currentOntology').subscribe(
-            (response: ReadOntology) => {
-                this.ontology = response;
-                this.lastModificationDate = response.lastModificationDate;
-            },
-            (error: ApiResponseError) => {
-                console.error(error);
-            }
-        );
+        // this._cache.get('currentOntology').subscribe(
+        //     (response: ReadOntology) => {
+        //         this.ontology = response;
+        //     },
+        //     (error: ApiResponseError) => {
+        //         console.error(error);
+        //     }
+        // );
 
-        this.buildForm();
 
         //     // init list of property types with first element
         //     this.propertyForm.patchValue({ type: this.propertyTypes[0].elements[0] });
@@ -158,6 +142,7 @@ export class PropertyFormComponent implements OnInit {
         this._cache.get('currentOntology').subscribe(
             (response: ReadOntology) => {
                 this.ontology = response;
+                this.lastModificationDate = response.lastModificationDate;
 
                 // set various lists to select from
                 // a) in case of link value:
@@ -197,33 +182,28 @@ export class PropertyFormComponent implements OnInit {
             }
         );
 
+        this.buildForm();
         // this.filteredProps = this.propertyForm.controls['label'].valueChanges
         //     .pipe(
         //         startWith(''),
         //         map(prop => prop.length >= 0 ? this.filter(this.existingProps, prop) : [])
         //     );
+
     }
 
     buildForm() {
 
+        // if property definition exists
+        // we are in edit mode: prepare form to edit label and/or comment
+        if (this.propertyInfo.propDef) {
+            this.labels = this.propertyInfo.propDef.labels;
+            this.comments = this.propertyInfo.propDef.comments;
+            this.guiAttributes = this.propertyInfo.propDef.guiAttributes;
+        }
+
         this.propertyForm = this._fb.group({
-            'labels': new FormControl({
-                value: this.propertyInfo.propDef.labels
-            }, [
-                Validators.required
-            ]),
-            'comments': new FormControl({
-                value: this.propertyInfo.propDef.comment
-            }, [
-                Validators.required // --> TODO: really required???
-            ]),
-            'type': new FormControl({
-                value: this.propertyInfo.propType
-            }, [
-                Validators.required,
-            ]),
             'guiAttr': new FormControl({
-                value: this.propertyInfo.propDef.guiAttributes
+                value: this.guiAttributes
             })
         });
 
@@ -307,35 +287,43 @@ export class PropertyFormComponent implements OnInit {
                 this.showGuiAttr = false;
         }
 
-        // set gui attribute value depending on gui element
-        switch (type.guiEle) {
-            // prop type is a list
-            case Constants.SalsahGui + Constants.HashDelimiter + 'List':
-            case Constants.SalsahGui + Constants.HashDelimiter + 'Radio':
-                // gui attribute value for lists looks as follow: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
-                // get index from guiAttr array where value starts with hlist=
-                const i = this.propertyInfo.propDef.guiAttributes.findIndex(element => element.includes('hlist'));
+        // set gui attribute value depending on gui element and existing property (edit mode)
+        if (this.propertyInfo.propDef) {
 
-                // find content beteween pointy brackets to get list iri
-                const re = /\<([^)]+)\>/;
-                const listIri = this.propertyInfo.propDef.guiAttributes[i].match(re)[1];
+            switch (type.guiEle) {
+                // prop type is a list
+                case Constants.SalsahGui + Constants.HashDelimiter + 'List':
+                case Constants.SalsahGui + Constants.HashDelimiter + 'Radio':
+                    // gui attribute value for lists looks as follow: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
+                    // get index from guiAttr array where value starts with hlist=
+                    const i = this.guiAttributes.findIndex(element => element.includes('hlist'));
+                    // find content beteween pointy brackets to get list iri
+                    const re = /\<([^)]+)\>/;
+                    const listIri = this.guiAttributes[i].match(re)[1];
 
-                this.showGuiAttr = true;
-                this.propertyForm.controls['guiAttr'].setValue(listIri);
-                this.propertyForm.controls['guiAttr'].disable();
-                break;
+                    this.propertyForm.controls['guiAttr'].setValue(listIri);
 
-            // prop type is resource pointer
-            case Constants.SalsahGui + Constants.HashDelimiter + 'Searchbox':
+                    break;
 
-                this.showGuiAttr = true;
-                this.propertyForm.controls['guiAttr'].setValue(this.propertyInfo.propDef.objectType);
-                this.propertyForm.controls['guiAttr'].disable();
-                break;
+                // prop type is resource pointer
+                case Constants.SalsahGui + Constants.HashDelimiter + 'Searchbox':
 
-            default:
-                this.showGuiAttr = false;
+                    this.propertyForm.controls['guiAttr'].setValue(this.propertyInfo.propDef.objectType);
+
+                    break;
+
+                default:
+                    this.showGuiAttr = false;
+            }
+
+            // the gui attribute can't be changed (at the moment?);
+            // disable the input and set the validator as not required
+            this.propertyForm.controls['guiAttr'].disable();
+            this.propertyForm.controls['guiAttr'].clearValidators();
+            this.propertyForm.controls['guiAttr'].updateValueAndValidity();
+
         }
+        console.log(this.propertyForm);
 
         this.loading = false;
 
@@ -361,7 +349,7 @@ export class PropertyFormComponent implements OnInit {
 
             const updateComment = new UpdateResourcePropertyComment();
             updateComment.id = this.propertyInfo.propDef.id;
-            updateComment.comments = this.comments;
+            updateComment.comments = (this.comments.length ? this.comments : this.labels);
             onto4Comment.entity = updateComment;
 
             this._dspApiConnection.v2.onto.updateResourceProperty(onto4Label).subscribe(
@@ -392,6 +380,72 @@ export class PropertyFormComponent implements OnInit {
             // create mode: new property incl. gui type and attribute
             // submit property
             // this.submitProps(this.resourceClassForm.value.properties, this.propertyInfo.propDef.id);
+            // set resource property name / id: randomized string
+            const uniquePropName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
+
+            const onto = new UpdateOntology<CreateResourceProperty>();
+
+            onto.id = this.ontology.id;
+            onto.lastModificationDate = this.lastModificationDate;
+
+            // prepare payload for property
+            const newResProp = new CreateResourceProperty();
+            newResProp.name = uniquePropName;
+            // --> TODO update prop.label and use StringLiteralInput in property-form
+            newResProp.label = this.labels;
+            newResProp.comment = (this.comments.length ? this.comments : this.labels);
+            const guiAttr = this.propertyForm.controls['guiAttr'].value;
+            if (guiAttr) {
+                switch (this.propertyInfo.propType.guiEle) {
+
+                    case Constants.SalsahGui + Constants.HashDelimiter + 'Colorpicker':
+                        newResProp.guiAttributes = ['ncolors=' + guiAttr];
+                        break;
+                    case Constants.SalsahGui + Constants.HashDelimiter + 'List':
+                    case Constants.SalsahGui + Constants.HashDelimiter + 'Pulldown':
+                    case Constants.SalsahGui + Constants.HashDelimiter + 'Radio':
+                        newResProp.guiAttributes = ['hlist=<' + guiAttr + '>'];
+                        break;
+                    case Constants.SalsahGui + Constants.HashDelimiter + 'SimpleText':
+                        // --> TODO could have two guiAttr fields: size and maxlength
+                        // we suggest to use default value for size; we do not support this guiAttr in DSP-App
+                        newResProp.guiAttributes = ['maxlength=' + guiAttr];
+                        break;
+                    case Constants.SalsahGui + Constants.HashDelimiter + 'Spinbox':
+                        // --> TODO could have two guiAttr fields: min and max
+                        newResProp.guiAttributes = ['min=' + guiAttr, 'max=' + guiAttr];
+                        break;
+                    case Constants.SalsahGui + Constants.HashDelimiter + 'Textarea':
+                        // --> TODO could have four guiAttr fields: width, cols, rows, wrap
+                        // we suggest to use default values; we do not support this guiAttr in DSP-App
+                        newResProp.guiAttributes = ['width=100%'];
+                        break;
+                }
+            }
+            newResProp.guiElement = this.propertyInfo.propType.guiEle;
+            newResProp.subPropertyOf = [this.propertyInfo.propType.subPropOf];
+
+            if (this.propertyInfo.propType.subPropOf === Constants.HasLinkTo) {
+                newResProp.objectType = guiAttr;
+                // newResProp.subjectType = classIri;
+            } else {
+                newResProp.objectType = this.propertyInfo.propType.objectType;
+            }
+
+            onto.entity = newResProp;
+
+            this._dspApiConnection.v2.onto.createResourceProperty(onto).subscribe(
+                (response: ResourcePropertyDefinitionWithAllLanguages) => {
+                    this.lastModificationDate = response.lastModificationDate;
+                    // close the dialog box
+                    this.loading = false;
+                    this.closeDialog.emit();
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
+
         }
     }
 

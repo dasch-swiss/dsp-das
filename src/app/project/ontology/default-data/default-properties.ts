@@ -66,11 +66,11 @@ export class DefaultProperties {
             group: 'List',
             elements: [
                 {
-                    icon: 'radio_button_checked',
-                    label: 'Multiple choice',
+                    icon: 'arrow_drop_down_circle',
+                    label: 'Dropdown',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.ListValue,
-                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Radio',
+                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'List',     // 'Pulldown'
                     group: 'List'
                 },
                 {
@@ -82,11 +82,11 @@ export class DefaultProperties {
                     group: 'List'
                 },
                 {
-                    icon: 'arrow_drop_down_circle',
-                    label: 'Dropdown',
+                    icon: 'radio_button_checked',
+                    label: 'Multiple choice',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.ListValue,
-                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'List',     // 'Pulldown'
+                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Radio',
                     group: 'List'
                 },
                 {
