@@ -213,13 +213,13 @@
 
     <!-- Ontology editor: create new ontology -->
     <div *ngSwitchCase="'createOntology'">
-        <app-dialog-header [title]="'Data model'" [subtitle]="'Create new'"></app-dialog-header>
+        <app-dialog-header [title]="data.title" [subtitle]="'Create new'"></app-dialog-header>
         <app-ontology-form [projectcode]="data.project" (closeDialog)="dialogRef.close($event)"
             [existingOntologyNames]="data.existing"></app-ontology-form>
     </div>
 
     <div *ngSwitchCase="'editOntology'">
-        <app-dialog-header [title]="'Data model information'" [subtitle]="'Edit'" (close)="dialogRef.close()">
+        <app-dialog-header [title]="data.title" [subtitle]="'Customize data model'" (close)="dialogRef.close()">
         </app-dialog-header>
         <app-ontology-form [iri]="data.id" [projectcode]="data.project" (closeDialog)="dialogRef.close($event)"
             [existingOntologyNames]="data.existing"></app-ontology-form>
