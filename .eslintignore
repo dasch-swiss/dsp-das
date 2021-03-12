@@ -1,7 +1,8 @@
-# copied from @angular/material
 # Ignore miscellaneous folders
 .github/
 .idea/
+.vscode/
+.yalc/
 node_modules/
 dist/
 tmp/

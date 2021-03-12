@@ -26,7 +26,6 @@ export interface NewOntology {
 })
 export class OntologyFormComponent implements OnInit {
 
-    loading: boolean;
 
     // project short code
     @Input() projectcode: string;
@@ -41,12 +40,14 @@ export class OntologyFormComponent implements OnInit {
 
     @Output() updateParent: EventEmitter<string> = new EventEmitter<string>();
 
+    loading: boolean;
+
     project: ReadProject;
 
     ontologyForm: FormGroup;
 
-    ontologyLabel: string = '';
-    ontologyComment: string = '';
+    ontologyLabel = '';
+    ontologyComment = '';
 
     nameRegex = /^(?![vV][0-9]|[0-9]|[\u00C0-\u017F]).[a-zA-Z0-9]+\S*$/;
 
@@ -208,7 +209,7 @@ export class OntologyFormComponent implements OnInit {
     }
 
     /**
-     * Reset the form
+     * reset the form
      */
     resetForm(ev: Event, resourceClass?: any) {
 
@@ -217,7 +218,5 @@ export class OntologyFormComponent implements OnInit {
         this.buildForm();
 
     }
-
-
 
 }

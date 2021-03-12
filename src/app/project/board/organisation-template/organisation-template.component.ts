@@ -1,32 +1,37 @@
 import { Component, Input } from '@angular/core';
-import { IOrganisation } from '../dataset-metadata';
+import { Organization } from '@dasch-swiss/dsp-js';
 
 @Component({
     selector: 'app-organisation-template',
     template: `
-        <div>
-            <div>
-                <h4 class="metadata-title">Organisation: </h4>
-                {{ organisation.name }}
+        <div class="organization">
+            <div class="metadata-property">
+                <div class="property-label">
+                    <p *ngFor="let name of organisation.name" class="organization-name">
+                        {{ organisation.name }}
+                    </p>
+                </div>
             </div>
 
             <div *ngIf="organisation.url">
-                <h4>URL:</h4>
-                <a href="{{ organisation.url }}" target="_blank"> {{ organisation.url }} </a>
+                <app-url-template [urls]="organisation.url" [displayLabel]='true'></app-url-template>
             </div>
 
-            <div *ngIf="organisation.email" class="email">
-                <h4>Email:</h4>
-                <a href="mailto:{{ organisation.email }}"> {{ organisation.email }} </a>
+            <div *ngIf="organisation.email" class="metadata-property">
+                <div class="property-label display-inline-block">
+                    Email:
+                </div>
+                <div class="display-inline-block add-left-margin">
+                    <a href="mailto:{{ organisation.email }}"> {{ organisation.email }} </a>
+                </div>
             </div>
 
             <app-address-template *ngIf="organisation.address" [address]="organisation.address"></app-address-template>
         </div>
-    `,
-    styles: ['.metadata-title { font-size: 95%; }']
+    `
 })
 
 export class OrganisationTemplateComponent {
     // input parameter
-    @Input() organisation: IOrganisation;
+    @Input() organisation: Organization;
 }

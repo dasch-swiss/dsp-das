@@ -3,6 +3,7 @@ import {
     ApiResponseData,
     ApiResponseError,
     KnoraApiConnection,
+    ListChildNodeResponse,
     ListNode,
     ListResponse,
     RepositionChildNodeRequest,
@@ -56,7 +57,7 @@ export class ListItemComponent implements OnInit {
     }
 
     /**
-     * Checks if parent node should show its children.
+     * checks if parent node should show its children.
      * @param id id of parent node.
      */
     showChildren(id: string): boolean {
@@ -64,7 +65,7 @@ export class ListItemComponent implements OnInit {
     }
 
     /**
-     * Called from template when the 'expand' button is clicked.
+     * called from template when the 'expand' button is clicked.
      *
      * @param id id of parent node for which the 'expand' button was clicked.
      */
@@ -77,7 +78,7 @@ export class ListItemComponent implements OnInit {
     }
 
     /**
-     * Called when the 'refreshParent' event from ListItemFormComponent is triggered.
+     * called when the 'refreshParent' event from ListItemFormComponent is triggered.
      *
      * @param data info about the operation that was performed on the node and should be reflected in the UI.
      * @param firstNode states whether or not the node is a new child node; defaults to false.
@@ -95,6 +96,25 @@ export class ListItemComponent implements OnInit {
                     } else {
                         this.list.push(data.listNode);
                     }
+                    break;
+                }
+                case 'insert': {
+                    // get the corresponding list from the API again and reassign the local list with its response
+                    this._dspApiConnection.admin.listsEndpoint.getList(this.parentIri).subscribe(
+                        (result: ApiResponseData<ListResponse | ListChildNodeResponse>) => {
+                            if (result.body instanceof ListResponse) {
+                                this.list = result.body.list.children; // root node
+                            } else {
+                                this.list = result.body.node.children; // child node
+                            }
+
+                            // emit the updated list of children to the parent node
+                            this.refreshChildren.emit(this.list);
+                        },
+                        (error: ApiResponseError) => {
+                            this._errorHandler.showMessage(error);
+                        }
+                    );
                     break;
                 }
                 case 'update': {
@@ -118,6 +138,7 @@ export class ListItemComponent implements OnInit {
                     repositionRequest.position = data.listNode.position;
 
                     // since we don't have any way to know the parent IRI from the ListItemForm component, we need to do the API call here
+                    // --> TODO now we have the parent IRI within the ListItemForm component so we can move this logic there
                     this._dspApiConnection.admin.listsEndpoint.repositionChildNode(data.listNode.id, repositionRequest).subscribe(
                         (res: ApiResponseData<RepositionChildNodeResponse>) => {
                             this.list = res.body.node.children;
