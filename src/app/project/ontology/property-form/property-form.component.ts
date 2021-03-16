@@ -58,14 +58,6 @@ export class PropertyFormComponent implements OnInit {
     ontology: ReadOntology;
     lastModificationDate: string;
 
-    // @Output() deleteProperty: EventEmitter<number> = new EventEmitter();
-
-    // iri = new FormControl();
-    // label = new FormControl();
-    // type = new FormControl();
-    // multiple = new FormControl();
-    // required = new FormControl();
-
     // selection of default property types
     propertyTypes: PropertyCategory[] = DefaultProperties.data;
 
@@ -77,16 +69,6 @@ export class PropertyFormComponent implements OnInit {
 
     // resource classes in this ontology
     resourceClass: ClassDefinition[] = [];
-
-    // list of existing properties
-    existingProps: AutocompleteItem[] = [];
-
-    filteredProps: Observable<AutocompleteItem[]>;
-
-    selectTypeLabel: string; // = this.propertyTypes[0].group + ': ' + this.propertyTypes[0].elements[0].label;
-    selectedGroup: string;
-
-    existingProperty: boolean;
 
     loading = false;
 
@@ -110,35 +92,6 @@ export class PropertyFormComponent implements OnInit {
 
         this.loading = true;
 
-        //     // get property from current ontology
-
-        // this._cache.get('currentOntology').subscribe(
-        //     (response: ReadOntology) => {
-        //         this.ontology = response;
-        //     },
-        //     (error: ApiResponseError) => {
-        //         console.error(error);
-        //     }
-        // );
-
-
-        //     // init list of property types with first element
-        //     this.propertyForm.patchValue({ type: this.propertyTypes[0].elements[0] });
-
-        //     if (this.propertyForm.value.label) {
-
-        //         const existingProp: AutocompleteItem = {
-        //             iri: this.propertyInfo.propDef.id,
-        //             label: this.propertyForm.value.label,
-        //             name: ''
-        //         };
-
-        //         // edit mode: this prop value exists already
-        //         this.loading = true;
-        //         this.updateFieldsDependingOnLabel(existingProp);
-        //     }
-        // }
-
         this._cache.get('currentOntology').subscribe(
             (response: ReadOntology) => {
                 this.ontology = response;
@@ -147,34 +100,15 @@ export class PropertyFormComponent implements OnInit {
                 // set various lists to select from
                 // a) in case of link value:
                 // set list of resource classes from response; needed for linkValue
-                const classKeys: string[] = Object.keys(response.classes);
-                for (const c of classKeys) {
-                    this.resourceClass.push(this.ontology.classes[c]);
-                }
+                this.resourceClass = response.getAllClassDefinitions();
 
-                // b) in case of already existing label:
-                // set list of properties from response; needed for autocomplete in label to reuse existing property
-                const propKeys: string[] = Object.keys(response.properties);
-                for (const p of propKeys) {
-                    const prop = this.ontology.properties[p];
-                    if (prop.objectType !== Constants.LinkValue) {
-                        const existingProperty: AutocompleteItem = {
-                            iri: this.ontology.properties[p].id,
-                            name: this.ontology.properties[p].id.split('#')[1],
-                            label: this.ontology.properties[p].label
-                        };
-
-                        this.existingProps.push(existingProperty);
-                    }
-
-                }
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
             }
         );
 
-        // c) in case of list value:
+        // b) in case of list value:
         // set list of lists; needed for listValue
         this._cache.get('currentOntologyLists').subscribe(
             (response: ListNodeInfo[]) => {
@@ -183,11 +117,6 @@ export class PropertyFormComponent implements OnInit {
         );
 
         this.buildForm();
-        // this.filteredProps = this.propertyForm.controls['label'].valueChanges
-        //     .pipe(
-        //         startWith(''),
-        //         map(prop => prop.length >= 0 ? this.filter(this.existingProps, prop) : [])
-        //     );
 
     }
 
@@ -321,7 +250,6 @@ export class PropertyFormComponent implements OnInit {
                     this.showGuiAttr = false;
             }
         }
-
 
         this.loading = false;
 
