@@ -167,11 +167,6 @@ describe('PropertyInfoComponent', () => {
     let overlayContainer: OverlayContainer;
 
     beforeEach(async(() => {
-        const dspConnSpy = {
-            v2: {
-                ontologyCache: jasmine.createSpyObj('ontologyCache', ['getOntology']),
-            }
-        };
 
         const cacheServiceSpy = jasmine.createSpyObj('CacheService', ['get']);
 
