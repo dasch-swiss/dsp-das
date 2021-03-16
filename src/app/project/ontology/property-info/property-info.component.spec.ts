@@ -247,11 +247,11 @@ describe('PropertyInfoComponent', () => {
     });
 
     beforeEach(() => {
-        // mock cache service for currentOntology
+        // mock cache service for currentOntologyLists
         const cacheSpy = TestBed.inject(CacheService);
 
         (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
-            (key = 'currentOntologyLists') => {
+            () => {
                 const response: ListNodeInfo[] = [{
                     'comments': [],
                     'id': 'http://rdfh.ch/lists/0001/otherTreeList',

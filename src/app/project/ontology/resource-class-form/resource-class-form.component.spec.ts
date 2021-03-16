@@ -32,14 +32,7 @@ describe('ResourceClassFormComponent', () => {
     let component: ResourceClassFormComponent;
     let fixture: ComponentFixture<ResourceClassFormComponent>;
 
-    const dspConnSpy = {
-        v2: {
-            ontologyCache: jasmine.createSpyObj('ontologyCache', ['getOntology']),
-        }
-    };
-
     const cacheServiceSpy = jasmine.createSpyObj('CacheService', ['get']);
-
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
