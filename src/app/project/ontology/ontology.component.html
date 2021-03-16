@@ -122,7 +122,7 @@
                     <a mat-list-item routerLinkActive="active" [routerLink]="'../classes'"
                         (click)="view = 'classes'">Classes</a>
                     <span *ngIf="view === 'classes'">
-                        <button mat-button (click)="expandClasses = !expandClasses">
+                        <button mat-button (click)="expandClasses = !expandClasses" [disabled]="!ontoClasses.length">
                             <mat-icon>{{expandClasses ? 'compress' : 'expand'}}</mat-icon>
                             {{expandClasses ? "Compress all" : "Expand all"}}
                         </button>
