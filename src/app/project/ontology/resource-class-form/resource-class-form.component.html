@@ -75,9 +75,7 @@
                     <mat-icon>drag_indicator</mat-icon>
                 </button>
 
-                <app-resource-class-property-form [propertyForm]="prop" [index]="i" [ontology]="ontology"
-                    [resClassIri]="iri">
-                </app-resource-class-property-form>
+                <app-resource-class-property-form [propertyForm]="prop" [index]="i" [resClassIri]="iri"></app-resource-class-property-form>
 
                 <button *ngIf="properties.length > 1" mat-icon-button type="button" color="warn"
                     aria-label="Delete this property" class="suffix delete-line" (click)="removeProperty(i)">

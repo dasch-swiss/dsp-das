@@ -194,6 +194,7 @@ export class ResourceClassFormService {
 
         this.resourceClassForm.next(currentResourceClass);
     }
+
     /**
      * delete property line by index i
      *

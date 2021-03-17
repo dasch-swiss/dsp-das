@@ -27,20 +27,11 @@ export class ResourceClassPropertyFormComponent implements OnInit {
 
     @Input() index: number;
 
-    @Input() ontology?: ReadOntology;
-
     @Input() resClassIri?: string;
-
-    @Input() edit = false;
 
     @Output() deleteProperty: EventEmitter<number> = new EventEmitter();
 
-    iri = new FormControl();
-    label = new FormControl();
-    type = new FormControl();
-    multiple = new FormControl();
-    required = new FormControl();
-
+    ontology: ReadOntology;
     // selection of default property types
     propertyTypes: PropertyCategory[] = DefaultProperties.data;
 
@@ -73,24 +64,6 @@ export class ResourceClassPropertyFormComponent implements OnInit {
 
     ngOnInit() {
 
-        if (this.propertyForm) {
-            // init list of property types with first element
-            this.propertyForm.patchValue({ type: this.propertyTypes[0].elements[0] });
-
-            if (this.propertyForm.value.label) {
-
-                const existingProp: AutocompleteItem = {
-                    iri: this.propertyForm.value.iri,
-                    label: this.propertyForm.value.label,
-                    name: ''
-                };
-
-                // edit mode: this prop value exists already
-                this.loading = true;
-                this.updateFieldsDependingOnLabel(existingProp);
-            }
-        }
-
         this._cache.get('currentOntology').subscribe(
             (response: ReadOntology) => {
                 this.ontology = response;
@@ -114,10 +87,26 @@ export class ResourceClassPropertyFormComponent implements OnInit {
                             name: this.ontology.properties[p].id.split('#')[1],
                             label: this.ontology.properties[p].label
                         };
-
                         this.properties.push(existingProperty);
                     }
+                }
 
+                if (this.propertyForm) {
+                    // init list of property types with first element
+                    this.propertyForm.patchValue({ type: this.propertyTypes[0].elements[0] });
+
+                    if (this.propertyForm.value.label) {
+
+                        const existingProp: AutocompleteItem = {
+                            iri: this.propertyForm.value.iri,
+                            label: this.propertyForm.value.label,
+                            name: ''
+                        };
+
+                        // edit mode: this prop value exists already
+                        this.loading = true;
+                        this.updateFieldsDependingOnLabel(existingProp);
+                    }
                 }
             },
             (error: ApiResponseError) => {
