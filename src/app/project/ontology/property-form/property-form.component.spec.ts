@@ -134,6 +134,12 @@ describe('PropertyFormComponent', () => {
         const cacheServiceSpyOnto = jasmine.createSpyObj('CacheServiceOnto', ['get']);
         const cacheServiceSpyLists = jasmine.createSpyObj('CacheServiceLists', ['get']);
 
+        const ontologyEndpointSpyObj = {
+            v2: {
+                ontologyEndpoint: jasmine.createSpyObj('onto', ['updateResourceProperty', 'createResourceProperty'])
+            }
+        };
+
         TestBed.configureTestingModule({
             declarations: [
                 LinkHostComponent,
@@ -156,14 +162,9 @@ describe('PropertyFormComponent', () => {
                 TranslateModule.forRoot()
             ],
             providers: [
-                AppInitService,
-                {
-                    provide: DspApiConfigToken,
-                    useValue: TestConfig.ApiConfig
-                },
                 {
                     provide: DspApiConnectionToken,
-                    useValue: new KnoraApiConnection(TestConfig.ApiConfig)
+                    useValue: ontologyEndpointSpyObj
                 },
                 {
                     provide: CacheService,
