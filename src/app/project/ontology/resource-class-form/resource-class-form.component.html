@@ -1,5 +1,6 @@
 <!-- content: Step 1 = define resource class -->
-<form [formGroup]="resourceClassForm" class="form-content" *ngIf="ontology.lastModificationDate; else missingLastModificationDate">
+<form [formGroup]="resourceClassForm" class="form-content"
+    *ngIf="ontology.lastModificationDate; else missingLastModificationDate">
 
     <div *ngIf="showResourceClassForm" class="resource-class-data">
         <div class="center more-space-top">
@@ -75,7 +76,8 @@
                     <mat-icon>drag_indicator</mat-icon>
                 </button>
 
-                <app-resource-class-property-form [propertyForm]="prop" [index]="i" [resClassIri]="iri"></app-resource-class-property-form>
+                <app-resource-class-property-form [propertyForm]="prop" [index]="i" [resClassIri]="iri">
+                </app-resource-class-property-form>
 
                 <button *ngIf="properties.length > 1" mat-icon-button type="button" color="warn"
                     aria-label="Delete this property" class="suffix delete-line" (click)="removeProperty(i)">
@@ -88,6 +90,7 @@
                 <mat-icon>add</mat-icon> Add property
             </button>
         </div>
+
         <!-- action buttons -->
         <div class="form-panel form-action">
             <span>
@@ -100,8 +103,9 @@
             </span>
             <span class="fill-remaining-space"></span>
             <span>
-                <button mat-raised-button type="submit" color="primary" [disabled]="!properties?.valid"
-                    (click)="submitData()">
+
+                <button mat-raised-button type="submit" [color]="error ? 'warning' : 'primary'"
+                    [disabled]="!properties?.valid" (click)="submitData()">
                     <dsp-progress-indicator [color]="'white'" [status]="0" *ngIf="loading" class="submit-progress">
                     </dsp-progress-indicator>
                     <mat-icon *ngIf="error && !loading">close</mat-icon>
@@ -109,7 +113,6 @@
                 </button>
             </span>
         </div>
-
     </div>
 </form>
 <!-- in case the last modification date is not defined,
@@ -119,7 +122,8 @@
 <ng-template #missingLastModificationDate>
     <p class="note warning center">The resource class can't be edited because of missing "lastModificationDate"!</p>
 
-    <app-resource-class-info [resourceClass]="ontology.classes[iri]" [expanded]="true" [projectCode]="projectCode"></app-resource-class-info>
+    <app-resource-class-info [resourceClass]="ontology.classes[iri]" [expanded]="true" [projectCode]="projectCode">
+    </app-resource-class-info>
 
     <mat-dialog-actions>
         <span class="fill-remaining-space"></span>
