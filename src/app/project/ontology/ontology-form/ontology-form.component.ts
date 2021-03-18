@@ -9,7 +9,6 @@ import {
     ProjectResponse,
     ReadOntology,
     ReadProject,
-    UpdateOntology,
     UpdateOntologyMetadata
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, existingNamesValidator } from '@dasch-swiss/dsp-ui';
@@ -29,7 +28,6 @@ export interface NewOntology {
     styleUrls: ['./ontology-form.component.scss']
 })
 export class OntologyFormComponent implements OnInit {
-
 
     // project short code
     @Input() projectcode: string;
@@ -101,6 +99,9 @@ export class OntologyFormComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+
+        console.log(this.existingOntologyNames);
+
 
         this.loading = true;
 
