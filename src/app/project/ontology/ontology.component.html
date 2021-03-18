@@ -124,7 +124,7 @@
                     <span *ngIf="view === 'classes'">
                         <button mat-button (click)="expandClasses = !expandClasses" [disabled]="!ontoClasses.length">
                             <mat-icon>{{expandClasses ? 'compress' : 'expand'}}</mat-icon>
-                            {{expandClasses ? "Compress all" : "Expand all"}}
+                            {{expandClasses ? "Collapse all" : "Expand all"}}
                         </button>
                         <span mat-list-item *ngIf="project?.status && (sysAdmin || projectAdmin) && ontologyIri"
                             [matTooltip]="'This data model can\'t be edited because of missing \'lastModificationDate\'!'"
