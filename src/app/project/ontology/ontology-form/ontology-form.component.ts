@@ -100,9 +100,6 @@ export class OntologyFormComponent implements OnInit {
 
     ngOnInit() {
 
-        console.log(this.existingOntologyNames);
-
-
         this.loading = true;
 
         // set the cache
