@@ -98,7 +98,7 @@
                     <p class="mat-caption space-reducer">Data model configuration</p>
                     <!-- TODO: remove following span as soon edit mode is implemented; it's only for tooltip to use with disabled button  -->
                     <span
-                        [matTooltip]="(ontology.lastModificationDate ? 'Edit data model info (not yet implemented)' : 'This data model can\'t be edited because of missing lastModificationDate!')">
+                        [matTooltip]="(ontology.lastModificationDate ? 'Edit data model info' : 'This data model can\'t be edited because of missing lastModificationDate!')">
                         <button mat-button [disabled]="!ontology.lastModificationDate" [disabled]="!ontology.lastModificationDate"
                             (click)="$event.stopPropagation(); openOntologyForm('editOntology', ontology.id)">
                             <mat-icon>edit</mat-icon>
