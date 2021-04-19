@@ -1,5 +1,12 @@
 # Changelog
 
+### [4.4.4](https://www.github.com/dasch-swiss/dsp-app/compare/v4.4.3...v4.4.4) (2021-04-19)
+
+
+### Bug Fixes
+
+* **users:** update session the correct way (DSP-690) ([#419](https://www.github.com/dasch-swiss/dsp-app/issues/419)) ([3ec049e](https://www.github.com/dasch-swiss/dsp-app/commit/3ec049e76df1c66a80026f0cb1d83bfea5178319))
+
 ### [4.4.3](https://www.github.com/dasch-swiss/dsp-app/compare/v4.4.2...v4.4.3) (2021-04-14)
 
 
