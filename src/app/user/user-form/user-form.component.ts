@@ -429,7 +429,6 @@ export class UserFormComponent implements OnInit, OnChanges {
                                 this._dspApiConnection.admin.usersEndpoint.addUserToProjectMembership(this.user.id, res.id).subscribe(
                                     () => {
                                         // update project cache and member of project cache
-                                        this._cache.get(this.projectcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
                                         this._cache.get('members_of_' + this.projectcode, this._dspApiConnection.admin.projectsEndpoint.getProjectMembersByShortcode(this.projectcode));
                                         this.closeDialog.emit(this.user);
                                         this.loading = false;
