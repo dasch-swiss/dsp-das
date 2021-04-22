@@ -145,7 +145,7 @@ export class DefaultResourceClasses {
 }
 
 /* --> DSP-1559: disable RTI class;
-    the following object can be added again to the default classes as soon an RTI viewer is implemented
+    the following object can be added again to the default classes as soon as a RTI viewer is implemented
     {
         iri: Constants.KnoraApiV2 + Constants.HashDelimiter + 'DDDRepresentation',
         label: 'RTI Image',
