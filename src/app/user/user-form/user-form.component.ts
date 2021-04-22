@@ -7,6 +7,7 @@ import {
     Constants,
     KnoraApiConnection,
     ProjectResponse,
+    ReadProject,
     ReadUser,
     StringLiteral,
     UpdateUserRequest,
@@ -422,11 +423,10 @@ export class UserFormComponent implements OnInit, OnChanges {
                     if (this.projectcode) {
                         // if a projectcode exists, add the user to the project
                         // get project iri by projectcode
-                        this._cache.get(this.projectcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
-                        this._cache.get(this.projectcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode)).subscribe(
-                            (res: ApiResponseData<ProjectResponse>) => {
+                        this._cache.get(this.projectcode).subscribe(
+                            (res: ReadProject) => {
                                 // add user to project
-                                this._dspApiConnection.admin.usersEndpoint.addUserToProjectMembership(this.user.id, res.body.project.id).subscribe(
+                                this._dspApiConnection.admin.usersEndpoint.addUserToProjectMembership(this.user.id, res.id).subscribe(
                                     () => {
                                         // update project cache and member of project cache
                                         this._cache.get(this.projectcode, this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectcode));
