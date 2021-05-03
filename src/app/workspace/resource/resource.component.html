@@ -1,3 +1,75 @@
 <div class="content large middle">
-    <dsp-resource-view [iri]="resourceIri" (openProject)="openProject($event)" (referredResourceClicked)="openResource($event)" ></dsp-resource-view>
+    <div class="resource-view" *ngIf="resource && resPropInfoVals && systemPropDefs">
+
+        <!-- dsp-resource-representation -->
+        <div class="center">
+
+            <!-- still image view -->
+            <dsp-still-image
+                *ngIf="resource.representationsToDisplay.length && resource.representationsToDisplay.length === 1"
+                [images]="resource.representationsToDisplay">
+            </dsp-still-image>
+
+            <!-- compound object -->
+            <dsp-still-image
+                *ngIf="resource.representationsToDisplay.length && resource.representationsToDisplay.length > 1"
+                [images]="resource.representationsToDisplay">
+            </dsp-still-image>
+            <!-- TODO: here we'll add more viewers and players dsp-moving-image, dsp-audio etc. -->
+            <mat-divider></mat-divider>
+        </div>
+
+        <!-- tabs -->
+        <mat-tab-group animationDuration="0ms">
+            <!-- first tab for the main resource e.g. book -->
+            <mat-tab [label]="resource.readResource.entityInfo?.classes[resource.readResource.type].label">
+                <!-- dsp-property-toolbar with action buttons and project information -->
+                <dsp-property-toolbar *ngIf="showToolbar" [resource]="resource.readResource"
+                    [showAllProps]="showAllProps" (toggleProps)="!showAllProps"
+                    (referredProjectClicked)="openProject($event)">
+                </dsp-property-toolbar>
+                <!-- (referredProjectHovered)="referredProjectHovered.emit($event)" -->
+
+                <!-- dsp-property-view -->
+                <dsp-property-view *ngIf="resPropInfoVals.length !== 0 || systemPropDefs.length !== 0; else noProperty"
+                    [parentResource]="resource.readResource" [propArray]="resPropInfoVals"
+                    [systemPropArray]="systemPropDefs" [showAllProps]="showAllProps"
+                    (referredResourceClicked)="openResource($event)">
+                </dsp-property-view>
+
+                <ng-template #noProperty>The resource {{resource?.readResource.resourceClassLabel}} has no defined
+                    properties.</ng-template>
+            </mat-tab>
+            <mat-tab *ngIf="resource.incomingRepresentations.length"
+                [label]="resource.incomingRepresentations[0].entityInfo.classes[resource.incomingRepresentations[0].type].label">
+                <!-- dsp-property-toolbar with action buttons and project information -->
+                <dsp-property-toolbar *ngIf="showToolbar" [resource]="resource.incomingRepresentations[0]"
+                    [showAllProps]="showAllProps" (toggleProps)="!showAllProps"
+                    (referredProjectClicked)="openProject($event)">
+                </dsp-property-toolbar>
+                <!-- (referredProjectHovered)="referredProjectHovered.emit($event)" -->
+
+                <!-- dsp-property-view -->
+                <!-- <dsp-property-view *ngIf="resPropInfoVals.length !== 0 || systemPropDefs.length !== 0; else noProperty"
+                [parentResource]="resource.readResource"
+                            [propArray]="resPropInfoVals"
+                            [systemPropArray]="systemPropDefs"
+                            [showAllProps]="showAllProps"
+                            (referredResourceClicked)="referredResourceClicked.emit($event)"
+                            (referredResourceHovered)="referredResourceHovered.emit($event)">
+            </dsp-property-view> -->
+
+                <!-- <ng-template #noProperty>The resource {{resource?.readResource.resourceClassLabel}} has no defined properties.</ng-template> -->
+            </mat-tab>
+        </mat-tab-group>
+
+
+
+        <!--
+    <dsp-resource-view [iri]="resourceIri" (openProject)="openProject($event)"
+        (referredResourceClicked)="openResource($event)"></dsp-resource-view> -->
+
+        <!-- progress indicator -->
+        <dsp-progress-indicator *ngIf="!(resource && resPropInfoVals && systemPropDefs)"></dsp-progress-indicator>
+    </div>
 </div>
