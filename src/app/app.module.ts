@@ -90,6 +90,7 @@ import { SwitchPropertiesComponent } from './workspace/resource/resource-instanc
 import { SelectResourceClassComponent } from './workspace/resource/resource-instance-form/select-resource-class/select-resource-class.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
+import { ResourceToolbarComponent } from './workspace/resource/resource-toolbar/resource-toolbar.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -167,6 +168,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         UsersComponent,
         UsersListComponent,
         VisualizerComponent,
+        ResourceToolbarComponent,
     ],
     imports: [
         AppRoutingModule,

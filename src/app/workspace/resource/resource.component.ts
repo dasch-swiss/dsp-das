@@ -178,6 +178,10 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
      */
     getResource(iri: string): void {
 
+        if (!iri) {
+            return;
+        }
+
         // reset still image representations
         this.stillImageRepresentations = [];
 

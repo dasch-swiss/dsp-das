@@ -24,10 +24,10 @@
             <!-- first tab for the main resource e.g. book -->
             <mat-tab [label]="resource.readResource.entityInfo?.classes[resource.readResource.type].label">
                 <!-- dsp-property-toolbar with action buttons and project information -->
-                <dsp-property-toolbar *ngIf="showToolbar" [resource]="resource.readResource"
-                    [showAllProps]="showAllProps" (toggleProps)="!showAllProps"
+                <app-resource-toolbar *ngIf="resource.readResource" [resource]="resource.readResource"
+                    [showAllProps]="showAllProps" (toggleProps)="showAllProps = !showAllProps"
                     (referredProjectClicked)="openProject($event)">
-                </dsp-property-toolbar>
+                </app-resource-toolbar>
                 <!-- (referredProjectHovered)="referredProjectHovered.emit($event)" -->
 
                 <!-- dsp-property-view -->
@@ -43,10 +43,10 @@
             <mat-tab *ngIf="resource.incomingRepresentations.length"
                 [label]="resource.incomingRepresentations[0].entityInfo.classes[resource.incomingRepresentations[0].type].label">
                 <!-- dsp-property-toolbar with action buttons and project information -->
-                <dsp-property-toolbar *ngIf="showToolbar" [resource]="resource.incomingRepresentations[0]"
+                <app-resource-toolbar [resource]="resource.incomingRepresentations[0]"
                     [showAllProps]="showAllProps" (toggleProps)="!showAllProps"
                     (referredProjectClicked)="openProject($event)">
-                </dsp-property-toolbar>
+                </app-resource-toolbar>
                 <!-- (referredProjectHovered)="referredProjectHovered.emit($event)" -->
 
                 <!-- dsp-property-view -->
