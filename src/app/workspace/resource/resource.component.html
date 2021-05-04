@@ -2,17 +2,17 @@
     <div class="resource-view" *ngIf="resource && resPropInfoVals && systemPropDefs">
 
         <!-- dsp-resource-representation -->
-        <div class="center">
+        <div class="center" *ngIf="resource.representationsToDisplay.length">
 
             <!-- still image view -->
             <dsp-still-image
-                *ngIf="resource.representationsToDisplay.length && resource.representationsToDisplay.length === 1"
+                *ngIf="resource.representationsToDisplay.length === 1"
                 [images]="resource.representationsToDisplay">
             </dsp-still-image>
 
             <!-- compound object -->
             <dsp-still-image
-                *ngIf="resource.representationsToDisplay.length && resource.representationsToDisplay.length > 1"
+                *ngIf="resource.representationsToDisplay.length > 1"
                 [images]="resource.representationsToDisplay">
             </dsp-still-image>
             <!-- TODO: here we'll add more viewers and players dsp-moving-image, dsp-audio etc. -->
