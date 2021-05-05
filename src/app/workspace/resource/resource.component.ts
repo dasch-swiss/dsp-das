@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 import { Location } from '@angular/common';
 import { Component, Inject, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { MatSliderChange } from '@angular/material/slider';
 import { Title } from '@angular/platform-browser';
 import {
     ActivatedRoute,
@@ -13,6 +14,7 @@ import {
 import {
     ApiResponseError,
     Constants,
+    CountQueryResponse,
     DeleteValue,
     IHasPropertyWithPropertyDefinition,
     KnoraApiConnection,
@@ -35,7 +37,7 @@ import {
 } from '@dasch-swiss/dsp-ui';
 import { AddedEventValue, DeletedEventValue, Events, UpdatedEventValues, ValueOperationEventService } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
-import { DspResource } from './dsp-resource';
+import { DspCompoundPosition, DspResource } from './dsp-resource';
 import { IncomingService } from './incoming.service';
 
 @Component({
@@ -48,16 +50,37 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() resourceIri: string;
 
+    // this will be the main resource
     resource: DspResource;
 
-    resPropInfoVals: PropertyInfoValues[] = []; // array of resource properties
+    // in case of incoming representations,
+    // this will be the currently selected (part-of main) resource
+    incomingResource: DspResource;
 
-    systemPropDefs: SystemPropertyDefinition[] = []; // array of system properties
+    // list of representations to be displayed
+    // --> TODO: will be expanded with | MovingImageRepresentation[] | AudioRepresentation[] etc.
+    representationsToDisplay: StillImageRepresentation[] = [];
+
+    // in case of compound object,
+    // this will store the current page position information
+    compoundPosition: DspCompoundPosition;
+
+    // --> TODO: incoming representation annotations (DSP-1583)
+    // annotations:
+
+
+    // resPropInfoVals: PropertyInfoValues[] = []; // array of resource properties
+
+    // systemPropDefs: SystemPropertyDefinition[] = []; // array of system properties
 
     valueOperationEventSubscriptions: Subscription[] = []; // array of ValueOperationEvent subscriptions
 
-    stillImageRepresentations: StillImageRepresentation[];
-    incomingStillImageRepresentationCurrentOffset: number;
+    // stillImageRepresentations: StillImageRepresentation[];
+    // incomingCurrentOffset: number;
+    // incomingCurrentPage: number;
+
+    // incomingPropInfoVals: PropertyInfoValues[] = []; // array of current incoming resource properties (e.g. in case of book page)
+    // incomingSystemPropDefs: SystemPropertyDefinition[] = []; // array of system properties
 
     showAllProps = false;
 
@@ -112,26 +135,18 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit() {
-        // subscribe to the ValueOperationEventService and listen for an event to be emitted
-        this.valueOperationEventSubscriptions.push(this._valueOperationEventService.on(
-            Events.ValueAdded, (newValue: AddedEventValue) =>
-                this.addValueToResource(newValue.addedValue)
-        ));
 
-        this.valueOperationEventSubscriptions.push(this._valueOperationEventService.on(
-            Events.ValueUpdated, (updatedValue: UpdatedEventValues) =>
-                this.updateValueInResource(updatedValue.currentValue, updatedValue.updatedValue)
-        ));
-
-        this.valueOperationEventSubscriptions.push(this._valueOperationEventService.on(
-            Events.ValueDeleted, (deletedValue: DeletedEventValue) =>
-                this.deleteValueFromResource(deletedValue.deletedValue)
-        ));
 
     }
 
     ngOnChanges() {
+        // reset all resources
+        this.resource = undefined;
+        this.incomingResource = undefined;
+        this.representationsToDisplay = [];
+        this.compoundPosition = undefined;
         // get resource with all necessary information
+        // incl. incoming resources and annotations
         if (this.resourceIri) {
             this.getResource(this.resourceIri);
         }
@@ -152,10 +167,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
     // ------------------------------------------------------------------------
     // general methods
     // ------------------------------------------------------------------------
-    goBack() {
-        // --> TODO: is this still needed?
-        this._location.back();
-    }
 
     // open project in new tab
     openProject(project: ReadProject) {
@@ -164,6 +175,36 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
 
     openResource(linkValue: ReadLinkValue) {
         window.open('/resource/' + encodeURIComponent(linkValue.linkedResource.id), '_blank');
+    }
+
+    goToPage(event: MatSliderChange) {
+        console.log(event.value);
+    }
+
+    compoundNavigation(page: number) {
+
+        // set current compound object position
+        // calculate offset and offset item position from current page and total pages info
+
+        const offset = Math.ceil(page / 25) - 1;
+        const position = Math.floor(page - (offset * 25) - 1);
+
+        if (offset !== this.compoundPosition.offset) {
+            this.compoundPosition.offset = offset;
+            this.getIncomingStillImageRepresentations(offset);
+        } else {
+            // get incoming resource
+            this.getIncomingResource(this.resource.incomingRepresentations[position].id);
+        }
+        this.compoundPosition.position = position;
+        this.compoundPosition.page = page;
+
+        this.collectImagesAndRegionsForResource(this.incomingResource);
+        // get all information for this page
+        // this.incomingResource
+
+        // update incoming resource information
+
     }
 
     // ------------------------------------------------------------------------
@@ -176,131 +217,145 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
      *
      * @param iri resourceIri
      */
-    getResource(iri: string): void {
-
+    getResource(iri: string, incoming: boolean = false): void {
         if (!iri) {
             return;
         }
 
-        // reset still image representations
-        this.stillImageRepresentations = [];
-
         this._dspApiConnection.v2.res.getResource(iri).subscribe(
             (response: ReadResource) => {
-
                 const res = new DspResource(response);
 
-                this.collectImagesAndRegionsForResource(res);
                 this.resource = res;
 
-                console.log(this.resource);
+                this.collectImagesAndRegionsForResource(this.resource);
+
+
+                if (!this.representationsToDisplay.length && !this.compoundPosition) {
+                    // the resource could be a compound object
+                    this._incomingService.getStillImageRepresentationsForCompoundResource(this.resource.res.id, 0, true).subscribe(
+                        (countQuery: CountQueryResponse) => {
+
+                            if (countQuery.numberOfResults > 0) {
+
+                                this.compoundPosition = new DspCompoundPosition(countQuery.numberOfResults);
+                                this.compoundNavigation(1);
+                                // this.getIncomingStillImageRepresentations(this.compoundPosition.offset);
+                            }
+                        },
+                        (error: ApiResponseError) => {
+                            this._notification.openSnackBar(error);
+                        }
+                    );
+                }
 
                 // find resource type and get representation info
-                // this.getIncomingStillImageRepresentations(2)
-
 
                 // gather resource property information
-                this.resPropInfoVals = this.resource.readResource.entityInfo.classes[this.resource.readResource.type].getResourcePropertiesList().map(
-                    (prop: IHasPropertyWithPropertyDefinition) => {
-                        let propInfoAndValues: PropertyInfoValues;
+                res.resProps = this.initProps(response);
 
-                        switch (prop.propertyDefinition.objectType) {
-                            case Constants.StillImageFileValue:
-                                propInfoAndValues = {
-                                    propDef: prop.propertyDefinition,
-                                    guiDef: prop,
-                                    values: this.resource.readResource.getValuesAs(prop.propertyIndex, ReadStillImageFileValue)
-                                };
-                                this.stillImageRepresentations = [new StillImageRepresentation(
-                                    this.resource.readResource.getValuesAs(Constants.HasStillImageFileValue, ReadStillImageFileValue)[0], [])
-                                ];
+                res.systemProps = this.resource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
-                                // --> TODO: get regions here
-
-                                break;
-
-                            default:
-                                // the object type is none from above;
-                                // get incoming stillImages (in case of a compound object)
-                                // this.getIncomingStillImageRepresentations(0)
-
-
-                                propInfoAndValues = {
-                                    propDef: prop.propertyDefinition,
-                                    guiDef: prop,
-                                    values: this.resource.readResource.getValues(prop.propertyIndex)
-                                };
-                        }
-
-                        return propInfoAndValues;
-                    }
-                );
-
-                console.log(this.resPropInfoVals);
-
-                // sort properties by guiOrder
-                this.resPropInfoVals =
-                    this.resPropInfoVals
-                        .filter(prop => prop.propDef.objectType !== Constants.GeomValue)
-                        .sort((a, b) => (a.guiDef.guiOrder > b.guiDef.guiOrder) ? 1 : -1);
-
-                // get system property information
-                this.systemPropDefs = this.resource.readResource.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
+                console.warn('main res', res);
 
                 this.loading = false;
-
             },
             (error: ApiResponseError) => {
                 this._notification.openSnackBar(error);
-            });
+            }
+        );
     }
 
-    protected collectImagesAndRegionsForResource(resource: DspResource): void {
+    getIncomingResource(iri: string) {
+        this._dspApiConnection.v2.res.getResource(iri).subscribe(
+            (response: ReadResource) => {
+                const res = new DspResource(response);
 
-        const imgRepresentations: StillImageRepresentation[] = [];
+                this.incomingResource = res;
+                res.resProps = this.initProps(response);
+                res.systemProps = this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
-        if (resource.readResource.properties[Constants.HasStillImageFileValue] !== undefined) {
+                this.collectImagesAndRegionsForResource(this.incomingResource);
+                // console.log('incoming', this.incomingResource);
+            },
+            (error: ApiResponseError) => {
+                this._notification.openSnackBar(error);
+            }
+        );
+    }
+    /**
+     * gather resource property information
+     */
+    protected initProps(resource: ReadResource): PropertyInfoValues[] {
+        let props = resource.entityInfo.classes[resource.type].getResourcePropertiesList().map(
+            (prop: IHasPropertyWithPropertyDefinition) => {
+                let propInfoAndValues: PropertyInfoValues;
+
+                switch (prop.propertyDefinition.objectType) {
+                    case Constants.StillImageFileValue:
+                        propInfoAndValues = {
+                            propDef: prop.propertyDefinition,
+                            guiDef: prop,
+                            values: resource.getValuesAs(prop.propertyIndex, ReadStillImageFileValue)
+                        };
+
+                        const stillImageRepresentations = [new StillImageRepresentation(
+                            resource.getValuesAs(Constants.HasStillImageFileValue, ReadStillImageFileValue)[0], [])
+                        ];
+
+                        this.representationsToDisplay = stillImageRepresentations;
+
+                        // --> TODO: get regions here
+
+                        break;
+
+                    default:
+                        // the object type is none from above
+                        propInfoAndValues = {
+                            propDef: prop.propertyDefinition,
+                            guiDef: prop,
+                            values: resource.getValues(prop.propertyIndex)
+                        };
+                }
+
+                return propInfoAndValues;
+            }
+        );
+
+        // sort properties by guiOrder
+        props = props
+            .filter(prop => prop.propDef.objectType !== Constants.GeomValue)
+            .sort((a, b) => (a.guiDef.guiOrder > b.guiDef.guiOrder) ? 1 : -1);
+
+        return props;
+    }
+
+    /**
+     * creates a collection of [[StillImageRepresentation]] belonging to the given resource and assigns it to it.
+     * each [[StillImageRepresentation]] represents an image including regions.
+     *
+     * @param resource The resource to get the images for.
+     * @returns A collection of images for the given resource.
+     */
+    // --> TODO: rename to collectRepresentationsAndAnnotations
+    protected collectImagesAndRegionsForResource(resource: DspResource): any {
+
+        console.log('collectImagesAndRegionsForResource', resource)
+
+        // --> TODO: should be a general object for all kind of representations
+        const representations: StillImageRepresentation[] = [];
+
+        // --> TODO: use a switch here to go throught the different representation types
+        if (resource.res.properties[Constants.HasStillImageFileValue] !== undefined) {
             // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
             // resource has StillImageFileValues that are directly attached to it (properties)
 
-            const fileValues: ReadStillImageFileValue[] = resource.readResource.properties[Constants.HasStillImageFileValue] as ReadStillImageFileValue[];
+            const fileValues: ReadStillImageFileValue[] = resource.res.properties[Constants.HasStillImageFileValue] as ReadStillImageFileValue[];
 
             for (const img of fileValues) {
 
                 const regions: Region[] = [];
-                for (const incomingRegion of resource.incomingRepresentationAnnotations) {
-
-                    const region = new Region(incomingRegion);
-
-                    regions.push(region);
-
-                }
-
-                const stillImage = new StillImageRepresentation(img, regions);
-                imgRepresentations.push(stillImage);
-
-            }
-
-
-        } else if (resource.incomingRepresentations.length > 0) {
-            // there are StillImageRepresentations pointing to this resource (incoming)
-
-            const readStillImageFileValues: ReadStillImageFileValue[] = resource.incomingRepresentations.map(
-                (stillImageRes: ReadResource) => {
-                    const fileValues = stillImageRes.properties[Constants.HasStillImageFileValue] as ReadStillImageFileValue[];
-                    // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
-
-                    return fileValues;
-                }
-            ).reduce((prev, curr) => {
-                // transform ReadStillImageFileValue[][] to ReadStillImageFileValue[]
-                return prev.concat(curr);
-            });
-
-            for (const img of readStillImageFileValues) {
-
-                const regions: Region[] = [];
-                for (const incomingRegion of resource.incomingRepresentationAnnotations) {
+                for (const incomingRegion of resource.incomingAnnotations) {
 
                     const region = new Region(incomingRegion);
                     regions.push(region);
@@ -308,70 +363,47 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                 }
 
                 const stillImage = new StillImageRepresentation(img, regions);
-                imgRepresentations.push(stillImage);
+                representations.push(stillImage);
+
             }
 
         }
 
-        resource.representationsToDisplay = imgRepresentations;
-    }
+        // else if (resource.incomingRepresentations.length > 0) {
+        //     // there are StillImageRepresentations pointing to this resource (incoming)
 
-    /**
-     * requests incoming resources for [[this.resource]].
-     * Incoming resources are: regions, StillImageRepresentations, and incoming links.
-     *
-     *
-     */
-    protected requestIncomingResources(): void {
+        //     const readStillImageFileValues: ReadStillImageFileValue[] = resource.incomingRepresentations.map(
+        //         (stillImageRes: ReadResource) => {
+        //             const fileValues = stillImageRes.properties[Constants.HasStillImageFileValue] as ReadStillImageFileValue[];
+        //             // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
 
-        // make sure that this.resource has been initialized correctly
-        if (this.resource === undefined) {
-            return;
-        }
+        //             return fileValues;
+        //         }
+        //     ).reduce((prev, curr) => {
+        //         // transform ReadStillImageFileValue[][] to ReadStillImageFileValue[]
+        //         return prev.concat(curr);
+        //     });
 
-        // request incoming regions --> TODO: add case to get incoming sequences in case of video and audio
-        if (this.resource.readResource.properties[Constants.HasStillImageFileValue]) {
-            // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
-            // the resource is a StillImageRepresentation, check if there are regions pointing to it
+        //     for (const img of readStillImageFileValues) {
 
-            this.getIncomingRegions(0);
+        //         const regions: Region[] = [];
+        //         for (const incomingRegion of resource.incomingAnnotations) {
 
-        } else {
-            // this resource is not a StillImageRepresentation
-            // check if there are StillImageRepresentations pointing to this resource
+        //             const region = new Region(incomingRegion);
+        //             regions.push(region);
 
-            // this gets the first page of incoming StillImageRepresentations
-            // more pages may be requested by [[this.viewer]].
-            // --> TODO: for now, we begin with offset 0. This may have to be changed later (beginning somewhere in a collection)
-            this.getIncomingStillImageRepresentations(0);
-        }
+        //         }
 
-        // check for incoming links for the current resource
-        this.getIncomingLinks(0);
+        //         const stillImage = new StillImageRepresentation(img, regions);
+        //         representations.push(stillImage);
+        //     }
 
-    }
+        //     // display first page
+        //     this.compoundNavigation(1);
 
-    /**
-     * gets the incoming regions for [[this.resource]].
-     *
-     * @param offset the offset to be used (needed for paging). First request uses an offset of 0.
-     */
-    protected getIncomingRegions(offset: number): void {
-        this._incomingService.getIncomingRegions(this.resource.readResource.id, offset).subscribe(
-            (regions: ReadResourceSequence) => {
+        // }
 
-                // append elements of regions.resources to resource.incoming
-                Array.prototype.push.apply(this.resource.incomingRepresentationAnnotations, regions.resources);
-
-                // prepare regions to be displayed
-                // triggers ngOnChanges of StillImageComponent
-                this.collectImagesAndRegionsForResource(this.resource);
-
-            },
-            (error: any) => {
-                this._notification.openSnackBar(error);
-            }
-        );
+        this.representationsToDisplay = representations;
     }
 
     /**
@@ -387,30 +419,41 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
 
-        if (offset < 0) {
+        if (offset < 0 || offset > this.compoundPosition.maxOffsets) {
             console.log(`offset of ${offset} is invalid`);
             return;
         }
 
-        this._incomingService.getStillImageRepresentationsForCompoundResource(this.resource.readResource.id, offset).subscribe(
+        // get all representations for compound resource of this offset sequence
+        this._incomingService.getStillImageRepresentationsForCompoundResource(this.resource.res.id, offset).subscribe(
             (incomingImageRepresentations: ReadResourceSequence) => {
-
-                // console.log(incomingImageRepresentations);
 
                 if (incomingImageRepresentations.resources.length > 0) {
 
                     // set current offset
-                    this.incomingStillImageRepresentationCurrentOffset = offset;
+                    // this.incomingCurrentOffset = offset;
 
                     // --> TODO: implement prepending of StillImageRepresentations when moving to the left (getting previous pages)
                     // --> TODO: append existing images to response and then assign response to `this.resource.incomingStillImageRepresentations`
                     // --> TODO: maybe we have to support non consecutive arrays (sparse arrays)
 
                     // append incomingImageRepresentations.resources to this.resource.incomingStillImageRepresentations
-                    Array.prototype.push.apply(this.resource.incomingRepresentations, incomingImageRepresentations.resources);
+
+                    // set the incoming representations for the current offset only
+                    this.resource.incomingRepresentations = incomingImageRepresentations.resources;
+
+                    // Array.prototype.push.apply(this.resource.incomingRepresentations, incomingImageRepresentations.resources);
 
                     // prepare attached image files to be displayed
-                    this.collectImagesAndRegionsForResource(this.resource);
+                    // this.collectImagesAndRegionsForResource(this.resource);
+
+                    this.getIncomingResource(this.resource.incomingRepresentations[this.compoundPosition.position].id);
+
+                    // get properties and values for current incoming image representation
+                    // this.incomingPropInfoVals = this.initProps(this.resource.incomingRepresentations[this.incomingCurrentPage]);
+
+                    // get system property information
+                    // this.incomingSystemPropDefs = this.resource.incomingRepresentations[this.incomingCurrentPage].entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
                 }
             },
             (error: any) => {
@@ -418,6 +461,62 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
             }
         );
 
+    }
+
+    /**
+     * requests incoming resources for [[this.resource]].
+     * Incoming resources are: regions, StillImageRepresentations, and incoming links.
+     */
+    protected requestIncomingResources(): void {
+
+        // make sure that this.resource has been initialized correctly
+        if (this.resource === undefined) {
+            return;
+        }
+
+        // request incoming regions --> TODO: add case to get incoming sequences in case of video and audio
+        if (this.resource.res.properties[Constants.HasStillImageFileValue]) {
+            // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
+            // the resource is a StillImageRepresentation, check if there are regions pointing to it
+
+            this.getIncomingRegions(0);
+
+        } else {
+            // this resource is not a StillImageRepresentation
+            // check if there are StillImageRepresentations pointing to this resource
+
+            // this gets the first page of incoming StillImageRepresentations
+            // more pages may be requested by [[this.viewer]].
+            // --> TODO: for now, we begin with offset 0. This may have to be changed later (beginning somewhere in a collection)
+            this.getIncomingStillImageRepresentations(this.compoundPosition.offset);
+        }
+
+        // check for incoming links for the current resource
+        this.getIncomingLinks(0);
+
+    }
+
+    /**
+     * gets the incoming regions for [[this.resource]].
+     *
+     * @param offset the offset to be used (needed for paging). First request uses an offset of 0.
+     */
+    protected getIncomingRegions(offset: number): void {
+        this._incomingService.getIncomingRegions(this.resource.res.id, offset).subscribe(
+            (regions: ReadResourceSequence) => {
+
+                // append elements of regions.resources to resource.incoming
+                Array.prototype.push.apply(this.resource.incomingAnnotations, regions.resources);
+
+                // prepare regions to be displayed
+                // triggers ngOnChanges of StillImageComponent
+                this.collectImagesAndRegionsForResource(this.resource);
+
+            },
+            (error: any) => {
+                this._notification.openSnackBar(error);
+            }
+        );
     }
 
     /**
@@ -428,153 +527,15 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
      */
     protected getIncomingLinks(offset: number): void {
 
-        this._incomingService.getIncomingLinksForResource(this.resource.readResource.id, offset).subscribe(
+        this._incomingService.getIncomingLinksForResource(this.resource.res.id, offset).subscribe(
             (incomingResources: ReadResourceSequence) => {
 
                 // append elements incomingResources to this.resource.incomingLinks
-                Array.prototype.push.apply(this.resource.readResource.incomingReferences, incomingResources.resources);
+                Array.prototype.push.apply(this.resource.res.incomingReferences, incomingResources.resources);
             },
             (error: any) => {
                 this._notification.openSnackBar(error);
             }
         );
     }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    // edit and update
-    // ------------------------------------------------------------------------
-    /**
-     * updates the UI in the event of a new value being added to show the new value
-     *
-     * @param valueToAdd the value to add to the end of the values array of the filtered property
-     */
-    addValueToResource(valueToAdd: ReadValue): void {
-        if (this.resPropInfoVals) {
-            this.resPropInfoVals
-                .filter(propInfoValueArray =>
-                    propInfoValueArray.propDef.id === valueToAdd.property) // filter to the correct property
-                .forEach(propInfoValue =>
-                    propInfoValue.values.push(valueToAdd)); // push new value to array
-            if (valueToAdd instanceof ReadTextValueAsXml) {
-                this._updateStandoffLinkValue();
-            }
-        } else {
-            console.error('No properties exist for this resource');
-        }
-    }
-
-    /**
-     * updates the UI in the event of an existing value being updated to show the updated value
-     *
-     * @param valueToReplace the value to be replaced within the values array of the filtered property
-     * @param updatedValue the value to replace valueToReplace with
-     */
-    updateValueInResource(valueToReplace: ReadValue, updatedValue: ReadValue): void {
-        if (this.resPropInfoVals && updatedValue !== null) {
-            this.resPropInfoVals
-                .filter(propInfoValueArray =>
-                    propInfoValueArray.propDef.id === valueToReplace.property) // filter to the correct property
-                .forEach(filteredpropInfoValueArray => {
-                    filteredpropInfoValueArray.values.forEach((val, index) => { // loop through each value of the current property
-                        if (val.id === valueToReplace.id) { // find the value that should be updated using the id of valueToReplace
-                            filteredpropInfoValueArray.values[index] = updatedValue; // replace value with the updated value
-                        }
-                    });
-                });
-            if (updatedValue instanceof ReadTextValueAsXml) {
-                this._updateStandoffLinkValue();
-            }
-        } else {
-            console.error('No properties exist for this resource');
-        }
-    }
-
-    /**
-     * updates the UI in the event of an existing value being deleted
-     *
-     * @param valueToDelete the value to remove from the values array of the filtered property
-     */
-    deleteValueFromResource(valueToDelete: DeleteValue): void {
-        if (this.resPropInfoVals) {
-            this.resPropInfoVals
-                .filter(propInfoValueArray =>  // filter to the correct type
-                    this._valueService.compareObjectTypeWithValueType(propInfoValueArray.propDef.objectType, valueToDelete.type))
-                .forEach(filteredpropInfoValueArray => {
-                    filteredpropInfoValueArray.values.forEach((val, index) => { // loop through each value of the current property
-                        if (val.id === valueToDelete.id) { // find the value that was deleted using the id
-                            filteredpropInfoValueArray.values.splice(index, 1); // remove the value from the values array
-                            if (val instanceof ReadTextValueAsXml) {
-                                this._updateStandoffLinkValue();
-                            }
-                        }
-                    });
-                }
-                );
-        } else {
-            console.error('No properties exist for this resource');
-        }
-    }
-
-    /**
-     * updates the standoff link value for the resource being displayed.
-     *
-     */
-    private _updateStandoffLinkValue(): void {
-
-        if (this.resource === undefined) {
-            // this should never happen:
-            // if the user was able to click on a standoff link,
-            // then the resource must have been initialised before.
-            return;
-        }
-
-        const gravsearchQuery = `
- PREFIX knora-api: <http://api.knora.org/ontology/knora-api/simple/v2#>
- CONSTRUCT {
-     ?res knora-api:isMainResource true .
-     ?res knora-api:hasStandoffLinkTo ?target .
- } WHERE {
-     BIND(<${this.resource.readResource.id}> as ?res) .
-     OPTIONAL {
-         ?res knora-api:hasStandoffLinkTo ?target .
-     }
- }
- OFFSET 0
- `;
-
-        this._dspApiConnection.v2.search.doExtendedSearch(gravsearchQuery).subscribe(
-            (res: ReadResourceSequence) => {
-
-                // one resource is expected
-                if (res.resources.length !== 1) {
-                    return;
-                }
-
-                const newStandoffLinkVals = res.resources[0].getValuesAs(Constants.HasStandoffLinkToValue, ReadLinkValue);
-
-                this.resPropInfoVals.filter(
-                    resPropInfoVal => {
-                        return resPropInfoVal.propDef.id === Constants.HasStandoffLinkToValue;
-                    }
-                ).forEach(
-                    standoffLinkResPropInfoVal => {
-                        // delete all the existing standoff link values
-                        standoffLinkResPropInfoVal.values = [];
-                        // push standoff link values retrieved for the resource
-                        newStandoffLinkVals.forEach(
-                            standoffLinkVal => {
-                                standoffLinkResPropInfoVal.values.push(standoffLinkVal);
-                            }
-                        );
-                    });
-
-            },
-            err => {
-                console.error(err);
-            }
-        );
-
-    }
-
 }

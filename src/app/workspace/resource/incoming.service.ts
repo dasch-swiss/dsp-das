@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { ApiResponseError, KnoraApiConnection, ReadResourceSequence } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, CountQueryResponse, KnoraApiConnection, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { Observable } from 'rxjs';
 
@@ -77,9 +77,10 @@ knora-api:hasColor knora-api:objectType knora-api:Color .
      *
      * @param {string} resourceIri the Iri of the resource whose StillImageRepresentations should be returned.
      * @param {number} offset the offset to be used for paging. 0 is the default and is used to get the first page of results.
+     * @param {boolean} countQuery if set to true, the request returns only the CountQueryResponse; default value is `false`
      * @returns {Observable<any>}
      */
-    getStillImageRepresentationsForCompoundResource(resourceIri: string, offset: number): Observable<ReadResourceSequence | ApiResponseError> {
+    getStillImageRepresentationsForCompoundResource(resourceIri: string, offset: number, countQuery: boolean = false): Observable<ReadResourceSequence | CountQueryResponse | ApiResponseError> {
         const sparqlQueryStr = `
 PREFIX knora-api: <http://api.knora.org/ontology/knora-api/simple/v2#>
 
@@ -113,7 +114,8 @@ knora-api:hasStillImageFile knora-api:objectType knora-api:File .
 OFFSET ${offset}
 `;
 
-        return this._dspApiConnection.v2.search.doExtendedSearch(sparqlQueryStr);
+
+        return (countQuery ? this._dspApiConnection.v2.search.doExtendedSearchCountQuery(sparqlQueryStr) : this._dspApiConnection.v2.search.doExtendedSearch(sparqlQueryStr));
 
     }
 

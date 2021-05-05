@@ -4,30 +4,47 @@ import { ActivatedRoute } from '@angular/router';
 import {
     Constants,
     KnoraApiConnection,
+    ReadIntValue,
     ReadLinkValue,
     ReadResource,
-    ReadValue
+    ReadTextValue,
+    ReadValue,
+    SystemPropertyDefinition
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, StillImageComponent, StillImageRepresentation } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, PropertyInfoValues, StillImageComponent, StillImageRepresentation } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 import { IncomingService } from './incoming.service';
 
 export class DspResource {
 
-    readResource: ReadResource;
+    res: ReadResource;
+
+    resProps: PropertyInfoValues[] = []; // array of resource properties
+
+    systemProps: SystemPropertyDefinition[] = []; // array of system properties
 
     // regions or sequences
-    incomingRepresentationAnnotations: ReadResource[] = [];
+    incomingAnnotations: ReadResource[] = [];
 
     // incoming stillImages, movingImages, audio etc.
     incomingRepresentations: ReadResource[] = [];
 
-    // --> TODO: will be expanded with MovingImageRepresentation, AudioRepresentation etc.
-    representationsToDisplay: StillImageRepresentation[] = [];
-
     constructor(resource: ReadResource) {
 
-        this.readResource = resource;
+        this.res = resource;
+    }
+}
+
+export class DspCompoundPosition {
+    offset: number;         // current offset of search requests
+    maxOffsets: number;     // max offsets in relation to totalPages
+    position: number;       // current item position in offset sequence
+    page: number;           // current and real page number in compound object
+    totalPages: number;     // total pages (part of) in compound object
+
+    constructor(totalPages: number) {
+        this.totalPages = totalPages;
+        this.maxOffsets = Math.ceil(totalPages / 25) - 1;;
     }
 }
 
@@ -37,6 +54,16 @@ export interface PropIriToNameMapping {
 
 export interface PropertyValues {
     [index: string]: ReadValue[];
+}
+
+class PageProps implements PropertyValues {
+
+    [index: string]: ReadValue[];
+
+    pagenum: ReadTextValue[] = [];
+    seqnum: ReadIntValue[] = [];
+    partOf: ReadLinkValue[] = [];
+
 }
 
 
@@ -121,9 +148,9 @@ export abstract class DspCompoundResource implements OnInit, OnDestroy {
 
         const swapped = DspCompoundResource._swap(this.propIris);
 
-        for (const key in this.resource.readResource.properties) {
-            if (this.resource.readResource.properties.hasOwnProperty(key)) {
-                for (const val of this.resource.readResource.properties[key]) {
+        for (const key in this.resource.res.properties) {
+            if (this.resource.res.properties.hasOwnProperty(key)) {
+                for (const val of this.resource.res.properties[key]) {
                     const name = swapped[val.property];
 
                     if (name !== undefined && Array.isArray(propClass[name])) {
