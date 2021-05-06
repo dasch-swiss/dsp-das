@@ -149,6 +149,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     compoundNavigation(page: number) {
+        this.representationsToDisplay = [];
 
         // set current compound object position
         // calculate offset and offset item position from current page and total pages info

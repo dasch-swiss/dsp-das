@@ -1,5 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Constants, Point2D, ReadGeomValue, ReadResource, ReadStillImageFileValue, RegionGeometry } from '@dasch-swiss/dsp-js';
+import { DspCompoundPosition } from '../../dsp-resource';
 
 
 // this component needs the openseadragon library itself, as well as the openseadragon plugin openseadragon-svg-overlay
@@ -83,6 +84,10 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     @Input() imageCaption?: string;
     @Input() activateRegion?: string; // highlight a region
 
+    @Input() compoundNavigation?: DspCompoundPosition;
+
+    @Output() goToPage = new EventEmitter<number>();
+
     @Output() regionClicked = new EventEmitter<string>();
 
     private _viewer;
@@ -91,7 +96,12 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
     constructor(
         private _elementRef: ElementRef
-    ) { }
+    ) {
+        OpenSeadragon.setString('Tooltips.Home', null);
+        OpenSeadragon.setString('Tooltips.ZoomIn', null);
+        OpenSeadragon.setString('Tooltips.ZoomOut', null);
+        OpenSeadragon.setString('Tooltips.FullPage', null);
+    }
     /**
      * calculates the surface of a rectangular region.
      *
@@ -225,15 +235,20 @@ export class StillImageComponent implements OnChanges, OnDestroy {
             element: viewerContainer,
             sequenceMode: false,
             showReferenceStrip: true,
-            showNavigator: true,
             zoomInButton: 'DSP_OSD_ZOOM_IN',
             zoomOutButton: 'DSP_OSD_ZOOM_OUT',
-            /* previousButton: 'DSP_OSD_PREV_PAGE',
-            nextButton: 'DSP_OSD_NEXT_PAGE',*/
+            previousButton: 'DSP_OSD_PREV_PAGE',
+            nextButton: 'DSP_OSD_NEXT_PAGE',
             homeButton: 'DSP_OSD_HOME',
-            fullPageButton: 'DSP_OSD_FULL_PAGE'/* ,
-            rotateLeftButton: 'DSP_OSD_ROTATE_LEFT',        // doesn't work yet
-            rotateRightButton: 'DSP_OSD_ROTATE_RIGHT'*/       // doesn't work yet
+            fullPageButton: 'DSP_OSD_FULL_PAGE',
+            // rotateLeftButton: 'DSP_OSD_ROTATE_LEFT',        // doesn't work yet
+            // rotateRightButton: 'DSP_OSD_ROTATE_RIGHT',       // doesn't work yet
+            showNavigator: true,
+            navigatorPosition: 'ABSOLUTE',
+            navigatorTop: '40px',
+            navigatorLeft: 'calc(100% - 160px)',
+            navigatorHeight: '120px',
+            navigatorWidth: '120px',
         };
         this._viewer = new OpenSeadragon.Viewer(osdOptions);
 

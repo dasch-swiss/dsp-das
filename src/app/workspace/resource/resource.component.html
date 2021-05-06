@@ -5,29 +5,17 @@
         <div class="center" *ngIf="representationsToDisplay.length">
 
             <!-- compound object navigation -->
-            <div class="compound-object" *ngIf="incomingResource">
-                <button mat-button [disabled]="compoundPosition.page <= 1"
-                    (click)="compoundNavigation(compoundPosition.page - 1)">Previous</button>
+            <div class="compound-object" *ngIf="compoundPosition">
 
-                <mat-slider
-                    [color]="'primary'"
-                    [disabled]="compoundPosition.totalPages < 2"
-                    [max]="compoundPosition.totalPages"
-                    [min]="1"
-                    [step]="1"
-                    [thumbLabel]="true"
-                    [tickInterval]="'auto'"
-                    [(ngModel)]="compoundPosition.page"
-                    (change)="compoundNavigation($event.value)">
-                </mat-slider>
-
-                <button mat-button [disabled]="compoundPosition.page >= compoundPosition.totalPages"
-                    (click)="compoundNavigation(compoundPosition.page + 1)">Next</button>
             </div>
             <!-- still image view -->
-            <app-still-image [images]="representationsToDisplay"></app-still-image>
+            <app-still-image
+                [images]="representationsToDisplay"
+                [imageCaption]="(incomingResource ? resource.res.label + ': ' + incomingResource.res.label : resource.res.label)"
+                [compoundNavigation]="compoundPosition" (goToPage)="compoundNavigation($event)">
+            </app-still-image>
             <!-- TODO: here we'll add more viewers and players dsp-moving-image, dsp-audio etc. -->
-            <mat-divider></mat-divider>
+
         </div>
 
         <!-- tabs -->
@@ -71,6 +59,11 @@
                 <!-- <ng-template #noProperty>The resource {{resource?.res.resourceClassLabel}} has no defined properties.</ng-template> -->
             </mat-tab>
         </mat-tab-group>
+
+
+
+
+
 
 
 
