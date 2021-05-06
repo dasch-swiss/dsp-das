@@ -24,11 +24,11 @@ import { ResourceToolbarComponent } from './resource-toolbar.component';
  */
 @Component({
     template: `
-      <dsp-property-toolbar #resToolbar
+      <app-resource-toolbar #resToolbar
         [resource]="parentResource"
         [showAllProps]="showAllProps"
         (toggleProps)="toggleProps($event)">
-      </dsp-property-toolbar>`
+      </app-resource-toolbar>`
 })
 class TestResourceParentComponent implements OnInit {
 

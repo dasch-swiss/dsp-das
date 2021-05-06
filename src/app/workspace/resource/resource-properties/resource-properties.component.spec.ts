@@ -7,6 +7,7 @@ import {
     ApiResponseError,
     Constants,
     IHasPropertyWithPropertyDefinition,
+    KnoraApiConnection,
     MockResource,
     ReadLinkValue,
     ReadResource,
@@ -15,13 +16,19 @@ import {
     SystemPropertyDefinition
 } from '@dasch-swiss/dsp-js';
 import {
+    AppInitService,
+    DspActionModule,
+    DspApiConfigToken,
+    DspApiConnectionToken,
+    DspCoreModule,
+    DspViewerModule,
     EmitEvent,
     Events,
     PropertyInfoValues,
-    PropertyViewComponent,
     ValueOperationEventService
 } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
+import { TestConfig } from 'test.config';
 import { ResourcePropertiesComponent } from './resource-properties.component';
 
 /**
@@ -40,7 +47,7 @@ import { ResourcePropertiesComponent } from './resource-properties.component';
 })
 class TestPropertyParentComponent implements OnInit, OnDestroy {
 
-    @ViewChild('propView') propertyViewComponent: PropertyViewComponent;
+    @ViewChild('propView') resourcePropertiesComponent: ResourcePropertiesComponent;
 
     parentResource: ReadResource;
 
@@ -158,7 +165,16 @@ describe('ResourcePropertiesComponent', () => {
                 ResourcePropertiesComponent
             ],
             providers: [
-                ValueOperationEventService
+                ValueOperationEventService,
+                AppInitService,
+                {
+                    provide: DspApiConfigToken,
+                    useValue: TestConfig.ApiConfig
+                },
+                {
+                    provide: DspApiConnectionToken,
+                    useValue: new KnoraApiConnection(TestConfig.ApiConfig)
+                }
             ]
         })
             .compileComponents();
@@ -262,7 +278,7 @@ describe('ResourcePropertiesComponent', () => {
         let propertyViewComponentDe;
 
         beforeEach(() => {
-            expect(testHostComponent.propertyViewComponent).toBeTruthy();
+            expect(testHostComponent.resourcePropertiesComponent).toBeTruthy();
 
             hostCompDe = testHostFixture.debugElement;
 
@@ -270,8 +286,8 @@ describe('ResourcePropertiesComponent', () => {
 
             expect(testHostComponent).toBeTruthy();
 
-            testHostComponent.propertyViewComponent.addButtonIsVisible = true;
-            testHostComponent.propertyViewComponent.addValueFormIsVisible = false;
+            testHostComponent.resourcePropertiesComponent.addButtonIsVisible = true;
+            testHostComponent.resourcePropertiesComponent.addValueFormIsVisible = false;
             testHostFixture.detectChanges();
         });
 
@@ -332,7 +348,7 @@ describe('ResourcePropertiesComponent', () => {
                 propVal => propVal.propDef.id === Constants.HasStandoffLinkToValue
             );
 
-            expect(testHostComponent.propertyViewComponent.addValueIsAllowed(standoffLinkVal[0])).toBeFalsy();
+            expect(testHostComponent.resourcePropertiesComponent.addValueIsAllowed(standoffLinkVal[0])).toBeFalsy();
 
         });
 
@@ -342,7 +358,7 @@ describe('ResourcePropertiesComponent', () => {
                 propVal => propVal.propDef.id === 'http://api.knora.org/ontology/knora-api/v2#hasIncomingLinkValue'
             );
 
-            expect(testHostComponent.propertyViewComponent.addValueIsAllowed(standoffLinkVal[0])).toBeFalsy();
+            expect(testHostComponent.resourcePropertiesComponent.addValueIsAllowed(standoffLinkVal[0])).toBeFalsy();
 
         });
 
@@ -352,7 +368,7 @@ describe('ResourcePropertiesComponent', () => {
                 propVal => propVal.propDef.id === 'http://0.0.0.0:3333/ontology/0001/anything/v2#hasInteger'
             );
 
-            expect(testHostComponent.propertyViewComponent.addValueIsAllowed(standoffLinkVal[0])).toBeTruthy();
+            expect(testHostComponent.resourcePropertiesComponent.addValueIsAllowed(standoffLinkVal[0])).toBeTruthy();
 
         });
 
