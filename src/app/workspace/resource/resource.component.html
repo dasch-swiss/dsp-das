@@ -1,13 +1,8 @@
 <div class="content large middle">
-    <div class="resource-view" *ngIf="resource">
+    <div class="resource-view" *ngIf="!loading">
 
         <!-- dsp-resource-representation -->
         <div class="center" *ngIf="representationsToDisplay.length">
-
-            <!-- <dsp-still-image
-                *ngIf="resource.representationsToDisplay.length === 1"
-                [images]="resource.representationsToDisplay">
-            </dsp-still-image> -->
 
             <!-- compound object navigation -->
             <div class="compound-object" *ngIf="incomingResource">
@@ -85,5 +80,5 @@
 
         <!-- progress indicator -->
     </div>
-    <dsp-progress-indicator *ngIf="!resource"></dsp-progress-indicator>
+    <dsp-progress-indicator *ngIf="loading"></dsp-progress-indicator>
 </div>

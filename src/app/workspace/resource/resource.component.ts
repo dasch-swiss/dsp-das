@@ -1,21 +1,17 @@
 /* eslint-disable @typescript-eslint/member-ordering */
-import { Location } from '@angular/common';
 import { Component, Inject, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { MatSliderChange } from '@angular/material/slider';
 import { Title } from '@angular/platform-browser';
 import {
     ActivatedRoute,
     NavigationEnd,
     NavigationError,
     NavigationStart,
-    Params,
     Router
 } from '@angular/router';
 import {
     ApiResponseError,
     Constants,
     CountQueryResponse,
-    DeleteValue,
     IHasPropertyWithPropertyDefinition,
     KnoraApiConnection,
     ReadLinkValue,
@@ -23,8 +19,6 @@ import {
     ReadResource,
     ReadResourceSequence,
     ReadStillImageFileValue,
-    ReadTextValueAsXml,
-    ReadValue,
     SystemPropertyDefinition
 } from '@dasch-swiss/dsp-js';
 import {
@@ -33,9 +27,8 @@ import {
     PropertyInfoValues,
     Region,
     StillImageRepresentation,
-    ValueService
+    ValueOperationEventService
 } from '@dasch-swiss/dsp-ui';
-import { AddedEventValue, DeletedEventValue, Events, UpdatedEventValues, ValueOperationEventService } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 import { DspCompoundPosition, DspResource } from './dsp-resource';
 import { IncomingService } from './incoming.service';
@@ -193,6 +186,8 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
 
+        this.loading = true;
+
         this._dspApiConnection.v2.res.getResource(iri).subscribe(
             (response: ReadResource) => {
                 const res = new DspResource(response);
@@ -212,6 +207,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                                 this.compoundPosition = new DspCompoundPosition(countQuery.numberOfResults);
                                 this.compoundNavigation(1);
                                 // this.getIncomingStillImageRepresentations(this.compoundPosition.offset);
+                                this.loading = false;
                             }
                         },
                         (error: ApiResponseError) => {
@@ -228,7 +224,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                 // gather system property information
                 res.systemProps = this.resource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
-                this.loading = false;
             },
             (error: ApiResponseError) => {
                 this._notification.openSnackBar(error);
@@ -287,6 +282,8 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                         };
                 }
 
+                this.loading = false;
+
                 return propInfoAndValues;
             }
         );
@@ -308,6 +305,10 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
      */
     // --> TODO: rename to collectRepresentationsAndAnnotations
     protected collectImagesAndRegionsForResource(resource: DspResource): any {
+
+        if (!resource) {
+            return;
+        }
 
         // --> TODO: should be a general object for all kind of representations
         const representations: StillImageRepresentation[] = [];
