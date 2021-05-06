@@ -6,137 +6,7 @@ import { By } from '@angular/platform-browser';
 import { Constants, ReadGeomValue, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { Region, StillImageComponent, StillImageRepresentation } from './still-image.component';
 
-
 // --> TODO: get test data from dsp-js
-
-
-// --> TODO: get this from dsp-js: https://dasch.myjetbrains.com/youtrack/issue/DSP-506
-// const stillImageFileValue = {
-//     'type': 'http://api.knora.org/ontology/knora-api/v2#StillImageFileValue',
-//     'id': 'http://rdfh.ch/0803/00014b43f902/values/18dc0912cd05',
-//     'attachedToUser': 'http://rdfh.ch/users/91e19f1e01',
-//     'arkUrl': 'http://0.0.0.0:3336/ark:/72163/1/0803/00014b43f902l/000000000018dc0912cd0wl',
-//     'versionArkUrl': 'http://0.0.0.0:3336/ark:/72163/1/0803/00014b43f902l/000000000018dc0912cd0wl.20121121T165038Z',
-//     'valueCreationDate': '2012-11-21T16:50:38Z',
-//     'hasPermissions': 'CR knora-admin:Creator|M knora-admin:ProjectMember|V knora-admin:KnownUser|RV knora-admin:UnknownUser',
-//     'userHasPermission': 'RV',
-//     'uuid': '000000000018dc0912cd0w',
-//     'filename': 'incunabula_0000003328.jp2',
-//     'fileUrl': 'http://0.0.0.0:1024/0803/incunabula_0000003328.jp2/full/1312,1815/0/default.jpg',
-//     'dimX': 1312,
-//     'dimY': 1815,
-//     'iiifBaseUrl': 'http://0.0.0.0:1024/0803',
-//     'strval': 'http://0.0.0.0:1024/0803/incunabula_0000003328.jp2/full/1312,1815/0/default.jpg',
-//     'property': 'http://api.knora.org/ontology/knora-api/v2#hasStillImageFileValue',
-//     'propertyLabel': 'has image file',
-//     'propertyComment': 'Connects a Representation to an image file'
-// };
-
-// // --> TODO: remove dummy regions: https://dasch.myjetbrains.com/youtrack/issue/DSP-506
-// const rectangleGeom = `{
-//     'status': 'active',
-//     'lineColor': '#ff3333',
-//     'lineWidth': 2,
-//     'points': [
-//         {
-//             'x': 0.0989010989010989,
-//             'y': 0.18055555555555555
-//         },
-//         {
-//             'x': 0.7252747252747253,
-//             'y': 0.7245370370370371
-//         }
-//     ],
-//     'type': 'rectangle'
-// }`;
-
-// const rectangleGeom2 = `{
-//     'status': 'active',
-//     'lineColor': '#ff3333',
-//     'lineWidth': 2,
-//     'points': [
-//         {
-//             'x': 0.17296511627906977,
-//             'y': 0.08226691042047532
-//         },
-//         {
-//             'x': 0.7122093023255814,
-//             'y': 0.16544789762340037
-//         }
-//     ],
-//     'type': 'rectangle'
-// }`;
-
-// const polygonGeom = `{
-//     'status': 'active',
-//     'lineColor': '#ff3333',
-//     'lineWidth': 2,
-//     'points': [
-//         {
-//             'x': 0.17532467532467533,
-//             'y': 0.18049792531120332
-//         },
-//         {
-//             'x': 0.8051948051948052,
-//             'y': 0.17012448132780084
-//         },
-//         {
-//             'x': 0.8311688311688312,
-//             'y': 0.7261410788381742
-//         },
-//         {
-//             'x': 0.19480519480519481,
-//             'y': 0.7323651452282157
-//         },
-//         {
-//             'x': 0.17857142857142858,
-//             'y': 0.17842323651452283
-//         },
-//         {
-//             'x': 0.18506493506493507,
-//             'y': 0.1825726141078838
-//         },
-//         {
-//             'x': 0.17857142857142858,
-//             'y': 0.1825726141078838
-//         }
-//     ],
-//     'type': 'polygon'
-// }`;
-
-// const circleGeom = `{
-//     'status': 'active',
-//     'lineColor': '#3333ff',
-//     'lineWidth': 2,
-//     'points': [{
-//         'x': 0.3400735294117647,
-//         'y': 0.45376078914919854
-//     }],
-//     'type': 'circle',
-//     'radius': {
-//         'x': 0.04595588235294118,
-//         'y': 0.03082614056720101
-//     },
-//     'original_index': 1
-// }`;
-
-// const circleGeom2 = `{
-//     'status': 'active',
-//     'lineColor': '#3333ff',
-//     'lineWidth': 2,
-//     'points': [{
-//         'x': 0.5305232558139537,
-//         'y': 0.3126142595978062
-//     }],
-//     'type': 'circle',
-//     'radius': {
-//         'x': 0.18023255813953487,
-//         'y': 0.08957952468007313
-//     },
-//     'original_index': 1
-// }`;
-
-
 // --> TODO: get this from dsp-js: https://dasch.myjetbrains.com/youtrack/issue/DSP-506
 const stillImageFileValue = {
     'type': 'http://api.knora.org/ontology/knora-api/v2#StillImageFileValue',
@@ -306,7 +176,7 @@ class TestHostComponent implements OnInit {
     }
 }
 
-fdescribe('StillImageComponent', () => {
+describe('StillImageComponent', () => {
     let testHostComponent: TestHostComponent;
     let testHostFixture: ComponentFixture<TestHostComponent>;
 
