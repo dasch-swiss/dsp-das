@@ -25,13 +25,12 @@ import {
     DspApiConnectionToken,
     NotificationService,
     PropertyInfoValues,
-    Region,
-    StillImageRepresentation,
     ValueOperationEventService
 } from '@dasch-swiss/dsp-ui';
 import { Subscription } from 'rxjs';
 import { DspCompoundPosition, DspResource } from './dsp-resource';
 import { IncomingService } from './incoming.service';
+import { Region, StillImageRepresentation } from './representation/still-image/still-image.component';
 
 @Component({
     selector: 'app-resource',
@@ -186,8 +185,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
 
-        this.loading = true;
-
         this._dspApiConnection.v2.res.getResource(iri).subscribe(
             (response: ReadResource) => {
                 const res = new DspResource(response);
@@ -207,7 +204,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                                 this.compoundPosition = new DspCompoundPosition(countQuery.numberOfResults);
                                 this.compoundNavigation(1);
                                 // this.getIncomingStillImageRepresentations(this.compoundPosition.offset);
-                                this.loading = false;
                             }
                         },
                         (error: ApiResponseError) => {
@@ -224,6 +220,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                 // gather system property information
                 res.systemProps = this.resource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
+                this.loading = false;
             },
             (error: ApiResponseError) => {
                 this._notification.openSnackBar(error);
@@ -281,8 +278,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                             values: resource.getValues(prop.propertyIndex)
                         };
                 }
-
-                this.loading = false;
 
                 return propInfoAndValues;
             }

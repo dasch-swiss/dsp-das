@@ -1,5 +1,5 @@
 <div class="content large middle">
-    <div class="resource-view" *ngIf="!loading">
+    <div class="resource-view" *ngIf="resource">
 
         <!-- dsp-resource-representation -->
         <div class="center" *ngIf="representationsToDisplay.length">
@@ -25,7 +25,7 @@
                     (click)="compoundNavigation(compoundPosition.page + 1)">Next</button>
             </div>
             <!-- still image view -->
-            <dsp-still-image [images]="representationsToDisplay"></dsp-still-image>
+            <app-still-image [images]="representationsToDisplay"></app-still-image>
             <!-- TODO: here we'll add more viewers and players dsp-moving-image, dsp-audio etc. -->
             <mat-divider></mat-divider>
         </div>
@@ -80,5 +80,5 @@
 
         <!-- progress indicator -->
     </div>
-    <dsp-progress-indicator *ngIf="loading"></dsp-progress-indicator>
+    <dsp-progress-indicator *ngIf="!resource"></dsp-progress-indicator>
 </div>

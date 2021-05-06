@@ -1,0 +1,57 @@
+<div class="still-image-viewer">
+    <!--<div class="navigation left">
+        <button mat-button class="full-size" id="DSP_OSD_PREV_PAGE">
+            <mat-icon>keyboard_arrow_left</mat-icon>
+        </button>
+    </div>-->
+
+    <!-- main content with navigation and osd viewer -->
+    <div class="content">
+
+        <!-- openseadragon (osd) viewer -->
+        <div class="osd-container"></div>
+        <!-- /openseadragon (osd) -->
+
+        <!-- footer with image caption e.g. copyright information -->
+        <div class="footer">
+            <p class="mat-caption" [innerHtml]="imageCaption"></p>
+        </div>
+
+        <!-- action panel with tools for image -->
+        <mat-toolbar class="action">
+            <mat-toolbar-row>
+                <!-- home button -->
+                <span>
+                    <button mat-icon-button id="DSP_OSD_HOME">
+                        <mat-icon>aspect_ratio</mat-icon>
+                    </button>
+                </span>
+                <!-- zoom buttons -->
+                <span class="fill-remaining-space"></span>
+                <span>
+                    <button mat-icon-button id="DSP_OSD_ZOOM_IN">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                    <button mat-icon-button id="DSP_OSD_ZOOM_OUT">
+                        <mat-icon>remove</mat-icon>
+                    </button>
+                </span>
+                <!-- window button -->
+                <span class="fill-remaining-space"></span>
+                <span>
+                    <button mat-icon-button id="DSP_OSD_FULL_PAGE">
+                        <mat-icon>fullscreen</mat-icon>
+                    </button>
+                </span>
+            </mat-toolbar-row>
+        </mat-toolbar>
+
+    </div>
+
+    <!--<div class="navigation">
+        <button mat-button class="full-size" id="DSP_OSD_NEXT_PAGE" (click)="getCurrentImage()">
+            <mat-icon>keyboard_arrow_right</mat-icon>
+        </button>
+    </div>-->
+
+</div>
