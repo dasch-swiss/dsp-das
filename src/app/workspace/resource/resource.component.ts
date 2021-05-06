@@ -68,20 +68,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
     // --> TODO: incoming representation annotations (DSP-1583)
     // annotations:
 
-
-    // resPropInfoVals: PropertyInfoValues[] = []; // array of resource properties
-
-    // systemPropDefs: SystemPropertyDefinition[] = []; // array of system properties
-
-    valueOperationEventSubscriptions: Subscription[] = []; // array of ValueOperationEvent subscriptions
-
-    // stillImageRepresentations: StillImageRepresentation[];
-    // incomingCurrentOffset: number;
-    // incomingCurrentPage: number;
-
-    // incomingPropInfoVals: PropertyInfoValues[] = []; // array of current incoming resource properties (e.g. in case of book page)
-    // incomingSystemPropDefs: SystemPropertyDefinition[] = []; // array of system properties
-
     showAllProps = false;
 
     loading = true;
@@ -93,13 +79,10 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _incomingService: IncomingService,
-        private _location: Location,
         private _notification: NotificationService,
         private _route: ActivatedRoute,
         private _router: Router,
-        private _titleService: Title,
-        private _valueOperationEventService: ValueOperationEventService,
-        private _valueService: ValueService
+        private _titleService: Title
     ) {
 
         if (!this.resourceIri) {
@@ -156,10 +139,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         if (this.navigationSubscription !== undefined) {
             this.navigationSubscription.unsubscribe();
         }
-        // unsubscribe from the ValueOperationEventService when component is destroyed
-        if (this.valueOperationEventSubscriptions !== undefined) {
-            this.valueOperationEventSubscriptions.forEach(sub => sub.unsubscribe());
-        }
     }
 
 
@@ -175,10 +154,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
 
     openResource(linkValue: ReadLinkValue) {
         window.open('/resource/' + encodeURIComponent(linkValue.linkedResource.id), '_blank');
-    }
-
-    goToPage(event: MatSliderChange) {
-        console.log(event.value);
     }
 
     compoundNavigation(page: number) {
@@ -200,10 +175,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         this.compoundPosition.page = page;
 
         this.collectImagesAndRegionsForResource(this.incomingResource);
-        // get all information for this page
-        // this.incomingResource
-
-        // update incoming resource information
 
     }
 
@@ -249,14 +220,13 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                     );
                 }
 
-                // find resource type and get representation info
+                // --> TODO: myabe better solution: find resource type and get representation info
 
                 // gather resource property information
                 res.resProps = this.initProps(response);
 
+                // gather system property information
                 res.systemProps = this.resource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
-
-                console.warn('main res', res);
 
                 this.loading = false;
             },
@@ -276,7 +246,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                 res.systemProps = this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
                 this.collectImagesAndRegionsForResource(this.incomingResource);
-                // console.log('incoming', this.incomingResource);
             },
             (error: ApiResponseError) => {
                 this._notification.openSnackBar(error);
@@ -340,8 +309,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
     // --> TODO: rename to collectRepresentationsAndAnnotations
     protected collectImagesAndRegionsForResource(resource: DspResource): any {
 
-        console.log('collectImagesAndRegionsForResource', resource)
-
         // --> TODO: should be a general object for all kind of representations
         const representations: StillImageRepresentation[] = [];
 
@@ -369,40 +336,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
 
         }
 
-        // else if (resource.incomingRepresentations.length > 0) {
-        //     // there are StillImageRepresentations pointing to this resource (incoming)
-
-        //     const readStillImageFileValues: ReadStillImageFileValue[] = resource.incomingRepresentations.map(
-        //         (stillImageRes: ReadResource) => {
-        //             const fileValues = stillImageRes.properties[Constants.HasStillImageFileValue] as ReadStillImageFileValue[];
-        //             // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
-
-        //             return fileValues;
-        //         }
-        //     ).reduce((prev, curr) => {
-        //         // transform ReadStillImageFileValue[][] to ReadStillImageFileValue[]
-        //         return prev.concat(curr);
-        //     });
-
-        //     for (const img of readStillImageFileValues) {
-
-        //         const regions: Region[] = [];
-        //         for (const incomingRegion of resource.incomingAnnotations) {
-
-        //             const region = new Region(incomingRegion);
-        //             regions.push(region);
-
-        //         }
-
-        //         const stillImage = new StillImageRepresentation(img, regions);
-        //         representations.push(stillImage);
-        //     }
-
-        //     // display first page
-        //     this.compoundNavigation(1);
-
-        // }
-
         this.representationsToDisplay = representations;
     }
 
@@ -420,7 +353,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (offset < 0 || offset > this.compoundPosition.maxOffsets) {
-            console.log(`offset of ${offset} is invalid`);
+            this._notification.openSnackBar(`Offset of ${offset} is invalid`);
             return;
         }
 
@@ -430,30 +363,13 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
 
                 if (incomingImageRepresentations.resources.length > 0) {
 
-                    // set current offset
-                    // this.incomingCurrentOffset = offset;
-
-                    // --> TODO: implement prepending of StillImageRepresentations when moving to the left (getting previous pages)
-                    // --> TODO: append existing images to response and then assign response to `this.resource.incomingStillImageRepresentations`
-                    // --> TODO: maybe we have to support non consecutive arrays (sparse arrays)
-
-                    // append incomingImageRepresentations.resources to this.resource.incomingStillImageRepresentations
-
                     // set the incoming representations for the current offset only
                     this.resource.incomingRepresentations = incomingImageRepresentations.resources;
 
-                    // Array.prototype.push.apply(this.resource.incomingRepresentations, incomingImageRepresentations.resources);
-
-                    // prepare attached image files to be displayed
-                    // this.collectImagesAndRegionsForResource(this.resource);
+                    // --> KEEP for the moment (old implementation): Array.prototype.push.apply(this.resource.incomingRepresentations, incomingImageRepresentations.resources);
 
                     this.getIncomingResource(this.resource.incomingRepresentations[this.compoundPosition.position].id);
 
-                    // get properties and values for current incoming image representation
-                    // this.incomingPropInfoVals = this.initProps(this.resource.incomingRepresentations[this.incomingCurrentPage]);
-
-                    // get system property information
-                    // this.incomingSystemPropDefs = this.resource.incomingRepresentations[this.incomingCurrentPage].entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
                 }
             },
             (error: any) => {
