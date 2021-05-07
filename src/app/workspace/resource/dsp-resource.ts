@@ -34,7 +34,7 @@ export class DspCompoundPosition {
 
     constructor(totalPages: number) {
         this.totalPages = totalPages;
-        this.maxOffsets = Math.ceil(totalPages / 25) - 1;;
+        this.maxOffsets = Math.ceil(totalPages / 25) - 1;
     }
 }
 
