@@ -1,9 +1,4 @@
 <div class="still-image-viewer">
-    <!-- <div class="navigation left">
-        <button mat-button class="full-size" id="DSP_OSD_PREV_PAGE">
-            <mat-icon>keyboard_arrow_left</mat-icon>
-        </button>
-    </div> -->
 
     <!-- main content with navigation and osd viewer -->
     <div class="content">
@@ -78,22 +73,6 @@
         </div>
         <!-- /openseadragon (osd) -->
 
-        <!-- <div class="compound-nav" *ngIf="compoundNavigation">
-            <button mat-button [disabled]="compoundNavigation.page <= 1"
-                (click)="goToPage.emit(compoundNavigation.page - 1)">Previous</button>
-
-            <mat-slider [color]="'primary'" [disabled]="compoundNavigation.totalPages < 2"
-                [max]="compoundNavigation.totalPages" [min]="1" [step]="1" [thumbLabel]="true" [tickInterval]="'auto'"
-                [(ngModel)]="compoundNavigation.page" (change)="goToPage.emit($event.value)">
-            </mat-slider>
-
-            <button mat-button [disabled]="compoundNavigation.page >= compoundNavigation.totalPages"
-                (click)="goToPage.emit(compoundNavigation.page + 1)">Next</button>
-        </div> -->
-
-
-
-        <!-- action panel with tools for image -->
     </div>
 
 </div>
