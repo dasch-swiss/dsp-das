@@ -97,10 +97,10 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     constructor(
         private _elementRef: ElementRef
     ) {
-        OpenSeadragon.setString('Tooltips.Home', null);
-        OpenSeadragon.setString('Tooltips.ZoomIn', null);
-        OpenSeadragon.setString('Tooltips.ZoomOut', null);
-        OpenSeadragon.setString('Tooltips.FullPage', null);
+        OpenSeadragon.setString('Tooltips.Home', '');
+        OpenSeadragon.setString('Tooltips.ZoomIn', '');
+        OpenSeadragon.setString('Tooltips.ZoomOut', '');
+        OpenSeadragon.setString('Tooltips.FullPage', '');
     }
     /**
      * calculates the surface of a rectangular region.
