@@ -80,7 +80,7 @@ export class ResourcePropertiesComponent implements OnInit, OnDestroy {
     addValueFormIsVisible: boolean; // used to toggle add value form field
     propID: string; // used in template to show only the add value form of the corresponding value
 
-    valueOperationEventSubscription: Subscription; // [] = []; // array of ValueOperationEvent subscriptions
+    valueOperationEventSubscriptions: Subscription[] = []; // array of ValueOperationEvent subscriptions
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -103,33 +103,32 @@ export class ResourcePropertiesComponent implements OnInit, OnDestroy {
         // this.valueOperationEventSubscription = this._valueOperationEventService.on(Events.ValueAdded, () => this.hideAddValueForm());
 
         // subscribe to the ValueOperationEventService and listen for an event to be emitted
-        this.valueOperationEventSubscription = this._valueOperationEventService.on(
+        this.valueOperationEventSubscriptions.push(this._valueOperationEventService.on(
             Events.ValueAdded, (newValue: AddedEventValue) => {
                 this.addValueToResource(newValue.addedValue);
                 this.hideAddValueForm();
-            });
+            }));
 
-        this.valueOperationEventSubscription = this._valueOperationEventService.on(
+        this.valueOperationEventSubscriptions.push(this._valueOperationEventService.on(
             Events.ValueUpdated, (updatedValue: UpdatedEventValues) => {
                 this.updateValueInResource(updatedValue.currentValue, updatedValue.updatedValue);
                 this.hideAddValueForm();
-            }
-        );
+            }));
 
-        this.valueOperationEventSubscription = this._valueOperationEventService.on(
+        this.valueOperationEventSubscriptions.push(this._valueOperationEventService.on(
             Events.ValueDeleted, (deletedValue: DeletedEventValue) => this.deleteValueFromResource(deletedValue.deletedValue)
-        );
+        ));
     }
 
     ngOnDestroy() {
         // unsubscribe from the event bus when component is destroyed
-        if (this.valueOperationEventSubscription !== undefined) {
-            this.valueOperationEventSubscription.unsubscribe();
-        }
-        // unsubscribe from the ValueOperationEventService when component is destroyed
-        // if (this.valueOperationEventSubscriptions !== undefined) {
-        //     this.valueOperationEventSubscriptions.forEach(sub => sub.unsubscribe());
+        // if (this.valueOperationEventSubscription !== undefined) {
+        //     this.valueOperationEventSubscription.unsubscribe();
         // }
+        // unsubscribe from the ValueOperationEventService when component is destroyed
+        if (this.valueOperationEventSubscriptions !== undefined) {
+            this.valueOperationEventSubscriptions.forEach(sub => sub.unsubscribe());
+        }
     }
 
     /**
