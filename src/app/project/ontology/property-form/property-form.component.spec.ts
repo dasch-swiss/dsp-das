@@ -243,11 +243,11 @@ describe('PropertyFormComponent', () => {
 
     });
 
-    xit('should update labels when the value changes', () => {
+    it('should update labels when the value changes', () => {
 
         const hostCompDe = simpleTextHostFixture.debugElement;
         const submitButton: DebugElement = hostCompDe.query(By.css('button.submit'));
-        expect(submitButton.nativeElement.innerText).toEqual(' Update ');
+        expect(submitButton.nativeElement.innerText).toContain('Update');
 
         simpleTextHostComponent.propertyFormComponent.handleData([], 'labels');
         simpleTextHostFixture.detectChanges();
