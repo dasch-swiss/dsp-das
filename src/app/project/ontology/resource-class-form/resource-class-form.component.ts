@@ -619,10 +619,36 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
         onto.entity = addCard;
 
-        this._dspApiConnection.v2.onto.replaceCardinalityOfResourceClass(onto).subscribe(
-            (res: ResourceClassDefinitionWithAllLanguages) => {
-                this.lastModificationDate = res.lastModificationDate;
+        this._dspApiConnection.v2.onto.updateGuiOrderOfCardinalities(onto).subscribe(
+            (responseGuiOrder: ResourceClassDefinitionWithAllLanguages) => {
+                this.lastModificationDate = responseGuiOrder.lastModificationDate;
                 // close the dialog box
+                onto.lastModificationDate = this.lastModificationDate;
+
+                addCard.cardinalities = [];
+
+                props.forEach((prop, index) => {
+                    const propCard: IHasProperty = {
+                        propertyIndex: prop.iri,
+                        cardinality: this._resourceClassFormService.translateCardinality(prop.multiple, prop.required)
+                    };
+                    addCard.cardinalities.push(propCard);
+                });
+
+                onto.entity = addCard;
+
+                this._dspApiConnection.v2.onto.replaceCardinalityOfResourceClass(onto).subscribe(
+                    (res: ResourceClassDefinitionWithAllLanguages) => {
+                        this.lastModificationDate = res.lastModificationDate;
+                        // close the dialog box
+                        this.loading = false;
+                        this.closeDialog.emit();
+                    },
+                    (error: ApiResponseError) => {
+                        this._errorHandler.showMessage(error);
+                    }
+                );
+
                 this.loading = false;
                 this.closeDialog.emit();
             },
@@ -630,6 +656,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                 this._errorHandler.showMessage(error);
             }
         );
+
+
     }
 
 }
