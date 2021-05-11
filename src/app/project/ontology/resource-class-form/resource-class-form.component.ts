@@ -619,7 +619,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
         onto.entity = addCard;
 
-        this._dspApiConnection.v2.onto.updateGuiOrderOfCardinalities(onto).subscribe(
+        this._dspApiConnection.v2.onto.replaceGuiOrderOfCardinalities(onto).subscribe(
             (responseGuiOrder: ResourceClassDefinitionWithAllLanguages) => {
                 this.lastModificationDate = responseGuiOrder.lastModificationDate;
                 // close the dialog box
