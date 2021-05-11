@@ -46,7 +46,7 @@
     "jdnconvertiblecalendar": "^0.0.6",
     "jdnconvertiblecalendardateadapter": "^0.0.16",
     "json2typescript": "^1.0.6",
-    "jsonld": "^1.1.0",
+    "jsonld": "^5.2.0",
     "moment": "^2.27.0",
     "ngx-color-picker": "^11.0.0",
     "openseadragon": "^2.4.0",
@@ -60,7 +60,7 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.1102.8",
+    "@angular-devkit/build-angular": "^0.1102.12",
     "@angular-eslint/eslint-plugin": "^1.2.0",
     "@angular/cli": "^11.2.8",
     "@angular/compiler-cli": "^11.2.9",
