@@ -49,6 +49,8 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
     // this will be the currently selected (part-of main) resource
     incomingResource: DspResource;
 
+    annotationResources: DspResource[];
+
     // list of representations to be displayed
     // --> TODO: will be expanded with | MovingImageRepresentation[] | AudioRepresentation[] etc.
     representationsToDisplay: StillImageRepresentation[] = [];
@@ -56,9 +58,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
     // in case of compound object,
     // this will store the current page position information
     compoundPosition: DspCompoundPosition;
-
-    // --> TODO: incoming representation annotations (DSP-1583)
-    // annotations:
 
     showAllProps = false;
 
@@ -120,6 +119,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         this.incomingResource = undefined;
         this.representationsToDisplay = [];
         this.compoundPosition = undefined;
+
         // get resource with all necessary information
         // incl. incoming resources and annotations
         if (this.resourceIri) {
@@ -151,9 +151,8 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
     compoundNavigation(page: number) {
         this.representationsToDisplay = [];
 
-        // set current compound object position
+        // set current compound object position:
         // calculate offset and offset item position from current page and total pages info
-
         const offset = Math.ceil(page / 25) - 1;
         const position = Math.floor(page - (offset * 25) - 1);
 
@@ -164,6 +163,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
             // get incoming resource
             this.getIncomingResource(this.resource.incomingRepresentations[position].id);
         }
+
         this.compoundPosition.position = position;
         this.compoundPosition.page = page;
 
@@ -201,19 +201,17 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                         (countQuery: CountQueryResponse) => {
 
                             if (countQuery.numberOfResults > 0) {
-
                                 this.compoundPosition = new DspCompoundPosition(countQuery.numberOfResults);
                                 this.compoundNavigation(1);
-                                // this.getIncomingStillImageRepresentations(this.compoundPosition.offset);
                             }
                         },
                         (error: ApiResponseError) => {
                             this._notification.openSnackBar(error);
                         }
                     );
+                } else {
+                    this.requestIncomingResources();
                 }
-
-                // --> TODO: myabe better solution: find resource type and get representation info
 
                 // gather resource property information
                 res.resProps = this.initProps(response);
@@ -239,6 +237,10 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                 res.systemProps = this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
                 this.collectImagesAndRegionsForResource(this.incomingResource);
+
+                // if (this.representationsToDisplay.length && this.compoundPosition) {
+                //     this.getIncomingRegions(0);
+                // }
             },
             (error: ApiResponseError) => {
                 this._notification.openSnackBar(error);
@@ -319,21 +321,37 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
             for (const img of fileValues) {
 
                 const regions: Region[] = [];
+
+                const annotations: DspResource[] = [];
+
+
                 for (const incomingRegion of resource.incomingAnnotations) {
 
                     const region = new Region(incomingRegion);
                     regions.push(region);
+
+                    const annotation = new DspResource(incomingRegion);
+
+                    // gather region property information
+                    annotation.resProps = this.initProps(incomingRegion);
+
+                    // gather system property information
+                    annotation.systemProps = incomingRegion.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
+
+                    annotations.push(annotation);
 
                 }
 
                 const stillImage = new StillImageRepresentation(img, regions);
                 representations.push(stillImage);
 
+                this.annotationResources = annotations;
             }
 
         }
 
         this.representationsToDisplay = representations;
+
     }
 
     /**
@@ -388,7 +406,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         // request incoming regions --> TODO: add case to get incoming sequences in case of video and audio
-        if (this.resource.res.properties[Constants.HasStillImageFileValue]) {
+        if (this.resource.res.properties[Constants.HasStillImageFileValue] || this.incomingResource.res.properties[Constants.HasStillImageFileValue]) {
             // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
             // the resource is a StillImageRepresentation, check if there are regions pointing to it
 
@@ -400,7 +418,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
 
             // this gets the first page of incoming StillImageRepresentations
             // more pages may be requested by [[this.viewer]].
-            // --> TODO: for now, we begin with offset 0. This may have to be changed later (beginning somewhere in a collection)
             this.getIncomingStillImageRepresentations(this.compoundPosition.offset);
         }
 
@@ -424,6 +441,9 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                 // prepare regions to be displayed
                 // triggers ngOnChanges of StillImageComponent
                 this.collectImagesAndRegionsForResource(this.resource);
+
+                console.log(this.resource);
+                console.log(this.representationsToDisplay);
 
             },
             (error: any) => {
@@ -450,5 +470,9 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                 this._notification.openSnackBar(error);
             }
         );
+    }
+
+    openRegion(iri: string) {
+        console.log('region clicked', iri)
     }
 }
