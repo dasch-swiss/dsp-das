@@ -619,43 +619,68 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
         onto.entity = addCard;
 
-        this._dspApiConnection.v2.onto.replaceGuiOrderOfCardinalities(onto).subscribe(
-            (responseGuiOrder: ResourceClassDefinitionWithAllLanguages) => {
-                this.lastModificationDate = responseGuiOrder.lastModificationDate;
-                // close the dialog box
-                onto.lastModificationDate = this.lastModificationDate;
+        if (this.edit) {
+            // edit mode: we have to send two requests
+            // 1) update gui order
+            this._dspApiConnection.v2.onto.replaceGuiOrderOfCardinalities(onto).subscribe(
+                (responseGuiOrder: ResourceClassDefinitionWithAllLanguages) => {
+                    this.lastModificationDate = responseGuiOrder.lastModificationDate;
+                    onto.lastModificationDate = this.lastModificationDate;
 
-                addCard.cardinalities = [];
+                    addCard.cardinalities = [];
 
-                props.forEach((prop, index) => {
-                    const propCard: IHasProperty = {
-                        propertyIndex: prop.iri,
-                        cardinality: this._resourceClassFormService.translateCardinality(prop.multiple, prop.required)
-                    };
-                    addCard.cardinalities.push(propCard);
-                });
+                    // prepare a list of properites again for the update of the cardinalities
+                    props.forEach((prop) => {
+                        const propCard: IHasProperty = {
+                            propertyIndex: prop.iri,
+                            cardinality: this._resourceClassFormService.translateCardinality(prop.multiple, prop.required)
+                        };
+                        addCard.cardinalities.push(propCard);
+                    });
 
-                onto.entity = addCard;
+                    onto.entity = addCard;
 
-                this._dspApiConnection.v2.onto.replaceCardinalityOfResourceClass(onto).subscribe(
-                    (res: ResourceClassDefinitionWithAllLanguages) => {
-                        this.lastModificationDate = res.lastModificationDate;
-                        // close the dialog box
-                        this.loading = false;
-                        this.closeDialog.emit();
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                );
+                    // 2) update cardinality
+                    this._dspApiConnection.v2.onto.replaceCardinalityOfResourceClass(onto).subscribe(
+                        (res: ResourceClassDefinitionWithAllLanguages) => {
+                            this.lastModificationDate = res.lastModificationDate;
+                            // close the dialog box
+                            this.loading = false;
+                            this.closeDialog.emit();
+                        },
+                        (error: ApiResponseError) => {
+                            this._errorHandler.showMessage(error);
+                        }
+                    );
 
-                this.loading = false;
-                this.closeDialog.emit();
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-            }
-        );
+                    this.loading = false;
+                    this.closeDialog.emit();
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
+        } else {
+            // create mode: set the cardinality for each defined property incl. guiOrder
+
+            onto.entity = addCard;
+
+            this._dspApiConnection.v2.onto.replaceCardinalityOfResourceClass(onto).subscribe(
+                (res: ResourceClassDefinitionWithAllLanguages) => {
+                    this.lastModificationDate = res.lastModificationDate;
+                    // close the dialog box
+                    this.loading = false;
+                    this.closeDialog.emit();
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
+
+            this.loading = false;
+            this.closeDialog.emit();
+        }
+
 
 
     }
