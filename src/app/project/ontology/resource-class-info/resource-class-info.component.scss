@@ -43,3 +43,40 @@
     @include mat-elevation(8);
   }
 }
+
+.drag-n-drop-placeholder {
+  background: #ccc;
+  border: dotted 3px #999;
+  min-height: 54px;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.drag-n-drop-property {
+  &:hover {
+    background-color: $black-12-opacity;
+
+    .gui-order {
+      .display-on-hover {
+        display: block;
+      }
+
+      .hide-on-hover {
+        display: none;
+      }
+    }
+  }
+
+  .gui-order {
+    font-size: 16px;
+    color: $primary_700;
+    margin-left: -16px;
+    .display-on-hover {
+      display: none;
+    }
+
+    .drag-n-drop-handle {
+      cursor: move;
+    }
+  }
+
+}

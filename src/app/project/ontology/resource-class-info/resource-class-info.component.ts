@@ -1,5 +1,5 @@
-import { EventEmitter, Input, Output } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ApiResponseError, ClassDefinition, ReadOntology } from '@dasch-swiss/dsp-js';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
@@ -47,7 +47,6 @@ export class ResourceClassInfoComponent implements OnInit {
         );
     }
 
-
     /**
      * translates iri from "sub class of" array
      * - display label from default resource classes (as part of DSP System Project)
@@ -87,6 +86,18 @@ export class ResourceClassInfoComponent implements OnInit {
             }
         });
 
+    }
+
+    /**
+     * drag and drop property line
+     */
+    drop(event: CdkDragDrop<string[]>) {
+
+        // set sort order for child component
+        moveItemInArray(this.resourceClass.propertiesList, event.previousIndex, event.currentIndex);
+
+        // set sort order in form value
+        // moveItemInArray(this.resourceClassForm.value.properties, event.previousIndex, event.currentIndex);
     }
 
 }
