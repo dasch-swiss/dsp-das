@@ -56,7 +56,7 @@
 
                     <!-- display only properties with guiOrder and if they exist in list of properties;
                      objectType is not a linkValue (otherwise we have the property twice) -->
-                    <app-property-info [propDef]="ontology?.properties[prop.propertyIndex]" [propCard]="prop"
+                    <app-property-info class="property-info" [propDef]="ontology?.properties[prop.propertyIndex]" [propCard]="prop"
                         [projectCode]="projectCode">
                     </app-property-info>
                 </mat-list-item>

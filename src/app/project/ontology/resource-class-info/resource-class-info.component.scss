@@ -1,5 +1,6 @@
 @import "~@angular/material/theming";
 @import "../../../../assets/style/config";
+@import "../../../../assets/style/mixins";
 
 .resource-class {
   min-height: 120px;
@@ -52,7 +53,9 @@
 }
 
 .drag-n-drop-property {
-  &:hover {
+  &:hover,
+  &:active,
+  &:focus {
     background-color: $black-12-opacity;
 
     .gui-order {
@@ -79,4 +82,24 @@
     }
   }
 
+}
+
+.cdk-drag-preview {
+  background-color: rgba(254, 254, 254, 1);
+  @include box-shadow();
+  cursor: move;
+  .gui-order {
+    .display-on-hover {
+      display: block;
+    }
+
+    .hide-on-hover {
+      display: none;
+    }
+  }
+  .property-info {
+    position: fixed;
+    left: 32px;
+    top: 4px;
+  }
 }
