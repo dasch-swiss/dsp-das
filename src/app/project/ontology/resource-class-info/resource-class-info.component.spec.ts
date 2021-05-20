@@ -72,7 +72,7 @@ describe('ResourceClassInfoComponent', () => {
     beforeEach(waitForAsync(() => {
         const ontologyEndpointSpyObj = {
             v2: {
-                ontologyEndpoint: jasmine.createSpyObj('onto', ['getOntology', 'replaceGuiOrderOfCardinalities']),
+                onto: jasmine.createSpyObj('onto', ['getOntology', 'replaceGuiOrderOfCardinalities'])
             }
         };
 
@@ -81,16 +81,13 @@ describe('ResourceClassInfoComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 HostComponent,
-                ResourceClassInfoComponent,
-                PropertyInfoComponent
+                ResourceClassInfoComponent
             ],
             imports: [
                 DspActionModule,
-                DragDropModule,
                 MatCardModule,
                 MatIconModule,
                 MatMenuModule,
-                MatSnackBarModule,
                 MatTooltipModule
             ],
             providers: [
