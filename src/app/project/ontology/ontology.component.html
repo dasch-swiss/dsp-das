@@ -180,6 +180,8 @@
                     <app-resource-class-info *ngFor="let resClass of ontoClasses" [resourceClass]="resClass"
                         [expanded]="expandClasses"
                         [projectCode]="projectCode"
+                        [lastModificationDate]="lastModificationDate"
+                        (updateParent)="lastModificationDate = $event"
                         (editResourceClass)="openResourceClassForm('editResourceClass', $event)"
                         (updateCardinality)="updateCard($event)"
                         (deleteResourceClass)="delete('ResourceClass', $event)">

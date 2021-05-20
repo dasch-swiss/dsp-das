@@ -1,6 +1,17 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ApiResponseError, ClassDefinition, ReadOntology } from '@dasch-swiss/dsp-js';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+    ApiResponseError,
+    ClassDefinition,
+    IHasProperty,
+    KnoraApiConnection,
+    ReadOntology,
+    ResourceClassDefinitionWithAllLanguages,
+    UpdateOntology,
+    UpdateResourceClassCardinality
+} from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { DefaultClass, DefaultResourceClasses } from '../default-data/default-resource-classes';
@@ -19,11 +30,19 @@ export class ResourceClassInfoComponent implements OnInit {
 
     @Input() projectCode: string;
 
+    @Input() lastModificationDate?: string;
+
     @Output() editResourceClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
     @Output() updateCardinality: EventEmitter<ClassDefinition> = new EventEmitter<ClassDefinition>();
     @Output() deleteResourceClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
 
+    @Output() updateParent: EventEmitter<string> = new EventEmitter<string>();
+
     ontology: ReadOntology;
+
+
+    // list of properties that can be displayed (not all of the props should be displayed)
+    propsToDisplay: IHasProperty[] = [];
 
     subClassOfLabel = '';
 
@@ -31,15 +50,19 @@ export class ResourceClassInfoComponent implements OnInit {
     defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
 
     constructor(
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _errorHandler: ErrorHandlerService,
+        private _snackBar: MatSnackBar
     ) { }
 
     ngOnInit(): void {
         this._cache.get('currentOntology').subscribe(
             (response: ReadOntology) => {
                 this.ontology = response;
+                this.lastModificationDate = this.ontology.lastModificationDate;
                 this.translateSubClassOfIri(this.resourceClass.subClassOf);
+                this.preparePropsToDisplay(this.resourceClass.propertiesList);
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
@@ -89,15 +112,97 @@ export class ResourceClassInfoComponent implements OnInit {
     }
 
     /**
+     * prepares props to display
+     * Not all props should be displayed; there are some system / API-specific
+     * properties which have to be filtered.
+     *
+     * @param props
+     */
+    preparePropsToDisplay(classProps: IHasProperty[]) {
+
+        const ontoProps = this.ontology.getAllPropertyDefinitions();
+
+        // reset properties to display
+        this.propsToDisplay = [];
+
+        classProps.forEach((hasProp) => {
+            const propToDisplay = ontoProps.find(obj =>
+                obj.id === hasProp.propertyIndex &&
+                (obj.objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue' ||
+                    (obj.subjectType && !obj.subjectType.includes('Standoff'))
+                )
+            );
+
+            if (propToDisplay) {
+                this.propsToDisplay.push(hasProp);
+            }
+
+        });
+
+    }
+
+    /**
      * drag and drop property line
      */
     drop(event: CdkDragDrop<string[]>) {
 
         // set sort order for child component
-        moveItemInArray(this.resourceClass.propertiesList, event.previousIndex, event.currentIndex);
+        moveItemInArray(this.propsToDisplay, event.previousIndex, event.currentIndex);
 
-        // set sort order in form value
-        // moveItemInArray(this.resourceClassForm.value.properties, event.previousIndex, event.currentIndex);
+        if (event.previousIndex !== event.currentIndex) {
+            // the dropped property item has a new index (= gui order)
+            // send the new gui-order to the api by
+            // preparing the UpdateOntology object first
+            const onto = new UpdateOntology<UpdateResourceClassCardinality>();
+
+            onto.lastModificationDate = this.lastModificationDate;
+
+            onto.id = this.ontology.id;
+
+            const addCard = new UpdateResourceClassCardinality();
+
+            addCard.id = this.resourceClass.id;
+
+            addCard.cardinalities = [];
+
+            this.propsToDisplay.forEach((prop, index) => {
+                const propCard: IHasProperty = {
+                    propertyIndex: prop.propertyIndex,
+                    cardinality: prop.cardinality,
+                    guiOrder: index + 1
+                };
+
+                addCard.cardinalities.push(propCard);
+            });
+
+            onto.entity = addCard;
+
+            // send the request to the api
+            this._dspApiConnection.v2.onto.replaceGuiOrderOfCardinalities(onto).subscribe(
+                (responseGuiOrder: ResourceClassDefinitionWithAllLanguages) => {
+                    this.lastModificationDate = responseGuiOrder.lastModificationDate;
+
+                    // successful request: update the view
+                    this.preparePropsToDisplay(this.propsToDisplay);
+
+                    this.updateParent.emit(this.lastModificationDate);
+
+                    // display success message
+                    this._snackBar.open(`You have successfully changed the order of properties in the resource class "${this.resourceClass.label}".`, '', {
+                        horizontalPosition: 'center',
+                        verticalPosition: 'top',
+                        duration: 2500,
+                        panelClass: 'success'
+                    });
+
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
+
+        }
+
     }
 
 }
