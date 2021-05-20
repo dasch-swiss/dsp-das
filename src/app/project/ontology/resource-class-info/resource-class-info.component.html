@@ -46,14 +46,14 @@
 
                     <span cdkDragHandle mat-list-icon class="gui-order">
                         <span *ngIf="prop.guiOrder" class="hide-on-hover">{{i + 1}})</span>
-                        <span class="display-on-hover drag-n-drop-handle">
+                        <span *ngIf="lastModificationDate" class="display-on-hover drag-n-drop-handle">
                             <mat-icon>drag_indicator</mat-icon>
                         </span>
                     </span>
 
                     <!-- display only properties with guiOrder and if they exist in list of properties;
                      objectType is not a linkValue (otherwise we have the property twice) -->
-                    <app-property-info class="property-info" [propDef]="ontology?.properties[prop.propertyIndex]" [propCard]="propsToDisplay"
+                    <app-property-info class="property-info" [propDef]="ontology?.properties[prop.propertyIndex]" [propCard]="propsToDisplay[i]"
                         [projectCode]="projectCode">
                     </app-property-info>
                 </mat-list-item>
