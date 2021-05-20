@@ -45,8 +45,8 @@
                 <mat-list-item  class="drag-n-drop-property" *ngIf="expanded">
 
                     <span cdkDragHandle mat-list-icon class="gui-order">
-                        <span *ngIf="prop.guiOrder" class="hide-on-hover">{{i + 1}})</span>
-                        <span *ngIf="lastModificationDate" class="display-on-hover drag-n-drop-handle">
+                        <span *ngIf="prop.guiOrder" [class.hide-on-hover]="cardinalityUpdateEnabled">{{i + 1}})</span>
+                        <span *ngIf="lastModificationDate && cardinalityUpdateEnabled" class="display-on-hover drag-n-drop-handle">
                             <mat-icon>drag_indicator</mat-icon>
                         </span>
                     </span>

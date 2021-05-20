@@ -40,6 +40,7 @@ export class ResourceClassInfoComponent implements OnInit {
 
     ontology: ReadOntology;
 
+    cardinalityUpdateEnabled: boolean;
 
     // list of properties that can be displayed (not all of the props should be displayed)
     propsToDisplay: IHasProperty[] = [];
@@ -92,11 +93,15 @@ export class ResourceClassInfoComponent implements OnInit {
             const defaultClass = this.defaultClasses.find(i => i.iri === iri);
             if (defaultClass) {
                 this.subClassOfLabel += defaultClass.label;
+                this.cardinalityUpdateEnabled = true;
             } else if (this.ontology.id === ontologyIri) {
                 // the class is not defined in the default classes
                 // but defined in the current ontology
                 // get class label from there
                 this.subClassOfLabel += this.ontology.classes[iri].label;
+                // in this case, the user can't update the cardinality incl. the gui order in this class
+                // we have to disable this update cardinality functionality
+                this.cardinalityUpdateEnabled = false;
             } else {
                 // the ontology iri of the upper class couldn't be found
                 // display the class name
@@ -106,6 +111,9 @@ export class ResourceClassInfoComponent implements OnInit {
                     // iri is not kind of [ontologyIri]#[className]
                     this.subClassOfLabel += iri.split('/').filter(e => e).slice(-1);
                 }
+                // in this case, the user can't update the cardinality incl. the gui order in this class
+                // we have to disable this update cardinality functionality
+                this.cardinalityUpdateEnabled = false;
             }
         });
 
