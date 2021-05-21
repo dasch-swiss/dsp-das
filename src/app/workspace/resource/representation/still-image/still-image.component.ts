@@ -433,7 +433,9 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         svgElement.setAttribute('style', 'stroke: ' + lineColor + '; stroke-width: ' + lineWidth + 'px;');
 
         // event when a region is clicked (output)
-        svgElement.addEventListener('click', () => {
+        svgElement.addEventListener('click', (event: MouseEvent) => {
+            event.preventDefault();
+            event.stopPropagation();
             this.regionClicked.emit(regionIri);
         }, false);
 
