@@ -252,6 +252,10 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         };
         this._viewer = new OpenSeadragon.Viewer(osdOptions);
 
+        // do not zoom in on click
+        // https://github.com/openseadragon/openseadragon/issues/1115#issuecomment-275725918
+        this._viewer.zoomPerClick = 1;
+
         this._viewer.addHandler('full-screen', (args) => {
             if (args.fullScreen) {
                 viewerContainer.classList.add('fullscreen');
@@ -434,8 +438,6 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
         // event when a region is clicked (output)
         svgElement.addEventListener('click', (event: MouseEvent) => {
-            event.preventDefault();
-            event.stopPropagation();
             this.regionClicked.emit(regionIri);
         }, false);
 
