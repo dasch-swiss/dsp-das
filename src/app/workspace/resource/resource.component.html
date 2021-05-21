@@ -15,7 +15,7 @@
         </div>
 
         <!-- tabs -->
-        <mat-tab-group animationDuration="0ms">
+        <mat-tab-group animationDuration="0ms" [(selectedIndex)]="selectedTab">
             <!-- first tab for the main resource e.g. book -->
             <mat-tab [label]="resource.res.entityInfo?.classes[resource.res.type].label">
                 <!-- dsp-property-toolbar with action buttons and project information -->
@@ -58,9 +58,14 @@
             </mat-tab>
 
             <!-- annotations -->
-            <mat-tab *ngIf="representationsToDisplay[0]?.regions.length"
-                [label]="'Annotations'">
-                <div class="region-property" *ngFor="let annotation of annotationResources">
+            <mat-tab *ngIf="representationsToDisplay" >
+                <ng-template matTabLabel class="annotations">
+                    <span [matBadge]="representationsToDisplay[0]?.regions.length" matBadgeColor="primary" matBadgeOverlap="false">
+                        Annotations
+                    </span>
+                </ng-template>
+                <div class="region-property" *ngFor="let annotation of annotationResources"
+                    [id]="annotation.res.id" [class.active]="annotation.res.id === selectedRegion">
                     <!-- dsp-property-toolbar with action buttons and project information -->
                     <app-resource-toolbar [resource]="annotation.res" [showAllProps]="showAllProps"
                         (toggleProps)="showAllProps = !showAllProps" (referredProjectClicked)="openProject($event)">
