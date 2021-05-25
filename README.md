@@ -32,22 +32,6 @@ DSP-APP is [free software](http://www.gnu.org/philosophy/free-sw.en.html), relea
 
 If you would like to contribute to the development of the DSP-APP alongside us, please consult the  [general DSP contribution guidelines](https://docs.dasch.swiss/developers/dsp/contribution/).
 
-### Work on GitHub
-
-DSP-APP has two main branches at the moment:
-
-#### "main" branch
-
-- use the branch "main" to work on the DSP-ADMIN app. Any changes should be created in branches from "main" and should be merged into the "main" branch.
-
-#### "develop" branch
-
-- use the branch "develop" to work on the whole DSP-APP app (admin + research parts). Any new developments should be created in branches from "develop" and should be merged into the "develop" branch.
-
 ### Documentation / User guidelines
-
-- [Introduction](https://dasch-swiss.github.io/dsp-app/)
-- [User Guide](https://dasch-swiss.github.io/dsp-app/how-to-use/)
-- [Contribution](https://dasch-swiss.github.io/dsp-app/how-to-contribute/)
 
 We built the user guidelines and developer documentation with [MkDocs](https://www.mkdocs.org/). Get more information in the appropriate [README](https://github.com/dasch-swiss/dsp-app/blob/main/docs/README.md).
