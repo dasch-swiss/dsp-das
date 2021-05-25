@@ -74,9 +74,20 @@ export class ResultsComponent {
                     this.loading = false;
                 }
             );
+        } else if (this.searchMode === 'gravsearch') {
+            // search mode: gravsearch
+            // perform count query
+            this._dspApiConnection.v2.search.doExtendedSearchCountQuery(this.searchQuery).subscribe(
+                (response: CountQueryResponse) => {
+                    this.numberOfAllResults = response.numberOfResults;
+                    this.loading = false;
+                },
+                (error: ApiResponseError) => {
+                    this._notification.openSnackBar(error);
+                    this.loading = false;
+                }
+            );
         }
-        // in case of gravsearch
-        this.loading = false;
     }
 
     openResource(id: string) {

@@ -1,5 +1,5 @@
 <!-- In case if results present -->
-<div class="content" *ngIf="searchParams && ((!loading && (numberOfAllResults > 0)) || (searchMode === 'gravsearch'))">
+<div class="content" *ngIf="searchParams && !loading && (numberOfAllResults > 0)">
     <as-split direction="horizontal">
         <as-split-area [size]="40">
             <dsp-list-view [search]="searchParams" [displayViewSwitch]="false" (resourceSelected)="openResource($event)"></dsp-list-view>
