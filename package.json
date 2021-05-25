@@ -1,6 +1,6 @@
 {
   "name": "dsp-app",
-  "version": "4.7.0",
+  "version": "4.8.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/dasch-swiss/dsp-app.git"
@@ -8,6 +8,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start-with-test-server": "ng serve --configuration=test-server",
     "lint-ci": "eslint --color -c .eslintrc.js --ext .ts ./src/app",
     "lint-local": "eslint --color --fix -c .eslintrc.js --ext .ts ./src/app",
     "e2e": "ng e2e",
@@ -32,8 +33,8 @@
     "@angular/platform-browser-dynamic": "^11.2.9",
     "@angular/router": "^11.2.9",
     "@ckeditor/ckeditor5-angular": "^1.2.3",
-    "@dasch-swiss/dsp-js": "^2.2.0",
-    "@dasch-swiss/dsp-ui": "^1.3.0",
+    "@dasch-swiss/dsp-js": "^2.3.0",
+    "@dasch-swiss/dsp-ui": "^1.4.0",
     "@ngx-translate/core": "^12.1.2",
     "@ngx-translate/http-loader": "5.0.0",
     "3d-force-graph": "^1.60.12",
@@ -46,7 +47,7 @@
     "jdnconvertiblecalendar": "^0.0.6",
     "jdnconvertiblecalendardateadapter": "^0.0.16",
     "json2typescript": "^1.0.6",
-    "jsonld": "^1.1.0",
+    "jsonld": "^5.2.0",
     "moment": "^2.27.0",
     "ngx-color-picker": "^11.0.0",
     "openseadragon": "^2.4.0",
@@ -60,7 +61,7 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.1102.8",
+    "@angular-devkit/build-angular": "^0.1102.12",
     "@angular-eslint/eslint-plugin": "^1.2.0",
     "@angular/cli": "^11.2.8",
     "@angular/compiler-cli": "^11.2.9",
