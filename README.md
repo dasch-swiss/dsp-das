@@ -8,7 +8,7 @@
 
 This app is a simple user interface for the Data and Service Center for the Humanities DaSCH, which uses the DSP-API server application in the backend. It's a system for annotation and linkage of resources in arts and humanities.
 
-DSP-APP implements [DSP-JS-LIB](https://www.npmjs.com/package/@dasch-swiss/dsp-js) to connect with [DSP-API](https://docs.dasch.swiss/developers/knora/api-reference/). DSP (DaSCH Service Platform) is a software framework for storing, sharing, and working with primary resources and data in the humanities.
+DSP-APP implements [DSP-JS-LIB](https://www.npmjs.com/package/@dasch-swiss/dsp-js) to connect with [DSP-API](https://docs-api.dasch.swiss/03-apis/). DSP (DaSCH Service Platform) is a software framework for storing, sharing, and working with primary resources and data in the humanities.
 
 Additionaly it's built with [DSP-UI-LIB](https://www.npmjs.com/package/@dasch-swiss/dsp-ui) &mdash; reusable DSP specific Angular modules.
 
