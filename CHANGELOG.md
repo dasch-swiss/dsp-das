@@ -1,5 +1,17 @@
 # Changelog
 
+### [4.8.1](https://www.github.com/dasch-swiss/dsp-app/compare/v4.8.0...v4.8.1) (2021-05-25)
+
+
+### Bug Fixes
+
+* **resource:** add if condition (DSP-1655) ([#448](https://www.github.com/dasch-swiss/dsp-app/issues/448)) ([656da04](https://www.github.com/dasch-swiss/dsp-app/commit/656da04effaedb8cb62c8cd6ad31081a4763adc0))
+
+
+### Maintenance
+
+* **project:** resolve regex term (DSP-1654) ([#444](https://www.github.com/dasch-swiss/dsp-app/issues/444)) ([739beba](https://www.github.com/dasch-swiss/dsp-app/commit/739bebab58e6a89cb79a8d85cf1d3d5f514f23f0))
+
 ## [4.8.0](https://www.github.com/dasch-swiss/dsp-app/compare/v4.7.0...v4.8.0) (2021-05-21)
 
 
