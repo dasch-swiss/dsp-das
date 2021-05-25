@@ -46,4 +46,8 @@ DSP-APP has two main branches at the moment:
 
 ### Documentation / User guidelines
 
+- [Introduction](https://dasch-swiss.github.io/dsp-app/)
+- [User Guide](https://dasch-swiss.github.io/dsp-app/how-to-use/)
+- [Contribution](https://dasch-swiss.github.io/dsp-app/how-to-contribute/)
+
 We built the user guidelines and developer documentation with [MkDocs](https://www.mkdocs.org/). Get more information in the appropriate [README](https://github.com/dasch-swiss/dsp-app/blob/main/docs/README.md).
