@@ -75,6 +75,8 @@ export class ResultsComponent {
                 }
             );
         }
+        // in case of gravsearch
+        this.loading = false;
     }
 
     openResource(id: string) {
