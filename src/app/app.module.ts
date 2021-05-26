@@ -90,8 +90,6 @@ import { SwitchPropertiesComponent } from './workspace/resource/resource-instanc
 import { SelectResourceClassComponent } from './workspace/resource/resource-instance-form/select-resource-class/select-resource-class.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
-import { ResourceToolbarComponent } from './workspace/resource/resource-toolbar/resource-toolbar.component';
-import { ResourcePropertiesComponent } from './workspace/resource/resource-properties/resource-properties.component';
 import { StillImageComponent } from './workspace/resource/representation/still-image/still-image.component';
 import { PropertiesComponent } from './workspace/resource/properties/properties.component';
 
@@ -147,6 +145,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         ProjectsComponent,
         ProjectsListComponent,
         ProjectTabViewComponent,
+        PropertiesComponent,
         PropertyFormComponent,
         PropertyInfoComponent,
         ResourceClassFormComponent,
@@ -161,6 +160,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         SelectProjectComponent,
         SelectPropertiesComponent,
         SelectResourceClassComponent,
+        StillImageComponent,
         SwitchPropertiesComponent,
         SystemComponent,
         TermsTabViewComponent,
@@ -171,10 +171,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         UsersComponent,
         UsersListComponent,
         VisualizerComponent,
-        ResourceToolbarComponent,
-        ResourcePropertiesComponent,
-        StillImageComponent,
-        PropertiesComponent,
     ],
     imports: [
         AppRoutingModule,
