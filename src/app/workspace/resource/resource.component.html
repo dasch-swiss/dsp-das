@@ -20,17 +20,6 @@
             <mat-tab [label]="resource.res.entityInfo?.classes[resource.res.type].label">
                 <app-properties *ngIf="resource.res" [resource]="resource" [displayProjectInfo]="true">
                 </app-properties>
-
-                <!-- dsp-property-view -->
-                <!-- <app-resource-properties
-                    *ngIf="resource.resProps.length !== 0 || resource.systemProps.length !== 0; else noPropertyMain"
-                    [parentResource]="resource.res" [propArray]="resource.resProps"
-                    [systemPropArray]="resource.systemProps" [showAllProps]="showAllProps"
-                    >
-                </app-resource-properties>
-
-                <ng-template #noPropertyMain>The resource {{resource?.res.resourceClassLabel}} has no defined
-                    properties.</ng-template> -->
             </mat-tab>
 
             <!-- incoming resource -->
@@ -38,28 +27,13 @@
                 [label]="incomingResource.res.entityInfo.classes[incomingResource.res.type].label">
                 <app-properties *ngIf="incomingResource.res" [resource]="incomingResource" [displayProjectInfo]="false">
                 </app-properties>
-                <!-- dsp-property-toolbar with action buttons and project information -->
-                <!-- <app-resource-toolbar [resource]="incomingResource.res" [showAllProps]="showAllProps"
-                    (toggleProps)="showAllProps = !showAllProps" (referredProjectClicked)="openProject($event)">
-                </app-resource-toolbar> -->
-                <!-- (referredProjectHovered)="referredProjectHovered.emit($event)" -->
-
-                <!-- dsp-property-view -->
-                <!--
-                <app-resource-properties
-                    *ngIf="incomingResource.resProps.length !== 0 || incomingResource.systemProps.length !== 0; else noPropertyIncoming"
-                    [parentResource]="incomingResource.res" [propArray]="incomingResource.resProps"
-                    [systemPropArray]="incomingResource.systemProps" [showAllProps]="showAllProps"
-                    (referredResourceClicked)="openResource($event)">
-                </app-resource-properties>
-
-                <ng-template #noPropertyIncoming>The resource {{resource?.res.resourceClassLabel}} has no defined properties.</ng-template> -->
             </mat-tab>
 
             <!-- annotations -->
-            <mat-tab *ngIf="representationsToDisplay">
+            <mat-tab *ngIf="representationsToDisplay.length">
                 <ng-template matTabLabel class="annotations">
-                    <span [matBadge]="representationsToDisplay[0]?.regions.length" matBadgeColor="primary"
+                    <span [matBadge]="representationsToDisplay[0]?.regions.length"
+                        [matBadgeHidden]="representationsToDisplay[0]?.regions.length === 0" matBadgeColor="primary"
                         matBadgeOverlap="false">
                         Annotations
                     </span>
@@ -68,27 +42,11 @@
                     [class.active]="annotation.res.id === selectedRegion">
                     <app-properties [resource]="annotation" [displayProjectInfo]="false">
                     </app-properties>
-                    <!-- dsp-property-toolbar with action buttons and project information -->
-                    <!-- <app-resource-toolbar [resource]="annotation.res" [showAllProps]="showAllProps"
-                        (toggleProps)="showAllProps = !showAllProps" (referredProjectClicked)="openProject($event)">
-                    </app-resource-toolbar> -->
-
-                    <!-- dsp-property-view -->
-                    <!-- <app-resource-properties
-                        *ngIf="annotation.resProps.length !== 0 || annotation.systemProps.length !== 0; else noPropertyAnnotation"
-                        [parentResource]="annotation.res" [propArray]="annotation.resProps"
-                        [systemPropArray]="annotation.systemProps" [showAllProps]="showAllProps"
-                        (referredResourceClicked)="openResource($event)">
-                    </app-resource-properties>
-                    <ng-template #noPropertyAnnotation>The resource {{resource?.res.resourceClassLabel}} has no defined
-                        properties.</ng-template> -->
                 </div>
-
 
             </mat-tab>
         </mat-tab-group>
-
-        <!-- progress indicator -->
     </div>
+    <!-- progress indicator -->
     <dsp-progress-indicator *ngIf="!resource"></dsp-progress-indicator>
 </div>
