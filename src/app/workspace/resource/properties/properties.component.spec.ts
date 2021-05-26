@@ -132,7 +132,7 @@ class TestAddValueComponent {
 
 }
 
-fdescribe('PropertiesComponent', () => {
+describe('PropertiesComponent', () => {
     let testHostComponent: TestPropertyParentComponent;
     let testHostFixture: ComponentFixture<TestPropertyParentComponent>;
     let voeService: ValueOperationEventService;
