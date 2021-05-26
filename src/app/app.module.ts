@@ -93,6 +93,7 @@ import { ResultsComponent } from './workspace/results/results.component';
 import { ResourceToolbarComponent } from './workspace/resource/resource-toolbar/resource-toolbar.component';
 import { ResourcePropertiesComponent } from './workspace/resource/resource-properties/resource-properties.component';
 import { StillImageComponent } from './workspace/resource/representation/still-image/still-image.component';
+import { PropertiesComponent } from './workspace/resource/properties/properties.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -173,6 +174,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         ResourceToolbarComponent,
         ResourcePropertiesComponent,
         StillImageComponent,
+        PropertiesComponent,
     ],
     imports: [
         AppRoutingModule,
