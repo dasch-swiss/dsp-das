@@ -72,7 +72,7 @@ export class OntologyComponent implements OnInit {
     lastModificationDate: string;
 
     ontoClasses: ClassDefinition[];
-    expandClasses = false;
+    expandClasses = true;
 
     ontoProperties: PropertyDefinition[];
 
@@ -202,6 +202,7 @@ export class OntologyComponent implements OnInit {
                         // open this ontology
                         this.openOntologyRoute(response.ontologies[0].id, this.view);
                         this.ontologyIri = response.ontologies[0].id;
+                        this.lastModificationDate = response.ontologies[0].lastModificationDate;
                     }
 
                     response.ontologies.forEach(ontoMeta => {
@@ -368,9 +369,8 @@ export class OntologyComponent implements OnInit {
     openResourceClassForm(mode: 'createResourceClass' | 'editResourceClass', resClassInfo: DefaultClass): void {
 
         const dialogConfig: MatDialogConfig = {
-            disableClose: true,
-            width: '840px',
-            maxHeight: '90vh',
+            width: '640px',
+            maxHeight: '80vh',
             position: {
                 top: '112px'
             },
@@ -398,9 +398,8 @@ export class OntologyComponent implements OnInit {
         const title = (propertyInfo.propDef ? propertyInfo.propDef.label : propertyInfo.propType.label);
 
         const dialogConfig: MatDialogConfig = {
-            disableClose: false,
             width: '640px',
-            maxHeight: '90vh',
+            maxHeight: '80vh',
             position: {
                 top: '112px'
             },

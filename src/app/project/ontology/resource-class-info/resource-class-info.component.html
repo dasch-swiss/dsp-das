@@ -28,9 +28,9 @@
             <button mat-menu-item (click)="editResourceClass.emit({iri: resourceClass.id, label: resourceClass.label})">
                 Edit resource class info
             </button>
-            <button mat-menu-item (click)="updateCardinality.emit(resourceClass)">
+            <!-- <button mat-menu-item (click)="updateCardinality.emit(resourceClass)">
                 Update corresponding properties
-            </button>
+            </button> -->
             <button mat-menu-item
                 (click)="deleteResourceClass.emit({iri: resourceClass.id, label: resourceClass.label})">
                 Delete resource class
@@ -38,20 +38,18 @@
         </mat-menu>
     </mat-card-header>
     <!-- resource class card content with list of properties -->
-    <mat-card-content>
-        <mat-list cdkDropList class="resource-class-properties" (cdkDropListDropped)="drop($event)">
+    <mat-card-content *ngIf="expanded">
+        <mat-list cdkDropList class="resource-class-properties" (cdkDropListDropped)="drop($event)" *ngIf="propsToDisplay.length; else noProperties">
             <div cdkDrag [cdkDragDisabled]="!ontology.lastModificationDate" *ngFor="let prop of propsToDisplay; let i = index">
                 <div class="drag-n-drop-placeholder" *cdkDragPlaceholder></div>
-                <mat-list-item  class="drag-n-drop-property" *ngIf="expanded">
-
+                <mat-list-item  class="drag-n-drop-property">
                     <span cdkDragHandle mat-list-icon class="gui-order">
-                        <span *ngIf="prop.guiOrder" [class.hide-on-hover]="cardinalityUpdateEnabled">{{i + 1}})</span>
+                        <span [class.hide-on-hover]="cardinalityUpdateEnabled && lastModificationDate">{{i + 1}})</span>
                         <span *ngIf="lastModificationDate && cardinalityUpdateEnabled" class="display-on-hover drag-n-drop-handle">
                             <mat-icon>drag_indicator</mat-icon>
                         </span>
                     </span>
-
-                    <!-- display only properties with guiOrder and if they exist in list of properties;
+                    <!-- display only properties if they exist in list of properties;
                      objectType is not a linkValue (otherwise we have the property twice) -->
                     <app-property-info class="property-info" [propDef]="ontology?.properties[prop.propertyIndex]" [propCard]="propsToDisplay[i]"
                         [projectCode]="projectCode">
@@ -59,7 +57,16 @@
                 </mat-list-item>
             </div>
         </mat-list>
+        <!-- message if the class doesn't have any property -->
+        <ng-template #noProperties>
+            <p>There is no property assigned to this class yet.</p>
+        </ng-template>
+        <!-- button to assign new property to class -->
+        <mat-card-actions class="resource-class-footer">
+            <button *ngIf="lastModificationDate" mat-stroked-button type="button" color="primary"
+            aria-label="Add new property" (click)="addProperty()">
+            <mat-icon>add</mat-icon> Add property
+        </button>
+        </mat-card-actions>
     </mat-card-content>
-    <!-- resource class card actions; TODO: can be reacitviated if we decide to add some special buttons to res class card -->
-    <!-- <mat-card-actions class="resource-class-footer"></mat-card-actions> -->
 </mat-card>

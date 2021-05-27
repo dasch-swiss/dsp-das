@@ -55,14 +55,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
      */
     @Input() name: string;
 
-    // two step form: which should be active?
-    /**
-     * two step form: which should be active?
-     * true => step 1 shows label and comment of resource class
-     * false => step 2 shows list of properties of resource class
-     */
-    @Input() showResourceClassForm = true;
-
     /**
      * edit mode (true); otherwise create mode
     */
@@ -85,6 +77,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     ontology: ReadOntology;
 
     // set a list of properties to set res class cardinality for
+    // --> TODO: will be deleted
     propsForCard: Property[] = [];
 
     // success of sending data
@@ -110,14 +103,17 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     resourceClassComments: StringLiteralV2[] = [];
 
     // sub / second form of resource class: properties form
+    // --> TODO: will be deleted
     resourceClassFormSub: Subscription;
 
     // container for properties
+    // --> TODO: will be deleted
     properties: FormArray;
 
     // resource class name should be unique
     existingResourceClassNames: [RegExp];
 
+    // --> TODO: will be deleted
     existingPropertyNames: [RegExp];
 
     // --> TODO move to knora-api-js-lib
@@ -150,6 +146,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         private _cache: CacheService,
         private _cdr: ChangeDetectorRef,
         private _errorHandler: ErrorHandlerService,
+        // --> TODO: will be deleted
         private _resourceClassFormService: ResourceClassFormService
     ) { }
 
@@ -213,46 +210,19 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         this._resourceClassFormService.resetProperties();
 
         if (this.edit) {
-
-            if (this.showResourceClassForm) {
-                // edit mode: res class info (label and comment)
-                // get resource class info
-                const resourceClasses: ResourceClassDefinitionWithAllLanguages[] = this.ontology.getClassDefinitionsByType(ResourceClassDefinitionWithAllLanguages);
-                Object.keys(resourceClasses).forEach(key => {
-                    if (resourceClasses[key].id === this.iri) {
-                        this.resourceClassLabels = resourceClasses[key].labels;
-                        this.resourceClassComments = resourceClasses[key].comments;
-                    }
+            // edit mode: res class info (label and comment)
+            // get resource class info
+            const resourceClasses: ResourceClassDefinitionWithAllLanguages[] = this.ontology.getClassDefinitionsByType(ResourceClassDefinitionWithAllLanguages);
+            Object.keys(resourceClasses).forEach(key => {
+                if (resourceClasses[key].id === this.iri) {
+                    this.resourceClassLabels = resourceClasses[key].labels;
+                    this.resourceClassComments = resourceClasses[key].comments;
+                }
+            });
+            this.resourceClassFormSub = this._resourceClassFormService.resourceClassForm$
+                .subscribe(resourceClass => {
+                    this.resourceClassForm = resourceClass;
                 });
-                this.resourceClassFormSub = this._resourceClassFormService.resourceClassForm$
-                    .subscribe(resourceClass => {
-                        this.resourceClassForm = resourceClass;
-                    });
-
-            } else {
-                // edit mode: res class cardinality
-                // get list of ontology properties
-                const ontoProperties: PropertyDefinition[] = this.ontology.getAllPropertyDefinitions();
-
-                // find prop cardinality in resource class
-                const ontoClasses: ClassDefinition[] = this.ontology.getAllClassDefinitions();
-                Object.keys(ontoClasses).forEach(key => {
-                    if (ontoClasses[key].id === this.iri) {
-
-                        this._resourceClassFormService.setProperties(ontoClasses[key], ontoProperties);
-
-                        this.resourceClassFormSub = this._resourceClassFormService.resourceClassForm$
-                            .subscribe(resourceClass => {
-                                this.resourceClassForm = resourceClass;
-                                this.properties = this.resourceClassForm.get('properties') as FormArray;
-                            });
-
-                        // set default property language from resource class / first element
-                        this.resourceClassForm.controls.language.setValue(ontoClasses[key].labels[0].language);
-                        this.resourceClassForm.controls.language.disable();
-                    }
-                });
-            }
 
         } else {
             // create mode
@@ -289,18 +259,23 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     //
     // property form: handle list of properties
 
+    // --> TODO: will be deleted
     /**
      * add property line
      */
     addProperty() {
         this._resourceClassFormService.addProperty();
     }
+
+    // --> TODO: will be deleted
     /**
      * delete property line
      */
     removeProperty(index: number) {
         this._resourceClassFormService.removeProperty(index);
     }
+
+    // --> TODO: will be deleted
     /**
      * reset properties
      */
@@ -334,10 +309,11 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
      * go to next step: from resource-class form forward to properties form
      * In create mode only
      */
+    // --> TODO: will be deleted
     nextStep(ev: Event) {
 
         // go to next step: properties form
-        this.showResourceClassForm = false;
+        // this.showResourceClassForm = false;
 
         // use response to go further with properties
         this.updateParent.emit({ title: this.resourceClassLabels[0].value, subtitle: 'Define the metadata fields for the resource class' });
@@ -354,10 +330,11 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
      * go to previous step: from properties form back to resource-class form
      * In create mode only
      */
+    // --> TODO: will be deleted
     prevStep(ev: Event) {
         ev.preventDefault();
         this.updateParent.emit({ title: this.resourceClassTitle, subtitle: 'Customize the resource class' });
-        this.showResourceClassForm = true;
+        // this.showResourceClassForm = true;
     }
 
     //
@@ -370,56 +347,49 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         this.loading = true;
         if (this.edit) {
 
-            if (this.showResourceClassForm) {
-                // edit mode: res class info (label and comment)
-                // label
-                const onto4Label = new UpdateOntology<UpdateResourceClassLabel>();
-                onto4Label.id = this.ontology.id;
-                onto4Label.lastModificationDate = this.lastModificationDate;
+            // edit mode: res class info (label and comment)
+            // label
+            const onto4Label = new UpdateOntology<UpdateResourceClassLabel>();
+            onto4Label.id = this.ontology.id;
+            onto4Label.lastModificationDate = this.lastModificationDate;
 
-                const updateLabel = new UpdateResourceClassLabel();
-                updateLabel.id = this.iri;
-                updateLabel.labels = this.resourceClassLabels;
-                onto4Label.entity = updateLabel;
+            const updateLabel = new UpdateResourceClassLabel();
+            updateLabel.id = this.iri;
+            updateLabel.labels = this.resourceClassLabels;
+            onto4Label.entity = updateLabel;
 
-                // comment
-                const onto4Comment = new UpdateOntology<UpdateResourceClassComment>();
-                onto4Comment.id = this.ontology.id;
+            // comment
+            const onto4Comment = new UpdateOntology<UpdateResourceClassComment>();
+            onto4Comment.id = this.ontology.id;
 
-                const updateComment = new UpdateResourceClassComment();
-                updateComment.id = this.iri;
-                updateComment.comments = this.resourceClassComments;
-                onto4Comment.entity = updateComment;
+            const updateComment = new UpdateResourceClassComment();
+            updateComment.id = this.iri;
+            updateComment.comments = this.resourceClassComments;
+            onto4Comment.entity = updateComment;
 
-                this._dspApiConnection.v2.onto.updateResourceClass(onto4Label).subscribe(
-                    (classLabelResponse: ResourceClassDefinitionWithAllLanguages) => {
-                        this.lastModificationDate = classLabelResponse.lastModificationDate;
-                        onto4Comment.lastModificationDate = this.lastModificationDate;
+            this._dspApiConnection.v2.onto.updateResourceClass(onto4Label).subscribe(
+                (classLabelResponse: ResourceClassDefinitionWithAllLanguages) => {
+                    this.lastModificationDate = classLabelResponse.lastModificationDate;
+                    onto4Comment.lastModificationDate = this.lastModificationDate;
 
-                        this._dspApiConnection.v2.onto.updateResourceClass(onto4Comment).subscribe(
-                            (classCommentResponse: ResourceClassDefinitionWithAllLanguages) => {
-                                this.lastModificationDate = classCommentResponse.lastModificationDate;
+                    this._dspApiConnection.v2.onto.updateResourceClass(onto4Comment).subscribe(
+                        (classCommentResponse: ResourceClassDefinitionWithAllLanguages) => {
+                            this.lastModificationDate = classCommentResponse.lastModificationDate;
 
-                                // close the dialog box
-                                this.loading = false;
-                                this.closeDialog.emit();
-                            },
-                            (error: ApiResponseError) => {
-                                this._errorHandler.showMessage(error);
-                            }
-                        );
+                            // close the dialog box
+                            this.loading = false;
+                            this.closeDialog.emit();
+                        },
+                        (error: ApiResponseError) => {
+                            this._errorHandler.showMessage(error);
+                        }
+                    );
 
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                );
-
-            } else {
-                // edit mode: res class cardinality
-                // submit properties and set cardinality
-                this.submitProps(this.resourceClassForm.value.properties, this.iri);
-            }
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
 
         } else {
             // create mode
@@ -446,9 +416,9 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                 (classResponse: ResourceClassDefinitionWithAllLanguages) => {
                     // need lmd from classResponse
                     this.lastModificationDate = classResponse.lastModificationDate;
-
-                    // submit properties and set cardinality
-                    this.submitProps(this.resourceClassForm.value.properties, classResponse.id);
+                    // close the dialog box
+                    this.loading = false;
+                    this.closeDialog.emit();
 
                 },
                 (error: ApiResponseError) => {
@@ -468,6 +438,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         this.closeDialog.emit();
     }
 
+    // --> TODO: will be deleted
     submitProps(props: Property[], classIri: string) {
 
         let i = 1;
@@ -509,6 +480,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     }
 
+    // --> TODO: will be deleted
     createProp(prop: Property, classIri?: string) {
         return new Promise((resolve, reject) => {
 
@@ -583,6 +555,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         });
     }
 
+    // --> TODO: will be deleted
     setCardinality(props: Property[], classIri: string) {
         const onto = new UpdateOntology<UpdateResourceClassCardinality>();
 

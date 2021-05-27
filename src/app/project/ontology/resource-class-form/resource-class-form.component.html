@@ -2,7 +2,7 @@
 <form [formGroup]="resourceClassForm" class="form-content"
     *ngIf="ontology.lastModificationDate; else missingLastModificationDate">
 
-    <div *ngIf="showResourceClassForm" class="resource-class-data">
+    <div class="resource-class-data">
         <div class="center more-space-top">
 
             <!-- label -->
@@ -34,8 +34,8 @@
             <span>
                 <button *ngIf="!edit" mat-raised-button type="button" color="primary"
                     [disabled]="!resourceClassLabels.length || !resourceClassComments.length"
-                    (click)="nextStep($event)">
-                    Next
+                    (click)="submitData()">
+                    Submit
                 </button>
                 <button *ngIf="edit" mat-raised-button type="button" color="primary"
                     [disabled]="!resourceClassLabels.length || !resourceClassComments.length"
@@ -49,9 +49,13 @@
         </div>
     </div>
 
+    <!-- ------------------------------------------------------ -->
+    <!-- ------------------------------------------------------ -->
+
+    <!-- TODO: the following second step will be destroyed soon -->
     <!-- content: Step 2 = define properties for resource class -->
-    <div *ngIf="!showResourceClassForm" class="properties-data">
-        <!-- default language selector -->
+    <!-- <div *ngIf="!showResourceClassForm" class="properties-data">
+        <!-- default language selector --
         <mat-form-field class="properties-language">
             <mat-label>Default language for the labels</mat-label>
             <mat-select [formControl]="resourceClassForm.controls['language']"
@@ -62,12 +66,10 @@
             </mat-select>
         </mat-form-field>
 
-        <!-- propertiy: one line, with "add" icon to add additional properties -->
+        <!-- propertiy: one line, with "add" icon to add additional properties --
         <div class="properties-list">
             <div class="property-line"
                 *ngFor="let prop of properties?.controls; let last = last; let i = index;">
-
-                <!-- <div *ngIf="prop.value.objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue'"> -->
 
                 <app-resource-class-property-form [propertyForm]="prop" [index]="i" [resClassIri]="iri">
                 </app-resource-class-property-form>
@@ -76,7 +78,6 @@
                     aria-label="Delete this property" class="suffix delete-line" (click)="removeProperty(i)">
                     <mat-icon>delete_outlined</mat-icon>
                 </button>
-                <!-- </div> -->
             </div>
             <button [disabled]="!properties.valid" mat-button type="button" color="primary"
                 aria-label="Add new property" class="add-new-line" (click)="addProperty()">
@@ -84,7 +85,7 @@
             </button>
         </div>
 
-        <!-- action buttons -->
+        <!-- action buttons --
         <div class="form-panel form-action">
             <span>
                 <button *ngIf="!edit" mat-button type="button" (click)="prevStep($event)">
@@ -106,7 +107,7 @@
                 </button>
             </span>
         </div>
-    </div>
+    </div> -->
 </form>
 <!-- in case the last modification date is not defined,
     it's not possible to edit the resource class;

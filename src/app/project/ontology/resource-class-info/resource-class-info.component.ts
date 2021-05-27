@@ -149,6 +149,12 @@ export class ResourceClassInfoComponent implements OnInit {
 
     }
 
+    addProperty() {
+        // open dialog box with property-form
+        // create new property or add existing property
+        // form includes cardinality and gui-attribute
+    }
+
     /**
      * drag and drop property line
      */
