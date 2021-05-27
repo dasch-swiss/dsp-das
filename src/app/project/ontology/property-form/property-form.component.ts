@@ -5,12 +5,15 @@ import {
     ClassDefinition,
     Constants,
     CreateResourceProperty,
+    IHasProperty,
     KnoraApiConnection,
     ListNodeInfo,
     ReadOntology,
+    ResourceClassDefinitionWithAllLanguages,
     ResourcePropertyDefinitionWithAllLanguages,
     StringLiteral,
     UpdateOntology,
+    UpdateResourceClassCardinality,
     UpdateResourcePropertyComment,
     UpdateResourcePropertyLabel
 } from '@dasch-swiss/dsp-js';
@@ -19,7 +22,7 @@ import { Observable } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { DefaultProperties, DefaultProperty, PropertyCategory, PropertyInfoObject } from '../default-data/default-properties';
-import { ResourceClassFormService } from '../resource-class-form/resource-class-form.service';
+import { Property, ResourceClassFormService } from '../resource-class-form/resource-class-form.service';
 
 @Component({
     selector: 'app-property-form',
@@ -33,6 +36,11 @@ export class PropertyFormComponent implements OnInit {
      * and in case of 'edit' mode also the ResourcePropertyDefintion
      */
     @Input() propertyInfo: PropertyInfoObject;
+
+    /**
+     * iri of resClassIri; will be used to set cardinality
+     */
+    @Input() resClassIri?: string;
 
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
@@ -133,7 +141,9 @@ export class PropertyFormComponent implements OnInit {
         this.propertyForm = this._fb.group({
             'guiAttr': new FormControl({
                 value: this.guiAttributes
-            })
+            }),
+            'multiple': new FormControl({}),
+            'required': new FormControl({})
         });
 
         this.updateAttributeField(this.propertyInfo.propType);
@@ -363,7 +373,14 @@ export class PropertyFormComponent implements OnInit {
             this._dspApiConnection.v2.onto.createResourceProperty(onto).subscribe(
                 (response: ResourcePropertyDefinitionWithAllLanguages) => {
                     this.lastModificationDate = response.lastModificationDate;
+
+                    if (this.resClassIri) {
+                        // set cardinality
+                        this.setCardinality(this.propertyForm.value, this.resClassIri)
+                    }
+
                     // close the dialog box
+
                     this.loading = false;
                     this.closeDialog.emit();
                 },
@@ -373,6 +390,48 @@ export class PropertyFormComponent implements OnInit {
             );
 
         }
+    }
+
+    setCardinality(prop: Property, classIri: string) {
+        console.log(prop);
+        const onto = new UpdateOntology<UpdateResourceClassCardinality>();
+
+        onto.lastModificationDate = this.lastModificationDate;
+
+        onto.id = this.ontology.id;
+
+        const addCard = new UpdateResourceClassCardinality();
+
+        addCard.id = classIri;
+
+        addCard.cardinalities = [];
+
+        const propCard: IHasProperty = {
+            propertyIndex: prop.iri,
+            cardinality: this._resourceClassFormService.translateCardinality(prop.multiple, prop.required),
+            // guiOrder: index + 1 --> TODO: where do we set the correct gui order when adding prop to class?
+        };
+
+        addCard.cardinalities.push(propCard);
+
+        onto.entity = addCard;
+
+        onto.entity = addCard;
+
+        this._dspApiConnection.v2.onto.replaceCardinalityOfResourceClass(onto).subscribe(
+            (res: ResourceClassDefinitionWithAllLanguages) => {
+                this.lastModificationDate = res.lastModificationDate;
+                // close the dialog box
+                this.loading = false;
+                this.closeDialog.emit();
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+            }
+        );
+
+        this.loading = false;
+        this.closeDialog.emit();
     }
 
 }

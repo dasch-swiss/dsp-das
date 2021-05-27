@@ -39,20 +39,23 @@
     </mat-card-header>
     <!-- resource class card content with list of properties -->
     <mat-card-content *ngIf="expanded">
-        <mat-list cdkDropList class="resource-class-properties" (cdkDropListDropped)="drop($event)" *ngIf="propsToDisplay.length; else noProperties">
-            <div cdkDrag [cdkDragDisabled]="!ontology.lastModificationDate" *ngFor="let prop of propsToDisplay; let i = index">
+        <mat-list cdkDropList class="resource-class-properties" (cdkDropListDropped)="drop($event)"
+            *ngIf="propsToDisplay.length; else noProperties">
+            <div cdkDrag [cdkDragDisabled]="!ontology.lastModificationDate"
+                *ngFor="let prop of propsToDisplay; let i = index">
                 <div class="drag-n-drop-placeholder" *cdkDragPlaceholder></div>
-                <mat-list-item  class="drag-n-drop-property">
+                <mat-list-item class="drag-n-drop-property">
                     <span cdkDragHandle mat-list-icon class="gui-order">
                         <span [class.hide-on-hover]="cardinalityUpdateEnabled && lastModificationDate">{{i + 1}})</span>
-                        <span *ngIf="lastModificationDate && cardinalityUpdateEnabled" class="display-on-hover drag-n-drop-handle">
+                        <span *ngIf="lastModificationDate && cardinalityUpdateEnabled"
+                            class="display-on-hover drag-n-drop-handle">
                             <mat-icon>drag_indicator</mat-icon>
                         </span>
                     </span>
                     <!-- display only properties if they exist in list of properties;
                      objectType is not a linkValue (otherwise we have the property twice) -->
-                    <app-property-info class="property-info" [propDef]="ontology?.properties[prop.propertyIndex]" [propCard]="propsToDisplay[i]"
-                        [projectCode]="projectCode">
+                    <app-property-info class="property-info" [propDef]="ontology?.properties[prop.propertyIndex]"
+                        [propCard]="propsToDisplay[i]" [projectCode]="projectCode">
                     </app-property-info>
                 </mat-list-item>
             </div>
@@ -64,9 +67,21 @@
         <!-- button to assign new property to class -->
         <mat-card-actions class="resource-class-footer">
             <button *ngIf="lastModificationDate" mat-stroked-button type="button" color="primary"
-            aria-label="Add new property" (click)="addProperty()">
-            <mat-icon>add</mat-icon> Add property
-        </button>
+                [matMenuTriggerFor]="addPropertyMenu" aria-label="Add new property">
+                <mat-icon>add</mat-icon> Add property
+            </button>
+            <mat-menu #addPropertyMenu="matMenu" xPosition="before">
+                <ng-container *ngFor="let type of defaultProperties">
+                    <button mat-menu-item [matMenuTriggerFor]="sub_menu">{{type.group}}</button>
+                    <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
+                        <!-- <button *ngFor="let subItem of my_menu[mainItem]" mat-menu-item>{{ subItem }}</button> -->
+                        <button mat-menu-item *ngFor="let ele of type.elements" [value]="ele"
+                            (click)="openPropertyForm('createProperty', {propType: ele})">
+                            <mat-icon>{{ele.icon}}</mat-icon> {{ele.label}}
+                        </button>
+                    </mat-menu>
+                </ng-container>
+            </mat-menu>
         </mat-card-actions>
     </mat-card-content>
 </mat-card>

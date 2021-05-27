@@ -3,7 +3,7 @@
 -->
 <form [formGroup]="propertyForm" class="form-content" *ngIf="!loading">
 
-    <div class="center more-space-top">
+    <div class="center">
 
         <!-- label -->
         <div class="large-field string-literal-container">
@@ -18,7 +18,7 @@
         </div>
 
         <!-- comment/description -->
-        <div class="large-field string-literal-container more-space-top">
+        <div class="large-field string-literal-container">
             <dsp-string-literal-input
                 [textarea]="true"
                 [placeholder]="'Comment'"
@@ -28,7 +28,7 @@
         </div>
 
         <!-- property type -->
-        <mat-form-field *ngIf="propertyInfo.propType" class="large-field property-type more-space-top">
+        <mat-form-field *ngIf="propertyInfo.propType" class="large-field property-type">
             <span matPrefix class="property-type-icon">
                 <mat-icon>{{propertyInfo.propType?.icon}}</mat-icon>&nbsp;
             </span>
@@ -81,6 +81,21 @@
                 {{formErrors.guiAttr}}
             </mat-hint>
             <!-- <div *ngSwitchDefault>{{propertyInfo.propType.subPropOf}} not yet implemented</div> -->
+        </div>
+
+        <!-- TODO: in case of cardinality: diplay required and multiple checkboxes -->
+        <div class="cardinality" *ngIf="resClassIri">
+            <div class="large-field">
+                <mat-slide-toggle formControlName="multiple">
+                    Multiple values? The property in this class can have multiple values
+                </mat-slide-toggle>
+            </div>
+
+            <div class="large-field">
+                <mat-slide-toggle formControlName="required">
+                    Required field? The property in this class must have one value
+                </mat-slide-toggle>
+            </div>
         </div>
 
     </div>

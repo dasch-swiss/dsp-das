@@ -395,7 +395,7 @@ export class OntologyComponent implements OnInit {
      */
     openPropertyForm(mode: 'createProperty' | 'editProperty', propertyInfo: PropertyInfoObject): void {
 
-        const title = (propertyInfo.propDef ? propertyInfo.propDef.label : propertyInfo.propType.label);
+        const title = (propertyInfo.propDef ? propertyInfo.propDef.label : propertyInfo.propType.group + ': ' + propertyInfo.propType.label);
 
         const dialogConfig: MatDialogConfig = {
             width: '640px',

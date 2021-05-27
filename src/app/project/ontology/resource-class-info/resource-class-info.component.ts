@@ -1,5 +1,6 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
     ApiResponseError,
@@ -13,7 +14,9 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { PropertyCategory, DefaultProperties, PropertyInfoObject } from '../default-data/default-properties';
 import { DefaultClass, DefaultResourceClasses } from '../default-data/default-resource-classes';
 
 @Component({
@@ -33,8 +36,10 @@ export class ResourceClassInfoComponent implements OnInit {
     @Input() lastModificationDate?: string;
 
     @Output() editResourceClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
-    @Output() updateCardinality: EventEmitter<ClassDefinition> = new EventEmitter<ClassDefinition>();
     @Output() deleteResourceClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
+
+    @Output() updateCardinality: EventEmitter<ClassDefinition> = new EventEmitter<ClassDefinition>();
+    @Output() addProperty: EventEmitter<ClassDefinition> = new EventEmitter<ClassDefinition>();
 
     @Output() updateParent: EventEmitter<string> = new EventEmitter<string>();
 
@@ -47,12 +52,16 @@ export class ResourceClassInfoComponent implements OnInit {
 
     subClassOfLabel = '';
 
-    // list of default classes
+    /**
+     * list of all default resource classes (sub class of)
+     */
     defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
+    defaultProperties: PropertyCategory[] = DefaultProperties.data;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
+        private _dialog: MatDialog,
         private _errorHandler: ErrorHandlerService,
         private _snackBar: MatSnackBar
     ) { }
@@ -80,6 +89,9 @@ export class ResourceClassInfoComponent implements OnInit {
      * @param classIris
      */
     translateSubClassOfIri(classIris: string[]) {
+
+        // reset the label
+        this.subClassOfLabel = '';
 
         classIris.forEach((iri, index) => {
             // get ontology iri from class iri
@@ -149,11 +161,39 @@ export class ResourceClassInfoComponent implements OnInit {
 
     }
 
-    addProperty() {
-        // open dialog box with property-form
-        // create new property or add existing property
-        // form includes cardinality and gui-attribute
+    /**
+     * opens property form
+     * @param mode
+     * @param propertyInfo (could be subClassOf (create mode) or resource class itself (edit mode))
+     */
+    openPropertyForm(mode: 'createProperty' | 'editProperty', propertyInfo: PropertyInfoObject): void {
+
+        const title = (propertyInfo.propDef ? propertyInfo.propDef.label : propertyInfo.propType.group + ': ' + propertyInfo.propType.label);
+
+        const dialogConfig: MatDialogConfig = {
+            width: '640px',
+            maxHeight: '80vh',
+            position: {
+                top: '112px'
+            },
+            data: { propInfo: propertyInfo, title: title, subtitle: 'Customize property', mode: mode, parentIri: this.resourceClass.id }
+        };
+
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+            // update the view
+            // this.initOntologiesList();
+            this.ngOnInit();
+        });
     }
+    // open dialog box with property-form
+    // create new property or add existing property
+    // form includes cardinality and gui-attribute
+
 
     /**
      * drag and drop property line
