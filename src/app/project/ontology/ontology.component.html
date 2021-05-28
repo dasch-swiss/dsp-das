@@ -62,10 +62,10 @@
                         matTooltipPosition="above">
                         {{ontology?.label}}
                     </h3>
-                    <p class="mat-caption" [matTooltip]="'Last modification date: ' + ontology.lastModificationDate"
+                    <p class="mat-caption" [matTooltip]="'Last modification date: ' + lastModificationDate"
                         matTooltipPosition="above">
-                        <span *ngIf="ontology.lastModificationDate; else noModificationDate">
-                            Updated on: {{ontology.lastModificationDate | date:'medium'}}
+                        <span *ngIf="lastModificationDate; else noModificationDate">
+                            Updated on: {{lastModificationDate | date:'medium'}}
                         </span>
                         <ng-template #noModificationDate>
                             <span class="note warning">
