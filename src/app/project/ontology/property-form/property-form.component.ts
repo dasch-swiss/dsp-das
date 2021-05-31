@@ -18,11 +18,10 @@ import {
     UpdateResourcePropertyLabel
 } from '@dasch-swiss/dsp-js';
 import { AutocompleteItem, DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
-import { Observable } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { DefaultProperties, DefaultProperty, PropertyCategory, PropertyInfoObject } from '../default-data/default-properties';
-import { Property, ResourceClassFormService } from '../resource-class-form/resource-class-form.service';
+import { ResourceClassFormService } from '../resource-class-form/resource-class-form.service';
 
 @Component({
     selector: 'app-property-form',
@@ -42,6 +41,9 @@ export class PropertyFormComponent implements OnInit {
      */
     @Input() resClassIri?: string;
 
+    /**
+     * output closeDialog of property form component to update parent component
+     */
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
     /**
@@ -76,7 +78,7 @@ export class PropertyFormComponent implements OnInit {
     lists: ListNodeInfo[];
 
     // resource classes in this ontology
-    resourceClass: ClassDefinition[] = [];
+    resourceClasses: ClassDefinition[] = [];
 
     loading = false;
 
@@ -108,8 +110,7 @@ export class PropertyFormComponent implements OnInit {
                 // set various lists to select from
                 // a) in case of link value:
                 // set list of resource classes from response; needed for linkValue
-                this.resourceClass = response.getAllClassDefinitions();
-
+                this.resourceClasses = response.getAllClassDefinitions();
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
@@ -267,8 +268,8 @@ export class PropertyFormComponent implements OnInit {
 
     submitData() {
         // do something with your data
-        if (this.propertyInfo.propDef) {
-            // edit mode: res property info (label and comment)
+        if (this.propertyInfo.propDef && !this.resClassIri) {
+            // edit mode: update res property info (label and comment)
             // label
             const onto4Label = new UpdateOntology<UpdateResourcePropertyLabel>();
             onto4Label.id = this.ontology.id;
@@ -290,27 +291,33 @@ export class PropertyFormComponent implements OnInit {
 
             this._dspApiConnection.v2.onto.updateResourceProperty(onto4Label).subscribe(
                 (classLabelResponse: ResourcePropertyDefinitionWithAllLanguages) => {
-                    this.ontology.lastModificationDate = classLabelResponse.lastModificationDate;
+                    this.lastModificationDate = classLabelResponse.lastModificationDate;
                     onto4Comment.lastModificationDate = this.ontology.lastModificationDate;
 
                     this._dspApiConnection.v2.onto.updateResourceProperty(onto4Comment).subscribe(
                         (classCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
-                            this.ontology.lastModificationDate = classCommentResponse.lastModificationDate;
+                            this.lastModificationDate = classCommentResponse.lastModificationDate;
 
                             // close the dialog box
                             this.loading = false;
                             this.closeDialog.emit();
+
                         },
                         (error: ApiResponseError) => {
                             this._errorHandler.showMessage(error);
                         }
                     );
 
+
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
                 }
             );
+
+        } else if (this.propertyInfo.propDef && this.resClassIri) {
+            // edit cardinality mode: update cardinality of existing property in res class
+            this.setCardinality(this.propertyInfo.propDef);
 
         } else {
             // create mode: new property incl. gui type and attribute
@@ -327,7 +334,6 @@ export class PropertyFormComponent implements OnInit {
             // prepare payload for property
             const newResProp = new CreateResourceProperty();
             newResProp.name = uniquePropName;
-            // --> TODO update prop.label and use StringLiteralInput in property-form
             newResProp.label = this.labels;
             newResProp.comment = (this.comments.length ? this.comments : this.labels);
             const guiAttr = this.propertyForm.controls['guiAttr'].value;
@@ -374,15 +380,15 @@ export class PropertyFormComponent implements OnInit {
                 (response: ResourcePropertyDefinitionWithAllLanguages) => {
                     this.lastModificationDate = response.lastModificationDate;
 
-                    if (this.resClassIri) {
+                    if (this.resClassIri && response.lastModificationDate) {
                         // set cardinality
-                        this.setCardinality(this.propertyForm.value, this.resClassIri)
+                        this.setCardinality(response);
+                    } else {
+                        // close the dialog box
+                        this.loading = false;
+                        this.closeDialog.emit();
                     }
 
-                    // close the dialog box
-
-                    this.loading = false;
-                    this.closeDialog.emit();
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
@@ -392,8 +398,8 @@ export class PropertyFormComponent implements OnInit {
         }
     }
 
-    setCardinality(prop: Property, classIri: string) {
-        console.log(prop);
+    setCardinality(prop: ResourcePropertyDefinitionWithAllLanguages) {
+
         const onto = new UpdateOntology<UpdateResourceClassCardinality>();
 
         onto.lastModificationDate = this.lastModificationDate;
@@ -402,14 +408,39 @@ export class PropertyFormComponent implements OnInit {
 
         const addCard = new UpdateResourceClassCardinality();
 
-        addCard.id = classIri;
+        addCard.id = this.resClassIri;
 
         addCard.cardinalities = [];
 
+        // need a list of all properties in the current ontology
+        const ontoProps = this.ontology.getAllPropertyDefinitions();
+
+        // need a list of all properties in the current resource class
+        const currentResourceClass = this.resourceClasses.find(i => i.id === this.resClassIri);
+
+        // currentResourceClass.propertiesList.forEach((resProp) => {
+        //     const propToDisplay = ontoProps.find(obj =>
+        //         obj.id === resProp.propertyIndex &&
+        //         (obj.objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue' ||
+        //             (obj.subjectType && !obj.subjectType.includes('Standoff'))
+        //         )
+        //     );
+
+        //     if (propToDisplay) {
+        //         const existingPropCard: IHasProperty = {
+        //             propertyIndex: resProp.propertyIndex,
+        //             cardinality: resProp.cardinality,
+        //             guiOrder: resProp.guiOrder
+        //         };
+        //         addCard.cardinalities.push(existingPropCard);
+        //     }
+
+        // });
+
         const propCard: IHasProperty = {
-            propertyIndex: prop.iri,
-            cardinality: this._resourceClassFormService.translateCardinality(prop.multiple, prop.required),
-            // guiOrder: index + 1 --> TODO: where do we set the correct gui order when adding prop to class?
+            propertyIndex: prop.id,
+            cardinality: this._resourceClassFormService.translateCardinality(this.propertyForm.value.multiple, this.propertyForm.value.required),
+            guiOrder: addCard.cardinalities.length  // add new property to the end of current list of properties
         };
 
         addCard.cardinalities.push(propCard);
@@ -418,8 +449,9 @@ export class PropertyFormComponent implements OnInit {
 
         onto.entity = addCard;
 
-        this._dspApiConnection.v2.onto.replaceCardinalityOfResourceClass(onto).subscribe(
+        this._dspApiConnection.v2.onto.addCardinalityToResourceClass(onto).subscribe(
             (res: ResourceClassDefinitionWithAllLanguages) => {
+
                 this.lastModificationDate = res.lastModificationDate;
                 // close the dialog box
                 this.loading = false;

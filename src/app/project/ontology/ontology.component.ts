@@ -18,7 +18,6 @@ import {
     PropertyDefinition,
     ReadOntology,
     ReadProject,
-    ResourceClassDefinition,
     UpdateOntology
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, Session, SessionService, SortingService } from '@dasch-swiss/dsp-ui';
@@ -32,6 +31,11 @@ import { ResourceClassFormService } from './resource-class-form/resource-class-f
 export interface OntologyInfo {
     id: string;
     label: string;
+}
+
+export interface CardinalityInfo {
+    resClass: ClassDefinition;
+    property: PropertyInfoObject;
 }
 
 @Component({
@@ -51,6 +55,7 @@ export class OntologyComponent implements OnInit {
 
     // permissions of logged-in user
     session: Session;
+    // system admin or project admin is by default false
     sysAdmin = false;
     projectAdmin = false;
 
@@ -66,18 +71,23 @@ export class OntologyComponent implements OnInit {
     // existing project ontology names
     existingOntologyNames: string[] = [];
 
-    // current/selected ontology
+    // id of current ontology
+    ontologyIri: string = undefined;
+
+    // current ontology
     ontology: ReadOntology;
 
+    // the lastModificationDate is the most important key
+    // when updating something inside the ontology
     lastModificationDate: string;
 
+    // all resource classes in the current ontology
     ontoClasses: ClassDefinition[];
+    // expand the resource class cards
     expandClasses = true;
 
+    // all properties in the current ontology
     ontoProperties: PropertyDefinition[];
-
-    // selected ontology id
-    ontologyIri: string = undefined;
 
     // form to select ontology from list
     ontologyForm: FormGroup;
@@ -85,7 +95,8 @@ export class OntologyComponent implements OnInit {
     // display resource classes as grid or as graph
     view: 'classes' | 'properties' | 'graph' = 'classes';
 
-    // i18n setup
+    // i18n setup; in the user interface we use the term
+    // data model for ontology
     itemPluralMapping = {
         ontology: {
             '=1': '1 data model',
@@ -98,10 +109,6 @@ export class OntologyComponent implements OnInit {
      */
     defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
     defaultProperties: PropertyCategory[] = DefaultProperties.data;
-
-    // @ViewChild(AddToDirective, { static: false }) addToHost: AddToDirective;
-
-    // @ViewChild('addResourceClassComponent', { static: false }) addResourceClass: AddResourceClassComponent;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -127,7 +134,7 @@ export class OntologyComponent implements OnInit {
             if (this._route.snapshot.params.id) {
                 this.ontologyIri = decodeURIComponent(this._route.snapshot.params.id);
             }
-            // get view from route: classes, properties or graph
+            // get the selected view from route: display classes, properties or graph
             this.view = (this._route.snapshot.params.view ? this._route.snapshot.params.view : 'classes');
         }
 
@@ -275,11 +282,8 @@ export class OntologyComponent implements OnInit {
                                 this._errorHandler.showMessage(error);
                             }
                         );
-
                     });
-
                 }
-
             },
             (error: ApiResponseError) => {
                 this.ontologies = [];
@@ -289,16 +293,16 @@ export class OntologyComponent implements OnInit {
         );
     }
 
-    // update view after selecting an ontology from dropdown
+    /**
+     * update view after selecting an ontology from dropdown
+     * @param id
+     */
     onValueChanged(id: string) {
-
         if (!this.ontologyForm) {
             return;
         }
-
         // reset and open selected ontology
         this.resetOntology(id);
-
     }
 
     /**
@@ -312,21 +316,27 @@ export class OntologyComponent implements OnInit {
         this._router.navigateByUrl(goto, { skipLocationChange: false });
     }
 
+    /**
+     * resets the current view and the selected ontology
+     * @param id
+     */
     resetOntology(id: string) {
-
         this.ontology = undefined;
         this.ontoClasses = [];
         this.openOntologyRoute(id, this.view);
         this.initOntologiesList();
-
     }
 
+    /**
+     * filters owl class
+     * @param owlClass
+     */
     filterOwlClass(owlClass: any) {
         return (owlClass['@type'] === 'owl:class');
     }
 
     /**
-     * opens ontology form
+     * opens ontology form to create or edit ontology info
      * @param mode
      * @param [iri] only in edit mode
      */
@@ -362,7 +372,7 @@ export class OntologyComponent implements OnInit {
     }
 
     /**
-     * opens resource class form
+     * opens resource class form to create or edit resource class info
      * @param mode
      * @param resClassInfo (could be subClassOf (create mode) or resource class itself (edit mode))
      */
@@ -374,7 +384,7 @@ export class OntologyComponent implements OnInit {
             position: {
                 top: '112px'
             },
-            data: { id: resClassInfo.iri, title: resClassInfo.label, subtitle: 'Customize resource class', mode: mode, project: this.projectCode }
+            data: { id: resClassInfo.iri, title: resClassInfo.label, subtitle: 'Customize resource class', mode: mode }
         };
 
         const dialogRef = this._dialog.open(
@@ -389,11 +399,11 @@ export class OntologyComponent implements OnInit {
     }
 
     /**
-     * opens property form
+     * opens property form to create or edit property info
      * @param mode
      * @param propertyInfo (could be subClassOf (create mode) or resource class itself (edit mode))
      */
-    openPropertyForm(mode: 'createProperty' | 'editProperty', propertyInfo: PropertyInfoObject): void {
+    openPropertyForm(mode: 'createProperty' | 'editProperty', propertyInfo: PropertyInfoObject, ): void {
 
         const title = (propertyInfo.propDef ? propertyInfo.propDef.label : propertyInfo.propType.group + ': ' + propertyInfo.propType.label);
 
@@ -403,7 +413,7 @@ export class OntologyComponent implements OnInit {
             position: {
                 top: '112px'
             },
-            data: { propInfo: propertyInfo, title: title, subtitle: 'Customize property', mode: mode, project: this.project.id }
+            data: { propInfo: propertyInfo, title: title, subtitle: 'Customize property', mode: mode }
         };
 
         const dialogRef = this._dialog.open(
@@ -416,22 +426,33 @@ export class OntologyComponent implements OnInit {
             this.initOntologiesList();
         });
     }
-
 
     /**
      * updates cardinality
      * @param subClassOf resource class
      */
-    updateCard(subClassOf: ResourceClassDefinition) {
+    updateCard(card: CardinalityInfo) {
+
+        const classLabel = card.resClass.label;
+
+        let mode: 'createProperty' | 'updateCardinality' = 'createProperty';
+        let propLabel = card.property.propType.group + ': ' + card.property.propType.label;
+        let title = 'Add property "' + propLabel + '" to class "' + classLabel + '"';
+
+        if (card.property.propDef) {
+            // the property exists already
+            mode = 'updateCardinality';
+            propLabel = card.property.propDef.label;
+            title = 'Update property "' + propLabel + '" and the cardinality in class "' + classLabel + '"';
+        }
 
         const dialogConfig: MatDialogConfig = {
-            disableClose: true,
-            width: '840px',
-            maxHeight: '90vh',
+            width: '640px',
+            maxHeight: '80vh',
             position: {
                 top: '112px'
             },
-            data: { mode: 'updateCardinality', id: subClassOf.id, title: subClassOf.label, subtitle: 'Update the metadata fields of resource class', project: this.projectCode }
+            data: { propInfo: card.property, title: title, subtitle: 'Customize property and cardinality', mode: mode, parentIri: card.resClass.id }
         };
 
         const dialogRef = this._dialog.open(
@@ -446,7 +467,7 @@ export class OntologyComponent implements OnInit {
     }
 
     /**
-    * delete either ontology or resource class
+    * delete either ontology, resource class or property
     *
     * @param mode Can be 'Ontology' or 'ResourceClass'
     * @param id
@@ -552,7 +573,6 @@ export class OntologyComponent implements OnInit {
                 this.loadOntology = false;
             }
         );
-
     }
 
 }

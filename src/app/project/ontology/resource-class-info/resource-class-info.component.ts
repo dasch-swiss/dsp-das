@@ -7,8 +7,11 @@ import {
     ClassDefinition,
     IHasProperty,
     KnoraApiConnection,
+    PropertyDefinition,
     ReadOntology,
+    ResourceClassDefinition,
     ResourceClassDefinitionWithAllLanguages,
+    ResourcePropertyDefinitionWithAllLanguages,
     UpdateOntology,
     UpdateResourceClassCardinality
 } from '@dasch-swiss/dsp-js';
@@ -16,8 +19,9 @@ import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
-import { PropertyCategory, DefaultProperties, PropertyInfoObject } from '../default-data/default-properties';
+import { PropertyCategory, DefaultProperties, PropertyInfoObject, DefaultProperty } from '../default-data/default-properties';
 import { DefaultClass, DefaultResourceClasses } from '../default-data/default-resource-classes';
+import { CardinalityInfo } from '../ontology.component';
 
 @Component({
     selector: 'app-resource-class-info',
@@ -33,15 +37,18 @@ export class ResourceClassInfoComponent implements OnInit {
 
     @Input() projectCode: string;
 
+    @Input() ontoProperties: string;
+
     @Input() lastModificationDate?: string;
 
     @Output() editResourceClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
     @Output() deleteResourceClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
 
-    @Output() updateCardinality: EventEmitter<ClassDefinition> = new EventEmitter<ClassDefinition>();
-    @Output() addProperty: EventEmitter<ClassDefinition> = new EventEmitter<ClassDefinition>();
+    // to update the cardinality we need the information about property (incl. propType) and resource class
+    @Output() updateCardinality: EventEmitter<CardinalityInfo> = new EventEmitter<CardinalityInfo>();
 
-    @Output() updateParent: EventEmitter<string> = new EventEmitter<string>();
+    // event emitter when the lastModificationDate changed; bidirectional binding with lastModificationDate parameter
+    @Output() lastModificationDateChange: EventEmitter<string> = new EventEmitter<string>();
 
     ontology: ReadOntology;
 
@@ -161,6 +168,38 @@ export class ResourceClassInfoComponent implements OnInit {
 
     }
 
+    addNewProperty(propType: DefaultProperty) {
+        const cardinality: CardinalityInfo = {
+            resClass: this.resourceClass,
+            property: {
+                propType: propType
+            }
+        };
+        this.updateCardinality.emit(cardinality);
+    }
+
+    addExistingProperty(propDef: ResourcePropertyDefinitionWithAllLanguages) {
+        let propType: DefaultProperty;
+        for (const group of this.defaultProperties) {
+            propType = group.elements.find(i =>
+                i.guiEle === propDef.guiElement &&
+                (i.objectType === propDef.objectType || i.subPropOf === propDef.subPropertyOf[0])
+            );
+
+            if (propType) {
+                break;
+            }
+        }
+        const cardinality: CardinalityInfo = {
+            resClass: this.resourceClass,
+            property: {
+                propType: propType,
+                propDef: propDef
+            }
+        };
+        this.updateCardinality.emit(cardinality);
+    }
+
     /**
      * opens property form
      * @param mode
@@ -176,7 +215,7 @@ export class ResourceClassInfoComponent implements OnInit {
             position: {
                 top: '112px'
             },
-            data: { propInfo: propertyInfo, title: title, subtitle: 'Customize property', mode: mode, parentIri: this.resourceClass.id }
+            data: { propInfo: propertyInfo, title: title, subtitle: 'Customize property as part of ' + this.resourceClass.label, mode: mode, parentIri: this.resourceClass.id }
         };
 
         const dialogRef = this._dialog.open(
@@ -239,7 +278,7 @@ export class ResourceClassInfoComponent implements OnInit {
                     // successful request: update the view
                     this.preparePropsToDisplay(this.propsToDisplay);
 
-                    this.updateParent.emit(this.lastModificationDate);
+                    this.lastModificationDateChange.emit(this.lastModificationDate);
 
                     // display success message
                     this._snackBar.open(`You have successfully changed the order of properties in the resource class "${this.resourceClass.label}".`, '', {

@@ -17,6 +17,7 @@
             matTooltipPosition="above" [innerHTML]="'&rarr;&nbsp;' + propAttribute">
         </span>
     </div>
+
     <div mat-line class="info additional-info">
         <!-- in case of res class: display cardinality -->
         <span *ngIf="propCard">
@@ -25,7 +26,7 @@
             <mat-icon class="required">{{propInfo.required ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
             required
         </span>
-        <!-- in case of ontology property: display corresponding resource class -->
+        <!-- in case of ontology property: display corresponding resource classes -->
         <span *ngIf="!propCard">
             <span *ngIf="resClasses.length; else notUsed">
                 Property is used in:
@@ -42,6 +43,7 @@
 
         </span>
     </div>
+
     <div class="action-bubble" *ngIf="!propCard && ontology?.lastModificationDate && showActionBubble"
         [@simpleFadeAnimation]="'in'">
         <div class="button-container">

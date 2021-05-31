@@ -44,8 +44,8 @@
             <div cdkDrag [cdkDragDisabled]="!ontology.lastModificationDate"
                 *ngFor="let prop of propsToDisplay; let i = index">
                 <div class="drag-n-drop-placeholder" *cdkDragPlaceholder></div>
-                <mat-list-item class="drag-n-drop-property">
-                    <span cdkDragHandle mat-list-icon class="gui-order">
+                <mat-list-item class="property">
+                    <span cdkDragHandle mat-list-icon class="list-icon gui-order">
                         <span [class.hide-on-hover]="cardinalityUpdateEnabled && lastModificationDate">{{i + 1}})</span>
                         <span *ngIf="lastModificationDate && cardinalityUpdateEnabled"
                             class="display-on-hover drag-n-drop-handle">
@@ -65,23 +65,34 @@
             <p>There is no property assigned to this class yet.</p>
         </ng-template>
         <!-- button to assign new property to class -->
-        <mat-card-actions class="resource-class-footer">
-            <button *ngIf="lastModificationDate" mat-stroked-button type="button" color="primary"
-                [matMenuTriggerFor]="addPropertyMenu" aria-label="Add new property">
-                <mat-icon>add</mat-icon> Add property
-            </button>
-            <mat-menu #addPropertyMenu="matMenu" xPosition="before">
-                <ng-container *ngFor="let type of defaultProperties">
-                    <button mat-menu-item [matMenuTriggerFor]="sub_menu">{{type.group}}</button>
-                    <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
-                        <!-- <button *ngFor="let subItem of my_menu[mainItem]" mat-menu-item>{{ subItem }}</button> -->
-                        <button mat-menu-item *ngFor="let ele of type.elements" [value]="ele"
-                            (click)="openPropertyForm('createProperty', {propType: ele})">
-                            <mat-icon>{{ele.icon}}</mat-icon> {{ele.label}}
-                        </button>
-                    </mat-menu>
-                </ng-container>
-            </mat-menu>
-        </mat-card-actions>
+        <mat-list>
+            <mat-list-item *ngIf="lastModificationDate" class="property link" [matMenuTriggerFor]="addPropertyMenu">
+                <span mat-list-icon class="list-icon">
+                    <mat-icon>add</mat-icon>
+                </span>
+                Add property
+            </mat-list-item>
+        </mat-list>
+
+        <mat-menu #addPropertyMenu="matMenu" xPosition="after">
+            <button mat-menu-item [matMenuTriggerFor]="newFromPropType">Create new from type</button>
+            <button mat-menu-item [matMenuTriggerFor]="addExistingProp">Add existing property</button>
+        </mat-menu>
+        <mat-menu #newFromPropType="matMenu">
+            <ng-container *ngFor="let type of defaultProperties">
+                <button mat-menu-item [matMenuTriggerFor]="sub_menu">{{type.group}}</button>
+                <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
+                    <!-- <button *ngFor="let subItem of my_menu[mainItem]" mat-menu-item>{{ subItem }}</button> -->
+                    <button mat-menu-item *ngFor="let ele of type.elements" [value]="ele"
+                        (click)="addNewProperty(ele)">
+                        <!-- (click)="openPropertyForm('createProperty', {propType: ele})"  -->
+                        <mat-icon>{{ele.icon}}</mat-icon> {{ele.label}}
+                    </button>
+                </mat-menu>
+            </ng-container>
+        </mat-menu>
+        <mat-menu #addExistingProp="matMenu" class="default-nested-sub-menu">
+            <button mat-menu-item *ngFor="let prop of ontoProperties" (click)="addExistingProperty(prop)">{{prop.label}}</button>
+        </mat-menu>
     </mat-card-content>
 </mat-card>

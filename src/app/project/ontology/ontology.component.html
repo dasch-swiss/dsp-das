@@ -179,11 +179,11 @@
                     <app-resource-class-info *ngFor="let resClass of ontoClasses" [resourceClass]="resClass"
                         [expanded]="expandClasses"
                         [projectCode]="projectCode"
-                        [lastModificationDate]="lastModificationDate"
-                        (updateParent)="lastModificationDate = $event"
+                        [ontoProperties]="ontoProperties"
+                        [(lastModificationDate)]="lastModificationDate"
                         (editResourceClass)="openResourceClassForm('editResourceClass', $event)"
-                        (updateCardinality)="updateCard($event)"
-                        (deleteResourceClass)="delete('ResourceClass', $event)">
+                        (deleteResourceClass)="delete('ResourceClass', $event)"
+                        (updateCardinality)="updateCard($event)">
                     </app-resource-class-info>
                 </div>
                 <div class="ontology-editor-list properties" *ngIf="view === 'properties'">

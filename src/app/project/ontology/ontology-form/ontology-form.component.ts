@@ -1,12 +1,10 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
-    ApiResponseData,
     ApiResponseError,
     CreateOntology,
     KnoraApiConnection,
     OntologyMetadata,
-    ProjectResponse,
     ReadOntology,
     ReadProject,
     UpdateOntologyMetadata
