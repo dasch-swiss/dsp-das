@@ -143,8 +143,8 @@ export class PropertyFormComponent implements OnInit {
             'guiAttr': new FormControl({
                 value: this.guiAttributes
             }),
-            'multiple': new FormControl({}),
-            'required': new FormControl({})
+            'multiple': new FormControl(),
+            'required': new FormControl()
         });
 
         this.updateAttributeField(this.propertyInfo.propType);
@@ -241,7 +241,6 @@ export class PropertyFormComponent implements OnInit {
                     this.showGuiAttr = false;
             }
 
-
         } else {
             // depending on the selected property type,
             // we have to define gui element attributes
@@ -268,7 +267,7 @@ export class PropertyFormComponent implements OnInit {
 
     submitData() {
         // do something with your data
-        if (this.propertyInfo.propDef && !this.resClassIri) {
+        if (this.propertyInfo.propDef) {
             // edit mode: update res property info (label and comment)
             // label
             const onto4Label = new UpdateOntology<UpdateResourcePropertyLabel>();
@@ -292,11 +291,16 @@ export class PropertyFormComponent implements OnInit {
             this._dspApiConnection.v2.onto.updateResourceProperty(onto4Label).subscribe(
                 (classLabelResponse: ResourcePropertyDefinitionWithAllLanguages) => {
                     this.lastModificationDate = classLabelResponse.lastModificationDate;
-                    onto4Comment.lastModificationDate = this.ontology.lastModificationDate;
+                    onto4Comment.lastModificationDate = this.lastModificationDate;
 
                     this._dspApiConnection.v2.onto.updateResourceProperty(onto4Comment).subscribe(
                         (classCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
                             this.lastModificationDate = classCommentResponse.lastModificationDate;
+
+                            if (this.resClassIri) {
+                                // edit cardinality mode: update cardinality of existing property in res class
+                                this.setCardinality(this.propertyInfo.propDef);
+                            }
 
                             // close the dialog box
                             this.loading = false;
@@ -314,10 +318,6 @@ export class PropertyFormComponent implements OnInit {
                     this._errorHandler.showMessage(error);
                 }
             );
-
-        } else if (this.propertyInfo.propDef && this.resClassIri) {
-            // edit cardinality mode: update cardinality of existing property in res class
-            this.setCardinality(this.propertyInfo.propDef);
 
         } else {
             // create mode: new property incl. gui type and attribute
