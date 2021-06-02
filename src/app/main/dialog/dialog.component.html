@@ -281,9 +281,6 @@
     <div *ngSwitchCase="'updateCardinality'">
         <app-dialog-header [title]="data.title" [subtitle]="data.subtitle">
         </app-dialog-header>
-        <!-- <app-resource-class-form [iri]="data.id" [name]="data.title" [projectCode]="data.project" [edit]="true"
-            (closeDialog)="dialogRef.close()">
-        </app-resource-class-form> -->
         <app-property-form [propertyInfo]="data.propInfo" [resClassIri]="data.parentIri" (closeDialog)="dialogRef.close()">
         </app-property-form>
     </div>

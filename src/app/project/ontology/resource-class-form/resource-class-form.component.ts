@@ -581,8 +581,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
         onto.entity = addCard;
 
-        onto.entity = addCard;
-
         this._dspApiConnection.v2.onto.replaceCardinalityOfResourceClass(onto).subscribe(
             (res: ResourceClassDefinitionWithAllLanguages) => {
                 this.lastModificationDate = res.lastModificationDate;

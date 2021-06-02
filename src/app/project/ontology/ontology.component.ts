@@ -230,47 +230,7 @@ export class OntologyComponent implements OnInit {
                                     // get all information to display this ontology
                                     // with all classes, properties and connected lists
                                     this.loadOntology = true;
-                                    this.ontology = readOnto;
-                                    this.lastModificationDate = this.ontology.lastModificationDate;
-                                    this._cache.set('currentOntology', this.ontology);
-
-                                    // grab the onto class information to display
-                                    const allOntoClasses = readOnto.getAllClassDefinitions();
-
-                                    // reset the ontology classes
-                                    this.ontoClasses = [];
-
-                                    // display only the classes which are not a subClass of Standoff
-                                    allOntoClasses.forEach(resClass => {
-                                        if (resClass.subClassOf.length) {
-                                            const splittedSubClass = resClass.subClassOf[0].split('#');
-                                            if (!splittedSubClass[0].includes(Constants.StandoffOntology) && !splittedSubClass[1].includes('Standoff')) {
-                                                this.ontoClasses.push(resClass);
-                                            }
-                                        }
-                                    });
-                                    // sort classes by label
-                                    // --> TODO: add sort functionallity to the gui
-                                    this.ontoClasses = this._sortingService.keySortByAlphabetical(this.ontoClasses, 'label');
-
-                                    // grab the onto properties information to display
-                                    const allOntoProperties = readOnto.getAllPropertyDefinitions();
-
-                                    // reset the ontology properties
-                                    this.ontoProperties = [];
-
-                                    // display only the properties which are not a subjectType of Standoff
-                                    allOntoProperties.forEach(resProp => {
-                                        const standoff = (resProp.subjectType ? resProp.subjectType.includes('Standoff') : false);
-                                        if (resProp.objectType !== Constants.LinkValue && !standoff) {
-                                            this.ontoProperties.push(resProp);
-                                        }
-                                    });
-                                    // sort properties by label
-                                    // --> TODO: add sort functionallity to the gui
-                                    this.ontoProperties = this._sortingService.keySortByAlphabetical(this.ontoProperties, 'label');
-
-                                    this.loadOntology = false;
+                                    this.resetOntologyView(readOnto);
                                 }
                                 if (response.ontologies.length === this.ontologies.length) {
                                     this.ontologies = this._sortingService.keySortByAlphabetical(this.ontologies, 'label');
@@ -291,6 +251,41 @@ export class OntologyComponent implements OnInit {
                 this.loading = false;
             }
         );
+    }
+
+    initOntoClasses(allOntoClasses: ClassDefinition[]) {
+
+        // reset the ontology classes
+        this.ontoClasses = [];
+
+        // display only the classes which are not a subClass of Standoff
+        allOntoClasses.forEach(resClass => {
+            if (resClass.subClassOf.length) {
+                const splittedSubClass = resClass.subClassOf[0].split('#');
+                if (!splittedSubClass[0].includes(Constants.StandoffOntology) && !splittedSubClass[1].includes('Standoff')) {
+                    this.ontoClasses.push(resClass);
+                }
+            }
+        });
+        // sort classes by label
+        // --> TODO: add sort functionallity to the gui
+        this.ontoClasses = this._sortingService.keySortByAlphabetical(this.ontoClasses, 'label');
+    }
+
+    initOntoProperties(allOntoProperties: PropertyDefinition[]) {
+        // reset the ontology properties
+        this.ontoProperties = [];
+
+        // display only the properties which are not a subjectType of Standoff
+        allOntoProperties.forEach(resProp => {
+            const standoff = (resProp.subjectType ? resProp.subjectType.includes('Standoff') : false);
+            if (resProp.objectType !== Constants.LinkValue && !standoff) {
+                this.ontoProperties.push(resProp);
+            }
+        });
+        // sort properties by label
+        // --> TODO: add sort functionallity to the gui
+        this.ontoProperties = this._sortingService.keySortByAlphabetical(this.ontoProperties, 'label');
     }
 
     /**
@@ -325,6 +320,20 @@ export class OntologyComponent implements OnInit {
         this.ontoClasses = [];
         this.openOntologyRoute(id, this.view);
         this.initOntologiesList();
+    }
+
+    resetOntologyView(ontology: ReadOntology) {
+        this.ontology = ontology;
+        this.lastModificationDate = this.ontology.lastModificationDate;
+        this._cache.set('currentOntology', this.ontology);
+
+        // grab the onto class information to display
+        this.initOntoClasses(ontology.getAllClassDefinitions());
+
+        // grab the onto properties information to display
+        this.initOntoProperties(ontology.getAllPropertyDefinitions());
+
+        this.loadOntology = false;
     }
 
     /**
@@ -403,7 +412,7 @@ export class OntologyComponent implements OnInit {
      * @param mode
      * @param propertyInfo (could be subClassOf (create mode) or resource class itself (edit mode))
      */
-    openPropertyForm(mode: 'createProperty' | 'editProperty', propertyInfo: PropertyInfoObject, ): void {
+    openPropertyForm(mode: 'createProperty' | 'editProperty', propertyInfo: PropertyInfoObject,): void {
 
         const title = (propertyInfo.propDef ? propertyInfo.propDef.label : propertyInfo.propType.group + ': ' + propertyInfo.propType.label);
 
@@ -422,48 +431,74 @@ export class OntologyComponent implements OnInit {
         );
 
         dialogRef.afterClosed().subscribe(result => {
-            // update the view
-            this.initOntologiesList();
+            // update the view of resource class or list of properties
+            this._dspApiConnection.v2.onto.getOntology(this.ontologyIri, true).subscribe(
+                (response: ReadOntology) => {
+                    this.resetOntologyView(response);
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
         });
     }
 
     /**
      * updates cardinality
-     * @param subClassOf resource class
+     * @param card cardinality info object
      */
     updateCard(card: CardinalityInfo) {
 
-        const classLabel = card.resClass.label;
+        if (card) {
+            const classLabel = card.resClass.label;
 
-        let mode: 'createProperty' | 'updateCardinality' = 'createProperty';
-        let propLabel = card.property.propType.group + ': ' + card.property.propType.label;
-        let title = 'Add property "' + propLabel + '" to class "' + classLabel + '"';
+            let mode: 'createProperty' | 'updateCardinality' = 'createProperty';
+            let propLabel = card.property.propType.group + ': ' + card.property.propType.label;
+            let title = 'Add property "' + propLabel + '" to class "' + classLabel + '"';
 
-        if (card.property.propDef) {
-            // the property exists already
-            mode = 'updateCardinality';
-            propLabel = card.property.propDef.label;
-            title = 'Update property "' + propLabel + '" and the cardinality in class "' + classLabel + '"';
+            if (card.property.propDef) {
+                // the property exists already
+                mode = 'updateCardinality';
+                propLabel = card.property.propDef.label;
+                title = 'Update property "' + propLabel + '" and the cardinality in class "' + classLabel + '"';
+            }
+
+            const dialogConfig: MatDialogConfig = {
+                width: '640px',
+                maxHeight: '80vh',
+                position: {
+                    top: '112px'
+                },
+                data: { propInfo: card.property, title: title, subtitle: 'Customize property and cardinality', mode: mode, parentIri: card.resClass.id }
+            };
+
+            const dialogRef = this._dialog.open(
+                DialogComponent,
+                dialogConfig
+            );
+
+            dialogRef.afterClosed().subscribe(result => {
+                // update the view: list of properties in resource class
+                this._dspApiConnection.v2.onto.getOntology(this.ontologyIri, true).subscribe(
+                    (response: ReadOntology) => {
+                        this.resetOntologyView(response);
+                    },
+                    (error: ApiResponseError) => {
+                        this._errorHandler.showMessage(error);
+                    }
+                );
+            });
+        } else {
+            this._dspApiConnection.v2.onto.getOntology(this.ontologyIri, true).subscribe(
+                (response: ReadOntology) => {
+                    this.resetOntologyView(response);
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
         }
 
-        const dialogConfig: MatDialogConfig = {
-            width: '640px',
-            maxHeight: '80vh',
-            position: {
-                top: '112px'
-            },
-            data: { propInfo: card.property, title: title, subtitle: 'Customize property and cardinality', mode: mode, parentIri: card.resClass.id }
-        };
-
-        const dialogRef = this._dialog.open(
-            DialogComponent,
-            dialogConfig
-        );
-
-        dialogRef.afterClosed().subscribe(result => {
-            // update the view
-            this.initOntologiesList();
-        });
     }
 
     /**

@@ -54,8 +54,12 @@
                     </span>
                     <!-- display only properties if they exist in list of properties;
                      objectType is not a linkValue (otherwise we have the property twice) -->
-                    <app-property-info class="property-info" [propDef]="ontology?.properties[prop.propertyIndex]"
-                        [propCard]="propsToDisplay[i]" [projectCode]="projectCode">
+                    <app-property-info class="property-info"
+                        [propDef]="ontology?.properties[prop.propertyIndex]"
+                        [propCard]="propsToDisplay[i]"
+                        [projectCode]="projectCode"
+                        [(lastModificationDate)]="lastModificationDate"
+                        (removePropertyFromClass)="removeProperty($event)">
                     </app-property-info>
                 </mat-list-item>
             </div>
@@ -76,7 +80,7 @@
 
         <mat-menu #addPropertyMenu="matMenu" xPosition="after">
             <button mat-menu-item [matMenuTriggerFor]="newFromPropType">Create new from type</button>
-            <button mat-menu-item [matMenuTriggerFor]="addExistingProp">Add existing property</button>
+            <button mat-menu-item [matMenuTriggerFor]="addExistingProp" [disabled]="!ontoProperties.length">Add existing property</button>
         </mat-menu>
         <mat-menu #newFromPropType="matMenu">
             <ng-container *ngFor="let type of defaultProperties">

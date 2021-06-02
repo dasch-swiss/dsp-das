@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { AfterContentInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterContentInit, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import {
     Constants,
     IHasProperty,
@@ -46,7 +46,7 @@ import { Property } from '../resource-class-form/resource-class-form.service';
         ])
     ]
 })
-export class PropertyInfoComponent implements OnInit, AfterContentInit {
+export class PropertyInfoComponent implements OnChanges, AfterContentInit {
 
     @Input() propDef: ResourcePropertyDefinitionWithAllLanguages;
 
@@ -54,8 +54,14 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
 
     @Input() projectCode: string;
 
+    @Input() lastModificationDate?: string;
+
+    // event emitter when the lastModificationDate changed; bidirectional binding with lastModificationDate parameter
+    @Output() lastModificationDateChange: EventEmitter<string> = new EventEmitter<string>();
+
     @Output() editResourceProperty: EventEmitter<PropertyInfoObject> = new EventEmitter<PropertyInfoObject>();
     @Output() deleteResourceProperty: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
+    @Output() removePropertyFromClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
 
     // submit res class iri ot open res class
     @Output() clickedOnClass: EventEmitter<ResourceClassDefinitionWithAllLanguages> = new EventEmitter<ResourceClassDefinitionWithAllLanguages>();
@@ -83,7 +89,7 @@ export class PropertyInfoComponent implements OnInit, AfterContentInit {
         private _cache: CacheService
     ) { }
 
-    ngOnInit(): void {
+    ngOnChanges(): void {
 
         // convert cardinality from js-lib convention to app convention
         // if cardinality is defined; only in resource class view

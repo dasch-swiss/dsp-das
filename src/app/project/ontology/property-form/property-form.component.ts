@@ -412,31 +412,6 @@ export class PropertyFormComponent implements OnInit {
 
         addCard.cardinalities = [];
 
-        // need a list of all properties in the current ontology
-        const ontoProps = this.ontology.getAllPropertyDefinitions();
-
-        // need a list of all properties in the current resource class
-        const currentResourceClass = this.resourceClasses.find(i => i.id === this.resClassIri);
-
-        // currentResourceClass.propertiesList.forEach((resProp) => {
-        //     const propToDisplay = ontoProps.find(obj =>
-        //         obj.id === resProp.propertyIndex &&
-        //         (obj.objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue' ||
-        //             (obj.subjectType && !obj.subjectType.includes('Standoff'))
-        //         )
-        //     );
-
-        //     if (propToDisplay) {
-        //         const existingPropCard: IHasProperty = {
-        //             propertyIndex: resProp.propertyIndex,
-        //             cardinality: resProp.cardinality,
-        //             guiOrder: resProp.guiOrder
-        //         };
-        //         addCard.cardinalities.push(existingPropCard);
-        //     }
-
-        // });
-
         const propCard: IHasProperty = {
             propertyIndex: prop.id,
             cardinality: this._resourceClassFormService.translateCardinality(this.propertyForm.value.multiple, this.propertyForm.value.required),
@@ -444,8 +419,6 @@ export class PropertyFormComponent implements OnInit {
         };
 
         addCard.cardinalities.push(propCard);
-
-        onto.entity = addCard;
 
         onto.entity = addCard;
 

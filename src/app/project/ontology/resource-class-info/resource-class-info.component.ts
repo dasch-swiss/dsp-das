@@ -15,7 +15,7 @@ import {
     UpdateOntology,
     UpdateResourceClassCardinality
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, NotificationService } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
@@ -37,18 +37,23 @@ export class ResourceClassInfoComponent implements OnInit {
 
     @Input() projectCode: string;
 
-    @Input() ontoProperties: string;
+    @Input() ontoProperties: PropertyDefinition[];
 
     @Input() lastModificationDate?: string;
 
+    // event emitter when the lastModificationDate changed; bidirectional binding with lastModificationDate parameter
+    @Output() lastModificationDateChange: EventEmitter<string> = new EventEmitter<string>();
+
+    // event emitter when the lastModificationDate changed; bidirectional binding with lastModificationDate parameter
+    @Output() ontoPropertiesChange: EventEmitter<PropertyDefinition[]> = new EventEmitter<PropertyDefinition[]>();
+
+    // to update the resource class itself (edit or delete)
     @Output() editResourceClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
     @Output() deleteResourceClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
 
     // to update the cardinality we need the information about property (incl. propType) and resource class
     @Output() updateCardinality: EventEmitter<CardinalityInfo> = new EventEmitter<CardinalityInfo>();
 
-    // event emitter when the lastModificationDate changed; bidirectional binding with lastModificationDate parameter
-    @Output() lastModificationDateChange: EventEmitter<string> = new EventEmitter<string>();
 
     ontology: ReadOntology;
 
@@ -70,6 +75,7 @@ export class ResourceClassInfoComponent implements OnInit {
         private _cache: CacheService,
         private _dialog: MatDialog,
         private _errorHandler: ErrorHandlerService,
+        private _notification: NotificationService,
         private _snackBar: MatSnackBar
     ) { }
 
@@ -153,6 +159,7 @@ export class ResourceClassInfoComponent implements OnInit {
         this.propsToDisplay = [];
 
         classProps.forEach((hasProp) => {
+
             const propToDisplay = ontoProps.find(obj =>
                 obj.id === hasProp.propertyIndex &&
                 (obj.objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue' ||
@@ -161,7 +168,10 @@ export class ResourceClassInfoComponent implements OnInit {
             );
 
             if (propToDisplay) {
+                // add to list of properties to display in res class
                 this.propsToDisplay.push(hasProp);
+                // and remove from list of existing properties which can be added
+                this.ontoProperties = this.ontoProperties.filter(prop => !(prop.id === propToDisplay.id));
             }
 
         });
@@ -198,6 +208,46 @@ export class ResourceClassInfoComponent implements OnInit {
             }
         };
         this.updateCardinality.emit(cardinality);
+    }
+
+    /**
+     * removes property from resource class
+     * @param property
+     */
+    removeProperty(property: DefaultClass) {
+
+        const onto = new UpdateOntology<UpdateResourceClassCardinality>();
+
+        onto.lastModificationDate = this.lastModificationDate;
+
+        onto.id = this.ontology.id;
+
+        const addCard = new UpdateResourceClassCardinality();
+
+        addCard.id = this.resourceClass.id;
+
+        addCard.cardinalities = [];
+
+        this.propsToDisplay = this.propsToDisplay.filter(prop => !(prop.propertyIndex === property.iri));
+
+        addCard.cardinalities = this.propsToDisplay;
+        onto.entity = addCard;
+
+        this._dspApiConnection.v2.onto.replaceCardinalityOfResourceClass(onto).subscribe(
+            (res: ResourceClassDefinitionWithAllLanguages) => {
+                this.lastModificationDate = res.lastModificationDate;
+                this.lastModificationDateChange.emit(this.lastModificationDate);
+                this.preparePropsToDisplay(this.propsToDisplay);
+
+                this.updateCardinality.emit();
+                // display success message
+                this._notification.openSnackBar(`You have successfully removed "${property.label}" from "${this.resourceClass.label}".`);
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+            }
+        );
+
     }
 
     /**
@@ -281,12 +331,7 @@ export class ResourceClassInfoComponent implements OnInit {
                     this.lastModificationDateChange.emit(this.lastModificationDate);
 
                     // display success message
-                    this._snackBar.open(`You have successfully changed the order of properties in the resource class "${this.resourceClass.label}".`, '', {
-                        horizontalPosition: 'center',
-                        verticalPosition: 'top',
-                        duration: 2500,
-                        panelClass: 'success'
-                    });
+                    this._notification.openSnackBar(`You have successfully changed the order of properties in the resource class "${this.resourceClass.label}".`);
 
                 },
                 (error: ApiResponseError) => {
