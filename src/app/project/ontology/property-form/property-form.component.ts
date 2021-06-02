@@ -302,14 +302,14 @@ export class PropertyFormComponent implements OnInit {
                         (classCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
                             this.lastModificationDate = classCommentResponse.lastModificationDate;
 
-                            if (this.resClassIri) {
+                            if (this.resClassIri && classCommentResponse.lastModificationDate) {
                                 // edit cardinality mode: update cardinality of existing property in res class
                                 this.setCardinality(this.propertyInfo.propDef);
+                            } else {
+                                // close the dialog box
+                                this.loading = false;
+                                this.closeDialog.emit();
                             }
-
-                            // close the dialog box
-                            this.loading = false;
-                            this.closeDialog.emit();
 
                         },
                         (error: ApiResponseError) => {
