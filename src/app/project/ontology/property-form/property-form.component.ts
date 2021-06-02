@@ -42,6 +42,11 @@ export class PropertyFormComponent implements OnInit {
     @Input() resClassIri?: string;
 
     /**
+     * position of property in case of cardinality update
+     */
+    @Input() guiOrder?: number = 0;
+
+    /**
      * output closeDialog of property form component to update parent component
      */
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
@@ -415,7 +420,7 @@ export class PropertyFormComponent implements OnInit {
         const propCard: IHasProperty = {
             propertyIndex: prop.id,
             cardinality: this._resourceClassFormService.translateCardinality(this.propertyForm.value.multiple, this.propertyForm.value.required),
-            guiOrder: addCard.cardinalities.length  // add new property to the end of current list of properties
+            guiOrder: this.guiOrder  // add new property to the end of current list of properties
         };
 
         addCard.cardinalities.push(propCard);

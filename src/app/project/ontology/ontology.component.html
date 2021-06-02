@@ -186,7 +186,7 @@
                         [(lastModificationDate)]="lastModificationDate"
                         (editResourceClass)="openResourceClassForm('editResourceClass', $event)"
                         (deleteResourceClass)="delete('ResourceClass', $event)"
-                        (updateCardinality)="updateCard($event)">
+                        (updateCardinality)="initOntology($event)">
                     </app-resource-class-info>
                 </div>
                 <div class="ontology-editor-list properties" *ngIf="view === 'properties'">

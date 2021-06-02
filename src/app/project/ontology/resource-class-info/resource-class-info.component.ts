@@ -1,7 +1,6 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import {
     ApiResponseError,
     ClassDefinition,
@@ -9,7 +8,6 @@ import {
     KnoraApiConnection,
     PropertyDefinition,
     ReadOntology,
-    ResourceClassDefinition,
     ResourceClassDefinitionWithAllLanguages,
     ResourcePropertyDefinitionWithAllLanguages,
     UpdateOntology,
@@ -19,7 +17,7 @@ import { DspApiConnectionToken, NotificationService } from '@dasch-swiss/dsp-ui'
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
-import { PropertyCategory, DefaultProperties, PropertyInfoObject, DefaultProperty } from '../default-data/default-properties';
+import { DefaultProperties, DefaultProperty, PropertyCategory, PropertyInfoObject } from '../default-data/default-properties';
 import { DefaultClass, DefaultResourceClasses } from '../default-data/default-resource-classes';
 import { CardinalityInfo } from '../ontology.component';
 
@@ -52,7 +50,7 @@ export class ResourceClassInfoComponent implements OnInit {
     @Output() deleteResourceClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
 
     // to update the cardinality we need the information about property (incl. propType) and resource class
-    @Output() updateCardinality: EventEmitter<CardinalityInfo> = new EventEmitter<CardinalityInfo>();
+    @Output() updateCardinality: EventEmitter<string> = new EventEmitter<string>();
 
 
     ontology: ReadOntology;
@@ -75,8 +73,7 @@ export class ResourceClassInfoComponent implements OnInit {
         private _cache: CacheService,
         private _dialog: MatDialog,
         private _errorHandler: ErrorHandlerService,
-        private _notification: NotificationService,
-        private _snackBar: MatSnackBar
+        private _notification: NotificationService
     ) { }
 
     ngOnInit(): void {
@@ -185,7 +182,7 @@ export class ResourceClassInfoComponent implements OnInit {
                 propType: propType
             }
         };
-        this.updateCardinality.emit(cardinality);
+        this.updateCard(cardinality);
     }
 
     addExistingProperty(propDef: ResourcePropertyDefinitionWithAllLanguages) {
@@ -204,10 +201,11 @@ export class ResourceClassInfoComponent implements OnInit {
             resClass: this.resourceClass,
             property: {
                 propType: propType,
-                propDef: propDef
+                propDef: propDef,
             }
         };
-        this.updateCardinality.emit(cardinality);
+
+        this.updateCard(cardinality);
     }
 
     /**
@@ -239,7 +237,7 @@ export class ResourceClassInfoComponent implements OnInit {
                 this.lastModificationDateChange.emit(this.lastModificationDate);
                 this.preparePropsToDisplay(this.propsToDisplay);
 
-                this.updateCardinality.emit();
+                this.updateCardinality.emit(this.ontology.id);
                 // display success message
                 this._notification.openSnackBar(`You have successfully removed "${property.label}" from "${this.resourceClass.label}".`);
             },
@@ -247,6 +245,50 @@ export class ResourceClassInfoComponent implements OnInit {
                 this._errorHandler.showMessage(error);
             }
         );
+
+    }
+
+    /**
+     * updates cardinality
+     * @param card cardinality info object
+     */
+    updateCard(card: CardinalityInfo) {
+
+        if (card) {
+            const classLabel = card.resClass.label;
+
+            let mode: 'createProperty' | 'updateCardinality' = 'createProperty';
+            let propLabel = card.property.propType.group + ': ' + card.property.propType.label;
+            let title = 'Add property "' + propLabel + '" to class "' + classLabel + '"';
+
+            if (card.property.propDef) {
+                // the property exists already
+                mode = 'updateCardinality';
+                propLabel = card.property.propDef.label;
+                title = 'Update property "' + propLabel + '" and the cardinality in class "' + classLabel + '"';
+            }
+
+            const dialogConfig: MatDialogConfig = {
+                width: '640px',
+                maxHeight: '80vh',
+                position: {
+                    top: '112px'
+                },
+                data: { propInfo: card.property, title: title, subtitle: 'Customize property and cardinality', mode: mode, parentIri: card.resClass.id, position: this.propsToDisplay.length }
+            };
+
+            const dialogRef = this._dialog.open(
+                DialogComponent,
+                dialogConfig
+            );
+
+            dialogRef.afterClosed().subscribe(result => {
+                // update the view: list of properties in resource class
+                this.updateCardinality.emit(this.ontology.id);
+            });
+        } else {
+
+        }
 
     }
 

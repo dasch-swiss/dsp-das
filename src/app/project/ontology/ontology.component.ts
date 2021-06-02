@@ -253,6 +253,17 @@ export class OntologyComponent implements OnInit {
         );
     }
 
+    initOntology(iri: string) {
+        this._dspApiConnection.v2.onto.getOntology(iri, true).subscribe(
+            (response: ReadOntology) => {
+                this.resetOntologyView(response);
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+            }
+        );
+    }
+
     initOntoClasses(allOntoClasses: ClassDefinition[]) {
 
         // reset the ontology classes
@@ -432,73 +443,8 @@ export class OntologyComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             // update the view of resource class or list of properties
-            this._dspApiConnection.v2.onto.getOntology(this.ontologyIri, true).subscribe(
-                (response: ReadOntology) => {
-                    this.resetOntologyView(response);
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
+            this.initOntology(this.ontologyIri);
         });
-    }
-
-    /**
-     * updates cardinality
-     * @param card cardinality info object
-     */
-    updateCard(card: CardinalityInfo) {
-
-        if (card) {
-            const classLabel = card.resClass.label;
-
-            let mode: 'createProperty' | 'updateCardinality' = 'createProperty';
-            let propLabel = card.property.propType.group + ': ' + card.property.propType.label;
-            let title = 'Add property "' + propLabel + '" to class "' + classLabel + '"';
-
-            if (card.property.propDef) {
-                // the property exists already
-                mode = 'updateCardinality';
-                propLabel = card.property.propDef.label;
-                title = 'Update property "' + propLabel + '" and the cardinality in class "' + classLabel + '"';
-            }
-
-            const dialogConfig: MatDialogConfig = {
-                width: '640px',
-                maxHeight: '80vh',
-                position: {
-                    top: '112px'
-                },
-                data: { propInfo: card.property, title: title, subtitle: 'Customize property and cardinality', mode: mode, parentIri: card.resClass.id }
-            };
-
-            const dialogRef = this._dialog.open(
-                DialogComponent,
-                dialogConfig
-            );
-
-            dialogRef.afterClosed().subscribe(result => {
-                // update the view: list of properties in resource class
-                this._dspApiConnection.v2.onto.getOntology(this.ontologyIri, true).subscribe(
-                    (response: ReadOntology) => {
-                        this.resetOntologyView(response);
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                );
-            });
-        } else {
-            this._dspApiConnection.v2.onto.getOntology(this.ontologyIri, true).subscribe(
-                (response: ReadOntology) => {
-                    this.resetOntologyView(response);
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
-        }
-
     }
 
     /**
