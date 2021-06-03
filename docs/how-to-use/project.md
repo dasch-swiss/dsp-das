@@ -37,7 +37,6 @@ Project admin can create one or several permission groups in their project to se
 ---
 
 ## Data model
-&#9888; *NOT YET IMPLEMENTED* (only mockups are presented)
 
 The most important step in the project is the definition of the data model. DSP-APP will provide a tool for easy creation of data models. First, you have to know which data and sources you want to work with. The data model can be flexible and customizable. With DSP-APP, you can comply with the FAIR data standard, but compliance is not required to analyze your data.
 
@@ -54,19 +53,38 @@ The questions to answer in creating your data model:
 - data about the person you interviewed
 - location where the photograph was taken
 
-Diagram 1 shows the relationships of the data by source type from these experiences.
+Diagram 1 shows the relationships of the data by resource classes from these experiences.
 
-![Relationship of the data by source type](../assets/images/diagram-data-model.png)*Relationship of the data by source type*
+![Relationship of the data by resource classes](../assets/images/diagram-data-model.png)*Relationship of the data by resource classes*
+
+### Create your data model
+
+Go to your project, select the tab `Data model` and click on button `New data model` or `Create your first data model` (in case of a brand new project). This will open a form in a dialog box where you have to set a unique name and a label. Optional you can also add a short description of form of a comment.
+
+> **_NOTE:_** There are some rules for the unique name:
+>
+> - must be at least 3 characters long
+> - shouldn't begin with a number
+> - shouldn't begin with the letter v and a number
+> - spaces or special characters are not allowed
+> - the term "ontology" is not allowed
+> - the unique name can't be changed afterwards
+
+The label is a combination of project's shortname and the unique name. You can replace with any other string.
+
+![Data model editor | Step 1: Start by creating a new data model.](../assets/images/dsp-dmp-data-model-create.png)*Data model editor | Step 1: Start by creating a new data model.*
 
 ---
 
-### Select your SOURCE TYPES
+### Create the resource CLASSES
 
-In the data model editor, you select your source types from a predefined list on the right-hand side. Later, you will be able to customize the source type or define an additional default source type, if the one you need doesn't exist by default.
+In the data model editor, you create your resource classes by selecting a default representation type from a predefined list on the right-hand side. 
 
-![Data model editor 1: Select all your main source types by drag and drop; e.g. for an interview, select the source type "Audio / Sound / Interview".](../assets/images/data-model-add-source.png)*Data model editor 1: Select all your main source types by drag and drop; e.g. for an interview, select the source type "Audio / Sound / Interview".*
+Click on `+ Create new class` and select a representation type for your resource class.
 
-In our example with the interview and the photographs, you drag and drop the following main source types from the list on the right-hand side:
+![Data model editor | Step 2: Create all your main resource classes by selecting a predefined representation type; e.g. for a taped interview, select the representation type "Audio / Sound / Interview".](../assets/images/data-model-add-source.png)*Data model editor | Step 2: Create all your main resource classes by selecting a predefined resource type; e.g. for a taped interview, select the representation type "Audio / Sound / Interview".*
+
+In our example with the interview and the photographs, you drag and drop the following main resource classes from the list on the right-hand side:
 
 - Audio / Sound / Interview
 - Transcript
@@ -76,30 +94,30 @@ In our example with the interview and the photographs, you drag and drop the fol
 
 ---
 
-### Select the METADATA fields for each source type (optional)
+### Select the METADATA fields for each resource type (optional)
 
-The predefined source types offer a suggested list of metadata fields. This list could help to create a data model simply and quickly. It's also possible to deselect the suggested metadata fields (e.g., no metadata), to adapt others and to customize them.
+The predefined resource classes offer a suggested list of metadata fields. This list could help to create a data model simply and quickly. It's also possible to deselect the suggested metadata fields (e.g., no metadata), to adapt others and to customize them.
 
-![Data model editor 2: Add additional metadata fields to your source type; e.g. add the missing field "Person".](../assets/images/data-model-add-property.png)*Data model editor 2: Add additional metadata fields to your source type; e.g. add the missing field "Person".*
+![Data model editor 2: Add additional metadata fields to your resource type; e.g. add the missing field "Person".](../assets/images/data-model-add-property.png)*Data model editor 2: Add additional metadata fields to your resource type; e.g. add the missing field "Person".*
 
 ---
 
 ### Customize the SOURCE TYPES and the METADATA fields (optional)
 
-It's possible to customize the predefined source type and the metadata field values by clicking on the edit button of the source type. You can rename the source type, rearrange the order of the metadata fields, and set permissions.
+It's possible to customize the predefined resource type and the metadata field values by clicking on the edit button of the resource type. You can rename the resource type, rearrange the order of the metadata fields, and set permissions.
 
-![Data model editor 3: Customize the source type AUDIO; e.g. rename it into Interview](../assets/images/data-model-edit-source.png)*Data model editor 3: Customize the source type AUDIO; e.g. rename it into Interview*
+![Data model editor 3: Customize the resource type AUDIO; e.g. rename it into Interview](../assets/images/data-model-edit-source.png)*Data model editor 3: Customize the resource type AUDIO; e.g. rename it into Interview*
 
 ---
 
 ### Connect SOURCE TYPES in the data model (optional)
 
-If you have reusable metadata value in a source type (A), you should create an additional source type (B) and drag-and-drop it over the metadata field of the first source type (A) to connect the two data types.
-E.g., For the metadata "Photographer" in source type "Photograph", you should create a source type "Person" and connect it in "Photograph".
+If you have reusable metadata value in a resource type (A), you should create an additional resource type (B) and drag-and-drop it over the metadata field of the first resource type (A) to connect the two data types.
+E.g., For the metadata "Photographer" in resource type "Photograph", you should create a resource type "Person" and connect it in "Photograph".
 
-![Data model editor 4: Manage connections between the source types.](../assets/images/data-model-example.png)*Data model editor 4: Manage connections between the source types.*
+![Data model editor 4: Manage connections between the resource classes.](../assets/images/data-model-example.png)*Data model editor 4: Manage connections between the resource classes.*
 
-----
+---
 
 ## Lists
 &#9888; *WORK IN PROGRESS*
