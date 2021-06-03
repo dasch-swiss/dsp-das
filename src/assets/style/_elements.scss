@@ -50,6 +50,11 @@
     flex-direction: row;
     align-items: center;
     white-space: nowrap;
+
+    .mat-title {
+      word-wrap: normal;
+      white-space: normal;
+    }
   }
 
   .app-toolbar-action.button {

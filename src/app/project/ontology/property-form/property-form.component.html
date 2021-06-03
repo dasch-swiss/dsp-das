@@ -10,6 +10,16 @@
 
     <div class="center">
 
+        <!-- property type -->
+        <mat-form-field *ngIf="propertyInfo.propType" class="large-field property-type">
+            <span matPrefix class="property-type-icon">
+                <mat-icon>{{propertyInfo.propType?.icon}}</mat-icon>&nbsp;
+            </span>
+            <mat-label>Property type</mat-label>
+            <input matInput [value]="propertyInfo.propType.group + ': ' + propertyInfo.propType.label"
+                [disabled]="true">
+        </mat-form-field>
+
         <!-- label -->
         <div class="large-field string-literal-container">
             <dsp-string-literal-input [placeholder]="'Property label *'" [value]="labels"
@@ -26,16 +36,6 @@
                 (dataChanged)="handleData($event, 'comments')">
             </dsp-string-literal-input>
         </div>
-
-        <!-- property type -->
-        <mat-form-field *ngIf="propertyInfo.propType" class="large-field property-type">
-            <span matPrefix class="property-type-icon">
-                <mat-icon>{{propertyInfo.propType?.icon}}</mat-icon>&nbsp;
-            </span>
-            <mat-label>Property type</mat-label>
-            <input matInput [value]="propertyInfo.propType.group + ': ' + propertyInfo.propType.label"
-                [disabled]="true">
-        </mat-form-field>
 
         <!-- depending on type: display gui attribute -->
         <div *ngIf="showGuiAttr" [ngSwitch]="propertyInfo.propType.objectType">

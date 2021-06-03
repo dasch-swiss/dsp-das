@@ -96,7 +96,10 @@
             </ng-container>
         </mat-menu>
         <mat-menu #addExistingProp="matMenu" class="default-nested-sub-menu">
-            <button mat-menu-item *ngFor="let prop of ontoProperties" (click)="addExistingProperty(prop)">{{prop.label}}</button>
+            <button mat-menu-item *ngFor="let prop of existingProperties"
+                (click)="addExistingProperty(prop.propDef)">
+                <mat-icon>{{prop.propType.icon}}</mat-icon> {{prop.propDef.label}}
+            </button>
         </mat-menu>
     </mat-card-content>
 </mat-card>

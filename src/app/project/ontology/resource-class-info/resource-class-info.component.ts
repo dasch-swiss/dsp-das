@@ -35,7 +35,7 @@ export class ResourceClassInfoComponent implements OnInit {
 
     @Input() projectCode: string;
 
-    @Input() ontoProperties: PropertyDefinition[];
+    @Input() ontoProperties: ResourcePropertyDefinitionWithAllLanguages[];
 
     @Input() lastModificationDate?: string;
 
@@ -62,11 +62,14 @@ export class ResourceClassInfoComponent implements OnInit {
 
     subClassOfLabel = '';
 
-    /**
-     * list of all default resource classes (sub class of)
-     */
+    // list of default resource classes
     defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
+
+    // list of default property types
     defaultProperties: PropertyCategory[] = DefaultProperties.data;
+
+    // list of existing ontology properties, which are not in this resource class
+    existingProperties: PropertyInfoObject[];
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -77,6 +80,7 @@ export class ResourceClassInfoComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+
         this._cache.get('currentOntology').subscribe(
             (response: ReadOntology) => {
                 this.ontology = response;
@@ -154,8 +158,10 @@ export class ResourceClassInfoComponent implements OnInit {
 
         // reset properties to display
         this.propsToDisplay = [];
+        // reset existing properties to select from
+        this.existingProperties = [];
 
-        classProps.forEach((hasProp) => {
+        classProps.forEach((hasProp: IHasProperty) => {
 
             const propToDisplay = ontoProps.find(obj =>
                 obj.id === hasProp.propertyIndex &&
@@ -171,6 +177,29 @@ export class ResourceClassInfoComponent implements OnInit {
                 this.ontoProperties = this.ontoProperties.filter(prop => !(prop.id === propToDisplay.id));
             }
 
+        });
+
+        this.ontoProperties.forEach((availableProp: ResourcePropertyDefinitionWithAllLanguages) => {
+            let propType: DefaultProperty;
+            // find corresponding default property to have more prop info
+            if (availableProp.guiElement) {
+                for (const group of this.defaultProperties) {
+                    propType = group.elements.find(i =>
+                        i.guiEle === availableProp.guiElement &&
+                        (i.objectType === availableProp.objectType || i.subPropOf === availableProp.subPropertyOf[0])
+                    );
+
+                    if (propType) {
+                        break;
+                    }
+                }
+            }
+            this.existingProperties.push(
+                {
+                    propType: propType,
+                    propDef: availableProp
+                }
+            );
         });
 
     }
@@ -259,13 +288,13 @@ export class ResourceClassInfoComponent implements OnInit {
 
             let mode: 'createProperty' | 'updateCardinality' = 'createProperty';
             let propLabel = card.property.propType.group + ': ' + card.property.propType.label;
-            let title = 'Add property "' + propLabel + '" to class "' + classLabel + '"';
+            let title = 'Add new property of type "' + propLabel + '" to class "' + classLabel + '"';
 
             if (card.property.propDef) {
                 // the property exists already
                 mode = 'updateCardinality';
                 propLabel = card.property.propDef.label;
-                title = 'Update property "' + propLabel + '" and the cardinality in class "' + classLabel + '"';
+                title = 'Add existing property "' + propLabel + '" to class "' + classLabel + '"';
             }
 
             const dialogConfig: MatDialogConfig = {
