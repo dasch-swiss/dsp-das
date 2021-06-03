@@ -21,7 +21,7 @@ import { AutocompleteItem, DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { DefaultProperties, DefaultProperty, PropertyCategory, PropertyInfoObject } from '../default-data/default-properties';
-import { ResourceClassFormService } from '../resource-class-form/resource-class-form.service';
+import { OntologyService } from '../ontology.service';
 
 @Component({
     selector: 'app-property-form',
@@ -100,7 +100,7 @@ export class PropertyFormComponent implements OnInit {
         private _cache: CacheService,
         private _errorHandler: ErrorHandlerService,
         private _fb: FormBuilder,
-        private _resourceClassFormService: ResourceClassFormService
+        private _ontologyService: OntologyService
     ) { }
 
     ngOnInit() {
@@ -329,7 +329,7 @@ export class PropertyFormComponent implements OnInit {
             // submit property
             // this.submitProps(this.resourceClassForm.value.properties, this.propertyInfo.propDef.id);
             // set resource property name / id: randomized string
-            const uniquePropName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
+            const uniquePropName: string = this._ontologyService.setUniqueName(this.ontology.id);
 
             const onto = new UpdateOntology<CreateResourceProperty>();
 
@@ -419,7 +419,7 @@ export class PropertyFormComponent implements OnInit {
 
         const propCard: IHasProperty = {
             propertyIndex: prop.id,
-            cardinality: this._resourceClassFormService.translateCardinality(this.propertyForm.value.multiple, this.propertyForm.value.required),
+            cardinality: this._ontologyService.translateCardinality(this.propertyForm.value.multiple, this.propertyForm.value.required),
             guiOrder: this.guiOrder  // add new property to the end of current list of properties
         };
 

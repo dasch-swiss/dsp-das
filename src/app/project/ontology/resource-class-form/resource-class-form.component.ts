@@ -1,31 +1,22 @@
-import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms';
+import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
     ApiResponseError,
-    ClassDefinition,
-    Constants,
     CreateResourceClass,
-    CreateResourceProperty,
-    IHasProperty,
     KnoraApiConnection,
-    PropertyDefinition,
     ReadOntology,
     ResourceClassDefinitionWithAllLanguages,
-    ResourcePropertyDefinitionWithAllLanguages,
     StringLiteral,
     UpdateOntology,
-    UpdateResourceClassCardinality,
     UpdateResourceClassComment,
     UpdateResourceClassLabel
 } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/dsp-js/src/models/v2/string-literal-v2';
 import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
-import { from, of, Subscription } from 'rxjs';
-import { concatMap } from 'rxjs/operators';
 import { AppGlobal } from 'src/app/app-global';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
-import { Property, ResourceClassFormService } from './resource-class-form.service';
+import { OntologyService } from '../ontology.service';
 
 // nested form components; solution from:
 // https://medium.com/@joshblf/dynamic-nested-reactive-forms-in-angular-654c1d4a769a
@@ -35,7 +26,7 @@ import { Property, ResourceClassFormService } from './resource-class-form.servic
     templateUrl: './resource-class-form.component.html',
     styleUrls: ['./resource-class-form.component.scss']
 })
-export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class ResourceClassFormComponent implements OnInit, AfterViewChecked {
 
     /**
      * current project shortcode
@@ -98,9 +89,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     resourceClassLabels: StringLiteralV2[] = [];
     resourceClassComments: StringLiteralV2[] = [];
 
-    // sub / second form of resource class: properties form
-    resourceClassFormSub: Subscription;
-
     // resource class name should be unique
     existingResourceClassNames: [RegExp];
 
@@ -131,8 +119,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
         private _cache: CacheService,
         private _cdr: ChangeDetectorRef,
         private _errorHandler: ErrorHandlerService,
-        // --> TODO: will be deleted
-        private _resourceClassFormService: ResourceClassFormService
+        private _fb: FormBuilder,
+        private _ontologyService: OntologyService
     ) { }
 
     ngOnInit() {
@@ -175,10 +163,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
 
     }
 
-    ngOnDestroy() {
-        this.resourceClassFormSub.unsubscribe();
-    }
-
     ngAfterViewChecked() {
         this._cdr.detectChanges();
     }
@@ -187,9 +171,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
     // form handling:
 
     buildForm() {
-
-        // reset properties
-        // this._resourceClassFormService.resetProperties();
 
         if (this.edit) {
             // edit mode: res class info (label and comment)
@@ -201,18 +182,20 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
                     this.resourceClassComments = resourceClasses[key].comments;
                 }
             });
-            this.resourceClassFormSub = this._resourceClassFormService.resourceClassForm$
-                .subscribe(resourceClass => {
-                    this.resourceClassForm = resourceClass;
-                });
-
-        } else {
-            // create mode
-            this.resourceClassFormSub = this._resourceClassFormService.resourceClassForm$
-                .subscribe(resourceClass => {
-                    this.resourceClassForm = resourceClass;
-                });
         }
+
+        this.resourceClassForm = this._fb.group({
+            label: new FormControl({
+                value: this.resourceClassLabels, disabled: false
+            }, [
+                Validators.required
+            ]),
+            comment: new FormControl({
+                value: this.resourceClassComments, disabled: false
+            }, [
+                Validators.required
+            ])
+        });
 
         this.resourceClassForm.valueChanges.subscribe(data => this.onValueChanged(data));
     }
@@ -314,7 +297,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
             // submit resource class data to knora and create resource class incl. cardinality
 
             // set resource class name / id: randomized string
-            const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id);
+            const uniqueClassName: string = this._ontologyService.setUniqueName(this.ontology.id);
             // or const uniqueClassName: string = this._resourceClassFormService.setUniqueName(this.ontology.id, this.resourceClassLabels[0].value, 'class');
 
             const onto = new UpdateOntology<CreateResourceClass>();
@@ -352,7 +335,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy, AfterViewC
      */
     closeMessage() {
         this.resourceClassForm.reset();
-        this.resourceClassFormSub.unsubscribe();
         this.closeDialog.emit();
     }
 

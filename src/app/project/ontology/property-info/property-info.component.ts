@@ -17,7 +17,35 @@ import {
     PropertyInfoObject
 } from '../default-data/default-properties';
 import { DefaultClass } from '../default-data/default-resource-classes';
-import { Property } from '../resource-class-form/resource-class-form.service';
+
+// property data structure
+export class Property {
+    iri: string;
+    label: string;
+    type: DefaultProperty;
+    multiple: boolean;
+    required: boolean;
+    guiAttr: string;
+    // permission: string;
+
+    constructor(
+        iri?: string,
+        label?: string,
+        type?: any,
+        multiple?: boolean,
+        required?: boolean,
+        guiAttr?: string
+        // permission?: string
+    ) {
+        this.iri = iri;
+        this.label = label;
+        this.type = type;
+        this.multiple = multiple;
+        this.required = required;
+        this.guiAttr = guiAttr;
+        // this.permission = permission;
+    }
+}
 
 @Component({
     selector: 'app-property-info',

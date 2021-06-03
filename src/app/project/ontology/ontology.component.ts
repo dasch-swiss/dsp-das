@@ -26,7 +26,7 @@ import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { DefaultProperties, PropertyCategory, PropertyInfoObject } from './default-data/default-properties';
 import { DefaultClass, DefaultResourceClasses } from './default-data/default-resource-classes';
-import { ResourceClassFormService } from './resource-class-form/resource-class-form.service';
+import { OntologyService } from './ontology.service';
 
 export interface OntologyInfo {
     id: string;
@@ -116,7 +116,7 @@ export class OntologyComponent implements OnInit {
         private _dialog: MatDialog,
         private _errorHandler: ErrorHandlerService,
         private _fb: FormBuilder,
-        private _resourceClassFormService: ResourceClassFormService,
+        private _ontologyService: OntologyService,
         private _route: ActivatedRoute,
         private _router: Router,
         private _session: SessionService,
@@ -216,7 +216,7 @@ export class OntologyComponent implements OnInit {
                         // set list of already existing ontology names
                         // it will be used in ontology form
                         // because ontology name has to be unique
-                        const name = this._resourceClassFormService.getOntologyName(ontoMeta.id);
+                        const name = this._ontologyService.getOntologyName(ontoMeta.id);
                         this.existingOntologyNames.push(name);
 
                         // get each ontology
