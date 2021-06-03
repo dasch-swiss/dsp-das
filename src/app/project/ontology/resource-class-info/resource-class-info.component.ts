@@ -35,7 +35,7 @@ export class ResourceClassInfoComponent implements OnInit {
 
     @Input() projectCode: string;
 
-    @Input() ontoProperties: ResourcePropertyDefinitionWithAllLanguages[];
+    @Input() ontoProperties: ResourcePropertyDefinitionWithAllLanguages[] = [];
 
     @Input() lastModificationDate?: string;
 
