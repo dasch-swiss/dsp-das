@@ -58,7 +58,6 @@ export class ResourceClassInfoComponent implements OnInit {
 
     cardinalityUpdateEnabled: boolean;
 
-    classCanBeEdited: boolean;
     classCanBeDeleted: boolean;
 
     // list of properties that can be displayed (not all of the props should be displayed)
@@ -97,7 +96,7 @@ export class ResourceClassInfoComponent implements OnInit {
             }
         );
 
-        // check if the class can be edited or deleted
+        // check if the class can be deleted
         this._dspApiConnection.v2.onto.canDeleteResourceClass(this.resourceClass.id).subscribe(
             (response: CanDoResponse) => {
                 this.classCanBeDeleted = response.canDo;
