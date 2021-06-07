@@ -100,14 +100,12 @@ export class ResourceClassInfoComponent implements OnInit {
         // check if the class can be edited or deleted
         this._dspApiConnection.v2.onto.canDeleteResourceClass(this.resourceClass.id).subscribe(
             (response: CanDoResponse) => {
-                console.log(response);
-
                 this.classCanBeDeleted = response.canDo;
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
             }
-        )
+        );
     }
 
     /**
