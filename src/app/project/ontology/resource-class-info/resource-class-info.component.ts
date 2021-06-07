@@ -3,6 +3,7 @@ import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {
     ApiResponseError,
+    CanDoResponse,
     ClassDefinition,
     IHasProperty,
     KnoraApiConnection,
@@ -57,6 +58,9 @@ export class ResourceClassInfoComponent implements OnInit {
 
     cardinalityUpdateEnabled: boolean;
 
+    classCanBeEdited: boolean;
+    classCanBeDeleted: boolean;
+
     // list of properties that can be displayed (not all of the props should be displayed)
     propsToDisplay: IHasProperty[] = [];
 
@@ -92,6 +96,18 @@ export class ResourceClassInfoComponent implements OnInit {
                 this._errorHandler.showMessage(error);
             }
         );
+
+        // check if the class can be edited or deleted
+        this._dspApiConnection.v2.onto.canDeleteResourceClass(this.resourceClass.id).subscribe(
+            (response: CanDoResponse) => {
+                console.log(response);
+
+                this.classCanBeDeleted = response.canDo;
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+            }
+        )
     }
 
     /**
