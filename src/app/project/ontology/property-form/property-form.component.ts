@@ -271,6 +271,7 @@ export class PropertyFormComponent implements OnInit {
     }
 
     submitData() {
+        this.loading = true;
         // do something with your data
         if (this.propertyInfo.propDef) {
             // edit mode: update res property info (label and comment)
@@ -313,6 +314,8 @@ export class PropertyFormComponent implements OnInit {
 
                         },
                         (error: ApiResponseError) => {
+                            this.error = true;
+                            this.loading = false;
                             this._errorHandler.showMessage(error);
                         }
                     );
@@ -320,6 +323,8 @@ export class PropertyFormComponent implements OnInit {
 
                 },
                 (error: ApiResponseError) => {
+                    this.error = true;
+                    this.loading = false;
                     this._errorHandler.showMessage(error);
                 }
             );
@@ -396,6 +401,8 @@ export class PropertyFormComponent implements OnInit {
 
                 },
                 (error: ApiResponseError) => {
+                    this.error = true;
+                    this.loading = false;
                     this._errorHandler.showMessage(error);
                 }
             );
@@ -436,12 +443,12 @@ export class PropertyFormComponent implements OnInit {
                 this.closeDialog.emit();
             },
             (error: ApiResponseError) => {
+                this.error = true;
+                this.loading = false;
                 this._errorHandler.showMessage(error);
             }
         );
 
-        this.loading = false;
-        this.closeDialog.emit();
     }
 
 }
