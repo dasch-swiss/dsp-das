@@ -348,7 +348,7 @@ export class OntologyComponent implements OnInit {
         this.initOntoProperties(ontology.getAllPropertyDefinitions());
 
         // check if the ontology can be deleted
-        this._dspApiConnection.v2.onto.canDeleteResourceClass(this.ontology.id).subscribe(
+        this._dspApiConnection.v2.onto.canDeleteOntology(this.ontology.id).subscribe(
             (response: CanDoResponse) => {
                 console.log(response)
                 this.ontologyCanBeDeleted = response.canDo;
