@@ -8,6 +8,7 @@ import { Title } from '@angular/platform-browser';
 })
 export class AppComponent implements OnInit {
 
+    showCookieBanner = true;
     session = false;
 
     constructor(
@@ -19,6 +20,15 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit() {
+        if (sessionStorage.getItem('cookieBanner') === null) {
+            sessionStorage.setItem('cookieBanner', JSON.stringify(this.showCookieBanner));
+        } else {
+            this.showCookieBanner = JSON.parse(sessionStorage.getItem('cookieBanner'));
+        }
+    }
 
+    closeCookieBanner() {
+        this.showCookieBanner = !this.showCookieBanner;
+        sessionStorage.setItem('cookieBanner', JSON.stringify(this.showCookieBanner));
     }
 }
