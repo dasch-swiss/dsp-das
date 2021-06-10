@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-root',
@@ -12,7 +13,9 @@ export class AppComponent implements OnInit {
     session = false;
 
     constructor(
-        private _titleService: Title) {
+        private _router: Router,
+        private _titleService: Title
+    ) {
 
         // set the page title
         this._titleService.setTitle('DaSCH Service Platform');
@@ -25,6 +28,10 @@ export class AppComponent implements OnInit {
         } else {
             this.showCookieBanner = JSON.parse(sessionStorage.getItem('cookieBanner'));
         }
+    }
+
+    goToCookiePolicy() {
+        this._router.navigate(['cookie-policy']);
     }
 
     closeCookieBanner() {
