@@ -135,7 +135,7 @@ E.g., For the metadata "Photographer" in resource type "Photograph", you should 
 
 Projects often need to define lists or hierarchies of categories that can be assigned to many different sources. Lists can be created by project admin and system admin. 
 
-![Project lists](../assets/images/project-lists.png)*https://app2.dasch.swiss/project/0803/lists - Project lists: create a new list, add items by selecting the language and enter the corresponding value, repeat for each translation and press the + sign to create another item to the same level.*
+![Project lists](../assets/images/project-lists.png)*<https://admin.dasch.swiss/project/0803/lists> - Project lists: create a new list, add items by selecting the language and enter the corresponding value, repeat for each translation and press the + sign to create another item to the same level.*
 
 **The edition of items and child items will be implemented in a later version.**
 -->
