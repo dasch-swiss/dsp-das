@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
-import { ClassDefinition, Constants, MockOntology, ReadOntology } from '@dasch-swiss/dsp-js';
+import { CanDoResponse, ClassDefinition, Constants, MockOntology, ReadOntology } from '@dasch-swiss/dsp-js';
 import { DspActionModule, DspApiConnectionToken, SortingService } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
@@ -69,7 +69,7 @@ describe('ResourceClassInfoComponent', () => {
     beforeEach(waitForAsync(() => {
         const ontologyEndpointSpyObj = {
             v2: {
-                onto: jasmine.createSpyObj('onto', ['getOntology', 'replaceGuiOrderOfCardinalities'])
+                onto: jasmine.createSpyObj('onto', ['getOntology', 'replaceGuiOrderOfCardinalities', 'canDeleteResourceClass'])
             }
         };
 
@@ -118,6 +118,27 @@ describe('ResourceClassInfoComponent', () => {
 
         expect(hostComponent).toBeTruthy();
 
+    });
+
+
+    beforeEach(() => {
+        // mock cache service for resource class if it can be deleted
+        const cacheSpy = TestBed.inject(CacheService);
+
+        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
+            () => {
+                const response: CanDoResponse = {
+                    'canDo': false
+                };
+                return of(response);
+            }
+        );
+
+        hostFixture = TestBed.createComponent(HostComponent);
+        hostComponent = hostFixture.componentInstance;
+        hostFixture.detectChanges();
+
+        expect(hostComponent).toBeTruthy();
     });
 
     it('expect title to be "Blue thing" and subclass of "Thing"', () => {

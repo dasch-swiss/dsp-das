@@ -350,7 +350,6 @@ export class OntologyComponent implements OnInit {
         // check if the ontology can be deleted
         this._dspApiConnection.v2.onto.canDeleteOntology(this.ontology.id).subscribe(
             (response: CanDoResponse) => {
-                console.log(response)
                 this.ontologyCanBeDeleted = response.canDo;
             },
             (error: ApiResponseError) => {

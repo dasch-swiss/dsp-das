@@ -90,21 +90,13 @@ export class ResourceClassInfoComponent implements OnInit {
                 this.lastModificationDate = this.ontology.lastModificationDate;
                 this.translateSubClassOfIri(this.resourceClass.subClassOf);
                 this.preparePropsToDisplay(this.resourceClass.propertiesList);
+                this.canBeDeleted(this.resourceClass.id);
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
             }
         );
 
-        // check if the class can be deleted
-        this._dspApiConnection.v2.onto.canDeleteResourceClass(this.resourceClass.id).subscribe(
-            (response: CanDoResponse) => {
-                this.classCanBeDeleted = response.canDo;
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-            }
-        );
     }
 
     /**
@@ -215,6 +207,19 @@ export class ResourceClassInfoComponent implements OnInit {
             );
         });
 
+    }
+
+    canBeDeleted(id: string) {
+
+        // check if the class can be deleted
+        this._dspApiConnection.v2.onto.canDeleteResourceClass(id).subscribe(
+            (response: CanDoResponse) => {
+                this.classCanBeDeleted = response.canDo;
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+            }
+        );
     }
 
     addNewProperty(propType: DefaultProperty) {
