@@ -90,7 +90,7 @@ export class ResourceClassInfoComponent implements OnInit {
                 this.lastModificationDate = this.ontology.lastModificationDate;
                 this.translateSubClassOfIri(this.resourceClass.subClassOf);
                 this.preparePropsToDisplay(this.resourceClass.propertiesList);
-                this.canBeDeleted(this.resourceClass.id);
+                this.canBeDeleted();
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
@@ -209,10 +209,10 @@ export class ResourceClassInfoComponent implements OnInit {
 
     }
 
-    canBeDeleted(id: string) {
+    canBeDeleted() {
 
         // check if the class can be deleted
-        this._dspApiConnection.v2.onto.canDeleteResourceClass(id).subscribe(
+        this._dspApiConnection.v2.onto.canDeleteResourceClass(this.resourceClass.id).subscribe(
             (response: CanDoResponse) => {
                 this.classCanBeDeleted = response.canDo;
             },
