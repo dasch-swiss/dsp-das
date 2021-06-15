@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
-import { CanDoResponse, ClassDefinition, Constants, MockOntology, ReadOntology } from '@dasch-swiss/dsp-js';
+import { CanDoResponse, ClassDefinition, Constants, MockOntology, OntologiesEndpointV2, ReadOntology } from '@dasch-swiss/dsp-js';
 import { DspActionModule, DspApiConnectionToken, SortingService } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
@@ -120,17 +120,16 @@ describe('ResourceClassInfoComponent', () => {
 
     });
 
-
     beforeEach(() => {
-        // mock cache service for resource class if it can be deleted
-        const cacheSpy = TestBed.inject(CacheService);
 
-        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
+        const dspConnSpy = TestBed.inject(DspApiConnectionToken);
+
+        (dspConnSpy.v2.onto as jasmine.SpyObj<OntologiesEndpointV2>).canDeleteResourceClass.and.callFake(
             () => {
-                const response: CanDoResponse = {
+                const deleteResClass: CanDoResponse = {
                     'canDo': false
                 };
-                return of(response);
+                return of(deleteResClass);
             }
         );
 
