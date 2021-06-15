@@ -6,12 +6,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
-import { ClassDefinition, Constants, MockOntology, ReadOntology } from '@dasch-swiss/dsp-js';
-import { DspActionModule, DspApiConnectionToken, SortingService } from '@dasch-swiss/dsp-ui';
+import { CanDoResponse, ClassDefinition, Constants, MockOntology, OntologiesEndpointV2, ReadOntology } from '@dasch-swiss/dsp-js';
+import { DspActionModule, DspApiConfigToken, DspApiConnectionToken, SortingService } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DialogHeaderComponent } from 'src/app/main/dialog/dialog-header/dialog-header.component';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { TestConfig } from 'test.config';
 import { ResourceClassInfoComponent } from './resource-class-info.component';
 
 /**
@@ -86,6 +87,10 @@ describe('ResourceClassInfoComponent', () => {
             ],
             providers: [
                 {
+                    provide: DspApiConfigToken,
+                    useValue: TestConfig.ApiConfig
+                },
+                {
                     provide: CacheService,
                     useValue: cacheServiceSpy
                 },
@@ -130,26 +135,26 @@ describe('ResourceClassInfoComponent', () => {
     //     );
     // }));
 
-    // beforeEach(waitForAsync(() => {
+    beforeEach(() => {
 
-    //     const dspConnSpy = TestBed.inject(DspApiConnectionToken);
+        const dspConnSpy = TestBed.inject(DspApiConnectionToken);
 
-    //     (dspConnSpy.v2.onto as jasmine.SpyObj<OntologiesEndpointV2>).canDeleteResourceClass.and.callFake(
-    //         () => {
-    //             const deleteResClass: CanDoResponse = {
-    //                 'canDo': false
-    //             };
+        (dspConnSpy.v2.onto as jasmine.SpyObj<OntologiesEndpointV2>).canDeleteResourceClass.and.callFake(
+            () => {
+                const deleteResClass: CanDoResponse = {
+                    'canDo': false
+                };
 
-    //             return of(deleteResClass);
-    //         }
-    //     );
+                return of(deleteResClass);
+            }
+        );
 
-    //     hostFixture = TestBed.createComponent(HostComponent);
-    //     hostComponent = hostFixture.componentInstance;
-    //     hostFixture.detectChanges();
+        hostFixture = TestBed.createComponent(HostComponent);
+        hostComponent = hostFixture.componentInstance;
+        hostFixture.detectChanges();
 
-    //     expect(hostComponent).toBeTruthy();
-    // }));
+        expect(hostComponent).toBeTruthy();
+    });
 
     it('expect title to be "Blue thing" and subclass of "Thing"', () => {
         expect(hostComponent.resourceClassInfoComponent).toBeTruthy();
