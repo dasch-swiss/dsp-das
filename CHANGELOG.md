@@ -1,5 +1,12 @@
 # Changelog
 
+### [4.10.2](https://www.github.com/dasch-swiss/dsp-app/compare/v4.10.1...v4.10.2) (2021-06-15)
+
+
+### Maintenance
+
+* **gh-ci:** update docs deployment (DSP-1741) ([#463](https://www.github.com/dasch-swiss/dsp-app/issues/463)) ([6415152](https://www.github.com/dasch-swiss/dsp-app/commit/6415152debca4ed218c917ab0243d100e31d0708))
+
 ### [4.10.1](https://www.github.com/dasch-swiss/dsp-app/compare/v4.10.0...v4.10.1) (2021-06-15)
 
 
