@@ -63,14 +63,14 @@ class HostComponent implements OnInit {
 
 }
 
-fdescribe('ResourceClassInfoComponent', () => {
+describe('ResourceClassInfoComponent', () => {
     let hostComponent: HostComponent;
     let hostFixture: ComponentFixture<HostComponent>;
 
     beforeEach(waitForAsync(() => {
         const ontologyEndpointSpyObj = {
             v2: {
-                onto: jasmine.createSpyObj('onto', ['getOntology', 'replaceGuiOrderOfCardinalities', 'canDeleteResourceClass'])
+                onto: jasmine.createSpyObj('onto', ['replaceGuiOrderOfCardinalities', 'canDeleteResourceClass'])
             }
         };
 
