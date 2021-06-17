@@ -63,7 +63,7 @@ class HostComponent implements OnInit {
 
 }
 
-describe('ResourceClassInfoComponent', () => {
+fdescribe('ResourceClassInfoComponent', () => {
     let hostComponent: HostComponent;
     let hostFixture: ComponentFixture<HostComponent>;
 
@@ -146,5 +146,19 @@ describe('ResourceClassInfoComponent', () => {
         const subtitle: DebugElement = hostCompDe.query(By.css('mat-card-subtitle'));
 
         expect(subtitle.nativeElement.innerText).toEqual('Thing');
+    });
+
+    it('expect delete res class button should be disabled', () => {
+        expect(hostComponent.resourceClassInfoComponent).toBeTruthy();
+        expect(hostComponent.resourceClassInfoComponent.resourceClass).toBeDefined();
+
+        const hostCompDe = hostFixture.debugElement;
+
+        const moreBtn: DebugElement = hostCompDe.query(By.css('.res-class-menu'));
+        moreBtn.nativeElement.click();
+
+        const deleteBtn: DebugElement = hostCompDe.query(By.css('.res-class-delete'));
+        expect(deleteBtn.nativeElement.disabled).toBeTruthy();
+
     });
 });
