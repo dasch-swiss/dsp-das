@@ -63,7 +63,7 @@ class HostComponent implements OnInit {
 
 }
 
-fdescribe('ResourceClassInfoComponent', () => {
+describe('ResourceClassInfoComponent', () => {
     let hostComponent: HostComponent;
     let hostFixture: ComponentFixture<HostComponent>;
 
