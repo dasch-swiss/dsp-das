@@ -1,17 +1,14 @@
 import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
-import { CanDoResponse, ClassDefinition, Constants, MockOntology, OntologiesEndpointV2, ReadOntology } from '@dasch-swiss/dsp-js';
-import { DspActionModule, DspApiConfigToken, DspApiConnectionToken, SortingService } from '@dasch-swiss/dsp-ui';
+import { ClassDefinition, Constants, MockOntology, ReadOntology } from '@dasch-swiss/dsp-js';
+import { AppInitService, DspActionModule, DspApiConfigToken, DspApiConnectionToken, SortingService } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { DialogHeaderComponent } from 'src/app/main/dialog/dialog-header/dialog-header.component';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { TestConfig } from 'test.config';
 import { ResourceClassInfoComponent } from './resource-class-info.component';
 
@@ -27,31 +24,41 @@ class HostComponent implements OnInit {
     @ViewChild('resClassInfo') resourceClassInfoComponent: ResourceClassInfoComponent;
 
     // get ontology from DSP-JS-Lib test data
-    ontology: ReadOntology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
+    ontology: ReadOntology;
 
     resourceClass: ClassDefinition;
 
     constructor(
+        private _cache: CacheService,
         private _sortingService: SortingService
-    ) { }
+    ) {
+
+    }
 
     ngOnInit() {
 
-        const allOntoClasses = this.ontology.getAllClassDefinitions();
-        // reset the ontology classes
-        let classesToDisplay = [];
+        this._cache.get('currentOntology').subscribe(
+            (response: ReadOntology) => {
+                this.ontology = response;
 
-        // display only the classes which are not a subClass of Standoff
-        allOntoClasses.forEach(resClass => {
-            if (resClass.subClassOf.length) {
-                const splittedSubClass = resClass.subClassOf[0].split('#');
-                if (!splittedSubClass[0].includes(Constants.StandoffOntology) && !splittedSubClass[1].includes('Standoff')) {
-                    classesToDisplay.push(resClass);
-                }
+                const allOntoClasses = response.getAllClassDefinitions();
+                // reset the ontology classes
+                let classesToDisplay = [];
+
+                // display only the classes which are not a subClass of Standoff
+                allOntoClasses.forEach(resClass => {
+                    if (resClass.subClassOf.length) {
+                        const splittedSubClass = resClass.subClassOf[0].split('#');
+                        if (!splittedSubClass[0].includes(Constants.StandoffOntology) && !splittedSubClass[1].includes('Standoff')) {
+                            classesToDisplay.push(resClass);
+                        }
+                    }
+                });
+                classesToDisplay = this._sortingService.keySortByAlphabetical(classesToDisplay, 'label');
+                this.resourceClass = classesToDisplay[0];
             }
-        });
-        classesToDisplay = this._sortingService.keySortByAlphabetical(classesToDisplay, 'label');
-        this.resourceClass = classesToDisplay[0];
+        );
+
     }
 
 }
@@ -61,51 +68,40 @@ describe('ResourceClassInfoComponent', () => {
     let hostFixture: ComponentFixture<HostComponent>;
 
     beforeEach(waitForAsync(() => {
-
-        const cacheServiceSpy = jasmine.createSpyObj('CacheService', ['get']);
-
         const ontologyEndpointSpyObj = {
             v2: {
                 onto: jasmine.createSpyObj('onto', ['getOntology', 'replaceGuiOrderOfCardinalities', 'canDeleteResourceClass'])
             }
         };
 
+        const cacheServiceSpy = jasmine.createSpyObj('CacheService', ['get']);
+
         TestBed.configureTestingModule({
             declarations: [
-                DialogComponent,
-                DialogHeaderComponent,
                 HostComponent,
                 ResourceClassInfoComponent
             ],
             imports: [
                 DspActionModule,
                 MatCardModule,
-                MatDialogModule,
                 MatIconModule,
                 MatMenuModule,
                 MatTooltipModule
             ],
             providers: [
+                AppInitService,
                 {
                     provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig
-                },
-                {
-                    provide: CacheService,
-                    useValue: cacheServiceSpy
                 },
                 {
                     provide: DspApiConnectionToken,
                     useValue: ontologyEndpointSpyObj
                 },
                 {
-                    provide: MAT_DIALOG_DATA,
-                    useValue: {}
-                },
-                {
-                    provide: MatDialogRef,
-                    useValue: {}
-                },
+                    provide: CacheService,
+                    useValue: cacheServiceSpy
+                }
             ]
         })
             .compileComponents();
@@ -127,33 +123,7 @@ describe('ResourceClassInfoComponent', () => {
         hostFixture.detectChanges();
 
         expect(hostComponent).toBeTruthy();
-    });
 
-    // beforeEach(inject([DspApiConnectionToken], (knoraApiConn) => {
-    //     canBeDeletedSpy = spyOn(knoraApiConn.v2.onto, 'canDeleteResourceClass').and.callFake(
-    //         () => {}
-    //     );
-    // }));
-
-    beforeEach(() => {
-
-        const dspConnSpy = TestBed.inject(DspApiConnectionToken);
-
-        (dspConnSpy.v2.onto as jasmine.SpyObj<OntologiesEndpointV2>).canDeleteResourceClass.and.callFake(
-            () => {
-                const deleteResClass: CanDoResponse = {
-                    'canDo': false
-                };
-
-                return of(deleteResClass);
-            }
-        );
-
-        hostFixture = TestBed.createComponent(HostComponent);
-        hostComponent = hostFixture.componentInstance;
-        hostFixture.detectChanges();
-
-        expect(hostComponent).toBeTruthy();
     });
 
     it('expect title to be "Blue thing" and subclass of "Thing"', () => {
