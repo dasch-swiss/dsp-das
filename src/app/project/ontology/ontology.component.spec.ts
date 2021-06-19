@@ -167,6 +167,7 @@ describe('OntologyComponent', () => {
                 return of(response);
             }
         );
+
         (dspConnSpy.admin.listsEndpoint as jasmine.SpyObj<ListsEndpointAdmin>).getListsInProject.and.callFake(
             () => {
                 const response = new ListsResponse();
