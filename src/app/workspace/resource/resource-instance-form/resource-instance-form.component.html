@@ -66,6 +66,9 @@
 <!-- Step2: create property values and submit data -->
 <form *ngIf="propertiesParentForm && !showNextStepForm" [formGroup]="propertiesParentForm" class="resource-instance-form stepTwo form-content" (ngSubmit)="submitData()" appInvalidControlScroll>
 
+    <!-- upload file -->
+    <app-upload *ngIf="hasFileValue" [parentForm]="propertiesParentForm" [representation]="hasFileValue"></app-upload>
+
     <!-- create property values -->
     <app-select-properties
         #selectProps

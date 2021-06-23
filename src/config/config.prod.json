@@ -4,5 +4,6 @@
     "apiPort": 443,
     "apiPath": "",
     "jsonWebToken": "",
-    "logErrors": false
+    "logErrors": false,
+    "sipiUrl": "https://sipi.dasch.swiss"
 }
