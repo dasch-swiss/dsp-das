@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { AppInitService, SessionService } from '@dasch-swiss/dsp-ui';
 import { Observable } from 'rxjs';
 
-interface UploadedFile {
+export interface UploadedFile {
     fileType: string;
     internalFilename: string;
     originalFilename: string;

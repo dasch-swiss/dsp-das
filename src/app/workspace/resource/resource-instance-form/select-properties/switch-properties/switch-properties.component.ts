@@ -28,6 +28,8 @@ export class SwitchPropertiesComponent implements OnInit {
     constructor() { }
 
     ngOnInit(): void {
+        console.log(this.property);
+
         // the input isRequiredProp provided by KeyValuePair is stored as a number
         // a conversion from a number to a boolean is required by the input valueRequiredValidator
         this.isRequiredProp = !!+this.isRequiredProp;

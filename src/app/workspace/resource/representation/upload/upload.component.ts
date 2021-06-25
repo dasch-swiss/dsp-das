@@ -1,14 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
-    Constants,
     CreateFileValue,
     CreateStillImageFileValue,
     UpdateFileValue,
     UpdateStillImageFileValue
 } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/dsp-ui';
-import { UploadedFileResponse, UploadFileService } from './upload-file.service';
+import { UploadedFile, UploadedFileResponse, UploadFileService } from './upload-file.service';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 const resolvedPromise = Promise.resolve(null);
@@ -24,6 +23,10 @@ export class UploadComponent implements OnInit {
     @Input() parentForm?: FormGroup;
 
     @Input() representation: string; // only StillImageRepresentation supported so far
+
+    @Input() formName: string;
+
+    @Output() fileInfo: EventEmitter<CreateFileValue> = new EventEmitter<CreateFileValue>();
 
     file: File;
     form: FormGroup;
@@ -78,10 +81,17 @@ export class UploadComponent implements OnInit {
                 this._upload.upload(formData).subscribe(
                     (res: UploadedFileResponse) => {
                         const temporaryUrl = res.uploadedFiles[0].temporaryUrl;
-                        const thumbnailUri = '/full/150,/0/default.jpg';
+                        const thumbnailUri = '/full/256,/0/default.jpg';
                         this.thumbnailUrl = `${temporaryUrl}${thumbnailUri}`;
 
                         this.fileControl.setValue(res.uploadedFiles[0]);
+                        const fileValue = this.getNewValue();
+                        // console.log('here we should emit the values', res)
+                        // console.log(fileValue);
+
+                        if (fileValue) {
+                            this.fileInfo.emit(fileValue);
+                        }
                         this.isLoading = false;
                     },
                     (e: Error) => {
@@ -174,6 +184,9 @@ export class UploadComponent implements OnInit {
 
         const filename = this.fileControl.value.internalFilename;
 
+        console.log('getNewValue', filename);
+
+
         // --> TODO: handle different file types
 
         const fileValue = new CreateStillImageFileValue();
@@ -196,6 +209,7 @@ export class UploadComponent implements OnInit {
 
         const filename = this.fileControl.value.internalFilename;
 
+        console.log('getUpdatedValue', filename);
         // --> TODO: handle different file types
 
         const fileValue = new UpdateStillImageFileValue();

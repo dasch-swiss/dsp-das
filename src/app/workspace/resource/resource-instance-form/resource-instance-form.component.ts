@@ -5,6 +5,7 @@ import {
     ApiResponseData,
     ApiResponseError,
     Constants,
+    CreateFileValue,
     CreateResource,
     CreateValue,
     KnoraApiConnection,
@@ -74,6 +75,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     // selected resource class has a file value property: display the corresponding upload form
     hasFileValue: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text';
+
+    fileValue: CreateFileValue;
 
     valueOperationEventSubscription: Subscription;
 
@@ -161,16 +164,21 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
             });
 
+            if (this.fileValue) {
+                this.propertiesObj[Constants.HasStillImageFileValue] = [this.fileValue];
+            }
+
             createResource.properties = this.propertiesObj;
+
+            console.log(createResource)
 
             this._dspApiConnection.v2.res.createResource(createResource).subscribe(
                 (res: ReadResource) => {
                     this.resource = res;
+                    console.warn(res);
 
-                    // navigate to the resource viewer page
-                    this._router.navigateByUrl('/refresh', { skipLocationChange: true }).then(() =>
-                        this._router.navigate(['/resource/' + encodeURIComponent(this.resource.id)])
-                    );
+                    const goto = '/resource/' + encodeURIComponent(this.resource.id);
+                    this._router.navigateByUrl(goto, { skipLocationChange: false });
 
                     this.closeDialog.emit();
                 },
@@ -365,7 +373,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
                     // filter out all props that cannot be edited or are link props but also the hasFileValue props
                     this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition).filter(
-                        prop => prop.isEditable && !prop.isLinkProperty && (prop.id !== Constants.HasStillImageFileValue));
+                        prop => prop.isEditable && !prop.isLinkProperty && prop.id !== Constants.HasStillImageFileValue);
 
                     if (onto.properties[Constants.HasStillImageFileValue]) {
                         this.hasFileValue = 'stillImage';
@@ -384,6 +392,10 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
             this.errorMessage = 'No resource class defined for the selected ontology.';
         }
 
+    }
+
+    setFileValue(file: CreateFileValue) {
+        this.fileValue = file;
     }
 
 }
