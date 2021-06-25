@@ -170,7 +170,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
             createResource.properties = this.propertiesObj;
 
-            console.log(createResource)
+            console.log(createResource);
 
             this._dspApiConnection.v2.res.createResource(createResource).subscribe(
                 (res: ReadResource) => {
