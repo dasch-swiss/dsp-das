@@ -170,12 +170,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
             createResource.properties = this.propertiesObj;
 
-            console.log(createResource);
-
             this._dspApiConnection.v2.res.createResource(createResource).subscribe(
                 (res: ReadResource) => {
                     this.resource = res;
-                    console.warn(res);
 
                     const goto = '/resource/' + encodeURIComponent(this.resource.id);
                     this._router.navigateByUrl(goto, { skipLocationChange: false });

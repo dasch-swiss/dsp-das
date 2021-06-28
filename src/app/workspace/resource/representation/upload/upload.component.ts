@@ -184,9 +184,6 @@ export class UploadComponent implements OnInit {
 
         const filename = this.fileControl.value.internalFilename;
 
-        console.log('getNewValue', filename);
-
-
         // --> TODO: handle different file types
 
         const fileValue = new CreateStillImageFileValue();
@@ -209,7 +206,6 @@ export class UploadComponent implements OnInit {
 
         const filename = this.fileControl.value.internalFilename;
 
-        console.log('getUpdatedValue', filename);
         // --> TODO: handle different file types
 
         const fileValue = new UpdateStillImageFileValue();
