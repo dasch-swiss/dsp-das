@@ -15,7 +15,7 @@ describe('UploadFileService', () => {
 
         const appInitSpy = {
             config: {
-                sipiUrl: 'https://sipi.dasch.swiss/'
+                iiifUrl: 'https://sipi.dasch.swiss/'
             }
         };
 

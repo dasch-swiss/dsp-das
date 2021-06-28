@@ -5,5 +5,5 @@
     "apiPath": "",
     "jsonWebToken": "",
     "logErrors": false,
-    "sipiUrl": "https://sipi.dasch.swiss"
+    "iiifUrl": "https://iiif.dasch.swiss"
 }

@@ -19,7 +19,7 @@ export interface UploadedFileResponse {
 })
 export class UploadFileService {
 
-    sipiHost: string = this._init.config['sipiUrl'];
+    iiifHost: string = (this._init.config['iiifUrl'].substr(-1) === '/') ? this._init.config['iiifUrl'] : this._init.config['iiifUrl'] + '/';
 
     constructor(
         private readonly _init: AppInitService,
@@ -32,7 +32,7 @@ export class UploadFileService {
      * @param (file)
      */
     upload(file: FormData): Observable<UploadedFileResponse> {
-        const baseUrl = `${this.sipiHost}upload`;
+        const baseUrl = `${this.iiifHost}upload`;
 
         // checks if user is logged in
         const jwt = this._session.getSession()?.user.jwt;

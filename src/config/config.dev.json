@@ -5,5 +5,5 @@
     "apiPath": "",
     "jsonWebToken": "",
     "logErrors": true,
-    "sipiUrl": "http://localhost:1024/"
+    "iiifUrl": "http://localhost:1024"
 }
