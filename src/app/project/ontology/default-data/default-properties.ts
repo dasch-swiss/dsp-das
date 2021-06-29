@@ -72,30 +72,30 @@ export class DefaultProperties {
                 {
                     icon: 'arrow_drop_down_circle',
                     label: 'Dropdown',
-                    description: 'Dropdown menu with values from predefined long list',
+                    description: 'Dropdown menu with values from predefined list',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.ListValue,
                     guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'List',     // 'Pulldown'
                     group: 'List'
-                },
-                {
-                    icon: 'check_box',
-                    label: 'Checkboxes',
-                    description: 'Select multiple values from predefined short list',
-                    subPropOf: Constants.HasValue,
-                    objectType: Constants.ListValue,
-                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Checkbox',
-                    group: 'List'
-                },
-                {
-                    icon: 'radio_button_checked',
-                    label: 'Multiple choice',
-                    description: 'Select only one value from predefined short list',
-                    subPropOf: Constants.HasValue,
-                    objectType: Constants.ListValue,
-                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Radio',
-                    group: 'List'
                 }
+                // {
+                //     icon: 'check_box',
+                //     label: 'Checkboxes',
+                //     description: 'Select multiple values from predefined short list',
+                //     subPropOf: Constants.HasValue,
+                //     objectType: Constants.ListValue,
+                //     guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Checkbox',
+                //     group: 'List'
+                // },
+                // {
+                //     icon: 'radio_button_checked',
+                //     label: 'Multiple choice',
+                //     description: 'Select only one value from predefined short list',
+                //     subPropOf: Constants.HasValue,
+                //     objectType: Constants.ListValue,
+                //     guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Radio',
+                //     group: 'List'
+                // }
             ]
         },
         {
