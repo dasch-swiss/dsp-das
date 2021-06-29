@@ -40,7 +40,7 @@ export class DefaultProperties {
                 {
                     icon: 'short_text',
                     label: 'Short',
-                    description: 'Small text like title',
+                    description: 'Short text such as title or name',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.TextValue,
                     guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'SimpleText',   // 'Input',
