@@ -6,10 +6,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
 import { CanDoResponse, ClassDefinition, Constants, MockOntology, OntologiesEndpointV2, ReadOntology } from '@dasch-swiss/dsp-js';
-import { AppInitService, DspActionModule, DspApiConfigToken, DspApiConnectionToken, SortingService } from '@dasch-swiss/dsp-ui';
+import { DspActionModule, DspApiConnectionToken, SortingService } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { TestConfig } from 'test.config';
 import { ResourceClassInfoComponent } from './resource-class-info.component';
 
 /**
