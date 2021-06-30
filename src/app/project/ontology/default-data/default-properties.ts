@@ -49,7 +49,7 @@ export class DefaultProperties {
                 {
                     icon: 'subject',
                     label: 'Paragraph',
-                    description: 'Long text like description; could have line breaks',
+                    description: 'Long text such as description; could have line breaks',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.TextValue,
                     guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Textarea',
@@ -168,7 +168,7 @@ export class DefaultProperties {
                 {
                     icon: 'functions',
                     label: 'Decimal',
-                    description: 'Floating point number',
+                    description: 'Decimal value',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.DecimalValue,
                     guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Spinbox',  // 'Number',
@@ -207,7 +207,7 @@ export class DefaultProperties {
                 {
                     icon: 'language',
                     label: 'External URL',
-                    description: 'Link to an external http address',
+                    description: 'Link to an external website',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.UriValue,
                     guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'SimpleText',
