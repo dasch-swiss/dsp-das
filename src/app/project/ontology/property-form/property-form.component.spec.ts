@@ -61,7 +61,7 @@ class SimpleTextHostComponent {
         'propType': {
             'icon': 'short_text',
             'label': 'Short',
-            'description': 'Small text like title',
+            'description': 'Small text such as title or name',
             'subPropOf': 'http://api.knora.org/ontology/knora-api/v2#hasValue',
             'objectType': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
             'guiEle': 'http://api.knora.org/ontology/salsah-gui/v2#SimpleText',
