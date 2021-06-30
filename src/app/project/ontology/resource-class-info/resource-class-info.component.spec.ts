@@ -69,7 +69,7 @@ describe('ResourceClassInfoComponent', () => {
     beforeEach(waitForAsync(() => {
         const ontologyEndpointSpyObj = {
             v2: {
-                onto: jasmine.createSpyObj('onto', ['replaceGuiOrderOfCardinalities', 'canDeleteResourceClass'])
+                onto: jasmine.createSpyObj('onto', ['replaceGuiOrderOfCardinalities', 'canDeleteResourceClass', 'canReplaceCardinalityOfResourceClass'])
             }
         };
 
@@ -121,6 +121,16 @@ describe('ResourceClassInfoComponent', () => {
                 };
 
                 return of(deleteResClass);
+            }
+        );
+
+        (dspConnSpy.v2.onto as jasmine.SpyObj<OntologiesEndpointV2>).canReplaceCardinalityOfResourceClass.and.callFake(
+            () => {
+                const replaceCardinalityOfResClass: CanDoResponse = {
+                    'canDo': false
+                };
+
+                return of(replaceCardinalityOfResClass);
             }
         );
 
