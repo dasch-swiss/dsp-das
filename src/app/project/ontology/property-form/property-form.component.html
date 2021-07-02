@@ -23,7 +23,7 @@
                     {{propertyForm.controls['propType'].value.label}}
                 </mat-select-trigger>
 
-                <mat-optgroup *ngFor="let type of defaultProperties" [label]="type.group" [disabled]="propertyForm.controls['propType'].value.group !== type.group">
+                <mat-optgroup *ngFor="let type of restrictedPropertyTypes" [label]="type.group" [disabled]="propertyForm.controls['propType'].value.group !== type.group">
                     <mat-option *ngFor="let ele of type.elements" [value]="ele">
                         <mat-icon>{{ele.icon}}</mat-icon> {{ele.label}}
                     </mat-option>

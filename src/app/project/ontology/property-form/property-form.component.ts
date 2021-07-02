@@ -157,7 +157,7 @@ export class PropertyFormComponent implements OnInit {
             this.guiAttributes = this.propertyInfo.propDef.guiAttributes;
 
             // prepare list of restricted property types
-            this.defaultProperties = [{
+            this.restrictedPropertyTypes = [{
                 group: this.propertyInfo.propType.group,
                 elements: []
             }];
@@ -174,7 +174,9 @@ export class PropertyFormComponent implements OnInit {
             // there's only the object type "text", where we can change the gui element;
             disablePropType = (this.propertyInfo.propType.objectType !== Constants.TextValue);
 
-            this.defaultProperties[0].elements = restrictedElements.slice(slice);
+            this.restrictedPropertyTypes[0].elements = restrictedElements.slice(slice);
+        } else {
+            this.restrictedPropertyTypes = this.defaultProperties;
         }
 
         this.propertyForm = this._fb.group({
@@ -262,7 +264,9 @@ export class PropertyFormComponent implements OnInit {
      * @returns an array of elements
      */
     filterPropertyTypesByGroup(group: string): DefaultProperty[] {
-        return DefaultProperties.data.filter(item => item.group === group)[0].elements;
+        const groups: PropertyCategory[] = this.defaultProperties.filter(item => item.group === group);
+
+        return (groups.length ? groups[0].elements : []);
     }
 
     updateAttributeField(type: DefaultProperty) {
