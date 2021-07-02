@@ -43,7 +43,7 @@ export class DefaultProperties {
                     description: 'Short text such as title or name',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.TextValue,
-                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'SimpleText',   // 'Input',
+                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'SimpleText',   // better element would be: 'Input',
                     group: 'Text'       // redundant information, but otherwise we don't get the main group name after selecting type
                 },
                 {
@@ -75,7 +75,7 @@ export class DefaultProperties {
                     description: 'Dropdown menu with values from predefined list',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.ListValue,
-                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'List',     // 'Pulldown'
+                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'List',     // better element would be: 'Pulldown' or 'Select'
                     group: 'List'
                 }
             ]
@@ -129,7 +129,7 @@ export class DefaultProperties {
                     label: 'Time sequence',
                     description: 'A time sequence with start and end point on a timeline',
                     subPropOf: Constants.HasValue,
-                    objectType: Constants.TimeValue,
+                    objectType: Constants.IntervalValue,
                     guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Interval',
                     group: 'Date / Time'
                 }
