@@ -92,13 +92,16 @@ export class UploadComponent implements OnInit {
                                 const temporaryUrl = res.uploadedFiles[0].temporaryUrl;
                                 const thumbnailUri = '/full/256,/0/default.jpg';
                                 this.thumbnailUrl = `${temporaryUrl}${thumbnailUri}`;
-
                                 break;
 
                             case 'document':
                                 // the preview thumbnail is deactivated for the moment;
                                 // --> TODO: it will be activated as soon as we implement a pdf viewer
                                 // this.thumbnailUrl = res.uploadedFiles[0].temporaryUrl;
+                                this.thumbnailUrl = undefined;
+                                break;
+
+                            default:
                                 this.thumbnailUrl = undefined;
                                 break;
                         }
@@ -211,7 +214,10 @@ export class UploadComponent implements OnInit {
             case 'document':
                 fileValue = new CreateDocumentFileValue();
                 break;
-            // --> TODO for UPLOAD: expand with other representation file types
+
+            default:
+                // --> TODO for UPLOAD: expand with other representation file types
+                break;
         }
 
         fileValue.filename = filename;
@@ -244,7 +250,9 @@ export class UploadComponent implements OnInit {
             case 'document':
                 fileValue = new UpdateDocumentFileValue();
                 break;
-            // --> TODO for UPLOAD: expand with other representation file types
+            default:
+                // --> TODO for UPLOAD: expand with other representation file types
+                break;
         }
 
         // const fileValue = new UpdateStillImageFileValue();
@@ -275,7 +283,6 @@ export class UploadComponent implements OnInit {
             case 'document':
                 this.allowedFileTypes = this.supportedDocumentTypes;
                 break;
-            // --> TODO for UPLOAD: expand with other representation file types
             default:
                 this.allowedFileTypes = [];
                 break;
