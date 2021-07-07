@@ -1,10 +1,10 @@
-import { CreateDocumentFileValue } from '.yalc/@dasch-swiss/dsp-js/src/models/v2/resources/values/create/create-file-value';
-import { UpdateDocumentFileValue } from '.yalc/@dasch-swiss/dsp-js/src/models/v2/resources/values/update/update-file-value';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
+    CreateDocumentFileValue,
     CreateFileValue,
     CreateStillImageFileValue,
+    UpdateDocumentFileValue,
     UpdateFileValue,
     UpdateStillImageFileValue
 } from '@dasch-swiss/dsp-js';
