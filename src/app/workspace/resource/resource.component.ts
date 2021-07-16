@@ -339,7 +339,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                 }
 
                 const stillImage = new FileRepresentation(img, regions);
-                // console.log(stillImage);
 
                 representations.push(stillImage);
 
@@ -351,9 +350,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
             const fileValues: ReadDocumentFileValue[] = resource.res.properties[Constants.HasDocumentFileValue] as ReadDocumentFileValue[];
             for (const doc of fileValues) {
 
-                const regions: Region[] = [];
-
-                const document = new FileRepresentation(doc, regions);
+                const document = new FileRepresentation(doc);
                 representations.push(document);
             }
 

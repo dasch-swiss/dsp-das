@@ -19,7 +19,7 @@ export class FileRepresentation {
      */
     constructor(
         readonly fileValue: ReadAudioFileValue | ReadDocumentFileValue | ReadMovingImageFileValue | ReadStillImageFileValue,
-        readonly annotations: Region[]
+        readonly annotations?: Region[]
     ) {
 
     }
