@@ -47,13 +47,13 @@ As soon as you have come to a conclusion concerning the structure of your data, 
 Go to your project, select the tab `Data model` (step 1) and click the button `New data model` (step 2) as shown below:
 ![Data model.](../assets/images/Fig2.png)
 
-By clicking `New data model`, a dialogue box opens:
+By clicking `New data model`, a dialog box opens:
 ![Define new data model.](../assets/images/Fig3.png)
 
 
 **Create data model**
 
-Now you've to set a unique name (*please consider the NOTE*) and you can add a comment. Push the button `Create` to create your data model.
+Now you have to set a unique name (*please consider the NOTE*) and you can add a comment. Push the button `Create` to create your data model.
 
 > **_NOTE:_***There are some rules for the unique name:*
 >
@@ -89,7 +89,7 @@ By clicking `+ Create new class`, a small window pops up with six basic types to
 Which type you choose depends on the data type which you need to describe. Let's assume you have pdf-documents of books and they have a number of pages. To describe this in an ontology, you create a class as `Document` by clicking on `Document`. A dialog box pops up which looks like this:
 ![Create a class with type *Document*.](../assets/images/Fig8.png)
 
-As label you could write *Book*, and you should add a preferably meaningful comment in at least one of the predefined languages English (en), German (de), French (fr) or Italian (it). Then click the `Submit` button:
+For the label you could write *Book*, and you should add a preferably meaningful comment in at least one of the predefined languages English (en), German (de), French (fr) or Italian (it). Then click the `Submit` button:
 ![Give a label and a description.](../assets/images/Fig9.png)
 
 
@@ -106,7 +106,7 @@ Now you can add properties to your class. Your pdf of a book has a number of pag
 Theoretically, you have two options now. If you defined properties before, you may simply add them here (second option in the following image). If you just start adding properties, you have to choose `Create new from type`.
 ![Two options for defining properties.](../assets/images/Fig12.png)
 
-By hovering over `Create new from type`, a new dialogue box appears:
+By hovering over `Create new from type`, a new dialog box appears:
 ![Create new property.](../assets/images/Fig13.png)
 
 You can choose from a selection of the following basic types with various subtypes:
@@ -123,7 +123,7 @@ Since in our example you want to add a property for the number of pages of your 
 ![Property types.](../assets/images/Fig14.png)
 
 Page numbers have no decimal places, thus you will selecet `Integer` as type for your property. The following window pops up:
-![Property of nteger type.](../assets/images/Fig15.png)
+![Property of integer type.](../assets/images/Fig15.png)
 
 In the field *Property label* add for example *Number of pages*, in the comment section you should add a meaningful explanation. It might also make sense to toggle `Required field?` since every PDF Document consists of a number of pages. If you toggle it, the number of pages MUST be given if you add data to the class *Book* - it would then be a required field, not an optional one and data could only be saved if you add the number of pages.
 ![Label and description of property.](../assets/images/Fig16.png)
@@ -140,14 +140,14 @@ One of the possible property types to choose from is *List*. Lists are very usef
 Click `Create your first list`. If there is already a list defined, click `New list`. A new window pops up where you have to enter a name for your list (`List label`) and a short description, then click `Create`.
 ![Create new list.](../assets/images/Fig35.png)
 
-As soon as the list is created you can continue with the definition of your data model. The single list items you can define later. How to do this will be explained below. We first focus on the definition of a list property in the data model. Currently there is only one option for the display of a property of type *List*, namely *Dropdown*. It is capable to display flat as well as hierarchical lists.
+As soon as the list is created you can continue with the definition of your data model. You can define the individual list items later. How to do this will be explained below. We first focus on the definition of a list property in the data model. Currently there is only one option for displaying a property of type *List*, namely *Dropdown*. It is capable of displaying flat as well as hierarchical lists.
 ![Define a property of type *List*.](../assets/images/Fig40.png)
 
 A new window opens up and as in the case of other properties you have to add a label, a desciption and to choose whether multiple values are allowed and/or whether this property is a required field. But in addition you have to select the list which contains your controlled vocabulary.
 ![Select list for list property.](../assets/images/Fig41.png)
 
 #### How to define items in a list
-In our example we have created a list named *Category*. Now it is time to define the list items. We will as first hierarchy in our list some main literature genres. Enter the name of the list node and click the `+` as shown below:
+In our example we have created a list named *Category*. Now it is time to define the list items. We will list some main literature genres as the first hierarchy in our list. Enter the name of the list node and click the `+` as shown below:
 ![Define list main nodes.](../assets/images/Fig36.png)
 
 By clicking on the small arrow on the left a second hierarchical level becomes accessible where you can add items in the same was as for the main hierarchy. 
@@ -157,7 +157,7 @@ It is possible to add list items at any time. You may rearrange the order of you
 ![Define further list nodes.](../assets/images/Fig39.png)
 
 ### Remove PROPERTIES from a resource class
-To remove a property, hover over the property which you want to remove. By doing so you see a white x with a black background (removee button) appearing, it is yellow-rimmed in the image below:
+To remove a property, hover over the property which you want to remove. By doing so you see a white x with a black background (remove button) appearing, it is highlighted in yellow in the image below:
 ![Remove properties from resource class.](../assets/images/Fig18.png)
 
 *Be aware, that you can only remove a property if there are no data yet!*
@@ -167,7 +167,7 @@ If you click the remove button, the property is removed and a green box pops up 
 ### Delete a property
 In order to really delete a property you have to go to the `Properties` section as shown below. Click on `Properties`, and afterwards click on the waste basket sign of the property which you intend to delete.
 ![Delete a property.](../assets/images/Fig38.png)
-*Be aware, you can only delete properties which are NOT used in a resouce class!*
+*Be aware, you can only delete properties which are NOT used in a resource class!*
 
 ### Delete a CLASS
 To delete a resource class, click on the three dots in the box of the class which you want to delete.
@@ -186,7 +186,7 @@ In the alert window appearing, you click the red button `Delete`. The data model
 
 
 ## An example
-WIn the following example we focus on how we can reflect about our data before building our model and how a data model can relate classes to each other.
+In the following example we focus on how we can reflect about our data before building our model and how a data model can relate classes to each other.
 
 
 ### Preparing a data model
@@ -207,7 +207,7 @@ In our case, we know that the transcripts are linked to the audio-interviews, pe
 How the practical arrangement finally looks like depends on your purposes and preferences. For example we could choose to arrange the data with regards to their audio source as seen in Diagram 2:
 ![Diagram 2: Focus on the audio-interview.](../assets/images/Fig24.png)*Diagram 2: Focus on the audio-interview.*
 
-However, we can also prefer another visualization which focusses on the transcript (Diagram 3):
+However, we can also prefer another visualization which focuses on the transcript (Diagram 3):
 ![Diagram 3: Focus on the transcript.](../assets/images/Fig25.png)*Diagram 3: Focus on the transcript.*
 
 We could think of many different hierarchies, lastly it depends on what serves your purposes best. Our next step will be to implement the hierarchy in Diagram 3 in our data model.
