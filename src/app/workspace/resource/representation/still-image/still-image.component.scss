@@ -8,8 +8,8 @@ $osd-height: 460px;
 $dark: #000;
 $bright: #ccc;
 
-.still-image-viewer {
-  display: inline-flex;
+:host {
+  // display: inline-flex;
   width: 100%;
 
   @media (max-height: 636px) {
@@ -33,7 +33,7 @@ $bright: #ccc;
     color: $bright;
 
     &.overlay {
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.48);
     }
 
     &.vertical {
@@ -91,27 +91,37 @@ $bright: #ccc;
       height: $panelSize;
       background: $dark;
       position: inherit;
+
+      &.bottom {
+        position: absolute;
+        bottom: 0;
+
+        .compound-nav {
+          bottom: 4px;
+          position: relative;
+        }
+      }
     }
 
 
   }
 
-  .content {
-    // min-height: $full-height;
-    height: 100%;
-    width: 100%;
+  // .content {
+  //   // min-height: $full-height;
+  //   height: 100%;
+  //   width: 100%;
 
     .osd-container {
       color: $bright;
       background-color: $dark;
-      height: $osd-height;
+      height: 100%;
 
       &.fullscreen {
         max-width: 100vw;
       }
     }
 
-  }
+  // }
 }
 
 
