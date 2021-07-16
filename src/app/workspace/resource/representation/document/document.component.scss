@@ -1,0 +1,21 @@
+// sizes
+$max-width: 800px;
+$panelSize: 40px;
+
+$osd-height: 460px;
+
+// colors
+$dark: #000;
+$bright: #ccc;
+
+:host {
+
+}
+
+.document-viewer {
+  width: 100%;
+
+  @media (max-height: 636px) {
+    height: 300px;
+  }
+}
