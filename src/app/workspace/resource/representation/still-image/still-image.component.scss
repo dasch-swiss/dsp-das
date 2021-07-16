@@ -16,114 +16,23 @@ $bright: #ccc;
     height: 300px;
   }
 
-  .caption {
-    padding: 10px 16px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 50%;
-  }
-
-  .action {
-    z-index: 1;
-    position: absolute;
-    display: flex;
-    flex-wrap: wrap;
-    // background: rgba(200, 200, 200, 0.3);
-    color: $bright;
-
-    &.overlay {
-      background: rgba(0, 0, 0, 0.48);
-    }
-
-    &.vertical {
-      width: $panelSize;
-      height: auto;
-      right: 0;
-      flex-direction: column;
-    }
-
-    &.horizontal {
-      height: $panelSize;
-      width: 100%;
-      left: 0;
-      flex-direction: row;
-
-      &.top {
-        top: 0;
-      }
-
-      &.bottom {
-        bottom: 0;
-      }
-    }
-  }
-
-  // first navigation implementation
-  // on the left resp. on the right hand side of osd viewer
-  .navigation {
-    position: absolute;
-    z-index: 1;
-    color: $bright;
-
-    &.vertical {
-      height: calc(100% - #{$panelSize});
-      width: $panelSize;
-      top: $panelSize;
-      &.previous {
-        left: 0;
-      }
-
-      &.next {
-        right: 0;
-      }
-      .mat-button.full-size {
-        height: 100% !important;
-        width: $panelSize !important;
-
-        padding: 0 !important;
-        min-width: $panelSize !important;
-      }
-    }
-
-    &.horizontal {
-      width: 100%;
-      height: $panelSize;
-      background: $dark;
-      position: inherit;
-
-      &.bottom {
-        position: absolute;
-        bottom: 0;
-
-        .compound-nav {
-          bottom: 4px;
-          position: relative;
-        }
-      }
-    }
-
-
-  }
-
   // .content {
   //   // min-height: $full-height;
   //   height: 100%;
   //   width: 100%;
 
-    .osd-container {
-      color: $bright;
-      background-color: $dark;
-      height: 100%;
+  .osd-container {
+    color: $bright;
+    background-color: $dark;
+    height: 100%;
 
-      &.fullscreen {
-        max-width: 100vw;
-      }
+    &.fullscreen {
+      max-width: 100vw;
     }
+  }
 
   // }
 }
-
 
 /*
  Overlay styling
