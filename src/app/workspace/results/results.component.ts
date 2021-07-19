@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ApiResponseError, CountQueryResponse, KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, NotificationService, SearchParams } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken, FilteredResouces, NotificationService, SearchParams } from '@dasch-swiss/dsp-ui';
 
 @Component({
     selector: 'app-results',
@@ -92,6 +92,13 @@ export class ResultsComponent {
 
     openResource(id: string) {
         this.resourceIri = id;
+    }
+
+    // this funtion is called when 'withMultipleSelection' is true and
+    // multiple resources are selected for comparision
+    openMultipleResources(resInfo: string) {
+        console.log('selected resources ', resInfo);
+        this.resourceIri = resInfo;
     }
 
 }
