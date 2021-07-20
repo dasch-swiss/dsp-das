@@ -50,7 +50,7 @@
         </mat-menu>
 
         <!-- more menu with: delete, erase resource -->
-        <button mat-icon-button class="more-menu" matTooltip="More" matTooltipPosition="above" [matMenuTriggerFor]="more">
+        <button *ngIf="editPermissions" mat-icon-button class="more-menu" matTooltip="More" matTooltipPosition="above" [matMenuTriggerFor]="more">
             <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #more="matMenu" class="res-more-menu">

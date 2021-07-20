@@ -76,6 +76,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
     // permissions of logged-in user
     session: Session;
     adminPermissions = false;
+    editPermissions = false;
 
     navigationSubscription: Subscription;
 
@@ -201,6 +202,9 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                 // get information about the logged-in user, if one is logged-in
                 if (this._session.getSession()) {
                     this.session = this._session.getSession();
+                    // is the logged-in user project member?
+                    // --> TODO: as soon as we know how to handle the permissions, set this value the correct way
+                    this.editPermissions = true;
                     // is the logged-in user system admin or project admin?
                     this.adminPermissions = this.session.user.sysAdmin ? this.session.user.sysAdmin : this.session.user.projectAdmin.some(e => e === res.res.attachedToProject);
                 }

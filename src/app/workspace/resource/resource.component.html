@@ -29,14 +29,16 @@
         <mat-tab-group animationDuration="0ms" [(selectedIndex)]="selectedTab">
             <!-- first tab for the main resource e.g. book -->
             <mat-tab [label]="resource.res.entityInfo?.classes[resource.res.type].label">
-                <app-properties *ngIf="resource.res" [resource]="resource" [displayProjectInfo]="true" [adminPermissions]="adminPermissions">
+                <app-properties *ngIf="resource.res" [resource]="resource" [displayProjectInfo]="true"
+                [adminPermissions]="adminPermissions" [editPermissions]="editPermissions">
                 </app-properties>
             </mat-tab>
 
             <!-- incoming resource -->
             <mat-tab *ngIf="incomingResource"
                 [label]="incomingResource.res.entityInfo.classes[incomingResource.res.type].label">
-                <app-properties *ngIf="incomingResource.res" [resource]="incomingResource" [displayProjectInfo]="false" [adminPermissions]="adminPermissions">
+                <app-properties *ngIf="incomingResource.res" [resource]="incomingResource" [displayProjectInfo]="false"
+                [adminPermissions]="adminPermissions" [editPermissions]="editPermissions">
                 </app-properties>
             </mat-tab>
 
@@ -52,7 +54,8 @@
                 </ng-template>
                 <div class="region-property" *ngFor="let annotation of annotationResources" [id]="annotation.res.id"
                     [class.active]="annotation.res.id === selectedRegion">
-                    <app-properties [resource]="annotation" [displayProjectInfo]="false" [adminPermissions]="adminPermissions">
+                    <app-properties [resource]="annotation" [displayProjectInfo]="false"
+                    [adminPermissions]="adminPermissions" [editPermissions]="editPermissions">
                     </app-properties>
                 </div>
 

@@ -64,6 +64,11 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     @Input() adminPermissions: false;
 
     /**
+     * is the logged-in user project member?
+     */
+    @Input() editPermissions: false;
+
+    /**
      * output `referredProjectClicked` of resource view component:
      * can be used to go to project page
      */
