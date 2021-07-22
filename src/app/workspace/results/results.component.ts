@@ -95,7 +95,6 @@ export class ResultsComponent {
     }
 
     openResource(id: string) {
-        console.log(id);
         this.resourceIri = id;
     }
 
@@ -107,7 +106,6 @@ export class ResultsComponent {
 
         if (this.multipleSelection) {
             this.multipleResources = resources;
-            console.log('selected resources ', resources);
         } else {
             // this.openResource()
             this.multipleResources = undefined;
