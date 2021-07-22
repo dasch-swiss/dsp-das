@@ -262,6 +262,7 @@ export class UploadComponent implements OnInit {
             case 'audio':
                 fileValue = new UpdateAudioFileValue();
                 break;
+
             default:
                 // --> TODO for UPLOAD: expand with other representation file types
                 break;
@@ -292,12 +293,15 @@ export class UploadComponent implements OnInit {
             case 'stillImage':
                 this.allowedFileTypes = this.supportedImageTypes;
                 break;
+
             case 'document':
                 this.allowedFileTypes = this.supportedDocumentTypes;
                 break;
+
             case 'audio':
                 this.allowedFileTypes = this.supportedAudioTypes;
                 break;
+
             default:
                 this.allowedFileTypes = [];
                 break;
