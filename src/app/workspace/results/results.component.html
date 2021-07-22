@@ -4,7 +4,7 @@
         <as-split-area [size]="40">
             <dsp-list-view [search]="searchParams"
                 [displayViewSwitch]="false"
-                [withMultipleSelection]="false"
+                [withMultipleSelection]="true"
                 (resourceSelected)="openResource($event)"
                 (multipleResourcesSelected)="openMultipleResources($event)"
                 (singleResourceSelected)="openResource($event)">
