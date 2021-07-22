@@ -390,12 +390,12 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
                     if (onto.properties[Constants.HasStillImageFileValue]) {
                         this.hasFileValue = 'stillImage';
-                    }
-                    if (onto.properties[Constants.HasDocumentFileValue]) {
+                    } else if (onto.properties[Constants.HasDocumentFileValue]) {
                         this.hasFileValue = 'document';
-                    }
-                    if (onto.properties[Constants.HasAudioFileValue]) {
+                    } else if (onto.properties[Constants.HasAudioFileValue]) {
                         this.hasFileValue = 'audio';
+                    } else {
+                        this.hasFileValue = undefined;
                     }
 
                     // notifies the user that the selected resource does not have any properties defined yet.

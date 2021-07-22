@@ -161,6 +161,7 @@ export class UploadComponent implements OnInit {
      */
     deleteAttachment(): void {
         this.fileControl.reset();
+        this.fileInfo.emit(undefined);
     }
 
     /**
