@@ -17,6 +17,10 @@ export class ResultsComponent {
 
     resourceIri: string;
 
+    // display single resource or intermediate page in case of multiple selection
+    multipleSelection = false;
+    multipleResources: FilteredResouces;
+
     // number of all results
     numberOfAllResults: number;
 
@@ -91,14 +95,24 @@ export class ResultsComponent {
     }
 
     openResource(id: string) {
+        console.log(id);
         this.resourceIri = id;
     }
 
     // this funtion is called when 'withMultipleSelection' is true and
     // multiple resources are selected for comparision
-    openMultipleResources(resInfo: string) {
-        console.log('selected resources ', resInfo);
-        this.resourceIri = resInfo;
+    openMultipleResources(resources: FilteredResouces) {
+
+        this.multipleSelection = (resources.count > 0);
+
+        if (this.multipleSelection) {
+            this.multipleResources = resources;
+            console.log('selected resources ', resources);
+        } else {
+            // this.openResource()
+            this.multipleResources = undefined;
+        }
+        // this.resourceIri = resInfo;
     }
 
 }
