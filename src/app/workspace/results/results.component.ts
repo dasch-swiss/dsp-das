@@ -107,10 +107,8 @@ export class ResultsComponent {
         if (this.multipleSelection) {
             this.multipleResources = resources;
         } else {
-            // this.openResource()
             this.multipleResources = undefined;
         }
-        // this.resourceIri = resInfo;
     }
 
 }
