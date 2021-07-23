@@ -95,6 +95,8 @@ export class ResultsComponent {
     }
 
     openResource(id: string) {
+        this.multipleSelection = false;
+        this.multipleResources = undefined;
         this.resourceIri = id;
     }
 
@@ -102,13 +104,10 @@ export class ResultsComponent {
     // multiple resources are selected for comparision
     openMultipleResources(resources: FilteredResouces) {
 
-        this.multipleSelection = (resources.count > 0);
+        this.multipleSelection = (resources && resources.count > 0);
 
-        if (this.multipleSelection) {
-            this.multipleResources = resources;
-        } else {
-            this.multipleResources = undefined;
-        }
+        this.multipleResources = (this.multipleSelection ? resources : undefined);
+
     }
 
 }

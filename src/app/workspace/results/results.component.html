@@ -5,14 +5,19 @@
             <dsp-list-view [search]="searchParams"
                 [displayViewSwitch]="false"
                 [withMultipleSelection]="true"
-                (resourceSelected)="openResource($event)"
                 (multipleResourcesSelected)="openMultipleResources($event)"
                 (singleResourceSelected)="openResource($event)">
             </dsp-list-view>
         </as-split-area>
         <as-split-area [size]="60">
+            <!-- single resource view -->
             <app-resource [resourceIri]="resourceIri" *ngIf="!multipleSelection"></app-resource>
-            <dsp-multiple-resources-view [noOfResources]="multipleResources.count" [resourceIds]="multipleResources.resIds" *ngIf="multipleSelection"></dsp-multiple-resources-view>
+
+            <!-- multiple resources view / comparison viewer -->
+            <dsp-multiple-resources-view *ngIf="multipleSelection"
+                [noOfResources]="multipleResources.count"
+                [resourceIds]="multipleResources.resIds">
+            </dsp-multiple-resources-view>
         </as-split-area>
     </as-split>
 </div>
