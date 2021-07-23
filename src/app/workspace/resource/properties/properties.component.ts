@@ -142,6 +142,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         this.valueOperationEventSubscriptions.push(this._valueOperationEventService.on(
             Events.ValueAdded, (newValue: AddedEventValue) => {
                 if (newValue) {
+                    this.lastModificationDate = newValue.addedValue.valueCreationDate;
                     this.addValueToResource(newValue.addedValue);
                     this.hideAddValueForm();
                 }
@@ -149,13 +150,18 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
 
         this.valueOperationEventSubscriptions.push(this._valueOperationEventService.on(
             Events.ValueUpdated, (updatedValue: UpdatedEventValues) => {
+                this.lastModificationDate = updatedValue.updatedValue.valueCreationDate;
                 this.updateValueInResource(updatedValue.currentValue, updatedValue.updatedValue);
                 this.hideAddValueForm();
             }));
 
         this.valueOperationEventSubscriptions.push(this._valueOperationEventService.on(
-            Events.ValueDeleted, (deletedValue: DeletedEventValue) => this.deleteValueFromResource(deletedValue.deletedValue)
-        ));
+            Events.ValueDeleted, (deletedValue: DeletedEventValue) => {
+                // the DeletedEventValue does not contain a creation or last modification date
+                // so, we have to grab it from res info
+                this._getLastModificationDate(this.resource.res.id);
+                this.deleteValueFromResource(deletedValue.deletedValue);
+            }));
 
         // keep the information if the user wants to display all properties or not
         if (localStorage.getItem('showAllProps')) {
@@ -338,8 +344,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                     propInfoValueArray.propDef.id === valueToAdd.property) // filter to the correct property
                 .forEach(propInfoValue => {
                     propInfoValue.values.push(valueToAdd); // push new value to array
-                    // update last modification date
-                    this._getLastModificationDate(this.resource.res.id);
                 });
 
             if (valueToAdd instanceof ReadTextValueAsXml) {
@@ -366,8 +370,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                     filteredpropInfoValueArray.values.forEach((val, index) => { // loop through each value of the current property
                         if (val.id === valueToReplace.id) { // find the value that should be updated using the id of valueToReplace
                             filteredpropInfoValueArray.values[index] = updatedValue; // replace value with the updated value
-                            // update last modification date
-                            this._getLastModificationDate(this.resource.res.id);
                         }
                     });
                 });
@@ -393,8 +395,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                     filteredpropInfoValueArray.values.forEach((val, index) => { // loop through each value of the current property
                         if (val.id === valueToDelete.id) { // find the value that was deleted using the id
                             filteredpropInfoValueArray.values.splice(index, 1); // remove the value from the values array
-                            // update last modification date
-                            this._getLastModificationDate(this.resource.res.id);
 
                             if (val instanceof ReadTextValueAsXml) {
                                 this._updateStandoffLinkValue();
