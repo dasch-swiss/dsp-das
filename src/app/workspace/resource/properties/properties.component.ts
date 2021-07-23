@@ -14,6 +14,7 @@ import {
     ProjectResponse,
     ReadLinkValue,
     ReadProject,
+    ReadResource,
     ReadResourceSequence,
     ReadTextValueAsXml,
     ReadUser,
@@ -92,6 +93,8 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
      */
     @Output() referredResourceHovered: EventEmitter<ReadLinkValue> = new EventEmitter<ReadLinkValue>();
 
+    lastModificationDate: string;
+
     deletedResource = false;
 
     addButtonIsVisible: boolean; // used to toggle add value button
@@ -124,6 +127,9 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                 this.resource.res.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR'
             );
 
+            // get last modification date
+            this.lastModificationDate = this.resource.res.lastModificationDate;
+
             // if user has modify permissions, set addButtonIsVisible to true so the user see's the add button
             this.addButtonIsVisible = allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
         }
@@ -150,6 +156,13 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         this.valueOperationEventSubscriptions.push(this._valueOperationEventService.on(
             Events.ValueDeleted, (deletedValue: DeletedEventValue) => this.deleteValueFromResource(deletedValue.deletedValue)
         ));
+
+        // keep the information if the user wants to display all properties or not
+        if (localStorage.getItem('showAllProps')) {
+            this.showAllProps = JSON.parse(localStorage.getItem('showAllProps'));
+        } else {
+            localStorage.setItem('showAllProps', JSON.stringify(this.showAllProps));
+        }
     }
 
     ngOnChanges(): void {
@@ -214,7 +227,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
             position: {
                 top: '112px'
             },
-            data: { mode: type+'Resource', title: this.resource.res.label }
+            data: { mode: type + 'Resource', title: this.resource.res.label }
         };
 
         const dialogRef = this._dialog.open(
@@ -230,9 +243,10 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                 payload.id = this.resource.res.id;
                 payload.type = this.resource.res.type;
                 payload.deleteComment = answer.comment ? answer.comment : undefined;
-                // delete and refresh the view
+                payload.lastModificationDate = this.lastModificationDate;
                 switch (type) {
                     case 'delete':
+                        // delete the resource and refresh the view
                         this._dspApiConnection.v2.res.deleteResource(payload).subscribe(
                             (response: DeleteResourceResponse) => {
                                 // display notification and mark resource as 'deleted'
@@ -246,7 +260,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                         break;
 
                     case 'erase':
-                        // delete resource class and refresh the view
+                        // erase the resource and refresh the view
                         this._dspApiConnection.v2.res.eraseResource(payload).subscribe(
                             (response: DeleteResourceResponse) => {
                                 // display notification and mark resource as 'erased'
@@ -322,8 +336,12 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
             this.resource.resProps
                 .filter(propInfoValueArray =>
                     propInfoValueArray.propDef.id === valueToAdd.property) // filter to the correct property
-                .forEach(propInfoValue =>
-                    propInfoValue.values.push(valueToAdd)); // push new value to array
+                .forEach(propInfoValue => {
+                    propInfoValue.values.push(valueToAdd); // push new value to array
+                    // update last modification date
+                    this._getLastModificationDate(this.resource.res.id);
+                });
+
             if (valueToAdd instanceof ReadTextValueAsXml) {
                 this._updateStandoffLinkValue();
             }
@@ -348,6 +366,8 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                     filteredpropInfoValueArray.values.forEach((val, index) => { // loop through each value of the current property
                         if (val.id === valueToReplace.id) { // find the value that should be updated using the id of valueToReplace
                             filteredpropInfoValueArray.values[index] = updatedValue; // replace value with the updated value
+                            // update last modification date
+                            this._getLastModificationDate(this.resource.res.id);
                         }
                     });
                 });
@@ -373,6 +393,9 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                     filteredpropInfoValueArray.values.forEach((val, index) => { // loop through each value of the current property
                         if (val.id === valueToDelete.id) { // find the value that was deleted using the id
                             filteredpropInfoValueArray.values.splice(index, 1); // remove the value from the values array
+                            // update last modification date
+                            this._getLastModificationDate(this.resource.res.id);
+
                             if (val instanceof ReadTextValueAsXml) {
                                 this._updateStandoffLinkValue();
                             }
@@ -383,6 +406,11 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         } else {
             console.error('No properties exist for this resource');
         }
+    }
+
+    toggleAllProps(status: boolean) {
+        this.showAllProps = !status;
+        localStorage.setItem('showAllProps', JSON.stringify(this.showAllProps));
     }
 
     /**
@@ -442,5 +470,11 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
             }
         );
 
+    }
+
+    private _getLastModificationDate(resId: string) {
+        this._dspApiConnection.v2.res.getResource(resId).subscribe(
+            (res: ReadResource) => this.lastModificationDate = res.lastModificationDate
+        );
     }
 }
