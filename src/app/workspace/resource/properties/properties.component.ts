@@ -226,7 +226,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         // --> TODO: pop up resource preview on hover
     }
 
-    openDialog(type: 'delete' | 'erase') {
+    openDialog(type: 'delete' | 'erase' | 'edit') {
         const dialogConfig: MatDialogConfig = {
             width: '560px',
             maxHeight: '80vh',
