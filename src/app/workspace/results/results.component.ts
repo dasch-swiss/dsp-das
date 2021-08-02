@@ -27,9 +27,6 @@ export class ResultsComponent {
     searchQuery: string;
     searchMode: 'fulltext' | 'gravsearch';
 
-    // progress status
-    loading = false;
-
     constructor(
         private _route: ActivatedRoute,
         private _titleService: Title
