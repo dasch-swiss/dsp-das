@@ -2,9 +2,33 @@ import { Component, DebugElement, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
 import { FilteredResouces } from '@dasch-swiss/dsp-ui';
 import { IntermediateComponent } from './intermediate.component';
+
+/**
+ * test host component to simulate parent component
+ */
+@Component({
+    template: '<app-intermediate #intermediateView [resources]="resources"></app-intermediate>'
+})
+class OneSelectedResourcesComponent {
+
+    @ViewChild('intermediateView') intermediateComponent: IntermediateComponent;
+
+    resources: FilteredResouces = {
+        'count': 1,
+        'resListIndex': [1],
+        'resIds': [
+            'http://rdfh.ch/0803/83616f8d8501'
+        ],
+        'selectionType': 'multiple'
+    };
+
+    constructor() { }
+
+}
 
 /**
  * test host component to simulate parent component
@@ -33,42 +57,122 @@ class ThreeSelectedResourcesComponent {
 
 describe('IntermediateComponent', () => {
 
-    let hostComponent: ThreeSelectedResourcesComponent;
-    let hostFixture: ComponentFixture<ThreeSelectedResourcesComponent>;
+    let host1Component: OneSelectedResourcesComponent;
+    let host1Fixture: ComponentFixture<OneSelectedResourcesComponent>;
+
+    let host3Component: ThreeSelectedResourcesComponent;
+    let host3Fixture: ComponentFixture<ThreeSelectedResourcesComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [
                 IntermediateComponent,
+                OneSelectedResourcesComponent,
                 ThreeSelectedResourcesComponent
             ],
             imports: [
                 MatButtonModule,
-                MatIconModule
+                MatIconModule,
+                MatTooltipModule
             ]
         })
             .compileComponents();
     });
 
     beforeEach(() => {
-        hostFixture = TestBed.createComponent(ThreeSelectedResourcesComponent);
-        hostComponent = hostFixture.componentInstance;
-        hostFixture.detectChanges();
+        host1Fixture = TestBed.createComponent(OneSelectedResourcesComponent);
+        host1Component = host1Fixture.componentInstance;
+        host1Fixture.detectChanges();
 
-        expect(hostComponent).toBeTruthy();
+        expect(host1Component).toBeTruthy();
+
+        host3Fixture = TestBed.createComponent(ThreeSelectedResourcesComponent);
+        host3Component = host3Fixture.componentInstance;
+        host3Fixture.detectChanges();
+
+        expect(host3Component).toBeTruthy();
 
     });
 
-    it('expect count to be "3" and compare button to be enabled', () => {
-        expect(hostComponent.intermediateComponent).toBeTruthy();
-        expect(hostComponent.intermediateComponent.resources).toBeDefined();
+    describe('One selected resource', () => {
 
-        const hostCompDe = hostFixture.debugElement;
+        it('expect count to be "1" and text to be "Resource Selected', () => {
+            expect(host1Component.intermediateComponent).toBeTruthy();
+            expect(host1Component.intermediateComponent.resources).toBeDefined();
 
-        const count: DebugElement = hostCompDe.query(By.css('.count'));
-        expect(count.nativeElement.innerText).toEqual('3');
+            const hostCompDe = host1Fixture.debugElement;
 
-        const button: DebugElement = hostCompDe.query(By.css('.compare'));
-        expect(button.nativeElement.disabled).toBeFalsy();
+            const count: DebugElement = hostCompDe.query(By.css('.count'));
+            expect(count.nativeElement.innerText).toEqual('1');
+            const text: DebugElement = hostCompDe.query(By.css('.text'));
+            expect(text.nativeElement.innerText).toEqual('Resource Selected');
+
+        });
+
+        it('expect compare button to be disabled', () => {
+            expect(host1Component.intermediateComponent).toBeTruthy();
+            expect(host1Component.intermediateComponent.resources).toBeDefined();
+
+            const hostCompDe = host1Fixture.debugElement;
+
+            const button: DebugElement = hostCompDe.query(By.css('.compare'));
+            expect(button.nativeElement.disabled).toBeTruthy();
+        });
+
+        it('expect no card stack', () => {
+            expect(host1Component.intermediateComponent).toBeTruthy();
+            expect(host1Component.intermediateComponent.resources).toBeDefined();
+
+            const hostCompDe = host1Fixture.debugElement;
+
+            const twoCards: DebugElement = hostCompDe.query(By.css('.two'));
+            expect(twoCards).toBeFalsy();
+            const threeCards: DebugElement = hostCompDe.query(By.css('.three'));
+            expect(threeCards).toBeFalsy();
+            const moreCards: DebugElement = hostCompDe.query(By.css('.more'));
+            expect(moreCards).toBeFalsy();
+        });
+
     });
+
+    describe('Three selected resources', () => {
+
+        it('expect count to be "3" and text to be "Resources Selected', () => {
+            expect(host3Component.intermediateComponent).toBeTruthy();
+            expect(host3Component.intermediateComponent.resources).toBeDefined();
+
+            const hostCompDe = host3Fixture.debugElement;
+
+            const count: DebugElement = hostCompDe.query(By.css('.count'));
+            expect(count.nativeElement.innerText).toEqual('3');
+            const text: DebugElement = hostCompDe.query(By.css('.text'));
+            expect(text.nativeElement.innerText).toEqual('Resources Selected');
+
+        });
+
+        it('expect compare button to be enabled', () => {
+            expect(host3Component.intermediateComponent).toBeTruthy();
+            expect(host3Component.intermediateComponent.resources).toBeDefined();
+
+            const hostCompDe = host3Fixture.debugElement;
+
+            const button: DebugElement = hostCompDe.query(By.css('.compare'));
+            expect(button.nativeElement.disabled).toBeFalsy();
+        });
+
+        it('expect card stack of more than 2', () => {
+            expect(host3Component.intermediateComponent).toBeTruthy();
+            expect(host3Component.intermediateComponent.resources).toBeDefined();
+
+            const hostCompDe = host3Fixture.debugElement;
+
+            const twoCards: DebugElement = hostCompDe.query(By.css('.two'));
+            expect(twoCards.nativeElement).toBeDefined();
+            const threeCards: DebugElement = hostCompDe.query(By.css('.three'));
+            expect(threeCards.nativeElement).toBeDefined();
+            const moreCards: DebugElement = hostCompDe.query(By.css('.more'));
+            expect(moreCards).toBeFalsy();
+        });
+    });
+
 });
