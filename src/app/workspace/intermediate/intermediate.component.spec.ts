@@ -1,12 +1,10 @@
-import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
+import { Component, DebugElement, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { By } from '@angular/platform-browser';
 import { FilteredResouces } from '@dasch-swiss/dsp-ui';
-
 import { IntermediateComponent } from './intermediate.component';
-
 
 /**
  * test host component to simulate parent component
@@ -32,7 +30,6 @@ class ThreeSelectedResourcesComponent {
     constructor() { }
 
 }
-
 
 describe('IntermediateComponent', () => {
 

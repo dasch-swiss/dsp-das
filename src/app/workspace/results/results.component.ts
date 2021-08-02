@@ -17,7 +17,6 @@ export class ResultsComponent {
     resourceIri: string;
 
     // display single resource or intermediate page in case of multiple selection
-    multipleSelection = false;
     multipleResources: FilteredResouces;
     viewMode: 'single' | 'intermediate' | 'compare' = 'single';
 
@@ -55,7 +54,6 @@ export class ResultsComponent {
     }
 
     openResource(id: string) {
-        // this.multipleSelection = false;
         this.viewMode = 'single';
         this.multipleResources = undefined;
         this.resourceIri = id;
