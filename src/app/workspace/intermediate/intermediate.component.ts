@@ -1,14 +1,7 @@
-import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import {
-    ApiResponseError,
-    Constants,
-    CreateLinkValue,
-    CreateResource,
-    CreateTextValueAsString,
-    KnoraApiConnection,
-    ReadResource
-} from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, FilteredResouces } from '@dasch-swiss/dsp-ui';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { FilteredResouces } from '@dasch-swiss/dsp-ui';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 
 @Component({
@@ -31,70 +24,39 @@ export class IntermediateComponent implements OnInit {
     };
 
     constructor(
-        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _dialog: MatDialog,
         private _errorHandler: ErrorHandlerService,
     ) { }
 
     ngOnInit(): void { }
 
     /**
-     * create a link resource from selected resources
-     * @param resources
+     * opens the dialog box with a form to create a link resource, to edit resources etc.
+     * @param type 'link' --> TODO: will be expanded with other types like edit, delete etc.
+     * @param data
      */
-    linkResources(resources: FilteredResouces) {
+    openDialog(type: 'link', data: FilteredResouces) {
 
-        // step 1: open dialog box with form to define label and comment
+        const title = 'Create collection of ' + data.count + ' resources';
 
-
-        // step 2: submit link resource
-        const linkObj = new CreateResource();
-
-        // --> TODO: will be replaced by label input from form value
-        linkObj.label = 'Label from link resource form: input';
-
-        linkObj.type = Constants.KnoraApiV2 + Constants.HashDelimiter + 'LinkObj';
-
-        linkObj.attachedToProject = 'http://rdfh.ch/projects/1111';
-
-        const propertyValues = [];
-        const hasComment = [];
-        // hasComment[Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasComment'] = [];
-        const hasLinkToValue = [];
-        // hasLinkToValue[Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasLinkToValue'] = [];
-        resources.resIds.forEach(id => {
-            const linkVal = new CreateLinkValue();
-            linkVal.type = Constants.LinkValue;
-            linkVal.linkedResourceIri = id;
-            // the value could have a comment
-            // linkVal.valueHasComment = 'comment from link res form?';
-
-            hasLinkToValue.push(linkVal);
-        });
-
-        // --> TODO: will be replaced by comment input from form value
-        const comment = 'Comment from link resource form: textarea';
-        if (comment) {
-            const commentVal = new CreateTextValueAsString();
-            commentVal.type = Constants.TextValue;
-            commentVal.text = comment;
-            hasComment.push(commentVal);
-        }
-
-        linkObj.properties = {
-            [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasLinkToValue']: hasLinkToValue,
-            [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasComment']: hasComment,
+        const dialogConfig: MatDialogConfig = {
+            width: '640px',
+            maxHeight: '80vh',
+            position: {
+                top: '112px'
+            },
+            data: { mode: type + 'Resources', title: title, selectedResources: data }
         };
 
-
-        this._dspApiConnection.v2.res.createResource(linkObj).subscribe(
-            (response: ReadResource) => {
-                // --> TODO: do something with the successful response
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-            }
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
         );
 
+        dialogRef.afterClosed().subscribe((resId: string) => {
+
+            // do something with the intermediate view... but what should we do / display? Maybe the new resource...
+        });
     }
 
 }
