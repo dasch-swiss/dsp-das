@@ -291,19 +291,20 @@ export class ResourceClassInfoComponent implements OnInit {
 
         onto.id = this.ontology.id;
 
-        const addCard = new UpdateResourceClassCardinality();
+        const delCard = new UpdateResourceClassCardinality();
 
-        addCard.id = this.resourceClass.id;
+        delCard.id = this.resourceClass.id;
 
-        addCard.cardinalities = [];
+        delCard.cardinalities = [];
 
-        this.propsToDisplay = this.propsToDisplay.filter(prop => !(prop.propertyIndex === property.iri));
+        this.propsToDisplay = this.propsToDisplay.filter(prop => (prop.propertyIndex === property.iri));
 
-        addCard.cardinalities = this.propsToDisplay;
-        onto.entity = addCard;
+        delCard.cardinalities = this.propsToDisplay;
+        onto.entity = delCard;
 
-        this._dspApiConnection.v2.onto.replaceCardinalityOfResourceClass(onto).subscribe(
+        this._dspApiConnection.v2.onto.deleteCardinalityFromResourceClass(onto).subscribe(
             (res: ResourceClassDefinitionWithAllLanguages) => {
+
                 this.lastModificationDate = res.lastModificationDate;
                 this.lastModificationDateChange.emit(this.lastModificationDate);
                 this.preparePropsToDisplay(this.propsToDisplay);
@@ -313,7 +314,7 @@ export class ResourceClassInfoComponent implements OnInit {
                 this._notification.openSnackBar(`You have successfully removed "${property.label}" from "${this.resourceClass.label}".`);
             },
             (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
+                this._errorHandler.showMessage(<ApiResponseError>error);
             }
         );
 
