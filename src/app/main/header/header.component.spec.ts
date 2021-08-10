@@ -23,6 +23,7 @@ import { SelectLanguageComponent } from '../select-language/select-language.comp
 import { HeaderComponent } from './header.component';
 import { ComponentCommunicationEventService, EmitEvent, Events } from 'src/app/main/services/component-communication-event.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 describe('HeaderComponent', () => {
     let component: HeaderComponent;
@@ -105,7 +106,7 @@ describe('HeaderComponent', () => {
     it('should display the login success message when the loginSuccess event is emitted', () => {
         componentCommsService.emit(new EmitEvent(Events.loginSuccess));
         fixture.detectChanges();
-        const message = fixture.debugElement.query(By.directive(MessageComponent));
+        const message = fixture.debugElement.query(By.css('snack-bar-container'));
         expect(message).toBeTruthy();
     });
 
