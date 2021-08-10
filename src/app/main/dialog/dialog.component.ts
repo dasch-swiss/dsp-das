@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FilteredResouces } from '@dasch-swiss/dsp-ui';
+import { FilteredResources } from '@dasch-swiss/dsp-ui';
 import { PropertyInfoObject } from 'src/app/project/ontology/default-data/default-properties';
 
 export interface DialogData {
@@ -17,7 +17,7 @@ export interface DialogData {
     position?: number;
     parentIri?: string;
     projectCode?: string;
-    selectedResources?: FilteredResouces;
+    selectedResources?: FilteredResources;
 }
 
 export interface ConfirmationWithComment {

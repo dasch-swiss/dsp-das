@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { FilteredResouces } from '@dasch-swiss/dsp-ui';
+import { FilteredResources } from '@dasch-swiss/dsp-ui';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 
@@ -11,7 +11,7 @@ import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 })
 export class IntermediateComponent implements OnInit {
 
-    @Input() resources: FilteredResouces;
+    @Input() resources: FilteredResources;
 
     @Output() action: EventEmitter<string> = new EventEmitter<string>();
 
@@ -35,9 +35,9 @@ export class IntermediateComponent implements OnInit {
      * @param type 'link' --> TODO: will be expanded with other types like edit, delete etc.
      * @param data
      */
-    openDialog(type: 'link', data: FilteredResouces) {
+    openDialog(type: 'link', data: FilteredResources) {
 
-        const title = 'Create collection of ' + data.count + ' resources';
+        const title = 'Create a collection of ' + data.count + ' resources';
 
         const dialogConfig: MatDialogConfig = {
             width: '640px',

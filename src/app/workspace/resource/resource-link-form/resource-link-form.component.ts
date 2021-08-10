@@ -1,7 +1,16 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ApiResponseError, Constants, CreateLinkValue, CreateResource, CreateTextValueAsString, KnoraApiConnection, ReadResource, StoredProject } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, FilteredResouces } from '@dasch-swiss/dsp-ui';
+import {
+    ApiResponseError,
+    Constants,
+    CreateLinkValue,
+    CreateResource,
+    CreateTextValueAsString,
+    KnoraApiConnection,
+    ReadResource,
+    StoredProject
+} from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken, FilteredResources } from '@dasch-swiss/dsp-ui';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { ProjectService } from '../project.service';
 
@@ -12,7 +21,7 @@ import { ProjectService } from '../project.service';
 })
 export class ResourceLinkFormComponent implements OnInit {
 
-    @Input() resources: FilteredResouces;
+    @Input() resources: FilteredResources;
 
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
@@ -113,10 +122,10 @@ export class ResourceLinkFormComponent implements OnInit {
         // hasComment[Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasComment'] = [];
         const hasLinkToValue = [];
         // hasLinkToValue[Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasLinkToValue'] = [];
-        this.resources.resIds.forEach(id => {
+        this.resources.resInfo.forEach(res => {
             const linkVal = new CreateLinkValue();
             linkVal.type = Constants.LinkValue;
-            linkVal.linkedResourceIri = id;
+            linkVal.linkedResourceIri = res.id;
             // the value could have a comment
             // linkVal.valueHasComment = 'comment from link res form?';
 

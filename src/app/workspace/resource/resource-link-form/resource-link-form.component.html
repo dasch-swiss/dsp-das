@@ -1,6 +1,15 @@
 <form [formGroup]="form" (ngSubmit)="submitData()" class="form" *ngIf="usersProjects?.length; else notProjectMember">
     <!-- auto complete list to select resource classes -->
     <div class="form-content">
+
+        <app-select-project
+            matTooltip="The link resource has to be added to a project. Please select one of yours."
+            [matTooltipPosition]="'above'"
+            [formGroup]="form"
+            [usersProjects]="usersProjects"
+            (projectSelected)="selectedProject = $event">
+        </app-select-project>
+
         <mat-form-field class="large-field label">
             <input matInput autocomplete="off" [formControl]="form.controls['label']"
                 [placeholder]="'Collection label *'">
@@ -16,11 +25,12 @@
             </textarea>
         </mat-form-field>
 
-        <app-select-project
-            [formGroup]="form"
-            [usersProjects]="usersProjects"
-            (projectSelected)="selectedProject = $event">
-        </app-select-project>
+        <div class="resource-container">
+            <p>The following resources will be connected:</p>
+            <ul>
+                <li *ngFor="let res of resources.resInfo">{{res.label}}</li>
+            </ul>
+        </div>
 
         <div class="form-panel form-action">
             <span>
