@@ -41,6 +41,7 @@ import { ConfirmationWithComment, DialogComponent } from 'src/app/main/dialog/di
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { DspResource } from '../dsp-resource';
 import { RepresentationConstants } from '../representation/file-representation';
+import { IncomingService } from '../incoming.service';
 
 @Component({
     selector: 'app-properties',
@@ -110,6 +111,8 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     project: ReadProject;
     user: ReadUser;
 
+    incomingLinkResources = [];
+
     showAllProps = false;   // show or hide empty properties
 
     constructor(
@@ -119,10 +122,21 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         private _notification: NotificationService,
         private _userService: UserService,
         private _valueOperationEventService: ValueOperationEventService,
-        private _valueService: ValueService
+        private _valueService: ValueService,
+        private _incomingService: IncomingService
     ) { }
 
     ngOnInit(): void {
+        this._incomingService.getIncomingLinks(this.resource.res.id, 0).subscribe(
+            (response: ReadResourceSequence) => {
+
+                if (response.resources.length > 0) {
+                    this.incomingLinkResources = response.resources;
+                }
+
+            }
+        );
+
         if (this.resource.res) {
             // get user permissions
             const allPermissions = PermissionUtil.allUserPermissions(
