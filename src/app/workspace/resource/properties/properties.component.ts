@@ -111,7 +111,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     project: ReadProject;
     user: ReadUser;
 
-    incomingLinkResources = [];
+    incomingLinkResources: ReadResource[] = [];
 
     showAllProps = false;   // show or hide empty properties
 
