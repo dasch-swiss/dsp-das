@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
-import { FilteredResouces } from '@dasch-swiss/dsp-ui';
+import { FilteredResources } from '@dasch-swiss/dsp-ui';
 import { IntermediateComponent } from './intermediate.component';
 
 /**
@@ -17,12 +17,13 @@ class OneSelectedResourcesComponent {
 
     @ViewChild('intermediateView') intermediateComponent: IntermediateComponent;
 
-    resources: FilteredResouces = {
+    resources: FilteredResources = {
         'count': 1,
         'resListIndex': [1],
-        'resIds': [
-            'http://rdfh.ch/0803/83616f8d8501'
-        ],
+        'resInfo': [{
+            'id': 'http://rdfh.ch/0803/83616f8d8501',
+            'label': '65r'
+        }],
         'selectionType': 'multiple'
     };
 
@@ -40,13 +41,22 @@ class ThreeSelectedResourcesComponent {
 
     @ViewChild('intermediateView') intermediateComponent: IntermediateComponent;
 
-    resources: FilteredResouces = {
+    resources: FilteredResources = {
         'count': 3,
         'resListIndex': [3, 2, 1],
-        'resIds': [
-            'http://rdfh.ch/0803/83616f8d8501',
-            'http://rdfh.ch/0803/71e0b9958a01',
-            'http://rdfh.ch/0803/683d5cd26f01'
+        'resInfo': [
+            {
+                'id': 'http://rdfh.ch/0803/83616f8d8501',
+                'label': '65r'
+            },
+            {
+                'id': 'http://rdfh.ch/0803/71e0b9958a01',
+                'label': '76r'
+            },
+            {
+                'id': 'http://rdfh.ch/0803/683d5cd26f01',
+                'label': '17v'
+            },
         ],
         'selectionType': 'multiple'
     };
