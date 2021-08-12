@@ -1,10 +1,13 @@
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
-import { FilteredResources } from '@dasch-swiss/dsp-ui';
+import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { AppInitService, DspActionModule, DspApiConfigToken, DspApiConnectionToken, FilteredResources } from '@dasch-swiss/dsp-ui';
+import { TestConfig } from 'test.config';
 import { IntermediateComponent } from './intermediate.component';
 
 /**
@@ -81,12 +84,24 @@ describe('IntermediateComponent', () => {
                 ThreeSelectedResourcesComponent
             ],
             imports: [
+                DspActionModule,
                 MatButtonModule,
+                MatDialogModule,
                 MatIconModule,
                 MatTooltipModule
+            ],
+            providers: [
+                AppInitService,
+                {
+                    provide: DspApiConfigToken,
+                    useValue: TestConfig.ApiConfig
+                },
+                {
+                    provide: DspApiConnectionToken,
+                    useValue: new KnoraApiConnection(TestConfig.ApiConfig)
+                }
             ]
-        })
-            .compileComponents();
+        }).compileComponents();
     });
 
     beforeEach(() => {

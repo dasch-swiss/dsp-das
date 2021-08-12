@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
     ApiResponseError,
     Constants,
@@ -51,7 +52,8 @@ export class ResourceLinkFormComponent implements OnInit {
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: ErrorHandlerService,
         private _fb: FormBuilder,
-        private _project: ProjectService
+        private _project: ProjectService,
+        private _router: Router
     ) { }
 
     ngOnInit(): void {
@@ -119,19 +121,14 @@ export class ResourceLinkFormComponent implements OnInit {
 
         linkObj.attachedToProject = this.selectedProject;
 
-        // hasComment[Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasComment'] = [];
         const hasLinkToValue = [];
-        // hasLinkToValue[Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasLinkToValue'] = [];
+
         this.resources.resInfo.forEach(res => {
             const linkVal = new CreateLinkValue();
             linkVal.type = Constants.LinkValue;
             linkVal.linkedResourceIri = res.id;
-            // the value could have a comment
-            // linkVal.valueHasComment = 'comment from link res form?';
-
             hasLinkToValue.push(linkVal);
         });
-
 
         const comment = this.form.controls['comment'].value;
         if (comment) {
@@ -149,8 +146,11 @@ export class ResourceLinkFormComponent implements OnInit {
         }
 
         this._dspApiConnection.v2.res.createResource(linkObj).subscribe(
-            (response: ReadResource) => {
+            (res: ReadResource) => {
                 // --> TODO: do something with the successful response
+                const goto = '/resource/' + encodeURIComponent(res.id);
+                this._router.navigate([]).then(result => window.open(goto, '_blank'));
+                this.closeDialog.emit();
                 this.loading = false;
             },
             (error: ApiResponseError) => {
