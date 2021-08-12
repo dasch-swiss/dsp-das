@@ -8,6 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
+    ApiResponseData,
     ApiResponseError,
     Constants,
     IHasPropertyWithPropertyDefinition,
@@ -17,7 +18,7 @@ import {
     MockUsers,
     ProjectsEndpointAdmin,
     ReadLinkValue,
-    ReadResource,
+    ReadResource, ReadResourceSequence,
     ReadValue,
     ResourcePropertyDefinition,
     SystemPropertyDefinition
@@ -37,6 +38,7 @@ import { of, Subscription } from 'rxjs';
 import { TestConfig } from 'test.config';
 import { DspResource } from '../dsp-resource';
 import { PropertiesComponent } from './properties.component';
+import { IncomingService } from '../incoming.service';
 
 /**
  * test host component to simulate parent component.
@@ -147,6 +149,8 @@ describe('PropertiesComponent', () => {
 
         const userServiceSpy = jasmine.createSpyObj('UserService', ['getUser']);
 
+        const incomingServiceSpy = jasmine.createSpyObj('IncomingService', ['getIncomingLinks']);
+
         TestBed.configureTestingModule({
             imports: [
                 ClipboardModule,
@@ -173,6 +177,10 @@ describe('PropertiesComponent', () => {
                 {
                     provide: UserService,
                     useValue: userServiceSpy
+                },
+                {
+                    provide: IncomingService,
+                    useValue: incomingServiceSpy
                 },
             ]
         })
@@ -221,6 +229,16 @@ describe('PropertiesComponent', () => {
                 const user = MockUsers.mockUser();
 
                 return of(user.body);
+            }
+        );
+
+        const incomingLinksSpy = TestBed.inject(IncomingService);
+
+        (incomingLinksSpy as jasmine.SpyObj<IncomingService>).getIncomingLinks.and.callFake(
+            () => {
+                const resources = new ReadResource();
+                const incomingLinks = new ReadResourceSequence([resources], true);
+                return of(incomingLinks);
             }
         );
 
