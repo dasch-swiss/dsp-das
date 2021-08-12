@@ -5,12 +5,9 @@
         <as-split-area [size]="40">
             <dsp-list-view [search]="searchParams" [displayViewSwitch]="false" [withMultipleSelection]="true"
             (selectedResources)="openSelectedResources($event)">
-                <!-- (multipleResourcesSelected)="openMultipleResources($event)" -->
-                <!-- (singleResourceSelected)="openResource($event)"> -->
             </dsp-list-view>
         </as-split-area>
         <as-split-area [size]="60" *ngIf="selectedResources?.count > 0">
-
             <div [ngSwitch]="viewMode">
                 <!-- single resource view -->
                 <app-resource *ngSwitchCase="'single'" [resourceIri]="selectedResources.resInfo[0].id"></app-resource>
