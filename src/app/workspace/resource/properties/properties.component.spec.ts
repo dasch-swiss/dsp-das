@@ -249,6 +249,11 @@ describe('PropertiesComponent', () => {
         expect(testHostComponent).toBeTruthy();
     });
 
+    it('should get one incoming link', () => {
+
+        expect(testHostComponent.propertiesComponent.incomingLinkResources.length).toEqual(1);
+    });
+
     it('should get the resource testding', () => {
 
         expect(testHostComponent.parentResource).toBeTruthy();
