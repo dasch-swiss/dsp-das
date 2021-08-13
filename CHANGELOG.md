@@ -1,5 +1,12 @@
 # Changelog
 
+### [5.3.1](https://www.github.com/dasch-swiss/dsp-app/compare/v5.3.0...v5.3.1) (2021-08-13)
+
+
+### Maintenance
+
+* **deps:** bump dsp-ui to latest ([#502](https://www.github.com/dasch-swiss/dsp-app/issues/502)) ([5d79065](https://www.github.com/dasch-swiss/dsp-app/commit/5d790653243f8afd0fb8591658706d84e6294f9f))
+
 ## [5.3.0](https://www.github.com/dasch-swiss/dsp-app/compare/v5.2.1...v5.3.0) (2021-08-12)
 
 
