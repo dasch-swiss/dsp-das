@@ -156,9 +156,21 @@
                     </h3>
                 </div>
                 <div class="property-value">
-                    <!-- the value(s) of the incoming links -->
-                    <div *ngFor="let inRes of incomingLinkResources">
-                        <a [routerLink]="['/resource', inRes.id]" target="_blank">{{inRes.label}}</a>
+                    <div *ngIf="loading">
+                        ...Loading
+                    </div>
+                    <div *ngIf="!loading">
+                        <!-- the value(s) of the incoming links -->
+                        <div *ngFor="let inRes of incomingLinkResources">
+                            <a [routerLink]="['/resource', inRes.id]" target="_blank">{{inRes.label}}</a>
+                        </div>
+                        <mat-paginator
+                                [length]=numberOffAllIncomingLinkRes
+                                [pageSize]="25"
+                                [hidePageSize]="true"
+                                [pageIndex]="pageEvent.pageIndex"
+                                (page)="goToPage($event)">
+                        </mat-paginator>
                     </div>
                 </div>
             </div>
