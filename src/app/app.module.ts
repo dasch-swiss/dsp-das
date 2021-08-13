@@ -98,6 +98,8 @@ import { ResultsComponent } from './workspace/results/results.component';
 import { AudioComponent } from './workspace/resource/representation/audio/audio.component';
 import { IntermediateComponent } from './workspace/intermediate/intermediate.component';
 import { ResourceLinkFormComponent } from './workspace/resource/resource-link-form/resource-link-form.component';
+import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
+import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -182,6 +184,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         AudioComponent,
         IntermediateComponent,
         ResourceLinkFormComponent,
+        DragDropDirective,
+        TextValueHtmlLinkDirective,
     ],
     imports: [
         AppRoutingModule,
