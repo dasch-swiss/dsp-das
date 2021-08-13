@@ -80,6 +80,9 @@
                     [matChipInputSeparatorKeyCodes]="separatorKeyCodes" [matChipInputAddOnBlur]="addOnBlur"
                     (matChipInputTokenEnd)="addKeyword($event)" />
             </mat-chip-list>
+            <mat-hint *ngIf="formErrors.keywords">
+                {{ formErrors.keywords }}
+            </mat-hint>
         </mat-form-field>
 
         <!-- upload logo -->
