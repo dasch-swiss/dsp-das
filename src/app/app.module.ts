@@ -106,6 +106,9 @@ import { ProgressIndicatorComponent } from './main/action/progress-indicator/pro
 import { StringLiteralInputComponent } from './main/action/string-literal-input/string-literal-input.component';
 import { SortButtonComponent } from './main/action/sort-button/sort-button.component';
 import { SelectedResourcesComponent } from './main/action/selected-resources/selected-resources.component';
+import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
+import { ExistingNamesDirective } from './main/directive/existing-names/existing-names.directive';
+import { GndDirective } from './main/directive/gnd/gnd.directive';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -198,6 +201,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         StringLiteralInputComponent,
         SortButtonComponent,
         SelectedResourcesComponent,
+        AdminImageDirective,
+        ExistingNamesDirective,
+        GndDirective,
     ],
     imports: [
         AppRoutingModule,
