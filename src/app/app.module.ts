@@ -98,6 +98,9 @@ import { ResultsComponent } from './workspace/results/results.component';
 import { AudioComponent } from './workspace/resource/representation/audio/audio.component';
 import { IntermediateComponent } from './workspace/intermediate/intermediate.component';
 import { ResourceLinkFormComponent } from './workspace/resource/resource-link-form/resource-link-form.component';
+import { ConfirmationDialogComponent } from './main/action/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationMessageComponent } from './main/action/confirmation-dialog/confirmation-message/confirmation-message.component';
+import { LoginFormComponent } from './main/action/login-form/login-form.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -182,6 +185,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         AudioComponent,
         IntermediateComponent,
         ResourceLinkFormComponent,
+        ConfirmationDialogComponent,
+        ConfirmationMessageComponent,
+        LoginFormComponent,
     ],
     imports: [
         AppRoutingModule,
