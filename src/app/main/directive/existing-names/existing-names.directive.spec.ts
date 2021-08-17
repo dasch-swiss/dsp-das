@@ -58,7 +58,7 @@ class TestHostComponent implements OnInit {
         // create a list of existing names
         let i = 1;
         for (const user of this.dataMock) {
-            this.existingNames[i] = new RegExp('(?:^|\W)' + user.toLowerCase() + '(?:$|\W)');
+            this.existingNames[i] = new RegExp('(?:^|W)' + user.toLowerCase() + '(?:$|W)');
 
             i++;
         }
@@ -148,7 +148,7 @@ describe('ExistingNameDirective', () => {
 
         let i = 1;
         for (const user of existingNamesList) {
-            existingNames[i] = new RegExp('(?:^|\W)' + user.toLowerCase() + '(?:$|\W)');
+            existingNames[i] = new RegExp('(?:^|W)' + user.toLowerCase() + '(?:$|W)');
 
             i++;
         }
@@ -186,7 +186,7 @@ describe('ExistingNameDirective', () => {
 
         let i = 1;
         for (const user of existingNamesList) {
-            existingNames[i] = new RegExp('(?:^|\W)' + user.toLowerCase() + '(?:$|\W)');
+            existingNames[i] = new RegExp('(?:^|W)' + user.toLowerCase() + '(?:$|W)');
 
             i++;
         }
