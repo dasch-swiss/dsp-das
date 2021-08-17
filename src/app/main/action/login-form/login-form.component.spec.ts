@@ -47,7 +47,7 @@ class TestHostComponent implements OnInit {
 
 }
 
-fdescribe('LoginFormComponent', () => {
+describe('LoginFormComponent', () => {
     let testHostComponent: TestHostComponent;
     let testHostFixture: ComponentFixture<TestHostComponent>;
 
