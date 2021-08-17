@@ -18,7 +18,8 @@ import {
     MockUsers,
     ProjectsEndpointAdmin,
     ReadLinkValue,
-    ReadResource, ReadResourceSequence,
+    ReadResource,
+    ReadResourceSequence,
     ReadValue,
     ResourcePropertyDefinition,
     SystemPropertyDefinition
