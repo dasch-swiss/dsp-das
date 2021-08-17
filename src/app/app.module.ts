@@ -103,6 +103,8 @@ import { ConfirmationMessageComponent } from './main/action/confirmation-dialog/
 import { LoginFormComponent } from './main/action/login-form/login-form.component';
 import { MessageComponent } from './main/action/message/message.component';
 import { ProgressIndicatorComponent } from './main/action/progress-indicator/progress-indicator.component';
+import { StringLiteralInputComponent } from './main/action/string-literal-input/string-literal-input.component';
+import { SortButtonComponent } from './main/action/sort-button/sort-button.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -192,6 +194,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         LoginFormComponent,
         MessageComponent,
         ProgressIndicatorComponent,
+        StringLiteralInputComponent,
+        SortButtonComponent,
     ],
     imports: [
         AppRoutingModule,
