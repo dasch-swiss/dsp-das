@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { Constants, Point2D, ReadFileValue, ReadGeomValue, ReadResource, ReadStillImageFileValue, RegionGeometry } from '@dasch-swiss/dsp-js';
 import { DspCompoundPosition } from '../../dsp-resource';
 import { FileRepresentation } from '../file-representation';
@@ -91,9 +91,11 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
     @Output() regionClicked = new EventEmitter<string>();
 
+    private _regionDrawMode: Boolean = false;
+    private _regionDragInfo;
+    private _mouseTracker;
     private _viewer;
     private _regions: PolygonsForRegion = {};
-
 
     constructor(
         private _elementRef: ElementRef
@@ -173,6 +175,51 @@ export class StillImageComponent implements OnChanges, OnDestroy {
             this._setupViewer();
         }
         this._renderRegions();
+    }
+
+    drawButtonClicked(){
+        this._regionDrawMode = true;
+        this._viewer.setMouseNavEnabled(false);
+    }
+
+
+    private _addRegionDrawer(){
+        this._mouseTracker = new OpenSeadragon.MouseTracker({
+            element: this._viewer.canvas,
+            pressHandler: (event) => {
+                if (!this._regionDrawMode){
+                    return;
+                }
+                const overlayElement = document.createElement('div');
+                overlayElement.style.background = 'rgba(255,0,0,0.3)';
+                const viewportPos = this._viewer.viewport.pointFromPixel(event.position);
+                this._viewer.addOverlay(overlayElement, new OpenSeadragon.Rect(viewportPos.x, viewportPos.y, 0, 0));
+                this._regionDragInfo = {
+                    overlayElement: overlayElement,
+                    startPos: viewportPos
+                };
+            },
+            dragHandler: (event) => {
+                if (!this._regionDragInfo){
+                    return;
+                }
+                const viewPortPos = this._viewer.viewport.pointFromPixel(event.position);
+                const diffX = viewPortPos.x - this._regionDragInfo.startPos.x;
+                const diffY = viewPortPos.y - this._regionDragInfo.startPos.y;
+                const location = new OpenSeadragon.Rect(
+                    Math.min(this._regionDragInfo.startPos.x, this._regionDragInfo.startPos.x + diffX),
+                    Math.min(this._regionDragInfo.startPos.y, this._regionDragInfo.startPos.y + diffY),
+                    Math.abs(diffX),
+                    Math.abs(diffY)
+                );
+                this._viewer.updateOverlay(this._regionDragInfo.overlayElement, location);
+            },
+            releaseHandler: () => {
+                this._regionDragInfo = null;
+                this._regionDrawMode = false;
+                this._viewer.setMouseNavEnabled(true);
+            }
+        });
     }
 
     /**
@@ -267,6 +314,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         this._viewer.addHandler('resize', (args) => {
             args.eventSource.svgOverlay().resize();
         });
+        this._addRegionDrawer();
     }
 
     /**
