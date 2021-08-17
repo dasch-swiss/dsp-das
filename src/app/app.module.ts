@@ -101,6 +101,8 @@ import { ResourceLinkFormComponent } from './workspace/resource/resource-link-fo
 import { ConfirmationDialogComponent } from './main/action/confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationMessageComponent } from './main/action/confirmation-dialog/confirmation-message/confirmation-message.component';
 import { LoginFormComponent } from './main/action/login-form/login-form.component';
+import { MessageComponent } from './main/action/message/message.component';
+import { ProgressIndicatorComponent } from './main/action/progress-indicator/progress-indicator.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -188,6 +190,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         ConfirmationDialogComponent,
         ConfirmationMessageComponent,
         LoginFormComponent,
+        MessageComponent,
+        ProgressIndicatorComponent,
     ],
     imports: [
         AppRoutingModule,
