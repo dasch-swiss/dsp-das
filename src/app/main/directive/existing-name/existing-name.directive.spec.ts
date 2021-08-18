@@ -5,7 +5,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ExistingNameDirective, existingNamesValidator } from './existing-names.directive';
+import { ExistingNameDirective, existingNamesValidator } from './existing-name.directive';
 
 @Component({
     template: `
