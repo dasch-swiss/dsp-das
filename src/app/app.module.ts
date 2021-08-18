@@ -107,7 +107,7 @@ import { StringLiteralInputComponent } from './main/action/string-literal-input/
 import { SortButtonComponent } from './main/action/sort-button/sort-button.component';
 import { SelectedResourcesComponent } from './main/action/selected-resources/selected-resources.component';
 import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
-import { ExistingNamesDirective } from './main/directive/existing-names/existing-names.directive';
+import { ExistingNameDirective } from './main/directive/existing-names/existing-names.directive';
 import { GndDirective } from './main/directive/gnd/gnd.directive';
 
 // translate: AoT requires an exported function for factories
@@ -202,7 +202,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         SortButtonComponent,
         SelectedResourcesComponent,
         AdminImageDirective,
-        ExistingNamesDirective,
+        ExistingNameDirective,
         GndDirective,
     ],
     imports: [
