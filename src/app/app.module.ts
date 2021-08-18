@@ -109,6 +109,11 @@ import { SelectedResourcesComponent } from './main/action/selected-resources/sel
 import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
 import { ExistingNameDirective } from './main/directive/existing-name/existing-name.directive';
 import { GndDirective } from './main/directive/gnd/gnd.directive';
+import { FormattedBooleanPipe } from './main/pipes/formatting/formatted-boolean.pipe';
+import { KnoraDatePipe } from './main/pipes/formatting/knoradate.pipe';
+import { LinkifyPipe } from './main/pipes/string-transformation/linkify.pipe';
+import { StringifyStringLiteralPipe } from './main/pipes/string-transformation/stringify-string-literal.pipe';
+import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -204,6 +209,11 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         AdminImageDirective,
         ExistingNameDirective,
         GndDirective,
+        FormattedBooleanPipe,
+        KnoraDatePipe,
+        LinkifyPipe,
+        StringifyStringLiteralPipe,
+        TruncatePipe,
     ],
     imports: [
         AppRoutingModule,
