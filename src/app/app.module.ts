@@ -116,6 +116,15 @@ import { StringifyStringLiteralPipe } from './main/pipes/string-transformation/s
 import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
+import { BooleanValueComponent } from './workspace/resource/values/boolean-value/boolean-value.component';
+import { ColorValueComponent } from './workspace/resource/values/color-value/color-value.component';
+import { ColorPickerComponent } from './workspace/resource/values/color-value/color-picker/color-picker.component';
+import { JDNDatepickerDirective } from './workspace/resource/values/jdn-datepicker-directive/jdndatepicker.directive';
+import { DateValueComponent } from './workspace/resource/values/date-value/date-value.component';
+import { CalendarHeaderComponent } from './workspace/resource/values/date-value/calendar-header/calendar-header.component';
+import { DateInputComponent } from './workspace/resource/values/date-value/date-input/date-input.component';
+import { DateInputTextComponent } from './workspace/resource/values/date-value/date-input-text/date-input-text.component';
+import { DateEditComponent } from './workspace/resource/values/date-value/date-input-text/date-edit/date-edit.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -218,6 +227,15 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         TruncatePipe,
         DragDropDirective,
         TextValueHtmlLinkDirective,
+        BooleanValueComponent,
+        ColorValueComponent,
+        ColorPickerComponent,
+        JDNDatepickerDirective,
+        DateValueComponent,
+        CalendarHeaderComponent,
+        DateInputComponent,
+        DateInputTextComponent,
+        DateEditComponent,
     ],
     imports: [
         AppRoutingModule,
