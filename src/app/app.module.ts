@@ -141,6 +141,8 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { TimeValueComponent } from './workspace/resource/values/time-value/time-value.component';
 import { TimeInputComponent } from './workspace/resource/values/time-value/time-input/time-input.component';
 import { UriValueComponent } from './workspace/resource/values/uri-value/uri-value.component';
+import { AddValueComponent } from './workspace/resource/operations/add-value/add-value.component';
+import { DisplayEditComponent } from './workspace/resource/operations/display-edit/display-edit.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -266,6 +268,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         TimeValueComponent,
         TimeInputComponent,
         UriValueComponent,
+        AddValueComponent,
+        DisplayEditComponent,
     ],
     imports: [
         AppRoutingModule,
