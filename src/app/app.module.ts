@@ -126,6 +126,21 @@ import { DateInputComponent } from './workspace/resource/values/date-value/date-
 import { DateInputTextComponent } from './workspace/resource/values/date-value/date-input-text/date-input-text.component';
 import { DateEditComponent } from './workspace/resource/values/date-value/date-input-text/date-edit/date-edit.component';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { DecimalValueComponent } from './workspace/resource/values/decimal-value/decimal-value.component';
+import { GeonameValueComponent } from './workspace/resource/values/geoname-value/geoname-value.component';
+import { IntValueComponent } from './workspace/resource/values/int-value/int-value.component';
+import { IntervalValueComponent } from './workspace/resource/values/interval-value/interval-value.component';
+import { IntervalInputComponent } from './workspace/resource/values/interval-value/interval-input/interval-input.component';
+import { LinkValueComponent } from './workspace/resource/values/link-value/link-value.component';
+import { ListValueComponent } from './workspace/resource/values/list-value/list-value.component';
+import { SublistValueComponent } from './workspace/resource/values/list-value/subList-value/sublist-value.component';
+import { TextValueAsHtmlComponent } from './workspace/resource/values/text-value/text-value-as-html/text-value-as-html.component';
+import { TextValueAsStringComponent } from './workspace/resource/values/text-value/text-value-as-string/text-value-as-string.component';
+import { TextValueAsXMLComponent } from './workspace/resource/values/text-value/text-value-as-xml/text-value-as-xml.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { TimeValueComponent } from './workspace/resource/values/time-value/time-value.component';
+import { TimeInputComponent } from './workspace/resource/values/time-value/time-input/time-input.component';
+import { UriValueComponent } from './workspace/resource/values/uri-value/uri-value.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -237,12 +252,27 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         DateInputComponent,
         DateInputTextComponent,
         DateEditComponent,
+        DecimalValueComponent,
+        GeonameValueComponent,
+        IntValueComponent,
+        IntervalValueComponent,
+        IntervalInputComponent,
+        LinkValueComponent,
+        ListValueComponent,
+        SublistValueComponent,
+        TextValueAsHtmlComponent,
+        TextValueAsStringComponent,
+        TextValueAsXMLComponent,
+        TimeValueComponent,
+        TimeInputComponent,
+        UriValueComponent,
     ],
     imports: [
         AppRoutingModule,
         AngularSplitModule.forRoot(),
         BrowserAnimationsModule,
         BrowserModule,
+        CKEditorModule,
         ClipboardModule,
         ColorPickerModule,
         CommonModule,
