@@ -90,10 +90,9 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     @Output() goToPage = new EventEmitter<number>();
 
     @Output() regionClicked = new EventEmitter<string>();
-
-    private _regionDrawMode: Boolean = false;
-    private _regionDragInfo;
-    private _mouseTracker;
+    private _regionDrawMode: Boolean = false; // stores whether viewer is currently drawing a region
+    private _regionDragInfo; // stores the information of the first click for drawing a region
+    private _mouseTracker; // stores the MouseTracker that allows drawing regions
     private _viewer;
     private _regions: PolygonsForRegion = {};
 
@@ -177,7 +176,11 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         this._renderRegions();
     }
 
-    drawButtonClicked(){
+    /**
+     * when the draw region button is clicked, this method is called from the html. It sets the draw mode to true and
+     * prevents navigation by mouse (so that the region can be accurately drawn).
+     */
+    drawButtonClicked(): void {
         this._regionDrawMode = true;
         this._viewer.setMouseNavEnabled(false);
     }
@@ -213,11 +216,24 @@ export class StillImageComponent implements OnChanges, OnDestroy {
                     Math.abs(diffY)
                 );
                 this._viewer.updateOverlay(this._regionDragInfo.overlayElement, location);
+                this._regionDragInfo.endPos = viewPortPos;
             },
             releaseHandler: () => {
-                this._regionDragInfo = null;
-                this._regionDrawMode = false;
-                this._viewer.setMouseNavEnabled(true);
+                if (this._regionDrawMode) {
+                    const imageSize =  this._viewer.world.getItemAt(0).getContentSize();
+                    const startPoint  = this._viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.startPos);
+                    const endPoint = this._viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.endPos);
+                    const x1 = Math.max(Math.min(startPoint.x, imageSize.x), 0)/imageSize.x;
+                    const x2 = Math.max(Math.min(endPoint.x, imageSize.x), 0)/imageSize.x;
+                    const y1 = Math.max(Math.min(startPoint.y, imageSize.y), 0)/imageSize.y;
+                    const y2 = Math.max(Math.min(endPoint.y, imageSize.y), 0)/imageSize.y;
+                    const geomStr = '{"status":"active","lineColor":"#ff3333","lineWidth":2,"points":[{"x":' +  x1.toString() +
+                        ',"y":' + y1.toString() + '},{"x":' + x2.toString() + '"y":' + y2.toString()+ '}],"type":"rectangle"}';
+                    console.log(geomStr);
+                    this._regionDragInfo = null;
+                    this._regionDrawMode = false;
+                    this._viewer.setMouseNavEnabled(true);
+                }
             }
         });
     }
