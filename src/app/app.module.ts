@@ -125,6 +125,7 @@ import { CalendarHeaderComponent } from './workspace/resource/values/date-value/
 import { DateInputComponent } from './workspace/resource/values/date-value/date-input/date-input.component';
 import { DateInputTextComponent } from './workspace/resource/values/date-value/date-input-text/date-input-text.component';
 import { DateEditComponent } from './workspace/resource/values/date-value/date-input-text/date-edit/date-edit.component';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -243,6 +244,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         BrowserAnimationsModule,
         BrowserModule,
         ClipboardModule,
+        ColorPickerModule,
         CommonModule,
         DspActionModule,
         DspCoreModule,
