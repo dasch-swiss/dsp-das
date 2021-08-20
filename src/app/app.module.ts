@@ -146,7 +146,6 @@ import { DisplayEditComponent } from './workspace/resource/operations/display-ed
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
 import { ResourceGridComponent } from './workspace/results/list-view/resource-grid/resource-grid.component';
 import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
-import { MultipleResourcesViewComponent } from './workspace/multiple-resources-view/multiple-resources-view.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -277,7 +276,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         ListViewComponent,
         ResourceGridComponent,
         ResourceListComponent,
-        MultipleResourcesViewComponent,
     ],
     imports: [
         AppRoutingModule,
