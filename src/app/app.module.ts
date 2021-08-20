@@ -143,6 +143,10 @@ import { TimeInputComponent } from './workspace/resource/values/time-value/time-
 import { UriValueComponent } from './workspace/resource/values/uri-value/uri-value.component';
 import { AddValueComponent } from './workspace/resource/operations/add-value/add-value.component';
 import { DisplayEditComponent } from './workspace/resource/operations/display-edit/display-edit.component';
+import { ListViewComponent } from './workspace/results/list-view/list-view.component';
+import { ResourceGridComponent } from './workspace/results/list-view/resource-grid/resource-grid.component';
+import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
+import { MultipleResourcesViewComponent } from './workspace/multiple-resources-view/multiple-resources-view.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -270,6 +274,10 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         UriValueComponent,
         AddValueComponent,
         DisplayEditComponent,
+        ListViewComponent,
+        ResourceGridComponent,
+        ResourceListComponent,
+        MultipleResourcesViewComponent,
     ],
     imports: [
         AppRoutingModule,
