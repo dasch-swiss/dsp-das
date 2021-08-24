@@ -1,8 +1,29 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
-import { Constants, Point2D, ReadFileValue, ReadGeomValue, ReadResource, ReadStillImageFileValue, RegionGeometry } from '@dasch-swiss/dsp-js';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    OnChanges,
+    OnDestroy,
+    Output,
+    SimpleChanges
+} from '@angular/core';
+import {
+    Constants,
+    CreateResource, KnoraApiConnection,
+    Point2D,
+    ReadFileValue,
+    ReadGeomValue,
+    ReadResource,
+    ReadStillImageFileValue,
+    RegionGeometry, ResourceClassAndPropertyDefinitions
+} from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { DspCompoundPosition } from '../../dsp-resource';
 import { FileRepresentation } from '../file-representation';
-
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 
 // this component needs the openseadragon library itself, as well as the openseadragon plugin openseadragon-svg-overlay
 // both libraries are installed via package.json, and loaded globally via the script tag in .angular-cli.json
@@ -83,6 +104,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
     @Input() images: FileRepresentation[];
     @Input() imageCaption?: string;
+    @Input() resourceIri: string;
     @Input() activateRegion?: string; // highlight a region
 
     @Input() compoundNavigation?: DspCompoundPosition;
@@ -90,6 +112,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     @Output() goToPage = new EventEmitter<number>();
 
     @Output() regionClicked = new EventEmitter<string>();
+
     private _regionDrawMode: Boolean = false; // stores whether viewer is currently drawing a region
     private _regionDragInfo; // stores the information of the first click for drawing a region
     private _mouseTracker; // stores the MouseTracker that allows drawing regions
@@ -97,7 +120,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     private _regions: PolygonsForRegion = {};
 
     constructor(
-        private _elementRef: ElementRef
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection, private _elementRef: ElementRef, private _dialog: MatDialog
     ) {
         OpenSeadragon.setString('Tooltips.Home', '');
         OpenSeadragon.setString('Tooltips.ZoomIn', '');
@@ -184,10 +207,43 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         this._regionDrawMode = true;
         this._viewer.setMouseNavEnabled(false);
     }
+    openDialog(startPoint, endPoint, imageSize){
+        const dialogConfig: MatDialogConfig = {
+            width: '840px',
+            maxHeight: '80vh',
+            position: {
+                top: '112px'
+            },
+            data: { mode: 'add_region', title: 'Create a region', subtitle: 'Add further properties', id: this.resourceIri }
+        };
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
+        );
+
+        dialogRef.afterClosed().subscribe((data) => {
+            this.uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment);
+        });
+    }
+    uploadRegion(startPoint, endPoint, imageSize, color, comment){
+        const x1 = Math.max(Math.min(startPoint.x, imageSize.x), 0)/imageSize.x;
+        const x2 = Math.max(Math.min(endPoint.x, imageSize.x), 0)/imageSize.x;
+        const y1 = Math.max(Math.min(startPoint.y, imageSize.y), 0)/imageSize.y;
+        const y2 = Math.max(Math.min(endPoint.y, imageSize.y), 0)/imageSize.y;
+        const geomStr = '{"status":"active","lineColor":"' + color + '","lineWidth":2,"points":[{"x":' +  x1.toString() +
+            ',"y":' + y1.toString() + '},{"x":' + x2.toString() + '"y":' + y2.toString()+ '}],"type":"rectangle"}';
+        const createResource = new CreateResource();
+        this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition('http://api.knora.org/ontology/knora-api/v2#Region').subscribe(
+            (onto: ResourceClassAndPropertyDefinitions) => {
+                console.log(onto);
+            });
+    }
 
 
     private _addRegionDrawer(){
         this._mouseTracker = new OpenSeadragon.MouseTracker({
+
+            $
             element: this._viewer.canvas,
             pressHandler: (event) => {
                 if (!this._regionDrawMode){
@@ -223,16 +279,10 @@ export class StillImageComponent implements OnChanges, OnDestroy {
                     const imageSize =  this._viewer.world.getItemAt(0).getContentSize();
                     const startPoint  = this._viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.startPos);
                     const endPoint = this._viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.endPos);
-                    const x1 = Math.max(Math.min(startPoint.x, imageSize.x), 0)/imageSize.x;
-                    const x2 = Math.max(Math.min(endPoint.x, imageSize.x), 0)/imageSize.x;
-                    const y1 = Math.max(Math.min(startPoint.y, imageSize.y), 0)/imageSize.y;
-                    const y2 = Math.max(Math.min(endPoint.y, imageSize.y), 0)/imageSize.y;
-                    const geomStr = '{"status":"active","lineColor":"#ff3333","lineWidth":2,"points":[{"x":' +  x1.toString() +
-                        ',"y":' + y1.toString() + '},{"x":' + x2.toString() + '"y":' + y2.toString()+ '}],"type":"rectangle"}';
-                    console.log(geomStr);
                     this._regionDragInfo = null;
                     this._regionDrawMode = false;
                     this._viewer.setMouseNavEnabled(true);
+                    this.openDialog(startPoint, endPoint, imageSize);
                 }
             }
         });

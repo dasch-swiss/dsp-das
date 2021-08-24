@@ -97,6 +97,7 @@ import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
 import { AudioComponent } from './workspace/resource/representation/audio/audio.component';
 import { IntermediateComponent } from './workspace/intermediate/intermediate.component';
+import { AddRegionFormComponent } from './workspace/resource/representation/add-region-form/add-region-form.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -180,6 +181,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         VisualizerComponent,
         AudioComponent,
         IntermediateComponent,
+        AddRegionFormComponent,
     ],
     imports: [
         AppRoutingModule,
