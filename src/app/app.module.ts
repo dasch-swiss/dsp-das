@@ -7,7 +7,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import {
-    AppInitService,
     DspActionModule,
     DspApiConfigToken,
     DspApiConnectionToken,
@@ -147,6 +146,7 @@ import { ListViewComponent } from './workspace/results/list-view/list-view.compo
 import { ResourceGridComponent } from './workspace/results/list-view/resource-grid/resource-grid.component';
 import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
 import { ComparisonComponent } from './workspace/comparison/comparison.component';
+import { AppInitService } from './app-init.service';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
