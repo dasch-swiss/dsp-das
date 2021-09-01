@@ -54,7 +54,7 @@ jobs:
       - name: Run the tests
         run: npm run test-e2e-protractor
 
-  lint-code:
+  lint:
     name: Run lint
     runs-on: ubuntu-latest
     steps:
@@ -71,7 +71,6 @@ jobs:
 
   build:
     name: Build the app
-    needs: [lint-code]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
@@ -82,7 +81,7 @@ jobs:
           node-version: ${{ env.NV }}
       - name: Install dependencies
         run: npm install
-      - name: Build app in prod mode
+      - name: Build in prod mode
         run: npm run build-prod
 
   release-please:
@@ -102,7 +101,12 @@ jobs:
   # publish only on release
   publish:
     name: Publish to Dockerhub
-    needs: [build, unit-tests, e2e-tests]
+    needs: [
+      build,
+      lint,
+      e2e-tests,
+      unit-tests
+    ]
     runs-on: ubuntu-latest
     if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags')
     steps:
