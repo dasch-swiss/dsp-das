@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
-      - name: Run script
+      - name: Run the script
         run: ./find-ignored-tests.sh
 
   unit-tests:
@@ -25,13 +25,13 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
-      - name: Use Node.js ${{ env.NV }}
+      - name: Set up Node.js ${{ env.NV }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ env.NV }}
       - name: Install dependencies
         run: npm install
-      - name: Run tests
+      - name: Run the tests
         run: npm run test-ci
         env:
           TZ: Europe/Zurich
@@ -43,7 +43,7 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
-      - name: Use Node.js ${{ env.NV }}
+      - name: Set up Node.js ${{ env.NV }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ env.NV }}
@@ -51,7 +51,7 @@ jobs:
         run: npm install
       - name: Webdriver update
         run: npm run webdriver-update
-      - name: Run tests
+      - name: Run the tests
         run: npm run test-e2e-protractor
 
   lint-code:
@@ -60,13 +60,13 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
-      - name: Use Node.js ${{ env.NV }}
+      - name: Set up Node.js ${{ env.NV }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ env.NV }}
       - name: Install dependencies
         run: npm install
-      - name: Run lint
+      - name: Run the script
         run: npm run lint-ci
 
   build:
@@ -76,7 +76,7 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
-      - name: Use Node.js ${{ env.NV }}
+      - name: Set up Node.js ${{ env.NV }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ env.NV }}
