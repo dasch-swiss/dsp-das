@@ -1,4 +1,6 @@
 name: CI
+env:
+  NV: 12.x  # node version
 
 on:
   push:
@@ -6,22 +8,6 @@ on:
     types: [published]
 
 jobs:
-  build:
-    name: Build the app
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install dependencies
-        run: npm install
-      - name: Build app in prod mode
-        run: npm run build-prod
 
   find-ignored-tests:
     name: Find ignored tests
@@ -34,18 +20,17 @@ jobs:
     name: Run unit tests
     needs: [find-ignored-tests]
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ env.NV }}
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NV }}
       - name: Install dependencies
         run: npm install
-      - run: npm run test-ci
+      - name: Run tests
+        run: npm run test-ci
         env:
           TZ: Europe/Zurich
 
@@ -53,28 +38,50 @@ jobs:
     name: Run e2e tests
     needs: [find-ignored-tests]
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ env.NV }}
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NV }}
       - name: Install dependencies
         run: npm install
       - name: Webdriver update
-        run: |
-          npm run webdriver-update
-          npm run test-e2e-protractor
+        run: npm run webdriver-update
+      - name: Run tests
+        run: npm run test-e2e-protractor
 
   lint-code:
     name: Run lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: npm run lint-ci
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ env.NV }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NV }}
+      - name: Install dependencies
+        run: npm install
+      - name: Run lint
+        run: npm run lint-ci
+
+  build:
+    name: Build the app
+    needs: [lint-code]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ env.NV }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NV }}
+      - name: Install dependencies
+        run: npm install
+      - name: Build app in prod mode
+        run: npm run build-prod
 
   release-please:
     name: Prepare next release
