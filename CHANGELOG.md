@@ -1,5 +1,22 @@
 # Changelog
 
+## [5.4.0](https://www.github.com/dasch-swiss/dsp-app/compare/v5.3.0...v5.4.0) (2021-09-01)
+
+
+### Enhancements
+
+* **resource:** display incoming links (DSP-1846) ([#507](https://www.github.com/dasch-swiss/dsp-app/issues/507)) ([9c3abce](https://www.github.com/dasch-swiss/dsp-app/commit/9c3abce7a01a509d041cbd569d603ab52c931dda))
+
+
+### Maintenance
+
+* **action:** migrate action module (DSP-1852) ([#509](https://www.github.com/dasch-swiss/dsp-app/issues/509)) ([725c45e](https://www.github.com/dasch-swiss/dsp-app/commit/725c45eef3e56de5f3cbe1be4117b83ffa29ea0f))
+* **core:** migrate core module from UI-lib (DSP-1853) ([#505](https://www.github.com/dasch-swiss/dsp-app/issues/505)) ([ea1cd55](https://www.github.com/dasch-swiss/dsp-app/commit/ea1cd55c1a0946915fd34278ff7fc10d3cc966d2))
+* **deps:** bump dsp-ui to latest ([#502](https://www.github.com/dasch-swiss/dsp-app/issues/502)) ([5d79065](https://www.github.com/dasch-swiss/dsp-app/commit/5d790653243f8afd0fb8591658706d84e6294f9f))
+* **project:** handle mandatory keyword field (DSP-1829) ([#503](https://www.github.com/dasch-swiss/dsp-app/issues/503)) ([35f6e7b](https://www.github.com/dasch-swiss/dsp-app/commit/35f6e7b31c5c6bd25deb0751810cb5ac66809204))
+* **resource:** migrate viewer from UI-lib (DSP-1850) ([#504](https://www.github.com/dasch-swiss/dsp-app/issues/504)) ([b742a98](https://www.github.com/dasch-swiss/dsp-app/commit/b742a987e2293bdc18bcf14e1b1174ee1f5c8180))
+* **search:** migrate search module (DSP-1851) ([#510](https://www.github.com/dasch-swiss/dsp-app/issues/510)) ([fc7ea5c](https://www.github.com/dasch-swiss/dsp-app/commit/fc7ea5c5f1b6b225c20e41cbd3273aa8a1acc4d0))
+
 ## [5.3.0](https://www.github.com/dasch-swiss/dsp-app/compare/v5.2.1...v5.3.0) (2021-08-12)
 
 
