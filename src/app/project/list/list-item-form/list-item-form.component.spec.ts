@@ -10,13 +10,11 @@ import { MatDialogHarness } from '@angular/material/dialog/testing';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ApiResponseData, DeleteListNodeResponse, ListsEndpointAdmin, StringLiteral } from '@dasch-swiss/dsp-js';
-import {
-    DspActionModule,
-    DspApiConnectionToken
-} from '@dasch-swiss/dsp-ui';
+import { DspActionModule } from '@dasch-swiss/dsp-ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogHeaderComponent } from 'src/app/main/dialog/dialog-header/dialog-header.component';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ListItemFormComponent, ListNodeOperation } from './list-item-form.component';

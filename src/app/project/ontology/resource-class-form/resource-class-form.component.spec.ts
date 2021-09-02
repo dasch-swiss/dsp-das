@@ -13,15 +13,11 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection, MockOntology, ReadOntology } from '@dasch-swiss/dsp-js';
-import {
-    AppInitService,
-    DspActionModule,
-    DspApiConfigToken,
-    DspApiConnectionToken
-} from '@dasch-swiss/dsp-ui';
+import { AppInitService, DspActionModule } from '@dasch-swiss/dsp-ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
+import { DspApiConfigToken, DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';

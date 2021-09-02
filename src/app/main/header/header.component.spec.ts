@@ -8,18 +8,12 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import {
-    AppInitService,
-    DspActionModule,
-    DspApiConfigToken,
-    DspApiConnectionToken,
-    DspCoreModule,
-    DspSearchModule
-} from '@dasch-swiss/dsp-ui';
+import { AppInitService, DspActionModule, DspCoreModule, DspSearchModule } from '@dasch-swiss/dsp-ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { ComponentCommunicationEventService, EmitEvent, Events } from 'src/app/main/services/component-communication-event.service';
 import { UserMenuComponent } from 'src/app/user/user-menu/user-menu.component';
 import { TestConfig } from 'test.config';
+import { DspApiConfigToken, DspApiConnectionToken } from '../declarations/dsp-api-tokens';
 import { SelectLanguageComponent } from '../select-language/select-language.component';
 import { HeaderComponent } from './header.component';
 
