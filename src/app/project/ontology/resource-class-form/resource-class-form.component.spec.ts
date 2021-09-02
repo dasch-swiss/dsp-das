@@ -34,7 +34,7 @@ import { ResourceClassFormComponent } from './resource-class-form.component';
 })
 class TestHostResourceClassFormComponent { }
 
-fdescribe('ResourceClassFormComponent', () => {
+describe('ResourceClassFormComponent', () => {
     let component: ResourceClassFormComponent;
     let fixture: ComponentFixture<ResourceClassFormComponent>;
 
