@@ -29,13 +29,13 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterVie
     @Input() selectedResourceClass?: ResourceClassDefinition;
 
     // optional input to provide the component with a pre-chosen label
-    @Input() chosenResourceLabel?: string;
+    // @Input() chosenResourceLabel?: string;
 
     @Output() resourceClassSelected = new EventEmitter<string>();
 
-    @Output() resourceLabel = new EventEmitter<string>();
+    // @Output() resourceLabel = new EventEmitter<string>();
 
-    label: string;
+    // label: string;
 
     form: FormGroup;
 
@@ -43,7 +43,7 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterVie
 
     resourceChangesSubscription: Subscription;
 
-    labelChangesSubscription: Subscription;
+    // labelChangesSubscription: Subscription;
 
     constructor(@Inject(FormBuilder) private _fb: FormBuilder) {}
 
@@ -52,7 +52,7 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterVie
         // build a form for the named graph selection
         this.form = this._fb.group({
             resources: [null, Validators.required],
-            label: [null, [Validators.required, Validators.pattern(this.checkPattern)]]
+            // label: [null, [Validators.required, Validators.pattern(this.checkPattern)]]
         });
 
         // emit Iri of the resource when selected
@@ -63,11 +63,11 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterVie
         });
 
         // emit label of the resource any time it is changed
-        this.labelChangesSubscription = this.form.controls.label.valueChanges.subscribe((data) => {
-            this.resourceLabel.emit(data);
-            this.formGroup.removeControl('resources');
-            this.formGroup.addControl('resources', this.form);
-        });
+        // this.labelChangesSubscription = this.form.controls.label.valueChanges.subscribe((data) => {
+        //     // this.resourceLabel.emit(data);
+        //     this.formGroup.removeControl('resources');
+        //     this.formGroup.addControl('resources', this.form);
+        // });
 
         resolvedPromise.then(() => {
             // add form to the parent form group
@@ -80,9 +80,9 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterVie
         }
 
         // check if there is a pre-chosen label, if so, set the value of the form control to this value
-        if (this.chosenResourceLabel) {
-            this.form.controls.label.setValue(this.chosenResourceLabel);
-        }
+        // if (this.chosenResourceLabel) {
+        //     this.form.controls.label.setValue(this.chosenResourceLabel);
+        // }
 
     }
 
@@ -101,9 +101,9 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterVie
             this.resourceChangesSubscription.unsubscribe();
         }
 
-        if (this.labelChangesSubscription !== undefined) {
-            this.labelChangesSubscription.unsubscribe();
-        }
+        // if (this.labelChangesSubscription !== undefined) {
+        //     this.labelChangesSubscription.unsubscribe();
+        // }
     }
 
 }

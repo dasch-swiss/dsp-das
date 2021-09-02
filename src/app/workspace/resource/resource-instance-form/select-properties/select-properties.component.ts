@@ -9,7 +9,7 @@ import {
     ResourceClassDefinition,
     ResourcePropertyDefinition
 } from '@dasch-swiss/dsp-js';
-import { ValueService } from '@dasch-swiss/dsp-ui';
+import { ValueService } from '../../services/value.service';
 import { SwitchPropertiesComponent } from './switch-properties/switch-properties.component';
 
 @Component({
@@ -66,7 +66,6 @@ export class SelectPropertiesComponent implements OnInit {
 
         this.parentResource.entityInfo = this.ontologyInfo;
     }
-
 
     /**
      * given a resource property, check if an add button should be displayed under the property values

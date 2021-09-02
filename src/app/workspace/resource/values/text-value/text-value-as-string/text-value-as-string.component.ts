@@ -17,6 +17,8 @@ export class TextValueAsStringComponent extends BaseValueDirective implements On
 
     @Input() displayValue?: ReadTextValueAsString;
 
+    @Input() commentDisabled?: boolean;
+
     valueFormControl: FormControl;
     commentFormControl: FormControl;
 
