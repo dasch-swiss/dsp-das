@@ -157,7 +157,15 @@ class MockSelectResourceClassComponent implements OnInit {
  * mock select-properties component to use in tests.
  */
 @Component({
-    selector: 'app-select-properties'
+    selector: 'app-select-properties',
+    template: `
+        <app-text-value-as-string #createVal
+            [mode]="'create'"
+            [commentDisabled]="true"
+            [valueRequiredValidator]="true"
+            [parentForm]="parentForm"
+            [formName]="'label'">
+        </app-text-value-as-string>`
 })
 class MockSelectPropertiesComponent {
     @ViewChildren('switchProp') switchPropertiesComponent: QueryList<SwitchPropertiesComponent>;
