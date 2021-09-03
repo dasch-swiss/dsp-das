@@ -82,6 +82,7 @@ class TestHostComponent implements OnInit {
 class MockSelectProjectComponent implements OnInit {
     @Input() formGroup: FormGroup;
     @Input() usersProjects: StoredProject[];
+    @Input() selectedProject?: string;
     @Output() projectSelected = new EventEmitter<string>();
 
     form: FormGroup;
@@ -109,6 +110,7 @@ class MockSelectProjectComponent implements OnInit {
 class MockSelectOntologyComponent implements OnInit {
     @Input() formGroup: FormGroup;
     @Input() ontologiesMetadata: OntologiesMetadata;
+    @Input() selectedOntology?: string;
     @Output() ontologySelected = new EventEmitter<string>();
 
     form: FormGroup;
@@ -136,6 +138,7 @@ class MockSelectOntologyComponent implements OnInit {
 class MockSelectResourceClassComponent implements OnInit {
     @Input() formGroup: FormGroup;
     @Input() resourceClassDefinitions: ResourceClassDefinition[];
+    @Input() selectedResourceClass?: string;
 
     form: FormGroup;
 
@@ -264,6 +267,10 @@ class MockCreateTextValueComponent implements OnInit {
     @Input() mode;
 
     @Input() displayValue;
+
+    @Input() commentDisabled?: boolean;
+
+    @Input() valueRequiredValidator: boolean;
 
     form: FormGroup;
 
