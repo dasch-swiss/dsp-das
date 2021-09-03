@@ -13,7 +13,7 @@ import {
     StringLiteral,
     UpdateListInfoRequest
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 
 @Component({

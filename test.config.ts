@@ -1,5 +1,5 @@
 import { KnoraApiConfig } from '@dasch-swiss/dsp-js';
-import { Session } from 'src/app/main/services/session.service';
+import { Session } from '@dasch-swiss/dsp-ui';
 
 export class TestConfig {
 

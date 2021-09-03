@@ -15,10 +15,8 @@ import {
     UpdateProjectRequest,
     UserResponse
 } from '@dasch-swiss/dsp-js';
-import { existingNamesValidator } from '@dasch-swiss/dsp-ui';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { DspApiConnectionToken, existingNamesValidator, SessionService } from '@dasch-swiss/dsp-ui';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
-import { SessionService } from 'src/app/main/services/session.service';
 import { CacheService } from '../../main/cache/cache.service';
 
 @Component({

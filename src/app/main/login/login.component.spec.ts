@@ -1,46 +1,27 @@
-import { Component } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { DspActionModule } from '@dasch-swiss/dsp-ui';
-import { AppInitService } from 'src/app/app-init.service';
+import {
+    AppInitService,
+    DspActionModule,
+    DspApiConfigToken,
+    DspApiConnectionToken,
+    DspCoreModule
+} from '@dasch-swiss/dsp-ui';
 import { TestConfig } from 'test.config';
-import { DspApiConfigToken, DspApiConnectionToken } from '../declarations/dsp-api-tokens';
 import { LoginComponent } from './login.component';
 
-/**
- * test host component to simulate parent component.
- */
-@Component({
-    template: '<app-login></app-login>'
-})
-class TestHostLoginComponent { }
-
-/**
- * test component to simulate child component.
- */
-@Component({
-    selector: 'app-login-form',
-    template: ''
-})
-class TestLoginFormComponent { }
-
 describe('LoginComponent', () => {
-    let testHostComponent: TestHostLoginComponent;
-    let testHostFixture: ComponentFixture<TestHostLoginComponent>;
-    let hostCompDe;
-    let loginComponentDe;
+    let component: LoginComponent;
+    let fixture: ComponentFixture<LoginComponent>;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                LoginComponent,
-                TestHostLoginComponent,
-                TestLoginFormComponent
-            ],
+            declarations: [LoginComponent],
             imports: [
                 DspActionModule,
+                DspCoreModule,
                 RouterTestingModule
             ],
             providers: [
@@ -58,23 +39,18 @@ describe('LoginComponent', () => {
     }));
 
     beforeEach(() => {
-        testHostFixture = TestBed.createComponent(TestHostLoginComponent);
-        testHostComponent = testHostFixture.componentInstance;
-        testHostFixture.detectChanges();
-
-        hostCompDe = testHostFixture.debugElement;
-        loginComponentDe = hostCompDe.query(By.directive(LoginComponent));
-
-        expect(testHostComponent).toBeTruthy();
+        fixture = TestBed.createComponent(LoginComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
     });
 
     it('should create', () => {
-        expect(testHostComponent).toBeTruthy();
+        expect(component).toBeTruthy();
     });
 
     it('should define the login form', () => {
-        const loginForm = testHostFixture.debugElement.query(By.css('app-login app-login-form'));
-        expect(loginForm).toBeTruthy();
+        const loginForm = fixture.debugElement.query(By.css('app-login dsp-login-form'));
+        expect(loginForm).toBeDefined();
     });
 
 });

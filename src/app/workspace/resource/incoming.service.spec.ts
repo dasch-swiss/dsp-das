@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
 import { IncomingService } from './incoming.service';
 
 describe('IncomingService', () => {

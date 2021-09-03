@@ -1,9 +1,9 @@
 <div class="no-shadow">
 
-    <app-progress-indicator *ngIf="loading"></app-progress-indicator>
+    <dsp-progress-indicator *ngIf="loading"></dsp-progress-indicator>
 
     <!-- success message after updating -->
-    <app-message *ngIf="success" [message]="successMessage" [short]="true"></app-message>
+    <dsp-message *ngIf="success" [message]="successMessage" [short]="true"></dsp-message>
 
     <!-- content -->
     <form *ngIf="!loading && project.status" [formGroup]="form" class="form-content project-data"
@@ -38,10 +38,10 @@
         </mat-form-field>
 
         <!-- description -->
-        <app-string-literal-input placeholder="{{'appLabels.form.project.general.description' | translate}} *"
+        <dsp-string-literal-input placeholder="{{'appLabels.form.project.general.description' | translate}} *"
             [disabled]="!project.status" [textarea]="true" [value]="project.description"
             (dataChanged)="getStringLiteral($event)">
-        </app-string-literal-input>
+        </dsp-string-literal-input>
         <mat-hint class="string-literal-error" *ngIf="formErrors.description">
             {{ formErrors.description }}
         </mat-hint>

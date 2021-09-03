@@ -3,9 +3,9 @@
 
     <as-split direction="horizontal">
         <as-split-area [size]="40">
-            <app-list-view [search]="searchParams" [displayViewSwitch]="false" [withMultipleSelection]="true"
+            <dsp-list-view [search]="searchParams" [displayViewSwitch]="false" [withMultipleSelection]="true"
             (selectedResources)="openSelectedResources($event)">
-            </app-list-view>
+            </dsp-list-view>
         </as-split-area>
         <as-split-area [size]="60" *ngIf="selectedResources?.count > 0">
             <div [ngSwitch]="viewMode">

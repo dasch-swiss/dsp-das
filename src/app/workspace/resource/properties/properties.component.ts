@@ -28,7 +28,9 @@ import {
 import {
     AddedEventValue,
     DeletedEventValue,
+    DspApiConnectionToken,
     Events,
+    NotificationService,
     UpdatedEventValues,
     UserService,
     ValueOperationEventService,
@@ -41,8 +43,6 @@ import { DspResource } from '../dsp-resource';
 import { RepresentationConstants } from '../representation/file-representation';
 import { IncomingService } from '../incoming.service';
 import { PageEvent } from '@angular/material/paginator';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { NotificationService } from 'src/app/main/services/notification.service';
 
 // object of property information from ontology class, properties and property values
 export interface PropertyInfoValues {
