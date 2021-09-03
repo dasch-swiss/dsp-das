@@ -6,6 +6,7 @@ import {
     Constants,
     CreateFileValue,
     CreateResource,
+    CreateTextValueAsString,
     CreateValue,
     KnoraApiConnection,
     OntologiesMetadata, ReadOntology,
@@ -158,7 +159,11 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
             const createResource = new CreateResource();
 
-            createResource.label = this.propertiesParentForm.controls['label'].value.value;
+            // createResource.label = this.propertiesParentForm.controls['label'].value.value;
+
+            const resLabelVal = <CreateTextValueAsString>this.selectPropertiesComponent.createValueComponent.getNewValue();
+
+            createResource.label = resLabelVal.text;
 
             createResource.type = this.selectedResourceClass.id;
 
@@ -296,7 +301,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                 // if there is already a select-resource-class component (i.e. the user clicked the back button), reset the resource & label
                 if (this.selectResourceClassComponent) {
                     this.selectResourceClassComponent.form.controls.resources.setValue(null);
-                    this.selectResourceClassComponent.form.controls.label.setValue(null);
 
                     // since the component already exists, we need to add the control back here as it is normally done in the OnInit of the component
                     this.selectResourceForm.addControl('resources', this.selectResourceClassComponent.form);

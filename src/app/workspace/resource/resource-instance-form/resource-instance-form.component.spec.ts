@@ -17,6 +17,7 @@ import {
     ApiResponseData,
     CreateIntValue,
     CreateResource,
+    CreateTextValueAsString,
     CreateValue,
     MockOntology,
     MockProjects,
@@ -48,6 +49,7 @@ import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
+import { TextValueAsStringComponent } from '../values/text-value/text-value-as-string/text-value-as-string.component';
 import { ResourceInstanceFormComponent } from './resource-instance-form.component';
 import { SwitchPropertiesComponent } from './select-properties/switch-properties/switch-properties.component';
 
@@ -135,15 +137,13 @@ class MockSelectResourceClassComponent implements OnInit {
     @Input() formGroup: FormGroup;
     @Input() resourceClassDefinitions: ResourceClassDefinition[];
 
-    label: string;
     form: FormGroup;
 
     constructor(@Inject(FormBuilder) private _fb: FormBuilder) { }
 
     ngOnInit() {
         this.form = this._fb.group({
-            resources: [null, Validators.required],
-            label: [null, Validators.required]
+            resources: [null, Validators.required]
         });
 
         resolvedPromise.then(() => {
@@ -161,6 +161,9 @@ class MockSelectResourceClassComponent implements OnInit {
 })
 class MockSelectPropertiesComponent {
     @ViewChildren('switchProp') switchPropertiesComponent: QueryList<SwitchPropertiesComponent>;
+
+    // input for resource's label
+    @ViewChild('createVal') createValueComponent: BaseValueDirective;
 
     @Input() properties: ResourcePropertyDefinition[];
 
@@ -236,7 +239,50 @@ class MockCreateIntValueComponent implements OnInit {
     updateCommentVisibility(): void { }
 }
 
-describe('ResourceInstanceFormComponent', () => {
+/**
+ * mock value component to use in tests.
+ */
+@Component({
+    selector: 'app-text-value-as-string'
+})
+class MockCreateTextValueComponent implements OnInit {
+
+    @ViewChild('createVal') createValueComponent: TextValueAsStringComponent;
+
+    @Input() parentForm: FormGroup;
+
+    @Input() formName: string;
+
+    @Input() mode;
+
+    @Input() displayValue;
+
+    form: FormGroup;
+
+    valueFormControl: FormControl;
+
+    constructor(@Inject(FormBuilder) private _fb: FormBuilder) { }
+
+    ngOnInit(): void {
+        this.valueFormControl = new FormControl(null, [Validators.required]);
+
+        this.form = this._fb.group({
+            label: this.valueFormControl
+        });
+    }
+
+    getNewValue(): CreateValue {
+        const createTextVal = new CreateTextValueAsString();
+
+        createTextVal.text = 'My Label';
+
+        return createTextVal;
+    }
+
+    updateCommentVisibility(): void { }
+}
+
+fdescribe('ResourceInstanceFormComponent', () => {
     let testHostComponent: TestHostComponent;
     let testHostFixture: ComponentFixture<TestHostComponent>;
     let resourceInstanceFormComponentDe: DebugElement;
@@ -269,7 +315,8 @@ describe('ResourceInstanceFormComponent', () => {
                 MockSelectResourceClassComponent,
                 MockSelectPropertiesComponent,
                 MockSwitchPropertiesComponent,
-                MockCreateIntValueComponent
+                MockCreateIntValueComponent,
+                MockCreateTextValueComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -467,11 +514,9 @@ describe('ResourceInstanceFormComponent', () => {
         expect(selectResourceClassComp).toBeTruthy();
 
         (selectResourceClassComp.componentInstance as MockSelectResourceClassComponent).form.controls.resources.setValue('http://0.0.0.0:3333/ontology/0001/anything/v2#Thing');
-        (selectResourceClassComp.componentInstance as MockSelectResourceClassComponent).form.controls.label.setValue('My Label');
+        // (selectResourceClassComp.componentInstance as MockSelectResourceClassComponent).form.controls.label.setValue('My Label');
 
         testHostComponent.resourceInstanceFormComponent.selectedResourceClass = (selectResourceClassComp.componentInstance as MockSelectResourceClassComponent).resourceClassDefinitions[1];
-
-        testHostComponent.resourceInstanceFormComponent.resourceLabel = 'My Label';
 
         testHostFixture.detectChanges();
 
@@ -485,6 +530,7 @@ describe('ResourceInstanceFormComponent', () => {
 
         expect(selectPropertiesComp).toBeTruthy();
 
+        // expect(testHostComponent.resourceInstanceFormComponent.resourceLabel).toEqual('Thing (Object without representation)');
     });
 
     it('should submit the form', () => {
@@ -509,7 +555,7 @@ describe('ResourceInstanceFormComponent', () => {
 
         testHostComponent.resourceInstanceFormComponent.selectedResourceClass = resourceClasses[1];
 
-        testHostComponent.resourceInstanceFormComponent.resourceLabel = 'My Label';
+        // testHostComponent.resourceInstanceFormComponent.resourceLabel = 'My Label';
 
         testHostComponent.resourceInstanceFormComponent.showNextStepForm = false;
 
@@ -525,6 +571,9 @@ describe('ResourceInstanceFormComponent', () => {
         const selectPropertiesComp = resourceInstanceFormComponentDe.query(By.directive(MockSelectPropertiesComponent));
 
         expect(selectPropertiesComp).toBeTruthy();
+
+        const label = new CreateTextValueAsString();
+        label.text = 'My Label';
 
         const props = {};
         const createVal = new CreateIntValue();

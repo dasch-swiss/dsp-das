@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
     Cardinality,
@@ -9,6 +9,7 @@ import {
     ResourceClassDefinition,
     ResourcePropertyDefinition
 } from '@dasch-swiss/dsp-js';
+import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
 import { ValueService } from '../../services/value.service';
 import { SwitchPropertiesComponent } from './switch-properties/switch-properties.component';
 
@@ -20,6 +21,8 @@ import { SwitchPropertiesComponent } from './switch-properties/switch-properties
 export class SelectPropertiesComponent implements OnInit {
 
     @ViewChildren('switchProp') switchPropertiesComponent: QueryList<SwitchPropertiesComponent>;
+
+    @ViewChild('createVal') createValueComponent: BaseValueDirective;
 
     @Input() properties: ResourcePropertyDefinition[];
 

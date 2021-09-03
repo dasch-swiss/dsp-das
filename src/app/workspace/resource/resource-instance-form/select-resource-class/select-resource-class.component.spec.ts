@@ -130,20 +130,20 @@ describe('SelectResourceClassComponent', () => {
 
     });
 
-    it('should fill in the label correctly', () => {
+    // it('should fill in the label correctly', () => {
 
-        const labelInput = testHostFixture.debugElement.query(By.css('input.label'));
+    //     const labelInput = testHostFixture.debugElement.query(By.css('input.label'));
 
-        const el = labelInput.nativeElement;
+    //     const el = labelInput.nativeElement;
 
-        expect(el.value).toEqual('');
+    //     expect(el.value).toEqual('');
 
-        el.value = 'resource label';
+    //     el.value = 'resource label';
 
-        testHostFixture.detectChanges();
+    //     testHostFixture.detectChanges();
 
-        expect(el.value).toEqual('resource label');
-    });
+    //     expect(el.value).toEqual('resource label');
+    // });
 
     it('should emit the Iri of a selected resource class', async () => {
 
@@ -163,17 +163,17 @@ describe('SelectResourceClassComponent', () => {
 
     });
 
-    it('should emit the label of the resource class', async () => {
+    // it('should emit the label of the resource class', async () => {
 
-        const inputElement = await loader.getHarness(MatInputHarness.with({ selector: 'input.label' }));
+    //     const inputElement = await loader.getHarness(MatInputHarness.with({ selector: 'input.label' }));
 
-        expect(await inputElement.getValue()).toEqual('');
-        expect(testHostComponent.resLabel).toBeUndefined();
+    //     expect(await inputElement.getValue()).toEqual('');
+    //     expect(testHostComponent.resLabel).toBeUndefined();
 
-        await inputElement.setValue('resource label');
+    //     await inputElement.setValue('resource label');
 
-        expect(testHostComponent.resLabel).toEqual('resource label');
-    });
+    //     expect(testHostComponent.resLabel).toEqual('resource label');
+    // });
 
     it('should unsubscribe from from changes on destruction', () => {
 
