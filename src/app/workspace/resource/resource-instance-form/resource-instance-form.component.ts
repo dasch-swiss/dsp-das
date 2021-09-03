@@ -6,6 +6,7 @@ import {
     Constants,
     CreateFileValue,
     CreateResource,
+    CreateTextValueAsString,
     CreateValue,
     KnoraApiConnection,
     OntologiesMetadata, ReadOntology,
@@ -156,7 +157,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
             const createResource = new CreateResource();
 
-            createResource.label = this.propertiesParentForm.controls['label'].value.value;
+            const resLabelVal = <CreateTextValueAsString>this.selectPropertiesComponent.createValueComponent.getNewValue();
+
+            createResource.label = resLabelVal.text;
 
             createResource.type = this.selectedResourceClass.id;
 

@@ -33,17 +33,11 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterVie
 
     @Output() resourceClassSelected = new EventEmitter<string>();
 
-    // @Output() resourceLabel = new EventEmitter<string>();
-
-    // label: string;
-
     form: FormGroup;
 
     checkPattern = '^\d*[a-zA-Z0-9\u00C0-\u024F\u1E00-\u1EFF_]+( [a-zA-Z0-9\u00C0-\u024F\u1E00-\u1EFF@_.]+)*$';
 
     resourceChangesSubscription: Subscription;
-
-    // labelChangesSubscription: Subscription;
 
     constructor(@Inject(FormBuilder) private _fb: FormBuilder) {}
 
@@ -62,13 +56,6 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterVie
             this.formGroup.addControl('resources', this.form);
         });
 
-        // emit label of the resource any time it is changed
-        // this.labelChangesSubscription = this.form.controls.label.valueChanges.subscribe((data) => {
-        //     // this.resourceLabel.emit(data);
-        //     this.formGroup.removeControl('resources');
-        //     this.formGroup.addControl('resources', this.form);
-        // });
-
         resolvedPromise.then(() => {
             // add form to the parent form group
             this.formGroup.addControl('resources', this.form);
@@ -78,11 +65,6 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterVie
         if (this.selectedResourceClass) {
             this.form.controls.resources.setValue(this.selectedResourceClass.id);
         }
-
-        // check if there is a pre-chosen label, if so, set the value of the form control to this value
-        // if (this.chosenResourceLabel) {
-        //     this.form.controls.label.setValue(this.chosenResourceLabel);
-        // }
 
     }
 
@@ -101,9 +83,6 @@ export class SelectResourceClassComponent implements OnInit, OnDestroy, AfterVie
             this.resourceChangesSubscription.unsubscribe();
         }
 
-        // if (this.labelChangesSubscription !== undefined) {
-        //     this.labelChangesSubscription.unsubscribe();
-        // }
     }
 
 }
