@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
 import {
     ApiResponseData,
     ApiResponseError,
@@ -25,24 +26,23 @@ import {
     UpdateResourceMetadataResponse,
     UserResponse
 } from '@dasch-swiss/dsp-js';
+import { Subscription } from 'rxjs';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { ConfirmationWithComment, DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { NotificationService } from 'src/app/main/services/notification.service';
+import { DspResource } from '../dsp-resource';
+import { IncomingService } from '../incoming.service';
+import { RepresentationConstants } from '../representation/file-representation';
+import { UserService } from '../services/user.service';
 import {
     AddedEventValue,
     DeletedEventValue,
     Events,
     UpdatedEventValues,
-    UserService,
-    ValueOperationEventService,
-    ValueService
-} from '@dasch-swiss/dsp-ui';
-import { Subscription } from 'rxjs';
-import { ConfirmationWithComment, DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
-import { DspResource } from '../dsp-resource';
-import { RepresentationConstants } from '../representation/file-representation';
-import { IncomingService } from '../incoming.service';
-import { PageEvent } from '@angular/material/paginator';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { NotificationService } from 'src/app/main/services/notification.service';
+    ValueOperationEventService
+} from '../services/value-operation-event.service';
+import { ValueService } from '../services/value.service';
 
 // object of property information from ontology class, properties and property values
 export interface PropertyInfoValues {
