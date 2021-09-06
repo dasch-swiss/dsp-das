@@ -24,7 +24,7 @@
                         [propertyDef]="$any(parentResource.entityInfo.properties[displayValue.property])"></app-list-value>
             <span *ngSwitchDefault>{{displayValue.strval}}</span>
         </span>
-        <div class="action-bubble" *ngIf="!editModeActive" [@simpleFadeAnimation]="'in'">
+        <div class="action-bubble" *ngIf="showActionBubble && !editModeActive" [@simpleFadeAnimation]="'in'">
             <div class="button-container">
                 <button mat-button
                         class="edit"
