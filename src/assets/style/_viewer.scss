@@ -134,6 +134,14 @@
   grid-row-end: auto;
   grid-column-start: 2;
   grid-column-end: 3;
+  display: inline-flex;
+}
+
+.value-action {
+  .material-icons,
+  .mat-icon {
+    font-size: 18px;
+  }
 }
 
 .mat-error {
@@ -141,32 +149,6 @@
   grid-row-end: auto;
   grid-column-start: 3;
   grid-column-end: end;
-}
-
-button.save,
-button.cancel {
-  cursor: pointer;
-  border: none;
-  padding: 0em;
-  margin-left: 1em;
-  outline: none;
-  background-color: transparent;
-  color: #000000;
-}
-
-button.save:disabled {
-  color: #adadad;
-  cursor: default;
-}
-
-button.save .material-icons,
-button.cancel .material-icons {
-  font-size: 18px;
-}
-
-button.save .mat-icon,
-button.cancel .mat-icon {
-  font-size: 18px;
 }
 
 .deletion-dialog .title {
@@ -195,7 +177,6 @@ button.cancel .mat-icon {
 .deletion-dialog-message .deletion-comment {
   min-width: 80%;
 }
-
 
 .ck-content code {
   font-family: monospace !important;
