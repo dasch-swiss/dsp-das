@@ -435,6 +435,18 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
+     * given a resource property, check if its cardinality allows a value to be deleted
+     *
+     * @param prop the resource property
+     */
+    deleteValueIsAllowed(prop: PropertyInfoValues): boolean {
+        const isAllowed = CardinalityUtil.deleteValueForPropertyAllowed(
+            prop.propDef.id, prop.values.length, this.resource.res.entityInfo.classes[this.resource.res.type]);
+
+        return isAllowed;
+    }
+
+    /**
      * updates the UI in the event of an existing value being deleted
      *
      * @param valueToDelete the value to remove from the values array of the filtered property

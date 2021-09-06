@@ -122,6 +122,7 @@
                             [parentResource]="resource.res"
                             [displayValue]="val"
                             [propArray]="resource.resProps"
+                            [canDelete]="deleteValueIsAllowed(prop)"
                             (referredResourceClicked)="openResource($event)"
                             (referredResourceHovered)="previewResource($event)">
                         </app-display-edit>
