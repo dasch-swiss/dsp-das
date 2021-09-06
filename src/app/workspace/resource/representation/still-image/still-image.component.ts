@@ -10,8 +10,8 @@ import {
     SimpleChanges
 } from '@angular/core';
 import {
-    Constants,
-    CreateResource, KnoraApiConnection,
+    Constants, CreateColorValue, CreateGeomValue, CreateLinkValue,
+    CreateResource, CreateTextValueAsString, KnoraApiConnection,
     Point2D,
     ReadFileValue,
     ReadGeomValue,
@@ -222,10 +222,10 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         );
 
         dialogRef.afterClosed().subscribe((data) => {
-            this.uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment);
+            this.uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
         });
     }
-    uploadRegion(startPoint, endPoint, imageSize, color, comment){
+    uploadRegion(startPoint, endPoint, imageSize, color, comment, label){
         const x1 = Math.max(Math.min(startPoint.x, imageSize.x), 0)/imageSize.x;
         const x2 = Math.max(Math.min(endPoint.x, imageSize.x), 0)/imageSize.x;
         const y1 = Math.max(Math.min(startPoint.y, imageSize.y), 0)/imageSize.y;
@@ -233,6 +233,35 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         const geomStr = '{"status":"active","lineColor":"' + color + '","lineWidth":2,"points":[{"x":' +  x1.toString() +
             ',"y":' + y1.toString() + '},{"x":' + x2.toString() + '"y":' + y2.toString()+ '}],"type":"rectangle"}';
         const createResource = new CreateResource();
+        createResource.label = label;
+        createResource.type = Constants.KnoraApiV2 + Constants.HashDelimiter + 'Region';
+        const geomVal = new CreateGeomValue();
+        geomVal.type = Constants.GeomValue;
+        geomVal.geometryString = geomStr;
+        const colorVal = new CreateColorValue();
+        colorVal.type = Constants.ColorValue;
+        colorVal.color = color;
+        const linkVal = new CreateLinkValue();
+        linkVal.type = Constants.LinkValue;
+        linkVal.linkedResourceIri = this.resourceIri;
+        if (comment) {
+            const commentVal = new CreateTextValueAsString();
+            commentVal.type = Constants.TextValue;
+            commentVal.text = comment;
+            createResource.properties = {
+                [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasComment']: [commentVal],
+                [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasColor'] : [colorVal],
+                [Constants.KnoraApiV2 + Constants.HashDelimiter + 'isRegionOf'] : [linkVal],
+                [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasGeometry'] : [geomVal]
+            };
+        } else {
+            createResource.properties = {
+                [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasColor'] : [colorVal],
+                [Constants.KnoraApiV2 + Constants.HashDelimiter + 'isRegionOf'] : [linkVal],
+                [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasGeometry'] : [geomVal],
+            };
+        }
+
         this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition('http://api.knora.org/ontology/knora-api/v2#Region').subscribe(
             (onto: ResourceClassAndPropertyDefinitions) => {
                 console.log(onto);
@@ -242,8 +271,6 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
     private _addRegionDrawer(){
         this._mouseTracker = new OpenSeadragon.MouseTracker({
-
-            $
             element: this._viewer.canvas,
             pressHandler: (event) => {
                 if (!this._regionDrawMode){

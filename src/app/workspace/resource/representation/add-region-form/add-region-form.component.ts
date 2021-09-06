@@ -17,7 +17,8 @@ export class AddRegionFormComponent implements OnInit {
     ngOnInit(): void {
         this.regionForm = this._fb.group({
             color: ['#ff3333', [Validators.required, Validators.pattern(this.colorPattern)]],
-            comment: [null]
+            comment: [null],
+            label: [null]
         });
     }
     submit(): void {
