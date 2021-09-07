@@ -208,14 +208,21 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         this._regionDrawMode = true;
         this._viewer.setMouseNavEnabled(false);
     }
-    openDialog(startPoint, endPoint, imageSize){
+
+    /**
+     * Opens the dialog to enter further properties for the region after it has been drawn and calls the function to upload the region after confirmation
+     * @param startPoint the start point of the drawing
+     * @param endPoint the end point of the drawing
+     * @param imageSize the image size for calculations
+     */
+    private _openRegionDialog(startPoint, endPoint, imageSize, overlay): void{
         const dialogConfig: MatDialogConfig = {
             width: '840px',
             maxHeight: '80vh',
             position: {
                 top: '112px'
             },
-            data: { mode: 'add_region', title: 'Create a region', subtitle: 'Add further properties', id: this.resourceIri },
+            data: { mode: 'addRegion', title: 'Create a region', subtitle: 'Add further properties', id: this.resourceIri },
             disableClose: true
         };
         const dialogRef = this._dialog.open(
@@ -224,14 +231,23 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         );
 
         dialogRef.afterClosed().subscribe((data) => {
-            if (data) {
-                this.uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
+            if (data) { // data is null if the cancel button was clicked
+                this._uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label); //Maybe we should remove the artificial overlay (drawing) also on success and refresh the regions from the api.
+            } else {
+                this._viewer.removeOverlay(overlay);
             }
-            /* TODO: Remove drawn region from image if cancelled */
-
         });
     }
-    uploadRegion(startPoint, endPoint, imageSize, color, comment, label){
+    /**
+     * 
+     * @param startPoint the start point of the drawing
+     * @param endPoint the end point of the drawing
+     * @param imageSize the image size for calculations
+     * @param color the value for the color entered in the form
+     * @param comment the value for the comment entered in the form
+     * @param label the value for the label entered in the form
+     */
+    private _uploadRegion(startPoint, endPoint, imageSize, color, comment, label){
         const x1 = Math.max(Math.min(startPoint.x, imageSize.x), 0)/imageSize.x;
         const x2 = Math.max(Math.min(endPoint.x, imageSize.x), 0)/imageSize.x;
         const y1 = Math.max(Math.min(startPoint.y, imageSize.y), 0)/imageSize.y;
@@ -251,29 +267,20 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         const linkVal = new CreateLinkValue();
         linkVal.type = Constants.LinkValue;
         linkVal.linkedResourceIri = this.resourceIri;
-        if (comment) {
-            const commentVal = new CreateTextValueAsString();
-            commentVal.type = Constants.TextValue;
-            commentVal.text = comment;
-            createResource.properties = {
-                [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasComment']: [commentVal],
-                [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasColor'] : [colorVal],
-                [Constants.KnoraApiV2 + Constants.HashDelimiter + 'isRegionOfValue'] : [linkVal],
-                [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasGeometry'] : [geomVal]
-            };
-        } else {
-            createResource.properties = {
-                [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasColor'] : [colorVal],
-                [Constants.KnoraApiV2 + Constants.HashDelimiter + 'isRegionOf'] : [linkVal],
-                [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasGeometry'] : [geomVal],
-            };
-        }
+        const commentVal = new CreateTextValueAsString();
+        commentVal.type = Constants.TextValue;
+        commentVal.text = comment;
 
-        console.log(createResource);
-
+        createResource.properties = {
+            [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasComment']: [commentVal],
+            [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasColor'] : [colorVal],
+            [Constants.KnoraApiV2 + Constants.HashDelimiter + 'isRegionOfValue'] : [linkVal],
+            [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasGeometry'] : [geomVal]
+        };
+        
         this._dspApiConnection.v2.res.createResource(createResource).subscribe(
             (res: ReadResource) => {
-                console.log(res);
+                //Should we add some confirmation message?
             },
             (error) => {
                 this._errorHandler.showMessage(error);
@@ -281,7 +288,9 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         );
     }
 
-
+    /**
+     * Set up function for the region drawer
+     */
     private _addRegionDrawer(){
         this._mouseTracker = new OpenSeadragon.MouseTracker({
             element: this._viewer.canvas,
@@ -319,10 +328,11 @@ export class StillImageComponent implements OnChanges, OnDestroy {
                     const imageSize =  this._viewer.world.getItemAt(0).getContentSize();
                     const startPoint  = this._viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.startPos);
                     const endPoint = this._viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.endPos);
+                    this._openRegionDialog(startPoint, endPoint, imageSize, this._regionDragInfo.overlayElement);
                     this._regionDragInfo = null;
                     this._regionDrawMode = false;
                     this._viewer.setMouseNavEnabled(true);
-                    this.openDialog(startPoint, endPoint, imageSize);
+                    
                 }
             }
         });

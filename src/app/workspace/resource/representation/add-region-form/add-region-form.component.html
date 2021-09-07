@@ -7,16 +7,19 @@
         <mat-label>Label</mat-label>
         <input matInput formControlName="label">
     </mat-form-field>
-    <!-- TODO: Colorpicker? -->
     <mat-form-field>
         <mat-label>Color</mat-label>
-        <input matInput formControlName="color">
+        <app-color-picker
+                #colorInput
+                [formControlName]="'color'"
+                class="value">
+            </app-color-picker>
     </mat-form-field>
     <mat-form-field>
         <mat-label>Is Region Of</mat-label>
         <input matInput disabled [value]="resourceIri">
     </mat-form-field>
-<!-- TODO: Further inputs would be status, lineColor and lineWidth if necessary -->
+<!-- Further inputs would be status, lineColor and lineWidth if we want to have these options-->
     <div class="form-panel large-field">
         <span>
             <button mat-button type="button" mat-dialog-close>
