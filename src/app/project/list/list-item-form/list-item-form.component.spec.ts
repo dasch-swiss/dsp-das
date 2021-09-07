@@ -8,17 +8,17 @@ import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialogHarness } from '@angular/material/dialog/testing';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ApiResponseData, DeleteListNodeResponse, ListsEndpointAdmin, StringLiteral } from '@dasch-swiss/dsp-js';
-import {
-    DspActionModule,
-    DspApiConnectionToken
-} from '@dasch-swiss/dsp-ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogHeaderComponent } from 'src/app/main/dialog/dialog-header/dialog-header.component';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { StringifyStringLiteralPipe } from 'src/app/main/pipes/string-transformation/stringify-string-literal.pipe';
+import { TruncatePipe } from 'src/app/main/pipes/string-transformation/truncate.pipe';
 import { ListItemFormComponent, ListNodeOperation } from './list-item-form.component';
 
 /**
@@ -82,14 +82,16 @@ describe('ListItemFormComponent', () => {
                 ListItemFormComponent,
                 TestHostComponent,
                 DialogComponent,
-                DialogHeaderComponent
+                DialogHeaderComponent,
+                StringifyStringLiteralPipe,
+                TruncatePipe
             ],
             imports: [
                 BrowserAnimationsModule,
-                DspActionModule,
                 MatIconModule,
                 MatDialogModule,
                 MatButtonModule,
+                MatSnackBarModule,
                 TranslateModule.forRoot()
             ],
             providers: [

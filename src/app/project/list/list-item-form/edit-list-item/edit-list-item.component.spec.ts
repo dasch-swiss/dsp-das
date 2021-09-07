@@ -1,12 +1,15 @@
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ApiResponseData, CreateChildNodeRequest, ListNodeInfoResponse, ListsEndpointAdmin, UpdateChildNodeRequest } from '@dasch-swiss/dsp-js';
-import { DspActionModule, DspApiConnectionToken, ProgressIndicatorComponent } from '@dasch-swiss/dsp-ui';
+import { ProgressIndicatorComponent } from '@dasch-swiss/dsp-ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { EditListItemComponent } from './edit-list-item.component';
 
 /**
@@ -76,7 +79,8 @@ describe('EditListItemComponent', () => {
             ],
             imports: [
                 BrowserAnimationsModule,
-                DspActionModule,
+                MatDialogModule,
+                MatSnackBarModule,
                 TranslateModule.forRoot()
             ],
             providers: [

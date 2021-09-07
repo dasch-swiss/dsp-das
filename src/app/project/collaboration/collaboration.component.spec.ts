@@ -3,23 +3,20 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import {
-    AppInitService,
-    DspActionModule,
-    DspApiConfigToken,
-    DspApiConnectionToken,
-    DspCoreModule
-} from '@dasch-swiss/dsp-ui';
+import { AppInitService } from '@dasch-swiss/dsp-ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
+import { DspApiConfigToken, DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { UsersListComponent } from 'src/app/system/users/users-list/users-list.component';
@@ -44,15 +41,15 @@ describe('CollaborationComponent', () => {
             ],
             imports: [
                 BrowserAnimationsModule,
-                DspActionModule,
-                DspCoreModule,
                 MatAutocompleteModule,
                 MatButtonModule,
                 MatChipsModule,
+                MatDialogModule,
                 MatIconModule,
                 MatInputModule,
                 MatMenuModule,
                 MatSelectModule,
+                MatSnackBarModule,
                 ReactiveFormsModule,
                 RouterTestingModule,
                 TranslateModule.forRoot()

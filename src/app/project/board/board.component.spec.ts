@@ -3,12 +3,14 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { AppInitService, DspActionModule, DspApiConfigToken, DspApiConnectionToken, DspCoreModule } from '@dasch-swiss/dsp-ui';
+import { AppInitService } from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
+import { DspApiConfigToken, DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
@@ -37,12 +39,11 @@ describe('BoardComponent', () => {
             ],
             imports: [
                 BrowserAnimationsModule,
-                DspActionModule,
-                DspCoreModule,
                 MatChipsModule,
                 MatDialogModule,
                 MatDividerModule,
                 MatIconModule,
+                MatSnackBarModule,
                 RouterTestingModule
             ],
             providers: [

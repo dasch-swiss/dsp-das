@@ -9,19 +9,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ApiResponseData, CanDoResponse, ListNodeInfo, ListsEndpointAdmin, ListsResponse, MockList, MockOntology, OntologiesEndpointV2, OntologiesMetadata, ReadOntology } from '@dasch-swiss/dsp-js';
-import {
-    DspActionModule, DspApiConnectionToken,
-    DspCoreModule
-} from '@dasch-swiss/dsp-ui';
+import { ApiResponseData, CanDoResponse, ListNodeInfo, ListsEndpointAdmin, ListsResponse, MockOntology, OntologiesEndpointV2, OntologiesMetadata, ReadOntology } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
 import { CacheService } from 'src/app/main/cache/cache.service';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
@@ -64,8 +62,6 @@ describe('OntologyComponent', () => {
             ],
             imports: [
                 BrowserAnimationsModule,
-                DspActionModule,
-                DspCoreModule,
                 HttpClientTestingModule,
                 MatCardModule,
                 MatDialogModule,
@@ -75,6 +71,7 @@ describe('OntologyComponent', () => {
                 MatMenuModule,
                 MatOptionModule,
                 MatSelectModule,
+                MatSnackBarModule,
                 MatToolbarModule,
                 MatTooltipModule,
                 ReactiveFormsModule,

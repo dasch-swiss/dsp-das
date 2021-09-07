@@ -15,8 +15,10 @@ import {
     UpdateProjectRequest,
     UserResponse
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, existingNamesValidator, SessionService } from '@dasch-swiss/dsp-ui';
+import { existingNamesValidator } from '@dasch-swiss/dsp-ui';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { SessionService } from 'src/app/main/services/session.service';
 import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
@@ -102,7 +104,8 @@ export class ProjectFormComponent implements OnInit {
         'shortname': '',
         'longname': '',
         'shortcode': '',
-        'description': ''
+        'description': '',
+        'keywords': ''
         // 'institution': ''
     };
 
@@ -127,6 +130,9 @@ export class ProjectFormComponent implements OnInit {
         'description': {
             'required': 'A description is required.',
             'maxlength': 'Description cannot be more than ' + this.descriptionMaxLength + ' characters long.'
+        },
+        'keywords': {
+            'required': 'At least one keyword is required.'
         }
         // 'institution': {}
     };
@@ -250,7 +256,9 @@ export class ProjectFormComponent implements OnInit {
             'keywords': new FormControl({
                 // must be empty (even in edit mode), because of the mat-chip-list
                 value: [], disabled: disabled
-            })
+            }, [
+                Validators.required
+            ])
         });
 
         this.form.valueChanges

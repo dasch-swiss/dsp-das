@@ -1,14 +1,13 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ApiResponseData, ListNode, ListNodeInfo, ListResponse, ListsEndpointAdmin, RepositionChildNodeResponse } from '@dasch-swiss/dsp-js';
-import {
-    DspActionModule,
-    DspApiConnectionToken
-} from '@dasch-swiss/dsp-ui';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ListNodeOperation } from '../list-item-form/list-item-form.component';
 import { ListItemComponent } from './list-item.component';
 
@@ -80,8 +79,9 @@ describe('ListItemComponent', () => {
             ],
             imports: [
                 BrowserAnimationsModule,
-                DspActionModule,
-                MatIconModule
+                MatDialogModule,
+                MatIconModule,
+                MatSnackBarModule,
             ],
             providers: [
                 {
