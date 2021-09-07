@@ -22,20 +22,15 @@ import {
     ResourcePropertyDefinition,
     SystemPropertyDefinition
 } from '@dasch-swiss/dsp-js';
-import {
-    EmitEvent,
-    Events,
-    PropertyInfoValues,
-    ValueOperationEventService
-} from '@dasch-swiss/dsp-ui';
 import { of, Subscription } from 'rxjs';
 import { DspResource } from '../dsp-resource';
-import { PropertiesComponent } from './properties.component';
+import { PropertiesComponent, PropertyInfoValues } from './properties.component';
 import { IncomingService } from '../incoming.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { UserService } from '../services/user.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AppInitService } from 'src/app/app-init.service';
+import { EmitEvent, Events, ValueOperationEventService } from '../services/value-operation-event.service';
 
 /**
  * test host component to simulate parent component.
