@@ -210,7 +210,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     }
 
     /**
-     * Opens the dialog to enter further properties for the region after it has been drawn and calls the function to upload the region after confirmation
+     * opens the dialog to enter further properties for the region after it has been drawn and calls the function to upload the region after confirmation
      * @param startPoint the start point of the drawing
      * @param endPoint the end point of the drawing
      * @param imageSize the image size for calculations
@@ -232,14 +232,15 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
         dialogRef.afterClosed().subscribe((data) => {
             if (data) { // data is null if the cancel button was clicked
-                this._uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label); //Maybe we should remove the artificial overlay (drawing) also on success and refresh the regions from the api.
+                this._uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
+                // maybe we should remove the artificial overlay (drawing) also on success and refresh the regions from the api.
             } else {
                 this._viewer.removeOverlay(overlay);
             }
         });
     }
     /**
-     * 
+     * uploads the region after being prepared by the dialog 
      * @param startPoint the start point of the drawing
      * @param endPoint the end point of the drawing
      * @param imageSize the image size for calculations
@@ -276,11 +277,10 @@ export class StillImageComponent implements OnChanges, OnDestroy {
             [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasColor'] : [colorVal],
             [Constants.KnoraApiV2 + Constants.HashDelimiter + 'isRegionOfValue'] : [linkVal],
             [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasGeometry'] : [geomVal]
-        };
-        
+        };        
         this._dspApiConnection.v2.res.createResource(createResource).subscribe(
             (res: ReadResource) => {
-                //Should we add some confirmation message?
+                // should we add some confirmation message?
             },
             (error) => {
                 this._errorHandler.showMessage(error);
@@ -289,7 +289,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     }
 
     /**
-     * Set up function for the region drawer
+     * set up function for the region drawer
      */
     private _addRegionDrawer(){
         this._mouseTracker = new OpenSeadragon.MouseTracker({
@@ -332,7 +332,6 @@ export class StillImageComponent implements OnChanges, OnDestroy {
                     this._regionDragInfo = null;
                     this._regionDrawMode = false;
                     this._viewer.setMouseNavEnabled(true);
-                    
                 }
             }
         });
