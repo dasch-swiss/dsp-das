@@ -9,8 +9,9 @@ import {
     ReadProject,
     UpdateOntologyMetadata
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, existingNamesValidator } from '@dasch-swiss/dsp-ui';
+import { existingNamesValidator } from '@dasch-swiss/dsp-ui';
 import { CacheService } from 'src/app/main/cache/cache.service';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { OntologyService } from '../ontology.service';
 
@@ -79,7 +80,7 @@ export class OntologyFormComponent implements OnInit {
             'required': 'Name is required.',
             'minlength': 'Name must be at least ' + this.nameMinLength + ' characters long.',
             'maxlength': 'Name cannot be more than ' + this.nameMaxLength + ' characters long.',
-            'pattern': 'Name shouldn\'t start with a number or v + number and spaces or special characters are not allowed.',
+            'pattern': 'Name shouldn\'t start with a number or v + number and spaces or special characters (except dash, dot and underscore) are not allowed.',
             'existingName': 'This name is not allowed or exists already.'
         },
         'label': {
@@ -93,7 +94,7 @@ export class OntologyFormComponent implements OnInit {
         - must be at least 3 characters long
         - shouldn't begin with a number
         - shouldn't begin with the letter v and a number
-        - spaces or special characters are not allowed
+        - spaces or special characters (except dash, dot and underscore) are not allowed
         - may not contain these reserved words: knora, ontology, salsah, shared, simple or standoff
         - can't be changed afterwards
     `;

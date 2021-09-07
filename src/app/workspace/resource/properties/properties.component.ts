@@ -1,17 +1,19 @@
 import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { PageEvent } from '@angular/material/paginator';
 import {
     ApiResponseData,
     ApiResponseError,
     CardinalityUtil,
-    Constants,
+    Constants, CountQueryResponse,
     DeleteResource,
     DeleteResourceResponse,
     DeleteValue,
+    IHasPropertyWithPropertyDefinition,
     KnoraApiConnection,
     PermissionUtil,
     ProjectResponse,
+    PropertyDefinition,
     ReadLinkValue,
     ReadProject,
     ReadResource,
@@ -24,23 +26,30 @@ import {
     UpdateResourceMetadataResponse,
     UserResponse
 } from '@dasch-swiss/dsp-js';
+import { Subscription } from 'rxjs';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { ConfirmationWithComment, DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { NotificationService } from 'src/app/main/services/notification.service';
+import { DspResource } from '../dsp-resource';
+import { IncomingService } from '../incoming.service';
+import { RepresentationConstants } from '../representation/file-representation';
+import { UserService } from '../services/user.service';
 import {
     AddedEventValue,
     DeletedEventValue,
-    DspApiConnectionToken,
     Events,
-    NotificationService,
-    PropertyInfoValues,
     UpdatedEventValues,
-    UserService,
-    ValueOperationEventService,
-    ValueService
-} from '@dasch-swiss/dsp-ui';
-import { Subscription } from 'rxjs';
-import { ConfirmationWithComment, DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
-import { DspResource } from '../dsp-resource';
-import { RepresentationConstants } from '../representation/file-representation';
+    ValueOperationEventService
+} from '../services/value-operation-event.service';
+import { ValueService } from '../services/value.service';
+
+// object of property information from ontology class, properties and property values
+export interface PropertyInfoValues {
+    guiDef: IHasPropertyWithPropertyDefinition;
+    propDef: PropertyDefinition;
+    values: ReadValue[];
+}
 
 @Component({
     selector: 'app-properties',
@@ -110,6 +119,11 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     project: ReadProject;
     user: ReadUser;
 
+    incomingLinkResources: ReadResource[] = [];
+    pageEvent: PageEvent;
+    numberOffAllIncomingLinkRes: number;
+    loading = false;
+
     showAllProps = false;   // show or hide empty properties
 
     constructor(
@@ -119,10 +133,17 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         private _notification: NotificationService,
         private _userService: UserService,
         private _valueOperationEventService: ValueOperationEventService,
-        private _valueService: ValueService
+        private _valueService: ValueService,
+        private _incomingService: IncomingService
     ) { }
 
     ngOnInit(): void {
+        // reset the page event
+        this.pageEvent = new PageEvent();
+        this.pageEvent.pageIndex = 0;
+
+        this._getIncomingLinks();
+
         if (this.resource.res) {
             // get user permissions
             const allPermissions = PermissionUtil.allUserPermissions(
@@ -213,6 +234,15 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
 
     previewProject(project: ReadProject) {
         // --> TODO: pop up project preview on hover
+    }
+
+    /**
+     * goes to the next page of the incoming link pagination
+     * @param page
+     */
+    goToPage(page: PageEvent) {
+        this.pageEvent = page;
+        this._getIncomingLinks();
     }
 
     /**
@@ -405,6 +435,18 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
+     * given a resource property, check if its cardinality allows a value to be deleted
+     *
+     * @param prop the resource property
+     */
+    deleteValueIsAllowed(prop: PropertyInfoValues): boolean {
+        const isAllowed = CardinalityUtil.deleteValueForPropertyAllowed(
+            prop.propDef.id, prop.values.length, this.resource.res.entityInfo.classes[this.resource.res.type]);
+
+        return isAllowed;
+    }
+
+    /**
      * updates the UI in the event of an existing value being deleted
      *
      * @param valueToDelete the value to remove from the values array of the filtered property
@@ -434,6 +476,33 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     toggleAllProps(status: boolean) {
         this.showAllProps = !status;
         localStorage.setItem('showAllProps', JSON.stringify(this.showAllProps));
+    }
+
+    /**
+     * gets the number of incoming links and gets the incoming links.
+     * @private
+     */
+    private _getIncomingLinks() {
+        this.loading = true;
+
+        if (this.pageEvent.pageIndex === 0) {
+            this._incomingService.getIncomingLinks(this.resource.res.id, this.pageEvent.pageIndex, true).subscribe(
+                (response: CountQueryResponse) => {
+                    this.numberOffAllIncomingLinkRes = response.numberOfResults;
+                }
+            );
+        }
+
+        this._incomingService.getIncomingLinks(this.resource.res.id, this.pageEvent.pageIndex).subscribe(
+            (response: ReadResourceSequence) => {
+                if (response.resources.length > 0) {
+                    this.incomingLinkResources = response.resources;
+                }
+                this.loading = false;
+            }, (error: ApiResponseError) => {
+                this.loading = false;
+            }
+        );
     }
 
     /**
