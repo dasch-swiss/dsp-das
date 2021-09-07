@@ -18,11 +18,8 @@ export class AddRegionFormComponent implements OnInit {
         this.regionForm = this._fb.group({
             color: ['#ff3333', [Validators.required, Validators.pattern(this.colorPattern)]],
             comment: [null],
-            label: [null]
+            label: [null, Validators.required]
         });
-    }
-    submit(): void {
-        this._dialogRef.close(this.regionForm.value);
     }
 
 }

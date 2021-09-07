@@ -10,9 +10,11 @@ import {
     SimpleChanges
 } from '@angular/core';
 import {
+    ApiResponse,
     Constants, CreateColorValue, CreateGeomValue, CreateLinkValue,
     CreateResource, CreateTextValueAsString, KnoraApiConnection,
     Point2D,
+    ProjectResponse,
     ReadFileValue,
     ReadGeomValue,
     ReadResource,
@@ -24,6 +26,7 @@ import { DspCompoundPosition } from '../../dsp-resource';
 import { FileRepresentation } from '../file-representation';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 
 // this component needs the openseadragon library itself, as well as the openseadragon plugin openseadragon-svg-overlay
 // both libraries are installed via package.json, and loaded globally via the script tag in .angular-cli.json
@@ -105,6 +108,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     @Input() images: FileRepresentation[];
     @Input() imageCaption?: string;
     @Input() resourceIri: string;
+    @Input() project: string;
     @Input() activateRegion?: string; // highlight a region
 
     @Input() compoundNavigation?: DspCompoundPosition;
@@ -120,7 +124,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     private _regions: PolygonsForRegion = {};
 
     constructor(
-        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection, private _elementRef: ElementRef, private _dialog: MatDialog
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection, private _elementRef: ElementRef, private _dialog: MatDialog, private _errorHandler: ErrorHandlerService
     ) {
         OpenSeadragon.setString('Tooltips.Home', '');
         OpenSeadragon.setString('Tooltips.ZoomIn', '');
@@ -214,7 +218,8 @@ export class StillImageComponent implements OnChanges, OnDestroy {
             position: {
                 top: '112px'
             },
-            data: { mode: 'add_region', title: 'Create a region', subtitle: 'Add further properties', id: this.resourceIri }
+            data: { mode: 'add_region', title: 'Create a region', subtitle: 'Add further properties', id: this.resourceIri },
+            disableClose: true
         };
         const dialogRef = this._dialog.open(
             DialogComponent,
@@ -222,7 +227,11 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         );
 
         dialogRef.afterClosed().subscribe((data) => {
-            this.uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
+            if (data) {
+                this.uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
+            }
+            /* TODO: Remove drawn region from image if cancelled */
+            
         });
     }
     uploadRegion(startPoint, endPoint, imageSize, color, comment, label){
@@ -231,10 +240,11 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         const y1 = Math.max(Math.min(startPoint.y, imageSize.y), 0)/imageSize.y;
         const y2 = Math.max(Math.min(endPoint.y, imageSize.y), 0)/imageSize.y;
         const geomStr = '{"status":"active","lineColor":"' + color + '","lineWidth":2,"points":[{"x":' +  x1.toString() +
-            ',"y":' + y1.toString() + '},{"x":' + x2.toString() + '"y":' + y2.toString()+ '}],"type":"rectangle"}';
+            ',"y":' + y1.toString() + '},{"x":' + x2.toString() + ',"y":' + y2.toString()+ '}],"type":"rectangle"}';
         const createResource = new CreateResource();
         createResource.label = label;
         createResource.type = Constants.KnoraApiV2 + Constants.HashDelimiter + 'Region';
+        createResource.attachedToProject = this.project;
         const geomVal = new CreateGeomValue();
         geomVal.type = Constants.GeomValue;
         geomVal.geometryString = geomStr;
@@ -251,7 +261,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
             createResource.properties = {
                 [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasComment']: [commentVal],
                 [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasColor'] : [colorVal],
-                [Constants.KnoraApiV2 + Constants.HashDelimiter + 'isRegionOf'] : [linkVal],
+                [Constants.KnoraApiV2 + Constants.HashDelimiter + 'isRegionOfValue'] : [linkVal],
                 [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasGeometry'] : [geomVal]
             };
         } else {
@@ -261,11 +271,17 @@ export class StillImageComponent implements OnChanges, OnDestroy {
                 [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasGeometry'] : [geomVal],
             };
         }
+    
+        console.log(createResource);
 
-        this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition('http://api.knora.org/ontology/knora-api/v2#Region').subscribe(
-            (onto: ResourceClassAndPropertyDefinitions) => {
-                console.log(onto);
-            });
+        this._dspApiConnection.v2.res.createResource(createResource).subscribe(
+            (res: ReadResource) => {
+                console.log(res);
+            },
+            (error) => {
+                this._errorHandler.showMessage(error);
+            }
+        );
     }
 
 

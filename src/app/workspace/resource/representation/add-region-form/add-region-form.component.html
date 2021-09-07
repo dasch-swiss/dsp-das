@@ -19,7 +19,7 @@
 <!-- TODO: Further inputs would be status, lineColor and lineWidth if necessary -->
     <div class="form-panel large-field">
         <span>
-            <button mat-button type="button">
+            <button mat-button type="button" mat-dialog-close>
                 {{ 'appLabels.form.action.cancel' | translate }}
             </button>
         </span>
@@ -27,7 +27,7 @@
         <span>
             <button
                 mat-raised-button
-                (click)="submit()"
+                [mat-dialog-close]="regionForm.value"
                 type="button"
                 color="primary"
                 [disabled]="!regionForm.valid"
