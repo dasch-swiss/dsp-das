@@ -9,24 +9,21 @@ import {
     Output,
     SimpleChanges
 } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {
-    ApiResponse,
     Constants, CreateColorValue, CreateGeomValue, CreateLinkValue,
     CreateResource, CreateTextValueAsString, KnoraApiConnection,
-    Point2D,
-    ProjectResponse,
-    ReadFileValue,
+    Point2D, ReadFileValue,
     ReadGeomValue,
     ReadResource,
     ReadStillImageFileValue,
-    RegionGeometry, ResourceClassAndPropertyDefinitions
+    RegionGeometry
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/dsp-ui';
-import { DspCompoundPosition } from '../../dsp-resource';
-import { FileRepresentation } from '../file-representation';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { DspCompoundPosition } from '../../dsp-resource';
+import { FileRepresentation } from '../file-representation';
 
 // this component needs the openseadragon library itself, as well as the openseadragon plugin openseadragon-svg-overlay
 // both libraries are installed via package.json, and loaded globally via the script tag in .angular-cli.json
@@ -231,7 +228,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
                 this.uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
             }
             /* TODO: Remove drawn region from image if cancelled */
-            
+
         });
     }
     uploadRegion(startPoint, endPoint, imageSize, color, comment, label){
@@ -271,7 +268,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
                 [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasGeometry'] : [geomVal],
             };
         }
-    
+
         console.log(createResource);
 
         this._dspApiConnection.v2.res.createResource(createResource).subscribe(
