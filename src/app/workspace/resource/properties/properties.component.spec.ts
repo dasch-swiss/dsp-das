@@ -98,7 +98,7 @@ class TestPropertyParentComponent implements OnInit, OnDestroy {
  * test host component to simulate child component, here display-edit.
  */
 @Component({
-    selector: 'dsp-display-edit',
+    selector: 'app-display-edit',
     template: ''
 })
 class TestDisplayValueComponent {
@@ -116,7 +116,7 @@ class TestDisplayValueComponent {
  * test host component to simulate child component, here add-value.
  */
 @Component({
-    selector: 'dsp-add-value',
+    selector: 'app-add-value',
     template: ''
 })
 class TestAddValueComponent {
