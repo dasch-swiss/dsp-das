@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
-import { FilteredResources, SearchParams } from '@dasch-swiss/dsp-ui';
+import { SearchParams } from '@dasch-swiss/dsp-ui';
+import { FilteredResources } from './list-view/list-view.component';
 
 @Component({
     selector: 'app-results',
