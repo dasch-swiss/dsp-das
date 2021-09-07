@@ -23,7 +23,6 @@ import {
     SystemPropertyDefinition
 } from '@dasch-swiss/dsp-js';
 import {
-    AppInitService,
     EmitEvent,
     Events,
     PropertyInfoValues,
@@ -36,6 +35,7 @@ import { IncomingService } from '../incoming.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { UserService } from '../services/user.service';
 import { MatDialogModule } from '@angular/material/dialog';
+import { AppInitService } from 'src/app/app-init.service';
 
 /**
  * test host component to simulate parent component.
