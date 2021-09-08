@@ -240,7 +240,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         });
     }
     /**
-     * uploads the region after being prepared by the dialog 
+     * uploads the region after being prepared by the dialog
      * @param startPoint the start point of the drawing
      * @param endPoint the end point of the drawing
      * @param imageSize the image size for calculations
@@ -277,7 +277,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
             [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasColor'] : [colorVal],
             [Constants.KnoraApiV2 + Constants.HashDelimiter + 'isRegionOfValue'] : [linkVal],
             [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasGeometry'] : [geomVal]
-        };        
+        };
         this._dspApiConnection.v2.res.createResource(createResource).subscribe(
             (res: ReadResource) => {
                 // should we add some confirmation message?

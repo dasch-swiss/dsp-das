@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -11,7 +10,7 @@ export class AddRegionFormComponent implements OnInit {
     @Input() resourceIri: string;
     regionForm: FormGroup;
     colorPattern = '^#[a-f0-9]{6}$';
-    constructor(private _dialogRef: MatDialogRef<AddRegionFormComponent>, private _fb: FormBuilder) {
+    constructor(private _fb: FormBuilder) {
     }
 
     ngOnInit(): void {
