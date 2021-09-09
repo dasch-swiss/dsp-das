@@ -1,14 +1,14 @@
 <form [formGroup]="regionForm">
     <mat-form-field>
-        <mat-label>Comment</mat-label>
-        <input matInput formControlName="comment">
+        <mat-label>Comment*</mat-label>
+        <textarea matInput formControlName="comment"></textarea>
     </mat-form-field>
     <mat-form-field>
-        <mat-label>Label</mat-label>
+        <mat-label>Label*</mat-label>
         <input matInput formControlName="label">
     </mat-form-field>
     <mat-form-field>
-        <mat-label>Color</mat-label>
+        <mat-label>Color*</mat-label>
         <app-color-picker
                 #colorInput
                 [formControlName]="'color'"

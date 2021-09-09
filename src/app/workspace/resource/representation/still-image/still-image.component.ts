@@ -116,7 +116,6 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
     private _regionDrawMode: Boolean = false; // stores whether viewer is currently drawing a region
     private _regionDragInfo; // stores the information of the first click for drawing a region
-    private _mouseTracker; // stores the MouseTracker that allows drawing regions
     private _viewer;
     private _regions: PolygonsForRegion = {};
 
@@ -231,11 +230,11 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         );
 
         dialogRef.afterClosed().subscribe((data) => {
+            // remove the drawn rectangle as either the cancel button was clicked or the region will be displayed
+            this._viewer.removeOverlay(overlay);
             if (data) { // data is null if the cancel button was clicked
                 this._uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
-                // maybe we should remove the artificial overlay (drawing) also on success and refresh the regions from the api.
-            } else {
-                this._viewer.removeOverlay(overlay);
+                this.updateRegions();
             }
         });
     }
@@ -292,7 +291,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
      * set up function for the region drawer
      */
     private _addRegionDrawer(){
-        this._mouseTracker = new OpenSeadragon.MouseTracker({
+        new OpenSeadragon.MouseTracker({
             element: this._viewer.canvas,
             pressHandler: (event) => {
                 if (!this._regionDrawMode){

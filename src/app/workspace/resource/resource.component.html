@@ -8,8 +8,10 @@
             <app-still-image class="dsp-representation" *ngSwitchCase="representationConstants.stillImage"
                 [images]="representationsToDisplay"
                 [imageCaption]="(incomingResource ? resource.res.label + ': ' + incomingResource.res.label : resource.res.label)"
-                [compoundNavigation]="compoundPosition" (goToPage)="compoundNavigation($event)"
-                             [resourceIri]="incomingResource ? incomingResource.res.id : resource.res.id" [project]="resource.res.attachedToProject"
+                [compoundNavigation]="compoundPosition"
+                [resourceIri]="incomingResource ? incomingResource.res.id : resource.res.id"
+                [project]="resource.res.attachedToProject"
+                (goToPage)="compoundNavigation($event)"
                 (regionClicked)="openRegion($event)">
             </app-still-image>
 
