@@ -7,7 +7,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { DspViewerModule } from '@dasch-swiss/dsp-ui';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularSplitModule } from 'angular-split';
@@ -321,7 +320,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         ClipboardModule,
         ColorPickerModule,
         CommonModule,
-        DspViewerModule,
         FormsModule,
         HttpClientModule,
         MaterialModule,
