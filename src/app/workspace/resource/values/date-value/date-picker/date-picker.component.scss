@@ -1,0 +1,63 @@
+@import "../../../../../../assets/style/config";
+
+.date-picker {
+  width: 300px;
+}
+
+.month-year-selector {
+  height: 56px;
+  padding: 0 28px;
+  width: 244px;
+  display: inline-block;
+
+  .month {
+    width: 72px;
+  }
+  .year {
+    width: 168px;
+  }
+}
+
+.day-selector {
+  width: 224px;
+  padding: 0 38px;
+  display: grid;
+
+  &.disabled {
+    color: $grey;
+  }
+
+  .week-days {
+    margin-bottom: 0;
+  }
+
+  .week {
+    display: inline-flex;
+  }
+}
+
+.day {
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  display: inline-table;
+  text-align: center;
+  padding: 2px;
+
+  &.selected {
+    background-color: $primary_700;
+    color: $bright;
+    border-radius: 50%;
+  }
+
+  > span {
+    display: block;
+  }
+
+  .selectable {
+
+    &.disabled {
+      cursor: not-allowed;
+    }
+  }
+}

@@ -1,0 +1,223 @@
+import { Component, OnChanges, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ValueService } from '../../../services/value.service';
+
+@Component({
+    selector: 'app-date-picker',
+    templateUrl: './date-picker.component.html',
+    styleUrls: ['./date-picker.component.scss']
+})
+export class DatePickerComponent implements OnInit {
+
+    form: FormGroup;
+    formErrors = {
+        'year': ''
+    };
+
+    validationMessages = {
+        'year': {
+            'required': 'At least the year has to be set.',
+            'min': 'A valid year is greater than 0.',
+        }
+    };
+
+    // common era?
+    ce = true;
+
+    // list of months
+    months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
+    ];
+
+    weekDays = [
+        'M',
+        'T',
+        'W',
+        'T',
+        'F',
+        'S',
+        'S',
+    ];
+
+    weeks = [];
+    days: number[] = [];
+    selectedDay: number;
+
+    disableDaySelector: boolean;
+
+
+    era: 'CE' | 'BCE' = 'CE';
+
+    firstDayPos: number;
+
+    constructor(
+        private _valueService: ValueService
+    ) {
+    }
+
+    ngOnInit(): void {
+
+        this.buildForm();
+
+        // display current date;
+        // --> TODO: replace by date value in case of existing one
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth() + 1;
+        this.selectedDay = today.getDate();
+
+        this.form.controls.year.setValue(year);
+        this.form.controls.month.setValue(month);
+
+        this.form.controls.era.setValue(this.era);
+
+        this._setDays('GREGORIAN', this.era, year, month);
+
+        this.form.valueChanges
+            .subscribe(data => this.onValueChanged(data));
+    }
+
+    buildForm() {
+        this. form = new FormGroup({
+            calendar: new FormControl(''),
+            era: new FormControl(''),
+            year: new FormControl('', [
+                Validators.required,
+                Validators.min(1)
+            ]),
+            month: new FormControl(''),
+            day: new FormControl('')
+        });
+    }
+
+    /**
+         * this method is for the form error handling
+         *
+         * @param data Data which changed.
+         */
+    onValueChanged(data?: any) {
+
+        if (!this.form) {
+            return;
+        }
+
+        this.era = this.form.controls.era.value;
+
+        if (data.month && data.year > 0) {
+            // set the corresponding days
+            this.disableDaySelector = false;
+            this._setDays('GREGORIAN', this.era, data.year, data.month);
+
+        } else {
+            // disable the day selector
+            this.disableDaySelector = true;
+            this.selectedDay = undefined;
+        }
+
+        const form = this.form;
+
+        Object.keys(this.formErrors).map(field => {
+            this.formErrors[field] = '';
+            const control = form.get(field);
+            if (control && control.dirty && !control.valid) {
+                const messages = this.validationMessages[field];
+                Object.keys(control.errors).map(key => {
+                    this.formErrors[field] += messages[key] + ' ';
+                });
+
+            }
+        });
+    }
+
+    // switchEra() {
+    //     this.ce = !this.ce;
+    //     this.form.controls.era.setValue(this.ce);
+    // }
+
+    /**
+     * sets available days for a given year and month.
+     *
+     * @param calendar calendar of the given date.
+     * @param era era of the given date.
+     * @param year year of the given date.
+     * @param month month of the given date.
+     */
+    private _setDays(calendar: string, era: string, year: number, month: number) {
+
+        const yearAstro = this._valueService.convertHistoricalYearToAstronomicalYear(year, era, calendar);
+
+        let days = this._valueService.calculateDaysInMonth(calendar, yearAstro, month);
+
+        // calculate the week day and the position of the first day of the month
+        // if date is before October 4th 1582, we should use the julian date converter for week day
+        let firstDayOfMonth: number;
+
+        const h = (month <= 2 ? month + 12 : month );
+        const k = (month <= 2 ? year - 1 : year);
+
+        if(year < 1582 || (year === 1582 && month <= 10) || era === 'BCE') {
+            // get the day of the week by using the julian date converter independet from selected calendar
+            firstDayOfMonth = ( 1 + 2 * h + Math.floor((3 * h + 3) / 5) + k + Math.floor(k / 4) -1 ) % 7;
+            // console.log(firstDayOfMonth);
+        } else {
+            // firstDayOfMonth = new Date(year, month - 1, 1).getDay();
+            // console.log('firstDayOfMonth', firstDayOfMonth);
+            firstDayOfMonth = (1 + 2 * h + Math.floor((3 * h + 3) / 5) + k + Math.floor(k / 4) - Math.floor(k / 100) + Math.floor(k / 400) + 1) % 7;
+            // console.log('own greg formula', firstDayOfMonth);
+        }
+
+        // if (year === )
+
+
+        // empty array
+        this.days = [];
+
+        if (firstDayOfMonth === 0) {
+            firstDayOfMonth = 7;
+        }
+
+        // if era is not before common era, we support
+        // week days. The following loop helps to set
+        // position of the first day of the month
+        if (era === 'CE') {
+            for (let i = 1; i < firstDayOfMonth; i++) {
+                this.days.push(0);
+            }
+        }
+
+        for (let i = 1; i <= days; i++) {
+            if (year === 1582 && month === 10 && i === 5) {
+                i = 15;
+                days = 31;
+            }
+            this.days.push(i);
+        }
+
+        const dates = this.days;
+        const weeks = [];
+        while (dates.length > 0) {
+            weeks.push(dates.splice(0, 7));
+        }
+        this.weeks = weeks;
+
+        // console.log(this.days)
+        // console.log(this.weeks)
+        // check if selected day is still valid, otherwise set to latest possible day
+        // if (this.dayControl.value !== null && this.dayControl.value > this.days.length) {
+        //     this.dayControl.setValue(this.days.length);
+        // }
+    }
+
+
+}
