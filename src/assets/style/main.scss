@@ -106,6 +106,7 @@ app-color-value {
   white-space: pre-line;
 }
 
+// date picker adaption
 .year {
   top: -0.0125em;
 
@@ -127,10 +128,6 @@ app-color-value {
 
 .year,
 .month {
-  input,
-  mat-select {
-    text-align: center;
-  }
 
   // hide dropdown arrow
   .mat-select-arrow {

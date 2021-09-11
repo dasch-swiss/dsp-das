@@ -1,13 +1,30 @@
 <div [formGroup]="form" class="form-content date-picker">
 
-    <!-- select calendar -->
+    <!-- select calendar and button to close date picker -->
+    <div class="calendar-selector panel">
+        <mat-form-field class="calendar" floatLabel="never">
+            <mat-label>Calendar</mat-label>
+            <mat-select formControlName="calendar" class="center">
+                <mat-option *ngFor="let cal of calendars; let i = index" [value]="cal">
+                    {{cal}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <span class="fill-remaining-space"></span>
+        <div class="action">
+            <!-- submit button (which is needed if date doesn't have precision on an exact day) -->
+            <button mat-icon-button class="action-button submit">
+                <mat-icon>done</mat-icon>
+            </button>
+        </div>
+    </div>
 
     <!-- panel with month (incl. navigation), year and era -->
-    <div class="month-year-selector">
+    <div class="month-year-selector panel">
         <!-- select month -->
-        <mat-form-field class="month x-small-field" floatLabel="never">
+        <mat-form-field class="month" floatLabel="never">
             <mat-label>Month</mat-label>
-            <mat-select formControlName="month">
+            <mat-select formControlName="month" class="center">
                 <mat-option>-- None --</mat-option>
                 <mat-option *ngFor="let month of months; let i = index" [value]="i + 1">
                     {{month}}
@@ -15,9 +32,9 @@
             </mat-select>
         </mat-form-field>
         <!-- set year incl. era -->
-        <mat-form-field class="year small-field" floatLabel="never">
+        <mat-form-field class="year" floatLabel="never">
             <mat-label>Year *</mat-label>
-            <input matInput type="number" formControlName="year" min="1">
+            <input matInput type="number" formControlName="year" min="1" class="center">
             <mat-error *ngIf="formErrors.year">
                 {{ formErrors.year }}
             </mat-error>
@@ -36,11 +53,11 @@
     </div>
 
     <!-- select day -->
-    <div class="day-selector" [class.disabled]="disableDaySelector">
+    <div class="day-selector panel" [class.disabled]="disableDaySelector">
 
         <div>
             <p *ngIf="era === 'CE'" class="week-days">
-                <span *ngFor="let day of weekDays" class="day"><strong>{{day}}</strong></span>
+                <span *ngFor="let day of weekDays" class="day">{{day}}</span>
             </p>
             <p *ngIf="era === 'BCE'" class="mat-caption center">
                 <!-- <mat-icon>warn</mat-icon> -->

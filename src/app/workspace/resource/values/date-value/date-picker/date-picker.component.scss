@@ -1,45 +1,83 @@
 @import "../../../../../../assets/style/config";
 
 .date-picker {
-  width: 300px;
+  width: 296px;
+  // background-color: darkcyan;
 }
 
-.month-year-selector {
-  height: 56px;
-  padding: 0 28px;
-  width: 244px;
-  display: inline-block;
+.panel {
+  width: 280px;
+  margin: 0 8px;
 
-  .month {
-    width: 72px;
-  }
-  .year {
-    width: 168px;
-  }
-}
-
-.day-selector {
-  width: 224px;
-  padding: 0 38px;
-  display: grid;
-
-  &.disabled {
-    color: $grey;
-  }
-
-  .week-days {
-    margin-bottom: 0;
-  }
-
-  .week {
+  &.calendar-selector,
+  &.mont-year-selector {
     display: inline-flex;
+    height: 56px;
   }
+
+  &.calendar-selector {
+    // background-color: chartreuse;
+    .calendar {
+      width: 180px;
+    }
+
+    .action {
+      .action-button {
+        margin: 8px 4px;
+
+        &.cancel {
+          color: $dark;
+        }
+
+        &.submit {
+          // color: $primary_700;
+        }
+      }
+    }
+  }
+  &.month-year-selector {
+    // background-color: chocolate;
+    .month {
+      width: 96px;
+    }
+    .year {
+      width: 180px;
+
+      .era {
+        mat-button-toggle {
+          width: 48px;
+        }
+      }
+    }
+  }
+
+
+  &.day-selector {
+    display: grid;
+    // background-color: crimson;
+
+    &.disabled {
+      color: $grey;
+    }
+
+    .week-days {
+      margin-bottom: 0;
+      font-weight: lighter;
+      color: $dark;
+    }
+
+    .week {
+      display: inline-flex;
+    }
+  }
+
+
 }
 
 .day {
-  width: 28px;
-  height: 28px;
-  line-height: 28px;
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
   display: inline-table;
   text-align: center;
   padding: 2px;
@@ -55,7 +93,6 @@
   }
 
   .selectable {
-
     &.disabled {
       cursor: not-allowed;
     }

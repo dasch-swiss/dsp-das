@@ -21,9 +21,6 @@ export class DatePickerComponent implements OnInit {
         }
     };
 
-    // common era?
-    ce = true;
-
     // list of months
     months = [
         'Jan',
@@ -56,6 +53,13 @@ export class DatePickerComponent implements OnInit {
 
     disableDaySelector: boolean;
 
+    calendars = [
+        'Gregorian',
+        'Julian',
+        'Islamic'
+    ];
+
+    selectedCalendar: 'Gregorian' | 'Julian' | 'Islamic' = 'Gregorian';
 
     era: 'CE' | 'BCE' = 'CE';
 
@@ -81,8 +85,9 @@ export class DatePickerComponent implements OnInit {
         this.form.controls.month.setValue(month);
 
         this.form.controls.era.setValue(this.era);
+        this.form.controls.calendar.setValue(this.selectedCalendar);
 
-        this._setDays('GREGORIAN', this.era, year, month);
+        this._setDays(this.selectedCalendar, this.era, year, month);
 
         this.form.valueChanges
             .subscribe(data => this.onValueChanged(data));
@@ -114,10 +119,12 @@ export class DatePickerComponent implements OnInit {
 
         this.era = this.form.controls.era.value;
 
+        this.selectedCalendar = this.form.controls.calendar.value;
+
         if (data.month && data.year > 0) {
             // set the corresponding days
             this.disableDaySelector = false;
-            this._setDays('GREGORIAN', this.era, data.year, data.month);
+            this._setDays(this.selectedCalendar, this.era, data.year, data.month);
 
         } else {
             // disable the day selector
@@ -140,11 +147,6 @@ export class DatePickerComponent implements OnInit {
         });
     }
 
-    // switchEra() {
-    //     this.ce = !this.ce;
-    //     this.form.controls.era.setValue(this.ce);
-    // }
-
     /**
      * sets available days for a given year and month.
      *
@@ -155,9 +157,10 @@ export class DatePickerComponent implements OnInit {
      */
     private _setDays(calendar: string, era: string, year: number, month: number) {
 
-        const yearAstro = this._valueService.convertHistoricalYearToAstronomicalYear(year, era, calendar);
+        const yearAstro = this._valueService.convertHistoricalYearToAstronomicalYear(year, era, calendar.toUpperCase());
 
-        let days = this._valueService.calculateDaysInMonth(calendar, yearAstro, month);
+        // count the days of the month
+        let days = this._valueService.calculateDaysInMonth(calendar.toUpperCase(), yearAstro, month);
 
         // calculate the week day and the position of the first day of the month
         // if date is before October 4th 1582, we should use the julian date converter for week day
@@ -166,7 +169,7 @@ export class DatePickerComponent implements OnInit {
         const h = (month <= 2 ? month + 12 : month );
         const k = (month <= 2 ? year - 1 : year);
 
-        if(year < 1582 || (year === 1582 && month <= 10) || era === 'BCE') {
+        if(year < 1582 || (year === 1582 && month <= 10) || calendar === 'Julian') {
             // get the day of the week by using the julian date converter independet from selected calendar
             firstDayOfMonth = ( 1 + 2 * h + Math.floor((3 * h + 3) / 5) + k + Math.floor(k / 4) -1 ) % 7;
             // console.log(firstDayOfMonth);
@@ -177,12 +180,12 @@ export class DatePickerComponent implements OnInit {
             // console.log('own greg formula', firstDayOfMonth);
         }
 
-        // if (year === )
-
-
-        // empty array
+        // empty array of the days
         this.days = [];
 
+        // if first day of the month is sunday (0)
+        // move it to the end of the week (7)
+        // because the first column is prepared for Monday
         if (firstDayOfMonth === 0) {
             firstDayOfMonth = 7;
         }
@@ -196,14 +199,19 @@ export class DatePickerComponent implements OnInit {
             }
         }
 
+        // prepare list of the days
         for (let i = 1; i <= days; i++) {
-            if (year === 1582 && month === 10 && i === 5) {
+            // special case for October 1582, which had only 21 days instead of 31
+            // because of the change from julian to gregorian calendar
+            if (calendar === 'Gregorian' && (year === 1582 && month === 10) && i === 5) {
                 i = 15;
                 days = 31;
             }
             this.days.push(i);
         }
 
+        // split the list of the days in to
+        // list of days per week corresponding to the week day
         const dates = this.days;
         const weeks = [];
         while (dates.length > 0) {
