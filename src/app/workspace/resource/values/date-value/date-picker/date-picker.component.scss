@@ -1,8 +1,10 @@
 @import "../../../../../../assets/style/config";
 
-.date-picker {
+.date-picker-content {
   width: 296px;
+  height: 412px;
   // background-color: darkcyan;
+  padding: 8px 8px 16px 8px;
 }
 
 .panel {
@@ -18,19 +20,15 @@
   &.calendar-selector {
     // background-color: chartreuse;
     .calendar {
-      width: 180px;
+      width: 100%;
     }
 
     .action {
       .action-button {
         margin: 8px 4px;
 
-        &.cancel {
-          color: $dark;
-        }
-
         &.submit {
-          // color: $primary_700;
+          color: $primary_700;
         }
       }
     }
@@ -39,9 +37,16 @@
     // background-color: chocolate;
     .month {
       width: 96px;
+      &.larger {
+        width: 136px;
+      }
     }
     .year {
-      width: 180px;
+      width: 136px;
+
+      &.withButtonToggle {
+        width: 180px;
+      }
 
       .era {
         mat-button-toggle {
@@ -57,7 +62,7 @@
     // background-color: crimson;
 
     &.disabled {
-      color: $grey;
+      opacity: 25%;
     }
 
     .week-days {
@@ -93,8 +98,14 @@
   }
 
   .selectable {
+    max-height: 36px;
+    max-width: 36px;
     &.disabled {
       cursor: not-allowed;
+    }
+
+    mat-icon {
+      margin: 6px;
     }
   }
 }

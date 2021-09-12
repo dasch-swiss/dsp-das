@@ -107,8 +107,11 @@ app-color-value {
 }
 
 // date picker adaption
-.year {
-  top: -0.0125em;
+.mat-menu-panel.date-picker {
+  max-width: 312px !important;
+}
+.year.withButtonToggle {
+  top: -0.05em;
 
   .mat-form-field-suffix {
 
@@ -135,14 +138,14 @@ app-color-value {
   }
 
   // hide number de- and increase buttons
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-  }
+  // input[type="number"]::-webkit-inner-spin-button,
+  // input[type="number"]::-webkit-outer-spin-button {
+  //   -webkit-appearance: none;
+  // }
 
-  input[type="number"] {
-    -moz-appearance: textfield;
-  }
+  // input[type="number"] {
+  //   -moz-appearance: textfield;
+  // }
 }
 
 

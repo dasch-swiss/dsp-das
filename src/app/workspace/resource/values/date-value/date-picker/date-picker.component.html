@@ -1,115 +1,103 @@
-<div [formGroup]="form" class="form-content date-picker">
+<mat-form-field class="date" [matMenuTriggerFor]="datePicker">
+    <mat-label>{{calendar}} {{era}}</mat-label>
+    <input matInput class="link" autocomplete="off" readonly placeholder="dd/mm/yyyy or mm/yyyy or yyyy" [value]="date | knoraDate">
+    <mat-icon matSuffix class="link">event</mat-icon>
+</mat-form-field>
+<!-- <button mat-button [matMenuTriggerFor]="menu">Menu</button> -->
+<mat-menu #datePicker="matMenu" [formGroup]="form" class="date-picker">
 
-    <!-- select calendar and button to close date picker -->
-    <div class="calendar-selector panel">
-        <mat-form-field class="calendar" floatLabel="never">
-            <mat-label>Calendar</mat-label>
-            <mat-select formControlName="calendar" class="center">
-                <mat-option *ngFor="let cal of calendars; let i = index" [value]="cal">
-                    {{cal}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-        <span class="fill-remaining-space"></span>
-        <div class="action">
+    <div class="date-picker-content" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+
+
+        <!-- select calendar and button to close date picker -->
+        <div class="calendar-selector panel">
+            <mat-form-field class="calendar" floatLabel="never">
+                <mat-label>Calendar</mat-label>
+                <mat-select formControlName="calendar" class="center">
+                    <mat-option *ngFor="let cal of calendars; let i = index" [value]="cal">
+                        {{cal}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <!-- <span class="fill-remaining-space"></span> -->
             <!-- submit button (which is needed if date doesn't have precision on an exact day) -->
-            <button mat-icon-button class="action-button submit">
-                <mat-icon>done</mat-icon>
-            </button>
+            <!-- <div class="action">
+                <button mat-icon-button class="action-button submit">
+                    <mat-icon>done</mat-icon>
+                </button>
+            </div> -->
         </div>
-    </div>
 
-    <!-- panel with month (incl. navigation), year and era -->
-    <div class="month-year-selector panel">
-        <!-- select month -->
-        <mat-form-field class="month" floatLabel="never">
-            <mat-label>Month</mat-label>
-            <mat-select formControlName="month" class="center">
-                <mat-option>-- None --</mat-option>
-                <mat-option *ngFor="let month of months; let i = index" [value]="i + 1">
-                    {{month}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-        <!-- set year incl. era -->
-        <mat-form-field class="year" floatLabel="never">
-            <mat-label>Year *</mat-label>
-            <input matInput type="number" formControlName="year" min="1" class="center">
-            <mat-error *ngIf="formErrors.year">
-                {{ formErrors.year }}
-            </mat-error>
-            <!-- <button mat-flat-button matSuffix (click)="switchEra()" [attr.aria-label]="'Switch era'"
+        <!-- panel with month (incl. navigation), year and era -->
+        <div class="month-year-selector panel">
+            <!-- select month -->
+            <mat-form-field class="month" floatLabel="never" [class.larger]="calendar === 'Islamic'">
+                <mat-label>Month</mat-label>
+                <mat-select formControlName="month" class="center">
+                    <mat-option>-- None --</mat-option>
+                    <mat-option *ngFor="let month of months; let i = index" [value]="i + 1">
+                        <span *ngIf="calendar !== 'Islamic'">{{month[0]}}</span>
+                        <span *ngIf="calendar === 'Islamic'">{{month[1]}}</span>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <!-- set year incl. era -->
+            <mat-form-field class="year" floatLabel="never" [class.withButtonToggle]="calendar !== 'Islamic'">
+                <mat-label>Year *</mat-label>
+                <input matInput type="number" formControlName="year" min="1" class="center">
+                <mat-error *ngIf="formErrors.year">
+                    {{ formErrors.year }}
+                </mat-error>
+                <!-- <button mat-flat-button matSuffix (click)="switchEra()" [attr.aria-label]="'Switch era'"
                 [attr.aria-pressed]="ce">
                 {{ce ? 'CE' : 'BCE'}}
             </button> -->
-            <mat-button-toggle-group class="era suffix-toggle-group" matSuffix formControlName="era" aria-label="Define era">
-                <mat-button-toggle value="CE">CE</mat-button-toggle>
-                <mat-button-toggle value="BCE">BCE</mat-button-toggle>
-            </mat-button-toggle-group>
-        </mat-form-field>
+                <mat-button-toggle-group *ngIf="calendar !== 'Islamic'" class="era suffix-toggle-group"
+                    matSuffix formControlName="era" aria-label="Define era">
+                    <mat-button-toggle value="CE">CE</mat-button-toggle>
+                    <mat-button-toggle value="BCE">BCE</mat-button-toggle>
+                </mat-button-toggle-group>
+            </mat-form-field>
 
-        <!-- hidden slide toggle to know about era changed -->
-        <!-- <mat-slide-toggle formControlName="era">CE</mat-slide-toggle> -->
+            <!-- hidden slide toggle to know about era changed -->
+            <!-- <mat-slide-toggle formControlName="era">CE</mat-slide-toggle> -->
+        </div>
+
+        <!-- select day -->
+        <div class="day-selector panel" [class.disabled]="disableDaySelector">
+
+            <div>
+                <p *ngIf="era === 'CE'" class="week-days">
+                    <span *ngFor="let day of weekDays" class="day">{{day}}</span>
+                </p>
+                <p *ngIf="era === 'BCE'" class="mat-caption center">
+                    <!-- <mat-icon>warn</mat-icon> -->
+                    Attention: Date <strong>before common era</strong>.
+                </p>
+            </div>
+            <div *ngFor="let week of weeks; let last = last" class="week">
+                <span *ngFor="let day of week" class="day" [class.selected]="day === selectedDay">
+                    <!-- the following span is only a placeholder to set the position of the first day to the correct column-->
+                    <span *ngIf="day === 0"></span>
+                    <span *ngIf="day > 0" class="selectable link" [class.disabled]="disableDaySelector" (click)="setDate(day)">{{day}}</span>
+                </span>
+                <!-- add not interested button at the end, if you want precision on year and month only -->
+                <span *ngIf="(last && week.length < 7)" class="day">
+                    <span class="selectable link" [class.disabled]="disableDaySelector" (click)="setDate()">
+                        <mat-icon>not_interested</mat-icon>
+                    </span>
+                </span>
+            </div>
+            <!-- add not interested button at the end, if you want precision on year and month only;
+                if the month ends on a Sunday, we have to add an additional line to get the not-interested option -->
+            <div class="week" *ngIf="weeks[weeks.length - 1].length === 7">
+                <span class="day">
+                    <span class="selectable link" [class.disabled]="disableDaySelector" (click)="setDate()">
+                        <mat-icon>not_interested</mat-icon>
+                    </span>
+                </span>
+            </div>
+        </div>
     </div>
 
-    <!-- select day -->
-    <div class="day-selector panel" [class.disabled]="disableDaySelector">
-
-        <div>
-            <p *ngIf="era === 'CE'" class="week-days">
-                <span *ngFor="let day of weekDays" class="day">{{day}}</span>
-            </p>
-            <p *ngIf="era === 'BCE'" class="mat-caption center">
-                <!-- <mat-icon>warn</mat-icon> -->
-                Attention: Date <strong>before common era</strong>.
-            </p>
-        </div>
-        <div *ngFor="let week of weeks" class="week">
-            <span *ngFor="let day of week" class="day" [class.selected]="day === selectedDay">
-                <span *ngIf="day > 0" class="selectable link" [class.disabled]="disableDaySelector">{{day}}</span>
-                <!-- the following span is only a space holder to set the position of the first day -->
-                <span *ngIf="day === 0"></span>
-            </span>
-        </div>
-    </div>
-
-    <!--
-    <div class="era-radio">
-        <mat-radio-group class="era" [formControlName]="'era'" aria-label="Select an option" (change)="_handleInput()">
-            <mat-radio-button value="BCE">Before Common Era</mat-radio-button>
-            <mat-radio-button value="CE">Common Era</mat-radio-button>
-        </mat-radio-group>
-    </div>
-
-    <mat-form-field>
-        <mat-label>Year</mat-label>
-        <input class="year" matInput placeholder="Year" type="number" [formControlName]="'year'" min="1"
-               (input)="_handleInput()">
-        <div class="date-form-error">
-            <mat-error *ngIf="yearControl.hasError('required')">
-                <span class="custom-error-message">A year is <strong>required</strong>.</span>
-            </mat-error>
-            <mat-error *ngIf="yearControl.hasError('min')">
-                <span class="custom-error-message">A valid year is greater than 0.</span>
-            </mat-error>
-        </div>
-    </mat-form-field>
-    <mat-form-field>
-        <mat-label>Month</mat-label>
-        <mat-select class="month" [formControlName]="'month'" (selectionChange)="_handleInput()">
-            <mat-option [value]="null">no selection</mat-option>
-            <mat-option *ngFor="let month of months" [value]="month">
-                {{month}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-        <mat-label>Day</mat-label>
-        <mat-select class="day" [formControlName]="'day'" (selectionChange)="_handleInput()">
-            <mat-option [value]="null">no selection</mat-option>
-            <mat-option *ngFor="let day of days" [value]="day">
-                {{day}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field> -->
-</div>
+</mat-menu>

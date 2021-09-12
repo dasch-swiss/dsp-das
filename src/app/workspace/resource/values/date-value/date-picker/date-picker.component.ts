@@ -1,5 +1,7 @@
-import { Component, OnChanges, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { KnoraDate } from '@dasch-swiss/dsp-js';
 import { ValueService } from '../../../services/value.service';
 
 @Component({
@@ -8,6 +10,10 @@ import { ValueService } from '../../../services/value.service';
     styleUrls: ['./date-picker.component.scss']
 })
 export class DatePickerComponent implements OnInit {
+
+    @ViewChild(MatMenuTrigger) popover: MatMenuTrigger;
+
+    date: KnoraDate;
 
     form: FormGroup;
     formErrors = {
@@ -23,18 +29,18 @@ export class DatePickerComponent implements OnInit {
 
     // list of months
     months = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec'
+        ['Jan', 'Muḥarram'],
+        ['Feb', 'Safar'],
+        ['Mar', 'Rabīʿ al-ʾAwwal'],
+        ['Apr', 'Rabīʿ ath-Thānī'],
+        ['May', 'Jumadā al-ʾŪlā'],
+        ['Jun', 'Jumādā ath-Thāniyah'],
+        ['Jul', 'Rajab'],
+        ['Aug', 'Shaʿbān'],
+        ['Sep', 'Ramaḍān'],
+        ['Oct', 'Shawwāl'],
+        ['Nov', 'Ḏū al-Qaʿdah'],
+        ['Dec', 'Ḏū al-Ḥijjah']
     ];
 
     weekDays = [
@@ -59,11 +65,9 @@ export class DatePickerComponent implements OnInit {
         'Islamic'
     ];
 
-    selectedCalendar: 'Gregorian' | 'Julian' | 'Islamic' = 'Gregorian';
+    calendar: 'Gregorian' | 'Julian' | 'Islamic' = 'Gregorian';
 
     era: 'CE' | 'BCE' = 'CE';
-
-    firstDayPos: number;
 
     constructor(
         private _valueService: ValueService
@@ -83,11 +87,12 @@ export class DatePickerComponent implements OnInit {
 
         this.form.controls.year.setValue(year);
         this.form.controls.month.setValue(month);
+        this.form.controls.calendar.setValue(this.calendar);
+
 
         this.form.controls.era.setValue(this.era);
-        this.form.controls.calendar.setValue(this.selectedCalendar);
 
-        this._setDays(this.selectedCalendar, this.era, year, month);
+        this._setDays(this.calendar, this.era, year, month);
 
         this.form.valueChanges
             .subscribe(data => this.onValueChanged(data));
@@ -101,8 +106,8 @@ export class DatePickerComponent implements OnInit {
                 Validators.required,
                 Validators.min(1)
             ]),
-            month: new FormControl(''),
-            day: new FormControl('')
+            month: new FormControl('')
+            // day: new FormControl('')
         });
     }
 
@@ -117,17 +122,25 @@ export class DatePickerComponent implements OnInit {
             return;
         }
 
-        this.era = this.form.controls.era.value;
+        this.calendar = this.form.controls.calendar.value;
 
-        this.selectedCalendar = this.form.controls.calendar.value;
+        // islamic calendar doesn't have a "before common era"
+        this.era = (this.calendar === 'Islamic' ? null : this.form.controls.era.value);
 
-        if (data.month && data.year > 0) {
-            // set the corresponding days
-            this.disableDaySelector = false;
-            this._setDays(this.selectedCalendar, this.era, data.year, data.month);
-
+        if (data.year > 0) {
+            if (data.month) {
+                // give possibility to select day;
+                this.disableDaySelector = false;
+                // set the corresponding days
+                this._setDays(this.calendar, this.era, data.year, data.month);
+            } else {
+                // set precision to year only; disable the day selector
+                this.disableDaySelector = true;
+                this.selectedDay = undefined;
+                this.setDate();
+            }
         } else {
-            // disable the day selector
+            // not valid form; disable the day selector
             this.disableDaySelector = true;
             this.selectedDay = undefined;
         }
@@ -145,6 +158,23 @@ export class DatePickerComponent implements OnInit {
 
             }
         });
+    }
+
+    setDate(day?: number) {
+
+        // set date on year, on year and month or on year, month and day precision
+        if (this.form.controls.year.value > 0 && this.form.valid) {
+            this.selectedDay = day;
+            this.date = new KnoraDate(
+                this.calendar.toUpperCase(),
+                this.era,
+                this.form.controls.year.value,
+                this.form.controls.month.value ? this.form.controls.month.value : undefined,
+                day ? day : undefined
+            );
+
+            this.popover.closeMenu();
+        }
     }
 
     /**
@@ -203,7 +233,7 @@ export class DatePickerComponent implements OnInit {
         for (let i = 1; i <= days; i++) {
             // special case for October 1582, which had only 21 days instead of 31
             // because of the change from julian to gregorian calendar
-            if (calendar === 'Gregorian' && (year === 1582 && month === 10) && i === 5) {
+            if (calendar === 'Gregorian' && (year === 1582 && month === 10) && i === 5 && era === 'CE') {
                 i = 15;
                 days = 31;
             }
@@ -226,6 +256,5 @@ export class DatePickerComponent implements OnInit {
         //     this.dayControl.setValue(this.days.length);
         // }
     }
-
 
 }
