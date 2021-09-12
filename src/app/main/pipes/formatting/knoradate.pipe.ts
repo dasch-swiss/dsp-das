@@ -8,7 +8,7 @@ export class KnoraDatePipe implements PipeTransform {
 
     transform(date: KnoraDate, format?: string, displayOptions?: 'era' | 'calendar' | 'all'): string {
         if (!(date instanceof KnoraDate)) {
-            console.error('Non-KnoraDate provided. Expected a valid KnoraDate');
+            // console.error('Non-KnoraDate provided. Expected a valid KnoraDate');
             return '';
         }
 
