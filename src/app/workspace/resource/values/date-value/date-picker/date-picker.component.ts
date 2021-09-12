@@ -80,26 +80,19 @@ export class DatePickerComponent implements OnInit {
 
         // display current date;
         // --> TODO: replace by date value in case of existing one
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = today.getMonth() + 1;
-        this.selectedDay = today.getDate();
 
-        this.form.controls.year.setValue(year);
-        this.form.controls.month.setValue(month);
         this.form.controls.calendar.setValue(this.calendar);
-
 
         this.form.controls.era.setValue(this.era);
 
-        this._setDays(this.calendar, this.era, year, month);
+        this.setToday();
 
         this.form.valueChanges
             .subscribe(data => this.onValueChanged(data));
     }
 
     buildForm() {
-        this. form = new FormGroup({
+        this.form = new FormGroup({
             calendar: new FormControl(''),
             era: new FormControl(''),
             year: new FormControl('', [
@@ -177,6 +170,54 @@ export class DatePickerComponent implements OnInit {
         }
     }
 
+    setToday() {
+        const today = new Date();
+
+        let day: number;
+        let month: number;
+        let year: number;
+
+        switch (this.calendar) {
+            // islamic calendar
+            case 'Islamic':
+                // found solution and formula here:
+                // https://medium.com/@Saf_Bes/get-today-hijri-date-in-javascript-90855d3cd45b
+                const islamicDay = new Intl.DateTimeFormat('en-TN-u-ca-islamic', { day: 'numeric' }).format(today);
+                const islamicMonth = new Intl.DateTimeFormat('en-TN-u-ca-islamic', { month: 'numeric' }).format(today);
+                const islamicYear = new Intl.DateTimeFormat('en-TN-u-ca-islamic', { year: 'numeric' }).format(today);
+                day = parseInt(islamicDay, 0);
+                month = parseInt(islamicMonth, 0);
+                year = parseInt(islamicYear.substr(0, 4), 0);
+                break;
+
+            // julian calendar
+            case 'Julian':
+                // found solution and formula here:
+                // https://sciencing.com/convert-julian-date-calender-date-6017669.html
+                const julianDate = new Date();
+                const difference = parseInt((julianDate.getFullYear() + '').substr(0, 2), 0) * 0.75 - 1.25;
+                julianDate.setDate(julianDate.getDate() - Math.floor(difference));
+                day = julianDate.getDate();
+                month = julianDate.getMonth() + 1;
+                year = julianDate.getFullYear();
+                break;
+
+            // gregorian calendar
+            default:
+                day = today.getDate();
+                month = today.getMonth() + 1;
+                year = today.getFullYear();
+        }
+
+        this.selectedDay = day;
+        this.form.controls.month.setValue(month);
+        this.form.controls.year.setValue(year);
+        this._setDays(this.calendar, this.era, year, month);
+    }
+
+
+
+
     /**
      * sets available days for a given year and month.
      *
@@ -196,18 +237,18 @@ export class DatePickerComponent implements OnInit {
         // if date is before October 4th 1582, we should use the julian date converter for week day
         let firstDayOfMonth: number;
 
-        const h = (month <= 2 ? month + 12 : month );
+        const h = (month <= 2 ? month + 12 : month);
         const k = (month <= 2 ? year - 1 : year);
 
-        if(year < 1582 || (year === 1582 && month <= 10) || calendar === 'Julian') {
+        // calculate weekday of the first the of the month;
+        // found solution and formular here:
+        // https://straub.as/java/basic/kalender.html
+        if (year < 1582 || (year === 1582 && month <= 10) || calendar === 'Julian') {
             // get the day of the week by using the julian date converter independet from selected calendar
-            firstDayOfMonth = ( 1 + 2 * h + Math.floor((3 * h + 3) / 5) + k + Math.floor(k / 4) -1 ) % 7;
-            // console.log(firstDayOfMonth);
+            firstDayOfMonth = (1 + 2 * h + Math.floor((3 * h + 3) / 5) + k + Math.floor(k / 4) - 1) % 7;
         } else {
             // firstDayOfMonth = new Date(year, month - 1, 1).getDay();
-            // console.log('firstDayOfMonth', firstDayOfMonth);
             firstDayOfMonth = (1 + 2 * h + Math.floor((3 * h + 3) / 5) + k + Math.floor(k / 4) - Math.floor(k / 100) + Math.floor(k / 400) + 1) % 7;
-            // console.log('own greg formula', firstDayOfMonth);
         }
 
         // empty array of the days
@@ -249,12 +290,6 @@ export class DatePickerComponent implements OnInit {
         }
         this.weeks = weeks;
 
-        // console.log(this.days)
-        // console.log(this.weeks)
-        // check if selected day is still valid, otherwise set to latest possible day
-        // if (this.dayControl.value !== null && this.dayControl.value > this.days.length) {
-        //     this.dayControl.setValue(this.days.length);
-        // }
     }
 
 }

@@ -19,7 +19,9 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <!-- <span class="fill-remaining-space"></span> -->
+            <span class="fill-remaining-space"></span>
+            <!-- go to the current date -->
+            <button mat-button color="primary" (click)=setToday()>Today</button>
             <!-- submit button (which is needed if date doesn't have precision on an exact day) -->
             <!-- <div class="action">
                 <button mat-icon-button class="action-button submit">
