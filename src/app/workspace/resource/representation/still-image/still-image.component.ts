@@ -237,8 +237,6 @@ export class StillImageComponent implements OnChanges, OnDestroy {
             if (data) { // data is null if the cancel button was clicked
                 this._uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
             }
-            console.log("Regions", this._regions);
-            console.log("Images", this.images);
         });
     }
     /**
@@ -283,7 +281,6 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         this._dspApiConnection.v2.res.createResource(createResource).subscribe(
             (res: ReadResource) => {
                 this.regionAdded.emit(res.id);
-                
             },
             (error) => {
                 this._errorHandler.showMessage(error);
