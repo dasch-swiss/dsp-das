@@ -114,6 +114,8 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
     @Output() regionClicked = new EventEmitter<string>();
 
+    @Output() regionAdded = new EventEmitter<string>();
+
     private _regionDrawMode: Boolean = false; // stores whether viewer is currently drawing a region
     private _regionDragInfo; // stores the information of the first click for drawing a region
     private _viewer;
@@ -234,8 +236,9 @@ export class StillImageComponent implements OnChanges, OnDestroy {
             this._viewer.removeOverlay(overlay);
             if (data) { // data is null if the cancel button was clicked
                 this._uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
-                this.updateRegions();
             }
+            console.log("Regions", this._regions);
+            console.log("Images", this.images);
         });
     }
     /**
@@ -279,7 +282,8 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         };
         this._dspApiConnection.v2.res.createResource(createResource).subscribe(
             (res: ReadResource) => {
-                // should we add some confirmation message?
+                this.regionAdded.emit(res.id);
+                
             },
             (error) => {
                 this._errorHandler.showMessage(error);
