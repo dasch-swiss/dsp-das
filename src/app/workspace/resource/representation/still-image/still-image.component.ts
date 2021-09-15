@@ -2,15 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnIni
 import { Constants, Point2D, ReadFileValue, ReadGeomValue, ReadResource, ReadStillImageFileValue, RegionGeometry } from '@dasch-swiss/dsp-js';
 import { DspCompoundPosition } from '../../dsp-resource';
 import { FileRepresentation } from '../file-representation';
-
-
-// this component needs the openseadragon library itself, as well as the openseadragon plugin openseadragon-svg-overlay
-// both libraries are installed via package.json, and loaded globally via the script tag in .angular-cli.json
-
-// openSeadragon does not export itself as ES6/ECMA2015 module,
-// it is loaded globally in scripts tag of angular-cli.json,
-// we still need to declare the namespace to make TypeScript compiler happy.
-declare let OpenSeadragon: any;
+import * as OpenSeadragon from 'openseadragon';
 
 /**
  * represents a region resource.
@@ -91,7 +83,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
     @Output() regionClicked = new EventEmitter<string>();
 
-    private _viewer;
+    private _viewer: OpenSeadragon.Viewer;
     private _regions: PolygonsForRegion = {};
 
 
@@ -245,7 +237,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
             // rotateLeftButton: 'DSP_OSD_ROTATE_LEFT',        // doesn't work yet
             // rotateRightButton: 'DSP_OSD_ROTATE_RIGHT',       // doesn't work yet
             showNavigator: true,
-            navigatorPosition: 'ABSOLUTE',
+            navigatorPosition: 'ABSOLUTE' as const,
             navigatorTop: '40px',
             navigatorLeft: 'calc(100% - 160px)',
             navigatorHeight: '120px',
@@ -263,9 +255,9 @@ export class StillImageComponent implements OnChanges, OnDestroy {
                 viewerContainer.classList.remove('fullscreen');
             }
         });
-        this._viewer.addHandler('resize', (args) => {
-            args.eventSource.svgOverlay().resize();
-        });
+        // this._viewer.addHandler('resize', (args) => {
+        //     args.eventSource.svgOverlay().resize();
+        // });
     }
 
     /**
@@ -452,9 +444,26 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         svgGroup.appendChild(svgTitle);
         svgGroup.appendChild(svgElement);
 
-        const overlay = this._viewer.svgOverlay();
-        overlay.node().appendChild(svgGroup); // tODO: use method osdviewer's method addOverlay
+        // const overlay = this._viewer.svgOverlay();
+        // overlay.node().appendChild(svgGroup); // tODO: use method osdviewer's method addOverlay
+        this._viewer.addOverlay({
+            element: svgElement,
+            location: new OpenSeadragon.Point(geometry.points[0].x, geometry.points[0].y)
+        });
 
+        const elt = document.createElement('div');
+        elt.id = 'runtime-overlay';
+        elt.className = 'highlight';
+        this._viewer.addOverlay({
+            element: elt,
+            location: new OpenSeadragon.Rect(
+                geometry.points[0].x,
+                geometry.points[0].y,
+                geometry.points[1].x - geometry.points[0].x,
+                geometry.points[1].y - geometry.points[0].y),
+        });
+
+        console.log('geometry: ', geometry);
         this._regions[regionIri].push(svgElement);
     }
 

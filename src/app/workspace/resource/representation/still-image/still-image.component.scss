@@ -57,3 +57,7 @@ $bright: #ccc;
   filter: alpha(opacity=100);
   opacity: 1;
 }
+
+::ng-deep .highlight {
+  outline: red solid 2px;
+}
