@@ -244,6 +244,8 @@ export class StillImageComponent implements OnChanges, OnDestroy {
      * @param label the value for the label entered in the form
      */
     private _uploadRegion(startPoint, endPoint, imageSize, color, comment, label){
+        console.log('startPoint: ', startPoint);
+        console.log('endPoint: ', endPoint);
         const x1 = Math.max(Math.min(startPoint.x, imageSize.x), 0)/imageSize.x;
         const x2 = Math.max(Math.min(endPoint.x, imageSize.x), 0)/imageSize.x;
         const y1 = Math.max(Math.min(startPoint.y, imageSize.y), 0)/imageSize.y;
@@ -295,7 +297,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
                 }
                 const overlayElement = document.createElement('div');
                 overlayElement.style.background = 'rgba(255,0,0,0.3)';
-                const viewportPos = this._viewer.viewport.pointFromPixel(event.position);
+                const viewportPos = this._viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position);
                 this._viewer.addOverlay(overlayElement, new OpenSeadragon.Rect(viewportPos.x, viewportPos.y, 0, 0));
                 this._regionDragInfo = {
                     overlayElement: overlayElement,
@@ -306,7 +308,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
                 if (!this._regionDragInfo){
                     return;
                 }
-                const viewPortPos = this._viewer.viewport.pointFromPixel(event.position);
+                const viewPortPos = this._viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position);
                 const diffX = viewPortPos.x - this._regionDragInfo.startPos.x;
                 const diffY = viewPortPos.y - this._regionDragInfo.startPos.y;
                 const location = new OpenSeadragon.Rect(
@@ -315,6 +317,8 @@ export class StillImageComponent implements OnChanges, OnDestroy {
                     Math.abs(diffX),
                     Math.abs(diffY)
                 );
+
+                console.log('location ERIC: ', location);
                 this._viewer.updateOverlay(this._regionDragInfo.overlayElement, location);
                 this._regionDragInfo.endPos = viewPortPos;
             },
@@ -577,61 +581,83 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         const lineColor = geometry.lineColor;
         const lineWidth = geometry.lineWidth;
 
-        let svgElement;
-        switch (geometry.type) {
-            case 'rectangle':
-                svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');  // yes, we render rectangles as svg polygon elements
-                this._addSVGAttributesRectangle(svgElement, geometry, aspectRatio, xOffset);
-                break;
-            case 'polygon':
-                svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-                this._addSVGAttributesPolygon(svgElement, geometry, aspectRatio, xOffset);
-                break;
-            case 'circle':
-                svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                this._addSVGAttributesCircle(svgElement, geometry, aspectRatio, xOffset);
-                break;
-            default:
-                console.log('ERROR: StillImageOSDViewerComponent.createSVGOverlay: unknown geometryType: ' + geometry.type);
-                return;
-        }
-        svgElement.id = 'roi-svgoverlay-' + Math.random() * 10000;
-        svgElement.setAttribute('class', 'roi-svgoverlay');
-        svgElement.setAttribute('style', 'stroke: ' + lineColor + '; stroke-width: ' + lineWidth + 'px;');
+        // let svgElement;
+        // switch (geometry.type) {
+        //     case 'rectangle':
+        //         svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');  // yes, we render rectangles as svg polygon elements
+        //         this._addSVGAttributesRectangle(svgElement, geometry, aspectRatio, xOffset);
+        //         break;
+        //     case 'polygon':
+        //         svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        //         this._addSVGAttributesPolygon(svgElement, geometry, aspectRatio, xOffset);
+        //         break;
+        //     case 'circle':
+        //         svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        //         this._addSVGAttributesCircle(svgElement, geometry, aspectRatio, xOffset);
+        //         break;
+        //     default:
+        //         console.log('ERROR: StillImageOSDViewerComponent.createSVGOverlay: unknown geometryType: ' + geometry.type);
+        //         return;
+        // }
+        // svgElement.id = 'roi-svgoverlay-' + Math.random() * 10000;
+        // svgElement.setAttribute('class', 'roi-svgoverlay');
+        // svgElement.setAttribute('style', 'stroke: ' + lineColor + '; stroke-width: ' + lineWidth + 'px;');
 
         // event when a region is clicked (output)
-        svgElement.addEventListener('click', (event: MouseEvent) => {
-            this.regionClicked.emit(regionIri);
-        }, false);
+        // svgElement.addEventListener('click', (event: MouseEvent) => {
+        //     this.regionClicked.emit(regionIri);
+        // }, false);
 
-        const svgTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-        svgTitle.textContent = toolTip;
+        // console.log('svgElement: ', svgElement);
+        console.log('aspectRatio: ', aspectRatio);
+        console.log('xOffset: ', xOffset);
 
-        const svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        svgGroup.appendChild(svgTitle);
-        svgGroup.appendChild(svgElement);
+        // const svgTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        // svgTitle.textContent = toolTip;
+
+        // const svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        // svgGroup.appendChild(svgTitle);
+        // svgGroup.appendChild(svgElement);
 
         // const overlay = this._viewer.svgOverlay();
         // overlay.node().appendChild(svgGroup); // tODO: use method osdviewer's method addOverlay
-        this._viewer.addOverlay({
-            element: svgElement,
-            location: new OpenSeadragon.Point(geometry.points[0].x, geometry.points[0].y)
-        });
+        // this._viewer.addOverlay({
+        //     element: svgElement,
+        //     location: new OpenSeadragon.Point(geometry.points[0].x, geometry.points[0].y)
+        // });
 
         const elt = document.createElement('div');
         elt.id = 'runtime-overlay';
         elt.className = 'highlight';
+        elt.addEventListener('click', (event: MouseEvent) => {
+            this.regionClicked.emit(regionIri);
+        }, false);
+
+        const diffX = geometry.points[1].x - geometry.points[0].x;
+        const diffY = geometry.points[1].y - geometry.points[0].y;
+
+        const loc = new OpenSeadragon.Rect(
+            Math.min(geometry.points[0].x, geometry.points[0].x + diffX),
+            Math.min(geometry.points[0].y, geometry.points[0].y + diffY),
+            Math.abs(diffX),
+            Math.abs(diffY * aspectRatio));
+
+        loc.y = loc.y * aspectRatio;
+
+        console.log('location: ', loc);
+
+        // console.log('topLeft: ', loc.getTopLeft());
+        // console.log('topRight: ', loc.getTopRight());
+        // console.log('bottomRight: ', loc.getBottomRight());
+        // console.log('bottomLeft: ', loc.getBottomLeft());
+
         this._viewer.addOverlay({
             element: elt,
-            location: new OpenSeadragon.Rect(
-                geometry.points[0].x,
-                geometry.points[0].y,
-                geometry.points[1].x - geometry.points[0].x,
-                geometry.points[1].y - geometry.points[0].y),
+            location: loc
         });
 
         console.log('geometry: ', geometry);
-        this._regions[regionIri].push(svgElement);
+        // this._regions[regionIri].push(svgElement);
     }
 
     /**
