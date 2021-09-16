@@ -51,6 +51,7 @@
     "ng2-pdf-viewer": "^7.0.1",
     "ngx-color-picker": "^11.0.0",
     "openseadragon": "^2.4.0",
+    "pdfjs-dist": "^2.7.570",
     "rxjs": "~6.5.5",
     "semver": "^6.1.1",
     "svg-overlay": "github:openseadragon/svg-overlay",
