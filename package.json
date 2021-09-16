@@ -54,7 +54,6 @@
     "pdfjs-dist": "^2.7.570",
     "rxjs": "~6.5.5",
     "semver": "^6.1.1",
-    "svg-overlay": "github:openseadragon/svg-overlay",
     "three": "^0.125.0",
     "three-spritetext": "^1.5.1",
     "ts-md5": "^1.2.7",
