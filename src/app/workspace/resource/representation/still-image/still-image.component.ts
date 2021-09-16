@@ -85,7 +85,7 @@ export class GeometryForRegion {
  */
 interface PolygonsForRegion {
 
-    [key: string]: SVGPolygonElement[];
+    [key: string]: HTMLDivElement[];
 
 }
 
@@ -340,11 +340,11 @@ export class StillImageComponent implements OnChanges, OnDestroy {
      */
     private _highlightRegion(regionIri) {
 
-        const activeRegion: SVGPolygonElement[] = this._regions[regionIri];
+        const activeRegion: HTMLDivElement[] = this._regions[regionIri];
 
         if (activeRegion !== undefined) {
             for (const pol of activeRegion) {
-                pol.setAttribute('class', 'roi-svgoverlay active');
+                pol.setAttribute('class', 'region active');
             }
         }
     }
@@ -358,7 +358,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         for (const reg in this._regions) {
             if (this._regions.hasOwnProperty(reg)) {
                 for (const pol of this._regions[reg]) {
-                    pol.setAttribute('class', 'roi-svgoverlay');
+                    pol.setAttribute('class', 'region');
                 }
             }
         }
@@ -372,7 +372,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         for (const reg in this._regions) {
             if (this._regions.hasOwnProperty(reg)) {
                 for (const pol of this._regions[reg]) {
-                    if (pol instanceof SVGPolygonElement) {
+                    if (pol instanceof HTMLDivElement) {
                         pol.remove();
                     }
                 }
@@ -421,9 +421,6 @@ export class StillImageComponent implements OnChanges, OnDestroy {
                 viewerContainer.classList.remove('fullscreen');
             }
         });
-        // this._viewer.addHandler('resize', (args) => {
-        //     args.eventSource.svgOverlay().resize();
-        // });
 
         this._addRegionDrawer();
     }
@@ -579,8 +576,11 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         const lineWidth = geometry.lineWidth;
 
         const elt = document.createElement('div');
-        elt.id = 'runtime-overlay';
-        elt.className = 'highlight';
+        elt.id = 'region-overlay-' + Math.random() * 10000;
+        elt.className = 'region';
+        elt.title = toolTip;
+        elt.setAttribute('style', 'outline: solid ' + lineColor + ' ' + lineWidth + 'px;');
+
         elt.addEventListener('click', (event: MouseEvent) => {
             this.regionClicked.emit(regionIri);
         }, false);
@@ -600,6 +600,8 @@ export class StillImageComponent implements OnChanges, OnDestroy {
             element: elt,
             location: loc
         });
+
+        this._regions[regionIri].push(elt);
     }
 
 }

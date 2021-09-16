@@ -6,7 +6,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { By } from '@angular/platform-browser';
 import { Constants, ReadGeomValue, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
-import * as OpenSeadragon from 'openseadragon';
 import { AppInitService } from 'src/app/app-init.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { FileRepresentation } from '../file-representation';
@@ -184,13 +183,13 @@ describe('StillImageComponent', () => {
     it('should have 1 test region loaded (rectangle)', () => {
 
         const osd = testHostComponent.osdViewerComp['_viewer'];
-        expect(osd.getOverlayById('runtime-overlay')).toBeTruthy();
+        expect(osd.element.getElementsByClassName('region').length).toEqual(1);
     });
 
     it('should emit the region\'s Iri when a region is clicked', () => {
 
         const osd = testHostComponent.osdViewerComp['_viewer'];
-        const overlayElement = osd.element.getElementsByClassName('highlight')[0];
+        const overlayElement = osd.element.getElementsByClassName('region')[0];
 
         const event = new MouseEvent('click', {
             bubbles: true,
