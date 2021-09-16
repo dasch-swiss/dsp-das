@@ -27,7 +27,10 @@
                             "json2typescript",
                             "ngraph.graph",
                             "ngraph.forcelayout",
-                            "tinycolor2"
+                            "tinycolor2",
+                            "ng2-pdf-viewer",
+                            "pdfjs-dist",
+                            "openseadragon"
                         ],
                         "assets": [
                             "src/favicon.ico",
