@@ -21,7 +21,7 @@ export class ErrorHandlerService {
     showMessage(error: ApiResponseError) {
 
         // in case of (internal) server error
-        const apiServerError = (error.error['response'] === null);
+        const apiServerError = (error.error && error.error['response'] && error.error['response'] === null);
 
         if ((error.status > 499 && error.status < 600) || apiServerError) {
 
