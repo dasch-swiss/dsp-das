@@ -143,7 +143,7 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
         // this persists the search term in the search input field
         const urlArray = window.location.pathname.split('/');
         const currentSearchTerm = urlArray[urlArray.length - 1];
-        this.searchQuery = currentSearchTerm;
+        this.searchQuery = decodeURI(decodeURI(currentSearchTerm));
 
         // filterbyproject is set as deprecated. To avoid breaking changes we still support it
         if (this.filterbyproject) {
