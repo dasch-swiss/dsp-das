@@ -22,7 +22,7 @@ export class NotificationService {
         let panelClass: string;
 
         if (notification instanceof ApiResponseError) {
-            if (notification.error && notification.error['message']) {
+            if (notification.error && !notification.error['message'].startsWith('ajax error')) {
                 // the Api response error contains a complex error message from dsp-js-lib
                 message = notification.error['message'];
                 duration = undefined;
