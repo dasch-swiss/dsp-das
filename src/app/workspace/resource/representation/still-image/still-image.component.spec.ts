@@ -1,11 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { By } from '@angular/platform-browser';
 import { Constants, ReadGeomValue, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
+import { AppInitService } from 'src/app/app-init.service';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { FileRepresentation } from '../file-representation';
-import { Region, StillImageComponent, StillImageRepresentation } from './still-image.component';
+import { Region, StillImageComponent } from './still-image.component';
 
 // --> TODO: get test data from dsp-js
 // --> TODO: get this from dsp-js: https://dasch.myjetbrains.com/youtrack/issue/DSP-506
@@ -45,81 +49,6 @@ const rectangleGeom = `{
         "type": "rectangle"
     }`;
 
-const rectangleGeom2 = `{
-        "status": "active",
-        "lineColor": "#ff3333",
-        "lineWidth": 2,
-        "points": [{
-            "x": 0.17296511627906977,
-            "y": 0.08226691042047532
-        }, {
-            "x": 0.7122093023255814,
-            "y": 0.16544789762340037
-        }],
-        "type": "rectangle"
-    }`;
-
-const polygonGeom = `{
-	"status": "active",
-	"lineColor": "#ff3333",
-	"lineWidth": 2,
-	"points": [{
-		"x": 0.17532467532467533,
-		"y": 0.18049792531120332
-	}, {
-		"x": 0.8051948051948052,
-		"y": 0.17012448132780084
-	}, {
-		"x": 0.8311688311688312,
-		"y": 0.7261410788381742
-	}, {
-		"x": 0.19480519480519481,
-		"y": 0.7323651452282157
-	}, {
-		"x": 0.17857142857142858,
-		"y": 0.17842323651452283
-	}, {
-		"x": 0.18506493506493507,
-		"y": 0.1825726141078838
-	}, {
-		"x": 0.17857142857142858,
-		"y": 0.1825726141078838
-	}],
-	"type": "polygon"
-}`;
-
-const circleGeom = `{
-	"status": "active",
-	"lineColor": "#3333ff",
-	"lineWidth": 2,
-	"points": [{
-		"x": 0.3400735294117647,
-		"y": 0.45376078914919854
-	}],
-	"type": "circle",
-	"radius": {
-		"x": 0.04595588235294118,
-		"y": 0.03082614056720101
-	},
-	"original_index": 1
-}`;
-
-const circleGeom2 = `{
-	"status": "active",
-	"lineColor": "#3333ff",
-	"lineWidth": 2,
-	"points": [{
-		"x": 0.5305232558139537,
-		"y": 0.3126142595978062
-	}],
-	"type": "circle",
-	"radius": {
-		"x": 0.18023255813953487,
-		"y": 0.08957952468007313
-	},
-	"original_index": 1
-}`;
-
 class Geom extends ReadValue {
     geometryString: string;
 }
@@ -144,7 +73,8 @@ function makeRegion(geomString: string[], iri: string): ReadResource {
 @Component({
     template: `
         <app-still-image [images]="stillImageFileRepresentations"
-                         [imageCaption]="caption" [activateRegion]="inputActivateRegion"
+                         [imageCaption]="caption"
+                         [activateRegion]="inputActivateRegion"
                          (regionClicked)="regHovered($event)">
         </app-still-image>`
 })
@@ -164,10 +94,7 @@ class TestHostComponent implements OnInit {
             = [
                 new FileRepresentation(stillImageFileValue,
                     [
-                        new Region(makeRegion([rectangleGeom], 'first')),
-                        new Region(makeRegion([polygonGeom], 'second')),
-                        new Region(makeRegion([circleGeom], 'third')),
-                        new Region(makeRegion([circleGeom2, rectangleGeom2], 'fourth'))
+                        new Region(makeRegion([rectangleGeom], 'first'))
                     ])
             ];
     }
@@ -182,11 +109,27 @@ describe('StillImageComponent', () => {
     let testHostFixture: ComponentFixture<TestHostComponent>;
 
     beforeEach(waitForAsync(() => {
+
+        const adminSpyObj = {
+            v2: {
+                res: jasmine.createSpyObj('res', ['createResource'])
+            }
+        };
+
         TestBed.configureTestingModule({
             declarations: [StillImageComponent, TestHostComponent],
             imports: [
+                MatDialogModule,
                 MatIconModule,
-                MatToolbarModule
+                MatSnackBarModule,
+                MatToolbarModule,
+            ],
+            providers: [
+                AppInitService,
+                {
+                    provide: DspApiConnectionToken,
+                    useValue: adminSpyObj
+                },
             ]
         })
             .compileComponents();
@@ -237,18 +180,16 @@ describe('StillImageComponent', () => {
 
     });
 
-    it('should have 5 test regions loaded (rectangle, polygon, circle, [circle, rectangle])', () => {
+    it('should have 1 test region loaded (rectangle)', () => {
 
-        const overlay = testHostComponent.osdViewerComp['_viewer'].svgOverlay();
-        expect(overlay.node().childElementCount).toEqual(5);
+        const osd = testHostComponent.osdViewerComp['_viewer'];
+        expect(osd.element.getElementsByClassName('region').length).toEqual(1);
     });
 
-    it('should emit the region\'s Iri when a region is hovered', () => {
+    it('should emit the region\'s Iri when a region is clicked', () => {
 
-        const overlay = testHostComponent.osdViewerComp['_viewer'].svgOverlay();
-
-        // first region -> polygon element (second element in <g> element)
-        const regionSvgEle: HTMLElement = overlay.node().childNodes[0].childNodes[1];
+        const osd = testHostComponent.osdViewerComp['_viewer'];
+        const overlayElement = osd.element.getElementsByClassName('region')[0];
 
         const event = new MouseEvent('click', {
             bubbles: true,
@@ -256,46 +197,12 @@ describe('StillImageComponent', () => {
             view: window
         });
 
-        regionSvgEle.dispatchEvent(event);
+        overlayElement.dispatchEvent(event);
 
         testHostFixture.detectChanges();
 
         expect(testHostComponent.activeRegion).toEqual('first');
 
-    });
-
-    it('should highlight a region', () => {
-
-        testHostComponent.osdViewerComp['_highlightRegion']('first');
-        testHostFixture.detectChanges();
-
-        const overlay = testHostComponent.osdViewerComp['_viewer'].svgOverlay();
-
-        // first region -> polygon element (second element in <g> element)
-        const regionSvgEle: HTMLElement = overlay.node().childNodes[0].childNodes[1];
-
-        let attr = regionSvgEle.getAttribute('class');
-        expect(attr).toEqual('roi-svgoverlay active');
-
-        testHostComponent.osdViewerComp['_unhighlightAllRegions']();
-        testHostFixture.detectChanges();
-
-        attr = regionSvgEle.getAttribute('class');
-        expect(attr).toEqual('roi-svgoverlay');
-
-    });
-
-    it('should highlight a region using the input "activateRegion"', () => {
-        testHostComponent.inputActivateRegion = 'first';
-        testHostFixture.detectChanges();
-
-        const overlay = testHostComponent.osdViewerComp['_viewer'].svgOverlay();
-
-        // first region -> polygon element (second element in <g> element)
-        const regionSvgEle: HTMLElement = overlay.node().childNodes[0].childNodes[1];
-
-        const attr = regionSvgEle.getAttribute('class');
-        expect(attr).toEqual('roi-svgoverlay active');
     });
 
 });
