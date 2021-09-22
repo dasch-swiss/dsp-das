@@ -1,5 +1,18 @@
 # Changelog
 
+### [6.1.1](https://www.github.com/dasch-swiss/dsp-app/compare/v6.1.0...v6.1.1) (2021-09-22)
+
+
+### Bug Fixes
+
+* **error:** improve the current error handler in DSP-APP (DSP-1911) ([#540](https://www.github.com/dasch-swiss/dsp-app/issues/540)) ([0eb621b](https://www.github.com/dasch-swiss/dsp-app/commit/0eb621bbf9aa182d17b09df3ead46c34d357e0e5))
+* gravsearch results now appear after page refresh ([#542](https://www.github.com/dasch-swiss/dsp-app/issues/542)) ([a88dd79](https://www.github.com/dasch-swiss/dsp-app/commit/a88dd790e6bf35931e9443a6745a5d75f47ce502))
+
+
+### Maintenance
+
+* **fulltext-search:** persist fulltext search term in input field (DSP-1674) ([#539](https://www.github.com/dasch-swiss/dsp-app/issues/539)) ([67a52a3](https://www.github.com/dasch-swiss/dsp-app/commit/67a52a32ef8285e16b37f6cd069a72ded763deab))
+
 ## [6.1.0](https://www.github.com/dasch-swiss/dsp-app/compare/v6.0.0...v6.1.0) (2021-09-20)
 
 
