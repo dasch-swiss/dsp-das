@@ -36,9 +36,9 @@ export class KnoraDatePipe implements PipeTransform {
             case 'era':
                 return value  + (date.era !== 'noEra' ? ' ' + date.era : '');
             case 'calendar':
-                return value + ' ' + date.calendar;
+                return value + ' ' + this._titleCase(date.calendar);
             case 'all':
-                return value  + (date.era !== 'noEra' ? ' ' + date.era : '') + ' ' + date.calendar;
+                return value  + (date.era !== 'noEra' ? ' ' + (date.era === 'BCE' ? date.era : '') : '') + ' ' + this._titleCase(date.calendar);
         }
     }
 
@@ -77,6 +77,17 @@ export class KnoraDatePipe implements PipeTransform {
                     return `${date.year}`;
                 }
         }
+    }
+
+    /**
+     * returns a string in Title Case format
+     * It's needed to transform a calendar name e.g. 'GREGORIAN' into 'Gregorian'
+     *
+     * @param str
+     * @returns string
+     */
+    private _titleCase(str: string): string {
+        return str.split(' ').map(w => w[0].toUpperCase() + w.substr(1).toLowerCase()).join(' ');
     }
 
 }
