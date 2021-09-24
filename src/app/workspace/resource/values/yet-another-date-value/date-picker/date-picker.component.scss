@@ -1,0 +1,115 @@
+@import "../../../../../../assets/style/config";
+
+.date-picker-content {
+  width: 296px;
+  // height: 412px;
+  // background-color: darkcyan;
+  padding: 8px 8px 16px 8px;
+}
+
+.hidden {
+  // display: none;
+}
+
+.panel {
+  width: 280px;
+  margin: 0 8px;
+
+  &.calendar-selector,
+  &.mont-year-selector {
+    display: inline-flex;
+    height: 56px;
+  }
+
+  &.calendar-selector {
+    // background-color: chartreuse;
+    .calendar {
+      width: 100%;
+    }
+
+    .action {
+      .action-button {
+        margin: 8px 4px;
+
+        &.submit {
+          color: $primary_700;
+        }
+      }
+    }
+  }
+  &.month-year-selector {
+    // background-color: chocolate;
+    .month {
+      width: 96px;
+      &.larger {
+        width: 136px;
+      }
+    }
+    .year {
+      width: 136px;
+
+      &.withButtonToggle {
+        width: 180px;
+      }
+
+      .era {
+        mat-button-toggle {
+          width: 48px;
+        }
+      }
+    }
+  }
+
+
+  &.day-selector {
+    display: grid;
+    // background-color: crimson;
+
+    &.disabled {
+      opacity: 25%;
+    }
+
+    .week-days {
+      margin-bottom: 0;
+      font-weight: lighter;
+      color: $dark;
+    }
+
+    .week {
+      display: inline-flex;
+    }
+  }
+
+
+}
+
+.day {
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  display: inline-table;
+  text-align: center;
+  padding: 2px;
+
+  &.selected {
+    background-color: $primary_700;
+    color: $bright;
+    border-radius: 50%;
+  }
+
+  > span {
+    display: block;
+  }
+
+  .selectable {
+    max-height: 36px;
+    max-width: 36px;
+    &.disabled {
+      cursor: not-allowed;
+    }
+
+    mat-icon {
+      margin: 6px;
+    }
+  }
+}
