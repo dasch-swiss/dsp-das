@@ -2,8 +2,8 @@ import { Component, EventEmitter, Inject, Input, OnChanges, Output } from '@angu
 import { PageEvent } from '@angular/material/paginator';
 import { ApiResponseError, CountQueryResponse, IFulltextSearchParams, KnoraApiConnection, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { ComponentCommunicationEventService, EmitEvent, Events } from 'src/app/main/services/component-communication-event.service';
 import { NotificationService } from 'src/app/main/services/notification.service';
-import { AdvancedSearchParamsService } from '../../search/services/advanced-search-params.service';
 
 /**
  * query: search query. It can be gravserch query or fulltext string query.
@@ -116,8 +116,8 @@ export class ListViewComponent implements OnChanges {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
-        private _advancedSearchParamsService: AdvancedSearchParamsService,
-        private _notification: NotificationService
+        private _notification: NotificationService,
+        private _componentCommsService: ComponentCommunicationEventService,
     ) { }
 
     ngOnChanges(): void {
@@ -207,6 +207,8 @@ export class ListViewComponent implements OnChanges {
             );
 
         } else if (this.search.mode === 'gravsearch') {
+            // emit 'gravSearchExecuted' event to the fulltext-search component in order to clear the input field
+            this._componentCommsService.emit(new EmitEvent(Events.gravSearchExecuted, true));
 
             // search mode: gravsearch
             if (this.pageEvent.pageIndex === 0) {
@@ -227,10 +229,12 @@ export class ListViewComponent implements OnChanges {
                 );
             }
 
-            // perform advanced search
-            const gravsearch = this._advancedSearchParamsService.getSearchParams().generateGravsearch(this.pageEvent.pageIndex);
+            let gravsearch: string;
 
-            if (typeof gravsearch === 'string') {
+            if (this.search.query !== undefined) {
+                gravsearch = this.search.query;
+                gravsearch = gravsearch.substring(0, gravsearch.search('OFFSET'));
+                gravsearch = gravsearch + 'OFFSET ' + this.pageEvent.pageIndex;
                 this._dspApiConnection.v2.search.doExtendedSearch(gravsearch).subscribe(
                     (response: ReadResourceSequence) => {
                         // if the response does not contain any resources even the search count is greater than 0,

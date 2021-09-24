@@ -102,6 +102,7 @@ import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text
 import { AddValueComponent } from './workspace/resource/operations/add-value/add-value.component';
 import { DisplayEditComponent } from './workspace/resource/operations/display-edit/display-edit.component';
 import { PropertiesComponent } from './workspace/resource/properties/properties.component';
+import { AddRegionFormComponent } from './workspace/resource/representation/add-region-form/add-region-form.component';
 import { AudioComponent } from './workspace/resource/representation/audio/audio.component';
 import { DocumentComponent } from './workspace/resource/representation/document/document.component';
 import { StillImageComponent } from './workspace/resource/representation/still-image/still-image.component';
@@ -121,7 +122,6 @@ import { CalendarHeaderComponent } from './workspace/resource/values/date-value/
 import { DateEditComponent } from './workspace/resource/values/date-value/date-input-text/date-edit/date-edit.component';
 import { DateInputTextComponent } from './workspace/resource/values/date-value/date-input-text/date-input-text.component';
 import { DateInputComponent } from './workspace/resource/values/date-value/date-input/date-input.component';
-import { DatePickerComponent } from './workspace/resource/values/yet-another-date-value/date-picker/date-picker.component';
 import { DateValueComponent } from './workspace/resource/values/date-value/date-value.component';
 import { DecimalValueComponent } from './workspace/resource/values/decimal-value/decimal-value.component';
 import { GeonameValueComponent } from './workspace/resource/values/geoname-value/geoname-value.component';
@@ -160,7 +160,6 @@ import { SearchSelectOntologyComponent } from './workspace/search/advanced-searc
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
-import { YetAnotherDateValueComponent } from './workspace/resource/values/yet-another-date-value/yet-another-date-value.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -171,6 +170,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     declarations: [
         AccountComponent,
         AddGroupComponent,
+        AddRegionFormComponent,
         AddressTemplateComponent,
         AddUserComponent,
         AddValueComponent,
@@ -196,7 +196,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         DateEditComponent,
         DateInputComponent,
         DateInputTextComponent,
-        DatePickerComponent,
         DateValueComponent,
         DecimalValueComponent,
         DialogComponent,
@@ -311,7 +310,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         UsersComponent,
         UsersListComponent,
         VisualizerComponent,
-        YetAnotherDateValueComponent,
     ],
     imports: [
         AngularSplitModule.forRoot(),

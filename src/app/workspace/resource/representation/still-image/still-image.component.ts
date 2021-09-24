@@ -1,16 +1,31 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { Constants, Point2D, ReadFileValue, ReadGeomValue, ReadResource, ReadStillImageFileValue, RegionGeometry } from '@dasch-swiss/dsp-js';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    OnChanges,
+    OnDestroy,
+    Output,
+    SimpleChanges
+} from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import {
+    Constants, CreateColorValue, CreateGeomValue, CreateLinkValue,
+    CreateResource, CreateTextValueAsString, KnoraApiConnection,
+    Point2D, ReadFileValue,
+    ReadGeomValue,
+    ReadResource,
+    ReadStillImageFileValue,
+    RegionGeometry
+} from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { DspCompoundPosition } from '../../dsp-resource';
 import { FileRepresentation } from '../file-representation';
+import * as OpenSeadragon from 'openseadragon';
 
-
-// this component needs the openseadragon library itself, as well as the openseadragon plugin openseadragon-svg-overlay
-// both libraries are installed via package.json, and loaded globally via the script tag in .angular-cli.json
-
-// openSeadragon does not export itself as ES6/ECMA2015 module,
-// it is loaded globally in scripts tag of angular-cli.json,
-// we still need to declare the namespace to make TypeScript compiler happy.
-declare let OpenSeadragon: any;
 
 /**
  * represents a region resource.
@@ -70,7 +85,7 @@ export class GeometryForRegion {
  */
 interface PolygonsForRegion {
 
-    [key: string]: SVGPolygonElement[];
+    [key: string]: HTMLDivElement[];
 
 }
 
@@ -83,6 +98,8 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
     @Input() images: FileRepresentation[];
     @Input() imageCaption?: string;
+    @Input() resourceIri: string;
+    @Input() project: string;
     @Input() activateRegion?: string; // highlight a region
 
     @Input() compoundNavigation?: DspCompoundPosition;
@@ -91,12 +108,16 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
     @Output() regionClicked = new EventEmitter<string>();
 
-    private _viewer;
+
+    @Output() regionAdded = new EventEmitter<string>();
+
+    private _regionDrawMode: Boolean = false; // stores whether viewer is currently drawing a region
+    private _regionDragInfo; // stores the information of the first click for drawing a region
+    private _viewer: OpenSeadragon.Viewer;
     private _regions: PolygonsForRegion = {};
 
-
     constructor(
-        private _elementRef: ElementRef
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection, private _elementRef: ElementRef, private _dialog: MatDialog, private _errorHandler: ErrorHandlerService
     ) {
         OpenSeadragon.setString('Tooltips.Home', '');
         OpenSeadragon.setString('Tooltips.ZoomIn', '');
@@ -176,17 +197,154 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     }
 
     /**
+     * when the draw region button is clicked, this method is called from the html. It sets the draw mode to true and
+     * prevents navigation by mouse (so that the region can be accurately drawn).
+     */
+    drawButtonClicked(): void {
+        this._regionDrawMode = true;
+        this._viewer.setMouseNavEnabled(false);
+    }
+
+    /**
+     * opens the dialog to enter further properties for the region after it has been drawn and calls the function to upload the region after confirmation
+     * @param startPoint the start point of the drawing
+     * @param endPoint the end point of the drawing
+     * @param imageSize the image size for calculations
+     */
+    private _openRegionDialog(startPoint, endPoint, imageSize, overlay): void{
+        const dialogConfig: MatDialogConfig = {
+            width: '840px',
+            maxHeight: '80vh',
+            position: {
+                top: '112px'
+            },
+            data: { mode: 'addRegion', title: 'Create a region', subtitle: 'Add further properties', id: this.resourceIri },
+            disableClose: true
+        };
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
+        );
+
+        dialogRef.afterClosed().subscribe((data) => {
+            // remove the drawn rectangle as either the cancel button was clicked or the region will be displayed
+            this._viewer.removeOverlay(overlay);
+            if (data) { // data is null if the cancel button was clicked
+                this._uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
+            }
+        });
+    }
+    /**
+     * uploads the region after being prepared by the dialog
+     * @param startPoint the start point of the drawing
+     * @param endPoint the end point of the drawing
+     * @param imageSize the image size for calculations
+     * @param color the value for the color entered in the form
+     * @param comment the value for the comment entered in the form
+     * @param label the value for the label entered in the form
+     */
+    private _uploadRegion(startPoint, endPoint, imageSize, color, comment, label){
+        const x1 = Math.max(Math.min(startPoint.x, imageSize.x), 0)/imageSize.x;
+        const x2 = Math.max(Math.min(endPoint.x, imageSize.x), 0)/imageSize.x;
+        const y1 = Math.max(Math.min(startPoint.y, imageSize.y), 0)/imageSize.y;
+        const y2 = Math.max(Math.min(endPoint.y, imageSize.y), 0)/imageSize.y;
+        const geomStr = '{"status":"active","lineColor":"' + color + '","lineWidth":2,"points":[{"x":' +  x1.toString() +
+            ',"y":' + y1.toString() + '},{"x":' + x2.toString() + ',"y":' + y2.toString()+ '}],"type":"rectangle"}';
+        const createResource = new CreateResource();
+        createResource.label = label;
+        createResource.type = Constants.KnoraApiV2 + Constants.HashDelimiter + 'Region';
+        createResource.attachedToProject = this.project;
+        const geomVal = new CreateGeomValue();
+        geomVal.type = Constants.GeomValue;
+        geomVal.geometryString = geomStr;
+        const colorVal = new CreateColorValue();
+        colorVal.type = Constants.ColorValue;
+        colorVal.color = color;
+        const linkVal = new CreateLinkValue();
+        linkVal.type = Constants.LinkValue;
+        linkVal.linkedResourceIri = this.resourceIri;
+        const commentVal = new CreateTextValueAsString();
+        commentVal.type = Constants.TextValue;
+        commentVal.text = comment;
+
+        createResource.properties = {
+            [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasComment']: [commentVal],
+            [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasColor'] : [colorVal],
+            [Constants.KnoraApiV2 + Constants.HashDelimiter + 'isRegionOfValue'] : [linkVal],
+            [Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasGeometry'] : [geomVal]
+        };
+        this._dspApiConnection.v2.res.createResource(createResource).subscribe(
+            (res: ReadResource) => {
+                this.regionAdded.emit(res.id);
+            },
+            (error) => {
+                this._errorHandler.showMessage(error);
+            }
+        );
+    }
+
+    /**
+     * set up function for the region drawer
+     */
+    private _addRegionDrawer(){
+        new OpenSeadragon.MouseTracker({
+            element: this._viewer.canvas,
+            pressHandler: (event) => {
+                if (!this._regionDrawMode){
+                    return;
+                }
+                const overlayElement = document.createElement('div');
+                overlayElement.style.background = 'rgba(255,0,0,0.3)';
+                const viewportPos = this._viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position);
+                this._viewer.addOverlay(overlayElement, new OpenSeadragon.Rect(viewportPos.x, viewportPos.y, 0, 0));
+                this._regionDragInfo = {
+                    overlayElement: overlayElement,
+                    startPos: viewportPos
+                };
+            },
+            dragHandler: (event) => {
+                if (!this._regionDragInfo){
+                    return;
+                }
+                const viewPortPos = this._viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position);
+                const diffX = viewPortPos.x - this._regionDragInfo.startPos.x;
+                const diffY = viewPortPos.y - this._regionDragInfo.startPos.y;
+                const location = new OpenSeadragon.Rect(
+                    Math.min(this._regionDragInfo.startPos.x, this._regionDragInfo.startPos.x + diffX),
+                    Math.min(this._regionDragInfo.startPos.y, this._regionDragInfo.startPos.y + diffY),
+                    Math.abs(diffX),
+                    Math.abs(diffY)
+                );
+
+                this._viewer.updateOverlay(this._regionDragInfo.overlayElement, location);
+                this._regionDragInfo.endPos = viewPortPos;
+            },
+            releaseHandler: () => {
+                if (this._regionDrawMode) {
+                    const imageSize =  this._viewer.world.getItemAt(0).getContentSize();
+                    const startPoint  = this._viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.startPos);
+                    const endPoint = this._viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.endPos);
+                    this._openRegionDialog(startPoint, endPoint, imageSize, this._regionDragInfo.overlayElement);
+                    this._regionDragInfo = null;
+                    this._regionDrawMode = false;
+                    this._viewer.setMouseNavEnabled(true);
+                }
+            }
+        });
+    }
+
+    /**
      * highlights the polygon elements associated with the given region.
      *
      * @param regionIri the Iri of the region whose polygon elements should be highlighted..
      */
     private _highlightRegion(regionIri) {
 
-        const activeRegion: SVGPolygonElement[] = this._regions[regionIri];
+        const activeRegion: HTMLDivElement[] = this._regions[regionIri];
 
         if (activeRegion !== undefined) {
             for (const pol of activeRegion) {
-                pol.setAttribute('class', 'roi-svgoverlay active');
+                pol.setAttribute('class', 'region active');
             }
         }
     }
@@ -200,7 +358,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         for (const reg in this._regions) {
             if (this._regions.hasOwnProperty(reg)) {
                 for (const pol of this._regions[reg]) {
-                    pol.setAttribute('class', 'roi-svgoverlay');
+                    pol.setAttribute('class', 'region');
                 }
             }
         }
@@ -214,7 +372,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         for (const reg in this._regions) {
             if (this._regions.hasOwnProperty(reg)) {
                 for (const pol of this._regions[reg]) {
-                    if (pol instanceof SVGPolygonElement) {
+                    if (pol instanceof HTMLDivElement) {
                         pol.remove();
                     }
                 }
@@ -245,17 +403,16 @@ export class StillImageComponent implements OnChanges, OnDestroy {
             // rotateLeftButton: 'DSP_OSD_ROTATE_LEFT',        // doesn't work yet
             // rotateRightButton: 'DSP_OSD_ROTATE_RIGHT',       // doesn't work yet
             showNavigator: true,
-            navigatorPosition: 'ABSOLUTE',
+            navigatorPosition: 'ABSOLUTE' as const,
             navigatorTop: '40px',
             navigatorLeft: 'calc(100% - 160px)',
             navigatorHeight: '120px',
             navigatorWidth: '120px',
+            gestureSettingsMouse: {
+                clickToZoom: false // do not zoom in on click
+            }
         };
         this._viewer = new OpenSeadragon.Viewer(osdOptions);
-
-        // do not zoom in on click
-        // https://github.com/openseadragon/openseadragon/issues/1115#issuecomment-275725918
-        this._viewer.zoomPerClick = 1;
 
         this._viewer.addHandler('full-screen', (args) => {
             if (args.fullScreen) {
@@ -264,9 +421,8 @@ export class StillImageComponent implements OnChanges, OnDestroy {
                 viewerContainer.classList.remove('fullscreen');
             }
         });
-        this._viewer.addHandler('resize', (args) => {
-            args.eventSource.svgOverlay().resize();
-        });
+
+        this._addRegionDrawer();
     }
 
     /**
@@ -419,134 +575,33 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         const lineColor = geometry.lineColor;
         const lineWidth = geometry.lineWidth;
 
-        let svgElement;
-        switch (geometry.type) {
-            case 'rectangle':
-                svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');  // yes, we render rectangles as svg polygon elements
-                this._addSVGAttributesRectangle(svgElement, geometry, aspectRatio, xOffset);
-                break;
-            case 'polygon':
-                svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-                this._addSVGAttributesPolygon(svgElement, geometry, aspectRatio, xOffset);
-                break;
-            case 'circle':
-                svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                this._addSVGAttributesCircle(svgElement, geometry, aspectRatio, xOffset);
-                break;
-            default:
-                console.log('ERROR: StillImageOSDViewerComponent.createSVGOverlay: unknown geometryType: ' + geometry.type);
-                return;
-        }
-        svgElement.id = 'roi-svgoverlay-' + Math.random() * 10000;
-        svgElement.setAttribute('class', 'roi-svgoverlay');
-        svgElement.setAttribute('style', 'stroke: ' + lineColor + '; stroke-width: ' + lineWidth + 'px;');
+        const elt = document.createElement('div');
+        elt.id = 'region-overlay-' + Math.random() * 10000;
+        elt.className = 'region';
+        elt.title = toolTip;
+        elt.setAttribute('style', 'outline: solid ' + lineColor + ' ' + lineWidth + 'px;');
 
-        // event when a region is clicked (output)
-        svgElement.addEventListener('click', (event: MouseEvent) => {
+        elt.addEventListener('click', (event: MouseEvent) => {
             this.regionClicked.emit(regionIri);
         }, false);
 
-        const svgTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-        svgTitle.textContent = toolTip;
+        const diffX = geometry.points[1].x - geometry.points[0].x;
+        const diffY = geometry.points[1].y - geometry.points[0].y;
 
-        const svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        svgGroup.appendChild(svgTitle);
-        svgGroup.appendChild(svgElement);
+        const loc = new OpenSeadragon.Rect(
+            Math.min(geometry.points[0].x, geometry.points[0].x + diffX),
+            Math.min(geometry.points[0].y, geometry.points[0].y + diffY),
+            Math.abs(diffX),
+            Math.abs(diffY * aspectRatio));
 
-        const overlay = this._viewer.svgOverlay();
-        overlay.node().appendChild(svgGroup); // tODO: use method osdviewer's method addOverlay
+        loc.y = loc.y * aspectRatio;
 
-        this._regions[regionIri].push(svgElement);
-    }
+        this._viewer.addOverlay({
+            element: elt,
+            location: loc
+        });
 
-    /**
-     * adds the necessary attributes to create a ROI-overlay of type 'rectangle' to a SVGElement
-     * @param svgElement - an SVGElement (should have type 'polygon' (sic))
-     * @param geometry - the geometry describing the rectangle
-     * @param aspectRatio - the aspectRatio (h/w) of the image on which the circle should be placed
-     * @param xOffset - the x-offset in Openseadragon viewport coordinates of the image on which the circle should be placed
-     */
-    private _addSVGAttributesRectangle(svgElement: SVGElement, geometry: RegionGeometry, aspectRatio: number, xOffset: number): void {
-        const pointA = geometry.points[0];
-        const pointB = geometry.points[1];
-
-        // geometry.points contains two diagonally opposed corners of the rectangle, but the order of the corners is arbitrary.
-        // we therefore construct the upperleft (UL), lowerright (LR), upperright (UR) and lowerleft (LL) positions of the corners with min and max operations.
-        const positionUL = new Point2D(Math.min(pointA.x, pointB.x), Math.min(pointA.y, pointB.y));
-        const positionLR = new Point2D(Math.max(pointA.x, pointB.x), Math.max(pointA.y, pointB.y));
-        const positionUR = new Point2D(Math.max(pointA.x, pointB.x), Math.min(pointA.y, pointB.y));
-        const positionLL = new Point2D(Math.min(pointA.x, pointB.x), Math.max(pointA.y, pointB.y));
-
-        const points = [positionUL, positionUR, positionLR, positionLL];
-        const viewCoordPoints = this._image2ViewPortCoords(points, aspectRatio, xOffset);
-        const pointsString = this._createSVGPolygonPointsAttribute(viewCoordPoints);
-        svgElement.setAttribute('points', pointsString);
-    }
-
-    /**
-     * adds the necessary attributes to create a ROI-overlay of type 'polygon' to a SVGElement
-     * @param svgElement - an SVGElement (should have type 'polygon')
-     * @param geometry - the geometry describing the polygon
-     * @param aspectRatio - the aspectRatio (h/w) of the image on which the circle should be placed
-     * @param xOffset - the x-offset in Openseadragon viewport coordinates of the image on which the circle should be placed
-     */
-    private _addSVGAttributesPolygon(svgElement: SVGElement, geometry: RegionGeometry, aspectRatio: number, xOffset: number): void {
-        const viewCoordPoints = this._image2ViewPortCoords(geometry.points, aspectRatio, xOffset);
-        const pointsString = this._createSVGPolygonPointsAttribute(viewCoordPoints);
-        svgElement.setAttribute('points', pointsString);
-    }
-
-    /**
-     * adds the necessary attributes to create a ROI-overlay of type 'circle' to a SVGElement
-     * @param svgElement - an SVGElement (should have type 'circle')
-     * @param geometry - the geometry describing the circle
-     * @param aspectRatio - the aspectRatio (h/w) of the image on which the circle should be placed
-     * @param xOffset - the x-offset in Openseadragon viewport coordinates of the image on which the circle should be placed
-     */
-    private _addSVGAttributesCircle(svgElement: SVGElement, geometry: RegionGeometry, aspectRatio: number, xOffset: number): void {
-        const viewCoordPoints = this._image2ViewPortCoords(geometry.points, aspectRatio, xOffset);
-        const cx = String(viewCoordPoints[0].x);
-        const cy = String(viewCoordPoints[0].y);
-        // geometry.radius contains not the radius itself, but the coordinates of a (arbitrary) point on the circle.
-        // we therefore have to calculate the length of the vector geometry.radius to get the actual radius. -> sqrt(x^2 + y^2)
-        // since geometry.radius has its y coordinate scaled to the height of the image,
-        // we need to multiply it with the aspectRatio to get to the scale used by Openseadragon, analoguous to this.image2ViewPortCoords()
-        const radius = String(Math.sqrt(geometry.radius.x * geometry.radius.x + aspectRatio * aspectRatio * geometry.radius.y * geometry.radius.y));
-        svgElement.setAttribute('cx', cx);
-        svgElement.setAttribute('cy', cy);
-        svgElement.setAttribute('r', radius);
-    }
-
-    /**
-     * maps a Point2D[] with coordinates relative to an image to a new Point2D[] with coordinates in the viewport coordinate system of Openseadragon
-     * see also: https://openseadragon.github.io/examples/viewport-coordinates/
-     * @param points - an array of points in coordinate system relative to an image
-     * @param aspectRatio - the aspectRatio (h/w) of the image
-     * @param xOffset - the x-offset in viewport coordinates of the image
-     * @returns - a new Point2D[] with coordinates in the viewport coordinate system of Openseadragon
-     */
-    private _image2ViewPortCoords(points: Point2D[], aspectRatio: number, xOffset: number): Point2D[] {
-        return points.map(
-            (point) => (new Point2D(point.x + xOffset, point.y * aspectRatio))
-        );
-    }
-
-    /**
-     * returns a string in the format expected by the 'points' attribute of a SVGElement
-     * @param points - an array of points to be serialized to a string
-     * @returns - the points serialized to a string in the format expected by the 'points' attribute of a SVGElement
-     */
-    private _createSVGPolygonPointsAttribute(points: Point2D[]): string {
-        let pointsString = '';
-        for (const i in points) {
-            if (points.hasOwnProperty(i)) {
-                pointsString += points[i].x;
-                pointsString += ',';
-                pointsString += points[i].y;
-                pointsString += ' ';
-            }
-        }
-        return pointsString;
+        this._regions[regionIri].push(elt);
     }
 
 }

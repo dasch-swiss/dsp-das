@@ -517,4 +517,14 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         }
 
     }
+
+    updateRegions(iri: string) {
+        if (this.incomingResource) {
+            this.incomingResource.incomingAnnotations = [];
+        } else {
+            this.resource.incomingAnnotations = [];
+        }
+        this.getIncomingRegions(this.incomingResource ? this.incomingResource : this.resource, 0);
+        this.openRegion(iri);
+    }
 }
