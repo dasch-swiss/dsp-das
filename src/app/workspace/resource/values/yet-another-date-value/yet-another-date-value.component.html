@@ -1,6 +1,6 @@
 <span *ngIf="mode === 'read'; else showForm" class="read-mode-view">
     <div class="rm-value">
-        <span>{{ valueFormControl.value | knoraDate }}</span>
+        <span>{{ valueFormControl.value | knoraDate:ontologyDateFormat:displayOptions }}</span>
     </div>
     <span class="rm-comment" *ngIf="shouldShowComment">
         {{ commentFormControl.value }}
