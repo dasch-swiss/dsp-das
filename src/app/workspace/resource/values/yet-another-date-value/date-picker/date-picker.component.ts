@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Component, DoCheck, ElementRef, HostBinding, Input, OnDestroy, OnInit, Optional, Self, ViewChild } from '@angular/core';
+import { Component, DoCheck, ElementRef, HostBinding, Input, OnDestroy, Optional, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, FormGroup, FormGroupDirective, NgControl, NgForm, Validators } from '@angular/forms';
 import { CanUpdateErrorState, CanUpdateErrorStateCtor, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
@@ -171,7 +171,6 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
     @Input()
     get value(): KnoraDate | null {
         const dateValue = this.dateForm.value;
-        // console.warn('get value', dateValue);
         if (dateValue !== null) {
             return dateValue.knoraDate;
         }
@@ -181,7 +180,6 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
     set value(dateValue: KnoraDate | null) {
 
         if (dateValue !== null) {
-            console.log('date value', dateValue);
 
             this.dateForm.setValue({ date: this._knoraDatePipe.transform(dateValue), knoraDate: dateValue });
             // this.dateForm.setValue({ date: dateValue });
@@ -234,23 +232,13 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
         // this.date = this.dateForm.date
         if (this.empty) {
             // set today in date picker
-            // console.log('empty', this.value);
             this.buildForm();
         }
 
         this.dateForm.valueChanges
             .subscribe(data => this.handleInput(data));
 
-
-        // console.log('get date', date)
-
-        // console.log(this.dateForm)
     }
-
-    // ngOnInit() {
-    //     // this.buildForm();
-    //     this.setDate();
-    // }
 
     ngDoCheck() {
 
@@ -286,14 +274,10 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
     }
 
     handleInput(data: any) {
-        console.log('handle input', data);
-
         this.onChange(this.value);
     }
 
     buildForm() {
-
-        console.log('build date picker form with', this.value);
 
         this.form = new FormGroup({
             calendar: new FormControl(''),
@@ -308,7 +292,6 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
 
         this.disableDaySelector = (this.month === 0);
 
-        // console.log('set days in build form');
         if (this.value) {
             this.updateForm();
         } else {
@@ -326,8 +309,6 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
          * @param data Data which changed.
          */
     onValueChanged(data?: any) {
-
-        console.log('onValueChanged', data);
 
         if (!this.form) {
             return;
@@ -385,8 +366,6 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
             );
 
             this.value = this.date;
-            // this.dateForm.controls.knoraDate.touched = true;
-            // console.warn('set value of parent', this.value);
 
             this.popover.closeMenu();
         }
@@ -458,11 +437,6 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
      * @param month month of the given date.
      */
     private _setDays(calendar: string, era: string, year: number, month: number) {
-
-        // console.log('set days with calendar', calendar);
-        // console.log('set days with era', era);
-        // console.log('set days with year', year);
-        // console.log('set days with month', month);
 
         const yearAstro = this._valueService.convertHistoricalYearToAstronomicalYear(year, era, calendar.toUpperCase());
 

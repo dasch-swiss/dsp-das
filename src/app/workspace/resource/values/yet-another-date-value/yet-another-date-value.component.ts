@@ -1,11 +1,10 @@
 import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { CreateColorValue, CreateDateValue, KnoraDate, KnoraPeriod, ReadColorValue, ReadDateValue, UpdateColorValue, UpdateDateValue } from '@dasch-swiss/dsp-js';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { CreateDateValue, KnoraDate, KnoraPeriod, ReadDateValue, UpdateDateValue } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
-import { DatePickerComponent } from './date-picker/date-picker.component';
-import { CustomRegex } from '../custom-regex';
-import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
+import { ValueErrorStateMatcher } from '../value-error-state-matcher';
+import { DatePickerComponent } from './date-picker/date-picker.component';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 const resolvedPromise = Promise.resolve(null);
@@ -81,51 +80,6 @@ export class YetAnotherDateValueComponent extends BaseValueDirective implements 
             this.removeFromParentFormGroup(this.formName);
         });
     }
-
-    // getNewValue(): CreateDateValue | false {
-    //     if (this.mode !== 'create' || !this.form.valid || this.isEmptyVal()) {
-    //         return false;
-    //     }
-
-    //     console.warn('get new value', this.valueFormControl.value);
-
-    //     const newDateValue = new CreateDateValue();
-
-    //     newDateValue.startDay = this.valueFormControl.value;
-
-    //     if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
-    //         newDateValue.valueHasComment = this.commentFormControl.value;
-    //     }
-
-
-    //     return newDateValue;
-    // }
-
-    // getUpdatedValue(): UpdateDateValue | false {
-    //     if (this.mode !== 'update' || !this.form.valid) {
-    //         return false;
-    //     }
-
-    //     console.warn('get updated value', this.valueFormControl.value);
-
-
-    //     const updatedDateValue = new UpdateDateValue();
-
-    //     updatedDateValue.id = this.displayValue.id;
-
-    //     updatedDateValue.calendar = this.valueFormControl.value.calendar;
-    //     updatedDateValue.startEra = this.valueFormControl.value.era;
-    //     updatedDateValue.startYear = this.valueFormControl.value.year;
-    //     updatedDateValue.startMonth = this.valueFormControl.value.month;
-    //     updatedDateValue.startDay = this.valueFormControl.value.day;
-
-    //     // add the submitted comment to updatedIntValue only if user has added a comment
-    //     if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
-    //         updatedDateValue.valueHasComment = this.commentFormControl.value;
-    //     }
-
-    //     return updatedDateValue;
-    // }
 
     /**
      * given a value and a period or Date, populates the value.

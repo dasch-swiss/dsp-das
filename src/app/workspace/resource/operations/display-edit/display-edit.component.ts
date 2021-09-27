@@ -229,9 +229,6 @@ export class DisplayEditComponent implements OnInit {
         this.showActionBubble = false;
         const updatedVal = this.displayValueComponent.getUpdatedValue();
 
-        console.warn(updatedVal);
-
-
         if (updatedVal instanceof UpdateValue) {
             const updateRes = new UpdateResource();
             updateRes.id = this.parentResource.id;
@@ -242,10 +239,6 @@ export class DisplayEditComponent implements OnInit {
                 mergeMap((res: WriteValueResponse) => this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid))
             ).subscribe(
                 (res2: ReadResource) => {
-
-                    // console.warn(res);
-                    console.warn(res2);
-
 
                     this._valueOperationEventService.emit(
                         new EmitEvent(Events.ValueUpdated, new UpdatedEventValues(
