@@ -8,7 +8,7 @@
 </span>
 <ng-template #showForm>
     <span [formGroup]="form">
-        <!-- <mat-form-field class="large-field color-field child-value-component" floatLabel="never"> -->
+        <span class="large-field child-value-component">
             <app-date-picker
                 #dateInput
                 class="value"
@@ -18,13 +18,10 @@
             <mat-error *ngIf="valueFormControl.hasError('valueNotChanged')">
                New value must be different than the current value.
             </mat-error>
-            <!-- <mat-error *ngIf="valueFormControl.hasError('pattern')">
-                Please enter a hex color value.
-            </mat-error> -->
             <mat-error *ngIf="valueFormControl.hasError('duplicateValue')">
                 <span class="custom-error-message">This value already exists for this property. Duplicate values are not allowed.</span>
             </mat-error>
-        <!-- </mat-form-field> -->
+        </span>
         <mat-form-field class="large-field value-component-comment">
             <textarea
                 matInput

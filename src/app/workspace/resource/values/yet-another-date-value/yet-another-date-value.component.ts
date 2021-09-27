@@ -27,9 +27,8 @@ export class YetAnotherDateValueComponent extends BaseValueDirective implements 
     commentFormControl: FormControl;
     form: FormGroup;
     valueChangesSubscription: Subscription;
-    customValidators = [Validators.pattern(CustomRegex.COLOR_REGEX)];
+    customValidators = [];
     matcher = new ValueErrorStateMatcher();
-    textColor: string;
 
     constructor(@Inject(FormBuilder) private _fb: FormBuilder) {
         super();
@@ -83,21 +82,103 @@ export class YetAnotherDateValueComponent extends BaseValueDirective implements 
         });
     }
 
+    // getNewValue(): CreateDateValue | false {
+    //     if (this.mode !== 'create' || !this.form.valid || this.isEmptyVal()) {
+    //         return false;
+    //     }
+
+    //     console.warn('get new value', this.valueFormControl.value);
+
+    //     const newDateValue = new CreateDateValue();
+
+    //     newDateValue.startDay = this.valueFormControl.value;
+
+    //     if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
+    //         newDateValue.valueHasComment = this.commentFormControl.value;
+    //     }
+
+
+    //     return newDateValue;
+    // }
+
+    // getUpdatedValue(): UpdateDateValue | false {
+    //     if (this.mode !== 'update' || !this.form.valid) {
+    //         return false;
+    //     }
+
+    //     console.warn('get updated value', this.valueFormControl.value);
+
+
+    //     const updatedDateValue = new UpdateDateValue();
+
+    //     updatedDateValue.id = this.displayValue.id;
+
+    //     updatedDateValue.calendar = this.valueFormControl.value.calendar;
+    //     updatedDateValue.startEra = this.valueFormControl.value.era;
+    //     updatedDateValue.startYear = this.valueFormControl.value.year;
+    //     updatedDateValue.startMonth = this.valueFormControl.value.month;
+    //     updatedDateValue.startDay = this.valueFormControl.value.day;
+
+    //     // add the submitted comment to updatedIntValue only if user has added a comment
+    //     if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
+    //         updatedDateValue.valueHasComment = this.commentFormControl.value;
+    //     }
+
+    //     return updatedDateValue;
+    // }
+
+    /**
+     * given a value and a period or Date, populates the value.
+     *
+     * @param value the value to be populated.
+     * @param dateOrPeriod the date or period to read from.
+     */
+    populateValue(value: UpdateDateValue | CreateDateValue, dateOrPeriod: KnoraDate | KnoraPeriod) {
+
+        if (dateOrPeriod instanceof KnoraDate) {
+
+            value.calendar = dateOrPeriod.calendar;
+            value.startEra = dateOrPeriod.era !== 'noEra' ? dateOrPeriod.era : undefined;
+            value.startDay = dateOrPeriod.day;
+            value.startMonth = dateOrPeriod.month;
+            value.startYear = dateOrPeriod.year;
+
+            value.endEra = value.startEra;
+            value.endDay = value.startDay;
+            value.endMonth = value.startMonth;
+            value.endYear = value.startYear;
+
+        } else if (dateOrPeriod instanceof KnoraPeriod) {
+
+            value.calendar = dateOrPeriod.start.calendar;
+
+            value.startEra = dateOrPeriod.start.era !== 'noEra' ? dateOrPeriod.start.era : undefined;
+            value.startDay = dateOrPeriod.start.day;
+            value.startMonth = dateOrPeriod.start.month;
+            value.startYear = dateOrPeriod.start.year;
+
+            value.endEra = dateOrPeriod.end.era !== 'noEra' ? dateOrPeriod.end.era : undefined;
+            value.endDay = dateOrPeriod.end.day;
+            value.endMonth = dateOrPeriod.end.month;
+            value.endYear = dateOrPeriod.end.year;
+
+        }
+    }
+
     getNewValue(): CreateDateValue | false {
         if (this.mode !== 'create' || !this.form.valid || this.isEmptyVal()) {
             return false;
         }
 
-        console.warn('get new value', this.valueFormControl.value);
-
         const newDateValue = new CreateDateValue();
 
-        newDateValue.startDay = this.valueFormControl.value;
+        const dateOrPeriod = this.valueFormControl.value;
+
+        this.populateValue(newDateValue, dateOrPeriod);
 
         if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
             newDateValue.valueHasComment = this.commentFormControl.value;
         }
-
 
         return newDateValue;
     }
@@ -107,14 +188,13 @@ export class YetAnotherDateValueComponent extends BaseValueDirective implements 
             return false;
         }
 
-        console.warn('get updated value', this.valueFormControl.value);
-
-
-        let updatedDateValue = new UpdateDateValue();
-
-        updatedDateValue = <UpdateDateValue>this.valueFormControl.value;
+        const updatedDateValue = new UpdateDateValue();
 
         updatedDateValue.id = this.displayValue.id;
+
+        const dateOrPeriod = this.valueFormControl.value;
+
+        this.populateValue(updatedDateValue, dateOrPeriod);
 
         // add the submitted comment to updatedIntValue only if user has added a comment
         if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
@@ -123,6 +203,5 @@ export class YetAnotherDateValueComponent extends BaseValueDirective implements 
 
         return updatedDateValue;
     }
-
 
 }
