@@ -45,6 +45,8 @@ export class ErrorHandlerService {
                 dialogConfig
             );
 
+            throw new Error('dsp-api not responding');
+
         } else if (error.status === 401 && typeof(error.error) !== 'string') {
             // logout if error status is a 401 error and comes from a DSP-JS request
             this._dspApiConnection.v2.auth.logout().subscribe(
@@ -58,6 +60,7 @@ export class ErrorHandlerService {
                 },
                 (logoutError: ApiResponseError) => {
                     this._notification.openSnackBar(logoutError);
+                    throw new Error(logoutError.error['message']);
                 }
             );
 
@@ -65,6 +68,8 @@ export class ErrorHandlerService {
             // in any other case
             // open snack bar from dsp-ui notification service
             this._notification.openSnackBar(error);
+            // log error to Rollbar (done automatically by simply throwing a new Error)
+            throw new Error(error.error['message']);
         }
     }
 }

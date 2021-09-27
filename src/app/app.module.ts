@@ -2,7 +2,7 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, Inject, Injectable, InjectionToken, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -79,6 +79,7 @@ import { AddGroupComponent } from './project/permission/add-group/add-group.comp
 import { PermissionComponent } from './project/permission/permission.component';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ProjectComponent } from './project/project.component';
+import { RollbarErrorHandler, RollbarService, rollbarFactory } from './rollbar';
 import { GroupsListComponent } from './system/groups/groups-list/groups-list.component';
 import { GroupsComponent } from './system/groups/groups.component';
 import { ProjectsListComponent } from './system/projects/projects-list/projects-list.component';
@@ -350,7 +351,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
             provide: DspApiConnectionToken,
             useFactory: (appInitService: AppInitService) => new KnoraApiConnection(appInitService.dspApiConfig),
             deps: [AppInitService]
-        }
+        },
+        { provide: ErrorHandler, useClass: RollbarErrorHandler },
+        { provide: RollbarService, useFactory: rollbarFactory }
     ],
     bootstrap: [AppComponent]
 })
