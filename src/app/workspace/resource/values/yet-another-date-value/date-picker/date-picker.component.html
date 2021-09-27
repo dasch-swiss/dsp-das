@@ -10,10 +10,6 @@
             placeholder="dd/mm/yyyy or mm/yyyy or yyyy"
             autocomplete="off"
             readonly />
-        <!--
-            [(colorPicker)]="value"
-            (colorPickerChange)="handleInput()"
-             -->
         <mat-icon matSuffix class="link">event</mat-icon>
         <mat-error *ngIf="dateForm.controls.date.hasError('required')">
             Date is <strong>required</strong>
