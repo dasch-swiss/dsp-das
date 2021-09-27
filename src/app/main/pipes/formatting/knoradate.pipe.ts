@@ -34,11 +34,11 @@ export class KnoraDatePipe implements PipeTransform {
     addDisplayOptions(date: KnoraDate, value: string, options: string): string {
         switch (options) {
             case 'era':
-                return value  + (date.era !== 'noEra' ? ' ' + date.era : '');
+                return value + (date.era === 'noEra' ? '' : ' ' + date.era);
             case 'calendar':
                 return value + ' ' + this._titleCase(date.calendar);
             case 'all':
-                return value  + (date.era !== 'noEra' ? ' ' + (date.era === 'BCE' ? date.era : '') : '') + ' ' + this._titleCase(date.calendar);
+                return value + (date.era === 'noEra' ? '' : (date.era === 'BCE' ? ' ' + date.era : '')) + ' ' + this._titleCase(date.calendar);
         }
     }
 
