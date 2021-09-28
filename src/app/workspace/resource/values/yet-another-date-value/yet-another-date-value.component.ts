@@ -37,6 +37,29 @@ export class YetAnotherDateValueComponent extends BaseValueDirective implements 
         super();
     }
 
+    /**
+     * returns true if both dates are the same.
+     *
+     * @param date1 date for comparison with date2
+     * @param date2 date for comparison with date1
+     */
+    sameDate(date1: KnoraDate, date2: KnoraDate): boolean {
+        return (date1.calendar === date2.calendar && date1.year === date2.year && date1.month === date2.month && date1.day === date2.day);
+    }
+
+    standardValueComparisonFunc(initValue: KnoraDate | KnoraPeriod, curValue: KnoraDate | KnoraPeriod | null): boolean {
+        let sameValue: boolean;
+        if (initValue instanceof KnoraDate && curValue instanceof KnoraDate) {
+            sameValue = this.sameDate(initValue, curValue);
+        } else if (initValue instanceof KnoraPeriod && curValue instanceof KnoraPeriod) {
+            sameValue = this.sameDate(initValue.start, curValue.start) && this.sameDate(initValue.end, curValue.end);
+        } else {
+            // init value and current value have different types
+            sameValue = false;
+        }
+        return sameValue;
+    }
+
     getInitValue(): KnoraDate | KnoraPeriod | null {
         if (this.displayValue !== undefined) {
             return this.displayValue.date;

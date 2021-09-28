@@ -236,7 +236,7 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
         }
 
         this.dateForm.valueChanges
-            .subscribe(data => this.handleInput(data));
+            .subscribe(data => this.handleInput());
 
     }
 
@@ -273,7 +273,7 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
         this.disabled = isDisabled;
     }
 
-    handleInput(data: any) {
+    handleInput() {
         this.onChange(this.value);
     }
 
