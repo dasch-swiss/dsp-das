@@ -1,17 +1,28 @@
 <span *ngIf="mode === 'read'; else showForm" class="read-mode-view">
-    <div class="rm-value">
-        <span>{{ valueFormControl.value | knoraDate:ontologyDateFormat:displayOptions }}</span>
-    </div>
-    <span class="rm-comment" *ngIf="shouldShowComment">
-        {{ commentFormControl.value }}
+    <span class="rm-value">
+        <span *ngIf="valueFormControl.value?.end; else singleDate">
+            <span class="calendar mat-caption">{{valueFormControl.value?.start | knoraDate:ontologyDateFormat:'calendarOnly'}}</span><br>
+            <span>{{ valueFormControl.value?.start | knoraDate:ontologyDateFormat:'era' }}</span>
+            <span>&nbsp;&ndash;&nbsp;{{ valueFormControl.value?.end | knoraDate:ontologyDateFormat:'era' }}</span>
+        </span>
+
+        <ng-template #singleDate>
+            <span class="calendar mat-caption">{{valueFormControl.value | knoraDate:ontologyDateFormat:'calendarOnly'}}</span><br>
+            <span>{{ valueFormControl.value | knoraDate:ontologyDateFormat:'era' }}</span>
+        </ng-template>
     </span>
+    <!-- Comment -->
+    <span class="rm-comment" *ngIf="shouldShowComment">{{commentFormControl.value}}</span>
 </span>
 <ng-template #showForm>
     <span [formGroup]="form">
-        <span class="large-field child-value-component">
+        <span *ngIf="valueFormControl.value?.end; else singleDateForm">
+
+        </span>
+        <ng-template #singleDateForm>
             <app-date-picker
                 #dateInput
-                class="value"
+                class="value child-value-component"
                 [formControlName]="'value'"
                 [errorStateMatcher]="matcher">
             </app-date-picker>
@@ -21,7 +32,7 @@
             <mat-error *ngIf="valueFormControl.hasError('duplicateValue')">
                 <span class="custom-error-message">This value already exists for this property. Duplicate values are not allowed.</span>
             </mat-error>
-        </span>
+        </ng-template>
         <mat-form-field class="large-field value-component-comment">
             <textarea
                 matInput

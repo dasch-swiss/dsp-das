@@ -28,13 +28,8 @@
     }
 
     .action {
-      .action-button {
-        margin: 8px 4px;
+      display: flex;
 
-        &.submit {
-          color: $primary_700;
-        }
-      }
     }
   }
   &.month-year-selector {
@@ -79,7 +74,6 @@
       display: inline-flex;
     }
   }
-
 
 }
 

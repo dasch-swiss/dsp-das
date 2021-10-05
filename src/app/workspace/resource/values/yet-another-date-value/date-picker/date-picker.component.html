@@ -7,7 +7,7 @@
         <input matInput
             class="date-picker-input date"
             [formControlName]="'date'"
-            placeholder="dd/mm/yyyy or mm/yyyy or yyyy"
+            placeholder="Click to select a date"
             autocomplete="off"
             readonly />
         <mat-icon matSuffix class="link">event</mat-icon>
@@ -40,14 +40,14 @@
                 </mat-select>
             </mat-form-field>
             <span class="fill-remaining-space"></span>
-            <!-- go to the current date -->
-            <button mat-button color="primary" (click)=setToday()>Today</button>
-            <!-- submit button (which is needed if date doesn't have precision on an exact day) -->
-            <!-- <div class="action">
-                <button mat-icon-button class="action-button submit">
+            <div class="action">
+                <!-- go to the current date -->
+                <button mat-button (click)=setToday()>Today</button>
+                <!-- submit button (which is needed if date doesn't have precision on an exact day) -->
+                <button mat-icon-button color="primary" [disabled]="!form.valid" (click)="submit()">
                     <mat-icon>done</mat-icon>
                 </button>
-            </div> -->
+            </div>
         </div>
 
         <!-- panel with month (incl. navigation), year and era -->
@@ -102,11 +102,11 @@
                     <!-- the following span is only a placeholder to set the position of the first day to the correct column-->
                     <span *ngIf="d === 0"></span>
                     <span *ngIf="d > 0" class="selectable link" [class.disabled]="disableDaySelector"
-                        (click)="setDate(d)">{{d}}</span>
+                        (click)="!disableDaySelector && setDate(d)">{{d}}</span>
                 </span>
                 <!-- add not interested button at the end, if you want precision on year and month only -->
                 <span *ngIf="(last && week.length < 7)" class="day">
-                    <span class="selectable link" [class.disabled]="disableDaySelector" (click)="setDate()">
+                    <span class="selectable link" [class.disabled]="disableDaySelector" (click)="!disableDaySelector && setDate()">
                         <mat-icon>not_interested</mat-icon>
                     </span>
                 </span>
@@ -115,7 +115,7 @@
                 if the month ends on a Sunday, we have to add an additional line to get the not-interested option -->
             <div class="week" *ngIf="weeks[weeks.length - 1].length === 7">
                 <span class="day">
-                    <span class="selectable link" [class.disabled]="disableDaySelector" (click)="setDate()">
+                    <span class="selectable link" [class.disabled]="disableDaySelector" (click)="!disableDaySelector && setDate()">
                         <mat-icon>not_interested</mat-icon>
                     </span>
                 </span>

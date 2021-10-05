@@ -46,6 +46,9 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
 
     @Input() errorStateMatcher: ErrorStateMatcher;
 
+    // disable calendar selector in case of end date in a period date value
+    @Input() disableCalendarSelector: boolean;
+
     @HostBinding() id = `app-date-picker-${DatePickerComponent.nextId++}`;
 
     @HostBinding('attr.aria-describedby') describedBy = '';
@@ -367,7 +370,10 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
 
             this.value = this.date;
 
-            this.popover.closeMenu();
+            if (day || this.form.controls.month.value) {
+                this.submit();
+            }
+
         }
     }
 
@@ -416,6 +422,10 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
         this.year = year;
         this.era = 'CE';
         this.updateForm();
+    }
+
+    submit() {
+        this.popover.closeMenu();
     }
 
     updateForm() {
