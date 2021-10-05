@@ -162,6 +162,7 @@ import { SearchSelectOntologyComponent } from './workspace/search/advanced-searc
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
+import { DateValueHandlerComponent } from './workspace/resource/values/yet-another-date-value/date-value-handler/date-value-handler.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -314,6 +315,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         UsersListComponent,
         VisualizerComponent,
         YetAnotherDateValueComponent,
+        DateValueHandlerComponent,
     ],
     imports: [
         AngularSplitModule.forRoot(),
