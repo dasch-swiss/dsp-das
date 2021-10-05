@@ -283,7 +283,7 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
     buildForm() {
 
         this.form = new FormGroup({
-            calendar: new FormControl(''),
+            calendar: new FormControl({ value: '', disabled: this.disableCalendarSelector }),
             era: new FormControl(''),
             year: new FormControl('', [
                 Validators.required,

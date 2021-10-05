@@ -300,6 +300,10 @@ export class DateValueHandlerComponent extends _MatInputMixinBase implements Con
         this.onChange(this.value);
     }
 
+    togglePeriodControl() {
+        this.isPeriodControl.setValue(!this.isPeriodControl.value);
+    }
+
     onContainerClick(event: MouseEvent): void {
     }
 
