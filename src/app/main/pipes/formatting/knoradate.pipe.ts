@@ -6,7 +6,7 @@ import { KnoraDate } from '@dasch-swiss/dsp-js';
 })
 export class KnoraDatePipe implements PipeTransform {
 
-    transform(date: KnoraDate, format?: string, displayOptions?: 'era' | 'calendar' | 'all'): string {
+    transform(date: KnoraDate, format?: string, displayOptions?: 'era' | 'calendar' | 'calendarOnly' | 'all'): string {
         if (!(date instanceof KnoraDate)) {
             // console.error('Non-KnoraDate provided. Expected a valid KnoraDate');
             return '';
@@ -34,10 +34,16 @@ export class KnoraDatePipe implements PipeTransform {
     addDisplayOptions(date: KnoraDate, value: string, options: string): string {
         switch (options) {
             case 'era':
-                return value + (date.era === 'noEra' ? '' : ' ' + date.era);
+                // displays date with era; era only in case of BCE
+                return value + (date.era === 'noEra' ? '' : (date.era === 'BCE' ? ' ' + date.era : ''));
             case 'calendar':
+                // displays date without era but with calendar type
                 return value + ' ' + this._titleCase(date.calendar);
+            case 'calendarOnly':
+                // displays only the selected calendar type without any data
+                return this._titleCase(date.calendar);
             case 'all':
+                // displays date with era (only as BCE) and selected calendar type
                 return value + (date.era === 'noEra' ? '' : (date.era === 'BCE' ? ' ' + date.era : '')) + ' ' + this._titleCase(date.calendar);
         }
     }
