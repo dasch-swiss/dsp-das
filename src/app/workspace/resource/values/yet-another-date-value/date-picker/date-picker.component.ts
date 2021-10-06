@@ -248,10 +248,47 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
 
     ngOnChanges(changes: SimpleChanges) {
 
-        // in case the calendar has changed (from parent and in case of end date)
+        // in case the calendar has changed (from parent in case of end date)
         // update the calendar form control
-        if (changes.calendar.previousValue !== changes.calendar.currentValue) {
+        if (changes.calendar) {
+
+
             this.form.controls.calendar.setValue(this.calendar);
+            this.era = (this.calendar === 'ISLAMIC' ? null : (this.form.controls.era.value === null ? 'CE' : this.form.controls.era.value));
+            // this._updateForm();
+
+            console.log('changed?', this.value);
+            // console.log(this.era)
+            // if (this.calendar === 'ISLAMIC') {
+            //     this.form.controls.era.setValue(null);
+            // }
+            // this.buildForm();
+
+            // if (this.calendar === 'ISLAMIC') {
+            //     this.form.controls.calendar.setValue(this.calendar);
+            //     this.form.controls.era.setValue('noEra');
+            // } else {
+            //     if (this.form.controls.era.value === null || this.form.controls.era.value === 'noEra') {
+            //         this.form.controls.era.setValue('CE');
+            //     }
+            // }
+            // update era in case of switching from ISLAMIC to JULIAN or GREOGRIAN or vice versa
+            // this._setEra();
+            // console.log(this.era);
+
+
+            // this.era = this._setEra();
+            // this.setDate(this.day);
+
+            //
+
+            // this._updateForm();
+            // this.setDate(this.day);
+            // this.form.controls.calendar.setValue(this.calendar);
+            // if (this.calendar === 'ISLAMIC') {
+            //     this.form.controls.era.setValue('noEra');
+            // }
+            // console.log(this.value)
         }
 
     }
@@ -311,7 +348,7 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
         this.disableDaySelector = (this.month === 0);
 
         if (this.value) {
-            this.updateForm();
+            this._updateForm();
         } else {
             this.setToday();
         }
@@ -333,10 +370,22 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
         }
 
         this.calendar = this.form.controls.calendar.value;
+        // this.era = (this.calendar === 'ISLAMIC' ? 'CE' : this.form.controls.era.value);
 
+        // console.warn('cal?', this.calendar);
+        // console.warn('era?', this.era);
+
+
+        // this.era = (this.calendar === 'ISLAMIC' ? null : (this.form.controls.era.value === null ? 'CE' : this.form.controls.era.value));
         // islamic calendar doesn't have a "before common era"
         // in case of switching calendar from islamic to gregorian or julian set default era value to CE
-        this.era = (this.calendar === 'ISLAMIC' ? null : (this.form.controls.era.value === 'noEra' ? 'CE' : this.form.controls.era.value));
+        // if (this.calendar !== 'ISLAMIC' && this.era === null) {
+        //     this.form.controls.era.setValue('CE');
+        // }
+        //
+        // if (this.form.controls.era.value !== null) {
+
+        // }
 
         if (data.year > 0) {
             if (data.month) {
@@ -368,6 +417,8 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
 
             }
         });
+
+        this.setDate(this.day);
     }
 
     setDate(day?: number) {
@@ -384,10 +435,6 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
             );
 
             this.value = this.date;
-
-            this.popover.closeMenu();
-            if (day || this.form.controls.month.value) {
-            }
 
         }
     }
@@ -436,10 +483,16 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
         this.month = month;
         this.year = year;
         this.era = 'CE';
-        this.updateForm();
+        this._updateForm();
     }
 
-    updateForm() {
+    closeDatePicker() {
+        if (this.popover) {
+            this.popover.closeMenu();
+        }
+    }
+
+    private _updateForm() {
         this.form.setValue({
             calendar: this.calendar,
             era: this.era,

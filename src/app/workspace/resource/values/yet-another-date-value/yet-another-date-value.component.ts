@@ -20,7 +20,7 @@ export class YetAnotherDateValueComponent extends BaseValueDirective implements 
 
     @Input() displayValue?: ReadDateValue;
 
-    @Input() displayOptions?: 'era' | 'calendar' | 'all';
+    // @Input() displayOptions?: 'era' | 'calendar' | 'all';
 
     @Input() ontologyDateFormat = 'dd.MM.YYYY';
 

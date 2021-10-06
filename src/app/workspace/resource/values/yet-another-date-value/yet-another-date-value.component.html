@@ -18,12 +18,6 @@
     <span [formGroup]="form">
         <app-date-value-handler #dateInput [formControlName]="'value'" [valueRequiredValidator]="valueRequiredValidator" class="value"></app-date-value-handler>
 
-            <!-- <app-date-picker
-                #dateInput
-                class="value child-value-component"
-                [formControlName]="'startDate'"
-                [errorStateMatcher]="matcher">
-            </app-date-picker> -->
         <mat-error *ngIf="valueFormControl.hasError('valueNotChanged')">
             <span class="custom-error-message">New value must be different than the current value.</span>
         </mat-error>

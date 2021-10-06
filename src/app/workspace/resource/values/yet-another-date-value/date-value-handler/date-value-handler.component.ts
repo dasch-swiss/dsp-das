@@ -66,7 +66,7 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
     styleUrls: ['./date-value-handler.component.scss'],
     providers: [{ provide: MatFormFieldControl, useExisting: DateValueHandlerComponent }]
 })
-export class DateValueHandlerComponent extends _MatInputMixinBase implements ControlValueAccessor, MatFormFieldControl<KnoraDate | KnoraPeriod>, DoCheck, CanUpdateErrorState, OnInit, OnDestroy, OnInit {
+export class DateValueHandlerComponent extends _MatInputMixinBase implements ControlValueAccessor, MatFormFieldControl<KnoraDate | KnoraPeriod>, DoCheck, CanUpdateErrorState, OnInit, OnDestroy {
 
     static nextId = 0;
 
@@ -82,7 +82,7 @@ export class DateValueHandlerComponent extends _MatInputMixinBase implements Con
 
     readonly focused = false;
 
-    readonly controlType = 'app-date-input-text';
+    readonly controlType = 'app-date-value-handler';
 
     calendars = JDNConvertibleCalendar.supportedCalendars.map(cal => cal.toUpperCase());
 
@@ -172,7 +172,7 @@ export class DateValueHandlerComponent extends _MatInputMixinBase implements Con
         return this.focused || !this.empty;
     }
 
-    @HostBinding() id = `app-date-input-text-${DateValueHandlerComponent.nextId++}`;
+    @HostBinding() id = `app-date-value-handler-${DateValueHandlerComponent.nextId++}`;
 
     constructor(fb: FormBuilder,
         @Optional() @Self() public ngControl: NgControl,
