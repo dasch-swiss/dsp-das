@@ -35,7 +35,7 @@ export class KnoraDatePipe implements PipeTransform {
         switch (options) {
             case 'era':
                 // displays date with era; era only in case of BCE
-                return value + (date.era === 'noEra' ? '' : (date.era === 'BCE' ? ' ' + date.era : ''));
+                return value + (date.era === 'noEra' ? '' : ((date.era === 'BCE' || date.era === 'AD') ? ' ' + date.era : ''));
             case 'calendar':
                 // displays date without era but with calendar type
                 return value + ' ' + this._titleCase(date.calendar);
