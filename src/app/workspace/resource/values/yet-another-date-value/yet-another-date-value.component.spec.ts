@@ -15,7 +15,7 @@ import { KnoraDatePipe } from 'src/app/main/pipes/formatting/knoradate.pipe';
 import { YetAnotherDateValueComponent } from './yet-another-date-value.component';
 
 @Component({
-    selector: 'app-date-picker',
+    selector: 'app-date-value-handler',
     template: '',
     providers: [
         {
@@ -195,7 +195,7 @@ describe('YetAnotherDateValueComponent', () => {
 
             expect(testHostComponent.inputValueComponent.mode).toEqual('read');
 
-            expect(valueReadModeNativeElement.innerText).toEqual('13.05.2018');
+            expect(valueReadModeNativeElement.innerText).toEqual('Gregorian\n13.05.2018');
 
         });
 
@@ -367,7 +367,7 @@ describe('YetAnotherDateValueComponent', () => {
 
                 expect(testHostComponent.inputValueComponent.valueFormControl.value).toEqual(new KnoraDate('GREGORIAN', 'CE', 2019, 5, 13));
 
-                expect(valueReadModeNativeElement.innerText).toEqual('13.05.2019');
+                expect(valueReadModeNativeElement.innerText).toEqual('Gregorian\n13.05.2019');
 
                 expect(testHostComponent.inputValueComponent.form.valid).toBeTruthy();
 
