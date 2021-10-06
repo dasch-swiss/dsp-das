@@ -148,4 +148,16 @@ app-color-value {
   // }
 }
 
+// our own date picker value does not need additional space at the bottom
+// because of the combination with mat-menu which contains the date picker form
+.mat-form-field.date-picker-value {
+  .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+
+    .mat-form-field-underline {
+      bottom: 0 !important;
+    }
+  }
+}
+
 

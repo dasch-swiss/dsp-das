@@ -44,7 +44,7 @@ export class YetAnotherDateValueComponent extends BaseValueDirective implements 
      * @param date2 date for comparison with date1
      */
     sameDate(date1: KnoraDate, date2: KnoraDate): boolean {
-        return (date1.calendar === date2.calendar && date1.year === date2.year && date1.month === date2.month && date1.day === date2.day);
+        return (date1.calendar === date2.calendar && date1.year === date2.year && date1.month === date2.month && date1.day === date2.day && date1.era === date2.era);
     }
 
     standardValueComparisonFunc(initValue: KnoraDate | KnoraPeriod, curValue: KnoraDate | KnoraPeriod | null): boolean {

@@ -99,7 +99,7 @@ export class DateValueHandlerComponent extends _MatInputMixinBase implements Con
             return this.startDate.value;
         } else {
             if (this.startDate.value.calendar !== this.endDate.value.calendar) {
-                return null;
+                this.endDate.value.calendar = this.startDate.value.calendar;
             }
 
             return new KnoraPeriod(this.startDate.value, this.endDate.value);
@@ -217,7 +217,7 @@ export class DateValueHandlerComponent extends _MatInputMixinBase implements Con
                 // form's validity has not been updated yet,
                 // trigger update
                 this.form.updateValueAndValidity();
-                this._handleInput();
+                this.handleInput();
             }
         );
 
@@ -231,7 +231,7 @@ export class DateValueHandlerComponent extends _MatInputMixinBase implements Con
                 // form's validity has not been updated yet,
                 // trigger update
                 this.form.updateValueAndValidity();
-                this._handleInput();
+                this.handleInput();
             }
         );
 
@@ -296,7 +296,7 @@ export class DateValueHandlerComponent extends _MatInputMixinBase implements Con
         this.onTouched = fn;
     }
 
-    _handleInput(): void {
+    handleInput(): void {
         this.onChange(this.value);
     }
 

@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Component, DoCheck, ElementRef, HostBinding, Input, OnDestroy, Optional, Self, ViewChild } from '@angular/core';
+import { Component, DoCheck, ElementRef, HostBinding, Input, OnChanges, OnDestroy, Optional, Self, SimpleChanges, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, FormGroup, FormGroupDirective, NgControl, NgForm, Validators } from '@angular/forms';
 import { CanUpdateErrorState, CanUpdateErrorStateCtor, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
@@ -38,7 +38,7 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
         { provide: KnoraDatePipe }
     ]
 })
-export class DatePickerComponent extends _MatInputMixinBase implements ControlValueAccessor, MatFormFieldControl<KnoraDate>, DoCheck, CanUpdateErrorState, OnDestroy {
+export class DatePickerComponent extends _MatInputMixinBase implements ControlValueAccessor, MatFormFieldControl<KnoraDate>, OnChanges, DoCheck, CanUpdateErrorState, OnDestroy {
 
     static nextId = 0;
 
@@ -48,6 +48,9 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
 
     // disable calendar selector in case of end date in a period date value
     @Input() disableCalendarSelector: boolean;
+
+    // set predefinde calendar
+    @Input() calendar = 'GREGORIAN';
 
     @HostBinding() id = `app-date-picker-${DatePickerComponent.nextId++}`;
 
@@ -112,8 +115,6 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
         'JULIAN',
         'ISLAMIC'
     ];
-
-    calendar = 'GREGORIAN';
 
     era = 'CE';
     // ------
@@ -184,7 +185,9 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
 
         if (dateValue !== null) {
 
-            this.dateForm.setValue({ date: this._knoraDatePipe.transform(dateValue), knoraDate: dateValue });
+            this.dateForm.setValue({
+                date: this._knoraDatePipe.transform(dateValue, 'dd.MM.YYYY', 'era'), knoraDate: dateValue
+            });
             // this.dateForm.setValue({ date: dateValue });
             this.calendar = dateValue.calendar;
             this.era = dateValue.era;
@@ -243,6 +246,16 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
 
     }
 
+    ngOnChanges(changes: SimpleChanges) {
+
+        // in case the calendar has changed (from parent and in case of end date)
+        // update the calendar form control
+        if (changes.calendar.previousValue !== changes.calendar.currentValue) {
+            this.form.controls.calendar.setValue(this.calendar);
+        }
+
+    }
+
     ngDoCheck() {
 
         if (this.ngControl) {
@@ -283,14 +296,16 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
     buildForm() {
 
         this.form = new FormGroup({
-            calendar: new FormControl({ value: '', disabled: this.disableCalendarSelector }),
+            calendar: new FormControl({
+                value: this.calendar,
+                disabled: this.disableCalendarSelector
+            }),
             era: new FormControl(''),
             year: new FormControl('', [
                 Validators.required,
                 Validators.min(1)
             ]),
             month: new FormControl('')
-            // day: new FormControl('')
         });
 
         this.disableDaySelector = (this.month === 0);
@@ -307,10 +322,10 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
     }
 
     /**
-         * this method is for the form error handling
-         *
-         * @param data Data which changed.
-         */
+     * this method is for the form error handling
+     *
+     * @param data Data which changed.
+     */
     onValueChanged(data?: any) {
 
         if (!this.form) {
@@ -320,7 +335,8 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
         this.calendar = this.form.controls.calendar.value;
 
         // islamic calendar doesn't have a "before common era"
-        this.era = (this.calendar === 'ISLAMIC' ? null : this.form.controls.era.value);
+        // in case of switching calendar from islamic to gregorian or julian set default era value to CE
+        this.era = (this.calendar === 'ISLAMIC' ? null : (this.form.controls.era.value === 'noEra' ? 'CE' : this.form.controls.era.value));
 
         if (data.year > 0) {
             if (data.month) {
@@ -332,7 +348,6 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
                 // set precision to year only; disable the day selector
                 this.disableDaySelector = true;
                 this.day = undefined;
-                this.setDate();
             }
         } else {
             // not valid form; disable the day selector
@@ -370,8 +385,8 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
 
             this.value = this.date;
 
+            this.popover.closeMenu();
             if (day || this.form.controls.month.value) {
-                this.submit();
             }
 
         }
@@ -422,10 +437,6 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
         this.year = year;
         this.era = 'CE';
         this.updateForm();
-    }
-
-    submit() {
-        this.popover.closeMenu();
     }
 
     updateForm() {
@@ -510,10 +521,6 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
         }
         this.weeks = weeks;
 
-    }
-
-    private _stringifyKnoraDate(date: KnoraDate): string {
-        return (date ? this._knoraDatePipe.transform(date) : '');
     }
 
 }

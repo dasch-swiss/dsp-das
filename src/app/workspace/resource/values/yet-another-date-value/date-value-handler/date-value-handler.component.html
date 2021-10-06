@@ -1,47 +1,26 @@
 <div [formGroup]="form">
 
-    <!-- <mat-checkbox class="period-checkbox" [formControlName]="'isPeriod'" (change)="_handleInput()">
-        is time period
-    </mat-checkbox> -->
-
-    <!-- <div class="date-form-grid">
-        <div class="date-form-field">
-
-            <mat-form-field>
-                <mat-label>Calendar</mat-label>
-                    <mat-select class="calendar-selection" [formControlName]="'calendar'">
-                        <mat-option *ngFor="let cal of calendars" [value]="cal">
-                            {{cal}}
-                        </mat-option>
-                    </mat-select>
-            </mat-form-field>
-        </div>
-    </div> -->
-
     <div class="date-form-grid">
         <div class="date-form-field">
-            <!-- <mat-form-field> -->
-            <!-- <mat-label *ngIf="isPeriodControl.value">Start</mat-label> -->
             <app-date-picker class="start-date" [formControlName]="'startDate'"></app-date-picker>
-            <!-- </mat-form-field> -->
         </div>
 
         <button mat-button class="toggle-period-control"
             [matTooltip]="(isPeriodControl.value ? 'Delete end date' : 'Add end date')" matTooltipPosition="above"
             (click)="togglePeriodControl()">
             <mat-icon *ngIf="!isPeriodControl.value">keyboard_tab</mat-icon>
-            <mat-icon *ngIf="isPeriodControl.value">backspace</mat-icon>
+            <mat-icon *ngIf="isPeriodControl.value">remove</mat-icon>
         </button>
 
         <div *ngIf="isPeriodControl.value" class="date-form-field">
-            <app-date-picker class="end-date" [formControlName]="'endDate'" [disableCalendarSelector]="true">
+            <app-date-picker class="end-date" [formControlName]="'endDate'" [disableCalendarSelector]="true" [calendar]="startDate.value.calendar">
             </app-date-picker>
         </div>
     </div>
 
     <div class="date-form-error">
         <mat-error *ngIf="startDate.hasError('required')">
-            <span class="custom-error-message">Start date is <strong>required</strong></span>
+            <span class="custom-error-message">One date is <strong>required</strong></span>
         </mat-error>
         <mat-error *ngIf="endDate.hasError('required')">
             <span class="custom-error-message">End date is <strong>required</strong></span>

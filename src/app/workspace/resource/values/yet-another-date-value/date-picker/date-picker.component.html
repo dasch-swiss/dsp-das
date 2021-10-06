@@ -2,8 +2,8 @@
     <mat-form-field class="hidden">
         <input matInput [formControlName]="'knoraDate'" [errorStateMatcher]="matcher" readonly/>
     </mat-form-field>
-    <mat-form-field [floatLabel]="'always'" class="child-input-component date" [matMenuTriggerFor]="datePicker">
-        <mat-label>{{ calendar | titlecase }} {{era}}</mat-label>
+    <mat-form-field [floatLabel]="'always'" class="child-input-component date-picker-value" [matMenuTriggerFor]="datePicker">
+        <mat-label>{{ calendar | titlecase }}</mat-label>
         <input matInput
             class="date-picker-input date"
             [formControlName]="'date'"
@@ -11,9 +11,9 @@
             autocomplete="off"
             readonly />
         <mat-icon matSuffix class="link">event</mat-icon>
-        <mat-error *ngIf="dateForm.controls.date.hasError('required')">
+        <!-- <mat-error *ngIf="dateForm.controls.date.hasError('required')">
             Date is <strong>required</strong>
-        </mat-error>
+        </mat-error> -->
     </mat-form-field>
 </div>
 
@@ -44,7 +44,7 @@
                 <!-- go to the current date -->
                 <button mat-button (click)=setToday()>Today</button>
                 <!-- submit button (which is needed if date doesn't have precision on an exact day) -->
-                <button mat-icon-button color="primary" [disabled]="!form.valid" (click)="submit()">
+                <button mat-icon-button color="primary" [disabled]="!form.valid" (click)="setDate(day)">
                     <mat-icon>done</mat-icon>
                 </button>
             </div>
