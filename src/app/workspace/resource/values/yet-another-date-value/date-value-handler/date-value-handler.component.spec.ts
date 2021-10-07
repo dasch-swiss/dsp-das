@@ -265,4 +265,129 @@ describe('DateValueHandlerComponent', () => {
         expect((endDateEditComponentDe.componentInstance as TestDatePickerComponent).value.calendar).toEqual('GREGORIAN');
 
     });
+
+    it('should propagate changes made by the user for a single date', async () => {
+
+        const hostCompDe = testHostFixture.debugElement;
+
+        const startDateEditComponentDe = hostCompDe.query(By.css('.start-date'));
+
+        (startDateEditComponentDe.componentInstance as TestDatePickerComponent).writeValue(new KnoraDate('JULIAN', 'CE', 2019, 5, 19));
+        (startDateEditComponentDe.componentInstance as TestDatePickerComponent)._handleInput();
+
+        await testHostFixture.whenStable();
+
+        expect(testHostComponent.dateValueHandlerComponent.form.valid).toBe(true);
+
+        expect(testHostComponent.form.controls.date.value).toEqual(new KnoraDate('JULIAN', 'CE', 2019, 5, 19));
+    });
+
+    it('should propagate changes made by the user for a period', async () => {
+
+        testHostComponent.dateValueHandlerComponent.isPeriodControl.setValue(true);
+
+        testHostFixture.detectChanges();
+
+        const hostCompDe = testHostFixture.debugElement;
+
+        const startDateEditComponentDe = hostCompDe.query(By.css('.start-date'));
+
+        (startDateEditComponentDe.componentInstance as TestDatePickerComponent).writeValue(new KnoraDate('JULIAN', 'CE', 2019, 5, 19));
+        (startDateEditComponentDe.componentInstance as TestDatePickerComponent)._handleInput();
+
+        const endDateEditComponentDe = hostCompDe.query(By.css('.end-date'));
+
+        (endDateEditComponentDe.componentInstance as TestDatePickerComponent).writeValue(new KnoraDate('JULIAN', 'CE', 2020, 5, 19));
+        (endDateEditComponentDe.componentInstance as TestDatePickerComponent)._handleInput();
+
+        await testHostFixture.whenStable();
+
+        expect(testHostComponent.dateValueHandlerComponent.form.valid).toBe(true);
+
+        expect(testHostComponent.form.controls.date.value).toEqual(new KnoraPeriod(new KnoraDate('JULIAN', 'CE', 2019, 5, 19), new KnoraDate('JULIAN', 'CE', 2020, 5, 19)));
+    });
+
+    it('should return "null" for an invalid user input (start date greater than end date)', async () => {
+
+        testHostComponent.dateValueHandlerComponent.isPeriodControl.setValue(true);
+
+        testHostComponent.dateValueHandlerComponent.startDate.setValue(new KnoraDate('JULIAN', 'CE', 2021, 5, 19));
+
+        testHostComponent.dateValueHandlerComponent.endDate.setValue(new KnoraDate('JULIAN', 'CE', 2020, 5, 19));
+
+        await testHostFixture.whenStable();
+
+        expect(testHostComponent.dateValueHandlerComponent.form.valid).toBe(false);
+
+        expect(testHostComponent.form.controls.date.value).toBeNull();
+    });
+
+    it('should return "null" for an invalid user input (start date greater than end date) 2', async () => {
+
+        testHostComponent.dateValueHandlerComponent.isPeriodControl.setValue(true);
+
+        testHostComponent.dateValueHandlerComponent.startDate.setValue(new KnoraDate('JULIAN', 'CE', 2021, 5, 19));
+
+        testHostComponent.dateValueHandlerComponent.endDate.setValue(new KnoraDate('JULIAN', 'BCE', 2022, 5, 19));
+
+        await testHostFixture.whenStable();
+
+        expect(testHostComponent.dateValueHandlerComponent.form.valid).toBe(false);
+
+        expect(testHostComponent.form.controls.date.value).toBeNull();
+    });
+
+    it('should initialize the date with an empty value', () => {
+
+        testHostComponent.form.controls.date.setValue(null);
+
+        expect(testHostComponent.dateValueHandlerComponent.startDate.value).toBe(null);
+        expect(testHostComponent.dateValueHandlerComponent.isPeriodControl.value).toBe(false);
+        expect(testHostComponent.dateValueHandlerComponent.endDate.value).toBe(null);
+        expect(testHostComponent.dateValueHandlerComponent.calendarControl.value).toEqual('GREGORIAN');
+
+        expect(testHostComponent.dateValueHandlerComponent.form.valid).toBe(false);
+
+    });
+});
+
+
+describe('DateValueHandlerComponent (no validator required)', () => {
+    let testHostComponent: NoValueRequiredTestHostComponent;
+    let testHostFixture: ComponentFixture<NoValueRequiredTestHostComponent>;
+    let loader: HarnessLoader;
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                ReactiveFormsModule,
+                MatFormFieldModule,
+                MatInputModule,
+                MatSelectModule,
+                MatOptionModule,
+                MatCheckboxModule,
+                BrowserAnimationsModule,
+            ],
+            declarations: [DateValueHandlerComponent, TestDatePickerComponent, NoValueRequiredTestHostComponent]
+        })
+            .compileComponents();
+    }));
+
+    beforeEach(() => {
+        testHostFixture = TestBed.createComponent(NoValueRequiredTestHostComponent);
+        testHostComponent = testHostFixture.componentInstance;
+        loader = TestbedHarnessEnvironment.loader(testHostFixture);
+        testHostFixture.detectChanges();
+
+        expect(testHostComponent).toBeTruthy();
+    });
+
+    it('should receive the propagated valueRequiredValidator from the parent component', () => {
+        expect(testHostComponent.dateValueHandlerComponent.valueRequiredValidator).toBe(false);
+    });
+
+    it('should mark the form\'s validity correctly', () => {
+        expect(testHostComponent.dateValueHandlerComponent.form.valid).toBe(true);
+    });
+
 });
