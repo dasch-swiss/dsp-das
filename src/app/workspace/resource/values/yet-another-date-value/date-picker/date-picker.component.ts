@@ -246,10 +246,6 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
         // update the calendar form control
         if (changes.calendar) {
             this.form.controls.calendar.setValue(this.calendar);
-            // this.era = (this.calendar === 'ISLAMIC' ? 'noEra' : (this.era ? this.era : 'CE'));
-            // console.log('ngOnChanges', this.era);
-
-            // this.form.controls.era.setValue(this.era);
         }
 
     }
