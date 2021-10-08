@@ -5,7 +5,7 @@
             <app-date-picker class="start-date" [formControlName]="'startDate'"></app-date-picker>
         </div>
 
-        <button mat-button class="toggle-period-control"
+        <button mat-button class="toggle-period-control" [disabled]="!startDate.value"
             [matTooltip]="(isPeriodControl.value ? 'Delete end date' : 'Add end date')" matTooltipPosition="above"
             (click)="togglePeriodControl()">
             <mat-icon *ngIf="!isPeriodControl.value">keyboard_tab</mat-icon>
