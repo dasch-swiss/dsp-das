@@ -303,7 +303,7 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
 
         if (this.value) {
             this._updateForm();
-        } else {
+        } else if (!this.disableCalendarSelector) {
             this.setToday();
         }
 
