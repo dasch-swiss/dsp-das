@@ -6,8 +6,6 @@
 
 .date-picker-content {
   width: 296px;
-  // height: 412px;
-  // background-color: darkcyan;
   padding: 8px 8px 16px 8px;
 }
 
@@ -26,7 +24,6 @@
   }
 
   &.calendar-selector {
-    // background-color: chartreuse;
     .calendar {
       width: 100%;
     }
@@ -37,7 +34,6 @@
     }
   }
   &.month-year-selector {
-    // background-color: chocolate;
     .month {
       width: 96px;
       &.larger {
@@ -62,7 +58,7 @@
 
   &.day-selector {
     display: grid;
-    // background-color: crimson;
+    margin-top: -8px;
 
     &.disabled {
       opacity: 25%;
