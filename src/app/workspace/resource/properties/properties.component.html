@@ -95,7 +95,8 @@
                         prop.propDef.objectType !== representationConstants.movingImage &&
                         prop.propDef.objectType !== representationConstants.audio &&
                         prop.propDef.objectType !== representationConstants.document &&
-                        prop.propDef.objectType !== representationConstants.text)"
+                        prop.propDef.objectType !== representationConstants.text &&
+                        !(prop.propDef.subjectType === representationConstants.region && isAnnotation))"
                 [class.border-bottom]="prop.values && !last"
                 class="property">
                 <div class="property-label">

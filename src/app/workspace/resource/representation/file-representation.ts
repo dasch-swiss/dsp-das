@@ -32,4 +32,5 @@ export class RepresentationConstants {
     static movingImage = Constants.MovingImageFileValue;
     static stillImage = Constants.StillImageFileValue;
     static text = Constants.TextFileValue;
+    static region = Constants.Region;
 };
