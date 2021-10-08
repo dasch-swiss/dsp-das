@@ -214,7 +214,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
      */
     private _openRegionDialog(startPoint: Point2D, endPoint: Point2D, imageSize: Point2D, overlay: Element): void{
         const dialogConfig: MatDialogConfig = {
-            width: '840px',
+            width: '337px',
             maxHeight: '80vh',
             position: {
                 top: '112px'
