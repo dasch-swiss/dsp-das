@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
     ApiResponseData,
     AuthenticationEndpointV2,
+    KnoraApiConfig,
     LoginResponse,
     LogoutResponse,
     MockUsers,
@@ -14,7 +15,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { DspApiConnectionToken } from '../../declarations/dsp-api-tokens';
+import { DspApiConfigToken, DspApiConnectionToken } from '../../declarations/dsp-api-tokens';
 import { Session, SessionService } from '../../services/session.service';
 import { LoginFormComponent } from './login-form.component';
 
@@ -54,6 +55,8 @@ describe('LoginFormComponent', () => {
     let sessionService: SessionService;
 
     beforeEach(waitForAsync(() => {
+        const dspConfSpy = new KnoraApiConfig('http', 'localhost', 3333, undefined, undefined, true);
+
         const dspConnSpy = {
             admin: {
                 usersEndpoint: jasmine.createSpyObj('usersEndpoint', ['getUser'])
@@ -73,6 +76,10 @@ describe('LoginFormComponent', () => {
                 {
                     provide: DspApiConnectionToken,
                     useValue: dspConnSpy
+                },
+                {
+                    provide: DspApiConfigToken,
+                    useValue: dspConfSpy
                 },
                 FormBuilder,
                 SessionService
