@@ -241,6 +241,15 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
                 // }
             }
 
+        }
+    }
+
+    /**
+     * determines whether property can be deleted
+     * resp. removed from res class if we have the cardinality info
+     */
+    canBeDeleted() {
+        if (!this.propCard) {
             // check if the property can be deleted
             this._dspApiConnection.v2.onto.canDeleteResourceProperty(this.propDef.id).subscribe(
                 (canDoRes: CanDoResponse) => {
@@ -251,41 +260,40 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
                 }
             );
         } else {
-            console.log(this.propCard);
-
             // check if the property can be removed from res class
-            const onto = new UpdateOntology<UpdateResourceClassCardinality>();
+            if (this.lastModificationDate) {
+                const onto = new UpdateOntology<UpdateResourceClassCardinality>();
 
-            onto.lastModificationDate = this.lastModificationDate;
+                onto.lastModificationDate = this.lastModificationDate;
 
-            onto.id = this.ontology.id;
+                onto.id = this.ontology.id;
 
-            const delCard = new UpdateResourceClassCardinality();
+                const delCard = new UpdateResourceClassCardinality();
 
-            delCard.id = this.resourceIri;
+                delCard.id = this.resourceIri;
 
-            delCard.cardinalities = [];
+                delCard.cardinalities = [];
 
-            delCard.cardinalities = [this.propCard];
-            onto.entity = delCard;
-            this._dspApiConnection.v2.onto.canDeleteCardinalityFromResourceClass(onto).subscribe(
-                (canDoRes: CanDoResponse) => {
-                    this.propCanBeDeleted = canDoRes.canDo;
-                    console.log('prop can be removed', canDoRes.canDo);
+                delCard.cardinalities = [this.propCard];
+                onto.entity = delCard;
 
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
+                this._dspApiConnection.v2.onto.canDeleteCardinalityFromResourceClass(onto).subscribe(
+                    (canDoRes: CanDoResponse) => {
+                        this.propCanBeDeleted = canDoRes.canDo;
+                    },
+                    (error: ApiResponseError) => {
+                        this._errorHandler.showMessage(error);
+                    }
+                );
+            }
         }
-
     }
 
     /**
      * show action bubble with various CRUD buttons when hovered over.
      */
     mouseEnter() {
+        this.canBeDeleted();
         this.showActionBubble = true;
     }
 

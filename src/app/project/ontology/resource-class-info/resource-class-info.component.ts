@@ -168,7 +168,7 @@ export class ResourceClassInfoComponent implements OnInit {
      */
     preparePropsToDisplay(classProps: IHasProperty[]) {
 
-        const ontoProps = this.ontology.getAllPropertyDefinitions();
+        const ontoProps = <ResourcePropertyDefinitionWithAllLanguages[]>this.ontology.getAllPropertyDefinitions();
 
         // reset properties to display
         this.propsToDisplay = [];
@@ -177,11 +177,16 @@ export class ResourceClassInfoComponent implements OnInit {
 
         classProps.forEach((hasProp: IHasProperty) => {
 
+            // console.warn('------------------------');
+            // console.warn(hasProp);
+            // console.warn(ontoProps.find(obj =>
+            //     obj.id === hasProp.propertyIndex));
+
+
             const propToDisplay = ontoProps.find(obj =>
                 obj.id === hasProp.propertyIndex &&
-                (obj.objectType !== 'http://api.knora.org/ontology/knora-api/v2#LinkValue' ||
-                    (obj.subjectType && !obj.subjectType.includes('Standoff'))
-                )
+                ((!obj.isLinkValueProperty) || (!obj.subjectType.includes('Standoff')))
+
             );
 
             if (propToDisplay) {

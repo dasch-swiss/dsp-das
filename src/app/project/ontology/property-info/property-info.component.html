@@ -56,8 +56,7 @@
                 <mat-icon>tune</mat-icon>
             </button>
             <span
-                [matTooltip]="((!propCanBeDeleted) ? 'The property can\'t be removed because it\'s in use' : 'Remove property from resource class')">
-                <!-- TODO: add "disabled" param as soon as we use DSP-API 13.9.1 and DSP-JS 2.4.0; use same value in matTooltip above  -->
+                [matTooltip]="((!propCanBeDeleted) ? 'The property can\'t be removed because it is in use' : 'Remove property from resource class')">
                 <button mat-button [disabled]="!propCanBeDeleted" class="delete"
                     (click)="removePropertyFromClass.emit({iri: propDef.id, label: propDef.label})">
                     <mat-icon>backspace</mat-icon>
@@ -71,7 +70,7 @@
                 <mat-icon>edit</mat-icon>
             </button>
             <span
-                [matTooltip]="((resClasses.length > 0 || !propCanBeDeleted) ? 'The property can\'t be deleted because it\'s used in a class' : 'Delete property')">
+                [matTooltip]="((resClasses.length > 0 || !propCanBeDeleted) ? 'The property can\'t be deleted because it is used in a class' : 'Delete property')">
                 <button mat-button [disabled]="resClasses.length > 0" class="delete"
                     (click)="deleteResourceProperty.emit({iri: propDef.id, label: propDef.label})">
                     <mat-icon>delete</mat-icon>
