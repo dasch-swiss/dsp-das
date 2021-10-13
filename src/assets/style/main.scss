@@ -114,7 +114,6 @@ app-color-value {
   top: -0.05em;
 
   .mat-form-field-suffix {
-
     .suffix-toggle-group {
       font-size: 12px;
       border-radius: 0;
@@ -124,14 +123,11 @@ app-color-value {
         line-height: 36px !important;
       }
     }
-
   }
-
 }
 
 .year,
 .month {
-
   // hide dropdown arrow
   .mat-select-arrow {
     border: none;
@@ -160,4 +156,8 @@ app-color-value {
   }
 }
 
-
+.mat-form-field.without-border {
+  .mat-form-field-underline {
+    display: none;
+  }
+}
