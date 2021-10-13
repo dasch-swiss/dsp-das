@@ -242,10 +242,10 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
 
     ngOnChanges(changes: SimpleChanges) {
 
-        // in case the calendar has changed (from parent in case of end date)
+        // in case the calendar has changed (from parent e.g. in a period)
         // update the calendar form control
-        if (changes.calendar) {
-            this.form.controls.calendar.setValue(this.calendar);
+        if (changes.calendar && this.disableCalendarSelector) {
+            this._updateForm();
         }
 
     }
