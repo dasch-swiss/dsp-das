@@ -1,32 +1,25 @@
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Component, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {
     ControlValueAccessor,
     FormBuilder,
     FormControl,
-    FormGroup,
-    NG_VALUE_ACCESSOR,
-    NgControl,
-    ReactiveFormsModule
+    FormGroup, NgControl, NG_VALUE_ACCESSOR, ReactiveFormsModule
 } from '@angular/forms';
-import { KnoraDate, KnoraPeriod } from '@dasch-swiss/dsp-js';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { HarnessLoader } from '@angular/cdk/testing';
-import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ErrorStateMatcher, MatOptionModule } from '@angular/material/core';
-import { Subject } from 'rxjs';
+import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { By } from '@angular/platform-browser';
-import { MatCheckboxHarness } from '@angular/material/checkbox/testing';
-import { MatSelectHarness } from '@angular/material/select/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { KnoraDate, KnoraPeriod } from '@dasch-swiss/dsp-js';
+import { Subject } from 'rxjs';
 import { DateValueHandlerComponent } from './date-value-handler.component';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-
-
 
 /**
  * test host component to simulate parent component.
@@ -34,9 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
     template: `
         <div [formGroup]="form">
-            <mat-form-field>
-                <app-date-value-handler #dateValueHandler [formControlName]="'date'"></app-date-value-handler>
-            </mat-form-field>
+            <app-date-value-handler #dateValueHandler [formControlName]="'date'"></app-date-value-handler>
         </div>`
 })
 class TestHostComponent implements OnInit {
@@ -63,10 +54,10 @@ class TestHostComponent implements OnInit {
 @Component({
     template: `
         <div [formGroup]="form">
-            <mat-form-field>
-                <app-date-value-handler #dateValueHandler [formControlName]="'date'"
-                                     [valueRequiredValidator]="false"></app-date-value-handler>
-            </mat-form-field>
+            <app-date-value-handler #dateValueHandler
+                [formControlName]="'date'"
+                [valueRequiredValidator]="false">
+            </app-date-value-handler>
         </div>`
 })
 class NoValueRequiredTestHostComponent implements OnInit {
@@ -157,12 +148,12 @@ describe('DateValueHandlerComponent', () => {
                 TestHostComponent
             ],
             imports: [
-                ReactiveFormsModule,
-                MatFormFieldModule,
-                MatInputModule,
+                BrowserAnimationsModule,
                 MatButtonModule,
+                MatFormFieldModule,
                 MatIconModule,
-                BrowserAnimationsModule
+                MatInputModule,
+                ReactiveFormsModule,
             ]
         })
             .compileComponents();

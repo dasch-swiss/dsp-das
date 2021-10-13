@@ -28,12 +28,6 @@
 <ng-template #showForm>
     <span [formGroup]="form">
 
-        <h5>NEW date value editor with date picker</h5>
-        <app-date-picker></app-date-picker>
-
-        <hr>
-
-        <h5>OLD date value editor with date input fields</h5>
         <mat-form-field class="large-field child-value-component" floatLabel="never">
 
             <app-date-input-text #dateInput [formControlName]="'value'" [valueRequiredValidator]="valueRequiredValidator" class="value"></app-date-input-text>
