@@ -106,6 +106,56 @@ app-color-value {
   white-space: pre-line;
 }
 
+// date picker adaption
+.mat-menu-panel.date-picker {
+  max-width: 312px !important;
+}
+.year.withButtonToggle {
+  top: -0.05em;
+
+  .mat-form-field-suffix {
+    .suffix-toggle-group {
+      font-size: 12px;
+      border-radius: 0;
+      height: calc(36px - 0.25em);
+
+      .mat-button-toggle-label-content {
+        line-height: 36px !important;
+      }
+    }
+  }
+}
+
+.year,
+.month {
+  // hide dropdown arrow
+  .mat-select-arrow {
+    border: none;
+  }
+
+  // hide number de- and increase buttons
+  // input[type="number"]::-webkit-inner-spin-button,
+  // input[type="number"]::-webkit-outer-spin-button {
+  //   -webkit-appearance: none;
+  // }
+
+  // input[type="number"] {
+  //   -moz-appearance: textfield;
+  // }
+}
+
+// our own date picker value does not need additional space at the bottom
+// because of the combination with mat-menu which contains the date picker form
+.mat-form-field.date-picker-value {
+  .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+
+    .mat-form-field-underline {
+      bottom: 0 !important;
+    }
+  }
+}
+
 .mat-form-field.without-border {
   .mat-form-field-underline {
     display: none;
