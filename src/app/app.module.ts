@@ -139,6 +139,9 @@ import { TextValueAsXMLComponent } from './workspace/resource/values/text-value/
 import { TimeInputComponent } from './workspace/resource/values/time-value/time-input/time-input.component';
 import { TimeValueComponent } from './workspace/resource/values/time-value/time-value.component';
 import { UriValueComponent } from './workspace/resource/values/uri-value/uri-value.component';
+import { DatePickerComponent } from './workspace/resource/values/yet-another-date-value/date-picker/date-picker.component';
+import { DateValueHandlerComponent } from './workspace/resource/values/yet-another-date-value/date-value-handler/date-value-handler.component';
+import { YetAnotherDateValueComponent } from './workspace/resource/values/yet-another-date-value/yet-another-date-value.component';
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
 import { ResourceGridComponent } from './workspace/results/list-view/resource-grid/resource-grid.component';
 import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
@@ -198,7 +201,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         DateEditComponent,
         DateInputComponent,
         DateInputTextComponent,
+        DatePickerComponent,
         DateValueComponent,
+        DateValueHandlerComponent,
         DecimalValueComponent,
         DialogComponent,
         DialogHeaderComponent,
@@ -274,6 +279,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         SearchLinkValueComponent,
         SearchListValueComponent,
         SearchPanelComponent,
+        SearchResourceComponent,
         SearchSelectOntologyComponent,
         SearchSelectPropertyComponent,
         SearchSelectResourceClassComponent,
@@ -312,7 +318,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         UsersComponent,
         UsersListComponent,
         VisualizerComponent,
-        SearchResourceComponent,
+        YetAnotherDateValueComponent,
     ],
     imports: [
         AngularSplitModule.forRoot(),
