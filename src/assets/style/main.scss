@@ -12,10 +12,10 @@ body {
 
 // material icons
 .material-icons {
-  font-family: 'Material Icons';
+  font-family: "Material Icons";
   font-weight: normal;
   font-style: normal;
-  font-size: 24px;  /* Preferred icon size */
+  font-size: 24px; /* Preferred icon size */
   display: inline-block;
   line-height: 1;
   text-transform: none;
@@ -33,7 +33,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   /* Support for IE. */
-  font-feature-settings: 'liga';
+  font-feature-settings: "liga";
 }
 
 // The following styles will override material design!
@@ -50,7 +50,6 @@ body {
 }
 
 app-color-value {
-
   .mat-form-field-flex,
   .color-picker-input {
     cursor: pointer !important;
@@ -110,5 +109,22 @@ app-color-value {
 .mat-form-field.without-border {
   .mat-form-field-underline {
     display: none;
+  }
 }
+
+.mat-caption.space-reducer {
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+.project-actions {
+  border-left: 1px solid $primary_200;
+  padding: 0 12px;
+  .mat-caption.space-reducer {
+    margin-top: -6px;
+    margin-bottom: 6px;
+  }
+}
+
+button.space-reducer {
+  margin: 0;
 }
