@@ -77,6 +77,8 @@ export class DisplayEditComponent implements OnInit {
 
     @Input() canDelete: boolean;
 
+    @Input() projectStatus: boolean;
+
     @Output() referredResourceClicked: EventEmitter<ReadLinkValue> = new EventEmitter<ReadLinkValue>();
 
     @Output() referredResourceHovered: EventEmitter<ReadLinkValue> = new EventEmitter<ReadLinkValue>();
@@ -132,7 +134,7 @@ export class DisplayEditComponent implements OnInit {
         // determine if user has modify permissions
         const allPermissions = PermissionUtil.allUserPermissions(this.displayValue.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR');
 
-        this.canModify = allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
+        this.canModify = (this.projectStatus === true ? allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1 : false);
 
         // check if comment toggle button should be shown
         this.checkCommentToggleVisibility();
