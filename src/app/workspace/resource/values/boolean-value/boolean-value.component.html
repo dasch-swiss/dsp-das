@@ -10,11 +10,19 @@
         <mat-checkbox [formControlName]="'value'" class="value boolValue child-value-component">
         </mat-checkbox>
         <mat-error *ngIf="valueFormControl.hasError('valueNotChanged') && valueFormControl.dirty">
-            <span class="custom-error-message">New value must be different than the current value.</span>
+                <span class="custom-error-message">New value must be different than the current value.</span>
         </mat-error>
         <mat-form-field class="large-field value-component-comment">
-            <textarea matInput cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="6"
-                [formControlName]="'comment'" class="comment" placeholder="Comment" type="text" spellcheck="false">
+            <textarea
+                    matInput
+                    cdkTextareaAutosize
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="6"
+                    [formControlName]="'comment'"
+                    class="comment"
+                    placeholder="Comment"
+                    type="text"
+                    spellcheck="false">
             </textarea>
         </mat-form-field>
     </span>
