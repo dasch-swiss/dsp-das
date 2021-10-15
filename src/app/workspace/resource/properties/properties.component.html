@@ -136,7 +136,11 @@
                     </div>
                     <!-- Add button -->
                     <div *ngIf="addValueIsAllowed(prop)">
-                        <button mat-icon-button class="value-action create"
+                        <!-- boolen value will always be displayed even if value is not defined (value = false) -->
+                        <span *ngIf="prop.propDef.objectType === booleanValueTypeIri">
+                            <app-boolean-value [mode]="'read'" class="boolean-value"></app-boolean-value>
+                        </span>
+                        <button *ngIf="prop.propDef.objectType !== booleanValueTypeIri" mat-icon-button class="value-action create"
                             (click)="showAddValueForm(prop)"
                             title="Add a new value">
                             <mat-icon>add_box</mat-icon>
