@@ -108,6 +108,12 @@ $gc-small: $full-input-width - $gc-large - 4;
   color: $black-60-opacity;
 }
 
+app-search-date-value {
+  .date-picker-container {
+    display: inline-flex;
+  }
+}
+
 // responsive style: desktop
 @media (min-width: map-get($grid-breakpoints, desktop)) {
   .app-fulltext-search {
