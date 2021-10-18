@@ -77,6 +77,8 @@ export class DisplayEditComponent implements OnInit {
 
     @Input() canDelete: boolean;
 
+    @Input() projectStatus: boolean;
+
     @Output() referredResourceClicked: EventEmitter<ReadLinkValue> = new EventEmitter<ReadLinkValue>();
 
     @Output() referredResourceHovered: EventEmitter<ReadLinkValue> = new EventEmitter<ReadLinkValue>();
@@ -239,6 +241,7 @@ export class DisplayEditComponent implements OnInit {
                 mergeMap((res: WriteValueResponse) => this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid))
             ).subscribe(
                 (res2: ReadResource) => {
+
                     this._valueOperationEventService.emit(
                         new EmitEvent(Events.ValueUpdated, new UpdatedEventValues(
                             this.displayValue, res2.getValues(this.displayValue.property)[0])));
