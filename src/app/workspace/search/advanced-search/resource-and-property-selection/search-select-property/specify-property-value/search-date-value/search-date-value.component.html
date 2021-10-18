@@ -1,9 +1,5 @@
 <span [formGroup]="form">
-    <mat-form-field class="medium-field">
-        <app-jdn-datepicker>
-            <input matInput [matDatepicker]="picker" placeholder="Choose a date" [formControlName]="'dateValue'" readonly>
-            <mat-datepicker #picker [calendarHeaderComponent]="headerComponent"></mat-datepicker>
-        </app-jdn-datepicker>
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    </mat-form-field>
+    <app-date-picker class="medium-field" [formControlName]="'dateValue'">
+
+    </app-date-picker>
 </span>
