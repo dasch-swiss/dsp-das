@@ -20,7 +20,7 @@
     </div>
 
     <div mat-line class="info additional-info" [class.flex]="propCard">
-        <span [matTooltip]="'id: ' + propDef.id" matTooltipPosition="above">
+        <span [matTooltip]="'id: ' + propDef.id" matTooltipPosition="above" class="mat-caption">
             {{propDef.id | split: '#':1}}
         </span>
         <span class="fill-remaining-space center">&nbsp;&middot;&nbsp;</span>
@@ -48,14 +48,14 @@
         </span>
     </div>
 
-    <div class="action-bubble" *ngIf="lastModificationDate && showActionBubble && projectStatus" [@simpleFadeAnimation]="'in'">
+    <div class="action-bubble" *ngIf="lastModificationDate && projectStatus && showActionBubble" [@simpleFadeAnimation]="'in'">
         <!-- property action in case of resource class' view has different buttons and actions -->
         <div class="button-container" *ngIf="propCard">
             <!-- TODO: edit cardinality is disabled for the moment. Will be activated as soon as we use DSP-API 13.9.1 -->
-            <button mat-button [disabled]="true" [matTooltip]="'Edit property and cardinality'">
+            <button mat-button [disabled]="true" [matTooltip]="'Edit property and cardinality'" matTooltipPosition="above">
                 <mat-icon>tune</mat-icon>
             </button>
-            <span
+            <span matTooltipPosition="above"
                 [matTooltip]="((!propCanBeDeleted) ? 'The property can\'t be removed because it is in use' : 'Remove property from resource class')">
                 <button mat-button [disabled]="!propCanBeDeleted" class="delete"
                     (click)="removePropertyFromClass.emit({iri: propDef.id, label: propDef.label})">
@@ -65,11 +65,11 @@
         </div>
         <!-- property action in case of properties' list view -->
         <div class="button-container" *ngIf="!propCard">
-            <button mat-button [disabled]="!propDef.isEditable" class="edit" title="edit" [matTooltip]="'Edit property'"
+            <button mat-button [disabled]="!propDef.isEditable" class="edit" title="edit" [matTooltip]="'Edit property'" matTooltipPosition="above"
                 (click)="editResourceProperty.emit({propDef: propDef, propType: propType})">
                 <mat-icon>edit</mat-icon>
             </button>
-            <span
+            <span matTooltipPosition="above"
                 [matTooltip]="((resClasses.length > 0 || !propCanBeDeleted) ? 'The property can\'t be deleted because it is used in a class' : 'Delete property')">
                 <button mat-button [disabled]="resClasses.length > 0" class="delete"
                     (click)="deleteResourceProperty.emit({iri: propDef.id, label: propDef.label})">

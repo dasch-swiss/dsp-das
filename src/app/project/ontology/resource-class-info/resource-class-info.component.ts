@@ -179,15 +179,9 @@ export class ResourceClassInfoComponent implements OnInit {
 
         classProps.forEach((hasProp: IHasProperty) => {
 
-            // console.warn('------------------------');
-            // console.warn(hasProp);
-            // console.warn(ontoProps.find(obj =>
-            //     obj.id === hasProp.propertyIndex));
-
-
             const propToDisplay = ontoProps.find(obj =>
                 obj.id === hasProp.propertyIndex &&
-                ((!obj.isLinkValueProperty) || (!obj.subjectType.includes('Standoff')))
+                ((!obj.isLinkValueProperty) || (obj.subjectType && !obj.subjectType.includes('Standoff')))
 
             );
 
