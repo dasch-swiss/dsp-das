@@ -390,7 +390,7 @@ describe('PropertiesComponent', () => {
 
             // current amount of buttons should equal 18
             // standoff links value and has incoming link value are system props and cannot be added: -2
-            expect(addButtons.length).toEqual(18);
+            expect(addButtons.length).toEqual(17);
 
             // remove value from the boolean property
             testHostComponent.parentResource.resProps[9].values = [];
