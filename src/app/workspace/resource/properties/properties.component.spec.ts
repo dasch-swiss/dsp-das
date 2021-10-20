@@ -388,7 +388,7 @@ describe('PropertiesComponent', () => {
 
             let addButtons = propertyViewComponentDe.queryAll(By.css('button.create'));
 
-            // current amount of buttons should equal 18
+            // current amount of buttons should equal 17
             // standoff links value and has incoming link value are system props and cannot be added: -2
             expect(addButtons.length).toEqual(17);
 
