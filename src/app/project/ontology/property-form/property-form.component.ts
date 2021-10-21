@@ -75,7 +75,7 @@ export class PropertyFormComponent implements OnInit {
     validationMessages = {
         'name': {
             'required': 'Name is required.',
-            'existingName': 'This name is already taken. Please choose another one',
+            'existingName': 'This name is already taken. Please choose another one.',
             'pattern': 'Name shouldn\'t start with a number or v + number and spaces or special characters (except dash, dot and underscore) are not allowed.'
         },
         'label': {
@@ -109,9 +109,11 @@ export class PropertyFormComponent implements OnInit {
     error = false;
 
     labels: StringLiteral[] = [];
+    labelsTouched: boolean;
     comments: StringLiteral[] = [];
     guiAttributes: string[] = [];
 
+    // list of existing property names
     existingNames: [RegExp] = [
         new RegExp('anEmptyRegularExpressionWasntPossible')
     ];
@@ -147,7 +149,6 @@ export class PropertyFormComponent implements OnInit {
                         this.existingNames.push(
                             new RegExp('(?:^|W)' + name.toLowerCase() + '(?:$|W)')
                         );
-
                     }
                 );
             },
@@ -248,11 +249,9 @@ export class PropertyFormComponent implements OnInit {
             return;
         }
 
-        const form = this.propertyForm;
-
         Object.keys(this.formErrors).map(field => {
             this.formErrors[field] = '';
-            const control = form.get(field);
+            const control = this.propertyForm.get(field);
             if (control && control.dirty && !control.valid) {
                 const messages = this.validationMessages[field];
                 Object.keys(control.errors).map(key => {
@@ -263,14 +262,20 @@ export class PropertyFormComponent implements OnInit {
         });
     }
 
-    handleData(data: StringLiteral[], type: string) {
+    handleData(data: StringLiteral[], type: 'label' | 'comment') {
 
         switch (type) {
-            case 'labels':
+            case 'label':
                 this.labels = data;
+                const messages = this.validationMessages[type];
+                this.formErrors[type] = '';
+
+                if (this.labelsTouched && !this.labels.length) {
+                    this.formErrors[type] = messages['required'];
+                }
                 break;
 
-            case 'comments':
+            case 'comment':
                 this.comments = data;
                 break;
         }
