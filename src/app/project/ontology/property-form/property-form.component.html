@@ -11,8 +11,8 @@
     <div class="center">
 
         <!-- property type -->
-        <mat-form-field *ngIf="propertyInfo.propType" class="large-field property-type">
-            <span matPrefix class="property-type-icon">
+        <mat-form-field *ngIf="propertyInfo.propType" class="large-field property-form-field">
+            <span matPrefix class="property-prefix-icon">
                 <mat-icon>{{propertyForm.controls['propType'].value.icon}}</mat-icon>&nbsp;
             </span>
             <mat-label>Property type</mat-label>
@@ -29,6 +29,18 @@
                     </mat-option>
                 </mat-optgroup>
             </mat-select>
+        </mat-form-field>
+
+        <!-- name -->
+        <mat-form-field class="large-field property-form-field">
+            <span matPrefix class="property-prefix-icon">
+                <mat-icon>fingerprint</mat-icon>&nbsp;
+            </span>
+            <mat-label>Property name *</mat-label>
+            <input matInput formControlName="name" >
+            <mat-hint *ngIf="formErrors.name">
+                {{formErrors.name}}
+            </mat-hint>
         </mat-form-field>
 
         <!-- label -->
