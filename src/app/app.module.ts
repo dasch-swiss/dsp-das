@@ -11,6 +11,7 @@ import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularSplitModule } from 'angular-split';
+import { MatJDNConvertibleCalendarDateAdapterModule } from 'jdnconvertiblecalendardateadapter';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { environment } from '../environments/environment';
@@ -26,7 +27,7 @@ import { SelectedResourcesComponent } from './main/action/selected-resources/sel
 import { SortButtonComponent } from './main/action/sort-button/sort-button.component';
 import { StringLiteralInputComponent } from './main/action/string-literal-input/string-literal-input.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
-import { DspApiConfigToken, DspApiConnectionToken } from './main/declarations/dsp-api-tokens';
+import { DspApiConfigToken, DspApiConnectionToken, DspDataDogConfigToken } from './main/declarations/dsp-api-tokens';
 import { DialogHeaderComponent } from './main/dialog/dialog-header/dialog-header.component';
 import { DialogComponent } from './main/dialog/dialog.component';
 import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
@@ -139,6 +140,9 @@ import { TextValueAsXMLComponent } from './workspace/resource/values/text-value/
 import { TimeInputComponent } from './workspace/resource/values/time-value/time-input/time-input.component';
 import { TimeValueComponent } from './workspace/resource/values/time-value/time-value.component';
 import { UriValueComponent } from './workspace/resource/values/uri-value/uri-value.component';
+import { DatePickerComponent } from './workspace/resource/values/yet-another-date-value/date-picker/date-picker.component';
+import { DateValueHandlerComponent } from './workspace/resource/values/yet-another-date-value/date-value-handler/date-value-handler.component';
+import { YetAnotherDateValueComponent } from './workspace/resource/values/yet-another-date-value/yet-another-date-value.component';
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
 import { ResourceGridComponent } from './workspace/results/list-view/resource-grid/resource-grid.component';
 import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
@@ -153,6 +157,7 @@ import { SearchIntValueComponent } from './workspace/search/advanced-search/reso
 import { SearchLinkValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-link-value/search-link-value.component';
 import { SearchDisplayListComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-list-value/search-display-list/search-display-list.component';
 import { SearchListValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-list-value/search-list-value.component';
+import { SearchResourceComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-resource/search-resource.component';
 import { SearchTextValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-text-value/search-text-value.component';
 import { SearchUriValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-uri-value/search-uri-value.component';
 import { SpecifyPropertyValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/specify-property-value.component';
@@ -197,7 +202,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         DateEditComponent,
         DateInputComponent,
         DateInputTextComponent,
+        DatePickerComponent,
         DateValueComponent,
+        DateValueHandlerComponent,
         DecimalValueComponent,
         DialogComponent,
         DialogHeaderComponent,
@@ -273,6 +280,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         SearchLinkValueComponent,
         SearchListValueComponent,
         SearchPanelComponent,
+        SearchResourceComponent,
         SearchSelectOntologyComponent,
         SearchSelectPropertyComponent,
         SearchSelectResourceClassComponent,
@@ -311,6 +319,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         UsersComponent,
         UsersListComponent,
         VisualizerComponent,
+        YetAnotherDateValueComponent,
     ],
     imports: [
         AngularSplitModule.forRoot(),
@@ -324,6 +333,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         FormsModule,
         HttpClientModule,
         MaterialModule,
+        MatJDNConvertibleCalendarDateAdapterModule,
         PdfViewerModule,
         ReactiveFormsModule,
         TranslateModule.forRoot({
@@ -345,6 +355,11 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         {
             provide: DspApiConfigToken,
             useFactory: (appInitService: AppInitService) => appInitService.dspApiConfig,
+            deps: [AppInitService]
+        },
+        {
+            provide: DspDataDogConfigToken,
+            useFactory: (appInitService: AppInitService) => appInitService.dspDatadogConfig,
             deps: [AppInitService]
         },
         {

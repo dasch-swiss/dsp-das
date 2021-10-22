@@ -389,7 +389,6 @@ describe('PropertiesComponent', () => {
             let addButtons = propertyViewComponentDe.queryAll(By.css('button.create'));
 
             // current amount of buttons should equal 17
-            // because the boolean property shouldn't have an add button if it has a value
             // standoff links value and has incoming link value are system props and cannot be added: -2
             expect(addButtons.length).toEqual(17);
 
@@ -399,7 +398,6 @@ describe('PropertiesComponent', () => {
             testHostFixture.detectChanges();
 
             // now the boolean property should have an add button
-            // so the amount of add buttons on the page should increase by 1
             // standoff links value and has incoming link value are system props and cannot be added: -2
             addButtons = propertyViewComponentDe.queryAll(By.css('button.create'));
             expect(addButtons.length).toEqual(18);

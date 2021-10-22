@@ -19,7 +19,8 @@
             <app-geoname-value class="parent-value-component" #displayVal *ngSwitchCase="constants.GeonameValue" [mode]="mode" [displayValue]="$any(displayValue)"></app-geoname-value>
             <app-link-value class="parent-value-component" #displayVal *ngSwitchCase="constants.LinkValue" [mode]="mode" [displayValue]="$any(displayValue)"
                         [parentResource]="parentResource" [propIri]="displayValue.property" (referredResourceClicked)="referredResourceClicked.emit($event)" (referredResourceHovered)="referredResourceHovered.emit($event)"></app-link-value>
-            <app-date-value class="parent-value-component" #displayVal *ngSwitchCase="constants.DateValue" [mode]="mode" [displayValue]="$any(displayValue)" [displayOptions]="dateDisplayOptions" [labels]="showDateLabels" [ontologyDateFormat]="dateFormat"></app-date-value>
+            <!-- <app-date-value class="parent-value-component" #displayVal *ngSwitchCase="constants.DateValue" [mode]="mode" [displayValue]="$any(displayValue)" [displayOptions]="dateDisplayOptions" [labels]="showDateLabels" [ontologyDateFormat]="dateFormat"></app-date-value> -->
+            <app-yet-another-date-value class="parent-value-component" #displayVal *ngSwitchCase="constants.DateValue" [mode]="mode" [displayValue]="$any(displayValue)" [ontologyDateFormat]="dateFormat"></app-yet-another-date-value>
             <app-list-value class="parent-value-component" #displayVal *ngSwitchCase="constants.ListValue" [mode]="mode" [displayValue]="$any(displayValue)"
                         [propertyDef]="$any(parentResource.entityInfo.properties[displayValue.property])"></app-list-value>
             <span *ngSwitchDefault>{{displayValue.strval}}</span>
@@ -29,7 +30,7 @@
                 <button mat-button
                         class="edit"
                         [matTooltip]="'edit'"
-                        *ngIf="!readOnlyValue && canModify && !editModeActive"
+                        *ngIf="!readOnlyValue && canModify && !editModeActive && projectStatus"
                         (click)="activateEditMode()">
                     <mat-icon>edit</mat-icon>
                 </button>
@@ -46,11 +47,11 @@
                         (click)="toggleComment()">
                     <mat-icon>comment</mat-icon>
                 </button>
-                <span [matTooltip]="(canDelete ? 'delete' : 'This value cannot be deleted because at least one value is required')">
+                <span [matTooltip]="((canDelete && valueTypeOrClass != constants.BooleanValue ) ? 'delete' : 'This value cannot be deleted because at least one value is required')">
                     <button mat-button
                         class="delete"
-                        *ngIf="!readOnlyValue && canModify && !editModeActive"
-                        [disabled]="!canDelete"
+                        *ngIf="!readOnlyValue && canModify && !editModeActive && projectStatus"
+                        [disabled]="!canDelete || valueTypeOrClass === constants.BooleanValue"
                         (click)="openDialog()">
                         <mat-icon>delete</mat-icon>
                     </button>

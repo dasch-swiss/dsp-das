@@ -1,5 +1,68 @@
 # Changelog
 
+## [6.5.0](https://www.github.com/dasch-swiss/dsp-app/compare/v6.4.1...v6.5.0) (2021-10-21)
+
+
+### Enhancements
+
+* **ontology:** bring back the name input field (DEV-157) ([#559](https://www.github.com/dasch-swiss/dsp-app/issues/559)) ([51e539d](https://www.github.com/dasch-swiss/dsp-app/commit/51e539d88553a635bb4663dc8d185d79699ec03d))
+
+### [6.4.1](https://www.github.com/dasch-swiss/dsp-app/compare/v6.4.0...v6.4.1) (2021-10-20)
+
+
+### Bug Fixes
+
+* **value:** fix boolean value issue ([#557](https://www.github.com/dasch-swiss/dsp-app/issues/557)) ([4d35cd2](https://www.github.com/dasch-swiss/dsp-app/commit/4d35cd26152313f79399ff280cc59619d0d2372e))
+
+
+### Maintenance
+
+* **deps:** bump mkdocs from 1.1.2 to 1.2.3 in /docs ([#556](https://www.github.com/dasch-swiss/dsp-app/issues/556)) ([5f8213c](https://www.github.com/dasch-swiss/dsp-app/commit/5f8213c3fccf4988fbf10ce1e011b6bdc261cb72))
+
+## [6.4.0](https://www.github.com/dasch-swiss/dsp-app/compare/v6.3.0...v6.4.0) (2021-10-20)
+
+
+### Enhancements
+
+* **ontology:** delete property from resource class (DSP-1854 / DEV-28) ([#499](https://www.github.com/dasch-swiss/dsp-app/issues/499)) ([436c270](https://www.github.com/dasch-swiss/dsp-app/commit/436c2704717d66fbb817589dda4c12ac50f6fece))
+* **value:** refactor boolean value (DEV-98) ([#554](https://www.github.com/dasch-swiss/dsp-app/issues/554)) ([7affa5e](https://www.github.com/dasch-swiss/dsp-app/commit/7affa5e7c94b35929d795e29380fb31b9906c520))
+
+## [6.3.0](https://www.github.com/dasch-swiss/dsp-app/compare/v6.2.0...v6.3.0) (2021-10-15)
+
+
+### Bug Fixes
+
+* disable edit/delete action in deactivated projects (DEV-52) ([#550](https://www.github.com/dasch-swiss/dsp-app/issues/550)) ([d7bec78](https://www.github.com/dasch-swiss/dsp-app/commit/d7bec78ed703b513fa5d24fd895d4781e51af3cb))
+* **properties:** do not submit res instance form by adding new value (DEV-150) ([#553](https://www.github.com/dasch-swiss/dsp-app/issues/553)) ([99a3022](https://www.github.com/dasch-swiss/dsp-app/commit/99a3022af5a72a3409415c8453e8ec8ee730386d))
+* **value:** fix broken time value component (DEV-147) ([#552](https://www.github.com/dasch-swiss/dsp-app/issues/552)) ([fb846f9](https://www.github.com/dasch-swiss/dsp-app/commit/fb846f9d82a208f633e8ddb219dfc38a5f351a3a))
+
+
+### Enhancements
+
+* datadog RUM implementation (DEV-50) ([#546](https://www.github.com/dasch-swiss/dsp-app/issues/546)) ([ec59ee5](https://www.github.com/dasch-swiss/dsp-app/commit/ec59ee5b8ac1bd7d95cefab09c91e1383c990a0a))
+* **resource:** new date picker (DEV-112) ([#532](https://www.github.com/dasch-swiss/dsp-app/issues/532)) ([04e4b32](https://www.github.com/dasch-swiss/dsp-app/commit/04e4b32be6b9e836eade4ee9b0666ead5582b47d))
+
+## [6.2.0](https://www.github.com/dasch-swiss/dsp-app/compare/v6.1.0...v6.2.0) (2021-10-08)
+
+
+### Bug Fixes
+
+* **error:** improve the current error handler in DSP-APP (DSP-1911) ([#540](https://www.github.com/dasch-swiss/dsp-app/issues/540)) ([0eb621b](https://www.github.com/dasch-swiss/dsp-app/commit/0eb621bbf9aa182d17b09df3ead46c34d357e0e5))
+* gravsearch results now appear after page refresh ([#542](https://www.github.com/dasch-swiss/dsp-app/issues/542)) ([a88dd79](https://www.github.com/dasch-swiss/dsp-app/commit/a88dd790e6bf35931e9443a6745a5d75f47ce502))
+* **resource-instance-form:** reloads cached resource to show changes made to the data model ([#547](https://www.github.com/dasch-swiss/dsp-app/issues/547)) ([37bb2a7](https://www.github.com/dasch-swiss/dsp-app/commit/37bb2a75cceeafffd8ee74f19af18648020e9704))
+
+
+### Enhancements
+
+* **ontology:** display id / name in property and class (DEV-37) ([#544](https://www.github.com/dasch-swiss/dsp-app/issues/544)) ([0a2bcfb](https://www.github.com/dasch-swiss/dsp-app/commit/0a2bcfbd5121bb9d49c18d3b45b0567ab7350e05))
+* **search:** add missing search resource component (DEV-95) ([#548](https://www.github.com/dasch-swiss/dsp-app/issues/548)) ([79abd10](https://www.github.com/dasch-swiss/dsp-app/commit/79abd10d46f5398f2bc0a9170ea852b82f75f158))
+
+
+### Maintenance
+
+* **fulltext-search:** persist fulltext search term in input field (DSP-1674) ([#539](https://www.github.com/dasch-swiss/dsp-app/issues/539)) ([67a52a3](https://www.github.com/dasch-swiss/dsp-app/commit/67a52a32ef8285e16b37f6cd069a72ded763deab))
+* **resource:** improve still image annotation form (DEV-53) ([#549](https://www.github.com/dasch-swiss/dsp-app/issues/549)) ([38bbe41](https://www.github.com/dasch-swiss/dsp-app/commit/38bbe4192add49171688df230eaa2df8f0aaa633))
+
 ## [6.1.0](https://www.github.com/dasch-swiss/dsp-app/compare/v6.0.0...v6.1.0) (2021-09-20)
 
 

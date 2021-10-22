@@ -68,17 +68,23 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
      * input `displayProjectInfo` of properties component:
      * display project info or not; "This resource belongs to project XYZ"
      */
-    @Input() displayProjectInfo: false;
+    @Input() displayProjectInfo = false;
 
     /**
      * does the logged-in user has system or project admin permissions?
      */
-    @Input() adminPermissions: false;
+    @Input() adminPermissions = false;
 
     /**
      * is the logged-in user project member?
      */
-    @Input() editPermissions: false;
+    @Input() editPermissions = false;
+
+    /**
+     * in case properties belongs to an annotation (e.g. region in still images)
+     * in this case we don't have to display the isRegionOf property
+     */
+    @Input() isAnnotation = false;
 
     /**
      * output `referredProjectClicked` of resource view component:
@@ -115,6 +121,8 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     valueOperationEventSubscriptions: Subscription[] = []; // array of ValueOperationEvent subscriptions
 
     representationConstants = RepresentationConstants;
+
+    booleanValueTypeIri = Constants.BooleanValue;
 
     hasIncomingLinkIri = Constants.KnoraApiV2 + Constants.HashDelimiter + 'hasIncomingLinkValue';
 
@@ -350,7 +358,8 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     /**
      * called from the template when the user clicks on the add button
      */
-    showAddValueForm(prop: PropertyInfoValues) {
+    showAddValueForm(prop: PropertyInfoValues, ev: Event) {
+        ev.preventDefault();
         this.propID = prop.propDef.id;
         this.addValueFormIsVisible = true;
     }

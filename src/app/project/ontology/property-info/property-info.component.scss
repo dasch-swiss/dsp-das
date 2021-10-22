@@ -9,6 +9,10 @@
   color: $primary_700;
 }
 
+.flex {
+  display: flex !important;
+}
+
 .mat-line.title {
   line-height: 1.8;
   .mat-icon {
@@ -19,6 +23,10 @@
 
 .mat-line.info {
   font-size: small;
+
+  .mat-caption {
+    color: rgba($dark, .7);
+  }
 
   .mat-icon {
     width: 12px;

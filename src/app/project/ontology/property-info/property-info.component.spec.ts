@@ -27,6 +27,7 @@ import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogHeaderComponent } from 'src/app/main/dialog/dialog-header/dialog-header.component';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { SplitPipe } from 'src/app/main/pipes/split.pipe';
 import { PropertyFormComponent } from '../property-form/property-form.component';
 import { PropertyInfoComponent } from './property-info.component';
 
@@ -194,6 +195,7 @@ describe('PropertyInfoComponent', () => {
                 SimpleTextHostComponent,
                 PropertyFormComponent,
                 PropertyInfoComponent,
+                SplitPipe
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -240,6 +242,16 @@ describe('PropertyInfoComponent', () => {
     });
 
     beforeEach(() => {
+        // mock cache service for currentOntology
+        const cacheSpy = TestBed.inject(CacheService);
+
+        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
+            () => {
+                const response: ReadOntology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
+                return of(response);
+            }
+        );
+
         simpleTextHostFixture = TestBed.createComponent(SimpleTextHostComponent);
         simpleTextHostComponent = simpleTextHostFixture.componentInstance;
         simpleTextHostFixture.detectChanges();
@@ -251,19 +263,6 @@ describe('PropertyInfoComponent', () => {
 
         overlayContainer = TestBed.inject(OverlayContainer);
         rootLoader = TestbedHarnessEnvironment.documentRootLoader(simpleTextHostFixture);
-
-    });
-
-    beforeEach(() => {
-        // mock cache service for currentOntology
-        const cacheSpy = TestBed.inject(CacheService);
-
-        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
-            () => {
-                const response: ReadOntology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
-                return of(response);
-            }
-        );
 
         linkHostFixture = TestBed.createComponent(LinkHostComponent);
         linkHostComponent = linkHostFixture.componentInstance;

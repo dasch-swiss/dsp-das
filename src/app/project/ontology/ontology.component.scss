@@ -86,9 +86,11 @@ $width: 340px;
         .property {
           height: 56px !important;
           margin: 4px 0;
-
+          &.odd {
+            background-color: $primary_50;
+          }
           &:hover {
-            background-color: $black-12-opacity;
+            background-color: $black-14-opacity;
           }
         }
       }
@@ -120,19 +122,3 @@ $width: 340px;
   top: 80px;
 }
 
-.mat-caption.space-reducer {
-  margin-top: 0;
-  margin-bottom: 6px;
-}
-.ontology-actions {
-  border-left: 1px solid $primary_200;
-  padding: 0 12px;
-  .mat-caption.space-reducer {
-    margin-top: -6px;
-    margin-bottom: 6px;
-  }
-}
-
-button.space-reducer {
-  margin: 0;
-}
