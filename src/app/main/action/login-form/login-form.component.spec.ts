@@ -15,8 +15,8 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { DspApiConfigToken, DspApiConnectionToken, DspDataDogConfigToken } from '../../declarations/dsp-api-tokens';
-import { DspDataDogConfig } from '../../declarations/dsp-dataDog-config';
+import { DspApiConfigToken, DspApiConnectionToken, DspInstrumentationToken } from '../../declarations/dsp-api-tokens';
+import { DspDataDogConfig } from '../../declarations/dsp-instrumentation-config';
 import { Session, SessionService } from '../../services/session.service';
 import { LoginFormComponent } from './login-form.component';
 
@@ -85,7 +85,7 @@ describe('LoginFormComponent', () => {
                     useValue: dspConfSpy
                 },
                 {
-                    provide: DspDataDogConfigToken,
+                    provide: DspInstrumentationToken,
                     useValue: dspDatadogSpy
                 },
                 FormBuilder,

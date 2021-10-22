@@ -7,6 +7,9 @@ import {
     ErrorHandler
 } from '@angular/core';
 
+import { DspInstrumentationToken } from './main/declarations/dsp-api-tokens';
+import { DspInstrumentationConfig } from './main/declarations/dsp-instrumentation-config';
+
 const rollbarConfig = {
     accessToken: '86fd4ff29d3148999d80bdd724ce7704',
     captureUncaught: true,
@@ -17,7 +20,10 @@ export const RollbarService = new InjectionToken<Rollbar>('rollbar');
 
 @Injectable()
 export class RollbarErrorHandler implements ErrorHandler {
-    constructor(@Inject(RollbarService) private rollbar: Rollbar) {}
+    constructor(
+        @Inject(DspInstrumentationToken) private _dspInstrumentationConfig: DspInstrumentationConfig,
+        @Inject(RollbarService) private rollbar: Rollbar
+    ) { }
 
     handleError(err: any): void {
         this.rollbar.error(err.originalError || err);

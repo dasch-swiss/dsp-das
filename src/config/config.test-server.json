@@ -10,9 +10,17 @@
   "geonameToken": "knora",
   "jsonWebToken": "",
   "logErrors": true,
-  "dataDogLogging": false,
-  "dataDogApplicationId": "",
-  "dataDogClientToken": "",
-  "dataDogSite": "",
-  "dataDogService": ""
+  "instrumentation": {
+    "environment": "test",
+    "dataDog": {
+      "active": false,
+      "applicationId": "",
+      "clientToken": "",
+      "site": "",
+      "service": ""
+    },
+    "rollbar": {
+      "active": false
+    }
+  }
 }

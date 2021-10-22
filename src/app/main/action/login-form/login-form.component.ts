@@ -3,10 +3,12 @@ import { inject } from '@angular/core/testing';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiResponseData, ApiResponseError, KnoraApiConfig, KnoraApiConnection, LoginResponse, LogoutResponse } from '@dasch-swiss/dsp-js';
 import { datadogRum, RumFetchResourceEventDomainContext } from '@datadog/browser-rum';
-import { DspApiConfigToken, DspApiConnectionToken, DspDataDogConfigToken } from '../../declarations/dsp-api-tokens';
-import { DspDataDogConfig } from '../../declarations/dsp-dataDog-config';
+import { DspApiConfigToken, DspApiConnectionToken, DspInstrumentationToken } from '../../declarations/dsp-api-tokens';
+import { DspInstrumentationConfig } from '../../declarations/dsp-instrumentation-config';
 import { NotificationService } from '../../services/notification.service';
 import { Session, SessionService } from '../../services/session.service';
+
+const { version: appVersion } = require('../../../../package.json');
 
 @Component({
     selector: 'app-login-form',
@@ -105,7 +107,7 @@ export class LoginFormComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         @Inject(DspApiConfigToken) private _dspApiConfig: KnoraApiConfig,
-        @Inject(DspDataDogConfigToken) private _dspDataDogConfig: DspDataDogConfig,
+        @Inject(DspInstrumentationToken) private _dspInstrumentationConfig: DspInstrumentationConfig,
         private _notification: NotificationService,
         private _sessionService: SessionService,
         private _fb: FormBuilder
@@ -156,14 +158,14 @@ export class LoginFormComponent implements OnInit {
                         this.session = this._sessionService.getSession();
                         this.loginSuccess.emit(true);
                         this.loading = false;
-                        if (this._dspDataDogConfig.dataDogLogging) {
+                        if (this._dspInstrumentationConfig.dataDog.active) {
                             datadogRum.init({
-                                applicationId: this._dspDataDogConfig.dataDogApplicationId,
-                                clientToken: this._dspDataDogConfig.dataDogClientToken,
-                                site: this._dspDataDogConfig.dataDogSite,
-                                service: this._dspDataDogConfig.dataDogService,
-                                // specify a version number to identify the deployed version of your application in Datadog
-                                // version: '1.0.0',
+                                applicationId: this._dspInstrumentationConfig.dataDog.applicationId,
+                                clientToken: this._dspInstrumentationConfig.dataDog.clientToken,
+                                site: this._dspInstrumentationConfig.dataDog.site,
+                                service: this._dspInstrumentationConfig.dataDog.service,
+                                env: this._dspInstrumentationConfig.environment,
+                                version: appVersion,
                                 sampleRate: 100,
                                 trackInteractions: true,
                                 beforeSend: (event, context) => {
