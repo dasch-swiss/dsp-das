@@ -20,7 +20,8 @@
       "service": ""
     },
     "rollbar": {
-      "active": false
+      "active": false,
+      "accessToken": ""
     }
   }
 }

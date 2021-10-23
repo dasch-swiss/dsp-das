@@ -10,12 +10,6 @@ import {
 import { DspInstrumentationToken } from './main/declarations/dsp-api-tokens';
 import { DspInstrumentationConfig } from './main/declarations/dsp-instrumentation-config';
 
-const rollbarConfig = {
-    accessToken: '86fd4ff29d3148999d80bdd724ce7704',
-    captureUncaught: true,
-    captureUnhandledRejections: true,
-};
-
 export const RollbarService = new InjectionToken<Rollbar>('rollbar');
 
 @Injectable()
@@ -31,5 +25,11 @@ export class RollbarErrorHandler implements ErrorHandler {
 }
 
 export function rollbarFactory() {
-    return new Rollbar(rollbarConfig);
+    return new Rollbar(
+        {
+            accessToken: this._dspInstrumentationConfig.rollbar.accessToken, // '86fd4ff29d3148999d80bdd724ce7704',
+            captureUncaught: true,
+            captureUnhandledRejections: true
+        }
+    );
 }

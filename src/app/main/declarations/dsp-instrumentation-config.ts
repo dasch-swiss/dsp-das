@@ -18,6 +18,7 @@ export class DspDataDogConfig {
 
 export class DspRollbarConfig {
     constructor(
-        public active: boolean
+        public active: boolean,
+        public accessToken: string
     ) { }
 }
