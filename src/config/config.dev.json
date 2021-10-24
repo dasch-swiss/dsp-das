@@ -13,15 +13,15 @@
   "instrumentation": {
     "environment": "dev",
     "dataDog": {
-      "active": false,
+      "enabled": false,
       "applicationId": "",
       "clientToken": "",
       "site": "",
       "service": ""
     },
     "rollbar": {
-      "active": false,
-      "accessToken": ""
+      "enabled": true,
+      "accessToken": "416ea28b4e0c4861afc3fc7bfdfaa455"
     }
   }
 }

@@ -7,29 +7,55 @@ import {
     ErrorHandler
 } from '@angular/core';
 
-import { DspInstrumentationToken } from './main/declarations/dsp-api-tokens';
 import { DspInstrumentationConfig } from './main/declarations/dsp-instrumentation-config';
+import { DspInstrumentationToken } from './main/declarations/dsp-api-tokens';
+import { AppInitService } from './app-init.service';
 
 export const RollbarService = new InjectionToken<Rollbar>('rollbar');
+
+const rollbarConfig: Rollbar.Configuration = {
+    accessToken: 'POST_CLIENT_ITEM_TOKEN',
+    enabled: false,
+    captureUncaught: true,
+    captureUnhandledRejections: true,
+    nodeSourceMaps: false,
+    inspectAnonymousErrors: true,
+    ignoreDuplicateErrors: true,
+    wrapGlobalEventHandlers: false,
+    scrubRequestBody: true,
+    exitOnUncaughtException: false,
+    stackTraceLimit: 20
+};
 
 @Injectable()
 export class RollbarErrorHandler implements ErrorHandler {
     constructor(
-        @Inject(DspInstrumentationToken) private _dspInstrumentationConfig: DspInstrumentationConfig,
-        @Inject(RollbarService) private rollbar: Rollbar
-    ) { }
+        @Inject(RollbarService) private _rollbar: Rollbar,
+        @Inject(DspInstrumentationToken) private _instrConfig: DspInstrumentationConfig
+    ) {
+        console.log(this._instrConfig);
+        console.log(this._rollbar);
+    }
 
     handleError(err: any): void {
-        this.rollbar.error(err.originalError || err);
+        this._rollbar.error(err.originalError || err);
     }
 }
 
 export function rollbarFactory() {
-    return new Rollbar(
+    return (initService: AppInitService): Rollbar => new Rollbar(
         {
-            accessToken: this._dspInstrumentationConfig.rollbar.accessToken, // '86fd4ff29d3148999d80bdd724ce7704',
+            accessToken: initService.dspInstrumentationConfig.rollbar.accessToken,
+            enabled: initService.dspInstrumentationConfig.rollbar.enabled,
             captureUncaught: true,
-            captureUnhandledRejections: true
+            captureUnhandledRejections: true,
+            nodeSourceMaps: false,
+            inspectAnonymousErrors: true,
+            ignoreDuplicateErrors: true,
+            wrapGlobalEventHandlers: false,
+            scrubRequestBody: true,
+            exitOnUncaughtException: false,
+            stackTraceLimit: 20
         }
     );
 }

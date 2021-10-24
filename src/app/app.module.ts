@@ -27,7 +27,8 @@ import { SelectedResourcesComponent } from './main/action/selected-resources/sel
 import { SortButtonComponent } from './main/action/sort-button/sort-button.component';
 import { StringLiteralInputComponent } from './main/action/string-literal-input/string-literal-input.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
-import { DspApiConfigToken, DspApiConnectionToken, DspInstrumentationToken } from './main/declarations/dsp-api-tokens';
+import { DspApiConfigToken, DspApiConnectionToken, DspAppConfigToken, DspInstrumentationToken } from './main/declarations/dsp-api-tokens';
+import { DspAppConfig } from './main/declarations/dsp-app-config';
 import { DialogHeaderComponent } from './main/dialog/dialog-header/dialog-header.component';
 import { DialogComponent } from './main/dialog/dialog.component';
 import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
@@ -166,7 +167,7 @@ import { SearchSelectOntologyComponent } from './workspace/search/advanced-searc
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
-
+import * as Rollbar from 'rollbar';
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
     return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json');
@@ -358,17 +359,44 @@ export function httpLoaderFactory(httpClient: HttpClient) {
             deps: [AppInitService]
         },
         {
+            provide: DspApiConnectionToken,
+            useFactory: (appInitService: AppInitService) => new KnoraApiConnection(appInitService.dspApiConfig),
+            deps: [AppInitService]
+        },
+        {
+            provide: DspAppConfigToken,
+            useFactory: (appInitService: AppInitService) => appInitService.dspAppConfig,
+            deps: [AppInitService]
+        },
+        {
             provide: DspInstrumentationToken,
             useFactory: (appInitService: AppInitService) => appInitService.dspInstrumentationConfig,
             deps: [AppInitService]
         },
         {
-            provide: DspApiConnectionToken,
-            useFactory: (appInitService: AppInitService) => new KnoraApiConnection(appInitService.dspApiConfig),
+            provide: RollbarService,
+            useFactory: (appInitService: AppInitService): Rollbar => new Rollbar(
+                {
+                    accessToken: appInitService.dspInstrumentationConfig.rollbar.accessToken,
+                    enabled: appInitService.dspInstrumentationConfig.rollbar.enabled,
+                    captureUncaught: true,
+                    captureUnhandledRejections: true,
+                    nodeSourceMaps: false,
+                    inspectAnonymousErrors: true,
+                    ignoreDuplicateErrors: true,
+                    wrapGlobalEventHandlers: false,
+                    scrubRequestBody: true,
+                    exitOnUncaughtException: false,
+                    stackTraceLimit: 20
+                }),
             deps: [AppInitService]
         },
-        { provide: ErrorHandler, useClass: RollbarErrorHandler },
-        { provide: RollbarService, useFactory: rollbarFactory }
+        {
+            provide: ErrorHandler,
+            useClass: RollbarErrorHandler,
+            deps: [RollbarService, DspInstrumentationToken]
+        }
+
     ],
     bootstrap: [AppComponent]
 })

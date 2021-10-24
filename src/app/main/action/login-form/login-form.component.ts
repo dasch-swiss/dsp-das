@@ -8,7 +8,7 @@ import { DspInstrumentationConfig } from '../../declarations/dsp-instrumentation
 import { NotificationService } from '../../services/notification.service';
 import { Session, SessionService } from '../../services/session.service';
 
-const { version: appVersion } = require('../../../../package.json');
+const { version: appVersion } = require('../../../../../package.json');
 
 @Component({
     selector: 'app-login-form',
@@ -106,7 +106,6 @@ export class LoginFormComponent implements OnInit {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
-        @Inject(DspApiConfigToken) private _dspApiConfig: KnoraApiConfig,
         @Inject(DspInstrumentationToken) private _dspInstrumentationConfig: DspInstrumentationConfig,
         private _notification: NotificationService,
         private _sessionService: SessionService,
@@ -158,7 +157,7 @@ export class LoginFormComponent implements OnInit {
                         this.session = this._sessionService.getSession();
                         this.loginSuccess.emit(true);
                         this.loading = false;
-                        if (this._dspInstrumentationConfig.dataDog.active) {
+                        if (this._dspInstrumentationConfig.dataDog.enabled) {
                             datadogRum.init({
                                 applicationId: this._dspInstrumentationConfig.dataDog.applicationId,
                                 clientToken: this._dspInstrumentationConfig.dataDog.clientToken,

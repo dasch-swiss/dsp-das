@@ -8,7 +8,7 @@ export class DspInstrumentationConfig {
 
 export class DspDataDogConfig {
     constructor(
-        public active: boolean,
+        public enabled: boolean,
         public applicationId: string,
         public clientToken: string,
         public site: string,
@@ -18,7 +18,7 @@ export class DspDataDogConfig {
 
 export class DspRollbarConfig {
     constructor(
-        public active: boolean,
+        public enabled: boolean,
         public accessToken: string
     ) { }
 }

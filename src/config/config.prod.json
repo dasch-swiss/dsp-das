@@ -13,14 +13,14 @@
   "instrumentation": {
     "environment": "prod",
     "dataDog": {
-      "active": false,
+      "enabled": false,
       "applicationId": "",
       "clientToken": "",
       "site": "",
       "service": ""
     },
     "rollbar": {
-      "active": false,
+      "enabled": false,
       "accessToken": ""
     }
   }

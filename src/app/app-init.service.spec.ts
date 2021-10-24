@@ -22,7 +22,23 @@ describe('TestService', () => {
                 apiPort: 3333,
                 apiPath: 'mypath',
                 jsonWebToken: 'mytoken',
-                logErrors: true
+                logErrors: true,
+                geonameToken: "geoname_token",
+                instrumentation: {
+                    environment: 'dev',
+                    dataDog: {
+                        enabled: true,
+                        applicationId: 'app_id',
+                        clientToken: 'client_token',
+                        site: 'site',
+                        service: 'dsp-app'
+                    },
+                    rollbar: {
+                        enabled: true,
+                        accessToken: 'rollbar_token'
+                    }
+                }
+
             })))
         );
 
@@ -34,13 +50,15 @@ describe('TestService', () => {
         expect(service.dspApiConfig.apiPath).toEqual('mypath');
         expect(service.dspApiConfig.jsonWebToken).toEqual('mytoken');
         expect(service.dspApiConfig.logErrors).toEqual(true);
-
-        expect(service.config['apiProtocol']).toEqual('http');
-        expect(service.config['apiHost']).toEqual('0.0.0.0');
-        expect(service.config['apiPort']).toEqual(3333);
-        expect(service.config['apiPath']).toEqual('mypath');
-        expect(service.config['jsonWebToken']).toEqual('mytoken');
-        expect(service.config['logErrors']).toEqual(true);
+        expect(service.dspAppConfig.geonameToken).toEqual('geoname_token');
+        expect(service.dspInstrumentationConfig.environment).toEqual('dev');
+        expect(service.dspInstrumentationConfig.dataDog.enabled).toEqual(true);
+        expect(service.dspInstrumentationConfig.dataDog.applicationId).toEqual('app_id');
+        expect(service.dspInstrumentationConfig.dataDog.clientToken).toEqual('client_token');
+        expect(service.dspInstrumentationConfig.dataDog.site).toEqual('site');
+        expect(service.dspInstrumentationConfig.dataDog.service).toEqual('dsp-app');
+        expect(service.dspInstrumentationConfig.rollbar.enabled).toEqual(true);
+        expect(service.dspInstrumentationConfig.rollbar.accessToken).toEqual('rollbar_token');
 
         expect(fetchSpy).toHaveBeenCalledTimes(1);
         expect(fetchSpy).toHaveBeenCalledWith('config/config.prod.json');
@@ -52,7 +70,21 @@ describe('TestService', () => {
         const fetchSpy = spyOn(window, 'fetch').and.callFake(
             path => Promise.resolve(new Response(JSON.stringify({
                 apiProtocol: 'http',
-                apiHost: '0.0.0.0'
+                apiHost: '0.0.0.0',
+                instrumentation: {
+                    environment: 'dev',
+                    dataDog: {
+                        enabled: true,
+                        applicationId: 'app_id',
+                        clientToken: 'client_token',
+                        site: 'site',
+                        service: 'dsp-app'
+                    },
+                    rollbar: {
+                        enabled: true,
+                        accessToken: 'rollbar_token'
+                    }
+                }
             })))
         );
 
@@ -64,13 +96,6 @@ describe('TestService', () => {
         expect(service.dspApiConfig.apiPath).toEqual('');
         expect(service.dspApiConfig.jsonWebToken).toEqual('');
         expect(service.dspApiConfig.logErrors).toEqual(false);
-
-        expect(service.config['apiProtocol']).toEqual('http');
-        expect(service.config['apiHost']).toEqual('0.0.0.0');
-        expect(service.config['apiPort']).toEqual(null);
-        expect(service.config['apiPath']).toEqual('');
-        expect(service.config['jsonWebToken']).toEqual('');
-        expect(service.config['logErrors']).toEqual(false);
 
         expect(fetchSpy).toHaveBeenCalledTimes(1);
         expect(fetchSpy).toHaveBeenCalledWith('config/config.prod.json');
@@ -83,7 +108,20 @@ describe('TestService', () => {
             path => Promise.resolve(new Response(JSON.stringify({
                 apiProtocol: 'http',
                 apiHost: '0.0.0.0',
-                myOption: true
+                instrumentation: {
+                    environment: 'dev',
+                    dataDog: {
+                        enabled: true,
+                        applicationId: 'app_id',
+                        clientToken: 'client_token',
+                        site: 'site',
+                        service: 'dsp-app'
+                    },
+                    rollbar: {
+                        enabled: true,
+                        accessToken: 'rollbar_token'
+                    }
+                }
             })))
         );
 
@@ -95,14 +133,6 @@ describe('TestService', () => {
         expect(service.dspApiConfig.apiPath).toEqual('');
         expect(service.dspApiConfig.jsonWebToken).toEqual('');
         expect(service.dspApiConfig.logErrors).toEqual(false);
-
-        expect(service.config['apiProtocol']).toEqual('http');
-        expect(service.config['apiHost']).toEqual('0.0.0.0');
-        expect(service.config['apiPort']).toEqual(null);
-        expect(service.config['apiPath']).toEqual('');
-        expect(service.config['jsonWebToken']).toEqual('');
-        expect(service.config['logErrors']).toEqual(false);
-        expect(service.config['myOption']).toEqual(true);
 
         expect(fetchSpy).toHaveBeenCalledTimes(1);
         expect(fetchSpy).toHaveBeenCalledWith('config/config.prod.json');

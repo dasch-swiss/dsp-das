@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { KnoraApiConfig } from '@dasch-swiss/dsp-js';
 import { DspInstrumentationConfig, DspRollbarConfig, DspDataDogConfig } from './main/declarations/dsp-instrumentation-config';
 import { DspIiifConfig } from './main/declarations/dsp-iiif-config';
+import { DspAppConfig } from './main/declarations/dsp-app-config';
 
 @Injectable({
     providedIn: 'root'
@@ -10,9 +11,8 @@ export class AppInitService {
 
     dspApiConfig: KnoraApiConfig;
     dspIiifConfig: DspIiifConfig;
+    dspAppConfig: DspAppConfig;
     dspInstrumentationConfig: DspInstrumentationConfig;
-
-    config: object;
 
     constructor() {
     }
@@ -28,7 +28,6 @@ export class AppInitService {
         return new Promise<void>((resolve, reject) => {
             fetch(`${path}/config.${env.name}.json`).then(
                 (response: Response) => response.json()).then(jsonConfig => {
-
 
                     // check for presence of apiProtocol and apiHost
                     if (typeof jsonConfig.apiProtocol !== 'string' || typeof jsonConfig.apiHost !== 'string') {
@@ -62,36 +61,26 @@ export class AppInitService {
                         iiifPath
                     );
 
-                    // init datadog configuration
+                    // init dsp app extended configuration
+                    this.dspAppConfig = new DspAppConfig(
+                        jsonConfig.geonameToken
+                    )
+
+                    // init instrumentation configuration
                     this.dspInstrumentationConfig = new DspInstrumentationConfig(
-                        jsonConfig.environment,
+                        jsonConfig.instrumentation.environment,
                         new DspDataDogConfig(
-                            jsonConfig.dataDog.active,
-                            jsonConfig.dataDog.applicationId,
-                            jsonConfig.dataDog.clientToken,
-                            jsonConfig.dataDog.site,
-                            jsonConfig.dataDog.service,
+                            jsonConfig.instrumentation.dataDog.enabled,
+                            jsonConfig.instrumentation.dataDog.applicationId,
+                            jsonConfig.instrumentation.dataDog.clientToken,
+                            jsonConfig.instrumentation.dataDog.site,
+                            jsonConfig.instrumentation.dataDog.service,
                         ),
                         new DspRollbarConfig(
-                            jsonConfig.rollbar.active
+                            jsonConfig.instrumentation.rollbar.enabled,
+                            jsonConfig.instrumentation.rollbar.accessToken
                         )
                     );
-
-                    // get all options from config
-                    this.config = jsonConfig;
-
-                    // set sanitized standard config options
-                    this.config['apiProtocol'] = jsonConfig.apiProtocol;
-                    this.config['apiHost'] = jsonConfig.apiHost;
-                    this.config['apiPort'] = apiPort;
-                    this.config['apiPath'] = apiPath;
-                    this.config['jsonWebToken'] = jsonWebToken;
-                    this.config['logErrors'] = logErrors;
-                    this.config['iiifProtocol'] = jsonConfig.iiifProtocol;
-                    this.config['iiifHost'] = jsonConfig.iiifHost;
-                    this.config['iiifPort'] = iiifPort;
-                    this.config['iiifPath'] = iiifPath;
-                    this.config['iiifUrl'] = this.dspIiifConfig.iiifUrl;
 
                     resolve();
                 }
