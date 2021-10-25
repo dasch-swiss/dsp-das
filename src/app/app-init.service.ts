@@ -71,9 +71,5 @@ export class AppInitService {
                 this.config.instrumentation.rollbar.accessToken
             )
         )
-
-        console.group("AppInitService finished initialization");
-        console.log(this);
-        console.groupEnd();
     }
 }

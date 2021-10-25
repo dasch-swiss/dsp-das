@@ -29,7 +29,6 @@ const rollbarConfig: Rollbar.Configuration = {
 @Injectable()
 export class RollbarErrorHandler implements ErrorHandler {
 
-
     public rollbar: Rollbar;
 
     constructor(
@@ -50,10 +49,6 @@ export class RollbarErrorHandler implements ErrorHandler {
                 stackTraceLimit: 20
             }
         );
-
-
-        console.log(this.rollbar)
-        this.rollbar.info("rollbar initialized")
     }
 
     handleError(err: any): void {
