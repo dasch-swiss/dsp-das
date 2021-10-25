@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { KnoraApiConfig } from '@dasch-swiss/dsp-js';
 import { DspInstrumentationConfig, DspRollbarConfig, DspDataDogConfig } from './main/declarations/dsp-instrumentation-config';
 import { DspIiifConfig } from './main/declarations/dsp-iiif-config';
 import { DspAppConfig } from './main/declarations/dsp-app-config';
-import { environment } from '../environments/environment';
-import { Observable } from 'rxjs';
+import { IConfig } from './main/declarations/app-config';
+import { APP_CONFIG } from './main/declarations/dsp-api-tokens';
 
 @Injectable({
     providedIn: 'root'
@@ -14,94 +14,66 @@ export class AppInitService {
     public dspApiConfig: KnoraApiConfig | null;
     public dspIiifConfig: DspIiifConfig | null;
     public dspAppConfig: DspAppConfig | null;
-    public dspInstrumentationConfig: Observable<DspInstrumentationConfig> | null;
+    public dspInstrumentationConfig: DspInstrumentationConfig | null;
 
-    constructor() { }
+    constructor(
+        @Inject(APP_CONFIG) private config: IConfig
+    ) {
+        // check for presence of apiProtocol and apiHost
+        if (typeof this.config.apiProtocol !== 'string' || typeof this.config.apiHost !== 'string') {
+            throw new Error('config misses required members: apiProtocol and/or apiHost');
+        }
 
-    /**
-     * fetches and initialises the configuration.
-     *
-     * @param path path to the config file.
-     * @param env environment to be used (dev or prod).
-     */
-    Init(path: string, env: { name: string; production: boolean }): Promise<void> {
+        // make input type safe
+        const apiPort = (typeof this.config.apiPort === 'number' ? this.config.apiPort : null);
+        const apiPath = (typeof this.config.apiPath === 'string' ? this.config.apiPath : '');
+        const jsonWebToken = (typeof this.config.jsonWebToken === 'string' ? this.config.jsonWebToken : '');
+        const logErrors = (typeof this.config.logErrors === 'boolean' ? this.config.logErrors : false);
 
-        return new Promise<void>((resolve, reject) => {
-            fetch(`${path}/config.${env.name}.json`).then(
-                (response: Response) => response.json()).then(jsonConfig => {
+        // init dsp-api configuration
+        this.dspApiConfig = new KnoraApiConfig(
+            this.config.apiProtocol,
+            this.config.apiHost,
+            apiPort,
+            apiPath,
+            jsonWebToken,
+            logErrors
+        );
 
-                    // check for presence of apiProtocol and apiHost
-                    if (typeof jsonConfig.apiProtocol !== 'string' || typeof jsonConfig.apiHost !== 'string') {
-                        throw new Error('config misses required members: apiProtocol and/or apiHost');
-                    }
+        const iiifPort = (typeof this.config.iiifPort === 'number' ? this.config.iiifPort : null);
+        const iiifPath = (typeof this.config.iiifPath === 'string' ? this.config.iiifPath : '');
 
-                    // make input type safe
-                    const apiPort = (typeof jsonConfig.apiPort === 'number' ? jsonConfig.apiPort : null);
-                    const apiPath = (typeof jsonConfig.apiPath === 'string' ? jsonConfig.apiPath : '');
-                    const jsonWebToken = (typeof jsonConfig.jsonWebToken === 'string' ? jsonConfig.jsonWebToken : '');
-                    const logErrors = (typeof jsonConfig.logErrors === 'boolean' ? jsonConfig.logErrors : false);
+        // init iiif configuration
+        this.dspIiifConfig = new DspIiifConfig(
+            this.config.iiifProtocol,
+            this.config.iiifHost,
+            iiifPort,
+            iiifPath
+        );
 
-                    // init dsp-api configuration
-                    this.dspApiConfig = new KnoraApiConfig(
-                        jsonConfig.apiProtocol,
-                        jsonConfig.apiHost,
-                        apiPort,
-                        apiPath,
-                        jsonWebToken,
-                        logErrors
-                    );
+        // init dsp app extended configuration
+        this.dspAppConfig = new DspAppConfig(
+            this.config.geonameToken
+        )
 
-                    const iiifPort = (typeof jsonConfig.iiifPort === 'number' ? jsonConfig.iiifPort : null);
-                    const iiifPath = (typeof jsonConfig.iiifPath === 'string' ? jsonConfig.iiifPath : '');
+        // init instrumentation configuration
+        this.dspInstrumentationConfig = new DspInstrumentationConfig(
+            this.config.instrumentation.environment,
+            new DspDataDogConfig(
+                this.config.instrumentation.dataDog.enabled,
+                this.config.instrumentation.dataDog.applicationId,
+                this.config.instrumentation.dataDog.clientToken,
+                this.config.instrumentation.dataDog.site,
+                this.config.instrumentation.dataDog.service,
+            ),
+            new DspRollbarConfig(
+                this.config.instrumentation.rollbar.enabled,
+                this.config.instrumentation.rollbar.accessToken
+            )
+        )
 
-                    // init iiif configuration
-                    this.dspIiifConfig = new DspIiifConfig(
-                        jsonConfig.iiifProtocol,
-                        jsonConfig.iiifHost,
-                        iiifPort,
-                        iiifPath
-                    );
-
-                    // init dsp app extended configuration
-                    this.dspAppConfig = new DspAppConfig(
-                        jsonConfig.geonameToken
-                    )
-
-                    // init instrumentation configuration
-                    this.dspInstrumentationConfig = new Observable((observer) => {
-
-                        // observable execution
-                        observer.next(
-                            new DspInstrumentationConfig(
-                                jsonConfig.instrumentation.environment,
-                                new DspDataDogConfig(
-                                    jsonConfig.instrumentation.dataDog.enabled,
-                                    jsonConfig.instrumentation.dataDog.applicationId,
-                                    jsonConfig.instrumentation.dataDog.clientToken,
-                                    jsonConfig.instrumentation.dataDog.site,
-                                    jsonConfig.instrumentation.dataDog.service,
-                                ),
-                                new DspRollbarConfig(
-                                    jsonConfig.instrumentation.rollbar.enabled,
-                                    jsonConfig.instrumentation.rollbar.accessToken
-                                )
-                            )
-                        )
-                        observer.complete()
-                    })
-
-                    console.group("AppInitService finished initialization");
-                    console.log(this);
-                    console.groupEnd();
-                    resolve();
-                }
-                ).catch((err) => {
-                    reject(err);
-                });
-        });
+        console.group("AppInitService finished initialization");
+        console.log(this);
+        console.groupEnd();
     }
-}
-
-export function appInitFactory() {
-    return (appInitService: AppInitService): Promise<void> => appInitService.Init('config', environment);
 }

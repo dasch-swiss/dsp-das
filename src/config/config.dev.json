@@ -20,8 +20,8 @@
       "service": ""
     },
     "rollbar": {
-      "enabled": true,
-      "accessToken": "416ea28b4e0c4861afc3fc7bfdfaa455"
+      "enabled": false,
+      "accessToken": ""
     }
   }
 }
