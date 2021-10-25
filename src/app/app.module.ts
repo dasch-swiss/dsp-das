@@ -14,8 +14,7 @@ import { AngularSplitModule } from 'angular-split';
 import { MatJDNConvertibleCalendarDateAdapterModule } from 'jdnconvertiblecalendardateadapter';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { environment } from '../environments/environment';
-import { AppInitService } from './app-init.service';
+import { AppInitService, appInitFactory } from './app-init.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmationDialogComponent } from './main/action/confirmation-dialog/confirmation-dialog.component';
@@ -28,7 +27,6 @@ import { SortButtonComponent } from './main/action/sort-button/sort-button.compo
 import { StringLiteralInputComponent } from './main/action/string-literal-input/string-literal-input.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { DspApiConfigToken, DspApiConnectionToken, DspAppConfigToken, DspInstrumentationToken } from './main/declarations/dsp-api-tokens';
-import { DspAppConfig } from './main/declarations/dsp-app-config';
 import { DialogHeaderComponent } from './main/dialog/dialog-header/dialog-header.component';
 import { DialogComponent } from './main/dialog/dialog.component';
 import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
@@ -167,7 +165,7 @@ import { SearchSelectOntologyComponent } from './workspace/search/advanced-searc
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
-import * as Rollbar from 'rollbar';
+
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
     return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json');
@@ -346,10 +344,10 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         })
     ],
     providers: [
+        AppInitService,
         {
             provide: APP_INITIALIZER,
-            useFactory: (appInitService: AppInitService) =>
-                (): Promise<void> => appInitService.Init('config', environment),
+            useFactory: appInitFactory,
             deps: [AppInitService],
             multi: true
         },
@@ -373,28 +371,15 @@ export function httpLoaderFactory(httpClient: HttpClient) {
             useFactory: (appInitService: AppInitService) => appInitService.dspInstrumentationConfig,
             deps: [AppInitService]
         },
-        {
-            provide: RollbarService,
-            useFactory: (appInitService: AppInitService): Rollbar => new Rollbar(
-                {
-                    accessToken: appInitService.dspInstrumentationConfig.rollbar.accessToken,
-                    enabled: appInitService.dspInstrumentationConfig.rollbar.enabled,
-                    captureUncaught: true,
-                    captureUnhandledRejections: true,
-                    nodeSourceMaps: false,
-                    inspectAnonymousErrors: true,
-                    ignoreDuplicateErrors: true,
-                    wrapGlobalEventHandlers: false,
-                    scrubRequestBody: true,
-                    exitOnUncaughtException: false,
-                    stackTraceLimit: 20
-                }),
-            deps: [AppInitService]
-        },
+        // {
+        //     provide: RollbarService,
+        //     useFactory: rollbarFactory,
+        //     deps: [AppInitService]
+        // },
         {
             provide: ErrorHandler,
             useClass: RollbarErrorHandler,
-            deps: [RollbarService, DspInstrumentationToken]
+            deps: [AppInitService]
         }
 
     ],

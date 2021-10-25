@@ -3,19 +3,19 @@ import { KnoraApiConfig } from '@dasch-swiss/dsp-js';
 import { DspInstrumentationConfig, DspRollbarConfig, DspDataDogConfig } from './main/declarations/dsp-instrumentation-config';
 import { DspIiifConfig } from './main/declarations/dsp-iiif-config';
 import { DspAppConfig } from './main/declarations/dsp-app-config';
+import { environment } from '../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AppInitService {
 
-    dspApiConfig: KnoraApiConfig;
-    dspIiifConfig: DspIiifConfig;
-    dspAppConfig: DspAppConfig;
-    dspInstrumentationConfig: DspInstrumentationConfig;
+    public dspApiConfig: KnoraApiConfig | null;
+    public dspIiifConfig: DspIiifConfig | null;
+    public dspAppConfig: DspAppConfig | null;
+    public dspInstrumentationConfig: DspInstrumentationConfig | null;
 
-    constructor() {
-    }
+    constructor() { }
 
     /**
      * fetches and initialises the configuration.
@@ -82,6 +82,9 @@ export class AppInitService {
                         )
                     );
 
+                    console.group("AppInitService finished initialization");
+                    console.log(this);
+                    console.groupEnd();
                     resolve();
                 }
                 ).catch((err) => {
@@ -89,4 +92,8 @@ export class AppInitService {
                 });
         });
     }
+}
+
+export function appInitFactory() {
+    return (appInitService: AppInitService): Promise<void> => appInitService.Init('config', environment);
 }

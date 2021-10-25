@@ -9,7 +9,7 @@ import {
 
 import { DspInstrumentationConfig } from './main/declarations/dsp-instrumentation-config';
 import { DspInstrumentationToken } from './main/declarations/dsp-api-tokens';
-import { AppInitService } from './app-init.service';
+import { appInitFactory, AppInitService } from './app-init.service';
 
 export const RollbarService = new InjectionToken<Rollbar>('rollbar');
 
@@ -29,24 +29,41 @@ const rollbarConfig: Rollbar.Configuration = {
 
 @Injectable()
 export class RollbarErrorHandler implements ErrorHandler {
+
+    public rollbar: Rollbar;
     constructor(
-        @Inject(RollbarService) private _rollbar: Rollbar,
-        @Inject(DspInstrumentationToken) private _instrConfig: DspInstrumentationConfig
+        private _appInitService: AppInitService
     ) {
-        console.log(this._instrConfig);
-        console.log(this._rollbar);
+        appInitFactory;
+        console.log(this._appInitService.dspInstrumentationConfig);
+        this.rollbar = new Rollbar(
+            {
+                accessToken: _appInitService.dspInstrumentationConfig.rollbar.accessToken,
+                enabled: _appInitService.dspInstrumentationConfig.rollbar.enabled,
+                captureUncaught: true,
+                captureUnhandledRejections: true,
+                nodeSourceMaps: false,
+                inspectAnonymousErrors: true,
+                ignoreDuplicateErrors: true,
+                wrapGlobalEventHandlers: false,
+                scrubRequestBody: true,
+                exitOnUncaughtException: false,
+                stackTraceLimit: 20
+            });
+
+        console.log(this.rollbar);
     }
 
     handleError(err: any): void {
-        this._rollbar.error(err.originalError || err);
+        this.rollbar.error(err.originalError || err);
     }
 }
 
 export function rollbarFactory() {
-    return (initService: AppInitService): Rollbar => new Rollbar(
+    return (appInitService: AppInitService): Rollbar => new Rollbar(
         {
-            accessToken: initService.dspInstrumentationConfig.rollbar.accessToken,
-            enabled: initService.dspInstrumentationConfig.rollbar.enabled,
+            accessToken: appInitService.dspInstrumentationConfig.rollbar.accessToken,
+            enabled: appInitService.dspInstrumentationConfig.rollbar.enabled,
             captureUncaught: true,
             captureUnhandledRejections: true,
             nodeSourceMaps: false,
