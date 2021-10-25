@@ -4,6 +4,7 @@ import { DspInstrumentationConfig, DspRollbarConfig, DspDataDogConfig } from './
 import { DspIiifConfig } from './main/declarations/dsp-iiif-config';
 import { DspAppConfig } from './main/declarations/dsp-app-config';
 import { environment } from '../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +14,7 @@ export class AppInitService {
     public dspApiConfig: KnoraApiConfig | null;
     public dspIiifConfig: DspIiifConfig | null;
     public dspAppConfig: DspAppConfig | null;
-    public dspInstrumentationConfig: DspInstrumentationConfig | null;
+    public dspInstrumentationConfig: Observable<DspInstrumentationConfig> | null;
 
     constructor() { }
 
@@ -67,20 +68,27 @@ export class AppInitService {
                     )
 
                     // init instrumentation configuration
-                    this.dspInstrumentationConfig = new DspInstrumentationConfig(
-                        jsonConfig.instrumentation.environment,
-                        new DspDataDogConfig(
-                            jsonConfig.instrumentation.dataDog.enabled,
-                            jsonConfig.instrumentation.dataDog.applicationId,
-                            jsonConfig.instrumentation.dataDog.clientToken,
-                            jsonConfig.instrumentation.dataDog.site,
-                            jsonConfig.instrumentation.dataDog.service,
-                        ),
-                        new DspRollbarConfig(
-                            jsonConfig.instrumentation.rollbar.enabled,
-                            jsonConfig.instrumentation.rollbar.accessToken
+                    this.dspInstrumentationConfig = new Observable((observer) => {
+
+                        // observable execution
+                        observer.next(
+                            new DspInstrumentationConfig(
+                                jsonConfig.instrumentation.environment,
+                                new DspDataDogConfig(
+                                    jsonConfig.instrumentation.dataDog.enabled,
+                                    jsonConfig.instrumentation.dataDog.applicationId,
+                                    jsonConfig.instrumentation.dataDog.clientToken,
+                                    jsonConfig.instrumentation.dataDog.site,
+                                    jsonConfig.instrumentation.dataDog.service,
+                                ),
+                                new DspRollbarConfig(
+                                    jsonConfig.instrumentation.rollbar.enabled,
+                                    jsonConfig.instrumentation.rollbar.accessToken
+                                )
+                            )
                         )
-                    );
+                        observer.complete()
+                    })
 
                     console.group("AppInitService finished initialization");
                     console.log(this);

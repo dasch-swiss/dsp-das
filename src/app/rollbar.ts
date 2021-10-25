@@ -10,6 +10,7 @@ import {
 import { DspInstrumentationConfig } from './main/declarations/dsp-instrumentation-config';
 import { DspInstrumentationToken } from './main/declarations/dsp-api-tokens';
 import { appInitFactory, AppInitService } from './app-init.service';
+import { environment } from 'src/environments/environment';
 
 export const RollbarService = new InjectionToken<Rollbar>('rollbar');
 
@@ -34,24 +35,25 @@ export class RollbarErrorHandler implements ErrorHandler {
     constructor(
         private _appInitService: AppInitService
     ) {
-        appInitFactory;
-        console.log(this._appInitService.dspInstrumentationConfig);
-        this.rollbar = new Rollbar(
-            {
-                accessToken: _appInitService.dspInstrumentationConfig.rollbar.accessToken,
-                enabled: _appInitService.dspInstrumentationConfig.rollbar.enabled,
-                captureUncaught: true,
-                captureUnhandledRejections: true,
-                nodeSourceMaps: false,
-                inspectAnonymousErrors: true,
-                ignoreDuplicateErrors: true,
-                wrapGlobalEventHandlers: false,
-                scrubRequestBody: true,
-                exitOnUncaughtException: false,
-                stackTraceLimit: 20
-            });
+        _appInitService.Init('config', environment).then(_ => {
+            console.log(this._appInitService.dspInstrumentationConfig);
+            this.rollbar = new Rollbar(
+                {
+                    accessToken: _appInitService.dspInstrumentationConfig.rollbar.accessToken,
+                    enabled: _appInitService.dspInstrumentationConfig.rollbar.enabled,
+                    captureUncaught: true,
+                    captureUnhandledRejections: true,
+                    nodeSourceMaps: false,
+                    inspectAnonymousErrors: true,
+                    ignoreDuplicateErrors: true,
+                    wrapGlobalEventHandlers: false,
+                    scrubRequestBody: true,
+                    exitOnUncaughtException: false,
+                    stackTraceLimit: 20
+                });
+            console.log(this.rollbar);
+        }).catch(err => { console.log(err) });
 
-        console.log(this.rollbar);
     }
 
     handleError(err: any): void {
