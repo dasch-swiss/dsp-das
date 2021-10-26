@@ -7,7 +7,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
     ApiResponseData,
     AuthenticationEndpointV2,
+    CredentialsResponse,
     KnoraApiConfig,
+    KnoraApiConnection,
     LoginResponse,
     LogoutResponse,
     MockUsers,
@@ -16,6 +18,7 @@ import {
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
 import { AppInitService } from 'src/app/app-init.service';
+import { TestConfig } from 'test.config';
 import { DspApiConfigToken, DspApiConnectionToken, DspInstrumentationToken } from '../../declarations/dsp-api-tokens';
 import { DspDataDogConfig } from '../../declarations/dsp-instrumentation-config';
 import { Session, SessionService } from '../../services/session.service';
@@ -57,18 +60,16 @@ describe('LoginFormComponent', () => {
     let sessionService: SessionService;
 
     beforeEach(waitForAsync(() => {
-        const dspConfSpy = new KnoraApiConfig('http', 'localhost', 3333, undefined, undefined, true);
 
         const dspDatadogSpy = new DspDataDogConfig(false, '', '', '', '');
 
-        const dspConnSpy = {
+        const authEndpointSpyObj = {
             admin: {
                 usersEndpoint: jasmine.createSpyObj('usersEndpoint', ['getUser'])
             },
             v2: {
-                auth: jasmine.createSpyObj('auth', ['login', 'logout']),
-                jsonWebToken: ''
-            },
+                auth: jasmine.createSpyObj('auth', ['login', 'logout'])
+            }
         };
 
         TestBed.configureTestingModule({
@@ -78,20 +79,19 @@ describe('LoginFormComponent', () => {
             ],
             providers: [
                 AppInitService,
-                {
-                    provide: DspApiConnectionToken,
-                    useValue: dspConnSpy
-                },
+                SessionService,
                 {
                     provide: DspApiConfigToken,
-                    useValue: dspConfSpy
+                    useValue: TestConfig.ApiConfig
+                },
+                {
+                    provide: DspApiConnectionToken,
+                    useValue: authEndpointSpyObj
                 },
                 {
                     provide: DspInstrumentationToken,
                     useValue: dspDatadogSpy
                 },
-                FormBuilder,
-                SessionService
             ],
             imports: [
                 ReactiveFormsModule,
@@ -143,6 +143,7 @@ describe('LoginFormComponent', () => {
     });
 
     beforeEach(() => {
+
         testHostFixture = TestBed.createComponent(TestHostComponent);
         testHostComponent = testHostFixture.componentInstance;
         testHostFixture.detectChanges();
