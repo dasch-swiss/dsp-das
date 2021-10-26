@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, LogoutResponse } from '@dasch-swiss/dsp-js';
+import { StatusMsg } from 'src/assets/http/statusMsg';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
 import { DialogComponent } from '../dialog/dialog.component';
 import { NotificationService } from '../services/notification.service';
@@ -16,6 +17,7 @@ export class ErrorHandlerService {
         private _notification: NotificationService,
         private _dialog: MatDialog,
         private _session: SessionService,
+        private _statusMsg: StatusMsg
     ) { }
 
     showMessage(error: ApiResponseError) {
@@ -69,7 +71,19 @@ export class ErrorHandlerService {
             // open snack bar from dsp-ui notification service
             this._notification.openSnackBar(error);
             // log error to Rollbar (done automatically by simply throwing a new Error)
-            throw new Error(error.error['message']);
+            if (error instanceof ApiResponseError) {
+                if (error.error && !error.error['message'].startsWith('ajax error')) {
+                    // the Api response error contains a complex error message from dsp-js-lib
+                    throw new Error(error.error['message']);
+                } else {
+                    const defaultStatusMsg = this._statusMsg.default;
+                    const message = `${defaultStatusMsg[error.status].message} (${error.status}): ${defaultStatusMsg[error.status].description}`;
+                    throw new Error(message);
+                }
+            } else {
+                throw new Error(error);
+            }
+
         }
     }
 }
