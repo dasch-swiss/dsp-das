@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -106,6 +106,21 @@ describe('LoginFormComponent', () => {
     // mock localStorage
     beforeEach(() => {
         let store = {};
+
+        spyOn(sessionStorage, 'getItem').and.callFake(
+            (key: string): string => store[key] || null
+        );
+        spyOn(sessionStorage, 'removeItem').and.callFake(
+            (key: string): void => {
+                delete store[key];
+            }
+        );
+        spyOn(sessionStorage, 'setItem').and.callFake(
+            (key: string, value: string): string => (store[key] = <any>value)
+        );
+        spyOn(sessionStorage, 'clear').and.callFake(() => {
+            store = {};
+        });
 
         spyOn(localStorage, 'getItem').and.callFake(
             (key: string): string => store[key] || null

@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { inject } from '@angular/core/testing';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiResponseData, ApiResponseError, KnoraApiConfig, KnoraApiConnection, LoginResponse, LogoutResponse } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, LoginResponse, LogoutResponse } from '@dasch-swiss/dsp-js';
 import { datadogRum, RumFetchResourceEventDomainContext } from '@datadog/browser-rum';
-import { DspApiConfigToken, DspApiConnectionToken, DspInstrumentationToken } from '../../declarations/dsp-api-tokens';
+import { DspApiConnectionToken, DspInstrumentationToken } from '../../declarations/dsp-api-tokens';
 import { DspInstrumentationConfig } from '../../declarations/dsp-instrumentation-config';
 import { NotificationService } from '../../services/notification.service';
 import { Session, SessionService } from '../../services/session.service';
