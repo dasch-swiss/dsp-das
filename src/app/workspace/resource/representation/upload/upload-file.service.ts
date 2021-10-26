@@ -20,7 +20,7 @@ export interface UploadedFileResponse {
 })
 export class UploadFileService {
 
-    //FIXME: DEV-162
+    // fIXME: DEV-162
     iiifUrl: string = (this._init.dspIiifConfig.iiifUrl.substr(-1) === '/') ? this._init.dspIiifConfig.iiifUrl : this._init.dspIiifConfig.iiifUrl + '/';
 
     constructor(

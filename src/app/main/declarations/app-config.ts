@@ -18,10 +18,10 @@ export interface IConfig {
             clientToken: string;
             site: string;
             service: string;
-        }
+        };
         rollbar: {
             enabled: boolean;
             accessToken: string;
-        }
-    }
+        };
+    };
 }

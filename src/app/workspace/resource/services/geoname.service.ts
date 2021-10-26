@@ -85,42 +85,42 @@ export class GeonameService {
         return this._http.get<object>('https://ws.geonames.net/searchJSON?userName=' +
             this._appInitService.dspAppConfig.geonameToken +
             '&lang=en&style=full&maxRows=12&name_startsWith=' + encodeURIComponent(searchString)).pipe(
-                map(
-                    (places: {
-                        geonames: { geonameId: string; name: string; countryName: string; adminName1?: string; fclName: string }[]; // assertions for TS compiler
-                    }) => {
+            map(
+                (places: {
+                    geonames: { geonameId: string; name: string; countryName: string; adminName1?: string; fclName: string }[]; // assertions for TS compiler
+                }) => {
 
-                        if (!Array.isArray(places.geonames)) {
-                            // there is no top level array
-                            throw new Error('search did not return an array of results');
-                        }
-
-                        return places.geonames.map(
-                            geo => {
-
-                                if (!(('geonameId' in geo) && ('name' in geo) && ('countryName' in geo) && ('fclName' in geo))) {
-                                    // at least one of the expected properties is not present
-                                    throw new Error('required property missing in geonames response');
-                                }
-
-                                return {
-                                    id: geo.geonameId.toString(),
-                                    displayName: geo.name + (geo.adminName1 !== undefined ? ', ' + geo.adminName1 : '') + ', ' + geo.countryName,
-                                    name: geo.name,
-                                    administrativeName: geo.adminName1,
-                                    country: geo.countryName,
-                                    locationType: geo.fclName
-                                };
-                            }
-                        );
-
+                    if (!Array.isArray(places.geonames)) {
+                        // there is no top level array
+                        throw new Error('search did not return an array of results');
                     }
-                ),
-                catchError(error =>
-                    // an error occurred
-                    throwError(error)
-                )
-            );
+
+                    return places.geonames.map(
+                        geo => {
+
+                            if (!(('geonameId' in geo) && ('name' in geo) && ('countryName' in geo) && ('fclName' in geo))) {
+                                // at least one of the expected properties is not present
+                                throw new Error('required property missing in geonames response');
+                            }
+
+                            return {
+                                id: geo.geonameId.toString(),
+                                displayName: geo.name + (geo.adminName1 !== undefined ? ', ' + geo.adminName1 : '') + ', ' + geo.countryName,
+                                name: geo.name,
+                                administrativeName: geo.adminName1,
+                                country: geo.countryName,
+                                locationType: geo.fclName
+                            };
+                        }
+                    );
+
+                }
+            ),
+            catchError(error =>
+            // an error occurred
+                throwError(error)
+            )
+        );
 
     }
 }
