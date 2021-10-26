@@ -80,6 +80,23 @@ describe('UsersListComponent', () => {
         }).compileComponents();
     }));
 
+    beforeEach(() => {
+
+        // mock cache service
+        const cacheSpy = TestBed.inject(CacheService);
+
+        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
+            () => {
+                const response: ProjectResponse = new ProjectResponse();
+
+                const mockProjects = MockProjects.mockProjects();
+
+                response.project = mockProjects.body.projects[0];
+
+                return of(response.project as ReadProject);
+            }
+        );
+    });
 
     // mock localStorage
     beforeEach(() => {
@@ -122,25 +139,6 @@ describe('UsersListComponent', () => {
         fixture = TestBed.createComponent(UsersListComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-    });
-
-
-    beforeEach(() => {
-
-        // mock cache service
-        const cacheSpy = TestBed.inject(CacheService);
-
-        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
-            () => {
-                const response: ProjectResponse = new ProjectResponse();
-
-                const mockProjects = MockProjects.mockProjects();
-
-                response.project = mockProjects.body.projects[0];
-
-                return of(response.project as ReadProject);
-            }
-        );
     });
 
     it('should create', () => {
