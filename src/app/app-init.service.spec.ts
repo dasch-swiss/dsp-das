@@ -17,7 +17,7 @@ describe('TestService', () => {
         iiifPath: 'mypath',
         jsonWebToken: 'mytoken',
         logErrors: true,
-        geonameToken: "geoname_token",
+        geonameToken: 'geoname_token',
         instrumentation: {
             environment: 'dev',
             dataDog: {
@@ -32,7 +32,7 @@ describe('TestService', () => {
                 accessToken: 'rollbar_token'
             }
         }
-    }
+    };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
