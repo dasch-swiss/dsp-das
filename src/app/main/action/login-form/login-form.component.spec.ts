@@ -15,6 +15,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
+import { AppInitService } from 'src/app/app-init.service';
 import { DspApiConfigToken, DspApiConnectionToken, DspInstrumentationToken } from '../../declarations/dsp-api-tokens';
 import { DspDataDogConfig } from '../../declarations/dsp-instrumentation-config';
 import { Session, SessionService } from '../../services/session.service';
@@ -76,6 +77,7 @@ describe('LoginFormComponent', () => {
                 TestHostComponent
             ],
             providers: [
+                AppInitService,
                 {
                     provide: DspApiConnectionToken,
                     useValue: dspConnSpy
