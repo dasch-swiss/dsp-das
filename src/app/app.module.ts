@@ -2,7 +2,7 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { APP_INITIALIZER, ErrorHandler, Inject, Injectable, InjectionToken, NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,7 +26,7 @@ import { SelectedResourcesComponent } from './main/action/selected-resources/sel
 import { SortButtonComponent } from './main/action/sort-button/sort-button.component';
 import { StringLiteralInputComponent } from './main/action/string-literal-input/string-literal-input.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
-import { APP_CONFIG, DspApiConfigToken, DspApiConnectionToken, DspAppConfigToken, DspInstrumentationToken } from './main/declarations/dsp-api-tokens';
+import { DspApiConfigToken, DspApiConnectionToken, DspAppConfigToken, DspInstrumentationToken } from './main/declarations/dsp-api-tokens';
 import { DialogHeaderComponent } from './main/dialog/dialog-header/dialog-header.component';
 import { DialogComponent } from './main/dialog/dialog.component';
 import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
@@ -79,7 +79,7 @@ import { AddGroupComponent } from './project/permission/add-group/add-group.comp
 import { PermissionComponent } from './project/permission/permission.component';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ProjectComponent } from './project/project.component';
-import { RollbarErrorHandler, RollbarService } from './rollbar';
+import { RollbarErrorHandler } from './rollbar';
 import { GroupsListComponent } from './system/groups/groups-list/groups-list.component';
 import { GroupsComponent } from './system/groups/groups.component';
 import { ProjectsListComponent } from './system/projects/projects-list/projects-list.component';
