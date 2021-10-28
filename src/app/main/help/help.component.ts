@@ -1,5 +1,5 @@
-import { HealthResponse, VersionResponse, KnoraApiConnection, ApiResponseError, ApiResponseData } from '.yalc/@dasch-swiss/dsp-js';
 import { Component, Inject, OnInit } from '@angular/core';
+import { ApiResponseData, ApiResponseError, HealthResponse, KnoraApiConnection, VersionResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
 import { ErrorHandlerService } from '../error/error-handler.service';
 import { GridItem } from '../grid/grid.component';
@@ -113,22 +113,6 @@ export class HelpComponent implements OnInit {
                 this._errorHandler.showMessage(error);
             }
         );
-
-
-
-
-
-        // this._dspApiConnection.system.healthEndpoint.getHealthStatus().subscribe(
-        //     (response: ApiResponseData<HealthResponse>) => {
-        //         this.apiStatus = response.body;
-        //         const dspVersion = this.apiStatus.webdspVersion;
-        //         this.tools[1].title += dspVersion;
-        //         this.tools[1].url += dspVersion;
-        //     },
-        //     (error: ApiResponseError) => {
-        //         this._errorHandler.showMessage(error);
-        //     }
-        // );
 
     }
 
