@@ -144,7 +144,7 @@ export class PropertyFormComponent implements OnInit {
                 this.resourceClasses = response.getAllClassDefinitions();
                 const resourceProperties = response.getAllPropertyDefinitions();
 
-                // set list of all existing property names to avoid same name twice
+                // set list of all existing resource property names to avoid same name twice
                 resourceProperties.forEach((resProp: PropertyDefinition) => {
                     const name = this._os.getNameFromIri(resProp.id);
                     this.existingNames.push(

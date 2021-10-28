@@ -151,7 +151,7 @@ export class ResourceClassFormComponent implements OnInit, AfterViewChecked {
                 const resourceClasses = response.getAllClassDefinitions();
                 const resourceProperties = response.getAllPropertyDefinitions();
 
-                // add all resource classes to the same list
+                // set list of all existing resource class names to avoid same name twice
                 resourceClasses.forEach((resClass: ClassDefinition) => {
                     const name = this._os.getNameFromIri(resClass.id);
                     this.existingNames.push(
@@ -159,7 +159,7 @@ export class ResourceClassFormComponent implements OnInit, AfterViewChecked {
                     );
                 });
 
-                // set list of all existing property names to avoid same name twice
+                // add all resource properties to the same list
                 resourceProperties.forEach((resProp: PropertyDefinition) => {
                     const name = this._os.getNameFromIri(resProp.id);
                     this.existingNames.push(
