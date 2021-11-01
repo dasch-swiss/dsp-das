@@ -4,10 +4,15 @@
 </span>
 <ng-template #showForm>
     <span [formGroup]="form">
-        <mat-form-field class="large-field child-value-component" floatLabel="never">
-            <input *ngIf="!textArea" matInput [formControlName]="'value'" class="value" placeholder="Text value" type="text" [errorStateMatcher]="matcher">
-            <textarea *ngIf="textArea" matInput [formControlName]="'value'" class="value" placeholder="Text value" type="text" [errorStateMatcher]="matcher"></textarea>
-            <mat-error *ngIf="valueFormControl.hasError('valueNotChanged') &&
+        <span [ngSwitch]="guiElement">
+            <mat-form-field *ngSwitchCase="'simpleText' || 'textArea'"class="large-field child-value-component" floatLabel="never">
+
+                <input *ngIf="guiElement === 'simpleText'" matInput [formControlName]="'value'" class="value" placeholder="Text value" type="text" [errorStateMatcher]="matcher">
+                <textarea *ngIf="guiElement === 'textArea'" matInput [formControlName]="'value'" class="value" placeholder="Text value" type="text" [errorStateMatcher]="matcher"
+                    MatTextareaAutosize [mat-autosize]="true" [matAutosizeMaxRows]="10"></textarea>
+                <!-- <textarea *ngSwitchCase="'richText'" matInput [formControlName]="'value'" MatTextareaAutosize [mat-autosize]="true" [matAutosizeMaxRows]="10" class="value" placeholder="Text value" type="text" [errorStateMatcher]="matcher"></textarea> -->
+
+                <mat-error *ngIf="valueFormControl.hasError('valueNotChanged') &&
                 (valueFormControl.touched || valueFormControl.dirty)">
                 <span class="custom-error-message">New value must be different than the current value.</span>
             </mat-error>
@@ -18,6 +23,10 @@
                 <span class="custom-error-message">This value already exists for this property. Duplicate values are not allowed.</span>
             </mat-error>
         </mat-form-field>
+        <ckeditor *ngSwitchCase="'richText'" [formControlName]="'value'" [config]="editorConfig" [editor]="editor"></ckeditor>
+    </span>
+
+        <!-- comment -->
         <mat-form-field *ngIf="!commentDisabled" class="large-field value-component-comment">
             <textarea matInput
                       cdkTextareaAutosize
