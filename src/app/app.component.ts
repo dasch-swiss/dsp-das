@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { DatadogRumService } from './main/services/datadog-rum.service';
 
 @Component({
     selector: 'app-root',
@@ -14,12 +15,15 @@ export class AppComponent implements OnInit {
 
     constructor(
         private _router: Router,
-        private _titleService: Title
+        private _titleService: Title,
+        private _datadogRumService: DatadogRumService
     ) {
 
         // set the page title
         this._titleService.setTitle('DaSCH Service Platform');
 
+        // init datadog RUM
+        this._datadogRumService.initializeRum();
     }
 
     ngOnInit() {
