@@ -32,8 +32,6 @@ export class DatadogRumService {
                     }
                 },
             });
-        } else {
-            console.warn('Datadog Real User Monitoring is disabled. To enable it, set "enabled" to true in the config file.');
         }
     }
 
