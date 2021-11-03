@@ -1,22 +1,22 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
     ApiResponseData,
-    AuthenticationEndpointV2,
-    KnoraApiConfig,
-    LoginResponse,
+    AuthenticationEndpointV2, LoginResponse,
     LogoutResponse,
     MockUsers,
     UsersEndpointAdmin
 } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { DspApiConfigToken, DspApiConnectionToken, DspDataDogConfigToken } from '../../declarations/dsp-api-tokens';
-import { DspDataDogConfig } from '../../declarations/dsp-dataDog-config';
+import { AppInitService } from 'src/app/app-init.service';
+import { TestConfig } from 'test.config';
+import { DspApiConfigToken, DspApiConnectionToken, DspInstrumentationToken } from '../../declarations/dsp-api-tokens';
+import { DspDataDogConfig, DspInstrumentationConfig } from '../../declarations/dsp-instrumentation-config';
 import { Session, SessionService } from '../../services/session.service';
 import { LoginFormComponent } from './login-form.component';
 
@@ -56,18 +56,31 @@ describe('LoginFormComponent', () => {
     let sessionService: SessionService;
 
     beforeEach(waitForAsync(() => {
-        const dspConfSpy = new KnoraApiConfig('http', 'localhost', 3333, undefined, undefined, true);
 
         const dspDatadogSpy = new DspDataDogConfig(false, '', '', '', '');
 
-        const dspConnSpy = {
+        const instrumentationConfig: DspInstrumentationConfig = {
+            environment: 'dev',
+            dataDog: {
+                enabled: false,
+                applicationId: 'app_id',
+                clientToken: 'client_token',
+                site: 'site',
+                service: 'dsp-app'
+            },
+            rollbar: {
+                enabled: false,
+                accessToken: 'rollbar_token'
+            }
+        };
+
+        const authEndpointSpyObj = {
             admin: {
                 usersEndpoint: jasmine.createSpyObj('usersEndpoint', ['getUser'])
             },
             v2: {
-                auth: jasmine.createSpyObj('auth', ['login', 'logout']),
-                jsonWebToken: ''
-            },
+                auth: jasmine.createSpyObj('auth', ['login', 'logout'])
+            }
         };
 
         TestBed.configureTestingModule({
@@ -75,27 +88,27 @@ describe('LoginFormComponent', () => {
                 LoginFormComponent,
                 TestHostComponent
             ],
-            providers: [
-                {
-                    provide: DspApiConnectionToken,
-                    useValue: dspConnSpy
-                },
-                {
-                    provide: DspApiConfigToken,
-                    useValue: dspConfSpy
-                },
-                {
-                    provide: DspDataDogConfigToken,
-                    useValue: dspDatadogSpy
-                },
-                FormBuilder,
-                SessionService
-            ],
             imports: [
                 ReactiveFormsModule,
                 MatInputModule,
                 MatSnackBarModule,
                 BrowserAnimationsModule
+            ],
+            providers: [
+                AppInitService,
+                SessionService,
+                {
+                    provide: DspApiConfigToken,
+                    useValue: TestConfig.ApiConfig
+                },
+                {
+                    provide: DspApiConnectionToken,
+                    useValue: authEndpointSpyObj
+                },
+                {
+                    provide: DspInstrumentationToken,
+                    useValue: instrumentationConfig
+                },
             ]
         })
             .compileComponents();
@@ -106,6 +119,21 @@ describe('LoginFormComponent', () => {
     // mock localStorage
     beforeEach(() => {
         let store = {};
+
+        spyOn(sessionStorage, 'getItem').and.callFake(
+            (key: string): string => store[key] || null
+        );
+        spyOn(sessionStorage, 'removeItem').and.callFake(
+            (key: string): void => {
+                delete store[key];
+            }
+        );
+        spyOn(sessionStorage, 'setItem').and.callFake(
+            (key: string, value: string): string => (store[key] = <any>value)
+        );
+        spyOn(sessionStorage, 'clear').and.callFake(() => {
+            store = {};
+        });
 
         spyOn(localStorage, 'getItem').and.callFake(
             (key: string): string => store[key] || null
@@ -126,6 +154,7 @@ describe('LoginFormComponent', () => {
     });
 
     beforeEach(() => {
+
         testHostFixture = TestBed.createComponent(TestHostComponent);
         testHostComponent = testHostFixture.componentInstance;
         testHostFixture.detectChanges();
