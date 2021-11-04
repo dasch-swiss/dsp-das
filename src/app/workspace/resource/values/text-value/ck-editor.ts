@@ -12,6 +12,7 @@ export class ckEditor {
                 'italic',
                 'underline',
                 'strikethrough',
+                '|',
                 'subscript',
                 'superscript',
                 'blockQuote',
