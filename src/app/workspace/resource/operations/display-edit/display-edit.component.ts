@@ -110,7 +110,7 @@ export class DisplayEditComponent implements OnInit {
 
     showDateLabels = false;
 
-    textArea = false;
+    // gui element in case of textValue
     textValueGuiEle: 'simpleText' | 'textArea' | 'richText';
 
     dateFormat: string;
@@ -153,16 +153,6 @@ export class DisplayEditComponent implements OnInit {
         if (this.valueTypeOrClass === 'ReadTextValueAsString') {
             // handle the correct gui element depending on guiEle property
             this.textValueGuiEle = this._valueService.getTextValueGuiEle(resPropDef[0].guiElement);
-        }
-
-        // console.warn('value type or class', this.valueTypeOrClass);
-
-
-        // this.textValueGuiEle = ()
-        // console.log('giele', resPropDef[0].guiElement);
-        if (resPropDef[0].guiElement === Constants.SalsahGui + Constants.HashDelimiter + 'Textarea') {
-
-            this.textArea = true;
         }
 
         if (resPropDef.length !== 1) {
