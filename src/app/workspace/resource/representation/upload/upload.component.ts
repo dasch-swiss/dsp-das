@@ -4,10 +4,12 @@ import {
     CreateAudioFileValue,
     CreateDocumentFileValue,
     CreateFileValue,
+    CreateMovingImageFileValue,
     CreateStillImageFileValue,
     UpdateAudioFileValue,
     UpdateDocumentFileValue,
     UpdateFileValue,
+    UpdateMovingImageFileValue,
     UpdateStillImageFileValue
 } from '@dasch-swiss/dsp-js';
 import { NotificationService } from 'src/app/main/services/notification.service';
@@ -26,7 +28,7 @@ export class UploadComponent implements OnInit {
 
     @Input() parentForm?: FormGroup;
 
-    @Input() representation: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text';
+    @Input() representation: 'stillImage' | 'movingImage' | 'audio' | 'video' | 'document' | 'text';
     // only StillImageRepresentation and DocumentPresentation is supported so far
 
     @Input() formName: string;
@@ -44,11 +46,8 @@ export class UploadComponent implements OnInit {
     supportedImageTypes = ['image/jpeg', 'image/jp2', 'image/tiff', 'image/tiff-fx', 'image/png'];
     supportedDocumentTypes = ['application/pdf'];
     supportedAudioTypes = ['audio/mpeg'];
+    supportedVideoTypes = ['video/mp4'];
 
-    // readonly fromLabels = {
-    //     upload: 'Upload file',
-    //     drag_drop: 'Drag and drop or click to upload'
-    // };
     constructor(
         private _fb: FormBuilder,
         private _notification: NotificationService,
@@ -101,8 +100,8 @@ export class UploadComponent implements OnInit {
                             case 'document':
                                 // the preview thumbnail is deactivated for the moment;
                                 // --> TODO: it will be activated as soon as we implement a pdf viewer
-                                // this.thumbnailUrl = res.uploadedFiles[0].temporaryUrl;
-                                this.thumbnailUrl = undefined;
+                                this.thumbnailUrl = res.uploadedFiles[0].temporaryUrl;
+                                // this.thumbnailUrl = undefined;
                                 break;
 
                             default:
@@ -224,6 +223,10 @@ export class UploadComponent implements OnInit {
                 fileValue = new CreateAudioFileValue();
                 break;
 
+            case 'video':
+                fileValue = new CreateMovingImageFileValue();
+                break;
+
             default:
                 // --> TODO for UPLOAD: expand with other representation file types
                 break;
@@ -264,6 +267,10 @@ export class UploadComponent implements OnInit {
                 fileValue = new UpdateAudioFileValue();
                 break;
 
+            case 'video':
+                fileValue = new UpdateMovingImageFileValue();
+                break;
+
             default:
                 // --> TODO for UPLOAD: expand with other representation file types
                 break;
@@ -301,6 +308,10 @@ export class UploadComponent implements OnInit {
 
             case 'audio':
                 this.allowedFileTypes = this.supportedAudioTypes;
+                break;
+
+            case 'video':
+                this.allowedFileTypes = this.supportedVideoTypes;
                 break;
 
             default:
