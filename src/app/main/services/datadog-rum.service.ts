@@ -12,9 +12,7 @@ export class DatadogRumService {
 
     constructor(
         @Inject(DspInstrumentationToken) private _dspInstrumentationConfig: DspInstrumentationConfig
-    ) { }
-
-    initializeRum(): void {
+    ) {
         if (this._dspInstrumentationConfig.dataDog.enabled) {
             datadogRum.init({
                 applicationId: this._dspInstrumentationConfig.dataDog.applicationId,

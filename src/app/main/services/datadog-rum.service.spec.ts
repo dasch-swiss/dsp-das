@@ -19,15 +19,6 @@ describe('DatadogRumService', () => {
         expect(service).toBeTruthy();
     });
 
-    describe('initializeRum', () => {
-        it('should initialize the RUM service', () => {
-            const arg = 'test';
-            mockdatadogRumService.initializeRum.and.callThrough();
-            service.initializeRum();
-            expect(service.initializeRum).toHaveBeenCalled();
-        });
-    });
-
     describe('setActiveUser', () => {
         it('should set the active user', () => {
             const identifier = 'test';
