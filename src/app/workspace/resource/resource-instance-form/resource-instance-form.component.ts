@@ -191,6 +191,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                     case 'audio':
                         this.propertiesObj[Constants.HasAudioFileValue] = [this.fileValue];
                         break;
+                    case 'movingImage':
+                        this.propertiesObj[Constants.HasMovingImageFileValue] = [this.fileValue];
+                        break;
                 }
             }
 
@@ -359,7 +362,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                                     prop.isEditable &&
                                     prop.id !== Constants.HasStillImageFileValue &&
                                     prop.id !== Constants.HasDocumentFileValue &&
-                                    prop.id !== Constants.HasAudioFileValue  // --> TODO for UPLOAD: expand with other representation file values
+                                    prop.id !== Constants.HasAudioFileValue &&
+                                    prop.id !== Constants.HasMovingImageFileValue
+                                    // --> TODO for UPLOAD: expand with other representation file values
                             );
 
                             if (onto.properties[Constants.HasStillImageFileValue]) {
@@ -368,6 +373,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                                 this.hasFileValue = 'document';
                             } else if (onto.properties[Constants.HasAudioFileValue]) {
                                 this.hasFileValue = 'audio';
+                            } else if (onto.properties[Constants.HasMovingImageFileValue]) {
+                                this.hasFileValue = 'movingImage';
                             } else {
                                 this.hasFileValue = undefined;
                             }

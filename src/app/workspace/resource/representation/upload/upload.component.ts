@@ -28,7 +28,7 @@ export class UploadComponent implements OnInit {
 
     @Input() parentForm?: FormGroup;
 
-    @Input() representation: 'stillImage' | 'movingImage' | 'audio' | 'video' | 'document' | 'text';
+    @Input() representation: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text';
     // only StillImageRepresentation and DocumentPresentation is supported so far
 
     @Input() formName: string;
@@ -223,7 +223,7 @@ export class UploadComponent implements OnInit {
                 fileValue = new CreateAudioFileValue();
                 break;
 
-            case 'video':
+            case 'movingImage':
                 fileValue = new CreateMovingImageFileValue();
                 break;
 
@@ -267,7 +267,7 @@ export class UploadComponent implements OnInit {
                 fileValue = new UpdateAudioFileValue();
                 break;
 
-            case 'video':
+            case 'movingImage':
                 fileValue = new UpdateMovingImageFileValue();
                 break;
 
@@ -310,7 +310,7 @@ export class UploadComponent implements OnInit {
                 this.allowedFileTypes = this.supportedAudioTypes;
                 break;
 
-            case 'video':
+            case 'movingImage':
                 this.allowedFileTypes = this.supportedVideoTypes;
                 break;
 
