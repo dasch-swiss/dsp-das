@@ -65,7 +65,7 @@ class TestTextValueAsStringComponent {
 
     @Input() displayValue;
 
-    @Input() textArea;
+    @Input() guiElement: 'simpleText' | 'textArea' | 'richText' = 'simpleText';
 }
 
 @Component({
@@ -343,7 +343,7 @@ class TestHostDisplayValueComponent implements OnInit {
     }
 }
 
-describe('DisplayEditComponent', () => {
+fdescribe('DisplayEditComponent', () => {
     let testHostComponent: TestHostDisplayValueComponent;
     let testHostFixture: ComponentFixture<TestHostDisplayValueComponent>;
 
