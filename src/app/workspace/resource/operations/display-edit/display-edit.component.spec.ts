@@ -64,6 +64,8 @@ class TestTextValueAsStringComponent {
     @Input() mode;
 
     @Input() displayValue;
+
+    @Input() textArea;
 }
 
 @Component({
