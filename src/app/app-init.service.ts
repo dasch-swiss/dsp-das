@@ -5,6 +5,7 @@ import { DspIiifConfig } from './main/declarations/dsp-iiif-config';
 import { DspAppConfig } from './main/declarations/dsp-app-config';
 import { IConfig } from './main/declarations/app-config';
 import { APP_CONFIG } from './main/declarations/dsp-api-tokens';
+import { DatadogRumService } from './main/services/datadog-rum.service';
 
 @Injectable({
     providedIn: 'root'
@@ -36,7 +37,8 @@ export class AppInitService {
     }
 
     constructor(
-        @Inject(APP_CONFIG) private _config: IConfig
+        @Inject(APP_CONFIG) private _config: IConfig,
+        private _datadogRumService: DatadogRumService
     ) {
         // check for presence of apiProtocol and apiHost
         if (typeof this._config.apiProtocol !== 'string' || typeof this._config.apiHost !== 'string') {
@@ -89,5 +91,8 @@ export class AppInitService {
                 this._config.instrumentation.rollbar.accessToken
             )
         );
+
+        // init datadog RUM
+        this._datadogRumService.initializeRum();
     }
 }

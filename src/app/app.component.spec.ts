@@ -22,23 +22,6 @@ describe('AppComponent', () => {
 
     beforeEach(waitForAsync(() => {
 
-        const dspDatadogSpy = new DspDataDogConfig(false, '', '', '', '');
-
-        const instrumentationConfig: DspInstrumentationConfig = {
-            environment: 'dev',
-            dataDog: {
-                enabled: false,
-                applicationId: 'app_id',
-                clientToken: 'client_token',
-                site: 'site',
-                service: 'dsp-app'
-            },
-            rollbar: {
-                enabled: false,
-                accessToken: 'rollbar_token'
-            }
-        };
-
         TestBed.configureTestingModule({
             declarations: [
                 AppComponent,
@@ -66,11 +49,7 @@ describe('AppComponent', () => {
                 {
                     provide: DspApiConnectionToken,
                     useValue: new KnoraApiConnection(TestConfig.ApiConfig)
-                },
-                {
-                    provide: DspInstrumentationToken,
-                    useValue: instrumentationConfig
-                },
+                }
             ]
         }).compileComponents();
     }));

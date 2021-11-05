@@ -36,13 +36,17 @@ export class DatadogRumService {
     }
 
     setActiveUser(identifier: any, identifierType: 'iri' | 'email' | 'username'): void {
-        datadogRum.setUser({
-            id: identifier,
-            identifierType: identifierType
-        });
+        if(datadogRum.getInternalContext().application_id) {
+            datadogRum.setUser({
+                id: identifier,
+                identifierType: identifierType
+            });
+        }
     }
 
     removeActiveUser(): void {
-        datadogRum.removeUser();
+        if(datadogRum.getInternalContext().application_id) {
+            datadogRum.removeUser();
+        }
     }
 }
