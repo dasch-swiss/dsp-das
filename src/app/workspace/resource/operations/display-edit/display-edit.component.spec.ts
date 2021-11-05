@@ -343,7 +343,7 @@ class TestHostDisplayValueComponent implements OnInit {
     }
 }
 
-fdescribe('DisplayEditComponent', () => {
+describe('DisplayEditComponent', () => {
     let testHostComponent: TestHostDisplayValueComponent;
     let testHostFixture: ComponentFixture<TestHostDisplayValueComponent>;
 
