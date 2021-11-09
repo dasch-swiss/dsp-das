@@ -43,6 +43,9 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() resourceIri: string;
 
+    projectCode: string;
+
+    resourceUuid: string;
     // used to store the uuid of the value that is parsed from the url params
     valueUuid: string;
 
@@ -97,8 +100,11 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
     ) {
 
         this._route.params.subscribe(params => {
-            this.resourceIri = params['id'];
-            this.valueUuid = params['val'];
+            this.projectCode = params['project'];
+            this.resourceUuid = params['resource'];
+            this.valueUuid = params['value'];
+            // this.resourceIri = params['id'];
+            this.resourceIri = `http://rdfh.ch/${this.projectCode}/${this.resourceUuid}`;
             this.getResource(this.resourceIri);
         });
 
