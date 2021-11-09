@@ -149,7 +149,7 @@
                     <div *ngIf="prop.propDef.id === hasIncomingLinkIri && incomingLinkResources.length > 0">
                         <app-progress-indicator *ngIf="loading"></app-progress-indicator>
                         <div *ngIf="!loading">
-                            <!-- the value(s) of the incoming links -->
+                            <!-- the value(s) of the incoming links: TODO: resolve /resource route the new way (DEV-196) -->
                             <a class="link link-value" *ngFor="let inRes of incomingLinkResources" [routerLink]="['/resource', inRes.id]" target="_blank">{{inRes.label}}</a>
                             <mat-paginator *ngIf="numberOffAllIncomingLinkRes > 25"
                                     [length]=numberOffAllIncomingLinkRes

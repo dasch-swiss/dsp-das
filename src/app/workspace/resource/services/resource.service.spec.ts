@@ -1,16 +1,29 @@
 import { TestBed } from '@angular/core/testing';
-
+import { AppInitService } from 'src/app/app-init.service';
 import { ResourceService } from './resource.service';
 
 describe('ResourceService', () => {
-  let service: ResourceService;
+    let service: ResourceService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(ResourceService);
-  });
+    const appInitSpy = {
+        dspAppConfig: {
+            iriBase: 'http://rdfh.ch'
+        }
+    };
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [
+                {
+                    provide: AppInitService,
+                    useValue: appInitSpy
+                }
+            ]
+        });
+        service = TestBed.inject(ResourceService);
+    });
+
+    it('should be created', () => {
+        expect(service).toBeTruthy();
+    });
 });
