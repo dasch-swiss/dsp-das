@@ -11,7 +11,7 @@ export class ResourceService {
     constructor(
         private _ais: AppInitService
     ) {
-        this.iriBase = this._getIriBaseWithoutEndingSlash(this._ais.dspAppConfig.iriBase);
+        this.iriBase = this._getIriBaseWithoutTrailingSlash(this._ais.dspAppConfig.iriBase);
     }
 
     /**
@@ -34,11 +34,10 @@ export class ResourceService {
     }
 
     /**
-     * returns iri base without ending slash
-     * @returns iri base without ending slash
+     * returns iri base without trailing slash
+     * @returns iri base without trailing slash
      */
-    private _getIriBaseWithoutEndingSlash(base: string): string {
-        const lastChar = base.substring(base.length - 1);
-        return (lastChar === '/' ? base.slice(0, -1) : base);
+    private _getIriBaseWithoutTrailingSlash(base: string): string {
+        return base.replace(/\/$/, '');
     }
 }
