@@ -21,9 +21,6 @@ describe('ResourceService with iriBase = http://rdfh.ch', () => {
             ]
         });
         service = TestBed.inject(ResourceService);
-    });
-
-    it('should be created', () => {
         expect(service).toBeTruthy();
     });
 
@@ -58,9 +55,6 @@ describe('ResourceService with iriBase = http://rdfh.ch/', () => {
             ]
         });
         service = TestBed.inject(ResourceService);
-    });
-
-    it('should be created', () => {
         expect(service).toBeTruthy();
     });
 
