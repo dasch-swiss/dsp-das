@@ -6,9 +6,13 @@ import { AppInitService } from 'src/app/app-init.service';
 })
 export class ResourceService {
 
+    iriBase: string;
+
     constructor(
-        private _appInitService: AppInitService
-    ) { }
+        private _ais: AppInitService
+    ) {
+        this.iriBase = this._getIriBaseWithoutEndingSlash(this._ais.dspAppConfig.iriBase);
+    }
 
     /**
      * gets resource path `[project-shortcode]/[resource-uuid]`
@@ -16,7 +20,7 @@ export class ResourceService {
      * @returns resource path --> /082B/SQkTPdHdTzq_gqbwj6QR-A
      */
     getResourcePath(iri: string): string {
-        return iri.replace(this._appInitService.dspAppConfig.iriBase, '');
+        return iri.replace(this.iriBase, '');
     }
 
     /**
@@ -26,6 +30,15 @@ export class ResourceService {
      * @returns resource iri --> http://rdfh.ch/082B/SQkTPdHdTzq_gqbwj6QR-A
      */
     getResourceIri(shortcode: string, uuid: string): string {
-        return this._appInitService.dspAppConfig.iriBase + '/' + shortcode + '/' + uuid;
+        return this.iriBase + '/' + shortcode + '/' + uuid;
+    }
+
+    /**
+     * returns iri base without ending slash
+     * @returns iri base without ending slash
+     */
+    private _getIriBaseWithoutEndingSlash(base: string): string {
+        const lastChar = base.substring(base.length - 1);
+        return (lastChar === '/' ? base.slice(0, -1) : base);
     }
 }
