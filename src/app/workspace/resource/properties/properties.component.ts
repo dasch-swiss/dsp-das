@@ -14,6 +14,7 @@ import {
     PermissionUtil,
     ProjectResponse,
     PropertyDefinition,
+    ReadColorValue,
     ReadLinkValue,
     ReadProject,
     ReadResource,
@@ -111,6 +112,8 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
      * can be used for preview when hovering on resource
      */
     @Output() referredResourceHovered: EventEmitter<ReadLinkValue> = new EventEmitter<ReadLinkValue>();
+
+    @Output() regionColorChanged: EventEmitter<ReadColorValue> = new EventEmitter<ReadColorValue>();
 
     lastModificationDate: string;
 
@@ -441,6 +444,9 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                 });
             if (updatedValue instanceof ReadTextValueAsXml) {
                 this._updateStandoffLinkValue();
+            }
+            if (updatedValue instanceof ReadColorValue) {
+                this.regionColorChanged.emit();
             }
         } else {
             console.error('No properties exist for this resource');
