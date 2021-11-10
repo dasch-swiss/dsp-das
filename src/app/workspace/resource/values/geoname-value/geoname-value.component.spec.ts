@@ -90,7 +90,7 @@ describe('GeonameValueComponent', () => {
                     provide: GeonameService,
                     useValue: mockGeonameService,
                 }
-        ]
+            ]
         })
             .compileComponents();
     }));
