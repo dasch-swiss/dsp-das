@@ -163,12 +163,21 @@ export class DefaultProperties {
             elements: [
                 {
                     icon: 'link',
-                    label: 'Resource class',
+                    label: 'Link to class',
                     description: 'Refers to a resource class',
                     subPropOf: Constants.HasLinkTo,
                     objectType: Constants.LinkValue,
                     guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Searchbox',    // 'Autocomplete',
                     group: 'Link / Relation'
+                },
+                {
+                    icon: 'collections',
+                    label: 'Part of class',
+                    description: 'Is part of a resource class',
+                    subPropOf: Constants.KnoraApiV2 + Constants.HashDelimiter + 'isPartOf',
+                    objectType: Constants.LinkValue,
+                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Searchbox',    // 'Autocomplete',
+                    group: 'Relation'
                 },
                 {
                     icon: 'language',
