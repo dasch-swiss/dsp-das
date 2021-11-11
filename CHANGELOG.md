@@ -1,5 +1,12 @@
 # Changelog
 
+### [8.0.1](https://www.github.com/dasch-swiss/dsp-app/compare/v8.0.0...v8.0.1) (2021-11-11)
+
+
+### Bug Fixes
+
+* **text-value:** resource-instance-form and display-edit components now correctly display a paragraph text with line breaks ([#584](https://www.github.com/dasch-swiss/dsp-app/issues/584)) ([be9d6f4](https://www.github.com/dasch-swiss/dsp-app/commit/be9d6f4ea76cfc90852237ff916bac8b4a7e99d3))
+
 ## [8.0.0](https://www.github.com/dasch-swiss/dsp-app/compare/v7.0.1...v8.0.0) (2021-11-10)
 
 
