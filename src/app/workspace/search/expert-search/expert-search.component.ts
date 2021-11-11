@@ -38,7 +38,7 @@ export class ExpertSearchComponent implements OnInit {
     iriBaseUrl = this._getIriBaseUrl();
 
     defaultGravsearchQuery =
-    `PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+        `PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
 PREFIX incunabula: <${this.iriBaseUrl}/ontology/0803/incunabula/v2#>
 
 CONSTRUCT {
