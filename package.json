@@ -8,15 +8,15 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start-with-test-server": "ng serve --configuration=test-server",
+    "start-with-test-server": "ng serve --configuration test-server",
     "lint-ci": "eslint --color -c .eslintrc.js --ext .ts ./src/app",
     "lint-local": "eslint --color --fix -c .eslintrc.js --ext .ts ./src/app",
     "e2e": "ng e2e",
     "build": "ng build",
-    "build-prod": "ng build --prod=true",
+    "build-prod": "ng build --configuration production",
     "test-ci": "ng test --watch=false --browsers=ChromeHeadless",
     "test-local": "ng test",
-    "test-e2e-protractor": "ng e2e --prod=true --protractor-config=./e2e/protractor-ci.conf.js --webdriver-update=false",
+    "test-e2e-protractor": "ng e2e --configuration production --protractor-config=./e2e/protractor-ci.conf.js --webdriver-update=false",
     "webdriver-update": "webdriver-manager update --standalone false --gecko false --versions.chrome 2.37",
     "yalc-add-lib": "rm -rf .yalc/@dasch-swiss && yalc add @dasch-swiss/dsp-js && yalc add @dasch-swiss/dsp-ui && npm install"
   },
