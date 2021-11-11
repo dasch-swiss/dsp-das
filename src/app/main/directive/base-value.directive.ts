@@ -85,11 +85,11 @@ export abstract class BaseValueDirective {
     standardValidatorFunc: (val: any, comment: string, commentCtrl: FormControl)
     => ValidatorFn = (initValue: any, initComment: string, commentFormControl: FormControl): ValidatorFn => (control: AbstractControl): { [key: string]: any } | null => {
 
-            const invalid = this.standardValueComparisonFunc(initValue, control.value)
+        const invalid = this.standardValueComparisonFunc(initValue, control.value)
                     && (initComment === commentFormControl.value || (initComment === null && commentFormControl.value === ''));
 
-            return invalid ? { valueNotChanged: { value: control.value } } : null;
-        };
+        return invalid ? { valueNotChanged: { value: control.value } } : null;
+    };
 
     /**
      * returns the initially given value comment set via displayValue.
