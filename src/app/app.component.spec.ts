@@ -1,5 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { waitForAsync, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -20,6 +20,7 @@ import { UserMenuComponent } from './user/user-menu/user-menu.component';
 describe('AppComponent', () => {
 
     beforeEach(waitForAsync(() => {
+
         TestBed.configureTestingModule({
             declarations: [
                 AppComponent,

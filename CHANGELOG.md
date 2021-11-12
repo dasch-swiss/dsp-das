@@ -1,5 +1,41 @@
 # Changelog
 
+## [8.0.0](https://www.github.com/dasch-swiss/dsp-app/compare/v7.0.1...v8.0.0) (2021-11-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* **resource:** new resource route (DEV-196) (#581)
+
+### Maintenance
+
+* small code improvements ([#579](https://www.github.com/dasch-swiss/dsp-app/issues/579)) ([d19e353](https://www.github.com/dasch-swiss/dsp-app/commit/d19e353bd070b07d069ef5d1347c64592d029be6))
+
+
+### Enhancements
+
+* **resource:** add additional routing for an ark url of a value (DEV-196) ([#575](https://www.github.com/dasch-swiss/dsp-app/issues/575)) ([c1b0b94](https://www.github.com/dasch-swiss/dsp-app/commit/c1b0b94972760c3552c1ebcef8f2a8bffd7431b5))
+* **resource:** new resource route (DEV-196) ([#581](https://www.github.com/dasch-swiss/dsp-app/issues/581)) ([3fbd94c](https://www.github.com/dasch-swiss/dsp-app/commit/3fbd94cdfd62e78ee7b6e7a718663e12d222f897))
+* **still-image:** uses the color of the color property for the line color if a color property for the region exists ([#580](https://www.github.com/dasch-swiss/dsp-app/issues/580)) ([7680353](https://www.github.com/dasch-swiss/dsp-app/commit/768035399438c3857c2b08ec547483850700bd45))
+
+### [7.0.1](https://www.github.com/dasch-swiss/dsp-app/compare/v7.0.0...v7.0.1) (2021-11-05)
+
+
+### Bug Fixes
+
+* **error:** resolve error handler in case of server error (DEV-205) ([#576](https://www.github.com/dasch-swiss/dsp-app/issues/576)) ([ff9d097](https://www.github.com/dasch-swiss/dsp-app/commit/ff9d0971bf2f613591ddd446a006e64a5ca96203))
+* **ontology:** class and property name has to be unique (DEV-183) ([#569](https://www.github.com/dasch-swiss/dsp-app/issues/569)) ([059dd2a](https://www.github.com/dasch-swiss/dsp-app/commit/059dd2a48a8346b0f8835223c5d9fb86e05cefed))
+* **value:** display ckEditor in case of rich-text property (DEV-182) ([#571](https://www.github.com/dasch-swiss/dsp-app/issues/571)) ([6bfe254](https://www.github.com/dasch-swiss/dsp-app/commit/6bfe25403d42fe76b3239fda088b7029c78c1912))
+
+
+### Maintenance
+
+* annotations will now only be drawn when the user is on the annotations tab ([#574](https://www.github.com/dasch-swiss/dsp-app/issues/574)) ([bddc2f1](https://www.github.com/dasch-swiss/dsp-app/commit/bddc2f1bddfa51182a8855cf395ae922edc494c8))
+* **deps:** use release of ckeditor custom build (DEV-189) ([#570](https://www.github.com/dasch-swiss/dsp-app/issues/570)) ([fb55fd7](https://www.github.com/dasch-swiss/dsp-app/commit/fb55fd730506b3275ff70a536edb6f86d66a5df6))
+* **main:** use version route (DEV-124) ([#565](https://www.github.com/dasch-swiss/dsp-app/issues/565)) ([16f26ce](https://www.github.com/dasch-swiss/dsp-app/commit/16f26ce37f5118715faae60bb8481cf1b82eac8d))
+* move datadog rum methods to service (DEV-190) ([#572](https://www.github.com/dasch-swiss/dsp-app/issues/572)) ([77191cb](https://www.github.com/dasch-swiss/dsp-app/commit/77191cb7ad21ace706eb0335bb4b1eba72325c8a))
+* refactors upload-file service to use the string generated in the iiif-config file and changes the public class members in app-init service to private with getters. ([#573](https://www.github.com/dasch-swiss/dsp-app/issues/573)) ([c39ca5b](https://www.github.com/dasch-swiss/dsp-app/commit/c39ca5bcee02eca52ea17f660cc83670fec0d86a))
+
 ## [7.0.0](https://www.github.com/dasch-swiss/dsp-app/compare/v6.5.0...v7.0.0) (2021-10-28)
 
 

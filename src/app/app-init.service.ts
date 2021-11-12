@@ -36,7 +36,7 @@ export class AppInitService {
     }
 
     constructor(
-        @Inject(APP_CONFIG) private _config: IConfig
+        @Inject(APP_CONFIG) private _config: IConfig,
     ) {
         // check for presence of apiProtocol and apiHost
         if (typeof this._config.apiProtocol !== 'string' || typeof this._config.apiHost !== 'string') {
@@ -71,7 +71,8 @@ export class AppInitService {
 
         // init dsp app extended configuration
         this._dspAppConfig = new DspAppConfig(
-            this._config.geonameToken
+            this._config.geonameToken,
+            this._config.iriBase
         );
 
         // init instrumentation configuration

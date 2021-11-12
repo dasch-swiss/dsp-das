@@ -70,7 +70,7 @@
 <div class="infobar mat-caption" *ngIf="project && user">
     <p *ngIf="displayProjectInfo">This resource belongs to the project
         <span class="project link" (click)="openProject(project)" (mouseover)="previewProject(project)">
-            <b>{{project?.shortname}}</b>
+            <strong>{{project?.shortname}}</strong>
             <mat-icon inline>open_in_new</mat-icon>
         </span>
     </p>
@@ -122,6 +122,7 @@
                             [propArray]="resource.resProps"
                             [canDelete]="deleteValueIsAllowed(prop)"
                             [projectStatus]="project?.status"
+                            [valueUuidToHighlight]="valueUuidToHighlight"
                             (referredResourceClicked)="openResource($event)"
                             (referredResourceHovered)="previewResource($event)">
                         </app-display-edit>
@@ -149,7 +150,7 @@
                         <app-progress-indicator *ngIf="loading"></app-progress-indicator>
                         <div *ngIf="!loading">
                             <!-- the value(s) of the incoming links -->
-                            <a class="link link-value" *ngFor="let inRes of incomingLinkResources" [routerLink]="['/resource', inRes.id]" target="_blank">{{inRes.label}}</a>
+                            <a class="link link-value" *ngFor="let inRes of incomingLinkResources" (click)="openResource(inRes.id)">{{inRes.label}}</a>
                             <mat-paginator *ngIf="numberOffAllIncomingLinkRes > 25"
                                     [length]=numberOffAllIncomingLinkRes
                                     [pageSize]="25"

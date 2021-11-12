@@ -162,8 +162,17 @@ const routes: Routes = [
         ]
     },
     {
-        path: 'resource/:id',
-        component: ResourceComponent,
+        path: 'resource',
+        children: [
+            {
+                path: ':project/:resource/:value',
+                component: ResourceComponent
+            },
+            {
+                path: ':project/:resource',
+                component: ResourceComponent,
+            }
+        ],
         runGuardsAndResolvers: 'always'
     },
     {

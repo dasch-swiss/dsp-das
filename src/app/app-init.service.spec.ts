@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { AppInitService } from './app-init.service';
 import { IConfig } from './main/declarations/app-config';
-import { APP_CONFIG } from './main/declarations/dsp-api-tokens';
+import { APP_CONFIG, DspInstrumentationToken } from './main/declarations/dsp-api-tokens';
+import { DspDataDogConfig, DspInstrumentationConfig } from './main/declarations/dsp-instrumentation-config';
 
 describe('TestService', () => {
     let service: AppInitService;
@@ -18,6 +19,7 @@ describe('TestService', () => {
         jsonWebToken: 'mytoken',
         logErrors: true,
         geonameToken: 'geoname_token',
+        iriBase: 'http://rdfh.ch',
         instrumentation: {
             environment: 'dev',
             dataDog: {
@@ -34,10 +36,34 @@ describe('TestService', () => {
         }
     };
 
+    const dspDatadogSpy = new DspDataDogConfig(false, '', '', '', '');
+
+    const instrumentationConfig: DspInstrumentationConfig = {
+        environment: 'dev',
+        dataDog: {
+            enabled: false,
+            applicationId: 'app_id',
+            clientToken: 'client_token',
+            site: 'site',
+            service: 'dsp-app'
+        },
+        rollbar: {
+            enabled: false,
+            accessToken: 'rollbar_token'
+        }
+    };
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
-                { provide: APP_CONFIG, useValue: config }
+                {
+                    provide: APP_CONFIG,
+                    useValue: config
+                },
+                {
+                    provide: DspInstrumentationToken,
+                    useValue: instrumentationConfig
+                },
             ]
         });
         service = TestBed.inject(AppInitService);
@@ -59,6 +85,7 @@ describe('TestService', () => {
         expect(service.dspApiConfig.jsonWebToken).toEqual('mytoken');
         expect(service.dspApiConfig.logErrors).toEqual(true);
         expect(service.dspAppConfig.geonameToken).toEqual('geoname_token');
+        expect(service.dspAppConfig.iriBase).toEqual('http://rdfh.ch');
         expect(service.dspInstrumentationConfig.environment).toEqual('dev');
         expect(service.dspInstrumentationConfig.dataDog.enabled).toEqual(true);
         expect(service.dspInstrumentationConfig.dataDog.applicationId).toEqual('app_id');
