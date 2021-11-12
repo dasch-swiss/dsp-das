@@ -359,6 +359,8 @@ export class ResourceClassInfoComponent implements OnInit {
                 }
             };
 
+            console.log(dialogConfig.data)
+
             const dialogRef = this._dialog.open(
                 DialogComponent,
                 dialogConfig
