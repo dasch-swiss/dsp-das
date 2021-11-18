@@ -5,7 +5,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
 
-import * as Editor from 'ckeditor5-custom-build';
+import * as Editor from '../../../../../../assets/ckeditor-classic-custom-dsp/ckeditor.js';
 import { ckEditor } from '../ck-editor';
 
 
