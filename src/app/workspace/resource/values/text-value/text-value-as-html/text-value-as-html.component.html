@@ -1,4 +1,4 @@
-<div [innerHTML]="htmlFromKnora | appLinkify" class="value"></div>
+<div [innerHTML]="htmlFromKnora | appLinkify" appHtmlLink class="value"></div>
 <div *ngIf="comment">
   <label>{{commentLabel}}: </label><span class="comment">{{comment}}</span>
 </div>
