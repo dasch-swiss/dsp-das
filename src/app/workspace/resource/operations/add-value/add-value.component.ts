@@ -2,7 +2,8 @@ import {
     AfterViewInit, Component,
     EventEmitter,
     Inject,
-    Input, OnInit,
+    Input,
+    OnInit,
     Output,
     ViewChild
 } from '@angular/core';
