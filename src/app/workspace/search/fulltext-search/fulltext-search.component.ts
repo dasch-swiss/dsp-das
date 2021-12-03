@@ -14,22 +14,27 @@ import {
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import {
     ApiResponseData,
     ApiResponseError,
     Constants,
+    IFulltextSearchParams,
     KnoraApiConnection,
     ProjectResponse,
     ProjectsResponse,
-    ReadProject
+    ReadProject,
+    ReadResourceSequence
 } from '@dasch-swiss/dsp-js';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ComponentCommunicationEventService, Events } from 'src/app/main/services/component-communication-event.service';
 import { NotificationService } from 'src/app/main/services/notification.service';
 import { SortingService } from 'src/app/main/services/sorting.service';
 import { SearchParams } from '../../results/list-view/list-view.component';
+import { AutocompleteItem } from '../advanced-search/resource-and-property-selection/search-select-property/specify-property-value/operator';
 
 export interface PrevSearchItem {
     projectIri?: string;
@@ -82,11 +87,18 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
 
     @ViewChild('btnToSelectProject', { static: false }) selectProject: MatMenuTrigger;
 
+    searchControl = new FormControl();
+    options: string[] = ['Narrenschiff', 'Test', 'Objekt', 'Mehr tests'];
+    filteredOptions: Observable<string[]>;
+
     // search query
     searchQuery: string;
 
     // previous search = full-text search history
     prevSearch: PrevSearchItem[];
+
+    //
+    filteredSearchQueries: Observable<AutocompleteItem[] | string[]>;
 
     // list of projects, in case of filterproject is true
     projects: ReadProject[];
@@ -131,6 +143,11 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnInit(): void {
 
+        this.filteredOptions = this.searchControl.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filter(value)),
+        );
+
         // on page refresh, split the url into an array of strings and assign the `searchQuery` to the last element of this array of strings
         // this persists the search term in the search input field
         const urlArray = window.location.pathname.split('/');
@@ -170,7 +187,7 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnChanges() {
-        // resource classes have been reinitialized
+        // projects have been reinitialized
         // reset form
         resolvedPromise.then(() => {
 
@@ -181,6 +198,7 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
             }
 
         });
+
     }
 
     ngOnDestroy() {
@@ -239,6 +257,8 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
             this.limitToProject = undefined;
             this.limitToProjectChange.emit(this.limitToProject);
             localStorage.removeItem('currentProject');
+            // --> TODO: get prev search without project and replace options
+            this.options = [];
         } else {
             // set current project shortname and id
             this.projectLabel = project.shortname;
@@ -246,6 +266,8 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
             this.limitToProject = project.id;
             this.limitToProjectChange.emit(this.limitToProject);
             localStorage.setItem('currentProject', JSON.stringify(project));
+            // --> TODO: get prev search for certain project and replace options
+            this.options = [];
         }
     }
 
@@ -289,7 +311,15 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
      * send the search query to parent and store the new query in the local storage
      * to have a search history list
      */
-    doSearch(): void {
+    doSearch(query?: string): void {
+
+        if (query) {
+            this.searchQuery = `"${query}"`;
+        } else {
+            this.searchQuery = this.searchControl.value;
+        }
+
+        console.warn('do search', this.searchQuery);
 
         if (this.searchQuery !== undefined && this.searchQuery !== null) {
 
@@ -429,6 +459,8 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     emitSearchParams() {
+        console.warn('emit search params', this.searchQuery);
+
         const searchParams: SearchParams = {
             query: this.searchQuery,
             mode: 'fulltext'
@@ -445,6 +477,36 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
 
     togglePhonePanel() {
         this.displayPhonePanel = !this.displayPhonePanel;
+    }
+
+    private _filter(value: string): string[] {
+
+        console.log('changed', value);
+        if (value.length > 2) {
+            const searchParams: IFulltextSearchParams = {
+                limitToProject: this.limitToProject
+            };
+            // if (this.limitToProject) {
+            //     searchParams.limitToProject = this.limitToProject;
+            // }
+
+            this._dspApiConnection.v2.search.doSearchByLabel(value, 0, searchParams).subscribe(
+                (response: ReadResourceSequence) => {
+                    console.log(response);
+                    response.resources.forEach(res => {
+                        this.options.push(res.label);
+                    });
+                },
+                (error: ApiResponseError) => {
+                    this._notification.openSnackBar(error);
+                    this.error = error;
+                }
+            );
+        }
+
+        const filterValue = value.toLowerCase();
+
+        return this.options.filter(option => option.toLowerCase().includes(filterValue));
     }
 
 }

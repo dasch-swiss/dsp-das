@@ -13,20 +13,38 @@
         <mat-menu #selectProject="matMenu">
             <div class="app-project-filter-menu">
                 <button mat-menu-item class="center"
-                    (click)="setProject();changeFocus()">{{defaultProjectLabel}}</button>
+                    (click)="setProject(); changeFocus()">{{defaultProjectLabel}}</button>
                 <mat-divider></mat-divider>
                 <span *ngFor="let project of projects">
                     <button mat-menu-item class="project-item" *ngIf="!doNotDisplay.includes(project.id)"
-                        (click)="setProject(project);changeFocus()" [matTooltip]="project.longname"
+                        (click)="setProject(project); changeFocus()" [matTooltip]="project.longname"
                         [matTooltipPosition]="'after'">{{project.shortname}}</button>
                 </span>
             </div>
         </mat-menu>
     </div>
     <div class="app-fulltext-search-field" [class.with-project-filter]="projectfilter">
-        <input #fulltextSearchInput class="app-fulltext-search-input" type="search" [(ngModel)]="searchQuery"
+        <mat-autocomplete #search="matAutocomplete" (optionSelected)="doSearch($event.option.value)">
+            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                <!-- <span *ngIf="option.projectIri">{{option.projectLabel}}: </span> -->
+                {{option}}
+            </mat-option>
+        </mat-autocomplete>
+        <input type="text"
+            class="app-fulltext-search-input"
+            placeholder="Search"
+            aria-label="Fulltext search"
+            matInput
+            minlength="3"
+            (keyup.enter)="doSearch()"
+            [formControl]="searchControl"
+            [matAutocomplete]="search">
+
+<!--
+        <input #fulltextSearchInput  type="search" [(ngModel)]="searchQuery"
             name="fulltext-search" minlength="3" autocomplete="off" [placeholder]="'Search'" (keyup.esc)="resetSearch()"
             (keyup.enter)="doSearch()" (click)="setFocus()">
+-->
         <button class="app-fulltext-search-button suffix" (click)="doSearch()" type="submit">
             <mat-icon>search</mat-icon>
         </button>
