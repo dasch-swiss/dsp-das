@@ -4,7 +4,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
-    Input, OnInit,
+    Input,
     Output,
     TemplateRef,
     ViewChild,
@@ -17,21 +17,13 @@ import { SearchParams } from '../../results/list-view/list-view.component';
     templateUrl: './search-panel.component.html',
     styleUrls: ['./search-panel.component.scss']
 })
-export class SearchPanelComponent implements OnInit {
+export class SearchPanelComponent {
 
     /**
      * @param [projectfilter] If true it shows the selection of projects to filter by one of them
      * Default value: false
      */
     @Input() projectfilter?: boolean = false;
-
-    /**
-     * @deprecated Use `limitToProject` instead
-     *
-     * @param [filterbyproject] If your full-text search should be filtered by one project, you can define it with project
-     * iri in the parameter filterbyproject.
-     */
-    @Input() filterbyproject?: string;
 
     /**
      * filter ontologies in advanced search or query in fulltext search by specified project IRI
@@ -74,13 +66,6 @@ export class SearchPanelComponent implements OnInit {
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef
     ) { }
-
-    ngOnInit() {
-        // filterbyproject is set as deprecated. To avoid breaking changes we still support the parameter
-        if (this.filterbyproject) {
-            this.limitToProject = this.filterbyproject;
-        }
-    }
 
     openPanelWithBackdrop(type: string) {
 
