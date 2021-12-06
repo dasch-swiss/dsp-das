@@ -97,6 +97,9 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
     // previous search = full-text search history
     prevSearch: PrevSearchItem[];
 
+    // search by label = list of resource labes
+    labelSearch: string;
+
     //
     filteredSearchQueries: Observable<AutocompleteItem[] | string[]>;
 
@@ -112,7 +115,7 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
 
     projectIri: string;
 
-    componentCommsSubscriptions: Subscription[]= [];
+    componentCommsSubscriptions: Subscription[] = [];
 
     // in case of an (api) error
     error: any;
@@ -152,25 +155,21 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
         // this persists the search term in the search input field
         const urlArray = window.location.pathname.split('/');
         const currentSearchTerm = urlArray[urlArray.length - 1];
-        if(urlArray[urlArray.length - 2] === 'fulltext') {
+        if (urlArray[urlArray.length - 2] === 'fulltext') {
             this.searchQuery = decodeURI(decodeURI(currentSearchTerm));
         }
 
-        // initialise prevSearch
-        const prevSearchOption = JSON.parse(localStorage.getItem('prevSearch'));
-        if (prevSearchOption !== null) {
-            this.prevSearch = prevSearchOption;
-        } else {
-            this.prevSearch = [];
-        }
 
         if (this.limitToProject) {
             this.getProject(this.limitToProject);
+        } else {
+            this._initAutocompleteOptions();
         }
 
         if (this.projectfilter) {
             this.getAllProjects();
         }
+
 
         // in the event of a grav search (advanced or expert search), clear the input field
         this.componentCommsSubscriptions.push(this._componentCommsService.on(
@@ -257,8 +256,6 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
             this.limitToProject = undefined;
             this.limitToProjectChange.emit(this.limitToProject);
             localStorage.removeItem('currentProject');
-            // --> TODO: get prev search without project and replace options
-            this.options = [];
         } else {
             // set current project shortname and id
             this.projectLabel = project.shortname;
@@ -266,9 +263,10 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
             this.limitToProject = project.id;
             this.limitToProjectChange.emit(this.limitToProject);
             localStorage.setItem('currentProject', JSON.stringify(project));
-            // --> TODO: get prev search for certain project and replace options
-            this.options = [];
         }
+
+        // reset options
+        this._initAutocompleteOptions();
     }
 
     /**
@@ -400,7 +398,7 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
             this.prevSearch = [];
         }
 
-        if(!this.displayPhonePanel) {
+        if (!this.displayPhonePanel) {
             this.searchPanelFocus = true;
             this.openPanelWithBackdrop();
         }
@@ -481,32 +479,68 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
 
     private _filter(value: string): string[] {
 
-        console.log('changed', value);
+        let queryExists = false;
+
         if (value.length > 2) {
             const searchParams: IFulltextSearchParams = {
                 limitToProject: this.limitToProject
             };
-            // if (this.limitToProject) {
-            //     searchParams.limitToProject = this.limitToProject;
-            // }
+            if (this.limitToProject) {
+                searchParams.limitToProject = this.limitToProject;
+            }
 
-            this._dspApiConnection.v2.search.doSearchByLabel(value, 0, searchParams).subscribe(
-                (response: ReadResourceSequence) => {
-                    console.log(response);
-                    response.resources.forEach(res => {
-                        this.options.push(res.label);
-                    });
-                },
-                (error: ApiResponseError) => {
-                    this._notification.openSnackBar(error);
-                    this.error = error;
-                }
-            );
+            if (!queryExists) {
+                this._dspApiConnection.v2.search.doSearchByLabel(value, 0, searchParams).subscribe(
+                    (response: ReadResourceSequence) => {
+
+                        response.resources.forEach(res => {
+                            // const label = `"${res.label}"`;
+                            // console.warn('res');
+
+                            queryExists = this.options.indexOf(res.label) === -1 ? false : true;
+                            if (!queryExists) {
+                                this.options.push(res.label);
+                            }
+                        });
+                    },
+                    (error: ApiResponseError) => {
+                        this._notification.openSnackBar(error);
+                        this.error = error;
+                    }
+                );
+            }
         }
 
         const filterValue = value.toLowerCase();
 
         return this.options.filter(option => option.toLowerCase().includes(filterValue));
+    }
+
+    private _initAutocompleteOptions() {
+
+        this.options = [];
+
+        // initialise prevSearch
+        const prevSearchOption = JSON.parse(localStorage.getItem('prevSearch'));
+        if (prevSearchOption !== null) {
+            this.prevSearch = prevSearchOption;
+            // reset options by adding prev search depending on selected project
+            this.prevSearch.forEach(prev => {
+                // console.log('existing query for this project?', (prev.projectIri === this.projectIri));
+                if (this.limitToProject) {
+                    if (prev.projectIri === this.projectIri) {
+                        this.options.push(prev.query);
+                    }
+                } else {
+                    if (!prev.projectIri) {
+                        this.options.push(prev.query);
+                    }
+                }
+            });
+        } else {
+            this.prevSearch = [];
+        }
+
     }
 
 }
