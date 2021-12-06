@@ -398,10 +398,10 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
             this.prevSearch = [];
         }
 
-        if (!this.displayPhonePanel) {
-            this.searchPanelFocus = true;
-            this.openPanelWithBackdrop();
-        }
+        // if (!this.displayPhonePanel) {
+        //     this.searchPanelFocus = true;
+        //     this.openPanelWithBackdrop();
+        // }
     }
 
     /**
@@ -539,6 +539,10 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
             });
         } else {
             this.prevSearch = [];
+        }
+
+        if(this.searchQuery) {
+            this._filter(this.searchQuery);
         }
 
     }
