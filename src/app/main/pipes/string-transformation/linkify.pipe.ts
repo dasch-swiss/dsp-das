@@ -13,9 +13,11 @@ export class LinkifyPipe implements PipeTransform {
         if (value && value.length > 0) {
             const match = value.match(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig);
             let final = value;
-            match.map(url=>{
-                final = final.replace(url,`<a href="${url}" target="_blank">${url}</a>`);
-            });
+            if (match) {
+                match.map(url=>{
+                    final = final.replace(url,`<a href="${url}" target="_blank">${url}</a>`);
+                });
+            }
             return final;
         } else {
             return value;
