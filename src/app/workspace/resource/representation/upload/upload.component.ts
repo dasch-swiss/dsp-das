@@ -1,11 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
+    CreateArchiveFileValue,
     CreateAudioFileValue,
     CreateDocumentFileValue,
     CreateFileValue,
     CreateMovingImageFileValue,
     CreateStillImageFileValue,
+    UpdateArchiveFileValue,
     UpdateAudioFileValue,
     UpdateDocumentFileValue,
     UpdateFileValue,
@@ -28,8 +30,7 @@ export class UploadComponent implements OnInit {
 
     @Input() parentForm?: FormGroup;
 
-    @Input() representation: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text';
-    // only StillImageRepresentation and DocumentPresentation is supported so far
+    @Input() representation: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
 
     @Input() formName: string;
 
@@ -47,6 +48,7 @@ export class UploadComponent implements OnInit {
     supportedDocumentTypes = ['application/pdf'];
     supportedAudioTypes = ['audio/mpeg'];
     supportedVideoTypes = ['video/mp4'];
+    supportedArchiveTypes = ['application/zip', 'application/x-tar', 'application/gzip'];
 
     constructor(
         private _fb: FormBuilder,
@@ -208,7 +210,7 @@ export class UploadComponent implements OnInit {
 
         const filename = this.fileControl.value.internalFilename;
 
-        let fileValue: CreateStillImageFileValue | CreateDocumentFileValue;
+        let fileValue: CreateStillImageFileValue | CreateDocumentFileValue | CreateAudioFileValue | CreateArchiveFileValue;
 
         switch (this.representation) {
             case 'stillImage':
@@ -225,6 +227,9 @@ export class UploadComponent implements OnInit {
 
             case 'movingImage':
                 fileValue = new CreateMovingImageFileValue();
+
+            case 'archive':
+                fileValue = new CreateArchiveFileValue();
                 break;
 
             default:
@@ -251,7 +256,7 @@ export class UploadComponent implements OnInit {
 
         const filename = this.fileControl.value.internalFilename;
 
-        let fileValue: UpdateStillImageFileValue | UpdateDocumentFileValue | UpdateAudioFileValue;
+        let fileValue: UpdateStillImageFileValue | UpdateDocumentFileValue | UpdateAudioFileValue | UpdateArchiveFileValue;
 
 
         switch (this.representation) {
@@ -269,6 +274,9 @@ export class UploadComponent implements OnInit {
 
             case 'movingImage':
                 fileValue = new UpdateMovingImageFileValue();
+
+            case 'archive':
+                fileValue = new UpdateArchiveFileValue();
                 break;
 
             default:
@@ -312,6 +320,9 @@ export class UploadComponent implements OnInit {
 
             case 'movingImage':
                 this.allowedFileTypes = this.supportedVideoTypes;
+
+            case 'archive':
+                this.allowedFileTypes = this.supportedArchiveTypes;
                 break;
 
             default:
