@@ -109,9 +109,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
             if (this.projectCode && this.resourceUuid) {
                 this.resourceIri = this._resourceService.getResourceIri(this.projectCode, this.resourceUuid);
             }
-            if (this.resourceIri) {
-                this.getResource(this.resourceIri);
-            }
+            this.getResource(this.resourceIri);
         });
 
         this._router.events.subscribe((event) => {
