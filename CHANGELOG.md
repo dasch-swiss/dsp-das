@@ -1,5 +1,12 @@
 # Changelog
 
+### [8.2.1](https://www.github.com/dasch-swiss/dsp-app/compare/v8.2.0...v8.2.1) (2021-12-08)
+
+
+### Maintenance
+
+* **deps:** use correct nginx-server (DEEV-263) ([#610](https://www.github.com/dasch-swiss/dsp-app/issues/610)) ([ccae958](https://www.github.com/dasch-swiss/dsp-app/commit/ccae9587ac7bf1eb46cb6f34b99568feab78d256))
+
 ### [8.1.2](https://www.github.com/dasch-swiss/dsp-app/compare/v8.1.1...v8.1.2) (2021-12-01)
 
 
