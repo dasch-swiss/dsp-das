@@ -1,5 +1,12 @@
 # Changelog
 
+### [8.2.1](https://www.github.com/dasch-swiss/dsp-app/compare/v8.2.0...v8.2.1) (2021-12-08)
+
+
+### Bug Fixes
+
+* **angular:** fix budget in prod mode ([#606](https://www.github.com/dasch-swiss/dsp-app/issues/606)) ([5072948](https://www.github.com/dasch-swiss/dsp-app/commit/507294887a7dd8868cbecfd20ad0509fb80bd674))
+
 ### [8.1.2](https://www.github.com/dasch-swiss/dsp-app/compare/v8.1.1...v8.1.2) (2021-12-01)
 
 
