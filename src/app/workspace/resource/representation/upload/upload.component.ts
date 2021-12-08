@@ -227,6 +227,7 @@ export class UploadComponent implements OnInit {
 
             case 'movingImage':
                 fileValue = new CreateMovingImageFileValue();
+                break;
 
             case 'archive':
                 fileValue = new CreateArchiveFileValue();
@@ -274,6 +275,7 @@ export class UploadComponent implements OnInit {
 
             case 'movingImage':
                 fileValue = new UpdateMovingImageFileValue();
+                break;
 
             case 'archive':
                 fileValue = new UpdateArchiveFileValue();
@@ -320,6 +322,7 @@ export class UploadComponent implements OnInit {
 
             case 'movingImage':
                 this.allowedFileTypes = this.supportedVideoTypes;
+                break;
 
             case 'archive':
                 this.allowedFileTypes = this.supportedArchiveTypes;
