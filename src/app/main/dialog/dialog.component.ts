@@ -18,6 +18,7 @@ export interface DialogData {
     parentIri?: string;
     projectCode?: string;
     selectedResources?: FilteredResources;
+    permissionsString?: string; // hasPermissions property
 }
 
 export interface ConfirmationWithComment {

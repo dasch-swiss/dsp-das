@@ -158,6 +158,7 @@ import { ExpertSearchComponent } from './workspace/search/expert-search/expert-s
 import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
 import { ArchiveComponent } from './workspace/resource/representation/archive/archive.component';
+import { PermissionFormComponent } from './project/permission/permission-form/permission-form.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -304,6 +305,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         VisualizerComponent,
         YetAnotherDateValueComponent,
         ArchiveComponent,
+        PermissionFormComponent,
     ],
     imports: [
         AngularSplitModule.forRoot(),

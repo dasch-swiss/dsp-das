@@ -399,6 +399,19 @@
         </mat-dialog-content>
     </div>
 
+    <div *ngSwitchCase="'editPermissionsResource'">
+        <app-dialog-header [title]="data.title" [subtitle]="'Edit permission levels'"></app-dialog-header>
+
+        <mat-dialog-content class="form-content">
+            <app-permission-form [permissionsString]="data.permissionsString"></app-permission-form>
+        </mat-dialog-content>
+        <mat-dialog-actions>
+            <button mat-button mat-dialog-close class="cancel-button center">
+                Close
+            </button>
+        </mat-dialog-actions>
+    </div>
+
     <!-- general error message -->
     <div *ngSwitchCase="'error'">
         <app-error [status]="data.id"></app-error>

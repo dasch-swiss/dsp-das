@@ -49,6 +49,13 @@
                 -->
         </mat-menu>
 
+        <!-- edit resource permission level button -->
+        <button mat-icon-button class="permission-level-res" matTooltip="Edit Resource's Permission Level" matTooltipPosition="above"
+            [disabled]="deletedResource"
+            (click)="openDialog('editPermissions')">
+            <mat-icon>rule</mat-icon>
+        </button>
+
         <!-- more menu with: delete, erase resource -->
         <button *ngIf="editPermissions && project?.status" mat-icon-button class="more-menu" matTooltip="More" matTooltipPosition="above" [matMenuTriggerFor]="more" [disabled]="deletedResource">
             <mat-icon>more_vert</mat-icon>

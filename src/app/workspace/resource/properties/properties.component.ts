@@ -162,6 +162,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         this._getIncomingLinks();
 
         if (this.resource.res) {
+            console.log('resource: ', this.resource);
             // get user permissions
             const allPermissions = PermissionUtil.allUserPermissions(
                 this.resource.res.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR'
@@ -276,14 +277,14 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         // --> TODO: pop up resource preview on hover
     }
 
-    openDialog(type: 'delete' | 'erase' | 'edit') {
+    openDialog(type: 'delete' | 'erase' | 'edit' | 'editPermissions') {
         const dialogConfig: MatDialogConfig = {
             width: '560px',
             maxHeight: '80vh',
             position: {
                 top: '112px'
             },
-            data: { mode: type + 'Resource', title: this.resource.res.label }
+            data: { mode: type + 'Resource', title: this.resource.res.label, permissionsString: this.resource.res.hasPermissions }
         };
 
         const dialogRef = this._dialog.open(
