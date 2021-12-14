@@ -1,36 +1,20 @@
-import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, LoginResponse, LogoutResponse } from '@dasch-swiss/dsp-js';
-import { datadogRum, RumFetchResourceEventDomainContext } from '@datadog/browser-rum';
-import { DspApiConnectionToken, DspInstrumentationToken } from '../../declarations/dsp-api-tokens';
-import { DspInstrumentationConfig } from '../../declarations/dsp-instrumentation-config';
+import { CacheService } from '../../cache/cache.service';
+import { DspApiConnectionToken } from '../../declarations/dsp-api-tokens';
+import { ErrorHandlerService } from '../../error/error-handler.service';
+import { ComponentCommunicationEventService, EmitEvent, Events } from '../../services/component-communication-event.service';
 import { DatadogRumService } from '../../services/datadog-rum.service';
-import { NotificationService } from '../../services/notification.service';
 import { Session, SessionService } from '../../services/session.service';
-
-const { version: appVersion } = require('../../../../../package.json');
 
 @Component({
     selector: 'app-login-form',
     templateUrl: './login-form.component.html',
     styleUrls: ['./login-form.component.scss']
 })
-export class LoginFormComponent implements OnInit {
-
-    /**
-     * navigate to the defined url (or path) after successful login
-     *
-     * @param navigate
-     */
-    @Input() navigate?: string;
-
-    /**
-     * set your theme color here,
-     * it will be used in the progress-indicator and the buttons
-     *
-     * @param color
-     */
-    @Input() color?: string;
+export class LoginFormComponent implements OnInit, AfterViewInit {
 
     /**
      * set whether or not you want icons to display in the input fields
@@ -55,6 +39,8 @@ export class LoginFormComponent implements OnInit {
      */
     @Output() logoutSuccess: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+    @ViewChild('username') usernameInput: ElementRef;
+
     // is there already a valid session?
     session: Session;
 
@@ -64,6 +50,10 @@ export class LoginFormComponent implements OnInit {
     // show progress indicator
     loading = false;
 
+    // url history
+    returnUrl: string;
+
+    // in case of an error
     isError: boolean;
 
     // specific error messages
@@ -103,18 +93,22 @@ export class LoginFormComponent implements OnInit {
         }
     };
 
-
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _componentCommsService: ComponentCommunicationEventService,
         private _datadogRumService: DatadogRumService,
-        private _notification: NotificationService,
-        private _sessionService: SessionService,
-        private _fb: FormBuilder
-    ) { }
+        private _errorHandler: ErrorHandlerService,
+        private _fb: FormBuilder,
+        private _session: SessionService,
+        private _route: ActivatedRoute,
+        private _router: Router,
+    ) {
+        this.returnUrl = this._route.snapshot.queryParams['returnUrl'];
+    }
 
     ngOnInit() {
         // if session is valid (a user is logged-in) show a message, otherwise build the form
-        this._sessionService.isSessionValid().subscribe(
+        this._session.isSessionValid().subscribe(
             result => {
                 // returns a result if session is still valid
                 if (result) {
@@ -127,6 +121,12 @@ export class LoginFormComponent implements OnInit {
         );
     }
 
+    ngAfterViewInit() {
+        if (this.session) {
+            this.usernameInput.nativeElement.focus();
+        }
+    }
+
     buildLoginForm(): void {
         this.form = this._fb.group({
             username: ['', Validators.required],
@@ -135,9 +135,8 @@ export class LoginFormComponent implements OnInit {
     }
 
     /**
-     * @ignore
      *
-     * Login and set session
+     * login and set session
      */
     login() {
 
@@ -152,12 +151,19 @@ export class LoginFormComponent implements OnInit {
 
         this._dspApiConnection.v2.auth.login(identifierType, identifier, password).subscribe(
             (response: ApiResponseData<LoginResponse>) => {
-                this._sessionService.setSession(response.body.token, identifier, identifierType).subscribe(
+                this._session.setSession(response.body.token, identifier, identifierType).subscribe(
                     () => {
-                        this.session = this._sessionService.getSession();
                         this.loginSuccess.emit(true);
-                        this.loading = false;
+                        this.session = this._session.getSession();
+                        this._componentCommsService.emit(new EmitEvent(Events.loginSuccess, true));
+                        this.returnUrl = this._route.snapshot.queryParams['returnUrl'];
+                        if (this.returnUrl) {
+                            this._router.navigate([this.returnUrl]);
+                        } else {
+                            window.location.reload();
+                        }
                         this._datadogRumService.setActiveUser(identifier, identifierType);
+                        this.loading = false;
                     }
                 );
             },
@@ -167,10 +173,9 @@ export class LoginFormComponent implements OnInit {
                 this.loginErrorServer = (error.status === 0 || error.status >= 500 && error.status < 600);
 
                 if (this.loginErrorServer) {
-                    this._notification.openSnackBar(error);
+                    this._errorHandler.showMessage(error);
                 }
 
-                this.loginSuccess.emit(false);
                 this.isError = true;
 
                 this.loading = false;
@@ -181,32 +186,5 @@ export class LoginFormComponent implements OnInit {
         );
     }
 
-    /**
-     * @ignore
-     *
-     * Logout and destroy session
-     *
-     */
-    logout() {
-        this.loading = true;
-
-        this._dspApiConnection.v2.auth.logout().subscribe(
-            (response: ApiResponseData<LogoutResponse>) => {
-                this.logoutSuccess.emit(true);
-                this._sessionService.destroySession();
-                this._datadogRumService.removeActiveUser();
-                this.loading = false;
-                this.buildLoginForm();
-                this.session = undefined;
-                this.form.get('password').setValue('');
-            },
-            (error: ApiResponseError) => {
-                this._notification.openSnackBar(error);
-                this.logoutSuccess.emit(false);
-                this.loading = false;
-            }
-        );
-
-    }
 
 }

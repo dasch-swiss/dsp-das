@@ -4,8 +4,7 @@ import {
     ApiResponseError,
     Constants,
     CredentialsResponse,
-    KnoraApiConnection,
-    UserResponse
+    KnoraApiConnection, UserResponse
 } from '@dasch-swiss/dsp-js';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -69,14 +68,14 @@ export class SessionService {
      *
      * @param jwt Json Web Token
      * @param identifier  email address or username
-     * @param identifierType 'email' or 'username'
+     * @param type 'email' or 'username'
      */
-    setSession(jwt: string, identifier: string, identifierType: 'email' | 'username'): Observable<void> {
+    setSession(jwt: string, identifier: string, type: 'email' | 'username'): Observable<void> {
 
         this._dspApiConnection.v2.jsonWebToken = (jwt ? jwt : '');
 
         // get user information
-        return this._dspApiConnection.admin.usersEndpoint.getUser(identifierType, identifier).pipe(
+        return this._dspApiConnection.admin.usersEndpoint.getUser(type, identifier).pipe(
             map((response: ApiResponseData<UserResponse> | ApiResponseError) => {
                 this._storeSessionInLocalStorage(response, jwt);
                 // return type is void
