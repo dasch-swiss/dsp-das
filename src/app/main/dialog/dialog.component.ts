@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ReadResource } from '@dasch-swiss/dsp-js';
 import { PropertyInfoObject } from 'src/app/project/ontology/default-data/default-properties';
 import { FilteredResources } from 'src/app/workspace/results/list-view/list-view.component';
 
@@ -18,7 +19,7 @@ export interface DialogData {
     parentIri?: string;
     projectCode?: string;
     selectedResources?: FilteredResources;
-    permissionsString?: string; // hasPermissions property
+    resource?: ReadResource;
 }
 
 export interface ConfirmationWithComment {

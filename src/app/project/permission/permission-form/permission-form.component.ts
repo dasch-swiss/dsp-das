@@ -1,6 +1,6 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, KnoraApiConnection, ReadResource, UpdateResourceMetadata, UpdateResourceMetadataResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 
@@ -11,13 +11,11 @@ import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 })
 export class PermissionFormComponent implements OnInit {
 
-    @Input() permissionsString: string;
+    @Input() resource: ReadResource;
 
     loading: boolean;
 
-    permissionsForm: FormGroup;
-
-    permissions: string;
+    permissions: FormControl;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -26,23 +24,36 @@ export class PermissionFormComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.permissions = this.permissionsString ? this.permissionsString : undefined;
 
-        console.log('permissions: ', this.permissions);
+        this.permissions = new FormControl(this.resource.hasPermissions);
 
-        this.permissionsForm = this._fb.group({
-            permission: this.permissions
-        });
-
-        this.permissionsForm.valueChanges.subscribe(() => this.onValueChanged());
+        this.permissions.valueChanges.subscribe(() => this.onValueChanged());
     }
 
     onValueChanged() {
-        this.permissions = this.permissionsForm.get('permission').value;
-        console.log('permissions: ', this.permissions);
+        console.log('permission: ', this.permissions.value);
     }
 
     updatePermissions() {
-        console.log('updating permissions: ', this.permissions);
+        console.log('updating permission: ', this.permissions.value);
+        this.loading = true;
+        const updateResourceMetadata = new UpdateResourceMetadata();
+
+        updateResourceMetadata.id = this.resource.id;
+        updateResourceMetadata.type = this.resource.type;
+        updateResourceMetadata.lastModificationDate = this.resource.lastModificationDate;
+        updateResourceMetadata.hasPermissions = this.permissions.value;
+        console.log('updateResourceMetadata: ', updateResourceMetadata);
+        this._dspApiConnection.v2.res.updateResourceMetadata(updateResourceMetadata).subscribe(
+            (res: UpdateResourceMetadataResponse) => {
+                console.log('res: ', res);
+                this.resource.lastModificationDate = res.lastModificationDate;
+                this.loading = false;
+            },
+            (error: ApiResponseError) => {
+                this.loading = false;
+                this._errorHandler.showMessage(error);
+            }
+        );
     }
 }

@@ -53,7 +53,8 @@
         <button mat-icon-button class="permission-level-res" matTooltip="Edit Resource's Permission Level" matTooltipPosition="above"
             [disabled]="deletedResource"
             (click)="openDialog('editPermissions')">
-            <mat-icon>rule</mat-icon>
+            <!-- we should use a different icon, maybe 'rule', but we need to update our mat-icons first-->
+            <mat-icon>create</mat-icon>
         </button>
 
         <!-- more menu with: delete, erase resource -->

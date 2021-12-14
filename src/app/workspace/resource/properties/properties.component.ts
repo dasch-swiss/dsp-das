@@ -284,7 +284,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
             position: {
                 top: '112px'
             },
-            data: { mode: type + 'Resource', title: this.resource.res.label, permissionsString: this.resource.res.hasPermissions }
+            data: { mode: type + 'Resource', title: this.resource.res.label, resource: this.resource.res }
         };
 
         const dialogRef = this._dialog.open(

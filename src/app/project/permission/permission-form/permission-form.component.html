@@ -1,18 +1,19 @@
 <app-progress-indicator *ngIf="loading"></app-progress-indicator>
 
 <div>
-    <form [formGroup]="permissionsForm">
+    <form>
         <div class="form-content">
             <mat-form-field class="full-width">
                 <input
                     required
                     matInput
-                    [formControl]="permissionsForm.controls['permission']"
-                    placeholder="Enter a permissions string">
+                    [formControl]="permissions"
+                    placeholder="Enter a permissions string"
+                    [disabled]="loading">
             </mat-form-field>
         </div>
     </form>
-    <button (click)="updatePermissions()">
+    <button (click)="updatePermissions()" [disabled]="loading">
         update
     </button>
 </div>

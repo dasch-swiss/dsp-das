@@ -403,7 +403,7 @@
         <app-dialog-header [title]="data.title" [subtitle]="'Edit permission levels'"></app-dialog-header>
 
         <mat-dialog-content class="form-content">
-            <app-permission-form [permissionsString]="data.permissionsString"></app-permission-form>
+            <app-permission-form [resource]="data.resource"></app-permission-form>
         </mat-dialog-content>
         <mat-dialog-actions>
             <button mat-button mat-dialog-close class="cancel-button center">
