@@ -4,14 +4,11 @@ import {
     ApiResponseError,
     Constants,
     CredentialsResponse,
-    KnoraApiConnection, LogoutResponse, UserResponse
+    KnoraApiConnection, UserResponse
 } from '@dasch-swiss/dsp-js';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CacheService } from '../cache/cache.service';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
-import { ErrorHandlerService } from '../error/error-handler.service';
-import { DatadogRumService } from './datadog-rum.service';
 
 /**
  * information about the current user
@@ -53,12 +50,8 @@ export class SessionService {
      */
     readonly MAX_SESSION_TIME: number = 86400000; // 1d = 24 * 60 * 60 * 1000
 
-
     constructor(
-        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
-        private _cache: CacheService,
-        private _datadogRumService: DatadogRumService,
-        private _errorHandler: ErrorHandlerService,
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection
     ) { }
 
     /**
@@ -137,31 +130,6 @@ export class SessionService {
         localStorage.removeItem('session');
     }
 
-    /**
-     * logout service
-     */
-    logout() {
-        this._dspApiConnection.v2.auth.logout().subscribe(
-            (response: ApiResponseData<LogoutResponse>) => {
-
-                // destroy session
-                this.destroySession();
-
-                // destroy cache
-                this._cache.destroy();
-
-                // reload the page
-                window.location.reload();
-
-                // remove active datadog user
-                this._datadogRumService.removeActiveUser();
-
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-            }
-        );
-    }
 
     /**
      * returns a timestamp represented in seconds

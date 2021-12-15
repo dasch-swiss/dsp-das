@@ -12,6 +12,7 @@ import { AppGlobal } from 'src/app/app-global';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { AuthenticationService } from 'src/app/main/services/authentication.service';
 import { DatadogRumService } from 'src/app/main/services/datadog-rum.service';
 import { SessionService } from 'src/app/main/services/session.service';
 import { MenuItem } from '../../main/declarations/menu-item';
@@ -38,8 +39,8 @@ export class UserMenuComponent implements OnChanges {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _auth: AuthenticationService,
         private _cache: CacheService,
-        private _datadogRumService: DatadogRumService,
         private _errorHandler: ErrorHandlerService,
         private _session: SessionService
     ) { }
@@ -66,43 +67,16 @@ export class UserMenuComponent implements OnChanges {
     }
 
     /**
-     *
      * logout and destroy session
      *
      */
     logout() {
-        // this.loading = true;
-
-        this._session.logout();
-
-        // this._dspApiConnection.v2.auth.logout().subscribe(
-        //     (response: ApiResponseData<LogoutResponse>) => {
-        //         this._session.destroySession();
-        //         this._datadogRumService.removeActiveUser();
-
-
-        //         this.buildLoginForm();
-        //         this.session = undefined;
-        //         this.form.get('password').setValue('');
-        //         this.logoutSuccess.emit(true);
-        //     },
-        //     (error: ApiResponseError) => {
-        //         this._notification.openSnackBar(error);
-        //         this.loading = false;
-        //         this.logoutSuccess.emit(false);
-        //     }
-        // );
-
+        this._auth.logout();
     }
 
-    // login() {
-    //     this._session.login();
-    // }
-
-    // logout() {
-    //     this._session.logout();
-    // }
-
+    /**
+     * closes menu in case of submitting login form
+     */
     closeMenu() {
         this.menuTrigger.closeMenu();
     }

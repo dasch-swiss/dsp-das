@@ -5,6 +5,7 @@ import { ApiResponseData, ApiResponseError, KnoraApiConnection, LoginResponse, L
 import { CacheService } from '../../cache/cache.service';
 import { DspApiConnectionToken } from '../../declarations/dsp-api-tokens';
 import { ErrorHandlerService } from '../../error/error-handler.service';
+import { AuthenticationService } from '../../services/authentication.service';
 import { ComponentCommunicationEventService, EmitEvent, Events } from '../../services/component-communication-event.service';
 import { DatadogRumService } from '../../services/datadog-rum.service';
 import { Session, SessionService } from '../../services/session.service';
@@ -39,7 +40,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
      */
     @Output() logoutSuccess: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    @ViewChild('username') usernameInput: ElementRef;
+    // @ViewChild('username') usernameInput: ElementRef;
 
     // is there already a valid session?
     session: Session;
@@ -95,6 +96,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _auth: AuthenticationService,
         private _componentCommsService: ComponentCommunicationEventService,
         private _datadogRumService: DatadogRumService,
         private _errorHandler: ErrorHandlerService,
@@ -123,7 +125,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         if (this.session) {
-            this.usernameInput.nativeElement.focus();
+            // this.usernameInput.nativeElement.focus();
         }
     }
 
@@ -155,15 +157,17 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
                     () => {
                         this.loginSuccess.emit(true);
                         this.session = this._session.getSession();
+
+                        this._componentCommsService.emit(new EmitEvent(Events.loginSuccess, true));
+                        this._datadogRumService.setActiveUser(identifier, identifierType);
+                        this.loading = false;
+
                         this.returnUrl = this._route.snapshot.queryParams['returnUrl'];
                         if (this.returnUrl) {
                             this._router.navigate([this.returnUrl]);
                         } else {
                             window.location.reload();
                         }
-                        this._componentCommsService.emit(new EmitEvent(Events.loginSuccess, true));
-                        this._datadogRumService.setActiveUser(identifier, identifierType);
-                        this.loading = false;
                     }
                 );
             },
@@ -188,7 +192,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
 
     logout() {
         // bring back the logout method and use it in the parent (somehow)
-        this._session.logout();
+        this._auth.logout();
     }
 
 

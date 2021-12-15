@@ -55,7 +55,7 @@ class TestUserMenuComponent {
     @Input() session?: boolean = true;
 }
 
-fdescribe('HeaderComponent', () => {
+describe('HeaderComponent', () => {
     let testHostComponent: TestHostHeaderComponent;
     let testHostFixture: ComponentFixture<TestHostHeaderComponent>;
     let hostCompDe;
@@ -125,14 +125,6 @@ fdescribe('HeaderComponent', () => {
 
         const helpBtnLabel = helpBtn.nativeElement.innerHTML;
         expect(helpBtnLabel).toEqual('Help');
-    });
-
-    it('should display the login button', () => {
-        const loginBtn = testHostFixture.debugElement.query(By.css('button.login-button'));
-        expect(loginBtn).toBeTruthy();
-
-        const loginBtnLabel = loginBtn.nativeElement.innerHTML;
-        expect(loginBtnLabel).toEqual('LOGIN');
     });
 
     it('should display search panel', () => {
