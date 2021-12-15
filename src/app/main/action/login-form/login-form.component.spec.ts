@@ -52,7 +52,7 @@ class TestHostComponent implements OnInit {
 
 }
 
-xdescribe('LoginFormComponent', () => {
+describe('LoginFormComponent', () => {
     let testHostComponent: TestHostComponent;
     let testHostFixture: ComponentFixture<TestHostComponent>;
 
@@ -104,9 +104,6 @@ xdescribe('LoginFormComponent', () => {
 
     }));
 
-    beforeAll(() => {
-        window.onbeforeunload = () => 'Oh no!';
-    });
 
     // mock localStorage
     beforeEach(() => {

@@ -136,7 +136,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
         dialogRef.afterClosed().subscribe(() => {
 
-            // do something
 
         });
     }

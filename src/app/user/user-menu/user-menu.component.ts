@@ -3,9 +3,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import {
     ApiResponseData,
     ApiResponseError,
-    KnoraApiConnection,
-    LogoutResponse,
-    ReadUser,
+    KnoraApiConnection, ReadUser,
     UserResponse
 } from '@dasch-swiss/dsp-js';
 import { AppGlobal } from 'src/app/app-global';
@@ -13,7 +11,6 @@ import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { AuthenticationService } from 'src/app/main/services/authentication.service';
-import { DatadogRumService } from 'src/app/main/services/datadog-rum.service';
 import { SessionService } from 'src/app/main/services/session.service';
 import { MenuItem } from '../../main/declarations/menu-item';
 

@@ -48,7 +48,7 @@ export class SessionService {
      * default value (24h): 86400000
      *
      */
-    readonly MAX_SESSION_TIME: number = 86400000; // 1d = 24 * 60 * 60 * 1000
+    readonly MAX_SESSION_TIME: number = 3600; // 1d = 24 * 60 * 60 * 1000
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection
