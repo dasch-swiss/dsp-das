@@ -156,12 +156,9 @@ export class SessionService {
                 // remove active datadog user
                 this._datadogRumService.removeActiveUser();
 
-                // this.loading = false;
-
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
-                // this.loading = false;
             }
         );
     }

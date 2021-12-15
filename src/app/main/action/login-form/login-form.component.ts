@@ -155,13 +155,13 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
                     () => {
                         this.loginSuccess.emit(true);
                         this.session = this._session.getSession();
-                        this._componentCommsService.emit(new EmitEvent(Events.loginSuccess, true));
                         this.returnUrl = this._route.snapshot.queryParams['returnUrl'];
                         if (this.returnUrl) {
                             this._router.navigate([this.returnUrl]);
                         } else {
                             window.location.reload();
                         }
+                        this._componentCommsService.emit(new EmitEvent(Events.loginSuccess, true));
                         this._datadogRumService.setActiveUser(identifier, identifierType);
                         this.loading = false;
                     }
