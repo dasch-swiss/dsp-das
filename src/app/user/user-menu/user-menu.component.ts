@@ -73,31 +73,7 @@ export class UserMenuComponent implements OnChanges {
     logout() {
         // this.loading = true;
 
-        this._dspApiConnection.v2.auth.logout().subscribe(
-            (response: ApiResponseData<LogoutResponse>) => {
-
-                // destroy session
-                this._session.destroySession();
-
-                // destroy cache
-                this._cache.destroy();
-
-                // reload the page
-                window.location.reload();
-
-                // remove active datadog user
-                this._datadogRumService.removeActiveUser();
-
-                // this.loading = false;
-
-
-
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-                // this.loading = false;
-            }
-        );
+        this._session.logout();
 
         // this._dspApiConnection.v2.auth.logout().subscribe(
         //     (response: ApiResponseData<LogoutResponse>) => {

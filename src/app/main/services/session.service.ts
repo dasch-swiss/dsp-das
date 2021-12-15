@@ -4,11 +4,14 @@ import {
     ApiResponseError,
     Constants,
     CredentialsResponse,
-    KnoraApiConnection, UserResponse
+    KnoraApiConnection, LogoutResponse, UserResponse
 } from '@dasch-swiss/dsp-js';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { CacheService } from '../cache/cache.service';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
+import { ErrorHandlerService } from '../error/error-handler.service';
+import { DatadogRumService } from './datadog-rum.service';
 
 /**
  * information about the current user
@@ -52,7 +55,10 @@ export class SessionService {
 
 
     constructor(
-        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _cache: CacheService,
+        private _datadogRumService: DatadogRumService,
+        private _errorHandler: ErrorHandlerService,
     ) { }
 
     /**
@@ -132,6 +138,35 @@ export class SessionService {
     }
 
     /**
+     * logout service
+     */
+    logout() {
+        this._dspApiConnection.v2.auth.logout().subscribe(
+            (response: ApiResponseData<LogoutResponse>) => {
+
+                // destroy session
+                this.destroySession();
+
+                // destroy cache
+                this._cache.destroy();
+
+                // reload the page
+                window.location.reload();
+
+                // remove active datadog user
+                this._datadogRumService.removeActiveUser();
+
+                // this.loading = false;
+
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+                // this.loading = false;
+            }
+        );
+    }
+
+    /**
      * returns a timestamp represented in seconds
      *
      */
@@ -165,7 +200,7 @@ export class SessionService {
             }
 
             // store session information in browser's localstorage
-            // tODO: jwt will be removed, when we have a better cookie solution (DSP-261)
+            // todo: jwt will be removed, when we have a better cookie solution (DSP-261)
             // --> no it can't be removed because the token is needed in sipi upload:
             // https://docs.dasch.swiss/DSP-API/03-apis/api-v2/editing-values/#upload-files-to-sipi
             session = {
@@ -183,7 +218,7 @@ export class SessionService {
             localStorage.setItem('session', JSON.stringify(session));
         } else {
             localStorage.removeItem('session');
-            console.error(response);
+            // console.error(response);
         }
     }
 

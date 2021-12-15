@@ -186,5 +186,10 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
         );
     }
 
+    logout() {
+        // bring back the logout method and use it in the parent (somehow)
+        this._session.logout();
+    }
+
 
 }
