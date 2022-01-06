@@ -39,7 +39,6 @@ import { FooterComponent } from './main/footer/footer.component';
 import { GridComponent } from './main/grid/grid.component';
 import { HeaderComponent } from './main/header/header.component';
 import { HelpComponent } from './main/help/help.component';
-import { LoginComponent } from './main/login/login.component';
 import { MainComponent } from './main/main.component';
 import { FormattedBooleanPipe } from './main/pipes/formatting/formatted-boolean.pipe';
 import { KnoraDatePipe } from './main/pipes/formatting/knoradate.pipe';
@@ -50,16 +49,7 @@ import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { SelectLanguageComponent } from './main/select-language/select-language.component';
 import { DatadogRumService } from './main/services/datadog-rum.service';
 import { MaterialModule } from './material-module';
-import { AddressTemplateComponent } from './project/board/address-template/address-template.component';
-import { AttributionTabViewComponent } from './project/board/attribution-tab-view/attribution-tab-view.component';
 import { BoardComponent } from './project/board/board.component';
-import { ContactsTabViewComponent } from './project/board/contacts-tab-view/contacts-tab-view.component';
-import { DatasetTabViewComponent } from './project/board/dataset-tab-view/dataset-tab-view.component';
-import { OrganisationTemplateComponent } from './project/board/organisation-template/organisation-template.component';
-import { PersonTemplateComponent } from './project/board/person-template/person-template.component';
-import { ProjectTabViewComponent } from './project/board/project-tab-view/project-tab-view.component';
-import { TermsTabViewComponent } from './project/board/terms-tab-view/terms-tab-view.component';
-import { UrlTemplateComponent } from './project/board/url-template/url-template.component';
 import { AddUserComponent } from './project/collaboration/add-user/add-user.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
 import { SelectGroupComponent } from './project/collaboration/select-group/select-group.component';
@@ -105,6 +95,7 @@ import { AddValueComponent } from './workspace/resource/operations/add-value/add
 import { DisplayEditComponent } from './workspace/resource/operations/display-edit/display-edit.component';
 import { PropertiesComponent } from './workspace/resource/properties/properties.component';
 import { AddRegionFormComponent } from './workspace/resource/representation/add-region-form/add-region-form.component';
+import { ArchiveComponent } from './workspace/resource/representation/archive/archive.component';
 import { AudioComponent } from './workspace/resource/representation/audio/audio.component';
 import { DocumentComponent } from './workspace/resource/representation/document/document.component';
 import { StillImageComponent } from './workspace/resource/representation/still-image/still-image.component';
@@ -166,7 +157,6 @@ import { SearchSelectOntologyComponent } from './workspace/search/advanced-searc
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
-import { ArchiveComponent } from './workspace/resource/representation/archive/archive.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -178,13 +168,12 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         AccountComponent,
         AddGroupComponent,
         AddRegionFormComponent,
-        AddressTemplateComponent,
         AddUserComponent,
         AddValueComponent,
         AdminImageDirective,
         AdvancedSearchComponent,
         AppComponent,
-        AttributionTabViewComponent,
+        ArchiveComponent,
         AudioComponent,
         BoardComponent,
         BooleanValueComponent,
@@ -196,10 +185,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         ComparisonComponent,
         ConfirmationDialogComponent,
         ConfirmationMessageComponent,
-        ContactsTabViewComponent,
         CookiePolicyComponent,
         DashboardComponent,
-        DatasetTabViewComponent,
         DateEditComponent,
         DateInputComponent,
         DateInputTextComponent,
@@ -242,7 +229,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         ListItemFormComponent,
         ListValueComponent,
         ListViewComponent,
-        LoginComponent,
         LoginFormComponent,
         MainComponent,
         MembershipComponent,
@@ -250,17 +236,14 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         OntologyComponent,
         OntologyFormComponent,
         OntologyVisualizerComponent,
-        OrganisationTemplateComponent,
         PasswordFormComponent,
         PermissionComponent,
-        PersonTemplateComponent,
         ProfileComponent,
         ProgressIndicatorComponent,
         ProjectComponent,
         ProjectFormComponent,
         ProjectsComponent,
         ProjectsListComponent,
-        ProjectTabViewComponent,
         PropertiesComponent,
         PropertyFormComponent,
         PropertyInfoComponent,
@@ -303,7 +286,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         SublistValueComponent,
         SwitchPropertiesComponent,
         SystemComponent,
-        TermsTabViewComponent,
         TextValueAsHtmlComponent,
         TextValueAsStringComponent,
         TextValueAsXMLComponent,
@@ -313,7 +295,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         TruncatePipe,
         UploadComponent,
         UriValueComponent,
-        UrlTemplateComponent,
         UserComponent,
         UserFormComponent,
         UserMenuComponent,
@@ -321,7 +302,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         UsersListComponent,
         VisualizerComponent,
         YetAnotherDateValueComponent,
-        ArchiveComponent,
     ],
     imports: [
         AngularSplitModule.forRoot(),

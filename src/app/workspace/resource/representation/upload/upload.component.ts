@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
     CreateArchiveFileValue,
     CreateAudioFileValue,
@@ -40,7 +41,7 @@ export class UploadComponent implements OnInit {
     form: FormGroup;
     fileControl: FormControl;
     isLoading = false;
-    thumbnailUrl: string;
+    thumbnailUrl: string | SafeUrl;
 
     allowedFileTypes: string[];
     // todo: maybe we can use this list to display which file format is allowed to
@@ -53,6 +54,7 @@ export class UploadComponent implements OnInit {
     constructor(
         private _fb: FormBuilder,
         private _notification: NotificationService,
+        private _sanitizer: DomSanitizer,
         private _upload: UploadFileService
     ) { }
 
@@ -96,7 +98,7 @@ export class UploadComponent implements OnInit {
                             case 'stillImage':
                                 const temporaryUrl = res.uploadedFiles[0].temporaryUrl;
                                 const thumbnailUri = '/full/256,/0/default.jpg';
-                                this.thumbnailUrl = `${temporaryUrl}${thumbnailUri}`;
+                                this.thumbnailUrl = this._sanitizer.bypassSecurityTrustUrl(temporaryUrl + thumbnailUri);
                                 break;
 
                             case 'document':
