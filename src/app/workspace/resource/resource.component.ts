@@ -218,8 +218,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                 const res = new DspResource(response);
                 this.resource = res;
 
-                console.log(this.resource);
-
                 if (response.isDeleted) {
                     // deleted resource; no further infos needed
 
@@ -267,10 +265,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                     // gather system property information
                     res.systemProps = this.resource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
                 }
-
-
-
-                console.log('where are you?')
 
                 this.loading = false;
             },
