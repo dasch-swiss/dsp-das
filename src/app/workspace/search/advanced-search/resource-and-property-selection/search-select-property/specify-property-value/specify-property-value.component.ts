@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component, Inject, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ContentChild, Inject, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
 import { Constants, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
@@ -118,7 +118,11 @@ export class SpecifyPropertyValueComponent implements OnChanges, OnDestroy {
         switch (this.propertyValueType) {
 
             case Constants.TextValue:
-                this.comparisonOperators = [new Like(), new Match(), new Equals(), new NotEquals(), new Exists()];
+                if (this._property.guiElement === Constants.SalsahGui + Constants.HashDelimiter + 'Richtext') {
+                    this.comparisonOperators = [new Like(), new Match(), new Exists()];
+                } else {
+                    this.comparisonOperators = [new Like(), new Match(), new Equals(), new NotEquals(), new Exists()];
+                }
                 break;
 
             case Constants.BooleanValue:
