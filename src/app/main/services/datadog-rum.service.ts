@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { datadogRum, RumFetchResourceEventDomainContext } from '@datadog/browser-rum';
 import { DspInstrumentationToken } from '../declarations/dsp-api-tokens';
 import { DspInstrumentationConfig } from '../declarations/dsp-instrumentation-config';
+import { Session, SessionService } from './session.service';
 
 const { version: appVersion } = require('../../../../package.json');
 
@@ -11,7 +12,8 @@ const { version: appVersion } = require('../../../../package.json');
 export class DatadogRumService {
 
     constructor(
-        @Inject(DspInstrumentationToken) private _dspInstrumentationConfig: DspInstrumentationConfig
+        @Inject(DspInstrumentationToken) private _dspInstrumentationConfig: DspInstrumentationConfig,
+        private _session: SessionService
     ) {
         if (this._dspInstrumentationConfig.dataDog.enabled) {
             datadogRum.init({
@@ -26,10 +28,19 @@ export class DatadogRumService {
                 beforeSend: (event, context) => {
                     // collect a RUM resource's response headers
                     if (event.type === 'resource' && event.resource.type === 'xhr') {
-                        event.context = { ...event.context, responseHeaders: (context as RumFetchResourceEventDomainContext).response.body };
+                        event.context = { ...event.context, responseHeaders: (context as RumFetchResourceEventDomainContext).response?.body };
                     }
                 },
             });
+
+            // if session is valid: setActiveUser
+            this._session.isSessionValid().subscribe((response: boolean) => {
+                if (response) {
+                    const session: Session = this._session.getSession();
+                    this.setActiveUser(session.user.name, 'username');
+                }
+            });
+
         }
     }
 

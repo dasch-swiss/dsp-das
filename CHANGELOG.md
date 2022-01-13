@@ -1,5 +1,126 @@
 # Changelog
 
+### [8.3.3](https://www.github.com/dasch-swiss/dsp-app/compare/v8.3.2...v8.3.3) (2022-01-04)
+
+
+### Bug Fixes
+
+* **resource:** bug fix in pdf viewer (DEV-338) ([#626](https://www.github.com/dasch-swiss/dsp-app/issues/626)) ([4b5d5d5](https://www.github.com/dasch-swiss/dsp-app/commit/4b5d5d5992cb5c3f9bd75a358f16f2aca2efefb3))
+
+### [8.3.2](https://www.github.com/dasch-swiss/dsp-app/compare/v8.3.1...v8.3.2) (2021-12-16)
+
+
+### Bug Fixes
+
+* **authentication:** set active datadog rum user (DEV-325) ([#624](https://www.github.com/dasch-swiss/dsp-app/issues/624)) ([69308e0](https://www.github.com/dasch-swiss/dsp-app/commit/69308e08010cceba80c40fe5a568b417f5326bb3))
+
+### [8.3.1](https://www.github.com/dasch-swiss/dsp-app/compare/v8.3.0...v8.3.1) (2021-12-15)
+
+
+### Bug Fixes
+
+* **upload:** fix thumbnail preview (DEV-268) ([#619](https://www.github.com/dasch-swiss/dsp-app/issues/619)) ([7cb8505](https://www.github.com/dasch-swiss/dsp-app/commit/7cb8505dd6886c22996bf6d2121e5eedae51f980))
+
+
+### Maintenance
+
+* **authentication:** new login / logout structure (DEV-325) ([#622](https://www.github.com/dasch-swiss/dsp-app/issues/622)) ([e8bec98](https://www.github.com/dasch-swiss/dsp-app/commit/e8bec983f1681a0d107106682114ac01b32a7301))
+* **fonts:** delete fonts and icons (DEV-327) ([#623](https://www.github.com/dasch-swiss/dsp-app/issues/623)) ([08e088b](https://www.github.com/dasch-swiss/dsp-app/commit/08e088b77a99904e3b5fae08f0a28bf64274246b))
+* **google fonts:** switch to using fonts hosted by google ([#620](https://www.github.com/dasch-swiss/dsp-app/issues/620)) ([daa4167](https://www.github.com/dasch-swiss/dsp-app/commit/daa41672e9019f6dd19db2a10c20cdadb803898f))
+
+## [8.3.0](https://www.github.com/dasch-swiss/dsp-app/compare/v8.2.0...v8.3.0) (2021-12-09)
+
+
+### Bug Fixes
+
+* **resource:** update lastModificationDate after editing label (DEV-315) ([#616](https://www.github.com/dasch-swiss/dsp-app/issues/616)) ([3b9d93b](https://www.github.com/dasch-swiss/dsp-app/commit/3b9d93be2596e407f825ccf4b1a3b19bdcb4cedd))
+
+
+### Enhancements
+
+* **still-image:** display iiif url under the image caption (DEV-243) ([#613](https://www.github.com/dasch-swiss/dsp-app/issues/613)) ([109978f](https://www.github.com/dasch-swiss/dsp-app/commit/109978f779536bd10013d66169bdb57f20af3e04))
+
+
+### Maintenance
+
+* **metadata:** remove "old" implementation of the project metadata (DEV-282) ([#615](https://www.github.com/dasch-swiss/dsp-app/issues/615)) ([29acf3a](https://www.github.com/dasch-swiss/dsp-app/commit/29acf3a34aa1a17df0d35fa4f46bbb55baeef92f))
+
+### [8.2.0](https://www.github.com/dasch-swiss/dsp-app/compare/v8.1.2...v8.2.0) (2021-12-08)
+
+### Bug Fixes
+
+* **ontology:** bug fix in ontology form (DEV-280) ([#603](https://www.github.com/dasch-swiss/dsp-app/issues/603)) ([4c1bc24](https://www.github.com/dasch-swiss/dsp-app/commit/4c1bc248d5020ea62b57dbac5a83294481275442))
+* **resource:** create resource iri from route only in certain cases (DEV-306) ([#605](https://www.github.com/dasch-swiss/dsp-app/issues/605)) ([a38abd0](https://www.github.com/dasch-swiss/dsp-app/commit/a38abd01f24ef98518042d6d8136f21ad0bc5368))
+* **value:** fix linkify pipe (DEV-270) ([#602](https://www.github.com/dasch-swiss/dsp-app/issues/602)) ([f2c8d7a](https://www.github.com/dasch-swiss/dsp-app/commit/f2c8d7a57811c8eb7b1989a534d6e27f2955f984))
+
+
+### Enhancements
+
+* **representation:** add support for uploading and viewing archive files (DEV-18) ([#600](https://www.github.com/dasch-swiss/dsp-app/issues/600)) ([9bb63d7](https://www.github.com/dasch-swiss/dsp-app/commit/9bb63d71234fc49f2afcb959603b8bcd4deb4429))
+
+
+### Maintenance
+
+* **deps:** update outdated angular packages ([#604](https://www.github.com/dasch-swiss/dsp-app/issues/604)) ([80b3f93](https://www.github.com/dasch-swiss/dsp-app/commit/80b3f934c5c04e8c4ba284e6a173d265e3fd9e0d))
+* **deps:** use correct nginx-server (DEV-263) ([#610](https://www.github.com/dasch-swiss/dsp-app/issues/610)) ([ccae958](https://www.github.com/dasch-swiss/dsp-app/commit/ccae9587ac7bf1eb46cb6f34b99568feab78d256))
+* **angular:** fix budget in prod mode ([#606](https://www.github.com/dasch-swiss/dsp-app/issues/606)) ([5072948](https://www.github.com/dasch-swiss/dsp-app/commit/507294887a7dd8868cbecfd20ad0509fb80bd674))
+
+
+### [8.1.2](https://www.github.com/dasch-swiss/dsp-app/compare/v8.1.1...v8.1.2) (2021-12-01)
+
+
+### Maintenance
+
+* **lists:** adds changes required for lists to work due to the change in js-lib ([#599](https://www.github.com/dasch-swiss/dsp-app/issues/599)) ([ca83584](https://www.github.com/dasch-swiss/dsp-app/commit/ca8358451624c8b8af4a3a58051b3f60140378eb))
+* **projects:** don't use the cache when refreshing the projects list. Also renames some labels and methods to clarify that these things are for deactivating a project as opposed to deleting a project. ([#597](https://www.github.com/dasch-swiss/dsp-app/issues/597)) ([faebe3e](https://www.github.com/dasch-swiss/dsp-app/commit/faebe3e20953d6c2afc12cff9bf94a670db50ced))
+
+### [8.1.1](https://www.github.com/dasch-swiss/dsp-app/compare/v8.1.0...v8.1.1) (2021-11-19)
+
+
+### Bug Fixes
+
+* **results:** display xml a better way (DEV-96) ([#593](https://www.github.com/dasch-swiss/dsp-app/issues/593)) ([d968f2f](https://www.github.com/dasch-swiss/dsp-app/commit/d968f2faca57f579efdbcb014797ad411b1b0067))
+* **value:** bug fix in text-value-as-string (DEV-242) ([#595](https://www.github.com/dasch-swiss/dsp-app/issues/595)) ([0fb95ee](https://www.github.com/dasch-swiss/dsp-app/commit/0fb95ee82bd634ebd904af70330a919b449275d5))
+
+## [8.1.0](https://www.github.com/dasch-swiss/dsp-app/compare/v8.0.0...v8.1.0) (2021-11-18)
+
+
+### Bug Fixes
+
+* **fulltext-search:** updates the projects list when a new project is created (DEV-212) ([#586](https://www.github.com/dasch-swiss/dsp-app/issues/586)) ([43fcbfa](https://www.github.com/dasch-swiss/dsp-app/commit/43fcbfa55efdfd85746d00eec5e1793d0c0c20f7))
+* **ontology:** resolve gui order issue (DEV-222) ([#590](https://www.github.com/dasch-swiss/dsp-app/issues/590)) ([4ddbf7c](https://www.github.com/dasch-swiss/dsp-app/commit/4ddbf7c2fe84260ba58017aabec069dd9e6f7943))
+* **ontology:** send modified label (DEV-221) ([#589](https://www.github.com/dasch-swiss/dsp-app/issues/589)) ([9d7ffea](https://www.github.com/dasch-swiss/dsp-app/commit/9d7ffea6c50ea1d26d6ff77112c0cc507175159f))
+* **text-value:** resource-instance-form and display-edit components now correctly display a paragraph text with line breaks (DEV-211) ([#584](https://www.github.com/dasch-swiss/dsp-app/issues/584)) ([be9d6f4](https://www.github.com/dasch-swiss/dsp-app/commit/be9d6f4ea76cfc90852237ff916bac8b4a7e99d3))
+
+
+### Maintenance
+
+* **deps:** update angular to v12 ([#588](https://www.github.com/dasch-swiss/dsp-app/issues/588)) ([37e65a8](https://www.github.com/dasch-swiss/dsp-app/commit/37e65a8d087223c7bc7e3302eaf828061f69ef45))
+
+
+### Enhancements
+
+* **properties:** ckEditor Internal Links (DEV-118) ([#591](https://www.github.com/dasch-swiss/dsp-app/issues/591)) ([cac988b](https://www.github.com/dasch-swiss/dsp-app/commit/cac988b2ddfe87e8ce7d3b64956cdc153302c483))
+* update UI on region color change (DEV-215) ([#583](https://www.github.com/dasch-swiss/dsp-app/issues/583)) ([b497d0e](https://www.github.com/dasch-swiss/dsp-app/commit/b497d0ead475d520ff3d02e620128cac4947694b))
+
+## [8.0.0](https://www.github.com/dasch-swiss/dsp-app/compare/v7.0.1...v8.0.0) (2021-11-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* **resource:** new resource route (DEV-196) (#581)
+
+### Maintenance
+
+* small code improvements ([#579](https://www.github.com/dasch-swiss/dsp-app/issues/579)) ([d19e353](https://www.github.com/dasch-swiss/dsp-app/commit/d19e353bd070b07d069ef5d1347c64592d029be6))
+
+
+### Enhancements
+
+* **resource:** add additional routing for an ark url of a value (DEV-196) ([#575](https://www.github.com/dasch-swiss/dsp-app/issues/575)) ([c1b0b94](https://www.github.com/dasch-swiss/dsp-app/commit/c1b0b94972760c3552c1ebcef8f2a8bffd7431b5))
+* **resource:** new resource route (DEV-196) ([#581](https://www.github.com/dasch-swiss/dsp-app/issues/581)) ([3fbd94c](https://www.github.com/dasch-swiss/dsp-app/commit/3fbd94cdfd62e78ee7b6e7a718663e12d222f897))
+* **still-image:** uses the color of the color property for the line color if a color property for the region exists ([#580](https://www.github.com/dasch-swiss/dsp-app/issues/580)) ([7680353](https://www.github.com/dasch-swiss/dsp-app/commit/768035399438c3857c2b08ec547483850700bd45))
+
 ### [7.0.1](https://www.github.com/dasch-swiss/dsp-app/compare/v7.0.0...v7.0.1) (2021-11-05)
 
 

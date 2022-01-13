@@ -1,10 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
+    CreateArchiveFileValue,
     CreateAudioFileValue,
     CreateDocumentFileValue,
     CreateFileValue,
     CreateStillImageFileValue,
+    UpdateArchiveFileValue,
     UpdateAudioFileValue,
     UpdateDocumentFileValue,
     UpdateFileValue,
@@ -26,8 +29,7 @@ export class UploadComponent implements OnInit {
 
     @Input() parentForm?: FormGroup;
 
-    @Input() representation: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text';
-    // only StillImageRepresentation and DocumentPresentation is supported so far
+    @Input() representation: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
 
     @Input() formName: string;
 
@@ -37,21 +39,19 @@ export class UploadComponent implements OnInit {
     form: FormGroup;
     fileControl: FormControl;
     isLoading = false;
-    thumbnailUrl: string;
+    thumbnailUrl: string | SafeUrl;
 
     allowedFileTypes: string[];
     // todo: maybe we can use this list to display which file format is allowed to
     supportedImageTypes = ['image/jpeg', 'image/jp2', 'image/tiff', 'image/tiff-fx', 'image/png'];
     supportedDocumentTypes = ['application/pdf'];
     supportedAudioTypes = ['audio/mpeg'];
+    supportedArchiveTypes = ['application/zip', 'application/x-tar', 'application/gzip'];
 
-    // readonly fromLabels = {
-    //     upload: 'Upload file',
-    //     drag_drop: 'Drag and drop or click to upload'
-    // };
     constructor(
         private _fb: FormBuilder,
         private _notification: NotificationService,
+        private _sanitizer: DomSanitizer,
         private _upload: UploadFileService
     ) { }
 
@@ -95,7 +95,7 @@ export class UploadComponent implements OnInit {
                             case 'stillImage':
                                 const temporaryUrl = res.uploadedFiles[0].temporaryUrl;
                                 const thumbnailUri = '/full/256,/0/default.jpg';
-                                this.thumbnailUrl = `${temporaryUrl}${thumbnailUri}`;
+                                this.thumbnailUrl = this._sanitizer.bypassSecurityTrustUrl(temporaryUrl + thumbnailUri);
                                 break;
 
                             case 'document':
@@ -209,7 +209,7 @@ export class UploadComponent implements OnInit {
 
         const filename = this.fileControl.value.internalFilename;
 
-        let fileValue: CreateStillImageFileValue | CreateDocumentFileValue;
+        let fileValue: CreateStillImageFileValue | CreateDocumentFileValue | CreateAudioFileValue | CreateArchiveFileValue;
 
         switch (this.representation) {
             case 'stillImage':
@@ -222,6 +222,10 @@ export class UploadComponent implements OnInit {
 
             case 'audio':
                 fileValue = new CreateAudioFileValue();
+                break;
+
+            case 'archive':
+                fileValue = new CreateArchiveFileValue();
                 break;
 
             default:
@@ -248,7 +252,7 @@ export class UploadComponent implements OnInit {
 
         const filename = this.fileControl.value.internalFilename;
 
-        let fileValue: UpdateStillImageFileValue | UpdateDocumentFileValue | UpdateAudioFileValue;
+        let fileValue: UpdateStillImageFileValue | UpdateDocumentFileValue | UpdateAudioFileValue | UpdateArchiveFileValue;
 
 
         switch (this.representation) {
@@ -262,6 +266,10 @@ export class UploadComponent implements OnInit {
 
             case 'audio':
                 fileValue = new UpdateAudioFileValue();
+                break;
+
+            case 'archive':
+                fileValue = new UpdateArchiveFileValue();
                 break;
 
             default:
@@ -301,6 +309,10 @@ export class UploadComponent implements OnInit {
 
             case 'audio':
                 this.allowedFileTypes = this.supportedAudioTypes;
+                break;
+
+            case 'archive':
+                this.allowedFileTypes = this.supportedArchiveTypes;
                 break;
 
             default:

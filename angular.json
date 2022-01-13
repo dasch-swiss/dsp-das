@@ -37,16 +37,19 @@
                         ],
                         "assets": [
                             "src/favicon.ico",
-                            "src/assets",
-                            "src/config"
+                            "src/config",
+                            {
+                              "glob": "**/*",
+                              "input": "src/assets/",
+                              "ignore": ["**/*.scss"],
+                              "output": "/assets/"
+                            }
                         ],
                         "styles": [
                             "src/styles.scss"
                         ],
                         "scripts": [
-                            "node_modules/openseadragon/build/openseadragon/openseadragon.min.js",
-                            "node_modules/3d-force-graph/dist/3d-force-graph.min.js",
-                            "node_modules/d3-force-3d/dist/d3-force-3d.js"
+                            "node_modules/openseadragon/build/openseadragon/openseadragon.min.js"
                         ]
                     },
                     "configurations": {
@@ -73,7 +76,7 @@
                                 },
                                 {
                                     "type": "anyComponentStyle",
-                                    "maximumWarning": "6kb"
+                                    "maximumWarning": "9kb"
                                 }
                             ]
                         },
@@ -140,8 +143,13 @@
                         ],
                         "assets": [
                             "src/favicon.ico",
-                            "src/assets",
-                            "src/config"
+                            "src/config",
+                            {
+                              "glob": "**/*",
+                              "input": "src/assets/",
+                              "ignore": ["**/*.scss"],
+                              "output": "/assets/"
+                            }
                         ]
                     }
                 },

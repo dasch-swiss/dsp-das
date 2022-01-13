@@ -194,16 +194,18 @@ export class OntologyFormComponent implements OnInit {
         });
 
         this.ontologyForm.valueChanges.subscribe(data => this.onValueChanged(data));
+
+        if (!this.iri) {
+            this.ontologyForm.get('name').valueChanges.subscribe(val => {
+                this.ontologyForm.controls.label.setValue(this.capitalizeFirstLetter(val));
+            });
+        }
     }
 
     onValueChanged(data?: any) {
 
         if (!this.ontologyForm) {
             return;
-        }
-
-        if (!this.iri) {
-            this.ontologyLabel = this.capitalizeFirstLetter(data.name);
         }
 
         Object.keys(this.formErrors).map(field => {
@@ -250,7 +252,7 @@ export class OntologyFormComponent implements OnInit {
             // create mode
 
             const ontologyData = new CreateOntology();
-            ontologyData.label = this.project.shortname + ': ' + (this.ontologyLabel ? this.ontologyLabel : this.ontologyForm.controls['name'].value);
+            ontologyData.label = this.project.shortname + ': ' + this.ontologyForm.controls['label'].value;
             ontologyData.name = this.ontologyForm.controls['name'].value;
             ontologyData.comment = this.ontologyForm.controls['comment'].value;
             ontologyData.attachedToProject = this.project.id;

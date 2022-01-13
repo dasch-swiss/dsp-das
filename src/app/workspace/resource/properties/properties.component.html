@@ -27,9 +27,14 @@
         </button>
         <mat-menu #share="matMenu" class="res-share-menu">
             <button mat-menu-item matTooltip="Copy ARK url" matTooltipPosition="above"
-                [cdkCopyToClipboard]="resource.res.versionArkUrl" (click)="openSnackBar()">
+                [cdkCopyToClipboard]="resource.res.versionArkUrl" (click)="openSnackBar('ARK URL copied to clipboard!')">
                 <mat-icon>content_copy</mat-icon>
                 Copy ARK url to clipboard
+            </button>
+            <button mat-menu-item matTooltip="Copy internal link" matTooltipPosition="above"
+                [cdkCopyToClipboard]="resource.res.id" (click)="openSnackBar('Internal link copied to clipboard!')">
+                <mat-icon>content_copy</mat-icon>
+                Copy internal link to clipboard
             </button>
             <button mat-menu-item matTooltip="Open in new tab" matTooltipPosition="above"
                 (click)="openResource(resource.res.id)">
@@ -68,18 +73,18 @@
 
 <!-- additional line with project and user information -->
 <div class="infobar mat-caption" *ngIf="project && user">
-    <p *ngIf="displayProjectInfo">This resource belongs to the project
+    <span *ngIf="displayProjectInfo">This resource belongs to the project
         <span class="project link" (click)="openProject(project)" (mouseover)="previewProject(project)">
             <strong>{{project?.shortname}}</strong>
             <mat-icon inline>open_in_new</mat-icon>
         </span>
-    </p>
-    <span class="fill-remaining-space"></span>
-    <p *ngIf="user || resource.res.creationDate">
+    </span>
+    <span class="fill-remaining-space desktop-only"></span>
+    <span *ngIf="user || resource.res.creationDate">
         Created
         <span *ngIf="user">by {{(user.username ? user.username : user.givenName + ' ' + user.familyName)}}</span>
         <span *ngIf="resource.res.creationDate"> on {{resource.res.creationDate | date}}</span>
-    </p>
+    </span>
 </div>
 
 <!-- list of properties -->
@@ -96,6 +101,7 @@
                 prop.propDef.objectType !== representationConstants.audio &&
                 prop.propDef.objectType !== representationConstants.document &&
                 prop.propDef.objectType !== representationConstants.text &&
+                prop.propDef.objectType !== representationConstants.archive &&
                 !(isAnnotation && (
                     prop.propDef.subjectType === representationConstants.region &&
                     prop.propDef.objectType !== representationConstants.color

@@ -1,41 +1,13 @@
-@import "font";
-@import "theme";
-@import "layout";
-@import "elements";
-@import "search";
-@import "viewer";
-@import "ontology";
+@import "./theme";
+@import "./layout";
+@import "./elements";
+@import "./search";
+@import "./viewer";
+@import "./ontology";
 
 body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   margin: 0;
-  //  overflow: hidden;
-}
-
-// material icons
-.material-icons {
-  font-family: "Material Icons";
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px; /* Preferred icon size */
-  display: inline-block;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
-
-  /* Support for all WebKit browsers. */
-  -webkit-font-smoothing: antialiased;
-  /* Support for Safari and Chrome. */
-  text-rendering: optimizeLegibility;
-
-  /* Support for Firefox. */
-  -moz-osx-font-smoothing: grayscale;
-
-  /* Support for IE. */
-  font-feature-settings: "liga";
 }
 
 // The following styles will override material design!
@@ -184,4 +156,12 @@ button.space-reducer {
 // ckEditor
 .ck-editor__editable_inline {
   min-height: 256px;
+}
+
+// mat-menu with form element
+.form-menu {
+  &.mat-menu-panel {
+    min-width: 320px !important;
+    max-width: 320px !important;
+  }
 }
