@@ -487,7 +487,7 @@ export class PropertyFormComponent implements OnInit {
 
             if (this.propertyInfo.propType.subPropOf === Constants.HasLinkTo || this.propertyInfo.propType.subPropOf === Constants.KnoraApiV2 + Constants.HashDelimiter + 'isPartOf') {
                 newResProp.objectType = guiAttr;
-                newResProp.subjectType = 'http://0.0.0.0:3333/ontology/1111/notizblogg/v2#bild';
+                newResProp.subjectType = this.resClassIri;
             } else {
                 newResProp.objectType = this.propertyInfo.propType.objectType;
             }

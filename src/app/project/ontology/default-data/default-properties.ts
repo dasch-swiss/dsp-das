@@ -139,7 +139,7 @@ export class DefaultProperties {
             group: 'Number',
             elements: [
                 {
-                    icon: 'money',
+                    icon: '60fps',
                     label: 'Integer',
                     description: 'Integer value',
                     subPropOf: Constants.HasValue,
@@ -153,6 +153,15 @@ export class DefaultProperties {
                     description: 'Decimal value',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.DecimalValue,
+                    guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Spinbox',  // 'Number',
+                    group: 'Number'
+                },
+                {
+                    icon: 'filter_3',
+                    label: 'Page number',
+                    description: 'The page number is needed for page classes in case of part of properties',
+                    subPropOf: Constants.KnoraApiV2 + Constants.HashDelimiter + 'seqnum',
+                    objectType: Constants.IntValue,
                     guiEle: Constants.SalsahGui + Constants.HashDelimiter + 'Spinbox',  // 'Number',
                     group: 'Number'
                 }
