@@ -123,7 +123,7 @@ You can choose from a selection of the following basic types with various subtyp
 Since in our example you want to add a property for the number of pages of your book, you choose `Number`. Now you will see that you can either choose the type `Decimal`, `Integer` or `Page number` for your property. 
 ![Property types.](../assets/images/Fig14.png)
 
-Page numbers have no decimal places, thus you will selecet `Integer` (or `Page number` which is a special case (s. [next section](#correct-property-selection-in-case-of-special-classes))) as type for your property. The following window pops up:
+Page numbers have no decimal places, thus you will selecet `Integer` (or `Page number` which is a special case (s. [next section](#correct-property-selection-in-case-of-special-classes))) as the type for your property. The following window pops up:
 ![Property of integer type.](../assets/images/Fig15.png)
 
 In the field *Property label* add for example *Number of pages*, in the comment section you should add a meaningful explanation. It might also make sense to toggle `Required field?` since every PDF Document consists of a number of pages. If you toggle it, the number of pages MUST be given if you add data to the class *Book* - it would then be a required field, not an optional one and data could only be saved if you add the number of pages.
@@ -136,9 +136,9 @@ Now you should see the new property in the box as seen below:
 
 ### Correct property selection in case of special classes
 
-#### Book class with pages as own classes
+#### Book class with pages as individual classes
 
-If you have in your project single digitized pages of a book, they can be defined as an own class of type *Still image*. In this case the — let's call it *Page* — class needs two specific properties to work the correct way. One is the `part of`-property which can be found in the list of properties in the section "Link / Relation". This property points the main class called *Book* (which should be defined first and is type of *Object without representation*). The second property is for the `page number` definition and is also necessary. This default property can be dound in the list of properties in the section "Number".
+If you have single digitized pages of a book in your project, they can be defined as its own individual *Still image* class type. In this case the — let's call it *Page* — class needs two specific properties to work the correct way. One is the `part of`-property which can be found in the list of properties in the section "Link / Relation". This property points to the main class called *Book* (which should be defined first and is type of *Object without representation*). The second property is for the `page number` definition and is also necessary. This default property can be found in the list of properties in the section called "Number".
 
 This is how a book and the page class could look like:
 ![Page class as part of Book class](../assets/images/Fig42.png)
