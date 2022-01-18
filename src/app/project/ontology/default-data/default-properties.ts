@@ -180,7 +180,7 @@ export class DefaultProperties {
                     group: 'Link / Relation'
                 },
                 {
-                    icon: 'collections',
+                    icon: 'extension',
                     label: 'Part of class',
                     description: 'Is part of a resource class',
                     subPropOf: Constants.KnoraApiV2 + Constants.HashDelimiter + 'isPartOf',
