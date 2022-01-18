@@ -18,6 +18,7 @@
             },
             "architect": {
                 "build": {
+                    "defaultConfiguration": "development",
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
                         "aot": true,
@@ -49,12 +50,20 @@
                             "src/styles.scss"
                         ],
                         "scripts": [
-                            "node_modules/openseadragon/build/openseadragon/openseadragon.min.js",
-                            "node_modules/3d-force-graph/dist/3d-force-graph.min.js",
-                            "node_modules/d3-force-3d/dist/d3-force-3d.js"
+                            "node_modules/openseadragon/build/openseadragon/openseadragon.min.js"
                         ]
                     },
                     "configurations": {
+                        "development": {
+                            "optimization": false,
+                            "sourceMap": false,
+                            "namedChunks": true,
+                            "aot": true,
+                            "extractLicenses": false,
+                            "vendorChunk": true,
+                            "buildOptimizer": false,
+                            "budgets": []
+                        },
                         "production": {
                             "fileReplacements": [
                                 {
@@ -91,22 +100,12 @@
                             ],
                             "optimization": false,
                             "sourceMap": true,
-                            "namedChunks": false,
+                            "namedChunks": true,
                             "aot": true,
                             "extractLicenses": false,
                             "vendorChunk": false,
                             "buildOptimizer": false,
-                            "budgets": [
-                                {
-                                    "type": "initial",
-                                    "maximumWarning": "8mb",
-                                    "maximumError": "8mb"
-                                },
-                                {
-                                    "type": "anyComponentStyle",
-                                    "maximumWarning": "6kb"
-                                }
-                            ]
+                            "budgets": []
                         }
                     }
                 },
@@ -116,6 +115,9 @@
                         "browserTarget": "dsp-app:build"
                     },
                     "configurations": {
+                        "development": {
+                          "browserTarget": "dsp-app:build:development"
+                        },
                         "production": {
                             "browserTarget": "dsp-app:build:production"
                         },
