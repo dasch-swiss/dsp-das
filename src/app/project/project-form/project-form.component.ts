@@ -262,8 +262,9 @@ export class ProjectFormComponent implements OnInit {
         });
 
         if (!this.projectCode) {
+            // if projectCode does not exist, we are in create mode;
+            // in this case, the keywords are required in the API request
             this.form.controls['keywords'].setValidators(Validators.required);
-            // setValue(this.keywords);
         }
 
         this.form.valueChanges
