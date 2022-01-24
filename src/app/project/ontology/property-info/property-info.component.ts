@@ -168,14 +168,18 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
         // find gui ele from list of default property-types to set type value
         if (this.propDef.guiElement) {
             for (const group of this.defaultProperties) {
-                if (this.propDef.subPropertyOf[0] !== Constants.HasLinkTo) {
-                    this.propType = group.elements.find(i =>
-                        i.guiEle === this.propDef.guiElement && i.objectType === this.propDef.objectType
-                    );
-                } else {
-                    this.propType = group.elements.find(i =>
-                        i.guiEle === this.propDef.guiElement && i.subPropOf === this.propDef.subPropertyOf[0]
-                    );
+                if (this.propDef.subPropertyOf.length) {
+                    for (const subProp of this.propDef.subPropertyOf) {
+                        if (subProp !== Constants.HasLinkTo) {
+                            this.propType = group.elements.find(i =>
+                                i.guiEle === this.propDef.guiElement && i.objectType === this.propDef.objectType
+                            );
+                        } else {
+                            this.propType = group.elements.find(i =>
+                                i.guiEle === this.propDef.guiElement && i.subPropOf === subProp
+                            );
+                        }
+                    }
                 }
 
                 if (this.propType) {
@@ -187,6 +191,12 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
     }
 
     ngAfterContentInit() {
+
+        console.log('def', this.propDef);
+        // console.log('info', this.propInfo);
+        // console.log('type', this.propType);
+        console.log('-- -- -- -- -- -- -- -- -- -- -- --');
+
 
         if (this.propDef.isLinkProperty) {
             // this property is a link property to another resource class
