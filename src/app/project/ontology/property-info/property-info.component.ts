@@ -192,12 +192,6 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
 
     ngAfterContentInit() {
 
-        console.log('def', this.propDef);
-        // console.log('info', this.propInfo);
-        // console.log('type', this.propType);
-        console.log('-- -- -- -- -- -- -- -- -- -- -- --');
-
-
         if (this.propDef.isLinkProperty) {
             // this property is a link property to another resource class
             // get current ontology to get linked res class information
