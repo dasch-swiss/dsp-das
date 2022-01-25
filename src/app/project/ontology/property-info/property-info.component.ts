@@ -170,7 +170,7 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
             for (const group of this.defaultProperties) {
                 if (this.propDef.subPropertyOf.length) {
                     for (const subProp of this.propDef.subPropertyOf) {
-                        if (subProp !== Constants.HasLinkTo) {
+                        if (subProp !== Constants.HasLinkTo && subProp !== Constants.KnoraApiV2 + Constants.HashDelimiter + 'isPartOf') {
                             this.propType = group.elements.find(i =>
                                 i.guiEle === this.propDef.guiElement && i.objectType === this.propDef.objectType
                             );
