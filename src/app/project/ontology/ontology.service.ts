@@ -1,13 +1,11 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
     Cardinality,
-    Constants,
-    KnoraApiConnection, ReadOntology,
+    Constants, ReadOntology,
     ResourcePropertyDefinitionWithAllLanguages
 } from '@dasch-swiss/dsp-js';
 import { Observable, of } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import {
     DefaultProperties,
     DefaultProperty,
