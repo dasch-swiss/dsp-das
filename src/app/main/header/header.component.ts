@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.dspRelease = this._appInitService.dspRelease;
+        this.dspRelease = this._appInitService.dspConfig.release;
     }
 
     ngOnInit() {

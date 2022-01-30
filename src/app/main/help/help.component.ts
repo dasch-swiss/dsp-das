@@ -97,7 +97,7 @@ export class HelpComponent implements OnInit {
 
     ngOnInit() {
 
-        this.dspRelease = this._appInitService.dspRelease;
+        this.dspRelease = this._appInitService.dspConfig.release;
 
         this._dspApiConnection.system.versionEndpoint.getVersion().subscribe(
             (response: ApiResponseData<VersionResponse>) => {
