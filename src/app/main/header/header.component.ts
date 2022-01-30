@@ -4,13 +4,14 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AppInitService } from 'src/app/app-init.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ComponentCommunicationEventService, Events } from 'src/app/main/services/component-communication-event.service';
 import { SearchParams } from 'src/app/workspace/results/list-view/list-view.component';
 import { NotificationService } from '../services/notification.service';
 import { SessionService } from '../services/session.service';
 
-const { version: appVersion } = require('../../../../package.json');
+// const { version: appVersion } = require('../../../../package.json');
 
 @Component({
     selector: 'app-header',
@@ -23,11 +24,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     show = false;
     searchParams: SearchParams;
 
-    appVersion: string = 'v' + appVersion;
+    dspRelease: string;
 
     componentCommsSubscription: Subscription;
 
     constructor(
+        private _appInitService: AppInitService,
         private _componentCommsService: ComponentCommunicationEventService,
         private _dialog: MatDialog,
         private _domSanitizer: DomSanitizer,
@@ -51,6 +53,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 });
             }
         });
+
+        this.dspRelease = this._appInitService.dspRelease;
     }
 
     ngOnInit() {

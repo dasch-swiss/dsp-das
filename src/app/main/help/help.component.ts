@@ -1,11 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ApiResponseData, ApiResponseError, HealthResponse, KnoraApiConnection, VersionResponse } from '@dasch-swiss/dsp-js';
+import { AppInitService } from 'src/app/app-init.service';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
 import { ErrorHandlerService } from '../error/error-handler.service';
 import { GridItem } from '../grid/grid.component';
 
 declare let require: any;
-const { version: appVersion, name: appName } = require('../../../../package.json');
+const { version: appVersion } = require('../../../../package.json');
 
 @Component({
     selector: 'app-help',
@@ -16,9 +17,11 @@ export class HelpComponent implements OnInit {
 
     loading = true;
 
+    dspRelease: string;
+
     appVersion: string = appVersion;
     apiStatus: HealthResponse;
-    dspVersion: VersionResponse;
+    apiVersion: VersionResponse;
 
     docs: GridItem[] = [
         {
@@ -74,7 +77,7 @@ export class HelpComponent implements OnInit {
         },
         {
             title: 'DaSCH Infrastructure',
-            text: 'Wondering what the Data and Service Center for the Humanities DaSCH exactly is? Get more information on our Website:',
+            text: 'Wondering what the Swiss National Data and Service Center for the Humanities DaSCH exactly is? Get more information on our Website:',
             url: 'https://dasch.swiss',
             urlText: 'dasch.swiss'
         },
@@ -88,26 +91,29 @@ export class HelpComponent implements OnInit {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _appInitService: AppInitService,
         private _errorHandler: ErrorHandlerService) {
     }
 
     ngOnInit() {
 
+        this.dspRelease = this._appInitService.dspRelease;
+
         this._dspApiConnection.system.versionEndpoint.getVersion().subscribe(
             (response: ApiResponseData<VersionResponse>) => {
-                this.dspVersion = response.body;
+                this.apiVersion = response.body;
 
                 // set dsp-app version
                 this.tools[0].title += ' v' + this.appVersion;
                 this.tools[0].url += this.appVersion;
 
                 // set dsp-api version
-                this.tools[1].title += this.dspVersion.webapi;
-                this.tools[1].url += this.dspVersion.webapi;
+                this.tools[1].title += this.apiVersion.webapi;
+                this.tools[1].url += this.apiVersion.webapi;
 
                 // set dsp-sipi version
-                this.tools[2].title += ' v' + this.dspVersion.sipi;
-                this.tools[2].url += this.dspVersion.sipi;
+                this.tools[2].title += ' v' + this.apiVersion.sipi;
+                this.tools[2].url += this.apiVersion.sipi;
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
