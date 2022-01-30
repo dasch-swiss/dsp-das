@@ -11,6 +11,12 @@ import { APP_CONFIG } from './main/declarations/dsp-api-tokens';
 })
 export class AppInitService {
 
+    private _dspRelease: string;
+
+    get dspRelease(): string {
+        return this._dspRelease;
+    }
+
     private _dspApiConfig: KnoraApiConfig;
 
     get dspApiConfig(): KnoraApiConfig {
@@ -42,6 +48,8 @@ export class AppInitService {
         if (typeof this._config.apiProtocol !== 'string' || typeof this._config.apiHost !== 'string') {
             throw new Error('config misses required members: apiProtocol and/or apiHost');
         }
+
+        this._dspRelease = this._config.dspRelease;
 
         // make input type safe
         const apiPort = (typeof this._config.apiPort === 'number' ? this._config.apiPort : null);
