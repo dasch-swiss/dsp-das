@@ -10,6 +10,7 @@ import {
     SimpleChanges
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {
     CreateLinkValue,
     KnoraApiConnection,
@@ -20,6 +21,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
 
 export function resourceValidator(control: AbstractControl) {
@@ -57,6 +59,7 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
     customValidators = [resourceValidator];
 
     constructor(
+        private _dialog: MatDialog,
         @Inject(FormBuilder) private _fb: FormBuilder,
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection) {
         super();
@@ -109,7 +112,7 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
     ngOnInit() {
         const linkType = this.parentResource.getLinkPropertyIriFromLinkValuePropertyIri(this.propIri);
         this.restrictToResourceClass = this.parentResource.entityInfo.properties[linkType].objectType;
-
+        console.log('restrictToResourceClass: ', this.restrictToResourceClass);
         // initialize form control elements
         this.valueFormControl = new FormControl(null);
 
@@ -202,5 +205,31 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
      */
     refResHovered() {
         this.referredResourceHovered.emit(this.displayValue);
+    }
+
+    openDialog(mode: string, ev: Event, name?: string, iri?: string): void {
+        ev.preventDefault();
+        console.log('propIri: ', iri);
+        console.log('parentResource: ', this.parentResource);
+        const dialogConfig: MatDialogConfig = {
+            width: '840px',
+            maxHeight: '80vh',
+            position: {
+                top: '112px'
+            },
+            data: { mode: mode, title: name, id: iri, parentResource: this.parentResource },
+            disableClose: true
+        };
+
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
+        );
+
+        dialogRef.afterClosed().subscribe(() => {
+
+            // do something
+
+        });
     }
 }
