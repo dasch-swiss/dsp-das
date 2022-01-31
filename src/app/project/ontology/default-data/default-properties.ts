@@ -118,15 +118,6 @@ export class DefaultProperties {
                     guiEle: Constants.GuiDatePicker,
                     group: 'Date / Time'
                 },
-                // {
-                //     icon: 'date_range',
-                //     label: 'Period',
-                //     description: 'A period of time between two dates',
-                //     subPropOf: Constants.HasValue,
-                //     objectType: Constants.DateValue,
-                //     guiEle: Constants.GuiDatePicker',
-                //     group: 'Date / Time'
-                // },
                 {
                     icon: 'access_time',
                     label: 'Timestamp',
