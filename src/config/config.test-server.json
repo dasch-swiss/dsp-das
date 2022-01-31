@@ -1,5 +1,5 @@
 {
-  "dspRelease": "2022.01.02",
+  "dspRelease": "2022.01.01",
   "apiProtocol": "https",
   "apiHost": "api.test.dasch.swiss",
   "apiPort": 443,
