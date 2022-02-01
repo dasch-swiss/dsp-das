@@ -79,8 +79,6 @@ describe('TestService', () => {
         expect(service.dspConfig.environment).toEqual('dev');
         expect(service.dspConfig.color).toEqual('accent');
         expect(service.dspConfig.production).toEqual(false);
-        expect(service.dspConfig.release).toEqual('2022.01.01');
-        expect(service.dspConfig.release).toEqual('2022.01.01');
         expect(service.dspApiConfig.apiProtocol).toEqual('http');
         expect(service.dspApiConfig.apiHost).toEqual('0.0.0.0');
         expect(service.dspApiConfig.apiPort).toEqual(3333);
