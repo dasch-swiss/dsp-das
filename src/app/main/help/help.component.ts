@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { ApiResponseData, ApiResponseError, HealthResponse, KnoraApiConnection, VersionResponse } from '@dasch-swiss/dsp-js';
 import { AppInitService } from 'src/app/app-init.service';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
+import { DspConfig } from '../declarations/dsp-config';
 import { ErrorHandlerService } from '../error/error-handler.service';
 import { GridItem } from '../grid/grid.component';
 
@@ -17,7 +18,7 @@ export class HelpComponent implements OnInit {
 
     loading = true;
 
-    dspRelease: string;
+    dsp: DspConfig;
 
     appVersion: string = appVersion;
     apiStatus: HealthResponse;
@@ -97,7 +98,7 @@ export class HelpComponent implements OnInit {
 
     ngOnInit() {
 
-        this.dspRelease = this._appInitService.dspConfig.release;
+        this.dsp = this._appInitService.dspConfig;
 
         this._dspApiConnection.system.versionEndpoint.getVersion().subscribe(
             (response: ApiResponseData<VersionResponse>) => {

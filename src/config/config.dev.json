@@ -13,7 +13,7 @@
   "logErrors": true,
   "iriBase": "http://rdfh.ch",
   "instrumentation": {
-    "environment": "dev",
+    "environment": "local-dev",
     "dataDog": {
       "enabled": false,
       "applicationId": "",

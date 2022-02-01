@@ -8,6 +8,7 @@ import { AppInitService } from 'src/app/app-init.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ComponentCommunicationEventService, Events } from 'src/app/main/services/component-communication-event.service';
 import { SearchParams } from 'src/app/workspace/results/list-view/list-view.component';
+import { DspConfig } from '../declarations/dsp-config';
 import { NotificationService } from '../services/notification.service';
 import { SessionService } from '../services/session.service';
 
@@ -24,7 +25,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     show = false;
     searchParams: SearchParams;
 
-    dspRelease: string;
+    dsp: DspConfig;
 
     componentCommsSubscription: Subscription;
 
@@ -54,7 +55,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.dspRelease = this._appInitService.dspConfig.release;
+        this.dsp = this._appInitService.dspConfig;
+
     }
 
     ngOnInit() {

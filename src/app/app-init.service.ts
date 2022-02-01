@@ -50,8 +50,22 @@ export class AppInitService {
             throw new Error('config misses required members: apiProtocol and/or apiHost');
         }
 
+        const prodMode = (this._config.instrumentation.environment === ('prod' || 'production'));
+
+        let color = 'primary';
+        if (!prodMode) {
+            if (this._config.instrumentation.environment.includes('staging') || this._config.instrumentation.environment.includes('dev')) {
+                color = 'accent';
+            } else if (this._config.instrumentation.environment.includes('test')){
+                color = 'warn';
+            }
+        }
+
         this._dspConfig = new DspConfig(
-            this._config.dspRelease
+            this._config.dspRelease,
+            this._config.instrumentation.environment,
+            prodMode,
+            color
         );
 
         // make input type safe
