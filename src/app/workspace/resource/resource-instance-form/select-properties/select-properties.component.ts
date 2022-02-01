@@ -46,6 +46,9 @@ export class SelectPropertiesComponent implements OnInit {
 
     ngOnInit() {
         if (this.properties) {
+            console.log('properties from select-properties: ', this.properties);
+            console.log('ontologyInfo from select-properties: ', this.ontologyInfo);
+            console.log('resourceClass from select-properties: ', this.resourceClass);
             for (const prop of this.properties) {
                 if (prop) {
                     if (prop.objectType === 'http://api.knora.org/ontology/knora-api/v2#TextValue') {

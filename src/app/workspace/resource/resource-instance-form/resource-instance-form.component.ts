@@ -251,6 +251,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
                 // assign the selected iri to selectedProject
                 this.selectedProject = projectIri;
+                console.log('selectedProjectIri: ', this.selectedProject);
 
                 this._dspApiConnection.v2.onto.getOntologiesByProjectIri(projectIri).subscribe(
                     (response: OntologiesMetadata) => {

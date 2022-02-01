@@ -1,4 +1,9 @@
-<p>create-link-resource works!</p>
+<app-select-properties #selectProps
+        [ontologyInfo]="ontologyInfo"
+        [resourceClass]="resourceClass"
+        [properties]="properties"
+        class="select-properties">
+    </app-select-properties>
 <div class="form-panel form-action">
     <span>
         <button mat-button type="button" (click)="closeDialog.emit()">
