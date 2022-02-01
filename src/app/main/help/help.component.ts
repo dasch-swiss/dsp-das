@@ -19,6 +19,7 @@ export class HelpComponent implements OnInit {
     loading = true;
 
     dsp: DspConfig;
+    releaseNotesUrl: string;
 
     appVersion: string = appVersion;
     apiStatus: HealthResponse;
@@ -99,6 +100,11 @@ export class HelpComponent implements OnInit {
     ngOnInit() {
 
         this.dsp = this._appInitService.dspConfig;
+
+        // quick solution; todo: has to be done in a better way
+        // to go directly to the page e.g. https://dasch.atlassian.net/wiki/spaces/changelog/pages/25067546/Releasenews+2022.01.02
+        // or https://dasch.atlassian.net/wiki/spaces/changelog/pages/21266446/Releasenews+2022.01.01
+        this.releaseNotesUrl = 'https://dasch.atlassian.net/wiki/search?text=' + this.dsp.release;
 
         this._dspApiConnection.system.versionEndpoint.getVersion().subscribe(
             (response: ApiResponseData<VersionResponse>) => {
