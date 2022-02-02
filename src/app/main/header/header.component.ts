@@ -12,8 +12,6 @@ import { DspConfig } from '../declarations/dsp-config';
 import { NotificationService } from '../services/notification.service';
 import { SessionService } from '../services/session.service';
 
-// const { version: appVersion } = require('../../../../package.json');
-
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
