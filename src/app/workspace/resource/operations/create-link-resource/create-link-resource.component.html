@@ -1,6 +1,11 @@
-
-
 <form [formGroup]="propertiesForm" (ngSubmit)="onSubmit()">
+    <!-- upload file -->
+    <app-upload *ngIf="hasFileValue"
+        [parentForm]="propertiesForm"
+        [representation]="hasFileValue"
+        (fileInfo)="setFileValue($event)">
+    </app-upload>
+
     <app-select-properties #selectProps
         [ontologyInfo]="ontologyInfo"
         [resourceClass]="resourceClass"

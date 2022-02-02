@@ -8,13 +8,11 @@ import {
     CreateTextValueAsString,
     CreateValue,
     KnoraApiConnection,
-    ReadOntology,
     ReadResource,
     ResourceClassAndPropertyDefinitions,
     ResourceClassDefinition,
     ResourcePropertyDefinition
 } from '@dasch-swiss/dsp-js';
-import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { SelectPropertiesComponent } from '../../resource-instance-form/select-properties/select-properties.component';
@@ -151,5 +149,9 @@ export class CreateLinkResourceComponent implements OnInit {
         } else {
             this.propertiesForm.markAllAsTouched();
         }
+    }
+
+    setFileValue(file: CreateFileValue) {
+        this.fileValue = file;
     }
 }
