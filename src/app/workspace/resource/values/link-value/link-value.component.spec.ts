@@ -2,6 +2,7 @@ import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { waitForAsync, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -126,6 +127,7 @@ describe('LinkValueComponent', () => {
                 ReactiveFormsModule,
                 MatInputModule,
                 MatAutocompleteModule,
+                MatDialogModule,
                 BrowserAnimationsModule
             ],
             providers: [

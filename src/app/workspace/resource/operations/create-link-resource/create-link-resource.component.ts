@@ -25,9 +25,8 @@ import { SelectPropertiesComponent } from '../../resource-instance-form/select-p
 export class CreateLinkResourceComponent implements OnInit {
 
     @Input() parentResource: ReadResource;
-    @Input() propIri: string;
-    @Input() resourceClassIri: string;
-    @Input() propertiesForm: FormGroup;
+    @Input() propDef: string;
+    @Input() resourceClassDef: string;
 
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
@@ -35,6 +34,7 @@ export class CreateLinkResourceComponent implements OnInit {
 
     properties: ResourcePropertyDefinition[];
     property: ResourcePropertyDefinition;
+    propertiesForm: FormGroup;
     resourceClass: ResourceClassDefinition;
     ontologyInfo: ResourceClassAndPropertyDefinitions;
     fileValue: CreateFileValue;
@@ -51,16 +51,16 @@ export class CreateLinkResourceComponent implements OnInit {
 
     ngOnInit(): void {
         console.log('parentResource: ', this.parentResource);
-        console.log('propIri: ', this.propIri);
-        console.log('resourceClassIri: ', this.resourceClassIri);
+        console.log('propIri: ', this.propDef);
+        console.log('resourceClassIri: ', this.resourceClassDef);
 
         this.propertiesForm = this._fb.group({});
 
-        this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassIri).subscribe(
+        this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassDef).subscribe(
             (onto: ResourceClassAndPropertyDefinitions) => {
                 console.log('onto: ', onto);
                 this.ontologyInfo = onto;
-                this.resourceClass = onto.classes[this.resourceClassIri];
+                this.resourceClass = onto.classes[this.resourceClassDef];
                 // this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition);
                 this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition).filter(
                     prop =>
@@ -98,7 +98,7 @@ export class CreateLinkResourceComponent implements OnInit {
 
             createResource.label = resLabelVal.text;
 
-            createResource.type = this.resourceClassIri;
+            createResource.type = this.resourceClassDef;
 
             createResource.attachedToProject = 'http://rdfh.ch/projects/0123';
 

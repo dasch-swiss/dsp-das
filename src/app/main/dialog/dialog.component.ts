@@ -20,7 +20,7 @@ export interface DialogData {
     parentResource?: ReadResource;
     projectCode?: string;
     selectedResources?: FilteredResources;
-    resourceClassIri?: string;
+    resourceClassDefinition?: string;
 }
 
 export interface ConfirmationWithComment {
