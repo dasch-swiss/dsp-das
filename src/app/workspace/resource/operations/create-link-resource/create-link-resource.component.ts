@@ -33,7 +33,6 @@ export class CreateLinkResourceComponent implements OnInit {
     @ViewChild('selectProps') selectPropertiesComponent: SelectPropertiesComponent;
 
     properties: ResourcePropertyDefinition[];
-    property: ResourcePropertyDefinition;
     propertiesForm: FormGroup;
     resourceClass: ResourceClassDefinition;
     ontologyInfo: ResourceClassAndPropertyDefinitions;
@@ -51,8 +50,8 @@ export class CreateLinkResourceComponent implements OnInit {
 
     ngOnInit(): void {
         console.log('parentResource: ', this.parentResource);
-        console.log('propIri: ', this.propDef);
-        console.log('resourceClassIri: ', this.resourceClassDef);
+        console.log('propDef: ', this.propDef);
+        console.log('resourceClassDef: ', this.resourceClassDef);
 
         this.propertiesForm = this._fb.group({});
 
