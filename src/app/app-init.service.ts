@@ -50,7 +50,7 @@ export class AppInitService {
             throw new Error('config misses required members: apiProtocol and/or apiHost');
         }
 
-        const prodMode = (this._config.instrumentation.environment === ('prod' || 'production'));
+        const prodMode = (this._config.instrumentation.environment.includes('prod') || this._config.instrumentation.environment.includes('production'));
 
         let color = 'primary';
         if (!prodMode) {
