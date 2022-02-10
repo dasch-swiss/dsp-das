@@ -206,7 +206,7 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
         this.referredResourceHovered.emit(this.displayValue);
     }
 
-    openDialog(mode: string, ev: Event, name?: string, iri?: string): void {
+    openDialog(mode: string, ev: Event, title?: string, iri?: string): void {
         ev.preventDefault();
         const dialogConfig: MatDialogConfig = {
             width: '840px',
@@ -214,19 +214,10 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
             position: {
                 top: '112px'
             },
-            data: { mode: mode, title: name, id: iri, parentResource: this.parentResource, resourceClassDefinition: this.restrictToResourceClass },
+            data: { mode: mode, title: title, id: iri, parentResource: this.parentResource, resourceClassDefinition: this.restrictToResourceClass },
             disableClose: true
         };
 
-        const dialogRef = this._dialog.open(
-            DialogComponent,
-            dialogConfig
-        );
-
-        dialogRef.afterClosed().subscribe(() => {
-
-            // do something
-
-        });
+        this._dialog.open(DialogComponent, dialogConfig);
     }
 }

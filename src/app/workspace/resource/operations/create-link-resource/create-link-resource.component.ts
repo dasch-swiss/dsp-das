@@ -49,7 +49,6 @@ export class CreateLinkResourceComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-
         this.propertiesForm = this._fb.group({});
 
         this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassDef).subscribe(
