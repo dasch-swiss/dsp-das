@@ -112,7 +112,6 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
     ngOnInit() {
         const linkType = this.parentResource.getLinkPropertyIriFromLinkValuePropertyIri(this.propIri);
         this.restrictToResourceClass = this.parentResource.entityInfo.properties[linkType].objectType;
-        console.log('restrictToResourceClass: ', this.restrictToResourceClass);
         // initialize form control elements
         this.valueFormControl = new FormControl(null);
 
@@ -209,8 +208,6 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
 
     openDialog(mode: string, ev: Event, name?: string, iri?: string): void {
         ev.preventDefault();
-        console.log('propIri: ', iri);
-        console.log('parentResource: ', this.parentResource);
         const dialogConfig: MatDialogConfig = {
             width: '840px',
             maxHeight: '80vh',

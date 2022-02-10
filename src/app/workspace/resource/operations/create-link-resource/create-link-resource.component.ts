@@ -49,15 +49,11 @@ export class CreateLinkResourceComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        console.log('parentResource: ', this.parentResource);
-        console.log('propDef: ', this.propDef);
-        console.log('resourceClassDef: ', this.resourceClassDef);
 
         this.propertiesForm = this._fb.group({});
 
         this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassDef).subscribe(
             (onto: ResourceClassAndPropertyDefinitions) => {
-                console.log('onto: ', onto);
                 this.ontologyInfo = onto;
                 this.resourceClass = onto.classes[this.resourceClassDef];
                 // this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition);
@@ -82,14 +78,11 @@ export class CreateLinkResourceComponent implements OnInit {
                 } else {
                     this.hasFileValue = undefined;
                 }
-
-                console.log('properties: ', this.properties);
             }
         );
     }
 
     onSubmit() {
-        console.log('onSubmit clicked');
         if (this.propertiesForm.valid) {
             const createResource = new CreateResource();
 
@@ -99,7 +92,8 @@ export class CreateLinkResourceComponent implements OnInit {
 
             createResource.type = this.resourceClassDef;
 
-            createResource.attachedToProject = 'http://rdfh.ch/projects/0123';
+            // todo: find a better way to do this
+            createResource.attachedToProject = 'http://rdfh.ch/projects/' + this.resourceClassDef.split('/')[4];
 
             this.selectPropertiesComponent.switchPropertiesComponent.forEach((child) => {
                 const createVal = child.createValueComponent.getNewValue();
@@ -136,8 +130,6 @@ export class CreateLinkResourceComponent implements OnInit {
 
             this._dspApiConnection.v2.res.createResource(createResource).subscribe(
                 (res: ReadResource) => {
-                    console.log('resource created!: ', res);
-
                     this.closeDialog.emit();
                 },
                 (error: ApiResponseError) => {
