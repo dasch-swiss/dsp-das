@@ -8,6 +8,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
     CreateLinkValue,
+    MockOntology,
     MockResource,
     ReadLinkValue,
     ReadResource,
@@ -15,6 +16,7 @@ import {
     SearchEndpointV2,
     UpdateLinkValue
 } from '@dasch-swiss/dsp-js';
+import { OntologyCache } from '@dasch-swiss/dsp-js/src/cache/ontology-cache/OntologyCache';
 import { of } from 'rxjs';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { LinkValueComponent } from './link-value.component';
@@ -113,6 +115,7 @@ describe('LinkValueComponent', () => {
     beforeEach(waitForAsync(() => {
         const valuesSpyObj = {
             v2: {
+                ontologyCache: jasmine.createSpyObj('ontologyCache', ['getOntology', 'getResourceClassDefinition']),
                 search: jasmine.createSpyObj('search', ['doSearchByLabel']),
             }
         };
@@ -152,6 +155,13 @@ describe('LinkValueComponent', () => {
         let commentInputNativeElement;
 
         beforeEach(() => {
+
+            const dspConnSpy = TestBed.inject(DspApiConnectionToken);
+
+            (dspConnSpy.v2.ontologyCache as jasmine.SpyObj<OntologyCache>).getResourceClassDefinition.and.callFake(
+                (resClassIri: string) => of(MockOntology.mockIResourceClassAndPropertyDefinitions('http://0.0.0.0:3333/ontology/0001/anything/v2#Thing'))
+            );
+
             testHostFixture = TestBed.createComponent(TestHostDisplayValueComponent);
             testHostComponent = testHostFixture.componentInstance;
             testHostFixture.detectChanges();
@@ -485,6 +495,12 @@ describe('LinkValueComponent', () => {
 
         beforeEach(() => {
 
+            const dspConnSpy = TestBed.inject(DspApiConnectionToken);
+
+            (dspConnSpy.v2.ontologyCache as jasmine.SpyObj<OntologyCache>).getResourceClassDefinition.and.callFake(
+                (resClassIri: string) => of(MockOntology.mockIResourceClassAndPropertyDefinitions('http://0.0.0.0:3333/ontology/0001/anything/v2#Thing'))
+            );
+
             testHostFixture = TestBed.createComponent(TestHostCreateValueComponent);
             testHostComponent = testHostFixture.componentInstance;
             testHostFixture.detectChanges();
@@ -614,6 +630,12 @@ describe('LinkValueComponent', () => {
         let testHostFixture: ComponentFixture<TestHostCreateValueNoValueRequiredComponent>;
 
         beforeEach(() => {
+
+            const dspConnSpy = TestBed.inject(DspApiConnectionToken);
+
+            (dspConnSpy.v2.ontologyCache as jasmine.SpyObj<OntologyCache>).getResourceClassDefinition.and.callFake(
+                (resClassIri: string) => of(MockOntology.mockIResourceClassAndPropertyDefinitions('http://0.0.0.0:3333/ontology/0001/anything/v2#Thing'))
+            );
 
             testHostFixture = TestBed.createComponent(TestHostCreateValueNoValueRequiredComponent);
             testHostComponent = testHostFixture.componentInstance;
