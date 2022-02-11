@@ -135,7 +135,6 @@ export class CreateLinkResourceComponent implements OnInit {
                     this._errorHandler.showMessage(error);
                 }
             );
-        // the goal of this is to send a CreateResource request in the end
         } else {
             this.propertiesForm.markAllAsTouched();
         }
