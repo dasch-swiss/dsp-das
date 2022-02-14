@@ -1,5 +1,14 @@
 # Changelog
 
+### [9.0.2](https://www.github.com/dasch-swiss/dsp-app/compare/v9.0.1...v9.0.2) (2022-02-14)
+
+
+### Maintenance
+
+* **deps-dev:** bump karma from 6.3.13 to 6.3.14 ([#653](https://www.github.com/dasch-swiss/dsp-app/issues/653)) ([1794e47](https://www.github.com/dasch-swiss/dsp-app/commit/1794e47406114e054c5393effe940d0db4b43add))
+* **deps:** bump follow-redirects from 1.14.7 to 1.14.8 ([#656](https://www.github.com/dasch-swiss/dsp-app/issues/656)) ([8554764](https://www.github.com/dasch-swiss/dsp-app/commit/8554764b3562868c6fcee9462e89325e3fd5c2c6))
+* **google fonts:** switches back to self hosting google fonts ([#654](https://www.github.com/dasch-swiss/dsp-app/issues/654)) ([938721b](https://www.github.com/dasch-swiss/dsp-app/commit/938721b9ae9e28f08c7b0af7742c44a1ed843799))
+
 ### [9.0.1](https://www.github.com/dasch-swiss/dsp-app/compare/v9.0.0...v9.0.1) (2022-02-09)
 
 
