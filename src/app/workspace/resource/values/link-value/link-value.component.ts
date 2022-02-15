@@ -92,9 +92,12 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
                 searchTerm, 0, { limitToResourceClass: this.restrictToResourceClass }).subscribe(
                 (response: ReadResourceSequence) => {
                     this.resources = response.resources;
+                    const collator = new Intl.Collator(['en', 'de', 'fr', 'it'], { numeric: true, sensitivity: 'base' });
+
+                    // sort results alphabetically
+                    this.resources.sort((a,b) => collator.compare(a.label, b.label));
+                    console.log('resources: ', this.resources);
                 });
-        } else {
-            this.resources = [];
         }
     }
 
@@ -216,16 +219,46 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
 
     openDialog(mode: string, ev: Event, iri?: string): void {
         ev.preventDefault();
+
+        let data = {};
+
+        switch (mode){
+            case 'createLinkResource':
+                data = {
+                    mode: mode,
+                    title: this.resourceClassLabel,
+                    id: iri, parentResource: this.parentResource,
+                    resourceClassDefinition: this.restrictToResourceClass
+                };
+                break;
+
+            case 'linkResourceResults':
+                data = {
+                    mode: mode,
+                    title: 'Result list for link value',
+                    id: iri,
+                    parentResource: this.parentResource,
+                    resourceClassDefinition: this.restrictToResourceClass,
+                    resources: this.resources
+                };
+                break;
+        }
+
+        console.log('data: ', data);
         const dialogConfig: MatDialogConfig = {
             width: '840px',
             maxHeight: '80vh',
             position: {
                 top: '112px'
             },
-            data: { mode: mode, title: this.resourceClassLabel, id: iri, parentResource: this.parentResource, resourceClassDefinition: this.restrictToResourceClass },
+            data: data,
             disableClose: true
         };
 
-        this._dialog.open(DialogComponent, dialogConfig);
+        const dialogRef =  this._dialog.open(DialogComponent, dialogConfig);
+
+        dialogRef.afterClosed().subscribe((temp: string) => {
+            this.resources = [];
+        });
     }
 }

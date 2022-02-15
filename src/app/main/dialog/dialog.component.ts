@@ -21,6 +21,7 @@ export interface DialogData {
     projectCode?: string;
     selectedResources?: FilteredResources;
     resourceClassDefinition?: string;
+    resources?: ReadResource[];
 }
 
 export interface ConfirmationWithComment {

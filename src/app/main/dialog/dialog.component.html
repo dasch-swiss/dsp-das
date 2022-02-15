@@ -406,6 +406,13 @@
         </mat-dialog-content>
     </div>
 
+    <div *ngSwitchCase="'linkResourceResults'">
+        <app-dialog-header [title]="data.title" [subtitle]="'Add linked resources'"></app-dialog-header>
+        <mat-dialog-content>
+            <app-link-resource-results [parentResource]="data.parentResource" [propDef]="data.id" [resourceClassDef]="data.resourceClassDefinition" [resources]="data.resources" (closeDialog)="dialogRef.close($event)"></app-link-resource-results>
+        </mat-dialog-content>
+    </div>
+
     <!-- general error message -->
     <div *ngSwitchCase="'error'">
         <app-error [status]="data.id"></app-error>

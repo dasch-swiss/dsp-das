@@ -12,8 +12,13 @@
             <mat-option (click)="openDialog('createLinkResource', $event, propIri)">
                 Create New {{resourceClassLabel}}
             </mat-option>
-            <mat-option *ngFor="let res of resources" [value]="res">
-                {{res?.label}}
+            <ng-container *ngFor="let res of resources">
+                <mat-option *ngIf="resources.length <= 20" [value]="res">
+                    {{res?.label}}
+                </mat-option>
+            </ng-container>
+            <mat-option *ngIf="resources.length > 20" (click)="openDialog('linkResourceResults', $event, propIri)">
+                More than 20 results, click here to browse all results
             </mat-option>
           </mat-autocomplete>
         <mat-error *ngIf="valueFormControl.hasError('valueNotChanged')">

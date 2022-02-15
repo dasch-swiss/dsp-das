@@ -1,0 +1,14 @@
+<div>
+    <ol>
+        <li *ngFor="let res of resources">
+            {{res?.label}}
+        </li>
+    </ol>
+</div>
+<div class="form-panel form-action">
+    <span>
+        <button mat-button type="button" (click)="closeDialog.emit()">
+            {{ 'appLabels.form.action.cancel' | translate }}
+        </button>
+    </span>
+</div>
