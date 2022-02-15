@@ -1,25 +1,31 @@
+import { OverlayModule } from '@angular/cdk/overlay';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PermissionInfoComponent } from './permission-info.component';
 
-describe('PermissionInfoComponent', () => {
-  let component: PermissionInfoComponent;
-  let fixture: ComponentFixture<PermissionInfoComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ PermissionInfoComponent ]
-    })
-    .compileComponents();
-  });
+fdescribe('PermissionInfoComponent', () => {
+    let component: PermissionInfoComponent;
+    let fixture: ComponentFixture<PermissionInfoComponent>;
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(PermissionInfoComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [
+                OverlayModule
+            ],
+            declarations: [
+                PermissionInfoComponent
+            ]
+        })
+            .compileComponents();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(PermissionInfoComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });
