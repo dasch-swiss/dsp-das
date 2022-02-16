@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ConnectionPositionPair, OriginConnectionPosition, Overlay, OverlayConnectionPosition, OverlayPositionBuilder, ScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { PermissionUtil } from '@dasch-swiss/dsp-js';
 
 export interface PermissionObj {
@@ -19,9 +20,13 @@ export interface PermissionGroup {
 })
 export class PermissionInfoComponent implements OnInit {
 
-    @Input() hasPermissions: string;
+    // the permission info can display the `hasPermission` of a resource and `userHasPermission`together
+    // or only user's permission in case of restricted view
+    @Input() hasPermissions?: string;
 
-    @Input() userHasPermission: string;
+    @Input() userHasPermission?: string;
+
+    @ViewChild('infoButton', { static: false }) infoButton: ElementRef;
 
     // info menu is open or not
     isOpen = false;
@@ -71,40 +76,62 @@ export class PermissionInfoComponent implements OnInit {
 
     usersRestrictions: PermissionUtil.Permissions[];
 
-    constructor( ) { }
+    scrollStrategy: ScrollStrategy;
+
+    infoBoxPositions: ConnectionPositionPair[];
+    private _originPos: OriginConnectionPosition = {
+        originX: 'end',
+        originY: 'bottom'
+    };
+
+    private _overlayPos: OverlayConnectionPosition = {
+        overlayX: 'end',
+        overlayY: 'top'
+    };
+
+    constructor(
+        // private _overlay: Overlay,
+        private _sso: ScrollStrategyOptions
+        // private _opb: OverlayPositionBuilder
+    ) {
+        this.scrollStrategy = this._sso.noop();
+    }
 
     ngOnInit(): void {
 
-        const sections = this.hasPermissions.split('|');
+        if (this.hasPermissions) {
+            const sections = this.hasPermissions.split('|');
 
-        sections.forEach(item => {
-            // split by space
-            const unit = item.split(' ');
+            sections.forEach(item => {
+                // split by space
+                const unit = item.split(' ');
 
-            const allPermissions = PermissionUtil.allUserPermissions(
-                unit[0] as 'RV' | 'V' | 'M' | 'D' | 'CR'
-            );
+                const allPermissions = PermissionUtil.allUserPermissions(
+                    unit[0] as 'RV' | 'V' | 'M' | 'D' | 'CR'
+                );
 
-            const permission: PermissionGroup = {
-                'group': unit[1],
-                'restriction': allPermissions
-            };
+                const permission: PermissionGroup = {
+                    'group': unit[1],
+                    'restriction': allPermissions
+                };
 
-            this.listOfPermissions.push(permission);
+                this.listOfPermissions.push(permission);
 
-        });
+            });
 
-        this.defaultGroups.forEach((group, i) => {
+            this.defaultGroups.forEach((group, i) => {
 
-            // current index
-            const currentIndex = this.listOfPermissions.findIndex(e => e.group === group);
+                // current index
+                const currentIndex = this.listOfPermissions.findIndex(e => e.group === group);
 
-            if (currentIndex !== -1) {
-                // new index = i
-                this.arrayMove(this.listOfPermissions, currentIndex, i);
-            }
+                if (currentIndex !== -1) {
+                    // new index = i
+                    this.arrayMove(this.listOfPermissions, currentIndex, i);
+                }
 
-        });
+            });
+        }
+
 
         if (this.userHasPermission) {
             this.usersRestrictions = PermissionUtil.allUserPermissions(
@@ -116,6 +143,30 @@ export class PermissionInfoComponent implements OnInit {
 
     toggleMenu() {
         this.isOpen = !this.isOpen;
+        // console.log(this.infoButton)
+        const pos: ConnectionPositionPair = new ConnectionPositionPair(
+            this._originPos,
+            this._overlayPos,
+            0,
+            0
+        );
+
+        this.infoBoxPositions = [pos];
+
+        // const overlay = this._overlay.position()
+        //     .flexibleConnectedTo(this.infoButton)
+        //     .withPositions([{
+        //         originX: 'start',
+        //         originY: 'bottom',
+        //         overlayX: 'start',
+        //         overlayY: 'top',
+        //     }, {
+        //         originX: 'start',
+        //         originY: 'top',
+        //         overlayX: 'start',
+        //         overlayY: 'bottom',
+        //     }]);
+
         // --> TODO: set the position of the infobox here
     }
 
