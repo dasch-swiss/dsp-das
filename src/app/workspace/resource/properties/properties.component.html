@@ -49,10 +49,9 @@
                 -->
         </mat-menu>
 
-        <!-- permission info: lock icon in case of no rights, and lock_open icon in case of available permissions -->
-        <!-- "CR knora-admin:ProjectAdmin|D knora-admin:ProjectAdmin|M knora-admin:ProjectAdmin|V knora-admin:ProjectAdmin|RV knora-admin:ProjectAdmin" -->
-        <!-- "CR knora-admin:Creator|M knora-admin:ProjectMember|V knora-admin:KnownUser|RV knora-admin:UnknownUser" -->
-        <app-permission-info [hasPermissions]="resource.res.hasPermissions" [userHasPermission]="resource.res.userHasPermission"></app-permission-info>
+        <!-- permission info: display full info in case of system or project admin; otherwise display only user's permissions -->
+        <app-permission-info *ngIf="adminPermissions" [hasPermissions]="resource.res.hasPermissions" [userHasPermission]="resource.res.userHasPermission"></app-permission-info>
+        <app-permission-info *ngIf="!adminPermissions" [userHasPermission]="resource.res.userHasPermission"></app-permission-info>
 
         <!-- more menu with: delete, erase resource -->
         <button *ngIf="editPermissions && project?.status" mat-icon-button class="more-menu" matTooltip="More"
