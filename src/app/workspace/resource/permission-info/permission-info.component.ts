@@ -90,9 +90,7 @@ export class PermissionInfoComponent implements OnInit {
     };
 
     constructor(
-        // private _overlay: Overlay,
         private _sso: ScrollStrategyOptions
-        // private _opb: OverlayPositionBuilder
     ) {
         this.scrollStrategy = this._sso.noop();
     }
@@ -152,22 +150,6 @@ export class PermissionInfoComponent implements OnInit {
         );
 
         this.infoBoxPositions = [pos];
-
-        // const overlay = this._overlay.position()
-        //     .flexibleConnectedTo(this.infoButton)
-        //     .withPositions([{
-        //         originX: 'start',
-        //         originY: 'bottom',
-        //         overlayX: 'start',
-        //         overlayY: 'top',
-        //     }, {
-        //         originX: 'start',
-        //         originY: 'top',
-        //         overlayX: 'start',
-        //         overlayY: 'bottom',
-        //     }]);
-
-        // --> TODO: set the position of the infobox here
     }
 
     getStatus(restriction: string, listOfRestrictions: number[]): boolean {
