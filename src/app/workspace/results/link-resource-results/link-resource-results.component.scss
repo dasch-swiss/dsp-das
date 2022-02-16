@@ -1,0 +1,17 @@
+.results-list {
+  .resource {
+    display: flex;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1em 0em;
+    align-items: center;
+    .label, .add-button {
+      display: inline-flex;
+    }
+    .label {
+
+    }
+    .add-button {
+
+    }
+  }
+}
