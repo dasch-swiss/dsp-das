@@ -28,9 +28,9 @@
                 </th>
             </tr>
             <ng-container *ngIf="hasPermissions && listOfPermissions.length">
-                <tr *ngFor="let item of listOfPermissions">
+                <tr *ngFor="let item of listOfPermissions" [class]="item.group.split(':')[1]">
                     <td class="first-col">{{item.group.split(':')[1] | titleFromCamelCase}}</td>
-                    <td *ngFor="let dp of defaultPermissions">
+                    <td *ngFor="let dp of defaultPermissions" [class]="'perm-' + dp.name">
                         <mat-icon class="status" [class.checked]="getStatus(dp.name, item.restriction)"
                             [matTooltip]="dp.label" matTooltipPosition="above">
                             {{getStatus(dp.name, item.restriction) ? 'radio_button_checked' : 'radio_button_unchecked'}}
@@ -38,9 +38,9 @@
                     </td>
                 </tr>
             </ng-container>
-            <tr *ngIf="userHasPermission && userRestrictions" class="border-top">
+            <tr *ngIf="userHasPermission && userRestrictions" class="border-top LoggedInUser">
                 <td class="first-col">Your permissions</td>
-                <td *ngFor="let dp of defaultPermissions">
+                <td *ngFor="let dp of defaultPermissions" [class]="'perm-' + dp.name">
                     <mat-icon class="status" [class.checked]="getStatus(dp.name, userRestrictions)"
                         [matTooltip]="dp.label" matTooltipPosition="above">
                         {{getStatus(dp.name, userRestrictions) ? 'radio_button_checked' : 'radio_button_unchecked'}}

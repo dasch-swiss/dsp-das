@@ -12,6 +12,11 @@
     th, td {
       min-width: 48px;
       text-align: center;
+      vertical-align: middle;
+
+      .mat-icon {
+        margin-top: 3px;
+      }
     }
 
     .first-col {
