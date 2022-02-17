@@ -1,69 +1,126 @@
 import { OverlayModule } from '@angular/cdk/overlay';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { By } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
 import { MockResource, ReadResource } from '@dasch-swiss/dsp-js';
+import { TitleFromCamelCasePipe } from 'src/app/main/pipes/string-transformation/title-from-camel-case.pipe';
 import { PermissionInfoComponent } from './permission-info.component';
 
 /**
  * test host component to simulate parent component
  */
 @Component({
-    template: '<app-permissions-info #permissionInfo [hasPermissions]="resource.hasPermissions" [userHasPermission]="resource.userHasPermission"></app-permissions-info>'
+    template: `
+        <app-permission-info #permissionInfo
+            [hasPermissions]="resource.hasPermissions"
+            [userHasPermission]="resource.userHasPermission">
+        </app-permission-info>`
 })
 class TestHostComponent implements OnInit {
 
-    @ViewChild('permissionInfo') permissionInfoComponent: PermissionInfoComponent;
+    @ViewChild('permissionInfo', { static: false }) permissionInfoComponent: PermissionInfoComponent;
 
-    // get a resource from DSP-JS-Lib test data
     resource: ReadResource;
-    constructor(
-    ) {
 
+    constructor() {
     }
 
     ngOnInit() {
+        // get a resource from DSP-JS-Lib test data
         MockResource.getTestThing().subscribe(
             (response: ReadResource) => {
                 this.resource = response;
-                // has permissions: CR knora-admin:Creator|M knora-admin:ProjectMember|V knora-admin:KnownUser|RV knora-admin:UnknownUser
-                // user has permisson: RV
             }
         );
-
     }
 
 }
 
-describe('PermissionInfoComponent', () => {
+fdescribe('PermissionInfoComponent', () => {
     let testHostComponent: TestHostComponent;
     let testHostFixture: ComponentFixture<TestHostComponent>;
 
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+
+        TestBed.configureTestingModule({
             imports: [
                 MatButtonModule,
                 MatIconModule,
                 MatTooltipModule,
-                OverlayModule
+                OverlayModule,
+                RouterTestingModule,
+                TitleFromCamelCasePipe
             ],
             declarations: [
                 PermissionInfoComponent,
                 TestHostComponent
-            ]
+            ],
+            providers: []
         })
             .compileComponents();
-    });
+
+    }));
 
     beforeEach(() => {
         testHostFixture = TestBed.createComponent(TestHostComponent);
         testHostComponent = testHostFixture.componentInstance;
         testHostFixture.detectChanges();
+
+        expect(testHostComponent).toBeTruthy();
     });
 
     it('should create', () => {
         expect(testHostComponent.permissionInfoComponent).toBeTruthy();
     });
+
+    it('should have permission values and an icon button', () => {
+        expect(testHostFixture.nativeElement.querySelector('button.permissions').innerText).toEqual('lock');
+        expect(testHostComponent.permissionInfoComponent.hasPermissions).toEqual('CR knora-admin:Creator|M knora-admin:ProjectMember|V knora-admin:KnownUser|RV knora-admin:UnknownUser');
+        expect(testHostComponent.permissionInfoComponent.userHasPermission).toEqual('RV');
+    });
+
+
+
+    fit('should display all permissions as enabled in the first line (Creator has CR)', () => {
+        const hostCompDe = testHostFixture.debugElement;
+        const permissionInfoEl = hostCompDe.query(By.directive(PermissionInfoComponent));
+        const permissionBtnEl = permissionInfoEl.query(By.css('button.permissions'));
+        permissionBtnEl.triggerEventHandler('click', null);
+        testHostFixture.detectChanges();
+
+        // const permissionInfoBox: DebugElement = hostCompDe.query(By.css('div.overlay-info-box'));
+        const permissionInfoBox = permissionInfoEl.query(By.css('div.overlay-info-box'));
+        console.log(permissionInfoBox);
+
+
+
+    });
+
+
+
+    //     // expect(testHostComponent.permissionInfoComponent.userHasPermission).toEqual('RV');
+
+    //     // expect(testHostComponent.resourceHasPermissions).toBeDefined();
+    //     // expect(testHostComponent.userHasPermission).toBeDefined();
+
+    //     // const permissionInfoFixture = TestBed.createComponent(PermissionInfoComponent);
+    //     // const permissionInfoComponent = permissionInfoFixture.componentInstance;
+    //     // permissionInfoFixture.detectChanges();
+
+
+
+    //     // // click on button, to open box
+    //     // const nativeElement = hostCompDe.nativeElement;
+    //     // const item = nativeElement.querySelector('button.permissions');
+    //     // item.dispatchEvent(new Event('click'));
+
+
+
+    //     //
+
+    // });
 });

@@ -1,4 +1,4 @@
-<button *ngIf="hasPermissions || userHasPermission"
+<button
     mat-icon-button
     class="permissions"
     matTooltip="Resource permissions"
@@ -27,7 +27,7 @@
                     </mat-icon>
                 </th>
             </tr>
-            <ng-container *ngIf="hasPermissions">
+            <ng-container *ngIf="hasPermissions && listOfPermissions.length">
                 <tr *ngFor="let item of listOfPermissions">
                     <td class="first-col">{{item.group.split(':')[1] | titleFromCamelCase}}</td>
                     <td *ngFor="let dp of defaultPermissions">
@@ -38,12 +38,12 @@
                     </td>
                 </tr>
             </ng-container>
-            <tr *ngIf="userHasPermission && usersRestrictions" class="border-top">
+            <tr *ngIf="userHasPermission && userRestrictions" class="border-top">
                 <td class="first-col">Your permissions</td>
                 <td *ngFor="let dp of defaultPermissions">
-                    <mat-icon class="status" [class.checked]="getStatus(dp.name, usersRestrictions)"
+                    <mat-icon class="status" [class.checked]="getStatus(dp.name, userRestrictions)"
                         [matTooltip]="dp.label" matTooltipPosition="above">
-                        {{getStatus(dp.name, usersRestrictions) ? 'radio_button_checked' : 'radio_button_unchecked'}}
+                        {{getStatus(dp.name, userRestrictions) ? 'radio_button_checked' : 'radio_button_unchecked'}}
                     </mat-icon>
                 </td>
             </tr>

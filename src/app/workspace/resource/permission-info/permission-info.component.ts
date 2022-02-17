@@ -1,4 +1,10 @@
-import { ConnectionPositionPair, OriginConnectionPosition, Overlay, OverlayConnectionPosition, OverlayPositionBuilder, ScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
+import {
+    ConnectionPositionPair,
+    OriginConnectionPosition,
+    OverlayConnectionPosition,
+    ScrollStrategy,
+    ScrollStrategyOptions
+} from '@angular/cdk/overlay';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { PermissionUtil } from '@dasch-swiss/dsp-js';
 
@@ -22,9 +28,9 @@ export class PermissionInfoComponent implements OnInit {
 
     // the permission info can display the `hasPermission` of a resource and `userHasPermission`together
     // or only user's permission in case of restricted view
-    @Input() hasPermissions?: string;
+    @Input() hasPermissions: string;
 
-    @Input() userHasPermission?: string;
+    @Input() userHasPermission: string;
 
     @ViewChild('infoButton', { static: false }) infoButton: ElementRef;
 
@@ -74,7 +80,7 @@ export class PermissionInfoComponent implements OnInit {
 
     listOfPermissions: PermissionGroup[] = [];
 
-    usersRestrictions: PermissionUtil.Permissions[];
+    userRestrictions: PermissionUtil.Permissions[];
 
     scrollStrategy: ScrollStrategy;
 
@@ -98,6 +104,7 @@ export class PermissionInfoComponent implements OnInit {
     ngOnInit(): void {
 
         if (this.hasPermissions) {
+            // split by | to get each permission section
             const sections = this.hasPermissions.split('|');
 
             sections.forEach(item => {
@@ -130,9 +137,8 @@ export class PermissionInfoComponent implements OnInit {
             });
         }
 
-
         if (this.userHasPermission) {
-            this.usersRestrictions = PermissionUtil.allUserPermissions(
+            this.userRestrictions = PermissionUtil.allUserPermissions(
                 this.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR'
             );
         }
