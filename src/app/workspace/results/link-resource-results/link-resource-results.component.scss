@@ -1,4 +1,21 @@
+.selected-list {
+  mat-chip {
+    background-color: #6B7280;
+    color: #fff;
+    .label {
+
+    }
+    .delete {
+      margin-left: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+}
+
 .results-list {
+  height: calc(90vh - 400px);
+  overflow-y: auto;
   .resource {
     display: flex;
     border-bottom: 1px solid #e5e7eb;

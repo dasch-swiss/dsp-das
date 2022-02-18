@@ -12,18 +12,25 @@ import {
 import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {
+    ApiResponseError,
     CreateLinkValue,
+    CreateValue,
     KnoraApiConnection,
     ReadLinkValue,
     ReadResource,
     ReadResourceSequence,
     ResourceClassAndPropertyDefinitions,
-    UpdateLinkValue
+    ResourcePropertyDefinition,
+    UpdateLinkValue,
+    UpdateResource,
+    WriteValueResponse
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
+import { EmitEvent, Events, AddedEventValue, ValueOperationEventService } from '../../services/value-operation-event.service';
 
 export function resourceValidator(control: AbstractControl) {
     const invalid = !(control.value === null || control.value === '' || control.value instanceof ReadResource);
@@ -43,6 +50,7 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
     @Input() displayValue?: ReadLinkValue;
     @Input() parentResource: ReadResource;
     @Input() propIri: string;
+    @Input() propertyDef: ResourcePropertyDefinition;
 
     @Output() referredResourceClicked: EventEmitter<ReadLinkValue> = new EventEmitter();
 
@@ -62,6 +70,7 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
 
     constructor(
         private _dialog: MatDialog,
+        private _valueOperationEventService: ValueOperationEventService,
         @Inject(FormBuilder) private _fb: FormBuilder,
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection) {
         super();
@@ -96,7 +105,6 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
 
                     // sort results alphabetically
                     this.resources.sort((a,b) => collator.compare(a.label, b.label));
-                    console.log('resources: ', this.resources);
                 });
         }
     }
@@ -247,7 +255,7 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
         console.log('data: ', data);
         const dialogConfig: MatDialogConfig = {
             width: '840px',
-            maxHeight: '80vh',
+            maxHeight: '90vh',
             position: {
                 top: '112px'
             },
@@ -257,8 +265,57 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
 
         const dialogRef =  this._dialog.open(DialogComponent, dialogConfig);
 
-        dialogRef.afterClosed().subscribe((temp: string) => {
-            this.resources = [];
+        dialogRef.afterClosed().subscribe((event: any) => {
+            console.log('parentResource: ', this.parentResource);
+            if (mode === 'linkResourceResults' && this.parentResource.id !== '') {
+                const resourcesToLink = event as ReadResource[];
+                console.log('resourcesToLink: ', resourcesToLink);
+                // loop through and post each resource
+                resourcesToLink.forEach(res => {
+                    console.log('resource: ', res);
+
+                    const createVal = new CreateLinkValue();
+                    createVal.linkedResourceIri = res.id;
+
+                    if (createVal instanceof CreateValue) {
+                        const updateRes = new UpdateResource();
+                        updateRes.id = this.parentResource.id;
+                        updateRes.type = this.parentResource.type;
+                        updateRes.property = this.propertyDef.id;
+
+                        updateRes.value = createVal;
+
+                        this._dspApiConnection.v2.values.createValue(updateRes as UpdateResource<CreateValue>).pipe(
+                            mergeMap((response: WriteValueResponse) =>
+                                // if successful, get the newly created value
+                                this._dspApiConnection.v2.values.getValue(this.parentResource.id, response.uuid)
+                            )
+                        ).subscribe(
+                            (res2: ReadResource) => {
+                                // emit a ValueAdded event to the listeners in:
+                                // property-view component to hide the add value form
+                                // resource-view component to trigger a refresh of the resource
+                                this._valueOperationEventService.emit(
+                                    new EmitEvent(Events.ValueAdded, new AddedEventValue(res2.getValues(updateRes.property)[0])));
+                                console.log('res2: ', res2);
+                            },
+                            (error: ApiResponseError) => {
+                                switch (error.status) {
+                                    case 400:
+                                        this.valueFormControl.setErrors({ duplicateValue: true });
+                                        break;
+                                    default:
+                                        console.log('There was an error processing your request. Details: ', error);
+                                        break;
+                                }
+                            }
+                        );
+                    }
+                });
+            } else if (mode === 'linkResourceResults') {
+                console.log('in creation mode');
+
+            }
         });
     }
 }

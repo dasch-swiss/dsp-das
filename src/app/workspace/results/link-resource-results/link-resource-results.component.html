@@ -1,18 +1,35 @@
+<div class="selected-list">
+    <mat-chip-list>
+        <mat-chip *ngFor="let slr of selectedLinkResources">
+            <span class="label">{{slr.label}}</span>
+            <span class="delete" (click)="removeResource(slr)">X</span>
+        </mat-chip>
+    </mat-chip-list>
+</div>
 <div class="results-list">
     <div class="resource" *ngFor="let res of resources">
         <div class="label">
-            {{res?.label}}
+            {{res.label}}
         </div>
         <span class="fill-remaining-space"></span>
         <div class="add-button">
-            <button mat-button type="button">Add Link</button>
+            <button
+                [disabled]="selectedLinkResources.indexOf(res) > -1"
+                mat-stroked-button
+                type="button"
+                (click)="selectResource(res)">
+                Add Link
+            </button>
         </div>
+    </div>
+    <div *ngIf="showLoadMoreButton">
+        <button mat-button (click)="loadMore()">Load More</button>
     </div>
 </div>
 <div class="form-panel form-action">
     <span>
-        <button mat-stroked-button type="button" (click)="closeDialog.emit()">
-            {{ 'appLabels.form.action.cancel' | translate }}
+        <button mat-button type="button" (click)="closeDialog.emit(selectedLinkResources)">
+            {{ 'appLabels.form.action.submit' | translate }}
         </button>
     </span>
 </div>
