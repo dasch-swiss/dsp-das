@@ -1,6 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { KnoraApiConnection, ApiResponseData, HealthResponse, ApiResponseError } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
+import { SessionService } from '../services/session.service';
 
 export interface ErrorMsg {
     status: number;
@@ -18,6 +21,8 @@ export interface ErrorMsg {
 export class ErrorComponent implements OnInit {
 
     @Input() status: number;
+
+    refresh = false;
 
     // default error messages
     errorMessages: ErrorMsg[] = [
@@ -67,8 +72,10 @@ export class ErrorComponent implements OnInit {
     errorMessage: ErrorMsg;
 
     constructor(
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _titleService: Title,
-        private _route: ActivatedRoute
+        private _route: ActivatedRoute,
+        private _session: SessionService
     ) { }
 
     ngOnInit() {
@@ -99,7 +106,20 @@ export class ErrorComponent implements OnInit {
     }
 
     reload() {
-        window.location.reload();
+        // get api health status first and reload page only, if the api is running and status is healthy
+        this.refresh = true;
+
+        this._dspApiConnection.system.healthEndpoint.getHealthStatus().subscribe(
+            (response: ApiResponseData<HealthResponse>) => {
+                if (response.body.status === 'healthy') {
+                    window.location.reload();
+                }
+            },
+            (error: ApiResponseError) => {
+                this. refresh = false;
+            }
+        );
+
     }
 
 }

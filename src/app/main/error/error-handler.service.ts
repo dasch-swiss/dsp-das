@@ -38,7 +38,7 @@ export class ErrorHandlerService {
                 position: {
                     top: '0'
                 },
-                data: { mode: 'error', id: status },
+                data: { mode: 'error', id: status, fullSize: true },
                 disableClose: true
             };
 
