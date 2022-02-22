@@ -1,5 +1,17 @@
 # Changelog
 
+### [9.2.2](https://www.github.com/dasch-swiss/dsp-app/compare/v9.2.1...v9.2.2) (2022-02-22)
+
+
+### Bug Fixes
+
+* **permission-info:** close permission info on scrolling (DEV-552) ([#671](https://www.github.com/dasch-swiss/dsp-app/issues/671)) ([8ac1d25](https://www.github.com/dasch-swiss/dsp-app/commit/8ac1d2555d4e5d742375c45d0823f981b99dbaff))
+
+
+### Maintenance
+
+* **dockerfile:** add dependabot config to keep base image up-to-date (INFRA-13) ([#670](https://www.github.com/dasch-swiss/dsp-app/issues/670)) ([485a57e](https://www.github.com/dasch-swiss/dsp-app/commit/485a57eda564a92bbdf5927e3752e18d86a59ee0))
+
 ### [9.2.1](https://www.github.com/dasch-swiss/dsp-app/compare/v9.2.0...v9.2.1) (2022-02-21)
 
 
