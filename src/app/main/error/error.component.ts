@@ -74,8 +74,7 @@ export class ErrorComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _titleService: Title,
-        private _route: ActivatedRoute,
-        private _session: SessionService
+        private _route: ActivatedRoute
     ) { }
 
     ngOnInit() {
