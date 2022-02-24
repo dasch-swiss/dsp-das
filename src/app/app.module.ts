@@ -157,7 +157,6 @@ import { SearchSelectOntologyComponent } from './workspace/search/advanced-searc
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
-import { CreateLinkResourceComponent } from './workspace/resource/operations/create-link-resource/create-link-resource.component';
 import { LinkResourceResultsComponent } from './workspace/results/link-resource-results/link-resource-results.component';
 import { TitleFromCamelCasePipe } from './main/pipes/string-transformation/title-from-camel-case.pipe';
 
@@ -297,7 +296,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         TextValueHtmlLinkDirective,
         TimeInputComponent,
         TimeValueComponent,
-        TitleFromCamelCasePipe
+        TitleFromCamelCasePipe,
         TruncatePipe,
         UploadComponent,
         UriValueComponent,
@@ -306,8 +305,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         UserMenuComponent,
         UsersComponent,
         UsersListComponent,
-        YetAnotherDateValueComponent,
-        
+        YetAnotherDateValueComponent
     ],
     imports: [
         AngularSplitModule.forRoot(),
