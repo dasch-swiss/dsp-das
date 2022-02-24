@@ -90,7 +90,9 @@ import { IntermediateComponent } from './workspace/intermediate/intermediate.com
 import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
 import { AddValueComponent } from './workspace/resource/operations/add-value/add-value.component';
+import { CreateLinkResourceComponent } from './workspace/resource/operations/create-link-resource/create-link-resource.component';
 import { DisplayEditComponent } from './workspace/resource/operations/display-edit/display-edit.component';
+import { PermissionInfoComponent } from './workspace/resource/permission-info/permission-info.component';
 import { PropertiesComponent } from './workspace/resource/properties/properties.component';
 import { AddRegionFormComponent } from './workspace/resource/representation/add-region-form/add-region-form.component';
 import { ArchiveComponent } from './workspace/resource/representation/archive/archive.component';
@@ -157,6 +159,7 @@ import { FulltextSearchComponent } from './workspace/search/fulltext-search/full
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
 import { CreateLinkResourceComponent } from './workspace/resource/operations/create-link-resource/create-link-resource.component';
 import { LinkResourceResultsComponent } from './workspace/results/link-resource-results/link-resource-results.component';
+import { TitleFromCamelCasePipe } from './main/pipes/string-transformation/title-from-camel-case.pipe';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -186,6 +189,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         ConfirmationDialogComponent,
         ConfirmationMessageComponent,
         CookiePolicyComponent,
+        CreateLinkResourceComponent,
         DashboardComponent,
         DateEditComponent,
         DateInputComponent,
@@ -222,6 +226,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         JDNDatepickerDirective,
         KnoraDatePipe,
         LinkifyPipe,
+        LinkResourceResultsComponent,
         LinkValueComponent,
         ListComponent,
         ListInfoFormComponent,
@@ -237,6 +242,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         OntologyFormComponent,
         PasswordFormComponent,
         PermissionComponent,
+        PermissionInfoComponent,
         ProfileComponent,
         ProgressIndicatorComponent,
         ProjectComponent,
@@ -291,6 +297,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         TextValueHtmlLinkDirective,
         TimeInputComponent,
         TimeValueComponent,
+        TitleFromCamelCasePipe
         TruncatePipe,
         UploadComponent,
         UriValueComponent,
@@ -300,8 +307,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         UsersComponent,
         UsersListComponent,
         YetAnotherDateValueComponent,
-        CreateLinkResourceComponent,
-        LinkResourceResultsComponent,
+        
     ],
     imports: [
         AngularSplitModule.forRoot(),
