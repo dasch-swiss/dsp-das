@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { FileRepresentation } from '../file-representation';
@@ -17,7 +17,20 @@ export class ArchiveComponent implements OnInit {
         private _errorHandler: ErrorHandlerService
     ) { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        const requestOptions = {
+            headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+            withCredentials: true
+        };
+
+        const pathToJson = this.src.fileValue.fileUrl.substring(0, this.src.fileValue.fileUrl.lastIndexOf('/')) + '/info.json';
+
+        this._http.get(pathToJson, requestOptions).subscribe(
+            res => {
+                console.log('res: ', res);
+            }
+        );
+    }
 
     // https://stackoverflow.com/questions/66986983/angular-10-download-file-from-firebase-link-without-opening-into-new-tab
     async downloadArchive(url: string) {
