@@ -1,5 +1,77 @@
 # Changelog
 
+### [9.2.1](https://www.github.com/dasch-swiss/dsp-app/compare/v9.2.0...v9.2.1) (2022-02-21)
+
+
+### Bug Fixes
+
+* **permission-info:** better permission string handling (DEV-537) ([#667](https://www.github.com/dasch-swiss/dsp-app/issues/667)) ([8be1efe](https://www.github.com/dasch-swiss/dsp-app/commit/8be1efe7427cac81309b895c3d56cd1bc0b047b1))
+* **resource:** resource viewer is broken if fileRepresentation has restricted view (DEV-455) ([#666](https://www.github.com/dasch-swiss/dsp-app/issues/666)) ([6a360ac](https://www.github.com/dasch-swiss/dsp-app/commit/6a360acd50cdceff5a75dceea116839a3648b1f0))
+* **still-image:** fix image displayed as black square (DEV-525) ([#668](https://www.github.com/dasch-swiss/dsp-app/issues/668)) ([33833f6](https://www.github.com/dasch-swiss/dsp-app/commit/33833f6d8efe06335a755547cfba2d505683799b))
+
+
+### Maintenance
+
+* **deps:** bump url-parse from 1.5.4 to 1.5.7 ([#664](https://www.github.com/dasch-swiss/dsp-app/issues/664)) ([54a348f](https://www.github.com/dasch-swiss/dsp-app/commit/54a348f4e86f64c86579d84ef79ca86a4bb8d3de))
+* **rollbar:** add environment to the config ([#669](https://www.github.com/dasch-swiss/dsp-app/issues/669)) ([8a587b9](https://www.github.com/dasch-swiss/dsp-app/commit/8a587b9b91a32727cd05db980a42b55d09e10722))
+
+## [9.2.0](https://www.github.com/dasch-swiss/dsp-app/compare/v9.1.0...v9.2.0) (2022-02-17)
+
+
+### Bug Fixes
+
+* **ontology-editor:** display sub-properties the correct way (DEV-530) ([#661](https://www.github.com/dasch-swiss/dsp-app/issues/661)) ([a2cf6e0](https://www.github.com/dasch-swiss/dsp-app/commit/a2cf6e074698553aab51667461345e04a3b7928b))
+
+
+### Enhancements
+
+* **resource:** display permissions (DEV-454) ([#660](https://www.github.com/dasch-swiss/dsp-app/issues/660)) ([13a3a49](https://www.github.com/dasch-swiss/dsp-app/commit/13a3a49574a5d2b73d8427606b724eec5eaabc8b))
+
+## [9.1.0](https://www.github.com/dasch-swiss/dsp-app/compare/v9.0.1...v9.1.0) (2022-02-15)
+
+
+### Enhancements
+
+* **add-link-resource-button:** Add Link Resource Button (DEV-404) ([#645](https://www.github.com/dasch-swiss/dsp-app/issues/645)) ([f762c3c](https://www.github.com/dasch-swiss/dsp-app/commit/f762c3ce8c06bb09d644474d01cc8548197aa2d3))
+
+
+### Maintenance
+
+* **deps-dev:** bump karma from 6.3.13 to 6.3.14 ([#653](https://www.github.com/dasch-swiss/dsp-app/issues/653)) ([1794e47](https://www.github.com/dasch-swiss/dsp-app/commit/1794e47406114e054c5393effe940d0db4b43add))
+* **deps:** bump follow-redirects from 1.14.7 to 1.14.8 ([#656](https://www.github.com/dasch-swiss/dsp-app/issues/656)) ([8554764](https://www.github.com/dasch-swiss/dsp-app/commit/8554764b3562868c6fcee9462e89325e3fd5c2c6))
+* **google fonts:** switches back to self hosting google fonts ([#654](https://www.github.com/dasch-swiss/dsp-app/issues/654)) ([938721b](https://www.github.com/dasch-swiss/dsp-app/commit/938721b9ae9e28f08c7b0af7742c44a1ed843799))
+* **open-sea-dragon:** updates package to v3.0.0 ([#658](https://www.github.com/dasch-swiss/dsp-app/issues/658)) ([42bffa6](https://www.github.com/dasch-swiss/dsp-app/commit/42bffa6fa542babc06a1086324eae10931a9de78))
+
+### [9.0.1](https://www.github.com/dasch-swiss/dsp-app/compare/v9.0.0...v9.0.1) (2022-02-09)
+
+
+### Bug Fixes
+
+* **main:** bug fix in configuration file in case of prod mode (DEV-491) ([#651](https://www.github.com/dasch-swiss/dsp-app/issues/651)) ([a6c9e87](https://www.github.com/dasch-swiss/dsp-app/commit/a6c9e87d74d47f00450f1cb64d6f533d7191496d))
+
+## [9.0.0](https://www.github.com/dasch-swiss/dsp-app/compare/v8.5.0...v9.0.0) (2022-02-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* display dsp release number (DEV-420) (#644)
+
+### Bug Fixes
+
+* **ontology:** support subproperty in ontology editor (DEV-332) ([#643](https://www.github.com/dasch-swiss/dsp-app/issues/643)) ([c838043](https://www.github.com/dasch-swiss/dsp-app/commit/c838043b273739ed444d77b42bc9a919a94078a7))
+
+
+### Enhancements
+
+* display dsp release number (DEV-420) ([#644](https://www.github.com/dasch-swiss/dsp-app/issues/644)) ([b6c9f1c](https://www.github.com/dasch-swiss/dsp-app/commit/b6c9f1c12c62e2610811f96f890032ba6ce18080))
+
+
+### Maintenance
+
+* **deps:** bump log4js from 6.3.0 to 6.4.1 ([#648](https://www.github.com/dasch-swiss/dsp-app/issues/648)) ([dd2eebe](https://www.github.com/dasch-swiss/dsp-app/commit/dd2eebe3eb3c6aba1a456ebfaa1548097e90d667))
+* **deps:** bump nanoid from 3.1.30 to 3.2.0 ([#647](https://www.github.com/dasch-swiss/dsp-app/issues/647)) ([13c6f2a](https://www.github.com/dasch-swiss/dsp-app/commit/13c6f2a0898359bd68dac2cd24901454c754a7d8))
+* **deps:** update packages ([#650](https://www.github.com/dasch-swiss/dsp-app/issues/650)) ([cc60b0b](https://www.github.com/dasch-swiss/dsp-app/commit/cc60b0b374aa608b15605d07a5bf84e636112d58))
+
 ## [8.5.0](https://www.github.com/dasch-swiss/dsp-app/compare/v8.4.0...v8.5.0) (2022-01-19)
 
 
