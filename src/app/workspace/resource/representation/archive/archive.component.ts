@@ -11,6 +11,8 @@ import { FileRepresentation } from '../file-representation';
 export class ArchiveComponent implements OnInit {
 
     @Input() src: FileRepresentation;
+    originalFilename: string;
+    temp: string;
 
     constructor(
         private readonly _http: HttpClient,
@@ -23,11 +25,11 @@ export class ArchiveComponent implements OnInit {
             withCredentials: true
         };
 
-        const pathToJson = this.src.fileValue.fileUrl.substring(0, this.src.fileValue.fileUrl.lastIndexOf('/')) + '/info.json';
+        const pathToJson = this.src.fileValue.fileUrl.substring(0, this.src.fileValue.fileUrl.lastIndexOf('/')) + '/knora.json';
 
         this._http.get(pathToJson, requestOptions).subscribe(
             res => {
-                console.log('res: ', res);
+                this.originalFilename = res['originalFilename'];
             }
         );
     }
@@ -46,7 +48,14 @@ export class ArchiveComponent implements OnInit {
         const url = window.URL.createObjectURL(data);
         const e = document.createElement('a');
         e.href = url;
-        e.download = url.substr(url.lastIndexOf('/') + 1);
+
+        // set filename
+        if (this.originalFilename === undefined) {
+            e.download = url.substr(url.lastIndexOf('/') + 1);
+        } else {
+            e.download = this.originalFilename;
+        }
+
         document.body.appendChild(e);
         e.click();
         document.body.removeChild(e);
