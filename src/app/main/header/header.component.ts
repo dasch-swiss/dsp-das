@@ -56,23 +56,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 this._session.isSessionValid().subscribe((response: boolean) => {
                     this.session = response;
                 });
-
-                this._dspApiConnection.system.healthEndpoint.getHealthStatus().subscribe(
-                    (response: ApiResponseData<HealthResponse>) => {
-                        if (response.body.status === 'unhealthy') {
-                            const error: ApiResponseError = {
-                                error: response.body.message,
-                                method: response.method,
-                                status: 500,
-                                url: this._router.url
-                            };
-                            this._errorHandler.showMessage(error);
-                        }
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                );
             }
         });
 
