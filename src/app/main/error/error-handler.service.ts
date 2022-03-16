@@ -25,6 +25,8 @@ export class ErrorHandlerService {
         // in case of (internal) server error
         const apiServerError = (error.error && !error.error['response']);
 
+        const apiResponseMessage = (error.error['response'] ? error.error['response'].error : undefined);
+
         if ((error.status > 499 && error.status < 600) || apiServerError) {
 
             let status = (apiServerError ? 503 : error.status);
@@ -60,7 +62,7 @@ export class ErrorHandlerService {
                 position: {
                     top: '0'
                 },
-                data: { mode: 'error', id: status, fullSize: true },
+                data: { mode: 'error', id: status, comment: apiResponseMessage, fullSize: true },
                 disableClose: true
             };
 

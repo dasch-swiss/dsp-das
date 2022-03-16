@@ -1,9 +1,8 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { KnoraApiConnection, ApiResponseData, HealthResponse, ApiResponseError } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, HealthResponse, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
-import { SessionService } from '../services/session.service';
 
 export interface ErrorMsg {
     status: number;
@@ -21,6 +20,8 @@ export interface ErrorMsg {
 export class ErrorComponent implements OnInit {
 
     @Input() status: number;
+
+    @Input() comment?: string;
 
     refresh = false;
 

@@ -8,6 +8,7 @@
             <h2 class="mat-title">ERROR {{status}}</h2>
             <h1 class="mat-headline">{{errorMessage?.message}}</h1>
             <p [innerHTML]="errorMessage.description"></p>
+            <p *ngIf="comment"><strong>API response:</strong><br>&rarr; {{comment}}</p>
             <div [ngSwitch]="errorMessage?.action" class="action">
                 <button *ngSwitchCase="'goback'" mat-button routerLink="/">
                     <mat-icon>keyboard_backspace</mat-icon> Please go back to the start page.
