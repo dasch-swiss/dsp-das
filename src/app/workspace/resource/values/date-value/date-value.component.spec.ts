@@ -12,7 +12,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CreateDateValue, KnoraDate, KnoraPeriod, MockResource, ReadDateValue, UpdateDateValue } from '@dasch-swiss/dsp-js';
 import { Subject } from 'rxjs';
 import { KnoraDatePipe } from 'src/app/main/pipes/formatting/knoradate.pipe';
-import { YetAnotherDateValueComponent } from './yet-another-date-value.component';
+import { DateValueComponent } from './date-value.component';
 
 @Component({
     selector: 'app-date-value-handler',
@@ -73,11 +73,11 @@ class TestDateInputComponent implements ControlValueAccessor, MatFormFieldContro
  */
 @Component({
     template: `
-    <app-yet-another-date-value #inputVal [displayValue]="displayInputVal" [mode]="mode"></app-yet-another-date-value>`
+    <app-date-value #inputVal [displayValue]="displayInputVal" [mode]="mode"></app-date-value>`
 })
 class TestHostDisplayValueComponent implements OnInit {
 
-    @ViewChild('inputVal') inputValueComponent: YetAnotherDateValueComponent;
+    @ViewChild('inputVal') inputValueComponent: DateValueComponent;
 
     displayInputVal: ReadDateValue;
 
@@ -102,11 +102,11 @@ class TestHostDisplayValueComponent implements OnInit {
  */
 @Component({
     template: `
-        <app-yet-another-date-value #inputVal [mode]="mode"></app-yet-another-date-value>`
+        <app-date-value #inputVal [mode]="mode"></app-date-value>`
 })
 class TestHostCreateValueComponent implements OnInit {
 
-    @ViewChild('inputVal') inputValueComponent: YetAnotherDateValueComponent;
+    @ViewChild('inputVal') inputValueComponent: DateValueComponent;
 
     mode: 'read' | 'update' | 'create' | 'search';
 
@@ -122,11 +122,11 @@ class TestHostCreateValueComponent implements OnInit {
  */
 @Component({
     template: `
-      <app-yet-another-date-value #inputVal [mode]="mode" [valueRequiredValidator]="false"></app-yet-another-date-value>`
+      <app-date-value #inputVal [mode]="mode" [valueRequiredValidator]="false"></app-date-value>`
 })
 class TestHostCreateValueNoValueRequiredComponent implements OnInit {
 
-    @ViewChild('inputVal') inputValueComponent: YetAnotherDateValueComponent;
+    @ViewChild('inputVal') inputValueComponent: DateValueComponent;
 
     mode: 'read' | 'update' | 'create' | 'search';
 
@@ -137,9 +137,9 @@ class TestHostCreateValueNoValueRequiredComponent implements OnInit {
     }
 }
 
-describe('YetAnotherDateValueComponent', () => {
-    let component: YetAnotherDateValueComponent;
-    let fixture: ComponentFixture<YetAnotherDateValueComponent>;
+describe('DateValueComponent', () => {
+    let component: DateValueComponent;
+    let fixture: ComponentFixture<DateValueComponent>;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -149,7 +149,7 @@ describe('YetAnotherDateValueComponent', () => {
                 BrowserAnimationsModule
             ],
             declarations: [
-                YetAnotherDateValueComponent,
+                DateValueComponent,
                 TestDateInputComponent,
                 TestHostDisplayValueComponent,
                 TestHostCreateValueComponent,
@@ -181,7 +181,7 @@ describe('YetAnotherDateValueComponent', () => {
 
             const hostCompDe = testHostFixture.debugElement;
 
-            valueComponentDe = hostCompDe.query(By.directive(YetAnotherDateValueComponent));
+            valueComponentDe = hostCompDe.query(By.directive(DateValueComponent));
             valueReadModeDebugElement = valueComponentDe.query(By.css('.rm-value'));
             valueReadModeNativeElement = valueReadModeDebugElement.nativeElement;
 
@@ -559,7 +559,7 @@ describe('YetAnotherDateValueComponent', () => {
 
             const hostCompDe = testHostFixture.debugElement;
 
-            valueComponentDe = hostCompDe.query(By.directive(YetAnotherDateValueComponent));
+            valueComponentDe = hostCompDe.query(By.directive(DateValueComponent));
         });
 
         it('should create a value', () => {

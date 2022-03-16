@@ -112,6 +112,9 @@ import { ResourceComponent } from './workspace/resource/resource.component';
 import { BooleanValueComponent } from './workspace/resource/values/boolean-value/boolean-value.component';
 import { ColorPickerComponent } from './workspace/resource/values/color-value/color-picker/color-picker.component';
 import { ColorValueComponent } from './workspace/resource/values/color-value/color-value.component';
+import { DatePickerComponent } from './workspace/resource/values/date-value/date-picker/date-picker.component';
+import { DateValueHandlerComponent } from './workspace/resource/values/date-value/date-value-handler/date-value-handler.component';
+import { DateValueComponent } from './workspace/resource/values/date-value/date-value.component';
 import { DecimalValueComponent } from './workspace/resource/values/decimal-value/decimal-value.component';
 import { GeonameValueComponent } from './workspace/resource/values/geoname-value/geoname-value.component';
 import { IntValueComponent } from './workspace/resource/values/int-value/int-value.component';
@@ -127,9 +130,6 @@ import { TextValueAsXMLComponent } from './workspace/resource/values/text-value/
 import { TimeInputComponent } from './workspace/resource/values/time-value/time-input/time-input.component';
 import { TimeValueComponent } from './workspace/resource/values/time-value/time-value.component';
 import { UriValueComponent } from './workspace/resource/values/uri-value/uri-value.component';
-import { DatePickerComponent } from './workspace/resource/values/yet-another-date-value/date-picker/date-picker.component';
-import { DateValueHandlerComponent } from './workspace/resource/values/yet-another-date-value/date-value-handler/date-value-handler.component';
-import { YetAnotherDateValueComponent } from './workspace/resource/values/yet-another-date-value/yet-another-date-value.component';
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
 import { ResourceGridComponent } from './workspace/results/list-view/resource-grid/resource-grid.component';
 import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
@@ -184,6 +184,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         CreateLinkResourceComponent,
         DashboardComponent,
         DatePickerComponent,
+        DateValueComponent,
         DateValueHandlerComponent,
         DecimalValueComponent,
         DialogComponent,
@@ -293,7 +294,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         UserMenuComponent,
         UsersComponent,
         UsersListComponent,
-        YetAnotherDateValueComponent,
     ],
     imports: [
         AngularSplitModule.forRoot(),

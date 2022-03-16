@@ -10,11 +10,11 @@ import { DatePickerComponent } from './date-picker/date-picker.component';
 const resolvedPromise = Promise.resolve(null);
 
 @Component({
-    selector: 'app-yet-another-date-value',
-    templateUrl: './yet-another-date-value.component.html',
-    styleUrls: ['./yet-another-date-value.component.scss']
+    selector: 'app-date-value',
+    templateUrl: './date-value.component.html',
+    styleUrls: ['./date-value.component.scss']
 })
-export class YetAnotherDateValueComponent extends BaseValueDirective implements OnInit, OnChanges, OnDestroy {
+export class DateValueComponent extends BaseValueDirective implements OnInit, OnChanges, OnDestroy {
 
     @ViewChild('dateInput') datePickerComponent: DatePickerComponent;
 
