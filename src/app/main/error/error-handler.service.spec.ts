@@ -53,7 +53,7 @@ describe('ErrorHandlerService', () => {
         const dspConnSpy = TestBed.inject(DspApiConnectionToken);
         (dspConnSpy.system.healthEndpoint as jasmine.SpyObj<HealthEndpointSystem>).getHealthStatus.and.callFake(
             () => {
-                const health = MockHealth.mockMaintenance();
+                const health = MockHealth.mockRunning();
                 return of(health);
             }
         );
