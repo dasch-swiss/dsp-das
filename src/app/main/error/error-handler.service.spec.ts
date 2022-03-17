@@ -53,7 +53,7 @@ describe('ErrorHandlerService', () => {
         const dspConnSpy = TestBed.inject(DspApiConnectionToken);
         (dspConnSpy.system.healthEndpoint as jasmine.SpyObj<HealthEndpointSystem>).getHealthStatus.and.callFake(
             () => {
-                const health = MockHealth.mockRunning();
+                const health = MockHealth.mockStopped();
                 return of(health);
             }
         );
@@ -76,7 +76,7 @@ describe('ErrorHandlerService', () => {
         expect(service).toBeTruthy();
     });
 
-    xit('api is not healthy: should return 503 server error', () => {
+    it('api is not healthy: should return 503 server error', () => {
 
         const error = require('../../../assets/test-data/api-error-0.json');
 
