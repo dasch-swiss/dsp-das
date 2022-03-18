@@ -347,7 +347,6 @@ export class ResourceClassFormComponent implements OnInit, AfterViewChecked {
 
             onto.entity = newResClass;
 
-            console.log('create class from app: payload = ', onto)
             this._dspApiConnection.v2.onto.createResourceClass(onto).subscribe(
                 (classResponse: ResourceClassDefinitionWithAllLanguages) => {
                     // need lmd from classResponse
