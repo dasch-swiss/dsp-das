@@ -27,6 +27,7 @@ export class CreateLinkResourceComponent implements OnInit {
     @Input() parentResource: ReadResource;
     @Input() propDef: string;
     @Input() resourceClassDef: string;
+    @Input() ontoIri: string;
 
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
@@ -49,6 +50,9 @@ export class CreateLinkResourceComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        // console.log('parentResource: ', this.parentResource);
+        // console.log('propDef: ', this.propDef);
+        // console.log('resourceClassDef: ', this.resourceClassDef);
         this.propertiesForm = this._fb.group({});
 
         this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassDef).subscribe(
@@ -82,6 +86,7 @@ export class CreateLinkResourceComponent implements OnInit {
     }
 
     onSubmit() {
+        console.log('clicked');
         if (this.propertiesForm.valid) {
             const createResource = new CreateResource();
 

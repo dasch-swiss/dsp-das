@@ -15,9 +15,12 @@ import {
     CreateLinkValue,
     KnoraApiConnection,
     ReadLinkValue,
+    ReadOntology,
     ReadResource,
     ReadResourceSequence,
     ResourceClassAndPropertyDefinitions,
+    ResourceClassDefinition,
+    ResourcePropertyDefinition,
     UpdateLinkValue
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
@@ -43,6 +46,7 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
     @Input() displayValue?: ReadLinkValue;
     @Input() parentResource: ReadResource;
     @Input() propIri: string;
+    @Input() ontoIri: string;
 
     @Output() referredResourceClicked: EventEmitter<ReadLinkValue> = new EventEmitter();
 
@@ -59,6 +63,9 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
     labelChangesSubscription: Subscription;
     // label cannot contain logical operations of lucene index
     customValidators = [resourceValidator];
+
+    resourceClasses: ResourceClassDefinition[];
+    properties: ResourcePropertyDefinition[];
 
     constructor(
         private _dialog: MatDialog,
@@ -114,10 +121,42 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
     ngOnInit() {
         const linkType = this.parentResource.getLinkPropertyIriFromLinkValuePropertyIri(this.propIri);
         this.restrictToResourceClass = this.parentResource.entityInfo.properties[linkType].objectType;
+        // console.log('parentResource: ', this.parentResource);
+        // console.log('linkType: ', linkType);
+        // console.log('restrictToResourceClass: ', this.restrictToResourceClass);
+        // console.log('resourceClasses: ', this.resourceClasses);
+        // console.log('ontoIri: ', this.ontoIri);
+        // console.log('propIri: ', this.propIri);
 
         // get label of resource class
         this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.restrictToResourceClass).subscribe(
-            (onto: ResourceClassAndPropertyDefinitions) => this.resourceClassLabel = onto.classes[this.restrictToResourceClass].label
+            (onto: ResourceClassAndPropertyDefinitions) => {
+                // console.log('onto: ', onto);
+                this.resourceClassLabel = onto.classes[this.restrictToResourceClass].label;
+            }
+        );
+
+        this._dspApiConnection.v2.ontologyCache.getOntology(this.ontoIri).subscribe(
+            (onto: Map<string, ReadOntology>) => {
+
+                const resClasses = onto.get(this.ontoIri).getClassDefinitionsByType(ResourceClassDefinition);
+                this.resourceClasses = resClasses.filter(
+                    (resClassDef: ResourceClassDefinition) => resClassDef.id === this.restrictToResourceClass
+                );
+                const subclasses = resClasses.filter(
+                    (resClassDef: ResourceClassDefinition) =>
+                        resClassDef.subClassOf.indexOf(this.restrictToResourceClass) > -1
+                );
+
+                this.resourceClasses = this.resourceClasses.concat(subclasses);
+                // console.log('resourceClasses: ', this.resourceClasses);
+
+                this.properties = onto.get(this.ontoIri).getPropertyDefinitionsByType(ResourcePropertyDefinition);
+                // console.log('properties: ', this.properties);
+            },
+            error => {
+                console.error(error);
+            }
         );
 
         // initialize form control elements
@@ -214,15 +253,16 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
         this.referredResourceHovered.emit(this.displayValue);
     }
 
-    openDialog(mode: string, ev: Event, iri?: string): void {
+    openDialog(mode: string, ev: Event, iri?: string, resClass?: ResourceClassDefinition): void {
         ev.preventDefault();
+        console.log('resClass: ', resClass);
         const dialogConfig: MatDialogConfig = {
             width: '840px',
             maxHeight: '80vh',
             position: {
                 top: '112px'
             },
-            data: { mode: mode, title: this.resourceClassLabel, id: iri, parentResource: this.parentResource, resourceClassDefinition: this.restrictToResourceClass },
+            data: { mode: mode, title: resClass.label, id: iri, parentResource: this.parentResource, resourceClassDefinition: resClass.id, ontoIri: this.ontoIri },
             disableClose: true
         };
 
