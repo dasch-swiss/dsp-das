@@ -414,7 +414,7 @@ export class PropertyFormComponent implements OnInit {
 
                 const updateComment = new UpdateResourcePropertyComment();
                 updateComment.id = this.propertyInfo.propDef.id;
-                updateComment.comments = this.comments;
+                updateComment.comments = (this.comments.length ? this.comments : this.labels);
                 onto4Comment.entity = updateComment;
 
                 this._dspApiConnection.v2.onto.updateResourceProperty(onto4Label).subscribe(

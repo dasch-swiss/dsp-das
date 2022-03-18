@@ -302,7 +302,7 @@ export class ResourceClassFormComponent implements OnInit, AfterViewChecked {
 
             const updateComment = new UpdateResourceClassComment();
             updateComment.id = this.iri;
-            updateComment.comments = this.resourceClassComments;
+            updateComment.comments = (this.resourceClassComments.length ? this.resourceClassComments : this.resourceClassLabels);
             onto4Comment.entity = updateComment;
 
             this._dspApiConnection.v2.onto.updateResourceClass(onto4Label).subscribe(
