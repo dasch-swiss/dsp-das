@@ -23,7 +23,7 @@ export class SwitchPropertiesComponent implements OnInit {
 
     @Input() isRequiredProp: boolean;
 
-    @Input() ontoIri?: string;
+    @Input() currentOntoIri?: string;
 
     mode = 'create';
 

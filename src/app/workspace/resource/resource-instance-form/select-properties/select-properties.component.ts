@@ -32,7 +32,7 @@ export class SelectPropertiesComponent implements OnInit {
 
     @Input() parentForm: FormGroup;
 
-    @Input() ontoIri: string;
+    @Input() currentOntoIri: string;
 
     parentResource = new ReadResource();
 

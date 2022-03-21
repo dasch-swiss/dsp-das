@@ -27,7 +27,7 @@ export class CreateLinkResourceComponent implements OnInit {
     @Input() parentResource: ReadResource;
     @Input() propDef: string;
     @Input() resourceClassDef: string;
-    @Input() ontoIri: string;
+    @Input() currentOntoIri: string;
 
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 

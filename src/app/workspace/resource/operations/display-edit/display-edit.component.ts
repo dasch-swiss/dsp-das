@@ -131,7 +131,6 @@ export class DisplayEditComponent implements OnInit {
 
     ngOnInit() {
         this.ontoIri = this.parentResource.type.split('#')[0];
-        // console.log('ONTOIRI: ', this.ontoIri);
         this.mode = 'read';
         this.dateDisplayOptions = 'all';
         this.showDateLabels = true;

@@ -46,7 +46,7 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
     @Input() displayValue?: ReadLinkValue;
     @Input() parentResource: ReadResource;
     @Input() propIri: string;
-    @Input() ontoIri: string;
+    @Input() currentOntoIri: string;
 
     @Output() referredResourceClicked: EventEmitter<ReadLinkValue> = new EventEmitter();
 
@@ -136,10 +136,10 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
             }
         );
 
-        this._dspApiConnection.v2.ontologyCache.getOntology(this.ontoIri).subscribe(
+        this._dspApiConnection.v2.ontologyCache.getOntology(this.currentOntoIri).subscribe(
             (onto: Map<string, ReadOntology>) => {
 
-                const resClasses = onto.get(this.ontoIri).getClassDefinitionsByType(ResourceClassDefinition);
+                const resClasses = onto.get(this.currentOntoIri).getClassDefinitionsByType(ResourceClassDefinition);
                 this.resourceClasses = resClasses.filter(
                     (resClassDef: ResourceClassDefinition) => resClassDef.id === this.restrictToResourceClass
                 );
@@ -151,7 +151,7 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
                 this.resourceClasses = this.resourceClasses.concat(subclasses);
                 // console.log('resourceClasses: ', this.resourceClasses);
 
-                this.properties = onto.get(this.ontoIri).getPropertyDefinitionsByType(ResourcePropertyDefinition);
+                this.properties = onto.get(this.currentOntoIri).getPropertyDefinitionsByType(ResourcePropertyDefinition);
                 // console.log('properties: ', this.properties);
             },
             error => {
@@ -262,7 +262,7 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
             position: {
                 top: '112px'
             },
-            data: { mode: mode, title: resClass.label, id: iri, parentResource: this.parentResource, resourceClassDefinition: resClass.id, ontoIri: this.ontoIri },
+            data: { mode: mode, title: resClass.label, id: iri, parentResource: this.parentResource, resourceClassDefinition: resClass.id, ontoIri: this.currentOntoIri },
             disableClose: true
         };
 
