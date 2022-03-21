@@ -7,6 +7,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
     ApiResponseError,
@@ -155,6 +156,7 @@ describe('PropertiesComponent', () => {
 
         TestBed.configureTestingModule({
             imports: [
+                BrowserAnimationsModule,
                 ClipboardModule,
                 MatDialogModule,
                 MatIconModule,

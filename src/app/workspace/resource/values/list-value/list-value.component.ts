@@ -45,8 +45,7 @@ export class ListValueComponent extends BaseValueDirective implements OnInit, On
     constructor(
         @Inject(FormBuilder) private _fb: FormBuilder,
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: ErrorHandlerService,
-        private _notification: NotificationService
+        private _errorHandler: ErrorHandlerService
     ) {
         super();
     }
