@@ -150,7 +150,6 @@ export class ListViewComponent implements OnChanges {
         } else if (res.count > 0) {
             this.selectedResourceIdx = res.resListIndex;
             this.selectedResources.emit(res);
-            // this.resourceSelected.emit(res.resInfo[0].id);
         }
 
     }
