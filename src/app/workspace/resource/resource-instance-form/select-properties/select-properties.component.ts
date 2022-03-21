@@ -47,9 +47,6 @@ export class SelectPropertiesComponent implements OnInit {
     constructor(private _valueService: ValueService) { }
 
     ngOnInit() {
-        // console.log('ontologyInfo: ', this.ontologyInfo);
-        // console.log('resourceClass: ', this.selectedResourceClass);
-        // console.log('resourceClasses: ', this.resourceClasses);
         if (this.properties) {
             for (const prop of this.properties) {
                 if (prop) {
