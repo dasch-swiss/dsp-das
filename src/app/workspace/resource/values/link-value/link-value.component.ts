@@ -138,7 +138,7 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
 
         this._dspApiConnection.v2.ontologyCache.getOntology(this.currentOntoIri).subscribe(
             (onto: Map<string, ReadOntology>) => {
-
+                console.log('currentOntoIri: ', this.currentOntoIri);
                 const resClasses = onto.get(this.currentOntoIri).getClassDefinitionsByType(ResourceClassDefinition);
                 this.resourceClasses = resClasses.filter(
                     (resClassDef: ResourceClassDefinition) => resClassDef.id === this.restrictToResourceClass
