@@ -38,12 +38,12 @@ describe('ErrorHandlerService', () => {
             ],
             providers: [
                 {
-                    provide: DspApiConnectionToken,
-                    useValue: apiEndpointSpyObj
-                },
-                {
                     provide: MatDialog,
                     useValue: { open: () => of({ id: 1 }) }
+                },
+                {
+                    provide: DspApiConnectionToken,
+                    useValue: apiEndpointSpyObj
                 }
             ]
         });
@@ -54,7 +54,7 @@ describe('ErrorHandlerService', () => {
         const dspConnSpy = TestBed.inject(DspApiConnectionToken);
         (dspConnSpy.system.healthEndpoint as jasmine.SpyObj<HealthEndpointSystem>).getHealthStatus.and.callFake(
             () => {
-                const health = MockHealth.mockStopped();
+                const health = MockHealth.mockRunning();
                 return of(health);
             }
         );
