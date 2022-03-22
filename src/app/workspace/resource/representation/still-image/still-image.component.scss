@@ -32,10 +32,10 @@ $bright: #ccc;
     .captions-container {
       .top, .bottom {
         text-align: left;
-        .iiif-link, .copy-button {
+        .iiif-url, .copy-button {
           display: inline-block;
         }
-        .iiif-link {
+        .iiif-url {
           a {
             padding: 0px 0px 0px 16px;
             white-space: nowrap;
