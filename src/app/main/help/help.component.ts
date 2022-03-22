@@ -53,7 +53,7 @@ export class HelpComponent implements OnInit {
         {
             title: 'DSP-APP ',
             text: 'This is the tool of the user interface you are using right now. DaSCH\'s generic web application.',
-            url: 'https://github.com/dasch-swiss/dsp-app/releases/tag/v',
+            url: 'https://github.com/dasch-swiss/dsp-app/releases/tag/',
             urlText: 'Release notes'
         },
         {
@@ -111,7 +111,7 @@ export class HelpComponent implements OnInit {
                 this.apiVersion = response.body;
 
                 // set dsp-app version
-                this.tools[0].title += ' v' + this.appVersion;
+                this.tools[0].title += this.appVersion;
                 this.tools[0].url += this.appVersion;
 
                 // set dsp-api version
@@ -119,7 +119,7 @@ export class HelpComponent implements OnInit {
                 this.tools[1].url += this.apiVersion.webapi;
 
                 // set dsp-sipi version
-                this.tools[2].title += ' v' + this.apiVersion.sipi;
+                this.tools[2].title += this.apiVersion.sipi;
                 this.tools[2].url += this.apiVersion.sipi;
             },
             (error: ApiResponseError) => {
