@@ -6,7 +6,15 @@
                 <span class="caption mat-caption">{{imageCaption}}</span>
             </div>
             <div class="bottom">
-                <a href="{{iiifUrl}}" target="_blank" class="iiif mat-caption">{{iiifUrl}}</a>
+                <div class="iiif-link">
+                    <a href="{{iiifUrl}}" target="_blank" class="mat-caption">{{iiifUrl}}</a>
+                </div>
+                <div class="copy-button">
+                    <button mat-icon-button matTooltip="Copy IIIF URL" [cdkCopyToClipboard]="iiifUrl">
+                        <mat-icon>content_copy</mat-icon>
+                    </button>
+                </div>
+
             </div>
         </div>
         <!-- caption -->
