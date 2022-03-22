@@ -10,7 +10,11 @@
                     <a href="{{iiifUrl}}" target="_blank" class="mat-caption">{{iiifUrl}}</a>
                 </div>
                 <div class="copy-button">
-                    <button mat-icon-button matTooltip="Copy IIIF URL" [cdkCopyToClipboard]="iiifUrl">
+                    <button
+                        mat-icon-button
+                        matTooltip="Copy IIIF URL to clipboard"
+                        [cdkCopyToClipboard]="iiifUrl"
+                        (click)="openSnackBar('IIIF URL copied to clipboard!')">
                         <mat-icon>content_copy</mat-icon>
                     </button>
                 </div>
