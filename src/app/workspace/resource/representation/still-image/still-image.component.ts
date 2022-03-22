@@ -10,25 +10,30 @@ import {
     SimpleChanges
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import {
-    Constants, CreateColorValue, CreateGeomValue, CreateLinkValue,
-    CreateResource, CreateTextValueAsString, KnoraApiConnection,
-    Point2D, ReadColorValue, ReadFileValue,
+    Constants,
+    CreateColorValue,
+    CreateGeomValue,
+    CreateLinkValue,
+    CreateResource,
+    CreateTextValueAsString,
+    KnoraApiConnection,
+    Point2D,
+    ReadColorValue,
+    ReadFileValue,
     ReadGeomValue,
     ReadResource,
     ReadStillImageFileValue,
-    ReadValue,
     RegionGeometry
 } from '@dasch-swiss/dsp-js';
+import * as OpenSeadragon from 'openseadragon';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { DspCompoundPosition } from '../../dsp-resource';
 import { FileRepresentation } from '../file-representation';
-import * as OpenSeadragon from 'openseadragon';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
-
 
 /**
  * represents a region resource.
