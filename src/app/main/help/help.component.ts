@@ -53,13 +53,13 @@ export class HelpComponent implements OnInit {
         {
             title: 'DSP-APP ',
             text: 'This is the tool of the user interface you are using right now. DaSCH\'s generic web application.',
-            url: 'https://github.com/dasch-swiss/dsp-app/releases/tag/',
+            url: 'https://github.com/dasch-swiss/dsp-app/releases/tag/v',
             urlText: 'Release notes'
         },
         {
             title: 'DSP-API ',
             text: 'Framework to store, share, and work with primary resources in the humanities.',
-            url: 'https://github.com/dasch-swiss/dsp-api/releases/tag/',
+            url: 'https://github.com/dasch-swiss/dsp-api/releases/tag/v',
             urlText: 'Release notes'
         },
         {
