@@ -81,8 +81,8 @@ jobs:
           node-version: ${{ env.NV }}
       - name: Install dependencies
         run: npm install
-      - name: Build in prod mode
-        run: npm run build-prod
+      - name: Build docker image in prod mode
+        run: docker build .
 
   release-please:
     name: Prepare next release
