@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -5,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Constants, ReadGeomValue, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { AppInitService } from 'src/app/app-init.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
@@ -120,8 +122,13 @@ describe('StillImageComponent', () => {
         };
 
         TestBed.configureTestingModule({
-            declarations: [StillImageComponent, TestHostComponent],
+            declarations: [
+                StillImageComponent,
+                TestHostComponent
+            ],
             imports: [
+                BrowserAnimationsModule,
+                HttpClientModule,
                 MatDialogModule,
                 MatIconModule,
                 MatSnackBarModule,
@@ -188,7 +195,7 @@ describe('StillImageComponent', () => {
         const hostCompDe = testHostFixture.debugElement;
         const stillImageComponentDe = hostCompDe.query(By.directive(StillImageComponent));
 
-        const iiifUrlDebugElement = stillImageComponentDe.query(By.css('.iiif'));
+        const iiifUrlDebugElement = stillImageComponentDe.query(By.css('.iiif-url a'));
         const iiifUrlEle = iiifUrlDebugElement.nativeElement;
 
         expect(iiifUrlEle.innerText).toEqual('https://iiif.test.dasch.swiss:443/0803/incunabula_0000003840.jp2/full/3210,5144/0/default.jpg');
