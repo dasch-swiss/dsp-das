@@ -254,7 +254,7 @@ describe('StillImageComponent', () => {
 
     });
 
-    // fit('should open the dialog box when the replace image button is clicked', async () => {
+    // it('should open the dialog box when the replace image button is clicked', async () => {
 
     //     const replaceImageButton = await rootLoader.getHarness(MatButtonHarness.with({ selector: '.replace-image' }));
     //     console.log('replaceImageButton: ', replaceImageButton);

@@ -104,7 +104,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         private _router: Router,
         private _session: SessionService,
         private _titleService: Title,
-        // private _valueOperationEventService: ValueOperationEventService
+        private _valueOperationEventService: ValueOperationEventService
     ) {
 
         this._route.params.subscribe(params => {
@@ -143,13 +143,13 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
 
         });
 
-        // this.valueOperationEventSubscriptions.push(this._valueOperationEventService.on(
-        // eslint-disable-next-line capitalized-comments
-        //     Events.FileValueUpdated, (newFileValue: UpdatedFileEventValue) => {
-        //         if (newFileValue) {
-        //             console.log('newFileValue: ', newFileValue);
-        //         }
-        //     }));
+        this.valueOperationEventSubscriptions.push(this._valueOperationEventService.on(
+            Events.FileValueUpdated, (newFileValue: UpdatedFileEventValue) => {
+                if (newFileValue) {
+                    console.log('newFileValue: ', newFileValue);
+                    this.getResource(this.resourceIri);
+                }
+            }));
     }
 
     ngOnInit() {
@@ -174,6 +174,11 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
     ngOnDestroy() {
         if (this.navigationSubscription !== undefined) {
             this.navigationSubscription.unsubscribe();
+        }
+
+        // unsubscribe from the ValueOperationEventService when component is destroyed
+        if (this.valueOperationEventSubscriptions !== undefined) {
+            this.valueOperationEventSubscriptions.forEach(sub => sub.unsubscribe());
         }
     }
 

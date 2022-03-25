@@ -143,7 +143,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, OnInit {
         private _errorHandler: ErrorHandlerService,
         private _matIconRegistry: MatIconRegistry,
         private _notification: NotificationService,
-        // private _valueOperationEventService: ValueOperationEventService
+        private _valueOperationEventService: ValueOperationEventService
     ) {
         OpenSeadragon.setString('Tooltips.Home', '');
         OpenSeadragon.setString('Tooltips.ZoomIn', '');
@@ -393,9 +393,9 @@ export class StillImageComponent implements OnChanges, OnDestroy, OnInit {
         ).subscribe(
             (res2: ReadResource) => {
                 console.log('SUCCESS: ', res2);
-                // this._valueOperationEventService.emit(
-                //     new EmitEvent(Events.FileValueUpdated, new UpdatedFileEventValue(
-                //         res2.properties[Constants.HasStillImageFileValue][0])));
+                this._valueOperationEventService.emit(
+                    new EmitEvent(Events.FileValueUpdated, new UpdatedFileEventValue(
+                        res2.properties[Constants.HasStillImageFileValue][0])));
             },
             (error: ApiResponseError) => {
                 console.log('ERROR: ', error);
@@ -684,6 +684,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, OnInit {
         elt.setAttribute('style', 'outline: solid ' + lineColor + ' ' + lineWidth + 'px;');
 
         elt.addEventListener('click', (event: MouseEvent) => {
+            console.log('region clicked');
             this.regionClicked.emit(regionIri);
         }, false);
 
