@@ -146,7 +146,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         this.valueOperationEventSubscriptions.push(this._valueOperationEventService.on(
             Events.FileValueUpdated, (newFileValue: UpdatedFileEventValue) => {
                 if (newFileValue) {
-                    console.log('newFileValue: ', newFileValue);
                     this.getResource(this.resourceIri);
                 }
             }));
@@ -281,7 +280,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                     // gather system property information
                     res.systemProps = this.resource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
                 }
-                console.log('resource: ', res);
                 this.loading = false;
             },
             (error: ApiResponseError) => {

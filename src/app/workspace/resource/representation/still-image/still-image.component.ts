@@ -113,7 +113,7 @@ interface PolygonsForRegion {
     templateUrl: './still-image.component.html',
     styleUrls: ['./still-image.component.scss']
 })
-export class StillImageComponent implements OnChanges, OnDestroy, OnInit {
+export class StillImageComponent implements OnChanges, OnDestroy {
 
     @Input() images: FileRepresentation[];
     @Input() imageCaption?: string;
@@ -174,13 +174,6 @@ export class StillImageComponent implements OnChanges, OnDestroy, OnInit {
 
         return w * h;
 
-    }
-
-    ngOnInit(): void {
-        console.log('resourceIri: ', this.resourceIri);
-        console.log('project: ', this.project);
-        // const temp = this.parentResource.properties[Constants.HasStillImageFileValue];
-        // console.log('props: ', temp);
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -353,7 +346,6 @@ export class StillImageComponent implements OnChanges, OnDestroy, OnInit {
     }
 
     openReplaceFileDialog(){
-        console.log('parentResource: ', this.parentResource);
         const propId = this.parentResource.properties[Constants.HasStillImageFileValue][0].id;
 
         const dialogConfig: MatDialogConfig = {
@@ -371,34 +363,27 @@ export class StillImageComponent implements OnChanges, OnDestroy, OnInit {
         );
 
         dialogRef.afterClosed().subscribe((data) => {
-            // console.log('dialog event data: ', data);
             this._replaceFile(data);
         });
     }
 
     private _replaceFile(file: UpdateFileValue) {
-        console.log('file: ', file);
-        console.log('parent resource: ', this.parentResource);
-
         const updateRes = new UpdateResource();
         updateRes.id = this.parentResource.id;
         updateRes.type = this.parentResource.type;
         updateRes.property = Constants.HasStillImageFileValue;
         updateRes.value = file;
 
-        console.log('updateRes: ', updateRes);
-
         this._dspApiConnection.v2.values.updateValue(updateRes as UpdateResource<UpdateValue>).pipe(
             mergeMap((res: WriteValueResponse) => this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid))
         ).subscribe(
             (res2: ReadResource) => {
-                console.log('SUCCESS: ', res2);
                 this._valueOperationEventService.emit(
                     new EmitEvent(Events.FileValueUpdated, new UpdatedFileEventValue(
                         res2.properties[Constants.HasStillImageFileValue][0])));
             },
             (error: ApiResponseError) => {
-                console.log('ERROR: ', error);
+                this._errorHandler.showMessage(error);
             }
         );
     }
@@ -684,7 +669,6 @@ export class StillImageComponent implements OnChanges, OnDestroy, OnInit {
         elt.setAttribute('style', 'outline: solid ' + lineColor + ' ' + lineWidth + 'px;');
 
         elt.addEventListener('click', (event: MouseEvent) => {
-            console.log('region clicked');
             this.regionClicked.emit(regionIri);
         }, false);
 

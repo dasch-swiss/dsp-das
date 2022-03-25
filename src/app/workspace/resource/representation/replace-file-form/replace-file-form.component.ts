@@ -24,8 +24,6 @@ export class ReplaceFileFormComponent implements OnInit {
 
     setFileValue(file: UpdateFileValue) {
         this.fileValue = file;
-        console.log('new file: ', this.fileValue);
-        console.log('propId: ', this.propId);
     }
 
     saveFile() {
