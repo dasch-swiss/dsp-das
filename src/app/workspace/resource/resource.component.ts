@@ -31,7 +31,7 @@ import { FileRepresentation, RepresentationConstants } from './representation/fi
 import { Region, StillImageComponent } from './representation/still-image/still-image.component';
 import { IncomingService } from './services/incoming.service';
 import { ResourceService } from './services/resource.service';
-import { ValueOperationEventService } from './services/value-operation-event.service';
+import { Events, UpdatedFileEventValue, ValueOperationEventService } from './services/value-operation-event.service';
 
 @Component({
     selector: 'app-resource',
@@ -92,6 +92,8 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
 
     navigationSubscription: Subscription;
 
+    valueOperationEventSubscriptions: Subscription[] = [];
+
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: ErrorHandlerService,
@@ -102,6 +104,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         private _router: Router,
         private _session: SessionService,
         private _titleService: Title,
+        // private _valueOperationEventService: ValueOperationEventService
     ) {
 
         this._route.params.subscribe(params => {
@@ -139,6 +142,14 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
             }
 
         });
+
+        // this.valueOperationEventSubscriptions.push(this._valueOperationEventService.on(
+        // eslint-disable-next-line capitalized-comments
+        //     Events.FileValueUpdated, (newFileValue: UpdatedFileEventValue) => {
+        //         if (newFileValue) {
+        //             console.log('newFileValue: ', newFileValue);
+        //         }
+        //     }));
     }
 
     ngOnInit() {
@@ -265,7 +276,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                     // gather system property information
                     res.systemProps = this.resource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
                 }
-
+                console.log('resource: ', res);
                 this.loading = false;
             },
             (error: ApiResponseError) => {

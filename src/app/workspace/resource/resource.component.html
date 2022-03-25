@@ -13,6 +13,7 @@
                 [resourceIri]="incomingResource ? incomingResource.res.id : resource.res.id"
                 [project]="resource.res.attachedToProject"
                 [currentTab]="selectedTabLabel"
+                [parentResource]="resource.res"
                 (goToPage)="compoundNavigation($event)"
                 (regionClicked)="openRegion($event)"
                 (regionAdded)="updateRegions($event)">

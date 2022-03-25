@@ -6,6 +6,7 @@ import {
     Input,
     OnChanges,
     OnDestroy,
+    OnInit,
     Output,
     SimpleChanges
 } from '@angular/core';
@@ -13,8 +14,10 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
+    ApiResponseError,
     Constants,
     CreateColorValue,
+    CreateFileValue,
     CreateGeomValue,
     CreateLinkValue,
     CreateResource,
@@ -26,14 +29,20 @@ import {
     ReadGeomValue,
     ReadResource,
     ReadStillImageFileValue,
-    RegionGeometry
+    RegionGeometry,
+    UpdateFileValue,
+    UpdateResource,
+    UpdateValue,
+    WriteValueResponse
 } from '@dasch-swiss/dsp-js';
 import * as OpenSeadragon from 'openseadragon';
+import { mergeMap } from 'rxjs/operators';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { NotificationService } from 'src/app/main/services/notification.service';
 import { DspCompoundPosition } from '../../dsp-resource';
+import { EmitEvent, Events, UpdatedFileEventValue, ValueOperationEventService } from '../../services/value-operation-event.service';
 import { FileRepresentation } from '../file-representation';
 
 
@@ -104,7 +113,7 @@ interface PolygonsForRegion {
     templateUrl: './still-image.component.html',
     styleUrls: ['./still-image.component.scss']
 })
-export class StillImageComponent implements OnChanges, OnDestroy {
+export class StillImageComponent implements OnChanges, OnDestroy, OnInit {
 
     @Input() images: FileRepresentation[];
     @Input() imageCaption?: string;
@@ -114,6 +123,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     @Input() activateRegion?: string; // highlight a region
     @Input() compoundNavigation?: DspCompoundPosition;
     @Input() currentTab: string;
+    @Input() parentResource: ReadResource;
 
     @Output() goToPage = new EventEmitter<number>();
 
@@ -132,7 +142,8 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         private _elementRef: ElementRef,
         private _errorHandler: ErrorHandlerService,
         private _matIconRegistry: MatIconRegistry,
-        private _notification: NotificationService
+        private _notification: NotificationService,
+        // private _valueOperationEventService: ValueOperationEventService
     ) {
         OpenSeadragon.setString('Tooltips.Home', '');
         OpenSeadragon.setString('Tooltips.ZoomIn', '');
@@ -163,6 +174,13 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
         return w * h;
 
+    }
+
+    ngOnInit(): void {
+        console.log('resourceIri: ', this.resourceIri);
+        console.log('project: ', this.project);
+        // const temp = this.parentResource.properties[Constants.HasStillImageFileValue];
+        // console.log('props: ', temp);
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -332,6 +350,57 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     */
     openSnackBar(message: string) {
         this._notification.openSnackBar(message);
+    }
+
+    openReplaceFileDialog(){
+        console.log('parentResource: ', this.parentResource);
+        const propId = this.parentResource.properties[Constants.HasStillImageFileValue][0].id;
+
+        const dialogConfig: MatDialogConfig = {
+            width: '800px',
+            maxHeight: '80vh',
+            position: {
+                top: '112px'
+            },
+            data: { mode: 'replaceFile', title: '2D Image (Still Image)', subtitle: 'Update image of the resource' , representation: 'stillImage', id: propId },
+            disableClose: true
+        };
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
+        );
+
+        dialogRef.afterClosed().subscribe((data) => {
+            // console.log('dialog event data: ', data);
+            this._replaceFile(data);
+        });
+    }
+
+    private _replaceFile(file: UpdateFileValue) {
+        console.log('file: ', file);
+        console.log('parent resource: ', this.parentResource);
+
+        const updateRes = new UpdateResource();
+        updateRes.id = this.parentResource.id;
+        updateRes.type = this.parentResource.type;
+        updateRes.property = Constants.HasStillImageFileValue;
+        updateRes.value = file;
+
+        console.log('updateRes: ', updateRes);
+
+        this._dspApiConnection.v2.values.updateValue(updateRes as UpdateResource<UpdateValue>).pipe(
+            mergeMap((res: WriteValueResponse) => this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid))
+        ).subscribe(
+            (res2: ReadResource) => {
+                console.log('SUCCESS: ', res2);
+                // this._valueOperationEventService.emit(
+                //     new EmitEvent(Events.FileValueUpdated, new UpdatedFileEventValue(
+                //         res2.properties[Constants.HasStillImageFileValue][0])));
+            },
+            (error: ApiResponseError) => {
+                console.log('ERROR: ', error);
+            }
+        );
     }
 
     /**
