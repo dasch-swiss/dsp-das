@@ -70,7 +70,7 @@ export class ArchiveComponent implements OnInit {
             position: {
                 top: '112px'
             },
-            data: { mode: 'replaceFile', title: '2D Image (Still Image)', subtitle: 'Update image of the resource' , representation: 'archive', id: propId },
+            data: { mode: 'replaceFile', title: 'Archive (zip, x-tar, gzip)', subtitle: 'Update the archive file of this resource' , representation: 'archive', id: propId },
             disableClose: true
         };
         const dialogRef = this._dialog.open(

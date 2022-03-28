@@ -224,7 +224,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
      * @param iri resourceIri
      */
     getResource(iri: string, incoming: boolean = false): void {
-        console.log('iri: ', iri);
         if (!iri) {
             return;
         }

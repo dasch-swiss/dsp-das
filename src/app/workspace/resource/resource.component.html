@@ -22,7 +22,7 @@
             <app-document class="dsp-representation" *ngSwitchCase="representationConstants.document" [src]="representationsToDisplay[0]">
             </app-document>
 
-            <app-audio class="dsp-representation audio" *ngSwitchCase="representationConstants.audio" [src]="representationsToDisplay[0]"></app-audio>
+            <app-audio class="dsp-representation audio" *ngSwitchCase="representationConstants.audio" [src]="representationsToDisplay[0]" [parentResource]="resource.res"></app-audio>
 
             <app-archive class="dsp-representation archive" *ngSwitchCase="representationConstants.archive" [src]="representationsToDisplay[0]" [parentResource]="resource.res"></app-archive>
 
