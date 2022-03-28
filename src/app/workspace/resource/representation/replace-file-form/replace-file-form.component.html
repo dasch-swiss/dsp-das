@@ -1,4 +1,15 @@
-<p>Warning</p>
+<div class="warning">
+    <div class="container">
+        <div class="icon">
+            <mat-icon>warning</mat-icon>
+        </div>
+        <div class="message">
+            <p class="top">File will be replaced</p>
+            <br>
+            <p class="bottom">Please note that you are about to replace the file.</p>
+        </div>
+    </div>
+</div>
 <app-upload #upload [representation]="representation" (fileInfo)="setFileValue($event)"></app-upload>
 
 <div class="form-panel form-action">
