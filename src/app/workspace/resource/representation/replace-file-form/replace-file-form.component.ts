@@ -16,10 +16,12 @@ export class ReplaceFileFormComponent implements OnInit {
     @ViewChild('upload') uploadComponent: UploadComponent;
 
     fileValue: UpdateFileValue;
+    warningMessages: string[];
 
     constructor() { }
 
     ngOnInit(): void {
+        this._generateWarningMessage(this.representation);
     }
 
     setFileValue(file: UpdateFileValue) {
@@ -36,6 +38,29 @@ export class ReplaceFileFormComponent implements OnInit {
         } else {
             console.log('expected UpdateFileValue, got: ', updateVal);
         }
+    }
+
+    // generate the warning message strings with the correct representation type
+    _generateWarningMessage(representationType: string) {
+        this.warningMessages = [];
+        let repType = representationType;
+
+        if (representationType === 'stillImage' || representationType === 'movingImage') {
+            switch (representationType) {
+                case 'stillImage':
+                    repType = 'image';
+                    break;
+
+                case 'movingImage':
+                    repType = 'video';
+                    break;
+            }
+        }
+
+        const capitalized = repType[0].toUpperCase() + repType.substring(1).toLowerCase();
+
+        this.warningMessages.push(capitalized + ' will be replaced.');
+        this.warningMessages.push('Please note that you are about to replace the ' + repType + '.');
     }
 
 }
