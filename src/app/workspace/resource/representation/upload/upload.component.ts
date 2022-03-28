@@ -247,7 +247,6 @@ export class UploadComponent implements OnInit {
      * @param id the current file value's id.
      */
     getUpdatedValue(id: string): UpdateFileValue | false {
-        console.log('form: ', this.form);
         if (!this.form.valid) {
             return false;
         }

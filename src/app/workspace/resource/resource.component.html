@@ -24,7 +24,7 @@
 
             <app-audio class="dsp-representation audio" *ngSwitchCase="representationConstants.audio" [src]="representationsToDisplay[0]"></app-audio>
 
-            <app-archive class="dsp-representation archive" *ngSwitchCase="representationConstants.archive" [src]="representationsToDisplay[0]"></app-archive>
+            <app-archive class="dsp-representation archive" *ngSwitchCase="representationConstants.archive" [src]="representationsToDisplay[0]" [parentResource]="resource.res"></app-archive>
 
             <span *ngSwitchDefault>
                 The file representation type "{{representationsToDisplay[0].fileValue.type}}" is not yet implemented
