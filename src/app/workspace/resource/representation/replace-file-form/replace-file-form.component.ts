@@ -42,7 +42,14 @@ export class ReplaceFileFormComponent implements OnInit {
 
     // generate the warning message strings with the correct representation type
     _generateWarningMessage(representationType: string) {
+
         this.warningMessages = [];
+
+        if(representationType === undefined){
+            this.warningMessages.push('File will be replaced.');
+            this.warningMessages.push('Please note that you are about to replace the file');
+        }
+
         let repType = representationType;
 
         if (representationType === 'stillImage' || representationType === 'movingImage') {
