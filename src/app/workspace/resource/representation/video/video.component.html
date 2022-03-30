@@ -1,0 +1,87 @@
+<div class="player" appDisableContextMenu [class.cinema]="cinemaMode">
+    <div class="container">
+        <video class="video" #videoEle [src]="video" type="video/mp4" preload="auto" [muted]="muted"
+            (click)="togglePlay()" (timeupdate)="timeUpdate($event)" (loadedmetadata)="loadedMetadata($event)"
+            (canplaythrough)="loadedVideo()">
+        </video>
+
+        <div class="preview-line">
+            <!-- preview image -->
+            <div class="preview" #preview>
+                <app-video-preview [time]="previewTime" [src]="src" [dispTime]="true">
+                </app-video-preview>
+                <!-- <p class="preview-time">
+                    <span class="time">{{ previewTime | time }}</span>
+                </p> -->
+            </div>
+        </div>
+    </div>
+
+    <mat-toolbar class="controls">
+        <mat-toolbar-row style="overflow: hidden;">
+            <app-av-timeline #timeline [value]="currentTime" [min]="0" [max]="duration" [resized]="cinemaMode"
+                (move)="updatePreview($event)" (mouseenter)="displayPreview(true)"
+                (mouseleave)="displayPreview(false)" (changed)="updateTimeFromSlider($event)"></app-av-timeline>
+        </mat-toolbar-row>
+        <!-- <mat-toolbar-row>
+            <input class="progress" type="range" [value]="currentTime" min="0" [max]="duration" [step]="0.04">
+        </mat-toolbar-row>
+        <mat-toolbar-row>
+            <mat-slider class="progress" [value]="currentTime" [min]="0" [max]="duration"
+                (mousemove)="updatePreview($event)" (mouseenter)="displayPreview('block')"
+                (mouseleave)="displayPreview('none')" (mouseup)="sliderChange($event)"></mat-slider>
+        </mat-toolbar-row> -->
+        <mat-toolbar-row class="action">
+            <button mat-icon-button (click)="goToStart()" [disabled]="currentTime === 0"
+                matTooltip="Stop and go to start" [matTooltipPosition]="matTooltipPos">
+                <mat-icon>skip_previous</mat-icon>
+            </button>
+            <button mat-icon-button (click)="togglePlay()" [matTooltip]="(play ? 'Pause' : 'Play')"
+                [matTooltipPosition]="matTooltipPos">
+                <mat-icon>{{ play ? "pause" : "play_arrow" }}</mat-icon>
+            </button>
+            <span class="fill-remaining-space"></span>
+            <button mat-icon-button (click)="updateTimeFromButton(-10)" [disabled]="currentTime < 10"
+                matTooltip="10 seconds backward" [matTooltipPosition]="matTooltipPos">
+                <mat-icon>replay_10</mat-icon>
+            </button>
+
+            <div (wheel)="updateTimeFromScroll($event)">
+                <p class="mat-body-1 time" (click)="togglePlay()">
+                    {{ currentTime | time }}
+                    <span *ngIf="!loading">/ {{ duration | time }}</span>
+                </p>
+            </div>
+
+            <button mat-icon-button (click)="updateTimeFromButton(+10)" [disabled]="currentTime > (duration - 10)"
+                matTooltip="10 seconds forward" [matTooltipPosition]="matTooltipPos">
+                <mat-icon>forward_10</mat-icon>
+            </button>
+            <span class="fill-remaining-space"></span>
+            <button mat-icon-button (click)="muted = !muted" [matTooltip]="(muted ? 'Unmute' : 'Mute')"
+                [matTooltipPosition]="matTooltipPos">
+                <mat-icon>
+                    {{ muted ? "volume_mute" : "volume_up" }}
+                </mat-icon>
+            </button>
+            <button mat-icon-button (click)="toggleCinemaMode()"
+                [matTooltip]="(cinemaMode ? 'Default view' : 'Cinema mode')" [matTooltipPosition]="matTooltipPos">
+                <mat-icon>{{
+                    cinemaMode ? "fullscreen_exit" : "fullscreen"
+                }}</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <!-- <mat-progress-bar
+        class="progress"
+        [value]="currentBuffer"
+        mode="determinate"
+        [color]="'primary'"
+    >
+        <!-- ((currentTime / duration) * 100).toFixed(0) --
+    </mat-progress-bar> -->
+</div>
+
+<!-- <p>currentBuffer: {{ currentBuffer }}</p>
+<p>currentTime: {{ currentTime }}</p> -->
