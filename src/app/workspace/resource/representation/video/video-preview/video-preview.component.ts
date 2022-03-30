@@ -175,7 +175,7 @@ export class VideoPreviewComponent implements OnInit, AfterViewInit, OnChanges {
         this.focusOnPreview = active;
 
         let i = 0;
-        let j = 0;
+        const j = 0;
 
         if (this.focusOnPreview) {
             // automatic playback of individual frames from first matrix

@@ -59,12 +59,10 @@ export class MatrixService {
     }
 
     getMatrixSize(matrix: string): Observable<Size> {
-        const mapLoadedImage = (event): Size => {
-            return {
-                width: event.target.width,
-                height: event.target.height
-            };
-        };
+        const mapLoadedImage = (event): Size => ({
+            width: event.target.width,
+            height: event.target.height
+        });
 
         const image = new Image();
         const $loadedImg = fromEvent(image, 'load').pipe(take(1), map(mapLoadedImage));
