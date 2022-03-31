@@ -11,7 +11,7 @@
                 <app-video-preview [time]="previewTime" [src]="src" [dispTime]="true">
                 </app-video-preview>
                 <!-- <p class="preview-time">
-                    <span class="time">{{ previewTime | time }}</span>
+                    <span class="time">{{ previewTime | appTime }}</span>
                 </p> -->
             </div>
         </div>
@@ -48,8 +48,8 @@
 
             <div (wheel)="updateTimeFromScroll($event)">
                 <p class="mat-body-1 time" (click)="togglePlay()">
-                    {{ currentTime | time }}
-                    <span *ngIf="!loading">/ {{ duration | time }}</span>
+                    {{ currentTime | appTime }}
+                    <span *ngIf="!loading">/ {{ duration | appTime }}</span>
                 </p>
             </div>
 
@@ -73,15 +73,9 @@
         </mat-toolbar-row>
     </mat-toolbar>
 
-    <!-- <mat-progress-bar
-        class="progress"
-        [value]="currentBuffer"
-        mode="determinate"
-        [color]="'primary'"
-    >
-        <!-- ((currentTime / duration) * 100).toFixed(0) --
-    </mat-progress-bar> -->
 </div>
 
-<!-- <p>currentBuffer: {{ currentBuffer }}</p>
-<p>currentTime: {{ currentTime }}</p> -->
+<!-- keep to following lines to get some information when re-activating  buffer size in timeUpdate($event)
+    <p>currentBuffer: {{ currentBuffer }}</p>
+    <p>currentTime: {{ currentTime }}</p>
+-->

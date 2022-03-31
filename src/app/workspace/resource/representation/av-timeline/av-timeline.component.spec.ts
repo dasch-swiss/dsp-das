@@ -8,7 +8,9 @@ describe('AvTimelineComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [ AvTimelineComponent ]
+            declarations: [
+                AvTimelineComponent
+            ]
         })
             .compileComponents();
     }));
