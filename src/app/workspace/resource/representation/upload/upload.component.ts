@@ -33,8 +33,6 @@ export class UploadComponent implements OnInit {
 
     @Input() formName: string;
 
-    // @Input() mode: 'add' | 'replace';
-
     @Output() fileInfo: EventEmitter<CreateFileValue> = new EventEmitter<CreateFileValue>();
 
     file: File;
@@ -247,6 +245,7 @@ export class UploadComponent implements OnInit {
      * @param id the current file value's id.
      */
     getUpdatedValue(id: string): UpdateFileValue | false {
+
         if (!this.form.valid) {
             return false;
         }
