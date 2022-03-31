@@ -4,7 +4,7 @@
 
 .player {
   background: black;
-  width: 800px;
+  // width: 800px;
   height: 522px;
 
   .container {
@@ -119,7 +119,8 @@
 
   .controls {
     position: fixed;
-    bottom: 16px;
+    bottom: 0;
+    height: 80px;
 
     .action {
       margin: 24px 0 0;

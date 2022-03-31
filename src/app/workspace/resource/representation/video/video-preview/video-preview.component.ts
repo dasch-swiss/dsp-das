@@ -66,6 +66,8 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
 
     @Output() open = new EventEmitter<{ video: string; time: number }>();
 
+    @Output() fileMetadata = new EventEmitter<MovingImageSidecar>();
+
     @ViewChild('frame') frame: ElementRef;
 
 
@@ -132,6 +134,7 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
         this._http.get(pathToJson, requestOptions).subscribe(
             (res: MovingImageSidecar) => {
                 this.fileInfo = res;
+                this.fileMetadata.emit(res);
             }
         );
 
@@ -213,6 +216,8 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
     // to test the difference between sipi single image calculation and css background position,
     // this method has the additional parameter `sipi` as boolean value to switch between the two variants quite quick
     calculateSizes(image: string, sipi: boolean) {
+
+        console.warn('load matrix file to get info');
 
         // host dimension
         const parentFrameWidth: number = this._host.nativeElement.offsetWidth;
@@ -338,8 +343,14 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
         });
 
         const image = new Image();
-        const $loadedImg = fromEvent(image, 'load').pipe(take(1), map(mapLoadedImage));
         image.src = matrix;
+        // console.log('image new', image);
+        const $loadedImg = fromEvent(image, 'load').pipe(
+            take(1),
+            map(mapLoadedImage)
+        );
+        // console.log('loadedImg', $loadedImg);
+        // console.log('image def', image);
         return $loadedImg;
     }
 

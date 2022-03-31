@@ -8,7 +8,7 @@
         <div class="preview-line">
             <!-- preview image -->
             <div class="preview" #preview>
-                <app-video-preview [time]="previewTime" [src]="src" [dispTime]="true">
+                <app-video-preview [time]="previewTime" [src]="src" [dispTime]="true" (fileMetadata)="loadMetadata($event)">
                 </app-video-preview>
                 <!-- <p class="preview-time">
                     <span class="time">{{ previewTime | appTime }}</span>
@@ -36,12 +36,12 @@
                 matTooltip="Stop and go to start" [matTooltipPosition]="matTooltipPos">
                 <mat-icon>skip_previous</mat-icon>
             </button>
-            <button mat-icon-button (click)="togglePlay()" [matTooltip]="(play ? 'Pause' : 'Play')"
+            <button mat-icon-button (click)="togglePlay()" [matTooltip]="(reachedTheEnd ? 'Replay' : (play ? 'Pause' : 'Play'))"
                 [matTooltipPosition]="matTooltipPos">
-                <mat-icon>{{ play ? "pause" : "play_arrow" }}</mat-icon>
+                <mat-icon>{{ reachedTheEnd ? "replay" : (play ? "pause" : "play_arrow") }}</mat-icon>
             </button>
             <span class="fill-remaining-space"></span>
-            <button mat-icon-button (click)="updateTimeFromButton(-10)" [disabled]="currentTime < 10"
+            <button mat-icon-button (click)="updateTimeFromButton(-10)"
                 matTooltip="10 seconds backward" [matTooltipPosition]="matTooltipPos">
                 <mat-icon>replay_10</mat-icon>
             </button>
@@ -53,7 +53,7 @@
                 </p>
             </div>
 
-            <button mat-icon-button (click)="updateTimeFromButton(+10)" [disabled]="currentTime > (duration - 10)"
+            <button mat-icon-button (click)="updateTimeFromButton(10)"
                 matTooltip="10 seconds forward" [matTooltipPosition]="matTooltipPos">
                 <mat-icon>forward_10</mat-icon>
             </button>

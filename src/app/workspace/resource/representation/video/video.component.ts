@@ -1,7 +1,8 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
+import { MovingImageSidecar } from './video-preview/video-preview.component';
 
 // --> TODO will be replaced resp. removed
 export interface Video {
@@ -71,6 +72,7 @@ export class VideoComponent implements OnInit {
 
     // status
     play = false;
+    reachedTheEnd = false;
 
     // volume
     volume = .75;
@@ -85,6 +87,12 @@ export class VideoComponent implements OnInit {
     constructor(
         private _sanitizer: DomSanitizer
     ) { }
+
+    @HostListener('document:keydown', ['$event']) onKeydownHandler(event: KeyboardEvent) {
+        if (event.key === 'Escape' && this.cinemaMode) {
+            this.cinemaMode = false;
+        }
+    }
 
     ngOnInit(): void {
         this.video = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
@@ -140,6 +148,13 @@ export class VideoComponent implements OnInit {
         while (!(bf.start(range) <= this.currentTime && this.currentTime <= bf.end(range))) {
             range += 1;
         }
+
+        if (this.currentTime === this.duration && this.play) {
+            this.play = false;
+            this.reachedTheEnd = true;
+        } else {
+            this.reachedTheEnd = false;
+        }
         // --> TODO: bring back this information
         // const loadStartPercentage = (bf.start(range) / this.duration) * 100;
         // const loadEndPercentage = (bf.end(range) / this.duration) * 100;
@@ -150,6 +165,10 @@ export class VideoComponent implements OnInit {
 
         // this.updatePosition(Math.round(this.currentTime / this.secondsPerPixel));
 
+    }
+
+    loadMetadata(data: MovingImageSidecar) {
+        console.log(data);
     }
 
     /**
@@ -195,7 +214,13 @@ export class VideoComponent implements OnInit {
      * @param range positive or negative number value
      */
     updateTimeFromButton(range: number) {
-        this._navigate(this.currentTime + range);
+        if (range > 0 && this.currentTime > (this.duration - 10)) {
+            this._navigate(this.duration);
+        } else if (range < 0 && this.currentTime < 10) {
+            this._navigate(0);
+        } else {
+            this._navigate(this.currentTime + range);
+        }
     }
     /**
      * video naviagtion from timeline / progress bar
