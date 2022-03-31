@@ -19,12 +19,9 @@ export class VideoComponent implements OnInit {
 
     @Input() src: FileRepresentation;
 
-    // @Input() video?: FileRepresentation;
-
     @Input() resourceIri?: string;
 
     @Input() project?: string;
-
 
     @Input() name?: string;
 
@@ -42,8 +39,6 @@ export class VideoComponent implements OnInit {
     loading = true;
 
     video: SafeUrl;
-
-    // video: Video;
 
     // video information
     aspectRatio: number;
@@ -145,12 +140,12 @@ export class VideoComponent implements OnInit {
         while (!(bf.start(range) <= this.currentTime && this.currentTime <= bf.end(range))) {
             range += 1;
         }
+        // --> TODO: bring back this information
         // const loadStartPercentage = (bf.start(range) / this.duration) * 100;
         // const loadEndPercentage = (bf.end(range) / this.duration) * 100;
         // let loadPercentage = (loadEndPercentage - loadStartPercentage);
 
         // console.log(loadPercentage);
-
         // console.log('position', (this.currentTime / this.secondsPerPixel))
 
         // this.updatePosition(Math.round(this.currentTime / this.secondsPerPixel));
@@ -192,7 +187,6 @@ export class VideoComponent implements OnInit {
         this.loading = false;
         this.play = !this.videoEle.nativeElement.paused;
         this.displayPreview(false);
-        // console.log(this.videoEle);
     }
 
     /**
@@ -224,7 +218,6 @@ export class VideoComponent implements OnInit {
 
     mouseMove(ev: MouseEvent) {
         this._calcPreviewTime(ev);
-        // console.log('mouse move on', this.previewTime)
     }
 
 
@@ -248,87 +241,13 @@ export class VideoComponent implements OnInit {
      * @param  ev PointerValue
      */
     updatePreview(ev: PointerValue) {
-        // console.log('update preview with', ev);
+
         this.displayPreview(true);
 
         this.previewTime = Math.round(ev.time);
 
-        // console.log('------------------------------------');
-        // console.log('mousemove', (ev.offsetX / this.progress.nativeElement.clientWidth) * this.duration);
-
-        // console.log(this.progress)
-
-        // console.log('UpdatePreview ----------------------');
-        // mouse position
-        // const position: number = ev.offsetX;
-        // clientX - this.progress._elementRef.nativeElement.offsetLeft;
-        // console.log('mouse offset X', ev.offsetX);
-        // console.log('progressEle', this.progress);
-        // console.log('mouse ev', ev);
-        // console.log('clientX', ev.clientX);
-        // console.log('offsetLeft', this.progress._elementRef.nativeElement.offsetLeft);
-
-
-        // get time of mouse position and set preview image time
-        // this.previewTime = Math.round(position * this.secondsPerPixel);
-        // if (this.previewTime < 0) {
-        //     this.previewTime = 0;
-        // }
-        // if (this.previewTime > this.duration) {
-        //     this.previewTime = this.duration;
-        // }
-
-        // this._calcPreviewTime(ev);
-
-        // console.log('preview time', this.previewTime);
-
-        // get current matrix image; one matrix contains 6 minute of the video
-        // }
-        // updatePrevDepr(ev: PointerValue) {
-
-
-        /*
-                let curMatrixNr: number = Math.floor(this.previewTime / 360);
-
-                if (curMatrixNr < 0) {
-                    curMatrixNr = 0;
-                }
-
-                // get current matrix file url; TODO: this will be handled by sipi; no jpg extension needed
-                const curMatrixFile = 'data/' + this.name + '/matrix/' + this.name + '_m_' + curMatrixNr + '.jpg';
-
-                // the last matrix file could have another dimension size...
-                if (curMatrixNr < this.lastMatrixNr) {
-                    this.matrixHeight = Math.round(this.frameHeight * 6);
-                } else {
-                    this.matrixHeight = Math.round(this.frameHeight * this.lastMatrixLine);
-                }
-
-                // get current matrix size information
-                const matrixSize = this.matrixWidth + 'px ' + this.matrixHeight + 'px';
-
-                let curFrameNr: number = Math.floor(this.previewTime / 10) - Math.floor(36 * curMatrixNr);
-                if (curFrameNr < 0) {
-                    curFrameNr = 0;
-                }
-                if (curFrameNr > this.lastFrameNr) {
-                    curFrameNr = this.lastFrameNr;
-                }
-                // calculate current line and columne number in the matrix and get current frame / preview image position
-                const curLineNr: number = Math.floor(curFrameNr / 6);
-                const curColNr: number = Math.floor(curFrameNr - (curLineNr * 6));
-                const curFramePos: string = '-' + (curColNr * this.frameWidth) + 'px -' + (curLineNr * this.frameHeight) + 'px';
-
-                // manipulate css of preview image on the fly
-                this.preview.nativeElement.style['background-image'] = 'url(' + curMatrixFile + ')';
-                this.preview.nativeElement.style['background-size'] = matrixSize;
-                this.preview.nativeElement.style['background-position'] = curFramePos;
-                // this.preview.nativeElement.style['top'] = (this.progress.nativeElement.offsetTop - this.frameHeight - 8) + 'px';
-        */
         // position from left:
-
         let leftPosition: number = ev.position - this.halfFrameWidth;
-        // console.log('left position of preview', leftPosition);
 
         if (this.cinemaMode) {
             // ev.screenX
@@ -350,9 +269,9 @@ export class VideoComponent implements OnInit {
                 leftPosition = this.progressBarWidth - this.halfFrameWidth + 48;
             }
         }
+
         // set preview positon on x axis
         this.preview.nativeElement.style.left = leftPosition + 'px';
-
 
     }
 
@@ -382,7 +301,6 @@ export class VideoComponent implements OnInit {
      * @param position Pixelnumber
      */
     private _navigate(position: number) {
-
         this.videoEle.nativeElement.currentTime = position;
     }
 
@@ -391,7 +309,5 @@ export class VideoComponent implements OnInit {
         this.previewTime = this.previewTime > this.duration ? this.duration : this.previewTime;
         this.previewTime = this.previewTime < 0 ? 0 : this.previewTime;
     }
-
-
 
 }

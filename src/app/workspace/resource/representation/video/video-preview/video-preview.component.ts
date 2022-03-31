@@ -1,9 +1,18 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
+import { fromEvent, Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 import { FileRepresentation } from '../../file-representation';
-import { MatrixService, Size } from '../matrix.service';
-import { Video } from '../video.component';
 
 export interface MovingImageSidecar {
     '@context': string;
@@ -19,39 +28,33 @@ export interface MovingImageSidecar {
     'width': number;
 }
 
+export interface Size {
+    'width': number;
+    'height': number;
+}
+
+export interface Profile {
+    'formats': [string];
+    'qualities': [string];
+    'supports': [string];
+}
+
+export interface SipiImageInfo {
+    '@context': string;
+    '@id': string;
+    'protocol': string;
+    'width': number;
+    'height': number;
+    'sizes': [Size];
+    'profile': (string | Profile)[];
+}
+
 @Component({
     selector: 'app-video-preview',
     templateUrl: './video-preview.component.html',
     styleUrls: ['./video-preview.component.scss'],
-    // animations: [
-    //     trigger('focus',
-    //         [
-    //             state('inactive', style({
-    //                 width: '100%',
-    //                 height: '100%',
-    //                 top: '0',
-    //                 left: '0',
-    //             })),
-    //             state('active', style({
-    //                 width: '280%',
-    //                 height: '280%',
-    //                 top: '-90%',
-    //                 left: '-90%'
-    //             })),
-    //             transition('* <=> *', [
-    //                 animate('500ms ease')
-    //             ])
-    //         ]
-    //     )
-    // ],
-    // host: {
-    //     '(mouseenter)': 'toggleFlipbook(true)',
-    //     '(mouseleave)': 'toggleFlipbook(false)',
-    //     '(mousemove)': 'updatePreviewByPosition($event)',
-    //     '(click)': 'openVideo()'
-    // }
 })
-export class VideoPreviewComponent implements OnInit, AfterViewInit, OnChanges {
+export class VideoPreviewComponent implements OnInit, OnChanges {
 
     @Input() dispTime = false;
 
@@ -67,11 +70,10 @@ export class VideoPreviewComponent implements OnInit, AfterViewInit, OnChanges {
 
 
     fileInfo: MovingImageSidecar;
-    // video: MovingImageSidecar;
 
     focusOnPreview = false;
 
-    // video information
+    // video information: aspect ration
     aspectRatio: number;
 
     // preview images are organized in matrix files;
@@ -98,13 +100,10 @@ export class VideoPreviewComponent implements OnInit, AfterViewInit, OnChanges {
     // to calculate matrix background size
     proportion: number;
 
-
     constructor(
         private _host: ElementRef,
-        private _http: HttpClient,
-        private _matrix: MatrixService
+        private _http: HttpClient
     ) { }
-
 
     @HostListener('mouseenter', ['$event']) onEnter(e: MouseEvent) {
         this.toggleFlipbook(true);
@@ -136,7 +135,6 @@ export class VideoPreviewComponent implements OnInit, AfterViewInit, OnChanges {
             }
         );
 
-
     }
 
     ngOnChanges() {
@@ -158,17 +156,6 @@ export class VideoPreviewComponent implements OnInit, AfterViewInit, OnChanges {
         if (!this.matrixFrameWidth && !this.matrixFrameHeight) {
             this.calculateSizes(this.matrix, false);
         }
-        // --> TODO: update time from timeline
-        // console.log('something has changed', this.time)
-
-        // this.calculateSizes();
-        // this.frameHeight = this.element.nativeElement.clientHeight;
-    }
-
-    ngAfterViewInit() {
-
-        // this.calculateSizes(this.matrix, false);
-
     }
 
     toggleFlipbook(active: boolean) {
@@ -230,9 +217,8 @@ export class VideoPreviewComponent implements OnInit, AfterViewInit, OnChanges {
         // host dimension
         const parentFrameWidth: number = this._host.nativeElement.offsetWidth;
         const parentFrameHeight: number = this._host.nativeElement.offsetHeight;
-        // const matrixSize: Size = this._matrix.getMatrixFileInfo(image);
 
-        this._matrix.getMatrixSize(image).subscribe(
+        this._getMatrixSize(image).subscribe(
             (dim: Size) => {
 
                 // whole matrix dimension is:
@@ -251,9 +237,6 @@ export class VideoPreviewComponent implements OnInit, AfterViewInit, OnChanges {
 
                 if ((this.matrixFrameHeight / this.proportion) > parentFrameHeight) {
                     this.proportion = (this.matrixFrameHeight / parentFrameHeight);
-                    // console.log('matrix frame height is to high', (this.proportion));
-                } else {
-                    // console.log('matrix frame height is ok', (this.proportion));
                 }
 
                 this.frameWidth = Math.round(this.matrixFrameWidth / this.proportion);
@@ -269,18 +252,12 @@ export class VideoPreviewComponent implements OnInit, AfterViewInit, OnChanges {
                     // background-image, -size
                     this.frame.nativeElement.style['background-image'] = 'url(' + this.matrix + ')';
                     this.frame.nativeElement.style['background-size'] = Math.round(this.matrixWidth / this.proportion) + 'px auto';
-                    // + Math.round(this.matrixHeight / this.proportion) + 'px';
                 }
 
                 this.frame.nativeElement.style['width'] = this.frameWidth + 'px';
                 this.frame.nativeElement.style['height'] = this.frameHeight + 'px';
             }
         );
-
-        // this._matrix.getMatrixInfo(image + '/info.json').subscribe((res: any) => {
-
-
-        // });
 
     }
 
@@ -316,19 +293,16 @@ export class VideoPreviewComponent implements OnInit, AfterViewInit, OnChanges {
         }
 
         // get current matrix file url; TODO: this will be handled by sipi
-        // this.matrix = environment.iiifUrl + this.fileInfo.name + '_m_' + curMatrixNr;
 
         // the last matrix file could have another dimension size...
         if (curMatrixNr < this.lastMatrixNr) {
             this.matrixHeight = Math.round(this.frameHeight * 6);
             this.frame.nativeElement.style['background-size'] = Math.round(this.matrixWidth / this.proportion) + 'px auto';
-            // + Math.round(this.matrixHeight / this.proportion) + 'px';
         } else {
             this.lastMatrixFrameNr = Math.floor((this.fileInfo.duration - 8) / 10);
             this.lastMatrixLine = Math.ceil((this.lastMatrixFrameNr - (this.lastMatrixNr * 36)) / 6) + 1;
             this.matrixHeight = Math.round(this.frameHeight * this.lastMatrixLine);
             this.frame.nativeElement.style['background-size'] = Math.round(this.matrixWidth / this.proportion) + 'px auto';
-            // + Math.round(this.matrixHeight / this.proportion) + 'px';
         }
 
         let curFrameNr: number = Math.floor(this.time / 10) - Math.floor(36 * curMatrixNr);
@@ -357,7 +331,16 @@ export class VideoPreviewComponent implements OnInit, AfterViewInit, OnChanges {
         // this.open.emit({ video: this.fileInfo.name, time: Math.round(this.time) });
     }
 
+    private _getMatrixSize(matrix: string): Observable<Size> {
+        const mapLoadedImage = (event): Size => ({
+            width: event.target.width,
+            height: event.target.height
+        });
 
-
+        const image = new Image();
+        const $loadedImg = fromEvent(image, 'load').pipe(take(1), map(mapLoadedImage));
+        image.src = matrix;
+        return $loadedImg;
+    }
 
 }
