@@ -3,6 +3,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    HostListener,
     Input,
     OnChanges,
     Output,
@@ -18,18 +19,7 @@ export interface PointerValue {
 @Component({
     selector: 'app-av-timeline',
     templateUrl: './av-timeline.component.html',
-    styleUrls: ['./av-timeline.component.scss'],
-    host: {
-        '(focus)': '_onFocus()',
-        '(blur)': '_onBlur()',
-        '(keydown)': '_onKeydown($event)',
-        '(keyup)': '_onKeyup()',
-        '(mouseenter)': '_onMouseenter($event)',
-        '(mousemove)': '_onMousemove($event)',
-        // '(mousedown)': '_onMousemove($event)',
-        '(mouseup)': '_onMouseup($event)',
-        '(window:resize)': '_onWindowResize($event)'
-    }
+    styleUrls: ['./av-timeline.component.scss']
 })
 export class AvTimelineComponent implements OnChanges {
 
@@ -68,6 +58,37 @@ export class AvTimelineComponent implements OnChanges {
 
     constructor() {
         // this.dragging = this.unboundDragging.bind(this);
+    }
+    // @HostListener('focus', ['$event']) onFocus(e: MouseEvent) {
+    //     this._onFocus();
+    // }
+
+    // @HostListener('blur', ['$event']) onBlur(e: MouseEvent) {
+    //     this._onBlur();
+    // }
+
+    // @HostListener('keydown', ['$event']) onKeydown(e: MouseEvent) {
+    //     this._onKeydown(e);
+    // }
+
+    // @HostListener('keyup', ['$event']) onKeyUp(e: MouseEvent) {
+    //     this._onKeyup(e);
+    // }
+
+    @HostListener('mouseenter', ['$event']) onEnter(e: MouseEvent) {
+        this._onMouseenter(e);
+    }
+
+    @HostListener('mousemove', ['$event']) onMousemove(e: MouseEvent) {
+        this._onMousemove(e);
+    }
+
+    @HostListener('mouseup', ['$event']) onMouseup(e: MouseEvent) {
+        this._onMouseup(e);
+    }
+
+    @HostListener('resize', ['$event']) onWindwoResiz(e: Event) {
+        this._onWindowResize(e);
     }
 
     ngOnChanges(changes: { [propName: string]: SimpleChange }) {
