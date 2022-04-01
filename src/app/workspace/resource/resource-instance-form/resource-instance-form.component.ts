@@ -79,6 +79,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     valueOperationEventSubscription: Subscription;
 
+    loading = false;
+    // in case of any error
+    error = false;
     errorMessage: any;
 
     propertiesObj = {};
@@ -155,6 +158,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     submitData() {
 
+        this.loading = true;
+
         if (this.propertiesParentForm.valid) {
 
             const createResource = new CreateResource();
@@ -215,6 +220,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                     this.closeDialog.emit();
                 },
                 (error: ApiResponseError) => {
+                    this.error = true;
+                    this.loading = false;
                     this._errorHandler.showMessage(error);
                 }
             );
