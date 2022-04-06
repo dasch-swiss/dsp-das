@@ -102,6 +102,7 @@ import { ArchiveComponent } from './workspace/resource/representation/archive/ar
 import { AudioComponent } from './workspace/resource/representation/audio/audio.component';
 import { AvTimelineComponent } from './workspace/resource/representation/av-timeline/av-timeline.component';
 import { DocumentComponent } from './workspace/resource/representation/document/document.component';
+import { ReplaceFileFormComponent } from './workspace/resource/representation/replace-file-form/replace-file-form.component';
 import { StillImageComponent } from './workspace/resource/representation/still-image/still-image.component';
 import { UploadComponent } from './workspace/resource/representation/upload/upload.component';
 import { VideoPreviewComponent } from './workspace/resource/representation/video/video-preview/video-preview.component';
@@ -247,6 +248,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         PropertiesComponent,
         PropertyFormComponent,
         PropertyInfoComponent,
+        ReplaceFileFormComponent,
         ResourceAndPropertySelectionComponent,
         ResourceClassFormComponent,
         ResourceClassInfoComponent,
