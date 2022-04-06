@@ -9,7 +9,9 @@
     <mat-form-field class="child-value-component" floatLabel="never">
         <div class="search-input">
             <input matInput [formControlName]="'value'" class="value" type="text" placeholder="{{resourceClassLabel}}" aria-label="resource" [matAutocomplete]="auto">
-            <app-progress-indicator *ngIf="loadingResults" [status]="0" ></app-progress-indicator>
+            <span matSuffix class="progress-indicator">
+                <app-progress-indicator *ngIf="loadingResults" [status]="0" ></app-progress-indicator>
+            </span>
         </div>
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource">
         <mat-option *ngFor="let rc of resourceClasses" (click)="openDialog('createLinkResource', $event, propIri, rc)">
