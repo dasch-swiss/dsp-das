@@ -1,0 +1,16 @@
+.search-input {
+  input,
+  app-progress-indicator {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  input {
+    width: 88%;
+  }
+
+  app-progress-indicator {
+    width: 10%;
+    transform: scale(0.6);
+  }
+}
