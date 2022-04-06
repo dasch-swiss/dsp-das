@@ -1,5 +1,19 @@
 # Changelog
 
+### [9.5.1](https://www.github.com/dasch-swiss/dsp-app/compare/v9.5.0...v9.5.1) (2022-04-06)
+
+
+### Bug Fixes
+
+* **ontology:** display all classes in a property (DEV-564) ([#701](https://www.github.com/dasch-swiss/dsp-app/issues/701)) ([f90aedc](https://www.github.com/dasch-swiss/dsp-app/commit/f90aedcaf55ce9d0acc57272441a73b9dc32b99b))
+* package.json & package-lock.json to reduce vulnerabilities ([#704](https://www.github.com/dasch-swiss/dsp-app/issues/704)) ([5d4bb7c](https://www.github.com/dasch-swiss/dsp-app/commit/5d4bb7cce7f854eed20ae1f50bc6ba36d1154bf2))
+
+
+### Maintenance
+
+* **gh-ci:** add style to the release notes ([#706](https://www.github.com/dasch-swiss/dsp-app/issues/706)) ([8e9e143](https://www.github.com/dasch-swiss/dsp-app/commit/8e9e143ca56a16d332a78f8bf4692a319264bc1a))
+* **resource:** display class label of incoming link (DEV-568) ([#702](https://www.github.com/dasch-swiss/dsp-app/issues/702)) ([aad1c5a](https://www.github.com/dasch-swiss/dsp-app/commit/aad1c5a0ba1859d1ccf82cb808b4fcf80792cc33))
+
 ## [9.5.0](https://www.github.com/dasch-swiss/dsp-app/compare/v9.4.0...v9.5.0) (2022-04-04)
 
 
