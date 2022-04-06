@@ -20,7 +20,6 @@ export class ArchiveComponent implements OnInit {
     @Input() parentResource: ReadResource;
 
     originalFilename: string;
-    temp: string;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,

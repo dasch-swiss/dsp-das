@@ -26,38 +26,37 @@ export interface PointerValue {
 })
 export class AvTimelineComponent implements OnChanges {
 
-    /** current time value */
+    // current time value
     @Input() value: number;
 
-    /** start time value */
+    // start time value
     @Input() min?= 0;
 
-    /** end time value: Normally this is the duration */
+    // end time value: Normally this is the duration
     @Input() max: number;
 
-    /** in case parent resized: Will be used in video player when switching between cinema and default view  */
+    // in case parent resized: Will be used in video player when switching between cinema and default view
     @Input() resized: boolean;
 
-    /** send click position to parent */
+    // send click position to parent
     @Output() changed = new EventEmitter<number>();
 
-    /** send mouse position to parent */
+    // send mouse position to parent
     @Output() move = new EventEmitter<PointerValue>();
 
-    /** timeline element: main container */
+    // timeline element: main container
     @ViewChild('timeline') timelineEle: ElementRef;
 
-    /** progress element: thin bar line */
+    // progress element: thin bar line
     @ViewChild('progress') progressEle: ElementRef;
 
-    /** thumb element: current postion pointer */
+    // thumb element: current postion pointer
     @ViewChild('thumb') thumbEle: ElementRef;
 
     dragging = false;
 
-    /** size of timeline; will be used to calculate progress position in pixel corresponding to time value */
+    // size of timeline; will be used to calculate progress position in pixel corresponding to time value
     timelineDimension: ClientRect | null = null;
-
 
     constructor() {
     }
@@ -132,12 +131,16 @@ export class AvTimelineComponent implements OnChanges {
         this.updatePosition(pos);
     }
 
-    /** mouse enters timeline */
+    /**
+     * mouse enters timeline
+     */
     private _onMouseenter(ev: MouseEvent) {
         this.timelineDimension = this._getTimelineDimensions();
     }
 
-    /** mouse moves on timeline */
+    /**
+     * mouse moves on timeline
+     */
     private _onMousemove(ev: MouseEvent) {
 
         const pos: number = ev.clientX - this.timelineDimension.left;
@@ -169,7 +172,9 @@ export class AvTimelineComponent implements OnChanges {
         this.changed.emit(time);
     }
 
-    /** event listener on window resize */
+    /**
+     * event listener on window resize
+     */
     private _onWindowResize(ev: Event) {
         this.timelineDimension = this._getResizedTimelineDimensions();
     }

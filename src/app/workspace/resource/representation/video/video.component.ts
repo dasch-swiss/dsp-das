@@ -1,15 +1,31 @@
-import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, ElementRef, HostListener, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {
+    ApiResponseError,
+    Constants,
+    KnoraApiConnection,
+    ReadMovingImageFileValue,
+    ReadResource,
+    UpdateFileValue,
+    UpdateResource,
+    UpdateValue,
+    WriteValueResponse
+} from '@dasch-swiss/dsp-js';
+import { mergeMap } from 'rxjs/operators';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import {
+    EmitEvent,
+    Events,
+    UpdatedFileEventValue,
+    ValueOperationEventService
+} from '../../services/value-operation-event.service';
 import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
 import { MovingImageSidecar } from './video-preview/video-preview.component';
-
-// --> TODO will be replaced resp. removed
-export interface Video {
-    'name': string;
-    'duration': number;
-    'description'?: string;
-}
 
 @Component({
     selector: 'app-video',
@@ -28,6 +44,7 @@ export class VideoComponent implements OnInit {
 
     @Input() start?= 0;
 
+    @Input() parentResource: ReadResource;
 
     @ViewChild('videoEle') videoEle: ElementRef;
 
@@ -40,6 +57,7 @@ export class VideoComponent implements OnInit {
     loading = true;
 
     video: SafeUrl;
+    originalFilename: string;
 
     // video information
     aspectRatio: number;
@@ -84,8 +102,15 @@ export class VideoComponent implements OnInit {
     // matTooltipPosition
     matTooltipPos = 'above';
 
+    // if file was replaced, we have to reload the preview
+    fileHasChanged = false;
+
     constructor(
-        private _sanitizer: DomSanitizer
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _dialog: MatDialog,
+        private _sanitizer: DomSanitizer,
+        private _errorHandler: ErrorHandlerService,
+        private _valueOperationEventService: ValueOperationEventService
     ) { }
 
     @HostListener('document:keydown', ['$event']) onKeydownHandler(event: KeyboardEvent) {
@@ -96,6 +121,7 @@ export class VideoComponent implements OnInit {
 
     ngOnInit(): void {
         this.video = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
+        this.fileHasChanged = false;
     }
 
     /**
@@ -155,20 +181,14 @@ export class VideoComponent implements OnInit {
         } else {
             this.reachedTheEnd = false;
         }
-        // --> TODO: bring back this information
+        // --> TODO: activate the buffer information
         // const loadStartPercentage = (bf.start(range) / this.duration) * 100;
         // const loadEndPercentage = (bf.end(range) / this.duration) * 100;
-        // let loadPercentage = (loadEndPercentage - loadStartPercentage);
-
-        // console.log(loadPercentage);
-        // console.log('position', (this.currentTime / this.secondsPerPixel))
-
-        // this.updatePosition(Math.round(this.currentTime / this.secondsPerPixel));
-
+        // const loadPercentage = (loadEndPercentage - loadStartPercentage);
     }
 
     loadMetadata(data: MovingImageSidecar) {
-        console.log(data);
+        // console.log('loaded metadata', data);
     }
 
     /**
@@ -180,22 +200,6 @@ export class VideoComponent implements OnInit {
     loadedMetadata(ev: Event) {
         // get video duration
         this.duration = this.videoEle.nativeElement.duration;
-        // this.video = {
-        //     name: this.name,
-        //     duration: this.duration
-        // };
-
-        // calculate aspect ratio and set preview image size
-        // this.aspectRatio = this.videoEle.nativeElement.videoWidth / this.videoEle.nativeElement.videoHeight;
-
-        // this.frameHeight = Math.round(this.frameWidth / this.aspectRatio);
-        // this.preview.nativeElement.style['width'] = this.frameWidth + 'px';
-        // this.preview.nativeElement.style['height'] = this.frameHeight + 'px';
-
-        // get last frame and matrix number and last matrix line
-        // this.lastMatrixNr = Math.floor((this.duration - 30) / 360);
-        // this.lastFrameNr = Math.round((this.duration - 9) / 10);
-        // this.lastMatrixLine = Math.ceil((this.lastFrameNr - (this.lastMatrixNr * 36)) / 6);
 
         // set default volume
         this.videoEle.nativeElement.volume = this.volume;
@@ -243,21 +247,6 @@ export class VideoComponent implements OnInit {
 
     mouseMove(ev: MouseEvent) {
         this._calcPreviewTime(ev);
-    }
-
-
-    sliderChange(ev: Event) {
-        // console.log(ev);
-        // const valueSeeked: number = parseInt(ev.target.value);
-
-        // if (this.previewTime === valueSeeked) {
-        //     console.log('preview time and slider value are correct')
-        // } else {
-
-        //     console.log('time: ', this.previewTime + ' === ' + valueSeeked + ' : ' + (this.previewTime === valueSeeked))
-        // }
-
-
     }
 
     /**
@@ -320,6 +309,28 @@ export class VideoComponent implements OnInit {
         this.preview.nativeElement.style.display = display;
     }
 
+    openReplaceFileDialog() {
+        const propId = this.parentResource.properties[Constants.HasMovingImageFileValue][0].id;
+
+        const dialogConfig: MatDialogConfig = {
+            width: '800px',
+            maxHeight: '80vh',
+            position: {
+                top: '112px'
+            },
+            data: { mode: 'replaceFile', title: 'Video (mp4)', subtitle: 'Update the video file of this resource', representation: 'movingImage', id: propId },
+            disableClose: true
+        };
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
+        );
+
+        dialogRef.afterClosed().subscribe((data) => {
+            this._replaceFile(data);
+        });
+    }
+
     /**
      * general video navigation: Update current video time from position
      *
@@ -335,4 +346,32 @@ export class VideoComponent implements OnInit {
         this.previewTime = this.previewTime < 0 ? 0 : this.previewTime;
     }
 
+    private _replaceFile(file: UpdateFileValue) {
+        this.fileHasChanged = true;
+
+        const updateRes = new UpdateResource();
+        updateRes.id = this.parentResource.id;
+        updateRes.type = this.parentResource.type;
+        updateRes.property = Constants.HasMovingImageFileValue;
+        updateRes.value = file;
+
+        this._dspApiConnection.v2.values.updateValue(updateRes as UpdateResource<UpdateValue>).pipe(
+            mergeMap((res: WriteValueResponse) => this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid))
+        ).subscribe(
+            (res2: ReadResource) => {
+                this.src.fileValue.fileUrl = (res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue).fileUrl;
+                this.src.fileValue.filename = (res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue).filename;
+                this.src.fileValue.strval = (res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue).strval;
+
+                this.ngOnInit();
+
+                this._valueOperationEventService.emit(
+                    new EmitEvent(Events.FileValueUpdated, new UpdatedFileEventValue(
+                        res2.properties[Constants.HasMovingImageFileValue][0])));
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+            }
+        );
+    }
 }

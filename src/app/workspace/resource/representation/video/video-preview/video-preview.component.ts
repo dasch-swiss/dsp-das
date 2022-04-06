@@ -58,11 +58,14 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
 
     @Input() dispTime = false;
 
-    /** needed video information: name and duration */
+    // needed video information: name and duration
     @Input() src: FileRepresentation;
 
-    /** show frame at the corresponding time */
+    // show frame at the corresponding time
     @Input() time?: number;
+
+    // if video file has changed; it will run ngOnChanges
+    @Input() fileHasChanged = false;
 
     @Output() open = new EventEmitter<{ video: string; time: number }>();
 
@@ -217,8 +220,6 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
     // this method has the additional parameter `sipi` as boolean value to switch between the two variants quite quick
     calculateSizes(image: string, sipi: boolean) {
 
-        console.warn('load matrix file to get info');
-
         // host dimension
         const parentFrameWidth: number = this._host.nativeElement.offsetWidth;
         const parentFrameHeight: number = this._host.nativeElement.offsetHeight;
@@ -230,7 +231,9 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
                 this.matrixWidth = dim.width;
                 this.matrixHeight = dim.height;
 
-                const lines: number = (this.fileInfo.duration > 360 ? 6 : Math.round(this.fileInfo.duration / 60));
+                let lines: number = (this.fileInfo.duration > 360 ? 6 : Math.round(this.fileInfo.duration / 60));
+
+                lines = (lines > 0 ? lines : 1);
 
                 // get matrix frame dimension
                 this.matrixFrameWidth = (this.matrixWidth / 6);
@@ -296,7 +299,6 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
         if (curMatrixNr < 0) {
             curMatrixNr = 0;
         }
-
         // get current matrix file url; TODO: this will be handled by sipi
 
         // the last matrix file could have another dimension size...
@@ -326,7 +328,6 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
 
         this.frame.nativeElement.style['background-image'] = 'url(' + this.matrix + ')';
 
-
         this.frame.nativeElement.style['background-position'] = cssParams;
 
     }
@@ -344,13 +345,10 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
 
         const image = new Image();
         image.src = matrix;
-        // console.log('image new', image);
         const $loadedImg = fromEvent(image, 'load').pipe(
             take(1),
             map(mapLoadedImage)
         );
-        // console.log('loadedImg', $loadedImg);
-        // console.log('image def', image);
         return $loadedImg;
     }
 
