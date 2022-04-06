@@ -668,10 +668,6 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         elt.title = toolTip;
         elt.setAttribute('style', 'outline: solid ' + lineColor + ' ' + lineWidth + 'px;');
 
-        elt.addEventListener('click', (event: MouseEvent) => {
-            this.regionClicked.emit(regionIri);
-        }, false);
-
         const diffX = geometry.points[1].x - geometry.points[0].x;
         const diffY = geometry.points[1].y - geometry.points[0].y;
 
@@ -689,6 +685,12 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         });
 
         this._regions[regionIri].push(elt);
+
+        if (this._viewer.getOverlayById) {
+            elt.addEventListener('click', (event: MouseEvent) => {
+                this.regionClicked.emit(regionIri);
+            }, false);
+        }
     }
 
 }
