@@ -102,10 +102,7 @@ export class UploadComponent implements OnInit {
                                 break;
 
                             case 'document':
-                                // the preview thumbnail is deactivated for the moment;
-                                // --> TODO: it will be activated as soon as we implement a pdf viewer
                                 this.thumbnailUrl = res.uploadedFiles[0].temporaryUrl;
-                                // this.thumbnailUrl = undefined;
                                 break;
 
                             default:
