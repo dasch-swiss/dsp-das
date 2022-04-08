@@ -181,7 +181,7 @@ export class VideoComponent implements OnInit {
     }
 
     loadMetadata(data: MovingImageSidecar) {
-        console.log('loaded metadata', data);
+        // console.log('loaded metadata', data);
     }
 
     /**

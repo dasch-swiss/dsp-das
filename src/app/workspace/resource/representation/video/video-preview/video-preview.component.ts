@@ -357,11 +357,13 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
         });
 
         const image = new Image();
-        image.src = matrix;
         const $loadedImg = fromEvent(image, 'load').pipe(
             take(1),
             map(mapLoadedImage)
         );
+
+        image.src = matrix;
+
         return $loadedImg;
     }
 
