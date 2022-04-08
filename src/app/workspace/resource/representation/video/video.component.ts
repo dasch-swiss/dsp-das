@@ -286,7 +286,7 @@ export class VideoComponent implements OnInit {
      * @param status true = show ('block'), false=hide ('none')
      */
     displayPreview(status: boolean) {
-        this.preview.nativeElement.style.display = (status ? 'block' : 'block');
+        this.preview.nativeElement.style.display = (status ? 'block' : 'none');
     }
 
     openReplaceFileDialog() {
