@@ -10,6 +10,7 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { fromEvent, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { FileRepresentation } from '../../file-representation';
@@ -28,25 +29,9 @@ export interface MovingImageSidecar {
     'width': number;
 }
 
-export interface Size {
+export interface Dimension {
     'width': number;
     'height': number;
-}
-
-export interface Profile {
-    'formats': [string];
-    'qualities': [string];
-    'supports': [string];
-}
-
-export interface SipiImageInfo {
-    '@context': string;
-    '@id': string;
-    'protocol': string;
-    'width': number;
-    'height': number;
-    'sizes': [Size];
-    'profile': (string | Profile)[];
 }
 
 @Component({
@@ -67,8 +52,10 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
     // if video file has changed; it will run ngOnChanges
     @Input() fileHasChanged = false;
 
+    // in preview only, when clicking on the flipbook, it opens the video at this position
     @Output() open = new EventEmitter<{ video: string; time: number }>();
 
+    // sends the metadata (sipi sidecar) to the parent e.g. video player
     @Output() fileMetadata = new EventEmitter<MovingImageSidecar>();
 
     @ViewChild('frame') frame: ElementRef;
@@ -149,13 +136,17 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
             this.updatePreviewByTime();
         }
 
-        this._setMatrixFile(0);
+        this._getMatrixFile(0);
 
         if (!this.matrixFrameWidth && !this.matrixFrameHeight) {
             this.calculateSizes(this.matrix);
         }
     }
 
+    /**
+     * toggles flipbook
+     * @param active
+     */
     toggleFlipbook(active: boolean) {
         this.focusOnPreview = active;
 
@@ -165,7 +156,7 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
         if (this.focusOnPreview) {
             // automatic playback of individual frames from first matrix
             // --> TODO: activate this later with an additional parameter (@Input) to switch between mousemove and automatic preview
-            // this.autoPlay(i, j, false);
+            // this.autoPlay(i, j);
 
         } else {
             i = 0;
@@ -173,8 +164,13 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
 
     }
 
-    autoPlay(i: number, j: number, sipi: boolean, delay: number = 250) {
-        let iiifParams: string;
+    /**
+     * run frame by frame automatically; only in preview mode
+     * @param i
+     * @param j
+     * @param [delay]
+     */
+    autoPlay(i: number, j: number, delay: number = 250) {
         let cssParams: string;
         let x = 0;
         let y = 0;
@@ -184,40 +180,37 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
             x = i * this.matrixFrameWidth;
             y = j * this.matrixFrameHeight;
 
-            if (sipi) {
-                iiifParams = x + ',' + y + ',' + this.matrixFrameWidth + ',' + this.matrixFrameHeight + '/' + this.frameWidth + ',' + this.frameHeight + '/0/default.jpg';
-                const currentFrame: string = this.matrix + '/' + iiifParams;
-
-                this.frame.nativeElement.style['background-image'] = 'url(' + currentFrame + ')';
-            } else {
-                cssParams = '-' + x + 'px -' + y + 'px';
-
-                this.frame.nativeElement.style['background-position'] = cssParams;
-            }
+            cssParams = '-' + x + 'px -' + y + 'px';
+            this.frame.nativeElement.style['background-position'] = cssParams;
 
             i++;
             if (i < 6 && this.focusOnPreview) {
-                this.autoPlay(i, j, sipi);
+                this.autoPlay(i, j);
             } else {
                 i = 0;
                 j++;
                 if (j < 6 && this.focusOnPreview) {
-                    this.autoPlay(i, j, sipi);
+                    this.autoPlay(i, j);
                 }
             }
         }, delay);
     }
 
-    // to test the difference between sipi single image calculation and css background position,
-    // this method has the additional parameter `sipi` as boolean value to switch between the two variants quite quick
+
+    /**
+     * calculates sizes of the preview frame;
+     * - always depends on aspect ration of the video
+     * - with of the matrix file is always the same (960px)
+     * @param image
+     */
     calculateSizes(image: string) {
 
         // host dimension
         const parentFrameWidth: number = this._host.nativeElement.offsetWidth;
         const parentFrameHeight: number = this._host.nativeElement.offsetHeight;
 
-        this._getMatrixSize(image).subscribe(
-            (dim: Size) => {
+        this._getMatrixDimension(image).subscribe(
+            (dim: Dimension) => {
 
                 // whole matrix dimension is:
                 this.matrixWidth = dim.width;
@@ -252,8 +245,11 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
 
     }
 
+    /**
+     * updates preview frame by mouse position
+     * @param ev
+     */
     updatePreviewByPosition(ev: MouseEvent) {
-
         const position: number = ev.offsetX;
 
         // one frame per 6 pixels
@@ -263,9 +259,11 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
 
             this.updatePreviewByTime();
         }
-
     }
 
+    /**
+     * updates preview frame by time
+     */
     updatePreviewByTime() {
 
         // overflow fixes
@@ -284,7 +282,7 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
         }
 
         // set current matrix file url
-        this._setMatrixFile(curMatrixNr);
+        this._getMatrixFile(curMatrixNr);
 
         // the last matrix file could have another dimension size...
         if (curMatrixNr < this.lastMatrixNr) {
@@ -316,12 +314,21 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
 
     }
 
+    /**
+     * opens video by clicking on a certain frame
+     * used in preview only.
+     * --> Not sure if we have to keep it in DSP-APP.
+     * It will be part of the grid view and has to be activated when using there.
+     */
     openVideo() {
-        // used in preview only. Not sure if we have to keep it in DSP-APP. It will be part of the grid view
         // this.open.emit({ video: this.fileInfo.name, time: Math.round(this.time) });
     }
 
-    private _setMatrixFile(fileNumber: number) {
+    /**
+     * get matrix file by filenumber and with information from video file
+     * @param fileNumber
+     */
+    private _getMatrixFile(fileNumber: number) {
 
         // get matrix url from video url
         // get base path from http://0.0.0.0:1024/1111/5AiQkeJNbQn-ClrXWkJVFvB.mp4/file
@@ -338,8 +345,13 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
         }
     }
 
-    private _getMatrixSize(matrix: string): Observable<Size> {
-        const mapLoadedImage = (event): Size => ({
+    /**
+     * gets matrix dimension (width and height)
+     * @param matrix
+     * @returns matrix dimension
+     */
+    private _getMatrixDimension(matrix: string): Observable<Dimension> {
+        const mapLoadedImage = (event): Dimension => ({
             width: event.target.width,
             height: event.target.height
         });
