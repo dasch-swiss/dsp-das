@@ -75,7 +75,7 @@ export class VideoComponent implements OnInit {
     lastMatrixLine: number;
 
     // size of progress bar / timeline
-    progressBarWidth: number;
+    timelineDimension: DOMRect;
 
     // time information
     duration: number;
@@ -100,7 +100,7 @@ export class VideoComponent implements OnInit {
     cinemaMode = false;
 
     // matTooltipPosition
-    matTooltipPos = 'above';
+    matTooltipPos = 'below';
 
     // if file was replaced, we have to reload the preview
     fileHasChanged = false;
@@ -259,29 +259,20 @@ export class VideoComponent implements OnInit {
         this.displayPreview(true);
 
         this.previewTime = Math.round(ev.time);
+        // console.warn(this.timelineDimension)
 
         // position from left:
-        let leftPosition: number = ev.position - this.halfFrameWidth;
+        let leftPosition: number = (ev.position - this.timelineDimension.x) - this.halfFrameWidth;
 
-        if (this.cinemaMode) {
-            // ev.screenX
-            // prevent overflow of preview image on the left
-            if (leftPosition <= 8) {
-                leftPosition = 8;
-            }
-            // prevent overflow of preview image on the right
-            if (leftPosition >= (this.progressBarWidth - this.frameWidth + 32)) {
-                leftPosition = this.progressBarWidth - this.frameWidth + 32;
-            }
-        } else {
-            // prevent overflow of preview image on the left
-            if (leftPosition <= (this.halfFrameWidth)) {
-                leftPosition = this.halfFrameWidth;
-            }
-            // prevent overflow of preview image on the right
-            if (leftPosition >= (this.progressBarWidth - this.halfFrameWidth + 48)) {
-                leftPosition = this.progressBarWidth - this.halfFrameWidth + 48;
-            }
+        // prevent overflow of preview image on the left
+        if (leftPosition <= 8) {
+            leftPosition = 8;
+        }
+
+
+        // prevent overflow of preview image on the right
+        if (leftPosition >= (this.timelineDimension.width - this.frameWidth + 8)) {
+            leftPosition = this.timelineDimension.width - this.frameWidth + 8;
         }
 
         // set preview positon on x axis
@@ -292,21 +283,10 @@ export class VideoComponent implements OnInit {
     /**
      * show preview image or hide it
      *
-     * @param status 'block' or 'none'
+     * @param status true = show ('block'), false=hide ('none')
      */
     displayPreview(status: boolean) {
-
-        const display = (status ? 'block' : 'none');
-
-        // get size of progress bar / timeline to calculate seconds per pixel
-        // this.progressBarWidth = this.progress.nativeElement.offsetWidth;
-        // console.log('progressBarWidth', this.progressBarWidth);
-        // this.secondsPerPixel = this.duration / this.progressBarWidth;
-
-
-        // display preview or hide it; depending on mouse event "enter" or "leave" on progress bar / timeline
-        // --> TODO: reactivate here again after testing video-preview size
-        this.preview.nativeElement.style.display = display;
+        this.preview.nativeElement.style.display = (status ? 'block' : 'block');
     }
 
     openReplaceFileDialog() {

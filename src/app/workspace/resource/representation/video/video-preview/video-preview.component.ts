@@ -73,7 +73,6 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
 
     @ViewChild('frame') frame: ElementRef;
 
-
     fileInfo: MovingImageSidecar;
 
     focusOnPreview = false;
@@ -144,23 +143,16 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges() {
-        this.time = this.time || (this.fileInfo.duration / 2);
+        this.time = this.time || 0;
 
         if (this.frame.nativeElement) {
             this.updatePreviewByTime();
         }
-        // get matrix url from video url
-        // get base path from http://0.0.0.0:1024/1111/5AiQkeJNbQn-ClrXWkJVFvB.mp4/file
-        // => http://0.0.0.0:1024/1111/5AiQkeJNbQn-ClrXWkJVFvB
-        const basePath = this.src.fileValue.fileUrl.substring(0, this.src.fileValue.fileUrl.lastIndexOf('/')).replace(/\.[^/.]+$/, '');
-        // and file name
-        // => 5AiQkeJNbQn-ClrXWkJVFvB
-        const fileName = basePath.substring(basePath.lastIndexOf('/') + 1);
 
-        this.matrix = basePath + '/' + fileName + '_m_0.jpg/file';
+        this._setMatrixFile(0);
 
         if (!this.matrixFrameWidth && !this.matrixFrameHeight) {
-            this.calculateSizes(this.matrix, false);
+            this.calculateSizes(this.matrix);
         }
     }
 
@@ -218,7 +210,7 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
 
     // to test the difference between sipi single image calculation and css background position,
     // this method has the additional parameter `sipi` as boolean value to switch between the two variants quite quick
-    calculateSizes(image: string, sipi: boolean) {
+    calculateSizes(image: string) {
 
         // host dimension
         const parentFrameWidth: number = this._host.nativeElement.offsetWidth;
@@ -250,17 +242,8 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
                 this.frameWidth = Math.round(this.matrixFrameWidth / this.proportion);
                 this.frameHeight = Math.round(this.matrixFrameHeight / this.proportion);
 
-                if (sipi) {
-                    // calculate iiifParams / position, cutout-size (matrixFrameDimension) / display-size
-                    const iiifParams: string = '0,0,' + this.matrixFrameWidth + ',' + this.matrixFrameHeight + '/' + this.frameWidth + ',/0/default.jpg';
-                    const currentFrame: string = image + '/' + iiifParams;
-                    this.frame.nativeElement.style['background-image'] = 'url(' + currentFrame + ')';
-                    this.frame.nativeElement.style['background-size'] = this.frameWidth + 'px ' + this.frameHeight + 'px';
-                } else {
-                    // background-image, -size
-                    this.frame.nativeElement.style['background-image'] = 'url(' + this.matrix + ')';
-                    this.frame.nativeElement.style['background-size'] = Math.round(this.matrixWidth / this.proportion) + 'px auto';
-                }
+                this.frame.nativeElement.style['background-image'] = 'url(' + this.matrix + ')';
+                this.frame.nativeElement.style['background-size'] = Math.round(this.matrixWidth / this.proportion) + 'px auto';
 
                 this.frame.nativeElement.style['width'] = this.frameWidth + 'px';
                 this.frame.nativeElement.style['height'] = this.frameHeight + 'px';
@@ -299,7 +282,9 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
         if (curMatrixNr < 0) {
             curMatrixNr = 0;
         }
-        // get current matrix file url; TODO: this will be handled by sipi
+
+        // set current matrix file url
+        this._setMatrixFile(curMatrixNr);
 
         // the last matrix file could have another dimension size...
         if (curMatrixNr < this.lastMatrixNr) {
@@ -327,14 +312,30 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
         const cssParams: string = '-' + (curColNr * this.frameWidth) + 'px -' + (curLineNr * this.frameHeight) + 'px';
 
         this.frame.nativeElement.style['background-image'] = 'url(' + this.matrix + ')';
-
         this.frame.nativeElement.style['background-position'] = cssParams;
 
     }
 
     openVideo() {
-        // used in preview only. Not sure if we have to keep it in DSP-APP
+        // used in preview only. Not sure if we have to keep it in DSP-APP. It will be part of the grid view
         // this.open.emit({ video: this.fileInfo.name, time: Math.round(this.time) });
+    }
+
+    private _setMatrixFile(fileNumber: number) {
+
+        // get matrix url from video url
+        // get base path from http://0.0.0.0:1024/1111/5AiQkeJNbQn-ClrXWkJVFvB.mp4/file
+        // => http://0.0.0.0:1024/1111/5AiQkeJNbQn-ClrXWkJVFvB
+        const basePath = this.src.fileValue.fileUrl.substring(0, this.src.fileValue.fileUrl.lastIndexOf('/')).replace(/\.[^/.]+$/, '');
+        // and file name
+        // => 5AiQkeJNbQn-ClrXWkJVFvB
+        const fileName = basePath.substring(basePath.lastIndexOf('/') + 1);
+
+        const matrixUrl = basePath + '/' + fileName + '_m_' + fileNumber + '.jpg/file';
+
+        if (this.matrix !== matrixUrl) {
+            this.matrix = matrixUrl;
+        }
     }
 
     private _getMatrixSize(matrix: string): Observable<Size> {

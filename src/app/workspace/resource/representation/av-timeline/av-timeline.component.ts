@@ -44,6 +44,8 @@ export class AvTimelineComponent implements OnChanges {
     // send mouse position to parent
     @Output() move = new EventEmitter<PointerValue>();
 
+    @Output() dimension = new EventEmitter<DOMRect>();
+
     // timeline element: main container
     @ViewChild('timeline') timelineEle: ElementRef;
 
@@ -56,7 +58,7 @@ export class AvTimelineComponent implements OnChanges {
     dragging = false;
 
     // size of timeline; will be used to calculate progress position in pixel corresponding to time value
-    timelineDimension: ClientRect | null = null;
+    timelineDimension: DOMRect | null = null;
 
     constructor() {
     }
@@ -73,7 +75,7 @@ export class AvTimelineComponent implements OnChanges {
         this._onMouseup(e);
     }
 
-    @HostListener('resize', ['$event']) onWindwoResiz(e: Event) {
+    @HostListener('window:resize', ['$event']) onWindwoResiz(e: Event) {
         this._onWindowResize(e);
     }
 
@@ -91,6 +93,8 @@ export class AvTimelineComponent implements OnChanges {
                 this.timelineDimension = this._getResizedTimelineDimensions();
             }
         }
+
+        this.dimension.emit(this.timelineDimension);
 
         // update pointer position from time
         this.updatePositionFromTime(this.value);
@@ -177,6 +181,7 @@ export class AvTimelineComponent implements OnChanges {
      */
     private _onWindowResize(ev: Event) {
         this.timelineDimension = this._getResizedTimelineDimensions();
+        this.dimension.emit(this.timelineDimension);
     }
 
     /**
@@ -184,13 +189,13 @@ export class AvTimelineComponent implements OnChanges {
      * The track is used rather than the native element to ignore the extra space that the thumb can
      * take up.
      */
-    private _getTimelineDimensions(): ClientRect | null {
+    private _getTimelineDimensions(): DOMRect | null {
         return this.timelineEle ? this.timelineEle.nativeElement.getBoundingClientRect() : null;
     }
 
-    private _getResizedTimelineDimensions(): ClientRect | null {
+    private _getResizedTimelineDimensions(): DOMRect | null {
         // recalculate timeline dimension
-        const newDimension: ClientRect = this._getTimelineDimensions();
+        const newDimension: DOMRect = this._getTimelineDimensions();
 
         if (this.timelineDimension.width !== newDimension.width) {
             return newDimension;

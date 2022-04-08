@@ -28,7 +28,7 @@
     <mat-toolbar class="controls">
         <mat-toolbar-row style="overflow: hidden;">
             <app-av-timeline #timeline [value]="currentTime" [min]="0" [max]="duration" [resized]="cinemaMode"
-                (move)="updatePreview($event)" (mouseenter)="displayPreview(true)"
+                (move)="updatePreview($event)" (mouseenter)="displayPreview(true)" (dimension)="timelineDimension = $event"
                 (mouseleave)="displayPreview(false)" (changed)="updateTimeFromSlider($event)"></app-av-timeline>
         </mat-toolbar-row>
 
