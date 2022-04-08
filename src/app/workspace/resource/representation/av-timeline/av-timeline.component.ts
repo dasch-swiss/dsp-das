@@ -16,8 +16,7 @@ export interface PointerValue {
     time: number;
 }
 /**
- * this component can be used in video as well in audio.
- * it's a timeline incl. progress indicator
+ * this component can be used in video and audio players
  */
 @Component({
     selector: 'app-av-timeline',
@@ -44,6 +43,7 @@ export class AvTimelineComponent implements OnChanges {
     // send mouse position to parent
     @Output() move = new EventEmitter<PointerValue>();
 
+    // send dimension and position of the timeline
     @Output() dimension = new EventEmitter<DOMRect>();
 
     // timeline element: main container
@@ -55,6 +55,7 @@ export class AvTimelineComponent implements OnChanges {
     // thumb element: current postion pointer
     @ViewChild('thumb') thumbEle: ElementRef;
 
+    // in case of draging the thumb element
     dragging = false;
 
     // size of timeline; will be used to calculate progress position in pixel corresponding to time value
@@ -94,12 +95,17 @@ export class AvTimelineComponent implements OnChanges {
             }
         }
 
+        // emit the dimension to the parent
         this.dimension.emit(this.timelineDimension);
 
         // update pointer position from time
         this.updatePositionFromTime(this.value);
     }
 
+    /**
+     * updates position from time value
+     * @param time
+     */
     updatePositionFromTime(time: number) {
         // calc position on the x axis from time value
         const percent: number = (time / this.max);
@@ -109,8 +115,12 @@ export class AvTimelineComponent implements OnChanges {
         this.updatePosition(pos);
     }
 
+    /**
+     * updates position of the thumb
+     * @param pos
+     */
     updatePosition(pos: number) {
-        // already played time
+        // already played time: fill with red background color
         const fillPos = (pos / this.timelineDimension.width);
 
         // background (timeline fill) start position
@@ -126,10 +136,17 @@ export class AvTimelineComponent implements OnChanges {
         this.progressEle.nativeElement.children[2].style.transform = 'translateX(0px) scale3d(' + fillPos + ', 1, 1)';
     }
 
+    /**
+     * toggles dragging
+     */
     toggleDragging() {
         this.dragging = !this.dragging;
     }
 
+    /**
+     * drags action
+     * @param ev
+     */
     dragAction(ev: CdkDragMove) {
         const pos: number = (ev.pointerPosition.x - this.timelineDimension.left);
         this.updatePosition(pos);
@@ -162,6 +179,10 @@ export class AvTimelineComponent implements OnChanges {
         this.move.emit({ position: ev.clientX, time });
     }
 
+    /**
+     * determines action after click or drop event
+     * @param ev
+     */
     private _onMouseup(ev: MouseEvent) {
 
         const pos: number = (ev.clientX - this.timelineDimension.left);
@@ -193,6 +214,10 @@ export class AvTimelineComponent implements OnChanges {
         return this.timelineEle ? this.timelineEle.nativeElement.getBoundingClientRect() : null;
     }
 
+    /**
+     * gets resized timeline dimensions
+     * @returns resized timeline dimensions
+     */
     private _getResizedTimelineDimensions(): DOMRect | null {
         // recalculate timeline dimension
         const newDimension: DOMRect = this._getTimelineDimensions();
