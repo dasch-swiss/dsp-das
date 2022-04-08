@@ -1,4 +1,3 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, ElementRef, HostListener, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -36,12 +35,6 @@ export class VideoComponent implements OnInit {
 
     @Input() src: FileRepresentation;
 
-    @Input() resourceIri?: string;
-
-    @Input() project?: string;
-
-    @Input() name?: string;
-
     @Input() start?= 0;
 
     @Input() parentResource: ReadResource;
@@ -56,8 +49,8 @@ export class VideoComponent implements OnInit {
 
     loading = true;
 
+    // video file url
     video: SafeUrl;
-    originalFilename: string;
 
     // video information
     aspectRatio: number;
@@ -188,7 +181,7 @@ export class VideoComponent implements OnInit {
     }
 
     loadMetadata(data: MovingImageSidecar) {
-        // console.log('loaded metadata', data);
+        console.log('loaded metadata', data);
     }
 
     /**
@@ -206,6 +199,9 @@ export class VideoComponent implements OnInit {
 
     }
 
+    /**
+     * what happens when video is loaded
+     */
     loadedVideo() {
         this.loading = false;
         this.play = !this.videoEle.nativeElement.paused;
@@ -245,6 +241,10 @@ export class VideoComponent implements OnInit {
     }
 
 
+    /**
+     * event on mouses move on timeline
+     * @param ev MouseEvent
+     */
     mouseMove(ev: MouseEvent) {
         this._calcPreviewTime(ev);
     }
@@ -269,7 +269,6 @@ export class VideoComponent implements OnInit {
             leftPosition = 8;
         }
 
-
         // prevent overflow of preview image on the right
         if (leftPosition >= (this.timelineDimension.width - this.frameWidth + 8)) {
             leftPosition = this.timelineDimension.width - this.frameWidth + 8;
@@ -289,6 +288,10 @@ export class VideoComponent implements OnInit {
         this.preview.nativeElement.style.display = (status ? 'block' : 'none');
     }
 
+    /**
+     * opens replace file dialog
+     *
+     */
     openReplaceFileDialog() {
         const propId = this.parentResource.properties[Constants.HasMovingImageFileValue][0].id;
 
@@ -320,12 +323,20 @@ export class VideoComponent implements OnInit {
         this.videoEle.nativeElement.currentTime = position;
     }
 
+    /**
+     * calcs time in preview frame
+     * @param ev
+     */
     private _calcPreviewTime(ev: MouseEvent) {
         this.previewTime = Math.round((ev.offsetX / this.timeline.nativeElement.clientWidth) * this.duration);
         this.previewTime = this.previewTime > this.duration ? this.duration : this.previewTime;
         this.previewTime = this.previewTime < 0 ? 0 : this.previewTime;
     }
 
+    /**
+     * replaces file
+     * @param file
+     */
     private _replaceFile(file: UpdateFileValue) {
         this.fileHasChanged = true;
 
