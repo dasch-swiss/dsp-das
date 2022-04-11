@@ -1,6 +1,6 @@
 <div class="property-info" (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
 
-    <div mat-line class="title">
+    <div mat-line class="title" [class.with-line-break]="!propCard">
         <span class="icon" *ngIf="propType" [matTooltip]="propType?.group + ': ' + propType?.label + ' (' + propDef.id.split('#')[1] + ')'"
             matTooltipPosition="above">
             <mat-icon class="type">{{propType?.icon}}</mat-icon>
@@ -19,7 +19,7 @@
         </span>
     </div>
 
-    <div mat-line class="info additional-info" [class.flex]="propCard">
+    <div mat-line class="info additional-info" [class.flex]="propCard" [class.with-line-break]="!propCard">
         <span [matTooltip]="'id: ' + propDef.id" matTooltipPosition="above" class="mat-caption">
             {{propDef.id | split: '#':1}}
         </span>
@@ -32,7 +32,7 @@
             required
         </span>
         <!-- in case of ontology property: display corresponding resource classes -->
-        <span *ngIf="!propCard">
+        <span *ngIf="!propCard" class="white-space">
             <span *ngIf="resClasses.length; else notUsed">
                 Property is used in:
                 <!-- <span>{{ resClasses.join(", ") }}</span> -->
@@ -56,7 +56,11 @@
                 <mat-icon>tune</mat-icon>
             </button>
             <span matTooltipPosition="above"
-                [matTooltip]="((!propCanBeDeleted) ? 'The property can\'t be removed because it is in use' : 'Remove property from resource class')">
+                [matTooltip]="((!propCanBeDeleted) ?
+                    (propCard.isInherited ?
+                        'The property can\'t be removed because it is inherited from another class' :
+                        'The property can\'t be removed because it is in use'
+                    ) : 'Remove property from resource class')">
                 <button mat-button [disabled]="!propCanBeDeleted" class="delete"
                     (click)="removePropertyFromClass.emit({iri: propDef.id, label: propDef.label})">
                     <mat-icon>backspace</mat-icon>
@@ -65,12 +69,15 @@
         </div>
         <!-- property action in case of properties' list view -->
         <div class="button-container" *ngIf="!propCard">
-            <button mat-button [disabled]="!propDef.isEditable" class="edit" title="edit" [matTooltip]="'Edit property'" matTooltipPosition="above"
-                (click)="editResourceProperty.emit({propDef: propDef, propType: propType})">
-                <mat-icon>edit</mat-icon>
-            </button>
             <span matTooltipPosition="above"
-                [matTooltip]="((resClasses.length > 0 || !propCanBeDeleted) ? 'The property can\'t be deleted because it is used in a class' : 'Delete property')">
+                [matTooltip]="propDef.isEditable ? 'Edit property' : 'The property can\'t be edited; No further information available'">
+                <button mat-button [disabled]="!propDef.isEditable" class="edit"
+                    (click)="editResourceProperty.emit({propDef: propDef, propType: propType})">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </span>
+            <span matTooltipPosition="above"
+                [matTooltip]="((resClasses.length > 0) ? 'The property can\'t be deleted because it is used in a class' : 'Delete property')">
                 <button mat-button [disabled]="resClasses.length > 0" class="delete"
                     (click)="deleteResourceProperty.emit({iri: propDef.id, label: propDef.label})">
                     <mat-icon>delete</mat-icon>

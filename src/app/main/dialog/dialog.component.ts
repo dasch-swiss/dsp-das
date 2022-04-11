@@ -1,5 +1,6 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ReadResource } from '@dasch-swiss/dsp-js';
 import { PropertyInfoObject } from 'src/app/project/ontology/default-data/default-properties';
 import { FilteredResources } from 'src/app/workspace/results/list-view/list-view.component';
 
@@ -16,13 +17,22 @@ export interface DialogData {
     canBeUpdated?: boolean;
     position?: number;
     parentIri?: string;
+    parentResource?: ReadResource;
     projectCode?: string;
     selectedResources?: FilteredResources;
+    resourceClassDefinition?: string;
+    fullSize?: boolean;
+    ontoIri?: string;
+    representation?: string; // respresentation type (stillImage, audio, etc.)
 }
 
 export interface ConfirmationWithComment {
     confirmed: boolean;
     comment?: string;
+}
+
+export enum DialogEvent {
+    DialogCanceled
 }
 
 @Component({
@@ -39,7 +49,12 @@ export class DialogComponent implements OnInit {
     constructor(
         public dialogRef: MatDialogRef<DialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData
-    ) { }
+    ) {
+        if (this.data.fullSize) {
+            // do not animate the dialog box
+            this.dialogRef.addPanelClass('full-size-dialog');
+        }
+    }
 
     ngOnInit() { }
 

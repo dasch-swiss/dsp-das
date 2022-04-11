@@ -18,6 +18,7 @@
             },
             "architect": {
                 "build": {
+                    "defaultConfiguration": "development",
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
                         "aot": true,
@@ -49,12 +50,20 @@
                             "src/styles.scss"
                         ],
                         "scripts": [
-                            "node_modules/openseadragon/build/openseadragon/openseadragon.min.js",
-                            "node_modules/3d-force-graph/dist/3d-force-graph.min.js",
-                            "node_modules/d3-force-3d/dist/d3-force-3d.js"
+                            "node_modules/openseadragon/build/openseadragon/openseadragon.min.js"
                         ]
                     },
                     "configurations": {
+                        "development": {
+                            "optimization": false,
+                            "sourceMap": false,
+                            "namedChunks": true,
+                            "aot": true,
+                            "extractLicenses": false,
+                            "vendorChunk": true,
+                            "buildOptimizer": false,
+                            "budgets": []
+                        },
                         "production": {
                             "fileReplacements": [
                                 {
@@ -91,22 +100,28 @@
                             ],
                             "optimization": false,
                             "sourceMap": true,
-                            "namedChunks": false,
+                            "namedChunks": true,
                             "aot": true,
                             "extractLicenses": false,
                             "vendorChunk": false,
                             "buildOptimizer": false,
-                            "budgets": [
+                            "budgets": []
+                        },
+                        "ls-test-server": {
+                            "fileReplacements": [
                                 {
-                                    "type": "initial",
-                                    "maximumWarning": "8mb",
-                                    "maximumError": "8mb"
-                                },
-                                {
-                                    "type": "anyComponentStyle",
-                                    "maximumWarning": "6kb"
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.ls-test-server.ts"
                                 }
-                            ]
+                            ],
+                            "optimization": false,
+                            "sourceMap": true,
+                            "namedChunks": true,
+                            "aot": true,
+                            "extractLicenses": false,
+                            "vendorChunk": false,
+                            "buildOptimizer": false,
+                            "budgets": []
                         }
                     }
                 },
@@ -116,11 +131,17 @@
                         "browserTarget": "dsp-app:build"
                     },
                     "configurations": {
+                        "development": {
+                          "browserTarget": "dsp-app:build:development"
+                        },
                         "production": {
                             "browserTarget": "dsp-app:build:production"
                         },
                         "test-server": {
                             "browserTarget": "dsp-app:build:test-server"
+                        },
+                        "ls-test-server": {
+                            "browserTarget": "dsp-app:build:ls-test-server"
                         }
                     }
                 },
@@ -154,18 +175,6 @@
                             }
                         ]
                     }
-                },
-                "lint": {
-                    "builder": "@angular-devkit/build-angular:tslint",
-                    "options": {
-                        "tsConfig": [
-                            "src/tsconfig.app.json",
-                            "src/tsconfig.spec.json"
-                        ],
-                        "exclude": [
-                            "**/node_modules/**"
-                        ]
-                    }
                 }
             }
         },
@@ -186,16 +195,10 @@
                         },
                         "test-server": {
                             "devServerTarget": "dsp-app:serve:test-server"
+                        },
+                        "ls-test-server": {
+                            "devServerTarget": "dsp-app:serve:ls-test-server"
                         }
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-devkit/build-angular:tslint",
-                    "options": {
-                        "tsConfig": "e2e/tsconfig.e2e.json",
-                        "exclude": [
-                            "**/node_modules/**"
-                        ]
                     }
                 }
             }

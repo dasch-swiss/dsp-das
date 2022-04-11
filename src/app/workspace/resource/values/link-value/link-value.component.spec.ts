@@ -2,18 +2,22 @@ import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { waitForAsync, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
     CreateLinkValue,
+    MockOntology,
     MockResource,
     ReadLinkValue,
+    ReadOntology,
     ReadResource,
     ReadResourceSequence,
     SearchEndpointV2,
     UpdateLinkValue
 } from '@dasch-swiss/dsp-js';
+import { OntologyCache } from '@dasch-swiss/dsp-js/src/cache/ontology-cache/OntologyCache';
 import { of } from 'rxjs';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { LinkValueComponent } from './link-value.component';
@@ -24,7 +28,7 @@ import { LinkValueComponent } from './link-value.component';
 @Component({
     template: `
     <app-link-value #inputVal [displayValue]="displayInputVal" [mode]="mode" [parentResource]="parentResource"
-                    [propIri]="propIri" (referredResourceClicked)="refResClicked($event)" (referredResourceHovered)="refResHovered($event)"></app-link-value>`
+                    [propIri]="propIri" [currentOntoIri]="currentOntoIri" (referredResourceClicked)="refResClicked($event)" (referredResourceHovered)="refResHovered($event)"></app-link-value>`
 })
 class TestHostDisplayValueComponent implements OnInit {
 
@@ -33,6 +37,7 @@ class TestHostDisplayValueComponent implements OnInit {
     displayInputVal: ReadLinkValue;
     parentResource: ReadResource;
     propIri: string;
+    currentOntoIri: string;
     mode: 'read' | 'update' | 'create' | 'search';
     linkValueClicked: ReadLinkValue;
     linkValueHovered: ReadLinkValue;
@@ -47,6 +52,7 @@ class TestHostDisplayValueComponent implements OnInit {
             this.propIri = this.displayInputVal.property;
             this.parentResource = res;
             this.mode = 'read';
+            this.currentOntoIri = 'http://0.0.0.0:3333/ontology/0001/anything/v2';
         });
 
     }
@@ -65,19 +71,21 @@ class TestHostDisplayValueComponent implements OnInit {
  */
 @Component({
     template: `
-    <app-link-value #inputVal [mode]="mode" [parentResource]="parentResource" [propIri]="propIri"></app-link-value>`
+    <app-link-value #inputVal [mode]="mode" [parentResource]="parentResource" [propIri]="propIri" [currentOntoIri]="currentOntoIri"></app-link-value>`
 })
 class TestHostCreateValueComponent implements OnInit {
 
     @ViewChild('inputVal') inputValueComponent: LinkValueComponent;
     parentResource: ReadResource;
     propIri: string;
+    currentOntoIri: string;
     mode: 'read' | 'update' | 'create' | 'search';
 
     ngOnInit() {
 
         MockResource.getTestThing().subscribe(res => {
             this.propIri = 'http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherThingValue';
+            this.currentOntoIri = 'http://0.0.0.0:3333/ontology/0001/anything/v2';
             this.parentResource = res;
             this.mode = 'create';
         });
@@ -89,18 +97,20 @@ class TestHostCreateValueComponent implements OnInit {
  */
 @Component({
     template: `
-    <app-link-value #inputVal [mode]="mode" [parentResource]="parentResource" [propIri]="propIri" [valueRequiredValidator]="false"></app-link-value>`
+    <app-link-value #inputVal [mode]="mode" [parentResource]="parentResource" [propIri]="propIri" [currentOntoIri]="currentOntoIri" [valueRequiredValidator]="false"></app-link-value>`
 })
 class TestHostCreateValueNoValueRequiredComponent implements OnInit {
 
     @ViewChild('inputVal') inputValueComponent: LinkValueComponent;
     parentResource: ReadResource;
     propIri: string;
+    currentOntoIri: string;
     mode: 'read' | 'update' | 'create' | 'search';
 
     ngOnInit() {
         MockResource.getTestThing().subscribe(res => {
             this.propIri = 'http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherThingValue';
+            this.currentOntoIri = 'http://0.0.0.0:3333/ontology/0001/anything/v2';
             this.parentResource = res;
             this.mode = 'create';
         });
@@ -112,6 +122,7 @@ describe('LinkValueComponent', () => {
     beforeEach(waitForAsync(() => {
         const valuesSpyObj = {
             v2: {
+                ontologyCache: jasmine.createSpyObj('ontologyCache', ['getOntology', 'getResourceClassDefinition']),
                 search: jasmine.createSpyObj('search', ['doSearchByLabel']),
             }
         };
@@ -126,6 +137,7 @@ describe('LinkValueComponent', () => {
                 ReactiveFormsModule,
                 MatInputModule,
                 MatAutocompleteModule,
+                MatDialogModule,
                 BrowserAnimationsModule
             ],
             providers: [
@@ -150,6 +162,28 @@ describe('LinkValueComponent', () => {
         let commentInputNativeElement;
 
         beforeEach(() => {
+
+            const dspConnSpy = TestBed.inject(DspApiConnectionToken);
+
+            (dspConnSpy.v2.ontologyCache as jasmine.SpyObj<OntologyCache>).getOntology.and.callFake(
+                (ontoIri: string) => {
+
+                    const anythingOnto = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
+                    const knoraApiOnto = MockOntology.mockReadOntology('http://api.knora.org/ontology/knora-api/v2');
+
+                    const ontoMap: Map<string, ReadOntology> = new Map();
+
+                    ontoMap.set('http://api.knora.org/ontology/knora-api/v2', knoraApiOnto);
+                    ontoMap.set('http://0.0.0.0:3333/ontology/0001/anything/v2', anythingOnto);
+
+                    return of(ontoMap);
+                }
+            );
+
+            (dspConnSpy.v2.ontologyCache as jasmine.SpyObj<OntologyCache>).getResourceClassDefinition.and.callFake(
+                (resClassIri: string) => of(MockOntology.mockIResourceClassAndPropertyDefinitions('http://0.0.0.0:3333/ontology/0001/anything/v2#Thing'))
+            );
+
             testHostFixture = TestBed.createComponent(TestHostDisplayValueComponent);
             testHostComponent = testHostFixture.componentInstance;
             testHostFixture.detectChanges();
@@ -483,6 +517,27 @@ describe('LinkValueComponent', () => {
 
         beforeEach(() => {
 
+            const dspConnSpy = TestBed.inject(DspApiConnectionToken);
+
+            (dspConnSpy.v2.ontologyCache as jasmine.SpyObj<OntologyCache>).getOntology.and.callFake(
+                (ontoIri: string) => {
+
+                    const anythingOnto = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
+                    const knoraApiOnto = MockOntology.mockReadOntology('http://api.knora.org/ontology/knora-api/v2');
+
+                    const ontoMap: Map<string, ReadOntology> = new Map();
+
+                    ontoMap.set('http://api.knora.org/ontology/knora-api/v2', knoraApiOnto);
+                    ontoMap.set('http://0.0.0.0:3333/ontology/0001/anything/v2', anythingOnto);
+
+                    return of(ontoMap);
+                }
+            );
+
+            (dspConnSpy.v2.ontologyCache as jasmine.SpyObj<OntologyCache>).getResourceClassDefinition.and.callFake(
+                (resClassIri: string) => of(MockOntology.mockIResourceClassAndPropertyDefinitions('http://0.0.0.0:3333/ontology/0001/anything/v2#Thing'))
+            );
+
             testHostFixture = TestBed.createComponent(TestHostCreateValueComponent);
             testHostComponent = testHostFixture.componentInstance;
             testHostFixture.detectChanges();
@@ -612,6 +667,27 @@ describe('LinkValueComponent', () => {
         let testHostFixture: ComponentFixture<TestHostCreateValueNoValueRequiredComponent>;
 
         beforeEach(() => {
+
+            const dspConnSpy = TestBed.inject(DspApiConnectionToken);
+
+            (dspConnSpy.v2.ontologyCache as jasmine.SpyObj<OntologyCache>).getOntology.and.callFake(
+                (ontoIri: string) => {
+
+                    const anythingOnto = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
+                    const knoraApiOnto = MockOntology.mockReadOntology('http://api.knora.org/ontology/knora-api/v2');
+
+                    const ontoMap: Map<string, ReadOntology> = new Map();
+
+                    ontoMap.set('http://api.knora.org/ontology/knora-api/v2', knoraApiOnto);
+                    ontoMap.set('http://0.0.0.0:3333/ontology/0001/anything/v2', anythingOnto);
+
+                    return of(ontoMap);
+                }
+            );
+
+            (dspConnSpy.v2.ontologyCache as jasmine.SpyObj<OntologyCache>).getResourceClassDefinition.and.callFake(
+                (resClassIri: string) => of(MockOntology.mockIResourceClassAndPropertyDefinitions('http://0.0.0.0:3333/ontology/0001/anything/v2#Thing'))
+            );
 
             testHostFixture = TestBed.createComponent(TestHostCreateValueNoValueRequiredComponent);
             testHostComponent = testHostFixture.componentInstance;

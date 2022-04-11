@@ -1,11 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ApiResponseData, ApiResponseError, HealthResponse, KnoraApiConnection, VersionResponse } from '@dasch-swiss/dsp-js';
+import { AppInitService } from 'src/app/app-init.service';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
+import { DspConfig } from '../declarations/dsp-config';
 import { ErrorHandlerService } from '../error/error-handler.service';
 import { GridItem } from '../grid/grid.component';
 
 declare let require: any;
-const { version: appVersion, name: appName } = require('../../../../package.json');
+const { version: appVersion } = require('../../../../package.json');
 
 @Component({
     selector: 'app-help',
@@ -16,9 +18,12 @@ export class HelpComponent implements OnInit {
 
     loading = true;
 
+    dsp: DspConfig;
+    releaseNotesUrl: string;
+
     appVersion: string = appVersion;
     apiStatus: HealthResponse;
-    dspVersion: VersionResponse;
+    apiVersion: VersionResponse;
 
     docs: GridItem[] = [
         {
@@ -54,7 +59,7 @@ export class HelpComponent implements OnInit {
         {
             title: 'DSP-API ',
             text: 'Framework to store, share, and work with primary resources in the humanities.',
-            url: 'https://github.com/dasch-swiss/dsp-api/releases/tag/',
+            url: 'https://github.com/dasch-swiss/dsp-api/releases/tag/v',
             urlText: 'Release notes'
         },
         {
@@ -68,13 +73,13 @@ export class HelpComponent implements OnInit {
     support: GridItem[] = [
         {
             title: 'Need more help?',
-            text: 'Have you had some issues by using our software? Let us know and get in contact with developers and users:',
-            url: 'https://discuss.dasch.swiss',
-            urlText: 'DaSCH Forum'
+            text: 'Have you had some issues by using our software? Let us know and get in contact with the developers:',
+            url: 'mailto:support@dasch.swiss?subject=DSP-APP request | ',
+            urlText: 'Contact us'
         },
         {
             title: 'DaSCH Infrastructure',
-            text: 'Wondering what the Data and Service Center for the Humanities DaSCH exactly is? Get more information on our Website:',
+            text: 'Wondering what the Swiss National Data and Service Center for the Humanities DaSCH exactly is? Get more information on our Website:',
             url: 'https://dasch.swiss',
             urlText: 'dasch.swiss'
         },
@@ -88,26 +93,36 @@ export class HelpComponent implements OnInit {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _appInitService: AppInitService,
         private _errorHandler: ErrorHandlerService) {
     }
 
     ngOnInit() {
 
+        this.dsp = this._appInitService.dspConfig;
+
+        this.support[0].url += this.dsp.environment + ': ' + this.dsp.release;
+
+        // quick solution; todo: has to be done in a better way
+        // to go directly to the page e.g. https://dasch.atlassian.net/wiki/spaces/changelog/pages/25067546/Releasenews+2022.01.02
+        // or https://dasch.atlassian.net/wiki/spaces/changelog/pages/21266446/Releasenews+2022.01.01
+        this.releaseNotesUrl = 'https://dasch.atlassian.net/wiki/search?text=' + this.dsp.release;
+
         this._dspApiConnection.system.versionEndpoint.getVersion().subscribe(
             (response: ApiResponseData<VersionResponse>) => {
-                this.dspVersion = response.body;
+                this.apiVersion = response.body;
 
                 // set dsp-app version
-                this.tools[0].title += ' v' + this.appVersion;
+                this.tools[0].title += this.appVersion;
                 this.tools[0].url += this.appVersion;
 
                 // set dsp-api version
-                this.tools[1].title += this.dspVersion.webapi;
-                this.tools[1].url += this.dspVersion.webapi;
+                this.tools[1].title += this.apiVersion.webapi;
+                this.tools[1].url += this.apiVersion.webapi;
 
                 // set dsp-sipi version
-                this.tools[2].title += ' v' + this.dspVersion.sipi;
-                this.tools[2].url += this.dspVersion.sipi;
+                this.tools[2].title += this.apiVersion.sipi;
+                this.tools[2].url += this.apiVersion.sipi;
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);

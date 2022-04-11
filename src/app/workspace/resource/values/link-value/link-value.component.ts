@@ -7,19 +7,27 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    SimpleChanges
+    SimpleChanges,
+    ViewChild
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {
     CreateLinkValue,
     KnoraApiConnection,
     ReadLinkValue,
+    ReadOntology,
     ReadResource,
     ReadResourceSequence,
+    ResourceClassAndPropertyDefinitions,
+    ResourceClassDefinition,
+    ResourcePropertyDefinition,
     UpdateLinkValue
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { DialogComponent, DialogEvent } from 'src/app/main/dialog/dialog.component';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
 
 export function resourceValidator(control: AbstractControl) {
@@ -40,23 +48,32 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
     @Input() displayValue?: ReadLinkValue;
     @Input() parentResource: ReadResource;
     @Input() propIri: string;
+    @Input() currentOntoIri: string;
 
     @Output() referredResourceClicked: EventEmitter<ReadLinkValue> = new EventEmitter();
-
     @Output() referredResourceHovered: EventEmitter<ReadLinkValue> = new EventEmitter();
+
+    @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
     resources: ReadResource[] = [];
     restrictToResourceClass: string;
     valueFormControl: FormControl;
     commentFormControl: FormControl;
     form: FormGroup;
+    resourceClassLabel: string;
 
     valueChangesSubscription: Subscription;
     labelChangesSubscription: Subscription;
     // label cannot contain logical operations of lucene index
     customValidators = [resourceValidator];
 
+    resourceClasses: ResourceClassDefinition[];
+    properties: ResourcePropertyDefinition[];
+
+    loadingResults = false;
+
     constructor(
+        private _dialog: MatDialog,
         @Inject(FormBuilder) private _fb: FormBuilder,
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection) {
         super();
@@ -83,10 +100,12 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
     searchByLabel(searchTerm: string) {
         // at least 3 characters are required
         if (typeof searchTerm === 'string' && searchTerm.length >= 3) {
+            this.loadingResults = true;
             this._dspApiConnection.v2.search.doSearchByLabel(
                 searchTerm, 0, { limitToResourceClass: this.restrictToResourceClass }).subscribe(
                 (response: ReadResourceSequence) => {
                     this.resources = response.resources;
+                    this.loadingResults = false;
                 });
         } else {
             this.resources = [];
@@ -109,6 +128,33 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
     ngOnInit() {
         const linkType = this.parentResource.getLinkPropertyIriFromLinkValuePropertyIri(this.propIri);
         this.restrictToResourceClass = this.parentResource.entityInfo.properties[linkType].objectType;
+
+        // get label of resource class
+        this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.restrictToResourceClass).subscribe(
+            (onto: ResourceClassAndPropertyDefinitions) => {
+                this.resourceClassLabel = onto.classes[this.restrictToResourceClass].label;
+            }
+        );
+
+        this._dspApiConnection.v2.ontologyCache.getOntology(this.currentOntoIri).subscribe(
+            (onto: Map<string, ReadOntology>) => {
+                const resClasses = onto.get(this.currentOntoIri).getClassDefinitionsByType(ResourceClassDefinition);
+                this.resourceClasses = resClasses.filter(
+                    (resClassDef: ResourceClassDefinition) => resClassDef.id === this.restrictToResourceClass
+                );
+                const subclasses = resClasses.filter(
+                    (resClassDef: ResourceClassDefinition) =>
+                        resClassDef.subClassOf.indexOf(this.restrictToResourceClass) > -1
+                );
+
+                this.resourceClasses = this.resourceClasses.concat(subclasses);
+
+                this.properties = onto.get(this.currentOntoIri).getPropertyDefinitionsByType(ResourcePropertyDefinition);
+            },
+            error => {
+                console.error(error);
+            }
+        );
 
         // initialize form control elements
         this.valueFormControl = new FormControl(null);
@@ -202,5 +248,41 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
      */
     refResHovered() {
         this.referredResourceHovered.emit(this.displayValue);
+    }
+
+    openDialog(mode: string, ev: Event, iri?: string, resClass?: ResourceClassDefinition): void {
+        ev.preventDefault();
+        const dialogConfig: MatDialogConfig = {
+            width: '840px',
+            maxHeight: '80vh',
+            position: {
+                top: '112px'
+            },
+            data: { mode: mode, title: resClass.label, id: iri, parentResource: this.parentResource, resourceClassDefinition: resClass.id, ontoIri: this.currentOntoIri },
+            disableClose: true
+        };
+
+        const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
+
+        dialogRef.afterClosed().subscribe((event: ReadResource | DialogEvent) => {
+            // save button clicked
+            if (event instanceof ReadResource ) {
+                const newResource = event as ReadResource;
+
+                // set value of value form control to the newly created resource
+                this.form.controls.value.setValue(newResource);
+
+                // hide the autocomplete results
+                this.autocomplete.closePanel();
+            }
+
+            // cancel button clicked
+            if (event === DialogEvent.DialogCanceled){
+                this.resetFormControl();
+
+                // hide the autocomplete results
+                this.autocomplete.closePanel();
+            }
+        });
     }
 }

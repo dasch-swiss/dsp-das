@@ -27,6 +27,7 @@ yalc.lock
 .vscode/extensions.json
 
 # misc
+/.angular/cache
 /.sass-cache
 /connect.lock
 /coverage
@@ -47,3 +48,6 @@ docs/bin
 .DS_Store
 Thumbs.db
 *.code-workspace
+
+# Generated docs
+/site

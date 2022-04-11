@@ -1,11 +1,19 @@
+import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonHarness } from '@angular/material/button/testing';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogHarness } from '@angular/material/dialog/testing';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { By } from '@angular/platform-browser';
-import { Constants, ReadGeomValue, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Constants, MockResource, ReadGeomValue, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { AppInitService } from 'src/app/app-init.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { FileRepresentation } from '../file-representation';
@@ -77,6 +85,7 @@ function makeRegion(geomString: string[], iri: string): ReadResource {
                          [iiifUrl]="iiifUrl"
                          [activateRegion]="inputActivateRegion"
                          [currentTab]="'annotations'"
+                         [parentResource]="readresource"
                          (regionClicked)="regHovered($event)">
         </app-still-image>`
 })
@@ -84,6 +93,7 @@ class TestHostComponent implements OnInit {
 
     @ViewChild(StillImageComponent) osdViewerComp: StillImageComponent;
 
+    readResource: ReadResource;
     stillImageFileRepresentations: FileRepresentation[] = [];
     caption = 'test image';
     iiifUrl = 'https://iiif.test.dasch.swiss:443/0803/incunabula_0000003840.jp2/full/3210,5144/0/default.jpg';
@@ -92,6 +102,10 @@ class TestHostComponent implements OnInit {
     activeRegion: string;
 
     ngOnInit() {
+
+        MockResource.getTestThing().subscribe(res => {
+            this.readResource = res;
+        });
 
         this.stillImageFileRepresentations
             = [
@@ -110,6 +124,8 @@ class TestHostComponent implements OnInit {
 describe('StillImageComponent', () => {
     let testHostComponent: TestHostComponent;
     let testHostFixture: ComponentFixture<TestHostComponent>;
+    let rootLoader: HarnessLoader;
+    let overlayContainer: OverlayContainer;
 
     beforeEach(waitForAsync(() => {
 
@@ -120,8 +136,14 @@ describe('StillImageComponent', () => {
         };
 
         TestBed.configureTestingModule({
-            declarations: [StillImageComponent, TestHostComponent],
+            declarations: [
+                StillImageComponent,
+                TestHostComponent,
+                CdkCopyToClipboard
+            ],
             imports: [
+                BrowserAnimationsModule,
+                HttpClientModule,
                 MatDialogModule,
                 MatIconModule,
                 MatSnackBarModule,
@@ -133,6 +155,14 @@ describe('StillImageComponent', () => {
                     provide: DspApiConnectionToken,
                     useValue: adminSpyObj
                 },
+                {
+                    provide: MAT_DIALOG_DATA,
+                    useValue: {}
+                },
+                {
+                    provide: MatDialogRef,
+                    useValue: {}
+                },
             ]
         })
             .compileComponents();
@@ -142,6 +172,9 @@ describe('StillImageComponent', () => {
         testHostFixture = TestBed.createComponent(TestHostComponent);
         testHostComponent = testHostFixture.componentInstance;
         testHostFixture.detectChanges();
+
+        overlayContainer = TestBed.inject(OverlayContainer);
+        rootLoader = TestbedHarnessEnvironment.documentRootLoader(testHostFixture);
     });
 
     it('should create', () => {
@@ -188,7 +221,7 @@ describe('StillImageComponent', () => {
         const hostCompDe = testHostFixture.debugElement;
         const stillImageComponentDe = hostCompDe.query(By.directive(StillImageComponent));
 
-        const iiifUrlDebugElement = stillImageComponentDe.query(By.css('.iiif'));
+        const iiifUrlDebugElement = stillImageComponentDe.query(By.css('.iiif-url a'));
         const iiifUrlEle = iiifUrlDebugElement.nativeElement;
 
         expect(iiifUrlEle.innerText).toEqual('https://iiif.test.dasch.swiss:443/0803/incunabula_0000003840.jp2/full/3210,5144/0/default.jpg');
@@ -220,5 +253,15 @@ describe('StillImageComponent', () => {
         expect(testHostComponent.activeRegion).toEqual('first');
 
     });
+
+    // it('should open the dialog box when the replace image button is clicked', async () => {
+
+    //     const replaceImageButton = await rootLoader.getHarness(MatButtonHarness.with({ selector: '.replace-image' }));
+    //     console.log('replaceImageButton: ', replaceImageButton);
+    //     await replaceImageButton.click();
+
+    //     const dialogHarnesses = await rootLoader.getAllHarnesses(MatDialogHarness);
+    //     expect(dialogHarnesses.length).toEqual(1);
+    // });
 
 });

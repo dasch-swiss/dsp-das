@@ -1,16 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationStart, Router } from '@angular/router';
+import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
+import { AppInitService } from 'src/app/app-init.service';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ComponentCommunicationEventService, Events } from 'src/app/main/services/component-communication-event.service';
 import { SearchParams } from 'src/app/workspace/results/list-view/list-view.component';
+import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
+import { DspConfig } from '../declarations/dsp-config';
 import { NotificationService } from '../services/notification.service';
 import { SessionService } from '../services/session.service';
-
-const { version: appVersion } = require('../../../../package.json');
 
 @Component({
     selector: 'app-header',
@@ -23,11 +25,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     show = false;
     searchParams: SearchParams;
 
-    appVersion: string = 'v' + appVersion;
+    dsp: DspConfig;
 
     componentCommsSubscription: Subscription;
 
     constructor(
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _appInitService: AppInitService,
         private _componentCommsService: ComponentCommunicationEventService,
         private _dialog: MatDialog,
         private _domSanitizer: DomSanitizer,
@@ -37,7 +41,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         private _session: SessionService
     ) {
 
-        // create tool icons to use them in mat-icons
+        // create own logo icon to use them in mat-icons
         this._matIconRegistry.addSvgIcon(
             'dasch_icon_black',
             this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/dasch-icon-black.svg')
@@ -45,12 +49,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
         // logged-in user? show user menu or login button
         this._router.events.forEach((event) => {
+
             if (event instanceof NavigationStart) {
-                this._session.isSessionValid().subscribe((response) => {
+                this._session.isSessionValid().subscribe((response: boolean) => {
                     this.session = response;
                 });
             }
         });
+
+        this.dsp = this._appInitService.dspConfig;
+
     }
 
     ngOnInit() {

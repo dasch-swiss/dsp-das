@@ -30,6 +30,7 @@ import {
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { ComponentCommunicationEventService, Events } from 'src/app/main/services/component-communication-event.service';
 import { NotificationService } from 'src/app/main/services/notification.service';
 import { SortingService } from 'src/app/main/services/sorting.service';
@@ -137,11 +138,11 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
-        private _notification: NotificationService,
-        private _sortingService: SortingService,
-        private _overlay: Overlay,
-        private _viewContainerRef: ViewContainerRef,
         private _componentCommsService: ComponentCommunicationEventService,
+        private _errorHandler: ErrorHandlerService,
+        private _overlay: Overlay,
+        private _sortingService: SortingService,
+        private _viewContainerRef: ViewContainerRef,
     ) { }
 
     ngOnInit(): void {
@@ -223,8 +224,8 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
                 this.projects = this._sortingService.keySortByAlphabetical(response.body.projects, 'shortname');
             },
             (error: ApiResponseError) => {
-                this._notification.openSnackBar(error);
                 this.error = error;
+                this._errorHandler.showMessage(error);
             }
         );
     }
@@ -239,7 +240,7 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
                 this.setProject(project.body.project);
             },
             (error: ApiResponseError) => {
-                this._notification.openSnackBar(error);
+                this._errorHandler.showMessage(error);
             }
         );
     }
