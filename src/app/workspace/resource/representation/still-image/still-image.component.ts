@@ -312,8 +312,6 @@ export class StillImageComponent implements OnChanges, OnDestroy {
                     geometry.lineColor = colorValues[0].color;
                 }
 
-                console.log(geom)
-
                 this._createSVGOverlay(geom.region.id, geometry, aspectRatio, imageXOffset, geom.region.label, geom.region.properties[Constants.HasComment][0].strval);
 
                 imageXOffset++;
