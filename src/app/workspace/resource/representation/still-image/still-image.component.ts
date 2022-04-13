@@ -1,15 +1,10 @@
-import { E } from '@angular/cdk/keycodes';
 import {
     Component,
     ElementRef,
-    EventEmitter,
-    HostListener,
-    Inject,
+    EventEmitter, Inject,
     Input,
     OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
+    OnDestroy, Output,
     Renderer2,
     SimpleChanges
 } from '@angular/core';
@@ -19,9 +14,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import {
     ApiResponseError,
     Constants,
-    CreateColorValue,
-    CreateFileValue,
-    CreateGeomValue,
+    CreateColorValue, CreateGeomValue,
     CreateLinkValue,
     CreateResource,
     CreateTextValueAsString,
@@ -312,7 +305,9 @@ export class StillImageComponent implements OnChanges, OnDestroy {
                     geometry.lineColor = colorValues[0].color;
                 }
 
-                this._createSVGOverlay(geom.region.id, geometry, aspectRatio, imageXOffset, geom.region.label, geom.region.properties[Constants.HasComment][0].strval);
+                const commentValue = (geom.region.properties[Constants.HasComment] ? geom.region.properties[Constants.HasComment][0].strval : '');
+
+                this._createSVGOverlay(geom.region.id, geometry, aspectRatio, imageXOffset, geom.region.label, commentValue);
 
                 imageXOffset++;
             }
@@ -347,7 +342,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         this._notification.openSnackBar(message);
     }
 
-    openReplaceFileDialog(){
+    openReplaceFileDialog() {
         const propId = this.parentResource.properties[Constants.HasStillImageFileValue][0].id;
 
         const dialogConfig: MatDialogConfig = {
@@ -356,7 +351,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
             position: {
                 top: '112px'
             },
-            data: { mode: 'replaceFile', title: '2D Image (Still Image)', subtitle: 'Update image of the resource' , representation: 'stillImage', id: propId },
+            data: { mode: 'replaceFile', title: '2D Image (Still Image)', subtitle: 'Update image of the resource', representation: 'stillImage', id: propId },
             disableClose: true
         };
         const dialogRef = this._dialog.open(
@@ -687,7 +682,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
         const tracker = new OpenSeadragon.MouseTracker({
             element: regEle,
-            clickHandler: function(event) { }
+            clickHandler: function (event) { }
         });
 
         this._regions[regionIri].push(regEle);
