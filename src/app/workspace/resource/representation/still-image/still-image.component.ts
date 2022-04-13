@@ -681,6 +681,8 @@ export class StillImageComponent implements OnChanges, OnDestroy {
             location: loc,
         });
 
+        // mouse tracker has to be activated on the open seadragon viewer
+        // solution from: https://github.com/openseadragon/openseadragon/issues/1419#issuecomment-371564878
         const tracker = new OpenSeadragon.MouseTracker({
             element: regEle,
             clickHandler: function (event) { }
