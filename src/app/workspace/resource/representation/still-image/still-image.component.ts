@@ -14,7 +14,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import {
     ApiResponseError,
     Constants,
-    CreateColorValue, CreateGeomValue,
+    CreateColorValue,
+    CreateGeomValue,
     CreateLinkValue,
     CreateResource,
     CreateTextValueAsString,
