@@ -591,12 +591,16 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         // and scroll to region with this id
         const region = document.getElementById(iri);
         if (region) {
-            region.scrollIntoView();
+            region.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
         }
 
     }
 
     updateRegions(iri: string) {
+        console.log('res component: updateRegions', iri);
         if (this.incomingResource) {
             this.incomingResource.incomingAnnotations = [];
         } else {
@@ -606,7 +610,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         this.openRegion(iri);
     }
 
-    updateRegionColor() {
+    updateRegion() {
         if (this.stillImageComponent !== undefined) {
             this.stillImageComponent.updateRegions();
         }

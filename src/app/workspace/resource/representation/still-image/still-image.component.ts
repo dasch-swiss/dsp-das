@@ -687,9 +687,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
         const tracker = new OpenSeadragon.MouseTracker({
             element: regEle,
-            clickHandler: function(event: any) {
-                this.regionClicked.emit(regionIri);
-            }
+            clickHandler: function(event) { }
         });
 
         this._regions[regionIri].push(regEle);
@@ -704,6 +702,9 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         });
         regEle.addEventListener('mouseleave', (event: MouseEvent) => {
             comEle.setAttribute('style', 'display: none');
+        });
+        regEle.addEventListener('click', (event: MouseEvent) => {
+            this.regionClicked.emit(regionIri);
         });
 
     }
