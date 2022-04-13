@@ -600,7 +600,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     updateRegions(iri: string) {
-        console.log('res component: updateRegions', iri);
         if (this.incomingResource) {
             this.incomingResource.incomingAnnotations = [];
         } else {
