@@ -316,7 +316,7 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
                 curFrameNr = this.lastMatrixFrameNr;
             }
 
-            // calculate current line and columne number in the matrix and get current frame / preview image position
+            // calculate current line and column number in the matrix and get current frame / preview image position
             const curLineNr: number = Math.floor(curFrameNr / 6);
             const curColNr: number = Math.floor(curFrameNr - (curLineNr * 6));
             const cssParams: string = '-' + (curColNr * this.frameWidth) + 'px -' + (curLineNr * this.frameHeight) + 'px';

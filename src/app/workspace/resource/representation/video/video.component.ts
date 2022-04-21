@@ -220,7 +220,7 @@ export class VideoComponent implements OnInit {
         }
     }
     /**
-     * video naviagtion from timeline / progress bar
+     * video navigation from timeline / progress bar
      *
      * @param ev MatSliderChange
      */
