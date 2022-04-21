@@ -81,7 +81,6 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
     matrixHeight: number;
     // 3. number of matrixes and number of lines of last file and number of last possible frame
     lastMatrixNr: number;
-    lastMatrixLine: number;
     lastMatrixFrameNr: number;
     // 4. dimension of one frame inside the matrix
     matrixFrameWidth: number;
