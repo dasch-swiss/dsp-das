@@ -78,7 +78,9 @@ export class ArchiveComponent implements OnInit {
         );
 
         dialogRef.afterClosed().subscribe((data) => {
-            this._replaceFile(data);
+            if (data) {
+                this._replaceFile(data);
+            }
         });
     }
 

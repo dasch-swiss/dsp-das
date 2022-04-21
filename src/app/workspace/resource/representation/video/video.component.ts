@@ -305,8 +305,9 @@ export class VideoComponent implements OnInit {
         );
 
         dialogRef.afterClosed().subscribe((data) => {
-            this.goToStart();
-            this._replaceFile(data);
+            if (data) {
+                this._replaceFile(data);
+            }
         });
     }
 
@@ -334,6 +335,8 @@ export class VideoComponent implements OnInit {
      * @param file
      */
     private _replaceFile(file: UpdateFileValue) {
+        this.goToStart();
+
         this.fileHasChanged = true;
 
         const updateRes = new UpdateResource();
