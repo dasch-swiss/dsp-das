@@ -183,9 +183,8 @@ export class VideoComponent implements OnInit {
      * as soon as video has status "loadedmetadata" we're able to read
      * information about duration, video size and set volume
      *
-     * @param ev Event
      */
-    loadedMetadata(ev: Event) {
+    loadedMetadata() {
         // get video duration
         this.duration = this.videoEle.nativeElement.duration;
 
@@ -306,6 +305,7 @@ export class VideoComponent implements OnInit {
         );
 
         dialogRef.afterClosed().subscribe((data) => {
+            this.goToStart();
             this._replaceFile(data);
         });
     }
@@ -351,6 +351,8 @@ export class VideoComponent implements OnInit {
                 this.src.fileValue.strval = (res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue).strval;
 
                 this.ngOnInit();
+
+                this.loadedMetadata();
 
                 this._valueOperationEventService.emit(
                     new EmitEvent(Events.FileValueUpdated, new UpdatedFileEventValue(

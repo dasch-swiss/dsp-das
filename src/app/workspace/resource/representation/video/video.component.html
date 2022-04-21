@@ -2,7 +2,7 @@
     <div class="container">
 
         <video class="video" #videoEle *ngIf="!fileHasChanged; else loading"  [src]="video" type="video/mp4" preload="auto" [muted]="muted"
-            (click)="togglePlay()" (timeupdate)="timeUpdate($event)" (loadedmetadata)="loadedMetadata($event)"
+            (click)="togglePlay()" (timeupdate)="timeUpdate($event)" (loadedmetadata)="loadedMetadata()"
             (canplaythrough)="loadedVideo()">
         </video>
 
