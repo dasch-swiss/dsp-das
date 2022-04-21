@@ -228,7 +228,7 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
                 this.lastMatrixNr = Math.floor((this.fileInfo.duration - 10) / 360);
                 if (this.lastMatrixNr === fileNumber) {
                     // re-calc number of lines
-                    this.lastMatrixFrameNr = Math.round((this.fileInfo.duration - 8) / 10);
+                    this.lastMatrixFrameNr = Math.floor((this.fileInfo.duration - 8) / 10);
                     lines = Math.floor((this.lastMatrixFrameNr - (this.lastMatrixNr * 36)) / 6) + 1;
                 }
 
