@@ -10,9 +10,9 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { fromEvent, Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { fromEvent, merge, Observable } from 'rxjs';
+import { map, take, tap } from 'rxjs/operators';
+import { NotificationService } from 'src/app/main/services/notification.service';
 import { FileRepresentation } from '../../file-representation';
 
 export interface MovingImageSidecar {
@@ -58,6 +58,10 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
     // sends the metadata (sipi sidecar) to the parent e.g. video player
     @Output() fileMetadata = new EventEmitter<MovingImageSidecar>();
 
+    // emit true when the matrix file (or the default error file) is loaded;
+    // this helps to avoid an empty or black preview frame
+    @Output() loaded = new EventEmitter<boolean>();
+
     @ViewChild('frame') frame: ElementRef;
 
     fileInfo: MovingImageSidecar;
@@ -82,6 +86,8 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
     // 4. dimension of one frame inside the matrix
     matrixFrameWidth: number;
     matrixFrameHeight: number;
+
+    previewError = false;
 
     // size of frame to be displayed; corresponds to dimension of parent container
     frameWidth: number;
@@ -136,11 +142,6 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
             this.updatePreviewByTime();
         }
 
-        this._getMatrixFile(0);
-
-        if (!this.matrixFrameWidth && !this.matrixFrameHeight) {
-            this.calculateSizes(this.matrix);
-        }
     }
 
     /**
@@ -203,7 +204,7 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
      * - with of the matrix file is always the same (960px)
      * @param image
      */
-    calculateSizes(image: string) {
+    calculateSizes(image: string, fileNumber: number) {
 
         // host dimension
         const parentFrameWidth: number = this._host.nativeElement.offsetWidth;
@@ -212,34 +213,55 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
         this._getMatrixDimension(image).subscribe(
             (dim: Dimension) => {
 
+                // we got a dimension. There's no error
+                this.previewError = false;
+
                 // whole matrix dimension is:
                 this.matrixWidth = dim.width;
                 this.matrixHeight = dim.height;
 
                 let lines: number = (this.fileInfo.duration > 360 ? 6 : Math.round(this.fileInfo.duration / 60));
-
                 lines = (lines > 0 ? lines : 1);
+
+                // last matrix file could have a different height than the previous ones
+                // this means the number of lines could be different
+                this.lastMatrixNr = Math.floor((this.fileInfo.duration - 10) / 360);
+                if (this.lastMatrixNr === fileNumber) {
+                    // re-calc number of lines
+                    this.lastMatrixFrameNr = Math.round((this.fileInfo.duration - 8) / 10);
+                    lines = Math.floor((this.lastMatrixFrameNr - (this.lastMatrixNr * 36)) / 6) + 1;
+                }
 
                 // get matrix frame dimension
                 this.matrixFrameWidth = (this.matrixWidth / 6);
                 this.matrixFrameHeight = (this.matrixHeight / lines);
 
-                this.lastMatrixNr = Math.floor((this.fileInfo.duration - 10) / 360);
-
+                // set proportion between matrix frame width and the container where the preview frame has to be displayed
                 this.proportion = (this.matrixFrameWidth / parentFrameWidth);
 
+                // to avoid vertical overflow, we have to check the size resp. the proportion
                 if ((this.matrixFrameHeight / this.proportion) > parentFrameHeight) {
                     this.proportion = (this.matrixFrameHeight / parentFrameHeight);
                 }
 
+                // set width and height of the frame
                 this.frameWidth = Math.round(this.matrixFrameWidth / this.proportion);
                 this.frameHeight = Math.round(this.matrixFrameHeight / this.proportion);
 
+                // set the size of the matrix file
                 this.frame.nativeElement.style['background-image'] = 'url(' + this.matrix + ')';
                 this.frame.nativeElement.style['background-size'] = Math.round(this.matrixWidth / this.proportion) + 'px auto';
-
                 this.frame.nativeElement.style['width'] = this.frameWidth + 'px';
                 this.frame.nativeElement.style['height'] = this.frameHeight + 'px';
+                this.loaded.emit(true);
+            },
+            (error: Error) => {
+                // preview file is not available: show default error image
+                this.frame.nativeElement.style['background-image'] = 'url(assets/images/preview-not-available.png)';
+                this.frame.nativeElement.style['background-size'] = 'cover';
+                this.frame.nativeElement.style['width'] = '100%';
+                this.frame.nativeElement.style['height'] = '100%';
+                this.loaded.emit(true);
             }
         );
 
@@ -277,40 +299,32 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
         // get current matrix image; one matrix contains 6 minute of the video
         let curMatrixNr: number = Math.floor(this.time / 360);
 
-        if (curMatrixNr < 0) {
+        if (curMatrixNr <= 0) {
             curMatrixNr = 0;
         }
 
         // set current matrix file url
         this._getMatrixFile(curMatrixNr);
 
-        // the last matrix file could have another dimension size...
-        if (curMatrixNr < this.lastMatrixNr) {
-            this.matrixHeight = Math.round(this.frameHeight * 6);
-            this.frame.nativeElement.style['background-size'] = Math.round(this.matrixWidth / this.proportion) + 'px auto';
-        } else {
-            this.lastMatrixFrameNr = Math.floor((this.fileInfo.duration - 8) / 10);
-            this.lastMatrixLine = Math.ceil((this.lastMatrixFrameNr - (this.lastMatrixNr * 36)) / 6) + 1;
-            this.matrixHeight = Math.round(this.frameHeight * this.lastMatrixLine);
-            this.frame.nativeElement.style['background-size'] = Math.round(this.matrixWidth / this.proportion) + 'px auto';
+        if (!this.previewError) {
+
+            let curFrameNr: number = Math.floor(this.time / 10) - Math.floor(36 * curMatrixNr);
+
+            if (curFrameNr < 0) {
+                curFrameNr = 0;
+            }
+            if (curFrameNr > this.lastMatrixFrameNr) {
+                curFrameNr = this.lastMatrixFrameNr;
+            }
+
+            // calculate current line and columne number in the matrix and get current frame / preview image position
+            const curLineNr: number = Math.floor(curFrameNr / 6);
+            const curColNr: number = Math.floor(curFrameNr - (curLineNr * 6));
+            const cssParams: string = '-' + (curColNr * this.frameWidth) + 'px -' + (curLineNr * this.frameHeight) + 'px';
+
+            this.frame.nativeElement.style['background-image'] = 'url(' + this.matrix + ')';
+            this.frame.nativeElement.style['background-position'] = cssParams;
         }
-
-        let curFrameNr: number = Math.floor(this.time / 10) - Math.floor(36 * curMatrixNr);
-
-        if (curFrameNr < 0) {
-            curFrameNr = 0;
-        }
-        if (curFrameNr > this.lastMatrixFrameNr) {
-            curFrameNr = this.lastMatrixFrameNr;
-        }
-
-        // calculate current line and columne number in the matrix and get current frame / preview image position
-        const curLineNr: number = Math.floor(curFrameNr / 6);
-        const curColNr: number = Math.floor(curFrameNr - (curLineNr * 6));
-        const cssParams: string = '-' + (curColNr * this.frameWidth) + 'px -' + (curLineNr * this.frameHeight) + 'px';
-
-        this.frame.nativeElement.style['background-image'] = 'url(' + this.matrix + ')';
-        this.frame.nativeElement.style['background-position'] = cssParams;
 
     }
 
@@ -340,31 +354,46 @@ export class VideoPreviewComponent implements OnInit, OnChanges {
 
         const matrixUrl = basePath + '/' + fileName + '_m_' + fileNumber + '.jpg/file';
 
+        // if the new matrix url is different than the current one, the current one will be replaced
         if (this.matrix !== matrixUrl) {
             this.matrix = matrixUrl;
+            this.calculateSizes(this.matrix, fileNumber);
         }
+
     }
 
     /**
      * gets matrix dimension (width and height)
+     * if the file does not exist, return an error
      * @param matrix
-     * @returns matrix dimension
+     * @returns matrix dimension or error event
      */
-    private _getMatrixDimension(matrix: string): Observable<Dimension> {
+    private _getMatrixDimension(matrix: string): Observable<Dimension | Event> {
+
         const mapLoadedImage = (event): Dimension => ({
             width: event.target.width,
             height: event.target.height
         });
 
         const image = new Image();
-        const $loadedImg = fromEvent(image, 'load').pipe(
+
+        const imageComplete = fromEvent(image, 'load').pipe(
             take(1),
             map(mapLoadedImage)
         );
-
+        const imageError = fromEvent(image, 'error').pipe(
+            tap(x => {
+                this.previewError = true;
+                const error: Error = new Error();
+                error.message = 'Preview not available';
+                error.name = '404 error';
+                throw (error);
+            })
+        );
         image.src = matrix;
+        return merge(imageComplete, imageError);
 
-        return $loadedImg;
     }
+
 
 }

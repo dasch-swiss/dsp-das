@@ -24,7 +24,6 @@ import {
 } from '../../services/value-operation-event.service';
 import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
-import { MovingImageSidecar } from './video-preview/video-preview.component';
 
 @Component({
     selector: 'app-video',
@@ -180,10 +179,6 @@ export class VideoComponent implements OnInit {
         // const loadPercentage = (loadEndPercentage - loadStartPercentage);
     }
 
-    loadMetadata(data: MovingImageSidecar) {
-        // console.log('loaded metadata', data);
-    }
-
     /**
      * as soon as video has status "loadedmetadata" we're able to read
      * information about duration, video size and set volume
@@ -197,6 +192,9 @@ export class VideoComponent implements OnInit {
         // set default volume
         this.videoEle.nativeElement.volume = this.volume;
 
+        // load preview file
+        this.displayPreview(true);
+
     }
 
     /**
@@ -205,7 +203,6 @@ export class VideoComponent implements OnInit {
     loadedVideo() {
         this.loading = false;
         this.play = !this.videoEle.nativeElement.paused;
-        this.displayPreview(false);
     }
 
     /**
@@ -259,7 +256,6 @@ export class VideoComponent implements OnInit {
         this.displayPreview(true);
 
         this.previewTime = Math.round(ev.time);
-        // console.warn(this.timelineDimension)
 
         // position from left:
         let leftPosition: number = (ev.position - this.timelineDimension.x) - this.halfFrameWidth;
@@ -282,7 +278,7 @@ export class VideoComponent implements OnInit {
     /**
      * show preview image or hide it
      *
-     * @param status true = show ('block'), false=hide ('none')
+     * @param status true = show ('block'), false = hide ('none')
      */
     displayPreview(status: boolean) {
         this.preview.nativeElement.style.display = (status ? 'block' : 'none');
