@@ -1,5 +1,17 @@
 # Changelog
 
+### [9.6.1](https://www.github.com/dasch-swiss/dsp-app/compare/v9.6.0...v9.6.1) (2022-04-21)
+
+
+### Bug Fixes
+
+* package.json & package-lock.json to reduce vulnerabilities ([#714](https://www.github.com/dasch-swiss/dsp-app/issues/714)) ([0e90296](https://www.github.com/dasch-swiss/dsp-app/commit/0e90296404880e9b774f4bd02582ebfaad5d0560))
+
+
+### Maintenance
+
+* **deps:** bump async from 2.6.3 to 2.6.4 ([#716](https://www.github.com/dasch-swiss/dsp-app/issues/716)) ([c77c208](https://www.github.com/dasch-swiss/dsp-app/commit/c77c2087a337005710b6ae97e024997b5290328f))
+
 ## [9.6.0](https://www.github.com/dasch-swiss/dsp-app/compare/v9.5.0...v9.6.0) (2022-04-13)
 
 
