@@ -16,7 +16,7 @@ import {
     KnoraApiConnection,
     ReadArchiveFileValue,
     ReadAudioFileValue,
-    ReadDocumentFileValue, ReadResource,
+    ReadDocumentFileValue, ReadMovingImageFileValue, ReadResource,
     ReadResourceSequence,
     ReadStillImageFileValue, SystemPropertyDefinition
 } from '@dasch-swiss/dsp-js';
@@ -238,7 +238,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
 
                 } else {
                     // if there is no incomingResource and the resource has a still image property, assign the iiiUrl to be passed as an input to the still-image component
-                    if (!this.incomingResource && this.resource.res.properties[Constants.HasStillImageFileValue]){
+                    if (!this.incomingResource && this.resource.res.properties[Constants.HasStillImageFileValue]) {
                         this.iiifUrl = (this.resource.res.properties[Constants.HasStillImageFileValue][0] as ReadStillImageFileValue).fileUrl;
                     }
 
@@ -304,7 +304,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                 this.incomingResource = res;
 
                 // if the resource is a still image, assign the iiiUrl to be passed as an input to the still-image component
-                if (this.incomingResource.res.properties[Constants.HasStillImageFileValue]){
+                if (this.incomingResource.res.properties[Constants.HasStillImageFileValue]) {
                     this.iiifUrl = (this.incomingResource.res.properties[Constants.HasStillImageFileValue][0] as ReadStillImageFileValue).fileUrl;
                 }
 
@@ -430,6 +430,13 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                 representations.push(stillImage);
 
                 this.annotationResources = annotations;
+
+                // developer feature: this keeps the annotations tab open, if you add "/annotations" to the end of the URL
+                // e.g. http://0.0.0.0:4200/resource/[project-shortcode]/[resource-iri]/annotations
+                if (this.valueUuid === 'annotations') {
+                    this.selectedTab = (this.incomingResource ? 2 : 1);
+                    this.selectedTabLabel = 'annotations';
+                }
             }
 
         } else if (resource.res.properties[Constants.HasDocumentFileValue]) {
@@ -446,6 +453,12 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
             const fileValue: ReadAudioFileValue = resource.res.properties[Constants.HasAudioFileValue][0] as ReadAudioFileValue;
             const audio = new FileRepresentation(fileValue);
             representations.push(audio);
+
+        } else if (resource.res.properties[Constants.HasMovingImageFileValue]) {
+
+            const fileValue: ReadMovingImageFileValue = resource.res.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue;
+            const video = new FileRepresentation(fileValue);
+            representations.push(video);
 
         } else if (resource.res.properties[Constants.HasArchiveFileValue]) {
 
@@ -509,6 +522,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         if (resource.res.properties[Constants.HasStillImageFileValue] ||
             resource.res.properties[Constants.HasDocumentFileValue] ||
             resource.res.properties[Constants.HasAudioFileValue] ||
+            resource.res.properties[Constants.HasMovingImageFileValue] ||
             resource.res.properties[Constants.HasArchiveFileValue]) {
             // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
             // the resource is a StillImageRepresentation, check if there are regions pointing to it
@@ -584,7 +598,10 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         // and scroll to region with this id
         const region = document.getElementById(iri);
         if (region) {
-            region.scrollIntoView();
+            region.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
         }
 
     }
@@ -599,7 +616,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         this.openRegion(iri);
     }
 
-    updateRegionColor(){
+    updateRegion() {
         if (this.stillImageComponent !== undefined) {
             this.stillImageComponent.updateRegions();
         }
