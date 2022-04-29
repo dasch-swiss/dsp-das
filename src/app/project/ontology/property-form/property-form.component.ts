@@ -340,6 +340,7 @@ export class PropertyFormComponent implements OnInit {
             switch (type.guiEle) {
                 // prop type is a list
                 case Constants.GuiList:
+                case Constants.GuiPulldown:
                 case Constants.GuiRadio:
                     this.showGuiAttr = true;
                     // gui attribute value for lists looks as follow: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
