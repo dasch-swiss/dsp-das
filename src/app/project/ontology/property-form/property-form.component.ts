@@ -342,10 +342,10 @@ export class PropertyFormComponent implements OnInit {
                     // prop type is a list
                     case Constants.ListValue:
                         this.showGuiAttr = true;
-                        // gui attribute value for lists looks as follow: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
+                        // gui attribute value for lists looks as follows: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
                         // get index from guiAttr array where value starts with hlist=
                         const i = this.guiAttributes.findIndex(element => element.includes('hlist'));
-                        // find content beteween pointy brackets to get list iri
+                        // find content between pointy brackets to get list iri
                         const re = /\<([^)]+)\>/;
                         const listIri = this.guiAttributes[i].match(re)[1];
 
