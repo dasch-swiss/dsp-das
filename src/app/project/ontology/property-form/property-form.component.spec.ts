@@ -14,7 +14,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MockOntology, ReadOntology } from '@dasch-swiss/dsp-js';
+import { ListNodeInfo, MockOntology, ReadOntology } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
@@ -251,12 +251,62 @@ describe('PropertyFormComponent', () => {
     }));
 
     beforeEach(() => {
-        const cacheSpyOnto = TestBed.inject(CacheService);
 
         // mock cache service for currentOntology
-        (cacheSpyOnto as jasmine.SpyObj<CacheService>).get.and.callFake(
+        const cacheSpyOnto = TestBed.inject(CacheService);
+        (cacheSpyOnto as jasmine.SpyObj<CacheService>).get.withArgs('currentOntology').and.callFake (
             () => {
                 const response: ReadOntology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
+                return of(response);
+            }
+        );
+
+        // mock cache service for currentOntologyLists
+        const cacheSpyLists = TestBed.inject(CacheService);
+        (cacheSpyLists as jasmine.SpyObj<CacheService>).get.withArgs('currentOntologyLists').and.callFake(
+            () => {
+                const response: ListNodeInfo[] = [{
+                    'comments': [],
+                    'id': 'http://rdfh.ch/lists/0001/otherTreeList',
+                    'isRootNode': true,
+                    'labels': [{
+                        'language': 'en',
+                        'value': 'Tree list root'
+                    }],
+                    'projectIri': 'http://rdfh.ch/projects/0001'
+                }, {
+                    'comments': [{
+                        'language': 'en',
+                        'value': 'a list that is not in used in ontology or data'
+                    }],
+                    'id': 'http://rdfh.ch/lists/0001/notUsedList',
+                    'isRootNode': true,
+                    'labels': [{
+                        'language': 'de',
+                        'value': 'unbenutzte Liste'
+                    }, {
+                        'language': 'en',
+                        'value': 'a list that is not used'
+                    }],
+                    'name': 'notUsedList',
+                    'projectIri': 'http://rdfh.ch/projects/0001'
+                }, {
+                    'comments': [{
+                        'language': 'en',
+                        'value': 'Anything Tree List'
+                    }],
+                    'id': 'http://rdfh.ch/lists/0001/treeList',
+                    'isRootNode': true,
+                    'labels': [{
+                        'language': 'de',
+                        'value': 'Listenwurzel'
+                    }, {
+                        'language': 'en',
+                        'value': 'Tree list root'
+                    }],
+                    'name': 'treelistroot',
+                    'projectIri': 'http://rdfh.ch/projects/0001'
+                }];
                 return of(response);
             }
         );
@@ -281,7 +331,6 @@ describe('PropertyFormComponent', () => {
         listHostFixture.detectChanges();
 
         expect(listHostComponent).toBeTruthy();
-
     });
 
     it('should create an instance', () => {
@@ -332,24 +381,22 @@ describe('PropertyFormComponent', () => {
 
     });
 
-    it('expect link to other resource called "Thing"', () => {
+    it('expect link to other resource called "Thing" ( = guiAttribute)', () => {
         expect(linkHostComponent.propertyFormComponent).toBeTruthy();
         expect(linkHostComponent.propertyFormComponent.propertyInfo.propDef).toBeDefined();
         expect(linkHostComponent.propertyFormComponent.propertyInfo.propType).toBeDefined();
 
         const form = linkHostComponent.propertyFormComponent.propertyForm;
-
         expect(form.controls['guiAttr'].value).toEqual('http://0.0.0.0:3333/ontology/0001/anything/v2#Thing');
 
     });
 
-    it('expect link to List called "Tree list root"', () => {
+    it('expect link to List called "Tree list root" ( = guiAttribute)', () => {
         expect(listHostComponent.propertyFormComponent).toBeTruthy();
         expect(listHostComponent.propertyFormComponent.propertyInfo.propDef).toBeDefined();
         expect(listHostComponent.propertyFormComponent.propertyInfo.propType).toBeDefined();
 
         const form = listHostComponent.propertyFormComponent.propertyForm;
-
         expect(form.controls['guiAttr'].value).toEqual('http://rdfh.ch/lists/0001/otherTreeList');
 
     });
