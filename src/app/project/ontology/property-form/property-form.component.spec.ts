@@ -124,12 +124,79 @@ class LinkHostComponent {
 
 }
 
+/**
+ * test host component to simulate parent component
+ * Property is of type resource link
+ */
+@Component({
+    template: '<app-property-form #propertyForm [propertyInfo]="propertyInfo"></app-property-form>'
+})
+class ListHostComponent {
+
+    @ViewChild('propertyForm') propertyFormComponent: PropertyFormComponent;
+
+    propertyInfo: PropertyInfoObject = {
+        'propDef': {
+            'id': 'http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherListItem',
+            'subPropertyOf': ['http://api.knora.org/ontology/knora-api/v2#hasValue'],
+            'comment': 'Andere listenelement',
+            'label': 'Andere listenelement',
+            'guiElement': 'http://api.knora.org/ontology/salsah-gui/v2#Pulldown',
+            'subjectType': 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+            'objectType': 'http://api.knora.org/ontology/knora-api/v2#ListValue',
+            'isLinkProperty': false,
+            'isLinkValueProperty': false,
+            'isEditable': true,
+            'guiAttributes': ['hlist=<http://rdfh.ch/lists/0001/otherTreeList>'],
+            'comments': [{
+                'language': 'de',
+                'value': 'Andere listenelement'
+            }, {
+                'language': 'en',
+                'value': 'Other list element'
+            }, {
+                'language': 'fr',
+                'value': 'Autre elément de liste'
+            }, {
+                'language': 'it',
+                'value': 'Altra elemento di lista'
+            }],
+            'labels': [{
+                'language': 'de',
+                'value': 'Andere listenelement'
+            }, {
+                'language': 'en',
+                'value': 'Other list element'
+            }, {
+                'language': 'fr',
+                'value': 'Autre elément de liste'
+            }, {
+                'language': 'it',
+                'value': 'Altra elemento di lista'
+            }]
+        },
+        'propType': {
+            'icon': 'arrow_drop_down_circle',
+            'label': 'Dropdown',
+            'description': 'Dropdown menu with values from predefined list',
+            'subPropOf': 'http://api.knora.org/ontology/knora-api/v2#hasValue',
+            'objectType': 'http://api.knora.org/ontology/knora-api/v2#ListValue',
+            'guiEle': 'http://api.knora.org/ontology/salsah-gui/v2#Pulldown',
+            'group': 'List'
+        }
+    };
+
+}
+
 describe('PropertyFormComponent', () => {
     let simpleTextHostComponent: SimpleTextHostComponent;
     let simpleTextHostFixture: ComponentFixture<SimpleTextHostComponent>;
 
     let linkHostComponent: LinkHostComponent;
     let linkHostFixture: ComponentFixture<LinkHostComponent>;
+
+    let listHostComponent: ListHostComponent;
+    let listHostFixture: ComponentFixture<ListHostComponent>;
 
     beforeEach(waitForAsync(() => {
 
@@ -145,6 +212,7 @@ describe('PropertyFormComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 LinkHostComponent,
+                ListHostComponent,
                 SimpleTextHostComponent,
                 PropertyFormComponent
             ],
@@ -207,6 +275,13 @@ describe('PropertyFormComponent', () => {
 
         expect(linkHostComponent).toBeTruthy();
 
+        // list
+        listHostFixture = TestBed.createComponent(ListHostComponent);
+        listHostComponent = listHostFixture.componentInstance;
+        listHostFixture.detectChanges();
+
+        expect(listHostComponent).toBeTruthy();
+
     });
 
     it('should create an instance', () => {
@@ -265,6 +340,17 @@ describe('PropertyFormComponent', () => {
         const form = linkHostComponent.propertyFormComponent.propertyForm;
 
         expect(form.controls['guiAttr'].value).toEqual('http://0.0.0.0:3333/ontology/0001/anything/v2#Thing');
+
+    });
+
+    it('expect link to List called "Tree list root"', () => {
+        expect(listHostComponent.propertyFormComponent).toBeTruthy();
+        expect(listHostComponent.propertyFormComponent.propertyInfo.propDef).toBeDefined();
+        expect(listHostComponent.propertyFormComponent.propertyInfo.propType).toBeDefined();
+
+        const form = listHostComponent.propertyFormComponent.propertyForm;
+
+        expect(form.controls['guiAttr'].value).toEqual('http://rdfh.ch/lists/0001/otherTreeList');
 
     });
 
