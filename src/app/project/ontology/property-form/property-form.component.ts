@@ -133,6 +133,7 @@ export class PropertyFormComponent implements OnInit {
 
     ngOnInit() {
 
+        console.log(JSON.stringify(this.propertyInfo));
         this.loading = true;
 
         this._cache.get('currentOntology').subscribe(
@@ -337,11 +338,9 @@ export class PropertyFormComponent implements OnInit {
             // disable the input and set the validator as not required
             this.propertyForm.controls['guiAttr'].disable();
 
-            switch (type.guiEle) {
+            switch (type.objectType) {
                 // prop type is a list
-                case Constants.GuiList:
-                case Constants.GuiPulldown:
-                case Constants.GuiRadio:
+                case Constants.ListValue:
                     this.showGuiAttr = true;
                     // gui attribute value for lists looks as follow: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
                     // get index from guiAttr array where value starts with hlist=
@@ -354,7 +353,7 @@ export class PropertyFormComponent implements OnInit {
                     break;
 
                 // prop type is resource pointer: link to or part of
-                case Constants.GuiSearchbox:
+                case Constants.LinkValue:
                     this.showGuiAttr = true;
                     this.propertyForm.controls['guiAttr'].setValue(this.propertyInfo.propDef.objectType);
                     break;
