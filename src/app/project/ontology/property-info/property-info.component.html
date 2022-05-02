@@ -23,7 +23,7 @@
         <span [matTooltip]="'id: ' + propDef.id" matTooltipPosition="above" matTooltipClass="wide-tooltip" class="mat-caption">
             {{propDef.id | split: '#':1}}
         </span>
-        <span class="fill-remaining-space center">&nbsp;&middot;&nbsp;</span>
+        <span class="fill-remaining-space center"></span>
         <!-- in case of res class: display cardinality -->
         <span *ngIf="propCard">
             <mat-icon class="multiple">{{propInfo.multiple ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
@@ -35,11 +35,9 @@
         <span *ngIf="!propCard" class="white-space">
             <span *ngIf="resClasses.length; else notUsed">
                 Property is used in:
-                <!-- <span>{{ resClasses.join(", ") }}</span> -->
                 <span *ngFor="let c of resClasses; let last = last">
                     <span [matTooltip]="c.comment" matTooltipPosition="above" class="link"
-                        (click)="clickedOnClass.emit(c)">{{c.label}}</span>
-                    <span *ngIf="!last">,&nbsp;</span>
+                        (click)="clickedOnClass.emit(c)">{{c.label}}</span><span *ngIf="!last">&nbsp;&middot;&nbsp;</span>
                 </span>
             </span>
             <ng-template #notUsed>

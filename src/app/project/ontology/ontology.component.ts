@@ -18,8 +18,7 @@ import {
     OntologyMetadata,
     PropertyDefinition,
     ReadOntology,
-    ReadProject,
-    UpdateOntology
+    ReadProject, UpdateOntology
 } from '@dasch-swiss/dsp-js';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
@@ -39,6 +38,11 @@ export interface OntologyInfo {
 export interface CardinalityInfo {
     resClass: ClassDefinition;
     property: PropertyInfoObject;
+}
+
+export interface OntologyProperties {
+    ontology: string;
+    properties: PropertyDefinition[];
 }
 
 @Component({
@@ -92,7 +96,7 @@ export class OntologyComponent implements OnInit {
     expandClasses = true;
 
     // all properties in the current ontology
-    ontoProperties: PropertyDefinition[];
+    ontoProperties: OntologyProperties;
 
     // form to select ontology from list
     ontologyForm: FormGroup;
@@ -288,20 +292,20 @@ export class OntologyComponent implements OnInit {
         this.ontoClasses = this._sortingService.keySortByAlphabetical(this.ontoClasses, 'label');
     }
 
-    initOntoProperties(allOntoProperties: PropertyDefinition[]) {
+    initOntoProperties(allOntoProperties: PropertyDefinition[]): PropertyDefinition[] {
         // reset the ontology properties
-        this.ontoProperties = [];
+        const listOfProperties = [];
 
         // display only the properties which are not a subjectType of Standoff
         allOntoProperties.forEach(resProp => {
             const standoff = (resProp.subjectType ? resProp.subjectType.includes('Standoff') : false);
             if (resProp.objectType !== Constants.LinkValue && !standoff) {
-                this.ontoProperties.push(resProp);
+                listOfProperties.push(resProp);
             }
         });
         // sort properties by label
         // --> TODO: add sort functionallity to the gui
-        this.ontoProperties = this._sortingService.keySortByAlphabetical(this.ontoProperties, 'label');
+        return this._sortingService.keySortByAlphabetical(listOfProperties, 'label');
     }
 
     /**
@@ -347,7 +351,10 @@ export class OntologyComponent implements OnInit {
         this.initOntoClasses(ontology.getAllClassDefinitions());
 
         // grab the onto properties information to display
-        this.initOntoProperties(ontology.getAllPropertyDefinitions());
+        this.ontoProperties = {
+            ontology: this.ontology.id,
+            properties: this.initOntoProperties(this.ontology.getAllPropertyDefinitions())
+        };
 
         // check if the ontology can be deleted
         this._dspApiConnection.v2.onto.canDeleteOntology(this.ontology.id).subscribe(
