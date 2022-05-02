@@ -83,13 +83,12 @@
 
         <mat-menu #addPropertyMenu="matMenu" xPosition="after">
             <button mat-menu-item [matMenuTriggerFor]="newFromPropType">Create new from type</button>
-            <button mat-menu-item [matMenuTriggerFor]="addExistingProp" >Add existing property</button>
+            <button mat-menu-item [matMenuTriggerFor]="addExistingProp">Add existing property</button>
         </mat-menu>
         <mat-menu #newFromPropType="matMenu">
             <ng-container *ngFor="let type of defaultProperties">
                 <button mat-menu-item [matMenuTriggerFor]="sub_menu">{{type.group}}</button>
                 <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
-                    <!-- <button *ngFor="let subItem of my_menu[mainItem]" mat-menu-item>{{ subItem }}</button> -->
                     <button mat-menu-item *ngFor="let ele of type.elements" [value]="ele"
                         [matTooltip]="ele.description" matTooltipPosition="after"
                         (click)="addNewProperty(ele)">
@@ -102,23 +101,12 @@
             <ng-container *ngFor="let onto of existingProperties">
                 <button mat-menu-item [disabled]="!onto.properties.length" [matMenuTriggerFor]="sub_menu">{{ onto.ontologyLabel }}</button>
                 <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
-                    <!-- <button *ngFor="let subItem of my_menu[mainItem]" mat-menu-item>{{ subItem }}</button> -->
-                    <!-- <button mat-menu-item *ngFor="let prop of onto.properties" [value]="prop.label"
-                        [matTooltip]="ele.description" matTooltipPosition="after"
-                        (click)="addNewProperty(ele)">
-                        <mat-icon>{{ele.icon}}</mat-icon> {{ele.label}}
-                    </button> -->
-
                     <button mat-menu-item *ngFor="let prop of onto.properties" [matTooltip]="prop.propDef.comment" matTooltipPosition="after"
                         (click)="addExistingProperty(prop)">
                         <mat-icon>{{prop.propType?.icon}}</mat-icon> {{prop.propDef.label}}
                     </button>
                 </mat-menu>
             </ng-container>
-<!--
-            <button mat-menu-item *ngFor="let onto of ontoProperties">
-
-            </button> -->
 
         </mat-menu>
     </mat-card-content>
