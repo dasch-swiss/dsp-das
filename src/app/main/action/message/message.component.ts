@@ -5,8 +5,7 @@ import { ApiResponseError } from '@dasch-swiss/dsp-js';
 import { StatusMsg } from 'src/assets/http/statusMsg';
 
 /**
- * @ignore
- * Data type for messages
+ * data type for messages
  */
 export class AppMessageData {
     status: number;
@@ -62,7 +61,7 @@ export class MessageComponent implements OnInit {
     disable = false;
 
     /**
-     * @ignore
+
      * default link list, which will be used in message content to give a user some possibilities
      * what he can do in the case of an error
      *
