@@ -18,7 +18,8 @@ import {
     OntologyMetadata,
     PropertyDefinition,
     ReadOntology,
-    ReadProject, UpdateOntology
+    ReadProject,
+    UpdateOntology
 } from '@dasch-swiss/dsp-js';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
@@ -353,14 +354,11 @@ export class OntologyComponent implements OnInit {
         this.lastModificationDate = this.ontology.lastModificationDate;
         this._cache.set('currentOntology', ontology);
 
-        // todo: ak re-set current project ontologes here
         this._cache.get('currentProjectOntologies').subscribe(
             (ontologies: ReadOntology[]) => {
                 // update current list of project ontologies
                 ontologies[ontologies.findIndex(onto => onto.id === ontology.id)] = ontology;
-
                 this._cache.set('currentProjectOntologies', ontologies);
-
             }
         );
 
