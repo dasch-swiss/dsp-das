@@ -43,13 +43,14 @@
         </mat-menu>
     </mat-card-header>
     <!-- resource class card content with list of properties -->
+
     <mat-card-content *ngIf="expanded">
         <mat-list cdkDropList class="resource-class-properties" (cdkDropListDropped)="drop($event)"
             *ngIf="propsToDisplay.length; else noProperties">
             <div cdkDrag [cdkDragDisabled]="!ontology.lastModificationDate"
                 *ngFor="let prop of propsToDisplay; let i = index;">
                 <div class="drag-n-drop-placeholder" *cdkDragPlaceholder></div>
-                <mat-list-item class="property">
+                <mat-list-item class="property" [disabled]="loadProperty">
                     <span cdkDragHandle mat-list-icon class="list-icon gui-order">
                         <span [class.hide-on-hover]="cardinalityUpdateEnabled && lastModificationDate">{{i + 1}})</span>
                         <span *ngIf="lastModificationDate && cardinalityUpdateEnabled"
@@ -59,8 +60,12 @@
                     </span>
                     <!-- display only properties if they exist in list of properties;
                      objectType is not a linkValue (otherwise we have the property twice) -->
-                    <app-property-info class="property-info" [propDef]="propsToDisplay[i].propDef"
-                        [propCard]="propsToDisplay[i]" [projectCode]="projectCode" [projectStatus]="projectStatus" [resourceIri]="resourceClass.id"
+                    <app-property-info class="property-info"
+                        [propDef]="propsToDisplay[i].propDef"
+                        [propCard]="propsToDisplay[i]"
+                        [projectCode]="projectCode"
+                        [projectStatus]="projectStatus"
+                        [resourceIri]="resourceClass.id"
                         [(lastModificationDate)]="lastModificationDate"
                         (removePropertyFromClass)="removeProperty($event)">
                     </app-property-info>

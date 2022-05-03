@@ -243,6 +243,7 @@ export class OntologyComponent implements OnInit {
                                 }
                                 if (response.ontologies.length === this.ontologies.length) {
                                     this.ontologies = this._sortingService.keySortByAlphabetical(this.ontologies, 'label');
+
                                     this._cache.set('currentProjectOntologies', this.ontologies);
                                     this.setCache();
                                 }
@@ -292,7 +293,8 @@ export class OntologyComponent implements OnInit {
         this.ontoClasses = this._sortingService.keySortByAlphabetical(this.ontoClasses, 'label');
     }
 
-    initOntoProperties(allOntoProperties: PropertyDefinition[]): PropertyDefinition[] {
+    initOntoProperties(allOntoProperties: PropertyDefinition[]) {
+
         // reset the ontology properties
         const listOfProperties = [];
 
@@ -303,9 +305,13 @@ export class OntologyComponent implements OnInit {
                 listOfProperties.push(resProp);
             }
         });
+
         // sort properties by label
-        // --> TODO: add sort functionallity to the gui
-        return this._sortingService.keySortByAlphabetical(listOfProperties, 'label');
+        this.ontoProperties = {
+            ontology: this.ontology.id,
+            properties: this._sortingService.keySortByAlphabetical(listOfProperties, 'label')
+        };
+
     }
 
     /**
@@ -345,16 +351,24 @@ export class OntologyComponent implements OnInit {
     resetOntologyView(ontology: ReadOntology) {
         this.ontology = ontology;
         this.lastModificationDate = this.ontology.lastModificationDate;
-        this._cache.set('currentOntology', this.ontology);
+        this._cache.set('currentOntology', ontology);
+
+        // todo: ak re-set current project ontologes here
+        this._cache.get('currentProjectOntologies').subscribe(
+            (ontologies: ReadOntology[]) => {
+                // update current list of project ontologies
+                ontologies[ontologies.findIndex(onto => onto.id === ontology.id)] = ontology;
+
+                this._cache.set('currentProjectOntologies', ontologies);
+
+            }
+        );
 
         // grab the onto class information to display
         this.initOntoClasses(ontology.getAllClassDefinitions());
 
         // grab the onto properties information to display
-        this.ontoProperties = {
-            ontology: this.ontology.id,
-            properties: this.initOntoProperties(this.ontology.getAllPropertyDefinitions())
-        };
+        this.initOntoProperties(ontology.getAllPropertyDefinitions());
 
         // check if the ontology can be deleted
         this._dspApiConnection.v2.onto.canDeleteOntology(this.ontology.id).subscribe(
@@ -464,6 +478,8 @@ export class OntologyComponent implements OnInit {
         );
 
         dialogRef.afterClosed().subscribe(result => {
+            // get the ontologies for this project
+            this.initOntologiesList();
             // update the view of resource class or list of properties
             this.initOntology(this.ontologyIri);
         });

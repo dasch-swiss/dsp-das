@@ -1,5 +1,5 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {
     ApiResponseError,
@@ -41,7 +41,7 @@ export interface PropToAdd {
     templateUrl: './resource-class-info.component.html',
     styleUrls: ['./resource-class-info.component.scss']
 })
-export class ResourceClassInfoComponent implements OnChanges {
+export class ResourceClassInfoComponent implements OnInit {
 
     // open / close res class card
     @Input() expanded = false;
@@ -69,7 +69,6 @@ export class ResourceClassInfoComponent implements OnChanges {
     // to update the cardinality we need the information about property (incl. propType) and resource class
     @Output() updateCardinality: EventEmitter<string> = new EventEmitter<string>();
 
-
     ontology: ReadOntology;
 
     // list of all ontologies with their properties
@@ -95,6 +94,9 @@ export class ResourceClassInfoComponent implements OnChanges {
     // list of existing ontology properties, which are not in this resource class
     existingProperties: PropToAdd[];
 
+    // load single property (in case of property cardinality action)
+    loadProperty = false;
+
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
@@ -105,13 +107,13 @@ export class ResourceClassInfoComponent implements OnChanges {
         private _sortingService: SortingService
     ) { }
 
-    ngOnChanges(): void {
-
+    ngOnInit(): void {
         // grab the onto properties information to display
         this.ontoProperties = [];
         // get all project ontologies
         this._cache.get('currentProjectOntologies').subscribe(
             (ontologies: ReadOntology[]) => {
+                this.ontologies = ontologies;
                 ontologies.forEach(onto => {
                     const prepareList: OntologyProperties = {
                         ontology: onto.id,
@@ -217,10 +219,7 @@ export class ResourceClassInfoComponent implements OnChanges {
      *
      * @param props
      */
-    preparePropsToDisplay(classProps: IHasProperty[]) {
-
-        // reset properties to display
-        this.propsToDisplay = [];
+    preparePropsToDisplay(classProps: PropToDisplay[]) {
 
         // reset existing properties to select from
         this.existingProperties = [];
@@ -239,7 +238,9 @@ export class ResourceClassInfoComponent implements OnChanges {
 
                 // propDef was found, add hasProp to the properties list which has to be displayed in this resource class
                 if (hasProp.propDef) {
-                    this.propsToDisplay.push(hasProp);
+                    if (this.propsToDisplay.indexOf(hasProp) === -1) {
+                        this.propsToDisplay.push(hasProp);
+                    }
 
                     // and remove from list of existing properties to avoid double cardinality entries
                     // because the prop displayed in the class cannot be added a second time,
@@ -250,14 +251,13 @@ export class ResourceClassInfoComponent implements OnChanges {
                     }
                 }
             }
-
         });
 
         this.ontoProperties.forEach((op: OntologyProperties, i: number) => {
 
             this.existingProperties.push({
                 ontologyId: op.ontology,
-                ontologyLabel: this.ontologies[this.ontologies.findIndex(onto => onto.id === op.ontology)].label,
+                ontologyLabel: this.ontologies[i].label,
                 properties: []
             });
 
@@ -341,6 +341,8 @@ export class ResourceClassInfoComponent implements OnChanges {
      */
     removeProperty(property: DefaultClass) {
 
+        this.loadProperty = true;
+
         const onto = new UpdateOntology<UpdateResourceClassCardinality>();
 
         onto.lastModificationDate = this.lastModificationDate;
@@ -353,9 +355,7 @@ export class ResourceClassInfoComponent implements OnChanges {
 
         delCard.cardinalities = [];
 
-        this.propsToDisplay = this.propsToDisplay.filter(prop => (prop.propertyIndex === property.iri));
-
-        delCard.cardinalities = this.propsToDisplay;
+        delCard.cardinalities = this.propsToDisplay.filter(prop => (prop.propertyIndex === property.iri));
         onto.entity = delCard;
 
         this._dspApiConnection.v2.onto.deleteCardinalityFromResourceClass(onto).subscribe(
@@ -368,6 +368,8 @@ export class ResourceClassInfoComponent implements OnChanges {
                 this.updateCardinality.emit(this.ontology.id);
                 // display success message
                 this._notification.openSnackBar(`You have successfully removed "${property.label}" from "${this.resourceClass.label}".`);
+
+                this.loadProperty = false;
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(<ApiResponseError>error);
@@ -469,8 +471,6 @@ export class ResourceClassInfoComponent implements OnChanges {
                     this.lastModificationDate = responseGuiOrder.lastModificationDate;
 
                     // successful request: update the view
-                    this.preparePropsToDisplay(this.propsToDisplay);
-
                     this.lastModificationDateChange.emit(this.lastModificationDate);
 
                     // display success message

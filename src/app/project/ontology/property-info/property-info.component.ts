@@ -140,7 +140,6 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
         this._cache.get('currentOntology').subscribe(
             (response: ReadOntology) => {
                 this.ontology = response;
-
             }
         );
     }
@@ -180,13 +179,11 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
         }
 
         // get the default property type for this property
-        // if (this.propDef.guiElement) {
         this._ontoService.getDefaultPropType(this.propDef).subscribe(
             (prop: DefaultProperty) => {
                 this.propType = prop;
             }
         );
-        // }
 
     }
 
@@ -290,10 +287,10 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
                     this._dspApiConnection.v2.onto.canDeleteCardinalityFromResourceClass(onto).subscribe(
                         (canDoRes: CanDoResponse) => {
                             this.propCanBeDeleted = canDoRes.canDo;
-                        },
-                        (error: ApiResponseError) => {
-                            this._errorHandler.showMessage(error);
                         }
+                        // since this request runs on mouseover, it can always
+                        // ends in a EditConflictException because of a wrong lastModificationDate.
+                        // so, it doesn't make sense to handle the error here and to open the snackbar
                     );
                 }
 

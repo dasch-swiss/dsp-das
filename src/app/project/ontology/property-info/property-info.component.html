@@ -1,4 +1,4 @@
-<div class="property-info" (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
+<div class="property-info" [class.standalone]="!propCard" (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
 
     <div mat-line class="title" [class.with-line-break]="!propCard">
         <span class="icon" *ngIf="propType" [matTooltip]="propType?.group + ': ' + propType?.label + ' (' + propDef.id.split('#')[1] + ')'"

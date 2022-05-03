@@ -187,8 +187,8 @@
                     </app-resource-class-info>
                 </div>
                 <div class="ontology-editor-list properties" *ngIf="view === 'properties'">
-                    <!-- list of resource properties of current ontology -->
-                    <mat-list>
+                    <!-- list of properties of current ontology -->
+                    <mat-list class="without-padding">
                         <mat-list-item class="property" *ngFor="let prop of ontoProperties.properties; let odd = odd"
                             [class.odd]="odd">
                             <!-- display only properties with guiOrder and if they exist in list of properties;
