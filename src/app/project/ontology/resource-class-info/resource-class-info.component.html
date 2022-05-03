@@ -47,7 +47,7 @@
     <mat-card-content *ngIf="expanded">
         <mat-list cdkDropList class="resource-class-properties" (cdkDropListDropped)="drop($event)"
             *ngIf="propsToDisplay.length; else noProperties">
-            <div cdkDrag [cdkDragDisabled]="!ontology.lastModificationDate"
+            <div cdkDrag [cdkDragDisabled]="!ontology.lastModificationDate || !cardinalityUpdateEnabled"
                 *ngFor="let prop of propsToDisplay; let i = index;">
                 <div class="drag-n-drop-placeholder" *cdkDragPlaceholder></div>
                 <mat-list-item class="property" [disabled]="loadProperty">
