@@ -34,14 +34,16 @@
         <!-- in case of ontology property: display corresponding resource classes -->
         <span *ngIf="!propCard" class="white-space">
             <span *ngIf="resClasses.length; else notUsed">
-                <span class="mat-caption"> > Property is used in:</span>
+                <span class="mat-caption">&gt; Property is used in:</span>
                 <span *ngFor="let c of resClasses; let last = last">
                     <span [matTooltip]="c.comment" matTooltipPosition="above" class="link"
                         (click)="clickedOnClass.emit(c)">{{c.label}}</span><span *ngIf="!last">&nbsp;&middot;</span>
                 </span>
             </span>
             <ng-template #notUsed>
-                <span class="not-used">This property is not used in a class</span>
+                <span class="mat-caption">&gt;
+                    <span class="not-used">This property is not used in a class.</span>
+                </span>
             </ng-template>
         </span>
     </div>
@@ -75,8 +77,8 @@
                 </button>
             </span>
             <span matTooltipPosition="above"
-                [matTooltip]="((resClasses.length > 0) ? 'The property can\'t be deleted because it is used in a class' : 'Delete property')">
-                <button mat-button [disabled]="resClasses.length > 0" class="delete"
+                [matTooltip]="((!propCanBeDeleted) ? 'The property can\'t be deleted because it is used in a class' : 'Delete property')">
+                <button mat-button [disabled]="!propCanBeDeleted" class="delete"
                     (click)="deleteResourceProperty.emit({iri: propDef.id, label: propDef.label})">
                     <mat-icon>delete</mat-icon>
                 </button>
