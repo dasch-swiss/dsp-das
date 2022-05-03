@@ -96,12 +96,6 @@ export class MessageComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        // temporary solution as long we have to support the deprecated inputs "short" and "medium"
-        if (this.short || this.medium) {
-            this.size = (this.short ? 'short' : 'medium');
-        }
-
-
         if (this.apiError) {
             this.message.status = this.apiError.status;
         }
