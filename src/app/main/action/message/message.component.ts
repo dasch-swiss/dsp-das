@@ -19,9 +19,6 @@ export class AppMessageData {
     url?: string;
 }
 
-/**
- * @deprecated Will be replaced by notification service with material snackbar
- */
 @Component({
     selector: 'app-message',
     templateUrl: './message.component.html',
@@ -49,20 +46,6 @@ export class MessageComponent implements OnInit {
      * @param size Default size is 'long'
      */
     @Input() size: 'short' | 'medium' | 'long' = 'long';
-
-    /**
-     * @deprecated
-     * @param short Show short message only
-     * A small message box to notify the user an event has occured.
-     */
-    @Input() short = (this.size === 'short');
-
-    /**
-     * @deprecated
-     * @param medium Show medium message
-     * A message box without footnote or links.
-     */
-    @Input() medium = (this.size === 'medium');
 
     /**
      * @param duration How long should the message be displayed
