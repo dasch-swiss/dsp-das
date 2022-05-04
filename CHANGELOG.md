@@ -1,5 +1,18 @@
 # Changelog
 
+### [9.7.1](https://www.github.com/dasch-swiss/dsp-app/compare/v9.7.0...v9.7.1) (2022-05-04)
+
+
+### Bug Fixes
+
+* **ontology-editor:** bring back the gui-attr for pulldown (DEV-856) ([#719](https://www.github.com/dasch-swiss/dsp-app/issues/719)) ([0c2a43d](https://www.github.com/dasch-swiss/dsp-app/commit/0c2a43d7b9420a7c9327d0975eef2b100fc97d8e))
+
+
+### Maintenance
+
+* clean up jsDocs and delete deprecated methods (DEV-741) ([#722](https://www.github.com/dasch-swiss/dsp-app/issues/722)) ([8457119](https://www.github.com/dasch-swiss/dsp-app/commit/84571196dfe22af624b315aae9c47cbcaf335aeb))
+* **ontology:** crop loooong ontology labels (DEV-493) ([#723](https://www.github.com/dasch-swiss/dsp-app/issues/723)) ([1b7384f](https://www.github.com/dasch-swiss/dsp-app/commit/1b7384fb5ca2c47cd68ff058877c9427484d74e9))
+
 ## [9.7.0](https://www.github.com/dasch-swiss/dsp-app/compare/v9.6.0...v9.7.0) (2022-04-22)
 
 
