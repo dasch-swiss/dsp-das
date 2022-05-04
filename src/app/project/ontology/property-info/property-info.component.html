@@ -36,7 +36,7 @@
             <span *ngIf="resClasses.length; else notUsed">
                 <span class="mat-caption">&gt; Property is used in:</span>
                 <span *ngFor="let c of resClasses; let last = last">
-                    <span [matTooltip]="c.comment" matTooltipPosition="above" class="link"
+                    <span [matTooltip]="c.comment" matTooltipPosition="above"
                         (click)="clickedOnClass.emit(c)">{{c.label}}</span><span *ngIf="!last">&nbsp;&middot;</span>
                 </span>
             </span>
