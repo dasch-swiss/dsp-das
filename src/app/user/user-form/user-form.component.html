@@ -1,9 +1,9 @@
 <!-- content -->
-<form [formGroup]="form" class="form-content user-data" (ngSubmit)="submitData()">
+<form [formGroup]="userForm" class="form-content user-data" (ngSubmit)="submitData()">
 
     <!-- username -->
     <mat-form-field [class.large-field]="!username" [class.small-field]="username">
-        <input matInput type="text" [formControl]="form.controls['username']"
+        <input matInput type="text" formControlName="username"
             placeholder="{{ 'appLabels.form.user.general.username' | translate }}" autocomplete="username">
         <mat-hint *ngIf="formErrors.username">
             {{ formErrors.username }}
@@ -12,7 +12,7 @@
 
     <!-- email -->
     <mat-form-field [class.large-field]="!username" [class.medium-field]="username">
-        <input matInput type="email" [formControl]="form.controls['email']"
+        <input matInput type="email" formControlName="email"
             placeholder="{{ 'appLabels.form.user.general.email' | translate }}" autocomplete="email">
         <mat-hint *ngIf="formErrors.email">
             {{ formErrors.email }}
@@ -21,7 +21,7 @@
 
     <!-- given name -->
     <mat-form-field class="small-field">
-        <input matInput [formControl]="form.controls['givenName']"
+        <input matInput formControlName="givenName"
             placeholder="{{ 'appLabels.form.user.general.givenName' | translate }}" autocomplete="givenname">
         <mat-hint *ngIf="formErrors.givenName">
             {{ formErrors.givenName }}
@@ -30,7 +30,7 @@
 
     <!-- family name -->
     <mat-form-field class="medium-field">
-        <input matInput [formControl]="form.controls['familyName']"
+        <input matInput formControlName="familyName"
             placeholder="{{ 'appLabels.form.user.general.familyName' | translate }}" autocomplete="name">
         <mat-hint *ngIf="formErrors.familyName">
             {{ formErrors.familyName }}
@@ -38,11 +38,11 @@
     </mat-form-field>
 
     <!-- password // hidden in edit mode -->
-    <app-password-form *ngIf="!username" (sendToParent)="getPassword($event)"></app-password-form>
+    <!-- <app-password-form *ngIf="!username" (sendToParent)="getPassword($event)"></app-password-form> -->
 
     <mat-form-field class="large-field">
 
-        <mat-select [formControl]="form.controls['lang']"
+        <mat-select formControlName="lang"
             [placeholder]="'appLabels.form.user.general.language' | translate">
             <mat-option *ngFor="let lang of languagesList" [value]="lang.language">
                 {{ lang.value }}
@@ -52,7 +52,8 @@
     </mat-form-field>
 
     <div class="large-field">
-        <mat-slide-toggle [formControl]="form.controls['systemAdmin']" *ngIf="sysAdmin">
+        <mat-slide-toggle formControlName="systemAdmin"
+            *ngIf="sysAdmin">
             {{ 'appLabels.form.user.general.sysAdmin' | translate }}
         </mat-slide-toggle>
     </div>
@@ -66,7 +67,7 @@
         <span class="fill-remaining-space"></span>
         <span>
             <!-- Update -->
-            <button mat-raised-button type="submit" color="primary" *ngIf="username" [disabled]="!form.valid">
+            <button mat-raised-button type="submit" color="primary" *ngIf="username" [disabled]="!userForm.valid">
                 <app-progress-indicator [color]="'white'" [status]="0" *ngIf="loading" class="submit-progress">
                 </app-progress-indicator>
                 <mat-icon *ngIf="error && !loading">close</mat-icon>
@@ -75,7 +76,7 @@
             </button>
             <!-- Create new -->
             <button mat-raised-button type="submit" color="primary" *ngIf="!username"
-                [disabled]="!form.valid || (form.controls['password'].value.length < 8)">
+                [disabled]="!userForm.valid || (userForm.controls['password'].value.length < 8)">
                 <app-progress-indicator [color]="'white'" [status]="0" *ngIf="loading" class="submit-progress">
                 </app-progress-indicator>
                 <mat-icon *ngIf="error && !loading">close</mat-icon>

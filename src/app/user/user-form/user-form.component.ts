@@ -20,6 +20,7 @@ import { existingNamesValidator } from 'src/app/main/directive/existing-name/exi
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
 import { NotificationService } from 'src/app/main/services/notification.service';
 import { Session, SessionService } from 'src/app/main/services/session.service';
+import { CustomRegex } from 'src/app/workspace/resource/values/custom-regex';
 import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
@@ -55,11 +56,6 @@ export class UserFormComponent implements OnInit, OnChanges {
      * in case of dialog box?
      */
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<ReadUser>();
-
-    public readonly REGEX_USERNAME = /^[a-zA-Z0-9]+$/;
-
-    // --> TODO replace REGEX_EMAIL by CustomRegex.EMAIL_REGEX from dsp-ui
-    public readonly REGEX_EMAIL = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
     /**
      * status for the progress indicator and error
@@ -98,7 +94,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     /**
      * form group for the form controller
      */
-    form: FormGroup;
+    userForm: FormGroup;
 
     /**
      * error checking on the following fields
@@ -236,8 +232,7 @@ export class UserFormComponent implements OnInit, OnChanges {
                     // const name: string = this._route.snapshot.queryParams['value'];
                     const newUser: ReadUser = new ReadUser();
 
-                    // --> TODO replace this.REGEX_EMAIL by CustomRegex.EMAIL_REGEX from dsp-ui
-                    if (this.REGEX_EMAIL.test(this.name)) {
+                    if (CustomRegex.EMAIL_REGEX.test(this.name)) {
                         newUser.email = this.name;
                     } else {
                         newUser.username = this.name;
@@ -269,7 +264,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         // otherwise "create new user" mode is active
         const editMode = !!user.id;
 
-        this.form = this._formBuilder.group({
+        this.userForm = this._formBuilder.group({
             givenName: new FormControl(
                 {
                     value: user.givenName,
@@ -291,7 +286,7 @@ export class UserFormComponent implements OnInit, OnChanges {
                 },
                 [
                     Validators.required,
-                    Validators.pattern(this.REGEX_EMAIL), // --> TODO replace this.REGEX_EMAIL by CustomRegex.EMAIL_REGEX from dsp-ui
+                    Validators.pattern(CustomRegex.EMAIL_REGEX),
                     existingNamesValidator(this.existingEmails)
                 ]
             ),
@@ -303,7 +298,7 @@ export class UserFormComponent implements OnInit, OnChanges {
                 [
                     Validators.required,
                     Validators.minLength(4),
-                    Validators.pattern(this.REGEX_USERNAME),
+                    Validators.pattern(CustomRegex.USERNAME_REGEX),
                     existingNamesValidator(this.existingUsernames)
                 ]
             ),
@@ -331,16 +326,16 @@ export class UserFormComponent implements OnInit, OnChanges {
 
         // this.loading = false;
 
-        this.form.valueChanges.subscribe(data => this.onValueChanged());
+        this.userForm.valueChanges.subscribe(data => this.onValueChanged());
         return true;
     }
 
     onValueChanged() {
-        if (!this.form) {
+        if (!this.userForm) {
             return;
         }
 
-        const form = this.form;
+        const form = this.userForm;
 
         Object.keys(this.formErrors).map(field => {
             this.formErrors[field] = '';
@@ -356,7 +351,7 @@ export class UserFormComponent implements OnInit, OnChanges {
 
     // get password from password form and send it to user form
     getPassword(pw: string) {
-        this.form.controls.password.setValue(pw);
+        this.userForm.controls.password.setValue(pw);
     }
 
     submitData(): void {
@@ -364,7 +359,7 @@ export class UserFormComponent implements OnInit, OnChanges {
 
         const returnUrl: string =
             this._route.snapshot.queryParams['returnUrl'] ||
-            '/user/' + this.form.controls['username'].value;
+            '/user/' + this.userForm.controls['username'].value;
 
         if (this.username) {
             // edit mode: update user data
@@ -372,11 +367,11 @@ export class UserFormComponent implements OnInit, OnChanges {
             // but a user can't change the username, the field is disabled, so it's not a value in this form.
             // we have to make a small hack here.
             const userData: UpdateUserRequest = new UpdateUserRequest();
-            // userData.username = this.form.value.username;
-            userData.familyName = this.form.value.familyName;
-            userData.givenName = this.form.value.givenName;
-            // userData.email = this.form.value.email;
-            userData.lang = this.form.value.lang;
+            // userData.username = this.userForm.value.username;
+            userData.familyName = this.userForm.value.familyName;
+            userData.givenName = this.userForm.value.givenName;
+            // userData.email = this.userForm.value.email;
+            userData.lang = this.userForm.value.lang;
 
             this._dspApiConnection.admin.usersEndpoint.updateUserBasicInformation(this.user.id, userData).subscribe(
                 (response: ApiResponseData<UserResponse>) => {
@@ -386,7 +381,7 @@ export class UserFormComponent implements OnInit, OnChanges {
                     const session: Session = this._session.getSession();
                     if (session.user.name === this.username) {
                         // update logged in user session
-                        session.user.lang = this.form.controls['lang'].value;
+                        session.user.lang = this.userForm.controls['lang'].value;
                         localStorage.setItem('session', JSON.stringify(session));
                     }
 
@@ -407,14 +402,14 @@ export class UserFormComponent implements OnInit, OnChanges {
         } else {
             // new: create user
             const userData: User = new User();
-            userData.username = this.form.value.username;
-            userData.familyName = this.form.value.familyName;
-            userData.givenName = this.form.value.givenName;
-            userData.email = this.form.value.email;
-            userData.password = this.form.value.password;
-            userData.systemAdmin = this.form.value.systemAdmin;
-            userData.status = this.form.value.status;
-            userData.lang = this.form.value.lang;
+            userData.username = this.userForm.value.username;
+            userData.familyName = this.userForm.value.familyName;
+            userData.givenName = this.userForm.value.givenName;
+            userData.email = this.userForm.value.email;
+            userData.password = this.userForm.value.password;
+            userData.systemAdmin = this.userForm.value.systemAdmin;
+            userData.status = this.userForm.value.status;
+            userData.lang = this.userForm.value.lang;
 
             this._dspApiConnection.admin.usersEndpoint.createUser(userData).subscribe(
                 (response: ApiResponseData<UserResponse>) => {

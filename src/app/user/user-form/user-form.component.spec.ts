@@ -1,4 +1,4 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,10 +8,12 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, KnoraApiConnection, MockUsers, ReadUser, UsersResponse } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
+import { of } from 'rxjs';
 import { AppInitService } from 'src/app/app-init.service';
-import { DspApiConfigToken, DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { CacheService } from 'src/app/main/cache/cache.service';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorComponent } from 'src/app/main/error/error.component';
 import { TestConfig } from 'test.config';
@@ -21,6 +23,16 @@ import { UserFormComponent } from './user-form.component';
 describe('UserFormComponent', () => {
     let component: UserFormComponent;
     let fixture: ComponentFixture<UserFormComponent>;
+
+    const cacheServiceSpyUser = jasmine.createSpyObj('CacheServiceUser', ['get']);
+    const cacheServiceSpyAllUsers = jasmine.createSpyObj('CacheServiceAllUsers', ['get']);
+
+
+    const apiSpyObj = {
+        admin: {
+            usersEndpoint: jasmine.createSpyObj('usersEndpoint', ['getUser', 'getUsers'])
+        },
+    };
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -45,12 +57,20 @@ describe('UserFormComponent', () => {
             providers: [
                 AppInitService,
                 {
-                    provide: DspApiConfigToken,
-                    useValue: TestConfig.ApiConfig
+                    provide: DspApiConnectionToken,
+                    useValue: apiSpyObj
                 },
                 {
                     provide: DspApiConnectionToken,
                     useValue: new KnoraApiConnection(TestConfig.ApiConfig)
+                },
+                {
+                    provide: CacheService,
+                    useValue: cacheServiceSpyUser
+                },
+                {
+                    provide: CacheService,
+                    useValue: cacheServiceSpyAllUsers
                 }
             ]
         }).compileComponents();
@@ -59,12 +79,29 @@ describe('UserFormComponent', () => {
     beforeEach(() => {
         localStorage.setItem('session', JSON.stringify(TestConfig.CurrentSession));
 
+        // const cacheSpyUser = TestBed.inject(CacheService);
+        // (cacheSpyUser as jasmine.SpyObj<CacheService>).get.withArgs('root').and.callFake(
+        //     () => {
+        //         const response: ApiResponseData<UserResponse> = MockUsers.mockUser();
+
+        //         return of(response.body.user as ReadUser);
+        //     }
+        // );
+
+        const cacheSpyAllUsers = TestBed.inject(CacheService);
+        (cacheSpyAllUsers as jasmine.SpyObj<CacheService>).get.and.callFake(
+            () => {
+                const response: ApiResponseData<UsersResponse> = MockUsers.mockUsers();
+                return of(response.body.users as ReadUser[]);
+            }
+        );
+
         fixture = TestBed.createComponent(UserFormComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    xit('should create', () => {
         expect<any>(localStorage.getItem('session')).toBe(
             JSON.stringify(TestConfig.CurrentSession)
         );
