@@ -77,7 +77,7 @@ export class ErrorHandlerService {
             this._dspApiConnection.v2.auth.logout().subscribe(
                 (logoutResponse: ApiResponseData<LogoutResponse>) => {
 
-                    // destroy (dsp-ui) session
+                    // destroy session
                     this._session.destroySession();
 
                     // reload the page

@@ -5,16 +5,24 @@
             <img class="error-image" [src]="'/assets/images/' + errorMessage?.image" />
         </div>
         <div class="text error-message">
-            <h2 class="mat-title">ERROR {{status}}</h2>
-            <h1 class="mat-headline">{{errorMessage?.message}}</h1>
+            <h2 class="mat-title">{{errorMessage.type | uppercase}} {{status}} | {{errorMessage?.message}}</h2>
+            <!-- <h1 class="mat-headline">{{errorMessage?.message}}</h1> -->
             <p [innerHTML]="errorMessage.description"></p>
-            <p *ngIf="comment"><strong>API response:</strong><br>&rarr; {{comment}}</p>
+            <p *ngIf="comment">
+                <span *ngIf="errorMessage.type === 'error'">
+                    <strong>Response in detail:</strong><br>&rarr;
+                </span>
+                <span [innerHTML]="comment | appLinkify"></span>
+            </p>
             <div [ngSwitch]="errorMessage?.action" class="action">
                 <button *ngSwitchCase="'goback'" mat-button routerLink="/">
                     <mat-icon>keyboard_backspace</mat-icon> Please go back to the start page.
                 </button>
                 <p *ngSwitchCase="'reload'">
                     Please come back in a few minutes and try to <a (click)="reload()">reload the page</a>.
+                </p>
+                <p *ngSwitchCase="'goto'" [innerHtml]="url | appLinkify">
+                    <!-- <a [href]="url">{{url |appLinkify}}</a> -->
                 </p>
             </div>
 
