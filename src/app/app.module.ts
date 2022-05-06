@@ -20,7 +20,6 @@ import { AppComponent } from './app.component';
 import { ConfirmationDialogComponent } from './main/action/confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationMessageComponent } from './main/action/confirmation-dialog/confirmation-message/confirmation-message.component';
 import { LoginFormComponent } from './main/action/login-form/login-form.component';
-import { MessageComponent } from './main/action/message/message.component';
 import { ProgressIndicatorComponent } from './main/action/progress-indicator/progress-indicator.component';
 import { SelectedResourcesComponent } from './main/action/selected-resources/selected-resources.component';
 import { SortButtonComponent } from './main/action/sort-button/sort-button.component';
@@ -233,7 +232,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         LoginFormComponent,
         MainComponent,
         MembershipComponent,
-        MessageComponent,
         OntologyComponent,
         OntologyFormComponent,
         PasswordFormComponent,
