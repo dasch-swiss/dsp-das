@@ -27,7 +27,6 @@ describe('UserFormComponent', () => {
     const cacheServiceSpyUser = jasmine.createSpyObj('CacheServiceUser', ['get']);
     const cacheServiceSpyAllUsers = jasmine.createSpyObj('CacheServiceAllUsers', ['get']);
 
-
     const apiSpyObj = {
         admin: {
             usersEndpoint: jasmine.createSpyObj('usersEndpoint', ['getUser', 'getUsers'])
