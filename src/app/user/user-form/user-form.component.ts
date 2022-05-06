@@ -6,7 +6,6 @@ import {
     ApiResponseError,
     Constants,
     KnoraApiConnection,
-    ProjectResponse,
     ReadProject,
     ReadUser,
     StringLiteral,
@@ -19,6 +18,7 @@ import { AppGlobal } from 'src/app/app-global';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { existingNamesValidator } from 'src/app/main/directive/existing-name/existing-name.directive';
 import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { NotificationService } from 'src/app/main/services/notification.service';
 import { Session, SessionService } from 'src/app/main/services/session.service';
 import { CacheService } from '../../main/cache/cache.service';
 
@@ -62,9 +62,10 @@ export class UserFormComponent implements OnInit, OnChanges {
     public readonly REGEX_EMAIL = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
     /**
-     * status for the progress indicator
+     * status for the progress indicator and error
      */
     loading = true;
+    error: boolean;
 
     /**
      * user data
@@ -166,6 +167,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         private _cache: CacheService,
         private _errorHandler: ErrorHandlerService,
         private _formBuilder: FormBuilder,
+        private _notification: NotificationService,
         private _route: ActivatedRoute,
         private _session: SessionService
     ) {
@@ -390,14 +392,16 @@ export class UserFormComponent implements OnInit, OnChanges {
 
                     this._cache.set(this.username, response);
 
-                    this.success = true;
-
+                    // this.loading = false;
+                    this._notification.openSnackBar('You have successfully updated user\'s profile data.');
+                    this.closeDialog.emit();
                     this.loading = false;
+
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
                     this.loading = false;
-                    this.success = false;
+                    this.error = true;
                 }
             );
         } else {
@@ -452,6 +456,7 @@ export class UserFormComponent implements OnInit, OnChanges {
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
                     this.loading = false;
+                    this.error = true;
                 }
             );
         }

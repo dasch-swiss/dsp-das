@@ -55,8 +55,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy, AfterViewChec
 
     formChangesSubscription: Subscription;
 
-    errorMessage: ApiResponseError;
-
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         @Inject(FormBuilder) private _fb: FormBuilder,
@@ -105,7 +103,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy, AfterViewChec
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
-                    this.errorMessage = error;
                 });
         } else {
             this._dspApiConnection.v2.onto.getOntologiesMetadata().subscribe(
@@ -120,7 +117,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy, AfterViewChec
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
-                    this.errorMessage = error;
                 });
         }
 
