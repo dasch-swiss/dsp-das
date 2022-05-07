@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -8,7 +8,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ApiResponseData, KnoraApiConnection, MockUsers, ReadUser, UsersResponse } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, KnoraApiConnection, MockUsers, ReadUser, UserResponse, UsersEndpointAdmin, UsersResponse } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AppInitService } from 'src/app/app-init.service';
@@ -23,8 +23,9 @@ import { UserFormComponent } from './user-form.component';
 describe('UserFormComponent', () => {
     let component: UserFormComponent;
     let fixture: ComponentFixture<UserFormComponent>;
+    const formBuilder: FormBuilder = new FormBuilder();
 
-    const cacheServiceSpyUser = jasmine.createSpyObj('CacheServiceUser', ['get']);
+    // const cacheServiceSpyUser = jasmine.createSpyObj('CacheServiceUser', ['get']);
     const cacheServiceSpyAllUsers = jasmine.createSpyObj('CacheServiceAllUsers', ['get']);
 
     const apiSpyObj = {
@@ -59,17 +60,17 @@ describe('UserFormComponent', () => {
                     provide: DspApiConnectionToken,
                     useValue: apiSpyObj
                 },
-                {
-                    provide: DspApiConnectionToken,
-                    useValue: new KnoraApiConnection(TestConfig.ApiConfig)
-                },
-                {
-                    provide: CacheService,
-                    useValue: cacheServiceSpyUser
-                },
+                // {
+                //     provide: CacheService,
+                //     useValue: cacheServiceSpyUser
+                // },
                 {
                     provide: CacheService,
                     useValue: cacheServiceSpyAllUsers
+                },
+                {
+                    provide: FormBuilder,
+                    useValue: formBuilder
                 }
             ]
         }).compileComponents();
@@ -78,29 +79,38 @@ describe('UserFormComponent', () => {
     beforeEach(() => {
         localStorage.setItem('session', JSON.stringify(TestConfig.CurrentSession));
 
-        // const cacheSpyUser = TestBed.inject(CacheService);
-        // (cacheSpyUser as jasmine.SpyObj<CacheService>).get.withArgs('root').and.callFake(
-        //     () => {
-        //         const response: ApiResponseData<UserResponse> = MockUsers.mockUser();
-
-        //         return of(response.body.user as ReadUser);
-        //     }
-        // );
+        const dspConnSpy = TestBed.inject(DspApiConnectionToken);
+        (dspConnSpy.admin.usersEndpoint as jasmine.SpyObj<UsersEndpointAdmin>).getUsers.and.callFake(
+            () => {
+                const allUsers: ApiResponseData<UsersResponse> = MockUsers.mockUsers();;
+                return of(allUsers);
+            }
+        );
 
         const cacheSpyAllUsers = TestBed.inject(CacheService);
         (cacheSpyAllUsers as jasmine.SpyObj<CacheService>).get.and.callFake(
             () => {
-                const response: ApiResponseData<UsersResponse> = MockUsers.mockUsers();
-                return of(response.body.users as ReadUser[]);
+                const allUsers: ApiResponseData<UsersResponse> = MockUsers.mockUsers();
+                return of(allUsers);
             }
         );
 
         fixture = TestBed.createComponent(UserFormComponent);
         component = fixture.componentInstance;
+        component.userForm = formBuilder.group({
+            givenName: ['', Validators.required],
+            familyName: ['', Validators.required],
+            email: ['', Validators.required],
+            username: ['', Validators.required],
+            password: ['', Validators.required],
+            lang: ['en', Validators.required],
+            status: ['', Validators.required],
+            systemAdmin: ['', Validators.required]
+        });
         fixture.detectChanges();
     });
 
-    xit('should create', () => {
+    it('should create', () => {
         expect<any>(localStorage.getItem('session')).toBe(
             JSON.stringify(TestConfig.CurrentSession)
         );
