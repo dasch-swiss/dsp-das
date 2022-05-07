@@ -28,6 +28,10 @@ export class ErrorComponent implements OnInit {
 
     refresh = false;
 
+
+    // error message that will be shown in template
+    message: ErrorMsg;
+
     // default error messages
     errorMessages: ErrorMsg[] = [
         {
@@ -80,9 +84,6 @@ export class ErrorComponent implements OnInit {
         }
     ];
 
-    // error message that will be shown in template
-    errorMessage: ErrorMsg;
-
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _titleService: Title,
@@ -103,14 +104,7 @@ export class ErrorComponent implements OnInit {
         this._titleService.setTitle('DSP | Error ' + this.status);
 
         // get error message by status
-        this.errorMessage = this.getMsgByStatus(this.status);
-        console.log(this.errorMessage);
-
-        // if error message is not defined for the current status
-        // use the default error message
-        // if (!this.errorMessage) {
-        //     this.errorMessage = this.errorMessages[0];
-        // }
+        this.message = this.getMsgByStatus(this.status);
 
     }
 
