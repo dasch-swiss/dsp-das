@@ -25,6 +25,7 @@ export class ErrorComponent implements OnInit {
 
     @Input() comment?: string;
     @Input() url?: string;
+    @Input() representation?: 'archive' | 'audio' | 'document' | 'still-image' | 'video';
 
     refresh = false;
 
@@ -105,6 +106,11 @@ export class ErrorComponent implements OnInit {
 
         // get error message by status
         this.message = this.getMsgByStatus(this.status);
+
+        if(this.representation) {
+            this.comment = `There was an error loading the ${this.representation} file representation. Try to open it directly by clicking on the iiif url below:`;
+            this.message.action = 'goto';
+        }
 
     }
 

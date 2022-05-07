@@ -1,6 +1,7 @@
 <!-- openseadragon (osd) viewer -->
 <div class="osd-container" [class.drawing]="regionDrawMode">
     <div class="action horizontal top overlay">
+        <!-- caption -->
         <div class="captions-container">
             <div class="top">
                 <span class="caption mat-caption">{{imageCaption}}</span>
@@ -20,9 +21,9 @@
                 </div>
             </div>
         </div>
-        <!-- caption -->
 
         <span class="fill-remaining-space"></span>
+
         <!-- image action tools e.g. zoom, rotate and flip -->
         <span>
             <!-- zoom buttons -->
@@ -47,6 +48,9 @@
             </button>
         </span>
     </div>
+
+    <!-- in case of an error -->
+    <app-error [status]="404" [url]="iiifUrl" [representation]="'still-image'" *ngIf="failedToLoad"></app-error>
 
     <!-- navigation in case of compound object: previous and next page -->
     <div class="navigation vertical previous" *ngIf="compoundNavigation">

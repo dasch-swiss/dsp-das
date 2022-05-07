@@ -133,6 +133,8 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
 
     @Output() loaded = new EventEmitter<boolean>();
 
+    failedToLoad = false;
+
     regionDrawMode = false; // stores whether viewer is currently drawing a region
     private _regionDragInfo; // stores the information of the first click for drawing a region
     private _viewer: OpenSeadragon.Viewer;
@@ -615,6 +617,10 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
 
         this.removeOverlays();
         this._viewer.open(tileSources);
+
+        this._viewer.addHandler('tile-load-failed', (args) => {
+            this.failedToLoad = true;
+        });
 
     }
 

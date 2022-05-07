@@ -5,6 +5,10 @@
   height: 100%;
   width: 100%;
 
+  &.representation-error {
+    background: none;
+  }
+
   .container {
     display: grid;
     grid-template-columns: 1fr;
@@ -39,7 +43,8 @@
 }
 
 .action {
-  margin-top: 72px;
+  margin-top: 16px;
+  width: 360px;
 }
 
 // mobile device: phone

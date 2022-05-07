@@ -1,7 +1,7 @@
-<div class="error-page">
+<div class="error-page" [class.representation-error]="representation">
 
     <div class="container" *ngIf="!refresh; else isLoading">
-        <div class="image">
+        <div class="image" *ngIf="!representation">
             <img class="error-image" [src]="'/assets/images/' + message?.image" />
         </div>
         <div class="text error-message">
