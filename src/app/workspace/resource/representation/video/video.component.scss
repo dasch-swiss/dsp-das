@@ -4,6 +4,7 @@
 
 .player {
   background: black;
+  color: white;
   height: 522px;
 
   .container {
@@ -53,7 +54,6 @@
 
   .controls {
     background: rgba(0, 0, 0, 0.5);
-    color: white;
     position: relative;
 
     .mat-toolbar-row {
