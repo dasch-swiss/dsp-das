@@ -4,6 +4,7 @@ import {
     ApiResponseError,
     ClassDefinition,
     CreateResourceClass,
+    DeleteResourceClassComment,
     KnoraApiConnection,
     PropertyDefinition,
     ReadOntology,
@@ -302,7 +303,7 @@ export class ResourceClassFormComponent implements OnInit, AfterViewChecked {
 
             const updateComment = new UpdateResourceClassComment();
             updateComment.id = this.iri;
-            updateComment.comments = (this.resourceClassComments.length ? this.resourceClassComments : this.resourceClassLabels);
+            updateComment.comments = this.resourceClassComments;
             onto4Comment.entity = updateComment;
 
             this._dspApiConnection.v2.onto.updateResourceClass(onto4Label).subscribe(
@@ -310,18 +311,37 @@ export class ResourceClassFormComponent implements OnInit, AfterViewChecked {
                     this.lastModificationDate = classLabelResponse.lastModificationDate;
                     onto4Comment.lastModificationDate = this.lastModificationDate;
 
-                    this._dspApiConnection.v2.onto.updateResourceClass(onto4Comment).subscribe(
-                        (classCommentResponse: ResourceClassDefinitionWithAllLanguages) => {
-                            this.lastModificationDate = classCommentResponse.lastModificationDate;
+                    if(updateComment.comments.length) {
+                        this._dspApiConnection.v2.onto.updateResourceClass(onto4Comment).subscribe(
+                            (classCommentResponse: ResourceClassDefinitionWithAllLanguages) => {
+                                this.lastModificationDate = classCommentResponse.lastModificationDate;
 
-                            // close the dialog box
-                            this.loading = false;
-                            this.closeDialog.emit();
-                        },
-                        (error: ApiResponseError) => {
-                            this._errorHandler.showMessage(error);
-                        }
-                    );
+                                // close the dialog box
+                                this.loading = false;
+                                this.closeDialog.emit();
+                            },
+                            (error: ApiResponseError) => {
+                                this._errorHandler.showMessage(error);
+                            }
+                        );
+                    } else {
+                        const deleteResourceClassComment = new DeleteResourceClassComment();
+                        deleteResourceClassComment.id = this.iri;
+                        deleteResourceClassComment.lastModificationDate = this.lastModificationDate;
+
+                        this._dspApiConnection.v2.onto.deleteResourceClassComment(deleteResourceClassComment).subscribe(
+                            (deleteCommentResponse: ResourceClassDefinitionWithAllLanguages) => {
+                                this.lastModificationDate = deleteCommentResponse.lastModificationDate;
+
+                                // close the dialog box
+                                this.loading = false;
+                                this.closeDialog.emit();
+                            },
+                            (error: ApiResponseError) => {
+                                this._errorHandler.showMessage(error);
+                            }
+                        );
+                    }
 
                 },
                 (error: ApiResponseError) => {

@@ -276,7 +276,7 @@ export class OntologyComponent implements OnInit {
     }
 
     initOntoClasses(allOntoClasses: ClassDefinition[]) {
-
+        console.log('allOntoClasses: ', allOntoClasses);
         // reset the ontology classes
         this.ontoClasses = [];
 
@@ -292,6 +292,7 @@ export class OntologyComponent implements OnInit {
         // sort classes by label
         // --> TODO: add sort functionallity to the gui
         this.ontoClasses = this._sortingService.keySortByAlphabetical(this.ontoClasses, 'label');
+        console.log('ontoClasses: ', this.ontoClasses);
     }
 
     initOntoProperties(allOntoProperties: PropertyDefinition[]) {
