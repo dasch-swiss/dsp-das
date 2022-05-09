@@ -617,6 +617,8 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
         // display only the defined range of this.images
         const tileSources: object[] = this._prepareTileSourcesFromFileValues(fileValues);
 
+        console.log(tileSources);
+
         this.removeOverlays();
         this._viewer.open(tileSources);
 
