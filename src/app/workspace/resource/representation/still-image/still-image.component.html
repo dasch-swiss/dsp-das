@@ -1,31 +1,26 @@
 <!-- openseadragon (osd) viewer -->
 <div class="osd-container" [class.drawing]="regionDrawMode">
-    <div class="action horizontal top overlay">
+    <div class="horizontal top overlay">
         <!-- caption -->
-        <div class="captions-container">
-            <div class="top">
-                <span class="caption mat-caption">{{imageCaption}}</span>
-            </div>
-            <div class="bottom">
-                <div class="iiif-url">
-                    <a href="{{iiifUrl}}" target="_blank" class="mat-caption">{{iiifUrl}}</a>
-                </div>
-                <div class="copy-button">
-                    <button
+        <div class="caption">
+            <div class="top mat-caption">{{imageCaption}}</div>
+            <div class="bottom mat-caption">
+                <a [href]="iiifUrl" target="_blank" class="iiif-url"
+                    matTooltip="Open file directly">{{iiifUrl}}</a>
+                <button class="copy-button"
                         mat-icon-button
                         matTooltip="Copy IIIF URL to clipboard"
                         [cdkCopyToClipboard]="iiifUrl"
                         (click)="openSnackBar('IIIF URL copied to clipboard!')">
                         <mat-icon>content_copy</mat-icon>
-                    </button>
-                </div>
+                </button>
             </div>
         </div>
 
         <span class="fill-remaining-space"></span>
 
         <!-- image action tools e.g. zoom, rotate and flip -->
-        <span>
+        <div class="action">
             <!-- zoom buttons -->
             <button mat-icon-button id="DSP_OSD_ZOOM_OUT" matTooltip="Zoom out" [disabled]="failedToLoad">
                 <mat-icon>remove_circle_outline</mat-icon>
@@ -46,7 +41,7 @@
             <button mat-icon-button id="DSP_OSD_REPLACE_IMAGE" class="replace-image" matTooltip="Replace image" (click)="openReplaceFileDialog()">
                 <mat-icon>cloud_upload</mat-icon>
             </button>
-        </span>
+        </div>
     </div>
 
     <!-- in case of an error -->
