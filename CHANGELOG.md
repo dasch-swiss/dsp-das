@@ -1,5 +1,12 @@
 # Changelog
 
+### [9.8.2](https://www.github.com/dasch-swiss/dsp-app/compare/v9.8.1...v9.8.2) (2022-05-09)
+
+
+### Maintenance
+
+* **message:** use only one static error component (DEV-900) ([#727](https://www.github.com/dasch-swiss/dsp-app/issues/727)) ([404f1f6](https://www.github.com/dasch-swiss/dsp-app/commit/404f1f6da03e1de695bbe8a06db9e555eb0d5a92))
+
 ### [9.8.1](https://www.github.com/dasch-swiss/dsp-app/compare/v9.8.0...v9.8.1) (2022-05-09)
 
 
