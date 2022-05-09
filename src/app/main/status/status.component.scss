@@ -1,8 +1,8 @@
 @import "../../../assets/style/responsive";
 @import "../../../assets/style/config";
 
-.error-page {
-  // background: #fff;
+.status-page {
+  background: #fff;
   height: 100%;
   width: 100%;
 
@@ -25,11 +25,10 @@
       justify-self: stretch;
       align-self: stretch;
       box-sizing: border-box;
-      // padding: 24px;
       min-height: 280px;
       max-width: 360px;
 
-      &.error-message {
+      &.status-message {
         line-height: 1.5;
         margin: 0 auto;
       }
@@ -59,7 +58,7 @@
   .image {
     display: none;
   }
-  .error-page .container {
+  .status-page .container {
     padding-top: 30px;
   }
 }

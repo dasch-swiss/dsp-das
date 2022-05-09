@@ -13,7 +13,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ApiResponseError, Constants, KnoraApiConnection, OntologiesMetadata, OntologyMetadata } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { SearchParams } from '../../results/list-view/list-view.component';
 import { GravsearchGenerationService } from '../services/gravsearch-generation.service';
 import { ResourceAndPropertySelectionComponent } from './resource-and-property-selection/resource-and-property-selection.component';

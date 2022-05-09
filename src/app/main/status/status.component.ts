@@ -2,10 +2,10 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ApiResponseData, ApiResponseError, HealthResponse, KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { StatusMsg } from 'src/assets/http/statusMsg';
+import { HttpStatusMsg } from 'src/assets/http/statusMsg';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
 
-export interface ErrorMsg {
+export interface StatusMsg {
     status: number;
     message: string;
     description: string;
@@ -15,11 +15,11 @@ export interface ErrorMsg {
 }
 
 @Component({
-    selector: 'app-error',
-    templateUrl: './error.component.html',
-    styleUrls: ['./error.component.scss']
+    selector: 'app-status',
+    templateUrl: './status.component.html',
+    styleUrls: ['./status.component.scss']
 })
-export class ErrorComponent implements OnInit {
+export class StatusComponent implements OnInit {
 
     @Input() status: number;
 
@@ -31,10 +31,10 @@ export class ErrorComponent implements OnInit {
 
 
     // error message that will be shown in template
-    message: ErrorMsg;
+    message: StatusMsg;
 
     // default error messages
-    errorMessages: ErrorMsg[] = [
+    errorMessages: StatusMsg[] = [
         {
             status: 0,
             message: 'Undefined Error',
@@ -89,7 +89,7 @@ export class ErrorComponent implements OnInit {
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _titleService: Title,
         private _route: ActivatedRoute,
-        private _status: StatusMsg
+        private _status: HttpStatusMsg
     ) { }
 
     ngOnInit() {
@@ -114,7 +114,7 @@ export class ErrorComponent implements OnInit {
 
     }
 
-    getMsgByStatus(status: number): ErrorMsg {
+    getMsgByStatus(status: number): StatusMsg {
         let msg = this.errorMessages.filter(x => x.status === status)[0];
 
         if (!msg) {

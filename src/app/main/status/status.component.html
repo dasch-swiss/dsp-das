@@ -1,10 +1,10 @@
-<div class="error-page" [class.representation-error]="representation">
+<div class="status-page" [class.representation-error]="representation">
 
     <div class="container" *ngIf="!refresh; else isLoading">
         <div class="image" *ngIf="!representation">
             <img class="error-image" [src]="'/assets/images/' + message?.image" />
         </div>
-        <div class="text error-message">
+        <div class="text status-message">
             <h2 class="mat-title">{{message.type | uppercase}} {{status}} | {{message?.message}}</h2>
             <p [innerHTML]="message.description"></p>
             <p *ngIf="comment">
