@@ -206,7 +206,7 @@ describe('StillImageComponent', () => {
         const hostCompDe = testHostFixture.debugElement;
         const stillImageComponentDe = hostCompDe.query(By.directive(StillImageComponent));
 
-        const captionDebugElement = stillImageComponentDe.query(By.css('.caption'));
+        const captionDebugElement = stillImageComponentDe.query(By.css('.caption .mat-caption'));
         const captionEle = captionDebugElement.nativeElement;
 
         expect(captionEle.innerText).toEqual('test image');
@@ -218,7 +218,7 @@ describe('StillImageComponent', () => {
         const hostCompDe = testHostFixture.debugElement;
         const stillImageComponentDe = hostCompDe.query(By.directive(StillImageComponent));
 
-        const iiifUrlDebugElement = stillImageComponentDe.query(By.css('.iiif-url a'));
+        const iiifUrlDebugElement = stillImageComponentDe.query(By.css('a.iiif-url'));
         const iiifUrlEle = iiifUrlDebugElement.nativeElement;
 
         expect(iiifUrlEle.innerText).toEqual('https://iiif.test.dasch.swiss:443/0803/incunabula_0000003840.jp2/full/3210,5144/0/default.jpg');
