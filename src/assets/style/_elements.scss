@@ -345,6 +345,12 @@ a,
     }
   }
 
+  .representation-error {
+    .action a {
+      color: $warn !important;
+    }
+  }
+
   // first navigation implementation
   // on the left resp. on the right hand side of osd viewer
   .navigation {

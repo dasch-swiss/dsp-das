@@ -621,7 +621,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
         this._viewer.open(tileSources);
 
         this._viewer.addHandler('tile-load-failed', (args) => {
-            console.log('-- failed to load tile', args);
+            // console.log('-- failed to load tile', args);
             this.failedToLoad = true;
             this.loaded.emit(true);
         });

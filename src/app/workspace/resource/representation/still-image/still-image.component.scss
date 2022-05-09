@@ -17,6 +17,11 @@ $osd-height: 460px;
     color: $grey !important;
   }
 
+  app-error {
+    margin-top: 128px;
+    display: inline-block;
+  }
+
   .osd-container {
     color: $bright;
     background-color: $dark;

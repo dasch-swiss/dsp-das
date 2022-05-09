@@ -9,6 +9,15 @@ $osd-height: 460px;
 :host {
   border: 1px solid $black;
 
+  .mat-button-disabled {
+    color: $grey !important;
+  }
+
+  app-error {
+    margin-top: 64px;
+    display: inline-block;
+  }
+
   .pdf-container {
     color: $bright;
     height: 100%;

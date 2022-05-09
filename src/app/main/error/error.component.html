@@ -20,7 +20,7 @@
                 <p *ngSwitchCase="'reload'">
                     Please come back in a few minutes and try to <a (click)="reload()">reload the page</a>.
                 </p>
-                <p *ngSwitchCase="'goto'" [innerHtml]="url | appLinkify"></p>
+                <p *ngSwitchCase="'goto'" class="goto" [innerHtml]="url | appLinkify"></p>
             </div>
 
         </div>

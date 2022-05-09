@@ -1,7 +1,8 @@
 @import "../../../assets/style/responsive";
+@import "../../../assets/style/config";
 
 .error-page {
-  background: #fff;
+  // background: #fff;
   height: 100%;
   width: 100%;
 
@@ -15,7 +16,7 @@
     grid-template-rows: 1fr;
     align-items: stretch;
     align-content: space-evenly;
-    padding-top: 120px;
+    padding-top: 16px;
     max-width: 480px;
     margin: 0 auto;
 
@@ -25,7 +26,7 @@
       align-self: stretch;
       box-sizing: border-box;
       // padding: 24px;
-      max-height: 280px;
+      min-height: 280px;
       max-width: 360px;
 
       &.error-message {
@@ -43,7 +44,7 @@
 }
 
 .action {
-  margin-top: 16px;
+  // margin-top: 16px;
   width: 360px;
 
   p {
