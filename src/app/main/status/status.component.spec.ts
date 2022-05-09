@@ -7,9 +7,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HealthEndpointSystem, MockHealth } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
-import { StatusMsg } from 'src/assets/http/statusMsg';
+import { HttpStatusMsg } from 'src/assets/http/statusMsg';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
-import { ErrorComponent } from './error.component';
+import { StatusComponent } from './status.component';
 
 /**
  * test host component to simulate parent component.
@@ -17,11 +17,11 @@ import { ErrorComponent } from './error.component';
  */
 @Component({
     template: `
-        <app-error #error [status]="204"></app-error>`
+        <app-status #warning [status]="204"></app-status>`
 })
 class NoContentTestHostComponent implements OnInit {
 
-    @ViewChild('error', { static: false }) errorComponent: ErrorComponent;
+    @ViewChild('warning', { static: false }) StatusComponent: StatusComponent;
 
     constructor() {
     }
@@ -35,11 +35,11 @@ class NoContentTestHostComponent implements OnInit {
  */
 @Component({
     template: `
-        <app-error #error [status]="418"></app-error>`
+        <app-status #error [status]="418"></app-status>`
 })
 class TeapotTestHostComponent implements OnInit {
 
-    @ViewChild('error', { static: false }) errorComponent: ErrorComponent;
+    @ViewChild('error', { static: false }) StatusComponent: StatusComponent;
 
     constructor() {
     }
@@ -47,14 +47,14 @@ class TeapotTestHostComponent implements OnInit {
     ngOnInit() { }
 }
 
-describe('ErrorComponent', () => {
+describe('StatusComponent', () => {
     let noContentTestHostComponent: NoContentTestHostComponent;
     let noContentTestHostFixture: ComponentFixture<NoContentTestHostComponent>;
 
     let teapotTestHostComponent: TeapotTestHostComponent;
     let teapotTestHostFixture: ComponentFixture<TeapotTestHostComponent>;
 
-    let status: StatusMsg;
+    let status: HttpStatusMsg;
 
     const apiEndpointSpyObj = {
         system: {
@@ -65,7 +65,7 @@ describe('ErrorComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
-                ErrorComponent,
+                StatusComponent,
                 NoContentTestHostComponent,
                 TeapotTestHostComponent
             ],
@@ -75,7 +75,7 @@ describe('ErrorComponent', () => {
                 RouterTestingModule
             ],
             providers: [
-                StatusMsg,
+                HttpStatusMsg,
                 {
                     provide: MatDialogRef,
                     useValue: {}
@@ -87,7 +87,7 @@ describe('ErrorComponent', () => {
             ]
         }).compileComponents();
 
-        status = TestBed.inject(StatusMsg);
+        status = TestBed.inject(HttpStatusMsg);
 
     }));
 
@@ -114,13 +114,13 @@ describe('ErrorComponent', () => {
     });
 
     it('should display "warning 204 | no content"', () => {
-        expect(noContentTestHostComponent.errorComponent).toBeTruthy();
-        expect(noContentTestHostComponent.errorComponent.message.status).toEqual(204);
-        expect(noContentTestHostComponent.errorComponent.message.type).toEqual('warning');
+        expect(noContentTestHostComponent.StatusComponent).toBeTruthy();
+        expect(noContentTestHostComponent.StatusComponent.message.status).toEqual(204);
+        expect(noContentTestHostComponent.StatusComponent.message.type).toEqual('warning');
 
         const hostCompDe = noContentTestHostFixture.debugElement;
 
-        const messageEl = hostCompDe.query(By.directive(ErrorComponent));
+        const messageEl = hostCompDe.query(By.directive(StatusComponent));
 
         const titleEle = messageEl.query(By.css('.mat-title'));
 
@@ -128,13 +128,13 @@ describe('ErrorComponent', () => {
     });
 
     it('should display "error 418 | I\'m a teapot"', () => {
-        expect(teapotTestHostComponent.errorComponent).toBeTruthy();
-        expect(teapotTestHostComponent.errorComponent.message.status).toEqual(418);
-        expect(teapotTestHostComponent.errorComponent.message.type).toEqual('error');
+        expect(teapotTestHostComponent.StatusComponent).toBeTruthy();
+        expect(teapotTestHostComponent.StatusComponent.message.status).toEqual(418);
+        expect(teapotTestHostComponent.StatusComponent.message.type).toEqual('error');
 
         const hostCompDe = teapotTestHostFixture.debugElement;
 
-        const messageEl = hostCompDe.query(By.directive(ErrorComponent));
+        const messageEl = hostCompDe.query(By.directive(StatusComponent));
 
         const titleEle = messageEl.query(By.css('.mat-title'));
 

@@ -17,7 +17,7 @@ import {
 import { AppGlobal } from 'src/app/app-global';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { existingNamesValidator } from 'src/app/main/directive/existing-name/existing-name.directive';
-import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { NotificationService } from 'src/app/main/services/notification.service';
 import { Session, SessionService } from 'src/app/main/services/session.service';
 import { CustomRegex } from 'src/app/workspace/resource/values/custom-regex';
