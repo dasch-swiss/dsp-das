@@ -108,7 +108,7 @@ export class ErrorComponent implements OnInit {
         this.message = this.getMsgByStatus(this.status);
 
         if(this.representation) {
-            this.comment = `There was an error loading the ${this.representation} file representation. Try to open it directly by clicking on the iiif url below:`;
+            this.comment = `There was an error loading the ${this.representation} file representation. Try to open it directly by clicking on the file url below:`;
             this.message.action = 'goto';
         }
 
