@@ -388,7 +388,7 @@ export class UserFormComponent implements OnInit, OnChanges {
                     this._cache.set(this.username, response);
 
                     // this.loading = false;
-                    this._notification.openSnackBar('You have successfully updated user\'s profile data.');
+                    this._notification.openSnackBar('You have successfully updated the user\'s profile data.');
                     this.closeDialog.emit();
                     this.loading = false;
 
