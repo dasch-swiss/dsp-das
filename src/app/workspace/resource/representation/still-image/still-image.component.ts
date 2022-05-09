@@ -44,6 +44,7 @@ import { NotificationService } from 'src/app/main/services/notification.service'
 import { DspCompoundPosition } from '../../dsp-resource';
 import { EmitEvent, Events, UpdatedFileEventValue, ValueOperationEventService } from '../../services/value-operation-event.service';
 import { FileRepresentation } from '../file-representation';
+import { RepresentationService } from '../representation.service';
 
 
 /**
@@ -149,6 +150,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
         private _matIconRegistry: MatIconRegistry,
         private _notification: NotificationService,
         private _renderer: Renderer2,
+        private _rs: RepresentationService,
         private _valueOperationEventService: ValueOperationEventService
     ) {
         OpenSeadragon.setString('Tooltips.Home', '');
@@ -619,7 +621,9 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
         this._viewer.open(tileSources);
 
         this._viewer.addHandler('tile-load-failed', (args) => {
+            console.log('-- failed to load tile', args);
             this.failedToLoad = true;
+            this.loaded.emit(true);
         });
 
     }
