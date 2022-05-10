@@ -1,6 +1,6 @@
 <div class="controls">
     <!-- in case of an error -->
-    <app-error [status]="404" [url]="src.fileValue.fileUrl" [representation]="'audio'" *ngIf="failedToLoad"></app-error>
+    <app-status [status]="404" [url]="src.fileValue.fileUrl" [representation]="'audio'" *ngIf="failedToLoad"></app-status>
 
     <div class="audio-player">
         <audio id="audio" [controls]="!failedToLoad" preload="auto">

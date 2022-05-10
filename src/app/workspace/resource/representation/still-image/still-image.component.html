@@ -45,7 +45,7 @@
     </div>
 
     <!-- in case of an error -->
-    <app-error [status]="404" [url]="iiifUrl" [representation]="'still-image'" *ngIf="failedToLoad"></app-error>
+    <app-status [status]="404" [url]="iiifUrl" [representation]="'still-image'" *ngIf="failedToLoad"></app-status>
 
     <!-- navigation in case of compound object: previous and next page -->
     <div class="navigation vertical previous" *ngIf="compoundNavigation">

@@ -2,7 +2,7 @@
 
     <div class="container">
         <!-- in case of an error -->
-        <app-error [status]="404" [url]="src.fileValue.fileUrl" [representation]="'video'" *ngIf="failedToLoad"></app-error>
+        <app-status [status]="404" [url]="src.fileValue.fileUrl" [representation]="'video'" *ngIf="failedToLoad"></app-status>
 
         <video class="video" #videoEle *ngIf="!fileHasChanged; else loading"  [src]="video" type="video/mp4" preload="auto" [muted]="muted"
             (click)="togglePlay()" (timeupdate)="timeUpdate($event)" (loadedmetadata)="loadedMetadata()"

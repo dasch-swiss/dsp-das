@@ -580,8 +580,8 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
             // rotateRightButton: 'DSP_OSD_ROTATE_RIGHT',       // doesn't work yet
             showNavigator: true,
             navigatorPosition: 'ABSOLUTE' as const,
-            navigatorTop: '40px',
-            navigatorLeft: 'calc(100% - 160px)',
+            navigatorTop: 'calc(100% - 136px)',
+            navigatorLeft: 'calc(100% - 136px)',
             navigatorHeight: '120px',
             navigatorWidth: '120px',
             gestureSettingsMouse: {
@@ -617,15 +617,20 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
         // display only the defined range of this.images
         const tileSources: object[] = this._prepareTileSourcesFromFileValues(fileValues);
 
-        console.log(tileSources);
-
         this.removeOverlays();
+
         this._viewer.open(tileSources);
 
-        this._viewer.addHandler('tile-load-failed', (args) => {
-            // console.log('-- failed to load tile', args);
+        this._viewer.addOnceHandler('open', (args) => {
+            this.failedToLoad = false;
+            // enable the navigator
+            this._viewer.navigator.element.style.display = 'inline-block';
+        });
+
+        this._viewer.addOnceHandler('tile-load-failed', (args) => {
             this.failedToLoad = true;
-            this.loaded.emit(true);
+            // disable the navigator
+            this._viewer.navigator.element.style.display = 'none';
         });
 
     }
