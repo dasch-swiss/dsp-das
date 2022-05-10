@@ -1,3 +1,4 @@
+import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -8,17 +9,25 @@ export class RepresentationService {
     constructor() { }
 
     doesFileExist(urlToFile: string): boolean {
+        const pathToKnoraJson = urlToFile.substring(0, urlToFile.lastIndexOf('/')) + '/knora.json';
         try {
             const xhr = new XMLHttpRequest();
-            xhr.open('HEAD', urlToFile, false);
+
+            xhr.open('GET', pathToKnoraJson, false);
+            xhr.withCredentials = true;
             xhr.send();
 
-            if (xhr.status !== 200) {
-                return false;
-            } else {
-                return true;
-            }
+            // fetch(urlToFile, {
+            //     credentials: 'include'
+            // }).then(response => response.json())
+            //     .then(data => console.log('fetch data', data));
+
+            // console.log('xhr', xhr);
+
+            return xhr.status === 200;
+
         } catch (e) {
+            // console.log('error', e);
             return false;
         }
     }
