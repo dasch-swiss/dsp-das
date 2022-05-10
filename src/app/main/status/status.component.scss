@@ -6,10 +6,6 @@
   height: 100%;
   width: 100%;
 
-  &.representation-error {
-    background: none;
-  }
-
   .container {
     display: grid;
     grid-template-columns: 1fr;
@@ -38,6 +34,14 @@
         margin: 0 auto;
         max-width: 360px;
       }
+    }
+  }
+
+  &.representation-error {
+    background: none;
+
+    .image {
+      display: none !important;
     }
   }
 }

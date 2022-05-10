@@ -1,7 +1,6 @@
 <div class="status-page" [class.representation-error]="representation">
-
     <div class="container" *ngIf="!refresh; else isLoading">
-        <div class="image" *ngIf="!representation">
+        <div class="image">
             <img class="error-image" [src]="'/assets/images/' + message?.image" />
         </div>
         <div class="text status-message">
@@ -22,11 +21,9 @@
                 </p>
                 <p *ngSwitchCase="'goto'" class="goto" [innerHtml]="url | appLinkify"></p>
             </div>
-
         </div>
     </div>
     <ng-template #isLoading>
         <app-progress-indicator></app-progress-indicator>
     </ng-template>
-
 </div>

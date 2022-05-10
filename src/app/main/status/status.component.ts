@@ -29,7 +29,6 @@ export class StatusComponent implements OnInit {
 
     refresh = false;
 
-
     // error message that will be shown in template
     message: StatusMsg;
 
@@ -93,6 +92,7 @@ export class StatusComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+
         // status is not defined in Input parameter
         if (!this.status) {
             // but status is defined in app.routing
@@ -102,7 +102,7 @@ export class StatusComponent implements OnInit {
         }
 
         // set the page title
-        this._titleService.setTitle('DSP | Error ' + this.status);
+        this._titleService.setTitle(`DSP | ${this.getTypeByStatus(this.status).toUpperCase()} ${this.status}`);
 
         // get error message by status
         this.message = this.getMsgByStatus(this.status);
