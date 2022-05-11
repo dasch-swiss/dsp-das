@@ -35,9 +35,23 @@
 
 <!-- full-text search menu -->
 <ng-template #fulltextSearchMenu>
-
     <div class="app-search-menu" [class.with-project-filter]="projectfilter">
         <div class="app-menu-content">
+            <div class="hint">
+                <p class="mat-caption">Use special syntax:</p>
+                    <ul class="mat-caption">
+                        <li>question mark<strong>?</strong> can be used as wildcard symbol for a single character.<br>
+                            <code class="">Example: <i>be?r</i> will find <i>beer</i> but also <i>bear</i></code>
+                        </li>
+                        <li>asterisk<strong>*</strong> can be used as a wildcard symbol for zero, one or multiple characters.<br>
+                            <code class="">Example: <i>b*r</i> will find <i>beer</i> but also <i>bear</i></code>
+                        </li>
+                        <li><strong>"</strong>quotation marks<strong>"</strong> searches for the whole pattern.<br>
+                            <code class="">Example: <i>"Lorem ipsum"</i> will find texts with exact content <i>Lorem ipsum</i></code>
+                        </li>
+                    </ul>
+                <hr>
+            </div>
             <mat-list class="app-previous-search-list">
                 <div *ngFor="let item of prevSearch; let i=index">
                     <mat-list-item *ngIf="i<10">
@@ -103,8 +117,7 @@
             <input #fulltextSearchInputMobile class="app-fulltext-search-input" type="search" [(ngModel)]="searchQuery"
                 name="fulltext-search" minlength="3" autocomplete="off" [placeholder]="'Search'" (click)="setFocus()"
                 (keyup.esc)="resetSearch()" (keyup.enter)="doSearch()">
-            <button mat-button color="primary" class="app-fulltext-search-button"
-                (click)="doSearch()" type="submit">
+            <button mat-button color="primary" class="app-fulltext-search-button" (click)="doSearch()" type="submit">
                 Search
             </button>
         </div>
