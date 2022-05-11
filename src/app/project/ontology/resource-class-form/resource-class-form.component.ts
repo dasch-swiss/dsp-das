@@ -311,7 +311,7 @@ export class ResourceClassFormComponent implements OnInit, AfterViewChecked {
                     this.lastModificationDate = classLabelResponse.lastModificationDate;
                     onto4Comment.lastModificationDate = this.lastModificationDate;
 
-                    if(updateComment.comments.length) {
+                    if(updateComment.comments.length) { // if the comments array is not empty, send a request to update the comments
                         this._dspApiConnection.v2.onto.updateResourceClass(onto4Comment).subscribe(
                             (classCommentResponse: ResourceClassDefinitionWithAllLanguages) => {
                                 this.lastModificationDate = classCommentResponse.lastModificationDate;
@@ -324,7 +324,7 @@ export class ResourceClassFormComponent implements OnInit, AfterViewChecked {
                                 this._errorHandler.showMessage(error);
                             }
                         );
-                    } else {
+                    } else { // if the comments array is empty, send a request to remove the comments
                         const deleteResourceClassComment = new DeleteResourceClassComment();
                         deleteResourceClassComment.id = this.iri;
                         deleteResourceClassComment.lastModificationDate = this.lastModificationDate;
