@@ -1,4 +1,3 @@
-import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -8,7 +7,14 @@ export class RepresentationService {
 
     constructor() { }
 
+    /**
+     * checks if representation file exists
+     * @param urlToFile sipi url to file representation
+     * @returns true if file exist
+     */
     doesFileExist(urlToFile: string): boolean {
+        // it seems that SIPI does not support HEAD request only --> xhr.open('HEAD')
+        // this is why we have to grab the sidecar file to check if the file exists
         const pathToKnoraJson = urlToFile.substring(0, urlToFile.lastIndexOf('/')) + '/knora.json';
         try {
             const xhr = new XMLHttpRequest();
@@ -17,17 +23,9 @@ export class RepresentationService {
             xhr.withCredentials = true;
             xhr.send();
 
-            // fetch(urlToFile, {
-            //     credentials: 'include'
-            // }).then(response => response.json())
-            //     .then(data => console.log('fetch data', data));
-
-            // console.log('xhr', xhr);
-
             return xhr.status === 200;
 
         } catch (e) {
-            // console.log('error', e);
             return false;
         }
     }

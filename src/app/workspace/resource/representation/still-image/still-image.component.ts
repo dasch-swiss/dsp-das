@@ -134,6 +134,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
 
     @Output() loaded = new EventEmitter<boolean>();
 
+    loading = true;
     failedToLoad = false;
 
     regionDrawMode = false; // stores whether viewer is currently drawing a region
@@ -194,6 +195,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
             // tODO: check if this is necessary or could be handled below
             //  (remove the 'else' before the 'if', so changes['activateRegion'] is always checked for)
         }
+
         if (this.activateRegion !== undefined) {
             this._highlightRegion(this.activateRegion);
         }
@@ -322,7 +324,9 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
 
                 const commentValue = (geom.region.properties[Constants.HasComment] ? geom.region.properties[Constants.HasComment][0].strval : '');
 
-                this._createSVGOverlay(geom.region.id, geometry, aspectRatio, imageXOffset, geom.region.label, commentValue);
+                if (!this.failedToLoad) {
+                    this._createSVGOverlay(geom.region.id, geometry, aspectRatio, imageXOffset, geom.region.label, commentValue);
+                }
 
                 imageXOffset++;
             }
@@ -617,21 +621,38 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
         // display only the defined range of this.images
         const tileSources: object[] = this._prepareTileSourcesFromFileValues(fileValues);
 
+
         this.removeOverlays();
 
-        this._viewer.open(tileSources);
-
         this._viewer.addOnceHandler('open', (args) => {
+            // reset the status on each image
             this.failedToLoad = false;
-            // enable the navigator
+            this._viewer.setMouseNavEnabled(true);
             this._viewer.navigator.element.style.display = 'inline-block';
+            const tiledImage = this._viewer.world.getItemAt(0);
+            // hide the image until it's fully loaded;
+            // it helps to avoid flickering
+            tiledImage.setOpacity(0);
+            if (tiledImage.getFullyLoaded()) {
+                this.failedToLoad = false;
+
+                tiledImage.setOpacity(1);
+            } else {
+                tiledImage.addOnceHandler('fully-loaded-change', (e) => {
+                    tiledImage.setOpacity(e.fullyLoaded ? 1 : 0);
+                });
+            }
+
         });
 
         this._viewer.addOnceHandler('tile-load-failed', (args) => {
             this.failedToLoad = true;
+            this._viewer.setMouseNavEnabled(false);
             // disable the navigator
             this._viewer.navigator.element.style.display = 'none';
         });
+
+        this._viewer.open(tileSources);
 
     }
 
@@ -647,6 +668,8 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
         let imageXOffset = 0;
         const imageYOffset = 0;
         const tileSources = [];
+
+        // let i = 0;
 
         for (const image of images) {
             const sipiBasePath = image.iiifBaseUrl + '/' + image.filename;
@@ -668,7 +691,8 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
                     }]
                 },
                 x: imageXOffset,
-                y: imageYOffset
+                y: imageYOffset,
+                preload: true
             });
 
             imageXOffset++;
