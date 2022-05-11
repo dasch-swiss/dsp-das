@@ -22,7 +22,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { NotificationService } from 'src/app/main/services/notification.service';
 import { Session, SessionService } from 'src/app/main/services/session.service';
 import { DspCompoundPosition, DspResource } from './dsp-resource';
@@ -315,8 +315,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                 res.systemProps = this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
                 this.representationsToDisplay = this.collectRepresentationsAndAnnotations(this.incomingResource);
-
-                this.loading = this.representationsToDisplay.length > 0;
 
                 if (this.representationsToDisplay.length && this.representationsToDisplay[0].fileValue && this.compoundPosition) {
                     this.getIncomingRegions(this.incomingResource, 0);
