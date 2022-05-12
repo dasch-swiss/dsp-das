@@ -432,7 +432,7 @@ export class PropertyFormComponent implements OnInit {
                                     this.lastModificationDate = propertyCommentResponse.lastModificationDate;
 
                                     if (!this.unsupportedPropertyType) {
-                                        this.replaceGuiAttribute();
+                                        this.replaceGuiElement();
                                     } else {
                                         this.loading = false;
                                         this.closeDialog.emit();
@@ -455,7 +455,7 @@ export class PropertyFormComponent implements OnInit {
                                     this.lastModificationDate = deleteCommentResponse.lastModificationDate;
 
                                     if (!this.unsupportedPropertyType) {
-                                        this.replaceGuiAttribute();
+                                        this.replaceGuiElement();
                                     } else {
                                         this.loading = false;
                                         this.closeDialog.emit();
@@ -532,7 +532,7 @@ export class PropertyFormComponent implements OnInit {
         }
     }
 
-    replaceGuiAttribute() {
+    replaceGuiElement() {
         const onto4guiEle = new UpdateOntology<UpdateResourcePropertyGuiElement>();
         onto4guiEle.id = this.ontology.id;
         onto4guiEle.lastModificationDate = this.lastModificationDate;
