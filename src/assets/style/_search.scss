@@ -190,10 +190,12 @@ app-search-date-value {
   .app-search-menu {
     width: calc(#{$search-width-small-device} - 32px);
     &.with-project-filter {
-      width: calc(#{$search-width-small-device} + #{$project-filter-width-small-device} - 32px);
+      width: calc(100vw - 32px);
+      margin: 0 16px;
     }
-    &.with-advanced-search {
-      width: 100vw;
+
+    .app-menu-action {
+      width: calc(100% - 32px);
     }
   }
 }
