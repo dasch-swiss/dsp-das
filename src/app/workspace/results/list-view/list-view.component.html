@@ -54,20 +54,9 @@
             <li>Try different keywords.</li>
             <li>Try more general keywords.</li>
             <li>Try fewer keywords.</li>
-            <li>Use special syntax:
-                <ul>
-                    <li>question mark<strong>?</strong> can be used as wildcard symbol for a single character.<br>
-                        <code class="">Example: <i>be?r</i> will find <i>beer</i> but also <i>bear</i></code>
-                    </li>
-                    <li>asterisk<strong>*</strong> can be used as a wildcard symbol for zero, one or multiple characters.<br>
-                        <code class="">Example: <i>b*r</i> will find <i>beer</i> but also <i>bear</i></code>
-                    </li>
-                    <li><strong>"</strong>quotation marks<strong>"</strong> searches for the whole pattern.<br>
-                        <code class="">Example: <i>"Lorem ipsum"</i> will find texts with exact content <i>Lorem ipsum</i></code>
-                    </li>
-                </ul>
-            </li>
         </ul>
+        <mat-divider></mat-divider>
+        <app-hint [topic]="'search'"></app-hint>
     </div>
 
 </div>
