@@ -26,6 +26,10 @@
 
       &.hint {
         color: $accent_200;
+
+        &.active {
+          color: $dark;
+        }
       }
 
       .mat-icon {

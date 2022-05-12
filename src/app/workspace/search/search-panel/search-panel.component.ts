@@ -127,6 +127,7 @@ export class SearchPanelComponent implements OnInit {
     closeMenu(): void {
         this.showAdvanced = false;
         this.showExpert = false;
+        this.showHint = false;
         if (this.overlayRef) {
             this.overlayRef.detach();
         }
