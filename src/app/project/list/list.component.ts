@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
@@ -71,6 +71,9 @@ export class ListComponent implements OnInit {
         }
     };
 
+    // disable content on small devices
+    disableContent = false;
+
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
@@ -93,14 +96,21 @@ export class ListComponent implements OnInit {
         }
 
         // set the page title
-        if (this.listIri) {
-            this._titleService.setTitle('Project ' + this.projectCode + ' | List');
-        } else {
-            this._titleService.setTitle('Project ' + this.projectCode + ' | Lists');
+        this._setPageTitle();
+
+    }
+
+    @HostListener('window:resize', ['$event']) onWindwoResize(e: Event) {
+        this.disableContent = (window.innerWidth <= 768);
+        // reset the page title
+        if (!this.disableContent) {
+            this._setPageTitle();
         }
     }
 
     ngOnInit() {
+
+        this.disableContent = (window.innerWidth <= 768);
 
         this.loading = true;
 
@@ -272,6 +282,14 @@ export class ListComponent implements OnInit {
                 }
             }
         });
+    }
+
+    private _setPageTitle() {
+        if (this.listIri) {
+            this._titleService.setTitle('Project ' + this.projectCode + ' | List');
+        } else {
+            this._titleService.setTitle('Project ' + this.projectCode + ' | Lists');
+        }
     }
 
 }

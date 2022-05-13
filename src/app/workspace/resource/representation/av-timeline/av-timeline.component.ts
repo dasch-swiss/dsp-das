@@ -76,7 +76,7 @@ export class AvTimelineComponent implements OnChanges {
         this._onMouseup(e);
     }
 
-    @HostListener('window:resize', ['$event']) onWindwoResiz(e: Event) {
+    @HostListener('window:resize', ['$event']) onWindowResize(e: Event) {
         this._onWindowResize(e);
     }
 
@@ -202,6 +202,7 @@ export class AvTimelineComponent implements OnChanges {
      */
     private _onWindowResize(ev: Event) {
         this.timelineDimension = this._getResizedTimelineDimensions();
+        console.log(this.timelineDimension);
         this.dimension.emit(this.timelineDimension);
     }
 
