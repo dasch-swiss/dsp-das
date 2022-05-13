@@ -28,6 +28,12 @@ import { AutocompleteItem } from 'src/app/workspace/search/advanced-search/resou
 import { DefaultProperties, DefaultProperty, PropertyCategory, PropertyInfoObject } from '../default-data/default-properties';
 import { OntologyService } from '../ontology.service';
 
+export interface ClassToSelect {
+    ontologyId: string;
+    ontologyLabel: string;
+    classes: ClassDefinition[];
+}
+
 @Component({
     selector: 'app-property-form',
     templateUrl: './property-form.component.html',
@@ -105,7 +111,7 @@ export class PropertyFormComponent implements OnInit {
     lists: ListNodeInfo[];
 
     // resource classes in this ontology
-    resourceClasses: ClassDefinition[] = [];
+    ontologyClasses: ClassToSelect[] = [];
 
     loading = false;
 
@@ -135,15 +141,12 @@ export class PropertyFormComponent implements OnInit {
 
         this.loading = true;
 
+        // set various lists to select from
         this._cache.get('currentOntology').subscribe(
             (response: ReadOntology) => {
                 this.ontology = response;
                 this.lastModificationDate = response.lastModificationDate;
 
-                // set various lists to select from
-                // a) in case of link value:
-                // set list of resource classes from response; needed for linkValue
-                this.resourceClasses = response.getAllClassDefinitions();
                 const resourceProperties = response.getAllPropertyDefinitions();
 
                 // set list of all existing resource property names to avoid same name twice
@@ -155,7 +158,7 @@ export class PropertyFormComponent implements OnInit {
                 });
 
                 // add all resource classes to the same list
-                this.resourceClasses.forEach((resClass: ClassDefinition) => {
+                response.getAllClassDefinitions().forEach((resClass: ClassDefinition) => {
                     const name = this._os.getNameFromIri(resClass.id);
                     this.existingNames.push(
                         new RegExp('(?:^|W)' + name.toLowerCase() + '(?:$|W)')
@@ -168,8 +171,25 @@ export class PropertyFormComponent implements OnInit {
             }
         );
 
-        // b) in case of list value:s
+        // a) in case of link value:
+        // set list of resource classes from response; needed for linkValue
+        this._cache.get('currentProjectOntologies').subscribe(
+            (response: ReadOntology[]) => {
+                // reset list of ontology classes
+                this.ontologyClasses = [];
+                response.forEach(onto => {
+                    const ontoClasses: ClassToSelect = {
+                        ontologyId: onto.id,
+                        ontologyLabel: onto.label,
+                        classes: onto.getAllClassDefinitions()
+                    };
+                    this.ontologyClasses.push(ontoClasses);
+                });
 
+            }
+        );
+
+        // b) in case of list value:
         // set list of lists; needed for listValue
         this._cache.get('currentOntologyLists').subscribe(
             (response: ListNodeInfo[]) => {
