@@ -47,9 +47,6 @@
     <!-- in case of an error -->
     <app-status [status]="404" [url]="iiifUrl" [representation]="'still-image'" *ngIf="failedToLoad"></app-status>
 
-    <!-- loading -->
-    <!-- <app-progress-indicator *ngIf="loading"></app-progress-indicator> -->
-
     <!-- navigation in case of compound object: previous and next page -->
     <div class="navigation vertical previous" *ngIf="compoundNavigation">
         <button mat-button class="full-size" [disabled]="compoundNavigation.page <= 1"

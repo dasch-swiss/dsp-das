@@ -10,7 +10,7 @@ export class RepresentationService {
     /**
      * checks if representation file exists
      * @param urlToFile sipi url to file representation
-     * @returns true if file exist
+     * @returns true if file exists
      */
     doesFileExist(urlToFile: string): boolean {
         // it seems that SIPI does not support HEAD request only --> xhr.open('HEAD')
