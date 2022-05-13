@@ -79,7 +79,7 @@ export class AvTimelineComponent implements OnChanges {
         this._onMouseup(e);
     }
 
-    @HostListener('window:resize', ['$event']) onWindwoResiz(e: Event) {
+    @HostListener('window:resize', ['$event']) onWindowResize(e: Event) {
         this._onWindowResize(e);
     }
 

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, HostListener, Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
@@ -30,11 +30,6 @@ import { SortingService } from 'src/app/main/services/sorting.service';
 import { DefaultProperties, PropertyCategory, PropertyInfoObject } from './default-data/default-properties';
 import { DefaultClass, DefaultResourceClasses } from './default-data/default-resource-classes';
 import { OntologyService } from './ontology.service';
-
-export interface OntologyInfo {
-    id: string;
-    label: string;
-}
 
 export interface CardinalityInfo {
     resClass: ClassDefinition;
@@ -120,6 +115,9 @@ export class OntologyComponent implements OnInit {
     defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
     defaultProperties: PropertyCategory[] = DefaultProperties.data;
 
+    // disable content on small devices
+    disableContent = false;
+
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
@@ -149,15 +147,21 @@ export class OntologyComponent implements OnInit {
         }
 
         // set the page title
-        if (this.ontologyIri) {
-            this._titleService.setTitle('Project ' + this.projectCode + ' | Data model');
-        } else {
-            // set the page title in case of more than one existing project ontologies
-            this._titleService.setTitle('Project ' + this.projectCode + ' | Data models');
+        this._setPageTitle();
+
+    }
+
+    @HostListener('window:resize', ['$event']) onWindwoResize(e: Event) {
+        this.disableContent = (window.innerWidth <= 768);
+        // reset the page title
+        if (!this.disableContent) {
+            this._setPageTitle();
         }
     }
 
     ngOnInit() {
+
+        this.disableContent = (window.innerWidth <= 768);
         this.loading = true;
 
         // get information about the logged-in user
@@ -589,6 +593,15 @@ export class OntologyComponent implements OnInit {
                 this.loadOntology = false;
             }
         );
+    }
+
+    private _setPageTitle() {
+        if (this.ontologyIri) {
+            this._titleService.setTitle('Project ' + this.projectCode + ' | Data model');
+        } else {
+            // set the page title in case of more than one existing project ontologies
+            this._titleService.setTitle('Project ' + this.projectCode + ' | Data models');
+        }
     }
 
 }
