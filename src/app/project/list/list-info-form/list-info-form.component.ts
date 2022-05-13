@@ -51,7 +51,7 @@ export class ListInfoFormComponent implements OnInit {
         }
     };
 
-    saveButtonDisabled = false;
+    saveButtonDisabled = true;
 
     labelInvalidMessage: string;
     commentInvalidMessage: string;

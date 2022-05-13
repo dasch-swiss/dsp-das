@@ -11,7 +11,6 @@ import {
     List,
     ListNodeInfo,
     ListsResponse,
-    ProjectResponse,
     ReadProject,
     StringLiteral
 } from '@dasch-swiss/dsp-js';
