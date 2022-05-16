@@ -175,7 +175,9 @@ export class OntologyService {
 
         if (!propType) {
             // property type could not be found in the list of default properties
-            // maybe it's not supported e.g. if propDef.objectType === Constants.GeomValue || propDef.subPropertyOf[0] === Constants.HasRepresentation
+            // maybe it's not supported or it's a subproperty of another prop.
+            // e.g. if propDef.objectType === Constants.GeomValue || propDef.subPropertyOf[0] === Constants.HasRepresentation
+            // --> TODO: check if it's a subproperty of another one in this ontology
             return of (DefaultProperties.unsupported);
         }
 
