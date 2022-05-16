@@ -1,5 +1,26 @@
 # Changelog
 
+## [9.9.0](https://www.github.com/dasch-swiss/dsp-app/compare/v9.8.1...v9.9.0) (2022-05-16)
+
+
+### Bug Fixes
+
+* **ontology:** unsupported property type was displayed wrong (DEV-936) ([#740](https://www.github.com/dasch-swiss/dsp-app/issues/740)) ([87124e9](https://www.github.com/dasch-swiss/dsp-app/commit/87124e9be7e53a6d4d4e831dfdf339dd9e88fce2))
+
+
+### Maintenance
+
+* **message:** use only one static error component (DEV-900) ([#727](https://www.github.com/dasch-swiss/dsp-app/issues/727)) ([404f1f6](https://www.github.com/dasch-swiss/dsp-app/commit/404f1f6da03e1de695bbe8a06db9e555eb0d5a92))
+* **project:** resolve issues in lists and with status 204 ([#738](https://www.github.com/dasch-swiss/dsp-app/issues/738)) ([52f904b](https://www.github.com/dasch-swiss/dsp-app/commit/52f904b953f4e6cf603d72a3d1378221edc8c532))
+
+
+### Enhancements
+
+* **error:** handle 504 timeout error with snackbar (DEV-751) ([#739](https://www.github.com/dasch-swiss/dsp-app/issues/739)) ([8f6c409](https://www.github.com/dasch-swiss/dsp-app/commit/8f6c4092f12e53e6a831968b1fd451c0bec30d9b))
+* **hint:** display hint about fulltext search (DEV-901) ([#734](https://www.github.com/dasch-swiss/dsp-app/issues/734)) ([f54dafc](https://www.github.com/dasch-swiss/dsp-app/commit/f54dafc4498a3bec43049a32bd9d91cc2bce6572))
+* **link-value:** UI now shows that there are no search results ([#736](https://www.github.com/dasch-swiss/dsp-app/issues/736)) ([88b81bf](https://www.github.com/dasch-swiss/dsp-app/commit/88b81bf39ee192bf8738824147a241022ef68365))
+* **ontology:** select link class from all ontologies (DEV-688) ([#737](https://www.github.com/dasch-swiss/dsp-app/issues/737)) ([8dcdd8f](https://www.github.com/dasch-swiss/dsp-app/commit/8dcdd8f7b15bf918777da3f1b046da2c4031053c))
+
 ### [9.8.1](https://www.github.com/dasch-swiss/dsp-app/compare/v9.8.0...v9.8.1) (2022-05-09)
 
 
