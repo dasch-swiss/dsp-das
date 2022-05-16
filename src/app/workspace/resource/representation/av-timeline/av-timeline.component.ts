@@ -202,6 +202,7 @@ export class AvTimelineComponent implements OnChanges {
      */
     private _onWindowResize(ev: Event) {
         this.timelineDimension = this._getResizedTimelineDimensions();
+        this.updatePositionFromTime(this.value);
         this.dimension.emit(this.timelineDimension);
     }
 
