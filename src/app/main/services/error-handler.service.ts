@@ -90,8 +90,7 @@ export class ErrorHandlerService {
             );
 
         } else {
-            // in any other case
-            // open snack bar from dsp-ui notification service
+            // open snack bar in any other case
             this._notification.openSnackBar(error);
             // log error to Rollbar (done automatically by simply throwing a new Error)
             if (error instanceof ApiResponseError) {
