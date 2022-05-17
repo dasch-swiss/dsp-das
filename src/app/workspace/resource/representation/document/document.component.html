@@ -10,6 +10,7 @@
                 class="pdf-searchbox"
                 placeholder="Search in pdf..."
                 [value]="pdfQuery"
+                [disabled]="failedToLoad"
                 (input)="searchQueryChanged($event.target.value)"
                 (keyup.enter)="searchQueryChanged(queryInp.value)"
             />
