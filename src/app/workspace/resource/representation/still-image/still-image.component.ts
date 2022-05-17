@@ -247,9 +247,8 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
      * prevents navigation by mouse (so that the region can be accurately drawn).
      */
     drawButtonClicked(): void {
-
-        this.regionDrawMode = true;
-        this._viewer.setMouseNavEnabled(false);
+        this.regionDrawMode = !this.regionDrawMode;
+        this._viewer.setMouseNavEnabled(!this.regionDrawMode);
     }
 
     /**
@@ -383,6 +382,11 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
                 this._replaceFile(data);
             }
         });
+    }
+
+    openPage(p: number) {
+        this.regionDrawMode = false;
+        this.goToPage.emit(p);
     }
 
     private _replaceFile(file: UpdateFileValue) {
@@ -614,6 +618,9 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
         // the first image has its left side at x = 0, and all images are scaled to have a width of 1 in viewport coordinates.
         // see also: https://openseadragon.github.io/examples/viewport-coordinates/
 
+        // reset the status
+        this.failedToLoad = false;
+
         const fileValues: ReadFileValue[] = this.images.map(
             (img) => (img.fileValue)
         );
@@ -621,39 +628,31 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
         // display only the defined range of this.images
         const tileSources: object[] = this._prepareTileSourcesFromFileValues(fileValues);
 
-
         this.removeOverlays();
 
         this._viewer.addOnceHandler('open', (args) => {
-            // reset the status on each image
-            this.failedToLoad = false;
-            this._viewer.setMouseNavEnabled(true);
-            this._viewer.navigator.element.style.display = 'inline-block';
-            const tiledImage = this._viewer.world.getItemAt(0);
-            // hide the image until it's fully loaded;
-            // it helps to avoid flickering
-            tiledImage.setOpacity(0);
-            if (tiledImage.getFullyLoaded()) {
-                this.failedToLoad = false;
-
-                tiledImage.setOpacity(1);
-            } else {
-                tiledImage.addOnceHandler('fully-loaded-change', (e) => {
-                    tiledImage.setOpacity(e.fullyLoaded ? 1 : 0);
-                });
+            // check if the current image exists
+            if (this.iiifUrl.includes(args.source['@id'])) {
+                this.failedToLoad = !this._rs.doesFileExist(args.source['@id'] + '/info.json');
+                if (this.failedToLoad) {
+                    // failed to laod
+                    // disable mouse navigation incl. zoom
+                    this._viewer.setMouseNavEnabled(false);
+                    // disable the navigator
+                    this._viewer.navigator.element.style.display = 'none';
+                    // disable the region draw mode
+                    this.regionDrawMode = false;
+                } else {
+                    // enable mouse navigation incl. zoom
+                    this._viewer.setMouseNavEnabled(true);
+                    // enable the navigator
+                    this._viewer.navigator.element.style.display = 'block';
+                }
+                this.loading = false;
             }
-
-        });
-
-        this._viewer.addOnceHandler('tile-load-failed', (args) => {
-            this.failedToLoad = true;
-            this._viewer.setMouseNavEnabled(false);
-            // disable the navigator
-            this._viewer.navigator.element.style.display = 'none';
         });
 
         this._viewer.open(tileSources);
-
     }
 
     /**

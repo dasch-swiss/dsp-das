@@ -40,6 +40,11 @@
       height: 40px;
       bottom: 0;
       padding: 8px 0;
+
+      .active {
+        background: rgba(128,128,128,.39);
+        font-weight: bolder;
+      }
     }
 
   }
