@@ -33,10 +33,9 @@
             <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #more="matMenu">
-            <button mat-menu-item>
-                <!-- <a href="{{iiifUrl}}" target="_blank" class="mat-caption">{{iiifUrl}}</a> -->
+            <a mat-menu-item href="{{iiifUrl}}" target="_blank">
                 Open file in new tab
-            </button>
+            </a>
             <button mat-menu-item [cdkCopyToClipboard]="iiifUrl"
             (click)="openSnackBar('IIIF URL copied to clipboard!')">
                 Copy IIIF URL to clipboard

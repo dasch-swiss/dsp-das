@@ -310,12 +310,18 @@ a,
     max-width: 50%;
   }
 
+  .action,
+  .navigation {
+    .mat-button-disabled {
+      color: grey;
+    }
+  }
+
   .action {
     z-index: 1;
     position: absolute;
     display: flex;
     flex-wrap: wrap;
-    // background: rgba(200, 200, 200, 0.3);
     color: $primary_50;
 
     a {
