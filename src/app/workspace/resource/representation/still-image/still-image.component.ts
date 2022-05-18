@@ -622,7 +622,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
         this.failedToLoad = false;
 
         const fileValues: ReadFileValue[] = this.images.map(
-            (img) => (img.fileValue)
+            img => img.fileValue
         );
 
         // display only the defined range of this.images
