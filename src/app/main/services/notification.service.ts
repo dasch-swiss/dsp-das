@@ -17,9 +17,7 @@ export class NotificationService {
     // action: string = 'x', duration: number = 4200
     // and / or type: 'note' | 'warning' | 'error' | 'success'; which can be used for the panelClass
     openSnackBar(notification: string | ApiResponseError, type?: 'success' | 'error'): void {
-        // let duration = 5000;
         let message: string;
-        // let panelClass: string;
 
         const conf: MatSnackBarConfig = {
             duration: 5000,
