@@ -33,7 +33,6 @@ export class NotificationService {
             if (notification.error && !notification.error['message'].startsWith('ajax error')) {
                 // the Api response error contains a complex error message from dsp-js-lib
                 message = notification.error['message'];
-                // duration = 5000;
             } else {
                 const defaultStatusMsg = this._statusMsg.default;
                 message = `${defaultStatusMsg[notification.status].message} (${notification.status}): `;
