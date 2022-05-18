@@ -13,7 +13,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ApiResponseError, Constants, KnoraApiConnection, OntologiesMetadata, OntologyMetadata } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { SearchParams } from '../../results/list-view/list-view.component';
 import { GravsearchGenerationService } from '../services/gravsearch-generation.service';
 import { ResourceAndPropertySelectionComponent } from './resource-and-property-selection/resource-and-property-selection.component';
@@ -55,8 +55,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy, AfterViewChec
 
     formChangesSubscription: Subscription;
 
-    errorMessage: ApiResponseError;
-
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         @Inject(FormBuilder) private _fb: FormBuilder,
@@ -87,8 +85,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy, AfterViewChec
     }
 
     /**
-     * @ignore
-     * Gets all available ontologies for the search form.
+     * gets all available ontologies for the search form.
      * @returns void
      */
     initializeOntologies(): void {
@@ -106,7 +103,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy, AfterViewChec
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
-                    this.errorMessage = error;
                 });
         } else {
             this._dspApiConnection.v2.onto.getOntologiesMetadata().subscribe(
@@ -121,7 +117,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy, AfterViewChec
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
-                    this.errorMessage = error;
                 });
         }
 
@@ -167,8 +162,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy, AfterViewChec
     }
 
     /**
-     * @ignore
-     * Validates form and returns its status (boolean).
+     * validates form and returns its status (boolean).
      */
     private _validateForm(): boolean {
 

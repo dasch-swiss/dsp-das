@@ -5,6 +5,7 @@ import {
     ClassDefinition,
     Constants,
     CreateResourceProperty,
+    DeleteResourcePropertyComment,
     IHasProperty,
     KnoraApiConnection,
     ListNodeInfo,
@@ -22,11 +23,17 @@ import {
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { existingNamesValidator } from 'src/app/main/directive/existing-name/existing-name.directive';
-import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { CustomRegex } from 'src/app/workspace/resource/values/custom-regex';
 import { AutocompleteItem } from 'src/app/workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/operator';
 import { DefaultProperties, DefaultProperty, PropertyCategory, PropertyInfoObject } from '../default-data/default-properties';
 import { OntologyService } from '../ontology.service';
+
+export interface ClassToSelect {
+    ontologyId: string;
+    ontologyLabel: string;
+    classes: ClassDefinition[];
+}
 
 @Component({
     selector: 'app-property-form',
@@ -105,7 +112,7 @@ export class PropertyFormComponent implements OnInit {
     lists: ListNodeInfo[];
 
     // resource classes in this ontology
-    resourceClasses: ClassDefinition[] = [];
+    ontologyClasses: ClassToSelect[] = [];
 
     loading = false;
 
@@ -135,15 +142,12 @@ export class PropertyFormComponent implements OnInit {
 
         this.loading = true;
 
+        // set various lists to select from
         this._cache.get('currentOntology').subscribe(
             (response: ReadOntology) => {
                 this.ontology = response;
                 this.lastModificationDate = response.lastModificationDate;
 
-                // set various lists to select from
-                // a) in case of link value:
-                // set list of resource classes from response; needed for linkValue
-                this.resourceClasses = response.getAllClassDefinitions();
                 const resourceProperties = response.getAllPropertyDefinitions();
 
                 // set list of all existing resource property names to avoid same name twice
@@ -155,7 +159,7 @@ export class PropertyFormComponent implements OnInit {
                 });
 
                 // add all resource classes to the same list
-                this.resourceClasses.forEach((resClass: ClassDefinition) => {
+                response.getAllClassDefinitions().forEach((resClass: ClassDefinition) => {
                     const name = this._os.getNameFromIri(resClass.id);
                     this.existingNames.push(
                         new RegExp('(?:^|W)' + name.toLowerCase() + '(?:$|W)')
@@ -168,8 +172,25 @@ export class PropertyFormComponent implements OnInit {
             }
         );
 
-        // b) in case of list value:s
+        // a) in case of link value:
+        // set list of resource classes from response; needed for linkValue
+        this._cache.get('currentProjectOntologies').subscribe(
+            (response: ReadOntology[]) => {
+                // reset list of ontology classes
+                this.ontologyClasses = [];
+                response.forEach(onto => {
+                    const ontoClasses: ClassToSelect = {
+                        ontologyId: onto.id,
+                        ontologyLabel: onto.label,
+                        classes: onto.getAllClassDefinitions()
+                    };
+                    this.ontologyClasses.push(ontoClasses);
+                });
 
+            }
+        );
+
+        // b) in case of list value:
         // set list of lists; needed for listValue
         this._cache.get('currentOntologyLists').subscribe(
             (response: ListNodeInfo[]) => {
@@ -330,37 +351,40 @@ export class PropertyFormComponent implements OnInit {
         // reset value of guiAttr
         this.propertyForm.controls['guiAttr'].setValue(undefined);
 
-
         // set gui attribute value depending on gui element and existing property (edit mode)
         if (this.propertyInfo.propDef) {
             // the gui attribute can't be changed (at the moment?);
             // disable the input and set the validator as not required
             this.propertyForm.controls['guiAttr'].disable();
 
-            switch (type.guiEle) {
-                // prop type is a list
-                case Constants.GuiList:
-                case Constants.GuiRadio:
-                    this.showGuiAttr = true;
-                    // gui attribute value for lists looks as follow: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
-                    // get index from guiAttr array where value starts with hlist=
-                    const i = this.guiAttributes.findIndex(element => element.includes('hlist'));
-                    // find content beteween pointy brackets to get list iri
-                    const re = /\<([^)]+)\>/;
-                    const listIri = this.guiAttributes[i].match(re)[1];
+            if (type.objectType) {
+                switch (type.objectType) {
+                    // prop type is a list
+                    case Constants.ListValue:
+                        this.showGuiAttr = true;
+                        // gui attribute value for lists looks as follows: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
+                        // get index from guiAttr array where value starts with hlist=
+                        const i = this.guiAttributes.findIndex(element => element.includes('hlist'));
+                        // find content between pointy brackets to get list iri
+                        const re = /\<([^)]+)\>/;
+                        const listIri = this.guiAttributes[i].match(re)[1];
 
-                    this.propertyForm.controls['guiAttr'].setValue(listIri);
-                    break;
+                        this.propertyForm.controls['guiAttr'].setValue(listIri);
+                        break;
 
-                // prop type is resource pointer: link to or part of
-                case Constants.GuiSearchbox:
-                    this.showGuiAttr = true;
-                    this.propertyForm.controls['guiAttr'].setValue(this.propertyInfo.propDef.objectType);
-                    break;
+                    // prop type is resource pointer: link to or part of
+                    case Constants.LinkValue:
+                        this.showGuiAttr = true;
+                        this.propertyForm.controls['guiAttr'].setValue(this.propertyInfo.propDef.objectType);
+                        break;
 
-                default:
-                    this.showGuiAttr = false;
+                    default:
+                        this.showGuiAttr = false;
+                }
+            } else {
+                this.showGuiAttr = false;
             }
+
 
         } else {
             // depending on the selected property type,
@@ -414,60 +438,56 @@ export class PropertyFormComponent implements OnInit {
 
                 const updateComment = new UpdateResourcePropertyComment();
                 updateComment.id = this.propertyInfo.propDef.id;
-                updateComment.comments = (this.comments.length ? this.comments : this.labels);
+                updateComment.comments = this.comments;
                 onto4Comment.entity = updateComment;
 
                 this._dspApiConnection.v2.onto.updateResourceProperty(onto4Label).subscribe(
-                    (classLabelResponse: ResourcePropertyDefinitionWithAllLanguages) => {
-                        this.lastModificationDate = classLabelResponse.lastModificationDate;
+                    (propertyLabelResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+                        this.lastModificationDate = propertyLabelResponse.lastModificationDate;
                         onto4Comment.lastModificationDate = this.lastModificationDate;
 
-                        this._dspApiConnection.v2.onto.updateResourceProperty(onto4Comment).subscribe(
-                            (classCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
-                                this.lastModificationDate = classCommentResponse.lastModificationDate;
+                        if (updateComment.comments.length) { // if the comments array is not empty, send a request to update the comments
+                            this._dspApiConnection.v2.onto.updateResourceProperty(onto4Comment).subscribe(
+                                (propertyCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+                                    this.lastModificationDate = propertyCommentResponse.lastModificationDate;
 
-                                if (!this.unsupportedPropertyType) {
-                                    const onto4guiEle = new UpdateOntology<UpdateResourcePropertyGuiElement>();
-                                    onto4guiEle.id = this.ontology.id;
-                                    onto4guiEle.lastModificationDate = this.lastModificationDate;
-
-                                    const updateGuiEle = new UpdateResourcePropertyGuiElement();
-                                    updateGuiEle.id = this.propertyInfo.propDef.id;
-                                    updateGuiEle.guiElement = this.propertyForm.controls['propType'].value.guiEle;
-
-                                    const guiAttr = this.propertyForm.controls['guiAttr'].value;
-                                    if (guiAttr) {
-                                        updateGuiEle.guiAttributes = this.setGuiAttribute(guiAttr);
+                                    if (!this.unsupportedPropertyType) {
+                                        this.replaceGuiElement();
+                                    } else {
+                                        this.loading = false;
+                                        this.closeDialog.emit();
                                     }
 
-                                    onto4guiEle.entity = updateGuiEle;
-
-                                    this._dspApiConnection.v2.onto.replaceGuiElementOfProperty(onto4guiEle).subscribe(
-                                        (guiEleResponse: ResourcePropertyDefinitionWithAllLanguages) => {
-                                            this.lastModificationDate = guiEleResponse.lastModificationDate;
-                                            // close the dialog box
-                                            this.loading = false;
-                                            this.closeDialog.emit();
-                                        },
-                                        (error: ApiResponseError) => {
-                                            this.error = true;
-                                            this.loading = false;
-                                            this._errorHandler.showMessage(error);
-                                        }
-                                    );
-                                } else {
+                                },
+                                (error: ApiResponseError) => {
+                                    this.error = true;
                                     this.loading = false;
-                                    this.closeDialog.emit();
+                                    this._errorHandler.showMessage(error);
                                 }
+                            );
+                        } else { // if the comments array is empty, send a request to remove the comments
+                            const deleteResourcePropertyComment = new DeleteResourcePropertyComment();
+                            deleteResourcePropertyComment.id = this.propertyInfo.propDef.id;
+                            deleteResourcePropertyComment.lastModificationDate = this.lastModificationDate;
 
-                            },
-                            (error: ApiResponseError) => {
-                                this.error = true;
-                                this.loading = false;
-                                this._errorHandler.showMessage(error);
-                            }
-                        );
+                            this._dspApiConnection.v2.onto.deleteResourcePropertyComment(deleteResourcePropertyComment).subscribe(
+                                (deleteCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+                                    this.lastModificationDate = deleteCommentResponse.lastModificationDate;
 
+                                    if (!this.unsupportedPropertyType) {
+                                        this.replaceGuiElement();
+                                    } else {
+                                        this.loading = false;
+                                        this.closeDialog.emit();
+                                    }
+                                },
+                                (error: ApiResponseError) => {
+                                    this.error = true;
+                                    this.loading = false;
+                                    this._errorHandler.showMessage(error);
+                                }
+                            );
+                        }
                     },
                     (error: ApiResponseError) => {
                         this.error = true;
@@ -532,6 +552,37 @@ export class PropertyFormComponent implements OnInit {
         }
     }
 
+    replaceGuiElement() {
+        const onto4guiEle = new UpdateOntology<UpdateResourcePropertyGuiElement>();
+        onto4guiEle.id = this.ontology.id;
+        onto4guiEle.lastModificationDate = this.lastModificationDate;
+
+        const updateGuiEle = new UpdateResourcePropertyGuiElement();
+        updateGuiEle.id = this.propertyInfo.propDef.id;
+        updateGuiEle.guiElement = this.propertyForm.controls['propType'].value.guiEle;
+
+        const guiAttr = this.propertyForm.controls['guiAttr'].value;
+        if (guiAttr) {
+            updateGuiEle.guiAttributes = this.setGuiAttribute(guiAttr);
+        }
+
+        onto4guiEle.entity = updateGuiEle;
+
+        this._dspApiConnection.v2.onto.replaceGuiElementOfProperty(onto4guiEle).subscribe(
+            (guiEleResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+                this.lastModificationDate = guiEleResponse.lastModificationDate;
+                // close the dialog box
+                this.loading = false;
+                this.closeDialog.emit();
+            },
+            (error: ApiResponseError) => {
+                this.error = true;
+                this.loading = false;
+                this._errorHandler.showMessage(error);
+            }
+        );
+    }
+
     setCardinality(prop: ResourcePropertyDefinitionWithAllLanguages) {
 
         const onto = new UpdateOntology<UpdateResourceClassCardinality>();
@@ -558,7 +609,6 @@ export class PropertyFormComponent implements OnInit {
 
         this._dspApiConnection.v2.onto.addCardinalityToResourceClass(onto).subscribe(
             (res: ResourceClassDefinitionWithAllLanguages) => {
-
                 this.lastModificationDate = res.lastModificationDate;
                 // close the dialog box
                 this.loading = false;

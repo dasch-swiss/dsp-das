@@ -14,7 +14,7 @@ import {
     UpdateListInfoRequest
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 
 @Component({
     selector: 'app-list-info-form',
@@ -45,12 +45,16 @@ export class ListInfoFormComponent implements OnInit {
     labelErrors = {
         label: {
             'required': 'A label is required.'
+        },
+        comment: {
+            'required': 'A description is required.'
         }
     };
 
-    saveButtonDisabled = false;
+    saveButtonDisabled = true;
 
     labelInvalidMessage: string;
+    commentInvalidMessage: string;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -153,21 +157,17 @@ export class ListInfoFormComponent implements OnInit {
         switch (type) {
             case 'labels':
                 this.labels = data;
+                this.labelInvalidMessage = (data.length ? null : this.labelErrors.label.required);
                 break;
 
             case 'comments':
                 this.comments = data;
+                this.commentInvalidMessage = (data.length ? null : this.labelErrors.comment.required);
                 break;
         }
 
-        if (this.labels.length === 0) {
-            // invalid label, don't let user submit
-            this.saveButtonDisabled = true;
-            this.labelInvalidMessage = this.labelErrors.label.required;
-        } else {
-            this.saveButtonDisabled = false;
-            this.labelInvalidMessage = null;
-        }
+        this.saveButtonDisabled = (!this.labels.length || !this.comments.length);
+
     }
 
 }

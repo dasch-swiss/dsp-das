@@ -10,6 +10,10 @@
 .space-reducer {
   max-height: 14px;
 }
+.empty-space {
+  display: block;
+  width: 48px;
+}
 
 // --------------------------------------
 
@@ -306,12 +310,18 @@ a,
     max-width: 50%;
   }
 
+  .action,
+  .navigation {
+    .mat-button-disabled {
+      color: grey;
+    }
+  }
+
   .action {
     z-index: 1;
     position: absolute;
     display: flex;
     flex-wrap: wrap;
-    // background: rgba(200, 200, 200, 0.3);
     color: $primary_50;
 
     a {
@@ -345,59 +355,16 @@ a,
     }
   }
 
-  // first navigation implementation
-  // on the left resp. on the right hand side of osd viewer
-  .navigation {
-    position: absolute;
-    z-index: 1;
-    color: $primary_50;
-
-    &.vertical {
-      height: calc(100% - #{$panel-height});
-      width: $panel-height;
-      top: $panel-height;
-      &.previous {
-        left: 0;
-      }
-
-      &.next {
-        right: 0;
-      }
-      .mat-button.full-size {
-        height: 100% !important;
-        width: $panel-height !important;
-
-        padding: 0 !important;
-        min-width: $panel-height !important;
-      }
-    }
-
-    &.horizontal {
-      width: 100%;
-      height: $panel-height;
-      background: $primary_900;
-      position: inherit;
-
-      &.bottom {
-        position: absolute;
-        bottom: 0;
-
-        .compound-nav {
-          bottom: 4px;
-          position: relative;
-        }
-      }
-    }
-  }
-
   .pdfViewer {
     margin-top: $panel-height;
   }
 }
 
 .no-results {
-  margin: 64px auto;
-  width: 400px;
+  margin: 64px;
+  min-width: 400px;
+  max-width: calc(70vw - 128px);
+  line-height: 1.5;
 }
 
 // --------------------------------------
@@ -420,6 +387,17 @@ a,
     .mat-list-text {
       position: relative;
       left: 48px;
+    }
+  }
+}
+
+.mat-list.without-padding {
+
+  .mat-list-item {
+    padding: 0 !important;
+
+    .mat-list-item-content {
+      padding: 0 !important;
     }
   }
 }
@@ -767,6 +745,10 @@ $gc-small: $form-width - $gc-large - 4;
   white-space: pre-line;
   line-height: 1.5;
   font-size: 11px;
+}
+
+.wide-tooltip {
+  max-width: unset !important;
 }
 
 .annotation-tooltip {

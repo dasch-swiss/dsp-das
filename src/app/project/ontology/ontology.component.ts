@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, HostListener, Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
@@ -24,21 +24,21 @@ import {
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { Session, SessionService } from 'src/app/main/services/session.service';
 import { SortingService } from 'src/app/main/services/sorting.service';
 import { DefaultProperties, PropertyCategory, PropertyInfoObject } from './default-data/default-properties';
 import { DefaultClass, DefaultResourceClasses } from './default-data/default-resource-classes';
 import { OntologyService } from './ontology.service';
 
-export interface OntologyInfo {
-    id: string;
-    label: string;
-}
-
 export interface CardinalityInfo {
     resClass: ClassDefinition;
     property: PropertyInfoObject;
+}
+
+export interface OntologyProperties {
+    ontology: string;
+    properties: PropertyDefinition[];
 }
 
 @Component({
@@ -92,7 +92,7 @@ export class OntologyComponent implements OnInit {
     expandClasses = true;
 
     // all properties in the current ontology
-    ontoProperties: PropertyDefinition[];
+    ontoProperties: OntologyProperties;
 
     // form to select ontology from list
     ontologyForm: FormGroup;
@@ -114,6 +114,9 @@ export class OntologyComponent implements OnInit {
      */
     defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
     defaultProperties: PropertyCategory[] = DefaultProperties.data;
+
+    // disable content on small devices
+    disableContent = false;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -144,15 +147,21 @@ export class OntologyComponent implements OnInit {
         }
 
         // set the page title
-        if (this.ontologyIri) {
-            this._titleService.setTitle('Project ' + this.projectCode + ' | Data model');
-        } else {
-            // set the page title in case of more than one existing project ontologies
-            this._titleService.setTitle('Project ' + this.projectCode + ' | Data models');
+        this._setPageTitle();
+
+    }
+
+    @HostListener('window:resize', ['$event']) onWindwoResize(e: Event) {
+        this.disableContent = (window.innerWidth <= 768);
+        // reset the page title
+        if (!this.disableContent) {
+            this._setPageTitle();
         }
     }
 
     ngOnInit() {
+
+        this.disableContent = (window.innerWidth <= 768);
         this.loading = true;
 
         // get information about the logged-in user
@@ -239,6 +248,7 @@ export class OntologyComponent implements OnInit {
                                 }
                                 if (response.ontologies.length === this.ontologies.length) {
                                     this.ontologies = this._sortingService.keySortByAlphabetical(this.ontologies, 'label');
+
                                     this._cache.set('currentProjectOntologies', this.ontologies);
                                     this.setCache();
                                 }
@@ -270,7 +280,6 @@ export class OntologyComponent implements OnInit {
     }
 
     initOntoClasses(allOntoClasses: ClassDefinition[]) {
-
         // reset the ontology classes
         this.ontoClasses = [];
 
@@ -289,19 +298,24 @@ export class OntologyComponent implements OnInit {
     }
 
     initOntoProperties(allOntoProperties: PropertyDefinition[]) {
+
         // reset the ontology properties
-        this.ontoProperties = [];
+        const listOfProperties = [];
 
         // display only the properties which are not a subjectType of Standoff
         allOntoProperties.forEach(resProp => {
             const standoff = (resProp.subjectType ? resProp.subjectType.includes('Standoff') : false);
             if (resProp.objectType !== Constants.LinkValue && !standoff) {
-                this.ontoProperties.push(resProp);
+                listOfProperties.push(resProp);
             }
         });
+
         // sort properties by label
-        // --> TODO: add sort functionallity to the gui
-        this.ontoProperties = this._sortingService.keySortByAlphabetical(this.ontoProperties, 'label');
+        this.ontoProperties = {
+            ontology: this.ontology.id,
+            properties: this._sortingService.keySortByAlphabetical(listOfProperties, 'label')
+        };
+
     }
 
     /**
@@ -341,7 +355,15 @@ export class OntologyComponent implements OnInit {
     resetOntologyView(ontology: ReadOntology) {
         this.ontology = ontology;
         this.lastModificationDate = this.ontology.lastModificationDate;
-        this._cache.set('currentOntology', this.ontology);
+        this._cache.set('currentOntology', ontology);
+
+        this._cache.get('currentProjectOntologies').subscribe(
+            (ontologies: ReadOntology[]) => {
+                // update current list of project ontologies
+                ontologies[ontologies.findIndex(onto => onto.id === ontology.id)] = ontology;
+                this._cache.set('currentProjectOntologies', ontologies);
+            }
+        );
 
         // grab the onto class information to display
         this.initOntoClasses(ontology.getAllClassDefinitions());
@@ -457,6 +479,8 @@ export class OntologyComponent implements OnInit {
         );
 
         dialogRef.afterClosed().subscribe(result => {
+            // get the ontologies for this project
+            this.initOntologiesList();
             // update the view of resource class or list of properties
             this.initOntology(this.ontologyIri);
         });
@@ -569,6 +593,15 @@ export class OntologyComponent implements OnInit {
                 this.loadOntology = false;
             }
         );
+    }
+
+    private _setPageTitle() {
+        if (this.ontologyIri) {
+            this._titleService.setTitle('Project ' + this.projectCode + ' | Data model');
+        } else {
+            // set the page title in case of more than one existing project ontologies
+            this._titleService.setTitle('Project ' + this.projectCode + ' | Data models');
+        }
     }
 
 }

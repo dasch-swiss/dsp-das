@@ -61,6 +61,7 @@ export class SearchPanelComponent {
     // show advanced or expert search
     showAdvanced: boolean;
     showExpert: boolean;
+    showHint: boolean;
 
     constructor(
         private _overlay: Overlay,
@@ -71,6 +72,7 @@ export class SearchPanelComponent {
 
         this.showAdvanced = (type === 'advanced');
         this.showExpert = (type === 'expert');
+        this.showHint = (type === 'hint');
 
         const config = new OverlayConfig({
             hasBackdrop: true,
@@ -84,6 +86,7 @@ export class SearchPanelComponent {
         this.overlayRef.backdropClick().subscribe(() => {
             this.showAdvanced = false;
             this.showExpert = false;
+            this.showHint = false;
             this.overlayRef.detach();
         });
     }
@@ -120,6 +123,7 @@ export class SearchPanelComponent {
     closeMenu(): void {
         this.showAdvanced = false;
         this.showExpert = false;
+        this.showHint = false;
         if (this.overlayRef) {
             this.overlayRef.detach();
         }

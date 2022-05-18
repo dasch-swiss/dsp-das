@@ -2,7 +2,7 @@ import { Component, EventEmitter, Inject, Input, OnChanges, Output } from '@angu
 import { PageEvent } from '@angular/material/paginator';
 import { ApiResponseError, CountQueryResponse, IFulltextSearchParams, KnoraApiConnection, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { ComponentCommunicationEventService, EmitEvent, Events } from 'src/app/main/services/component-communication-event.service';
 import { NotificationService } from 'src/app/main/services/notification.service';
 
@@ -76,30 +76,6 @@ export class ListViewComponent implements OnChanges {
      */
     @Output() selectedResources: EventEmitter<FilteredResources> = new EventEmitter<FilteredResources>();
 
-    /**
-     * @deprecated Use selectedResources instead
-     *
-     * Click on checkbox will emit the resource info
-     *
-     * @param {EventEmitter<FilteredResources>} resourcesSelected
-     */
-    @Output() multipleResourcesSelected?: EventEmitter<FilteredResources> = new EventEmitter<FilteredResources>();
-
-    /**
-     * @deprecated Use selectedResources instead
-     *
-     * Click on an item will emit the resource iri
-     *
-     * @param {EventEmitter<string>} singleResourceSelected
-     */
-    @Output() singleResourceSelected?: EventEmitter<string> = new EventEmitter<string>();
-
-    /**
-     * @deprecated Use selectedResources instead.
-     * Click on an item will emit the resource iri
-     */
-    @Output() resourceSelected: EventEmitter<string> = new EventEmitter<string>();
-
     resources: ReadResourceSequence;
 
     selectedResourceIdx: number[] = [];
@@ -127,6 +103,7 @@ export class ListViewComponent implements OnChanges {
         this.pageEvent = new PageEvent();
         this.pageEvent.pageIndex = 0;
         this.resources = undefined;
+        this.emitSelectedResources();
 
         this._doSearch();
     }
@@ -183,6 +160,7 @@ export class ListViewComponent implements OnChanges {
                     },
                     (countError: ApiResponseError) => {
                         this._errorHandler.showMessage(countError);
+                        this.loading = countError.status !== 504;
                     }
                 );
             }
@@ -224,6 +202,7 @@ export class ListViewComponent implements OnChanges {
                     },
                     (countError: ApiResponseError) => {
                         this._errorHandler.showMessage(countError);
+                        this.loading = countError.status !== 504;
                     }
                 );
             }

@@ -1,4 +1,4 @@
-<div *ngIf="projectAdmin" class="desktop-only">
+<div *ngIf="projectAdmin && !disableContent">
 
     <app-progress-indicator *ngIf="loading"></app-progress-indicator>
 
@@ -58,8 +58,8 @@
         <mat-toolbar class="ontology-editor-header">
             <mat-toolbar-row>
                 <span class="ontology-info">
-                    <h3 class="mat-title space-reducer"
-                        [matTooltip]="ontology.comment ? ontology.comment : ontology.id"
+                    <h3 class="mat-title"
+                        [matTooltip]="ontology.label + (ontology.comment ? ' &mdash; ' + ontology.comment : '')"
                         matTooltipPosition="above">
                         {{ontology?.label}}
                     </h3>
@@ -179,29 +179,23 @@
             <mat-sidenav-content class="ontology-editor-canvas drag-drop-stop">
                 <div class="ontology-editor-grid classes" *ngIf="view === 'classes'">
                     <!-- list of resource classes -->
-                    <app-resource-class-info *ngFor="let resClass of ontoClasses"
-                        [resourceClass]="resClass"
-                        [projectCode]="projectCode"
-                        [projectStatus]="project.status"
-                        [ontoProperties]="ontoProperties"
-                        [expanded]="expandClasses"
-                        [(lastModificationDate)]="lastModificationDate"
+                    <app-resource-class-info *ngFor="let resClass of ontoClasses" [resourceClass]="resClass"
+                        [projectCode]="projectCode" [projectStatus]="project.status" [ontologies]="ontologies"
+                        [expanded]="expandClasses" [(lastModificationDate)]="lastModificationDate"
                         (editResourceClass)="openResourceClassForm('editResourceClass', $event)"
                         (deleteResourceClass)="delete('ResourceClass', $event)"
                         (updateCardinality)="initOntology($event)">
                     </app-resource-class-info>
                 </div>
                 <div class="ontology-editor-list properties" *ngIf="view === 'properties'">
-                    <!-- list of resource properties -->
-                    <mat-list>
-                        <mat-list-item class="property" *ngFor="let prop of ontoProperties; let odd = odd" [class.odd]="odd">
+                    <!-- list of properties of current ontology -->
+                    <mat-list class="without-padding">
+                        <mat-list-item class="property" *ngFor="let prop of ontoProperties.properties; let odd = odd"
+                            [class.odd]="odd">
                             <!-- display only properties with guiOrder and if they exist in list of properties;
-                                     objectType is not a linkValue (otherwise we have the property twice) -->
-                            <app-property-info
-                                [propDef]="ontology?.properties[prop.id]"
-                                [projectCode]="projectCode"
-                                [projectStatus]="project.status"
-                                [(lastModificationDate)]="lastModificationDate"
+                                 if objectType is a linkValue hide it (otherwise we have the property twice) -->
+                            <app-property-info [propDef]="ontology?.properties[prop.id]" [projectCode]="projectCode"
+                                [projectStatus]="project.status" [(lastModificationDate)]="lastModificationDate"
                                 (editResourceProperty)="openPropertyForm('editProperty', $event)"
                                 (deleteResourceProperty)="delete('Property', $event)">
                             </app-property-info>
@@ -216,11 +210,8 @@
 
 </div>
 
-<div *ngIf="!projectAdmin" class="content large middle">
-    <app-error [status]="403"></app-error>
+<div *ngIf="!projectAdmin && !disableContent" class="content large middle">
+    <app-status [status]="403"></app-status>
 </div>
 
-<div class="mobile-only">
-    <app-message [message]="{status: 415, statusText: 'This content is not supported on small devices.'}">
-    </app-message>
-</div>
+<app-status *ngIf="disableContent" [status]="204"></app-status>

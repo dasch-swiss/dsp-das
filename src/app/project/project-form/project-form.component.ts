@@ -17,7 +17,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { existingNamesValidator } from 'src/app/main/directive/existing-name/existing-name.directive';
-import { ErrorHandlerService } from 'src/app/main/error/error-handler.service';
+import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { NotificationService } from 'src/app/main/services/notification.service';
 import { SessionService } from 'src/app/main/services/session.service';
 import { CacheService } from '../../main/cache/cache.service';
@@ -526,23 +526,6 @@ export class ProjectFormComponent implements OnInit {
                 this.loading = false;
             }
         );
-    }
-
-    /**
-     * @deprecated Maybe we can reactivate later.
-     *
-     * Reset the form
-     */
-    resetForm(ev: Event, project?: ReadProject) {
-        ev.preventDefault();
-
-        project = (project ? project : new ReadProject());
-        this.description = project.description;
-
-        this.buildForm(project);
-
-        // --> TODO fix "set value" for keywords field
-        //        this.form.controls['keywords'].setValue(this.keywords);
     }
 
 }
