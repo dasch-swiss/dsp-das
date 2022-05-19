@@ -1,5 +1,17 @@
 # Changelog
 
+### [10.0.1](https://www.github.com/dasch-swiss/dsp-app/compare/v10.0.0...v10.0.1) (2022-05-19)
+
+
+### Bug Fixes
+
+* **representation:** resolve timeline issue when resizing window (DEV-819) ([#741](https://www.github.com/dasch-swiss/dsp-app/issues/741)) ([da985fc](https://www.github.com/dasch-swiss/dsp-app/commit/da985fc6b9a3ff81ce34babaaf1c60afaeb5ff53))
+
+
+### Maintenance
+
+* **resource:** display incoming links the same way as prop values (DEV-567) ([#747](https://www.github.com/dasch-swiss/dsp-app/issues/747)) ([7d2f6f3](https://www.github.com/dasch-swiss/dsp-app/commit/7d2f6f3157308ebb2feb222d73899b2026bf3da4))
+
 ## [10.0.0](https://www.github.com/dasch-swiss/dsp-app/compare/v9.8.1...v10.0.0) (2022-05-18)
 
 
