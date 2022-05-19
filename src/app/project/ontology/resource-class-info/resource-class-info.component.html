@@ -109,7 +109,7 @@
         </mat-menu>
         <mat-menu #addExistingProp="matMenu" class="default-nested-sub-menu">
             <ng-container *ngFor="let onto of existingProperties">
-                <button mat-menu-item [disabled]="!onto.properties.length" [matMenuTriggerFor]="sub_menu">{{  onto.ontologyLabel }}</button>
+                <button mat-menu-item [disabled]="!onto.properties.length" [matMenuTriggerFor]="sub_menu">{{ onto.ontologyLabel }}</button>
                 <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
                     <button mat-menu-item *ngFor="let prop of onto.properties" [matTooltip]="prop.propDef.comment" matTooltipPosition="after"
                         (click)="addExistingProperty(prop)">
