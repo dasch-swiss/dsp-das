@@ -18,7 +18,8 @@
         <span class="resource-class-header-action">
             <span class="resource-class-more" *ngIf="projectStatus"
                 [matTooltip]="(ontology.lastModificationDate ? 'more' : 'This data model can\'t be edited because of missing lastModificationDate!')">
-                <button mat-icon-button [matMenuTriggerFor]="resClassMenu" class="res-class-menu" [disabled]="!ontology.lastModificationDate">
+                <button mat-icon-button [matMenuTriggerFor]="resClassMenu" class="res-class-menu"
+                    [disabled]="!ontology.lastModificationDate">
                     <mat-icon>more_horiz</mat-icon>
                 </button>
             </span>
@@ -33,8 +34,12 @@
                 (click)="editResourceClass.emit({iri: resourceClass.id, label: resourceClass.label})">
                 Edit resource class info
             </button>
-            <span
-                [matTooltip]="(classCanBeDeleted ? null : 'This class can\'t be deleted because it is in use')">
+            <span [matTooltip]="(classCanBeDeleted ? 'This class doesn\'t have any instances yet' : null)" matTooltipPosition="before">
+                <button mat-menu-item (click)="openResource(resourceClass.id)" [disabled]="classCanBeDeleted">
+                    Open resource instances
+                </button>
+            </span>
+            <span [matTooltip]="(classCanBeDeleted ? null : 'This class can\'t be deleted because it is in use')" matTooltipPosition="before">
                 <button mat-menu-item [disabled]="!classCanBeDeleted" class="res-class-delete"
                     (click)="deleteResourceClass.emit({iri: resourceClass.id, label: resourceClass.label})">
                     Delete resource class
@@ -60,13 +65,9 @@
                     </span>
                     <!-- display only properties if they exist in list of properties;
                      objectType is not a linkValue (otherwise we have the property twice) -->
-                    <app-property-info class="property-info"
-                        [propDef]="propsToDisplay[i].propDef"
-                        [propCard]="propsToDisplay[i]"
-                        [projectCode]="projectCode"
-                        [projectStatus]="projectStatus"
-                        [resourceIri]="resourceClass.id"
-                        [(lastModificationDate)]="lastModificationDate"
+                    <app-property-info class="property-info" [propDef]="propsToDisplay[i].propDef"
+                        [propCard]="propsToDisplay[i]" [projectCode]="projectCode" [projectStatus]="projectStatus"
+                        [resourceIri]="resourceClass.id" [(lastModificationDate)]="lastModificationDate"
                         (removePropertyFromClass)="removeProperty($event)">
                     </app-property-info>
                 </mat-list-item>
@@ -78,7 +79,8 @@
         </ng-template>
         <!-- button to assign new property to class -->
         <mat-list>
-            <mat-list-item *ngIf="lastModificationDate && projectStatus" class="property link" [matMenuTriggerFor]="addPropertyMenu">
+            <mat-list-item *ngIf="lastModificationDate && projectStatus" class="property link"
+                [matMenuTriggerFor]="addPropertyMenu">
                 <span mat-list-icon class="list-icon">
                     <mat-icon>add</mat-icon>
                 </span>
@@ -94,9 +96,8 @@
             <ng-container *ngFor="let type of defaultProperties">
                 <button mat-menu-item [matMenuTriggerFor]="sub_menu">{{type.group}}</button>
                 <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
-                    <button mat-menu-item *ngFor="let ele of type.elements" [value]="ele"
-                        [matTooltip]="ele.description" matTooltipPosition="after"
-                        (click)="addNewProperty(ele)">
+                    <button mat-menu-item *ngFor="let ele of type.elements" [value]="ele" [matTooltip]="ele.description"
+                        matTooltipPosition="after" (click)="addNewProperty(ele)">
                         <mat-icon>{{ele.icon}}</mat-icon> {{ele.label}}
                     </button>
                 </mat-menu>
@@ -104,10 +105,11 @@
         </mat-menu>
         <mat-menu #addExistingProp="matMenu" class="default-nested-sub-menu">
             <ng-container *ngFor="let onto of existingProperties">
-                <button mat-menu-item [disabled]="!onto.properties.length" [matMenuTriggerFor]="sub_menu">{{ onto.ontologyLabel }}</button>
+                <button mat-menu-item [disabled]="!onto.properties.length" [matMenuTriggerFor]="sub_menu">{{
+                    onto.ontologyLabel }}</button>
                 <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
-                    <button mat-menu-item *ngFor="let prop of onto.properties" [matTooltip]="prop.propDef.comment" matTooltipPosition="after"
-                        (click)="addExistingProperty(prop)">
+                    <button mat-menu-item *ngFor="let prop of onto.properties" [matTooltip]="prop.propDef.comment"
+                        matTooltipPosition="after" (click)="addExistingProperty(prop)">
                         <mat-icon>{{prop.propType?.icon}}</mat-icon> {{prop.propDef.label}}
                     </button>
                 </mat-menu>
