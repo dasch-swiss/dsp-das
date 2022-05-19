@@ -486,8 +486,13 @@ export class ResourceClassInfoComponent implements OnInit {
 
     }
 
+    /**
+     * opens resource instances in new tab using gravsearch
+     * @param iri
+     */
     openResource(iri: string) {
         // open resource instances in new tab:
+        // it's important not to indent the gravsearch.
         const gravsearch = `
 PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
 CONSTRUCT {
@@ -505,11 +510,8 @@ CONSTRUCT {
 
 OFFSET 0`;
 
-
         const doSearchRoute = `/search/gravsearch/${encodeURIComponent(gravsearch)}`;
-
         window.open(doSearchRoute, '_blank');
-
     }
 
 }
