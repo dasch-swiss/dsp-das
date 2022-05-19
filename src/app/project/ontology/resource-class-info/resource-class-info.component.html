@@ -82,8 +82,7 @@
         </ng-template>
         <!-- button to assign new property to class -->
         <mat-list>
-            <mat-list-item *ngIf="lastModificationDate && projectStatus" class="property link"
-                [matMenuTriggerFor]="addPropertyMenu">
+            <mat-list-item *ngIf="lastModificationDate && projectStatus" class="property link" [matMenuTriggerFor]="addPropertyMenu">
                 <span mat-list-icon class="list-icon">
                     <mat-icon>add</mat-icon>
                 </span>
