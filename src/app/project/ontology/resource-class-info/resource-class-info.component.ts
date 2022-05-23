@@ -490,7 +490,7 @@ export class ResourceClassInfoComponent implements OnInit {
      * opens resource instances in new tab using gravsearch
      * @param iri
      */
-    openResource(iri: string) {
+    openResourceInstances(iri: string) {
         // open resource instances in new tab:
         // it's important not to indent the gravsearch.
         const gravsearch = `
@@ -512,6 +512,25 @@ OFFSET 0`;
 
         const doSearchRoute = `/search/gravsearch/${encodeURIComponent(gravsearch)}`;
         window.open(doSearchRoute, '_blank');
+    }
+
+    createResourceInstance(iri: string, label: string) {
+        const dialogConfig: MatDialogConfig = {
+            width: '840px',
+            maxHeight: '80vh',
+            position: {
+                top: '112px'
+            },
+            data: { id: iri, mode: 'createResource', project: this.projectCode, title: label,  subtitle: 'Set the property values of the resource' },
+            disableClose: true
+        };
+
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
+        );
+
+        dialogRef.afterClosed().subscribe(() => { });
     }
 
 }

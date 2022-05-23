@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -9,7 +9,9 @@ import {
     CreateTextValueAsString,
     CreateValue,
     KnoraApiConnection,
-    OntologiesMetadata, ReadOntology,
+    OntologiesMetadata,
+    ReadOntology,
+    ReadProject,
     ReadResource,
     ResourceClassAndPropertyDefinitions,
     ResourceClassDefinition,
@@ -17,6 +19,7 @@ import {
     StoredProject
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
+import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { SortingService } from 'src/app/main/services/sorting.service';
@@ -33,6 +36,11 @@ import { SelectResourceClassComponent } from './select-resource-class/select-res
     styleUrls: ['./resource-instance-form.component.scss']
 })
 export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
+
+    // ontology's resource class iri
+    @Input() selectedResourceClassIri?: string;
+    // corresponding project
+    @Input() projectCode?: string;
 
     // output to close dialog
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
@@ -89,6 +97,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _cache: CacheService,
         private _errorHandler: ErrorHandlerService,
         private _fb: FormBuilder,
         private _project: ProjectService,
@@ -100,24 +109,45 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
 
+        if (this.selectedResourceClassIri) {
+            // get ontology iri from res class iri
+            const splittedIri = this.selectedResourceClassIri.split('#');
+            this.selectedOntology = splittedIri[0];
+            this.selectProperties(this.selectedResourceClassIri);
+
+            this._cache.get(this.projectCode).subscribe(
+                (response: ReadProject) => {
+                    this.selectedProject = response.id;
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
+
+            // const className = splittedIri[1];
+            this.showNextStepForm = false;
+
+
+        } else {
+            // initialize projects to be used for the project selection in the creation form
+            this._project.initializeProjects().subscribe(
+                (proj: StoredProject[]) => {
+                    this.usersProjects = proj;
+
+                    // notifies the user that he/she is not part of any project
+                    if (proj.length === 0) {
+                        this.errorMessage = 'You are not a part of any active projects or something went wrong';
+                    }
+                }
+            );
+
+            // boolean to show only the first step of the form (= selectResourceForm)
+            this.showNextStepForm = true;
+        }
+
         // parent form is empty, it gets passed to the child components
         this.selectResourceForm = this._fb.group({});
         this.propertiesParentForm = this._fb.group({});
-
-        // initialize projects to be used for the project selection in the creation form
-        this._project.initializeProjects().subscribe(
-            (proj: StoredProject[]) => {
-                this.usersProjects = proj;
-
-                // notifies the user that he/she is not part of any project
-                if (proj.length === 0) {
-                    this.errorMessage = 'You are not a part of any active projects or something went wrong';
-                }
-            }
-        );
-
-        // boolean to show only the first step of the form (= selectResourceForm)
-        this.showNextStepForm = true;
 
     }
 
@@ -393,7 +423,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                                     prop.id !== Constants.HasAudioFileValue &&
                                     prop.id !== Constants.HasMovingImageFileValue &&
                                     prop.id !== Constants.HasArchiveFileValue
-                                    // --> TODO for UPLOAD: expand with other representation file values
+                                // --> TODO for UPLOAD: expand with other representation file values
                             );
 
                             if (onto.properties[Constants.HasStillImageFileValue]) {
@@ -414,7 +444,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                             if (!this.selectPropertiesComponent && this.properties.length === 0 && !this.hasFileValue) {
                                 this.errorMessage = 'No properties defined for the selected resource.';
                             }
-
                             this.loading = false;
 
                         },
