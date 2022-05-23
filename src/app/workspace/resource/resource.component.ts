@@ -271,6 +271,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
 
                     if (response.isDeleted) {
                         // deleted resource; no further infos needed
+                        // --> TODO: as soon as we know how to display deleted/archived resources, we can handle it here.
 
                     } else {
                         // if there is no incomingResource and the resource has a still image property, assign the iiiUrl to be passed as an input to the still-image component
@@ -303,7 +304,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                                     } else {
                                         // not a compound object
                                         this.loading = false;
-
                                     }
                                 },
                                 (error: ApiResponseError) => {
