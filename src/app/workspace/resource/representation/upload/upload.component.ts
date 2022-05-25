@@ -52,7 +52,7 @@ export class UploadComponent implements OnInit {
     supportedAudioTypes = ['audio/mpeg'];
     supportedVideoTypes = ['video/mp4'];
     supportedArchiveTypes = ['application/zip', 'application/x-tar', 'application/gzip'];
-    supportedTextTypes = ['application/csv', 'application/xml', 'text/plain', 'text/xml'];
+    supportedTextTypes = ['application/csv', 'application/xml', 'text/csv', 'text/plain', 'text/xml'];
 
     constructor(
         private _fb: FormBuilder,
