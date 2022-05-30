@@ -11,7 +11,6 @@ import {
     KnoraApiConnection,
     OntologiesMetadata,
     ReadOntology,
-    ReadProject,
     ReadResource,
     ResourceClassAndPropertyDefinitions,
     ResourceClassDefinition,
@@ -19,7 +18,6 @@ import {
     StoredProject
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
-import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { SortingService } from 'src/app/main/services/sorting.service';
@@ -39,8 +37,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     // ontology's resource class iri
     @Input() selectedResourceClassIri?: string;
-    // corresponding project
-    @Input() projectCode?: string;
+    // corresponding project (iri)
+    @Input() selectedProject?: string;
 
     // output to close dialog
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
@@ -67,7 +65,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
     userWentBack = false;
 
     usersProjects: StoredProject[];
-    selectedProject: string;
     ontologiesMetadata: OntologiesMetadata;
     selectedOntology: string;
     resourceClasses: ResourceClassDefinition[];
@@ -97,7 +94,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
-        private _cache: CacheService,
         private _errorHandler: ErrorHandlerService,
         private _fb: FormBuilder,
         private _project: ProjectService,
@@ -109,24 +105,14 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
 
-        if (this.selectedResourceClassIri) {
+        if (this.selectedResourceClassIri && this.selectedProject) {
             // get ontology iri from res class iri
             const splittedIri = this.selectedResourceClassIri.split('#');
             this.selectedOntology = splittedIri[0];
             this.selectProperties(this.selectedResourceClassIri);
 
-            this._cache.get(this.projectCode).subscribe(
-                (response: ReadProject) => {
-                    this.selectedProject = response.id;
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
-
             // const className = splittedIri[1];
             this.showNextStepForm = false;
-
 
         } else {
             // initialize projects to be used for the project selection in the creation form
@@ -216,7 +202,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                         this.propertiesObj[iri] = [createVal];
                     }
                 }
-
             });
 
             if (this.fileValue) {
