@@ -220,6 +220,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                         break;
                     case 'archive':
                         this.propertiesObj[Constants.HasArchiveFileValue] = [this.fileValue];
+                        break;
+                    case 'text':
+                        this.propertiesObj[Constants.HasTextFileValue] = [this.fileValue];
                 }
             }
 
@@ -407,8 +410,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                                     prop.id !== Constants.HasDocumentFileValue &&
                                     prop.id !== Constants.HasAudioFileValue &&
                                     prop.id !== Constants.HasMovingImageFileValue &&
-                                    prop.id !== Constants.HasArchiveFileValue
-                                // --> TODO for UPLOAD: expand with other representation file values
+                                    prop.id !== Constants.HasArchiveFileValue &&
+                                    prop.id !== Constants.HasTextFileValue
+                                    // --> TODO for UPLOAD: expand with other representation file values
                             );
 
                             if (onto.properties[Constants.HasStillImageFileValue]) {
@@ -421,6 +425,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
                                 this.hasFileValue = 'movingImage';
                             } else if (onto.properties[Constants.HasArchiveFileValue]) {
                                 this.hasFileValue = 'archive';
+                            } else if (onto.properties[Constants.HasTextFileValue]) {
+                                this.hasFileValue = 'text';
                             } else {
                                 this.hasFileValue = undefined;
                             }
