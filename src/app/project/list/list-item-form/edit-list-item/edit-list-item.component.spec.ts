@@ -228,7 +228,7 @@ describe('EditListItemComponent', () => {
                     response.nodeinfo.comments = [];
 
                     expect(testHostComponent.editListItem.labels).toEqual(response.nodeinfo.labels);
-                    // expect(testHostComponent.editListItem.comments.length).toEqual(0);
+                    expect(testHostComponent.editListItem.comments.length).toEqual(0);
 
                     return of(ApiResponseData.fromAjaxResponse({ response } as AjaxResponse));
                 }
