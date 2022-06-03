@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
     Cardinality,
-    Constants, ReadOntology,
+    Constants, KnoraApiConfig, ReadOntology,
     ResourcePropertyDefinitionWithAllLanguages
 } from '@dasch-swiss/dsp-js';
 import { Observable, of } from 'rxjs';
 import { CacheService } from 'src/app/main/cache/cache.service';
+import { DspApiConfigToken } from 'src/app/main/declarations/dsp-api-tokens';
 import {
     DefaultProperties,
     DefaultProperty,
@@ -24,7 +25,8 @@ export class OntologyService {
     defaultProperties: PropertyCategory[] = DefaultProperties.data;
 
     constructor(
-        private _cache: CacheService
+        @Inject(DspApiConfigToken) private _dspApiConfig: KnoraApiConfig,
+        private _cache: CacheService,
     ) { }
 
     /**
@@ -184,5 +186,13 @@ export class OntologyService {
         // return of(propType);
         return of (propType);
 
+    }
+
+    getIriBaseUrl(): string {
+        return (
+            ('http://' + this._dspApiConfig.apiHost) +
+            (this._dspApiConfig.apiPort !== null ? ':' + this._dspApiConfig.apiPort : '') +
+            this._dspApiConfig.apiPath
+        );
     }
 }

@@ -28,6 +28,8 @@ import { ResultsComponent } from './workspace/results/results.component';
 import { SystemComponent } from './system/system.component';
 import { ProjectsComponent } from './system/projects/projects.component';
 import { UsersComponent } from './system/users/users.component';
+import { OntologyClassInstanceComponent } from './project/beta/ontology-classes/ontology-class-instance/ontology-class-instance.component';
+import { HintComponent } from './main/action/hint/hint.component';
 
 const routes: Routes = [
     {
@@ -92,6 +94,75 @@ const routes: Routes = [
             },
             {
                 path: 'lists/:id',
+                component: ListComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: '**',
+                component: StatusComponent,
+                data: { status: 404 }
+            }
+        ]
+    },
+    {
+        path: 'beta/project/:shortcode',
+        component: ProjectComponent,
+        children: [
+            {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'info'
+            },
+            {
+                path: 'info',
+                component: BoardComponent
+            },
+            {
+                path: 'collaboration',
+                component: CollaborationComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'permissions',
+                component: PermissionComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'ontology',
+                component: HintComponent,
+                data: { topic: 'ontology' }
+            },
+            {
+                path: 'ontology/:onto',
+                component: OntologyComponent,
+            },
+            {
+                path: 'ontology/:onto/:name',
+                component: OntologyClassInstanceComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'class/:id',
+                component: OntologyClassInstanceComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'class/:id/add',
+                component: OntologyClassInstanceComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'class/:id/conf',
+                component: OntologyClassInstanceComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'list',
+                component: HintComponent,
+                data: { topic: 'list' }
+            },
+            {
+                path: 'list/:list',
                 component: ListComponent,
                 canActivate: [AuthGuard]
             },

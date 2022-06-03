@@ -5,6 +5,18 @@
   color: $warn;
 }
 
+.section-title {
+  .hover-only {
+    display: none;
+  }
+
+  &:hover {
+    .hover-only {
+      display: block;
+    }
+  }
+}
+
 // mobile device: tablet and smaller than a tablet
 @media (max-width: map-get($grid-breakpoints, tablet)) {
   a[id="ontologies"] {

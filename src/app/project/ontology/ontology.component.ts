@@ -118,6 +118,9 @@ export class OntologyComponent implements OnInit {
     // disable content on small devices
     disableContent = false;
 
+    // feature toggle for new concept
+    beta = false;
+
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
@@ -148,6 +151,20 @@ export class OntologyComponent implements OnInit {
 
         // set the page title
         this._setPageTitle();
+
+        // get feature toggle information if url contains beta
+        this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
+        if (this.beta) {
+            const projectCode = this._route.parent.snapshot.params.shortcode;
+            this._route.params.subscribe(params => {
+                const iriBase = this._ontologyService.getIriBaseUrl();
+
+                const ontologyName = params['onto'];
+                this.ontologyIri = `${iriBase}/ontology/${projectCode}/${ontologyName}/v2`;
+                this.ngOnInit();
+            });
+            console.warn('This is a pre-released (beta) project\'s ontology view');
+        }
 
     }
 

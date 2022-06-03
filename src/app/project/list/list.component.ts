@@ -73,6 +73,9 @@ export class ListComponent implements OnInit {
     // disable content on small devices
     disableContent = false;
 
+    // feature toggle for new concept
+    beta = false;
+
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
@@ -96,6 +99,14 @@ export class ListComponent implements OnInit {
 
         // set the page title
         this._setPageTitle();
+
+        // get feature toggle information if url contains beta
+        this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
+        if (this.beta) {
+            this._route.params.subscribe(params => {
+                this.openList(params['list']);
+            });
+        }
 
     }
 
@@ -196,8 +207,10 @@ export class ListComponent implements OnInit {
 
         this.list = this.lists.find(i => i.id === id);
 
-        const goto = 'project/' + this.projectCode + '/lists/' + encodeURIComponent(id);
-        this._router.navigateByUrl(goto, { skipLocationChange: false });
+        if (!this.beta) {
+            const goto = 'project/' + this.projectCode + '/lists/' + encodeURIComponent(id);
+            this._router.navigateByUrl(goto, { skipLocationChange: false });
+        }
 
         setTimeout(() => {
             this.loadList = false;

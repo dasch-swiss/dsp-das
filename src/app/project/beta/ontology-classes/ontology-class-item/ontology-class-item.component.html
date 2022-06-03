@@ -1,0 +1,16 @@
+<span matLine class="label">
+    <span class="mat-subheading-2">{{resClass.label}}</span>
+    <span class="fill-remaining-space"></span>
+    <button mat-icon-button class="hover-only conf">
+        <mat-icon>tune</mat-icon>
+    </button>
+    <button mat-icon-button class="hover-only add">
+        <mat-icon>add</mat-icon>
+    </button>
+</span>
+
+<span matLine class="instances">
+    <a [routerLink]="link">
+        {{results | i18nPlural: itemPluralMapping['instance']}}
+    </a>
+</span>
