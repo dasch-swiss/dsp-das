@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -9,7 +9,8 @@ import {
     CreateTextValueAsString,
     CreateValue,
     KnoraApiConnection,
-    OntologiesMetadata, ReadOntology,
+    OntologiesMetadata,
+    ReadOntology,
     ReadResource,
     ResourceClassAndPropertyDefinitions,
     ResourceClassDefinition,
@@ -203,7 +204,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges, OnDestr
                         this.propertiesObj[iri] = [createVal];
                     }
                 }
-
             });
 
             if (this.fileValue) {
@@ -437,7 +437,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges, OnDestr
                             if (!this.selectPropertiesComponent && this.properties.length === 0 && !this.hasFileValue) {
                                 this.errorMessage = 'No properties defined for the selected resource.';
                             }
-
                             this.loading = false;
 
                         },

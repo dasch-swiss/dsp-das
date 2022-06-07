@@ -51,7 +51,7 @@
             <button mat-raised-button type="button" color="primary"
                 [disabled]="(!selectedProject || !selectedOntology || !selectedResourceClass || !selectResourceForm.valid) || this.errorMessage" (click)="nextStep()" class="form-next">
                 <app-progress-indicator *ngIf="loading" [status]="0" [color]="'primary'" class="next-progress"></app-progress-indicator>
-                Next
+                {{ 'appLabels.form.action.next' | translate }}
             </button>
         </span>
     </div>
@@ -84,7 +84,8 @@
         <button *ngIf="!selectedResourceClassIri" mat-button type="button" (click)="prevStep($event)">
             &larr;&nbsp;{{ 'appLabels.form.action.back' | translate }}
         </button>
-        <button *ngIf="!selectedResourceClassIri" mat-button type="button" (click)="closeDialog.emit()">
+        <!-- TODO: do not display the cancel button in the new project workflow concept -->
+        <button mat-button type="button" (click)="closeDialog.emit()">
             {{ 'appLabels.form.action.cancel' | translate }}
         </button>
         <span class="fill-remaining-space"></span>
