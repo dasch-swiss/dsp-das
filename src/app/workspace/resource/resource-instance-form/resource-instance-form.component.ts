@@ -111,10 +111,16 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
             this.selectedOntology = splittedIri[0];
             this.selectProperties(this.selectedResourceClassIri);
 
-            // const className = splittedIri[1];
             this.showNextStepForm = false;
 
+            this.propertiesParentForm = this._fb.group({});
+
         } else {
+
+            // parent form is empty, it gets passed to the child components
+            this.selectResourceForm = this._fb.group({});
+            this.propertiesParentForm = this._fb.group({});
+
             // initialize projects to be used for the project selection in the creation form
             this._project.initializeProjects().subscribe(
                 (proj: StoredProject[]) => {
@@ -131,9 +137,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
             this.showNextStepForm = true;
         }
 
-        // parent form is empty, it gets passed to the child components
-        this.selectResourceForm = this._fb.group({});
-        this.propertiesParentForm = this._fb.group({});
+
 
     }
 
