@@ -35,8 +35,6 @@ export class OntologyClassItemComponent implements OnInit {
         private _route: ActivatedRoute
     ) {
 
-        // console.log(this.link)
-
     }
 
     ngOnInit(): void {

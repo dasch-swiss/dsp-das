@@ -1,1 +1,13 @@
-<app-list-view [search]="searchParams"></app-list-view>
+<!-- display all resource instances if instance id does not exist -->
+<app-list-view *ngIf="searchParams" [search]="searchParams"></app-list-view>
+
+<!-- add new resource instance if instance id is called "add" -->
+<div class="instance-form" *ngIf="instanceId && instanceId === 'add'">
+    <h3>Create new {{classId}} instance</h3>
+    <app-resource-instance-form
+        [selectedResourceClassIri]="classId"
+        [selectedProject]="projectId">
+    </app-resource-instance-form>
+</div>
+
+<!-- display single resource instance if instance id exists and is not called "add" -->

@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit } from '@angular/core';
+import { Component, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OntologyService } from 'src/app/project/ontology/ontology.service';
 import { SearchParams } from 'src/app/workspace/results/list-view/list-view.component';
@@ -8,9 +8,13 @@ import { SearchParams } from 'src/app/workspace/results/list-view/list-view.comp
     templateUrl: './ontology-class-instance.component.html',
     styleUrls: ['./ontology-class-instance.component.scss']
 })
-export class OntologyClassInstanceComponent implements OnInit {
+export class OntologyClassInstanceComponent implements OnChanges {
+
+    projectId: string;
 
     classId: string;
+
+    instanceId: string;
 
     searchParams: SearchParams;
 
@@ -22,27 +26,41 @@ export class OntologyClassInstanceComponent implements OnInit {
         // parameters from the url
         const projectCode = this._route.parent.snapshot.params.shortcode;
 
+        this.projectId = `http://rdfh.ch/projects/${projectCode}`;
 
         this._route.params.subscribe(params => {
             const iriBase = this._ontologyService.getIriBaseUrl();
 
             const ontologyName = params['onto'];
-            const className = params['name'];
+            const className = params['class'];
 
             // get the resource class id from route
             this.classId = `${iriBase}/ontology/${projectCode}/${ontologyName}/v2#${className}`;
 
-            this.searchParams = {
-                query: this._setGravsearch(this.classId),
-                mode: 'gravsearch'
-            };
+            this.instanceId = params['instance'];
+            if (this.instanceId) {
+                // single instance
+
+                if (this.instanceId === 'add') {
+                    // create new res class instance: display res instance form
+                }
+            } else {
+                this.searchParams = {
+                    query: this._setGravsearch(this.classId),
+                    mode: 'gravsearch'
+                };
+            }
         });
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+
+        // this.reset();
+        console.log('something has changed',);
 
     }
 
-    ngOnInit(): void {
 
-    }
 
     private _setGravsearch(iri: string): string {
         return `
