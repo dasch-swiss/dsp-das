@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -32,7 +32,7 @@ import { SelectResourceClassComponent } from './select-resource-class/select-res
     templateUrl: './resource-instance-form.component.html',
     styleUrls: ['./resource-instance-form.component.scss']
 })
-export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
+export class ResourceInstanceFormComponent implements OnInit, OnChanges, OnDestroy {
 
     // ontology's resource class iri
     @Input() selectedResourceClassIri?: string;
@@ -130,8 +130,12 @@ export class ResourceInstanceFormComponent implements OnInit, OnDestroy {
             // boolean to show only the first step of the form (= selectResourceForm)
             this.showNextStepForm = true;
         }
+    }
 
-
+    ngOnChanges(changes: SimpleChanges) {
+        if(changes.selectedResourceClassIri) {
+            this.ngOnInit();
+        }
     }
 
     ngOnDestroy() {
