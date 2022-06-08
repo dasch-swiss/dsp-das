@@ -1,26 +1,33 @@
+@import "../../../../../assets/style/config";
 :host {
   width: 100%;
 
   &:hover {
-    .mat-line.label {
-      .hover-only {
+    .hover-only {
         display: block;
-      }
     }
   }
 }
 
-.mat-line.label {
+.mat-line {
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  height: 40px;
 
-  .mat-subheading-2 {
-    padding-top: 6px;
-  }
+  &.label {
+    display: flex;
+    flex-direction: row;
 
-  .hover-only {
-    display: none;
   }
+  &.instances {
+    color: $primary_500;
+  }
+}
+
+.overlay-buttons {
+  position: absolute;
+  right: 0;
+  bottom: 12px;
+}
+
+.hover-only {
+  display: none;
 }

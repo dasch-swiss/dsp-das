@@ -236,7 +236,7 @@ export class OntologyComponent implements OnInit {
                 } else {
                     // in case project has only one ontology: open this ontology
                     // because there will be no form to select an ontlogy
-                    if (response.ontologies.length === 1) {
+                    if (response.ontologies.length === 1 && !this.beta) {
                         // open this ontology
                         this.openOntologyRoute(response.ontologies[0].id, this.view);
                         this.ontologyIri = response.ontologies[0].id;

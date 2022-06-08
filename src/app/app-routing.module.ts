@@ -118,16 +118,6 @@ const routes: Routes = [
                 component: BoardComponent
             },
             {
-                path: 'collaboration',
-                component: CollaborationComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'permissions',
-                component: PermissionComponent,
-                canActivate: [AuthGuard]
-            },
-            {
                 path: 'ontology',
                 component: HintComponent,
                 data: { topic: 'ontology' }
@@ -135,26 +125,15 @@ const routes: Routes = [
             {
                 path: 'ontology/:onto',
                 component: OntologyComponent,
+                canActivate: [AuthGuard]
             },
             {
                 path: 'ontology/:onto/:class',
                 component: OntologyClassInstanceComponent,
-                canActivate: [AuthGuard]
             },
             {
                 path: 'ontology/:onto/:class/:instance',
                 component: OntologyClassInstanceComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'ontology/:onto/:class/conf',
-                component: OntologyClassInstanceComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'class/:id/conf',
-                component: OntologyClassInstanceComponent,
-                canActivate: [AuthGuard]
             },
             {
                 path: 'list',
@@ -164,6 +143,16 @@ const routes: Routes = [
             {
                 path: 'list/:list',
                 component: ListComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'settings/collaboration',
+                component: CollaborationComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'settings/permissions',
+                component: PermissionComponent,
                 canActivate: [AuthGuard]
             },
             {

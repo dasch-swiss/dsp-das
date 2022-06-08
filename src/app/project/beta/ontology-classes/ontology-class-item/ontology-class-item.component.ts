@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ClassDefinition, KnoraApiConnection, CountQueryResponse, ApiResponseError } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
@@ -32,7 +32,8 @@ export class OntologyClassItemComponent implements OnInit {
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: ErrorHandlerService,
         private _ontologyService: OntologyService,
-        private _route: ActivatedRoute
+        private _route: ActivatedRoute,
+        private _router: Router
     ) {
 
     }
@@ -56,6 +57,11 @@ export class OntologyClassItemComponent implements OnInit {
                 this._errorHandler.showMessage(error);
             }
         );
+    }
+
+    open(route: string) {
+        // event.preventDefault();
+        this._router.navigateByUrl(route);
     }
 
     private _setGravsearch(iri: string): string {

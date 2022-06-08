@@ -1,7 +1,8 @@
 import { Component, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OntologyService } from 'src/app/project/ontology/ontology.service';
-import { SearchParams } from 'src/app/workspace/results/list-view/list-view.component';
+import { FilteredResources, SearchParams } from 'src/app/workspace/results/list-view/list-view.component';
+import { SplitSize } from 'src/app/workspace/results/results.component';
 
 @Component({
     selector: 'app-ontology-class-instance',
@@ -17,6 +18,14 @@ export class OntologyClassInstanceComponent implements OnChanges {
     instanceId: string;
 
     searchParams: SearchParams;
+
+    // which resources are selected?
+    selectedResources: FilteredResources;
+
+    // display single resource or intermediate page in case of multiple selection
+    viewMode: 'single' | 'intermediate' | 'compare' = 'single';
+
+    splitSizeChanged: SplitSize;
 
     constructor(
         private _route: ActivatedRoute,
@@ -57,6 +66,20 @@ export class OntologyClassInstanceComponent implements OnChanges {
 
         // this.reset();
         console.log('something has changed',);
+
+    }
+
+    openSelectedResources(res: FilteredResources) {
+
+        this.selectedResources = res;
+
+        if (!res || res.count <= 1) {
+            this.viewMode = 'single';
+        } else {
+            if (this.viewMode !== 'compare') {
+                this.viewMode = ((res && res.count > 0) ? 'intermediate' : 'single');
+            }
+        }
 
     }
 
