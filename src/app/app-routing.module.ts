@@ -110,11 +110,6 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                pathMatch: 'full',
-                redirectTo: 'info'
-            },
-            {
-                path: 'info',
                 component: BoardComponent
             },
             {

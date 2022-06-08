@@ -22,7 +22,7 @@
             <mat-sidenav mode="side" opened class="project-nav">
                 <mat-list>
                     <!-- Project label -->
-                    <mat-list-item class="link" routerLink="info">
+                    <mat-list-item class="link" [routerLink]="'/beta/project/' + project.shortcode">
                         <span matLine>
                             <p class="mat-caption">{{project.longname}}</p>
                         </span>
