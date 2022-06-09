@@ -39,6 +39,7 @@ export class OntologyClassItemComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        console.log(JSON.stringify(this.resClass));
 
         const projectCode = this._route.snapshot.params.shortcode;
         const splitIri = this.resClass.id.split('#');
