@@ -188,6 +188,11 @@ export class OntologyService {
 
     }
 
+    /**
+     * get the IRI base url without configured api protocol.
+     * The protocol in this case is always http
+     * TODO: move to DSP-JS-Lib similar to `get ApiUrl`
+     */
     getIriBaseUrl(): string {
         return (
             ('http://' + this._dspApiConfig.apiHost) +

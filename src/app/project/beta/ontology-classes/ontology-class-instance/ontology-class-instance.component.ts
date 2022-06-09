@@ -1,5 +1,6 @@
 import { Component, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { AppInitService } from 'src/app/app-init.service';
 import { OntologyService } from 'src/app/project/ontology/ontology.service';
 import { FilteredResources, SearchParams } from 'src/app/workspace/results/list-view/list-view.component';
 import { SplitSize } from 'src/app/workspace/results/results.component';
@@ -28,6 +29,7 @@ export class OntologyClassInstanceComponent implements OnChanges {
     splitSizeChanged: SplitSize;
 
     constructor(
+        private _ais: AppInitService,
         private _route: ActivatedRoute,
         private _ontologyService: OntologyService
     ) {
@@ -35,7 +37,7 @@ export class OntologyClassInstanceComponent implements OnChanges {
         // parameters from the url
         const projectCode = this._route.parent.snapshot.params.shortcode;
 
-        this.projectId = `http://rdfh.ch/projects/${projectCode}`;
+        this.projectId = `${this._ais.dspAppConfig.iriBase}/projects/${projectCode}`;
 
         this._route.params.subscribe(params => {
             const iriBase = this._ontologyService.getIriBaseUrl();

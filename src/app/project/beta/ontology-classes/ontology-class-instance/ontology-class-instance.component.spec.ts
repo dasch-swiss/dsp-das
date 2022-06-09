@@ -4,7 +4,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { AppInitService } from 'src/app/app-init.service';
 import { DspApiConfigToken, DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { TestConfig } from 'test.config';
@@ -15,6 +15,12 @@ describe('OntologyClassInstanceComponent', () => {
     let component: OntologyClassInstanceComponent;
     let fixture: ComponentFixture<OntologyClassInstanceComponent>;
 
+    const appInitSpy = {
+        dspAppConfig: {
+            iriBase: 'http://rdfh.ch'
+        }
+    };
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [OntologyClassInstanceComponent],
@@ -24,7 +30,10 @@ describe('OntologyClassInstanceComponent', () => {
                 RouterTestingModule
             ],
             providers: [
-                AppInitService,
+                {
+                    provide: AppInitService,
+                    useValue: appInitSpy
+                },
                 {
                     provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig

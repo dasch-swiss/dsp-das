@@ -15,6 +15,7 @@ import {
     StringLiteral
 } from '@dasch-swiss/dsp-js';
 import { AppGlobal } from 'src/app/app-global';
+import { AppInitService } from 'src/app/app-init.service';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
@@ -78,6 +79,7 @@ export class ListComponent implements OnInit {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private _ais: AppInitService,
         private _cache: CacheService,
         private _dialog: MatDialog,
         private _errorHandler: ErrorHandlerService,
@@ -105,7 +107,7 @@ export class ListComponent implements OnInit {
         if (this.beta) {
             // get list iri from list name
             this._route.params.subscribe(params => {
-                const id = `http://rdfh.ch/lists/${this.projectCode}/${params['list']}`;
+                const id = `${this._ais.dspAppConfig.iriBase}/lists/${this.projectCode}/${params['list']}`;
                 this.openList(id);
             });
         }
