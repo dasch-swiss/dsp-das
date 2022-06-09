@@ -108,6 +108,10 @@ const routes: Routes = [
                 component: BoardComponent
             },
             {
+                path: 'info', // old path setup to avoid 404 when typing beta in front of project
+                redirectTo: ''
+            },
+            {
                 path: 'ontology',
                 component: HintComponent,
                 data: { topic: 'ontology' }
