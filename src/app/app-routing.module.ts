@@ -26,11 +26,6 @@ import { UserComponent } from './user/user.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
 
-
-
-
-
-
 const routes: Routes = [
     {
         path: '',

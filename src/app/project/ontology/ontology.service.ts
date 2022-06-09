@@ -61,7 +61,7 @@ export class OntologyService {
 
         const pos = array.length - 2;
 
-        return array[pos].toLowerCase();
+        return array[pos];
     }
 
     /**

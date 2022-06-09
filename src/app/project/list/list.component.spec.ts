@@ -111,7 +111,20 @@ describe('ListComponent', () => {
                                         return TestConfig.ProjectCode;
                                     }
                                 }
-                            })
+                            }),
+                            snapshot: {
+                                url: [
+                                    { path: 'project' }
+                                ]
+                            }
+                        },
+                        params: of(
+                            { list: 'mockList01' },
+                        ),
+                        snapshot: {
+                            params: [
+                                { id: 'http://rdfh.ch/lists/0001/mockList01' }
+                            ]
                         }
                     }
                 },

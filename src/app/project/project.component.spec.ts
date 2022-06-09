@@ -57,7 +57,7 @@ describe('ProjectComponent', () => {
                     useValue: {
                         snapshot: {
                             url: [
-                                { path: 'beta' }
+                                { path: 'project' }
                             ],
                             params: [
                                 { shortcode: '0001' }

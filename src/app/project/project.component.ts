@@ -179,7 +179,14 @@ export class ProjectComponent implements OnInit {
 
     open(route: string, id?: string) {
         if (route === 'ontology' && id) {
+            // get name of ontology
             id = this._ontologyService.getOntologyName(id);
+        }
+        if (route === 'list' && id) {
+            // get name of list
+            const array = id.split('/');
+            const pos = array.length - 1;
+            id = array[pos];
         }
         const param = (id ? `/${encodeURIComponent(id)}` : '');
         this._router.navigateByUrl(`/beta/project/${this.projectCode}/${route}${param}`);

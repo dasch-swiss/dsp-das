@@ -103,8 +103,10 @@ export class ListComponent implements OnInit {
         // get feature toggle information if url contains beta
         this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
         if (this.beta) {
+            // get list iri from list name
             this._route.params.subscribe(params => {
-                this.openList(params['list']);
+                const id = `http://rdfh.ch/lists/${this.projectCode}/${params['list']}`;
+                this.openList(id);
             });
         }
 
