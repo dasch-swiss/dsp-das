@@ -102,7 +102,14 @@
 
                     <!-- Project permissions ??? will it ever come? -->
 
+                    <div class="sidenav-footer">
+                        <mat-list-item *ngIf="projectAdmin" class="link section-title" routerLink="settings">
+                            <mat-icon>settings</mat-icon>
+                            <h2 class="mat-title">Settings</h2>
+                        </mat-list-item>
+                    </div>
                 </mat-list>
+
             </mat-sidenav>
             <mat-sidenav-content>
                 <app-progress-indicator *ngIf="loading"></app-progress-indicator>

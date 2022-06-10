@@ -132,8 +132,7 @@ export class ProjectComponent implements OnInit {
                                         },
                                         (error: ApiResponseError) => {
                                             this.loading = false;
-                                            console.error(error);
-                                            // todo: add error handler
+                                            this._errorHandler.showMessage(error);
                                         }
                                     );
                                 });

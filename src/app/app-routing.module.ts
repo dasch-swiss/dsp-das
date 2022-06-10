@@ -126,6 +126,12 @@ const routes: Routes = [
                 component: OntologyClassInstanceComponent,
             },
             {
+                path: 'ontology/:onto/:class/conf',
+                component: StatusComponent,
+                data: { status: 501, comment: 'Here you will be able to configure the resource class.' },
+                canActivate: [AuthGuard]
+            },
+            {
                 path: 'ontology/:onto/:class/:instance',
                 component: OntologyClassInstanceComponent,
             },
@@ -137,6 +143,12 @@ const routes: Routes = [
             {
                 path: 'list/:list',
                 component: ListComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'settings',
+                component: StatusComponent,
+                data: { status: 501, comment: 'Here you will be able to configure the project: e.g. setup collaboration and permissions.' },
                 canActivate: [AuthGuard]
             },
             {

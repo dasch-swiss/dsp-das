@@ -1,4 +1,4 @@
-import { Component, OnChanges, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AppInitService } from 'src/app/app-init.service';
 import { OntologyService } from 'src/app/project/ontology/ontology.service';
@@ -10,7 +10,7 @@ import { SplitSize } from 'src/app/workspace/results/results.component';
     templateUrl: './ontology-class-instance.component.html',
     styleUrls: ['./ontology-class-instance.component.scss']
 })
-export class OntologyClassInstanceComponent implements OnChanges {
+export class OntologyClassInstanceComponent {
 
     projectId: string;
 
@@ -64,13 +64,6 @@ export class OntologyClassInstanceComponent implements OnChanges {
         });
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-
-        // this.reset();
-        console.log('something has changed',);
-
-    }
-
     openSelectedResources(res: FilteredResources) {
 
         this.selectedResources = res;
@@ -84,8 +77,6 @@ export class OntologyClassInstanceComponent implements OnChanges {
         }
 
     }
-
-
 
     private _setGravsearch(iri: string): string {
         return `

@@ -39,13 +39,11 @@ export class OntologyClassItemComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log(JSON.stringify(this.resClass));
 
         const projectCode = this._route.snapshot.params.shortcode;
         const splitIri = this.resClass.id.split('#');
         const ontologyName = this._ontologyService.getOntologyName(splitIri[0]);
         this.link = `/beta/project/${projectCode}/ontology/${ontologyName}/${splitIri[1]}`;
-
 
         this.gravsearch = this._setGravsearch(this.resClass.id);
 
@@ -61,7 +59,6 @@ export class OntologyClassItemComponent implements OnInit {
     }
 
     open(route: string) {
-        // event.preventDefault();
         this._router.navigateByUrl(route);
     }
 
