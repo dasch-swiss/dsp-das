@@ -113,7 +113,9 @@ export class OntologyFormComponent implements OnInit {
         private _router: Router
     ) {
         // get feature toggle information if url contains beta
-        this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
+        if (this._route.parent) {
+            this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
+        }
     }
 
     ngOnInit() {

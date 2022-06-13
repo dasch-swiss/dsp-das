@@ -68,7 +68,9 @@ export class ListInfoFormComponent implements OnInit {
         private _route: ActivatedRoute,
         private _router: Router
     ) {
-        this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
+        if (this._route.parent) {
+            this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
+        }
 
         if (this.beta) {
             // get the shortcode of the current project
