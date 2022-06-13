@@ -161,7 +161,6 @@ export class OntologyComponent implements OnInit {
                 this.ontologyIri = `${iriBase}/ontology/${projectCode}/${ontologyName}/v2`;
                 this.ngOnInit();
             });
-            console.warn('This is a pre-released (beta) project\'s ontology view');
         }
     }
 

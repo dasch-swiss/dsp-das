@@ -148,7 +148,6 @@ export class ListInfoFormComponent implements OnInit {
 
             this._dspApiConnection.admin.listsEndpoint.createList(listInfoData).subscribe(
                 (response: ApiResponseData<ListResponse>) => {
-                    console.log('list created', response);
                     if (this.beta) {
                         // go to the new list page
                         const array = response.body.list.listinfo.id.split('/');

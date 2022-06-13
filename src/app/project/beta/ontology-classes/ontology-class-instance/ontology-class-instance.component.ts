@@ -76,11 +76,9 @@ export class OntologyClassInstanceComponent implements OnChanges {
     ngOnChanges() {
         this._cache.get('currentProjectOntologies').subscribe(
             (ontologies: ReadOntology[]) => {
-                console.log('ontos', ontologies);
                 // find ontology of current resource class to get the class label
                 const classes = ontologies[ontologies.findIndex(onto => onto.id === this.ontoId)].getAllClassDefinitions();
                 this.resClass = <ResourceClassDefinition>classes[classes.findIndex(res => res.id === this.classId)];
-                console.log('has class', this.resClass);
             }
         );
     }
