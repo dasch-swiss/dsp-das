@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
     ApiResponseData,
     ApiResponseError,
@@ -13,6 +14,7 @@ import {
     StringLiteral,
     UpdateListInfoRequest
 } from '@dasch-swiss/dsp-js';
+import { AppInitService } from 'src/app/app-init.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 
@@ -56,10 +58,27 @@ export class ListInfoFormComponent implements OnInit {
     labelInvalidMessage: string;
     commentInvalidMessage: string;
 
+    // feature toggle for new concept
+    beta = false;
+
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: ErrorHandlerService
-    ) { }
+        private _ais: AppInitService,
+        private _errorHandler: ErrorHandlerService,
+        private _route: ActivatedRoute,
+        private _router: Router
+    ) {
+        this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
+
+        if (this.beta) {
+            // get the shortcode of the current project
+            this._route.parent.paramMap.subscribe((params: Params) => {
+                this.projectCode = params.get('shortcode');
+                this.projectIri = `${this._ais.dspAppConfig.iriBase}/projects/${this.projectCode}`;
+            });
+        }
+
+    }
 
     ngOnInit() {
 
@@ -129,7 +148,17 @@ export class ListInfoFormComponent implements OnInit {
 
             this._dspApiConnection.admin.listsEndpoint.createList(listInfoData).subscribe(
                 (response: ApiResponseData<ListResponse>) => {
-                    this.closeDialog.emit(response.body.list);
+                    console.log('list created', response);
+                    if (this.beta) {
+                        // go to the new list page
+                        const array = response.body.list.listinfo.id.split('/');
+                        const name = array[array.length - 1];
+                        this._router.navigate(['list', name], { relativeTo: this._route.parent }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        this.closeDialog.emit(response.body.list);
+                    }
                     this.loading = false;
                 },
                 (error: ApiResponseError) => {

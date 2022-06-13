@@ -11,7 +11,9 @@ import { OntologyClassInstanceComponent } from './project/beta/ontology-classes/
 // project
 import { BoardComponent } from './project/board/board.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
+import { ListInfoFormComponent } from './project/list/list-info-form/list-info-form.component';
 import { ListComponent } from './project/list/list.component';
+import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
 import { PermissionComponent } from './project/permission/permission.component';
 import { ProjectComponent } from './project/project.component';
@@ -112,6 +114,11 @@ const routes: Routes = [
                 redirectTo: ''
             },
             {
+                path: 'add-ontology',
+                component: OntologyFormComponent,
+                canActivate: [AuthGuard]
+            },
+            {
                 path: 'ontology',
                 component: HintComponent,
                 data: { topic: 'ontology' }
@@ -134,6 +141,11 @@ const routes: Routes = [
             {
                 path: 'ontology/:onto/:class/:instance',
                 component: OntologyClassInstanceComponent,
+            },
+            {
+                path: 'add-list',
+                component: ListInfoFormComponent,
+                canActivate: [AuthGuard]
             },
             {
                 path: 'list',

@@ -27,7 +27,7 @@
 
 <!-- add new resource instance if instance id is called "add" -->
 <div class="single-instance-form" *ngIf="instanceId && instanceId === 'add'">
-    <h3>Create new {{classId}} instance</h3>
+    <h3>Create new resource of type: {{resClass?.label}}</h3>
     <app-resource-instance-form
         [selectedResourceClassIri]="classId"
         [selectedProject]="projectId">

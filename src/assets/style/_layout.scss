@@ -56,6 +56,10 @@
   .project-nav {
     width: 220px;
 
+    .mat-list.main-list {
+      margin-bottom: calc(#{$header-height} - 8px);
+    }
+
     .mat-title,
     .mat-subheading-2,
     .mat-subheading-1 {

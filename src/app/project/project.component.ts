@@ -50,6 +50,8 @@ export class ProjectComponent implements OnInit {
     // feature toggle for new concept
     beta = false;
 
+    ontologies: ReadOntology[] = [];
+
     // list of project ontologies
     projectOntologies: ReadOntology[] = [];
     projectLists: ListNodeInfo[] = [];
@@ -125,10 +127,15 @@ export class ProjectComponent implements OnInit {
                         this._dspApiConnection.v2.onto.getOntologiesByProjectIri(this.project.id).subscribe(
                             (ontoMeta: OntologiesMetadata) => {
                                 ontoMeta.ontologies.forEach(onto => {
+                                    // const name = this._ontologyService.getOntologyName(onto.id);
                                     this._dspApiConnection.v2.onto.getOntology(onto.id).subscribe(
                                         (ontology: ReadOntology) => {
                                             this.projectOntologies.push(ontology);
-                                            this.loading = !this._cache.has(this.projectCode);
+                                            this.ontologies.push(ontology);
+                                            if (ontoMeta.ontologies.length === this.ontologies.length) {
+                                                this._cache.set('currentProjectOntologies', this.ontologies);
+                                                this.loading = !this._cache.has(this.projectCode);
+                                            }
                                         },
                                         (error: ApiResponseError) => {
                                             this.loading = false;
@@ -168,14 +175,6 @@ export class ProjectComponent implements OnInit {
         }
     }
 
-    /**
-     * open form to create new ontology, class, property or list
-     * @param type
-     */
-    create(type: 'ontology' | 'class' | 'property' | 'list' | 'user') {
-        console.log('this will create a new', type);
-    }
-
     open(route: string, id?: string) {
         if (route === 'ontology' && id) {
             // get name of ontology
@@ -187,9 +186,13 @@ export class ProjectComponent implements OnInit {
             const pos = array.length - 1;
             id = array[pos];
         }
-        const param = (id ? `/${encodeURIComponent(id)}` : '');
-        this._router.navigateByUrl(`/beta/project/${this.projectCode}/${route}${param}`);
-
+        // const param = ;
+        // this._router.navigateByUrl(`/beta/project/${this.projectCode}/${route}${param}`);
+        if (id) {
+            this._router.navigate([route, encodeURIComponent(id)], { relativeTo: this._route });
+        } else {
+            this._router.navigate([route], { relativeTo: this._route });
+        }
     }
 
     /**

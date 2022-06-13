@@ -134,7 +134,6 @@ export class OntologyComponent implements OnInit {
         private _sortingService: SortingService,
         private _titleService: Title
     ) {
-
         // get the shortcode of the current project
         this._route.parent.paramMap.subscribe((params: Params) => {
             this.projectCode = params.get('shortcode');
@@ -158,14 +157,12 @@ export class OntologyComponent implements OnInit {
             const projectCode = this._route.parent.snapshot.params.shortcode;
             this._route.params.subscribe(params => {
                 const iriBase = this._ontologyService.getIriBaseUrl();
-
                 const ontologyName = params['onto'];
                 this.ontologyIri = `${iriBase}/ontology/${projectCode}/${ontologyName}/v2`;
                 this.ngOnInit();
             });
             console.warn('This is a pre-released (beta) project\'s ontology view');
         }
-
     }
 
     @HostListener('window:resize', ['$event']) onWindwoResize(e: Event) {
@@ -183,6 +180,7 @@ export class OntologyComponent implements OnInit {
 
         // get information about the logged-in user
         this.session = this._session.getSession();
+
         // is the logged-in user system admin?
         this.sysAdmin = this.session.user.sysAdmin;
 

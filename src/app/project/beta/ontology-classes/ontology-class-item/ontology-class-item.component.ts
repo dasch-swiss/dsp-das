@@ -22,9 +22,9 @@ export class OntologyClassItemComponent implements OnInit {
 
     // i18n setup
     itemPluralMapping = {
-        instance: {
-            '=1': '1 instance',
-            other: '# instances'
+        resource: {
+            '=1': '1 resource',
+            other: '# resources'
         }
     };
 
