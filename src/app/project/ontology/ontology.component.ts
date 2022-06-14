@@ -466,6 +466,10 @@ export class OntologyComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             // update the view
             this.initOntologiesList();
+            if (this.beta) {
+                // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
+                window.location.reload();
+            }
         });
     }
 
@@ -539,7 +543,10 @@ export class OntologyComponent implements OnInit {
                                 // get the ontologies for this project
                                 this.initOntologiesList();
                                 // go to project ontology page
-                                const goto = 'project/' + this.projectCode + '/ontologies/';
+                                let goto = `/project/${this.projectCode}/ontologies/`;
+                                if (this.beta) {
+                                    goto = `/beta/project/${this.projectCode}`;
+                                }
                                 this._router.navigateByUrl(goto, { skipLocationChange: false });
                             },
                             (error: ApiResponseError) => {
@@ -560,6 +567,10 @@ export class OntologyComponent implements OnInit {
                             (response: OntologyMetadata) => {
                                 this.loading = false;
                                 this.resetOntology(this.ontologyIri);
+                                if (this.beta) {
+                                    // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
+                                    window.location.reload();
+                                }
                             },
                             (error: ApiResponseError) => {
                                 this._errorHandler.showMessage(error);

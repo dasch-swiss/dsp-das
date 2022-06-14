@@ -18,11 +18,15 @@ export class OntologyClassInstanceComponent implements OnChanges {
 
     ontoId: string;
 
+    // id (iri) of resource class
     classId: string;
 
     resClass: ResourceClassDefinition;
 
+    // uuid of resource instance
     instanceId: string;
+    // id (iri) or resource instance
+    resourceIri: string;
 
     searchParams: SearchParams;
 
@@ -63,8 +67,12 @@ export class OntologyClassInstanceComponent implements OnChanges {
                 if (this.instanceId === 'add') {
                     // create new res class instance: display res instance form
                     this.ngOnChanges();
+                } else {
+                    // get the single resource instance
+                    this.resourceIri = `${this._ais.dspAppConfig.iriBase}/${projectCode}/${this.instanceId}`;
                 }
             } else {
+                // display all resource instances of this resource class
                 this.searchParams = {
                     query: this._setGravsearch(this.classId),
                     mode: 'gravsearch'

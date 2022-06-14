@@ -35,3 +35,6 @@
 </div>
 
 <!-- display single resource instance if instance id exists and is not called "add" -->
+<div class="single-instance" *ngIf="instanceId && instanceId !== 'add'">
+    <app-resource [resourceIri]="resourceIri"></app-resource>
+</div>
