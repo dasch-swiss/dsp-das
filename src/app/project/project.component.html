@@ -10,9 +10,7 @@
                 {{link.label}}
             </a>
         </nav>
-
         <app-progress-indicator *ngIf="loading"></app-progress-indicator>
-
         <router-outlet *ngIf="!loading"></router-outlet>
     </div>
     <!-- new concept of project view: sidenav instead tabs -->

@@ -8,6 +8,7 @@ import { HelpComponent } from './main/help/help.component';
 import { MainComponent } from './main/main.component';
 import { StatusComponent } from './main/status/status.component';
 import { OntologyClassInstanceComponent } from './project/beta/ontology-classes/ontology-class-instance/ontology-class-instance.component';
+import { SettingsComponent } from './project/beta/settings/settings.component';
 // project
 import { BoardComponent } from './project/board/board.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
@@ -159,19 +160,23 @@ const routes: Routes = [
             },
             {
                 path: 'settings',
-                component: StatusComponent,
-                data: { status: 501, comment: 'Here you will be able to configure the project: e.g. setup collaboration and permissions.' },
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'settings/collaboration',
-                component: CollaborationComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'settings/permissions',
-                component: PermissionComponent,
-                canActivate: [AuthGuard]
+                component: SettingsComponent,
+                canActivate: [AuthGuard],
+                children: [
+                    {
+                        path: '',
+                        pathMatch: 'full',
+                        redirectTo: 'collaboration'
+                    },
+                    {
+                        path: 'collaboration',
+                        component: CollaborationComponent
+                    },
+                    {
+                        path: 'permissions',
+                        component: PermissionComponent
+                    },
+                ]
             },
             {
                 path: '**',

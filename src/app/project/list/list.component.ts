@@ -104,7 +104,6 @@ export class ListComponent implements OnInit {
 
         // get feature toggle information if url contains beta
         this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
-        console.log( this._route.parent)
         if (this.beta) {
             // get list iri from list name
             this._route.params.subscribe(params => {

@@ -123,6 +123,15 @@
 
   padding-top: 0 !important;
 
+  &.settings {
+    height: 72px;
+    padding-top: 8px !important;
+
+    .mat-tab-links {
+      margin-top: 24px;
+    }
+  }
+
   .nav-item {
     height: 48px;
     text-align: left;
