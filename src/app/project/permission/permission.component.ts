@@ -49,13 +49,13 @@ export class PermissionComponent implements OnInit {
         private _titleService: Title) {
 
         // get the shortcode of the current project
+        this._route.parent.paramMap.subscribe((params: Params) => {
+            this.projectCode = params.get('shortcode');
+        });
+
         // in case of new beta view, we are in a grand-child route
-        if (this._route.parent.parent) {
+        if (this._route.parent.parent.snapshot.url.length) {
             this._route.parent.parent.paramMap.subscribe((params: Params) => {
-                this.projectCode = params.get('shortcode');
-            });
-        } else {
-            this._route.parent.paramMap.subscribe((params: Params) => {
                 this.projectCode = params.get('shortcode');
             });
         }

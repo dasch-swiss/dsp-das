@@ -55,15 +55,14 @@ export class CollaborationComponent implements OnInit {
         private _session: SessionService,
         private _titleService: Title) {
 
-
         // get the shortcode of the current project
+        this._route.parent.paramMap.subscribe((params: Params) => {
+            this.projectCode = params.get('shortcode');
+        });
+
         // in case of new beta view, we are in a grand-child route
-        if (this._route.parent.parent) {
+        if (this._route.parent.parent.snapshot.url.length) {
             this._route.parent.parent.paramMap.subscribe((params: Params) => {
-                this.projectCode = params.get('shortcode');
-            });
-        } else {
-            this._route.parent.paramMap.subscribe((params: Params) => {
                 this.projectCode = params.get('shortcode');
             });
         }
@@ -96,7 +95,6 @@ export class CollaborationComponent implements OnInit {
         // get the project data from cache
         this._cache.get(this.projectCode).subscribe(
             (response: ReadProject) => {
-                console.log('cache', response);
                 this.project = response;
 
                 // is logged-in user projectAdmin?
@@ -110,7 +108,6 @@ export class CollaborationComponent implements OnInit {
                 this.loading = false;
             },
             (error: ApiResponseError) => {
-                console.log('cache', error);
                 this._errorHandler.showMessage(error);
                 this.loading = false;
             }
