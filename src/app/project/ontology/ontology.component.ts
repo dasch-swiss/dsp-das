@@ -547,7 +547,10 @@ export class OntologyComponent implements OnInit {
                                 if (this.beta) {
                                     goto = `/beta/project/${this.projectCode}`;
                                 }
-                                this._router.navigateByUrl(goto, { skipLocationChange: false });
+                                this._router.navigateByUrl(goto, { skipLocationChange: false }).then(() => {
+                                    // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
+                                    window.location.reload();
+                                });
                             },
                             (error: ApiResponseError) => {
                                 this._errorHandler.showMessage(error);

@@ -113,8 +113,13 @@ export class OntologyFormComponent implements OnInit {
         private _router: Router
     ) {
         // get feature toggle information if url contains beta
+        // in case of creating new
         if (this._route.parent) {
             this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
+        }
+        // in case of edit
+        if (this._route.firstChild) {
+            this.beta = (this._route.firstChild.snapshot.url[0].path === 'beta');
         }
     }
 
@@ -264,6 +269,13 @@ export class OntologyFormComponent implements OnInit {
                     this.updateParent.emit(response.id);
                     this.loading = false;
                     this.closeDialog.emit(response.id);
+                    if (this.beta) {
+                        // go to the new ontology page
+                        const name = this._ontologyService.getOntologyName(response.id);
+                        this._router.navigate(['ontology', name], { relativeTo: this._route.firstChild }).then(() => {
+                            window.location.reload();
+                        });
+                    }
                 },
                 (error: ApiResponseError) => {
                     // in case of an error

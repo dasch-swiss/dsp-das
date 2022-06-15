@@ -68,16 +68,28 @@ export class ListInfoFormComponent implements OnInit {
         private _route: ActivatedRoute,
         private _router: Router
     ) {
+        // get feature toggle information if url contains beta
+        // in case of creating new
         if (this._route.parent) {
             this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
+            if (this.beta) {
+                // get the shortcode of the current project
+                this._route.parent.paramMap.subscribe((params: Params) => {
+                    this.projectCode = params.get('shortcode');
+                    this.projectIri = `${this._ais.dspAppConfig.iriBase}/projects/${this.projectCode}`;
+                });
+            }
         }
-
-        if (this.beta) {
-            // get the shortcode of the current project
-            this._route.parent.paramMap.subscribe((params: Params) => {
-                this.projectCode = params.get('shortcode');
-                this.projectIri = `${this._ais.dspAppConfig.iriBase}/projects/${this.projectCode}`;
-            });
+        // in case of edit
+        if (this._route.firstChild) {
+            this.beta = (this._route.firstChild.snapshot.url[0].path === 'beta');
+            if (this.beta) {
+                // get the shortcode of the current project
+                this._route.firstChild.paramMap.subscribe((params: Params) => {
+                    this.projectCode = params.get('shortcode');
+                    this.projectIri = `${this._ais.dspAppConfig.iriBase}/projects/${this.projectCode}`;
+                });
+            }
         }
 
     }
