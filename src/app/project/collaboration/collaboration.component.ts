@@ -96,7 +96,7 @@ export class CollaborationComponent implements OnInit {
         // get the project data from cache
         this._cache.get(this.projectCode).subscribe(
             (response: ReadProject) => {
-                console.log('cache', response)
+                console.log('cache', response);
                 this.project = response;
 
                 // is logged-in user projectAdmin?
@@ -110,7 +110,7 @@ export class CollaborationComponent implements OnInit {
                 this.loading = false;
             },
             (error: ApiResponseError) => {
-                console.log('cache', error)
+                console.log('cache', error);
                 this._errorHandler.showMessage(error);
                 this.loading = false;
             }
