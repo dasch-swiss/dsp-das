@@ -150,23 +150,28 @@ export class ProjectComponent implements OnInit {
                         // get all project ontologies
                         this._dspApiConnection.v2.onto.getOntologiesByProjectIri(this.project.id).subscribe(
                             (ontoMeta: OntologiesMetadata) => {
-                                ontoMeta.ontologies.forEach(onto => {
-                                    // const name = this._ontologyService.getOntologyName(onto.id);
-                                    this._dspApiConnection.v2.onto.getOntology(onto.id).subscribe(
-                                        (ontology: ReadOntology) => {
-                                            this.projectOntologies.push(ontology);
-                                            this.ontologies.push(ontology);
-                                            if (ontoMeta.ontologies.length === this.ontologies.length) {
-                                                this._cache.set('currentProjectOntologies', this.ontologies);
-                                                this.loading = !this._cache.has(this.projectCode);
+                                if (ontoMeta.ontologies.length) {
+                                    ontoMeta.ontologies.forEach(onto => {
+
+                                        // const name = this._ontologyService.getOntologyName(onto.id);
+                                        this._dspApiConnection.v2.onto.getOntology(onto.id).subscribe(
+                                            (ontology: ReadOntology) => {
+                                                this.projectOntologies.push(ontology);
+                                                this.ontologies.push(ontology);
+                                                if (ontoMeta.ontologies.length === this.ontologies.length) {
+                                                    this._cache.set('currentProjectOntologies', this.ontologies);
+                                                    this.loading = !this._cache.has(this.projectCode);
+                                                }
+                                            },
+                                            (error: ApiResponseError) => {
+                                                this.loading = false;
+                                                this._errorHandler.showMessage(error);
                                             }
-                                        },
-                                        (error: ApiResponseError) => {
-                                            this.loading = false;
-                                            this._errorHandler.showMessage(error);
-                                        }
-                                    );
-                                });
+                                        );
+                                    });
+                                } else {
+                                    this.loading = !this._cache.has(this.projectCode);
+                                }
                             },
                             (error: ApiResponseError) => {
                                 this._errorHandler.showMessage(error);
