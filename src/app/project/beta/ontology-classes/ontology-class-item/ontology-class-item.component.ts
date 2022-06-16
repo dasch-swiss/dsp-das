@@ -14,6 +14,8 @@ export class OntologyClassItemComponent implements OnInit {
 
     @Input() resClass: ClassDefinition;
 
+    @Input() projectMember: boolean;
+
     gravsearch: string;
 
     results: number;

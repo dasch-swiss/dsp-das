@@ -10,7 +10,7 @@ import {
     OntologiesMetadata,
     ProjectResponse,
     ReadOntology,
-    ReadProject
+    ReadProject, UserResponse
 } from '@dasch-swiss/dsp-js';
 import { AppGlobal } from '../app-global';
 import { CacheService } from '../main/cache/cache.service';
@@ -36,6 +36,7 @@ export class ProjectComponent implements OnInit {
     session: Session;
     sysAdmin = false;
     projectAdmin = false;
+    projectMember = false;
 
     // project shortcode; as identifier in project cache service
     projectCode: string;
@@ -113,6 +114,28 @@ export class ProjectComponent implements OnInit {
 
                         // is the logged-in user project admin?
                         this.projectAdmin = this.sysAdmin ? this.sysAdmin : (this.session.user.projectAdmin.some(e => e === this.project.id));
+
+                        // or at least project member?
+                        if (!this.projectAdmin) {
+                            this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.session.user.name).subscribe(
+                                (res: ApiResponseData<UserResponse>) => {
+                                    const usersProjects = res.body.user.projects;
+                                    if (usersProjects.length === 0) {
+                                        // the user is not part of any project
+                                        this.projectMember = false;
+                                    } else {
+                                        // check if the user is member of the current project
+                                        this.projectMember = usersProjects.some(p => p.shortcode === this.projectCode);
+                                    }
+                                },
+                                (error: ApiResponseError) => {
+                                    this._errorHandler.showMessage(error);
+                                }
+                            );
+                        } else {
+                            this.projectMember = this.projectAdmin;
+                        }
+
                     }
 
                     // set the cache for project members and groups
@@ -123,6 +146,7 @@ export class ProjectComponent implements OnInit {
 
                     // in the new concept of project view, we have to make many requests to get all project relevant information
                     if(this.beta) {
+
                         // get all project ontologies
                         this._dspApiConnection.v2.onto.getOntologiesByProjectIri(this.project.id).subscribe(
                             (ontoMeta: OntologiesMetadata) => {

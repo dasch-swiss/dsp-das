@@ -5,7 +5,7 @@
     </span>
 </span>
 
-<span class="overlay-buttons hover-only">
+<span class="overlay-buttons hover-only" *ngIf="projectMember">
     <!-- with the following button, it should be possible to edit the resource class in a quick way; but maybe we don't need it
     <button mat-icon-button class="conf" [routerLink]="link + '/conf'">
         <mat-icon>tune</mat-icon>

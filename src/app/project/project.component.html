@@ -50,7 +50,7 @@
                         <mat-expansion-panel [expanded]="true">
                             <mat-expansion-panel-header>
                                 <div class="sidenav-panel-header" (click)="$event.stopPropagation();">
-                                    <mat-panel-title class="mat-subheading-2" (click)="open('ontology', onto.id)">
+                                    <mat-panel-title class="mat-subheading-2" (click)="projectAdmin ? open('ontology', onto.id) : null">
                                         {{onto.label}}
                                     </mat-panel-title>
                                     <mat-panel-description>
@@ -69,7 +69,7 @@
                                 </button>
                             </mat-list-item> -->
                             <mat-list>
-                                <app-ontology-classes [resClasses]="onto.getAllClassDefinitions()">
+                                <app-ontology-classes [resClasses]="onto.getAllClassDefinitions()" [projectMember]="projectMember">
                                 </app-ontology-classes>
                             </mat-list>
                         </mat-expansion-panel>
@@ -105,8 +105,8 @@
 
                     <!-- Project permissions ??? will it ever come? -->
 
-                    <div class="sidenav-footer">
-                        <mat-list-item *ngIf="projectAdmin" class="section-title">
+                    <div class="sidenav-footer" *ngIf="projectAdmin" >
+                        <mat-list-item class="section-title">
                             <span class="link section-label" (click)="open('settings')">
                                 <mat-icon class="sidenav-prefix-icon">settings</mat-icon>
                                 <h2 class="mat-title">Settings</h2>
