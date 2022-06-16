@@ -215,8 +215,6 @@ export class ProjectComponent implements OnInit {
             const pos = array.length - 1;
             id = array[pos];
         }
-        // const param = ;
-        // this._router.navigateByUrl(`/beta/project/${this.projectCode}/${route}${param}`);
         if (id) {
             this._router.navigate([route, encodeURIComponent(id)], { relativeTo: this._route });
         } else {
