@@ -1,6 +1,6 @@
 # Data management
 
-Once your [data model](/user-guide/project/#data-model) is ready, you're able to add data. The DSP-APP offers several possibilities to add data, whether you are starting from scratch or importing data from another program.
+Once your [data model](https://docs.dasch.swiss/latest/DSP-APP/user-guide/project/#data-model) is ready, you're able to add data. The DSP-APP offers several possibilities to add data, whether you are starting from scratch or importing data from another program.
 
 ## Start from scratch
 &#9888; *NOT YET IMPLEMENTED* (only mockups are presented)
@@ -11,15 +11,15 @@ When a project starts from scratch, you will enter and generate new data directl
 - Augment the metadata
 - In case of interview transcriptions from audio or video files, DSP-APP will offer a simple transcription tool
 
-![Create new source e.g. upload audio file of an interview.](../assets/images/mock-source-new-edit.png)*Create new source; e.g. upload audio file of an interview.*
+![Create new resource e.g. upload audio file of an interview.](../assets/images/mock-source-new-edit.png)*Create new resource; e.g. upload audio file of an interview.*
 
 ---
 
-### Organize data and create additional sources
+### Organize data and create additional resources
 &#9888; *NOT YET IMPLEMENTED*
 
-The workspace of the DSP-APP includes tools to connect different sources, even if they're not in the same project (linkage), to comment on a source and on their metadata fields (annotate), and to transcribe audio-visual material. These actions will generate more data and will help to find specific sources and their relations easily.
-It's possible to collect different sources and to store them in an individual collection. You can define more than one collection. You can share collections and invite other users to collaborate.
+The workspace of the DSP-APP includes tools to connect different resources, even if they're not in the same project (linkage), to comment on a resource and on their metadata fields (annotate), and to transcribe audio-visual material. These actions will generate more data and will help to find specific resources and their relations easily.
+It's possible to collect different resources and to store them in an individual collection. You can define more than one collection. You can share collections and invite other users to collaborate.
 
 ---
 
@@ -156,63 +156,63 @@ The results of the search are displayed in a grid list with a big preview. You c
 ### Table: Excel-like view
 &#9888; *NOT YET IMPLEMENTED*
 
-The search results are displayed in a table with the option to sort them. This layout is enabled when the search has been performed with **only one source type**.
+The search results are displayed in a table with the option to sort them. This layout is enabled when the search has been performed with **only one resource type**.
 Each column of the table corresponds to one metadata.
 
-![Search result 3: An Excel-like table view to edit multiple sources at once.](../assets/images/search-results-table-mockup.png)*Search result 3: An Excel-like table view to edit multiple sources at once.*
+![Search result 3: An Excel-like table view to edit multiple resources at once.](../assets/images/search-results-table-mockup.png)*Search result 3: An Excel-like table view to edit multiple resources at once.*
 
 ---
 
 ## Do research and work on your data
 
-Once you have found the desired sources, you can (re)view them and annotate the source itself, the media file, or single metadata values. If you select more than one source, you can compare them in a side-by-side view, link them, edit them all at once, or save them in a collection. A collection is similar to a playlist in a music app or shopping basket in an online store.
+Once you have found the desired resources, you can (re)view them and annotate the resource itself, the media file, or single metadata values. If you select more than one resource, you can compare them in a side-by-side view, link them, edit them all at once, or save them in a collection. A collection is similar to a playlist in a music app or shopping basket in an online store.
 
-### Display a source
+### Display a resource
 <!-- &#9888; *WORK IN PROGRESS* -->
 
-The DSP-APP offers different source views for different media types. There's a viewer for still images, moving images, audio and document files. You can open them from the list of search results. Depending on the media type, DSP-APP offers different tools to work on the source.
+The DSP-APP offers different resource views for different media types. There's a viewer for still images, moving images, audio and document files. You can open them from the list of search results. Depending on the media type, DSP-APP offers different tools to work on the resource.
 
-In a still image source, you're able to draw regions on the image and to annotate or transcribe this region. Usually, a still image source is used for book pages, photographs, postcards, letters etc.
+In a still image resource, you're able to draw regions on the image and to annotate or transcribe this region. Usually, a still image resource is used for book pages, photographs, postcards, letters etc.
 
-In time-based sources like moving image or audio document, you can mark sequences on the timeline. A transcription tool helps to annotate and to transcribe the sequence.
+In time-based resources like moving image or audio document, you can mark sequences on the timeline. A transcription tool helps to annotate and to transcribe the sequence.
 
-![Single source view. The source type in this example is "Photo".](../assets/images/resource-view-with-image.png)*Single source view. The source type in this example is "Page".*
+![Single resource view. The resource type in this example is "Photo".](../assets/images/resource-view-with-image.png)*Single resource view. The resource type in this example is "Page".*
 
-DSP-APP will offer a graph view to visualize the connection of a selected source. The graph view is a powerful tool because you will find more information about the source by clicking through the nodes.
+DSP-APP will offer a graph view to visualize the connection of a selected resource. The graph view is a powerful tool because you will find more information about the resource by clicking through the nodes.
 
-![Graph view of a single source.](../assets/images/source-graph-view.png)*Graph view of a single source.*
+![Graph view of a single resource.](../assets/images/source-graph-view.png)*Graph view of a single resource.*
 
-Additionally, you can work on the source directly, e.g, transcribe a moving image or a taped interview or mark regions of interest on still images and on documents.
+Additionally, you can work on the resource directly, e.g, transcribe a moving image or a taped interview or mark regions of interest on still images and on documents.
 
-![Single source fullframe view with the transcription tool at the bottom. The source type in this example is "Video" with a table-based sequence protocol on the right hand-side.](../assets/images/source-selected-fullframe.png)*Single source fullframe view with the transcription tool at the bottom. The source type in this example is "Video" with a table-based sequence protocol on the right hand-side.*
-
----
-
-### Select more than one source
-<!-- &#9888; *NOT YET IMPLEMENTED* -->
-
-![Three sources selected; what do you want to do with them?](../assets/images/source-selected-three.png)*Three sources are selected; what do you want to do with them?*
-
-By selecting more than one source, you will be able to edit them all at once, add them to a collection, share or connect them.
-Or you could compare the sources (see [Compare the sources](/user-guide/data/#compare-the-sources)).
+![Single resource fullframe view with the transcription tool at the bottom. The resource type in this example is "Video" with a table-based sequence protocol on the right hand-side.](../assets/images/source-selected-fullframe.png)*Single resource fullframe view with the transcription tool at the bottom. The resource type in this example is "Video" with a table-based sequence protocol on the right hand-side.*
 
 ---
 
-### Compare the sources
+### Select more than one resource
 <!-- &#9888; *NOT YET IMPLEMENTED* -->
 
-You will be able to compare from two to six source objects at the same time side by side.
+![Three resources selected; what do you want to do with them?](../assets/images/source-selected-three.png)*Three resources are selected; what do you want to do with them?*
 
-![Compare 2 to 6 sources with each other, similar to the Mirador web app.](../assets/images/source-compare-viewer.png)*Compare 2 to 6 sources with each other, similar to the Mirador web app.*
+By selecting more than one resource, you will be able to edit them all at once, add them to a collection, share or connect them.
+Or you could compare the resources (see [Compare the resources](/user-guide/data/#compare-the-sources)).
 
 ---
 
-### Annotate and connect your data (sources and/or metadata)
+### Compare the resources
 <!-- &#9888; *NOT YET IMPLEMENTED* -->
 
-A main feature of the flexible data storage that DSP-APP uses is the possibility to annotate and link sources and their metadata. An annotation can be a small note about a date like "Not sure about the birthdate of this person. There's another date mentioned in the source XYZ". Inside the note, it will be possible to link to another source.
+You will be able to compare from two to six resource objects at the same time side by side.
 
-Links in DSP-APP are always bi-directional. If you link source A with source B, then source B knows about this connection. If you find source B, you have the connection to source A as well.
+![Compare 2 to 6 resources with each other, similar to the Mirador web app.](../assets/images/source-compare-viewer.png)*Compare 2 to 6 resources with each other, similar to the Mirador web app.*
+
+---
+
+### Annotate and connect your data (resources and/or metadata)
+<!-- &#9888; *NOT YET IMPLEMENTED* -->
+
+A main feature of the flexible data storage that DSP-APP uses is the possibility to annotate and link resources and their metadata. An annotation can be a small note about a date like "Not sure about the birthdate of this person. There's another date mentioned in the resource XYZ". Inside the note, it will be possible to link to another resource.
+
+Links in DSP-APP are always bi-directional. If you link resource A with resource B, then resource B knows about this connection. If you find resource B, you have the connection to resource A as well.
 
 ---
 
@@ -220,6 +220,6 @@ Links in DSP-APP are always bi-directional. If you link source A with source B, 
 &#9888; *NOT YET IMPLEMENTED*
 
 Data sets and metadata extracted through a search can be exported as CSV, XML, or other predefined file formats.
-It will be also possible to store full text, advanced, and expert search queries to reuse them later, collect source objects in a collection similar to a playlist of a music app or a shopping basket.
+It will be also possible to store full text, advanced, and expert search queries to reuse them later, collect resource objects in a collection similar to a playlist of a music app or a shopping basket.
 
-![The share menu offers many tools to export the data, to send it to someone or to store it in an individual source collection.](../assets/images/share-export-menu.png)*The share menu offers many tools to export the data, to send it to someone or to store it in an individual source collection.*
+![The share menu offers many tools to export the data, to send it to someone or to store it in an individual resource collection.](../assets/images/share-export-menu.png)*The share menu offers many tools to export the data, to send it to someone or to store it in an individual resource collection.*
