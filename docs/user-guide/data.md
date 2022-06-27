@@ -29,9 +29,17 @@ N.B.: Please, note that the image, video and audio files must be in one of the r
 
 ### Link resources
 
-The workspace of the DSP-APP allows you to connect different resources, even if they're not in the same project (linkage), to comment on a resource and on their metadata fields (annotate). These actions will generate more data and will help to find specific resources and their relations easily.
+The workspace of the DSP-APP allows you to connect different resources, even if they are not in the same project (linkage), to comment on a resource and on their metadata fields (annotate). These actions will generate more data and will help to find specific resources and their relations easily.
 
+To link 2 resources,
 
+On your resource A, open the Share menu and click on the button "Copy internal link on clipboard". You have copied the internal link of your resource A that will be used to make the link with your resource B.
+
+screen shot
+
+Go to your resource B. You click on the **edit** button of the property value where you want to add the link. This value must be of type **richtext**. You write and select a word or a group of words you want to attach the link, then click on the **Link** button in the toolbar of the text editor, paste the internal link of the resource A here, and click on Save. The word (or the group of words) is now highlighted in blue and is clickable.
+
+<!-- screen shots to describe the steps -->
 
 ---
 
@@ -43,7 +51,7 @@ DSP-APP offers the possibility to the user to search in 3 different ways: **full
 
 ### Full text search
 
-Full text search performs queries including one or more terms or phrases, and returns data that matches search conditions. By default, the search is performed in all projects stored in DSP. However, it is possible to filter by project using the menu "Filter by project" on the left side of the search bar.
+The full text search performs queries including one or more terms or phrases, and returns data that matches search conditions. By default, the search is performed in all projects stored in DSP. However, it is possible to filter by project using the menu "Filter by project" on the left side of the search bar.
 
 ![Filter your full text search by specific project](../assets/images/search-fulltext-filterByProject.png)*<https://admin.dasch.swiss> - Search 1: Full text search*
 
@@ -63,16 +71,16 @@ Special syntax:
 
 ![Advanced search link is findable in the search menu at the right of the full text search field.](../assets/images/search-advanced-link.png)
 
-The advanced search allows for the creation of complex queries using a graphical widget.
-The widget's contents are then turned into a string representing a Gravsearch (SPARQL) query to be sent to DSP-API.
+The advanced search allows the creation of complex queries using a form.
+The form creates a string representing a Gravsearch (SPARQL) query to be sent to DSP-API.
 
 A query consists of the following elements:
 
-- data model selection
+- selection of the data model
 - selection of a resource class belonging to the selected data model (optional)
 - specification of properties, comparison operators, and values (optional).
 
-Although selection of a resource or a property or both are optional, either a resource class has to be selected or at least one property has to be specified,
+Although the selection of a resource or a property or both are optional, either a resource class has to be selected or at least one property has to be specified,
 otherwise the query is not considered valid and cannot be submitted.
 
 ![Search 2: Advanced search offers many filter combinations and is a powerful search tool.](../assets/images/search-advanced.png)*<https://admin.dasch.swiss/search/advanced> - Search 2: Advanced search offers many filter combinations and is a powerful search tool.*
@@ -96,16 +104,16 @@ one or more of the following comparison operators can be selected:
 
 #### Search Examples
 
-##### Regular Expressions (is like)
+##### is like (regular Expressions)
 
 The `is like` operator lets the user search for texts that are *like* the search value via the support of regular expressions
 In this example, all books are found whose title contains "Narrenschiff" followed by a space and some other characters like "(lat.)" or "(dt.)".
 
-For general information about regular expressions see this [interactive tutorial](https://regexone.com).
+For general information about regular expressions, see this [interactive tutorial](https://regexone.com).
 
 ![Advanced search panel with a search example](../assets/images/advanced-search-regex.png)
 
-##### Lucene Parser Syntax (matches)
+##### matches (Lucene Parser Syntax)
 
 Used with a text property, the `matches` operator lets the user search for texts that *match* the search value,
 supporting [Lucene Query Parser Syntax](https://docs-api.dasch.swiss/08-lucene/lucene-query-parser-syntax/).
@@ -116,7 +124,7 @@ This search finds "Jacob" as well as "Jakob".
 
 ![Advanced search panel with a search example](../assets/images/advanced-search-match.png)
 
-##### Specifying a Linked Resource (matches)
+##### matches (specifying a Linked Resource)
 
 Used with a linking property, the `matches` operator lets the user search for a linked resource that matches the specified properties.
 In this example, the user writes a query looking for all letters that have an author that:
@@ -146,14 +154,14 @@ To learn Gravsearch, go to the DSP-API documentation [&rarr; Gravsearch](https:/
 
 ## Search results
 
-### Simple list
-The results of the search are displayed in an organised list with a small preview. You can select one result at a time to get more information.
+<!-- ### Simple list -->
+The results of the search are displayed in an organised list<!--with a small preview-->. You can select one result at a time to get more information.
 
 ![Search result 1: Simple list of results, similar to Google's list of results.](../assets/images/search-results-list.png)*Search result 1: Simple list of results, similar to Google's list of results.*
 
 &#9888; *NOT YET IMPLEMENTED*
 It is not possible yet to sort or order by criteria when searching with the full text search, use the advanced search or the expert search instead to get back sorted results.
-
+<!--
 ---
 
 ### Grid list: Lighttable
@@ -173,11 +181,12 @@ Each column of the table corresponds to one metadata.
 
 ![Search result 3: An Excel-like table view to edit multiple resources at once.](../assets/images/search-results-table-mockup.png)*Search result 3: An Excel-like table view to edit multiple resources at once.*
 
+-->
 ---
 
 ## Do research and work on your data
 
-Once you have found the desired resources, you can (re)view them and annotate the resource itself, the media file, or single metadata values. If you select more than one resource, you can compare them in a side-by-side view, link them, edit them all at once, or save them in a collection. A collection is similar to a playlist in a music app or shopping basket in an online store.
+Once you have found the desired resources, you can (re)view them and annotate the resource itself, the media file, or single metadata values. If you select more than one resource, you can compare them in a side-by-side view, link them, edit them all at once<!--, or save them in a collection. A collection is similar to a playlist in a music app or shopping basket in an online store-->.
 
 ### Display a resource
 <!-- &#9888; *WORK IN PROGRESS* -->
@@ -186,13 +195,13 @@ The DSP-APP offers different resource views for different media types. There's a
 
 In a still image resource, you're able to draw regions on the image and to annotate or transcribe this region. Usually, a still image resource is used for book pages, photographs, postcards, letters etc.
 
-In time-based resources like moving image or audio document, you can mark sequences on the timeline. A transcription tool helps to annotate and to transcribe the sequence.
+<!--In time-based resources like moving image or audio document, you can mark sequences on the timeline. A transcription tool helps to annotate and to transcribe the sequence.-->
 
 ![Single resource view. The resource type in this example is "Photo".](../assets/images/resource-view-with-image.png)*Single resource view. The resource type in this example is "Page".*
 
-DSP-APP will offer a graph view to visualize the connection of a selected resource. The graph view is a powerful tool because you will find more information about the resource by clicking through the nodes.
+<!-- DSP-APP will offer a graph view to visualize the connection of a selected resource. The graph view is a powerful tool because you will find more information about the resource by clicking through the nodes.
 
-![Graph view of a single resource.](../assets/images/source-graph-view.png)*Graph view of a single resource.*
+![Graph view of a single resource.](../assets/images/source-graph-view.png)*Graph view of a single resource.* -->
 
 Additionally, you can work on the resource directly, e.g, transcribe a moving image or a taped interview or mark regions of interest on still images and on documents.
 
