@@ -31,15 +31,21 @@ N.B.: Please, note that the image, video and audio files must be in one of the r
 
 The workspace of the DSP-APP allows you to connect different resources, even if they are not in the same project (linkage), to comment on a resource and on their metadata fields (annotate). These actions will generate more data and will help to find specific resources and their relations easily.
 
-To link 2 resources,
+To link 2 resources (A is an image and B is a document in the example), you go to your resource A that will be linked, open the Share menu and click on the button "Copy internal link on clipboard". You have copied the internal link of your resource A that will be used to make the link with your resource B.
 
-On your resource A, open the Share menu and click on the button "Copy internal link on clipboard". You have copied the internal link of your resource A that will be used to make the link with your resource B.
+![Copy the internal link](../assets/images/link_copy_internal_link.png)*Copy the internal link of the resource A.*
 
-screen shot
+Go to your resource B. You click on the **edit** button of the property value where you want to add the link (by mousing over the value content). This value must be of type **richtext**.
 
-Go to your resource B. You click on the **edit** button of the property value where you want to add the link. This value must be of type **richtext**. You write and select a word or a group of words you want to attach the link, then click on the **Link** button in the toolbar of the text editor, paste the internal link of the resource A here, and click on Save. The word (or the group of words) is now highlighted in blue and is clickable.
+![Edit the property value](../assets/images/link_edit_value.png)*Edit the property value of type richtext to add the link.*
 
-<!-- screen shots to describe the steps -->
+You write and select a word or a group of words you want to attach the link, then click on the **Link** button in the toolbar of the text editor, paste the internal link of the resource A here, and click on Save.
+
+![Add the link to your description](../assets/images/link_paste_link.png)*Add the link in your text and save.*
+
+The word (or the group of words) is now highlighted in blue-grey and is clickable.
+
+![Link has been added to the text](../assets/images/link_saved_as_standoff.png)*The link has been added to your text.*
 
 ---
 
