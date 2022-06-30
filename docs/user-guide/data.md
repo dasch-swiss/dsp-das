@@ -255,6 +255,24 @@ If your property is linked to another resource, you can search for an existing v
 
 ### Edit your data
 
+#### Edit a resource
+
+To edit the resource label, you reach the edit form by opening the resource menu on the right-side of the toolbar and clicking on `Edit label`.
+
+![Add a new linked resource value.](../assets/images/edit-resource-label.png)
+
+#### Edit a property value
+
+You can edit a property value from the resource viewer. You mouse over the value and click on the edit button.
+
+![Add a new linked resource value.](../assets/images/edit-value.png)*Edit button when mousing over the value.*
+
+You edit your value by changing the text content, searching for another resource label, or creating a new resource instance. Don't forget to save your changes (floppy disk button) or undo them (back arrow button) to leave the edit mode.
+
+![Add a new linked resource value.](../assets/images/edit-value-steps.png)
+
+It is the same process to add, edit or delete a comment to the value.
+
 ---
 
 ### Delete / erase your data
