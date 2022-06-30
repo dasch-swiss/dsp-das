@@ -216,7 +216,7 @@ By default, only important properties are shown in the resource viewer. To displ
 
 #### Display a value comment
 
-To display existing value comment, you mouse over the property value and click on the comment button (3rd icon from the left).
+To display the existing value comment, you mouse over the property value and click on the comment button (3rd icon from the left).
 
 ![Mouse over the property value to see if there is a comment.](../assets/images/comment-value.png)*Mouse over the property value to see if there is a comment and display it.*
 
@@ -247,9 +247,8 @@ To keep in mind: The more you compare, the smaller will be the resource viewer f
 ---
 
 ### Annotate and connect your data (resources and/or metadata)
-<!-- &#9888; *NOT YET IMPLEMENTED* -->
 
-A main feature of the flexible data storage that DSP-APP uses is the possibility to annotate and link resources and their metadata. An annotation can be a small note about a date like "Not sure about the birthdate of this person. There's another date mentioned in the resource XYZ". Inside the note, it will be possible to link to another resource.
+The main feature of the flexible data storage that DSP-APP uses is the possibility to annotate and link resources and their metadata. An annotation can be a small note about a date like "Not sure about the birthdate of this person. There's another date mentioned in the resource XYZ". Inside the note, it will be possible to link to another resource.
 
 Links in DSP-APP are always bi-directional. If you link resource A with resource B, then resource B knows about this connection. If you find resource B, you have the connection to resource A as well.
 
