@@ -208,11 +208,15 @@ In a still image resource, you're able to draw regions on the image and annotate
 
 Additionally, you can work on the resource directly, e.g, mark regions of interest on still images and on documents.
 
-#### Display properties
+#### Display resource properties
 
 By default, only important properties are shown in the resource viewer. To display them all, click on the "unfold" button in the resource toolbar.
 
 ![Show or hide properties.](../assets/images/show-hide-properties.png)*Show or hide properties from the toolbar.*
+
+To get more information about the property value, i.e. date of creation and author name, you mouse over the value and then on the info button.
+
+![Get more information about the value](../assets/images/value-info.png)*Get the creation date and the author name of the value.*
 
 #### Display a value comment
 
@@ -235,6 +239,17 @@ To keep in mind: The more you compare, the smaller will be the resource viewer f
 ---
 
 ### Add new data
+
+You can create a new property value **if your data model allows it**. The value should have a cardinality of 0-1, 0-N or, 1-N.
+A "plus" button is displayed to the right of the label or after the first value field. You fill in the form field and save the changes by clicking on the floppy disk button. You can undo (back arrow button) or cancel the changes (x button).
+
+![Add a new property value.](../assets/images/add-value.png)*Add a new property value.*
+
+![Save or undo the changes.](../assets/images/add-new-text-value.png)*Save or undo the changes you made.*
+
+If your property is linked to another resource, you can search for an existing value by typing the first letter of the resource label you are looking for. You can also create a new resource instance by clicking on the first option in the drop-down menu, `Create new: xxx`.
+
+![Add a new linked resource value.](../assets/images/add-new-resource-value.png)
 
 ---
 
