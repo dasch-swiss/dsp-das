@@ -309,7 +309,7 @@ You can delete a property value. You mouse over the value and click on the delet
 
 ---
 
-### Annotate and connect your data (resources and/or metadata)
+### Annotate and connect your data
 
 The main feature of the flexible data storage that DSP-APP uses is the possibility to annotate and link resources and their metadata. An annotation can be a small note about a date like "Not sure about the birthdate of this person. There's another date mentioned in the resource XYZ". Inside the note, it will be possible to link to another resource.
 
@@ -317,6 +317,10 @@ Links in DSP-APP are always bi-directional. If you link resource A with resource
 
 ---
 
-### Share the data
+### Share your data
 
-Each resource of your dataset gets an ARK URL (Archival Resource Key), a persistent identifier that will 
+Each resource of your dataset gets an ARK URL (Archival Resource Key), a persistent identifier that will allow citing permanently your resource in papers, conference presentations, books, etc.
+
+You will find it in the **Share** menu of the resource toolbar, click on `Copy ARK to clipboard` to copy and paste it wherever you want.
+
+![Copy ARK URL.](../assets/images/copy-ark.png)*Copy ARK URL.*
