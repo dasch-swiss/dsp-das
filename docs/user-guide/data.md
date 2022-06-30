@@ -194,9 +194,11 @@ Each column of the table corresponds to one metadata.
 
 Once you have found the desired resources, you can (re)view them and annotate the resource itself, the media file, or single metadata values. If you select more than one resource, you can compare them in a side-by-side view or link them.<!--edit them all at once, or save them in a collection. A collection is similar to a playlist in a music app or shopping basket in an online store-->
 
-### Display a resource
+### Display data
 
-DSP-APP offers different resource views for different media types. There's a viewer for still images, moving images, audio, and document files. You can open them from the list of search results. Depending on the media type, DSP-APP offers different tools to work on the resource.
+#### Display a resource
+
+DSP-APP offers different resource views for different media types. There's a viewer for still images, moving images, audio, and document files. You open them from the list of search results. Depending on the media type, DSP-APP offers different tools to work on the resource.
 
 In a still image resource, you're able to draw regions on the image and annotate this region. Usually, a still image resource is used for book pages, photographs, postcards, letters, etc.
 
@@ -205,6 +207,18 @@ In a still image resource, you're able to draw regions on the image and annotate
 ![Single resource view. The resource type in this example is "Photo".](../assets/images/resource-view-with-image.png)*Single resource view. The resource type in this example is "Page".*
 
 Additionally, you can work on the resource directly, e.g, mark regions of interest on still images and on documents.
+
+#### Display properties
+
+By default, only important properties are shown in the resource viewer. To display them all, click on the "unfold" button in the resource toolbar.
+
+![Show or hide properties.](../assets/images/show-hide-properties.png)*Show or hide properties from the toolbar.*
+
+#### Display a value comment
+
+To display existing value comment, you mouse over the property value and click on the comment button (3rd icon from the left).
+
+![Mouse over the property value to see if there is a comment.](../assets/images/comment-value.png)*Mouse over the property value to see if there is a comment and display it.*
 
 ---
 
@@ -222,9 +236,15 @@ To keep in mind: The more you compare, the smaller will be the resource viewer f
 
 ### Add new data
 
+---
+
 ### Edit your data
 
+---
+
 ### Delete / erase your data
+
+---
 
 ### Annotate and connect your data (resources and/or metadata)
 <!-- &#9888; *NOT YET IMPLEMENTED* -->
@@ -236,9 +256,5 @@ Links in DSP-APP are always bi-directional. If you link resource A with resource
 ---
 
 ### Share the data
-&#9888; *NOT YET IMPLEMENTED*
 
-Data sets and metadata extracted through a search can be exported as CSV, XML, or other predefined file formats.
-It will be also possible to store full text, advanced, and expert search queries to reuse them later, collect resource objects in a collection similar to a playlist of a music app or a shopping basket.
-
-![The share menu offers many tools to export the data, to send it to someone or to store it in an individual resource collection.](../assets/images/share-export-menu.png)*The share menu offers many tools to export the data, to send it to someone or to store it in an individual resource collection.*
+Each resource of your dataset gets an ARK URL (Archival Resource Key), a persistent identifier that will 
