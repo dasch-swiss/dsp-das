@@ -196,9 +196,9 @@ Once you have found the desired resources, you can (re)view them and annotate th
 
 ### Display a resource
 
-DSP-APP offers different resource views for different media types. There's a viewer for still images, moving images, audio and document files. You can open them from the list of search results. Depending on the media type, DSP-APP offers different tools to work on the resource.
+DSP-APP offers different resource views for different media types. There's a viewer for still images, moving images, audio, and document files. You can open them from the list of search results. Depending on the media type, DSP-APP offers different tools to work on the resource.
 
-In a still image resource, you're able to draw regions on the image and to annotate this region. Usually, a still image resource is used for book pages, photographs, postcards, letters etc.
+In a still image resource, you're able to draw regions on the image and annotate this region. Usually, a still image resource is used for book pages, photographs, postcards, letters, etc.
 
 <!--In time-based resources like moving image or audio document, you can mark sequences on the timeline. A transcription tool helps to annotate and to transcribe the sequence.-->
 
@@ -213,7 +213,7 @@ Additionally, you can work on the resource directly, e.g, mark regions of intere
 
 ![Three resources selected; what do you want to do with them?](../assets/images/source-selected-three.png)*Three resources are selected; what do you want to do with them?*
 
-By selecting more than one resource, you will be able to edit them all at once, add them to a collection, share or connect them.
+By selecting more than one resource, you will be able to edit them all at once, add them to a collection, and share or connect them.
 Or you could compare the resources (see [Compare the resources](/user-guide/data/#compare-the-sources)).
 
 ---
