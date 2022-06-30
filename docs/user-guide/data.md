@@ -196,7 +196,9 @@ Once you have found the desired resources, you can (re)view them and annotate th
 
 ### Data permissions
 
-In order to know what you are allowed to see or do with the selected resource, please check the permissions that are granted for your user role. You can find more details about the [permissions in the documentation of DSP-API](https://docs.dasch.swiss/2022.06.02/DSP-API/02-knora-ontologies/knora-base/?h=permission#permissions).
+In order to know what you are allowed to see or do with the selected resource, please check the permissions that are granted for your user role. You can find more details about the [permissions in the documentation of DSP-API](https://docs.dasch.swiss/latest/DSP-API/02-knora-ontologies/knora-base/?h=permission#permissions).
+
+If you don't have the permissions you were supposed to get, please contact the [DaSCH team](mailto:support@dasch.swiss).
 
 ![Get the resource permissions.](../assets/images/resource-permissions.png)*Check the resource permissions you are granted.*
 
@@ -246,6 +248,8 @@ To keep in mind: The more you compare, the smaller will be the resource viewer f
 
 ### Add new data
 
+&#9888; You must have the granted permission to proceed.
+
 You can create a new property value **if your data model allows it**. The value should have a cardinality of 0-1, 0-N or, 1-N.
 A "plus" button is displayed to the right of the label or after the first value field. You fill in the form field and save the changes by clicking on the floppy disk button. You can undo (back arrow button) or cancel the changes (x button).
 
@@ -260,6 +264,8 @@ If your property is linked to another resource, you can search for an existing v
 ---
 
 ### Edit your data
+
+&#9888; You must have the granted permission to proceed.
 
 #### Edit a resource
 
@@ -281,7 +287,25 @@ It is the same process to add, edit or delete a comment to the value.
 
 ---
 
-### Delete / erase your data
+### Delete your data
+
+&#9888; You must have the granted permission to proceed.
+
+#### Delete or erase a resource
+
+To delete a resource, there are 2 possibilities:
+
+1. **Delete** resource: the resource is not searchable or findable in DSP-APP anymore but the data still exists in the database.
+
+2. **Erase** resource: the resource is **definitely** deleted from the database, it will be impossible to get it back.
+
+![Delete or erase a resource.](../assets/images/delete-erase-resource.png)*Delete or erase a resource.*
+
+#### Delete a property value
+
+You can delete a property value. You mouse over the value and click on the delete button. You have to confirm your choice. It is possible to comment on the deletion of the value in the confirmation pop-up window to explain why it is being deleted.
+
+![Delete a property value.](../assets/images/delete-value.png)*Delete a property value.*
 
 ---
 
