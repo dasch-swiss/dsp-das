@@ -194,6 +194,12 @@ Each column of the table corresponds to one metadata.
 
 Once you have found the desired resources, you can (re)view them and annotate the resource itself, the media file, or single metadata values. If you select more than one resource, you can compare them in a side-by-side view or link them.<!--edit them all at once, or save them in a collection. A collection is similar to a playlist in a music app or shopping basket in an online store-->
 
+### Data permissions
+
+In order to know what you are allowed to see or do with the selected resource, please check the permissions that are granted for your user role. You can find more details about the [permissions in the documentation of DSP-API](https://docs.dasch.swiss/2022.06.02/DSP-API/02-knora-ontologies/knora-base/?h=permission#permissions).
+
+![Get the resource permissions.](../assets/images/resource-permissions.png)*Check the resource permissions you are granted.*
+
 ### Display data
 
 #### Display a resource
