@@ -31,8 +31,6 @@ N.B.: Please, note that the image, video and audio files must be in one of the r
 
 The workspace of the DSP-APP allows you to connect different resources, even if they are not in the same project (linkage), to comment on a resource and on their metadata fields (annotate). These actions will generate more data and will help to find specific resources and their relations easily.
 
-
-
 ---
 
 ## Search and browse
