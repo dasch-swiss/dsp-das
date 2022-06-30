@@ -192,7 +192,7 @@ Each column of the table corresponds to one metadata.
 
 ## Do research and work on your data
 
-Once you have found the desired resources, you can (re)view them and annotate the resource itself, the media file, or single metadata values. If you select more than one resource, you can compare them in a side-by-side view or link them. <!--edit them all at once, or save them in a collection. A collection is similar to a playlist in a music app or shopping basket in an online store-->.
+Once you have found the desired resources, you can (re)view them and annotate the resource itself, the media file, or single metadata values. If you select more than one resource, you can compare them in a side-by-side view or link them.<!--edit them all at once, or save them in a collection. A collection is similar to a playlist in a music app or shopping basket in an online store-->
 
 ### Display a resource
 
@@ -208,17 +208,7 @@ Additionally, you can work on the resource directly, e.g, mark regions of intere
 
 ---
 
-### Display more than one resource
-<!-- &#9888; *NOT YET IMPLEMENTED* -->
-
-![Three resources selected; what do you want to do with them?](../assets/images/source-selected-three.png)*Three resources are selected; what do you want to do with them?*
-
-By selecting more than one resource, you will be able to edit them all at once, add them to a collection, and share or connect them.
-Or you could compare the resources (see [Compare the resources](/user-guide/data/#compare-the-sources)).
-
----
-
-### Compare resources
+### Display and compare several resources
 
 You can compare 2 or more resources of any type at the same time side by side. From the search result list, select your resources of interest by checking the checkbox (right side of each result) and clicking on the compare button on the right-side tile.
 
