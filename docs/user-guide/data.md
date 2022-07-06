@@ -6,7 +6,7 @@ Once your [data model](https://docs.dasch.swiss/latest/DSP-APP/user-guide/projec
 
 When a project starts from scratch, you will enter and generate new data directly in the DSP-APP itself. Generating new data can be done one by one with a form at the moment:
 
-- Upload files, e.g., an audio file, a photography, a video or a document
+- Upload files, e.g., an audio file, photography, a video, or a document
 - Augment the metadata
 
 ### Create new resource instances
@@ -19,11 +19,11 @@ You can create a new resource instance using the "create new resource" form:
 
 ![Create a new resource instance e.g. a new audio file](../assets/images/create-new-resource-form-step1.png)*Step 1: Create a new resource instance e.g. a new audio file.*
 
-**Step2:** Fill in the form and upload the file if requested (depending on the type of resource). Please, note that the required fields are marked with an asterisk `*` after the property label. Click on `Save` to create the new resource instance. To go back to Step 1, click on `Back`.
+**Step2:** Fill in the form and upload the file if requested (depending on the type of resource). Please, note that the required fields are marked with an asterisk `*` after the property label. Click on `Save` to create the new resource instance. To go back to Step 1, click on `Back`. If you cannot click on `Save`, it means that a required field has not been filled in.
 
 ![Create a new resource instance e.g. a new audio file](../assets/images/create-new-resource-form-step2.png)*Step2: Create a new resource instance e.g. a new audio file in MP3 format.*
 
-N.B.: Please, note that the image, video and audio files must be in one of the required file types supported by the database. The supported types are listed in the upload section of the form.
+N.B.: Please, note that the image, video, and audio files must be in one of the required file types supported by the database. The supported types are listed in the upload section of the form.
 
 ---
 
@@ -35,31 +35,31 @@ The workspace of the DSP-APP allows you to connect different resources, even if 
 
 ## Search and browse
 
-DSP-APP offers the possibility to the user to search in 3 different ways: **full text** search, **advanced** search and **expert** search (Gravsearch query). The search bar is always available in the header of each page, whether logged in or out.
+DSP-APP offers the possibility for the user to search in 3 different ways: **full-text** search, **advanced** search, and **expert** search (Gravsearch query). The search bar is always available in the header of each page, whether logged in or out.
 
-![Search bar with the 3 search modes: full text, advanced and expert](../assets/images/search-3modes.png)
+![Search bar with the 3 search modes: full-text, advanced, and expert](../assets/images/search-3modes.png)
 
-### Full text search
+### Full-text search
 
-The full text search performs queries including one or more terms or phrases, and returns data that matches search conditions. By default, the search is performed in all projects stored in DSP. However, it is possible to filter by project using the menu "Filter by project" on the left side of the search bar.
+The full-text search performs queries including one or more terms or phrases and returns data that matches search conditions. By default, the search is performed in all projects stored in DSP. However, it is possible to filter by the project using the menu "Filter by project" on the left side of the search bar.
 
-![Filter your full text search by specific project](../assets/images/search-fulltext-filterByProject.png)*<https://admin.dasch.swiss> - Search 1: Full text search*
+![Filter your full-text search by specific project](../assets/images/search-fulltext-filterByProject.png)*<https://admin.dasch.swiss> - Search 1: Full-text search*
 
 When clicking on the search bar, the search history panel is displayed. The **10** last searches are registered. It is also possible to clear the search history list (*Clear list* button at the bottom of the panel or the *x* at the end of each line).
 
-![Search history panel](../assets/images/search-history.png)*Search history list is accessible for the full text search from any webpage.*
+![Search history panel](../assets/images/search-history.png)*Search history list is accessible for the full-text search from any webpage.*
 
 Special syntax:
 
-- question mark? can be used as wildcard symbol for a single character.
-- asterisk* can be used as a wildcard symbol for zero, one or multiple characters.
+- question mark? can be used as a wildcard symbol for a single character.
+- asterisk* can be used as a wildcard symbol for zero, one, or multiple characters.
 - "quotation marks" searches for the whole pattern.
 
 ---
 
 ### Advanced search
 
-![Advanced search link is findable in the search menu at the right of the full text search field.](../assets/images/search-advanced-link.png)
+![Advanced search link is findable in the search menu at the right of the full-text search field.](../assets/images/search-advanced-link.png)
 
 The advanced search allows the creation of complex queries using a form.
 The form creates a string representing a Gravsearch (SPARQL) query to be sent to DSP-API.
@@ -70,8 +70,7 @@ A query consists of the following elements:
 - selection of a resource class belonging to the selected data model (optional)
 - specification of properties, comparison operators, and values (optional).
 
-Although the selection of a resource or a property or both are optional, either a resource class has to be selected or at least one property has to be specified,
-otherwise the query is not considered valid and cannot be submitted.
+Although the selection of a resource or a property or both are optional, either a resource class has to be selected or at least one property has to be specified, otherwise, the query is not considered valid and cannot be submitted.
 
 ![Search 2: Advanced search offers many filter combinations and is a powerful search tool.](../assets/images/search-advanced.png)*<https://admin.dasch.swiss> - Search 2: Advanced search offers many filter combinations and is a powerful search tool.*
 
@@ -80,12 +79,12 @@ otherwise the query is not considered valid and cannot be submitted.
 Depending on the value type of the chosen property,
 one or more of the following comparison operators can be selected:
 
-- `is equal to`: value equality: same number, exact same string, overlap of date periods, same target resource.
+- `is equal to`: value equality: same number, exact same string, an overlap of date periods, same target resource.
 - `is not equal to`: value inequality: not same number, not exact same string, no overlap of date periods, not same target resource.
 - `is greater than`: value comparison: number is greater than search value, date period begins after search value.
-- `is greater than or equal to` value equality / value comparison: number is equal to or greater than search value, overlap of date periods or date period begins after search value.
+- `is greater than or equal to` value equality/value comparison: number is equal to or greater than search value, an overlap of date periods or date period begins after search value.
 - `is less than`: value comparison: number is less than search value, date period ends before search value.
-- `is less than or equal to`: value equality / value comparison: number is equal to or less than search value, overlap of date periods or date period ends before search value.
+- `is less than or equal to`: value equality/value comparison: number is equal to or less than search value, an overlap of date periods or date period ends before search value.
 - `exists`: value for the given property exists.
 - `is like`: search value is contained in a text using the SPARQL [REGEX](https://www.w3.org/TR/sparql11-query/#func-regex) function (supports regular expressions).
 - `matches`:
@@ -119,7 +118,7 @@ This search finds "Jacob" as well as "Jakob".
 Used with a linking property, the `matches` operator lets the user search for a linked resource that matches the specified properties.
 In this example, the user writes a query looking for all letters that have an author that:
 
-1. was born after January 1st 1650
+1. was born after January 1st, 1650
 1. whose family name is "Bernoulli"
 
 This is different from the "is equal to" operator that lets the user specify a certain person (selected from a list).
@@ -130,7 +129,7 @@ This is different from the "is equal to" operator that lets the user specify a c
 
 ### Expert search
 
-![Expert search link is findable in the search menu at the right of the full text search field.](../assets/images/search-expert-link.png)
+![Expert search link is findable in the search menu at the right of the full-text search field.](../assets/images/search-expert-link.png)
 
 The expert search can be more powerful than the advanced search, but requires knowing how to use the query language Gravsearch (based on SparQL and developed by the DaSCH team). With Gravsearch, expert users can build searches by combining text-related criteria with any other criteria.
 
@@ -145,12 +144,12 @@ To learn Gravsearch, go to the DSP-API documentation [&rarr; Gravsearch](https:/
 ## Search results
 
 <!-- ### Simple list -->
-The results of the search are displayed in an organised list<!--with a small preview-->. You can select one result at a time to get more information.
+The results of the search are displayed in an organized list<!--with a small preview-->. You can select one result at a time to get more information.
 
 ![Search result 1: Simple list of results, similar to Google's list of results.](../assets/images/search-results-list.png)*Search result 1: Simple list of results, similar to Google's list of results.*
 
 &#9888; *NOT YET IMPLEMENTED*
-It is not possible yet to sort or order by criteria when searching with the full text search, use the advanced search or the expert search instead to get back sorted results.
+It is not possible yet to sort or order by criteria when searching with the full-text search, use the advanced search or the expert search instead to get back sorted results.
 <!--
 ---
 
@@ -194,7 +193,7 @@ DSP-APP offers different resource views for different media types. There's a vie
 
 In a still image resource, you're able to draw regions on the image and annotate this region. Usually, a still image resource is used for book pages, photographs, postcards, letters, etc.
 
-<!--In time-based resources like moving image or audio document, you can mark sequences on the timeline. A transcription tool helps to annotate and to transcribe the sequence.-->
+<!--In time-based resources like moving images or audio documents, you can mark sequences on the timeline. A transcription tool helps to annotate and to transcribe the sequence.-->
 
 ![Single resource view. The resource type in this example is "Photo".](../assets/images/resource-view-with-image.png)*Single resource view. The resource type in this example is "Page".*
 
@@ -216,6 +215,12 @@ To display the existing value comment, you mouse over the property value and cli
 
 ![Mouse over the property value to see if there is a comment.](../assets/images/comment-value.png)*Mouse over the property value to see if there is a comment and display it.*
 
+#### Image viewer
+
+![Access the annotation panel](../assets/images/access_annotation_panel.png)*Access the annotation panel from the resource toolbar.*
+
+![Image viewer](../assets/images/region_annotation_panel.png)*Image viewer toolbar.*
+
 ---
 
 ### Display and compare several resources
@@ -234,6 +239,12 @@ To keep in mind: The more you compare, the smaller will be the resource viewer f
 
 &#9888; You must have the granted permission to proceed.
 
+#### Add a resource
+
+See section [Create new resource instances](https://docs.dasch.swiss/latest/DSP-APP/user-guide/data/#create-new-resource-instances).
+
+#### Add a property value
+
 You can create a new property value **if your data model allows it**. The value should have a cardinality of 0-1, 0-N or, 1-N.
 A "plus" button is displayed to the right of the label or after the first value field. You fill in the form field and save the changes by clicking on the floppy disk button. You can undo (back arrow button) or cancel the changes (x button).
 
@@ -244,6 +255,14 @@ A "plus" button is displayed to the right of the label or after the first value 
 If your property is linked to another resource, you can search for an existing value by typing the first letter of the resource label you are looking for. You can also create a new resource instance by clicking on the first option in the drop-down menu, `Create new: xxx`.
 
 ![Add a new linked resource value.](../assets/images/add-new-resource-value.png)
+
+#### Add an image region
+
+![Add a new property value.](../assets/images/add-value.png)*Add a new property value.*
+
+![Add a new property value.](../assets/images/add-value.png)*Add a new property value.*
+
+![Add a new property value.](../assets/images/add-value.png)*Add a new property value.*
 
 ---
 
