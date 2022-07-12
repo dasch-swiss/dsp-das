@@ -217,9 +217,13 @@ To display the existing value comment, you mouse over the property value and cli
 
 #### Image viewer
 
-![Access the annotation panel](../assets/images/access_annotation_panel.png)*Access the annotation panel from the resource toolbar.*
+When you open a resource that contains an image, this one is displayed in a viewer. Several functionalities are accessible from the image viewer, e.g. zoom in/out, copy the IIIF link, replace the image or draw a region on the image.
 
 ![Image viewer](../assets/images/region_annotation_panel.png)*Image viewer toolbar.*
+
+To access the regions, go to the annotation panel. You can **click on a region** in the image viewer, the focus of the page will be redirected to the annotation information.
+
+![Access the annotation panel](../assets/images/access_annotation_panel.png)*Access the annotation panel from the resource toolbar.*
 
 ---
 
@@ -258,11 +262,17 @@ If your property is linked to another resource, you can search for an existing v
 
 #### Add an image region
 
-![Add a new property value.](../assets/images/add-value.png)*Add a new property value.*
+To create a new region on an image, you click on the button Draw a region in the toolbar, then select the region you want on the image.
 
-![Add a new property value.](../assets/images/add-value.png)*Add a new property value.*
+![Select a region.](../assets/images/region_draw.png)*Select a region on the image with the drawing tool.*
 
-![Add a new property value.](../assets/images/add-value.png)*Add a new property value.*
+Enter the information about the region, an informative label and a description as a comment. You can change the color.
+
+![Fill in the form.](../assets/images/region_fillin_form.png)*Fill in the form about the selected region.*
+
+The new region information is displayed after the image viewer. You can edit or delete if you have the granted permissions. A region has also an AKR URL you can copy and share.
+
+![Region created.](../assets/images/region_new_annotation.png)*A new region has been created.*
 
 ---
 
