@@ -148,8 +148,8 @@ The results of the search are displayed in an organized list<!--with a small pre
 
 ![Search result 1: Simple list of results, similar to Google's list of results.](../assets/images/search-results-list.png)*Search result 1: Simple list of results, similar to Google's list of results.*
 
-&#9888; *NOT YET IMPLEMENTED*
-It is not possible yet to sort or order by criteria when searching with the full-text search, use the advanced search or the expert search instead to get back sorted results.
+&#9888;
+It is not possible to sort or order by criteria when searching with the full-text search, use the advanced search or the expert search instead to get back sorted results.
 <!--
 ---
 
@@ -233,7 +233,7 @@ You can compare 2 or more resources of any type at the same time side by side. F
 
 ![Select 3 resources and compare them.](../assets/images/compare-resource-select.png)*Example: Select 3 resources and compare them.*
 
-To keep in mind: The more you compare, the smaller will be the resource viewer for each. You can deselect one or more resources to remove them from the compare viewer.
+To keep in mind: The more you compare, the smaller the resource viewer for each will be. You can deselect one or more resources to remove them from the compare viewer.
 
 ![Visualise your selected resources side-by-side, e.g. 3 resources.](../assets/images/compare-resource-view.png)*Visualise your selected resources side-by-side. You can compare 2 images with an object without representation for instance.*
 

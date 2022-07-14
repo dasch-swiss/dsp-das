@@ -116,10 +116,10 @@ You can choose from a selection of the following basic types with various subtyp
 - Location (*Place*; a [geonames-identifier](https://www.geonames.org/))
 - Shape (*color*)
 
-Since in our example you want to add a property for the number of pages of your book, you choose `Number`. Now you will see that you can either choose the type `Decimal`, `Integer` or `Page number` for your property. 
+Since in our example you want to add a property for the number of pages of your book, you choose `Number`. Now you will see that you can either choose the type `Decimal`, `Integer` or `Page number` for your property.
 ![Property types.](../assets/images/Fig14.png)
 
-Page numbers have no decimal places, thus you will selecet `Integer` (or `Page number` which is a special case (s. [next section](#correct-property-selection-in-case-of-special-classes))) as the type for your property. The following window pops up:
+Page numbers have no decimal places, thus you will select `Integer` (or `Page number` which is a special case (s. [next section](#correct-property-selection-in-case-of-special-classes))) as the type for your property. The following window pops up:
 ![Property of integer type.](../assets/images/Fig15.png)
 
 In the field *Property label* add for example *Number of pages*, in the comment section you should add a meaningful explanation. It might also make sense to toggle `Required field?` since every PDF Document consists of a number of pages. If you toggle it, the number of pages MUST be given if you add data to the class *Book* - it would then be a required field, not an optional one and data could only be saved if you add the number of pages.
@@ -190,18 +190,17 @@ To delete a whole data model, you have to click the button `Delete` on the right
 
 In the alert window appearing, you click the red button `Delete`. The data model is now deleted.
 
-
 ## An example
 In the following example we focus on how we can reflect about our data before building our model and how a data model can relate classes to each other.
 
-
 ### Preparing a data model
 You have interviewed 20 people and recorded the interviews. During these interviews you talked about photographs. Among all the data collected during the project, the most important are:
-o	audio-files of the interview
-o	transcribed text of conversations (or transcribe the files within the web application)
-o	photographs
-o	data about the person you interviewed
-o	location where the photograph was taken
+
+-	audio-files of the interview
+-	transcribed text of conversations (or transcribe the files within the web application)
+-	photographs
+-	data about the person you interviewed
+-	location where the photograph was taken
 
 The following Diagram 1 shows the initial situation:
 
@@ -234,7 +233,7 @@ First, we create the resource classes that constitute the basic containers of ou
 ![Create resource classes.](../assets/images/Fig26.png)
 
 **2. Relate resource classes**
-According to our Diagram 3, we determined the transcript to be the centre of the hierarchy. In the transcript, the photographs are mentioned, the interviewed person is linked to the transcript and the audio-interview as the raw resource is linked to the transcript too. Thus, we have to add photograph, audio-interview and person as properties to the transcript. 
+According to our Diagram 3, we determined the transcript to be the center of the hierarchy. In the transcript, the photographs are mentioned, the interviewed person is linked to the transcript and the audio-interview as the raw resource is linked to the transcript too. Thus, we have to add photograph, audio-interview and person as properties to the transcript.
 
 In the box of *Transcript* click on `+ Add property`:
 ![Add property to resource class.](../assets/images/Fig27.png)
