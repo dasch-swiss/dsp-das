@@ -1,1 +1,27 @@
-<p>{{project.longname}}</p>
+<div class="project-tile">
+    <div class="project-tile-content">
+        <div class="top-bar">
+            <div class="status">
+                <div class="status-badge">
+                    <span *ngIf="project.status === true">Active</span>
+                    <span *ngIf="project.status === false">Deactivated</span>
+                </div>
+            </div>
+            <div class="settings">
+                <button mat-icon-button>
+                    <mat-icon>settings</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="icon">
+            <p>icon</p>
+        </div>
+        <div class="title">
+            <p>{{project.longname}}</p>
+        </div>
+        <div class="button">
+            <p>button</p>
+        </div>
+    </div>
+</div>

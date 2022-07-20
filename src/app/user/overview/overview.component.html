@@ -6,19 +6,25 @@
             <!-- list all projects -->
             <p>Hello sys admin!</p>
             <p class="title">Browse Research Projects</p>
-            <div *ngFor="let proj of allProjects">
-                <app-project-tile [project]="proj"></app-project-tile>
+            <div class="project-tiles">
+                <div *ngFor="let proj of allProjects" class="project-tile-container">
+                    <app-project-tile [project]="proj"></app-project-tile>
+                </div>
             </div>
         </div>
         <div *ngIf="!sysAdmin">
             <p>Hello regular user</p>
             <p class="title">Your Projects</p>
-            <div *ngFor="let userProj of userProjects">
-                <app-project-tile [project]="userProj"></app-project-tile>
+            <div class="project-tiles">
+                <div *ngFor="let userProj of userProjects" class="project-tile-container">
+                    <app-project-tile [project]="userProj"></app-project-tile>
+                </div>
             </div>
             <p class="title">Browse Other Research Projects</p>
-            <div *ngFor="let otherProj of otherProjects">
-                <app-project-tile [project]="otherProj"></app-project-tile>
+            <div class="project-tiles">
+                <div *ngFor="let otherProj of otherProjects" class="project-tile-container">
+                    <app-project-tile [project]="otherProj"></app-project-tile>
+                </div>
             </div>
         </div>
     </div>

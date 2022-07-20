@@ -320,7 +320,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         OntologyClassInstanceComponent,
         SettingsComponent,
         OverviewComponent,
-        ProjectTileComponent
+        ProjectTileComponent,
     ],
     imports: [
         AngularSplitModule.forRoot(),

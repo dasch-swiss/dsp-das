@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { ReadUser, KnoraApiConnection, ApiResponseData, UserResponse, ApiResponseError, StoredProject, ProjectsResponse } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ApiResponseData, UserResponse, ApiResponseError, StoredProject, ProjectsResponse } from '@dasch-swiss/dsp-js';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
@@ -15,16 +14,16 @@ export class OverviewComponent implements OnInit {
 
     loading = true;
 
-    user: ReadUser;
-
     session: Session;
     username: string;
     sysAdmin = false;
 
     // list of projects a user is a member of
     userProjects: StoredProject[] = [];
+
     // list of projects a user is NOT a member of
     otherProjects: StoredProject[] = [];
+
     // list of all projects
     allProjects: StoredProject[] = [];
 
@@ -47,17 +46,25 @@ export class OverviewComponent implements OnInit {
         // set the cache
         this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username));
 
-        // get from cache
-        this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(
-            (response: ApiResponseData<UserResponse>) => {
-                this.user = response.body.user;
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-            }
-        );
+        if (this.sysAdmin) {
+            // logged-in user is system admin: show all projects
+            this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
+                (response: ApiResponseData<ProjectsResponse>) => {
 
-        if (!this.sysAdmin) {
+                    // reset the list:
+                    this.allProjects = [];
+
+                    for (const project of response.body.projects) {
+                        this.allProjects.push(project);
+                    }
+
+                    this.loading = false;
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
+        } else {
             // logged-in user is NOT a system admin: get all projects the user is a member of
             this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username).subscribe(
                 (userResponse: ApiResponseData<UserResponse>) => {
@@ -89,24 +96,6 @@ export class OverviewComponent implements OnInit {
                             this._errorHandler.showMessage(error);
                         }
                     );
-
-                    this.loading = false;
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
-        } else {
-            // logged-in user is system admin: show all projects
-            this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
-                (response: ApiResponseData<ProjectsResponse>) => {
-
-                    // reset the list:
-                    this.allProjects = [];
-
-                    for (const project of response.body.projects) {
-                        this.allProjects.push(project);
-                    }
 
                     this.loading = false;
                 },
