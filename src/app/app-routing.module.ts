@@ -24,6 +24,7 @@ import { SystemComponent } from './system/system.component';
 import { UsersComponent } from './system/users/users.component';
 // user
 import { DashboardComponent } from './user/dashboard/dashboard.component';
+import { OverviewComponent } from './user/overview/overview.component';
 import { UserComponent } from './user/user.component';
 // search results and resource viewer
 import { ResourceComponent } from './workspace/resource/resource.component';
@@ -41,6 +42,11 @@ const routes: Routes = [
     {
         path: 'login',
         component: LoginFormComponent
+    },
+    {
+        path: 'overview',
+        component: OverviewComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'dashboard',

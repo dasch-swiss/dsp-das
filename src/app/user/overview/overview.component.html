@@ -1,0 +1,25 @@
+<div class="content large middle">
+    <app-progress-indicator *ngIf="loading"></app-progress-indicator>
+
+    <div *ngIf="!loading" class="overview">
+        <div *ngIf="sysAdmin">
+            <!-- list all projects -->
+            <p>Hello sys admin!</p>
+            <p class="title">Browse Research Projects</p>
+            <div *ngFor="let proj of allProjects">
+                <app-project-tile [project]="proj"></app-project-tile>
+            </div>
+        </div>
+        <div *ngIf="!sysAdmin">
+            <p>Hello regular user</p>
+            <p class="title">Your Projects</p>
+            <div *ngFor="let userProj of userProjects">
+                <app-project-tile [project]="userProj"></app-project-tile>
+            </div>
+            <p class="title">Browse Other Research Projects</p>
+            <div *ngFor="let otherProj of otherProjects">
+                <app-project-tile [project]="otherProj"></app-project-tile>
+            </div>
+        </div>
+    </div>
+</div>
