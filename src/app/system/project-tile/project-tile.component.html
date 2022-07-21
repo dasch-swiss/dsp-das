@@ -2,26 +2,32 @@
     <div class="project-tile-content">
         <div class="top-bar">
             <div class="status">
-                <div class="status-badge">
-                    <span *ngIf="project.status === true">Active</span>
-                    <span *ngIf="project.status === false">Deactivated</span>
+                <div *ngIf="project.status === true" class="status-badge active">
+                    <span>Active</span>
+                </div>
+                <div *ngIf="project.status === false" class="status-badge deactivated">
+                    <span>Deactivated</span>
                 </div>
             </div>
-            <div class="settings">
-                <button mat-icon-button>
+            <div *ngIf="sysAdmin" class="settings">
+                <button mat-icon-button (click)="navigateTo(project.shortcode, 'settings')">
                     <mat-icon>settings</mat-icon>
                 </button>
             </div>
         </div>
 
         <div class="icon">
-            <p>icon</p>
+            <mat-icon>redeem</mat-icon>
         </div>
+
         <div class="title">
             <p>{{project.longname}}</p>
         </div>
-        <div class="button">
-            <p>button</p>
+
+        <div class="dashboard-button">
+            <button mat-flat-button [color]="'primary'" (click)="navigateTo(project.shortcode, 'dashboard')">
+                Go to dashboard
+            </button>
         </div>
     </div>
 </div>

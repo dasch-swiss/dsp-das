@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { StoredProject } from '@dasch-swiss/dsp-js';
 
 @Component({
@@ -9,10 +10,29 @@ import { StoredProject } from '@dasch-swiss/dsp-js';
 export class ProjectTileComponent implements OnInit {
 
     @Input() project: StoredProject;
+    @Input() sysAdmin: Boolean; // used to show settings button
 
-    constructor() { }
+    constructor(private _router: Router) { }
 
     ngOnInit(): void {
     }
 
+    navigateTo(shortCode: string, path: 'dashboard' | 'settings') {
+        this._router.navigateByUrl('/refresh', { skipLocationChange: true }).then(
+            () => {
+                switch (path) {
+                    case 'dashboard':
+                        this._router.navigate(['/beta/project/' + shortCode]);
+                        break;
+
+                    case 'settings':
+                        this._router.navigate(['/beta/project/' + shortCode + '/settings/collaboration']);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        );
+    }
 }
