@@ -45,8 +45,7 @@ const routes: Routes = [
     },
     {
         path: 'overview',
-        component: OverviewComponent,
-        canActivate: [AuthGuard]
+        component: OverviewComponent
     },
     {
         path: 'dashboard',

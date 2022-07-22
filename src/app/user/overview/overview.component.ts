@@ -1,7 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { KnoraApiConnection, ApiResponseData, UserResponse, ApiResponseError, StoredProject, ProjectsResponse } from '@dasch-swiss/dsp-js';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { EmitEvent, Events } from 'src/app/main/services/component-communication-event.service';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { Session, SessionService } from 'src/app/main/services/session.service';
 
@@ -32,22 +36,32 @@ export class OverviewComponent implements OnInit {
         private _cache: CacheService,
         private _errorHandler: ErrorHandlerService,
         private _session: SessionService,
+        private _router: Router,
+        private _dialog: MatDialog
     ) {
         // get username
         this.session = this._session.getSession();
-        this.username = this.session.user.name;
-        this.sysAdmin = this.session.user.sysAdmin;
+
+        // if session is null, user is not logged in
+        if(this.session) {
+            this.username = this.session.user.name;
+            this.sysAdmin = this.session.user.sysAdmin;
+        }
+
     }
 
     ngOnInit() {
-
         this.loading = true;
 
-        // set the cache
-        this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username));
+        if (this.username) {
+            // set the cache
+            this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username));
+        }
 
-        if (this.sysAdmin) {
-            // logged-in user is system admin: show all projects
+        // if user is a system admin or not logged in, get all the projects
+        // system admin can create new projects and edit projects
+        // users not logged in can only view projects
+        if (this.sysAdmin || !this.session) {
             this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
                 (response: ApiResponseData<ProjectsResponse>) => {
 
@@ -81,15 +95,13 @@ export class OverviewComponent implements OnInit {
                     this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
                         (projectsResponse: ApiResponseData<ProjectsResponse>) => {
 
-                            console.log('userProjects: ', this.userProjects);
-
                             // get list of all projects the user is NOT a member of
                             for (const project of projectsResponse.body.projects) {
                                 if(this.userProjects.findIndex(userProj => userProj.id === project.id) === -1){
                                     this.otherProjects.push(project);
                                 }
                             }
-                            console.log('otherProjects: ', this.otherProjects);
+
                             this.loading = false;
                         },
                         (error: ApiResponseError) => {
@@ -106,4 +118,17 @@ export class OverviewComponent implements OnInit {
         }
     }
 
+    openDialog(mode: string, name?: string, id?: string): void {
+        const dialogConfig: MatDialogConfig = {
+            width: '560px',
+            maxHeight: '80vh',
+            position: {
+                top: '112px'
+            },
+            data: { name: name, mode: mode, project: id }
+        };
+
+        this._dialog.open(DialogComponent, dialogConfig);
+
+    }
 }

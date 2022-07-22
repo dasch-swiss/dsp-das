@@ -18,21 +18,17 @@ export class ProjectTileComponent implements OnInit {
     }
 
     navigateTo(shortCode: string, path: 'dashboard' | 'settings') {
-        this._router.navigateByUrl('/refresh', { skipLocationChange: true }).then(
-            () => {
-                switch (path) {
-                    case 'dashboard':
-                        this._router.navigate(['/beta/project/' + shortCode]);
-                        break;
+        switch (path) {
+            case 'dashboard':
+                this._router.navigate(['/beta/project/' + shortCode]);
+                break;
 
-                    case 'settings':
-                        this._router.navigate(['/beta/project/' + shortCode + '/settings/collaboration']);
-                        break;
+            case 'settings':
+                this._router.navigate(['/beta/project/' + shortCode + '/settings/collaboration']);
+                break;
 
-                    default:
-                        break;
-                }
-            }
-        );
+            default:
+                break;
+        }
     }
 }
