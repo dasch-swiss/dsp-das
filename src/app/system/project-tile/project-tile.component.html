@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div *ngIf="sysAdmin" class="settings">
-                <button mat-icon-button (click)="navigateTo(project.shortcode, 'settings')">
+                <button class="settings-button" mat-icon-button (click)="navigateTo(project.shortcode, 'settings')">
                     <mat-icon>settings</mat-icon>
                 </button>
             </div>
@@ -24,8 +24,9 @@
             <p>{{project.longname}}</p>
         </div>
 
-        <div class="dashboard-button">
-            <button mat-flat-button [color]="'primary'" (click)="navigateTo(project.shortcode, 'dashboard')">
+        <div class="dashboard-button-container">
+            <button class="dashboard-button" mat-flat-button [color]="'primary'"
+                (click)="navigateTo(project.shortcode, 'dashboard')">
                 Go to dashboard
             </button>
         </div>
