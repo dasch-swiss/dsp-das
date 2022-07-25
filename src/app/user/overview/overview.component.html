@@ -6,7 +6,6 @@
         <!-- user is a system admin -->
         <div *ngIf="sysAdmin">
             <!-- list all projects -->
-            <p>Hello sys admin!</p>
             <div class="title-bar admin">
                 <div class="title">
                     <p>Browse Research Projects</p>
@@ -26,7 +25,6 @@
 
         <!-- user is logged in and not a system admin -->
         <div *ngIf="!sysAdmin && this.session">
-            <p>Hello regular user</p>
             <div class="title-bar">
                 <div class="title">
                     <p>Your Projects</p>
@@ -52,7 +50,6 @@
         <!-- user is not logged in -->
         <div *ngIf="!sysAdmin && !this.session">
             <!-- list all projects -->
-            <p>Hello unknown user!</p>
             <div class="title-bar admin">
                 <div class="title">
                     <p>Browse Research Projects</p>
