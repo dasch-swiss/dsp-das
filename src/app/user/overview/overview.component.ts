@@ -1,11 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { KnoraApiConnection, ApiResponseData, UserResponse, ApiResponseError, StoredProject, ProjectsResponse } from '@dasch-swiss/dsp-js';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { EmitEvent, Events } from 'src/app/main/services/component-communication-event.service';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { Session, SessionService } from 'src/app/main/services/session.service';
 
@@ -36,8 +35,8 @@ export class OverviewComponent implements OnInit {
         private _cache: CacheService,
         private _errorHandler: ErrorHandlerService,
         private _session: SessionService,
-        private _router: Router,
-        private _dialog: MatDialog
+        private _dialog: MatDialog,
+        private _titleService: Title
     ) {
         // get username
         this.session = this._session.getSession();
@@ -47,6 +46,9 @@ export class OverviewComponent implements OnInit {
             this.username = this.session.user.name;
             this.sysAdmin = this.session.user.sysAdmin;
         }
+
+        // set the page title
+        this._titleService.setTitle('Projects Overview');
 
     }
 
@@ -65,7 +67,9 @@ export class OverviewComponent implements OnInit {
             this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
                 (response: ApiResponseData<ProjectsResponse>) => {
 
-                    // reset the list:
+                    // reset the lists:
+                    this.userProjects = [];
+                    this.otherProjects = [];
                     this.allProjects = [];
 
                     for (const project of response.body.projects) {
@@ -83,9 +87,10 @@ export class OverviewComponent implements OnInit {
             this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username).subscribe(
                 (userResponse: ApiResponseData<UserResponse>) => {
 
-                    // clean up list of projects
+                    // reset the lists:
                     this.userProjects = [];
                     this.otherProjects = [];
+                    this.allProjects = [];
 
                     // get list of all projects the user is a member of
                     for (const project of userResponse.body.user.projects) {
