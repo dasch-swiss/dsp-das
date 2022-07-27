@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="project-tiles">
-                <div *ngFor="let proj of allProjects" class="project-tile-container">
+                <div *ngFor="let proj of otherProjects" class="project-tile-container">
                     <app-project-tile [project]="proj" [sysAdmin]="true"></app-project-tile>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                 </div>
             </div>
             <div class="project-tiles">
-                <div *ngFor="let proj of allProjects" class="project-tile-container">
+                <div *ngFor="let proj of otherProjects" class="project-tile-container">
                     <app-project-tile [project]="proj" [sysAdmin]="false"></app-project-tile>
                 </div>
             </div>

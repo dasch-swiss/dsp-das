@@ -27,9 +27,6 @@ export class OverviewComponent implements OnInit {
     // list of projects a user is NOT a member of
     otherProjects: StoredProject[] = [];
 
-    // list of all projects
-    allProjects: StoredProject[] = [];
-
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
@@ -70,10 +67,9 @@ export class OverviewComponent implements OnInit {
                     // reset the lists:
                     this.userProjects = [];
                     this.otherProjects = [];
-                    this.allProjects = [];
 
                     for (const project of response.body.projects) {
-                        this.allProjects.push(project);
+                        this.otherProjects.push(project);
                     }
 
                     this.loading = false;
@@ -90,7 +86,6 @@ export class OverviewComponent implements OnInit {
                     // reset the lists:
                     this.userProjects = [];
                     this.otherProjects = [];
-                    this.allProjects = [];
 
                     // get list of all projects the user is a member of
                     for (const project of userResponse.body.user.projects) {
