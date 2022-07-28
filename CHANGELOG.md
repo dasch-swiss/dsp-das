@@ -1,5 +1,26 @@
 # Changelog
 
+### [10.4.1](https://www.github.com/dasch-swiss/dsp-app/compare/v10.4.0...v10.4.1) (2022-07-28)
+
+
+### Maintenance
+
+* **routing:** home button should direct to overview page (DEV-1152) ([#779](https://www.github.com/dasch-swiss/dsp-app/issues/779)) ([d3011ae](https://www.github.com/dasch-swiss/dsp-app/commit/d3011ae166fc9ce1f1212314034c48fc0869dd58))
+
+## [10.4.0](https://www.github.com/dasch-swiss/dsp-app/compare/v10.3.3...v10.4.0) (2022-07-27)
+
+
+### Enhancements
+
+* **overview:** add overview and project tile components (DEV-984) ([#777](https://www.github.com/dasch-swiss/dsp-app/issues/777)) ([a64359b](https://www.github.com/dasch-swiss/dsp-app/commit/a64359b33f7c5e73efb2c3e602ebeb3ade8cc02e))
+
+### [10.3.3](https://www.github.com/dasch-swiss/dsp-app/compare/v10.3.2...v10.3.3) (2022-07-19)
+
+
+### Documentation
+
+* Update the user guide (DEV-1049) ([#769](https://www.github.com/dasch-swiss/dsp-app/issues/769)) ([12d0edc](https://www.github.com/dasch-swiss/dsp-app/commit/12d0edce949976b223cee5dd9c9346fc3a929857))
+
 ### [10.3.2](https://www.github.com/dasch-swiss/dsp-app/compare/v10.3.1...v10.3.2) (2022-06-30)
 
 
