@@ -296,6 +296,7 @@ a,
   display: block;
   position: relative;
   padding: 0;
+  margin-bottom: 10px;
 
   &.video,
   &.audio,
@@ -311,50 +312,65 @@ a,
     max-width: 50%;
   }
 
-  .action,
-  .navigation {
-    .mat-button-disabled {
-      color: grey;
-    }
-  }
-
-  .action {
-    z-index: 1;
-    position: absolute;
-    display: flex;
-    flex-wrap: wrap;
+  .toolbar {
     color: $primary_50;
-
-    a {
-      color: $primary_50 !important;
-    }
-
-    &.overlay {
-      background: rgba(0, 0, 0, 0.48);
-    }
-
-    &.vertical {
-      width: $panel-height;
-      height: auto;
-      right: 0;
-      flex-direction: column;
-    }
-
-    &.horizontal {
-      height: auto;
-      width: 100%;
-      left: 0;
-      flex-direction: row;
-
-      &.top {
-        top: 0;
-      }
-
-      &.bottom {
-        bottom: 0;
-      }
-    }
+    background-color: $dark;
+    height: 64px;
+    border-radius: 0px 0px 8px 8px;
+    box-shadow: 0px 4px 4px 0px #888888;
   }
+
+  .action,
+    .navigation {
+      .mat-button-disabled {
+        color: grey;
+      }
+    }
+
+    .action {
+      z-index: 1;
+      position: absolute;
+      display: flex;
+      flex-wrap: wrap;
+      color: $primary_50;
+      height: 40px;
+      bottom: 0;
+      padding: 8px 0;
+      a {
+        color: $primary_50 !important;
+      }
+
+      .active {
+        background: rgba(128,128,128,.39);
+        font-weight: bolder;
+      }
+
+      &.overlay {
+        background: rgba(0, 0, 0, 0.48);
+      }
+
+      &.vertical {
+        width: $panel-height;
+        height: auto;
+        right: 0;
+        flex-direction: column;
+      }
+
+      &.horizontal {
+        height: auto;
+        width: 100%;
+        left: 0;
+        flex-direction: row;
+
+        &.top {
+          top: 0;
+        }
+
+        &.bottom {
+          bottom: 0;
+        }
+      }
+    }
 
   .representation-error {
     .action a {

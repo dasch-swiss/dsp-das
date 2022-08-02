@@ -16,11 +16,25 @@
                 </div>
             </div>
         </div>
-        <div class="action">
-            <!-- action bar -->
+        <div class="toolbar bottom">
+            <!-- toolbar -->
+            <div class="action horizontal">
+                <!-- vertical more button with menu to downlaod and replace file -->
+                <button mat-icon-button [matMenuTriggerFor]="more">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #more="matMenu">
+                    <button mat-menu-item (click)="downloadArchive(src.fileValue.fileUrl)">
+                        Download file
+                    </button>
+                    <button mat-menu-item (click)="openReplaceFileDialog()">
+                        Replace file
+                    </button>
+                </mat-menu>
+            </div>
         </div>
     </div>
-    <button class="download" mat-button (click)="downloadArchive(src.fileValue.fileUrl)" [disabled]="failedToLoad">
+    <!-- <button class="download" mat-button (click)="downloadArchive(src.fileValue.fileUrl)" [disabled]="failedToLoad">
         <mat-icon>
             file_download
         </mat-icon>
@@ -28,7 +42,7 @@
     </button>
     <button mat-button matTooltip="Replace archive file" (click)="openReplaceFileDialog()">
         <mat-icon>cloud_upload</mat-icon>
-    </button>
+    </button> -->
 </div>
 <div *ngIf="!src || !src.fileValue.fileUrl">
     No valid file url found for this resource.
