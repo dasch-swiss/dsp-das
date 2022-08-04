@@ -20,6 +20,7 @@ import { EmitEvent, Events, UpdatedFileEventValue, ValueOperationEventService } 
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
     selector: 'app-document',
@@ -44,7 +45,10 @@ export class DocumentComponent implements OnInit, AfterViewInit {
 
     failedToLoad = false;
 
+    elem: any;
+
     constructor(
+        @Inject(DOCUMENT) private document: any,
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private readonly _http: HttpClient,
         private _dialog: MatDialog,
@@ -54,6 +58,7 @@ export class DocumentComponent implements OnInit, AfterViewInit {
     ) { }
 
     ngOnInit(): void {
+        this.elem = document.getElementsByClassName('pdf-viewer')[0];
         this._getOriginalFilename();
         this.failedToLoad = !this._rs.doesFileExist(this.src.fileValue.fileUrl);
     }
@@ -125,6 +130,21 @@ export class DocumentComponent implements OnInit, AfterViewInit {
                 this._replaceFile(data);
             }
         });
+    }
+
+    openFullscreen() {
+        if (this.elem.requestFullscreen) {
+            this.elem.requestFullscreen();
+        } else if (this.elem.mozRequestFullScreen) {
+            // firefox
+            this.elem.mozRequestFullScreen();
+        } else if (this.elem.webkitRequestFullscreen) {
+            // chrome, safari and opera
+            this.elem.webkitRequestFullscreen();
+        } else if (this.elem.msRequestFullscreen) {
+            // edge, ie
+            this.elem.msRequestFullscreen();
+        }
     }
 
     private _getOriginalFilename() {
