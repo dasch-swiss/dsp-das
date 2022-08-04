@@ -19,6 +19,7 @@ import { ErrorHandlerService } from 'src/app/main/services/error-handler.service
 import { EmitEvent, Events, UpdatedFileEventValue, ValueOperationEventService } from '../../services/value-operation-event.service';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
     selector: 'app-document',
@@ -35,6 +36,8 @@ export class DocumentComponent implements OnInit, AfterViewInit {
 
     @ViewChild(PdfViewerComponent) private _pdfComponent: PdfViewerComponent;
 
+    originalFilename: string;
+
     zoomFactor = 1.0;
 
     pdfQuery = '';
@@ -43,6 +46,7 @@ export class DocumentComponent implements OnInit, AfterViewInit {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private readonly _http: HttpClient,
         private _dialog: MatDialog,
         private _errorHandler: ErrorHandlerService,
         private _rs: RepresentationService,
@@ -50,6 +54,7 @@ export class DocumentComponent implements OnInit, AfterViewInit {
     ) { }
 
     ngOnInit(): void {
+        this._getOriginalFilename();
         this.failedToLoad = !this._rs.doesFileExist(this.src.fileValue.fileUrl);
     }
 
@@ -70,6 +75,32 @@ export class DocumentComponent implements OnInit, AfterViewInit {
                 highlightAll: true,
             });
         }
+    }
+
+    async downloadDocument(url: string) {
+        try {
+            const res = await this._http.get(url, { responseType: 'blob' }).toPromise();
+            this.downloadFile(res);
+        } catch (e) {
+            this._errorHandler.showMessage(e);
+        }
+    }
+
+    downloadFile(data) {
+        const url = window.URL.createObjectURL(data);
+        const e = document.createElement('a');
+        e.href = url;
+
+        // set filename
+        if (this.originalFilename === undefined) {
+            e.download = url.substr(url.lastIndexOf('/') + 1);
+        } else {
+            e.download = this.originalFilename;
+        }
+
+        document.body.appendChild(e);
+        e.click();
+        document.body.removeChild(e);
     }
 
     openReplaceFileDialog(){
@@ -94,6 +125,21 @@ export class DocumentComponent implements OnInit, AfterViewInit {
                 this._replaceFile(data);
             }
         });
+    }
+
+    private _getOriginalFilename() {
+        const requestOptions = {
+            headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+            withCredentials: true
+        };
+
+        const pathToJson = this.src.fileValue.fileUrl.substring(0, this.src.fileValue.fileUrl.lastIndexOf('/')) + '/knora.json';
+
+        this._http.get(pathToJson, requestOptions).subscribe(
+            res => {
+                this.originalFilename = res['originalFilename'];
+            }
+        );
     }
 
     private _replaceFile(file: UpdateFileValue) {
