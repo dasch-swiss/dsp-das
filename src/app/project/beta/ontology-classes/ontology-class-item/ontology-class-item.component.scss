@@ -1,6 +1,6 @@
 @import "../../../../../assets/style/config";
 
-.class-container {
+.class-item-container {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -11,11 +11,15 @@
     width: 90%;
     border-radius: 5px;
     box-shadow: 0px 1px 3px rgb(0 0 0 / 10%), 0px 1px 2px rgb(0 0 0 / 6%);
+    border-bottom: 2px solid #F9FAFB;
+    &.is-active{
+      border-bottom: 2px solid #1F2937;
+    }
 
     .top {
       display: inline-flex;
       align-items: center;
-      margin: 20px 0px;
+      padding: 20px 0px;
       width: 100%;
 
       .file-icon {
@@ -45,13 +49,14 @@
           overflow: hidden;
           padding-right: 16px;
           color: #6B7280;
-          margin: 0px 0px 5px 0px;
+          margin: 0px;
         }
 
         .entries {
           color: #111827;
           font-size: 24px;
           margin: 0px;
+          padding-top: 5px;
         }
         
       }
@@ -69,13 +74,6 @@
           font-size: 32px;
           width: 32px;
           height: 32px;
-        }
-      }
-
-      .add-new {
-
-        &-label {
-
         }
       }
     }

@@ -18,23 +18,22 @@
         <mat-sidenav-container class="project-view">
             <mat-sidenav mode="side" opened class="project-nav">
                 <!-- Project label -->
-                <div class="project-title">
-                    <p class="link" [routerLink]="'/beta/project/' + project.shortcode"
-                        matTooltip="{{project.longname}}" matTooltipShowDelay="500">
+                <div class="link project-title" [routerLink]="'/beta/project/' + project.shortcode">
+                    <p matTooltip="{{project.longname}}" matTooltipShowDelay="500">
                         {{project.longname}}
                     </p>
                 </div>
                 <mat-list class="main-list">
                     <!-- Maybe we can have a project selector here (similar to the github dashboard page) -->
                     <mat-divider></mat-divider>
-                    <mat-list-item>
-                        <span class="link section-label" (click)="goToOverview()">
+                    <mat-list-item class="link" (click)="goToOverview()">
+                        <span class="link section-label">
                             <p>Go to projects overview</p>
                         </span>
                         <span class="fill-remaining-space"></span>
-                        <button mat-icon-button>
+                        <span mat-icon>
                             <mat-icon>chevron_right</mat-icon>
-                        </button>
+                        </span>
                     </mat-list-item>
                     <mat-divider></mat-divider>
 
@@ -51,8 +50,8 @@
                             <p>Data models</p>
                         </span>
                     </mat-list-item> -->
-                    <mat-list-item class="add-new" *ngIf="projectAdmin">
-                        <span class="link add-new-label" (click)="open('add-ontology')">
+                    <mat-list-item class="link add-new" *ngIf="projectAdmin" (click)="open('add-ontology')">
+                        <span class="add-new-label">
                             <mat-icon class="sidenav-prefix-icon">add_circle_outline</mat-icon>
                             <p>Add a new data model</p>
                         </span>
@@ -61,7 +60,7 @@
 
                     <!-- Project Ontologies -->
                     <mat-accordion *ngFor="let onto of projectOntologies" multi [displayMode]="'flat'">
-                        <mat-expansion-panel [expanded]="true">
+                        <mat-expansion-panel>
                             <mat-expansion-panel-header>
                                 <div class="sidenav-panel-header" (click)="$event.stopPropagation();">
                                     <mat-panel-title class="mat-subheading-2" matTooltip="{{onto.label}}"
@@ -79,21 +78,21 @@
                         <mat-divider></mat-divider>
                     </mat-accordion>
 
-
                     <!-- Lists Section -->
                     <span *ngIf="projectAdmin">
                         <div class="section-title">
-                            <span class="link section-label" (click)="open('list')">
+                            <span class="section-label">
                                 <mat-icon class="sidenav-prefix-icon">list</mat-icon>
-                                <p class="mat-title">Lists</p>
+                                <p>Lists</p>
                             </span>
                         </div>
-                        <mat-list-item class="add-new">
-                            <span class="link add-new-label" (click)="open('add-list')">
+                        <mat-list-item class="link add-new" (click)="open('add-list')">
+                            <span class="add-new-label">
                                 <mat-icon class="sidenav-prefix-icon">add_circle_outline</mat-icon>
                                 <p>Add a new list</p>
                             </span>
                         </mat-list-item>
+                        <mat-divider></mat-divider>
                         <!-- Project lists -->
                         <mat-list-item *ngFor="let list of projectLists" class="link" (click)="open('list', list.id)">
                             {{list.labels | appStringifyStringLiteral}}
@@ -110,10 +109,14 @@
                     <!-- Project permissions ??? will it ever come? -->
 
                     <div class="sidenav-footer" *ngIf="projectAdmin">
-                        <mat-list-item class="section-title">
-                            <span class="link section-label" (click)="open('settings')">
+                        <mat-list-item class="link section-title" (click)="open('settings')">
+                            <span class="section-label">
                                 <mat-icon class="sidenav-prefix-icon">settings</mat-icon>
                                 <h2 class="mat-title">Settings</h2>
+                            </span>
+                            <span class="fill-remaining-space"></span>
+                            <span mat-icon>
+                                <mat-icon>chevron_right</mat-icon>
                             </span>
                         </mat-list-item>
                     </div>
