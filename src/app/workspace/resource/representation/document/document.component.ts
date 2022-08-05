@@ -179,6 +179,8 @@ export class DocumentComponent implements OnInit, AfterViewInit {
                 this.src.fileValue.strval = (res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue).strval;
                 this.src.fileValue.valueCreationDate = (res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue).valueCreationDate;
 
+                this._getOriginalFilename();
+
                 this.zoomFactor = 1.0;
                 this.pdfQuery = '';
 
