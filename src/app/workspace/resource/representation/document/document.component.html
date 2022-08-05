@@ -28,7 +28,6 @@
                 (keyup.enter)="searchQueryChanged(queryInp.value)"
             />
         </span>
-        <span class="fill-remaining-space"></span>
         <!-- image action tools e.g. zoom, rotate and flip -->
         <span>
             <!-- zoom buttons -->
@@ -41,6 +40,9 @@
             <button mat-icon-button id="DSP_PDF_ZOOM_IN" matTooltip="Zoom in" (click)="zoomFactor = zoomFactor + 0.2" [disabled]="failedToLoad">
                 <mat-icon>add_circle_outline</mat-icon>
             </button>
+        </span>
+        <span class="fill-remaining-space"></span>
+        <span>
             <button mat-icon-button id="DSP_PDF_FULL_SCREEN" matTooltip="Fullscreen" (click)="openFullscreen()" [disabled]="failedToLoad">
                 <mat-icon>fullscreen</mat-icon>
             </button>
