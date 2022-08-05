@@ -14,20 +14,21 @@
                 </button>
             </mat-menu>
         </span>
-        <span class="caption mat-caption">
-            <input
-                #queryInp
-                type="text"
-                id="searchbox"
-                name="searchbox"
-                class="pdf-searchbox"
-                placeholder="Search in pdf..."
-                [value]="pdfQuery"
-                [disabled]="failedToLoad"
-                (input)="searchQueryChanged($event.target.value)"
-                (keyup.enter)="searchQueryChanged(queryInp.value)"
-            />
-        </span>
+
+        <!-- input field for searching through document -->
+        <input matInput
+               #queryInp
+               type="text"
+               id="searchbox"
+               name="searchbox"
+               class="pdf-searchbox fill-remaining-space"
+               placeholder="Search in pdf..."
+               [value]="pdfQuery"
+               [disabled]="failedToLoad"
+               (input)="searchQueryChanged($event.target.value)"
+               (keyup.enter)="searchQueryChanged(queryInp.value)"
+        />
+
         <!-- image action tools e.g. zoom, rotate and flip -->
         <span>
             <!-- zoom buttons -->
@@ -41,7 +42,14 @@
                 <mat-icon>add_circle_outline</mat-icon>
             </button>
         </span>
+
+        <!-- empty placeholders to center the zoom buttons -->
         <span class="fill-remaining-space"></span>
+        <span class="empty-space"></span>
+        <span class="empty-space"></span>
+        <span class="empty-space"></span>
+
+        <!-- full screen button -->
         <span>
             <button mat-icon-button id="DSP_PDF_FULL_SCREEN" matTooltip="Fullscreen" (click)="openFullscreen()" [disabled]="failedToLoad">
                 <mat-icon>fullscreen</mat-icon>
