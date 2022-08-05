@@ -384,6 +384,10 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
         });
     }
 
+    openImageInNewTab(url: string) {
+        window.open(url, '_blank');
+    }
+
     openPage(p: number) {
         this.regionDrawMode = false;
         this.goToPage.emit(p);
