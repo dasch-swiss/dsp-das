@@ -1,16 +1,66 @@
+<ng-waveform #waveform class="waveform"
+    [src]="src"
+    [height]="150"
+    [useRegion]="true"
+    backgroundColor="#d3d3d3"
+    regionBackgroundColor="rgba(255, 255, 255, 0.7)"
+    regionStartStickColor="#21f032"
+    regionEndStickColor="red"
+    regionTextColor="#09417e"
+    [withRegionLabels]="true"
+    waveColor="#ff11ff"
+    (paused)="onPauseButtonClick()"
+  >
+</ng-waveform>
 <div class="controls">
     <!-- in case of an error -->
     <app-status [status]="404" [url]="src.fileValue.fileUrl" [representation]="'audio'" *ngIf="failedToLoad"></app-status>
 
-    <div class="audio-player">
-        <audio id="audio" [controls]="!failedToLoad" preload="auto">
-            <source [src]="audio" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-    <div class="upload-button">
-        <button mat-button matTooltip="Replace audio file" (click)="openReplaceFileDialog()">
-            <mat-icon>cloud_upload</mat-icon>
-        </button>
+    <div class="file-representation">
+        <div class="container">
+            <div class="contents">
+                <div class="icon">
+                    <mat-icon>
+                        description
+                    </mat-icon>
+                </div>
+                <div class="file">
+                    <p>Hi</p>
+                </div>
+            </div>
+        </div>
+        <div class="toolbar">
+            <!-- toolbar -->
+            <div class="action horizontal bottom">
+                <!-- three dot menu to downlaod and replace file -->
+                <button mat-icon-button [matMenuTriggerFor]="more">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #more="matMenu">
+                    <button mat-menu-item>
+                        Download file
+                    </button>
+                    <button mat-menu-item (click)="openReplaceFileDialog()">
+                        Replace file
+                    </button>
+                </mat-menu>
+                <button mat-icon-button>
+                    <mat-icon>
+                        play_circle
+                    </mat-icon>
+                </button>
+            </div>
+        </div>
+        <!--<div class="audio-player">
+            <audio id="audio" [controls]="!failedToLoad" preload="auto">
+                <source [src]="audio" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+        <div class="upload-button">
+            <button mat-button matTooltip="Replace audio file" (click)="openReplaceFileDialog()">
+                <mat-icon>cloud_upload</mat-icon>
+            </button>
+        </div> -->
     </div>
 </div>

@@ -167,6 +167,7 @@ import { OntologyClassInstanceComponent } from './project/beta/ontology-classes/
 import { SettingsComponent } from './project/beta/settings/settings.component';
 import { OverviewComponent } from './user/overview/overview.component';
 import { ProjectTileComponent } from './system/project-tile/project-tile.component';
+import { NgWaveformModule } from 'ng-waveform';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -335,6 +336,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         HttpClientModule,
         MaterialModule,
         MatJDNConvertibleCalendarDateAdapterModule,
+        NgWaveformModule,
         PdfViewerModule,
         ReactiveFormsModule,
         TranslateModule.forRoot({

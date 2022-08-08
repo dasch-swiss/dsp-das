@@ -46,6 +46,7 @@
     "json2typescript": "^1.4.1",
     "jsonld": "^5.2.0",
     "moment": "^2.29.4",
+    "ng-waveform": "^0.2.1",
     "ng2-pdf-viewer": "^7.0.2",
     "ngx-color-picker": "^11.0.0",
     "openseadragon": "3.0.0",

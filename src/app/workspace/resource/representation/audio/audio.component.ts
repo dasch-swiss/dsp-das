@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
@@ -19,7 +19,7 @@ import { ErrorHandlerService } from 'src/app/main/services/error-handler.service
 import { EmitEvent, Events, UpdatedFileEventValue, ValueOperationEventService } from '../../services/value-operation-event.service';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
-
+import { ITimeUpdateEvent, NgWaveformComponent, IRegionPositions } from 'ng-waveform';
 
 @Component({
     selector: 'app-audio',
@@ -34,6 +34,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
 
     @Output() loaded = new EventEmitter<boolean>();
 
+    @ViewChild('waveform', { static: false }) waveform: NgWaveformComponent;
     failedToLoad = false;
 
     audio: SafeUrl;
@@ -55,6 +56,12 @@ export class AudioComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.loaded.emit(true);
     }
+    onPlayButtonClick() {
+        this.waveform.play();
+      }
+      onPauseButtonClick() {
+        this.waveform.pause();
+      }
 
     openReplaceFileDialog(){
         const propId = this.parentResource.properties[Constants.HasAudioFileValue][0].id;
