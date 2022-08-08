@@ -59,8 +59,9 @@
                     <mat-divider></mat-divider>
 
                     <!-- Project Ontologies -->
-                    <mat-accordion *ngFor="let onto of projectOntologies" multi [displayMode]="'flat'">
-                        <mat-expansion-panel>
+                    <mat-accordion *ngFor="let onto of projectOntologies; let first = first" multi
+                        [displayMode]="'flat'">
+                        <mat-expansion-panel [expanded]="first">
                             <mat-expansion-panel-header>
                                 <div class="sidenav-panel-header" (click)="$event.stopPropagation();">
                                     <mat-panel-title class="mat-subheading-2" matTooltip="{{onto.label}}"
@@ -94,8 +95,10 @@
                         </mat-list-item>
                         <mat-divider></mat-divider>
                         <!-- Project lists -->
-                        <mat-list-item *ngFor="let list of projectLists" class="link" (click)="open('list', list.id)">
-                            {{list.labels | appStringifyStringLiteral}}
+                        <mat-list-item *ngFor="let list of projectLists" class="list link"
+                            (click)="open('list', list.id)">
+                            <p>{{list.labels | appStringifyStringLiteral}}</p>
+                            <mat-divider></mat-divider>
                         </mat-list-item>
                     </span>
 
@@ -109,7 +112,7 @@
                     <!-- Project permissions ??? will it ever come? -->
 
                     <div class="sidenav-footer" *ngIf="projectAdmin">
-                        <mat-list-item class="link section-title" (click)="open('settings')">
+                        <mat-list-item class="link section-title footer" (click)="open('settings')">
                             <span class="section-label">
                                 <mat-icon class="sidenav-prefix-icon">settings</mat-icon>
                                 <h2 class="mat-title">Settings</h2>
