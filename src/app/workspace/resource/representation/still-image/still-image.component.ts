@@ -225,7 +225,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
 
     /**
      * renders all ReadStillImageFileValues to be found in [[this.images]].
-     * (Although this.images is a Angular Input property, the built-in change detection of Angular does not detect changes in complex objects or arrays, only reassignment of objects/arrays.
+     * (Although this.images is an Angular Input property, the built-in change detection of Angular does not detect changes in complex objects or arrays, only reassignment of objects/arrays.
      * Use this method if additional ReadStillImageFileValues were added to this.images after creation/assignment of the this.images array.)
      */
     updateImages() {
@@ -237,7 +237,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
 
     /**
      * renders all regions to be found in [[this.images]].
-     * (Although this.images is a Angular Input property, the built-in change detection of Angular does not detect changes in complex objects or arrays, only reassignment of objects/arrays.
+     * (Although this.images is an Angular Input property, the built-in change detection of Angular does not detect changes in complex objects or arrays, only reassignment of objects/arrays.
      * Use this method if additional regions were added to the resources.images)
      */
     updateRegions() {
@@ -762,7 +762,8 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
      * @param geometry - the geometry describing the ROI
      * @param aspectRatio -  the aspectRatio (h/w) of the image on which the geometry should be placed
      * @param xOffset -  the x-offset in Openseadragon viewport coordinates of the image on which the geometry should be placed
-     * @param toolTip -  the tooltip which should be displayed on mousehover of the svg element
+     * @param regionLabel -  the label of the region
+     * @param regionComment - the comment of the region
      */
     private _createSVGOverlay(regionIri: string, geometry: RegionGeometry, aspectRatio: number, xOffset: number, regionLabel: string, regionComment: string): void {
         const lineColor = geometry.lineColor;
