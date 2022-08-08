@@ -7,7 +7,8 @@
                 </div>
             </div>
             <div class="info">
-                <p class="label" matTooltip="{{resClass.label}}" matTooltipShowDelay="750"> {{resClass.label}}</p>
+                <p class="label" #classLabel matTooltip="{{resClass.label}}" matTooltipShowDelay="750"
+                    [matTooltipDisabled]="hideTooltip(classLabel)"> {{resClass.label}}</p>
                 <p class="entries">{{results | i18nPlural: itemPluralMapping['entry']}}</p>
             </div>
         </div>

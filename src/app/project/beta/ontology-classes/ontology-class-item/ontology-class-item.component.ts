@@ -68,6 +68,17 @@ export class OntologyClassItemComponent implements OnInit {
         this._router.navigateByUrl(route);
     }
 
+    /**
+     * given an Html element, compare the scrollHeight and the clientHeight
+     * determines whether or not the tooltip should be displayed
+     *
+     * @param elem the element which has the line-clamp css
+     * @returns inverse of comparison between the scrollHeight and the clientHeight of elem
+     */
+    hideTooltip(elem: HTMLElement): boolean {
+        return !(elem.scrollHeight > elem.clientHeight);
+    }
+
     private _setGravsearch(iri: string): string {
         return `
         PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
