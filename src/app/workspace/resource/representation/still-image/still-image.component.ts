@@ -419,6 +419,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
      * @param startPoint the start point of the drawing
      * @param endPoint the end point of the drawing
      * @param imageSize the image size for calculations
+     * @param overlay the overlay element that represents the region
      */
     private _openRegionDialog(startPoint: Point2D, endPoint: Point2D, imageSize: Point2D, overlay: Element): void {
         const dialogConfig: MatDialogConfig = {
