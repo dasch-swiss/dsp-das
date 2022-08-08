@@ -42,6 +42,9 @@
             (click)="openSnackBar('IIIF URL copied to clipboard!')">
                 Copy IIIF URL to clipboard
             </button>
+            <button mat-menu-item (click)="downloadStillImage(images[0].fileValue.fileUrl)">
+                Download file
+            </button>
             <button mat-menu-item (click)="openReplaceFileDialog()">
                 Replace file
             </button>

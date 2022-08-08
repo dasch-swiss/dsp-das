@@ -14,6 +14,7 @@ import {
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
     ApiResponseError,
     Constants,
@@ -136,6 +137,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
 
     loading = true;
     failedToLoad = false;
+    originalFilename: string;
 
     regionDrawMode = false; // stores whether viewer is currently drawing a region
     private _regionDragInfo; // stores the information of the first click for drawing a region
@@ -144,6 +146,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private readonly _http: HttpClient,
         private _dialog: MatDialog,
         private _domSanitizer: DomSanitizer,
         private _elementRef: ElementRef,
@@ -190,6 +193,8 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
             this._setupViewer();
         }
         if (changes['images']) {
+            this._getOriginalFilename();
+
             this._openImages();
             this._unhighlightAllRegions();
             // --> TODO: check if this is necessary or could be handled below
@@ -360,6 +365,32 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
         this._notification.openSnackBar(message);
     }
 
+    async downloadStillImage(url: string) {
+        try {
+            const res = await this._http.get(url, { responseType: 'blob' }).toPromise();
+            this.downloadFile(res);
+        } catch (e) {
+            this._errorHandler.showMessage(e);
+        }
+    }
+
+    downloadFile(data) {
+        const url = window.URL.createObjectURL(data);
+        const e = document.createElement('a');
+        e.href = url;
+
+        // set filename
+        if (this.originalFilename === undefined) {
+            e.download = url.substr(url.lastIndexOf('/') + 1);
+        } else {
+            e.download = this.originalFilename;
+        }
+
+        document.body.appendChild(e);
+        e.click();
+        document.body.removeChild(e);
+    }
+
     openReplaceFileDialog() {
         const propId = this.parentResource.properties[Constants.HasStillImageFileValue][0].id;
 
@@ -393,6 +424,22 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
         this.goToPage.emit(p);
     }
 
+    private _getOriginalFilename() {
+        const requestOptions = {
+            headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+            withCredentials: true
+        };
+
+        const index = this.images[0].fileValue.fileUrl.indexOf(this.images[0].fileValue.filename);
+        const pathToJson = this.images[0].fileValue.fileUrl.substring(0, index + this.images[0].fileValue.filename.length) + '/knora.json';
+
+        this._http.get(pathToJson, requestOptions).subscribe(
+            res => {
+                this.originalFilename = res['originalFilename'];
+            }
+        );
+    }
+
     private _replaceFile(file: UpdateFileValue) {
         const updateRes = new UpdateResource();
         updateRes.id = this.parentResource.id;
@@ -407,6 +454,8 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
                 this._valueOperationEventService.emit(
                     new EmitEvent(Events.FileValueUpdated, new UpdatedFileEventValue(
                         res2.properties[Constants.HasStillImageFileValue][0])));
+
+                this._getOriginalFilename();
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
