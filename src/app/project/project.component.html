@@ -64,7 +64,8 @@
                         [displayMode]="'flat'">
                         <mat-expansion-panel [expanded]="first">
                             <mat-expansion-panel-header>
-                                <div class="sidenav-panel-header" (click)="$event.stopPropagation();">
+                                <div class="sidenav-panel-header"
+                                    (click)="projectAdmin ? $event.stopPropagation() : true">
                                     <mat-panel-title class="mat-subheading-2"
                                         (click)="projectAdmin ? open('ontology', onto.id) : null">
                                         <p #ontoTitle matTooltip="{{onto.label}}" matTooltipShowDelay="500"
