@@ -32,7 +32,7 @@ describe('CollaborationComponent', () => {
 
     beforeEach(waitForAsync(() => {
 
-        const cacheServiceSpy = jasmine.createSpyObj('CacheService', ['get', 'set']);
+        const cacheServiceSpy = jasmine.createSpyObj('CacheService', ['get', 'set', 'del']);
 
         TestBed.configureTestingModule({
             declarations: [
