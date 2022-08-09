@@ -8,7 +8,7 @@
             </div>
             <div class="info">
                 <p class="label" #classLabel matTooltip="{{resClass.label}}" matTooltipShowDelay="750"
-                    [matTooltipDisabled]="hideTooltip(classLabel)"> {{resClass.label}}</p>
+                    [matTooltipDisabled]="compareElementHeights(classLabel)"> {{resClass.label}}</p>
                 <p class="entries">{{results | i18nPlural: itemPluralMapping['entry']}}</p>
             </div>
         </div>

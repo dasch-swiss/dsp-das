@@ -231,12 +231,11 @@ export class ProjectComponent implements OnInit {
 
     /**
      * given an Html element, compare the scrollHeight and the clientHeight
-     * determines whether or not the tooltip should be displayed
      *
      * @param elem the element which has the line-clamp css
      * @returns inverse of comparison between the scrollHeight and the clientHeight of elem
      */
-    hideTooltip(elem: HTMLElement): boolean {
+    compareElementHeights(elem: HTMLElement): boolean {
         return !(elem.scrollHeight > elem.clientHeight);
     }
 
