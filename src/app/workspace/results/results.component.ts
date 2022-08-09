@@ -35,6 +35,8 @@ export class ResultsComponent {
 
     splitSizeChanged: SplitSize;
 
+    forceResourceReload: Boolean;
+
     constructor(
         private _route: ActivatedRoute,
         private _titleService: Title
@@ -61,18 +63,16 @@ export class ResultsComponent {
         this._titleService.setTitle('Search results for ' + this.searchParams.mode + ' search');
     }
 
-    openSelectedResources(res: FilteredResources) {
-
+    onSelectionChange(res: FilteredResources) {
+        this.forceResourceReload = true; // if the selection changes, we must force ngOnChanges of the resource component
         this.selectedResources = res;
-
         if (!res || res.count <= 1) {
             this.viewMode = 'single';
+
         } else {
             if (this.viewMode !== 'compare') {
                 this.viewMode = ((res && res.count > 0) ? 'intermediate' : 'single');
             }
         }
-
     }
-
 }
