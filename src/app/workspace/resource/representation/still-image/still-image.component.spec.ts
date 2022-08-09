@@ -173,9 +173,6 @@ describe('StillImageComponent', () => {
 
         overlayContainer = TestBed.inject(OverlayContainer);
         rootLoader = TestbedHarnessEnvironment.documentRootLoader(testHostFixture);
-    });
-
-    it('should create', () => {
         expect(testHostComponent).toBeTruthy();
         expect(testHostComponent.osdViewerComp).toBeTruthy();
     });
