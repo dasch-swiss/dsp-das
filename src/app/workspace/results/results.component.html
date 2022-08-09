@@ -20,8 +20,11 @@
                 <app-intermediate *ngSwitchCase="'intermediate'" [resources]="selectedResources" (action)="viewMode=$event"></app-intermediate>
 
                 <!-- multiple resources view / comparison viewer -->
-                <app-comparison *ngSwitchCase="'compare'" [noOfResources]="selectedResources.count"
-                    [resources]="selectedResources.resInfo" [splitSizeChanged]="splitSizeChanged">
+                <app-comparison *ngSwitchCase="'compare'"
+                                [noOfResources]="selectedResources.count"
+                                [resources]="selectedResources.resInfo"
+                                [splitSizeChanged]="splitSizeChanged"
+                                [forceResourceReload]="forceResourceReload">
                 </app-comparison>
             </div>
         </as-split-area>
