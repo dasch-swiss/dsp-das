@@ -26,7 +26,7 @@ import { AddUserComponent } from './add-user/add-user.component';
 import { CollaborationComponent } from './collaboration.component';
 import { SelectGroupComponent } from './select-group/select-group.component';
 
-describe('CollaborationComponent', () => {
+fdescribe('CollaborationComponent', () => {
     let component: CollaborationComponent;
     let fixture: ComponentFixture<CollaborationComponent>;
 
@@ -139,6 +139,10 @@ describe('CollaborationComponent', () => {
         fixture = TestBed.createComponent(CollaborationComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+    });
+
+    afterEach(() => {
+        fixture.destroy();
     });
 
     it('should create', () => {
