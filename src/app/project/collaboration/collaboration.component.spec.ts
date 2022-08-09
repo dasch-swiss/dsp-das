@@ -26,7 +26,7 @@ import { AddUserComponent } from './add-user/add-user.component';
 import { CollaborationComponent } from './collaboration.component';
 import { SelectGroupComponent } from './select-group/select-group.component';
 
-fdescribe('CollaborationComponent', () => {
+describe('CollaborationComponent', () => {
     let component: CollaborationComponent;
     let fixture: ComponentFixture<CollaborationComponent>;
 
