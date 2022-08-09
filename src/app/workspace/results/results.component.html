@@ -4,13 +4,17 @@
     <as-split direction="horizontal" (dragEnd)="splitSizeChanged = $event">
         <as-split-area [size]="40">
             <app-list-view [search]="searchParams" [displayViewSwitch]="false" [withMultipleSelection]="true"
-            (selectedResources)="openSelectedResources($event)">
+            (selectedResources)="onSelectionChange($event)">
             </app-list-view>
         </as-split-area>
         <as-split-area [size]="60" *ngIf="selectedResources?.count > 0" cdkScrollable>
             <div [ngSwitch]="viewMode">
                 <!-- single resource view -->
-                <app-resource *ngSwitchCase="'single'" [resourceIri]="selectedResources.resInfo[0].id" [splitSizeChanged]="splitSizeChanged"></app-resource>
+                <app-resource *ngSwitchCase="'single'"
+                              [resourceIri]="selectedResources.resInfo[0].id"
+                              [splitSizeChanged]="splitSizeChanged"
+                              [forceReload] ="forceResourceReload">
+                </app-resource>
 
                 <!-- intermediate view -->
                 <app-intermediate *ngSwitchCase="'intermediate'" [resources]="selectedResources" (action)="viewMode=$event"></app-intermediate>
