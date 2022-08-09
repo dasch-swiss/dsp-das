@@ -28,6 +28,8 @@ export class ComparisonComponent implements OnChanges {
     // parent (or own) split size changed
     @Input() splitSizeChanged: SplitSize;
 
+    @Input() forceResourceReload: boolean;
+
     // if number of selected resources > 3, divide them into 2 rows
     topRow: string[] = [];
     bottomRow: string[] = [];
