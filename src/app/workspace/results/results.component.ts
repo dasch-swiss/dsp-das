@@ -33,9 +33,7 @@ export class ResultsComponent {
 
     loading = true;
 
-    splitSizeChanged: SplitSize;
-
-    forceResourceReload: Boolean;
+    splitSize: SplitSize;
 
     constructor(
         private _route: ActivatedRoute,
@@ -64,8 +62,9 @@ export class ResultsComponent {
     }
 
     onSelectionChange(res: FilteredResources) {
-        this.forceResourceReload = true; // if the selection changes, we must force ngOnChanges of the resource component
         this.selectedResources = res;
+        this.resourceIri = this.selectedResources.resInfo[0].id;
+
         if (!res || res.count <= 1) {
             this.viewMode = 'single';
 
@@ -75,4 +74,5 @@ export class ResultsComponent {
             }
         }
     }
+
 }
