@@ -13,6 +13,7 @@ import { TestConfig } from 'test.config';
 import { FileRepresentation } from '../file-representation';
 
 import { TextComponent } from './text.component';
+import {MatMenu} from "@angular/material/menu";
 
 const textFileValue = {
     'arkUrl': 'http://0.0.0.0:3336/ark:/72163/1/9876/=wcU1HzYTEKbJCYPybyKmAs/Kp81r_BPTHKa4oSd5iIxXgd',
@@ -63,7 +64,8 @@ describe('TextComponent', () => {
             imports: [
                 HttpClientTestingModule,
                 MatDialogModule,
-                MatSnackBarModule
+                MatSnackBarModule,
+                MatMenu
             ],
             providers: [
                 AppInitService,
