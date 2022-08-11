@@ -51,8 +51,10 @@ export class AudioComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.audio = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
         this.failedToLoad = !this._rs.doesFileExist(this.src.fileValue.fileUrl);
-        let player = document.getElementById('audio') as HTMLAudioElement;
-        player.addEventListener('timeupdate', () => { this.currentTime = player.currentTime });
+        const player = document.getElementById('audio') as HTMLAudioElement;
+        player.addEventListener('timeupdate', () => {
+            this.currentTime = player.currentTime; 
+        });
     }
 
     ngAfterViewInit() {
@@ -60,35 +62,34 @@ export class AudioComponent implements OnInit, AfterViewInit {
     }
 
     togglePlay(){
-        let player = document.getElementById('audio') as HTMLAudioElement;
+        const player = document.getElementById('audio') as HTMLAudioElement;
         if (player.paused){
             player.play();
         } else {
             player.pause();
         }
-        
     }
 
     isPaused(){
-        let player = document.getElementById('audio') as HTMLAudioElement;
+        const player = document.getElementById('audio') as HTMLAudioElement;
         return player.paused;
     }
 
     parseTime(time){
         if (isNaN(time)){     
-            return "00:00";
+            return '00:00';
         }
         const minutes = Math.floor(time/60);
         const seconds = Math.floor(time - minutes*60);
         let minutesString = minutes.toString();
         if (minutes < 10){
-            minutesString = "0" + minutesString;
+            minutesString = '0' + minutesString;
         }
         let secondsString = seconds.toString();
         if (seconds < 10){
-            secondsString = "0" + secondsString;
+            secondsString = '0' + secondsString;
         }
-        return minutesString + ":" + secondsString;
+        return minutesString + ':' + secondsString;
     }
 
     openReplaceFileDialog(){
@@ -143,22 +144,22 @@ export class AudioComponent implements OnInit, AfterViewInit {
     }
 
     onSliderChangeEnd(event){
-        let player = document.getElementById('audio') as HTMLAudioElement;
+        const player = document.getElementById('audio') as HTMLAudioElement;
         player.currentTime = event.value;
     }
 
     getDuration(){
-        let player = document.getElementById('audio') as HTMLAudioElement;
+        const player = document.getElementById('audio') as HTMLAudioElement;
         return player.duration;
     }
 
     toggleMute(){
-        let player = document.getElementById('audio') as HTMLAudioElement;
+        const player = document.getElementById('audio') as HTMLAudioElement;
         player.muted = !player.muted;
     }
 
     isMuted(){
-        let player = document.getElementById('audio') as HTMLAudioElement;
+        const player = document.getElementById('audio') as HTMLAudioElement;
         return player.muted;
     }
 

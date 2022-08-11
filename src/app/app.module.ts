@@ -168,7 +168,6 @@ import { SettingsComponent } from './project/beta/settings/settings.component';
 import { OverviewComponent } from './user/overview/overview.component';
 import { ProjectTileComponent } from './system/project-tile/project-tile.component';
 
-
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
     return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json');
@@ -335,6 +334,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         FormsModule,
         HttpClientModule,
         MaterialModule,
+        MatJDNConvertibleCalendarDateAdapterModule,
         PdfViewerModule,
         ReactiveFormsModule,
         TranslateModule.forRoot({
