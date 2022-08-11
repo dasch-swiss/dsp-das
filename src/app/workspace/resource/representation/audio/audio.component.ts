@@ -52,12 +52,13 @@ export class AudioComponent implements OnInit, AfterViewInit {
         this.audio = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
         this.failedToLoad = !this._rs.doesFileExist(this.src.fileValue.fileUrl);
         let player = document.getElementById('audio') as HTMLAudioElement;
-        player.addEventListener('timeupdate', () => {this.currentTime = player.currentTime});
+        player.addEventListener('timeupdate', () => { this.currentTime = player.currentTime });
     }
 
     ngAfterViewInit() {
         this.loaded.emit(true);
     }
+
     togglePlay(){
         let player = document.getElementById('audio') as HTMLAudioElement;
         if (player.paused){
@@ -67,11 +68,16 @@ export class AudioComponent implements OnInit, AfterViewInit {
         }
         
     }
+
     isPaused(){
         let player = document.getElementById('audio') as HTMLAudioElement;
         return player.paused;
     }
+
     parseTime(time){
+        if (isNaN(time)){     
+            return "00:00";
+        }
         const minutes = Math.floor(time/60);
         const seconds = Math.floor(time - minutes*60);
         let minutesString = minutes.toString();
@@ -84,6 +90,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
         }
         return minutesString + ":" + secondsString;
     }
+
     openReplaceFileDialog(){
         const propId = this.parentResource.properties[Constants.HasAudioFileValue][0].id;
 
@@ -107,10 +114,12 @@ export class AudioComponent implements OnInit, AfterViewInit {
             }
         });
     }
+
     openIIIFnewTab(){
         window.open(this.src.fileValue.fileUrl, "_blank");
     }
-     // https://stackoverflow.com/questions/66986983/angular-10-download-file-from-firebase-link-without-opening-into-new-tab
+
+    // https://stackoverflow.com/questions/66986983/angular-10-download-file-from-firebase-link-without-opening-into-new-tab
     async downloadAudio(url: string){
         try {
             const res = await this._http.get(url, { responseType: 'blob' }).toPromise();
@@ -119,6 +128,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
             this._errorHandler.showMessage(e);
         }
     }
+
     downloadFile(data){
         const url = window.URL.createObjectURL(data);
         const e = document.createElement('a');
@@ -131,22 +141,27 @@ export class AudioComponent implements OnInit, AfterViewInit {
         e.click();
         document.body.removeChild(e);
     }
+
     onSliderChangeEnd(event){
         let player = document.getElementById('audio') as HTMLAudioElement;
         player.currentTime = event.value;
     }
+
     getDuration(){
         let player = document.getElementById('audio') as HTMLAudioElement;
         return player.duration;
     }
+
     toggleMute(){
         let player = document.getElementById('audio') as HTMLAudioElement;
         player.muted = !player.muted;
     }
+
     isMuted(){
         let player = document.getElementById('audio') as HTMLAudioElement;
         return player.muted;
     }
+
     private _replaceFile(file: UpdateFileValue) {
         const updateRes = new UpdateResource();
         updateRes.id = this.parentResource.id;

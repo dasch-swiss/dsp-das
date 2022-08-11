@@ -50,19 +50,19 @@
                     </mat-icon>
                 </button>
                 <div class="current-time-span">
-                    <p>
+                    <span>
                         {{parseTime(currentTime)}} / {{parseTime(getDuration())}}
-                    </p>
+                    </span>
                 </div>
-                <div>
+                <div class="time-slider-container fill-remaining-space">
                     <mat-slider class="time-slider" min="0" [max]="getDuration()" step="1" [value]="currentTime" (input)="onSliderChangeEnd($event)"></mat-slider>
                 </div>
-                <button mat-icon-button (click)="toggleMute()" *ngIf="isMuted()">
+                <button mat-icon-button (click)="toggleMute()" *ngIf="!isMuted()">
                     <mat-icon>
                         volume_up
                     </mat-icon>
                 </button>
-                <button mat-icon-button (click)="toggleMute()" *ngIf="!isMuted()">
+                <button mat-icon-button (click)="toggleMute()" *ngIf="isMuted()">
                     <mat-icon>
                         volume_off
                     </mat-icon>
