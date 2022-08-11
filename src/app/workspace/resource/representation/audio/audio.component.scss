@@ -27,3 +27,17 @@
         }
     }
 }
+.current-time-span {
+    font-weight: bold;
+    height: 40px;
+}
+.time-slider {
+    height: 40px;
+    width: 90%;
+    ::ng-deep {
+        .mat-slider-track-background {
+            background-color: whitesmoke !important;
+        }
+    }
+         
+}
