@@ -53,7 +53,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
         this.failedToLoad = !this._rs.doesFileExist(this.src.fileValue.fileUrl);
         const player = document.getElementById('audio') as HTMLAudioElement;
         player.addEventListener('timeupdate', () => {
-            this.currentTime = player.currentTime; 
+            this.currentTime = player.currentTime;
         });
     }
 
@@ -76,7 +76,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
     }
 
     parseTime(time){
-        if (isNaN(time)){     
+        if (isNaN(time)){
             return '00:00';
         }
         const minutes = Math.floor(time/60);
@@ -117,7 +117,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
     }
 
     openIIIFnewTab(){
-        window.open(this.src.fileValue.fileUrl, "_blank");
+        window.open(this.src.fileValue.fileUrl, '_blank');
     }
 
     // https://stackoverflow.com/questions/66986983/angular-10-download-file-from-firebase-link-without-opening-into-new-tab
