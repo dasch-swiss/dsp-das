@@ -49,6 +49,9 @@
                         (click)="openSnackBar('URL copied to clipboard!')">
                     Copy URL to clipboard
                 </button>
+                <button mat-menu-item (click)="downloadVideo(video['changingThisBreaksApplicationSecurity'])">
+                    Download file
+                </button>
             </mat-menu>
             <button mat-icon-button (click)="goToStart()" [disabled]="currentTime === 0 || failedToLoad"
                 matTooltip="Stop and go to start" [matTooltipPosition]="matTooltipPos">

@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
     ApiResponseError,
     Constants,
@@ -49,7 +50,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
     @ViewChild('preview') preview: ElementRef;
 
     loading = true;
-
+    originalFilename: string;
     failedToLoad = false;
 
     // video file url
@@ -103,6 +104,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
+        private readonly _http: HttpClient,
         private _dialog: MatDialog,
         private _sanitizer: DomSanitizer,
         private _rs: RepresentationService,
@@ -121,6 +123,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
         this.video = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
         this.failedToLoad = !this._rs.doesFileExist(this.src.fileValue.fileUrl);
         this.fileHasChanged = false;
+        this._getOriginalFilename();
     }
 
     ngAfterViewInit() {
@@ -302,6 +305,32 @@ export class VideoComponent implements OnInit, AfterViewInit {
         this._notification.openSnackBar(message);
     }
 
+    async downloadVideo(url: string) {
+        try {
+            const res = await this._http.get(url, { responseType: 'blob' }).toPromise();
+            this.downloadFile(res);
+        } catch (e) {
+            this._errorHandler.showMessage(e);
+        }
+    }
+
+    downloadFile(data) {
+        const url = window.URL.createObjectURL(data);
+        const e = document.createElement('a');
+        e.href = url;
+
+        // set filename
+        if (this.originalFilename === undefined) {
+            e.download = url.substr(url.lastIndexOf('/') + 1);
+        } else {
+            e.download = this.originalFilename;
+        }
+
+        document.body.appendChild(e);
+        e.click();
+        document.body.removeChild(e);
+    }
+
     /**
      * opens replace file dialog
      *
@@ -351,6 +380,24 @@ export class VideoComponent implements OnInit, AfterViewInit {
         this.previewTime = Math.round((ev.offsetX / this.timeline.nativeElement.clientWidth) * this.duration);
         this.previewTime = this.previewTime > this.duration ? this.duration : this.previewTime;
         this.previewTime = this.previewTime < 0 ? 0 : this.previewTime;
+    }
+
+    private _getOriginalFilename() {
+        const requestOptions = {
+            headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+            withCredentials: true
+        };
+
+        const index = this.src.fileValue.fileUrl.indexOf(this.src.fileValue.filename);
+        const pathToJson = this.src.fileValue.fileUrl.substring(0, index + this.src.fileValue.filename.length) + '/knora.json';
+
+        this._http.get(pathToJson, requestOptions).subscribe(
+            res => {
+                console.log('a', res);
+                this.originalFilename = res['originalFilename'];
+                console.log(this.originalFilename);
+            }
+        );
     }
 
     /**
