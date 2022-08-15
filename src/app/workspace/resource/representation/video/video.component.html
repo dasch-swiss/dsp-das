@@ -52,6 +52,9 @@
                 <button mat-menu-item (click)="downloadVideo(video['changingThisBreaksApplicationSecurity'])">
                     Download file
                 </button>
+                <button mat-menu-item (click)="openReplaceFileDialog()">
+                    Replace file
+                </button>
             </mat-menu>
             <button mat-icon-button (click)="goToStart()" [disabled]="currentTime === 0 || failedToLoad"
                 matTooltip="Stop and go to start" [matTooltipPosition]="matTooltipPos">
@@ -90,9 +93,6 @@
 <!--                    {{ muted ? "volume_mute" : "volume_up" }}-->
 <!--                </mat-icon>-->
 <!--            </button>-->
-            <button mat-icon-button (click)="openReplaceFileDialog()" class="replace-file" matTooltip="Replace video file" [matTooltipPosition]="matTooltipPos">
-                <mat-icon>cloud_upload</mat-icon>
-            </button>
             <button mat-icon-button (click)="toggleCinemaMode()" [disabled]="failedToLoad"
                 [matTooltip]="(cinemaMode ? 'Default view' : 'Cinema mode')" [matTooltipPosition]="matTooltipPos">
                 <mat-icon>{{cinemaMode ? "fullscreen_exit" : "fullscreen"}}</mat-icon>
