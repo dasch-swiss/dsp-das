@@ -80,13 +80,13 @@
                 <mat-icon>forward_10</mat-icon>
             </button>
             <span class="fill-remaining-space"></span>
-            <button mat-icon-button (click)="muted = !muted" [matTooltip]="(muted ? 'Unmute' : 'Mute')"
-                [matTooltipPosition]="matTooltipPos"
-                [disabled]="failedToLoad">
-                <mat-icon>
-                    {{ muted ? "volume_mute" : "volume_up" }}
-                </mat-icon>
-            </button>
+<!--            <button mat-icon-button (click)="muted = !muted" [matTooltip]="(muted ? 'Unmute' : 'Mute')"-->
+<!--                [matTooltipPosition]="matTooltipPos"-->
+<!--                [disabled]="failedToLoad">-->
+<!--                <mat-icon>-->
+<!--                    {{ muted ? "volume_mute" : "volume_up" }}-->
+<!--                </mat-icon>-->
+<!--            </button>-->
             <button mat-icon-button (click)="openReplaceFileDialog()" class="replace-file" matTooltip="Replace video file" [matTooltipPosition]="matTooltipPos">
                 <mat-icon>cloud_upload</mat-icon>
             </button>
