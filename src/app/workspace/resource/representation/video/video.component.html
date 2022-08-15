@@ -45,6 +45,10 @@
                 <button mat-menu-item (click)="openVideoInNewTab(video['changingThisBreaksApplicationSecurity'])">
                     Open file in new tab
                 </button>
+                <button mat-menu-item [cdkCopyToClipboard]="video['changingThisBreaksApplicationSecurity']"
+                        (click)="openSnackBar('URL copied to clipboard!')">
+                    Copy URL to clipboard
+                </button>
             </mat-menu>
             <button mat-icon-button (click)="goToStart()" [disabled]="currentTime === 0 || failedToLoad"
                 matTooltip="Stop and go to start" [matTooltipPosition]="matTooltipPos">

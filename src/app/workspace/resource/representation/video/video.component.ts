@@ -21,6 +21,7 @@ import { EmitEvent, Events, UpdatedFileEventValue, ValueOperationEventService } 
 import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
+import { NotificationService } from '../../../../main/services/notification.service';
 
 @Component({
     selector: 'app-video',
@@ -106,6 +107,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
         private _sanitizer: DomSanitizer,
         private _rs: RepresentationService,
         private _errorHandler: ErrorHandlerService,
+        private _notification: NotificationService,
         private _valueOperationEventService: ValueOperationEventService
     ) { }
 
@@ -291,6 +293,13 @@ export class VideoComponent implements OnInit, AfterViewInit {
      */
     displayPreview(status: boolean) {
         this.preview.nativeElement.style.display = (status ? 'block' : 'none');
+    }
+
+    /**
+     * display message to confirm the copy of the citation link (ARK URL)
+     */
+    openSnackBar(message: string) {
+        this._notification.openSnackBar(message);
     }
 
     /**
