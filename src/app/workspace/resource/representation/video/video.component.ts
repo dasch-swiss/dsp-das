@@ -104,8 +104,8 @@ export class VideoComponent implements OnInit, AfterViewInit {
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _dialog: MatDialog,
         private _sanitizer: DomSanitizer,
-        private _errorHandler: ErrorHandlerService,
         private _rs: RepresentationService,
+        private _errorHandler: ErrorHandlerService,
         private _valueOperationEventService: ValueOperationEventService
     ) { }
 
@@ -319,6 +319,10 @@ export class VideoComponent implements OnInit, AfterViewInit {
                 this._replaceFile(data);
             }
         });
+    }
+
+    openVideoInNewTab(url: string) {
+        window.open(url, '_blank');
     }
 
     /**
