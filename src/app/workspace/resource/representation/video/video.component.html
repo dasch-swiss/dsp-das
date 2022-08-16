@@ -4,26 +4,18 @@
         <!-- in case of an error -->
         <app-status [status]="404" [url]="src.fileValue.fileUrl" [representation]="'video'" *ngIf="failedToLoad"></app-status>
 
-        <video class="video" #videoEle *ngIf="!fileHasChanged; else loading"  [src]="video" type="video/mp4" preload="auto" [muted]="muted"
-            (click)="togglePlay()" (timeupdate)="timeUpdate($event)" (loadedmetadata)="loadedMetadata()"
-            (canplaythrough)="loadedVideo()">
-        </video>
+        <div class="video-container">
+            <video class="video" #videoEle *ngIf="!fileHasChanged; else loading"  [src]="video" type="video/mp4" preload="auto" [muted]="muted"
+                (click)="togglePlay()" (timeupdate)="timeUpdate($event)" (loadedmetadata)="loadedMetadata()"
+                (canplaythrough)="loadedVideo()">
+            </video>
 
-        <div class="video-overlay" *ngIf="!play && firstPlayed">
-            <div>
-                <button class="icon-button-large" mat-icon-button (click)="updateTimeFromButton(-10)"
-                        matTooltip="10 seconds backward" [matTooltipPosition]="matTooltipPos"
-                        [disabled]="failedToLoad">
-                    <mat-icon>replay_10</mat-icon>
-                </button>
-                <button class="icon-button-large" mat-icon-button (click)="togglePlay()" [matTooltip]="(reachedTheEnd ? 'Replay' : (play ? 'Pause' : 'Play'))">
-                    <mat-icon>{{ reachedTheEnd ? "replay" : (play ? "pause" : "play_arrow") }}</mat-icon>
-                </button>
-                <button class="icon-button-large" mat-icon-button (click)="updateTimeFromButton(10)"
-                        matTooltip="10 seconds forward" [matTooltipPosition]="matTooltipPos"
-                        [disabled]="failedToLoad">
-                    <mat-icon>forward_10</mat-icon>
-                </button>
+            <div class="overlay">
+                <div>
+                    <mat-icon (click)="updateTimeFromButton(-10)">replay_10</mat-icon>
+                    <mat-icon (click)="togglePlay()">{{ reachedTheEnd ? "replay" : (play ? "pause" : "play_arrow") }}</mat-icon>
+                    <mat-icon (click)="updateTimeFromButton(10)">forward_10</mat-icon>
+                </div>
             </div>
         </div>
 

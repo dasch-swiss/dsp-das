@@ -87,7 +87,6 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
     // status
     play = false;
-    firstPlayed = false;
     reachedTheEnd = false;
 
     // volume
@@ -149,9 +148,6 @@ export class VideoComponent implements OnInit, AfterViewInit {
             this.play = !this.play;
 
             if (this.play) {
-                if (!this.firstPlayed) {
-                    this.firstPlayed = true;
-                }
                 this.videoEle.nativeElement.play();
             } else {
                 this.videoEle.nativeElement.pause();
