@@ -397,9 +397,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
         this._http.get(pathToJson, requestOptions).subscribe(
             res => {
-                console.log('a', res);
                 this.originalFilename = res['originalFilename'];
-                console.log(this.originalFilename);
             }
         );
     }
