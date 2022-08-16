@@ -51,14 +51,14 @@
                 <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #more="matMenu">
-                <button mat-menu-item (click)="openVideoInNewTab(video['changingThisBreaksApplicationSecurity'])">
+                <button mat-menu-item (click)="openVideoInNewTab(this.src.fileValue.fileUrl)">
                     Open file in new tab
                 </button>
-                <button mat-menu-item [cdkCopyToClipboard]="video['changingThisBreaksApplicationSecurity']"
+                <button mat-menu-item [cdkCopyToClipboard]="this.src.fileValue.fileUrl"
                         (click)="openSnackBar('URL copied to clipboard!')">
                     Copy URL to clipboard
                 </button>
-                <button mat-menu-item (click)="downloadVideo(video['changingThisBreaksApplicationSecurity'])">
+                <button mat-menu-item (click)="downloadVideo(this.src.fileValue.fileUrl)">
                     Download file
                 </button>
                 <button mat-menu-item (click)="openReplaceFileDialog()">
