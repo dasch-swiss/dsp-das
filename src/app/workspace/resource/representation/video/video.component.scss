@@ -11,6 +11,17 @@
     position: relative;
     height: 450px;
 
+    .video-overlay {
+      background: rgba(0, 0, 0, 0.58);
+      z-index: 1;
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     .video {
       position: absolute;
       display: block;

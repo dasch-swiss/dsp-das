@@ -9,6 +9,24 @@
             (canplaythrough)="loadedVideo()">
         </video>
 
+        <div class="video-overlay" *ngIf="!play && firstPlayed">
+            <div>
+                <button class="icon-button-large" mat-icon-button (click)="updateTimeFromButton(-10)"
+                        matTooltip="10 seconds backward" [matTooltipPosition]="matTooltipPos"
+                        [disabled]="failedToLoad">
+                    <mat-icon>replay_10</mat-icon>
+                </button>
+                <button class="icon-button-large" mat-icon-button (click)="togglePlay()" [matTooltip]="(reachedTheEnd ? 'Replay' : (play ? 'Pause' : 'Play'))">
+                    <mat-icon>{{ reachedTheEnd ? "replay" : (play ? "pause" : "play_arrow") }}</mat-icon>
+                </button>
+                <button class="icon-button-large" mat-icon-button (click)="updateTimeFromButton(10)"
+                        matTooltip="10 seconds forward" [matTooltipPosition]="matTooltipPos"
+                        [disabled]="failedToLoad">
+                    <mat-icon>forward_10</mat-icon>
+                </button>
+            </div>
+        </div>
+
         <ng-template #loading>
             <app-progress-indicator></app-progress-indicator>
         </ng-template>
@@ -23,7 +41,6 @@
                     [fileHasChanged]="fileHasChanged"
                     (loaded)="displayPreview(!$event)">
                 </app-video-preview>
-
             </div>
         </div>
     </div>
@@ -65,13 +82,9 @@
                 [disabled]="failedToLoad">
                 <mat-icon>{{ reachedTheEnd ? "replay" : (play ? "pause" : "play_arrow") }}</mat-icon>
             </button>
+
             <span class="empty-space"></span>
             <span class="fill-remaining-space"></span>
-            <button mat-icon-button (click)="updateTimeFromButton(-10)"
-                matTooltip="10 seconds backward" [matTooltipPosition]="matTooltipPos"
-                [disabled]="failedToLoad">
-                <mat-icon>replay_10</mat-icon>
-            </button>
 
             <div (wheel)="updateTimeFromScroll($event)">
                 <p class="mat-body-1 time" (click)="togglePlay()">
@@ -79,13 +92,6 @@
                     <span *ngIf="duration">/ {{ duration | appTime }}</span>
                 </p>
             </div>
-
-            <button mat-icon-button (click)="updateTimeFromButton(10)"
-                matTooltip="10 seconds forward" [matTooltipPosition]="matTooltipPos"
-                [disabled]="failedToLoad">
-                <mat-icon>forward_10</mat-icon>
-            </button>
-            <span class="fill-remaining-space"></span>
 <!--            <button mat-icon-button (click)="muted = !muted" [matTooltip]="(muted ? 'Unmute' : 'Mute')"-->
 <!--                [matTooltipPosition]="matTooltipPos"-->
 <!--                [disabled]="failedToLoad">-->
@@ -93,6 +99,10 @@
 <!--                    {{ muted ? "volume_mute" : "volume_up" }}-->
 <!--                </mat-icon>-->
 <!--            </button>-->
+            <span class="fill-remaining-space"></span>
+            <span class="empty-space"></span>
+            <span class="empty-space"></span>
+
             <button mat-icon-button (click)="toggleCinemaMode()" [disabled]="failedToLoad"
                 [matTooltip]="(cinemaMode ? 'Default view' : 'Cinema mode')" [matTooltipPosition]="matTooltipPos">
                 <mat-icon>{{cinemaMode ? "fullscreen_exit" : "fullscreen"}}</mat-icon>
