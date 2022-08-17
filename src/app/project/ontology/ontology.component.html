@@ -41,7 +41,8 @@
 
                 <span class="fill-remaining-space"></span>
 
-                <span class="app-toolbar-action" [class.select-form]="ontologies.length" *ngIf="project.status">
+                <span class="app-toolbar-action" [class.select-form]="ontologies.length"
+                    *ngIf="project.status && projectAdmin">
                     <button mat-raised-button color="primary" class="create-data-model-btn"
                         (click)="openOntologyForm('createOntology')">
                         {{ontologies.length ? 'New data model' : 'Create your first data model'}}
