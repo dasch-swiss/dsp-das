@@ -27,12 +27,6 @@ N.B.: Please, note that the image, video, and audio files must be in one of the 
 
 ---
 
-### Connect your data
-
-The workspace of the DSP-APP allows you to connect different resources, even if they are not in the same project (linkage), to comment on a resource and on their metadata fields (annotate). These actions will generate more data and will help to find specific resources and their relations easily.
-
----
-
 ## Search and browse
 
 DSP-APP offers the possibility for the user to search in 3 different ways: **full-text** search, **advanced** search, and **expert** search (Gravsearch query). The search bar is always available in the header of each page, whether logged in or out.
@@ -322,11 +316,21 @@ You can delete a property value. You mouse over the value and click on the delet
 
 ---
 
-### Annotate and link your data
+### Annotate and link data
 
 The main feature of the flexible data storage that DSP-APP uses is the possibility to annotate and link resources and their metadata. An annotation can be a small note about a date like "Not sure about the birthdate of this person. There's another date mentioned in the resource XYZ". Inside the note, it will be possible to link to another resource.
 
 Links in DSP-APP are always bi-directional. If you link resource A with resource B, then resource B knows about this connection. If you find resource B, you have the connection to resource A as well.
+
+It is possible to link resources of the same project or from 2 different projects.
+
+DSP-APP offers two ways to link data:
+
+1. Internal linkage: it allows you to create a direct link between 2 resources. The label of the linking resource (source) will appear in the „incoming links“ section of the targeted resource. You will choose this option when you want to embed the link in a text.
+
+2. Link object:  it allows you to create an annotation (the description of the link object) that can point to one or more resources. You will prefer this option if you want the link to exist and describe it.
+
+#### Internal linkage
 
 To link 2 resources (A is an image and B is a document in the example), you go to your resource A that will be linked, open the **Share** menu and click on the button `Copy internal link on clipboard`. You have copied the internal link of your resource A that will be used to make the link with your resource B.
 
@@ -343,6 +347,14 @@ You write and select a word or a group of words you want to attach the link to, 
 The word (or the group of words) is now highlighted in blue-grey and is clickable.
 
 ![Link has been added to the text](../assets/images/link_saved_as_standoff.png)*The link has been added to your text.*
+
+#### Link Object
+
+![Select resources to link](../assets/images/link-object-select.png)*Select the resources to link.*
+
+![Link object form](../assets/images/link-object-form.png)*Fill in the form about the new link object.*
+
+![Link object resource](../assets/images/link-object-resource-view.png)
 
 ---
 
