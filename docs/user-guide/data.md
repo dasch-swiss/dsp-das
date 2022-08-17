@@ -350,11 +350,19 @@ The word (or the group of words) is now highlighted in blue-grey and is clickabl
 
 #### Link Object
 
+To create a link object, the process starts from the search result list. You select 2 or more resources from the list and click on the button Create a link object from this selection.
+
 ![Select resources to link](../assets/images/link-object-select.png)*Select the resources to link.*
+
+You fill out the form indicating the project in which you want to register the link object, as well as a label to identify it. Optionally, you can add a comment (annotation) to describe this collection of resources. Then, click on Create.
 
 ![Link object form](../assets/images/link-object-form.png)*Fill in the form about the new link object.*
 
+The linked resources are listed in the `has Link to` property of the link object resource viewer. The label of your link object is searchable through a full-text search.
+
 ![Link object resource](../assets/images/link-object-resource-view.png)
+
+It is possible to add other resources later on by clicking on the `+` button in the `has Link to` property section.
 
 ---
 
