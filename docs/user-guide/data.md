@@ -358,7 +358,7 @@ You fill out the form indicating the project in which you want to register the l
 
 ![Link object form](../assets/images/link-object-form.png)*Fill in the form about the new link object.*
 
-The linked resources are listed in the `has Link to` property of the link object resource viewer. The label of your link object is searchable through a full-text search.
+The linked resources are listed in the `has Link to` property of the link object resource viewer. The label of your link object is searchable through a [full-text search](https://docs.dasch.swiss/latest/DSP-APP/user-guide/data/#full-text-search).
 
 ![Link object resource](../assets/images/link-object-resource-view.png)
 
