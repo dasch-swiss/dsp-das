@@ -193,6 +193,26 @@ In a still image resource, you're able to draw regions on the image and annotate
 
 Additionally, you can work on the resource directly, e.g, mark regions of interest on still images and on documents.
 
+##### Audio file
+
+##### Image file
+
+When you open a resource that contains an image, this one is displayed in a viewer. Several functionalities are accessible from the image viewer, e.g. zoom in/out, copy the IIIF link, replace the image or draw a region on the image.
+
+![Image viewer](../assets/images/region_annotation_panel.png)*Image viewer toolbar.*
+
+To access the regions, go to the annotation panel. You can **click on a region** in the image viewer, the focus of the page will be redirected to the annotation information.
+
+![Access the annotation panel](../assets/images/access_annotation_panel.png)*Access the annotation panel from the resource toolbar.*
+
+##### PDF file
+
+##### Text file
+
+##### Video file
+
+##### ZIP file
+
 #### Display resource properties
 
 By default, only important properties are shown in the resource viewer. To display them all, click on the "unfold" button in the resource toolbar.
@@ -208,16 +228,6 @@ To get more information about the property value, i.e. date of creation and auth
 To display the existing value comment, you mouse over the property value and click on the comment button (3rd icon from the left).
 
 ![Mouse over the property value to see if there is a comment.](../assets/images/comment-value.png)*Mouse over the property value to see if there is a comment and display it.*
-
-#### Image viewer
-
-When you open a resource that contains an image, this one is displayed in a viewer. Several functionalities are accessible from the image viewer, e.g. zoom in/out, copy the IIIF link, replace the image or draw a region on the image.
-
-![Image viewer](../assets/images/region_annotation_panel.png)*Image viewer toolbar.*
-
-To access the regions, go to the annotation panel. You can **click on a region** in the image viewer, the focus of the page will be redirected to the annotation information.
-
-![Access the annotation panel](../assets/images/access_annotation_panel.png)*Access the annotation panel from the resource toolbar.*
 
 ---
 
