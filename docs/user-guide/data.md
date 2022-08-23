@@ -195,11 +195,14 @@ Additionally, you can work on the resource directly, e.g, mark regions of intere
 
 ##### Audio file
 
+![Audio viewer](../assets/images/audio-file.png)
+
 ##### Image file
 
 When you open a resource that contains an image, this one is displayed in a viewer. Several functionalities are accessible from the image viewer, e.g. zoom in/out, copy the IIIF link, replace the image or draw a region on the image.
 
-![Image viewer](../assets/images/region_annotation_panel.png)*Image viewer toolbar.*
+<!-- ![Image viewer](../assets/images/region_annotation_panel.png)*Image viewer toolbar.* -->
+![Image viewer](../assets/images/image-file.png)
 
 To access the regions, go to the annotation panel. You can **click on a region** in the image viewer, the focus of the page will be redirected to the annotation information.
 
@@ -207,11 +210,19 @@ To access the regions, go to the annotation panel. You can **click on a region**
 
 ##### PDF file
 
+![PDF viewer](../assets/images/pdf-file.png)
+
 ##### Text file
+
+![Text viewer](../assets/images/text-doc-file.png)
 
 ##### Video file
 
+![Video viewer](../assets/images/video-file.png)
+
 ##### ZIP file
+
+![ZIP viewer](../assets/images/zip-file.png)
 
 #### Display resource properties
 
