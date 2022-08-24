@@ -4,7 +4,7 @@
 </span>
 <ng-template #showForm>
     <span [formGroup]="form">
-        <mat-form-field class="large-field child-value-component" floatLabel="never">
+        <mat-form-field class="large-field child-value-component" floatLabel="never" (input)="disallowCommentIfEmpty(form.value)">
             <input matInput [formControlName]="'value'" class="value" placeholder="Int value" type="number" [errorStateMatcher]="matcher">
             <mat-error *ngIf="valueFormControl.hasError('valueNotChanged') &&
                 (valueFormControl.touched || valueFormControl.dirty)">
@@ -23,14 +23,19 @@
         <mat-form-field class="large-field value-component-comment">
             <textarea
                 matInput
-                class="comment"
+                [ngClass]="{'comment': commentFormControl.value && !valueFormControl.value ,'invalid-comment' : commentFormControl.value && !valueFormControl.value}"
                 placeholder="Comment"
                 spellcheck="false"
+                [readonly] = "[commentReadOnly]"
                 [cdkTextareaAutosize]="true"
                 [cdkAutosizeMinRows]="1"
                 [cdkAutosizeMaxRows]="6"
                 [formControlName]="'comment'">
             </textarea>
+            <mat-icon matPrefix class="material-icons comment-lock" *ngIf="commentReadOnly && !(commentFormControl.value && !valueFormControl.value)">lock</mat-icon>
+            <mat-hint *ngIf="commentFormControl.value && !valueFormControl.value">
+                <span class="custom-error-message">This comment won't be saved if there is an invalid or an empty property value above.</span>
+            </mat-hint>
         </mat-form-field>
     </span>
 </ng-template>
