@@ -23,7 +23,7 @@
         <mat-form-field class="large-field value-component-comment">
             <textarea
                 matInput
-                [ngClass]="{'comment': commentFormControl.value && !valueFormControl.value ,'invalid-comment' : commentFormControl.value && !valueFormControl.value}"
+                [ngClass]="{'comment': valueFormControl.value ,'invalid-comment' : !valueFormControl.value}"
                 placeholder="Comment"
                 spellcheck="false"
                 [readonly] = "[commentReadOnly]"
