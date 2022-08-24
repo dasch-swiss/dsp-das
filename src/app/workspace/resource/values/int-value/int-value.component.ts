@@ -24,6 +24,7 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
     form: FormGroup;
     matcher = new ValueErrorStateMatcher();
     valueChangesSubscription: Subscription;
+    commentChangesSubsscription: Subscription;
 
     customValidators = [Validators.pattern(CustomRegex.INT_REGEX)]; // only allow for integer values (no fractions)
 
@@ -45,10 +46,18 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
 
         this.commentFormControl = new FormControl(null);
 
-        // subscribe to any change on the comment and recheck validity
-        this.valueChangesSubscription = this.commentFormControl.valueChanges.subscribe(
+        // subscribe to any change on the value and recheck validity
+        this.valueChangesSubscription = this.valueFormControl.valueChanges.subscribe(
             data => {
                 this.valueFormControl.updateValueAndValidity();
+            }
+        );
+
+        // subscribe to any change on the comment and recheck validity
+        this.commentChangesSubsscription = this.commentFormControl.valueChanges.subscribe(
+            data => {
+                this.valueFormControl.updateValueAndValidity();
+                this.commentFormControl.updateValueAndValidity();
             }
         );
 
@@ -113,6 +122,14 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
         }
 
         return updatedIntValue;
+    }
+
+    /**
+     * sets the comment field to readOnly if there is no property value or no more a property value
+     */
+    disallowCommentIfEmpty(newValue) {
+        console.log(newValue);
+        this.commentReadOnly = (!newValue || !newValue.value || this.valueFormControl.hasError('pattern') ||  this.valueFormControl.hasError('required'));
     }
 
 }
