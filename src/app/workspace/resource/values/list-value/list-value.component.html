@@ -47,7 +47,7 @@
     <span class="rm-value list">
         <span class="hierarchy" *ngFor="let item of selectedNodeHierarchy, let first = first, let last = last">
             <mat-icon *ngIf="!first">chevron_right</mat-icon>
-            <span class="right-here" [class.last]="last">{{ item }}</span>
+            <span [class.last]="last">{{ item }}</span>
         </span>
     </span>
     <span class="rm-comment" *ngIf="shouldShowComment">{{commentFormControl.value}}</span>
