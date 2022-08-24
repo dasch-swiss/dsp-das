@@ -128,7 +128,6 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
      * sets the comment field to readOnly if there is no property value or no more a property value
      */
     disallowCommentIfEmpty(newValue) {
-        console.log(newValue);
         this.commentReadOnly = (!newValue || !newValue.value || this.valueFormControl.hasError('pattern') ||  this.valueFormControl.hasError('required'));
     }
 
