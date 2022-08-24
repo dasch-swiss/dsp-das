@@ -39,6 +39,11 @@ export abstract class BaseValueDirective {
     shouldShowComment = false;
 
     /**
+     * whether the comment field can be edited or not
+     */
+    commentReadOnly = true;
+
+    /**
      * formControl element for the value.
      */
     abstract valueFormControl: FormControl;
