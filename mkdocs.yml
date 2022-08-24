@@ -17,7 +17,6 @@ nav:
       - Search results: user-guide/data/search-results.md
       - Work on your data: user-guide/data/work-on-data.md
     - User Profile: user-guide/user.md
-    # - Publication: user-guide/publication.md
   - Contribution:
     - How to contribute: contribution/index.md
     - Docs Documentation: contribution/docs-documentation.md
@@ -39,7 +38,6 @@ theme:
     accent: 'deep purple'
   features:
     - navigation.tabs
-    - navigation.sections
 
 extra_css:
   - 'assets/style/theme.css'
