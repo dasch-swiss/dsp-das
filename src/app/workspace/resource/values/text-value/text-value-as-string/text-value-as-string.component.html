@@ -43,19 +43,7 @@
         <ng-template #showRichText>
             <ckeditor [formControlName]="'value'" [config]="editorConfig" [editor]="editor"></ckeditor>
         </ng-template>
-
         <!-- comment -->
-        <mat-form-field *ngIf="!commentDisabled" class="large-field value-component-comment">
-            <textarea
-                matInput
-                class="comment"
-                placeholder="Comment"
-                spellcheck="false"
-                [cdkTextareaAutosize]="true"
-                [cdkAutosizeMinRows]="1"
-                [cdkAutosizeMaxRows]="6"
-                [formControlName]="'comment'">
-            </textarea>
-        </mat-form-field>
+        <app-comment-form *ngIf="!commentDisabled" [valueFormControl]="valueFormControl" [(commentFormControl)]="commentFormControl" [forceUpdate]="valueFormControl.value"></app-comment-form>
     </span>
 </ng-template>

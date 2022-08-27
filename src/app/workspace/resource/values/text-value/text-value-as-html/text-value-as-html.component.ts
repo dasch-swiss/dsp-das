@@ -23,6 +23,7 @@ export class TextValueAsHtmlComponent extends BaseValueDirective implements OnIn
     form: FormGroup;
 
     valueChangesSubscription: Subscription;
+    commentChangesSubscription: Subscription;
 
     customValidators = [];
 

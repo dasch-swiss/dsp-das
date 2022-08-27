@@ -26,7 +26,6 @@ export class ColorValueComponent extends BaseValueDirective implements OnInit, O
     valueFormControl: FormControl;
     commentFormControl: FormControl;
     form: FormGroup;
-    valueChangesSubscription: Subscription;
     customValidators = [Validators.pattern(CustomRegex.COLOR_REGEX)];
     matcher = new ValueErrorStateMatcher();
     textColor: string;
@@ -48,13 +47,6 @@ export class ColorValueComponent extends BaseValueDirective implements OnInit, O
         // initialize form control elements
         this.valueFormControl = new FormControl(null);
         this.commentFormControl = new FormControl(null);
-
-        // subscribe to any change on the comment and recheck validity
-        this.valueChangesSubscription = this.commentFormControl.valueChanges.subscribe(
-            data => {
-                this.valueFormControl.updateValueAndValidity();
-            }
-        );
 
         this.form = this._fb.group({
             value: this.valueFormControl,
@@ -81,8 +73,6 @@ export class ColorValueComponent extends BaseValueDirective implements OnInit, O
 
     // unsubscribe when the object is destroyed to prevent memory leaks
     ngOnDestroy(): void {
-        this.unsubscribeFromValueChanges();
-
         resolvedPromise.then(() => {
             // remove form from the parent form group
             this.removeFromParentFormGroup(this.formName);

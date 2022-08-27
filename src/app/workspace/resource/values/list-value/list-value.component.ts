@@ -38,8 +38,6 @@ export class ListValueComponent extends BaseValueDirective implements OnInit, On
 
     form: FormGroup;
 
-    valueChangesSubscription: Subscription;
-
     customValidators = [];
 
     constructor(
@@ -88,11 +86,7 @@ export class ListValueComponent extends BaseValueDirective implements OnInit, On
 
         this.valueFormControl = new FormControl(null);
         this.commentFormControl = new FormControl(null);
-        this.valueChangesSubscription = this.commentFormControl.valueChanges.subscribe(
-            data => {
-                this.valueFormControl.updateValueAndValidity();
-            }
-        );
+
         this.form = this._fb.group({
             value: this.valueFormControl,
             comment: this.commentFormControl
@@ -110,8 +104,6 @@ export class ListValueComponent extends BaseValueDirective implements OnInit, On
     }
 
     ngOnDestroy(): void {
-        this.unsubscribeFromValueChanges();
-
         resolvedPromise.then(() => {
             // remove form from the parent form group
             this.removeFromParentFormGroup(this.formName);

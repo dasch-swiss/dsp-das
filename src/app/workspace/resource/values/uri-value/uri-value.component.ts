@@ -24,7 +24,6 @@ export class UriValueComponent extends BaseValueDirective implements OnInit, OnC
 
     form: FormGroup;
     matcher = new ValueErrorStateMatcher();
-    valueChangesSubscription: Subscription;
 
     customValidators = [Validators.pattern(CustomRegex.URI_REGEX)];
 
@@ -44,12 +43,6 @@ export class UriValueComponent extends BaseValueDirective implements OnInit, OnC
         this.valueFormControl = new FormControl(null);
         this.commentFormControl = new FormControl(null);
 
-        this.valueChangesSubscription = this.commentFormControl.valueChanges.subscribe(
-            data => {
-                this.valueFormControl.updateValueAndValidity();
-            }
-        );
-
         this.form = this._fb.group({
             value: this.valueFormControl,
             comment: this.commentFormControl
@@ -68,8 +61,6 @@ export class UriValueComponent extends BaseValueDirective implements OnInit, OnC
     }
 
     ngOnDestroy(): void {
-        this.unsubscribeFromValueChanges();
-
         resolvedPromise.then(() => {
             // remove form from the parent form group
             this.removeFromParentFormGroup(this.formName);

@@ -29,8 +29,6 @@ export class IntervalValueComponent extends BaseValueDirective implements OnInit
 
     form: FormGroup;
 
-    valueChangesSubscription: Subscription;
-
     customValidators = [];
 
     matcher = new ValueErrorStateMatcher();
@@ -57,13 +55,6 @@ export class IntervalValueComponent extends BaseValueDirective implements OnInit
 
         this.commentFormControl = new FormControl(null);
 
-        // subscribe to any change on the comment and recheck validity
-        this.valueChangesSubscription = this.commentFormControl.valueChanges.subscribe(
-            data => {
-                this.valueFormControl.updateValueAndValidity();
-            }
-        );
-
         this.form = this._fb.group({
             value: this.valueFormControl,
             comment: this.commentFormControl
@@ -83,8 +74,6 @@ export class IntervalValueComponent extends BaseValueDirective implements OnInit
 
     // unsubscribe when the object is destroyed to prevent memory leaks
     ngOnDestroy(): void {
-        this.unsubscribeFromValueChanges();
-
         resolvedPromise.then(() => {
             // remove form from the parent form group
             this.removeFromParentFormGroup(this.formName);

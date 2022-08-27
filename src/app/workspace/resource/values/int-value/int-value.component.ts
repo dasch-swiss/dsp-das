@@ -23,8 +23,6 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
 
     form: FormGroup;
     matcher = new ValueErrorStateMatcher();
-    valueChangesSubscription: Subscription;
-    commentChangesSubsscription: Subscription;
 
     customValidators = [Validators.pattern(CustomRegex.INT_REGEX)]; // only allow for integer values (no fractions)
 
@@ -46,21 +44,6 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
 
         this.commentFormControl = new FormControl(null);
 
-        // subscribe to any change on the value and recheck validity
-        this.valueChangesSubscription = this.valueFormControl.valueChanges.subscribe(
-            data => {
-                this.valueFormControl.updateValueAndValidity();
-            }
-        );
-
-        // subscribe to any change on the comment and recheck validity
-        this.commentChangesSubsscription = this.commentFormControl.valueChanges.subscribe(
-            data => {
-                this.valueFormControl.updateValueAndValidity();
-                this.commentFormControl.updateValueAndValidity();
-            }
-        );
-
         this.form = this._fb.group({
             value: this.valueFormControl,
             comment: this.commentFormControl
@@ -80,8 +63,6 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
 
     // unsubscribe when the object is destroyed to prevent memory leaks
     ngOnDestroy(): void {
-        this.unsubscribeFromValueChanges();
-
         resolvedPromise.then(() => {
             // remove form from the parent form group
             this.removeFromParentFormGroup(this.formName);
@@ -122,5 +103,10 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
         }
 
         return updatedIntValue;
+    }
+
+    updateValueAndValidity() {
+        console.log('update onsubmit');
+        this.valueFormControl.updateValueAndValidity();
     }
 }

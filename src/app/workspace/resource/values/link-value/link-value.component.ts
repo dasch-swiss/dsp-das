@@ -63,7 +63,6 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
     form: FormGroup;
     resourceClassLabel: string;
 
-    valueChangesSubscription: Subscription;
     labelChangesSubscription: Subscription;
     // label cannot contain logical operations of lucene index
     customValidators = [resourceValidator];
@@ -178,13 +177,6 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
 
         this.commentFormControl = new FormControl(null);
 
-        // subscribe to any change on the comment and recheck validity
-        this.valueChangesSubscription = this.commentFormControl.valueChanges.subscribe(
-            data => {
-                this.valueFormControl.updateValueAndValidity();
-            }
-        );
-
         this.labelChangesSubscription = this.valueFormControl.valueChanges.subscribe(data => {
             this.searchByLabel(data);
         });
@@ -208,7 +200,6 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
 
     // unsubscribe when the object is destroyed to prevent memory leaks
     ngOnDestroy(): void {
-        this.unsubscribeFromValueChanges();
 
         if (this.labelChangesSubscription !== undefined) {
             this.labelChangesSubscription.unsubscribe();

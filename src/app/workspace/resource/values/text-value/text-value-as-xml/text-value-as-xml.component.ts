@@ -40,7 +40,6 @@ export class TextValueAsXMLComponent extends BaseValueDirective implements OnIni
 
     form: FormGroup;
 
-    valueChangesSubscription: Subscription;
     matcher = new ValueErrorStateMatcher();
     customValidators = [];
 
@@ -91,12 +90,6 @@ export class TextValueAsXMLComponent extends BaseValueDirective implements OnIni
 
         this.commentFormControl = new FormControl(null);
 
-        this.valueChangesSubscription = this.commentFormControl.valueChanges.subscribe(
-            data => {
-                this.valueFormControl.updateValueAndValidity();
-            }
-        );
-
         this.form = this.fb.group({
             value: this.valueFormControl,
             comment: this.commentFormControl
@@ -120,8 +113,6 @@ export class TextValueAsXMLComponent extends BaseValueDirective implements OnIni
     }
 
     ngOnDestroy(): void {
-        this.unsubscribeFromValueChanges();
-
         resolvedPromise.then(() => {
             // remove form from the parent form group
             this.removeFromParentFormGroup(this.formName);

@@ -30,6 +30,7 @@ export class GeonameValueComponent extends BaseValueDirective implements OnInit,
     form: FormGroup;
 
     valueChangesSubscription: Subscription;
+
     matcher = new ValueErrorStateMatcher();
     customValidators = [geonameIdValidator];
 
@@ -75,7 +76,7 @@ export class GeonameValueComponent extends BaseValueDirective implements OnInit,
         this.commentFormControl = new FormControl(null);
 
         // react to user typing places
-        this.valueFormControl.valueChanges.subscribe(
+        this.valueChangesSubscription = this.valueFormControl.valueChanges.subscribe(
             (searchTerm: string) => {
 
                 // console.log(searchTerm);
@@ -91,12 +92,6 @@ export class GeonameValueComponent extends BaseValueDirective implements OnInit,
                         this.places = [];
                     }
                 }
-            }
-        );
-
-        this.valueChangesSubscription = this.commentFormControl.valueChanges.subscribe(
-            data => {
-                this.valueFormControl.updateValueAndValidity();
             }
         );
 
@@ -129,8 +124,7 @@ export class GeonameValueComponent extends BaseValueDirective implements OnInit,
     }
 
     ngOnDestroy(): void {
-        this.unsubscribeFromValueChanges();
-
+        this.valueChangesSubscription.unsubscribe();
         resolvedPromise.then(() => {
             // remove form from the parent form group
             this.removeFromParentFormGroup(this.formName);

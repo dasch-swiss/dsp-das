@@ -27,7 +27,6 @@ export class TextValueAsStringComponent extends BaseValueDirective implements On
 
     form: FormGroup;
 
-    valueChangesSubscription: Subscription;
     matcher = new ValueErrorStateMatcher();
     customValidators = [];
 
@@ -49,17 +48,10 @@ export class TextValueAsStringComponent extends BaseValueDirective implements On
     }
 
     ngOnInit() {
-
         // initialize form control elements
         this.valueFormControl = new FormControl(null);
 
         this.commentFormControl = new FormControl(null);
-
-        this.valueChangesSubscription = this.commentFormControl.valueChanges.subscribe(
-            data => {
-                this.valueFormControl.updateValueAndValidity();
-            }
-        );
 
         this.form = this._fb.group({
             value: this.valueFormControl,
@@ -80,15 +72,12 @@ export class TextValueAsStringComponent extends BaseValueDirective implements On
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-
         // resets values and validators in form controls when input displayValue or mode changes
         // at the first call of ngOnChanges, form control elements are not initialized yet
         this.resetFormControl();
     }
 
     ngOnDestroy(): void {
-        this.unsubscribeFromValueChanges();
-
         resolvedPromise.then(() => {
             // remove form from the parent form group
             this.removeFromParentFormGroup(this.formName);
@@ -130,5 +119,4 @@ export class TextValueAsStringComponent extends BaseValueDirective implements On
 
         return updatedTextValue;
     }
-
 }

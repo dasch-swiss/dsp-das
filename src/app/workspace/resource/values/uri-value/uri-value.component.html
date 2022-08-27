@@ -23,16 +23,7 @@
             </mat-error>
         </mat-form-field>
         <mat-form-field class="large-field value-component-comment">
-            <textarea
-                matInput
-                class="comment"
-                placeholder="Comment"
-                spellcheck="false"
-                [cdkTextareaAutosize]="true"
-                [cdkAutosizeMinRows]="1"
-                [cdkAutosizeMaxRows]="6"
-                [formControlName]="'comment'">
-            </textarea>
+            <app-comment-form [valueFormControl]="valueFormControl" [(commentFormControl)]="commentFormControl" [forceUpdate]="valueFormControl.value"></app-comment-form>
         </mat-form-field>
     </span>
 </ng-template>
