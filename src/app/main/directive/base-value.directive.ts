@@ -39,11 +39,6 @@ export abstract class BaseValueDirective {
     shouldShowComment = false;
 
     /**
-     * whether the comment field can be edited or not
-     */
-    commentReadOnly = true;
-
-    /**
      * formControl element for the value.
      */
     abstract valueFormControl: FormControl;
@@ -57,11 +52,6 @@ export abstract class BaseValueDirective {
      * formGroup that contains FormControl elements.
      */
     abstract form: FormGroup;
-
-    /**
-     * subscription used for when the value changes.
-     */
-    abstract valueChangesSubscription: Subscription;
 
     /**
      * custom validators for a specific value type.
@@ -139,15 +129,6 @@ export abstract class BaseValueDirective {
             }
 
             this.valueFormControl.updateValueAndValidity();
-        }
-    }
-
-    /**
-     * unsubscribes from the valueChangesSubscription
-     */
-    unsubscribeFromValueChanges(): void {
-        if (this.valueChangesSubscription !== undefined) {
-            this.valueChangesSubscription.unsubscribe();
         }
     }
 
