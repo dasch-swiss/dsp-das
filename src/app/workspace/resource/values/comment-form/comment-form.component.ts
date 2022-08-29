@@ -19,7 +19,7 @@ export class CommentFormComponent implements OnChanges{
     @Input() valueFormControl: FormControl;
 
     /**
-     * pass valueFormControl.value to trigger ngOnChanges. (Change detection on the valueFormControl does not always detect value changes)
+     * pass valueFormControls value to trigger ngOnChanges. (Change detection on the valueFormControl does not always detect value changes)
      */
     @Input() forceUpdate: any;
 
@@ -31,7 +31,7 @@ export class CommentFormComponent implements OnChanges{
     /**
      * whether the comment field is editable or not
      */
-    commentReadOnly = false;
+    disallowed = false;
 
     constructor() { }
 
@@ -47,13 +47,16 @@ export class CommentFormComponent implements OnChanges{
     }
 
     /**
+     * checks the comment field to readOnly if there is no property value or an invalid property value in the valueFormControl
+     */
+    hasError() {
+        return this.valueFormControl.hasError('pattern') || this.valueFormControl.hasError('required');
+    }
+
+    /**
      * sets the comment field to readOnly if there is no property value or an invalid property value in the valueFormControl
      */
     disallowCommentIfEmptyValue() {
-        this.commentReadOnly = (
-            !this.valueFormControl
-            || this.isEmptyVal()
-            || this.valueFormControl.hasError('pattern')
-            || this.valueFormControl.hasError('required'));
+        this.disallowed = this.isEmptyVal() || this.hasError();
     }
 }

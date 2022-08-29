@@ -2,17 +2,17 @@
     <textarea
         matInput
         [formControl]="commentFormControl"
-        [ngClass]="{'comment': valueFormControl.value ,'invalid-comment' : isEmptyVal()}"
+        [ngClass]="{'comment': valueFormControl.value ,'invalid-comment' : hasError() || isEmptyVal()}"
         placeholder="Comment"
         spellcheck="false"
-        [readonly] = "[commentReadOnly]"
+        [readonly] = "[disallowed]"
         [cdkTextareaAutosize]="true"
         [cdkAutosizeMinRows]="1"
         [cdkAutosizeMaxRows]="6"
         [formControlName]="'comment'">
     </textarea>
-    <mat-icon matPrefix class="material-icons comment-lock" *ngIf="commentReadOnly && !(commentFormControl.value && isEmptyVal())">lock</mat-icon>
-    <mat-hint *ngIf="commentFormControl.value && isEmptyVal()">
+    <mat-icon matPrefix class="material-icons comment-lock" *ngIf="isEmptyVal() && disallowed && !commentFormControl.value">lock</mat-icon>
+    <mat-hint *ngIf="commentFormControl.value && disallowed">
         <span class="custom-error-message">This comment won't be saved if there is an invalid or an empty property value above.</span>
     </mat-hint>
 </mat-form-field>
