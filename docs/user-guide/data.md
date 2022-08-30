@@ -196,13 +196,13 @@ Everything about the resource is displayed below the media viewer (when there is
 
 ##### Audio file
 
-Supported format: **mp3**, **wav**
+Supported file types: **mp3**, **wav**
 
 ![Audio viewer](../assets/images/audio-file.png)
 
 ##### Image file
 
-Supported format: **jpeg**, **jp2**, **tiff**, **tiff-x**, **png**
+Supported file types: **jpeg**, **jp2**, **jpg**, **tiff**, **tif**, **png**
 
 In a resource of type "still image", you're able to draw regions on the image and annotate this region. Usually, a still image resource is used for book pages, photographs, postcards, letters, etc.
 
@@ -217,25 +217,25 @@ To access the regions, go to the **annotation** panel. You can **click on an exi
 
 ##### Document file
 
-Supported format: **PDF**
+Supported file types: **pdf**, **doc**, **docx**, **xls**, **xlsx**, **ppt**, **pptx**
 
 ![PDF viewer](../assets/images/pdf-file.png)
 
 ##### Text file
 
-Supported format: **csv**, **txt**, **xml**
+Supported file types: **csv**, **txt**, **xml**, **xsd**, **xsl**
 
 ![Text viewer](../assets/images/text-doc-file.png)
 
 ##### Video file
 
-Supported format: **mp4**
+Supported file types: **mp4**
 
 ![Video viewer](../assets/images/video-file.png)
 
 ##### Archive file
 
-Supported format: **zip**, **x-tar**, **gzip**
+Supported file types: **7z**, **gz**, **gzip**, **tar**, **tgz**, **z**, **zip**
 
 ![Archive viewer](../assets/images/zip-file.png)
 
