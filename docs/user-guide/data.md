@@ -196,7 +196,7 @@ Everything about the resource is displayed below the media viewer (when there is
 
 ##### Audio file
 
-Supported format: **mp3**
+Supported format: **mp3**, **wav**
 
 ![Audio viewer](../assets/images/audio-file.png)
 
