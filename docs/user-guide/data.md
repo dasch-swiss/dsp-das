@@ -183,7 +183,7 @@ If you don't have the permissions you were supposed to get, please contact the [
 
 #### Display a resource
 
-DSP-APP offers different resource views for different media types (images, videos, audio, archives, text, and PDF files). You can access to the resources from the list of search results. Depending on the media type, DSP-APP offers different tools to work on the resource.
+DSP-APP offers different resource views for different media types (images, videos, audio, archives, text, and PDF files). You can access the resources from the list of search results. Depending on the media type, DSP-APP offers different tools to work on the resource.
 Additionally, you can work on the resource directly, e.g, mark regions of interest on images and documents.
 
 Each media viewer offers different tools and functionalities, either displayed in the bottom toolbar (e.g. zoom, open in fullscreen button, play button, etc. - captioned in orange thereafter) or in the menu - the three-dot button on the bottom-left side (e.g. copy the ARK URL to the clipboard, download/replace the file, open the file in a new tab - captioned in red thereafter).
