@@ -183,14 +183,14 @@ If you don't have the permissions you were supposed to get, please contact the [
 
 #### Display a resource
 
-DSP-APP offers different resource views for different media types (images, videos, audio, archives, text, and PDF files). You get access to the resources from the list of search results. Depending on the media type, DSP-APP offers different tools to work on the resource.
+DSP-APP offers different resource views for different media types (images, videos, audio, archives, text, and PDF files). You can access to the resources from the list of search results. Depending on the media type, DSP-APP offers different tools to work on the resource.
 Additionally, you can work on the resource directly, e.g, mark regions of interest on images and documents.
 
 Each media viewer offers different tools and functionalities, either displayed in the bottom toolbar (e.g. zoom, open in fullscreen button, play button, etc. - captioned in orange thereafter) or in the menu - the three-dot button on the bottom-left side (e.g. copy the ARK URL to the clipboard, download/replace the file, open the file in a new tab - captioned in red thereafter).
 
 ![Single resource view. The resource type in this example is "Page".](../assets/images/resource-view-with-image.png)*Single resource view. The resource type in this example is "Page" and an image viewer displays the photograph of the manuscript page.*
 
-Everything about the resource is displayed below the media viewer (when there is one). All the information about the resource itself (e.g. type, label, permissions, creator, date of creation, etc.), the data (properties and values), and different functionalities such as editing, deleting, sharing the resource. Get more details about the functionalities in the following sections.
+Everything about the resource is displayed below the media viewer (when there is one). All the information about the resource itself (e.g. type, label, permissions, creator, date of creation, etc.), the data (properties and values), and different functionalities such as editing, deleting, sharing the resource. You can find more information about the functionalities in the following sections.
 
 ![Resource toolbar description.](../assets/images/resource-toolbar.png)
 
@@ -206,7 +206,7 @@ Supported file types: **jpeg**, **jp2**, **jpg**, **tiff**, **tif**, **png**
 
 In a resource of type "still image", you're able to draw regions on the image and annotate this region. Usually, a still image resource is used for book pages, photographs, postcards, letters, etc.
 
-When you open a resource that contains an image, this one is displayed in a viewer. Several functionalities are accessible from the image viewer, e.g. zoom in/out, copy the IIIF link, replace the image or draw a region on the image.
+When you open a resource that contains an image, it is displayed in a viewer. Several functionalities are accessible from the image viewer, e.g. zoom in/out, copy the IIIF link, replace the image or draw a region on the image.
 
 <!-- ![Image viewer](../assets/images/region_annotation_panel.png)*Image viewer toolbar.* -->
 ![Image viewer](../assets/images/image-file.png)
