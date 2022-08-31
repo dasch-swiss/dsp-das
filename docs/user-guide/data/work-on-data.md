@@ -14,7 +14,7 @@ If you don't have the permissions you were supposed to get, please contact the [
 
 ### Display a resource
 
-DSP-APP offers different resource views for different media types (images, videos, audio, archives, text, and PDF files). You can access the resources from the list of search results. Depending on the media type, DSP-APP offers different tools to work on the resource.
+DSP-APP offers different resource views for different media types (images, videos, audio, archives, text, and document files). You can access the resources from the list of search results. Depending on the media type, DSP-APP offers different tools to work on the resource.
 Additionally, you can work on the resource directly, e.g, mark regions of interest on images and documents.
 
 Each media viewer offers different tools and functionalities, either displayed in the bottom toolbar (e.g. zoom, open in fullscreen button, play button, etc. - captioned in orange thereafter) or in the menu - the three-dot button on the bottom-left side (e.g. copy the ARK URL to the clipboard, download/replace the file, open the file in a new tab - captioned in red thereafter).
@@ -76,15 +76,15 @@ By default, only important properties are shown in the resource viewer. To displ
 
 ![Show or hide properties.](../../assets/images/show-hide-properties.png)*Show or hide properties from the toolbar.*
 
-To get more information about the property value, i.e. date of creation and author name, you mouse over the value and then on the info button.
+To get more information about the property value, i.e. date of creation and author name, hover over the value and then over the info button.
 
 ![Get more information about the value](../../assets/images/value-info.png)*Get the creation date and the author name of the value.*
 
 ### Display a value comment
 
-To display the existing value comment, you mouse over the property value and click on the comment button (3rd icon from the left).
+To display the existing value comment, hover over the property value and click on the comment button (3rd icon from the left).
 
-![Mouse over the property value to see if there is a comment.](../../assets/images/comment-value.png)*Mouse over the property value to see if there is a comment and display it.*
+![Hover over the property value to see if there is a comment.](../../assets/images/comment-value.png)*Hover over the property value to see if there is a comment and display it.*
 
 ---
 
@@ -117,13 +117,13 @@ A "plus" button is displayed to the right of the label or after the first value 
 
 ![Save or undo the changes.](../../assets/images/add-new-text-value.png)*Save or undo the changes you made.*
 
-If your property is linked to another resource, you can search for an existing value by typing the first letter of the resource label you are looking for. You can also create a new resource instance by clicking on the first option in the drop-down menu, `Create new: xxx`.
+If your property is linked to another resource, you can search for an existing value by typing the first three letter of the resource label you are looking for. You can also create a new resource instance by clicking on the first option in the drop-down menu, `Create new: xxx`.
 
 ![Add a new linked resource value.](../../assets/images/add-new-resource-value.png)
 
 ### Add an image region
 
-To create a new region on an image, you click on the button Draw a region in the toolbar, then select the region you want on the image.
+To create a new region on an image, you click on the button `Draw a region` in the toolbar, then select the region you want on the image.
 
 ![Select a region.](../../assets/images/region_draw.png)*Select a region on the image with the drawing tool.*
 
@@ -143,13 +143,13 @@ The new region information is displayed after the image viewer. You can edit or 
 
 ### Edit a resource
 
-To edit the resource label, you reach the edit form by opening the resource menu on the right-side of the toolbar and clicking on `Edit label`.
+To edit the resource label, open the resource menu on the right-side of the toolbar and click on `Edit label`.
 
 ![Add a new linked resource value.](../../assets/images/edit-resource-label.png)
 
 ### Edit a property value
 
-You can edit a property value from the resource viewer. You mouse over the value and click on the edit button.
+You can edit a property value from the resource viewer. Hover over the value and click on the edit button.
 
 ![Add a new linked resource value.](../../assets/images/edit-value.png)*Edit button when mousing over the value.*
 
@@ -171,13 +171,13 @@ To delete a resource, there are 2 possibilities:
 
 1. **Delete** resource: the resource is not searchable or findable in DSP-APP anymore but the data still exists in the database.
 
-2. **Erase** resource: the resource is **definitely** deleted from the database, it will be impossible to get it back.
+2. **Erase** resource: the resource is **permanently** deleted from the database, it will be impossible to get it back.
 
 ![Delete or erase a resource.](../../assets/images/delete-erase-resource.png)*Delete or erase a resource.*
 
 ### Delete a property value
 
-You can delete a property value. You mouse over the value and click on the delete button. You have to confirm your choice. It is possible to comment on the deletion of the value in the confirmation pop-up window to explain why it is being deleted.
+You can delete a property value. Hover over the value and click on the delete button. You have to confirm your choice. It is possible to comment on the deletion of the value in the confirmation pop-up window to explain why it is being deleted.
 
 ![Delete a property value.](../../assets/images/delete-value.png)*Delete a property value.*
 
@@ -203,7 +203,7 @@ To link 2 resources (A is an image and B is a document in the example), you go t
 
 ![Copy the internal link](../../assets/images/link_copy_internal_link.png)*Copy the internal link of the resource A.*
 
-Go to your resource B. You click on the **edit** button of the property value where you want to add the link (by mousing over the value content). This value must be of type **rich text**.
+Go to your resource B. You click on the **edit** button of the property value where you want to add the link (by hovering over the value content). This value must be of type **rich text**.
 
 ![Edit the property value](../../assets/images/link_edit_value.png)*Edit the property value of type rich text to add the link.*
 
@@ -235,7 +235,7 @@ It is possible to add other resources later on by clicking on the `+` button in 
 
 ## Share your data
 
-Each resource of your dataset gets an ARK URL (Archival Resource Key), a persistent identifier that will allow citing permanently your resource in papers, conference presentations, books, etc.
+Each resource of your dataset gets an ARK URL (Archival Resource Key), a persistent identifier that will allow you to permanently cite your resource in papers, conference presentations, books, etc.
 
 You will find it in the **Share** menu of the resource toolbar, click on `Copy ARK to clipboard` to copy and paste it wherever you want.
 

@@ -6,11 +6,11 @@ DSP-APP offers the possibility for the user to search in 3 different ways: **ful
 
 ## Full-text search
 
-The full-text search performs queries including one or more terms or phrases and returns data that matches search conditions. By default, the search is performed in all projects stored in DSP. However, it is possible to filter by the project using the menu "Filter by project" on the left side of the search bar.
+The full-text search performs queries including one or more terms or phrases and returns data that matches the search conditions. By default, the search is performed in all projects stored in DSP. However, it is possible to filter by project using the "Filter by project" menu on the left side of the search bar.
 
 ![Filter your full-text search by specific project](../../assets/images/search-fulltext-filterByProject.png)*<https://admin.dasch.swiss> - Search 1: Full-text search*
 
-When clicking on the search bar, the search history panel is displayed. The **10** last searches are registered. It is also possible to clear the search history list (*Clear list* button at the bottom of the panel or the *x* at the end of each line).
+When clicking on the search bar, the search history panel is displayed. The last **10** searches are registered. It is also possible to clear the search history list (*Clear list* button at the bottom of the panel or the *x* at the end of each line).
 
 ![Search history panel](../../assets/images/search-history.png)*Search history list is accessible for the full-text search from any webpage.*
 
