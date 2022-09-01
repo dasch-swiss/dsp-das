@@ -48,10 +48,10 @@ export class UploadComponent implements OnInit {
     allowedFileTypes: string[];
 
     supportedAudioTypes = ['mp3', 'wav'];
-    supportedArchiveTypes = ['zip', 'tar', 'gz', 'gzip', '7z', 'tgz', 'z'];
-    supportedDocumentTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'];
-    supportedImageTypes = ['jp2', 'tif', 'tiff', 'png', 'jpeg', 'jpg'];
-    supportedTextTypes = ['xml', 'xsl', 'xsd', 'txt', 'csv'];
+    supportedArchiveTypes = ['7z', 'gz', 'gzip', 'tar', 'tgz', 'z', 'zip'];
+    supportedDocumentTypes = ['doc', 'docx', 'pdf', 'ppt', 'pptx', 'xls', 'xlsx'];
+    supportedImageTypes = ['jp2', 'jpg', 'jpeg', 'png', 'tif', 'tiff'];
+    supportedTextTypes = ['csv', 'txt', 'xml', 'xsd', 'xsl'];
     supportedVideoTypes = ['mp4'];
 
     constructor(
