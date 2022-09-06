@@ -1,5 +1,26 @@
 # Changelog
 
+### [10.7.1](https://www.github.com/dasch-swiss/dsp-app/compare/v10.7.0...v10.7.1) (2022-09-06)
+
+
+### Bug Fixes
+
+* **audio:** download audio file with original filename ([#810](https://www.github.com/dasch-swiss/dsp-app/issues/810)) ([8001fab](https://www.github.com/dasch-swiss/dsp-app/commit/8001fab46b4395a8367a134387d09e7272d65e25))
+* **int-value:** fix int-value validation (DEV-1277) ([#815](https://www.github.com/dasch-swiss/dsp-app/issues/815)) ([d86dc7b](https://www.github.com/dasch-swiss/dsp-app/commit/d86dc7b61ac4cc70fb28393da65bbc8cc5480921))
+* **ontology:** don't show 403 error is user is a system admin or project admin and not a project member ([#816](https://www.github.com/dasch-swiss/dsp-app/issues/816)) ([ffe00c0](https://www.github.com/dasch-swiss/dsp-app/commit/ffe00c054148fd7bb2030f16c2e2b902ae179ae9))
+* **resource:** reinit representationsToDisplay array to fix undefined issue in template ([#813](https://www.github.com/dasch-swiss/dsp-app/issues/813)) ([375166a](https://www.github.com/dasch-swiss/dsp-app/commit/375166a1fb58ee8e317cce80dc782bb76eacc17a))
+
+
+### Documentation
+
+* Add documentation about the different file types and their functionalities ([#804](https://www.github.com/dasch-swiss/dsp-app/issues/804)) ([8c64276](https://www.github.com/dasch-swiss/dsp-app/commit/8c642767a76232fb22cc261367d04490d5917fa6))
+
+
+### Maintenance
+
+* **deps:** bump js-lib version to 7.4.3 ([#814](https://www.github.com/dasch-swiss/dsp-app/issues/814)) ([c97c569](https://www.github.com/dasch-swiss/dsp-app/commit/c97c5696ab423e727fc1868c6efdaff086b9e603))
+* **upload:** use file extensions for valid file types instead of MIME types (DEV-1203) ([#808](https://www.github.com/dasch-swiss/dsp-app/issues/808)) ([448e783](https://www.github.com/dasch-swiss/dsp-app/commit/448e7832aef7c97439a88e55482993abf1fb56ee))
+
 ## [10.7.0](https://www.github.com/dasch-swiss/dsp-app/compare/v10.6.0...v10.7.0) (2022-08-24)
 
 
