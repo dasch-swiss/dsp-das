@@ -24,9 +24,6 @@ import {
     ReadResourceSequence,
     ReadStillImageFileValue,
     ReadTextFileValue,
-    ResourceClassAndPropertyDefinitions,
-    ResourceClassDefinition,
-    ResourceClassDefinitionWithPropertyDefinition,
     SystemPropertyDefinition
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
