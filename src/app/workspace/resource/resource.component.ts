@@ -419,7 +419,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                 // to get equal results on all browser engines which implements sorting in different way
                 // properties list has to be sorted again, pushing all "has..." properties to the bottom
                 .sort((a, b) => {
-                    if (a.propDef.label.startsWith('has')) {
+                    if (a.guiDef.guiOrder === undefined) {
                         return 1;
                     }
                 });
