@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/member-ordering */
-import { A } from '@angular/cdk/keycodes';
 import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChange, ViewChild } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
@@ -31,7 +30,6 @@ import {
     SystemPropertyDefinition
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
-import { delay } from 'rxjs/operators';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { NotificationService } from 'src/app/main/services/notification.service';
@@ -321,11 +319,8 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                             this.requestIncomingResources(this.resource);
                         }
 
-                        setTimeout(() => {
-                            // gather resource property information
-                            res.resProps = this.initProps(response);
-                        }, 2000);
-
+                        // gather resource property information
+                        res.resProps = this.initProps(response);
 
                         // gather system property information
                         res.systemProps = this.resource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
