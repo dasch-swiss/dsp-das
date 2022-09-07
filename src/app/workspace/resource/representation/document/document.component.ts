@@ -166,7 +166,6 @@ export class DocumentComponent implements OnInit, AfterViewInit {
 
         this._http.get(pathToJson, requestOptions).subscribe(
             res => {
-                console.log('res: ', res);
                 this.originalFilename = res['originalFilename'];
             }
         );
