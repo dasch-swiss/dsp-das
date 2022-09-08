@@ -63,7 +63,7 @@ export class ResultsComponent {
 
     onSelectionChange(res: FilteredResources) {
         this.selectedResources = res;
-        this.resourceIri = this.selectedResources.resInfo[0].id;
+        this.resourceIri = this.selectedResources.resInfo[0] ? this.selectedResources.resInfo[0].id : undefined;
 
         if (!res || res.count <= 1) {
             this.viewMode = 'single';
