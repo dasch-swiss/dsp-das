@@ -117,7 +117,7 @@ A "plus" button is displayed to the right of the label or after the first value 
 
 ![Save or undo the changes.](../../assets/images/add-new-text-value.png)*Save or undo the changes you made.*
 
-If your property is linked to another resource, you can search for an existing value by typing the first three letter of the resource label you are looking for. You can also create a new resource instance by clicking on the first option in the drop-down menu, `Create new: xxx`.
+If your property is linked to another resource, you can search for an existing value by typing the first three letters of the resource label you are looking for. You can also create a new resource instance by clicking on the first option in the drop-down menu, `Create new: xxx`.
 
 ![Add a new linked resource value.](../../assets/images/add-new-resource-value.png)
 
