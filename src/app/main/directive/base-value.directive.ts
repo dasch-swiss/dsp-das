@@ -1,10 +1,14 @@
-import { Directive, Input } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { Directive, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { CreateValue, ReadValue, UpdateValue } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 
+
+// https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
+const resolvedPromise = Promise.resolve(null);
+
 @Directive()
-export abstract class BaseValueDirective {
+export abstract class BaseValueDirective implements OnInit, OnDestroy{
 
     /**
      * value to be displayed, if any.
@@ -39,25 +43,64 @@ export abstract class BaseValueDirective {
     shouldShowComment = false;
 
     /**
+     * subscription of comment changes.
+     */
+    commentChangesSubscription: Subscription;
+
+    /**
      * formControl element for the value.
      */
-    abstract valueFormControl: FormControl;
+    valueFormControl: FormControl;
 
     /**
      * formControl element for the comment on the value.
      */
-    abstract commentFormControl: FormControl;
+    commentFormControl: FormControl;
 
     /**
      * formGroup that contains FormControl elements.
      */
-    abstract form: FormGroup;
+    form: FormGroup;
 
     /**
      * custom validators for a specific value type.
      * Can be initialized to an empty array if not needed.
      */
     abstract customValidators: ValidatorFn[];
+
+    protected constructor(protected _fb?: FormBuilder) {
+    }
+
+    ngOnInit() {
+        // initialize form control elements
+        this.valueFormControl = new FormControl(null);
+        this.commentFormControl = new FormControl(null);
+
+        this.form = this._fb.group({
+            value: this.valueFormControl,
+            comment: this.commentFormControl
+        });
+        this.resetFormControl();
+        // subscribing to comment changes and revalidate. Enables changing of comments and saving values even if the valueFormControls value did not change.
+        this.commentChangesSubscription = this.commentFormControl.valueChanges.subscribe(update => {
+            this.valueFormControl.updateValueAndValidity();
+        });
+        resolvedPromise.then(() => {
+            // add form to the parent form group
+            this.addToParentFormGroup(this.formName, this.form);
+        });
+    }
+
+    ngOnDestroy() {
+        // unsubscribe to avoid memory leaks
+        if (this.commentChangesSubscription) {
+            this.commentChangesSubscription.unsubscribe();
+        }
+        resolvedPromise.then(() => {
+            // remove form from the parent form group
+            this.removeFromParentFormGroup(this.formName);
+        });
+    }
 
     /**
      * standard implementation for comparison of primitive values.
@@ -117,7 +160,6 @@ export abstract class BaseValueDirective {
 
             // set validators depending on mode
             if (this.mode === 'update') {
-                // console.log('reset update validators');
                 this.valueFormControl.setValidators([Validators.required, this.standardValidatorFunc(initialValue, initialComment, this.commentFormControl)].concat(this.customValidators));
             } else {
                 // console.log('reset read/create validators');
@@ -136,7 +178,7 @@ export abstract class BaseValueDirective {
      * hide comment field by default if in READ mode
      */
     updateCommentVisibility(): void {
-        this.shouldShowComment = this.mode === 'read' ? true : false;
+        this.shouldShowComment = this.mode === 'read';
     }
 
     /**
