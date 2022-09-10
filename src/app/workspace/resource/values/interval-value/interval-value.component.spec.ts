@@ -163,8 +163,6 @@ describe('IntervalValueComponent', () => {
         let intervalEndReadModeDebugElement: DebugElement;
         let intervalStartReadModeNativeElement;
         let intervalEndReadModeNativeElement;
-        let commentInputDebugElement: DebugElement;
-        let commentInputNativeElement;
 
         beforeEach(() => {
             testHostFixture = TestBed.createComponent(TestHostDisplayValueComponent);
@@ -277,14 +275,11 @@ describe('IntervalValueComponent', () => {
 
         });
 
-        it('should validate an existing value with an added comment', () => {
+        it('should validate an existing value', () => {
 
             testHostComponent.mode = 'update';
 
             testHostFixture.detectChanges();
-
-            commentInputDebugElement = valueComponentDe.query(By.css('textarea.comment'));
-            commentInputNativeElement = commentInputDebugElement.nativeElement;
 
             expect(testHostComponent.inputValueComponent.mode).toEqual('update');
 
@@ -294,9 +289,6 @@ describe('IntervalValueComponent', () => {
 
             expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
 
-            commentInputNativeElement.value = 'this is a comment';
-
-            commentInputNativeElement.dispatchEvent(new Event('input'));
 
             testHostFixture.detectChanges();
 
@@ -305,8 +297,6 @@ describe('IntervalValueComponent', () => {
             const updatedValue = testHostComponent.inputValueComponent.getUpdatedValue();
 
             expect(updatedValue instanceof UpdateIntervalValue).toBeTruthy();
-
-            expect((updatedValue as UpdateIntervalValue).valueHasComment).toEqual('this is a comment');
 
         });
 
@@ -387,15 +377,6 @@ describe('IntervalValueComponent', () => {
             expect(testHostComponent.inputValueComponent.form.valid).toBeTruthy();
 
         });
-
-        it('should unsubscribe when destroyed', () => {
-            expect(testHostComponent.inputValueComponent.valueChangesSubscription.closed).toBeFalsy();
-
-            testHostComponent.inputValueComponent.ngOnDestroy();
-
-            expect(testHostComponent.inputValueComponent.valueChangesSubscription.closed).toBeTruthy();
-        });
-
     });
 
     describe('create an interval value', () => {
@@ -404,8 +385,6 @@ describe('IntervalValueComponent', () => {
         let testHostFixture: ComponentFixture<TestHostCreateValueComponent>;
 
         let valueComponentDe: DebugElement;
-        let commentInputDebugElement: DebugElement;
-        let commentInputNativeElement;
 
         beforeEach(() => {
             testHostFixture = TestBed.createComponent(TestHostCreateValueComponent);
@@ -418,8 +397,6 @@ describe('IntervalValueComponent', () => {
             const hostCompDe = testHostFixture.debugElement;
 
             valueComponentDe = hostCompDe.query(By.directive(IntervalValueComponent));
-            commentInputDebugElement = valueComponentDe.query(By.css('textarea.comment'));
-            commentInputNativeElement = commentInputDebugElement.nativeElement;
         });
 
         it('should create a value', () => {
@@ -461,10 +438,6 @@ describe('IntervalValueComponent', () => {
 
             testHostFixture.detectChanges();
 
-            commentInputNativeElement.value = 'created comment';
-
-            commentInputNativeElement.dispatchEvent(new Event('input'));
-
             testHostFixture.detectChanges();
 
             expect(testHostComponent.inputValueComponent.mode).toEqual('create');
@@ -476,8 +449,6 @@ describe('IntervalValueComponent', () => {
             expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
 
             expect(testHostComponent.inputValueComponent.intervalInputComponent.value).toEqual(null);
-
-            expect(commentInputNativeElement.value).toEqual('');
 
         });
 

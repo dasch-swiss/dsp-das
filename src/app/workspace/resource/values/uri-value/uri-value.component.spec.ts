@@ -1,7 +1,7 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UriValueComponent } from './uri-value.component';
-import { ReadUriValue, MockResource, UpdateValue, UpdateUriValue, CreateUriValue } from '@dasch-swiss/dsp-js';
+import { ReadUriValue, MockResource, UpdateUriValue, CreateUriValue } from '@dasch-swiss/dsp-js';
 import { OnInit, Component, ViewChild, DebugElement } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -281,14 +281,6 @@ describe('UriValueComponent', () => {
 
             expect(testHostComponent.inputValueComponent.form.valid).toBeTruthy();
 
-        });
-
-        it('should unsubscribe when destroyed', () => {
-            expect(testHostComponent.inputValueComponent.valueChangesSubscription.closed).toBeFalsy();
-
-            testHostComponent.inputValueComponent.ngOnDestroy();
-
-            expect(testHostComponent.inputValueComponent.valueChangesSubscription.closed).toBeTruthy();
         });
     });
 

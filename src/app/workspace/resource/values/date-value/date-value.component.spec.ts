@@ -6,7 +6,6 @@ import { ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR, ReactiveFormsModule
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatInputHarness } from '@angular/material/input/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CreateDateValue, KnoraDate, KnoraPeriod, MockResource, ReadDateValue, UpdateDateValue } from '@dasch-swiss/dsp-js';
@@ -270,7 +269,7 @@ describe('DateValueComponent', () => {
 
         });
 
-        it('should validate an existing value with an added comment', async () => {
+        it('should validate an existing value', async () => {
 
             testHostComponent.mode = 'update';
 
@@ -282,17 +281,11 @@ describe('DateValueComponent', () => {
 
             expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
 
-            const commentTextarea = await loader.getHarness(MatInputHarness);
-
-            await commentTextarea.setValue('this is a comment');
-
             expect(testHostComponent.inputValueComponent.form.valid).toBeTruthy();
 
             const updatedValue = testHostComponent.inputValueComponent.getUpdatedValue();
 
             expect(updatedValue instanceof UpdateDateValue).toBeTruthy();
-
-            expect((updatedValue as UpdateDateValue).valueHasComment).toEqual('this is a comment');
 
         });
 
@@ -373,15 +366,6 @@ describe('DateValueComponent', () => {
 
                 done();
             });
-
-        });
-
-        it('should unsubscribe when destroyed', () => {
-            expect(testHostComponent.inputValueComponent.valueChangesSubscription.closed).toBeFalsy();
-
-            testHostComponent.inputValueComponent.ngOnDestroy();
-
-            expect(testHostComponent.inputValueComponent.valueChangesSubscription.closed).toBeTruthy();
 
         });
 
@@ -603,9 +587,6 @@ describe('DateValueComponent', () => {
 
             testHostFixture.detectChanges();
 
-            const commentTextarea = await loader.getHarness(MatInputHarness);
-            await commentTextarea.setValue('created comment');
-
             testHostFixture.detectChanges();
 
             expect(testHostComponent.inputValueComponent.mode).toEqual('create');
@@ -617,10 +598,6 @@ describe('DateValueComponent', () => {
             expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
 
             expect(testHostComponent.inputValueComponent.datePickerComponent.value).toEqual(null);
-
-            const comment = await commentTextarea.getValue();
-
-            expect(comment).toEqual('');
 
         });
 

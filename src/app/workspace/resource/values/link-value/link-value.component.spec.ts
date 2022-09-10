@@ -158,8 +158,6 @@ describe('LinkValueComponent', () => {
         let valueInputNativeElement;
         let valueReadModeDebugElement: DebugElement;
         let valueReadModeNativeElement;
-        let commentInputDebugElement: DebugElement;
-        let commentInputNativeElement;
 
         beforeEach(() => {
 
@@ -381,27 +379,21 @@ describe('LinkValueComponent', () => {
 
         });
 
-        it('should validate an existing value with an added comment', () => {
+        it('should validate an existing value', () => {
 
             testHostComponent.mode = 'update';
             testHostFixture.detectChanges();
             valueInputDebugElement = valueComponentDe.query(By.css('input.value'));
             valueInputNativeElement = valueInputDebugElement.nativeElement;
 
-            commentInputDebugElement = valueComponentDe.query(By.css('textarea.comment'));
-            commentInputNativeElement = commentInputDebugElement.nativeElement;
-
             expect(testHostComponent.inputValueComponent.mode).toEqual('update');
             expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
 
-            commentInputNativeElement.value = 'this is a comment';
-            commentInputNativeElement.dispatchEvent(new Event('input'));
             testHostFixture.detectChanges();
 
             expect(testHostComponent.inputValueComponent.form.valid).toBeTruthy();
             const updatedValue = testHostComponent.inputValueComponent.getUpdatedValue();
             expect(updatedValue instanceof UpdateLinkValue).toBeTruthy();
-            expect((updatedValue as UpdateLinkValue).valueHasComment).toEqual('this is a comment');
 
         });
 
@@ -512,8 +504,6 @@ describe('LinkValueComponent', () => {
 
         let valueInputDebugElement: DebugElement;
         let valueInputNativeElement;
-        let commentInputDebugElement: DebugElement;
-        let commentInputNativeElement;
 
         beforeEach(() => {
 
@@ -552,8 +542,6 @@ describe('LinkValueComponent', () => {
             valueInputDebugElement = valueComponentDe.query(By.css('input.value'));
             valueInputNativeElement = valueInputDebugElement.nativeElement;
 
-            commentInputDebugElement = valueComponentDe.query(By.css('textarea.comment'));
-            commentInputNativeElement = commentInputDebugElement.nativeElement;
         });
 
         it('should search a new value', () => {
@@ -636,10 +624,6 @@ describe('LinkValueComponent', () => {
 
             expect(valueInputNativeElement.value).toEqual('hidden thing');
 
-            commentInputNativeElement.value = 'created comment';
-
-            commentInputNativeElement.dispatchEvent(new Event('input'));
-
             testHostFixture.detectChanges();
 
             expect(testHostComponent.inputValueComponent.mode).toEqual('create');
@@ -657,7 +641,6 @@ describe('LinkValueComponent', () => {
             expect(testHostComponent.inputValueComponent.valueFormControl.value).toEqual(null);
 
             expect(valueInputNativeElement.value).toEqual('');
-            expect(commentInputNativeElement.value).toEqual('');
 
         }));
     });

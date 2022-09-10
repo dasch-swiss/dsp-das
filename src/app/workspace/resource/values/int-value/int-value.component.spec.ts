@@ -1,7 +1,7 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IntValueComponent } from './int-value.component';
-import { ReadIntValue, MockResource, UpdateValue, UpdateIntValue, CreateIntValue } from '@dasch-swiss/dsp-js';
+import { ReadIntValue, MockResource, UpdateIntValue, CreateIntValue } from '@dasch-swiss/dsp-js';
 import { OnInit, Component, ViewChild, DebugElement } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -162,7 +162,7 @@ describe('IntValueComponent', () => {
 
         });
 
-        it('should validate an existing value with an added comment', async () => {
+        it('should validate an existing value', async () => {
 
             testHostComponent.mode = 'update';
 
@@ -170,23 +170,17 @@ describe('IntValueComponent', () => {
 
             const inputElement = await loader.getHarness(MatInputHarness.with({ selector: '.value' }));
 
-            const commentElement = await loader.getHarness(MatInputHarness.with({ selector: '.comment' }));
-
             expect(testHostComponent.inputValueComponent.mode).toEqual('update');
 
             expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
 
             expect(await inputElement.getValue()).toEqual('1');
 
-            await commentElement.setValue('this is a comment');
-
             expect(testHostComponent.inputValueComponent.form.valid).toBeTruthy();
 
             const updatedValue = testHostComponent.inputValueComponent.getUpdatedValue();
 
             expect(updatedValue instanceof UpdateIntValue).toBeTruthy();
-
-            expect((updatedValue as UpdateIntValue).valueHasComment).toEqual('this is a comment');
 
         });
 
@@ -199,9 +193,6 @@ describe('IntValueComponent', () => {
             expect(testHostComponent.inputValueComponent.mode).toEqual('update');
 
             expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
-
-            // tODO: use MatHarness once bug with number strings is fixed
-            // https://github.com/angular/components/issues/18790#issuecomment-635206117
 
             const valueInputDebugElement = valueComponentDe.query(By.css('input.value'));
             const valueInputNativeElement = valueInputDebugElement.nativeElement;
@@ -262,14 +253,6 @@ describe('IntValueComponent', () => {
             expect(testHostComponent.inputValueComponent.form.valid).toBeTruthy();
 
         });
-
-        it('should unsubscribe when destroyed', () => {
-            expect(testHostComponent.inputValueComponent.valueChangesSubscription.closed).toBeFalsy();
-
-            testHostComponent.inputValueComponent.ngOnDestroy();
-
-            expect(testHostComponent.inputValueComponent.valueChangesSubscription.closed).toBeTruthy();
-        });
     });
 
     describe('create an integer value', () => {
@@ -277,7 +260,6 @@ describe('IntValueComponent', () => {
         let testHostComponent: TestHostCreateValueComponent;
         let testHostFixture: ComponentFixture<TestHostCreateValueComponent>;
         let inputElement: MatInputHarness;
-        let commentElement: MatInputHarness;
 
         let loader: HarnessLoader;
 
@@ -292,12 +274,9 @@ describe('IntValueComponent', () => {
 
             inputElement = await loader.getHarness(MatInputHarness.with({ selector: '.value' }));
 
-            commentElement = await loader.getHarness(MatInputHarness.with({ selector: '.comment' }));
-
             expect(testHostComponent.inputValueComponent.displayValue).toEqual(undefined);
             expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
             expect(await inputElement.getValue()).toEqual('');
-            expect(await commentElement.getValue()).toEqual('');
         });
 
         it('should create a value', async () => {
@@ -317,8 +296,6 @@ describe('IntValueComponent', () => {
         it('should reset form after cancellation', async () => {
             await inputElement.setValue('20');
 
-            await commentElement.setValue('created comment');
-
             expect(testHostComponent.inputValueComponent.mode).toEqual('create');
 
             expect(testHostComponent.inputValueComponent.form.valid).toBeTruthy();
@@ -328,8 +305,6 @@ describe('IntValueComponent', () => {
             expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
 
             expect(await inputElement.getValue()).toEqual('');
-
-            expect(await commentElement.getValue()).toEqual('');
 
         });
     });
