@@ -29,6 +29,11 @@ export class CommentFormComponent implements OnChanges{
     @Output() commentFormControlChange: EventEmitter<FormControl> = new EventEmitter<FormControl>();
 
     /**
+     * emitting back if the whole form needs revalidation
+     */
+    @Output() triggerRevalidation: EventEmitter<any> = new EventEmitter<any>();
+
+    /**
      * whether the comment field is editable or not
      */
     disallowed = false;
@@ -37,6 +42,10 @@ export class CommentFormComponent implements OnChanges{
 
     ngOnChanges(changes: SimpleChanges) {
         this.disallowCommentIfEmptyValue();
+    }
+
+    onInputChange(){
+        this.triggerRevalidation.emit(this.commentFormControl.value);
     }
 
     /**
