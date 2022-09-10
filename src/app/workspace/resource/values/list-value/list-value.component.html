@@ -45,9 +45,9 @@
 </span>
 <ng-template #showForm>
     <span [formGroup]="form">
-    <mat-form-field class="large-field child-value-component" *ngIf="mode === 'read'" floatLabel="never">
+        <mat-form-field class="large-field child-value-component" *ngIf="mode === 'read'" floatLabel="never">
             <input [formControlName]="'value'" class="value" type="text" placeholder="List value" matInput readonly>
-    </mat-form-field>
-    <app-comment-form [valueFormControl]="valueFormControl" [(commentFormControl)]="commentFormControl" [forceUpdate]="valueFormControl.value"></app-comment-form>
+        </mat-form-field>
+        <app-comment-form [valueFormControl]="valueFormControl" [(commentFormControl)]="commentFormControl" [forceUpdate]="valueFormControl.value"></app-comment-form>
     </span>
 </ng-template>
