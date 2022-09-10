@@ -1,13 +1,10 @@
 import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { CreateDateValue, KnoraDate, KnoraPeriod, ReadDateValue, UpdateDateValue } from '@dasch-swiss/dsp-js';
-import { Subscription } from 'rxjs';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
 import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 import { DatePickerComponent } from './date-picker/date-picker.component';
 
-// https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
-const resolvedPromise = Promise.resolve(null);
 
 @Component({
     selector: 'app-date-value',
@@ -26,14 +23,11 @@ export class DateValueComponent extends BaseValueDirective implements OnInit, On
 
     // @Input() showHexCode = false;
 
-    valueFormControl: FormControl;
-    commentFormControl: FormControl;
-    form: FormGroup;
     customValidators = [];
     matcher = new ValueErrorStateMatcher();
 
-    constructor(@Inject(FormBuilder) private _fb: FormBuilder) {
-        super();
+    constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
+        super(_fb);
     }
 
     /**
@@ -68,22 +62,7 @@ export class DateValueComponent extends BaseValueDirective implements OnInit, On
     }
 
     ngOnInit() {
-
-        // initialize form control elements
-        this.valueFormControl = new FormControl(null);
-        this.commentFormControl = new FormControl(null);
-
-        this.form = this._fb.group({
-            value: this.valueFormControl,
-            comment: this.commentFormControl
-        });
-
-        this.resetFormControl();
-
-        resolvedPromise.then(() => {
-            // add form to the parent form group
-            this.addToParentFormGroup(this.formName, this.form);
-        });
+        super.ngOnInit();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -92,10 +71,7 @@ export class DateValueComponent extends BaseValueDirective implements OnInit, On
 
     // unsubscribe when the object is destroyed to prevent memory leaks
     ngOnDestroy(): void {
-        resolvedPromise.then(() => {
-            // remove form from the parent form group
-            this.removeFromParentFormGroup(this.formName);
-        });
+        super.ngOnDestroy();
     }
 
     /**

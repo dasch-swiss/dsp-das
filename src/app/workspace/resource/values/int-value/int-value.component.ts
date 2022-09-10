@@ -1,13 +1,10 @@
 import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { CreateIntValue, ReadIntValue, UpdateIntValue } from '@dasch-swiss/dsp-js';
-import { Subscription } from 'rxjs';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
 import { CustomRegex } from '../custom-regex';
 import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 
-// https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
-const resolvedPromise = Promise.resolve(null);
 
 @Component({
     selector: 'app-int-value',
@@ -18,16 +15,12 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
 
     @Input() displayValue?: ReadIntValue;
 
-    valueFormControl: FormControl;
-    commentFormControl: FormControl;
-
-    form: FormGroup;
     matcher = new ValueErrorStateMatcher();
 
     customValidators = [Validators.pattern(CustomRegex.INT_REGEX)]; // only allow for integer values (no fractions)
 
-    constructor(@Inject(FormBuilder) private _fb: FormBuilder) {
-        super();
+    constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
+        super(_fb);
     }
 
     getInitValue(): number | null {
@@ -40,33 +33,15 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
 
     ngOnInit() {
         // initialize form control elements
-        this.valueFormControl = new FormControl(null);
-
-        this.commentFormControl = new FormControl(null);
-
-        this.form = this._fb.group({
-            value: this.valueFormControl,
-            comment: this.commentFormControl
-        });
-
-        this.resetFormControl();
-
-        resolvedPromise.then(() => {
-            // add form to the parent form group
-            this.addToParentFormGroup(this.formName, this.form);
-        });
+        super.ngOnInit();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         this.resetFormControl();
     }
 
-    // unsubscribe when the object is destroyed to prevent memory leaks
     ngOnDestroy(): void {
-        resolvedPromise.then(() => {
-            // remove form from the parent form group
-            this.removeFromParentFormGroup(this.formName);
-        });
+        super.ngOnDestroy();
     }
 
     getNewValue(): CreateIntValue | false {
@@ -103,10 +78,5 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
         }
 
         return updatedIntValue;
-    }
-
-    updateValueAndValidity() {
-        console.log('update onsubmit');
-        this.valueFormControl.updateValueAndValidity();
     }
 }

@@ -1,11 +1,7 @@
 import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { CreateBooleanValue, ReadBooleanValue, UpdateBooleanValue } from '@dasch-swiss/dsp-js';
-import { Subscription } from 'rxjs';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
-
-// https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
-const resolvedPromise = Promise.resolve(null);
 
 @Component({
     selector: 'app-boolean-value',
@@ -18,19 +14,10 @@ export class BooleanValueComponent extends BaseValueDirective implements OnInit,
 
     @Input() moreSpace?: boolean;
 
-    valueFormControl: FormControl;
-    commentFormControl: FormControl;
-
-    form: FormGroup;
-
     customValidators = [];
 
-    displayTypes = [];
-
-    preferredDisplayType: string;
-
-    constructor(@Inject(FormBuilder) private _fb: FormBuilder) {
-        super();
+    constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
+        super(_fb);
     }
 
     getInitValue(): boolean | null {
@@ -42,25 +29,7 @@ export class BooleanValueComponent extends BaseValueDirective implements OnInit,
     }
 
     ngOnInit() {
-        // initialize form control elements
-        this.valueFormControl = new FormControl(null);
-        this.commentFormControl = new FormControl(null);
-
-        this.form = this._fb.group({
-            value: this.valueFormControl,
-            comment: this.commentFormControl
-        });
-
-        this.resetFormControl();
-
-        resolvedPromise.then(() => {
-            // add form to the parent form group
-            this.addToParentFormGroup(this.formName, this.form);
-        });
-    }
-
-    onSubmit() {
-        this.valueFormControl.markAsDirty();
+        super.ngOnInit();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -69,10 +38,7 @@ export class BooleanValueComponent extends BaseValueDirective implements OnInit,
 
     // unsubscribe when the object is destroyed to prevent memory leaks
     ngOnDestroy(): void {
-        resolvedPromise.then(() => {
-            // remove form from the parent form group
-            this.removeFromParentFormGroup(this.formName);
-        });
+        super.ngOnDestroy();
     }
 
     getNewValue(): CreateBooleanValue | false {

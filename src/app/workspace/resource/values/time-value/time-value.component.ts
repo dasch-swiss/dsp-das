@@ -1,13 +1,10 @@
 import { Component, OnInit, OnChanges, OnDestroy, ViewChild, Input, Inject, SimpleChanges } from '@angular/core';
 import { TimeInputComponent } from './time-input/time-input.component';
 import { ReadTimeValue, CreateTimeValue, UpdateTimeValue } from '@dasch-swiss/dsp-js';
-import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { FormBuilder } from '@angular/forms';
 import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
 
-// https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
-const resolvedPromise = Promise.resolve(null);
 
 @Component({
     selector: 'app-time-value',
@@ -20,17 +17,12 @@ export class TimeValueComponent extends BaseValueDirective implements OnInit, On
 
     @Input() displayValue?: ReadTimeValue;
 
-    valueFormControl: FormControl;
-    commentFormControl: FormControl;
-
-    form: FormGroup;
-
     customValidators = [];
 
     matcher = new ValueErrorStateMatcher();
 
-    constructor(@Inject(FormBuilder) private _fb: FormBuilder) {
-        super();
+    constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
+        super(_fb);
     }
 
     getInitValue(): string | null {
@@ -42,22 +34,7 @@ export class TimeValueComponent extends BaseValueDirective implements OnInit, On
     }
 
     ngOnInit() {
-        // initialize form control elements
-        this.valueFormControl = new FormControl(null);
-
-        this.commentFormControl = new FormControl(null);
-
-        this.form = this._fb.group({
-            value: this.valueFormControl,
-            comment: this.commentFormControl,
-        });
-
-        this.resetFormControl();
-
-        resolvedPromise.then(() => {
-            // add form to the parent form group
-            this.addToParentFormGroup(this.formName, this.form);
-        });
+        super.ngOnInit();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -66,10 +43,7 @@ export class TimeValueComponent extends BaseValueDirective implements OnInit, On
 
     // unsubscribe when the object is destroyed to prevent memory leaks
     ngOnDestroy(): void {
-        resolvedPromise.then(() => {
-            // remove form from the parent form group
-            this.removeFromParentFormGroup(this.formName);
-        });
+        super.ngOnDestroy();
     }
 
     getNewValue(): CreateTimeValue | false {

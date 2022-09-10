@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder } from '@angular/forms';
 import { CreateGeonameValue, ReadGeonameValue, UpdateGeonameValue } from '@dasch-swiss/dsp-js';
 import { Observable, Subscription } from 'rxjs';
 import { ValueErrorStateMatcher } from '../value-error-state-matcher';
@@ -13,9 +13,6 @@ export function geonameIdValidator(control: AbstractControl) {
     return invalid ? { invalidType: { value: control.value } } : null;
 }
 
-// https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
-const resolvedPromise = Promise.resolve(null);
-
 @Component({
     selector: 'app-geoname-value',
     templateUrl: './geoname-value.component.html',
@@ -23,11 +20,6 @@ const resolvedPromise = Promise.resolve(null);
 })
 export class GeonameValueComponent extends BaseValueDirective implements OnInit, OnChanges, OnDestroy {
     @Input() displayValue?: ReadGeonameValue;
-
-    valueFormControl: FormControl;
-    commentFormControl: FormControl;
-
-    form: FormGroup;
 
     valueChangesSubscription: Subscription;
 
@@ -38,8 +30,8 @@ export class GeonameValueComponent extends BaseValueDirective implements OnInit,
 
     places: SearchPlace[];
 
-    constructor(@Inject(FormBuilder) private _fb: FormBuilder, private _geonameService: GeonameService) {
-        super();
+    constructor(@Inject(FormBuilder) protected _fb: FormBuilder, private _geonameService: GeonameService) {
+        super(_fb);
     }
 
     standardValueComparisonFunc(initValue: { id: string }, curValue: { id: string } | null): boolean {
@@ -69,11 +61,7 @@ export class GeonameValueComponent extends BaseValueDirective implements OnInit,
     }
 
     ngOnInit() {
-
-        // initialize form control elements
-        this.valueFormControl = new FormControl(null);
-
-        this.commentFormControl = new FormControl(null);
+        super.ngOnInit();
 
         // react to user typing places
         this.valueChangesSubscription = this.valueFormControl.valueChanges.subscribe(
@@ -95,21 +83,11 @@ export class GeonameValueComponent extends BaseValueDirective implements OnInit,
             }
         );
 
-        this.form = this._fb.group({
-            value: this.valueFormControl,
-            comment: this.commentFormControl
-        });
-
         this.resetFormControl();
 
         if (this.mode === 'read') {
             this.$geonameLabel = this._geonameService.resolveGeonameID(this.valueFormControl.value.id);
         }
-
-        resolvedPromise.then(() => {
-            // add form to the parent form group
-            this.addToParentFormGroup(this.formName, this.form);
-        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -125,10 +103,7 @@ export class GeonameValueComponent extends BaseValueDirective implements OnInit,
 
     ngOnDestroy(): void {
         this.valueChangesSubscription.unsubscribe();
-        resolvedPromise.then(() => {
-            // remove form from the parent form group
-            this.removeFromParentFormGroup(this.formName);
-        });
+        super.ngOnDestroy();
     }
 
     getNewValue(): CreateGeonameValue | false {

@@ -1,14 +1,10 @@
 import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { CreateColorValue, ReadColorValue, UpdateColorValue } from '@dasch-swiss/dsp-js';
-import { Subscription } from 'rxjs';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { CustomRegex } from '../custom-regex';
 import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
-
-// https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
-const resolvedPromise = Promise.resolve(null);
 
 @Component({
     selector: 'app-color-value',
@@ -23,15 +19,12 @@ export class ColorValueComponent extends BaseValueDirective implements OnInit, O
 
     @Input() showHexCode = false;
 
-    valueFormControl: FormControl;
-    commentFormControl: FormControl;
-    form: FormGroup;
     customValidators = [Validators.pattern(CustomRegex.COLOR_REGEX)];
     matcher = new ValueErrorStateMatcher();
     textColor: string;
 
-    constructor(@Inject(FormBuilder) private _fb: FormBuilder) {
-        super();
+    constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
+        super(_fb);
     }
 
     getInitValue(): string | null {
@@ -43,24 +36,8 @@ export class ColorValueComponent extends BaseValueDirective implements OnInit, O
     }
 
     ngOnInit() {
-
-        // initialize form control elements
-        this.valueFormControl = new FormControl(null);
-        this.commentFormControl = new FormControl(null);
-
-        this.form = this._fb.group({
-            value: this.valueFormControl,
-            comment: this.commentFormControl
-        });
-
-        this.resetFormControl();
-
+        super.ngOnInit();
         this.textColor = this.getTextColor(this.valueFormControl.value);
-
-        resolvedPromise.then(() => {
-            // add form to the parent form group
-            this.addToParentFormGroup(this.formName, this.form);
-        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -73,10 +50,7 @@ export class ColorValueComponent extends BaseValueDirective implements OnInit, O
 
     // unsubscribe when the object is destroyed to prevent memory leaks
     ngOnDestroy(): void {
-        resolvedPromise.then(() => {
-            // remove form from the parent form group
-            this.removeFromParentFormGroup(this.formName);
-        });
+        super.ngOnDestroy();
     }
 
     getNewValue(): CreateColorValue | false {
@@ -117,7 +91,7 @@ export class ColorValueComponent extends BaseValueDirective implements OnInit, O
 
     // calculate text color
     getTextColor(hex: string): string {
-        if (!hex || hex === null) {
+        if (!hex) {
             return;
         }
 

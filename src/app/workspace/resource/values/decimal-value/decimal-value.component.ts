@@ -1,13 +1,9 @@
 import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 import { CreateDecimalValue, ReadDecimalValue, UpdateDecimalValue } from '@dasch-swiss/dsp-js';
-import { Subscription } from 'rxjs';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { CustomRegex } from '../custom-regex';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
-
-// https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
-const resolvedPromise = Promise.resolve(null);
 
 @Component({
     selector: 'app-decimal-value',
@@ -18,16 +14,12 @@ export class DecimalValueComponent extends BaseValueDirective implements OnInit,
 
     @Input() displayValue?: ReadDecimalValue;
 
-    valueFormControl: FormControl;
-    commentFormControl: FormControl;
-
-    form: FormGroup;
     matcher = new ValueErrorStateMatcher();
 
     customValidators = [Validators.pattern(CustomRegex.DECIMAL_REGEX)]; // only allow for decimal values
 
-    constructor(@Inject(FormBuilder) private _fb: FormBuilder) {
-        super();
+    constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
+        super(_fb);
     }
 
     getInitValue(): number | null {
@@ -39,23 +31,7 @@ export class DecimalValueComponent extends BaseValueDirective implements OnInit,
     }
 
     ngOnInit() {
-        // initialize form control elements
-        this.valueFormControl = new FormControl(null);
-
-        this.commentFormControl = new FormControl(null);
-        // subscribe to any change on the comment and recheck validity
-
-        this.form = this._fb.group({
-            value: this.valueFormControl,
-            comment: this.commentFormControl
-        });
-
-        this.resetFormControl();
-
-        resolvedPromise.then(() => {
-            // add form to the parent form group
-            this.addToParentFormGroup(this.formName, this.form);
-        });
+        super.ngOnInit();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -64,10 +40,7 @@ export class DecimalValueComponent extends BaseValueDirective implements OnInit,
 
     // unsubscribe when the object is destroyed to prevent memory leaks
     ngOnDestroy(): void {
-        resolvedPromise.then(() => {
-            // remove form from the parent form group
-            this.removeFromParentFormGroup(this.formName);
-        });
+        super.ngOnDestroy();
     }
 
     getNewValue(): CreateDecimalValue | false {

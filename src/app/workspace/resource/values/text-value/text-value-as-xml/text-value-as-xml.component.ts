@@ -10,16 +10,13 @@ import {
     Output,
     SimpleChanges
 } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Constants, CreateTextValueAsXml, ReadTextValueAsXml, UpdateTextValueAsXml } from '@dasch-swiss/dsp-js';
 import * as Editor from 'ckeditor5-custom-build';
-import { Subscription } from 'rxjs';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
 import { ValueErrorStateMatcher } from '../../value-error-state-matcher';
 import { ckEditor } from '../ck-editor';
 
-// https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
-const resolvedPromise = Promise.resolve(null);
 
 @Component({
     selector: 'app-text-value-as-xml',
@@ -34,11 +31,6 @@ export class TextValueAsXMLComponent extends BaseValueDirective implements OnIni
     @Output() internalLinkHovered: EventEmitter<string> = new EventEmitter<string>();
 
     readonly standardMapping = Constants.StandardMapping; // todo: define this somewhere else
-
-    valueFormControl: FormControl;
-    commentFormControl: FormControl;
-
-    form: FormGroup;
 
     matcher = new ValueErrorStateMatcher();
     customValidators = [];
@@ -59,8 +51,8 @@ export class TextValueAsXMLComponent extends BaseValueDirective implements OnIni
         '<br>': '<br/>'
     };
 
-    constructor(@Inject(FormBuilder) private fb: FormBuilder) {
-        super();
+    constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
+        super(_fb);
     }
 
     standardValueComparisonFunc(initValue: any, curValue: any): boolean {
@@ -84,24 +76,7 @@ export class TextValueAsXMLComponent extends BaseValueDirective implements OnIni
 
         this.editor = Editor;
         this.editorConfig = ckEditor.config;
-
-        // initialize form control elements
-        this.valueFormControl = new FormControl(null);
-
-        this.commentFormControl = new FormControl(null);
-
-        this.form = this.fb.group({
-            value: this.valueFormControl,
-            comment: this.commentFormControl
-        });
-
-        this.resetFormControl();
-
-        resolvedPromise.then(() => {
-            // add form to the parent form group
-            this.addToParentFormGroup(this.formName, this.form);
-        });
-
+        super.ngOnInit();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -113,10 +88,7 @@ export class TextValueAsXMLComponent extends BaseValueDirective implements OnIni
     }
 
     ngOnDestroy(): void {
-        resolvedPromise.then(() => {
-            // remove form from the parent form group
-            this.removeFromParentFormGroup(this.formName);
-        });
+        super.ngOnDestroy();
     }
 
     getNewValue(): CreateTextValueAsXml | false {
