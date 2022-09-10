@@ -5,7 +5,7 @@
     <span class="rm-comment" *ngIf="shouldShowComment">{{commentFormControl.value}}</span>
 </span>
 <ng-template #showForm>
-    <span [formGroup]="form" (ngSubmit)="onSubmit()">
+    <span [formGroup]="form">
         <mat-checkbox [formControlName]="'value'" class="value boolValue child-value-component" [class.more-space]="moreSpace">
         </mat-checkbox>
         <mat-error *ngIf="valueFormControl.hasError('valueNotChanged') && valueFormControl.dirty">
