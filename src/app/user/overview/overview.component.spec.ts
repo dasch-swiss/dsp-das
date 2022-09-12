@@ -168,8 +168,8 @@ describe('OverviewComponent', () => {
 
         it('should populate project lists correctly', () => {
 
-            expect(testHostComponent.overviewComp.userProjects.length).toEqual(1);
-            expect(testHostComponent.overviewComp.otherProjects.length).toEqual(7);
+            expect(testHostComponent.overviewComp.userProjects.length).toEqual(0);
+            expect(testHostComponent.overviewComp.otherProjects.length).toEqual(8);
         });
     });
 
@@ -272,7 +272,7 @@ describe('OverviewComponent', () => {
 
         it('should populate project lists correctly', () => {
             expect(testHostComponent.overviewComp.userProjects.length).toEqual(0);
-            expect(testHostComponent.overviewComp.otherProjects.length).toEqual(8);
+            expect(testHostComponent.overviewComp.otherProjects.length).toEqual(7);
         });
 
         it('should NOT show the "Create new project" button', async () => {
