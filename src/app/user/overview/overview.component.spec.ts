@@ -143,6 +143,7 @@ describe('OverviewComponent', () => {
                     anythingProj.shortcode = '0001';
                     anythingProj.keywords = ['arbitrary test data', 'things'];
                     anythingProj.shortname = 'anything';
+                    anythingProj.status = true;
 
                     // add project to list of users projects
                     loggedInUser.body.user.projects = [anythingProj];
@@ -168,8 +169,8 @@ describe('OverviewComponent', () => {
 
         it('should populate project lists correctly', () => {
 
-            expect(testHostComponent.overviewComp.userProjects.length).toEqual(0);
-            expect(testHostComponent.overviewComp.otherProjects.length).toEqual(8);
+            expect(testHostComponent.overviewComp.userProjects.length).toEqual(1);
+            expect(testHostComponent.overviewComp.otherProjects.length).toEqual(7);
         });
     });
 
@@ -220,7 +221,7 @@ describe('OverviewComponent', () => {
 
         it('should populate project lists correctly', () => {
             expect(testHostComponent.overviewComp.userProjects.length).toEqual(0);
-            expect(testHostComponent.overviewComp.otherProjects.length).toEqual(8);
+            expect(testHostComponent.overviewComp.otherProjects.length).toEqual(7);
         });
 
         it('should show the "Create new project" button', async () => {

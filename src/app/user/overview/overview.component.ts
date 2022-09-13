@@ -93,7 +93,7 @@ export class OverviewComponent implements OnInit {
                     this.userProjects = [];
                     this.otherProjects = [];
 
-                    // get list of all projects the user is a member of except of deactivated ones
+                    // get list of all projects the user is a member of except the deactivated ones
                     for (const project of userResponse.body.user.projects) {
                         if (project.status !== false) {
                             this.userProjects.push(project);
