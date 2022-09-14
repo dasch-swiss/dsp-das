@@ -27,7 +27,7 @@ import { OntologyService } from './ontology/ontology.service';
 })
 export class ProjectComponent implements OnInit {
 
-    // loading for progess indicator
+    // loading for progress indicator
     loading: boolean;
     // error in case of wrong project code
     error: boolean;
