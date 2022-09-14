@@ -29,7 +29,7 @@ import { Session, SessionService } from 'src/app/main/services/session.service';
 })
 export class ListComponent implements OnInit {
 
-    // loading for progess indicator
+    // loading for progress indicator
     loading: boolean;
     loadList: boolean;
 
