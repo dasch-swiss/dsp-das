@@ -12,13 +12,13 @@ import {
     ListsEndpointAdmin, MockProjects,
     ProjectResponse, ReadProject,
     RepositionChildNodeResponse
-} from "@dasch-swiss/dsp-js";
+} from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ListNodeOperation } from '../list-item-form/list-item-form.component';
 import { ListItemComponent } from './list-item.component';
-import {Session, SessionService} from "../../../main/services/session.service";
+import { Session, SessionService } from '../../../main/services/session.service';
 import { CacheService } from '../../../main/cache/cache.service';
 
 /**
