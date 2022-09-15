@@ -3,6 +3,10 @@
   display: flex;
   flex-wrap: wrap;
   width: 640px;
+
+  .list-item-indentation {
+    margin-left: 40px;
+  }
 }
 
 .child-node {
