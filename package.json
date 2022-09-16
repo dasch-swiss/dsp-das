@@ -43,7 +43,7 @@
     "ckeditor5-custom-build": "github:dasch-swiss/ckeditor_custom_build#v2.0.0",
     "core-js": "^3.21.0",
     "jdnconvertiblecalendar": "^0.0.7",
-    "jdnconvertiblecalendardateadapter": "^0.0.17",
+    "jdnconvertiblecalendardateadapter": "^0.0.18",
     "json2typescript": "^1.4.1",
     "jsonld": "^5.2.0",
     "moment": "^2.29.4",
@@ -59,9 +59,9 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^14.2.3",
+    "@angular-devkit/build-angular": "^14.2.2",
     "@angular-eslint/eslint-plugin": "^13.1.0",
-    "@angular/cli": "^14.2.3",
+    "@angular/cli": "^14.2.2",
     "@angular/compiler-cli": "^14.2.2",
     "@angular/language-service": "^14.2.2",
     "@types/jasmine": "~3.6.0",
