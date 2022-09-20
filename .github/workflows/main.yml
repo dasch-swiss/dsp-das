@@ -1,6 +1,6 @@
 name: CI
 env:
-  NV: 12.x  # node version
+  node-version: 16.15.0  # node version
 
 on:
   push:
@@ -25,10 +25,10 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
-      - name: Set up Node.js ${{ env.NV }}
+      - name: Set up Node.js ${{ env.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ env.NV }}
+          node-version: ${{ env.node-version }}
       - name: Install dependencies
         run: npm install
       - name: Run the tests
@@ -43,10 +43,10 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
-      - name: Set up Node.js ${{ env.NV }}
+      - name: Set up Node.js ${{ env.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ env.NV }}
+          node-version: ${{ env.node-version }}
       - name: Install dependencies
         run: npm install
       - name: Webdriver update
@@ -60,10 +60,10 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
-      - name: Set up Node.js ${{ env.NV }}
+      - name: Set up Node.js ${{ env.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ env.NV }}
+          node-version: ${{ env.node-version }}
       - name: Install dependencies
         run: npm install
       - name: Run the script
@@ -75,10 +75,10 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
-      - name: Set up Node.js ${{ env.NV }}
+      - name: Set up Node.js ${{ env.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ env.NV }}
+          node-version: ${{ env.node-version }}
       - name: Install dependencies
         run: npm install
       - name: Build in prod mode
