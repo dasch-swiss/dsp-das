@@ -82,7 +82,7 @@ export class ListViewComponent implements OnChanges, OnInit {
 
     selectedResourceIdx: number[] = [];
 
-    componentCommsSubscriptions: Subscription[]= [];
+    componentCommsSubscriptions: Subscription[] = [];
 
     resetCheckBoxes = false;
 
