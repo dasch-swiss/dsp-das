@@ -44,9 +44,6 @@ export class ListItemComponent implements OnInit {
     sysAdmin = false;
     projectAdmin = false;
 
-    // project data
-    project: ReadProject;
-
     expandedNode: string;
 
     constructor(
@@ -66,10 +63,8 @@ export class ListItemComponent implements OnInit {
         // get the project data from cache
         this._cache.get(this.projectCode).subscribe(
             (response: ReadProject) => {
-                this.project = response;
-
                 // is logged-in user projectAdmin?
-                this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
+                this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === response.id);
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
