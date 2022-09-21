@@ -19,9 +19,10 @@ import {
 import {
     CanUpdateErrorState,
     ErrorStateMatcher,
-    mixinErrorState
+    mixinErrorState,
+    _AbstractConstructor,
+    _Constructor
 } from '@angular/material/core';
-import { AbstractConstructor, Constructor } from '@angular/material/core/common-behaviors/constructor';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { KnoraDate, KnoraPeriod } from '@dasch-swiss/dsp-js';
 import { JDNConvertibleCalendar } from 'jdnconvertiblecalendar';
@@ -34,33 +35,32 @@ export function periodStartEndValidator(isPeriod: UntypedFormControl, endDate: U
 
         if (isPeriod.value && control.value !== null && endDate.value !== null) {
             // period: check if start is before end
-
             const jdnStartDate = valueService.createJDNCalendarDateFromKnoraDate(control.value);
             const jdnEndDate = valueService.createJDNCalendarDateFromKnoraDate(endDate.value);
 
             const invalid = jdnStartDate.toJDNPeriod().periodEnd >= jdnEndDate.toJDNPeriod().periodStart;
 
             return invalid ? { 'periodStartEnd': { value: control.value } } : null;
-
         }
 
         return null;
     };
 }
 
-type CanUpdateErrorStateCtor = Constructor<CanUpdateErrorState> & AbstractConstructor<CanUpdateErrorState>;
+type CanUpdateErrorStateCtor = _Constructor<CanUpdateErrorState> & _AbstractConstructor<CanUpdateErrorState>;
 
 class MatInputBase {
-    constructor(public _defaultErrorStateMatcher: ErrorStateMatcher,
+    constructor(
+        public _defaultErrorStateMatcher: ErrorStateMatcher,
         public _parentForm: NgForm,
         public _parentFormGroup: FormGroupDirective,
-        public ngControl: NgControl) {
-    }
+        public ngControl: NgControl,
+        public stateChanges: Subject<void>,
+    ) { }
 }
 
 const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
     mixinErrorState(MatInputBase);
-
 
 @Component({
     selector: 'app-date-value-handler',
@@ -177,13 +177,14 @@ export class DateValueHandlerComponent extends _MatInputMixinBase implements Con
 
     constructor(fb: UntypedFormBuilder,
         @Optional() @Self() public ngControl: NgControl,
+        private _stateChanges: Subject<void>,
         private _fm: FocusMonitor,
         private _elRef: ElementRef<HTMLElement>,
         @Optional() _parentForm: NgForm,
         @Optional() _parentFormGroup: FormGroupDirective,
         _defaultErrorStateMatcher: ErrorStateMatcher,
         private _valueService: ValueService) {
-        super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
+        super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl, _stateChanges);
 
         if (this.ngControl != null) {
             // setting the value accessor directly (instead of using

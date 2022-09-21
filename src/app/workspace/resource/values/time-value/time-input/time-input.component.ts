@@ -17,8 +17,7 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
-import { AbstractConstructor, Constructor } from '@angular/material/core/common-behaviors/constructor';
+import { CanUpdateErrorState, ErrorStateMatcher, mixinErrorState, _AbstractConstructor, _Constructor } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { CalendarDate, CalendarPeriod, GregorianCalendarDate } from 'jdnconvertiblecalendar';
 import { Subject } from 'rxjs';
@@ -30,19 +29,22 @@ export function dateTimeValidator(otherControl: UntypedFormControl): ValidatorFn
 
         // valid if both date and time are null or have values, excluding empty strings
         const invalid = !(control.value === null && otherControl.value === null ||
-                        ((control.value !== null && control.value !== '') && (otherControl.value !== null && otherControl.value !== '')));
+            ((control.value !== null && control.value !== '') && (otherControl.value !== null && otherControl.value !== '')));
 
         return invalid ? { 'validDateTimeRequired': { value: control.value } } : null;
     };
 }
 
-type CanUpdateErrorStateCtor = Constructor<CanUpdateErrorState> & AbstractConstructor<CanUpdateErrorState>;
+type CanUpdateErrorStateCtor = _Constructor<CanUpdateErrorState> & _AbstractConstructor<CanUpdateErrorState>;
 
 class MatInputBase {
-    constructor(public _defaultErrorStateMatcher: ErrorStateMatcher,
+    constructor(
+        public _defaultErrorStateMatcher: ErrorStateMatcher,
         public _parentForm: NgForm,
         public _parentFormGroup: FormGroupDirective,
-        public ngControl: NgControl) { }
+        public ngControl: NgControl,
+        public stateChanges: Subject<void>
+    ) { }
 }
 const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinErrorState(MatInputBase);
 
@@ -172,13 +174,14 @@ export class TimeInputComponent extends _MatInputMixinBase implements ControlVal
 
     constructor(fb: UntypedFormBuilder,
         @Optional() @Self() public ngControl: NgControl,
+        private _stateChanges: Subject<void>,
         private _fm: FocusMonitor,
         private _elRef: ElementRef<HTMLElement>,
         @Optional() _parentForm: NgForm,
         @Optional() _parentFormGroup: FormGroupDirective,
         _defaultErrorStateMatcher: ErrorStateMatcher) {
 
-        super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
+        super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl, _stateChanges);
 
         this.dateFormControl = new UntypedFormControl(null);
 

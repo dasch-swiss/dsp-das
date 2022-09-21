@@ -6,8 +6,7 @@ import { AbstractControl, ControlValueAccessor, UntypedFormBuilder, UntypedFormC
 import { Subject } from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { CanUpdateErrorState, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
-import { AbstractConstructor, Constructor } from '@angular/material/core/common-behaviors/constructor';
+import { CanUpdateErrorState, ErrorStateMatcher, mixinErrorState, _AbstractConstructor, _Constructor } from '@angular/material/core';
 
 /**
  * represents an interval consisting.
@@ -41,13 +40,16 @@ export function startEndSameTypeValidator(otherInterval: UntypedFormControl): Va
     };
 }
 
-type CanUpdateErrorStateCtor = Constructor<CanUpdateErrorState> & AbstractConstructor<CanUpdateErrorState>;
+type CanUpdateErrorStateCtor = _Constructor<CanUpdateErrorState> & _AbstractConstructor<CanUpdateErrorState>;
 
 class MatInputBase {
-    constructor(public _defaultErrorStateMatcher: ErrorStateMatcher,
+    constructor(
+        public _defaultErrorStateMatcher: ErrorStateMatcher,
         public _parentForm: NgForm,
         public _parentFormGroup: FormGroupDirective,
-        public ngControl: NgControl) { }
+        public ngControl: NgControl,
+        public stateChanges: Subject<void>
+    ) { }
 }
 const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
     mixinErrorState(MatInputBase);
@@ -159,13 +161,14 @@ export class IntervalInputComponent extends _MatInputMixinBase implements Contro
 
     constructor(fb: UntypedFormBuilder,
         @Optional() @Self() public ngControl: NgControl,
+        private _stateChanges: Subject<void>,
         private _fm: FocusMonitor,
         private _elRef: ElementRef<HTMLElement>,
         @Optional() _parentForm: NgForm,
         @Optional() _parentFormGroup: FormGroupDirective,
         _defaultErrorStateMatcher: ErrorStateMatcher) {
 
-        super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
+        super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl, _stateChanges);
 
         this.startIntervalControl = new UntypedFormControl(null);
         this.endIntervalControl = new UntypedFormControl(null);

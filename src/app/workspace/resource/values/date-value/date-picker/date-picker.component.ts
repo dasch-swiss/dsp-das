@@ -2,8 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, DoCheck, ElementRef, HostBinding, Input, OnChanges, OnDestroy, Optional, Self, SimpleChanges, ViewChild } from '@angular/core';
 import { ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgControl, NgForm, Validators } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
-import { AbstractConstructor, Constructor } from '@angular/material/core/common-behaviors/constructor';
+import { CanUpdateErrorState, ErrorStateMatcher, mixinErrorState, _AbstractConstructor, _Constructor } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { KnoraDate } from '@dasch-swiss/dsp-js';
@@ -19,18 +18,19 @@ export class DatePickerErrorStateMatcher implements ErrorStateMatcher {
     }
 }
 
-type CanUpdateErrorStateCtor = Constructor<CanUpdateErrorState> & AbstractConstructor<CanUpdateErrorState>;
+type CanUpdateErrorStateCtor = _Constructor<CanUpdateErrorState> & _AbstractConstructor<CanUpdateErrorState>;
 
 class MatInputBase {
     constructor(
         public _defaultErrorStateMatcher: ErrorStateMatcher,
         public _parentForm: NgForm,
         public _parentFormGroup: FormGroupDirective,
-        public ngControl: NgControl) { }
+        public ngControl: NgControl,
+        public stateChanges: Subject<void>
+    ) { }
 }
 const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
     mixinErrorState(MatInputBase);
-
 
 @Component({
     selector: 'app-date-picker',
@@ -210,6 +210,7 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
         @Optional() _parentForm: NgForm,
         @Optional() _parentFormGroup: FormGroupDirective,
         @Optional() @Self() public ngControl: NgControl,
+        private _stateChanges: Subject<void>,
         fb: UntypedFormBuilder,
         private _elRef: ElementRef<HTMLElement>,
         private _fm: FocusMonitor,
@@ -217,7 +218,7 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
         private _valueService: ValueService,
     ) {
 
-        super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
+        super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl, _stateChanges);
 
         this.dateForm = fb.group({
             date: [null, Validators.required],
