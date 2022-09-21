@@ -7,11 +7,6 @@ import { Subscription } from 'rxjs';
 export abstract class BaseValueDirective {
 
     /**
-     * value to be displayed, if any.
-     */
-    @Input() abstract displayValue?: ReadValue;
-
-    /**
      * sets the mode of the component.
      */
     @Input() mode: 'read' | 'update' | 'create' | 'search';
@@ -34,9 +29,14 @@ export abstract class BaseValueDirective {
     /**
      * disable the comment field
      */
-    @Input() commentDisabled? = false;
+    @Input() commentDisabled?= false;
 
     shouldShowComment = false;
+
+    /**
+     * value to be displayed, if any.
+     */
+    @Input() abstract displayValue?: ReadValue;
 
     /**
      * formControl element for the value.
@@ -83,13 +83,13 @@ export abstract class BaseValueDirective {
      * @param commentFormControl FormControl of the current comment.
      */
     standardValidatorFunc: (val: any, comment: string, commentCtrl: UntypedFormControl)
-    => ValidatorFn = (initValue: any, initComment: string, commentFormControl: UntypedFormControl): ValidatorFn => (control: AbstractControl): { [key: string]: any } | null => {
+        => ValidatorFn = (initValue: any, initComment: string, commentFormControl: UntypedFormControl): ValidatorFn => (control: AbstractControl): { [key: string]: any } | null => {
 
-        const invalid = this.standardValueComparisonFunc(initValue, control.value)
-                    && (initComment === commentFormControl.value || (initComment === null && commentFormControl.value === ''));
+            const invalid = this.standardValueComparisonFunc(initValue, control.value)
+                && (initComment === commentFormControl.value || (initComment === null && commentFormControl.value === ''));
 
-        return invalid ? { valueNotChanged: { value: control.value } } : null;
-    };
+            return invalid ? { valueNotChanged: { value: control.value } } : null;
+        };
 
     /**
      * returns the initially given value comment set via displayValue.
