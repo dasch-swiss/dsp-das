@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 import { Component, DoCheck, ElementRef, HostBinding, Input, OnDestroy, OnInit, Optional, Self } from '@angular/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { AbstractControl, ControlValueAccessor, FormBuilder, FormControl, FormGroup, FormGroupDirective, NgControl, NgForm, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgControl, NgForm, ValidatorFn, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
@@ -24,14 +24,14 @@ export class Interval {
 
 /** error when invalid control is dirty, touched, or submitted. */
 export class IntervalInputErrorStateMatcher implements ErrorStateMatcher {
-    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
         const isSubmitted = form && form.submitted;
         return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
     }
 }
 
 /** interval must have a start and end of the same type, either both numbers or both null */
-export function startEndSameTypeValidator(otherInterval: FormControl): ValidatorFn {
+export function startEndSameTypeValidator(otherInterval: UntypedFormControl): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
 
         // valid if both start and end are null or have values
@@ -62,7 +62,7 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
 export class IntervalInputComponent extends _MatInputMixinBase implements ControlValueAccessor, MatFormFieldControl<Interval>, DoCheck, CanUpdateErrorState, OnDestroy, OnInit {
     static nextId = 0;
 
-    form: FormGroup;
+    form: UntypedFormGroup;
     stateChanges = new Subject<void>();
     @HostBinding() id = `app-interval-input-${IntervalInputComponent.nextId++}`;
     focused = false;
@@ -70,8 +70,8 @@ export class IntervalInputComponent extends _MatInputMixinBase implements Contro
     controlType = 'app-interval-input';
     matcher = new IntervalInputErrorStateMatcher();
 
-    startIntervalControl: FormControl;
-    endIntervalControl: FormControl;
+    startIntervalControl: UntypedFormControl;
+    endIntervalControl: UntypedFormControl;
 
     @Input() intervalStartLabel = 'start';
     @Input() intervalEndLabel = 'end';
@@ -157,7 +157,7 @@ export class IntervalInputComponent extends _MatInputMixinBase implements Contro
 
     @Input() errorStateMatcher: ErrorStateMatcher;
 
-    constructor(fb: FormBuilder,
+    constructor(fb: UntypedFormBuilder,
         @Optional() @Self() public ngControl: NgControl,
         private _fm: FocusMonitor,
         private _elRef: ElementRef<HTMLElement>,
@@ -167,8 +167,8 @@ export class IntervalInputComponent extends _MatInputMixinBase implements Contro
 
         super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
 
-        this.startIntervalControl = new FormControl(null);
-        this.endIntervalControl = new FormControl(null);
+        this.startIntervalControl = new UntypedFormControl(null);
+        this.endIntervalControl = new UntypedFormControl(null);
 
         this.form = fb.group({
             start: this.startIntervalControl,

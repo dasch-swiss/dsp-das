@@ -8,9 +8,9 @@ import { Component, DoCheck, ElementRef, HostBinding, Input, OnDestroy, OnInit, 
 import {
     AbstractControl,
     ControlValueAccessor,
-    FormBuilder,
-    FormControl,
-    FormGroup,
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
     FormGroupDirective,
     NgControl,
     NgForm,
@@ -25,7 +25,7 @@ import { Subject } from 'rxjs';
 import { CustomRegex } from '../../custom-regex';
 
 /** a valid time value must have both a date and a time, or both inputs must be null */
-export function dateTimeValidator(otherControl: FormControl): ValidatorFn {
+export function dateTimeValidator(otherControl: UntypedFormControl): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
 
         // valid if both date and time are null or have values, excluding empty strings
@@ -65,7 +65,7 @@ export class TimeInputComponent extends _MatInputMixinBase implements ControlVal
 
     static nextId = 0;
 
-    form: FormGroup;
+    form: UntypedFormGroup;
     stateChanges = new Subject<void>();
     @HostBinding() id = `app-time-input-${TimeInputComponent.nextId++}`;
     focused = false;
@@ -79,8 +79,8 @@ export class TimeInputComponent extends _MatInputMixinBase implements ControlVal
     @Input() timeLabel = 'Time';
     @Input() valueRequiredValidator = true;
 
-    dateFormControl: FormControl;
-    timeFormControl: FormControl;
+    dateFormControl: UntypedFormControl;
+    timeFormControl: UntypedFormControl;
 
     datePipe = new DatePipe('en-US');
 
@@ -170,7 +170,7 @@ export class TimeInputComponent extends _MatInputMixinBase implements ControlVal
 
     @Input() errorStateMatcher: ErrorStateMatcher;
 
-    constructor(fb: FormBuilder,
+    constructor(fb: UntypedFormBuilder,
         @Optional() @Self() public ngControl: NgControl,
         private _fm: FocusMonitor,
         private _elRef: ElementRef<HTMLElement>,
@@ -180,9 +180,9 @@ export class TimeInputComponent extends _MatInputMixinBase implements ControlVal
 
         super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
 
-        this.dateFormControl = new FormControl(null);
+        this.dateFormControl = new UntypedFormControl(null);
 
-        this.timeFormControl = new FormControl(null);
+        this.timeFormControl = new UntypedFormControl(null);
 
         this.form = fb.group({
             date: this.dateFormControl,

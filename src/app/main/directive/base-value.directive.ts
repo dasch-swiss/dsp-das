@@ -1,5 +1,5 @@
 import { Directive, Input } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { CreateValue, ReadValue, UpdateValue } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 
@@ -19,7 +19,7 @@ export abstract class BaseValueDirective {
     /**
      * parent FormGroup that contains all child FormGroups
      */
-    @Input() parentForm?: FormGroup;
+    @Input() parentForm?: UntypedFormGroup;
 
     /**
      * name of the FormGroup, used to add to the parentForm because the name needs to be unique
@@ -41,17 +41,17 @@ export abstract class BaseValueDirective {
     /**
      * formControl element for the value.
      */
-    abstract valueFormControl: FormControl;
+    abstract valueFormControl: UntypedFormControl;
 
     /**
      * formControl element for the comment on the value.
      */
-    abstract commentFormControl: FormControl;
+    abstract commentFormControl: UntypedFormControl;
 
     /**
      * formGroup that contains FormControl elements.
      */
-    abstract form: FormGroup;
+    abstract form: UntypedFormGroup;
 
     /**
      * subscription used for when the value changes.
@@ -82,8 +82,8 @@ export abstract class BaseValueDirective {
      * @param initComment Initially given comment.
      * @param commentFormControl FormControl of the current comment.
      */
-    standardValidatorFunc: (val: any, comment: string, commentCtrl: FormControl)
-    => ValidatorFn = (initValue: any, initComment: string, commentFormControl: FormControl): ValidatorFn => (control: AbstractControl): { [key: string]: any } | null => {
+    standardValidatorFunc: (val: any, comment: string, commentCtrl: UntypedFormControl)
+    => ValidatorFn = (initValue: any, initComment: string, commentFormControl: UntypedFormControl): ValidatorFn => (control: AbstractControl): { [key: string]: any } | null => {
 
         const invalid = this.standardValueComparisonFunc(initValue, control.value)
                     && (initComment === commentFormControl.value || (initComment === null && commentFormControl.value === ''));
@@ -163,7 +163,7 @@ export abstract class BaseValueDirective {
     /**
      * add the value components FormGroup to a parent FormGroup if one is defined
      */
-    addToParentFormGroup(name: string, form: FormGroup) {
+    addToParentFormGroup(name: string, form: UntypedFormGroup) {
         if (this.parentForm) {
             this.parentForm.addControl(name, form);
         }

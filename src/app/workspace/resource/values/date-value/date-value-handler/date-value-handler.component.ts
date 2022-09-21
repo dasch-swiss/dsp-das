@@ -7,9 +7,9 @@ import { Component, DoCheck, ElementRef, HostBinding, Input, OnDestroy, OnInit, 
 import {
     AbstractControl,
     ControlValueAccessor,
-    FormBuilder,
-    FormControl,
-    FormGroup,
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
     FormGroupDirective,
     NgControl,
     NgForm,
@@ -29,7 +29,7 @@ import { Subject, Subscription } from 'rxjs';
 import { ValueService } from '../../../services/value.service';
 
 /** if a period is defined, start date must be before end date */
-export function periodStartEndValidator(isPeriod: FormControl, endDate: FormControl, valueService: ValueService): ValidatorFn {
+export function periodStartEndValidator(isPeriod: UntypedFormControl, endDate: UntypedFormControl, valueService: ValueService): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
 
         if (isPeriod.value && control.value !== null && endDate.value !== null) {
@@ -74,13 +74,13 @@ export class DateValueHandlerComponent extends _MatInputMixinBase implements Con
 
     @Input() valueRequiredValidator = true;
 
-    form: FormGroup;
+    form: UntypedFormGroup;
     stateChanges = new Subject<void>();
 
-    isPeriodControl: FormControl;
-    calendarControl: FormControl;
-    startDate: FormControl;
-    endDate: FormControl;
+    isPeriodControl: UntypedFormControl;
+    calendarControl: UntypedFormControl;
+    startDate: UntypedFormControl;
+    endDate: UntypedFormControl;
 
     readonly focused = false;
 
@@ -175,7 +175,7 @@ export class DateValueHandlerComponent extends _MatInputMixinBase implements Con
 
     @HostBinding() id = `app-date-value-handler-${DateValueHandlerComponent.nextId++}`;
 
-    constructor(fb: FormBuilder,
+    constructor(fb: UntypedFormBuilder,
         @Optional() @Self() public ngControl: NgControl,
         private _fm: FocusMonitor,
         private _elRef: ElementRef<HTMLElement>,
@@ -191,11 +191,11 @@ export class DateValueHandlerComponent extends _MatInputMixinBase implements Con
             this.ngControl.valueAccessor = this;
         }
 
-        this.isPeriodControl = new FormControl(false); // tODO: if period, check if start is before end
-        this.calendarControl = new FormControl(null);
+        this.isPeriodControl = new UntypedFormControl(false); // tODO: if period, check if start is before end
+        this.calendarControl = new UntypedFormControl(null);
 
-        this.endDate = new FormControl(null);
-        this.startDate = new FormControl(null);
+        this.endDate = new UntypedFormControl(null);
+        this.startDate = new UntypedFormControl(null);
 
         const eraChangesSubscription = this.isPeriodControl.valueChanges.subscribe(
             isPeriod => {
