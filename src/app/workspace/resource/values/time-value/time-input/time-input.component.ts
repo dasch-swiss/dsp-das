@@ -61,14 +61,16 @@ export class DateTime {
     selector: 'app-time-input',
     templateUrl: './time-input.component.html',
     styleUrls: ['./time-input.component.scss'],
-    providers: [{ provide: MatFormFieldControl, useExisting: TimeInputComponent }]
+    providers: [
+        { provide: MatFormFieldControl, useExisting: TimeInputComponent },
+        { provide: Subject }
+    ]
 })
 export class TimeInputComponent extends _MatInputMixinBase implements ControlValueAccessor, MatFormFieldControl<string>, DoCheck, CanUpdateErrorState, OnDestroy, OnInit {
 
     static nextId = 0;
 
     form: UntypedFormGroup;
-    stateChanges = new Subject<void>();
     @HostBinding() id = `app-time-input-${TimeInputComponent.nextId++}`;
     focused = false;
     errorState = false;

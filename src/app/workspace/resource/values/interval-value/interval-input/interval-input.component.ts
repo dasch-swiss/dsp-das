@@ -59,13 +59,15 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
     selector: 'app-interval-input',
     templateUrl: './interval-input.component.html',
     styleUrls: ['./interval-input.component.scss'],
-    providers: [{ provide: MatFormFieldControl, useExisting: IntervalInputComponent }]
+    providers: [
+        { provide: MatFormFieldControl, useExisting: IntervalInputComponent },
+        { provide: Subject }
+    ]
 })
 export class IntervalInputComponent extends _MatInputMixinBase implements ControlValueAccessor, MatFormFieldControl<Interval>, DoCheck, CanUpdateErrorState, OnDestroy, OnInit {
     static nextId = 0;
 
     form: UntypedFormGroup;
-    stateChanges = new Subject<void>();
     @HostBinding() id = `app-interval-input-${IntervalInputComponent.nextId++}`;
     focused = false;
     errorState = false;

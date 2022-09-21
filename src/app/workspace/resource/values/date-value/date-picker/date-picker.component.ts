@@ -38,7 +38,8 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
     styleUrls: ['./date-picker.component.scss'],
     providers: [
         { provide: MatFormFieldControl, useExisting: DatePickerComponent },
-        { provide: KnoraDatePipe }
+        { provide: KnoraDatePipe },
+        { provide: Subject }
     ]
 })
 export class DatePickerComponent extends _MatInputMixinBase implements ControlValueAccessor, MatFormFieldControl<KnoraDate>, OnChanges, DoCheck, CanUpdateErrorState, OnDestroy {
@@ -59,7 +60,6 @@ export class DatePickerComponent extends _MatInputMixinBase implements ControlVa
 
     @HostBinding('attr.aria-describedby') describedBy = '';
     dateForm: UntypedFormGroup;
-    stateChanges = new Subject<void>();
     focused = false;
     errorState = false;
     controlType = 'app-date-picker';

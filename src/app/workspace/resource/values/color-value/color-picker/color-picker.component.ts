@@ -33,7 +33,8 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
     templateUrl: './color-picker.component.html',
     styleUrls: ['./color-picker.component.scss'],
     providers: [
-        { provide: MatFormFieldControl, useExisting: ColorPickerComponent }
+        { provide: MatFormFieldControl, useExisting: ColorPickerComponent },
+        { provide: Subject }
     ]
 })
 
@@ -47,7 +48,6 @@ export class ColorPickerComponent extends _MatInputMixinBase implements ControlV
 
     @HostBinding('attr.aria-describedby') describedBy = '';
     colorForm: UntypedFormGroup;
-    stateChanges = new Subject<void>();
     focused = false;
     errorState = false;
     controlType = 'app-color-picker';

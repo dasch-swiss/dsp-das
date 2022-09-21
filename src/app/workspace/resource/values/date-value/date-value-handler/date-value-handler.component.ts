@@ -66,7 +66,10 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
     selector: 'app-date-value-handler',
     templateUrl: './date-value-handler.component.html',
     styleUrls: ['./date-value-handler.component.scss'],
-    providers: [{ provide: MatFormFieldControl, useExisting: DateValueHandlerComponent }]
+    providers: [
+        { provide: MatFormFieldControl, useExisting: DateValueHandlerComponent },
+        { provide: Subject }
+    ]
 })
 export class DateValueHandlerComponent extends _MatInputMixinBase implements ControlValueAccessor, MatFormFieldControl<KnoraDate | KnoraPeriod>, DoCheck, CanUpdateErrorState, OnInit, OnDestroy {
 
@@ -75,7 +78,6 @@ export class DateValueHandlerComponent extends _MatInputMixinBase implements Con
     @Input() valueRequiredValidator = true;
 
     form: UntypedFormGroup;
-    stateChanges = new Subject<void>();
 
     isPeriodControl: UntypedFormControl;
     calendarControl: UntypedFormControl;
