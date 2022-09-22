@@ -1,4 +1,3 @@
-import { O } from '@angular/cdk/keycodes';
 import { Component, HostListener, Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -384,25 +383,25 @@ export class OntologyComponent implements OnInit {
                 // update current list of project ontologies
                 ontologies[ontologies.findIndex(onto => onto.id === ontology.id)] = ontology;
                 // avoid duplicates
-                const temp: ReadOntology[] = [];
-                const tempIds: String[] = [];
+                const uniqueOntologies: ReadOntology[] = [];
+                const uniqueIds: String[] = [];
                 for (const onto of ontologies){
-                    if (tempIds.indexOf(onto.id) !== -1){
+                    if (uniqueIds.indexOf(onto.id) !== -1){
                         let oldOntoIndex: number;
-                        temp.forEach((o, index) => {
+                        uniqueOntologies.forEach((o, index) => {
                             if (o.id === onto.id) {
                                 oldOntoIndex = index;
                             }
                         });
-                        if (Object.keys(onto.properties).length > Object.keys(temp[oldOntoIndex].properties).length){ // new onto has more props -> replace
-                            temp[oldOntoIndex] = onto;
+                        if (Object.keys(onto.properties).length > Object.keys(uniqueOntologies[oldOntoIndex].properties).length){ // new onto has more props -> replace
+                            uniqueOntologies[oldOntoIndex] = onto;
                         }
                     } else {
-                        tempIds.push(onto.id);
-                        temp.push(onto);
+                        uniqueIds.push(onto.id);
+                        uniqueOntologies.push(onto);
                     }
                 }
-                this._cache.set('currentProjectOntologies', temp);
+                this._cache.set('currentProjectOntologies', uniqueOntologies);
             },
             () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the cache
         );
