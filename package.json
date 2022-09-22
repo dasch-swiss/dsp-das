@@ -41,7 +41,7 @@
     "@ngx-translate/http-loader": "6.0.0",
     "angular-split": "^13.2.0",
     "ckeditor5-custom-build": "github:dasch-swiss/ckeditor_custom_build#v2.0.0",
-    "core-js": "^3.21.0",
+    "core-js": "^3.25.2",
     "jdnconvertiblecalendar": "^0.0.7",
     "jdnconvertiblecalendardateadapter": "^0.0.17",
     "json2typescript": "^1.4.1",
