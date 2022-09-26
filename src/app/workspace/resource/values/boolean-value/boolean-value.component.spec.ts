@@ -11,6 +11,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormattedBooleanPipe } from 'src/app/main/pipes/formatting/formatted-boolean.pipe';
 
+
 /**
  * test host component to simulate parent component.
  */
@@ -87,7 +88,6 @@ describe('BooleanValueComponent', () => {
         let valueReadModeDebugElement: DebugElement;
         let valueReadModeNativeElement;
         let checkboxEl;
-        let checkboxLabel;
 
         beforeEach(() => {
             testHostFixture = TestBed.createComponent(TestHostDisplayValueComponent);
@@ -152,7 +152,7 @@ describe('BooleanValueComponent', () => {
 
         });
 
-        it('should validate an existing value', () => {
+        it('should validate an existing value with an added comment', () => {
 
             testHostComponent.mode = 'update';
 
@@ -167,14 +167,16 @@ describe('BooleanValueComponent', () => {
 
             expect(checkboxEl.disabled).toBe(false);
 
-            expect(testHostComponent.booleanValueComponent.form.valid).toBeFalsy(); // because the boolens value did not change.
+            expect(testHostComponent.booleanValueComponent.form.valid).toBeFalsy(); // because the booleans value did not change. it is still == true
 
             expect(checkboxEl.checked).toBe(true);
 
+            // set a comment value
+            testHostComponent.booleanValueComponent.commentFormControl.setValue('a comment');
+
             testHostFixture.detectChanges();
 
-            expect(testHostComponent.booleanValueComponent.form.valid).toBeTruthy(); // because the bools value did change, so an update is valid
-
+            expect(testHostComponent.booleanValueComponent.form.valid).toBeTruthy(); // the form is valid now, because the comments value changed
             const updatedValue = testHostComponent.booleanValueComponent.getUpdatedValue();
 
             expect(updatedValue instanceof UpdateBooleanValue).toBeTruthy();

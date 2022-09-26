@@ -2,7 +2,7 @@ import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DecimalValueComponent } from './decimal-value.component';
 import { ReadDecimalValue, MockResource, UpdateDecimalValue, CreateDecimalValue } from '@dasch-swiss/dsp-js';
-import { OnInit, Component, ViewChild, DebugElement } from '@angular/core';
+import {OnInit, Component, ViewChild, DebugElement, NO_ERRORS_SCHEMA} from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -71,7 +71,7 @@ describe('DecimalValueComponent', () => {
                 ReactiveFormsModule,
                 MatInputModule,
                 BrowserAnimationsModule
-            ],
+            ]
         })
             .compileComponents();
     }));
@@ -84,8 +84,6 @@ describe('DecimalValueComponent', () => {
         let valueInputNativeElement;
         let valueReadModeDebugElement: DebugElement;
         let valueReadModeNativeElement;
-        let commentInputDebugElement: DebugElement;
-        let commentInputNativeElement;
 
         beforeEach(() => {
             testHostFixture = TestBed.createComponent(TestHostDisplayValueComponent);
@@ -155,18 +153,14 @@ describe('DecimalValueComponent', () => {
             valueInputDebugElement = valueComponentDe.query(By.css('input.value'));
             valueInputNativeElement = valueInputDebugElement.nativeElement;
 
-            commentInputDebugElement = valueComponentDe.query(By.css('textarea.comment'));
-            commentInputNativeElement = commentInputDebugElement.nativeElement;
-
             expect(testHostComponent.inputValueComponent.mode).toEqual('update');
-
-            expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
 
             expect(valueInputNativeElement.value).toEqual('1.5');
 
-            commentInputNativeElement.value = 'this is a comment';
+            expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
 
-            commentInputNativeElement.dispatchEvent(new Event('input'));
+            // set a comment value
+            testHostComponent.inputValueComponent.commentFormControl.setValue('this is a comment');
 
             testHostFixture.detectChanges();
 

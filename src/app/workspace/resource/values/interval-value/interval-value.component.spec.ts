@@ -1,7 +1,7 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IntervalValueComponent } from './interval-value.component';
-import { Component, DebugElement, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
+import {Component, DebugElement, forwardRef, Input, OnInit, ViewChild} from '@angular/core';
 import { CreateIntervalValue, MockResource, ReadIntervalValue, UpdateIntervalValue } from '@dasch-swiss/dsp-js';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -149,7 +149,7 @@ describe('IntervalValueComponent', () => {
                 ReactiveFormsModule,
                 MatInputModule,
                 BrowserAnimationsModule
-            ],
+            ]
         })
             .compileComponents();
     }));
@@ -275,7 +275,7 @@ describe('IntervalValueComponent', () => {
 
         });
 
-        it('should validate an existing value', () => {
+        it('should validate an existing value with an added comment', () => {
 
             testHostComponent.mode = 'update';
 
@@ -289,6 +289,8 @@ describe('IntervalValueComponent', () => {
 
             expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
 
+            // set a comment value
+            testHostComponent.inputValueComponent.commentFormControl.setValue('a comment');
 
             testHostFixture.detectChanges();
 

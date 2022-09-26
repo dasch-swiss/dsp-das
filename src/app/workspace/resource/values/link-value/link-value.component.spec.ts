@@ -1,4 +1,4 @@
-import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
+import {Component, DebugElement, NO_ERRORS_SCHEMA, OnInit, ViewChild} from '@angular/core';
 import { waitForAsync, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -145,7 +145,8 @@ describe('LinkValueComponent', () => {
                     provide: DspApiConnectionToken,
                     useValue: valuesSpyObj
                 }
-            ]
+            ],
+            schemas: [ NO_ERRORS_SCHEMA ]
         })
             .compileComponents();
     }));
@@ -387,11 +388,14 @@ describe('LinkValueComponent', () => {
             valueInputNativeElement = valueInputDebugElement.nativeElement;
 
             expect(testHostComponent.inputValueComponent.mode).toEqual('update');
-            expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
+            expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy(); // because no value nor the comment changed
+
+            // set a comment value
+            testHostComponent.inputValueComponent.commentFormControl.setValue('a comment');
 
             testHostFixture.detectChanges();
 
-            expect(testHostComponent.inputValueComponent.form.valid).toBeTruthy();
+            expect(testHostComponent.inputValueComponent.form.valid).toBeTruthy(); // now the form must be valid, hence the comment changed
             const updatedValue = testHostComponent.inputValueComponent.getUpdatedValue();
             expect(updatedValue instanceof UpdateLinkValue).toBeTruthy();
 

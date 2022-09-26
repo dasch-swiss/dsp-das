@@ -1,4 +1,4 @@
-import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
+import {Component, DebugElement, OnInit, ViewChild} from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -191,14 +191,10 @@ describe('ListValueComponent', () => {
 
             testHostFixture.detectChanges();
 
-            commentInputDebugElement = valueComponentDe.query(By.css('textarea.comment'));
-            commentInputNativeElement = commentInputDebugElement.nativeElement;
-
             expect(testHostComponent.inputValueComponent.mode).toEqual('update');
 
-            commentInputNativeElement.value = 'this is a comment';
-
-            commentInputNativeElement.dispatchEvent(new Event('input'));
+            // set a comment value
+            testHostComponent.inputValueComponent.commentFormControl.setValue('this is a comment');
 
             testHostFixture.detectChanges();
 
@@ -245,10 +241,6 @@ describe('ListValueComponent', () => {
 
             valueComponentDe = hostCompDe.query(By.directive(ListValueComponent));
 
-            commentInputDebugElement = valueComponentDe.query(By.css('textarea.comment'));
-            commentInputNativeElement = commentInputDebugElement.nativeElement;
-
-
         });
         it('should create a value', () => {
             expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
@@ -270,12 +262,6 @@ describe('ListValueComponent', () => {
 
             testHostFixture.detectChanges();
 
-            commentInputNativeElement.value = 'created comment';
-
-            commentInputNativeElement.dispatchEvent(new Event('input'));
-
-            testHostFixture.detectChanges();
-
             expect(testHostComponent.inputValueComponent.mode).toEqual('create');
 
             expect(testHostComponent.inputValueComponent.form.valid).toBeTruthy();
@@ -286,7 +272,7 @@ describe('ListValueComponent', () => {
 
             expect(testHostComponent.inputValueComponent.valueFormControl.value).toEqual(null);
 
-            expect(commentInputNativeElement.value).toEqual('');
+            expect(testHostComponent.inputValueComponent.commentFormControl.value).toEqual(null);
 
         });
     });

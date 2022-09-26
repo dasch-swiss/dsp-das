@@ -146,7 +146,7 @@ describe('TimeValueComponent', () => {
                 ReactiveFormsModule,
                 MatInputModule,
                 BrowserAnimationsModule
-            ],
+            ]
         })
             .compileComponents();
     }));
@@ -223,7 +223,7 @@ describe('TimeValueComponent', () => {
 
         });
 
-        it('should validate an existing value', () => {
+        it('should validate an existing value with han added comment', () => {
 
             testHostComponent.mode = 'update';
 
@@ -233,11 +233,14 @@ describe('TimeValueComponent', () => {
 
             expect(testHostComponent.inputValueComponent.timeInputComponent.value).toEqual('2019-08-30T10:45:20.173572Z');
 
-            expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
+            expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy(); // because no value nor the comment changed
+
+            // set a comment value
+            testHostComponent.inputValueComponent.commentFormControl.setValue('a comment');
 
             testHostFixture.detectChanges();
 
-            expect(testHostComponent.inputValueComponent.form.valid).toBeTruthy();
+            expect(testHostComponent.inputValueComponent.form.valid).toBeTruthy(); // now the form must be valid, hence the comment changed
 
             const updatedValue = testHostComponent.inputValueComponent.getUpdatedValue();
 

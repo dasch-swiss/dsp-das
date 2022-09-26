@@ -2,7 +2,7 @@ import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IntValueComponent } from './int-value.component';
 import { ReadIntValue, MockResource, UpdateIntValue, CreateIntValue } from '@dasch-swiss/dsp-js';
-import { OnInit, Component, ViewChild, DebugElement } from '@angular/core';
+import { OnInit, Component, ViewChild, DebugElement, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -94,7 +94,7 @@ describe('IntValueComponent', () => {
                 ReactiveFormsModule,
                 MatInputModule,
                 BrowserAnimationsModule
-            ],
+            ]
         })
             .compileComponents();
     }));
@@ -172,9 +172,15 @@ describe('IntValueComponent', () => {
 
             expect(testHostComponent.inputValueComponent.mode).toEqual('update');
 
+            expect(await inputElement.getValue()).toEqual('1');
+
+            testHostFixture.detectChanges();
+
             expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
 
-            expect(await inputElement.getValue()).toEqual('1');
+            testHostComponent.inputValueComponent.commentFormControl.setValue('this is a comment');
+
+            testHostFixture.detectChanges();
 
             expect(testHostComponent.inputValueComponent.form.valid).toBeTruthy();
 

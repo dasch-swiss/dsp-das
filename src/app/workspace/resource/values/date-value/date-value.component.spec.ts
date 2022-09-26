@@ -269,7 +269,7 @@ describe('DateValueComponent', () => {
 
         });
 
-        it('should validate an existing value', async () => {
+        it('should validate an existing value with an added comment', async () => {
 
             testHostComponent.mode = 'update';
 
@@ -279,9 +279,14 @@ describe('DateValueComponent', () => {
 
             expect(testHostComponent.inputValueComponent.displayValue.date).toEqual(new KnoraDate('GREGORIAN', 'CE', 2018, 5, 13));
 
-            expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy();
+            expect(testHostComponent.inputValueComponent.form.valid).toBeFalsy(); // because no value nor the comment changed
 
-            expect(testHostComponent.inputValueComponent.form.valid).toBeTruthy();
+            // set a comment value
+            testHostComponent.inputValueComponent.commentFormControl.setValue('a comment');
+
+            testHostFixture.detectChanges();
+
+            expect(testHostComponent.inputValueComponent.form.valid).toBeTruthy(); // now the form must be valid, hence the comment changed
 
             const updatedValue = testHostComponent.inputValueComponent.getUpdatedValue();
 
