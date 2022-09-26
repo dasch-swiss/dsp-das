@@ -215,7 +215,7 @@ export abstract class BaseValueDirective implements OnInit, OnDestroy{
     }
 
     /**
-     * returns true if there is no property value or an invalid property value in the valueFormControl
+     * returns true if there is no property value but one required or an invalid property value in the valueFormControl
      */
     hasError() {
         return this.valueFormControl.hasError('pattern') || this.valueFormControl.hasError('required');
