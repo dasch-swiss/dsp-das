@@ -1,8 +1,7 @@
-import { Directive, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { CreateValue, ReadValue, UpdateValue } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
-
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 const resolvedPromise = Promise.resolve(null);
@@ -96,10 +95,7 @@ export abstract class BaseValueDirective implements OnInit, OnDestroy{
         if (this.commentChangesSubscription) {
             this.commentChangesSubscription.unsubscribe();
         }
-        resolvedPromise.then(() => {
-            // remove form from the parent form group
-            this.removeFromParentFormGroup(this.formName);
-        });
+        this.removeFromParentFormGroup(this.formName);
     }
 
     /**
@@ -153,6 +149,7 @@ export abstract class BaseValueDirective implements OnInit, OnDestroy{
             const initialValue = this.getInitValue();
             const initialComment = this.getInitComment();
             this.valueFormControl.reset();
+            this.commentFormControl.reset();
             this.valueFormControl.setValue(initialValue);
             this.commentFormControl.setValue(initialComment);
 
