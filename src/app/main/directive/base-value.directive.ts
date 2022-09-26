@@ -10,13 +10,6 @@ const resolvedPromise = Promise.resolve(null);
 export abstract class BaseValueDirective implements OnInit, OnDestroy{
 
     /**
-     * value to be displayed, if any.
-     */
-    /* eslint-disable */
-    @Input() abstract displayValue?: ReadValue;
-    /* eslint-enable */
-
-    /**
      * sets the mode of the component.
      */
     @Input() mode: 'read' | 'update' | 'create' | 'search';
@@ -63,6 +56,14 @@ export abstract class BaseValueDirective implements OnInit, OnDestroy{
      * formGroup that contains FormControl elements.
      */
     form: FormGroup;
+
+    /**
+     * value to be displayed, if any.
+     */
+    /* eslint-disable */
+    @Input() abstract displayValue?: ReadValue;
+    /* eslint-enable */
+
 
     /**
      * custom validators for a specific value type.
