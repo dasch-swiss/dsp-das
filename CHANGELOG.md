@@ -1,5 +1,77 @@
 # Changelog
 
+### [10.9.1](https://www.github.com/dasch-swiss/dsp-app/compare/v10.9.0...v10.9.1) (2022-09-26)
+
+
+### Bug Fixes
+
+* **project:** fix route to lists ([#834](https://www.github.com/dasch-swiss/dsp-app/issues/834)) ([1d32a03](https://www.github.com/dasch-swiss/dsp-app/commit/1d32a03a8f2a4e182a6032fce7c81b5e2c50cf3a))
+
+## [10.9.0](https://www.github.com/dasch-swiss/dsp-app/compare/v10.8.1...v10.9.0) (2022-09-26)
+
+
+### Bug Fixes
+
+* **list-view:** refresh list view after a resource is deleted or erased (DEV-1353) ([#828](https://www.github.com/dasch-swiss/dsp-app/issues/828)) ([c15d87b](https://www.github.com/dasch-swiss/dsp-app/commit/c15d87b079b55e0a3caf64b121b9340feb492e5d))
+* Onto editor 404 error (DEV-1355) ([#831](https://www.github.com/dasch-swiss/dsp-app/issues/831)) ([e7836a9](https://www.github.com/dasch-swiss/dsp-app/commit/e7836a92a18f402049e9b99e7dbd2fc6a7f671c9))
+* Ontologies displayed twice (DEV-1325) ([#832](https://www.github.com/dasch-swiss/dsp-app/issues/832)) ([ba35d6f](https://www.github.com/dasch-swiss/dsp-app/commit/ba35d6fb41407b3d3abff8fed62b2e9c1febad06))
+* **property-form:** set the cache after the ontology changes with the new lastModificationDate to prevent 409 http errors ([#824](https://www.github.com/dasch-swiss/dsp-app/issues/824)) ([0304943](https://www.github.com/dasch-swiss/dsp-app/commit/03049436333056ca5db28ae45bc3d2c2a9898266))
+
+
+### Enhancements
+
+* **lists:** read mode project member (DEV-1343) ([#825](https://www.github.com/dasch-swiss/dsp-app/issues/825)) ([b818288](https://www.github.com/dasch-swiss/dsp-app/commit/b81828840428ca21e3cf6819c6beea8aca1540e0))
+
+
+### Maintenance
+
+* update js-lib to v7.4.5 ([#833](https://www.github.com/dasch-swiss/dsp-app/issues/833)) ([6d14ca7](https://www.github.com/dasch-swiss/dsp-app/commit/6d14ca736422169016fca2579176fc21ac02041e))
+
+### [10.8.1](https://www.github.com/dasch-swiss/dsp-app/compare/v10.8.0...v10.8.1) (2022-09-14)
+
+
+### Bug Fixes
+
+* make deactivated projects invisible for all except sysadmin (DEV-1261) ([#821](https://www.github.com/dasch-swiss/dsp-app/issues/821)) ([88a2cbd](https://www.github.com/dasch-swiss/dsp-app/commit/88a2cbd93cee29f2191bd4eff924f20d1a9bc5ae))
+* **properties:** resolve 409 conflict ([#822](https://www.github.com/dasch-swiss/dsp-app/issues/822)) ([bf0ed83](https://www.github.com/dasch-swiss/dsp-app/commit/bf0ed8388c9845eb6e8760e5f6f8d1a0bec07552))
+
+## [10.8.0](https://www.github.com/dasch-swiss/dsp-app/compare/v10.7.0...v10.8.0) (2022-09-09)
+
+
+### Bug Fixes
+
+* **audio:** download audio file with original filename ([#810](https://www.github.com/dasch-swiss/dsp-app/issues/810)) ([8001fab](https://www.github.com/dasch-swiss/dsp-app/commit/8001fab46b4395a8367a134387d09e7272d65e25))
+* **int-value:** fix int-value validation (DEV-1277) ([#815](https://www.github.com/dasch-swiss/dsp-app/issues/815)) ([d86dc7b](https://www.github.com/dasch-swiss/dsp-app/commit/d86dc7b61ac4cc70fb28393da65bbc8cc5480921))
+* **ontology:** don't show 403 error is user is a system admin or project admin and not a project member ([#816](https://www.github.com/dasch-swiss/dsp-app/issues/816)) ([ffe00c0](https://www.github.com/dasch-swiss/dsp-app/commit/ffe00c054148fd7bb2030f16c2e2b902ae179ae9))
+* **resource:** fix properties sorting (DEV-1204) ([#818](https://www.github.com/dasch-swiss/dsp-app/issues/818)) ([fbee603](https://www.github.com/dasch-swiss/dsp-app/commit/fbee603b5aefd61e76f39676af5c39d85389b7b0))
+* **resource:** reinit representationsToDisplay array to fix undefined issue in template ([#813](https://www.github.com/dasch-swiss/dsp-app/issues/813)) ([375166a](https://www.github.com/dasch-swiss/dsp-app/commit/375166a1fb58ee8e317cce80dc782bb76eacc17a))
+* rollbar fixes (DEV-1324) ([#817](https://www.github.com/dasch-swiss/dsp-app/issues/817)) ([e79eee5](https://www.github.com/dasch-swiss/dsp-app/commit/e79eee53bc0f3bca3e21c8efb557218a214f1022))
+
+
+### Enhancements
+
+* **document:** document viewer for non-pdf documents (DEV-1303) ([#812](https://www.github.com/dasch-swiss/dsp-app/issues/812)) ([36008c6](https://www.github.com/dasch-swiss/dsp-app/commit/36008c6f8d5883e92492bd39e7e85564310fae36))
+
+
+### Maintenance
+
+* **deps:** bump js-lib to 7.4.4 ([#820](https://www.github.com/dasch-swiss/dsp-app/issues/820)) ([57e3ccf](https://www.github.com/dasch-swiss/dsp-app/commit/57e3ccfa8658e10bee45ba851a658883c79e7fbc))
+* **deps:** bump js-lib version to 7.4.3 ([#814](https://www.github.com/dasch-swiss/dsp-app/issues/814)) ([c97c569](https://www.github.com/dasch-swiss/dsp-app/commit/c97c5696ab423e727fc1868c6efdaff086b9e603))
+* **upload:** use file extensions for valid file types instead of MIME types (DEV-1203) ([#808](https://www.github.com/dasch-swiss/dsp-app/issues/808)) ([448e783](https://www.github.com/dasch-swiss/dsp-app/commit/448e7832aef7c97439a88e55482993abf1fb56ee))
+
+
+### Documentation
+
+* Add documentation about the different file types and their functionalities ([#804](https://www.github.com/dasch-swiss/dsp-app/issues/804)) ([8c64276](https://www.github.com/dasch-swiss/dsp-app/commit/8c642767a76232fb22cc261367d04490d5917fa6))
+* Reorganise the main menu and the data menu ([#807](https://www.github.com/dasch-swiss/dsp-app/issues/807)) ([f8ef81d](https://www.github.com/dasch-swiss/dsp-app/commit/f8ef81d506aaf8fd4a0c29ddc28474f0bf93215d))
+
+## [10.7.0](https://www.github.com/dasch-swiss/dsp-app/compare/v10.6.0...v10.7.0) (2022-08-24)
+
+
+### Enhancements
+
+* **list-value:** show hierarchy of list node (DEV-1092) ([#805](https://www.github.com/dasch-swiss/dsp-app/issues/805)) ([26e88c3](https://www.github.com/dasch-swiss/dsp-app/commit/26e88c300badaf539c2e3baaac61d8134480dea0))
+
 ## [10.6.0](https://www.github.com/dasch-swiss/dsp-app/compare/v10.5.0...v10.6.0) (2022-08-19)
 
 

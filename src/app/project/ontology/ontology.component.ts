@@ -382,8 +382,28 @@ export class OntologyComponent implements OnInit {
             (ontologies: ReadOntology[]) => {
                 // update current list of project ontologies
                 ontologies[ontologies.findIndex(onto => onto.id === ontology.id)] = ontology;
-                this._cache.set('currentProjectOntologies', ontologies);
-            }
+                // avoid duplicates
+                const uniqueOntologies: ReadOntology[] = [];
+                const uniqueIds: String[] = [];
+                for (const onto of ontologies){
+                    if (uniqueIds.indexOf(onto.id) !== -1){
+                        let oldOntoIndex: number;
+                        uniqueOntologies.forEach((o, index) => {
+                            if (o.id === onto.id) {
+                                oldOntoIndex = index;
+                            }
+                        });
+                        if (Object.keys(onto.properties).length > Object.keys(uniqueOntologies[oldOntoIndex].properties).length){ // new onto has more props -> replace
+                            uniqueOntologies[oldOntoIndex] = onto;
+                        }
+                    } else {
+                        uniqueIds.push(onto.id);
+                        uniqueOntologies.push(onto);
+                    }
+                }
+                this._cache.set('currentProjectOntologies', uniqueOntologies);
+            },
+            () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the cache
         );
 
         // grab the onto class information to display
@@ -598,7 +618,10 @@ export class OntologyComponent implements OnInit {
                         this._dspApiConnection.v2.onto.deleteResourceProperty(resProp).subscribe(
                             (response: OntologyMetadata) => {
                                 this.loading = false;
-                                this.resetOntology(this.ontologyIri);
+                                // get the ontologies for this project
+                                this.initOntologiesList();
+                                // update the view of resource class or list of properties
+                                this.initOntology(this.ontologyIri);
                             },
                             (error: ApiResponseError) => {
                                 this._errorHandler.showMessage(error);

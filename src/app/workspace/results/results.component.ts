@@ -6,7 +6,7 @@ import { FilteredResources, SearchParams } from './list-view/list-view.component
 export interface SplitSize {
     gutterNum: number;
     sizes: Array<number>;
-};
+}
 
 @Component({
     selector: 'app-results',
@@ -63,7 +63,7 @@ export class ResultsComponent {
 
     onSelectionChange(res: FilteredResources) {
         this.selectedResources = res;
-        this.resourceIri = this.selectedResources.resInfo[0].id;
+        this.resourceIri = this.selectedResources.resInfo[0]?.id;
 
         if (!res || res.count <= 1) {
             this.viewMode = 'single';

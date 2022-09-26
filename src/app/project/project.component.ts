@@ -26,8 +26,10 @@ import { OntologyService } from './ontology/ontology.service';
     styleUrls: ['./project.component.scss']
 })
 export class ProjectComponent implements OnInit {
+    readonly TAB_DATA_MODEL = 3;
+    readonly TAB_LISTS = 4;
 
-    // loading for progess indicator
+    // loading for progress indicator
     loading: boolean;
     // error in case of wrong project code
     error: boolean;
@@ -216,7 +218,11 @@ export class ProjectComponent implements OnInit {
             id = array[pos];
         }
         if (id) {
-            this._router.navigate([route, encodeURIComponent(id)], { relativeTo: this._route });
+            if (route === 'ontology') {
+                this._router.navigate([route, encodeURIComponent(id), 'editor', 'classes'], { relativeTo: this._route });
+            } else {
+                this._router.navigate([route, encodeURIComponent(id)], { relativeTo: this._route });
+            }
         } else {
             this._router.navigate([route], { relativeTo: this._route });
         }

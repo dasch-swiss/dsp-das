@@ -191,7 +191,8 @@ export class PropertyFormComponent implements OnInit {
                         this.ontologyClasses.push(ontoClasses);
                     }
                 });
-            }
+            },
+            () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the cache
         );
 
         // b) in case of list value:
@@ -502,6 +503,9 @@ export class PropertyFormComponent implements OnInit {
                                 }
                             );
                         }
+
+                        this.ontology.lastModificationDate = this.lastModificationDate;
+                        this._cache.set('currentOntology', this.ontology);
                     },
                     (error: ApiResponseError) => {
                         this.error = true;
