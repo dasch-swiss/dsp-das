@@ -62,7 +62,7 @@ describe('CommentFormComponent', () => {
         }).compileComponents();
     });
 
-    fdescribe('display and edit a comment', () => {
+    describe('display and edit a comment', () => {
         let testHostFixture: ComponentFixture<TestHostValueComponent>;
         let component: TestHostValueComponent;
         let fixture: ComponentFixture<CommentFormComponent>;
