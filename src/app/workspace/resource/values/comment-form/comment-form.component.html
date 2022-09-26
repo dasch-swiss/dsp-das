@@ -2,8 +2,7 @@
     <textarea
         matInput
         [formControl]="commentFormControl"
-        (input)="onInputChange()"
-        [ngClass]="{'comment': valueFormControl.value ,'invalid-comment' : hasError() || isEmptyVal()}"
+        [ngClass]="{'comment': valueFormControlValue ,'invalid-comment' : valueFormControlHasError || isEmptyVal()}"
         placeholder="Comment"
         spellcheck="false"
         [readonly] = "[disallowed]"

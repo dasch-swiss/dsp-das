@@ -43,6 +43,6 @@
         <ng-template #showRichText>
             <ckeditor [formControlName]="'value'" [config]="editorConfig" [editor]="editor"></ckeditor>
         </ng-template>
-        <app-comment-form *ngIf="!commentDisabled && valueFormControl && commentFormControl" [valueFormControl]="valueFormControl" [(commentFormControl)]="commentFormControl" [forceUpdate]="valueFormControl.value"></app-comment-form>
+        <app-comment-form *ngIf="!commentDisabled && valueFormControl && commentFormControl" [valueFormControlHasError]="hasError()" [(commentFormControl)]="commentFormControl" [valueFormControlValue]="valueFormControl.value"></app-comment-form>
     </span>
 </ng-template>
