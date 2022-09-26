@@ -37,20 +37,6 @@ export class CommentFormComponent implements OnChanges {
     constructor() { }
 
     ngOnChanges() {
-        this.disallowCommentIfEmptyValue();
-    }
-
-    /**
-     * checks if the value is empty. !this.valueFormControl.value can not be used because this.valueFormControl.value === false is a valid value for boolean values
-     */
-    isEmptyVal(): boolean {
-        return this.valueFormControlValue === null || this.valueFormControlValue === '' || this.valueFormControlValue === undefined;
-    }
-
-    /**
-     * sets the comment field to readOnly if there is no property value or an invalid property value in the valueFormControl
-     */
-    disallowCommentIfEmptyValue() {
-        this.disallowed = this.isEmptyVal() || this.valueFormControlHasError;
+        this.disallowed = (!this.valueFormControlValue || this.valueFormControlHasError) && !this.commentFormControl.value;
     }
 }
