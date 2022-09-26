@@ -57,6 +57,8 @@ export class ResourceClassInfoComponent implements OnInit {
 
     @Input() lastModificationDate?: string;
 
+    @Input() userCanEdit: boolean; // is user a project admin or sys admin?
+
     // event emitter when the lastModificationDate changed; bidirectional binding with lastModificationDate parameter
     @Output() lastModificationDateChange: EventEmitter<string> = new EventEmitter<string>();
 
@@ -122,7 +124,8 @@ export class ResourceClassInfoComponent implements OnInit {
                     };
                     this.ontoProperties.push(prepareList);
                 });
-            }
+            },
+            () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the cache
         );
 
         // get currently selected ontology

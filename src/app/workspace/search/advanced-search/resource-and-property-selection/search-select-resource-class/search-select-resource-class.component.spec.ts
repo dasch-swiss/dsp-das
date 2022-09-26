@@ -1,7 +1,7 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MockOntology, ResourceClassDefinition } from '@dasch-swiss/dsp-js';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
@@ -24,14 +24,14 @@ class TestHostComponent implements OnInit {
 
     @ViewChild('selectResClass') selectResourceClass: SearchSelectResourceClassComponent;
 
-    form: FormGroup;
+    form: UntypedFormGroup;
 
     resourceClassDefs: ResourceClassDefinition[];
 
     selectedResClassIri: string;
 
     constructor(
-        @Inject(FormBuilder) private _fb: FormBuilder,
+        @Inject(UntypedFormBuilder) private _fb: UntypedFormBuilder,
         private _sortingService: SortingService
     ) {
     }
@@ -94,7 +94,7 @@ describe('SearchSelectResourceClassComponent', () => {
 
     it('should initialise the resource class definitions correctly', () => {
 
-        expect(testHostComponent.selectResourceClass.resourceClassDefinitions.length).toEqual(8);
+        expect(testHostComponent.selectResourceClass.resourceClassDefinitions.length).toEqual(12);
 
     });
 
@@ -110,7 +110,7 @@ describe('SearchSelectResourceClassComponent', () => {
 
         const options = await select.getOptions();
 
-        expect(options.length).toEqual(9);
+        expect(options.length).toEqual(13);
 
         const option1 = await options[0].getText();
 
@@ -118,11 +118,11 @@ describe('SearchSelectResourceClassComponent', () => {
 
         const option2 = await options[1].getText();
 
-        expect(option2).toEqual('Blue thing');
+        expect(option2).toEqual('Audio Sequence Thing');
 
         const option3 = await options[2].getText();
 
-        expect(option3).toEqual('Document');
+        expect(option3).toEqual('Audio Thing');
 
     });
 

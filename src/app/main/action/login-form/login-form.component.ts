@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, LoginResponse, UserResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '../../declarations/dsp-api-tokens';
@@ -8,6 +8,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { ComponentCommunicationEventService, EmitEvent, Events } from '../../services/component-communication-event.service';
 import { DatadogRumService } from '../../services/datadog-rum.service';
 import { Session, SessionService } from '../../services/session.service';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-login-form',
@@ -45,7 +46,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
     session: Session;
 
     // form
-    form: FormGroup;
+    form: UntypedFormGroup;
 
     // show progress indicator
     loading = false;
@@ -99,10 +100,11 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
         private _componentCommsService: ComponentCommunicationEventService,
         private _datadogRumService: DatadogRumService,
         private _errorHandler: ErrorHandlerService,
-        private _fb: FormBuilder,
+        private _fb: UntypedFormBuilder,
         private _session: SessionService,
         private _route: ActivatedRoute,
         private _router: Router,
+        private _location: Location
     ) {
         this.returnUrl = this._route.snapshot.queryParams['returnUrl'];
     }
@@ -158,12 +160,11 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
                         this.session = this._session.getSession();
 
                         this._componentCommsService.emit(new EmitEvent(Events.loginSuccess, true));
-
                         // if user hit a page that requires to be logged in, they will have a returnUrl in the url
                         this.returnUrl = this._route.snapshot.queryParams['returnUrl'];
                         if (this.returnUrl) {
                             this._router.navigate([this.returnUrl]);
-                        } else if (!this._route.snapshot.url.length || (this._route.snapshot.url.length && this._route.snapshot.url[0].path === 'login')) { // if user is on "/" or "/login"
+                        } else if (!this._location.path() || (this._route.snapshot.url.length && this._route.snapshot.url[0].path === 'login')) { // if user is on "/" or "/login"
                             const username = this.session.user.name;
                             this._dspApiConnection.admin.usersEndpoint.getUserByUsername(username).subscribe(
                                 (userResponse: ApiResponseData<UserResponse>) => {

@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import {
     ApiResponseError,
@@ -14,7 +14,6 @@ import { Subscription } from 'rxjs';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
-import { NotificationService } from 'src/app/main/services/notification.service';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 const resolvedPromise = Promise.resolve(null);
@@ -30,20 +29,22 @@ export class ListValueComponent extends BaseValueDirective implements OnInit, On
     @Input() propertyDef: ResourcePropertyDefinition;
     @ViewChild(MatMenuTrigger) menuTrigger: MatMenuTrigger;
 
-    valueFormControl: FormControl;
-    commentFormControl: FormControl;
+    valueFormControl: UntypedFormControl;
+    commentFormControl: UntypedFormControl;
     listRootNode: ListNodeV2;
     // active node
     selectedNode: ListNodeV2;
 
-    form: FormGroup;
+    form: UntypedFormGroup;
 
     valueChangesSubscription: Subscription;
 
     customValidators = [];
 
+    selectedNodeHierarchy: string[] = [];
+
     constructor(
-        @Inject(FormBuilder) private _fb: FormBuilder,
+        @Inject(UntypedFormBuilder) private _fb: UntypedFormBuilder,
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: ErrorHandlerService
     ) {
@@ -52,6 +53,7 @@ export class ListValueComponent extends BaseValueDirective implements OnInit, On
 
     getInitValue(): string | null {
         if (this.displayValue !== undefined) {
+            this.getReadModeValue(this.displayValue.listNode);
             return this.displayValue.listNode;
         } else {
             return null;
@@ -86,8 +88,8 @@ export class ListValueComponent extends BaseValueDirective implements OnInit, On
 
     ngOnInit() {
 
-        this.valueFormControl = new FormControl(null);
-        this.commentFormControl = new FormControl(null);
+        this.valueFormControl = new UntypedFormControl(null);
+        this.commentFormControl = new UntypedFormControl(null);
         this.valueChangesSubscription = this.commentFormControl.valueChanges.subscribe(
             data => {
                 this.valueFormControl.updateValueAndValidity();
@@ -159,5 +161,41 @@ export class ListValueComponent extends BaseValueDirective implements OnInit, On
         this.selectedNode = item;
         this.valueFormControl.setValue(item.id);
     }
+
+    getReadModeValue(nodeIri: string): void {
+        const rootNodeIris = this.propertyDef.guiAttributes;
+        for (const rootNodeIri of rootNodeIris) {
+            const trimmedRootNodeIRI = rootNodeIri.substr(7, rootNodeIri.length - (1 + 7));
+            this._dspApiConnection.v2.list.getList(trimmedRootNodeIRI).subscribe(
+                (response: ListNodeV2) => {
+                    if (!response.children.length) { // this shouldn't happen since users cannot select the root node
+                        this.selectedNodeHierarchy.push(response.label);
+                    } else {
+                        this.selectedNodeHierarchy = this._getHierarchy(nodeIri, response.children);
+                    }
+                }, (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                });
+        }
+    }
+
+    _getHierarchy(selectedNodeIri: string, children: ListNodeV2[]): string[] {
+        for (let i = 0; i < children.length; i++) {
+            const node = children[i];
+            if (node.id !== selectedNodeIri) {
+                if (node.children) {
+                    const path = this._getHierarchy(selectedNodeIri, node.children);
+
+                    if (path) {
+                        path.unshift(node.label);
+                        return path;
+                    }
+                }
+            } else {
+                return [node.label];
+            }
+        }
+    }
+
 
 }

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
     CreateArchiveFileValue,
@@ -31,7 +31,7 @@ const resolvedPromise = Promise.resolve(null);
 })
 export class UploadComponent implements OnInit {
 
-    @Input() parentForm?: FormGroup;
+    @Input() parentForm?: UntypedFormGroup;
 
     @Input() representation: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
 
@@ -40,22 +40,22 @@ export class UploadComponent implements OnInit {
     @Output() fileInfo: EventEmitter<CreateFileValue> = new EventEmitter<CreateFileValue>();
 
     file: File;
-    form: FormGroup;
-    fileControl: FormControl;
+    form: UntypedFormGroup;
+    fileControl: UntypedFormControl;
     isLoading = false;
     thumbnailUrl: string | SafeUrl;
 
     allowedFileTypes: string[];
-    // todo: maybe we can use this list to display which file format is allowed to
-    supportedImageTypes = ['image/jpeg', 'image/jp2', 'image/tiff', 'image/tiff-fx', 'image/png'];
-    supportedDocumentTypes = ['application/pdf'];
-    supportedAudioTypes = ['audio/mpeg'];
-    supportedVideoTypes = ['video/mp4'];
-    supportedArchiveTypes = ['application/zip', 'application/x-tar', 'application/gzip'];
-    supportedTextTypes = ['application/csv', 'application/xml', 'text/csv', 'text/plain', 'text/xml'];
+
+    supportedAudioTypes = ['mp3', 'wav'];
+    supportedArchiveTypes = ['7z', 'gz', 'gzip', 'tar', 'tgz', 'z', 'zip'];
+    supportedDocumentTypes = ['doc', 'docx', 'pdf', 'ppt', 'pptx', 'xls', 'xlsx'];
+    supportedImageTypes = ['jp2', 'jpg', 'jpeg', 'png', 'tif', 'tiff'];
+    supportedTextTypes = ['csv', 'txt', 'xml', 'xsd', 'xsl'];
+    supportedVideoTypes = ['mp4'];
 
     constructor(
-        private _fb: FormBuilder,
+        private _fb: UntypedFormBuilder,
         private _notification: NotificationService,
         private _sanitizer: DomSanitizer,
         private _upload: UploadFileService
@@ -84,7 +84,7 @@ export class UploadComponent implements OnInit {
             this.file = files[0];
 
             // only certain filetypes are supported
-            if (!this._isFileTypeSupported(this.file.type)) {
+            if (!this._isFileTypeSupported(this.file.name.split('.').pop())) {
                 const error = 'ERROR: File type not supported';
                 this._notification.openSnackBar(error);
                 this.file = null;
@@ -171,7 +171,7 @@ export class UploadComponent implements OnInit {
      * initializes form group
      */
     initializeForm(): void {
-        this.fileControl = new FormControl(null, Validators.required);
+        this.fileControl = new UntypedFormControl(null, Validators.required);
 
         this.fileControl.valueChanges.subscribe(
             val => {
@@ -240,7 +240,6 @@ export class UploadComponent implements OnInit {
                 break;
 
             default:
-                // --> TODO for UPLOAD: expand with other representation file types
                 break;
         }
 
@@ -292,11 +291,9 @@ export class UploadComponent implements OnInit {
                 break;
 
             default:
-                // --> TODO for UPLOAD: expand with other representation file types
                 break;
         }
 
-        // const fileValue = new UpdateStillImageFileValue();
         fileValue.filename = filename;
         fileValue.id = id;
 

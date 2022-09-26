@@ -24,9 +24,6 @@ import {
     ReadResourceSequence,
     ReadStillImageFileValue,
     ReadTextFileValue,
-    ResourceClassAndPropertyDefinitions,
-    ResourceClassDefinition,
-    ResourceClassDefinitionWithPropertyDefinition,
     SystemPropertyDefinition
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
@@ -56,6 +53,8 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
     @Input() resourceIri: string;
 
     @Input() splitSizeChanged: SplitSize;
+
+    oldResourceIri: string; // for change detection
 
     projectCode: string;
 
@@ -127,6 +126,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
             this.valueUuid = params['value'];
             if (this.projectCode && this.resourceUuid) {
                 this.resourceIri = this._resourceService.getResourceIri(this.projectCode, this.resourceUuid);
+                this.oldResourceIri = this.resourceIri;
             }
             this.getResource(this.resourceIri);
         });
@@ -164,12 +164,11 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit() {
-
     }
 
     ngOnChanges(changes: { [propName: string]: SimpleChange }) {
-        // do not reload the whole resource when the split size has changed
-        if (this.splitSizeChanged) {
+        // do not reload the whole resource when the iri did not change
+        if (this.oldResourceIri === this.resourceIri) {
             return;
         }
 
@@ -185,6 +184,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         if (this.resourceIri) {
             this.getResource(this.resourceIri);
         }
+        this.oldResourceIri = this.resourceIri;
     }
 
     ngOnDestroy() {
@@ -412,9 +412,17 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         );
 
         // sort properties by guiOrder
-        props = props
-            .filter(prop => prop.propDef.objectType !== Constants.GeomValue)
-            .sort((a, b) => (a.guiDef.guiOrder > b.guiDef.guiOrder) ? 1 : -1);
+        props =
+            props
+                .filter(prop => prop.propDef.objectType !== Constants.GeomValue)
+                .sort((a, b) => (a.guiDef.guiOrder > b.guiDef.guiOrder) ? 1 : -1)
+                // to get equal results on all browser engines which implements sorting in different way
+                // properties list has to be sorted again, pushing all "has..." properties to the bottom
+                .sort((a, b) => {
+                    if (a.guiDef.guiOrder === undefined) {
+                        return 1;
+                    }
+                });
 
         return props;
     }
@@ -547,6 +555,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
 
                 } else {
                     this.loading = false;
+                    this.representationsToDisplay = [];
                 }
             },
             (error: ApiResponseError) => {

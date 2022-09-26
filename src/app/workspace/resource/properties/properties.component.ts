@@ -30,6 +30,7 @@ import {
 import { Subscription } from 'rxjs';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ConfirmationWithComment, DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { ComponentCommunicationEventService, EmitEvent, Events as CommsEvents } from 'src/app/main/services/component-communication-event.service';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { NotificationService } from 'src/app/main/services/notification.service';
 import { DspResource } from '../dsp-resource';
@@ -155,6 +156,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         private _userService: UserService,
         private _valueOperationEventService: ValueOperationEventService,
         private _valueService: ValueService,
+        private _componentCommsService: ComponentCommunicationEventService
     ) { }
 
     ngOnInit(): void {
@@ -318,6 +320,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                                     // display notification and mark resource as 'deleted'
                                     this._notification.openSnackBar(`${response.result}: ${this.resource.res.label}`);
                                     this.deletedResource = true;
+                                    this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceDeleted));
                                 },
                                 (error: ApiResponseError) => {
                                     this._errorHandler.showMessage(error);
@@ -332,6 +335,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                                     // display notification and mark resource as 'erased'
                                     this._notification.openSnackBar(`${response.result}: ${this.resource.res.label}`);
                                     this.deletedResource = true;
+                                    this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceDeleted));
                                 },
                                 (error: ApiResponseError) => {
                                     this._errorHandler.showMessage(error);
@@ -343,22 +347,28 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
 
                     // update resource's label if it has changed
                     if (this.resource.res.label !== answer.comment) {
-                        const payload = new UpdateResourceMetadata();
-                        payload.id = this.resource.res.id;
-                        payload.type = this.resource.res.type;
-                        payload.lastModificationDate = this.lastModificationDate;
-                        payload.label = answer.comment;
-                        this._dspApiConnection.v2.res.updateResourceMetadata(payload).subscribe(
-                            (response: UpdateResourceMetadataResponse) => {
-                                this.resource.res.label = payload.label;
-                                this.lastModificationDate = response.lastModificationDate;
-                                // if annotations tab is active; a label of a region has been changed --> update regions
-                                if (this.isAnnotation) {
-                                    this.regionChanged.emit();
-                                }
-                            },
-                            (error: ApiResponseError) => {
-                                this._errorHandler.showMessage(error);
+                        // get the correct lastModificationDate from the resource
+                        this._dspApiConnection.v2.res.getResource(this.resource.res.id).subscribe(
+                            (res: ReadResource) => {
+                                const payload = new UpdateResourceMetadata();
+                                payload.id = this.resource.res.id;
+                                payload.type = this.resource.res.type;
+                                payload.lastModificationDate = res.lastModificationDate;
+                                payload.label = answer.comment;
+
+                                this._dspApiConnection.v2.res.updateResourceMetadata(payload).subscribe(
+                                    (response: UpdateResourceMetadataResponse) => {
+                                        this.resource.res.label = payload.label;
+                                        this.lastModificationDate = response.lastModificationDate;
+                                        // if annotations tab is active; a label of a region has been changed --> update regions
+                                        if (this.isAnnotation) {
+                                            this.regionChanged.emit();
+                                        }
+                                    },
+                                    (error: ApiResponseError) => {
+                                        this._errorHandler.showMessage(error);
+                                    }
+                                );
                             }
                         );
                     }

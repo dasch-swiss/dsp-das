@@ -24,8 +24,8 @@
     <!-- navigation -->
     <div class="navigation horizontal" *ngIf="compoundNavigation">
         <mat-slider [color]="'primary'" [disabled]="compoundNavigation.totalPages < 2"
-        [max]="compoundNavigation.totalPages" [min]="1" [step]="1" [thumbLabel]="true" [tickInterval]="'auto'"
-        [(ngModel)]="compoundNavigation.page" (change)="openPage($event.value)">
+            [max]="compoundNavigation.totalPages" [min]="1" [step]="1" [thumbLabel]="true" [tickInterval]="'auto'"
+            [(ngModel)]="compoundNavigation.page" (change)="openPage($event.value)">
         </mat-slider>
     </div>
     <!-- toolbar -->
@@ -34,13 +34,19 @@
         <button mat-icon-button [matMenuTriggerFor]="more">
             <mat-icon>more_vert</mat-icon>
         </button>
-        <mat-menu #more="matMenu">
-            <a mat-menu-item [href]="iiifUrl" target="_blank">
-                Open file in new tab
-            </a>
-            <button mat-menu-item [cdkCopyToClipboard]="iiifUrl"
-            (click)="openSnackBar('IIIF URL copied to clipboard!')">
+        <mat-menu #more="matMenu" class="mat-menu-custom-black">
+            <button class="menu-content" mat-menu-item (click)="openImageInNewTab(iiifUrl)">
+                Open IIIF URL in new tab
+            </button>
+            <button class="menu-content" mat-menu-item [cdkCopyToClipboard]="iiifUrl"
+                (click)="openSnackBar('IIIF URL copied to clipboard!')">
                 Copy IIIF URL to clipboard
+            </button>
+            <button class="menu-content" mat-menu-item (click)="downloadStillImage(images[0].fileValue.fileUrl)">
+                Download image
+            </button>
+            <button class="menu-content" mat-menu-item (click)="openReplaceFileDialog()">
+                Replace file
             </button>
         </mat-menu>
         <!-- empty placeholder to simulate two buttons; this helps to have the zoom buttons centered with fill-remaining-space setup -->
@@ -88,15 +94,11 @@
 
         <span class="fill-remaining-space"></span>
 
-        <!-- action buttons: create annotation/region, replace file, fullscreen -->
+        <!-- action buttons: create annotation/region, fullscreen -->
         <span>
             <button mat-icon-button id="DSP_OSD_DRAW_REGION" matTooltip="Draw Region" [disabled]="failedToLoad"
-            (click)="drawButtonClicked()" [class.active]="regionDrawMode">
+                (click)="drawButtonClicked()" [class.active]="regionDrawMode">
                 <mat-icon svgIcon="draw_region_icon"></mat-icon>
-            </button>
-            <button mat-icon-button id="DSP_OSD_REPLACE_IMAGE" class="replace-image" matTooltip="Replace image"
-                (click)="openReplaceFileDialog()">
-                <mat-icon>cloud_upload</mat-icon>
             </button>
             <button mat-icon-button id="DSP_OSD_FULL_PAGE" matTooltip="Open in fullscreen" [disabled]="failedToLoad">
                 <mat-icon>fullscreen</mat-icon>

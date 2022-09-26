@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     ApiResponseError,
@@ -47,7 +47,7 @@ export class OntologyFormComponent implements OnInit {
 
     project: ReadProject;
 
-    ontologyForm: FormGroup;
+    ontologyForm: UntypedFormGroup;
 
     ontologyLabel: string;
     ontologyComment: string;
@@ -107,7 +107,7 @@ export class OntologyFormComponent implements OnInit {
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _errorHandler: ErrorHandlerService,
-        private _fb: FormBuilder,
+        private _fb: UntypedFormBuilder,
         private _ontologyService: OntologyService,
         private _route: ActivatedRoute,
         private _router: Router
@@ -138,7 +138,8 @@ export class OntologyFormComponent implements OnInit {
                         const name = this._ontologyService.getOntologyName(onto.id);
                         this.existingOntologyNames.push(name);
                     });
-                }
+                },
+                () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the cache
             );
         }
 
@@ -204,7 +205,7 @@ export class OntologyFormComponent implements OnInit {
         this.ontologyLabel = '';
 
         this.ontologyForm = this._fb.group({
-            name: new FormControl({
+            name: new UntypedFormControl({
                 value: '', disabled: false
             }, [
                 Validators.required,
@@ -213,13 +214,13 @@ export class OntologyFormComponent implements OnInit {
                 existingNamesValidator(this.existingNames),
                 Validators.pattern(CustomRegex.ID_NAME_REGEX)
             ]),
-            label: new FormControl({
+            label: new UntypedFormControl({
                 value: this.ontologyLabel, disabled: false
             }, [
                 Validators.required,
                 Validators.minLength(this.nameMinLength)
             ]),
-            comment: new FormControl({
+            comment: new UntypedFormControl({
                 value: this.ontologyComment, disabled: false
             })
         });

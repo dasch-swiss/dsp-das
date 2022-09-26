@@ -30,7 +30,7 @@ import { ResourceClassInfoComponent } from './resource-class-info.component';
  * Property is of type simple text
  */
 @Component({
-    template: '<app-resource-class-info #resClassInfo [resourceClass]="resourceClass" [projectStatus]="true"></app-resource-class-info>'
+    template: '<app-resource-class-info #resClassInfo [resourceClass]="resourceClass" [projectStatus]="true" [userCanEdit]="userCanEdit"></app-resource-class-info>'
 })
 class HostComponent implements OnInit {
 
@@ -40,6 +40,8 @@ class HostComponent implements OnInit {
     ontology: ReadOntology;
 
     resourceClass: ClassDefinition;
+
+    userCanEdit: boolean;
 
     constructor(
         private _cache: CacheService,
@@ -71,6 +73,8 @@ class HostComponent implements OnInit {
                 this.resourceClass = classesToDisplay[0];
             }
         );
+
+        this.userCanEdit = true;
 
     }
 
@@ -133,7 +137,7 @@ describe('ResourceClassInfoComponent', () => {
     beforeEach(() => {
         // mock cache service for currentOntology
         const cacheSpyOnto = TestBed.inject(CacheService);
-        (cacheSpyOnto as jasmine.SpyObj<CacheService>).get.withArgs('currentOntology').and.callFake (
+        (cacheSpyOnto as jasmine.SpyObj<CacheService>).get.withArgs('currentOntology').and.callFake(
             () => {
                 const response: ReadOntology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
                 return of(response);
@@ -141,7 +145,7 @@ describe('ResourceClassInfoComponent', () => {
         );
 
         const cacheSpyProjOnto = TestBed.inject(CacheService);
-        (cacheSpyProjOnto as jasmine.SpyObj<CacheService>).get.withArgs('currentProjectOntologies').and.callFake (
+        (cacheSpyProjOnto as jasmine.SpyObj<CacheService>).get.withArgs('currentProjectOntologies').and.callFake(
             () => {
                 const ontologies: ReadOntology[] = [];
                 ontologies.push(MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2'));
@@ -181,7 +185,7 @@ describe('ResourceClassInfoComponent', () => {
 
     });
 
-    it('expect title to be "Blue thing", id name "BlueThing" and subclass of "Thing"', () => {
+    it('expect title to be "Audio Sequence Thing", id name "AudioSequenceThing" and subclass of "Thing"', () => {
         expect(hostComponent.resourceClassInfoComponent).toBeTruthy();
         expect(hostComponent.resourceClassInfoComponent.resourceClass).toBeDefined();
 
@@ -189,11 +193,11 @@ describe('ResourceClassInfoComponent', () => {
 
         const title: DebugElement = hostCompDe.query(By.css('mat-card-title'));
 
-        expect(title.nativeElement.innerText).toEqual('Blue thing');
+        expect(title.nativeElement.innerText).toEqual('Audio Sequence Thing');
 
         const subtitle: DebugElement = hostCompDe.query(By.css('mat-card-subtitle'));
 
-        expect(subtitle.nativeElement.innerText).toContain('BlueThing');
+        expect(subtitle.nativeElement.innerText).toContain('AudioSequenceThing');
         expect(subtitle.nativeElement.innerText).toContain('Thing');
     });
 

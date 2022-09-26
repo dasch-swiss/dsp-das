@@ -102,6 +102,8 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
 
     @Input() lastModificationDate?: string;
 
+    @Input() userCanEdit: boolean; // is user a project admin or sys admin?
+
     // event emitter when the lastModificationDate changed; bidirectional binding with lastModificationDate parameter
     @Output() lastModificationDateChange: EventEmitter<string> = new EventEmitter<string>();
 
@@ -212,7 +214,8 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
                             this.propAttribute = onto.classes[this.propDef.objectType].label;
                             this.propAttributeComment = onto.classes[this.propDef.objectType].comment;
                         }
-                    }
+                    },
+                    () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the cache
                 );
             } else {
                 this.propAttribute = this.ontology.classes[this.propDef.objectType].label;
@@ -254,7 +257,8 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
                             }
                         });
                     });
-                }
+                },
+                () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the cache
             );
         }
     }
@@ -315,8 +319,10 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
      * show action bubble with various CRUD buttons when hovered over.
      */
     mouseEnter() {
-        this.canBeDeleted();
-        this.showActionBubble = true;
+        if (this.userCanEdit) {
+            this.canBeDeleted();
+            this.showActionBubble = true;
+        }
     }
 
     /**

@@ -1,5 +1,5 @@
 import { Component, HostListener, Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -19,7 +19,8 @@ import {
     PropertyDefinition,
     ReadOntology,
     ReadProject,
-    UpdateOntology
+    UpdateOntology,
+    UserResponse
 } from '@dasch-swiss/dsp-js';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
@@ -58,9 +59,10 @@ export class OntologyComponent implements OnInit {
 
     // permissions of logged-in user
     session: Session;
-    // system admin or project admin is by default false
+    // system admin, project admin, and project member are by default false
     sysAdmin = false;
     projectAdmin = false;
+    projectMember = false;
 
     // project shortcode; as identifier in project cache service
     projectCode: string;
@@ -95,7 +97,7 @@ export class OntologyComponent implements OnInit {
     ontoProperties: OntologyProperties;
 
     // form to select ontology from list
-    ontologyForm: FormGroup;
+    ontologyForm: UntypedFormGroup;
 
     // display resource classes as grid or as graph
     view: 'classes' | 'properties' | 'graph' = 'classes';
@@ -126,7 +128,7 @@ export class OntologyComponent implements OnInit {
         private _cache: CacheService,
         private _dialog: MatDialog,
         private _errorHandler: ErrorHandlerService,
-        private _fb: FormBuilder,
+        private _fb: UntypedFormBuilder,
         private _ontologyService: OntologyService,
         private _route: ActivatedRoute,
         private _router: Router,
@@ -194,11 +196,16 @@ export class OntologyComponent implements OnInit {
                 // is logged-in user projectAdmin?
                 this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
 
-                // get the ontologies for this project
-                this.initOntologiesList();
+                this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.session.user.name).subscribe(
+                    (userResponse: ApiResponseData<UserResponse>) => {
+                        this.projectMember = userResponse.body.user.projects.some(p => p.shortcode === this.project.shortcode);
+
+                        // get the ontologies for this project
+                        this.initOntologiesList();
+                    });
 
                 this.ontologyForm = this._fb.group({
-                    ontology: new FormControl({
+                    ontology: new UntypedFormControl({
                         value: this.ontologyIri, disabled: false
                     })
                 });
@@ -375,8 +382,28 @@ export class OntologyComponent implements OnInit {
             (ontologies: ReadOntology[]) => {
                 // update current list of project ontologies
                 ontologies[ontologies.findIndex(onto => onto.id === ontology.id)] = ontology;
-                this._cache.set('currentProjectOntologies', ontologies);
-            }
+                // avoid duplicates
+                const uniqueOntologies: ReadOntology[] = [];
+                const uniqueIds: String[] = [];
+                for (const onto of ontologies){
+                    if (uniqueIds.indexOf(onto.id) !== -1){
+                        let oldOntoIndex: number;
+                        uniqueOntologies.forEach((o, index) => {
+                            if (o.id === onto.id) {
+                                oldOntoIndex = index;
+                            }
+                        });
+                        if (Object.keys(onto.properties).length > Object.keys(uniqueOntologies[oldOntoIndex].properties).length){ // new onto has more props -> replace
+                            uniqueOntologies[oldOntoIndex] = onto;
+                        }
+                    } else {
+                        uniqueIds.push(onto.id);
+                        uniqueOntologies.push(onto);
+                    }
+                }
+                this._cache.set('currentProjectOntologies', uniqueOntologies);
+            },
+            () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the cache
         );
 
         // grab the onto class information to display
@@ -591,7 +618,10 @@ export class OntologyComponent implements OnInit {
                         this._dspApiConnection.v2.onto.deleteResourceProperty(resProp).subscribe(
                             (response: OntologyMetadata) => {
                                 this.loading = false;
-                                this.resetOntology(this.ontologyIri);
+                                // get the ontologies for this project
+                                this.initOntologiesList();
+                                // update the view of resource class or list of properties
+                                this.initOntology(this.ontologyIri);
                             },
                             (error: ApiResponseError) => {
                                 this._errorHandler.showMessage(error);

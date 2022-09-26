@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -24,9 +24,9 @@ class TestHostComponent implements OnInit {
 
     representation = 'stillImage';
 
-    form: FormGroup;
+    form: UntypedFormGroup;
 
-    constructor(private _fb: FormBuilder) {
+    constructor(private _fb: UntypedFormBuilder) {
     }
 
     ngOnInit() {
@@ -36,9 +36,9 @@ class TestHostComponent implements OnInit {
 }
 
 describe('UploadComponent', () => {
-    const mockFile = new File(['1'], 'testfile', { type: 'image/jpeg' });
+    const mockFile = new File(['1'], 'testfile.jpg', { type: 'image/jpeg' });
 
-    const fb = new FormBuilder();
+    const fb = new UntypedFormBuilder();
 
     let testHostComponent: TestHostComponent;
     let testHostFixture: ComponentFixture<TestHostComponent>;
@@ -122,7 +122,7 @@ describe('UploadComponent', () => {
 
     describe('isFileTypeSupported', () => {
         it('should return true for the supported image files', () => {
-            const fileTypes = ['image/jpeg', 'image/jp2', 'image/tiff', 'image/tiff-fx', 'image/png'];
+            const fileTypes = ['jpg', 'jpeg', 'jp2', 'tiff', 'tif', 'png'];
 
             for (const type of fileTypes) {
                 expect(testHostComponent.uploadComp['_isFileTypeSupported'](type)).toBeTruthy();
@@ -130,8 +130,7 @@ describe('UploadComponent', () => {
         });
 
         it('should return false for unsupported image files', () => {
-            // --> TODO: add real unsupported filetypes?
-            const fileTypes = ['image/a', 'image/b', 'image/c', 'image/d', 'image/e'];
+            const fileTypes = ['gif', 'bmp', 'psd', 'raw', 'pdf', 'eps', 'ai', 'indd'];
             for (const type of fileTypes) {
                 expect(testHostComponent.uploadComp['_isFileTypeSupported'](type)).toBeFalsy();
             }

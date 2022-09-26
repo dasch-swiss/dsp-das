@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { CreateIntValue, ReadIntValue, UpdateIntValue } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
@@ -8,6 +8,8 @@ import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 const resolvedPromise = Promise.resolve(null);
+
+const DECIMAL_VALUE = 10;
 
 @Component({
     selector: 'app-int-value',
@@ -18,16 +20,16 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
 
     @Input() displayValue?: ReadIntValue;
 
-    valueFormControl: FormControl;
-    commentFormControl: FormControl;
+    valueFormControl: UntypedFormControl;
+    commentFormControl: UntypedFormControl;
 
-    form: FormGroup;
+    form: UntypedFormGroup;
     matcher = new ValueErrorStateMatcher();
     valueChangesSubscription: Subscription;
 
     customValidators = [Validators.pattern(CustomRegex.INT_REGEX)]; // only allow for integer values (no fractions)
 
-    constructor(@Inject(FormBuilder) private _fb: FormBuilder) {
+    constructor(@Inject(UntypedFormBuilder) private _fb: UntypedFormBuilder) {
         super();
     }
 
@@ -41,9 +43,9 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
 
     ngOnInit() {
         // initialize form control elements
-        this.valueFormControl = new FormControl(null);
+        this.valueFormControl = new UntypedFormControl(null);
 
-        this.commentFormControl = new FormControl(null);
+        this.commentFormControl = new UntypedFormControl(null);
 
         // subscribe to any change on the comment and recheck validity
         this.valueChangesSubscription = this.commentFormControl.valueChanges.subscribe(
@@ -87,7 +89,7 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
 
         const newIntValue = new CreateIntValue();
 
-        newIntValue.int = this.valueFormControl.value;
+        newIntValue.int = parseInt(this.valueFormControl.value, DECIMAL_VALUE);
 
         if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
             newIntValue.valueHasComment = this.commentFormControl.value;
@@ -105,7 +107,7 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
 
         updatedIntValue.id = this.displayValue.id;
 
-        updatedIntValue.int = this.valueFormControl.value;
+        updatedIntValue.int = parseInt(this.valueFormControl.value, DECIMAL_VALUE);
 
         // add the submitted comment to updatedIntValue only if user has added a comment
         if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {

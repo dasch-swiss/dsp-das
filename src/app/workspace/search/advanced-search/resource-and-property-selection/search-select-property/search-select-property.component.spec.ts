@@ -2,7 +2,7 @@ import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
@@ -33,7 +33,7 @@ class TestHostComponent implements OnInit {
 
     @ViewChild('selectProp') selectProperty: SearchSelectPropertyComponent;
 
-    form: FormGroup;
+    form: UntypedFormGroup;
 
     propertyDefs: ResourcePropertyDefinition[];
 
@@ -41,7 +41,7 @@ class TestHostComponent implements OnInit {
 
     topLevel: boolean;
 
-    constructor(@Inject(FormBuilder) private _fb: FormBuilder) {
+    constructor(@Inject(UntypedFormBuilder) private _fb: UntypedFormBuilder) {
     }
 
     ngOnInit() {
@@ -65,7 +65,7 @@ class TestHostComponent implements OnInit {
 })
 class TestSpecifyPropertyValueComponent implements OnInit {
 
-    @Input() formGroup: FormGroup;
+    @Input() formGroup: UntypedFormGroup;
 
     @Input() property: ResourcePropertyDefinition;
 
@@ -123,8 +123,8 @@ describe('SearchSelectPropertyComponent', () => {
         expect(testHostComponent.selectProperty.formGroup).toBeDefined();
         expect(testHostComponent.selectProperty.index).toEqual(0);
         expect(testHostComponent.selectProperty.activeResourceClass).toBeUndefined();
-        expect(Object.keys(testHostComponent.selectProperty.properties).length).toEqual(22);
-        expect(testHostComponent.selectProperty.properties.length).toEqual(22);
+        expect(Object.keys(testHostComponent.selectProperty.properties).length).toEqual(23);
+        expect(testHostComponent.selectProperty.properties.length).toEqual(23);
     });
 
     it('should add a new control to the parent form', waitForAsync(() => {
@@ -151,7 +151,7 @@ describe('SearchSelectPropertyComponent', () => {
 
         const options = await select.getOptions();
 
-        expect(options.length).toEqual(22);
+        expect(options.length).toEqual(23);
 
     });
 
