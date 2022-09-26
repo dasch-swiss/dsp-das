@@ -1,10 +1,13 @@
 import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { AbstractControl, FormBuilder } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl } from '@angular/forms';
 import { CreateGeonameValue, ReadGeonameValue, UpdateGeonameValue } from '@dasch-swiss/dsp-js';
 import { Observable, Subscription } from 'rxjs';
 import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 import { DisplayPlace, GeonameService, SearchPlace } from '../../services/geoname.service';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
+
+// https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
+const resolvedPromise = Promise.resolve(null);
 
 export function geonameIdValidator(control: AbstractControl) {
     // null or empty checks are out of this validator's scope
@@ -31,7 +34,7 @@ export class GeonameValueComponent extends BaseValueDirective implements OnInit,
     places: SearchPlace[];
 
     constructor(@Inject(FormBuilder) protected _fb: FormBuilder, private _geonameService: GeonameService) {
-        super(_fb);
+        super();
     }
 
     standardValueComparisonFunc(initValue: { id: string }, curValue: { id: string } | null): boolean {
@@ -61,7 +64,16 @@ export class GeonameValueComponent extends BaseValueDirective implements OnInit,
     }
 
     ngOnInit() {
-        super.ngOnInit();
+
+        // initialize component separately hence there is additional logic and different order which is not covered by super.ngOnInit
+        this.valueFormControl = new FormControl(null);
+
+        this.commentFormControl = new FormControl(null);
+
+        this.form = this._fb.group({
+            value: this.valueFormControl,
+            comment: this.commentFormControl
+        });
 
         // react to user typing places
         this.valueChangesSubscription = this.valueFormControl.valueChanges.subscribe(
@@ -83,11 +95,22 @@ export class GeonameValueComponent extends BaseValueDirective implements OnInit,
             }
         );
 
+        this.commentChangesSubscription = this.commentFormControl.valueChanges.subscribe(
+            data => {
+                this.valueFormControl.updateValueAndValidity();
+            }
+        );
+
         this.resetFormControl();
 
         if (this.mode === 'read') {
             this.$geonameLabel = this._geonameService.resolveGeonameID(this.valueFormControl.value.id);
         }
+
+        resolvedPromise.then(() => {
+            // add form to the parent form group
+            this.addToParentFormGroup(this.formName, this.form);
+        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -103,7 +126,11 @@ export class GeonameValueComponent extends BaseValueDirective implements OnInit,
 
     ngOnDestroy(): void {
         this.valueChangesSubscription.unsubscribe();
-        super.ngOnDestroy();
+        this.commentChangesSubscription.unsubscribe();
+        resolvedPromise.then(() => {
+            // remove form from the parent form group
+            this.removeFromParentFormGroup(this.formName);
+        });
     }
 
     getNewValue(): CreateGeonameValue | false {
@@ -116,7 +143,7 @@ export class GeonameValueComponent extends BaseValueDirective implements OnInit,
 
         newGeonameValue.geoname = this.valueFormControl.value.id;
 
-        if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
+        if (this.commentFormControl.value) {
             newGeonameValue.valueHasComment = this.commentFormControl.value;
         }
 
@@ -136,7 +163,7 @@ export class GeonameValueComponent extends BaseValueDirective implements OnInit,
 
         updatedGeonameValue.geoname = this.valueFormControl.value.id;
 
-        if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
+        if (this.commentFormControl.value) {
             updatedGeonameValue.valueHasComment = this.commentFormControl.value;
         }
 
