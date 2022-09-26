@@ -193,6 +193,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         CollectionListComponent,
         ColorPickerComponent,
         ColorValueComponent,
+        CommentFormComponent,
         ComparisonComponent,
         ConfirmationDialogComponent,
         ConfirmationMessageComponent,
