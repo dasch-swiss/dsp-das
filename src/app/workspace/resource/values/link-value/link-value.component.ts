@@ -72,7 +72,7 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
         private _dialog: MatDialog,
         @Inject(FormBuilder) protected _fb: FormBuilder,
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection) {
-        super(_fb);
+        super();
     }
 
     /**
@@ -193,7 +193,7 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
         const newLinkValue = new CreateLinkValue();
         newLinkValue.linkedResourceIri = this.valueFormControl.value.id;
 
-        if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
+        if (this.commentFormControl.value) {
             newLinkValue.valueHasComment = this.commentFormControl.value;
         }
 
@@ -212,7 +212,7 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
         updatedLinkValue.linkedResourceIri = this.valueFormControl.value.id;
 
         // add the submitted comment to updatedLinkValue only if user has added a comment
-        if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
+        if (this.commentFormControl.value) {
             updatedLinkValue.valueHasComment = this.commentFormControl.value;
         }
 

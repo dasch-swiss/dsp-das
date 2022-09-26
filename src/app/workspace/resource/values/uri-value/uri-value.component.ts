@@ -21,7 +21,7 @@ export class UriValueComponent extends BaseValueDirective implements OnInit, OnC
     customValidators = [Validators.pattern(CustomRegex.URI_REGEX)];
 
     constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
-        super(_fb);
+        super();
     }
 
     getInitValue(): string | null {
@@ -53,7 +53,7 @@ export class UriValueComponent extends BaseValueDirective implements OnInit, OnC
 
         newUriValue.uri = this.valueFormControl.value;
 
-        if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
+        if (this.commentFormControl.value) {
             newUriValue.valueHasComment = this.commentFormControl.value;
         }
 
@@ -70,7 +70,7 @@ export class UriValueComponent extends BaseValueDirective implements OnInit, OnC
 
         updatedUriValue.uri = this.valueFormControl.value;
 
-        if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
+        if (this.commentFormControl.value) {
             updatedUriValue.valueHasComment = this.commentFormControl.value;
         }
 

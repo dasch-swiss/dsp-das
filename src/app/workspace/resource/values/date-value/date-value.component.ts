@@ -1,10 +1,18 @@
-import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import {
+    Component,
+    Inject,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    SimpleChanges,
+    ViewChild
+} from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { CreateDateValue, KnoraDate, KnoraPeriod, ReadDateValue, UpdateDateValue } from '@dasch-swiss/dsp-js';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
 import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 import { DatePickerComponent } from './date-picker/date-picker.component';
-
 
 @Component({
     selector: 'app-date-value',
@@ -27,7 +35,7 @@ export class DateValueComponent extends BaseValueDirective implements OnInit, On
     matcher = new ValueErrorStateMatcher();
 
     constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
-        super(_fb);
+        super();
     }
 
     /**
@@ -69,7 +77,6 @@ export class DateValueComponent extends BaseValueDirective implements OnInit, On
         this.resetFormControl();
     }
 
-    // unsubscribe when the object is destroyed to prevent memory leaks
     ngOnDestroy(): void {
         super.ngOnDestroy();
     }
@@ -123,7 +130,7 @@ export class DateValueComponent extends BaseValueDirective implements OnInit, On
 
         this.populateValue(newDateValue, dateOrPeriod);
 
-        if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
+        if (this.commentFormControl.value) {
             newDateValue.valueHasComment = this.commentFormControl.value;
         }
 
@@ -144,7 +151,7 @@ export class DateValueComponent extends BaseValueDirective implements OnInit, On
         this.populateValue(updatedDateValue, dateOrPeriod);
 
         // add the submitted comment to updatedIntValue only if user has added a comment
-        if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
+        if (this.commentFormControl.value) {
             updatedDateValue.valueHasComment = this.commentFormControl.value;
         }
 

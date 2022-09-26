@@ -22,7 +22,7 @@ export class TimeValueComponent extends BaseValueDirective implements OnInit, On
     matcher = new ValueErrorStateMatcher();
 
     constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
-        super(_fb);
+        super();
     }
 
     getInitValue(): string | null {

@@ -1,4 +1,13 @@
-import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import {
+    Component,
+    Inject,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    SimpleChanges,
+    ViewChild
+} from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CreateColorValue, ReadColorValue, UpdateColorValue } from '@dasch-swiss/dsp-js';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
@@ -24,7 +33,7 @@ export class ColorValueComponent extends BaseValueDirective implements OnInit, O
     textColor: string;
 
     constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
-        super(_fb);
+        super();
     }
 
     getInitValue(): string | null {
@@ -62,7 +71,7 @@ export class ColorValueComponent extends BaseValueDirective implements OnInit, O
 
         newColorValue.color = this.valueFormControl.value;
 
-        if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
+        if (this.commentFormControl.value) {
             newColorValue.valueHasComment = this.commentFormControl.value;
         }
 

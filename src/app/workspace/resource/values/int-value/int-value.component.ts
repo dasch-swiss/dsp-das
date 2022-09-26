@@ -20,7 +20,7 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
     customValidators = [Validators.pattern(CustomRegex.INT_REGEX)]; // only allow for integer values (no fractions)
 
     constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
-        super(_fb);
+        super();
     }
 
     getInitValue(): number | null {
@@ -32,7 +32,6 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
     }
 
     ngOnInit() {
-        // initialize form control elements
         super.ngOnInit();
     }
 
@@ -54,7 +53,7 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
 
         newIntValue.int = this.valueFormControl.value;
 
-        if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
+        if (this.commentFormControl.value) {
             newIntValue.valueHasComment = this.commentFormControl.value;
         }
 
@@ -73,7 +72,7 @@ export class IntValueComponent extends BaseValueDirective implements OnInit, OnC
         updatedIntValue.int = this.valueFormControl.value;
 
         // add the submitted comment to updatedIntValue only if user has added a comment
-        if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
+        if (this.commentFormControl.value) {
             updatedIntValue.valueHasComment = this.commentFormControl.value;
         }
 

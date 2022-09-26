@@ -1,11 +1,18 @@
-import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import {
+    Component,
+    Inject,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    SimpleChanges
+} from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { CreateTextValueAsString, ReadTextValueAsString, UpdateTextValueAsString } from '@dasch-swiss/dsp-js';
 import * as Editor from 'ckeditor5-custom-build';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
 import { ValueErrorStateMatcher } from '../../value-error-state-matcher';
 import { ckEditor } from '../ck-editor';
-
 
 @Component({
     selector: 'app-text-value-as-string',
@@ -27,11 +34,10 @@ export class TextValueAsStringComponent extends BaseValueDirective implements On
     editorConfig;
 
     constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
-        super(_fb);
+        super();
     }
 
     getInitValue(): string | null {
-
         if (this.displayValue !== undefined) {
             return this.displayValue.text;
         } else {
@@ -40,15 +46,16 @@ export class TextValueAsStringComponent extends BaseValueDirective implements On
     }
 
     ngOnInit() {
+        super.ngOnInit();
 
         if (this.guiElement === 'richText') {
             this.editor = Editor;
             this.editorConfig = ckEditor.config;
         }
-        super.ngOnInit();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
+
         // resets values and validators in form controls when input displayValue or mode changes
         // at the first call of ngOnChanges, form control elements are not initialized yet
         this.resetFormControl();
@@ -93,4 +100,5 @@ export class TextValueAsStringComponent extends BaseValueDirective implements On
 
         return updatedTextValue;
     }
+
 }

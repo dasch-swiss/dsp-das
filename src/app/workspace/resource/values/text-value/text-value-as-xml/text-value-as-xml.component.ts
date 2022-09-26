@@ -17,7 +17,6 @@ import { BaseValueDirective } from 'src/app/main/directive/base-value.directive'
 import { ValueErrorStateMatcher } from '../../value-error-state-matcher';
 import { ckEditor } from '../ck-editor';
 
-
 @Component({
     selector: 'app-text-value-as-xml',
     templateUrl: './text-value-as-xml.component.html',
@@ -52,7 +51,7 @@ export class TextValueAsXMLComponent extends BaseValueDirective implements OnIni
     };
 
     constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
-        super(_fb);
+        super();
     }
 
     standardValueComparisonFunc(initValue: any, curValue: any): boolean {
@@ -76,11 +75,11 @@ export class TextValueAsXMLComponent extends BaseValueDirective implements OnIni
 
         this.editor = Editor;
         this.editorConfig = ckEditor.config;
+
         super.ngOnInit();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-
         // resets values and validators in form controls when input displayValue or mode changes
         // at the first call of ngOnChanges, form control elements are not initialized yet
         this.resetFormControl();

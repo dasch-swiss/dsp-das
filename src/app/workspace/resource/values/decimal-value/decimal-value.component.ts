@@ -19,7 +19,7 @@ export class DecimalValueComponent extends BaseValueDirective implements OnInit,
     customValidators = [Validators.pattern(CustomRegex.DECIMAL_REGEX)]; // only allow for decimal values
 
     constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
-        super(_fb);
+        super();
     }
 
     getInitValue(): number | null {
@@ -38,7 +38,6 @@ export class DecimalValueComponent extends BaseValueDirective implements OnInit,
         this.resetFormControl();
     }
 
-    // unsubscribe when the object is destroyed to prevent memory leaks
     ngOnDestroy(): void {
         super.ngOnDestroy();
     }
@@ -52,7 +51,7 @@ export class DecimalValueComponent extends BaseValueDirective implements OnInit,
 
         newDecimalValue.decimal = this.valueFormControl.value;
 
-        if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
+        if (this.commentFormControl.value) {
             newDecimalValue.valueHasComment = this.commentFormControl.value;
         }
 
@@ -71,7 +70,7 @@ export class DecimalValueComponent extends BaseValueDirective implements OnInit,
         updatedDecimalValue.decimal = this.valueFormControl.value;
 
         // add the submitted comment to updatedIntValue only if user has added a comment
-        if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
+        if (this.commentFormControl.value) {
             updatedDecimalValue.valueHasComment = this.commentFormControl.value;
         }
 

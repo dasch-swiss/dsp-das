@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    OnDestroy,
+    Input,
+    EventEmitter,
+    Output,
+} from '@angular/core';
 import { ReadTextValueAsHtml } from '@dasch-swiss/dsp-js';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
 
@@ -22,11 +29,10 @@ export class TextValueAsHtmlComponent extends BaseValueDirective implements OnIn
     comment: string;
 
     constructor() {
-        super(); // no formgroup here
+        super();
     }
 
     ngOnInit() {
-        super.ngOnInit();
         this.htmlFromKnora = this.getInitValue();
         this.comment = this.getInitComment();
     }

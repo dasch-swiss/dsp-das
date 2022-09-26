@@ -21,7 +21,7 @@ export class IntervalValueComponent extends BaseValueDirective implements OnInit
     matcher = new ValueErrorStateMatcher();
 
     constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
-        super(_fb);
+        super();
     }
 
     standardValueComparisonFunc(initValue: Interval, curValue: Interval | null): boolean {
@@ -59,7 +59,7 @@ export class IntervalValueComponent extends BaseValueDirective implements OnInit
         newIntervalValue.start = this.valueFormControl.value.start;
         newIntervalValue.end = this.valueFormControl.value.end;
 
-        if (this.commentFormControl.value !== null && this.commentFormControl.value !== '') {
+        if (this.commentFormControl.value) {
             newIntervalValue.valueHasComment = this.commentFormControl.value;
         }
 

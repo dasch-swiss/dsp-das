@@ -17,7 +17,7 @@ export class BooleanValueComponent extends BaseValueDirective implements OnInit,
     customValidators = [];
 
     constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
-        super(_fb);
+        super();
     }
 
     getInitValue(): boolean | null {
