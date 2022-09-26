@@ -1,4 +1,4 @@
-import {Component, DebugElement, OnInit, ViewChild} from '@angular/core';
+import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';

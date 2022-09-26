@@ -10,11 +10,6 @@ const resolvedPromise = Promise.resolve(null);
 export abstract class BaseValueDirective implements OnInit, OnDestroy{
 
     /**
-     * value to be displayed, if any.
-     */
-    @Input() abstract displayValue?: ReadValue;
-
-    /**
      * sets the mode of the component.
      */
     @Input() mode: 'read' | 'update' | 'create' | 'search';
@@ -38,6 +33,11 @@ export abstract class BaseValueDirective implements OnInit, OnDestroy{
      * disable the comment field
      */
     @Input() commentDisabled? = false;
+
+    /**
+     * value to be displayed, if any.
+     */
+    @Input() abstract displayValue?: ReadValue;
 
     shouldShowComment = false;
 

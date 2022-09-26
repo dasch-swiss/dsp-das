@@ -2,11 +2,10 @@ import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DecimalValueComponent } from './decimal-value.component';
 import { ReadDecimalValue, MockResource, UpdateDecimalValue, CreateDecimalValue } from '@dasch-swiss/dsp-js';
-import {OnInit, Component, ViewChild, DebugElement, NO_ERRORS_SCHEMA} from '@angular/core';
+import { OnInit, Component, ViewChild, DebugElement } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { $ } from 'protractor';
 import { By } from '@angular/platform-browser';
 
 /**

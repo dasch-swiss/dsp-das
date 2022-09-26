@@ -1,4 +1,4 @@
-import {Component, DebugElement, NO_ERRORS_SCHEMA, OnInit, ViewChild} from '@angular/core';
+import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { waitForAsync, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -145,8 +145,7 @@ describe('LinkValueComponent', () => {
                     provide: DspApiConnectionToken,
                     useValue: valuesSpyObj
                 }
-            ],
-            schemas: [ NO_ERRORS_SCHEMA ]
+            ]
         })
             .compileComponents();
     }));
