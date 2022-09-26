@@ -85,7 +85,6 @@ describe('CommentFormComponent', () => {
         });
         it('should be disabled if no value is set in the valueFormControl', () => {
             // hence there is no value set in valueFormControl, the commentForm should be disabled/readOnly
-            commentComponent.disallowCommentIfEmptyValue(); // run manually here; usually run by ngOnChanges
             expect(commentComponent.disallowed).toBeTruthy();
             testHostFixture.detectChanges();
             // testing if the lock icon is set correctly
@@ -97,7 +96,6 @@ describe('CommentFormComponent', () => {
             // hence there is no value for valueFormControl set, the commentForm should be disabled/readOnly
             component.valueFormControl.setValue('a value');
             testHostFixture.detectChanges();
-            commentComponent.disallowCommentIfEmptyValue(); // run manually here; usually run by ngOnChanges
             expect(commentComponent.disallowed).toBeFalsy();
         });
 
@@ -108,11 +106,8 @@ describe('CommentFormComponent', () => {
             // setting an error, so the formControl is set to Invalid
             component.valueFormControl.setErrors({ pattern: { value: 'you entered an invalid value' } } );
             testHostFixture.detectChanges();
-            commentComponent.disallowCommentIfEmptyValue();
             expect(component.commentFormControl.value).toBeTruthy(); // make sure there is a comment value
             expect(commentComponent.valueFormControlHasError); // testing hasError()
-            expect(commentComponent.disallowed).toBeTruthy(); // testing disallowed
-            testHostFixture.detectChanges();
             const warnText = testHostFixture.debugElement.nativeElement.querySelector('.custom-error-message');
             // test if warn text is displayed
             expect(warnText.innerText).toEqual('This comment won\'t be saved if there is an invalid or an empty property value above.');
@@ -121,26 +116,21 @@ describe('CommentFormComponent', () => {
         it('should warn if there is a comment but no value (null, undefined, empty string)', () => {
             // there should be already an error in the valueFormControl though, but it should still warn
             // even if there is no error, but a comment and no value
-            component.commentFormControl.setValue('this is a comment');
             const emptyValues = [ null, '', undefined ];
             emptyValues.forEach(val => {
                 component.valueFormControl.setValue(val);
+                component.commentFormControl.setValue('this is a comment');
                 testHostFixture.detectChanges();
-                commentComponent.disallowCommentIfEmptyValue();
                 expect(component.commentFormControl.value).toBeTruthy(); // make sure there is a comment value
-                expect(commentComponent.disallowed).toBeTruthy(); // testing disallowed
-                testHostFixture.detectChanges();
                 const warnText = testHostFixture.debugElement.nativeElement.querySelector('.custom-error-message');
                 // test if warn text is displayed
                 expect(warnText.innerText).toEqual('This comment won\'t be saved if there is an invalid or an empty property value above.');
                 // testing if the lock icon is unset if there is a comment
-                const lockIcon = testHostFixture.debugElement.nativeElement.querySelector('.comment-lock');
-                expect(lockIcon).toBeFalsy();
+                expect(commentComponent.commentFormControl.value).toBeTruthy();
             });
         });
 
         it('should lock the comment field if there is no value and no comment yet', () => {
-            commentComponent.disallowCommentIfEmptyValue();
             expect(component.commentFormControl.value).toBeFalsy(); // make sure there is no comment value
             expect(!commentComponent.valueFormControlHasError); // make sure there is no error
             expect(commentComponent.disallowed).toBeTruthy(); // testing if disallowed
