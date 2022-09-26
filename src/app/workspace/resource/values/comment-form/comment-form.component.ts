@@ -9,8 +9,6 @@ import { ControlContainer, FormControl, FormGroup, FormGroupDirective } from '@a
 })
 export class CommentFormComponent implements OnChanges {
 
-    @Input() form?: FormGroup; // needed for tests or when the CommentFormComponent is used without being wrapped by a FormGroup
-
     /**
      * the form control of the comment itself
      */

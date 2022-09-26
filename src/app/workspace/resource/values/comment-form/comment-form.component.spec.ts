@@ -14,7 +14,7 @@ import { By } from '@angular/platform-browser';
     template: `
         <div [formGroup]="form">
             <input formControlName="value">
-            <app-comment-form #commentComp [valueFormControl]="valueFormControl" [form]="form" [(commentFormControl)]="commentFormControl" [forceUpdate]="valueFormControl.value"></app-comment-form>
+            <app-comment-form #commentComp [valueFormControl]="valueFormControl" [(commentFormControl)]="commentFormControl" [forceUpdate]="valueFormControl.value"></app-comment-form>
         </div>
     `
 })
