@@ -1,12 +1,15 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import {ControlContainer, FormControl, FormGroup, FormGroupDirective} from '@angular/forms';
 
 @Component({
     selector: 'app-comment-form',
     templateUrl: './comment-form.component.html',
-    styleUrls: ['./comment-form.component.scss']
+    styleUrls: ['./comment-form.component.scss'],
+    viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }]
 })
-export class CommentFormComponent implements OnChanges{
+export class CommentFormComponent implements OnChanges {
+
+    @Input() form?: FormGroup; // needed for tests or when the CommentFormComponent is used without being wrapped by a FormGroup
 
     /**
      * the form control of the comment itself
@@ -40,7 +43,7 @@ export class CommentFormComponent implements OnChanges{
 
     constructor() { }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges() {
         this.disallowCommentIfEmptyValue();
     }
 
@@ -56,7 +59,7 @@ export class CommentFormComponent implements OnChanges{
     }
 
     /**
-     * checks the comment field to readOnly if there is no property value or an invalid property value in the valueFormControl
+     * returns true if there is no property value or an invalid property value in the valueFormControl
      */
     hasError() {
         return this.valueFormControl.hasError('pattern') || this.valueFormControl.hasError('required');
