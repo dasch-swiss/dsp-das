@@ -37,7 +37,7 @@ export class ListValueComponent extends BaseValueDirective implements OnInit, On
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: ErrorHandlerService
     ) {
-        super(_fb);
+        super();
     }
 
     getInitValue(): string | null {
