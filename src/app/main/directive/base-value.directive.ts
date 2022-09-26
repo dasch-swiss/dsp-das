@@ -12,6 +12,7 @@ export abstract class BaseValueDirective implements OnInit, OnDestroy{
     /**
      * value to be displayed, if any.
      */
+    /* eslint-disable member-ordering */
     @Input() abstract displayValue?: ReadValue;
 
     /**
