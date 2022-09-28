@@ -75,12 +75,12 @@ export class DocumentComponent implements OnInit, AfterViewInit {
     searchQueryChanged(newQuery: string) {
         if (newQuery !== this.pdfQuery) {
             this.pdfQuery = newQuery;
-            this._pdfComponent.eventBus.dispatch('find', {
+            this._pdfComponent.pdfFindController.executeCommand('find', {
                 query: this.pdfQuery,
                 highlightAll: true,
             });
         } else {
-            this._pdfComponent.eventBus.dispatch('findagain', {
+            this._pdfComponent.pdfFindController.executeCommand('findagain', {
                 query: this.pdfQuery,
                 highlightAll: true,
             });
