@@ -22,9 +22,11 @@ import {
     ListsEndpointAdmin,
     ListsResponse,
     MockOntology,
+    MockUsers,
     OntologiesEndpointV2,
     OntologiesMetadata,
-    ReadOntology
+    ReadOntology,
+    UsersEndpointAdmin
 } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
@@ -45,7 +47,8 @@ describe('OntologyComponent', () => {
     beforeEach(waitForAsync(() => {
         const apiSpyObj = {
             admin: {
-                listsEndpoint: jasmine.createSpyObj('listsEndpoint', ['getListsInProject'])
+                listsEndpoint: jasmine.createSpyObj('listsEndpoint', ['getListsInProject']),
+                usersEndpoint: jasmine.createSpyObj('usersEndpoint', ['getUserByUsername'])
             },
             v2: {
                 onto: jasmine.createSpyObj('onto', [
@@ -211,6 +214,13 @@ describe('OntologyComponent', () => {
                 response.lists.push(mockList1, mockList2);
 
                 return of(ApiResponseData.fromAjaxResponse({ response } as AjaxResponse));
+            }
+        );
+
+        (dspConnSpy.admin.usersEndpoint as jasmine.SpyObj<UsersEndpointAdmin>).getUserByUsername.and.callFake(
+            () => {
+                const loggedInUser = MockUsers.mockUser();
+                return of(loggedInUser);
             }
         );
 
