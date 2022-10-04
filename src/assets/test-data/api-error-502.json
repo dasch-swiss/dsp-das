@@ -1,10 +1,10 @@
 {
 	"method": "GET",
 	"url": "http://0.0.0.0:3333/admin/projects",
-	"status": 500,
+	"status": 502,
 	"error": {
-		"message": "ajax error 500",
-		"name": "AjaxError",
+		"message": "some error msg",
+		"name": "",
 		"xhr": {
 			"__zone_symbol__timeoutfalse": [{
 				"type": "eventTask",
@@ -64,7 +64,7 @@
 			"timeout": 0,
 			"url": "http://0.0.0.0:3333/admin/projects"
 		},
-		"status": 500,
+		"status": 502,
 		"responseType": "json",
 		"response": {
 			"error": "org.knora.webapi.exceptions.TriplestoreResponseException: Couldn't parse Turtle from triplestore"
