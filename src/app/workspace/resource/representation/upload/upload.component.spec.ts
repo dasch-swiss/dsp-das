@@ -35,7 +35,7 @@ class TestHostComponent implements OnInit {
 
 }
 
-describe('UploadComponent', () => {
+fdescribe('UploadComponent', () => {
     const mockFile = new File(['1'], 'testfile.jpg', { type: 'image/jpeg' });
 
     const fb = new UntypedFormBuilder();
@@ -122,7 +122,10 @@ describe('UploadComponent', () => {
 
     describe('isFileTypeSupported', () => {
         it('should return true for the supported image files', () => {
-            const fileTypes = ['jpg', 'jpeg', 'jp2', 'tiff', 'tif', 'png'];
+            let fileTypes = ['jpg', 'jpeg', 'jp2', 'tiff', 'tif', 'png'];
+            const fileTypeVariations = ['Jpg', 'jPg', 'jpG', 'JPG']; // edge case for strangely formated file extensions that are supported
+
+            fileTypes = fileTypes.concat(fileTypeVariations);
 
             for (const type of fileTypes) {
                 expect(testHostComponent.uploadComp['_isFileTypeSupported'](type)).toBeTruthy();
