@@ -35,7 +35,7 @@ class TestHostComponent implements OnInit {
 
 }
 
-fdescribe('UploadComponent', () => {
+describe('UploadComponent', () => {
     const mockFile = new File(['1'], 'testfile.jpg', { type: 'image/jpeg' });
 
     const fb = new UntypedFormBuilder();
