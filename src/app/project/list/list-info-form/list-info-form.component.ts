@@ -1,6 +1,4 @@
-import { T } from '@angular/cdk/keycodes';
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
     ApiResponseData,
@@ -12,7 +10,6 @@ import {
     ListNodeInfo,
     ListResponse,
     ProjectResponse,
-    ReadProject,
     StringLiteral,
     UpdateListInfoRequest
 } from '@dasch-swiss/dsp-js';
