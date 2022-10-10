@@ -27,7 +27,6 @@ export class ErrorHandlerService {
      * @param error ApiResponseError
      */
     showMessage(error: ApiResponseError) {
-        let errorToThrow;
         // if there is any server error (500-599) or there is any error but no error response
         if (((error.status > 499 && error.status < 600) || (error.error && !error.error['response'])) && error.status !== 504) {
             // check if the api is healthy:
