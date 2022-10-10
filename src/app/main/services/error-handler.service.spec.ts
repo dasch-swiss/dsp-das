@@ -11,7 +11,7 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { ErrorHandlerService } from './error-handler.service';
 import { HttpStatusMsg } from '../../../assets/http/statusMsg';
 
-fdescribe('ErrorHandlerService', () => {
+describe('ErrorHandlerService', () => {
     let httpTestingController: HttpTestingController;
     let service: ErrorHandlerService;
     let overlayContainer: OverlayContainer;
