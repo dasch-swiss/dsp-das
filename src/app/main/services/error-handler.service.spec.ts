@@ -4,7 +4,6 @@ import { TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ApiResponseError } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
 import { DialogComponent } from '../dialog/dialog.component';
