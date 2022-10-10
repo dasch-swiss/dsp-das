@@ -1,7 +1,7 @@
 {
 	"method": "GET",
 	"url": "http://0.0.0.0:3333/admin/projects",
-	"status": 502,
+	"status": 0,
 	"error": {
 		"message": "some error msg",
 		"name": "",
@@ -64,7 +64,7 @@
 			"timeout": 0,
 			"url": "http://0.0.0.0:3333/admin/projects"
 		},
-		"status": 502,
+		"status": 0,
 		"responseType": "json",
 		"response": {
 			"error": "org.knora.webapi.exceptions.TriplestoreResponseException: Couldn't parse Turtle from triplestore"
