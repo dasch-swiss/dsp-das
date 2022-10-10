@@ -90,40 +90,6 @@ fdescribe('ErrorHandlerService', () => {
         httpTestingController.verify();
     });
 
-    // comparing the new refactored error handler service to the old on faked
-    it('0) 500 errors should be handled the same as before if the api is not healthy', () => {
-        expect(service).toBeTruthy();
-        // iterating through all entries and test
-        for (const [key, value] of Object.entries(_statusMsg.default)) {
-            const s = Number(key);
-            if (s && s > 499 && s < 600 && s !== 504) {
-                const err = apiResponseError(s, value['message']);
-                // for comparing with the old error message
-                const oldErrMsg = service.showMessageOld(err, false);
-                expect(function() {
-                    service.handleServerSideErrors(err, false);
-                }).toThrowError(oldErrMsg);
-            }
-        };
-    });
-
-    // comparing the new refactored error handler service  to the old on faked
-    it('0) 500 errors should be handled the same as before if the api is healthy', () => {
-        // iterating through all entries and test
-        for (const [key, value] of Object.entries(_statusMsg.default)) {
-            const s = Number(key);
-            if (s && s > 499 && s < 600 && s !== 504) {
-                const err = apiResponseError(s, value['message']);
-                // for comparing with the old error message
-                const oldErrMsg = service.showMessageOld(err, true);
-                expect(function() {
-                    service.handleServerSideErrors(err, true);
-                }).toThrowError(oldErrMsg);
-            }
-        };
-    });
-
-    //
     it('1) should throw the status of the server error received if the api is healthy and there is an error response as well as an error message ', () => {
         // iterating through all entries and test
         for (const [key, value] of Object.entries(_statusMsg.default)) {
