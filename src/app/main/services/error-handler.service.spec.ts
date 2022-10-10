@@ -21,18 +21,14 @@ describe('ErrorHandlerService', () => {
 
     let dialog: MatDialog;
 
-    function apiResponseError(status: number, msg: string): ApiResponseError {
-        const err = errCanvas;
-        err.status = status;
-        err.error.status = status;
-        err.message = msg;
-        return err;
-    }
-
+    /**
+     * fakes an ApiResponseErrors error property with the given status code and error message
+     * @param status the error status code
+     * @param msg the error message
+     */
     function defaultApiResponseError(status: number, msg: string): ApiResponseError {
         const err = errCanvas;
         err.status = status;
-        err.error.status = status;
         err.error['message'] = msg;
         return err;
     }
@@ -71,14 +67,6 @@ describe('ErrorHandlerService', () => {
 
         httpTestingController = TestBed.inject(HttpTestingController);
 
-        const dspConnSpy = TestBed.inject(DspApiConnectionToken);
-        (dspConnSpy.system.healthEndpoint as jasmine.SpyObj<HealthEndpointSystem>).getHealthStatus.and.callFake(
-            () => {
-                const health = MockHealth.mockRunning();
-                return of(health);
-            }
-        );
-
         overlayContainer = TestBed.inject(OverlayContainer);
 
         dialog = TestBed.inject(MatDialog);
@@ -90,12 +78,19 @@ describe('ErrorHandlerService', () => {
         httpTestingController.verify();
     });
 
-    it('1) should throw the status of the server error received if the api is healthy and there is an error response as well as an error message ', () => {
-        // iterating through all entries and test
+    it('1) should throw the status of the server error received if the api is healthy and there is an error response as well as an error message', () => {
+        // iterating through all entries and test for each status
         for (const [key, value] of Object.entries(_statusMsg.default)) {
             const s = Number(key);
             if (s && s > 499 && s < 600 && s !== 504) {
-                const err = apiResponseError(s, value['message']); // any message, does not matter
+                // this test is only reflecting what has been implemented, so:
+                // the actual content of the error message does not matter at all
+                // the content of the response does not matter either - except to determine whether a 503 is thrown or
+                // the err.status. The actual error.error.status is not used;
+                // any error message is replaced hard coded.
+                // only the error.status is reflected in the error thrown by the app if there exists an err.error.response.
+                const err = errCanvas;
+                err.status = s;
                 const status = (err.hasOwnProperty('error') && err.error && !err.error['response']) ? 503 : err.status; // always 503 if there is no error response(?)
                 const expectedErrMsg = `ERROR ${status}: Server side error — dsp-api not responding`; // how it was and still is implemented ...
                 expect(function() {
@@ -111,7 +106,9 @@ describe('ErrorHandlerService', () => {
         for (const [key, value] of Object.entries(_statusMsg.default)) {
             const s = Number(key);
             if (s && s > 499 && s < 600 && s !== 504) {
-                const err = apiResponseError(s, value['message']); // any message, does not matter
+                // this test is only reflecting what has been implemented ...
+                const err = errCanvas;
+                err.status = s;
                 err.error['response'] = {};
                 const expectedErrMsg = `ERROR ${err.status}: Server side error — dsp-api not responding`; // how it was and still is implemented ...
                 expect(function() {
@@ -131,13 +128,33 @@ describe('ErrorHandlerService', () => {
         expect(dialog).toBeDefined();
     });
 
-    it('4) default errors which are not ajax errors should be displayed as defined in _statusMsg.default', () => {
+    it('4) default errors whose message does not start with "ajax errors" should be thrown as happened', () => {
         // iterating through all entries and test
         for (const [key, value] of Object.entries(_statusMsg.default)) {
             const s = Number(key);
-            if (s && s < 499 || s > 600 ) {
+            const messageAsHappened = 'knora-api:error":"dsp.errors.ForbiddenException: Anonymous users aren\'t $' +
+                'allowed to create resources","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}';
+            const err = errCanvas;
+            err.status = s;
+            err.error['message'] = messageAsHappened;
+            if (s && s < 499 || s > 600 || s === 504) { // like showMessage method
+                expect(function() {
+                    service.defaultErrorHandler(err);
+                }).toThrowError(messageAsHappened); // the actual status code does not matter anymore
+            }
+        };
+    });
+
+    it('5) default errors which are "ajax errors" should be displayed as defined in _statusMsg.default', () => {
+        // iterating through all entries and test
+        for (const [key, value] of Object.entries(_statusMsg.default)) {
+            const s = Number(key);
+            if (s && s < 499 || s > 600 || s === 504) { // like showMessage method
+                const err = errCanvas;
+                err.status = s; // the
+                err.error['message'] = 'ajax error followed by anything will be replaced by the messages defined in _statusMsg.default';
+                // the actual error thrown is expected to be replaced by _statusMsg.default's definitions'
                 const expectedMessage = `${value['message']} (${s}): ${value['description']}`;
-                const err = defaultApiResponseError(s, expectedMessage);
                 expect(function() {
                     service.defaultErrorHandler(err);
                 }).toThrowError(expectedMessage);
@@ -146,7 +163,7 @@ describe('ErrorHandlerService', () => {
     });
 
     // standard 500 test if server is coughing.
-    it('5) should throw a 500 error if the server is not healthy and there occurs any error of any status except 504', () => {
+    it('6) should throw a 500 error if the server is not healthy and error of any status occurs except 504', () => {
         expect(function() {
             service.handleServerSideErrors(errCanvas, false);
         }).toThrowError('ERROR 500: Server side error — dsp-api is not healthy'); // how it was and still is implemented ...
