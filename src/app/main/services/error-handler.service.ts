@@ -4,8 +4,8 @@ import { ApiResponseData, ApiResponseError, HealthResponse, KnoraApiConnection, 
 import { HttpStatusMsg } from 'src/assets/http/statusMsg';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
 import { DialogComponent } from '../dialog/dialog.component';
-import { NotificationService } from '../services/notification.service';
-import { SessionService } from '../services/session.service';
+import { NotificationService } from './notification.service';
+import { SessionService } from './session.service';
 
 @Injectable({
     providedIn: 'root'
@@ -53,22 +53,22 @@ export class ErrorHandlerService {
                     }
                 );
 
-        } else if (error instanceof ApiResponseError) { // all others which are ApiResponseErrors
+        } else if (error instanceof ApiResponseError) { // all others which are ApiResponseErrors so also 504
             this.defaultErrorHandler(error);
-        } else { // this should not be the case if typed ... but it could be a string as well ...
+        } else { // this should not be the case if really typed ... but error can be instanceof string as well ...
             throw new Error(error);
         }
     }
 
     /**
      * handles all server side errors, so all errors between status 500 and 599 except 504
-     * Always throws a 500 error except there is an ApiResponseError ... then it throws a 503
+     * Always throws a 500 error except there is no error.response ... then it throws a 503
      *
      * @param error ApiResponseError
      * @param isHealthy whether the api is healthy or not
      */
     handleServerSideErrors(error: ApiResponseError, isHealthy: Boolean): void {
-        const status = (error.error && !error.error['response']) ? 503 : error.status; // always 503 if there is no error response
+        const status = (error.hasOwnProperty('error') && error.error && !error.error['response']) ? 503 : error.status; // always 503 if there is no error response(?)
         // dialog
         const apiResponseMessage = (error.error['response'] ? error.error['response'].error : undefined);
         const dialogConfig: MatDialogConfig = {
@@ -95,7 +95,6 @@ export class ErrorHandlerService {
             throw new Error(`ERROR ${status}: Server side error — dsp-api not responding`);
         } else {
             // this equals the old error handler service but makes no sense imho.
-            // todo: Change this to ${status} like possibly intended?
             throw new Error('ERROR 500: Server side error — dsp-api is not healthy');
         }
     }
