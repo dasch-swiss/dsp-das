@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ApiResponseError, HealthEndpointSystem, MockHealth } from '@dasch-swiss/dsp-js';
+import { ApiResponseError } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
 import { DialogComponent } from '../dialog/dialog.component';
@@ -20,18 +20,6 @@ describe('ErrorHandlerService', () => {
     const errCanvas = require('../../../assets/test-data/api-error-502.json'); // has error.error.status of randomly chosen 502
 
     let dialog: MatDialog;
-
-    /**
-     * fakes an ApiResponseErrors error property with the given status code and error message
-     * @param status the error status code
-     * @param msg the error message
-     */
-    function defaultApiResponseError(status: number, msg: string): ApiResponseError {
-        const err = errCanvas;
-        err.status = status;
-        err.error['message'] = msg;
-        return err;
-    }
 
     beforeEach(() => {
 
