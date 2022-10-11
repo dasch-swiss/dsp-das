@@ -21,9 +21,9 @@ module.exports = function (config) {
       fixWebpackSourcePaths: true
     },
     files: [
-        { pattern: './src/assets/test-data/**', watched: false, included:false, nocache:false, served:true }
+        { pattern: './assets/test-data/api-error-0.json', watched: false, included:false, nocache:false, served:true }
     ],
-    proxies: {'/assets/': '/base/src/assets/api-error-0.json'},
+    proxies: {'/assets/': '/base/src/assets/'},
     reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
