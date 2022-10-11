@@ -23,7 +23,7 @@ module.exports = function (config) {
     files: [
         { pattern: './src/assets/test-data/**', watched: false, included:false, nocache:false, served:true }
     ],
-    proxies: {'/assets/': '/base/src/assets/'},
+    proxies: {'/assets/': '/base/src/assets/api-error-0.json'},
     reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,

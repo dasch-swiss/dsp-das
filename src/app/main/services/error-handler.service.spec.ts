@@ -1,5 +1,4 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -10,13 +9,12 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { ErrorHandlerService } from './error-handler.service';
 import { HttpStatusMsg } from '../../../assets/http/statusMsg';
 
-describe('ErrorHandlerService', () => {
-    let httpTestingController: HttpTestingController;
+fdescribe('ErrorHandlerService', () => {
     let service: ErrorHandlerService;
     let overlayContainer: OverlayContainer;
     let _statusMsg: HttpStatusMsg;
 
-    const errCanvas = require('../../../assets/test-data/api-error-0.json'); // has error.error.status of randomly chosen 502
+    const errCanvas = require('../../../assets/test-data/api-error-0.json'); // the canvas for an error - will be changed
 
     let dialog: MatDialog;
 
@@ -26,15 +24,11 @@ describe('ErrorHandlerService', () => {
             v2: {
                 auth: jasmine.createSpyObj('auth', ['logout'])
             },
-            system: {
-                healthEndpoint: jasmine.createSpyObj('healthEndpoint', ['getHealthStatus'])
-            }
         };
 
         TestBed.configureTestingModule({
             imports: [
                 BrowserAnimationsModule,
-                HttpClientTestingModule,
                 MatDialogModule,
                 MatSnackBarModule,
                 NoopAnimationsModule
@@ -52,17 +46,11 @@ describe('ErrorHandlerService', () => {
         });
         service = TestBed.inject(ErrorHandlerService);
 
-        httpTestingController = TestBed.inject(HttpTestingController);
-
         overlayContainer = TestBed.inject(OverlayContainer);
 
         dialog = TestBed.inject(MatDialog);
         _statusMsg = new HttpStatusMsg;
 
-    });
-
-    afterEach(() => {
-        httpTestingController.verify();
     });
 
     it('1. should throw the status of the server error received if the api is healthy and there is an error response as well as an error message', () => {
