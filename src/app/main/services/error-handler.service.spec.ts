@@ -16,7 +16,7 @@ describe('ErrorHandlerService', () => {
     let overlayContainer: OverlayContainer;
     let _statusMsg: HttpStatusMsg;
 
-    const errCanvas = require('../../../assets/test-data/api-error-502.json'); // has error.error.status of randomly chosen 502
+    const errCanvas = require('../../../assets/test-data/api-error-0.json'); // has error.error.status of randomly chosen 502
 
     let dialog: MatDialog;
 
@@ -65,7 +65,7 @@ describe('ErrorHandlerService', () => {
         httpTestingController.verify();
     });
 
-    it('1) should throw the status of the server error received if the api is healthy and there is an error response as well as an error message', () => {
+    it('1. should throw the status of the server error received if the api is healthy and there is an error response as well as an error message', () => {
         // iterating through all entries and test for each status
         for (const [key, value] of Object.entries(_statusMsg.default)) {
             const s = Number(key);
@@ -88,7 +88,7 @@ describe('ErrorHandlerService', () => {
     });
 
     //
-    it('2) should throw the status of the error received if the api is healthy and there is a server error with response but no error response message ', () => {
+    it('2. should throw the status of the error received if the api is healthy and there is a server error with response but no error response message ', () => {
         // iterating through all entries and test
         for (const [key, value] of Object.entries(_statusMsg.default)) {
             const s = Number(key);
@@ -105,8 +105,8 @@ describe('ErrorHandlerService', () => {
         };
     });
 
-    it('3) should throw a 503 error if and the server is healthy and there is any error of any status but no error response (except 504)', () => {
-        const error = require('../../../assets/test-data/api-error-502.json');
+    it('3. should throw a 503 error if and the server is healthy and there is any error of any status but no error response - except 504', () => {
+        const error = require('../../../assets/test-data/api-error-0.json');
         error.error.response = undefined; // set message to undefined
         expect(function() {
             service.handleServerSideErrors(error, true);
@@ -115,7 +115,7 @@ describe('ErrorHandlerService', () => {
         expect(dialog).toBeDefined();
     });
 
-    it('4) default errors whose message does not start with "ajax errors" should be thrown as happened', () => {
+    it('4. default errors whose message does not start with "ajax errors" should be thrown as happened', () => {
         // iterating through all entries and test
         for (const [key, value] of Object.entries(_statusMsg.default)) {
             const s = Number(key);
@@ -132,7 +132,7 @@ describe('ErrorHandlerService', () => {
         };
     });
 
-    it('5) default errors which are "ajax errors" should be displayed as defined in _statusMsg.default', () => {
+    it('5. default errors which are "ajax errors" should be displayed as defined in _statusMsg.default', () => {
         // iterating through all entries and test
         for (const [key, value] of Object.entries(_statusMsg.default)) {
             const s = Number(key);
@@ -150,7 +150,7 @@ describe('ErrorHandlerService', () => {
     });
 
     // standard 500 test if server is coughing.
-    it('6) should throw a 500 error if the server is not healthy and error of any status occurs except 504', () => {
+    it('6. should throw a 500 error if the server is not healthy and error of any status occurs - except 504', () => {
         expect(function() {
             service.handleServerSideErrors(errCanvas, false);
         }).toThrowError('ERROR 500: Server side error — dsp-api is not healthy'); // how it was and still is implemented ...
