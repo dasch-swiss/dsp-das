@@ -9,7 +9,7 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { ErrorHandlerService } from './error-handler.service';
 import { HttpStatusMsg } from '../../../assets/http/statusMsg';
 
-fdescribe('ErrorHandlerService', () => {
+describe('ErrorHandlerService', () => {
     let service: ErrorHandlerService;
     let overlayContainer: OverlayContainer;
     let _statusMsg: HttpStatusMsg;
