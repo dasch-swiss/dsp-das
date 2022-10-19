@@ -64,7 +64,7 @@ export class ListValueComponent extends BaseValueDirective implements OnInit, On
             if (this.mode !== 'read') {
                 const rootNodeIris = this.propertyDef.guiAttributes;
                 for (const rootNodeIri of rootNodeIris) {
-                    const trimmedRootNodeIRI = rootNodeIri.substr(7, rootNodeIri.length - (1 + 7));
+                    const trimmedRootNodeIRI = rootNodeIri.substring(7, rootNodeIri.length - 1);
                     this._dspApiConnection.v2.list.getList(trimmedRootNodeIRI).subscribe(
                         (response: ListNodeV2) => {
                             this.listRootNode = response;
@@ -113,7 +113,7 @@ export class ListValueComponent extends BaseValueDirective implements OnInit, On
         const updatedListValue = new UpdateListValue();
 
         updatedListValue.id = this.displayValue.id;
-        if (this.selectedNode) {
+        if (this.selectedNode.id !== '') {
             updatedListValue.listNode = this.selectedNode.id;
         } else {
             updatedListValue.listNode = this.displayValue.listNode;
@@ -135,7 +135,7 @@ export class ListValueComponent extends BaseValueDirective implements OnInit, On
     getReadModeValue(nodeIri: string): void {
         const rootNodeIris = this.propertyDef.guiAttributes;
         for (const rootNodeIri of rootNodeIris) {
-            const trimmedRootNodeIRI = rootNodeIri.substr(7, rootNodeIri.length - (1 + 7));
+            const trimmedRootNodeIRI = rootNodeIri.substring(7, rootNodeIri.length - 1);
             this._dspApiConnection.v2.list.getList(trimmedRootNodeIRI).subscribe(
                 (response: ListNodeV2) => {
                     if (!response.children.length) { // this shouldn't happen since users cannot select the root node
