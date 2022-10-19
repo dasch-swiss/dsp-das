@@ -47,6 +47,9 @@ export class EditListItemComponent implements OnInit {
     labels: StringLiteral[];
     comments: StringLiteral[];
 
+    // used to check if request to delete comments should be sent
+    initialCommentsLength: number;
+
     /**
      * error checking on the following fields
      */
@@ -118,6 +121,7 @@ export class EditListItemComponent implements OnInit {
         if (listNode && listNode.id) {
             this.labels = listNode.labels;
             this.comments = listNode.comments;
+            this.initialCommentsLength = this.comments.length;
         }
 
         this.loading = false;
@@ -164,7 +168,8 @@ export class EditListItemComponent implements OnInit {
 
         this._dspApiConnection.admin.listsEndpoint.updateChildNode(childNodeUpdateData).subscribe(
             (response: ApiResponseData<ChildNodeInfoResponse>) => {
-                if (!childNodeUpdateData.comments) {
+                // if initialCommentsLength is not equal to 0 and the comment is now empty, send request to delete comment
+                if (this.initialCommentsLength !== 0 && !childNodeUpdateData.comments) {
                     this._dspApiConnection.admin.listsEndpoint.deleteChildComments(childNodeUpdateData.listIri).subscribe(
                         (res: ApiResponseData<DeleteChildNodeCommentsResponse>) => {},
                         (error: ApiResponseError) => this._errorHandler.showMessage(error)
@@ -186,8 +191,7 @@ export class EditListItemComponent implements OnInit {
      */
     insertChildNode() {
         const createChildNodeRequest: CreateChildNodeRequest = new CreateChildNodeRequest();
-
-        createChildNodeRequest.name = this.projectCode + '-' + Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
+        createChildNodeRequest.name = this.projectCode + '-' + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
         createChildNodeRequest.parentNodeIri = this.parentIri;
         createChildNodeRequest.labels = this.labels;
         createChildNodeRequest.comments = this.comments.length > 0 ? this.comments : undefined;
