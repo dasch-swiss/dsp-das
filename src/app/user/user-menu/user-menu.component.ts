@@ -6,7 +6,6 @@ import {
     KnoraApiConnection, ReadUser,
     UserResponse
 } from '@dasch-swiss/dsp-js';
-import { AppGlobal } from 'src/app/app-global';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
@@ -32,7 +31,20 @@ export class UserMenuComponent implements OnChanges {
 
     sysAdmin = false;
 
-    navigation: MenuItem[];
+    navigation: MenuItem[] = [
+        {
+            label: 'DSP-App Home Page',
+            shortLabel: 'home',
+            route: '/',
+            icon: ''
+        },
+        {
+            label: 'My Account',
+            shortLabel: 'Account',
+            route: '/account',
+            icon: ''
+        }
+    ];
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -40,11 +52,10 @@ export class UserMenuComponent implements OnChanges {
         private _cache: CacheService,
         private _errorHandler: ErrorHandlerService,
         private _session: SessionService
-    ) { }
+    ) {
+    }
 
     ngOnChanges() {
-
-        this.navigation = AppGlobal.userNav;
 
         if (this.session) {
             this.username = this._session.getSession().user.name;
@@ -60,7 +71,6 @@ export class UserMenuComponent implements OnChanges {
                 }
             );
         }
-
     }
 
     /**
