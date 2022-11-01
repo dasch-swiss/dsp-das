@@ -217,14 +217,14 @@ describe('MainComponent', () => {
         expect(projectSpy).toHaveBeenCalledTimes(1);
     });
 
-    xit('should display the title "bring everything together and simplify your research"', () => {
+    it('should display the title "bring everything together and simplify your research"', () => {
         const h1 = element.querySelector('h1.app-headline');
 
         expect(h1.textContent).toEqual('bring everything together and simplify your research');
         expect(projectSpy).toHaveBeenCalledTimes(1);
     });
 
-    xit('should load projects', () => {
+    it('should load projects', () => {
         expect(projectSpy).toHaveBeenCalledTimes(1);
         expect(component.projects.length).toEqual(2);
 
@@ -235,26 +235,13 @@ describe('MainComponent', () => {
         expect(component.projects[1].url).toEqual('project/0803');
     });
 
-    xit('should not display the Anything project in the list', () => {
+    it('should not display the Anything project in the list', () => {
         expect(projectSpy).toHaveBeenCalledTimes(1);
         expect(component.projects.length).toEqual(2);
 
         expect(component.projects[0].title).not.toMatch('Anything Project');
         expect(component.projects[1].title).not.toMatch('Anything Project');
 
-    });
-
-    xit('should display the cookie banner', () => {
-        const cookieBanner = fixture.debugElement.query(By.css('div.cookie-banner'));
-        const acceptBtn = fixture.debugElement.query(By.css('div.action button'));
-
-        expect(cookieBanner).toBeDefined();
-        expect(acceptBtn.nativeElement.innerText).toEqual('ACCEPT');
-
-        // todo: find a way to check if the banner is gone after clicking on the button
-        /* acceptBtn.triggerEventHandler('click', {});
-        fixture.detectChanges();
-        expect(cookieBanner).toBeUndefined(); */
     });
 
 });

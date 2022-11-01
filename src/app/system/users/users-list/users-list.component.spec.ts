@@ -55,8 +55,8 @@ describe('UsersListComponent', () => {
                         parent: {
                             paramMap: of({
                                 get: (param: string) => {
-                                    if (param === 'shortcode') {
-                                        return TestConfig.ProjectCode;
+                                    if (param === 'uuid') {
+                                        return TestConfig.ProjectUuid;
                                     }
                                 }
                             }),
