@@ -36,6 +36,7 @@ import { NotificationService } from 'src/app/main/services/notification.service'
 import { DspResource } from '../dsp-resource';
 import { RepresentationConstants } from '../representation/file-representation';
 import { IncomingService } from '../services/incoming.service';
+import { ProjectService } from '../services/project.service';
 import { ResourceService } from '../services/resource.service';
 import { UserService } from '../services/user.service';
 import {
@@ -156,7 +157,8 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         private _userService: UserService,
         private _valueOperationEventService: ValueOperationEventService,
         private _valueService: ValueService,
-        private _componentCommsService: ComponentCommunicationEventService
+        private _componentCommsService: ComponentCommunicationEventService,
+        private _projectService: ProjectService
     ) { }
 
     ngOnInit(): void {
@@ -241,10 +243,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnDestroy() {
-        // unsubscribe from the event bus when component is destroyed
-        // if (this.valueOperationEventSubscription !== undefined) {
-        //     this.valueOperationEventSubscription.unsubscribe();
-        // }
         // unsubscribe from the ValueOperationEventService when component is destroyed
         if (this.valueOperationEventSubscriptions !== undefined) {
             this.valueOperationEventSubscriptions.forEach(sub => sub.unsubscribe());
@@ -253,10 +251,11 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
 
     /**
      * opens project
-     * @param linkValue
+     * @param project
      */
     openProject(project: ReadProject) {
-        window.open('/project/' + project.shortcode, '_blank');
+        const uuid = this._projectService.iriToUuid(project.id);
+        window.open('/beta/project/' + uuid, '_blank');
     }
 
     previewProject(project: ReadProject) {

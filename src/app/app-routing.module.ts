@@ -49,7 +49,7 @@ const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'project/:shortcode',
+        path: 'project/:uuid',
         component: ProjectComponent,
         children: [
             {
@@ -104,7 +104,7 @@ const routes: Routes = [
         ]
     },
     {
-        path: 'beta/project/:shortcode',
+        path: 'beta/project/:uuid',
         component: ProjectComponent,
         children: [
             {
