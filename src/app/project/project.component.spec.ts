@@ -14,11 +14,18 @@ import { CacheService } from '../main/cache/cache.service';
 import { DspApiConfigToken, DspApiConnectionToken } from '../main/declarations/dsp-api-tokens';
 import { DialogComponent } from '../main/dialog/dialog.component';
 import { StatusComponent } from '../main/status/status.component';
+import { ProjectService } from '../workspace/resource/services/project.service';
 import { ProjectComponent } from './project.component';
 
 describe('ProjectComponent', () => {
     let component: ProjectComponent;
     let fixture: ComponentFixture<ProjectComponent>;
+
+    const appInitSpy = {
+        dspAppConfig: {
+            iriBase: 'http://rdfh.ch'
+        }
+    };
 
     beforeEach(waitForAsync(() => {
 
@@ -39,7 +46,10 @@ describe('ProjectComponent', () => {
                 RouterTestingModule
             ],
             providers: [
-                AppInitService,
+                {
+                    provide: AppInitService,
+                    useValue: appInitSpy
+                },
                 {
                     provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig
@@ -60,7 +70,7 @@ describe('ProjectComponent', () => {
                                 { path: 'project' }
                             ],
                             params: [
-                                { shortcode: '0001' }
+                                { uuid: '09aQ4EuRKReCXnO0pTJ92ug001' }
                             ]
                         }
                     }
