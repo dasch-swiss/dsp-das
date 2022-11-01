@@ -1,6 +1,7 @@
 //
 // flex layout helper
 @use "sass:math";
+@import "../../assets/style/config";
 
 .fill-remaining-space {
   /* This fills the remaining space, by using flexbox.
@@ -144,52 +145,40 @@ a,
 
 //
 // menu
-.menu-header,
-.menu-content,
-.menu-footer {
-  width: 192px;
+
+.user-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
 }
 
-.menu-action,
-.menu-title {
-  width: 100%;
-}
+
 
 .menu-header {
-  background-color: $primary;
-  color: white;
-  border-bottom: 1px solid rgba($primary, 0.1);
-  border-top-left-radius: $border-radius;
-  border-top-right-radius: $border-radius;
-  display: inline-block;
-  height: 48px;
-
-  &.active {
-    background-color: $primary;
-  }
-
-  &.inactive {
-    background-color: $warn;
-  }
+  background: $gray_100;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px 16px;
 
   .menu-title {
-    text-align: center;
+    color: $gray_500;
   }
 }
 
 .menu-content {
   .mat-grid-tile button {
-    border-radius: $border-radius;
-    font-size: 11px;
-    height: 84px;
-    padding: 6px;
-    width: 84px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 16px;
 
-    .mat-icon {
-      font-size: 36px;
-      height: 36px;
-      width: 36px;
-    }
+    box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05), 0px 0px 0px 1px rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+  }
+  &.active {
+    background-color: $gray_100;
   }
 }
 
@@ -201,25 +190,56 @@ a,
   border-bottom: 1px solid rgba($primary, 0.1);
 }
 
-.menu-footer {
-  .menu-action.logout {
-    background: #ebebeb;
-    height: 48px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-
-    &:hover {
-      background: $warn;
-    }
-  }
-}
-
 .mat-menu-content {
   padding: 0 !important;
 
   .menu-action {
     .mat-button-wrapper {
       line-height: unset !important;
+    }
+  }
+}
+
+
+.nav-item {
+  width: 100%;
+  color: $gray_700;
+
+  &.button {
+    text-align: left;
+    width: 100%;
+
+
+    .mat-icon {
+      position: absolute;
+      top: 12px;
+
+      &.prefix {
+        left: 4px;
+      }
+
+      &.suffix {
+        display: none;
+        right: 0;
+      }
+    }
+
+    .label {
+      // margin-left: 20px;
+    }
+  }
+
+  .active-link {
+    background: $gray_100;
+
+    .mat-icon.suffix {
+      display: block;
+    }
+  }
+
+  .active-link {
+    .mat-icon.suffix {
+      display: block;
     }
   }
 }
@@ -309,7 +329,7 @@ a,
       height: 70vh;
     }
   }
-  
+
   .caption {
     padding: 10px 16px;
     white-space: nowrap;
