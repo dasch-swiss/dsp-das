@@ -2,7 +2,7 @@
 <button *ngIf="session"
         mat-button
         [matMenuTriggerFor]="userMenu"
-        class="main-toolbar-button user-menu">
+        class="main-toolbar-button">
     <img appAdminImage [image]="user?.email" [type]="'user'" class="avatar" />
 </button>
 
@@ -34,15 +34,15 @@
                     <span class="label">System Administration</span>
                 </button>
             </mat-list-item>
+            <mat-list-item *ngIf="session" class="nav-item">
+                <button
+                    mat-button
+                    (click)="logout()"
+                    class="nav-item button">
+                    <span class="label">Logout</span>
+                </button>
+            </mat-list-item>
         </mat-list>
-    </div>
-
-    <div class="menu-footer border-top">
-        <button mat-button
-                class="menu-action border-top logout"
-                (click)="logout()">
-            Logout
-        </button>
     </div>
 </mat-menu>
 
