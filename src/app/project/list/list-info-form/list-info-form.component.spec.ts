@@ -1,6 +1,6 @@
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -91,7 +91,7 @@ describe('ListInfoFormComponent', () => {
             ],
             imports: [
                 BrowserAnimationsModule,
-                HttpClientModule,
+                HttpClientTestingModule,
                 MatDialogModule,
                 MatIconModule,
                 MatInputModule,
