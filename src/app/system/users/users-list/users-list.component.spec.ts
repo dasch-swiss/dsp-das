@@ -25,6 +25,14 @@ describe('UsersListComponent', () => {
     let component: UsersListComponent;
     let fixture: ComponentFixture<UsersListComponent>;
 
+    const apiSpyObj = {
+        admin: {
+            usersEndpoint: jasmine.createSpyObj(
+                'usersEndpoint', ['getUserGroupMemberships', 'addUserToGroupMembership', 'removeUserFromGroupMembership', 'addUserToProjectAdminMembership', 'updateUserSystemAdminMembership']
+            )
+        },
+    };
+
     beforeEach(waitForAsync(() => {
 
         const cacheServiceSpy = jasmine.createSpyObj('CacheService', ['get', 'set']);
@@ -70,12 +78,8 @@ describe('UsersListComponent', () => {
                 },
                 AppInitService,
                 {
-                    provide: DspApiConfigToken,
-                    useValue: TestConfig.ApiConfig
-                },
-                {
                     provide: DspApiConnectionToken,
-                    useValue: new KnoraApiConnection(TestConfig.ApiConfig)
+                    useValue: apiSpyObj
                 },
                 {
                     provide: CacheService,

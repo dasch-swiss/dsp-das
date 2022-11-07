@@ -93,7 +93,7 @@ describe('UserFormComponent', () => {
         const dspConnSpy = TestBed.inject(DspApiConnectionToken);
         (dspConnSpy.admin.usersEndpoint as jasmine.SpyObj<UsersEndpointAdmin>).getUsers.and.callFake(
             () => {
-                const allUsers: ApiResponseData<UsersResponse> = MockUsers.mockUsers();;
+                const allUsers: ApiResponseData<UsersResponse> = MockUsers.mockUsers();
                 return of(allUsers);
             }
         );
