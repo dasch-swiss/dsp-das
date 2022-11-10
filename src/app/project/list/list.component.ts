@@ -60,6 +60,7 @@ export class ListComponent implements OnInit {
 
     // selected list
     list: ListNodeInfo;
+
     // selected list iri
     listIri: string = undefined;
 
