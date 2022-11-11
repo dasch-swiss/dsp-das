@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
 import { ApiResponseError, CountQueryResponse, IFulltextSearchParams, KnoraApiConnection, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
@@ -82,9 +81,6 @@ export class ListViewComponent implements OnChanges, OnInit {
 
     resetCheckBoxes = false;
 
-    // matPaginator Output
-    pageEvent: PageEvent;
-
     // number of all results
     numberOfAllResults: number;
 
@@ -93,6 +89,18 @@ export class ListViewComponent implements OnChanges, OnInit {
 
     // feature toggle for new concept
     beta = false;
+
+    currentIndex = 0;
+
+    currentRangeStart = 1;
+
+    currentRangeEnd = 0;
+
+    pageSize = 25;
+
+    previousDisabled = false;
+
+    nextDisabled = false;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -119,8 +127,6 @@ export class ListViewComponent implements OnChanges, OnInit {
 
     ngOnChanges(): void {
         // reset
-        this.pageEvent = new PageEvent();
-        this.pageEvent.pageIndex = 0;
         this.resources = undefined;
         this.emitSelectedResources();
 
@@ -142,26 +148,59 @@ export class ListViewComponent implements OnChanges, OnInit {
 
     }
 
-    goToPage(page: PageEvent) {
-        this.pageEvent = page;
-        this._doSearch();
+    goToPage(direction: 'previous' | 'next'){
+        if (direction === 'previous') {
+            if(this.currentIndex > 0) {
+                this.nextDisabled = false;
+                this.currentIndex -= 1;
+
+            }
+        }
+        if (direction === 'next') {
+            this.currentIndex += 1;
+
+            // if end range for the next page of results is greater than the total number of results
+            if(this.pageSize * (this.currentIndex + 1) >= this.numberOfAllResults) {
+                this.nextDisabled = true;
+            }
+        }
+
+        this._calculateRange(this.currentIndex);
+
+        this._doSearch(this.currentIndex);
+    }
+
+    /**
+     * given the index number, calculate the range of results shown
+     * @param index offset of gravsearch query
+     */
+    private _calculateRange(index: number) {
+        this.currentRangeStart = this.pageSize * index + 1;
+
+        if(this.pageSize * (index + 1) > this.numberOfAllResults){
+            this.currentRangeEnd = this.numberOfAllResults;
+        } else {
+            this.currentRangeEnd = this.pageSize * (index + 1);
+        }
     }
 
     /**
      * do the search and send the resources to the child components
      * like resource-list, resource-grid or resource-table
+     * @
      */
-    private _doSearch() {
+    private _doSearch(index: number = 0) {
 
         this.loading = true;
 
         if (this.search.mode === 'fulltext') {
             // search mode: fulltext
-            if (this.pageEvent.pageIndex === 0) {
+            if (index === 0) {
                 // perform count query
-                this._dspApiConnection.v2.search.doFulltextSearchCountQuery(this.search.query, this.pageEvent.pageIndex, this.search.filter).subscribe(
+                this._dspApiConnection.v2.search.doFulltextSearchCountQuery(this.search.query, index, this.search.filter).subscribe(
                     (count: CountQueryResponse) => {
                         this.numberOfAllResults = count.numberOfResults;
+                        this.currentRangeEnd = this.numberOfAllResults > 25 ? 25 : this.numberOfAllResults;
 
                         if (this.numberOfAllResults === 0) {
                             this.emitSelectedResources();
@@ -177,7 +216,7 @@ export class ListViewComponent implements OnChanges, OnInit {
             }
 
             // perform full text search
-            this._dspApiConnection.v2.search.doFulltextSearch(this.search.query, this.pageEvent.pageIndex, this.search.filter).subscribe(
+            this._dspApiConnection.v2.search.doFulltextSearch(this.search.query, index, this.search.filter).subscribe(
                 (response: ReadResourceSequence) => {
                     // if the response does not contain any resources even the search count is greater than 0,
                     // it means that the user does not have the permissions to see anything: emit an empty result
@@ -199,12 +238,12 @@ export class ListViewComponent implements OnChanges, OnInit {
             this._componentCommsService.emit(new EmitEvent(Events.gravSearchExecuted, true));
 
             // search mode: gravsearch
-            if (this.pageEvent.pageIndex === 0) {
+            if (index === 0) {
                 // perform count query
                 this._dspApiConnection.v2.search.doExtendedSearchCountQuery(this.search.query).subscribe(
                     (count: CountQueryResponse) => {
                         this.numberOfAllResults = count.numberOfResults;
-
+                        this.currentRangeEnd = this.numberOfAllResults > 25 ? 25 : this.numberOfAllResults;
                         if (this.numberOfAllResults === 0) {
                             this.emitSelectedResources();
                             this.resources = undefined;
@@ -223,7 +262,7 @@ export class ListViewComponent implements OnChanges, OnInit {
             if (this.search.query !== undefined) {
                 gravsearch = this.search.query;
                 gravsearch = gravsearch.substring(0, gravsearch.search('OFFSET'));
-                gravsearch = gravsearch + 'OFFSET ' + this.pageEvent.pageIndex;
+                gravsearch = gravsearch + 'OFFSET ' + index;
                 this._dspApiConnection.v2.search.doExtendedSearch(gravsearch).subscribe(
                     (response: ReadResourceSequence) => {
                         // if the response does not contain any resources even the search count is greater than 0,
