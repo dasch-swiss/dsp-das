@@ -28,6 +28,21 @@
   }
 }
 
+.no-results-container {
+  background: rgb(255, 250, 210);
+  color: rgb(170, 70, 10);
+  height: 50px;
+  padding: 25px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  mat-icon {
+    color:rgb(240, 150, 15);
+  }
+}
+
 button.active {
   background-color: $black-12-opacity;
 }
