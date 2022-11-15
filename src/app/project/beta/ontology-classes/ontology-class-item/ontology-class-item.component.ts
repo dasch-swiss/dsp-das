@@ -72,7 +72,7 @@ export class OntologyClassItemComponent implements OnInit {
     }
 
     /**
-     * given an Html element, compare the scrollHeight and the clientHeight
+     * given a Html element, compare the scrollHeight and the clientHeight
      *
      * @param elem the element which has the line-clamp css
      * @returns inverse of comparison between the scrollHeight and the clientHeight of elem
