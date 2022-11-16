@@ -13,7 +13,7 @@ const appInitSpy = {
     }
 };
 
-fdescribe('RepresentationService', () => {
+describe('RepresentationService', () => {
     let service: RepresentationService;
 
     beforeEach(() => {
