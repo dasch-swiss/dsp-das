@@ -84,7 +84,7 @@ describe('AudioComponent', () => {
 
 
     beforeEach(async () => {
-        const representationServiceSpyObj = jasmine.createSpyObj('RepresentationService', ['getOriginalFilename', 'doesFileExist']);
+        const representationServiceSpyObj = jasmine.createSpyObj('RepresentationService', ['getFileInfo', 'doesFileExist']);
         // const sanitizerSpyObj = jasmine.createSpyObj('DomSanitizer', ['bypassSecurityTrustUrl']);
 
         await TestBed.configureTestingModule({

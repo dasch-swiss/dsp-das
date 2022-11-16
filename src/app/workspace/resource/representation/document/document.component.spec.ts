@@ -137,7 +137,7 @@ class MockStatusComponent {
 describe('DocumentComponent', () => {
 
     beforeEach(async () => {
-        const representationServiceSpyObj = jasmine.createSpyObj('RepresentationService', ['getOriginalFilename', 'doesFileExist']);
+        const representationServiceSpyObj = jasmine.createSpyObj('RepresentationService', ['getFileInfo', 'doesFileExist']);
 
         await TestBed.configureTestingModule({
             declarations: [

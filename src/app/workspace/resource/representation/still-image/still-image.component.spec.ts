@@ -146,7 +146,7 @@ describe('StillImageComponent', () => {
             }
         };
 
-        const representationServiceSpyObj = jasmine.createSpyObj('RepresentationService', ['getOriginalFilename', 'doesFileExist']);
+        const representationServiceSpyObj = jasmine.createSpyObj('RepresentationService', ['getFileInfo', 'doesFileExist']);
 
         TestBed.configureTestingModule({
             declarations: [
