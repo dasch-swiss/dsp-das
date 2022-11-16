@@ -22,7 +22,7 @@
 
     <!-- In case of 0 result -->
     <div class="list-view no-results" *ngIf="!loading && (numberOfAllResults >= 0 && !resources?.resources.length)">
-        <!-- Case: user did a fulltext search -->
+        <!-- Case A: user did a fulltext search -->
         <div *ngIf="search.mode === 'fulltext'">
             <p>Your search - <strong> {{search.query}}</strong> - did not match any documents.</p>
             <p>Suggestions:</p>
@@ -36,11 +36,20 @@
             <mat-divider></mat-divider>
             <app-hint [topic]="'search'"></app-hint>
         </div>
-        <!-- Case: user clicked on the class item -->
+        <!-- Case B: user clicked on the class item -->
         <div *ngIf="search.mode !== 'fulltext'">
-            <div class="no-results-container">
+            <!-- Case B1: there is no resources created-->
+            <div *ngIf="hasPermission" class="no-results-container">
                 <mat-icon>warning</mat-icon>
                 <div>No resources have been created for this class yet.</div>
+            </div>
+            <!-- Case B2: no permission-->
+            <div *ngIf="!hasPermission" class="no-results-container">
+                <mat-icon>warning</mat-icon>
+                <div>
+                    It seems like you don’t have the necessary permissions.<br>
+                    Check with a project admin if you have the necessary permission or if you are logged in.
+                </div>
             </div>
         </div>
     </div>
