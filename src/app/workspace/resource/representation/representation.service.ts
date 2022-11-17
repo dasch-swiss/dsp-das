@@ -37,6 +37,12 @@ export class RepresentationService {
         }
     }
 
+    /**
+     * returns info about a file
+     * @param url url of the file
+     * @param imageFilename optional parameter if the file is an image because the url structure differs from other file types
+     * @returns an object containing the knora.json file for the given file url
+     */
     getFileInfo(url: string, imageFilename?: string): Observable<Object> {
         const requestOptions = {
             headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -55,6 +61,11 @@ export class RepresentationService {
         return this._http.get(pathToJson, requestOptions);
     }
 
+     /**
+     * downloads the file
+     * @param url url of the file
+     * @param imageFilename optional parameter if the file is an image because the url structure differs from other file types
+     */
     async downloadFile(url: string, imageFilename?: string) {
         let originalFilename;
 
