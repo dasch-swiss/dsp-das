@@ -1,7 +1,6 @@
 @import "../../../../assets/style/config";
 
-.list-view-header,
-.list-view-footer {
+.list-view-header {
   display: flex;
   box-sizing: border-box;
   flex-direction: row;
@@ -13,8 +12,36 @@
   z-index: 1;
   background: $bright;
 
-  mat-paginator {
-    background: none;
+  .pagination-button:disabled {
+    span,
+    mat-icon{
+      color: #BDBFC1;
+    }
+  }
+
+  .pagination-button {
+    &.previous {
+      span{
+        padding-left: 14px;
+      }
+    }
+
+    &.next {
+      span{
+        padding-right: 14px;
+      }
+    }
+
+    span,
+    mat-icon{
+      color: $primary-new;
+      font-weight: 400;
+    }
+  }
+
+  .range{
+    color: #7B7F84;
+    font-weight: 300;
   }
 }
 
@@ -41,5 +68,5 @@ button.active {
 }
 
 .beta {
-  height: 80px;
+  height: 60px;
 }
