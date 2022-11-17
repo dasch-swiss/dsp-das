@@ -5,7 +5,8 @@ import { ErrorHandlerService } from 'src/app/main/services/error-handler.service
 import { ComponentCommunicationEventService, EmitEvent, Events } from 'src/app/main/services/component-communication-event.service';
 import { NotificationService } from 'src/app/main/services/notification.service';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 /**
  * query: search query. It can be gravserch query or fulltext string query.
@@ -90,6 +91,9 @@ export class ListViewComponent implements OnChanges, OnInit {
     // feature toggle for new concept
     beta = false;
 
+    // flag to set permission to see resources
+    hasPermission = false;
+
     currentIndex = 0;
 
     currentRangeStart = 1;
@@ -134,7 +138,7 @@ export class ListViewComponent implements OnChanges, OnInit {
     }
 
     // the child component send the selected resources to the parent of this component directly;
-    // but when this component is intialized, it should select the first item in the list and
+    // but when this component is initialized, it should select the first item in the list and
     // emit this selected resource to the parent.
     emitSelectedResources(res?: FilteredResources) {
 
@@ -187,7 +191,7 @@ export class ListViewComponent implements OnChanges, OnInit {
     /**
      * do the search and send the resources to the child components
      * like resource-list, resource-grid or resource-table
-     * @
+     * @param index offset of gravsearch query
      */
     private _doSearch(index: number = 0) {
 
@@ -237,11 +241,10 @@ export class ListViewComponent implements OnChanges, OnInit {
             // emit 'gravSearchExecuted' event to the fulltext-search component in order to clear the input field
             this._componentCommsService.emit(new EmitEvent(Events.gravSearchExecuted, true));
 
-            // search mode: gravsearch
-            if (index === 0) {
-                // perform count query
-                this._dspApiConnection.v2.search.doExtendedSearchCountQuery(this.search.query).subscribe(
-                    (count: CountQueryResponse) => {
+            // request the count query if the page index is zero otherwise it is already stored in the numberOfAllResults
+            const numberOfAllResults$ = index !== 0 ? of(this.numberOfAllResults) :
+                this._dspApiConnection.v2.search.doExtendedSearchCountQuery(this.search.query).pipe(
+                    map((count: CountQueryResponse) => {
                         this.numberOfAllResults = count.numberOfResults;
                         this.currentRangeEnd = this.numberOfAllResults > 25 ? 25 : this.numberOfAllResults;
                         if (this.numberOfAllResults === 0) {
@@ -249,41 +252,48 @@ export class ListViewComponent implements OnChanges, OnInit {
                             this.resources = undefined;
                             this.loading = false;
                         }
-                    },
-                    (countError: ApiResponseError) => {
-                        this.loading = countError.status !== 504;
-                        this._errorHandler.showMessage(countError);
-                    }
+
+                        return count.numberOfResults;
+                    })
                 );
-            }
 
-            let gravsearch: string;
+            numberOfAllResults$.subscribe(
+                (numberOfAllResults: number) => {
+                    if (this.search.query !== undefined) {
+                        // build the gravsearch query
+                        let gravsearch = this.search.query;
+                        gravsearch = gravsearch.substring(0, gravsearch.search('OFFSET'));
+                        gravsearch = gravsearch + 'OFFSET ' + index;
 
-            if (this.search.query !== undefined) {
-                gravsearch = this.search.query;
-                gravsearch = gravsearch.substring(0, gravsearch.search('OFFSET'));
-                gravsearch = gravsearch + 'OFFSET ' + index;
-                this._dspApiConnection.v2.search.doExtendedSearch(gravsearch).subscribe(
-                    (response: ReadResourceSequence) => {
-                        // if the response does not contain any resources even the search count is greater than 0,
-                        // it means that the user does not have the permissions to see anything: emit an empty result
-                        if (response.resources.length === 0) {
-                            this.emitSelectedResources();
-                        }
-                        this.resources = response;
-                        this.loading = false;
-                    },
-                    (error: ApiResponseError) => {
-                        this.loading = false;
+                        this._dspApiConnection.v2.search.doExtendedSearch(gravsearch).subscribe(
+                            (response: ReadResourceSequence) => {
+                                // if the response does not contain any resources even the search count is greater than 0,
+                                // it means that the user does not have the permissions to see anything: emit an empty result
+                                if (response.resources.length === 0) {
+                                    this.emitSelectedResources();
+                                }
+
+                                this.resources = response;
+                                this.hasPermission = !(numberOfAllResults > 0 && this.resources.resources.length === 0);
+                                this.loading = false;
+                            },
+                            (error: ApiResponseError) => {
+                                this.loading = false;
+                                this.resources = undefined;
+                                this._errorHandler.showMessage(error);
+                            }
+                        );
+                    } else {
+                        this._notification.openSnackBar('The gravsearch query is not set correctly');
                         this.resources = undefined;
-                        this._errorHandler.showMessage(error);
+                        this.loading = false;
                     }
-                );
-            } else {
-                this._notification.openSnackBar('The gravsearch query is not set correctly');
-                this.resources = undefined;
-                this.loading = false;
-            }
+                },
+                (countError: ApiResponseError) => {
+                    this.loading = countError.status !== 504;
+                    this._errorHandler.showMessage(countError);
+                }
+            );
 
         }
 

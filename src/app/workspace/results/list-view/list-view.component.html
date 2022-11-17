@@ -27,17 +27,36 @@
 
     <!-- In case of 0 result -->
     <div class="list-view no-results" *ngIf="!loading && (numberOfAllResults >= 0 && !resources?.resources.length)">
-        <p>Your search <span *ngIf="search.mode === 'fulltext'">- <strong> {{search.query}}</strong> -</span> did not match any documents.</p>
-        <p>Suggestions:</p>
-        <ul>
-            <li *ngIf="numberOfAllResults > 0">Make sure that you are logged in and you have all the needed permissions.</li>
-            <li>Make sure that all words are spelled correctly.</li>
-            <li>Try different keywords.</li>
-            <li>Try more general keywords.</li>
-            <li>Try fewer keywords.</li>
-        </ul>
-        <mat-divider></mat-divider>
-        <app-hint [topic]="'search'"></app-hint>
+        <!-- Case A: user did a fulltext search -->
+        <div *ngIf="search.mode === 'fulltext'">
+            <p>Your search - <strong> {{search.query}}</strong> - did not match any documents.</p>
+            <p>Suggestions:</p>
+            <ul>
+                <li *ngIf="numberOfAllResults > 0">Make sure that you are logged in and you have all the needed permissions.</li>
+                <li>Make sure that all words are spelled correctly.</li>
+                <li>Try different keywords.</li>
+                <li>Try more general keywords.</li>
+                <li>Try fewer keywords.</li>
+            </ul>
+            <mat-divider></mat-divider>
+            <app-hint [topic]="'search'"></app-hint>
+        </div>
+        <!-- Case B: user clicked on the class item -->
+        <div *ngIf="search.mode !== 'fulltext'">
+            <!-- Case B1: there is no resources created-->
+            <div *ngIf="hasPermission" class="no-results-container">
+                <mat-icon>warning</mat-icon>
+                <div>No resources have been created for this class yet.</div>
+            </div>
+            <!-- Case B2: no permission-->
+            <div *ngIf="!hasPermission" class="no-results-container">
+                <mat-icon>warning</mat-icon>
+                <div>
+                    It seems like you don’t have the necessary permissions.<br>
+                    Check with a project admin if you have the necessary permission or if you are logged in.
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
