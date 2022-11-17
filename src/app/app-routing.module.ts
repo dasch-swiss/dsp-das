@@ -5,7 +5,6 @@ import { LoginFormComponent } from './main/action/login-form/login-form.componen
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { HelpComponent } from './main/help/help.component';
-import { MainComponent } from './main/main.component';
 import { StatusComponent } from './main/status/status.component';
 import { OntologyClassInstanceComponent } from './project/beta/ontology-classes/ontology-class-instance/ontology-class-instance.component';
 import { SettingsComponent } from './project/beta/settings/settings.component';
