@@ -644,12 +644,7 @@ export class OntologyComponent implements OnInit {
     }
 
     private _setPageTitle() {
-        if (this.ontologyIri) {
-            this._titleService.setTitle('Project ' + this.project.shortname + ' | Data model');
-        } else {
-            // set the page title in case of more than one existing project ontologies
-            this._titleService.setTitle('Project ' + this.project.shortname + ' | Data models');
-        }
+        this._titleService.setTitle('Project ' + this.project.shortname + ' | Data model' + (this.ontologyIri ? '' : 's'));
     }
 
 }

@@ -344,11 +344,7 @@ export class ListComponent implements OnInit {
     }
 
     private _setPageTitle() {
-        if (this.listIri) {
-            this._titleService.setTitle('Project ' + this.project?.shortname + ' | List');
-        } else {
-            this._titleService.setTitle('Project ' + this.project?.shortname + ' | Lists');
-        }
+        this._titleService.setTitle('Project ' + this.project?.shortname + ' | List' + (this.listIri? '' : 's'));
     }
 
 }
