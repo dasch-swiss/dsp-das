@@ -56,15 +56,15 @@
 }
 
 .no-results-container {
-  background: rgb(255, 250, 230);
-  color: rgb(170, 70, 10);
+  background: #fffae6;
+  color: #aa470a;
   padding: 25px;
   border-radius: 20px;
   display: flex;
   gap: 10px;
 
   mat-icon {
-    color:rgb(240, 150, 15);
+    color: #f0960f;
     min-width: 25px;
   }
 }
