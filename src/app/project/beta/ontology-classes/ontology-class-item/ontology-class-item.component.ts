@@ -13,6 +13,7 @@ import { OntologyService } from 'src/app/project/ontology/ontology.service';
     styleUrls: ['./ontology-class-item.component.scss']
 })
 export class OntologyClassItemComponent implements OnInit {
+    readonly MAX_LABEL_CHAR = 25;
 
     @Input() resClass: ClassDefinition;
 
@@ -71,14 +72,9 @@ export class OntologyClassItemComponent implements OnInit {
         this._router.navigateByUrl(route);
     }
 
-    /**
-     * given a Html element, compare the scrollHeight and the clientHeight
-     *
-     * @param elem the element which has the line-clamp css
-     * @returns inverse of comparison between the scrollHeight and the clientHeight of elem
-     */
-    compareElementHeights(elem: HTMLElement): boolean {
-        return !(elem.scrollHeight > elem.clientHeight);
+
+    trimLabel(fullString: string) {
+        return fullString.length > this.MAX_LABEL_CHAR ? `${fullString.slice(0, this.MAX_LABEL_CHAR)}...`: fullString;
     }
 
     private _setGravsearch(iri: string): string {

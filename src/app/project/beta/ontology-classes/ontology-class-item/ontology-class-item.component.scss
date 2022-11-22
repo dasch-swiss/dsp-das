@@ -7,75 +7,60 @@
   align-content: center;
   padding: 10px 0px;
 
-  .content {
+  .v-content {
+    height: 70px;
     width: 90%;
-    border-radius: 5px;
-    box-shadow: 0px 1px 3px rgb(0 0 0 / 10%), 0px 1px 2px rgb(0 0 0 / 6%);
-    border-bottom: 2px solid #F9FAFB;
-    &.is-active{
-      border-bottom: 2px solid #1F2937;
+    border-radius: 7px;
+    display: flex;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 10%), 0 1px 2px rgb(0 0 0 / 6%);
+
+    &.is-active {
+      background-color: #D6E0E8;
     }
 
-    .top {
-      display: inline-flex;
-      align-items: center;
-      padding: 20px 0px;
-      width: 100%;
+    .v-box {
+      padding-left: 10px;
+      padding-top: 10px;
+      flex-grow: 1;
 
-      .file-icon {
-
-        .icon-wrapper {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 48px;
-          height: 48px;
-          background: #1F2937;
-          border-radius: 6px;
-          margin: 0px 20px;
-
-          mat-icon {
-            color: white;
-          }
-        }
+      .label {
+        width: 200px;
+        color: #74A2CF;
+        padding-left: 4px;
       }
 
-      .info {
+      .entry-container {
+        color: #336790;
+        display: flex;
+        align-items: center;
+        gap: 5px;
 
-        .label {
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;  
-          overflow: hidden;
-          padding-right: 16px;
-          color: #6B7280;
-          margin: 0px;
+        .entry {
+          font-size: 20px;
         }
-
-        .entries {
-          color: #111827;
-          font-size: 24px;
-          margin: 0px;
-          padding-top: 5px;
-        }
-        
       }
     }
 
-    .bottom {
+    .v-box:hover {
+      background-color: #1F293730;
+    }
+
+    .icon {
+      background-color: #336790;
+      border-radius: 0 7px 7px 0;
+      flex-basis: 40px;
       display: flex;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      background: #F9FAFB;
 
-      .add-icon {
-        margin: 0px 10px;
-
-        mat-icon {
-          font-size: 32px;
-          width: 32px;
-          height: 32px;
-        }
+      mat-icon {
+        color: white;
       }
+    }
+
+    .icon:hover {
+      background-color: #1F293730;
     }
   }
 }
