@@ -222,10 +222,8 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
             // get incoming resource, if the offset is the same but page changed
             this.getIncomingResource(this.resource.incomingRepresentations[position].id);
         }
-        
         this.compoundPosition.position = position;
         this.compoundPosition.page = page;
-
         this.representationsToDisplay = this.collectRepresentationsAndAnnotations(this.incomingResource);
 
     }
