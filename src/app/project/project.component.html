@@ -25,32 +25,22 @@
                     </p>
                 </div>
                 <mat-list class="main-list">
-                    <!-- Maybe we can have a project selector here (similar to the github dashboard page) -->
+
+                    <!-- Ontology Section -->
                     <mat-divider></mat-divider>
-                    <mat-list-item class="link" (click)="goToOverview()">
-                        <span class="link section-label">
-                            <p>Go to projects overview</p>
+                    <mat-list-item class="section-title">
+                        <span class="section-label">
+                            <mat-icon class="sidenav-prefix-icon">bubble_chart</mat-icon>
+                            <p>Data models</p>
                         </span>
                         <span class="fill-remaining-space"></span>
-                        <span mat-icon>
+                        <span class="section-icon">
                             <mat-icon>chevron_right</mat-icon>
                         </span>
                     </mat-list-item>
                     <mat-divider></mat-divider>
 
-                    <!-- Ontology Section -->
-                    <div class="section-title">
-                        <span class="section-label">
-                            <mat-icon class="sidenav-prefix-icon">bubble_chart</mat-icon>
-                            <p>Data models</p>
-                        </span>
-                    </div>
-                    <!-- <mat-list-item class="section-title">
-                        <span class="section-label">
-                            <mat-icon class="sidenav-prefix-icon">bubble_chart</mat-icon>
-                            <p>Data models</p>
-                        </span>
-                    </mat-list-item> -->
+                    <!--  ↓↓↓ This should be deleted later ↓↓↓ -->
                     <mat-list-item class="link add-new" *ngIf="projectAdmin" (click)="open('add-ontology')">
                         <span class="add-new-label">
                             <mat-icon class="sidenav-prefix-icon">add_circle_outline</mat-icon>
@@ -58,6 +48,7 @@
                         </span>
                     </mat-list-item>
                     <mat-divider></mat-divider>
+                    <!--  ↑↑↑ This should be deleted later ↑↑↑ -->
 
                     <!-- Project Ontologies -->
                     <mat-accordion *ngFor="let onto of projectOntologies; let first = first" multi
@@ -84,12 +75,20 @@
 
                     <!-- Lists Section -->
                     <span *ngIf="projectMember">
-                        <div class="section-title">
+                        <mat-list-item class="section-title">
                             <span class="section-label">
                                 <mat-icon class="sidenav-prefix-icon">list</mat-icon>
                                 <p>Lists</p>
                             </span>
-                        </div>
+                            <span class="fill-remaining-space"></span>
+                            <span class="section-icon">
+                                <mat-icon>chevron_right</mat-icon>
+                            </span>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+
+
+                        <!--  ↓↓↓ This should be deleted later ↓↓↓ -->
                         <mat-list-item class="link add-new" *ngIf="projectAdmin" (click)="open('add-list')">
                             <span class="add-new-label">
                                 <mat-icon class="sidenav-prefix-icon">add_circle_outline</mat-icon>
@@ -97,6 +96,8 @@
                             </span>
                         </mat-list-item>
                         <mat-divider></mat-divider>
+                        <!--  ↑↑↑ This should be deleted later ↑↑↑ -->
+
                         <!-- Project lists -->
                         <mat-list-item *ngFor="let list of projectLists" class="list link"
                             (click)="open('list', list.id)">
@@ -109,8 +110,6 @@
                         </mat-list-item>
                     </span>
 
-                    <mat-divider></mat-divider>
-
                     <!-- Project members if project admin -->
                     <!-- <mat-list-item *ngIf="projectAdmin" class="link section-title" routerLink="settings/collaboration">
                         <h2 class="mat-title">Members</h2>
@@ -122,10 +121,10 @@
                         <mat-list-item class="link section-title footer" (click)="open('settings')">
                             <span class="section-label">
                                 <mat-icon class="sidenav-prefix-icon">settings</mat-icon>
-                                <h2 class="mat-title">Project Settings</h2>
+                                <div>Project Settings</div>
                             </span>
                             <span class="fill-remaining-space"></span>
-                            <span mat-icon>
+                            <span class="section-icon">
                                 <mat-icon>chevron_right</mat-icon>
                             </span>
                         </mat-list-item>
