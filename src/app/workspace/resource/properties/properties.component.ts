@@ -238,6 +238,8 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                 this.user = response.user;
             }
         );
+
+        this._getIncomingLinks();
     }
 
     ngOnDestroy() {
