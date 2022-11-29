@@ -7,7 +7,7 @@
   align-content: center;
   padding: 10px 0px;
 
-  .v-content {
+  .content {
     height: 70px;
     width: 90%;
     border-radius: 7px;
@@ -18,7 +18,7 @@
       background-color: #D6E0E8;
     }
 
-    .v-box {
+    .box {
       padding-left: 10px;
       padding-top: 10px;
       flex-grow: 1;
@@ -41,7 +41,7 @@
       }
     }
 
-    .v-box:hover {
+    .box:hover {
       background-color: #1F293730;
     }
 
