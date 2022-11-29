@@ -127,7 +127,7 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
 
     ngOnInit() {
         // in case the resource is referencing itself, assign the parent resource to linkedResource
-        if (this.displayValue.linkedResourceIri === this.parentResource.id) {
+        if (this.displayValue  && this.displayValue.linkedResourceIri === this.parentResource.id) {
             this.displayValue.linkedResource = this.parentResource;
         }
 
