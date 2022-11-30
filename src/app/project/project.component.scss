@@ -6,20 +6,29 @@
 }
 
 .section-title {
-  padding-top: 17.5%;
+  height: 60px!important;
 
   &.footer {
-    padding-top: 0%;
+    padding-top: 0;
   }
 
   .section-label {
+    color: #336790;
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    padding: 0px 16px;
     font-size: 20px;
     font-weight: 300;
   }
+
+  .section-icon {
+    color: #336790;
+
+    mat-icon {
+      vertical-align: middle;
+    }
+  }
+
   .hover-only {
     display: none;
   }

@@ -1,24 +1,15 @@
 <div class="class-item-container">
-    <div class="content" [routerLinkActive]="['is-active']">
-        <div class="top link" [routerLink]="link">
-            <div class="file-icon">
-                <div class="icon-wrapper">
-                    <mat-icon>{{icon}}</mat-icon>
-                </div>
-            </div>
-            <div class="info">
-                <p class="label" #classLabel matTooltip="{{resClass.label}}" matTooltipShowDelay="750"
-                    [matTooltipDisabled]="compareElementHeights(classLabel)"> {{resClass.label}}</p>
-                <p class="entries">{{results | i18nPlural: itemPluralMapping['entry']}}</p>
+    <div class="content" [routerLinkActive]="['is-active']" >
+        <div class="box link" [routerLink]="link">
+            <div class="label" matTooltip="{{resClass.label}}" matTooltipShowDelay="750" [matTooltipPosition]="'above'"
+                 [matTooltipDisabled]="resClass.label.length < MAX_LABEL_CHAR">{{trimLabel(resClass.label)}}</div>
+            <div class="entry-container">
+                <mat-icon>{{icon}}</mat-icon>
+                <div class="entry">{{results | i18nPlural: itemPluralMapping['entry']}}</div>
             </div>
         </div>
-        <div class="bottom link" *ngIf="projectMember" [routerLink]="link + '/add'">
-            <div class="add-icon">
-                <mat-icon>add_circle_outline</mat-icon>
-            </div>
-            <div class="add-new">
-                <p class="add-new-label">Add a new resource</p>
-            </div>
+        <div class="icon link" *ngIf="projectMember" [routerLink]="link + '/add'">
+            <mat-icon>add_circle_outline</mat-icon>
         </div>
     </div>
 </div>
