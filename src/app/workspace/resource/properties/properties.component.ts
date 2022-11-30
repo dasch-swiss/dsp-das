@@ -240,6 +240,8 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                 this.user = response.user;
             }
         );
+
+        this._getIncomingLinks();
     }
 
     ngOnDestroy() {
@@ -528,25 +530,27 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
      */
     private _getIncomingLinks() {
         this.loading = true;
+        if (this.pageEvent) {
+            if (this.pageEvent.pageIndex === 0) {
+                this._incomingService.getIncomingLinks(this.resource.res.id, this.pageEvent.pageIndex, true).subscribe(
+                    (response: CountQueryResponse) => {
+                        this.numberOffAllIncomingLinkRes = response.numberOfResults;
+                    }
+                );
+            }
 
-        if (this.pageEvent.pageIndex === 0) {
-            this._incomingService.getIncomingLinks(this.resource.res.id, this.pageEvent.pageIndex, true).subscribe(
-                (response: CountQueryResponse) => {
-                    this.numberOffAllIncomingLinkRes = response.numberOfResults;
+            this._incomingService.getIncomingLinks(this.resource.res.id, this.pageEvent.pageIndex).subscribe(
+                (response: ReadResourceSequence) => {
+                    if (response.resources.length > 0) {
+                        this.incomingLinkResources = response.resources;
+                    }
+                    this.loading = false;
+                }, (error: ApiResponseError) => {
+                    this.loading = false;
                 }
             );
         }
 
-        this._incomingService.getIncomingLinks(this.resource.res.id, this.pageEvent.pageIndex).subscribe(
-            (response: ReadResourceSequence) => {
-                if (response.resources.length > 0) {
-                    this.incomingLinkResources = response.resources;
-                }
-                this.loading = false;
-            }, (error: ApiResponseError) => {
-                this.loading = false;
-            }
-        );
     }
 
     /**
