@@ -168,9 +168,6 @@ describe('OverviewComponent', () => {
         });
 
         it('should populate project lists correctly', () => {
-
-            console.log()
-
             expect(testHostComponent.overviewComp.userProjects.length).toEqual(1);
             expect(testHostComponent.overviewComp.otherProjects.length).toEqual(7);
         });
