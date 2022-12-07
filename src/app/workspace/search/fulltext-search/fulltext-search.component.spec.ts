@@ -325,7 +325,7 @@ describe('FulltextSearchComponent', () => {
             testHostFixture.detectChanges();
 
             expect(projBtnLabelNe.innerHTML).toEqual('anything');
-            expect(testHostComponent.fulltextSearch.projectIri).toEqual('http://rdfh.ch/projects/FulltextSearchComponent');
+            expect(testHostComponent.fulltextSearch.projectIri).toEqual('http://rdfh.ch/projects/Lw3FC39BSzCwvmdOaTyLqQ');
             expect(testHostComponent.fulltextSearch.projectLabel).toEqual('anything');
         });
 
