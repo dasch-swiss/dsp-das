@@ -206,7 +206,7 @@ export class ListViewComponent implements OnChanges, OnInit {
                         this.numberOfAllResults = count.numberOfResults;
 
                         if (this.numberOfAllResults === 0) {
-                            this._notification.openSnackBar('No results to display.');
+                            this._notification.openSnackBar('No resources to display.');
                             this.emitSelectedResources();
                             this.resources = undefined;
                             this.loading = false;
