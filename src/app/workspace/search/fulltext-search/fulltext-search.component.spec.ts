@@ -115,8 +115,8 @@ describe('FulltextSearchComponent', () => {
 
         // initiate the local storage prevSearch
         prevSearchArray = [
-            { projectIri: 'http://rdfh.ch/projects/yISnUYe6SYmoyuqeMdW39w', projectLabel: 'incunabula', query: 'one thing' },
-            { projectIri: 'http://rdfh.ch/projects/yISnUYe6SYmoyuqeMdW39w', projectLabel: 'incunabula', query: 'two things' },
+            { projectIri: 'http://rdfh.ch/projects/0803', projectLabel: 'incunabula', query: 'one thing' },
+            { projectIri: 'http://rdfh.ch/projects/0803', projectLabel: 'incunabula', query: 'two things' },
             { projectIri: 'http://rdfh.ch/projects/0001', projectLabel: 'anything', query: 'hello world' }
         ];
 
@@ -184,8 +184,8 @@ describe('FulltextSearchComponent', () => {
             // check the local storage state
             expect(testHostComponent.fulltextSearch.searchQuery).toEqual('new thing');
             const newPrevSearchArray: PrevSearchItem[] = [
-                { projectIri: 'http://rdfh.ch/projects/yISnUYe6SYmoyuqeMdW39w', projectLabel: 'incunabula', query: 'one thing' },
-                { projectIri: 'http://rdfh.ch/projects/yISnUYe6SYmoyuqeMdW39w', projectLabel: 'incunabula', query: 'two things' },
+                { projectIri: 'http://rdfh.ch/projects/0803', projectLabel: 'incunabula', query: 'one thing' },
+                { projectIri: 'http://rdfh.ch/projects/0803', projectLabel: 'incunabula', query: 'two things' },
                 { projectIri: 'http://rdfh.ch/projects/0001', projectLabel: 'anything', query: 'hello world' },
                 { query: 'new thing' }
             ];
@@ -216,7 +216,7 @@ describe('FulltextSearchComponent', () => {
             testHostComponent.fulltextSearch.doPrevSearch(prevSearchArray[0]);
 
             expect(testHostComponent.fulltextSearch.searchQuery).toEqual('one thing');
-            expect(testHostComponent.fulltextSearch.projectIri).toEqual('http://rdfh.ch/projects/yISnUYe6SYmoyuqeMdW39w');
+            expect(testHostComponent.fulltextSearch.projectIri).toEqual('http://rdfh.ch/projects/0803');
             expect(testHostComponent.fulltextSearch.projectLabel).toEqual('incunabula');
 
         });
@@ -244,8 +244,8 @@ describe('FulltextSearchComponent', () => {
             testHostFixture.detectChanges();
 
             const newPrevSearchArray: PrevSearchItem[] = [
-                { projectIri: 'http://rdfh.ch/projects/yISnUYe6SYmoyuqeMdW39w', projectLabel: 'incunabula', query: 'two things' },
-                { projectIri: 'http://rdfh.ch/projects/yISnUYe6SYmoyuqeMdW39w', projectLabel: 'incunabula', query: 'one thing' }
+                { projectIri: 'http://rdfh.ch/projects/0803', projectLabel: 'incunabula', query: 'two things' },
+                { projectIri: 'http://rdfh.ch/projects/0803', projectLabel: 'incunabula', query: 'one thing' }
             ];
             expect(localStorage.getItem('prevSearch')).toEqual(JSON.stringify(newPrevSearchArray));
         });
@@ -255,8 +255,8 @@ describe('FulltextSearchComponent', () => {
             testHostComponent.fulltextSearch.resetPrevSearch(prevSearchArray[2]);
 
             const newPrevSearchArray: PrevSearchItem[] = [
-                { projectIri: 'http://rdfh.ch/projects/yISnUYe6SYmoyuqeMdW39w', projectLabel: 'incunabula', query: 'one thing' },
-                { projectIri: 'http://rdfh.ch/projects/yISnUYe6SYmoyuqeMdW39w', projectLabel: 'incunabula', query: 'two things' }
+                { projectIri: 'http://rdfh.ch/projects/0803', projectLabel: 'incunabula', query: 'one thing' },
+                { projectIri: 'http://rdfh.ch/projects/0803', projectLabel: 'incunabula', query: 'two things' }
             ];
             expect(localStorage.getItem('prevSearch')).toEqual(JSON.stringify(newPrevSearchArray));
         });
