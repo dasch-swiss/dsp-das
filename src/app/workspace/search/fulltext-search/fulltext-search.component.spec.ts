@@ -117,7 +117,7 @@ describe('FulltextSearchComponent', () => {
         prevSearchArray = [
             { projectIri: 'http://rdfh.ch/projects/yISnUYe6SYmoyuqeMdW39w', projectLabel: 'incunabula', query: 'one thing' },
             { projectIri: 'http://rdfh.ch/projects/yISnUYe6SYmoyuqeMdW39w', projectLabel: 'incunabula', query: 'two things' },
-            { projectIri: 'http://rdfh.ch/projects/Lw3FC39BSzCwvmdOaTyLqQ', projectLabel: 'anything', query: 'hello world' }
+            { projectIri: 'http://rdfh.ch/projects/0001', projectLabel: 'anything', query: 'hello world' }
         ];
 
         localStorage.setItem('prevSearch', JSON.stringify(prevSearchArray));
@@ -186,7 +186,7 @@ describe('FulltextSearchComponent', () => {
             const newPrevSearchArray: PrevSearchItem[] = [
                 { projectIri: 'http://rdfh.ch/projects/yISnUYe6SYmoyuqeMdW39w', projectLabel: 'incunabula', query: 'one thing' },
                 { projectIri: 'http://rdfh.ch/projects/yISnUYe6SYmoyuqeMdW39w', projectLabel: 'incunabula', query: 'two things' },
-                { projectIri: 'http://rdfh.ch/projects/Lw3FC39BSzCwvmdOaTyLqQ', projectLabel: 'anything', query: 'hello world' },
+                { projectIri: 'http://rdfh.ch/projects/0001', projectLabel: 'anything', query: 'hello world' },
                 { query: 'new thing' }
             ];
             expect(localStorage.getItem('prevSearch')).toEqual(JSON.stringify(newPrevSearchArray));
@@ -207,7 +207,7 @@ describe('FulltextSearchComponent', () => {
             testHostFixture.detectChanges();
 
             expect(testHostComponent.fulltextSearch.searchQuery).toEqual('hello world');
-            expect(testHostComponent.fulltextSearch.projectIri).toEqual('http://rdfh.ch/projects/Lw3FC39BSzCwvmdOaTyLqQ');
+            expect(testHostComponent.fulltextSearch.projectIri).toEqual('http://rdfh.ch/projects/0001');
             expect(testHostComponent.fulltextSearch.projectLabel).toEqual('anything');
 
         });
@@ -325,7 +325,7 @@ describe('FulltextSearchComponent', () => {
             testHostFixture.detectChanges();
 
             expect(projBtnLabelNe.innerHTML).toEqual('anything');
-            expect(testHostComponent.fulltextSearch.projectIri).toEqual('http://rdfh.ch/projects/Lw3FC39BSzCwvmdOaTyLqQ');
+            expect(testHostComponent.fulltextSearch.projectIri).toEqual('http://rdfh.ch/projects/0001');
             expect(testHostComponent.fulltextSearch.projectLabel).toEqual('anything');
         });
 
