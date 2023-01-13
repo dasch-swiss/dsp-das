@@ -4,6 +4,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ApiResponseData, MockProjects, ProjectResponse, ProjectsEndpointAdmin } from '@dasch-swiss/dsp-js';
+import { SplitAreaDirective, SplitComponent } from 'angular-split';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
 import { AppInitService } from 'src/app/app-init.service';
@@ -32,7 +33,7 @@ describe('OntologyClassInstanceComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [OntologyClassInstanceComponent],
+            declarations: [OntologyClassInstanceComponent, SplitComponent, SplitAreaDirective],
             imports: [
                 MatSnackBarModule,
                 MatDialogModule,
