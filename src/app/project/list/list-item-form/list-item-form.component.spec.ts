@@ -72,6 +72,9 @@ class TestHostComponent implements OnInit {
 
 }
 
+/**
+ * test component that mocks StringLiteralInputComponent
+ */
 @Component({ selector: 'app-string-literal-input', template: '' })
 class MockStringLiteralInputComponent {
     @Input() placeholder = 'Label';
