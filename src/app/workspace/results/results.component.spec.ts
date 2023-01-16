@@ -20,7 +20,7 @@ class MockListViewComponent {
     constructor() { }
 }
 
-fdescribe('ResultsComponent', () => {
+describe('ResultsComponent', () => {
     let component: ResultsComponent;
     let fixture: ComponentFixture<ResultsComponent>;
 
