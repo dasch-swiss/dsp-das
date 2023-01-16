@@ -4,6 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { AddRegionFormComponent } from './add-region-form.component';
 
+// use test host component approach - create separate simple component in the test file and uses it instead the real one
 describe('AddRegionFormComponent', () => {
     let component: AddRegionFormComponent;
     let fixture: ComponentFixture<AddRegionFormComponent>;
@@ -16,7 +17,7 @@ describe('AddRegionFormComponent', () => {
             imports: [
                 TranslateModule.forRoot()
             ],
-            providers:[
+            providers: [
                 UntypedFormBuilder
             ]
         })
