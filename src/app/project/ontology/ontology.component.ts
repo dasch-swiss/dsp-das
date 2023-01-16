@@ -134,7 +134,7 @@ export class OntologyComponent implements OnInit {
         private _ontologyService: OntologyService,
         private _route: ActivatedRoute,
         private _router: Router,
-        private _session: SessionService,
+        private _sessionService: SessionService,
         private _sortingService: SortingService,
         private _titleService: Title,
         private _projectService: ProjectService
@@ -191,7 +191,7 @@ export class OntologyComponent implements OnInit {
         this.disableContent = (window.innerWidth <= 768);
 
         // get information about the logged-in user
-        this.session = this._session.getSession();
+        this.session = this._sessionService.getSession();
 
         // is the logged-in user system admin?
         this.sysAdmin = this.session.user.sysAdmin;
