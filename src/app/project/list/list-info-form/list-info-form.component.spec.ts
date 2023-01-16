@@ -74,7 +74,7 @@ class MockStringLiteralInputComponent {
     constructor() { }
 }
 
-fdescribe('ListInfoFormComponent', () => {
+describe('ListInfoFormComponent', () => {
     let testHostUpdateListComponent: TestHostUpdateListComponent;
     let testHostUpdateListFixture: ComponentFixture<TestHostUpdateListComponent>;
     let testHostCreateListComponent: TestHostCreateListComponent;
