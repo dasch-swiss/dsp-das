@@ -1,6 +1,7 @@
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, Input, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,6 +14,7 @@ import {
     MockProjects,
     ProjectResponse,
     ReadProject,
+    StringLiteral,
     UpdateChildNodeRequest
 } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
@@ -69,6 +71,17 @@ class TestHostInsertChildNodeComponent {
     constructor() { }
 }
 
+@Component({ selector: 'app-string-literal-input', template: '' })
+class MockStringLiteralInputComponent {
+    @Input() placeholder = 'Label';
+    @Input() language: string;
+    @Input() textarea: boolean;
+    @Input() value: StringLiteral[] = [];
+    @Input() disabled: boolean;
+    @Input() readonly: boolean;
+    constructor() { }
+}
+
 describe('EditListItemComponent', () => {
     let testHostComponent: TestHostUpdateChildNodeComponent;
     let testHostFixture: ComponentFixture<TestHostUpdateChildNodeComponent>;
@@ -99,11 +112,13 @@ describe('EditListItemComponent', () => {
                 TestHostUpdateChildNodeComponent,
                 TestHostInsertChildNodeComponent,
                 ProgressIndicatorComponent,
+                MockStringLiteralInputComponent
             ],
             imports: [
                 BrowserAnimationsModule,
                 MatDialogModule,
                 MatSnackBarModule,
+                MatFormFieldModule,
                 TranslateModule.forRoot()
             ],
             providers: [
