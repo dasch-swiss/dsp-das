@@ -26,8 +26,8 @@
         <span class="fill-remaining-space center"></span>
         <!-- in case of res class: display cardinality -->
         <span *ngIf="propCard">
-            <mat-slide-toggle [disabled]="true" [checked]="propInfo.multiple"></mat-slide-toggle> multiple
-            <mat-slide-toggle [disabled]="true" [checked]="propInfo.required"></mat-slide-toggle> required
+            <mat-slide-toggle id="multiple" [disabled]="true" [checked]="propInfo.multiple"></mat-slide-toggle> multiple
+            <mat-slide-toggle id="required" [disabled]="true" [checked]="propInfo.required"></mat-slide-toggle> required
         </span>
         <!-- in case of ontology property: display corresponding resource classes -->
         <span *ngIf="!propCard" class="white-space">
