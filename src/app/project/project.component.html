@@ -93,7 +93,7 @@
                                 <p>Lists</p>
                             </span>
                         </div>
-                        <mat-list-item class="link add-new" *ngIf="projectAdmin" (click)="open('add-list')">
+                        <mat-list-item class="link add-new" [class.list-item-deactivated]="!project?.status" *ngIf="projectAdmin" (click)="open('add-list')">
                             <span class="add-new-label">
                                 <mat-icon class="sidenav-prefix-icon">add_circle_outline</mat-icon>
                                 <p>Add a new list</p>

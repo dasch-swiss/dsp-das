@@ -225,7 +225,7 @@ export class ProjectComponent implements OnInit {
             const pos = array.length - 1;
             id = array[pos];
         }
-        if (route === 'add-ontology') {
+        if (route === 'add-ontology' || route === 'add-list') {
             if (!this.project || !this.project.status) { // project is deactivated. Do not reroute
                 return;
             }
