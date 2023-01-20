@@ -11,6 +11,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormattedBooleanPipe } from 'src/app/main/pipes/formatting/formatted-boolean.pipe';
 import { CommentFormComponent } from '../comment-form/comment-form.component';
+import { MatIconModule } from '@angular/material/icon';
 
 
 /**
@@ -58,7 +59,7 @@ class TestHostCreateValueComponent implements OnInit {
     }
 }
 
-describe('BooleanValueComponent', () => {
+fdescribe('BooleanValueComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -75,6 +76,7 @@ describe('BooleanValueComponent', () => {
                 MatInputModule,
                 MatSelectModule,
                 MatOptionModule,
+                MatIconModule,
                 BrowserAnimationsModule
             ]
         })
