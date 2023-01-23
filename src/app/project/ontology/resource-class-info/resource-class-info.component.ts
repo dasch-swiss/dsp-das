@@ -325,7 +325,7 @@ export class ResourceClassInfoComponent implements OnInit {
                 propType: propType
             }
         };
-        this.updateCard(cardinality);
+        this.openEditDialogue(cardinality);
     }
 
     addExistingProperty(prop: PropertyInfoObject) {
@@ -336,7 +336,7 @@ export class ResourceClassInfoComponent implements OnInit {
                 propDef: prop.propDef,
             }
         };
-        this.updateCard(cardinality);
+        this.openEditDialogue(cardinality);
     }
 
     /**
@@ -383,53 +383,54 @@ export class ResourceClassInfoComponent implements OnInit {
     }
 
     /**
-     * updates cardinality
+     * openEditDialogue: Open the dialogue in order to Add a new property or update the cardinality of an existing
+     * property
      * @param card cardinality info object
+     * @param updateCardinality to display and update the cardinalities only
      */
-    updateCard(card: CardinalityInfo) {
+    openEditDialogue(card: CardinalityInfo) {
+        if (!card) {
+            return;
+        }
+        const classLabel = card.resClass.label;
 
-        if (card) {
-            const classLabel = card.resClass.label;
+        let mode: 'createProperty' | 'updateCardinality' = 'createProperty';
+        let propLabel = card.property.propType.group + ': ' + card.property.propType.label;
+        let title = 'Add new property of type "' + propLabel + '" to class "' + classLabel + '"';
 
-            let mode: 'createProperty' | 'updateCardinality' = 'createProperty';
-            let propLabel = card.property.propType.group + ': ' + card.property.propType.label;
-            let title = 'Add new property of type "' + propLabel + '" to class "' + classLabel + '"';
-
-            if (card.property.propDef) {
-                // the property exists already
-                mode = 'updateCardinality';
-                propLabel = card.property.propDef.label;
-                title = 'Add existing property "' + propLabel + '" to class "' + classLabel + '"';
-            }
-
-            const dialogConfig: MatDialogConfig = {
-                width: '640px',
-                maxHeight: '80vh',
-                position: {
-                    top: '112px'
-                },
-                data: {
-                    propInfo: card.property,
-                    title: title,
-                    subtitle: 'Customize property and cardinality',
-                    mode: mode,
-                    parentIri: card.resClass.id,
-                    position: this.propsToDisplay.length + 1,
-                    canBeUpdated: this.classCanReplaceCardinality
-                }
-            };
-
-            const dialogRef = this._dialog.open(
-                DialogComponent,
-                dialogConfig
-            );
-
-            dialogRef.afterClosed().subscribe(result => {
-                // update the view: list of properties in resource class
-                this.updateCardinality.emit(this.ontology.id);
-            });
+        if (card.property.propDef) {
+            // the property exists already
+            mode = 'updateCardinality';
+            propLabel = card.property.propDef.label;
+            title = 'Add existing property "' + propLabel + '" to class "' + classLabel + '"';
         }
 
+        const dialogConfig: MatDialogConfig = {
+            width: '640px',
+            maxHeight: '80vh',
+            position: {
+                top: '112px'
+            },
+            data: {
+                propInfo: card.property,
+                title: title,
+                subtitle: 'Customize property and cardinality',
+                mode: mode,
+                parentIri: card.resClass.id,
+                position: this.propsToDisplay.length + 1,
+                canBeUpdated: this.classCanReplaceCardinality
+            }
+        };
+
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+            // update the view: list of properties in resource class
+            this.updateCardinality.emit(this.ontology.id);
+        });
     }
 
 
