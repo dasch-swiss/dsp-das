@@ -61,8 +61,9 @@ export class OverviewComponent implements OnInit {
         // system admin can create new projects and edit projects
         // users not logged in can only view projects
         if (this.sysAdmin || !this.session) {
-            this._dspApiConnection.admin.projectsEndpoint.getProjects(true).subscribe(
+            this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
                 (response: ApiResponseData<ProjectsResponse>) => {
+
                     // reset the lists:
                     this.userProjects = [];
                     this.otherProjects = [];
@@ -99,7 +100,7 @@ export class OverviewComponent implements OnInit {
                         }
                     }
 
-                    this._dspApiConnection.admin.projectsEndpoint.getProjects(true).subscribe(
+                    this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
                         (projectsResponse: ApiResponseData<ProjectsResponse>) => {
 
                             // get list of all projects the user is NOT a member of
