@@ -1,3 +1,4 @@
+import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -10,10 +11,21 @@ import { AjaxResponse } from 'rxjs/ajax';
 import { AppInitService } from 'src/app/app-init.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { OntologyService } from 'src/app/project/ontology/ontology.service';
+import { ListViewComponent, SearchParams } from 'src/app/workspace/results/list-view/list-view.component';
 import { OntologyClassInstanceComponent } from './ontology-class-instance.component';
 
+/**
+ * test component that mocks ListViewComponent
+ */
+@Component({ selector: 'app-list-view', template: '' })
+class MockListViewComponent {
+    @Input() search: SearchParams;
+    @Input() withMultipleSelection?: boolean = false;
+    constructor() { }
+}
 
-describe('OntologyClassInstanceComponent', () => {
+
+fdescribe('OntologyClassInstanceComponent', () => {
     let component: OntologyClassInstanceComponent;
     let fixture: ComponentFixture<OntologyClassInstanceComponent>;
 
@@ -33,7 +45,7 @@ describe('OntologyClassInstanceComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [OntologyClassInstanceComponent, SplitComponent, SplitAreaDirective],
+            declarations: [OntologyClassInstanceComponent, SplitComponent, SplitAreaDirective, MockListViewComponent],
             imports: [
                 MatSnackBarModule,
                 MatDialogModule,
