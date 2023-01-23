@@ -1,5 +1,12 @@
 # Changelog
 
+## [10.13.0](https://github.com/dasch-swiss/dsp-app/compare/v10.12.0...v10.13.0) (2023-01-23)
+
+
+### Enhancements
+
+* **zio:** add support for new zio routes ([33dcc71](https://github.com/dasch-swiss/dsp-app/commit/33dcc7160690a3126dcaf4cc38fbb20df5c06195))
+
 ## [10.12.0](https://github.com/dasch-swiss/dsp-app/compare/v10.11.2...v10.12.0) (2023-01-20)
 
 
