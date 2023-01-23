@@ -34,7 +34,10 @@ import { DefaultProperties, PropertyCategory, PropertyInfoObject } from './defau
 import { DefaultClass, DefaultResourceClasses } from './default-data/default-resource-classes';
 import { OntologyService } from './ontology.service';
 
-export interface CardinalityInfo {
+/**
+ * contains the information about the assignment of a property to a class
+ **/
+export interface PropertyAssignment {
     resClass: ClassDefinition;
     property: PropertyInfoObject;
 }
