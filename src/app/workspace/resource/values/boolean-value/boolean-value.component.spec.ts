@@ -59,7 +59,7 @@ class TestHostCreateValueComponent implements OnInit {
     }
 }
 
-fdescribe('BooleanValueComponent', () => {
+describe('BooleanValueComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
