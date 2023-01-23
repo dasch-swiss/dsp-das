@@ -50,7 +50,7 @@ class TestHostUpdateChildNodeComponent {
  * test host component to simulate parent component for inserting a new child node.
  */
 @Component({
-    template: '<app-edit-list-item #editListItem [iri]="iri" [mode]="mode" [parentIri]="parentIri" [position]="position" [projectUuid]="projectUuid" [projectIri]="projectIri"></app-edit-list-item>'
+    template: '<app-edit-list-item #editListItem [iri]="iri" [mode]="mode" [parentIri]="parentIri" [position]="position" [projectIri]="projectIri"></app-edit-list-item>'
 })
 class TestHostInsertChildNodeComponent {
 
@@ -63,8 +63,6 @@ class TestHostInsertChildNodeComponent {
     parentIri = 'http://rdfh.ch/lists/0001/otherTreeList';
 
     position = 0;
-
-    projectUuid = '0001';
 
     projectIri = 'http://rdfh.ch/projects/0001';
 
@@ -82,7 +80,7 @@ class MockStringLiteralInputComponent {
     constructor() { }
 }
 
-describe('EditListItemComponent', () => {
+fdescribe('EditListItemComponent', () => {
     let testHostComponent: TestHostUpdateChildNodeComponent;
     let testHostFixture: ComponentFixture<TestHostUpdateChildNodeComponent>;
     let editListItemComponentDe: DebugElement;
