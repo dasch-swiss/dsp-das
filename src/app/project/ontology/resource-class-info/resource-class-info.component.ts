@@ -24,7 +24,7 @@ import { NotificationService } from 'src/app/main/services/notification.service'
 import { SortingService } from 'src/app/main/services/sorting.service';
 import { DefaultProperties, DefaultProperty, PropertyCategory, PropertyInfoObject } from '../default-data/default-properties';
 import { DefaultClass, DefaultResourceClasses } from '../default-data/default-resource-classes';
-import { CardinalityInfo, OntologyProperties } from '../ontology.component';
+import { PropertyAssignment, OntologyProperties } from '../ontology.component';
 import { OntologyService } from '../ontology.service';
 
 export interface PropToDisplay extends IHasProperty {
@@ -319,24 +319,24 @@ export class ResourceClassInfoComponent implements OnInit {
     }
 
     addNewProperty(propType: DefaultProperty) {
-        const cardinality: CardinalityInfo = {
+        const propertyAssignment: PropertyAssignment = {
             resClass: this.resourceClass,
             property: {
                 propType: propType
             }
         };
-        this.openEditDialogue(cardinality);
+        this.openEditDialogue(propertyAssignment);
     }
 
     addExistingProperty(prop: PropertyInfoObject) {
-        const cardinality: CardinalityInfo = {
+        const propertyAssignment: PropertyAssignment = {
             resClass: this.resourceClass,
             property: {
                 propType: prop.propType,
                 propDef: prop.propDef,
             }
         };
-        this.openEditDialogue(cardinality);
+        this.openEditDialogue(propertyAssignment);
     }
 
     /**
@@ -385,23 +385,21 @@ export class ResourceClassInfoComponent implements OnInit {
     /**
      * openEditDialogue: Open the dialogue in order to Add a new property or update the cardinality of an existing
      * property
-     * @param card cardinality info object
-     * @param updateCardinality to display and update the cardinalities only
-     */
-    openEditDialogue(card: CardinalityInfo) {
-        if (!card) {
+     * @param propertyAssignment information about how a property is assigned to a class
+     **/
+    openEditDialogue(propertyAssignment: PropertyAssignment) {
+        if (!propertyAssignment) {
             return;
         }
-        const classLabel = card.resClass.label;
+        const classLabel = propertyAssignment.resClass.label;
 
-        let mode: 'createProperty' | 'updateCardinality' = 'createProperty';
-        let propLabel = card.property.propType.group + ': ' + card.property.propType.label;
+        let mode: 'createProperty' | 'editProperty' = 'createProperty';
+        let propLabel = propertyAssignment.property.propType.group + ': ' + propertyAssignment.property.propType.label;
         let title = 'Add new property of type "' + propLabel + '" to class "' + classLabel + '"';
-
-        if (card.property.propDef) {
-            // the property exists already
-            mode = 'updateCardinality';
-            propLabel = card.property.propDef.label;
+        if (propertyAssignment.property.propDef) {
+            // the property already exists, assigning an existing property
+            mode = 'editProperty';
+            propLabel = propertyAssignment.property.propDef.label;
             title = 'Add existing property "' + propLabel + '" to class "' + classLabel + '"';
         }
 
@@ -412,13 +410,14 @@ export class ResourceClassInfoComponent implements OnInit {
                 top: '112px'
             },
             data: {
-                propInfo: card.property,
+                propInfo: propertyAssignment.property,
                 title: title,
                 subtitle: 'Customize property and cardinality',
                 mode: mode,
-                parentIri: card.resClass.id,
+                parentIri: propertyAssignment.resClass.id,
                 position: this.propsToDisplay.length + 1,
-                canBeUpdated: this.classCanReplaceCardinality
+                canBeUpdated: this.classCanReplaceCardinality,
+                cardinalitiesOnly: false
             }
         };
 
