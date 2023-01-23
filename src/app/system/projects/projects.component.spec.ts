@@ -1,3 +1,4 @@
+import { Component, Input } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -16,6 +17,13 @@ import { TestConfig } from 'test.config';
 import { ProjectsListComponent } from './projects-list/projects-list.component';
 import { ProjectsComponent } from './projects.component';
 
+@Component({ selector: 'app-progress-indicator', template: '' })
+class MockProgressIndicatorComponent {
+    @Input() status?: number;
+    @Input() color = '#5849a7';
+    @Input() size: 'small' | 'large' = 'small';
+}
+
 describe('ProjectsComponent', () => {
     let component: ProjectsComponent;
     let fixture: ComponentFixture<ProjectsComponent>;
@@ -23,6 +31,7 @@ describe('ProjectsComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
+                MockProgressIndicatorComponent,
                 ProjectsComponent,
                 ProjectsListComponent,
                 DialogComponent,

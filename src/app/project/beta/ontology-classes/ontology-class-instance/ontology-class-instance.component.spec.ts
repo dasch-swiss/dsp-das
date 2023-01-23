@@ -25,7 +25,7 @@ class MockListViewComponent {
 }
 
 
-fdescribe('OntologyClassInstanceComponent', () => {
+describe('OntologyClassInstanceComponent', () => {
     let component: OntologyClassInstanceComponent;
     let fixture: ComponentFixture<OntologyClassInstanceComponent>;
 
