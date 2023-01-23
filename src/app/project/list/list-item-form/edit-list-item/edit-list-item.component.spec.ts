@@ -50,7 +50,7 @@ class TestHostUpdateChildNodeComponent {
  * test host component to simulate parent component for inserting a new child node.
  */
 @Component({
-    template: '<app-edit-list-item #editListItem [iri]="iri" [mode]="mode" [parentIri]="parentIri" [position]="position" [projectCode]="projectCode" [projectIri]="projectIri"></app-edit-list-item>'
+    template: '<app-edit-list-item #editListItem [iri]="iri" [mode]="mode" [parentIri]="parentIri" [position]="position" [projectUuid]="projectUuid" [projectIri]="projectIri"></app-edit-list-item>'
 })
 class TestHostInsertChildNodeComponent {
 
@@ -64,7 +64,7 @@ class TestHostInsertChildNodeComponent {
 
     position = 0;
 
-    projectCode = '0001';
+    projectUuid = '0001';
 
     projectIri = 'http://rdfh.ch/projects/0001';
 

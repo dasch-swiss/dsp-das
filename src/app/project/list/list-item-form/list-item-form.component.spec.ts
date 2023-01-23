@@ -40,7 +40,7 @@ import { CacheService } from '../../../main/cache/cache.service';
         [language]="language"
         (refreshParent)="updateView($event)"
         [projectIri]="projectIri"
-        [projectCode]="projectCode"
+        [projectUuid]="projectUuid"
         [projectStatus]="true"
         [labels]="labels">
     </app-list-item-form>`
@@ -55,7 +55,7 @@ class TestHostComponent implements OnInit {
 
     projectIri = 'http://rdfh.ch/projects/0001';
 
-    projectCode = '0001';
+    projectUuid = '0001';
 
     labels: StringLiteral[];
 

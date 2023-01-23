@@ -45,7 +45,7 @@ class TestHostUpdateListComponent {
  * test host component to simulate parent component for creating a new list.
  */
 @Component({
-    template: '<app-list-info-form #listInfoForm [mode]="mode" [projectCode]="projectCode" [projectIri]="projectIri"></app-list-info-form>'
+    template: '<app-list-info-form #listInfoForm [mode]="mode" [projectUuid]="projectUuid" [projectIri]="projectIri"></app-list-info-form>'
 })
 class TestHostCreateListComponent {
 
@@ -53,7 +53,7 @@ class TestHostCreateListComponent {
 
     mode = 'create';
 
-    projectCode = '0001';
+    projectUuid = '0001';
 
     projectIri = 'http://rdfh.ch/projects/0001';
 
