@@ -69,8 +69,9 @@ export class ResourceClassInfoComponent implements OnInit {
     @Output() editResourceClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
     @Output() deleteResourceClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
 
-    // to update the cardinality we need the information about property (incl. propType) and resource class
-    @Output() updateCardinality: EventEmitter<string> = new EventEmitter<string>();
+    // to update the assignment of a property to a class we need the information about property (incl. propType)
+    // and resource class
+    @Output() updatePropertyAssignment: EventEmitter<string> = new EventEmitter<string>();
 
     ontology: ReadOntology;
 
@@ -325,7 +326,7 @@ export class ResourceClassInfoComponent implements OnInit {
                 propType: propType
             }
         };
-        this.openEditDialogue(propertyAssignment);
+        this.assignProperty(propertyAssignment);
     }
 
     addExistingProperty(prop: PropertyInfoObject) {
@@ -336,7 +337,7 @@ export class ResourceClassInfoComponent implements OnInit {
                 propDef: prop.propDef,
             }
         };
-        this.openEditDialogue(propertyAssignment);
+        this.assignProperty(propertyAssignment);
     }
 
     /**
@@ -369,7 +370,7 @@ export class ResourceClassInfoComponent implements OnInit {
                 this.lastModificationDateChange.emit(this.lastModificationDate);
                 this.preparePropsToDisplay(this.propsToDisplay);
 
-                this.updateCardinality.emit(this.ontology.id);
+                this.updatePropertyAssignment.emit(this.ontology.id);
                 // display success message
                 this._notification.openSnackBar(`You have successfully removed "${property.label}" from "${this.resourceClass.label}".`);
 
@@ -383,11 +384,11 @@ export class ResourceClassInfoComponent implements OnInit {
     }
 
     /**
-     * openEditDialogue: Open the dialogue in order to Add a new property or update the cardinality of an existing
-     * property
-     * @param propertyAssignment information about how a property is assigned to a class
+     * assignProperty: Open the dialogue in order to add an existing property to a class or to create a new
+     * property and add it to the class
+     * @param propertyAssignment information about the link of a property to a class
      **/
-    openEditDialogue(propertyAssignment: PropertyAssignment) {
+    assignProperty(propertyAssignment: PropertyAssignment) {
         if (!propertyAssignment) {
             return;
         }
@@ -397,7 +398,7 @@ export class ResourceClassInfoComponent implements OnInit {
         let propLabel = propertyAssignment.property.propType.group + ': ' + propertyAssignment.property.propType.label;
         let title = 'Add new property of type "' + propLabel + '" to class "' + classLabel + '"';
         if (propertyAssignment.property.propDef) {
-            // the property already exists, assigning an existing property
+            // the property already exists. To assign an existing property simply open the dialog in edit mode
             mode = 'editProperty';
             propLabel = propertyAssignment.property.propDef.label;
             title = 'Add existing property "' + propLabel + '" to class "' + classLabel + '"';
@@ -417,10 +418,16 @@ export class ResourceClassInfoComponent implements OnInit {
                 parentIri: propertyAssignment.resClass.id,
                 position: this.propsToDisplay.length + 1,
                 canBeUpdated: this.classCanReplaceCardinality,
-                cardinalitiesOnly: false
             }
         };
+        this.openEditDialog(dialogConfig);
+    }
 
+    /**
+     * openEditDialog: Open the dialogue in order assign a property or change cardinalities
+     * @param dialogConfig the MatDialogConfig
+     **/
+    openEditDialog(dialogConfig: MatDialogConfig) {
         const dialogRef = this._dialog.open(
             DialogComponent,
             dialogConfig
@@ -428,7 +435,7 @@ export class ResourceClassInfoComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             // update the view: list of properties in resource class
-            this.updateCardinality.emit(this.ontology.id);
+            this.updatePropertyAssignment.emit(this.ontology.id);
         });
     }
 
