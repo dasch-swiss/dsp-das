@@ -80,7 +80,7 @@ class MockStringLiteralInputComponent {
     constructor() { }
 }
 
-fdescribe('EditListItemComponent', () => {
+describe('EditListItemComponent', () => {
     let testHostComponent: TestHostUpdateChildNodeComponent;
     let testHostFixture: ComponentFixture<TestHostUpdateChildNodeComponent>;
     let editListItemComponentDe: DebugElement;

@@ -41,7 +41,7 @@ import { OntologyComponent } from './ontology.component';
 import { PropertyInfoComponent } from './property-info/property-info.component';
 import { ResourceClassInfoComponent } from './resource-class-info/resource-class-info.component';
 
-describe('OntologyComponent', () => {
+fdescribe('OntologyComponent', () => {
     let component: OntologyComponent;
     let fixture: ComponentFixture<OntologyComponent>;
 
