@@ -1,5 +1,64 @@
 # Changelog
 
+## [10.12.1](https://github.com/dasch-swiss/dsp-app/compare/v10.12.0...v10.12.1) (2023-01-23)
+
+
+### Bug Fixes
+
+* **create-link-resource:** fix issue when creating a new linked resource (DEV-1637) ([#899](https://github.com/dasch-swiss/dsp-app/issues/899)) ([cf9008a](https://github.com/dasch-swiss/dsp-app/commit/cf9008a71085d806e91f527e2d5179ce26b2e74c))
+
+## [10.12.0](https://github.com/dasch-swiss/dsp-app/compare/v10.11.2...v10.12.0) (2023-01-20)
+
+
+### Bug Fixes
+
+* firefox audio representation (DEV 1553) ([#884](https://github.com/dasch-swiss/dsp-app/issues/884)) ([420d54f](https://github.com/dasch-swiss/dsp-app/commit/420d54f8819692fd1c32b35ab411c522b09a622a))
+* **fulltext-search:** don't allow search queries of less than 3 characters (DEV-1602) ([#890](https://github.com/dasch-swiss/dsp-app/issues/890)) ([5b6a131](https://github.com/dasch-swiss/dsp-app/commit/5b6a13104194432a240f6282a1e1067053795cb3))
+* **ontology:** fix old view ontology editor not appearing (DEV-1603) ([#891](https://github.com/dasch-swiss/dsp-app/issues/891)) ([00ad45e](https://github.com/dasch-swiss/dsp-app/commit/00ad45e517df38b891147d6c4bf192a76fac4216))
+* **project:** Prevent adding new data model for deactivated projects (DEV-1582) ([#892](https://github.com/dasch-swiss/dsp-app/issues/892)) ([c5fcc30](https://github.com/dasch-swiss/dsp-app/commit/c5fcc3028f7d143f9dd786c29efbe5354cd80a82))
+
+
+### Enhancements
+
+* **releasenotes:** Integrate releasenotes (DEV-1600) ([#895](https://github.com/dasch-swiss/dsp-app/issues/895)) ([64ef14b](https://github.com/dasch-swiss/dsp-app/commit/64ef14ba63b18a458aa897448ae25df440aa2714))
+
+
+### Maintenance
+
+* bump JS-LIB to v7.4.10 ([#896](https://github.com/dasch-swiss/dsp-app/issues/896)) ([775b012](https://github.com/dasch-swiss/dsp-app/commit/775b0128019fc77e67c9b41451ece6664870317f))
+* **deps:** bump engine.io from 6.2.0 to 6.2.1 ([#872](https://github.com/dasch-swiss/dsp-app/issues/872)) ([3e208a5](https://github.com/dasch-swiss/dsp-app/commit/3e208a5ad30e184e32e99435f0b3e9a74af2ab3b))
+* **deps:** bump json5 from 1.0.1 to 1.0.2 ([#886](https://github.com/dasch-swiss/dsp-app/issues/886)) ([6064d42](https://github.com/dasch-swiss/dsp-app/commit/6064d4297a5b404b40587f12e82db6943e988dbb))
+* **deps:** bump loader-utils from 2.0.2 to 2.0.4 ([#866](https://github.com/dasch-swiss/dsp-app/issues/866)) ([2dfaa61](https://github.com/dasch-swiss/dsp-app/commit/2dfaa6177587b0120180a8649c3c28650962fb75))
+
+## [10.11.2](https://github.com/dasch-swiss/dsp-app/compare/v10.11.1...v10.11.2) (2023-01-09)
+
+
+### Bug Fixes
+
+* fix gravsearch results infinite loading (DEV-1541) ([#887](https://github.com/dasch-swiss/dsp-app/issues/887)) ([3c8e1a9](https://github.com/dasch-swiss/dsp-app/commit/3c8e1a9d623acdef5cd6e6c59624b28099d82e18))
+* **ontology:** Displaying ontology on click (DEV-1545) ([#882](https://github.com/dasch-swiss/dsp-app/issues/882)) ([479c1e8](https://github.com/dasch-swiss/dsp-app/commit/479c1e8207ed4308d2897441e428ed1a2bf727b5))
+
+
+### Maintenance
+
+* bump JS-LIB to v7.4.9 ([#888](https://github.com/dasch-swiss/dsp-app/issues/888)) ([4b958e2](https://github.com/dasch-swiss/dsp-app/commit/4b958e21193a272fd9474fb3644cccd8df74e805))
+* **header:** Logo & favicon (DEV-1574) ([#885](https://github.com/dasch-swiss/dsp-app/issues/885)) ([384d8ef](https://github.com/dasch-swiss/dsp-app/commit/384d8efd58d599aa9ae2ac09e5babc1799d2c6bf))
+
+## [10.11.1](https://github.com/dasch-swiss/dsp-app/compare/v10.11.0...v10.11.1) (2022-12-07)
+
+
+### Bug Fixes
+
+* **properties:** fixing incoming links bug in compound view (DEV-1493) ([#873](https://github.com/dasch-swiss/dsp-app/issues/873)) ([d606cf0](https://github.com/dasch-swiss/dsp-app/commit/d606cf0ce7055dbc2d1f544d161334e61a91492b))
+
+
+### Maintenance
+
+* bump js-lib to v7.4.8 ([#880](https://github.com/dasch-swiss/dsp-app/issues/880)) ([c412dfd](https://github.com/dasch-swiss/dsp-app/commit/c412dfda1dcf71b2b9da60e28a07172ad3174a02))
+* project IRI refactor (DEV-1468) ([#862](https://github.com/dasch-swiss/dsp-app/issues/862)) ([d898109](https://github.com/dasch-swiss/dsp-app/commit/d898109cfc781c53a4283d050e48d3064c29e80b))
+* **representations:** move repeated code to a shared service (DEV-1488) ([#869](https://github.com/dasch-swiss/dsp-app/issues/869)) ([c2dcb17](https://github.com/dasch-swiss/dsp-app/commit/c2dcb17f4d86fdab198941edeb26954476a4ab3c))
+* **text-value-as-string:** no longer account for richText gui attribute (DEV-1471) ([#874](https://github.com/dasch-swiss/dsp-app/issues/874)) ([21f7c6c](https://github.com/dasch-swiss/dsp-app/commit/21f7c6c00ccf212e52c0032a7c6888c0a9ef8f8a))
+
 ## [10.11.0](https://github.com/dasch-swiss/dsp-app/compare/v10.10.2...v10.11.0) (2022-11-02)
 
 

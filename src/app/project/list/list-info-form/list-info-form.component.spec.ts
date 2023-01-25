@@ -1,6 +1,6 @@
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -38,7 +38,7 @@ class TestHostUpdateListComponent {
 
     projectIri = 'http://rdfh.ch/projects/0001';
 
-    constructor() {}
+    constructor() { }
 }
 
 /**
@@ -57,7 +57,7 @@ class TestHostCreateListComponent {
 
     projectIri = 'http://rdfh.ch/projects/0001';
 
-    constructor() {}
+    constructor() { }
 }
 
 describe('ListInfoFormComponent', () => {
@@ -91,7 +91,7 @@ describe('ListInfoFormComponent', () => {
             ],
             imports: [
                 BrowserAnimationsModule,
-                HttpClientModule,
+                HttpClientTestingModule,
                 MatDialogModule,
                 MatIconModule,
                 MatInputModule,

@@ -46,7 +46,7 @@ class TestHostComponent implements OnInit {
 
     projectCode = '0001';
 
-    constructor() {}
+    constructor() { }
 
     ngOnInit() {
         this.list = [

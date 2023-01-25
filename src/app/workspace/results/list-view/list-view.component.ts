@@ -131,6 +131,10 @@ export class ListViewComponent implements OnChanges, OnInit {
 
     ngOnChanges(): void {
         // reset
+        this.currentIndex = 0;
+        this.currentRangeStart = 1;
+        this.currentRangeEnd = 0;
+        this.nextDisabled = false;
         this.resources = undefined;
         this.emitSelectedResources();
 
@@ -248,6 +252,7 @@ export class ListViewComponent implements OnChanges, OnInit {
                         this.numberOfAllResults = count.numberOfResults;
                         this.currentRangeEnd = this.numberOfAllResults > 25 ? 25 : this.numberOfAllResults;
                         if (this.numberOfAllResults === 0) {
+                            this._notification.openSnackBar('No resources to display.');
                             this.emitSelectedResources();
                             this.resources = undefined;
                             this.loading = false;
@@ -269,7 +274,8 @@ export class ListViewComponent implements OnChanges, OnInit {
                             (response: ReadResourceSequence) => {
                                 // if the response does not contain any resources even the search count is greater than 0,
                                 // it means that the user does not have the permissions to see anything: emit an empty result
-                                if (response.resources.length === 0) {
+                                if (response.resources.length === 0 && this.numberOfAllResults > 0) {
+                                    this._notification.openSnackBar('No permission to display the resources.');
                                     this.emitSelectedResources();
                                 }
 

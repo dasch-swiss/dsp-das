@@ -59,7 +59,7 @@ class TestHostComponent implements OnInit {
 
     labels: StringLiteral[];
 
-    constructor() {}
+    constructor() { }
 
     ngOnInit() {
         this.labels = [

@@ -5,6 +5,14 @@
   color: $warn;
 }
 
+.list-item-deactivated {
+  cursor: default;
+  
+  span {
+    opacity: 0.4;
+  }
+}
+
 .section-title {
   height: 60px!important;
 

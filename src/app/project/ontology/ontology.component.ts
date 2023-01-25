@@ -16,6 +16,7 @@ import {
     ListsResponse,
     OntologiesMetadata,
     OntologyMetadata,
+    ProjectResponse,
     PropertyDefinition,
     ReadOntology,
     ReadProject,
@@ -28,6 +29,7 @@ import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { Session, SessionService } from 'src/app/main/services/session.service';
 import { SortingService } from 'src/app/main/services/sorting.service';
+import { ProjectService } from 'src/app/workspace/resource/services/project.service';
 import { DefaultProperties, PropertyCategory, PropertyInfoObject } from './default-data/default-properties';
 import { DefaultClass, DefaultResourceClasses } from './default-data/default-resource-classes';
 import { OntologyService } from './ontology.service';
@@ -64,8 +66,8 @@ export class OntologyComponent implements OnInit {
     projectAdmin = false;
     projectMember = false;
 
-    // project shortcode; as identifier in project cache service
-    projectCode: string;
+    // project uuid; used as identifier in project cache service
+    projectUuid: string;
 
     // project data
     project: ReadProject;
@@ -112,7 +114,7 @@ export class OntologyComponent implements OnInit {
     };
 
     /**
-     * list of all default resource classes (sub class of)
+     * list of all default resource classes (subclass of)
      */
     defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
     defaultProperties: PropertyCategory[] = DefaultProperties.data;
@@ -132,13 +134,25 @@ export class OntologyComponent implements OnInit {
         private _ontologyService: OntologyService,
         private _route: ActivatedRoute,
         private _router: Router,
-        private _session: SessionService,
+        private _sessionService: SessionService,
         private _sortingService: SortingService,
-        private _titleService: Title
-    ) {
-        // get the shortcode of the current project
+        private _titleService: Title,
+        private _projectService: ProjectService
+    ) {}
+
+    @HostListener('window:resize', ['$event']) onWindowResize(e: Event) {
+        this.disableContent = (window.innerWidth <= 768);
+        // reset the page title
+        if (!this.disableContent) {
+            this._setPageTitle();
+        }
+    }
+
+    ngOnInit() {
+        this.loading = true;
+        // get the uuid of the current project
         this._route.parent.paramMap.subscribe((params: Params) => {
-            this.projectCode = params.get('shortcode');
+            this.projectUuid = params.get('uuid');
         });
 
         if (this._route.snapshot) {
@@ -150,36 +164,34 @@ export class OntologyComponent implements OnInit {
             this.view = (this._route.snapshot.params.view ? this._route.snapshot.params.view : 'classes');
         }
 
-        // set the page title
-        this._setPageTitle();
-
         // get feature toggle information if url contains beta
         this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
         if (this.beta) {
-            const projectCode = this._route.parent.snapshot.params.shortcode;
+            const uuid = this._route.parent.snapshot.params.uuid;
             this._route.params.subscribe(params => {
-                const iriBase = this._ontologyService.getIriBaseUrl();
-                const ontologyName = params['onto'];
-                this.ontologyIri = `${iriBase}/ontology/${projectCode}/${ontologyName}/v2`;
+                this.loading = true;
+                this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(this._projectService.uuidToIri(uuid)).subscribe(
+                    (res: ApiResponseData<ProjectResponse>) => {
+                        const shortcode = res.body.project.shortcode;
+                        const iriBase = this._ontologyService.getIriBaseUrl();
+                        const ontologyName = params['onto'];
+                        this.ontologyIri = `${iriBase}/ontology/${shortcode}/${ontologyName}/v2`;
+
+                        this.initView();
+                    }
+                );
             });
+        } else {
+            // to be removed once the beta view is implemented
+            this.initView();
         }
     }
 
-    @HostListener('window:resize', ['$event']) onWindwoResize(e: Event) {
+    initView(): void {
         this.disableContent = (window.innerWidth <= 768);
-        // reset the page title
-        if (!this.disableContent) {
-            this._setPageTitle();
-        }
-    }
-
-    ngOnInit() {
-
-        this.disableContent = (window.innerWidth <= 768);
-        this.loading = true;
 
         // get information about the logged-in user
-        this.session = this._session.getSession();
+        this.session = this._sessionService.getSession();
 
         // is the logged-in user system admin?
         this.sysAdmin = this.session.user.sysAdmin;
@@ -188,9 +200,12 @@ export class OntologyComponent implements OnInit {
         this.projectAdmin = this.sysAdmin;
 
         // get the project data from cache
-        this._cache.get(this.projectCode).subscribe(
+        this._cache.get(this.projectUuid).subscribe(
             (response: ReadProject) => {
                 this.project = response;
+
+                // set the page title
+                this._setPageTitle();
 
                 // is logged-in user projectAdmin?
                 this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
@@ -357,7 +372,7 @@ export class OntologyComponent implements OnInit {
      */
     openOntologyRoute(id: string, view: 'classes' | 'properties' | 'graph' = 'classes') {
         this.view = view;
-        const goto = 'project/' + this.projectCode + '/ontologies/' + encodeURIComponent(id) + '/' + view;
+        const goto = 'project/' + this.projectUuid + '/ontologies/' + encodeURIComponent(id) + '/' + view;
         this._router.navigateByUrl(goto, { skipLocationChange: false });
     }
 
@@ -422,13 +437,15 @@ export class OntologyComponent implements OnInit {
 
         const title = (iri ? this.ontology.label : 'Data model');
 
+        const uuid = this._projectService.iriToUuid(this.project.id);
+
         const dialogConfig: MatDialogConfig = {
             width: '640px',
             maxHeight: '80vh',
             position: {
                 top: '112px'
             },
-            data: { mode: mode, title: title, id: iri, project: this.project.shortcode, existing: this.existingOntologyNames }
+            data: { mode: mode, title: title, id: iri, project: uuid, existing: this.existingOntologyNames }
         };
 
         const dialogRef = this._dialog.open(
@@ -515,8 +532,7 @@ export class OntologyComponent implements OnInit {
     * delete either ontology, resource class or property
     *
     * @param mode Can be 'Ontology' or 'ResourceClass'
-    * @param id
-    * @param title
+    * @param info
     */
     delete(mode: 'Ontology' | 'ResourceClass' | 'Property', info: DefaultClass) {
         const dialogConfig: MatDialogConfig = {
@@ -550,9 +566,9 @@ export class OntologyComponent implements OnInit {
                                 // get the ontologies for this project
                                 this.initOntologiesList();
                                 // go to project ontology page
-                                let goto = `/project/${this.projectCode}/ontologies/`;
+                                let goto = `/project/${this.projectUuid}/ontologies/`;
                                 if (this.beta) {
-                                    goto = `/beta/project/${this.projectCode}`;
+                                    goto = `/beta/project/${this.projectUuid}`;
                                 }
                                 this._router.navigateByUrl(goto, { skipLocationChange: false }).then(() => {
                                     // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
@@ -634,12 +650,7 @@ export class OntologyComponent implements OnInit {
     }
 
     private _setPageTitle() {
-        if (this.ontologyIri) {
-            this._titleService.setTitle('Project ' + this.projectCode + ' | Data model');
-        } else {
-            // set the page title in case of more than one existing project ontologies
-            this._titleService.setTitle('Project ' + this.projectCode + ' | Data models');
-        }
+        this._titleService.setTitle('Project ' + this.project.shortname + ' | Data model' + (this.ontologyIri ? '' : 's'));
     }
 
 }

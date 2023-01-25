@@ -52,13 +52,13 @@ describe('SelectProjectComponent', () => {
     beforeEach(waitForAsync(() => {
 
         TestBed.configureTestingModule({
-            declarations: [ SelectProjectComponent, TestHostComponent ],
+            declarations: [SelectProjectComponent, TestHostComponent],
             imports: [
                 ReactiveFormsModule,
                 FormsModule,
                 BrowserAnimationsModule,
                 MatFormFieldModule,
-                MatSelectModule ]
+                MatSelectModule]
         })
             .compileComponents();
     }));
