@@ -41,20 +41,7 @@
                         </span>
                     </mat-list-item>
                     <mat-divider></mat-divider>
-
-                    <!-- Ontology Section -->
-                    <div class="section-title">
-                        <span class="section-label">
-                            <mat-icon class="sidenav-prefix-icon">bubble_chart</mat-icon>
-                            <p>Data models</p>
-                        </span>
-                    </div>
-                    <!-- <mat-list-item class="section-title">
-                        <span class="section-label">
-                            <mat-icon class="sidenav-prefix-icon">bubble_chart</mat-icon>
-                            <p>Data models</p>
-                        </span>
-                    </mat-list-item> -->
+                    <!--  ↓↓↓ This should be deleted later ↓↓↓ -->
                     <mat-list-item class="link add-new" [class.list-item-deactivated]="!project?.status"
                         *ngIf="projectAdmin" (click)="open('add-ontology')">
                         <span class="add-new-label">
