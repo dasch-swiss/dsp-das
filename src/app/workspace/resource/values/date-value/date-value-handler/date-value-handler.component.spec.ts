@@ -369,6 +369,8 @@ describe('DateValueHandlerComponent (no validator required)', () => {
                 MatSelectModule,
                 MatOptionModule,
                 MatCheckboxModule,
+                MatTooltipModule,
+                MatIconModule,
                 BrowserAnimationsModule,
             ],
             declarations: [DateValueHandlerComponent, TestDatePickerComponent, NoValueRequiredTestHostComponent]

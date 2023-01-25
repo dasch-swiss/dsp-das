@@ -42,6 +42,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { of, throwError } from 'rxjs';
 import { AjaxError } from 'rxjs/ajax';
+import { ConfirmationDialogComponent } from 'src/app/main/action/confirmation-dialog/confirmation-dialog.component';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { PropertyInfoValues } from '../../properties/properties.component';
 import { UserService } from '../../services/user.service';
@@ -248,6 +249,13 @@ class TestDateValueComponent {
     @Input() displayValue;
 }
 
+@Component({ selector: 'app-confirmation-message', template: '' })
+class TestConfirmationMessageComponent {
+    @Input() value: ReadValue;
+
+    constructor() { }
+}
+
 /**
  * test host component to simulate parent component.
  */
@@ -369,6 +377,7 @@ describe('DisplayEditComponent', () => {
             ],
             declarations: [
                 DisplayEditComponent,
+                ConfirmationDialogComponent,
                 TestHostDisplayValueComponent,
                 TestTextValueAsStringComponent,
                 TestTextValueAsHtmlComponent,
@@ -383,7 +392,8 @@ describe('DisplayEditComponent', () => {
                 TestGeonameValueComponent,
                 TestTimeValueComponent,
                 TestColorValueComponent,
-                TestDateValueComponent
+                TestDateValueComponent,
+                TestConfirmationMessageComponent
             ],
             providers: [
                 {
