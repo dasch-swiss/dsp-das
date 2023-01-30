@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -270,6 +270,17 @@ export class ProjectComponent implements OnInit {
         this.sideNavOpened = !this.sideNavOpened;
         this.sidenav.toggle();
     }
+
+    /**
+     * add keyboard support to expand/collapse sidenav
+     * @param event automatically passed whenever the user types
+     */
+    @HostListener('window:keyup', ['$event'])
+    keyEvent(event: KeyboardEvent) {
+        if(event.key === '['){
+          this.toggleSidenav();
+        }
+      }
 
     /**
      * compare function which sorts the ontologies in the ascending order.
