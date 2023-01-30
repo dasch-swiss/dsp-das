@@ -108,10 +108,11 @@ mat-sidenav {
     margin-top: 4.5%;
     right: 1.5%;
     z-index: 1;
+    color: #183145;
 
     .collapse-btn {
       border-radius: 50%;
-      border: 1px solid black;
+      border: 1px solid #336790;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -144,10 +145,11 @@ mat-sidenav-content {
     width: auto;
     margin-top: 1%;
     padding-left: 0.3%;
+    color: #183145;
 
     .expand-btn {
       border-radius: 50%;
-      border: 1px solid black;
+      border: 1px solid #336790;
       display: flex;
       align-items: center;
       justify-content: center;
