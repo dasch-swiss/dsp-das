@@ -1,4 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { MatSidenav } from '@angular/material/sidenav';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -29,6 +30,8 @@ import { OntologyService } from './ontology/ontology.service';
 export class ProjectComponent implements OnInit {
     readonly TAB_DATA_MODEL = 3;
     readonly TAB_LISTS = 4;
+
+    @ViewChild('sidenav') sidenav: MatSidenav;
 
     // loading for progress indicator
     loading: boolean;
@@ -62,6 +65,8 @@ export class ProjectComponent implements OnInit {
     // list of project ontologies
     projectOntologies: ReadOntology[] = [];
     projectLists: ListNodeInfo[] = [];
+
+    sideNavOpened = true;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -256,6 +261,14 @@ export class ProjectComponent implements OnInit {
      */
     compareElementHeights(elem: HTMLElement): boolean {
         return !(elem.scrollHeight > elem.clientHeight);
+    }
+
+    /**
+     * toggle sidenav
+     */
+    toggleSidenav() {
+        this.sideNavOpened = !this.sideNavOpened;
+        this.sidenav.toggle();
     }
 
     /**

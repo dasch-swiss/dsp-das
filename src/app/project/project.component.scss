@@ -77,9 +77,10 @@
 
 .sidenav-footer {
   border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
   bottom: 0;
   position: absolute;
-  width: 100%;
+  width: 92%;
   background-color: #fff;
 }
 
@@ -90,6 +91,79 @@
   height: 32px;
 }
 
+.mat-drawer.mat-drawer-side {
+  border-right: none !important
+}
+
+mat-sidenav {
+  .main-content {
+    width: 290px;
+    border-right: solid 1px rgba(0, 0, 0, 0.12);
+    background-color: #fff;
+  }
+
+  .sidenav-collapse-btn {
+    position: absolute;
+    margin-top: 5.3%;
+    right: 1.5%;
+    z-index: 1;
+
+    .collapse-btn {
+      border-radius: 50%;
+      border: 1px solid black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1%;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      background-color: #fff;
+  
+      mat-icon {
+        font-size: 24px;
+      }
+    }
+  }
+}
+
+mat-sidenav-content {
+  .sidenav-expand-btn,
+  .main-content {
+    display: inline-block;
+  }
+
+  .main-content {
+    width: 95%;
+  }
+
+  .sidenav-expand-btn {
+    vertical-align: top;
+    width: auto;
+    margin-top: 1%;
+    padding-left: 0.3%;
+
+    .expand-btn {
+      border-radius: 50%;
+      border: 1px solid black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1%;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+  
+      mat-icon {
+        font-size: 24px;
+      }
+    }
+  }
+}
+
+
 .sidenav-container {
   .sidenav {
 
@@ -99,6 +173,12 @@
 
     &.narrow {
       width: 36px;
+    }
+  }
+
+  .sidenav-content {
+    .sidenav-collapse-btn {
+      background-color: blue;
     }
   }
 

@@ -17,16 +17,22 @@
     <!-- new concept of project view: sidenav instead tabs -->
     <div *ngIf="beta">
         <mat-sidenav-container class="project-view">
-            <mat-sidenav mode="side" opened class="project-nav">
-                <!-- Project label -->
-                <div *ngIf="project !== undefined" class="link project-title"
+            <mat-sidenav #sidenav mode="side" [(opened)]="sideNavOpened" class="project-nav">
+                <div *ngIf="sideNavOpened" class="sidenav-collapse-btn">
+                    <button mat-button class="collapse-btn" (click)="toggleSidenav()" matTooltip="collapse" matTooltipShowDelay="500">
+                        <mat-icon>chevron_left</mat-icon>
+                    </button>
+                </div>
+                <div class="main-content">
+                    <!-- Project label -->
+                    <div *ngIf="project !== undefined" class="link project-title"
                     [routerLink]="'/beta/project/' + projectUuid">
                     <p #projectTitle matTooltip="{{project.longname}}" matTooltipShowDelay="500"
                         [matTooltipDisabled]="compareElementHeights(projectTitle)" matTooltipPosition="right">
                         {{project.longname}}
                     </p>
-                </div>
-                <mat-list class="main-list">
+                    </div>
+                    <mat-list class="main-list">
 
                     <!-- Ontology Section -->
                     <mat-divider></mat-divider>
@@ -131,12 +137,20 @@
                             </span>
                         </mat-list-item>
                     </div>
-                </mat-list>
+                    </mat-list>
 
+                </div>
             </mat-sidenav>
             <mat-sidenav-content>
-                <app-progress-indicator *ngIf="loading"></app-progress-indicator>
-                <router-outlet *ngIf="!loading"></router-outlet>
+                <div *ngIf="!sideNavOpened" class="sidenav-expand-btn">
+                    <button mat-button class="expand-btn" (click)="toggleSidenav()" matTooltip="expand" matTooltipShowDelay="500">
+                        <mat-icon>chevron_right</mat-icon>
+                    </button>
+                </div>
+                <div class="main-content">
+                    <app-progress-indicator *ngIf="loading"></app-progress-indicator>
+                    <router-outlet *ngIf="!loading"></router-outlet>
+                </div>
             </mat-sidenav-content>
         </mat-sidenav-container>
     </div>
