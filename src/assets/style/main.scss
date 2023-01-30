@@ -227,3 +227,7 @@ button.space-reducer {
     position: fixed;
   }
 }
+
+.mat-drawer-inner-container::-webkit-scrollbar {
+  display: none;
+}
