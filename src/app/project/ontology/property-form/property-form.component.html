@@ -1,6 +1,3 @@
-<!-- content: Step 1 = define resource class -->
-<!-- <form [formGroup]="propertyForm"
--->
 <form [formGroup]="propertyForm" class="form-content">
 
     <p *ngIf="resClassIri && propertyInfo.propDef" class="note warning mat-caption center">
@@ -67,7 +64,7 @@
             <app-string-literal-input
                 placeholder="Comment"
                 [value]="comments"
-                [disabled]="(resClassIri && propertyInfo.propDef)"
+                [disabled]="(resClassIri && !!propertyInfo.propDef)"
                 [textarea]="true"
                 (dataChanged)="handleData($event, 'comment')">
             </app-string-literal-input>
@@ -99,8 +96,8 @@
                 <mat-label>Select resource class</mat-label>
                 <mat-select formControlName="guiAttr">
                     <mat-optgroup *ngFor="let onto of ontologyClasses" [label]="onto.ontologyLabel">
-                        <mat-option *ngFor="let class of onto.classes" [value]="class.id">
-                            {{class.label}}
+                        <mat-option *ngFor="let oClass of onto.classes" [value]="oClass.id">
+                            {{oClass.label}}
                         </mat-option>
                     </mat-optgroup>
                 </mat-select>
