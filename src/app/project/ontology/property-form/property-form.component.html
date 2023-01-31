@@ -1,4 +1,4 @@
-<form [formGroup]="propertyForm" *ngIf="!changeCardinalities" class="form-content">
+<form [formGroup]="propertyForm" class="form-content">
 
     <p *ngIf="resClassIri && propertyInfo.propDef" class="note warning mat-caption center">
         You're adding an already existing property to this class.
@@ -50,7 +50,7 @@
             <app-string-literal-input
                 [placeholder]="'Property label *'"
                 [value]="labels"
-                [disabled]="(resClassIri && !!propertyInfo.propDef)"
+                [disabled]="(resClassIri && propertyInfo.propDef)"
                 (touched)="labelsTouched = $event"
                 (dataChanged)="handleData($event, 'label')">
             </app-string-literal-input>
@@ -127,6 +127,7 @@
             <!-- <div *ngSwitchDefault>{{propertyInfo.propType.subPropOf}} not yet implemented</div> -->
         </div>
 
+        <!-- TODO: in case of cardinality: diplay required and multiple checkboxes -->
         <div class="large-field cardinality" *ngIf="resClassIri">
             <mat-slide-toggle formControlName="multiple"
                 [matTooltip]="'The property in this class can have multiple values'" [matTooltipPosition]="'above'">
@@ -157,34 +158,4 @@
         </button>
     </div>
 </form>
-<div>
-    <form [formGroup]="propertyForm" *ngIf="changeCardinalities" class="form-content">
-        <div class="center">
-            <div *ngIf="!canSetFullCardinality">
-                <div class="mat-title">This action is not possible</div>
-                <mat-icon aria-label="cancel icon" fontIcon="cancel" color="warn"></mat-icon>
-                <div>This action is not possible</div>
-            </div>
-            <div *ngIf="canSetFullCardinality">
-                <mat-icon aria-label="warn icon" fontIcon="warning_amber" color="accent"></mat-icon>
-                <div class="mat-title">Attention</div>
-                <div>Please note that this change may not be reversible.</div>
-            </div>
-        </div>
-        <div *ngIf="canSetFullCardinality" [ngClass]="canSetFullCardinality? 'form-panel form-action' : 'center'">
-            <button mat-button type="button" (click)="closeDialog.emit()">
-                {{ 'appLabels.form.action.cancel' | translate }}
-            </button>
-            <span class="fill-remaining-space" *ngIf="canSetFullCardinality"></span>
-            <button mat-raised-button type="button" color="primary"
-                    *ngIf="canSetFullCardinality"
-                    [disabled]="true" (click)="submitData()"
-                    class="submit">
-                <app-progress-indicator [color]="'white'" [status]="0" *ngIf="loading" class="submit-progress">
-                </app-progress-indicator>
-                <mat-icon *ngIf="error && !loading">close</mat-icon>
-                {{error ? 'Failed' : ('Continue')}}
-            </button>
-        </div>
-    </form>
-</div>
+<!-- </form> -->
