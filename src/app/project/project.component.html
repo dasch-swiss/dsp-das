@@ -17,7 +17,7 @@
     <!-- new concept of project view: sidenav instead tabs -->
     <div *ngIf="beta">
         <mat-sidenav-container class="project-view">
-            <mat-sidenav #sidenav mode="side" [(opened)]="sideNavOpened" class="project-nav">
+            <mat-sidenav #sidenav mode="side" [(opened)]="sideNavOpened" [disableClose]="true" class="project-nav">
                 <div *ngIf="sideNavOpened" class="sidenav-collapse-btn">
                     <button mat-button class="collapse-btn" (click)="toggleSidenav()" matTooltip="collapse"
                             matTooltipShowDelay="500" matTooltipPosition="right">
