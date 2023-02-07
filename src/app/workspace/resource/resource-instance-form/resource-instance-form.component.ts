@@ -229,7 +229,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
                     this._router.navigate([params[0].path, params[1].path, params[2].path, uuid],
                         { relativeTo: this._route.parent }).then(() => {
                         // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
-                        window.location.reload();
+                        // window.location.reload();
                     });
 
                 },
