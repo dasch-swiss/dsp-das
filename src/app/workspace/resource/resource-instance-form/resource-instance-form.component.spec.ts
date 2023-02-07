@@ -1,10 +1,7 @@
-import { HarnessLoader } from '@angular/cdk/testing';
-import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { Component, DebugElement, EventEmitter, Inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, DebugElement, Inject, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,8 +21,8 @@ import {
     MockProjects,
     MockResource,
     MockUsers,
-    OntologiesEndpointV2,
-    OntologiesMetadata, ReadOntology, ReadResource,
+    ReadOntology,
+    ReadResource,
     ResourceClassAndPropertyDefinitions,
     ResourceClassDefinition,
     ResourcePropertyDefinition,
@@ -43,7 +40,6 @@ import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
 import { Session, SessionService } from 'src/app/main/services/session.service';
-import { TestConfig } from 'test.config';
 import { ValueService } from '../services/value.service';
 import { IntValueComponent } from '../values/int-value/int-value.component';
 import { TextValueAsStringComponent } from '../values/text-value/text-value-as-string/text-value-as-string.component';
@@ -218,7 +214,6 @@ describe('ResourceInstanceFormComponent', () => {
     let testHostComponent: TestHostComponent;
     let testHostFixture: ComponentFixture<TestHostComponent>;
     let resourceInstanceFormComponentDe: DebugElement;
-    let loader: HarnessLoader;
 
     beforeEach(waitForAsync(() => {
         const dspConnSpy = {
@@ -242,7 +237,7 @@ describe('ResourceInstanceFormComponent', () => {
             }
         };
 
-        const routerSpy = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
+        const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
         TestBed.configureTestingModule({
             declarations: [
@@ -371,7 +366,6 @@ describe('ResourceInstanceFormComponent', () => {
 
         testHostFixture = TestBed.createComponent(TestHostComponent);
         testHostComponent = testHostFixture.componentInstance;
-        loader = TestbedHarnessEnvironment.loader(testHostFixture);
         testHostFixture.detectChanges();
 
         (dspConnSpy.admin.usersEndpoint as jasmine.SpyObj<UsersEndpointAdmin>).getUserByUsername.and.callFake(
@@ -409,11 +403,6 @@ describe('ResourceInstanceFormComponent', () => {
                 return of(resource);
             }
         );
-
-        // mock router
-        // const routerSpy = TestBed.inject(Router);
-
-        // (routerSpy as jasmine.SpyObj<Router>).navigate.and.stub();
 
         const anythingOnto = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
 
