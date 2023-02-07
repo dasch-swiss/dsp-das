@@ -16,6 +16,7 @@ import {
     ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { ComponentCommunicationEventService, EmitEvent, Events as CommsEvents } from 'src/app/main/services/component-communication-event.service';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { DefaultClass, DefaultResourceClasses } from 'src/app/project/ontology/default-data/default-resource-classes';
 import { ResourceService } from '../services/resource.service';
@@ -75,6 +76,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
         private _resourceService: ResourceService,
         private _route: ActivatedRoute,
         private _router: Router,
+        private _componentCommsService: ComponentCommunicationEventService,
     ) { }
 
     ngOnInit(): void {
@@ -227,10 +229,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
                     const params = this._route.snapshot.url;
                     // go to ontology/[ontoname]/[classname]/[classuuid] relative to parent route beta/project/[projectcode]/
                     this._router.navigate([params[0].path, params[1].path, params[2].path, uuid],
-                        { relativeTo: this._route.parent }).then(() => {
-                        // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
-                        // window.location.reload();
-                    });
+                        { relativeTo: this._route.parent }).then(() => this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceCreated)));
 
                 },
                 (error: ApiResponseError) => {

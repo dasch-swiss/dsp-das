@@ -66,6 +66,12 @@ export class OntologyClassItemComponent implements OnInit {
                 this._getSearchCount();
             }
         ));
+
+        this.componentCommsSubscriptions.push(this._componentCommsService.on(
+            Events.resourceCreated, () => {
+                this._getSearchCount();
+            }
+        ));
     }
 
     open(route: string) {
