@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClassDefinition, KnoraApiConnection, CountQueryResponse, ApiResponseError, Constants } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { OntologyService } from 'src/app/project/ontology/ontology.service';
     templateUrl: './ontology-class-item.component.html',
     styleUrls: ['./ontology-class-item.component.scss']
 })
-export class OntologyClassItemComponent implements OnInit {
+export class OntologyClassItemComponent implements OnInit, OnDestroy {
     readonly MAX_LABEL_CHAR = 25;
 
     @Input() resClass: ClassDefinition;
@@ -27,7 +27,7 @@ export class OntologyClassItemComponent implements OnInit {
 
     icon: string;
 
-    componentCommsSubscriptions: Subscription[]= [];
+    componentCommsSubscriptions: Subscription[] = [];
 
     // i18n setup
     itemPluralMapping = {
@@ -66,6 +66,16 @@ export class OntologyClassItemComponent implements OnInit {
                 this._getSearchCount();
             }
         ));
+
+        this.componentCommsSubscriptions.push(this._componentCommsService.on(
+            Events.resourceCreated, () => {
+                this._getSearchCount();
+            }
+        ));
+    }
+
+    ngOnDestroy(): void {
+        this.componentCommsSubscriptions.forEach(sub => sub.unsubscribe());
     }
 
     open(route: string) {
