@@ -27,7 +27,7 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
 
     icon: string;
 
-    componentCommsSubscriptions: Subscription[]= [];
+    componentCommsSubscriptions: Subscription[] = [];
 
     // i18n setup
     itemPluralMapping = {
@@ -75,9 +75,7 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.componentCommsSubscriptions !== undefined) {
-            this.componentCommsSubscriptions.forEach(sub => sub.unsubscribe());
-        }
+        this.componentCommsSubscriptions.forEach(sub => sub.unsubscribe());
     }
 
     open(route: string) {
