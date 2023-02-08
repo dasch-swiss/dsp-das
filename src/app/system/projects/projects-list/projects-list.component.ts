@@ -187,7 +187,7 @@ export class ProjectsListComponent implements OnInit {
                 this.refreshParent.emit();
                 // update project cache
                 this._cache.del(uuid);
-                this._cache.get(uuid, this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(id));
+                this._cache.get(uuid, this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(id, false));
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
@@ -207,7 +207,7 @@ export class ProjectsListComponent implements OnInit {
                 this.refreshParent.emit();
                 // update project cache
                 this._cache.del(uuid);
-                this._cache.get(uuid, this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(id));
+                this._cache.get(uuid, this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(id, false));
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
