@@ -1,3 +1,8 @@
+name: Publish from branch
+
+on:
+  workflow_dispatch:
+
 jobs:
   publish-from-branch:
     name: Publish from branch
