@@ -1,8 +1,7 @@
 name: Publish from branch
 
 on:
-  workflow_dispatch:
-
+  workflow_dispatch
 jobs:
   publish-from-branch:
     name: Publish from branch
@@ -13,4 +12,5 @@ jobs:
       - name: Build and publish image
         run: |
           echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+          docker buildx create --use
           make docker-publish
