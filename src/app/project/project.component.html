@@ -37,7 +37,7 @@
 
                     <!-- Ontology Section -->
                     <mat-divider></mat-divider>
-                    <mat-list-item class="section-title" (click)="open('data-models')">
+                    <mat-list-item class="link section-title" (click)="open('data-models')">
                         <span class="section-label">
                             <mat-icon class="sidenav-prefix-icon">bubble_chart</mat-icon>
                             <p>Data models</p>
@@ -48,16 +48,6 @@
                         </span>
                     </mat-list-item>
                     <mat-divider></mat-divider>
-                    <!--  ↓↓↓ This should be deleted later ↓↓↓ -->
-                    <mat-list-item class="link add-new" [class.list-item-deactivated]="!project?.status"
-                        *ngIf="projectAdmin" (click)="open('add-ontology')">
-                        <span class="add-new-label">
-                            <mat-icon class="sidenav-prefix-icon">add_circle_outline</mat-icon>
-                            <p>Add a new data model</p>
-                        </span>
-                    </mat-list-item>
-                    <mat-divider></mat-divider>
-                    <!--  ↑↑↑ This should be deleted later ↑↑↑ -->
 
                     <!-- Project Ontologies -->
                     <mat-accordion *ngFor="let onto of projectOntologies; let first = first"
@@ -65,10 +55,8 @@
                         [displayMode]="'flat'">
                         <mat-expansion-panel [expanded]="first">
                             <mat-expansion-panel-header>
-                                <div class="sidenav-panel-header"
-                                    (click)="projectMember ? $event.stopPropagation() : true">
-                                    <mat-panel-title class="mat-subheading-2"
-                                        (click)="projectMember ? open('ontology', onto.id) : null">
+                                <div class="sidenav-panel-header">
+                                    <mat-panel-title class="mat-subheading-2">
                                         <p #ontoTitle
                                             matTooltip="{{onto.label}}"
                                             matTooltipShowDelay="500"
@@ -84,53 +72,6 @@
                         </mat-expansion-panel>
                         <mat-divider></mat-divider>
                     </mat-accordion>
-
-                    <!-- Lists Section -->
-                    <span *ngIf="projectMember">
-                        <mat-list-item class="section-title">
-                            <span class="section-label">
-                                <mat-icon class="sidenav-prefix-icon">list</mat-icon>
-                                <p>Lists</p>
-                            </span>
-                            <span class="fill-remaining-space"></span>
-                            <span class="section-icon">
-                                <mat-icon>chevron_right</mat-icon>
-                            </span>
-                        </mat-list-item>
-                        <mat-divider></mat-divider>
-
-
-                        <!--  ↓↓↓ This should be deleted later ↓↓↓ -->
-                        <mat-list-item class="link add-new" *ngIf="projectAdmin" (click)="open('add-list')">
-                            <span class="add-new-label">
-                                <mat-icon class="sidenav-prefix-icon">add_circle_outline</mat-icon>
-                                <p>Add a new list</p>
-                            </span>
-                        </mat-list-item>
-                        <mat-divider></mat-divider>
-                        <!--  ↑↑↑ This should be deleted later ↑↑↑ -->
-
-                        <!-- Project lists -->
-                        <mat-list-item *ngFor="let list of projectLists"
-                            class="list link"
-                            (click)="open('list', list.id)">
-                            <p #listTitle
-                                matTooltip="{{list.labels | appStringifyStringLiteral}}"
-                                matTooltipShowDelay="500"
-                                matTooltipPosition="right"
-                                [matTooltipDisabled]="compareElementHeights(listTitle)">
-                                {{list.labels | appStringifyStringLiteral}}
-                            </p>
-                            <mat-divider></mat-divider>
-                        </mat-list-item>
-                    </span>
-
-                    <!-- Project members if project admin -->
-                    <!-- <mat-list-item *ngIf="projectAdmin" class="link section-title" routerLink="settings/collaboration">
-                        <h2 class="mat-title">Members</h2>
-                    </mat-list-item> -->
-
-                    <!-- Project permissions ??? will it ever come? -->
 
                     <div class="sidenav-footer"
                         *ngIf="projectAdmin">

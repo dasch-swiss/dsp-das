@@ -1,1 +1,46 @@
-<p>data-model works!</p>
+<div *ngIf="!loading" class="data-models-container">
+    <div class="header">
+        <p class="title">Data Models</p>
+        <button #tooltip="matTooltip" mat-button (click)="toggleTooltip('data-models')" [matTooltipDisabled]="!isTooltipVisible" [matTooltip]="tooltipText">click</button>
+        <mat-icon class="icon">info</mat-icon>
+    </div>
+    <div class="action-buttons">
+        <button mat-button class="create" (click)="open('add-ontology')">
+            <mat-icon>add_circle</mat-icon>
+            Create New
+        </button>
+        <button mat-button class="docs" (click)="open('docs')">
+            Read Documentation About How To Create Data Models
+            <mat-icon>chevron_right</mat-icon>
+        </button>
+    </div>
+    <div *ngIf="projectOntologies">
+        <div class="list">
+            <div class="list-item" *ngFor="let onto of projectOntologies.ontologies" (click)="open('ontology', onto.id)">
+                <mat-icon class="icon-prefix">bubble_chart</mat-icon>
+                <p class="label">{{onto.label}}</p>
+                <mat-icon class="icon-suffix">chevron_right</mat-icon>
+            </div>
+        </div>
+    </div>
+    <div class="spacing"></div>
+    <div class="header">
+        <p class="title">Controlled Vocabularies</p>
+        <mat-icon class="icon">info</mat-icon>
+    </div>
+    <div class="action-buttons">
+        <button mat-button class="create" (click)="open('add-list')">
+            <mat-icon>add_circle</mat-icon>
+            Create New
+        </button>
+    </div>
+    <div *ngIf="projectLists">
+        <div class="list">
+            <div class="list-item" *ngFor="let list of projectLists" (click)="open('list', list.id)">
+                <mat-icon class="icon-prefix">list</mat-icon>
+                <p class="label">{{list.labels | appStringifyStringLiteral}}</p>
+                <mat-icon class="icon-suffix">chevron_right</mat-icon>
+            </div>
+        </div>
+    </div>
+</div>
