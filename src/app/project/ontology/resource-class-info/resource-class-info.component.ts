@@ -26,6 +26,7 @@ import { DefaultProperties, DefaultProperty, PropertyCategory, PropertyInfoObjec
 import { DefaultClass, DefaultResourceClasses } from '../default-data/default-resource-classes';
 import { PropertyAssignment, OntologyProperties } from '../ontology.component';
 import { OntologyService } from '../ontology.service';
+import { GuiCardinality } from '../property-info/property-info.component';
 
 export interface PropToDisplay extends IHasProperty {
     propDef?: PropertyDefinition;
@@ -78,11 +79,10 @@ export class ResourceClassInfoComponent implements OnInit {
     // list of all ontologies with their properties
     ontoProperties: OntologyProperties[] = [];
 
-    cardinalityUpdateEnabled: boolean;
+    // set to false if it is a subclass of a default class inheriting the order
+    canChangeGuiOrder: boolean;
 
     classCanBeDeleted: boolean;
-
-    classCanReplaceCardinality: boolean;
 
     // list of properties that can be displayed (not all the props should be displayed)
     propsToDisplay: PropToDisplay[] = [];
@@ -140,8 +140,6 @@ export class ResourceClassInfoComponent implements OnInit {
                 this.preparePropsToDisplay(this.resourceClass.propertiesList);
                 // check if the class can be deleted
                 this.canBeDeleted();
-                // check if the cardinalities can be changed
-                this.canReplaceCardinality();
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
@@ -175,7 +173,7 @@ export class ResourceClassInfoComponent implements OnInit {
             const defaultClass = this.defaultClasses.find(i => i.iri === iri);
             if (defaultClass) {
                 this.subClassOfLabel += defaultClass.label;
-                this.cardinalityUpdateEnabled = true;
+                this.canChangeGuiOrder = true;
             } else if (this.ontology.id === ontologyIri) {
                 // the class is not defined in the default classes
                 // but defined in the current ontology
@@ -183,7 +181,7 @@ export class ResourceClassInfoComponent implements OnInit {
                 this.subClassOfLabel += this.ontology.classes[iri].label;
                 // in this case, the user can't update the cardinality incl. the gui order in this class
                 // we have to disable this update cardinality functionality
-                this.cardinalityUpdateEnabled = false;
+                this.canChangeGuiOrder = false;
             } else {
                 // the ontology iri of the upper class couldn't be found
                 // display the class name
@@ -193,9 +191,9 @@ export class ResourceClassInfoComponent implements OnInit {
                     // iri is not kind of [ontologyIri]#[className]
                     this.subClassOfLabel += iri.split('/').filter(e => e).slice(-1);
                 }
-                // in this case, the user can't update the cardinality incl. the gui order in this class
-                // we have to disable this update cardinality functionality
-                this.cardinalityUpdateEnabled = false;
+                // in this case, the user can't update the currentCardinality incl. the gui order in this class
+                // we have to disable this update currentCardinality functionality
+                this.canChangeGuiOrder = false;
             }
         });
 
@@ -222,7 +220,7 @@ export class ResourceClassInfoComponent implements OnInit {
      * Not all props should be displayed; there are some system / API-specific
      * properties which have to be filtered.
      *
-     * @param props
+     * @param classProps
      */
     preparePropsToDisplay(classProps: PropToDisplay[]) {
 
@@ -301,17 +299,6 @@ export class ResourceClassInfoComponent implements OnInit {
         this._dspApiConnection.v2.onto.canDeleteResourceClass(this.resourceClass.id).subscribe(
             (response: CanDoResponse) => {
                 this.classCanBeDeleted = response.canDo;
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-            }
-        );
-    }
-
-    canReplaceCardinality() {
-        this._dspApiConnection.v2.onto.canReplaceCardinalityOfResourceClass(this.resourceClass.id).subscribe(
-            (response: CanDoResponse) => {
-                this.classCanReplaceCardinality = response.canDo;
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
@@ -416,11 +403,36 @@ export class ResourceClassInfoComponent implements OnInit {
                 subtitle: 'Customize property and cardinality',
                 mode: mode,
                 parentIri: propertyAssignment.resClass.id,
-                position: this.propsToDisplay.length + 1,
-                canBeUpdated: this.classCanReplaceCardinality,
+                position: this.propsToDisplay.length + 1
             }
         };
         this.openEditDialog(dialogConfig);
+    }
+
+    /**
+     * changeCardinalities: Open the dialogue in order to change the currentCardinality of an existing property and
+     * class combination
+     * @param cardRequest information about the property, its type and its new cardinalities to be set
+     **/
+    changeCardinalities(cardRequest: { prop: PropToDisplay; propType: DefaultProperty; targetCardinality: GuiCardinality }) {
+        const dialogConfig: MatDialogConfig = {
+            width: '640px',
+            maxHeight: '80vh',
+            position: {
+                top: '112px'
+            },
+            data: {
+                propInfo: { propDef: cardRequest.prop.propDef, propType: cardRequest.propType },
+                title: 'Update cardinality',
+                subtitle: `Set the cardinality for property ${ cardRequest.prop.propDef.label }`,
+                mode: 'updateCardinality',
+                parentIri: this.resourceClass.id,
+                currentCardinality: cardRequest.prop.cardinality,
+                targetCardinality: cardRequest.targetCardinality,
+            }
+        };
+        this.openEditDialog(dialogConfig);
+
     }
 
     /**
