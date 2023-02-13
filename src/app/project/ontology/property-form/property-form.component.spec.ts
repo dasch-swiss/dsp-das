@@ -269,8 +269,7 @@ describe('PropertyFormComponent', () => {
                 LinkHostComponent,
                 ListHostComponent,
                 SimpleTextHostComponent,
-                PropertyFormComponent,
-                MockStringLiteralInputComponent
+                PropertyFormComponent
             ],
             imports: [
                 BrowserAnimationsModule,
