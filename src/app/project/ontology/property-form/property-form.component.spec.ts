@@ -14,7 +14,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ListNodeInfo, MockOntology, ReadOntology } from '@dasch-swiss/dsp-js';
+import { ListNodeInfo, MockOntology, ReadOntology, StringLiteral } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AppInitService } from 'src/app/app-init.service';
@@ -269,7 +269,8 @@ describe('PropertyFormComponent', () => {
                 LinkHostComponent,
                 ListHostComponent,
                 SimpleTextHostComponent,
-                PropertyFormComponent
+                PropertyFormComponent,
+                MockStringLiteralInputComponent
             ],
             imports: [
                 BrowserAnimationsModule,
