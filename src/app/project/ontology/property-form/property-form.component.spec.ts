@@ -1,5 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, ViewChild, Input } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -207,6 +207,17 @@ class ListHostComponent {
 
 }
 
+@Component({ selector: 'app-string-literal-input', template: '' })
+class MockStringLiteralInputComponent {
+    @Input() placeholder = 'Label';
+    @Input() language: string;
+    @Input() textarea: boolean;
+    @Input() value: StringLiteral[] = [];
+    @Input() disabled: boolean;
+    @Input() readonly: boolean;
+    constructor() { }
+}
+
 const listNodeInfo = [{
     'comments': [],
     'id': 'http://rdfh.ch/lists/0001/otherTreeList',
@@ -268,8 +279,9 @@ describe('PropertyFormComponent', () => {
             declarations: [
                 LinkHostComponent,
                 ListHostComponent,
-                SimpleTextHostComponent,
-                PropertyFormComponent
+                MockStringLiteralInputComponent,
+                PropertyFormComponent,
+                SimpleTextHostComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -454,8 +466,9 @@ describe('Cardinality restriction', () => {
             declarations: [
                 LinkHostComponent,
                 ListHostComponent,
-                SimpleTextHostComponent,
-                PropertyFormComponent
+                MockStringLiteralInputComponent,
+                PropertyFormComponent,
+                SimpleTextHostComponent
             ],
             imports: [
                 BrowserAnimationsModule,
