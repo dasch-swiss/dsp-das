@@ -1,7 +1,7 @@
 # DSP-APP Documentation
 
 This is the DSP-APP documentation, based on [MkDocs](https://www.mkdocs.org) and published
-under [http://dasch-swiss.github.io/dsp-app](http://dasch-swiss.github.io/dsp-app).
+under [https://docs.dasch.swiss/latest/DSP-APP/](https://docs.dasch.swiss/latest/DSP-APP/).
 
 ## Contribute
 
