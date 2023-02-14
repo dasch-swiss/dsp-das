@@ -73,6 +73,10 @@
     }
 
     .title {
+      padding: 20px;
+      height: 80px;
+    }
+    .title-text {
       font-weight: 700;
       font-size: 24px;
       color: #3b4856;
@@ -83,8 +87,6 @@
       overflow-wrap: break-word;
       text-overflow: ellipsis;
       line-height: 28px;
-      padding: 7px 20px;
-      height: 80px;
     }
 
     .workspace-button-container {
