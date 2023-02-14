@@ -19,7 +19,7 @@ The documentation consists of three main topics with subordinate themes:
     - System = All about system administration; part of DSP-ADMIN
     - Data = All about data management; part of VRE. In the current DSP-APP ADMIN version it's commented out
 1. **contribution** contains all information for people who wants to contribute to DSP-APP
-    - Index = How to contribute incl. link to the [general DSP contribution guidelines](https://docs.dasch.swiss/2023.02.01/developers/dsp/contribution/)
+    - Index = How to contribute incl. link to the [general DSP contribution guidelines](https://docs.dasch.swiss/latest/developers/dsp/contribution/)
     - Release Notes = Contains the CHANGELOG file of DSP-APP
 
 Images like screenshots and so on have to be stored in `assets/images`.
