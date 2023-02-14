@@ -20,8 +20,8 @@ export class RepresentationService {
      * @returns true if file exists
      */
     doesFileExist(urlToFile: string): boolean {
-        // it seems that SIPI doe not support HEAD request only --> xhr.open('HEAD')
-        // this is why we have to grab the sidecar file to check if the file existss
+        // it seems that SIPI does not support HEAD request only --> xhr.open('HEAD')
+        // this is why we have to grab the sidecar file to check if the file exists
         const pathToKnoraJson = urlToFile.substring(0, urlToFile.lastIndexOf('/')) + '/knora.json';
         try {
             const xhr = new XMLHttpRequest();
