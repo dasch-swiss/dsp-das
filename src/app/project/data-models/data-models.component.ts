@@ -17,8 +17,6 @@ export class DataModelsComponent implements OnInit {
     projectLists: ListNodeInfo[];
 
     loading: boolean;
-    tooltipText: string;
-    isTooltipVisible: boolean;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -78,22 +76,6 @@ export class DataModelsComponent implements OnInit {
         } else {
             this._router.navigate([route], { relativeTo: this._route.parent });
         }
-    }
-
-    toggleTooltip(type: string){
-        switch(type) {
-            case 'data-models':
-                this.tooltipText = 'A data model organizes data elements and specifies how they relate to one another and by which properties they are described.';
-                break;
-            case 'lists':
-                this.tooltipText = `Controlled vocabularies are hierarchical or non-hierarchical lexica of reference terms.
-                    Due to their normative or standardized nature, controlled vocabularies improve data quality and make database searching more efficient than free-text fields.`;
-                break;
-        }
-        console.log('text: ', this.tooltipText);
-        this.isTooltipVisible = !this.isTooltipVisible;
-        console.log('visible: ', this.isTooltipVisible);
-
     }
 
 }

@@ -1,8 +1,12 @@
 <div *ngIf="!loading" class="data-models-container">
     <div class="header">
         <p class="title">Data Models</p>
-        <button #tooltip="matTooltip" mat-button (click)="toggleTooltip('data-models')" [matTooltipDisabled]="!isTooltipVisible" [matTooltip]="tooltipText">click</button>
-        <mat-icon class="icon">info</mat-icon>
+        <mat-icon
+            class="icon"
+            matTooltip="A data model organizes data elements and specifies how they relate to one another and by which properties they are described."
+            matTooltipPosition="above">
+            info
+        </mat-icon>
     </div>
     <div class="action-buttons">
         <button mat-button class="create" (click)="open('add-ontology')">
@@ -26,7 +30,12 @@
     <div class="spacing"></div>
     <div class="header">
         <p class="title">Controlled Vocabularies</p>
-        <mat-icon class="icon">info</mat-icon>
+        <mat-icon
+            class="icon"
+            matTooltip="Controlled vocabularies are hierarchical or non-hierarchical lexica of reference terms. Due to their normative or standardized nature, controlled vocabularies improve data quality and make database searching more efficient than free-text fields."
+            matTooltipPosition="above">
+            info
+        </mat-icon>
     </div>
     <div class="action-buttons">
         <button mat-button class="create" (click)="open('add-list')">
