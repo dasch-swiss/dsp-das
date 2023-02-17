@@ -1,4 +1,4 @@
-# DSP-APP &mdash; Generic user interface of DaSCH Service Platform
+# DSP-APP &mdash; Generic user interface of DaSCH Service Platform 
 
 [![Github](https://img.shields.io/github/v/tag/dasch-swiss/dsp-app?include_prereleases&label=Github%20tag)](https://github.com/dasch-swiss/dsp-app)
 [![Docker](https://img.shields.io/docker/v/daschswiss/dsp-app?label=Docker%20image)](https://hub.docker.com/r/daschswiss/dsp-app)
