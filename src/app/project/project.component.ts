@@ -20,7 +20,6 @@ import { DspApiConnectionToken } from '../main/declarations/dsp-api-tokens';
 import { MenuItem } from '../main/declarations/menu-item';
 import { ErrorHandlerService } from '../main/services/error-handler.service';
 import { Session, SessionService } from '../main/services/session.service';
-import { OntologyService } from './ontology/ontology.service';
 
 @Component({
     selector: 'app-project',
@@ -72,7 +71,6 @@ export class ProjectComponent implements OnInit {
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: ErrorHandlerService,
         private _cache: CacheService,
-        private _ontologyService: OntologyService,
         private _route: ActivatedRoute,
         private _router: Router,
         private _session: SessionService,
@@ -157,7 +155,6 @@ export class ProjectComponent implements OnInit {
                         this._cache.get('groups_of_' + this.projectUuid, this._dspApiConnection.admin.groupsEndpoint.getGroups());
                     }
 
-                    // in the new concept of project view, we have to make many requests to get all project relevant information
                     if (this.beta) {
 
                         // get all project ontologies
@@ -165,8 +162,6 @@ export class ProjectComponent implements OnInit {
                             (ontoMeta: OntologiesMetadata) => {
                                 if (ontoMeta.ontologies.length) {
                                     ontoMeta.ontologies.forEach(onto => {
-
-                                        // const name = this._ontologyService.getOntologyName(onto.id);
                                         this._dspApiConnection.v2.onto.getOntology(onto.id).subscribe(
                                             (ontology: ReadOntology) => {
                                                 this.projectOntologies.push(ontology);
@@ -192,18 +187,6 @@ export class ProjectComponent implements OnInit {
                                 this._errorHandler.showMessage(error);
                             }
                         );
-
-                        // get all project lists
-                        this._dspApiConnection.admin.listsEndpoint.getListsInProject(this.project.id).subscribe(
-                            (lists: ApiResponseData<ListsResponse>) => {
-                                this.projectLists = lists.body.lists;
-
-                            },
-                            (error: ApiResponseError) => {
-                                this._errorHandler.showMessage(error);
-                            }
-                        );
-
                     } else {
                         if (this._cache.has(this.projectUuid)) {
                             this.loading = false;
@@ -219,38 +202,8 @@ export class ProjectComponent implements OnInit {
         }
     }
 
-    open(route: string, id?: string) {
-        if (route === 'ontology' && id) {
-            // get name of ontology
-            id = this._ontologyService.getOntologyName(id);
-        }
-        if (route === 'list' && id) {
-            // get name of list
-            const array = id.split('/');
-            const pos = array.length - 1;
-            id = array[pos];
-        }
-        if (route === 'add-ontology' || route === 'add-list') {
-            if (!this.project || !this.project.status) { // project is deactivated. Do not reroute
-                return;
-            }
-        }
-        if (id) {
-            if (route === 'ontology') {
-                this._router.navigate([route, encodeURIComponent(id), 'editor', 'classes'], { relativeTo: this._route });
-            } else {
-                this._router.navigate([route, encodeURIComponent(id)], { relativeTo: this._route });
-            }
-        } else {
-            this._router.navigate([route], { relativeTo: this._route });
-        }
-    }
-
-    /**
-     * go to overview page
-     */
-    goToOverview() {
-        this._router.navigate(['/'], { relativeTo: this._route });
+    open(route: string) {
+        this._router.navigate([route], { relativeTo: this._route });
     }
 
     /**
