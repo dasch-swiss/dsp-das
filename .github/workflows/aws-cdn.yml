@@ -4,7 +4,8 @@ on:
     branches:
       - aws-cdn
 jobs:
-  build:
+  deploy:
+    environment: "aws-cdn"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
