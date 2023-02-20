@@ -18,9 +18,9 @@
             <mat-icon>chevron_right</mat-icon>
         </button>
     </div>
-    <div *ngIf="projectOntologies">
+    <div class="projectOntos" *ngIf="projectOntologies">
         <div class="list">
-            <div class="list-item" *ngFor="let onto of projectOntologies.ontologies" (click)="open('ontology', onto.id)">
+            <div class="list-item ontos" *ngFor="let onto of projectOntologies.ontologies" (click)="open('ontology', onto.id)">
                 <mat-icon class="icon-prefix">bubble_chart</mat-icon>
                 <p class="label">{{onto.label}}</p>
                 <mat-icon class="icon-suffix">chevron_right</mat-icon>
@@ -43,7 +43,7 @@
             Create New
         </button>
     </div>
-    <div *ngIf="projectLists">
+    <div class="projectLists" *ngIf="projectLists">
         <div class="list">
             <div class="list-item" *ngFor="let list of projectLists" (click)="open('list', list.id)">
                 <mat-icon class="icon-prefix">list</mat-icon>
