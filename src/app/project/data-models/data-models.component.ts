@@ -55,6 +55,11 @@ export class DataModelsComponent implements OnInit {
         );
     }
 
+    /**
+     * handles routing to the correct path
+     * @param route path to route to
+     * @param id optional ontology id or list id
+     */
     open(route: string, id?: string) {
         let name;
 
