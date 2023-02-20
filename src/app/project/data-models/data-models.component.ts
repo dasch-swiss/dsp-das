@@ -56,24 +56,31 @@ export class DataModelsComponent implements OnInit {
     }
 
     open(route: string, id?: string) {
+        let name;
+
         if (route === 'ontology' && id) {
-            id = this._ontologyService.getOntologyName(id);
+            // get name of ontology
+            name = this._ontologyService.getOntologyName(id);
         }
         if (route === 'list' && id) {
             // get name of list
             const array = id.split('/');
             const pos = array.length - 1;
-            id = array[pos];
+            name = array[pos];
         }
-        if(id) {
+        if(name) {
             if (route === 'ontology') {
-                this._router.navigate([route, encodeURIComponent(id), 'editor', 'classes'], { relativeTo: this._route.parent });
+                // route to the onto editor
+                this._router.navigate([route, encodeURIComponent(name), 'editor', 'classes'], { relativeTo: this._route.parent });
             } else {
-                this._router.navigate([route, encodeURIComponent(id)], { relativeTo: this._route.parent });
+                // route to the list editor
+                this._router.navigate([route, encodeURIComponent(name)], { relativeTo: this._route.parent });
             }
         } else if (route === 'docs') {
+            // route to the external docs
             window.open('https://docs.dasch.swiss/latest/DSP-APP/user-guide/project/#data-model', '_blank');
         } else {
+            // fallback default routing
             this._router.navigate([route], { relativeTo: this._route.parent });
         }
     }
