@@ -63,7 +63,6 @@ export class OverviewComponent implements OnInit {
         if (this.sysAdmin || !this.session) {
             this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
                 (response: ApiResponseData<ProjectsResponse>) => {
-
                     // reset the lists:
                     this.userProjects = [];
                     this.otherProjects = [];

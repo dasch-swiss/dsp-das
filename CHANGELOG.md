@@ -1,5 +1,52 @@
 # Changelog
 
+## [10.14.0](https://github.com/dasch-swiss/dsp-app/compare/v10.13.0...v10.14.0) (2023-02-17)
+
+
+### Enhancements
+
+* **cardinalities:** implement cardinalities user workflow (Dev-1615 ) ([#917](https://github.com/dasch-swiss/dsp-app/issues/917)) ([4f0347a](https://github.com/dasch-swiss/dsp-app/commit/4f0347a12eeacad37b5b01b39aae011fc59df2d1))
+
+
+### Documentation
+
+* Fix broken links ([#921](https://github.com/dasch-swiss/dsp-app/issues/921)) ([ad368aa](https://github.com/dasch-swiss/dsp-app/commit/ad368aaf00e1926e1c5bcfc64ab0e04ccc2ca0de))
+
+
+### Maintenance
+
+* bump js-lib to 8.0.0 ([#923](https://github.com/dasch-swiss/dsp-app/issues/923)) ([f7c4847](https://github.com/dasch-swiss/dsp-app/commit/f7c48476a765626777a5d754d05516cbc2fc96b5))
+* **deps:** fix breaking changes from js-lib v8.0.0 ([#918](https://github.com/dasch-swiss/dsp-app/issues/918)) ([f2d14be](https://github.com/dasch-swiss/dsp-app/commit/f2d14be3c0fd7dd6014839870e12b34351b850a5))
+* enable publishing docker image arm64 and amd64 architectures (DEV-1701) ([#915](https://github.com/dasch-swiss/dsp-app/issues/915)) ([65d3120](https://github.com/dasch-swiss/dsp-app/commit/65d31208217a747dac12e3d4b909c1c38fd46d87))
+
+## [10.13.0](https://github.com/dasch-swiss/dsp-app/compare/v10.12.1...v10.13.0) (2023-02-03)
+
+
+### Bug Fixes
+
+* adapt link to search doc ([#907](https://github.com/dasch-swiss/dsp-app/issues/907)) ([dc294af](https://github.com/dasch-swiss/dsp-app/commit/dc294af95501dc7c5c8557c28a4c227ef7d28eda))
+* fix disappeared buttons colors (DEV-1686) ([#906](https://github.com/dasch-swiss/dsp-app/issues/906)) ([9594a6e](https://github.com/dasch-swiss/dsp-app/commit/9594a6ef73816ba2302cbfb48dcdc4aeb9a2532d))
+* **project:** disable closing sidenav with esc key (DEV-1687) ([#909](https://github.com/dasch-swiss/dsp-app/issues/909)) ([1dea40f](https://github.com/dasch-swiss/dsp-app/commit/1dea40f21cc006f0056df5e7a6c3acd87b0fa829))
+
+
+### Maintenance
+
+* fix test logs (DEV-1610) ([#893](https://github.com/dasch-swiss/dsp-app/issues/893)) ([681fc7a](https://github.com/dasch-swiss/dsp-app/commit/681fc7ad476834e31cac7c324bd5967e72992dc4))
+* make possible to publish manually to DockerHub using GH Actions ([#911](https://github.com/dasch-swiss/dsp-app/issues/911)) ([5f72fa9](https://github.com/dasch-swiss/dsp-app/commit/5f72fa93726f2c67ea3ca544f75baea034d64041))
+* **ontology editor:** restyle ontology editor for cardinalities (DEV-1614) ([#900](https://github.com/dasch-swiss/dsp-app/issues/900)) ([57b41d9](https://github.com/dasch-swiss/dsp-app/commit/57b41d9521fb50bdabe66e10b4561b4e0ec21997))
+
+
+### Enhancements
+
+* **zio:** add support for new zio routes (DEV-1636) ([#898](https://github.com/dasch-swiss/dsp-app/issues/898)) ([d4e2a94](https://github.com/dasch-swiss/dsp-app/commit/d4e2a94dc816a796801045eea4e38165043de4dc))
+
+## [10.12.1](https://github.com/dasch-swiss/dsp-app/compare/v10.12.0...v10.12.1) (2023-01-23)
+
+
+### Bug Fixes
+
+* **create-link-resource:** fix issue when creating a new linked resource (DEV-1637) ([#899](https://github.com/dasch-swiss/dsp-app/issues/899)) ([cf9008a](https://github.com/dasch-swiss/dsp-app/commit/cf9008a71085d806e91f527e2d5179ce26b2e74c))
+
 ## [10.12.0](https://github.com/dasch-swiss/dsp-app/compare/v10.11.2...v10.12.0) (2023-01-20)
 
 
