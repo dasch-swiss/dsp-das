@@ -17,11 +17,11 @@ import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { StatusComponent } from 'src/app/main/status/status.component';
 import { TestConfig } from 'test.config';
 import { CacheService } from '../../main/cache/cache.service';
-import { BoardComponent } from './board.component';
+import { DescriptionComponent } from './description.component';
 
-describe('BoardComponent', () => {
-    let component: BoardComponent;
-    let fixture: ComponentFixture<BoardComponent>;
+describe('DescriptionComponent', () => {
+    let component: DescriptionComponent;
+    let fixture: ComponentFixture<DescriptionComponent>;
 
     beforeEach(waitForAsync(() => {
 
@@ -29,7 +29,7 @@ describe('BoardComponent', () => {
 
         TestBed.configureTestingModule({
             declarations: [
-                BoardComponent,
+                DescriptionComponent,
                 DialogComponent,
                 StatusComponent
             ],
@@ -122,7 +122,7 @@ describe('BoardComponent', () => {
     beforeEach(() => {
         localStorage.setItem('session', JSON.stringify(TestConfig.CurrentSession));
 
-        fixture = TestBed.createComponent(BoardComponent);
+        fixture = TestBed.createComponent(DescriptionComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

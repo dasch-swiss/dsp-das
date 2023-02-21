@@ -19,12 +19,12 @@ export interface DatasetRadioOption {
 }
 
 @Component({
-    selector: 'app-board',
-    templateUrl: './board.component.html',
-    styleUrls: ['./board.component.scss']
+    selector: 'app-description',
+    templateUrl: './description.component.html',
+    styleUrls: ['./description.component.scss']
 })
 
-export class BoardComponent implements OnInit {
+export class DescriptionComponent implements OnInit {
 
     // loading for progress indicator
     loading: boolean;

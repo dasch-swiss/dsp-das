@@ -9,7 +9,7 @@ import { StatusComponent } from './main/status/status.component';
 import { OntologyClassInstanceComponent } from './project/beta/ontology-classes/ontology-class-instance/ontology-class-instance.component';
 import { SettingsComponent } from './project/beta/settings/settings.component';
 // project
-import { BoardComponent } from './project/board/board.component';
+import { DescriptionComponent } from './project/description/description.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
 import { DataModelsComponent } from './project/data-models/data-models.component';
 import { ListInfoFormComponent } from './project/list/list-info-form/list-info-form.component';
@@ -59,7 +59,7 @@ const routes: Routes = [
             },
             {
                 path: 'info',
-                component: BoardComponent
+                component: DescriptionComponent
             },
             {
                 path: 'collaboration',
@@ -109,7 +109,7 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                component: BoardComponent
+                component: DescriptionComponent
             },
             {
                 path: 'info', // old path setup to avoid 404 when typing beta in front of project

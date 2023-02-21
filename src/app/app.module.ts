@@ -51,7 +51,7 @@ import { SelectLanguageComponent } from './main/select-language/select-language.
 import { DatadogRumService } from './main/services/datadog-rum.service';
 import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
-import { BoardComponent } from './project/board/board.component';
+import { DescriptionComponent } from './project/description/description.component';
 import { AddUserComponent } from './project/collaboration/add-user/add-user.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
 import { SelectGroupComponent } from './project/collaboration/select-group/select-group.component';
@@ -186,7 +186,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         ArchiveComponent,
         AudioComponent,
         AvTimelineComponent,
-        BoardComponent,
+        DescriptionComponent,
         BooleanValueComponent,
         CollaborationComponent,
         CollectionListComponent,
