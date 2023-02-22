@@ -1,5 +1,9 @@
 // Import material design icons
 @use "@angular/material" as mat;
+
+@use "config" as *;
+@use "responsive" as *;
+@use "mixins" as *;
 // @import "~material-design-icons/iconfont/material-icons.css";
 // @import "~material-icons/iconfont/material-icons.scss";
 
@@ -16,11 +20,6 @@ $accent: mat.get-color-from-palette($app-accent);
 $accent-contrast: mat.get-color-from-palette($app-accent, default-contrast);
 $warn: mat.get-color-from-palette($app-warn);
 $warn-contrast: mat.get-color-from-palette($app-warn, default-contrast);
-
-
-@import "./config";
-@import "./responsive";
-@import "./mixins";
 
 
 // for development only: display badge with release and environment

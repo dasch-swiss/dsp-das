@@ -1,5 +1,4 @@
-@import "../../../assets/style/responsive";
-@import "../../../assets/style/config";
+@use "responsive" as *;
 
 .status-page {
   background: #fff;

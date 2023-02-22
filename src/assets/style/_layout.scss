@@ -1,3 +1,5 @@
+@use "config" as *;
+
 //
 // general app layout
 .app {
@@ -69,7 +71,7 @@
         font-size: 24px;
         display: -webkit-box;
         -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;  
+        -webkit-box-orient: vertical;
         overflow: hidden;
         margin: 0px;
       }
@@ -102,7 +104,7 @@
         p {
           display: -webkit-box;
           -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;  
+          -webkit-box-orient: vertical;
           overflow: hidden;
         }
       }
@@ -131,7 +133,7 @@
           p {
             display: -webkit-box;
             -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;  
+            -webkit-box-orient: vertical;
             overflow: hidden;
           }
         }

@@ -1,4 +1,4 @@
-@import "../../../../assets/style/config";
+@use "config" as *;
 
 .list-view-header {
   display: flex;

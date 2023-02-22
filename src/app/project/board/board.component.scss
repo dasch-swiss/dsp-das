@@ -1,6 +1,6 @@
-@import "../../../assets/style/responsive";
-@import "../../../assets/style/config";
-@import "../../../assets/style/theme";
+@use "config" as *;
+@use "responsive" as *;
+@use "theme";
 
 section {
   margin: 24px 16px;

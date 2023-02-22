@@ -1,6 +1,8 @@
 //
 // flex layout helper
 @use "sass:math";
+@use "config" as *;
+@use "mixins" as *;
 
 .fill-remaining-space {
   /* This fills the remaining space, by using flexbox.
@@ -309,7 +311,7 @@ a,
       height: 70vh;
     }
   }
-  
+
   .caption {
     padding: 10px 16px;
     white-space: nowrap;

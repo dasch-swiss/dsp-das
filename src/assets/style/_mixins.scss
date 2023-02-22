@@ -1,12 +1,5 @@
 @use "sass:math";
-
-$black: rgb(11, 11, 11);
-$black-12-opacity: rgba($black, .12);
-$black-14-opacity: rgba($black, .14);
-$black-20-opacity: rgba($black, .2);
-$black-60-opacity: rgba($black, .6);
-
-$white: rgb(244, 244, 244);
+@use "config" as *;
 
 $border-color: #ebebeb;
 

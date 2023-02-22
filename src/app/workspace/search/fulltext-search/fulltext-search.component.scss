@@ -1,4 +1,6 @@
-@import "../../../../assets/style/search";
+@use "config" as *;
+@use "search" as *;
+@use "responsive" as *;
 
 //
 // general css (applied on desktop/tablet versions)
@@ -19,10 +21,7 @@
     font-size: inherit;
     overflow: hidden;
     text-overflow: ellipsis;
-    border-top-left-radius: $border-radius;
-    border-top-right-radius: 0;
-    border-bottom-left-radius: $border-radius;
-    border-bottom-right-radius: 0;
+    border-radius: $border-radius 0 $border-radius 0;
     margin: 1px;
   }
 }
@@ -60,17 +59,11 @@
   }
 
   .suffix {
-    border-top-left-radius: 0;
-    border-top-right-radius: $border-radius;
-    border-bottom-right-radius: $border-radius;
-    border-bottom-left-radius: 0;
+    border-radius: 0 $border-radius $border-radius 0;
     margin: 1px 0 1px -3px;
   }
   .prefix {
-    border-top-left-radius: $border-radius;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: $border-radius;
+    border-radius: $border-radius 0 0 $border-radius;
     margin: 1px 0 1px 3px;
   }
   .prefix,
