@@ -41,8 +41,6 @@ import { OntologyService } from '../ontology.service';
 import { GuiCardinality } from '../property-info/property-info.component';
 import { PropToDisplay } from '../resource-class-info/resource-class-info.component';
 
-type FormContext = 'assignToClass' | 'editProperty' | 'changeCardinalities';
-
 export interface ClassToSelect {
     ontologyId: string;
     ontologyLabel: string;
@@ -67,13 +65,13 @@ export class PropertyFormComponent implements OnInit {
      */
     @Input() resClassIri?: string; // the classes iri to which a property can be assigned
 
-    @Input() changeCardinalities?: boolean; // whether only the cardinalities should be changed or the whole property
+    @Input() changeCardinalities?: boolean; // whether only the cardinalities should be changed or a property
 
     @Input() currentCardinality?: Cardinality; // the currently active cardinality
 
     @Input() targetGuiCardinality?: GuiCardinality; // the cardinality which is requested to be set
 
-    @Input() classProperties?: PropToDisplay[]; // the properties of a resource class for changing a cardinality
+    @Input() classProperties?: PropToDisplay[]; // the properties of a resource class. Needed for changing a cardinality
     /**
      * position of property in case of cardinality update
      */
@@ -648,28 +646,27 @@ export class PropertyFormComponent implements OnInit {
     }
 
     /**
-     * submitCardinalitiesChange: create a transaction  based on currentCardinality but updated by the desired target value
-     * @param targetValue the value by which the current cardinality is updated
-     * @return the equivalent cardinality enum
+     * submitCardinalitiesChange: create a transaction based on currentCardinality but updated by the desired
+     * target cardinality set in the gui
      */
     submitCardinalitiesChange(){
-        // replace the cardinality of existing property in res class
+        // get the ontology, the class and its properties
         const classUpdate = new UpdateOntology<UpdateResourceClassCardinality>();
         classUpdate.lastModificationDate = this.lastModificationDate;
         classUpdate.id = this.ontology.id;
+        const changedClass = new UpdateResourceClassCardinality();
+        changedClass.id = this.resClassIri;
+        changedClass.cardinalities = this.classProperties;
 
-        const changeCard = new UpdateResourceClassCardinality();
-        changeCard.id = this.resClassIri;
-        changeCard.cardinalities = this.classProperties;
-
-        // replacing the property
-        const idx = changeCard.cardinalities.findIndex(c => c.propertyIndex === this.propertyInfo.propDef.id);
+        // get the property for replacing the cardinality
+        const idx = changedClass.cardinalities.findIndex(c => c.propertyIndex === this.propertyInfo.propDef.id);
         if (idx === -1) {
             return;
         }
+        // set the new cardinality
+        changedClass.cardinalities[idx].cardinality = this.getTargetCardinality(this.targetGuiCardinality);
 
-        changeCard.cardinalities[idx].cardinality = this.getTargetCardinality(this.targetGuiCardinality);
-        classUpdate.entity = changeCard;
+        classUpdate.entity = changedClass;
         this._dspApiConnection.v2.onto.replaceCardinalityOfResourceClass(classUpdate).subscribe(
             (res: ResourceClassDefinitionWithAllLanguages) => {
                 this.lastModificationDate = res.lastModificationDate;
@@ -681,8 +678,6 @@ export class PropertyFormComponent implements OnInit {
                 this.error = true;
                 this.loading = false;
                 this._errorHandler.showMessage(error);
-                // display success message
-                // this._notification.openSnackBar(`You have successfully removed "${property.label}" from "${this.resourceClass.label}".`);
             }
         );
     }
