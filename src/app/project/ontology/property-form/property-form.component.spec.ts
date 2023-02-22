@@ -438,7 +438,7 @@ describe('PropertyFormComponent', () => {
 
     });
 
-    it('should enable the cardinality toggles if canSetFullCardinality is true', fakeAsync(() => {
+    it('should enable the cardinality toggles if canSetCardinality is true', fakeAsync(() => {
         // the concrete components or property types or classes (...) do not matter anymore for enabling/disabling the
         // cardinalities. All that matters is the canDo response.
         simpleTextHostFixture = TestBed.createComponent(SimpleTextHostComponent);
@@ -547,7 +547,7 @@ describe('Cardinality restriction', () => {
         expect(simpleTextHostComponent.propertyFormComponent).toBeTruthy();
     });
 
-    it('should disable the cardinality toggles if canSetFullCardinality is false', fakeAsync(() => {
+    it('should disable the cardinality toggles if canSetCardinality is false', fakeAsync(() => {
         // the concrete components or property types or classes (...) do not matter anymore for enabling/disabling the
         // cardinalities. All that matters is the canDo response.
         simpleTextHostFixture = TestBed.createComponent(SimpleTextHostComponent);
