@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import {
     ApiResponseError,
     CanDoResponse,
@@ -22,12 +22,12 @@ import {
     UpdateResourcePropertyGuiElement,
     UpdateResourcePropertyLabel
 } from '@dasch-swiss/dsp-js';
-import {CacheService} from 'src/app/main/cache/cache.service';
-import {DspApiConnectionToken} from 'src/app/main/declarations/dsp-api-tokens';
-import {existingNamesValidator} from 'src/app/main/directive/existing-name/existing-name.directive';
-import {ErrorHandlerService} from 'src/app/main/services/error-handler.service';
-import {SortingService} from 'src/app/main/services/sorting.service';
-import {CustomRegex} from 'src/app/workspace/resource/values/custom-regex';
+import { CacheService } from 'src/app/main/cache/cache.service';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { existingNamesValidator } from 'src/app/main/directive/existing-name/existing-name.directive';
+import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
+import { SortingService } from 'src/app/main/services/sorting.service';
+import { CustomRegex } from 'src/app/workspace/resource/values/custom-regex';
 import {
     AutocompleteItem
 } from 'src/app/workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/operator';
@@ -37,9 +37,9 @@ import {
     PropertyCategory,
     PropertyInfoObject
 } from '../default-data/default-properties';
-import {OntologyService} from '../ontology.service';
-import {CardinalityKey, GuiCardinality} from '../property-info/property-info.component';
-import {PropToDisplay} from "../resource-class-info/resource-class-info.component";
+import { OntologyService } from '../ontology.service';
+import { GuiCardinality } from '../property-info/property-info.component';
+import { PropToDisplay } from "../resource-class-info/resource-class-info.component";
 
 type FormContext = 'assignToClass' | 'editProperty' | 'changeCardinalities';
 
