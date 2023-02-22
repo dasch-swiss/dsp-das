@@ -193,9 +193,9 @@
     <form [formGroup]="propertyForm" *ngIf="changeCardinalities" class="form-content">
         <div class="center">
             <div *ngIf="!canSetCardinality">
-                <div class="mat-title">This action is not possible</div>
                 <mat-icon aria-label="cancel icon" fontIcon="cancel" color="warn"></mat-icon>
-                <div>This action is not possible</div>
+                <div class="mat-title">This action is not possible</div>
+                <div></div>
             </div>
             <div *ngIf="canSetCardinality">
                 <mat-icon aria-label="warn icon" fontIcon="warning_amber" color="accent"></mat-icon>
