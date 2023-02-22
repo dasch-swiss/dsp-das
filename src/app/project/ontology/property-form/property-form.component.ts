@@ -39,7 +39,7 @@ import {
 } from '../default-data/default-properties';
 import { OntologyService } from '../ontology.service';
 import { GuiCardinality } from '../property-info/property-info.component';
-import { PropToDisplay } from "../resource-class-info/resource-class-info.component";
+import { PropToDisplay } from '../resource-class-info/resource-class-info.component';
 
 type FormContext = 'assignToClass' | 'editProperty' | 'changeCardinalities';
 
@@ -665,7 +665,7 @@ export class PropertyFormComponent implements OnInit {
         // replacing the property
         const idx = changeCard.cardinalities.findIndex(c => c.propertyIndex === this.propertyInfo.propDef.id);
         if (idx === -1) {
-            console.error('Property not found, abort');
+            return;
         }
 
         changeCard.cardinalities[idx].cardinality = this.getTargetCardinality(this.targetGuiCardinality);
@@ -718,7 +718,7 @@ export class PropertyFormComponent implements OnInit {
         );
     }
 
-    // Actually nothing to do with cardinality. This is setting domain and range, i.e. assigning a property to a class
+    // actually nothing to do with a cardinality like 1_n asf. This is simply assigning a property to a class
     setCardinality(prop: ResourcePropertyDefinitionWithAllLanguages) {
 
         const onto = new UpdateOntology<UpdateResourceClassCardinality>();
