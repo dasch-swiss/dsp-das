@@ -1,22 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
+import { ENTER, COMMA } from '@angular/cdk/keycodes';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
+    ApiResponseData,
     ApiResponseError,
-    ReadProject
+    KnoraApiConnection,
+    ProjectResponse,
+    ReadProject,
+    StringLiteral,
+    UpdateProjectRequest
 } from '@dasch-swiss/dsp-js';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
+import { NotificationService } from 'src/app/main/services/notification.service';
 import { Session, SessionService } from 'src/app/main/services/session.service';
+import { ProjectService } from 'src/app/workspace/resource/services/project.service';
 import { CacheService } from '../../main/cache/cache.service';
-
-export interface DatasetRadioOption {
-    name: string;
-    id: number;
-    checked: boolean;
-}
 
 @Component({
     selector: 'app-description',
@@ -42,16 +43,49 @@ export class DescriptionComponent implements OnInit {
 
     color = 'primary';
 
+    description: StringLiteral[];
+    descriptionMaxLength = 2000;
+
+    // keywords is an array of objects of {name: 'string'}
+    keywords: string[] = [];
+    // separator: Enter, comma
+    separatorKeyCodes = [ENTER, COMMA];
+
+    form: FormGroup;
+
+    formOpen = false;
+
+    formErrors = {
+        'longname': '',
+        'description': '',
+        'keywords': ''
+    };
+
+    validationMessages = {
+        'longname': {
+            'required': 'Project (long) name is required.'
+        },
+        'description': {
+            'required': 'A description is required.',
+            'maxlength': 'Description cannot be more than ' + this.descriptionMaxLength + ' characters long.'
+        },
+        'keywords': {
+            'required': 'At least one keyword is required.'
+        }
+    };
+
     beta = false;
 
     constructor(
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _errorHandler: ErrorHandlerService,
         private _session: SessionService,
-        private _dialog: MatDialog,
         private _route: ActivatedRoute,
         private _router: Router,
-        private _titleService: Title
+        private _fb: FormBuilder,
+        private _projectService: ProjectService,
+        private _notification: NotificationService,
     ) {
         // get the uuid of the current project
         this._route.parent.paramMap.subscribe((params: Params) => {
@@ -75,6 +109,33 @@ export class DescriptionComponent implements OnInit {
 
         // get project info from backend
         this.getProject();
+
+    }
+
+    /**
+     * this method is for the form error handling
+     *
+     * @param data Data which changed.
+     */
+    onValueChanged(data?: any) {
+
+        if (!this.form) {
+            return;
+        }
+
+        const form = this.form;
+
+        Object.keys(this.formErrors).map(field => {
+            this.formErrors[field] = '';
+            const control = form.get(field);
+            if (control && control.dirty && !control.valid) {
+                const messages = this.validationMessages[field];
+                Object.keys(control.errors).map(key => {
+                    this.formErrors[field] += messages[key] + ' ';
+                });
+
+            }
+        });
     }
 
     getProject() {
@@ -88,6 +149,7 @@ export class DescriptionComponent implements OnInit {
                     this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
                 }
 
+                this.buildForm();
                 this.loading = false;
             },
             (error: ApiResponseError) => {
@@ -98,26 +160,117 @@ export class DescriptionComponent implements OnInit {
         this.loading = false;
     }
 
-    openDialog(mode: string, name: string, id?: string): void {
+    buildForm(): void {
+        // create deep copy of description array because it contains objects
+        this.description = JSON.parse(JSON.stringify(this.project.description));
 
-        const dialogConfig: MatDialogConfig = {
-            width: '560px',
-            maxHeight: '80vh',
-            position: {
-                top: '112px'
-            },
-            data: { mode: mode, title: name, project: id }
-        };
+        // create shallow copy of keywords array
+        this.keywords = this.project.keywords.slice();
 
-        const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-
-        dialogRef.afterClosed().subscribe(response => {
-            // update the view
-            this.getProject();
+        this.form = this._fb.group({
+            'longname': new FormControl({
+                value: this.project.longname, disabled: false
+            }, [ Validators.required ]),
+            'keywords': new FormControl({
+                // must be empty (even in edit mode), because of the mat-chip-list
+                value: [], disabled: false
+            })
         });
+
+        this.form.valueChanges
+            .subscribe(data => this.onValueChanged(data));
+    }
+
+    /**
+     * gets string literal
+     * @param data
+     */
+    getStringLiteral(data: StringLiteral[]) {
+        this.description = data;
+        if (!this.description.length) {
+            this.formErrors['description'] = this.validationMessages['description'].required;
+        } else {
+            this.formErrors['description'] = '';
+        }
+    }
+
+    addKeyword(event: MatChipInputEvent): void {
+        const input = event.chipInput.inputElement;
+        const value = event.value;
+
+        if (!this.keywords) {
+            this.keywords = [];
+        }
+
+        // add keyword
+        if ((value || '').trim()) {
+            this.keywords.push(value.trim());
+        }
+
+        // reset the input value
+        if (input) {
+            input.value = '';
+        }
+    }
+
+    removeKeyword(keyword: any): void {
+        const index = this.keywords.indexOf(keyword);
+
+        if (index >= 0) {
+            this.keywords.splice(index, 1);
+        }
     }
 
     featureToggle() {
         this._router.navigate([(this.beta ? 'beta' : ''), 'project', this.projectUuid ]);
+    }
+
+    toggleForm() {
+        this.formOpen = !this.formOpen;
+
+        if(this.formOpen) {
+            this.buildForm();
+        }
+    }
+
+    submitData() {
+        this.loading = true;
+
+        this.form.controls['keywords'].setValue(this.keywords);
+
+        const projectData: UpdateProjectRequest = new UpdateProjectRequest();
+        projectData.description = [new StringLiteral()];
+        projectData.keywords = this.form.value.keywords;
+        projectData.longname = this.form.value.longname;
+        projectData.status = true;
+
+        let i = 0;
+        for (const d of this.description) {
+            projectData.description[i] = new StringLiteral();
+            projectData.description[i].language = d.language;
+            projectData.description[i].value = d.value;
+            i++;
+        }
+
+        // edit / update project data
+        this._dspApiConnection.admin.projectsEndpoint.updateProject(this.project.id, projectData).subscribe(
+            (response: ApiResponseData<ProjectResponse>) => {
+
+                this.project = response.body.project;
+
+                // update cache
+                this._cache.set(this._projectService.iriToUuid(this.project.id), this.project);
+
+                this._notification.openSnackBar('You have successfully updated the project information.');
+
+                this.loading = false;
+                this.formOpen = false;
+
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+                this.loading = false;
+            }
+        );
     }
 }
