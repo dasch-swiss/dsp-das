@@ -177,7 +177,7 @@ a,
     border-radius: 6px;
   }
   &.active {
-    background-color: $gray_100;
+    background-color: $primary_100;
   }
 }
 
@@ -201,7 +201,7 @@ a,
 
 .nav-item {
   width: 100%;
-  color: $gray_700;
+  color: $primary_700;
 
   &.button {
     text-align: left;
@@ -228,7 +228,7 @@ a,
   }
 
   .active-link {
-    background: $gray_100;
+    background: $primary_100;
 
     .mat-icon.suffix {
       display: block;
