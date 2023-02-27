@@ -76,6 +76,8 @@ export class AppInitService {
         const zioApiPort = (typeof this._config.zioApiPort === 'number' ? this._config.zioApiPort : null);
         const jsonWebToken = (typeof this._config.jsonWebToken === 'string' ? this._config.jsonWebToken : '');
         const logErrors = (typeof this._config.logErrors === 'boolean' ? this._config.logErrors : false);
+        const zioPrefix = (this._config.zioPrefix === '/zio' || this._config.zioPrefix === ':5555' ? this._config.zioPrefix : '/zio');
+        const zioEndpoints = (Array.isArray(this._config.zioEndpoints) ? this._config.zioEndpoints : []);
 
         this._dspApiConfig = new KnoraApiConfig(
             this._config.apiProtocol,
@@ -84,7 +86,9 @@ export class AppInitService {
             zioApiPort,
             apiPath,
             jsonWebToken,
-            logErrors
+            logErrors,
+            zioPrefix,
+            zioEndpoints
         );
 
         const iiifPort = (typeof this._config.iiifPort === 'number' ? this._config.iiifPort : null);
