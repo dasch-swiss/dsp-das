@@ -44,7 +44,20 @@ export class UserMenuComponent implements OnChanges {
 
     ngOnChanges() {
 
-        this.navigation = AppGlobal.userNav;
+        this.navigation = [
+            {
+                label: 'DSP-App Home Page',
+                shortLabel: 'home',
+                route: '/',
+                icon: ''
+            },
+            {
+                label: 'My Account',
+                shortLabel: 'Account',
+                route: '/account',
+                icon: ''
+            }
+        ];
 
         if (this.session) {
             this.username = this._session.getSession().user.name;
