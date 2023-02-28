@@ -19,7 +19,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AppInitService } from 'src/app/app-init.service';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { DspApiConfigToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { DspApiConfigToken, DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { TestConfig } from 'test.config';
 import { PropertyInfoObject } from '../default-data/default-properties';
 import { PropertyFormComponent } from './property-form.component';
@@ -124,6 +124,14 @@ class LinkHostComponent {
         }
     };
 
+}
+
+class DspApiConnectionMock {
+    v2 = {
+        onto: {
+            canReplaceCardinalityOfResourceClass: (resClassIri: string) => of({ canDo: true }),
+        },
+    };
 }
 
 /**
@@ -288,6 +296,7 @@ describe('PropertyFormComponent', () => {
                     provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig
                 },
+                { provide: DspApiConnectionToken, useClass: DspApiConnectionMock },
                 {
                     provide: CacheService,
                     useValue: cacheServiceSpy
