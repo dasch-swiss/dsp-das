@@ -11,6 +11,7 @@ import { SettingsComponent } from './project/beta/settings/settings.component';
 // project
 import { BoardComponent } from './project/board/board.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
+import { DataModelsComponent } from './project/data-models/data-models.component';
 import { ListInfoFormComponent } from './project/list/list-info-form/list-info-form.component';
 import { ListComponent } from './project/list/list.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
@@ -123,6 +124,11 @@ const routes: Routes = [
                 path: 'ontology',
                 component: HintComponent,
                 data: { topic: 'ontology' }
+            },
+            {
+                path: 'data-models',
+                component: DataModelsComponent,
+                canActivate: [AuthGuard]
             },
             {
                 path: 'ontology/:onto',
