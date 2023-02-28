@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    <div *ngIf="!formOpen">
+    <div *ngIf="!formOpen" class="description-rm">
         <div>
             <p>{{project.longname}}</p>
         </div>
@@ -67,7 +67,7 @@
         </section>
     </div>
 
-    <div *ngIf="formOpen">
+    <div *ngIf="formOpen" class="description-form">
         <form [formGroup]="form" (ngSubmit)="submitData()">
             <div>
                 <!-- long name -->
