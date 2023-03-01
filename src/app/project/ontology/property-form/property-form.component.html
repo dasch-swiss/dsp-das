@@ -195,7 +195,10 @@
             <div *ngIf="!canSetCardinality">
                 <mat-icon aria-label="cancel icon" fontIcon="cancel" color="warn"></mat-icon>
                 <div class="mat-title">This action is not possible</div>
-                <div></div>
+                <div>
+                    <p>{{canNotSetCardinalityUiReason.detail}}</p>
+                    <p>{{canNotSetCardinalityUiReason.hint}}</p>
+                </div>
             </div>
             <div *ngIf="canSetCardinality">
                 <mat-icon aria-label="warn icon" fontIcon="warning_amber" color="accent"></mat-icon>

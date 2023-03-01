@@ -145,7 +145,11 @@ export class PropertyFormComponent implements OnInit {
 
     // general for changing to a specific cardinality of an existing property
     canSetCardinality: boolean;
-    canNotSetCardinalityReason: string;
+    canNotSetCardinalityReason = ''; // response from the api
+    canNotSetCardinalityUiReason = { // default user readable reason
+        detail: this.canNotSetCardinalityReason,
+        hint: ''
+    };
 
     // if assigning a new property to a class
     canSetRequiredCardinality = false;
@@ -462,7 +466,6 @@ export class PropertyFormComponent implements OnInit {
         if (this.propertyInfo.propType.objectType === Constants.BooleanValue &&
             targetGuiCardinality.key === 'multiple' && targetGuiCardinality.value === true) {
             this.canSetCardinality = false;
-            this.canNotSetCardinalityReason = 'A boolean value can not occur multiple times. It is true or false';
             return;
         }
         // check if cardinality can be changed
@@ -471,6 +474,7 @@ export class PropertyFormComponent implements OnInit {
             (response: CanDoResponse) => {
                 this.canSetCardinality = response.canDo;
                 this.canNotSetCardinalityReason = response.cannotDoReason;
+                this.canNotSetCardinalityUiReason = this.getCanNotSetCardinalityUserReason();
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
@@ -784,6 +788,33 @@ export class PropertyFormComponent implements OnInit {
         }
 
         return guiAttributes;
+    }
+
+    /**
+     * getCanNotSetCardinalityUserReason: get the user readable reason why a cardinality can not be changed.
+     */
+    getCanNotSetCardinalityUserReason() {
+        const reason = {  detail: this.canNotSetCardinalityReason, hint: '' }; // default
+        const classLabel = this.resClassIri.split('#')[1];
+        const pLabel = this.propertyInfo.propDef.label;
+
+        if (this.canNotSetCardinalityReason.includes('is not included in the new cardinality')) {
+            // data contradicting the change
+            if (this.targetGuiCardinality.key === 'multiple' && this.targetGuiCardinality.value === false) {
+                // there are instances which have that property multiple times and do not allow to set multiple to false
+                reason.detail = `At least one ${classLabel} has multiple ${pLabel} properties in your data.`;
+                reason.hint =   `In order to change the data model and set the property ${pLabel} from multiple to ` +
+                                `single, every ${classLabel} must have only one ${pLabel} in the data.`;
+            }
+            if (this.targetGuiCardinality.key === 'required' && this.targetGuiCardinality.value === true) {
+                // setting from multiple to single is not possible because there are instances which have that property
+                // multiple times and do not allow to set multiple to false
+                reason.detail = `At least one ${classLabel} does not have a ${pLabel} property in your data.`;
+                reason.hint =   `In order to change the data model and set the property ${pLabel} to required ` +
+                                `every ${classLabel} needs to have a ${pLabel} in the data.`;
+            }
+        }
+        return reason;
     }
 
 }
