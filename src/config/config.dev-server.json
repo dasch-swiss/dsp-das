@@ -17,17 +17,17 @@
     "/admin/projects"
   ],
   "instrumentation": {
-    "environment": "dev-aws-cdn",
+    "environment": "dev-server",
     "dataDog": {
-      "enabled": true,
-      "applicationId": "05b92ddd-ff27-4f93-be1b-2e7bc8b57030",
-      "clientToken": "pub62e4946e2b51002479a38fdeccc78eaa",
-      "site": "datadoghq.eu",
-      "service": "dsp-app"
+      "enabled": false,
+      "applicationId": "",
+      "clientToken": "",
+      "site": "",
+      "service": ""
     },
     "rollbar": {
-      "enabled": true,
-      "accessToken": "416ea28b4e0c4861afc3fc7bfdfaa455"
+      "enabled": false,
+      "accessToken": ""
     }
   }
 }
