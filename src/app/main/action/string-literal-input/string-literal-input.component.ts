@@ -74,6 +74,7 @@ export class StringLiteralInputComponent implements OnInit, OnChanges {
      * * @emits {boolean} enter
      */
     @Output() enter: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output() focus: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     @ViewChild('textInput', { static: false }) textInput: ElementRef;
 
@@ -81,7 +82,6 @@ export class StringLiteralInputComponent implements OnInit, OnChanges {
 
     form: UntypedFormGroup;
     languages: string[] = ['de', 'fr', 'it', 'en', 'rm'];
-
     constructor(private _fb: UntypedFormBuilder,
         private _sessionService: SessionService) {
 
@@ -276,5 +276,4 @@ export class StringLiteralInputComponent implements OnInit, OnChanges {
         }
 
     }
-
 }
