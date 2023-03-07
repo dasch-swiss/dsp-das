@@ -12,7 +12,7 @@
   "jsonWebToken": "",
   "logErrors": true,
   "iriBase": "http://rdfh.ch",
-  "zioPrefix": ":5555",
+  "zioPrefix": "/zio",
   "zioEndpoints": [
     "/admin/projects"
   ],
