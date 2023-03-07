@@ -74,10 +74,10 @@ export class StringLiteralInputComponent implements OnInit, OnChanges {
      * * @emits {boolean} enter
      */
     @Output() enter: EventEmitter<boolean> = new EventEmitter<boolean>();
-    
+
     /**
      * returns true when the field is focused. Use similarly to touched for data validation.
-     * 
+     *
      * @emits {boolean} focus
      */
     @Output() focus: EventEmitter<boolean> = new EventEmitter<boolean>();
