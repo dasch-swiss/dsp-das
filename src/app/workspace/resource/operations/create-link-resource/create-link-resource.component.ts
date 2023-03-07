@@ -1,4 +1,4 @@
-    import { Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, FormControl, UntypedFormGroup } from '@angular/forms';
 import { ApiResponseData, ProjectResponse, ReadProject } from '@dasch-swiss/dsp-js';
 import {
