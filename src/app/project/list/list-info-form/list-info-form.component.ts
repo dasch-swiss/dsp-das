@@ -57,8 +57,10 @@ export class ListInfoFormComponent implements OnInit {
 
     labelInvalidMessage: string;
     commentInvalidMessage: string;
+
     isLabelTouched = false;
     isCommentTouched = false;
+
     // feature toggle for new concept
     beta = false;
 
@@ -218,7 +220,6 @@ export class ListInfoFormComponent implements OnInit {
         switch (type) {
             case 'labels':
                 this.labels = data;
-                
                 this.labelInvalidMessage = (data.length ? null : this.labelErrors.label.required);
                 break;
 
