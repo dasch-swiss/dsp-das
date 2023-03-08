@@ -474,8 +474,10 @@ export class PropertyFormComponent implements OnInit {
         this._dspApiConnection.v2.onto.canReplaceCardinalityOfResourceClassWith(this.resClassIri, this.propertyInfo.propDef.id, targetCardinality).subscribe(
             (response: CanDoResponse) => {
                 this.canSetCardinality = response.canDo;
-                this.canNotSetCardinalityReason = response.cannotDoReason;
-                this.canNotSetCardinalityUiReason = this.getCanNotSetCardinalityUserReason();
+                if (!this.canSetCardinality) {
+                    this.canNotSetCardinalityReason = response.cannotDoReason;
+                    this.canNotSetCardinalityUiReason = this.getCanNotSetCardinalityUserReason();
+                }
                 this.canChangeCardinalityChecked = true;
             },
             (error: ApiResponseError) => {
@@ -796,9 +798,6 @@ export class PropertyFormComponent implements OnInit {
      * getCanNotSetCardinalityUserReason: get the user readable reason why a cardinality can not be changed.
      */
     getCanNotSetCardinalityUserReason() {
-        if (this.canSetCardinality) {
-            return;
-        }
         const reason = {  detail: this.canNotSetCardinalityReason, hint: '' }; // default
         const classLabel = this.resClassIri.split('#')[1];
         const pLabel = this.propertyInfo.propDef.label;
