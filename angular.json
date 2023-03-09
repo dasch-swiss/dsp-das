@@ -52,7 +52,8 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "src/assets/style/"
+                "src/assets/style/",
+                "node_modules"
               ]
             },
             "scripts": [
