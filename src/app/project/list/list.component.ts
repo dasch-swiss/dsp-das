@@ -142,7 +142,7 @@ export class ListComponent implements OnInit {
         // is the logged-in user system admin?
         this.sysAdmin = this.session ? this.session.user.sysAdmin : false;
 
-        // get the project data from cache
+        // get the project
         this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(this._projectService.uuidToIri(this.projectUuid)).subscribe(
             (response: ApiResponseData<ProjectResponse>) => {
                 this.project = response.body.project;
