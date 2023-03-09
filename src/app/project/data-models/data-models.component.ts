@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ListNodeInfo, ListsResponse, OntologiesMetadata } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ListNodeInfo, ListsResponse, OntologiesMetadata, UserResponse } from '@dasch-swiss/dsp-js';
 import { AppInitService } from 'src/app/app-init.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
+import { Session, SessionService } from 'src/app/main/services/session.service';
 import { OntologyService } from '../ontology/ontology.service';
 
 @Component({
@@ -18,14 +19,24 @@ export class DataModelsComponent implements OnInit {
 
     loading: boolean;
 
+    // permissions of logged-in user
+    session: Session;
+    sysAdmin = false;
+    projectAdmin = false;
+    projectMember = false;
+
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: ErrorHandlerService,
         private _route: ActivatedRoute,
         private _router: Router,
         private _appInit: AppInitService,
-        private _ontologyService: OntologyService
-    ) { }
+        private _ontologyService: OntologyService,
+        private _session: SessionService,
+    ) {
+        // get session
+        this.session = this._session.getSession();
+    }
 
     ngOnInit(): void {
         this.loading = true;
@@ -53,6 +64,42 @@ export class DataModelsComponent implements OnInit {
                 this._errorHandler.showMessage(error);
             }
         );
+
+        // is logged-in user projectAdmin?
+        if (this.session) {
+            this.loading = true;
+
+            // is the logged-in user system admin?
+            this.sysAdmin = this.session.user.sysAdmin;
+
+            // is the logged-in user project admin?
+            this.projectAdmin = this.sysAdmin ? this.sysAdmin : (this.session.user.projectAdmin.some(e => e === iri));
+
+            // or at least project member?
+            if (!this.projectAdmin) {
+                this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.session.user.name).subscribe(
+                    (res: ApiResponseData<UserResponse>) => {
+                        const usersProjects = res.body.user.projects;
+                        if (usersProjects.length === 0) {
+                            // the user is not part of any project
+                            this.projectMember = false;
+                        } else {
+                            // check if the user is member of the current project
+                            // id contains the iri
+                            this.projectMember = usersProjects.some(p => p.id === iri);
+                        }
+                        this.loading = false;
+                    },
+                    (error: ApiResponseError) => {
+                        this._errorHandler.showMessage(error);
+                        this.loading = false;
+                    }
+                );
+            } else {
+                this.projectMember = this.projectAdmin;
+                this.loading = false;
+            }
+        }
     }
 
     /**

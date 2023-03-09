@@ -140,38 +140,19 @@ export class ListComponent implements OnInit {
         this.session = this._session.getSession();
 
         // is the logged-in user system admin?
-        this.sysAdmin = this.session.user.sysAdmin;
+        this.sysAdmin = this.session ? this.session.user.sysAdmin : false;
 
         // get the project data from cache
-        this._cache.get(this.projectUuid).subscribe(
-            (response: ReadProject) => {
-                this.project = response;
+        this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(this._projectService.uuidToIri(this.projectUuid)).subscribe(
+            (response: ApiResponseData<ProjectResponse>) => {
+                this.project = response.body.project;
 
                 // set the page title
                 this._setPageTitle();
 
                 // is logged-in user projectAdmin?
-                this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
-
-                // or at least project member?
-                if (!this.projectAdmin) {
-                    this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.session.user.name).subscribe(
-                        (res: ApiResponseData<UserResponse>) => {
-                            const usersProjects = res.body.user.projects;
-                            if (usersProjects.length === 0) {
-                                // the user is not part of any project
-                                this.projectMember = false;
-                            } else {
-                                // check if the user is member of the current project
-                                this.projectMember = usersProjects.some(p => p.shortcode === this.projectUuid);
-                            }
-                        },
-                        (error: ApiResponseError) => {
-                            this._errorHandler.showMessage(error);
-                        }
-                    );
-                } else {
-                    this.projectMember = this.projectAdmin;
+                if(this.session){
+                    this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
                 }
 
                 this.initList();
