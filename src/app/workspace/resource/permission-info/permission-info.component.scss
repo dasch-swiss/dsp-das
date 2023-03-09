@@ -33,10 +33,10 @@
 }
 
 .status {
-  color: $warn;
+  color: $red;
 
   &.checked {
-    color: $active;
+    color: $secondary;
   }
 }
 

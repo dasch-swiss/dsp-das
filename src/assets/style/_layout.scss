@@ -1,6 +1,5 @@
 @use "config" as *;
 
-//
 // general app layout
 .app {
   display: flex;
@@ -119,7 +118,7 @@
       }
 
       .mat-expansion-panel-header.mat-expanded {
-        background: #cacaca;
+        background: $primary_100;
       }
 
       .sidenav-panel-header{
