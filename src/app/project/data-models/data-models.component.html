@@ -8,7 +8,7 @@
             info
         </mat-icon>
     </div>
-    <div class="action-buttons">
+    <div *ngIf="projectAdmin" class="action-buttons">
         <button mat-button class="create" (click)="open('add-ontology')">
             <mat-icon>add_circle</mat-icon>
             Create New
@@ -18,16 +18,26 @@
             <mat-icon>chevron_right</mat-icon>
         </button>
     </div>
-    <div class="projectOntos" *ngIf="projectOntologies">
-        <div class="list">
-            <div class="list-item ontos" *ngFor="let onto of projectOntologies.ontologies" (click)="open('ontology', onto.id)">
+    <div *ngIf="projectOntologies" class="projectOntos">
+        <div class="list" [class.top-padding]="projectAdmin">
+            <div
+                class="list-item ontos"
+                [class.no-click]="!session"
+                *ngFor="let onto of projectOntologies.ontologies"
+                (click)="session ? open('ontology', onto.id) : null">
                 <mat-icon class="icon-prefix">bubble_chart</mat-icon>
-                <p class="label">{{onto.label}}</p>
+                <p
+                    class="label"
+                    matTooltip="You must be logged in to view data models"
+                    matTooltipPosition="right"
+                    [matTooltipDisabled]="session">
+                    {{onto.label}}
+                </p>
+                <span class="fill-remaining-space"></span>
                 <mat-icon class="icon-suffix">chevron_right</mat-icon>
             </div>
         </div>
     </div>
-    <div class="spacing"></div>
     <div class="header">
         <p class="title">Controlled Vocabularies</p>
         <mat-icon
@@ -37,17 +47,18 @@
             info
         </mat-icon>
     </div>
-    <div class="action-buttons">
+    <div *ngIf="projectAdmin" class="action-buttons">
         <button mat-button class="create" (click)="open('add-list')">
             <mat-icon>add_circle</mat-icon>
             Create New
         </button>
     </div>
-    <div class="projectLists" *ngIf="projectLists">
-        <div class="list">
+    <div *ngIf="projectLists" class="projectLists">
+        <div class="list" [class.top-padding]="projectAdmin">
             <div class="list-item" *ngFor="let list of projectLists" (click)="open('list', list.id)">
                 <mat-icon class="icon-prefix">list</mat-icon>
                 <p class="label">{{list.labels | appStringifyStringLiteral}}</p>
+                <span class="fill-remaining-space"></span>
                 <mat-icon class="icon-suffix">chevron_right</mat-icon>
             </div>
         </div>

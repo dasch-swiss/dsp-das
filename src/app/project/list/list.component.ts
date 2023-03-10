@@ -14,7 +14,6 @@ import {
     ProjectResponse,
     ReadProject,
     StringLiteral,
-    UserResponse
 } from '@dasch-swiss/dsp-js';
 import { AppGlobal } from 'src/app/app-global';
 import { AppInitService } from 'src/app/app-init.service';

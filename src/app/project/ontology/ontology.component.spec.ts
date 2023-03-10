@@ -22,9 +22,12 @@ import {
     ListsEndpointAdmin,
     ListsResponse,
     MockOntology,
+    MockProjects,
     MockUsers,
     OntologiesEndpointV2,
     OntologiesMetadata,
+    ProjectResponse,
+    ProjectsEndpointAdmin,
     ReadOntology,
     UsersEndpointAdmin
 } from '@dasch-swiss/dsp-js';
@@ -55,7 +58,8 @@ describe('OntologyComponent', () => {
         const apiSpyObj = {
             admin: {
                 listsEndpoint: jasmine.createSpyObj('listsEndpoint', ['getListsInProject']),
-                usersEndpoint: jasmine.createSpyObj('usersEndpoint', ['getUserByUsername'])
+                usersEndpoint: jasmine.createSpyObj('usersEndpoint', ['getUserByUsername']),
+                projectsEndpoint: jasmine.createSpyObj('projectsEndpoint', ['getProjectByIri'])
             },
             v2: {
                 onto: jasmine.createSpyObj('onto', [
@@ -240,6 +244,18 @@ describe('OntologyComponent', () => {
             }
         );
 
+        // mock projects endpoint
+        (dspConnSpy.admin.projectsEndpoint as jasmine.SpyObj<ProjectsEndpointAdmin>).getProjectByIri.and.callFake(
+            () => {
+                const response = new ProjectResponse();
+
+                const mockProjects = MockProjects.mockProjects();
+
+                response.project = mockProjects.body.projects[0];
+
+                return of(ApiResponseData.fromAjaxResponse({ response } as AjaxResponse));
+            }
+        );
 
         fixture = TestBed.createComponent(OntologyComponent);
         component = fixture.componentInstance;

@@ -10,7 +10,6 @@ import { OntologiesEndpointV2, MockOntology, ApiResponseData, ListNodeInfo, List
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
 import { AppInitService } from 'src/app/app-init.service';
-import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { StringifyStringLiteralPipe } from 'src/app/main/pipes/string-transformation/stringify-string-literal.pipe';
 import { Session, SessionService } from 'src/app/main/services/session.service';
