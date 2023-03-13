@@ -20,7 +20,8 @@
             *ngIf="projectAdmin">
             <button mat-icon-button
                 *ngIf="projectAdmin && project.status && !formOpen"
-                class="right">
+                class="right"
+                color="primary">
                 <mat-icon>edit_square</mat-icon>
                 Edit project description
             </button>
@@ -38,7 +39,8 @@
                 <button mat-button
                     *ngIf="projectAdmin && project.status && !formOpen"
                     class="right"
-                    (click)="toggleForm()">
+                    (click)="toggleForm()"
+                    color="primary">
                     <mat-icon>edit_square</mat-icon>
                     Edit project description
                 </button>
