@@ -46,9 +46,10 @@
 
         <div class="form-panel form-action">
             <button mat-button
-                type="button"
-                (click)="closeDialog.emit()"
-                *ngIf="!beta || iri">
+                    type="button"
+                    [color]="'accent'"
+                    (click)="closeDialog.emit()"
+                    *ngIf="!beta || iri">
                 {{ 'appLabels.form.action.cancel' | translate }}
             </button>
             <span class="fill-remaining-space"></span>

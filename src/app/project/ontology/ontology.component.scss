@@ -1,4 +1,4 @@
-@import "../../../assets/style/config";
+@use "config" as *;
 
 $width: 429px;
 
@@ -147,7 +147,7 @@ $width: 429px;
 }
 
 .active {
-  background-color: rgba(black, 0.12);
+  background-color: $primary_100;
 }
 
 .note {

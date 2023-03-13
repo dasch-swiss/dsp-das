@@ -2,22 +2,25 @@
     <div class="header">
         <p class="title">All Data Models</p>
         <mat-icon
+            color="primary"
             class="icon"
             matTooltip="A data model organizes data elements and specifies how they relate to one another and by which properties they are described."
             matTooltipPosition="above">
             info
         </mat-icon>
     </div>
+
     <div class="action-buttons">
-        <button mat-button class="create" (click)="open('add-ontology')">
+        <button color="primary" mat-raised-button class="create" (click)="open('add-ontology')">
             <mat-icon>add_circle</mat-icon>
             Create New
         </button>
-        <button mat-button class="docs" (click)="open('docs')">
+        <button color="primary" mat-stroked-button class="docs" (click)="open('docs')">
             Read Documentation About How To Create Data Models
             <mat-icon>chevron_right</mat-icon>
         </button>
     </div>
+
     <div class="projectOntos" *ngIf="projectOntologies">
         <div class="list">
             <div class="list-item ontos" *ngFor="let onto of projectOntologies.ontologies" (click)="open('ontology', onto.id)">
@@ -27,22 +30,27 @@
             </div>
         </div>
     </div>
+
     <div class="spacing"></div>
+
     <div class="header">
         <p class="title">Controlled Vocabularies</p>
         <mat-icon
+            color="primary"
             class="icon"
             matTooltip="Controlled vocabularies are hierarchical or non-hierarchical lexica of reference terms. Due to their normative or standardized nature, controlled vocabularies improve data quality and make database searching more efficient than free-text fields."
             matTooltipPosition="above">
             info
         </mat-icon>
     </div>
+
     <div class="action-buttons">
-        <button mat-button class="create" (click)="open('add-list')">
+        <button color="primary" mat-raised-button class="create" (click)="open('add-list')">
             <mat-icon>add_circle</mat-icon>
             Create New
         </button>
     </div>
+
     <div class="projectLists" *ngIf="projectLists">
         <div class="list">
             <div class="list-item" *ngFor="let list of projectLists" (click)="open('list', list.id)">

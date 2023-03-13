@@ -19,7 +19,7 @@
         <mat-sidenav-container class="project-view">
             <mat-sidenav #sidenav mode="side" [(opened)]="sideNavOpened" [disableClose]="true" class="project-nav">
                 <div *ngIf="sideNavOpened" class="sidenav-collapse-btn">
-                    <button mat-button class="collapse-btn" (click)="toggleSidenav()" matTooltip="collapse"
+                    <button mat-icon-button color="primary" class="collapse-btn" (click)="toggleSidenav()" matTooltip="collapse"
                             matTooltipShowDelay="500" matTooltipPosition="right">
                         <mat-icon>chevron_left</mat-icon>
                     </button>
@@ -105,7 +105,7 @@
             </mat-sidenav>
             <mat-sidenav-content>
                 <div *ngIf="!sideNavOpened" class="sidenav-expand-btn">
-                    <button mat-button class="expand-btn" (click)="toggleSidenav()" matTooltip="expand"
+                    <button mat-icon-button color="primary" class="expand-btn" (click)="toggleSidenav()" matTooltip="expand"
                             matTooltipShowDelay="500" matTooltipPosition="right">
                         <mat-icon>chevron_right</mat-icon>
                     </button>
