@@ -41,8 +41,6 @@ export class DescriptionComponent implements OnInit {
     // project data
     project: ReadProject;
 
-    color = 'primary';
-
     description: StringLiteral[];
     descriptionMaxLength = 2000;
 
@@ -213,7 +211,7 @@ export class DescriptionComponent implements OnInit {
         }
     }
 
-    removeKeyword(keyword: any): void {
+    removeKeyword(keyword: string): void {
         const index = this.keywords.indexOf(keyword);
 
         if (index >= 0) {
