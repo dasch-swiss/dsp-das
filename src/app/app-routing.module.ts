@@ -127,8 +127,7 @@ const routes: Routes = [
             },
             {
                 path: 'data-models',
-                component: DataModelsComponent,
-                canActivate: [AuthGuard]
+                component: DataModelsComponent
             },
             {
                 path: 'ontology/:onto',
@@ -166,8 +165,7 @@ const routes: Routes = [
             },
             {
                 path: 'list/:list',
-                component: ListComponent,
-                canActivate: [AuthGuard]
+                component: ListComponent
             },
             {
                 path: 'settings',

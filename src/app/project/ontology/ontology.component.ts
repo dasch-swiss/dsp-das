@@ -197,29 +197,32 @@ export class OntologyComponent implements OnInit {
         this.session = this._sessionService.getSession();
 
         // is the logged-in user system admin?
-        this.sysAdmin = this.session.user.sysAdmin;
+        this.sysAdmin = this.session ? this.session.user.sysAdmin : false;
 
         // default value for projectAdmin
         this.projectAdmin = this.sysAdmin;
 
         // get the project data from cache
-        this._cache.get(this.projectUuid).subscribe(
-            (response: ReadProject) => {
-                this.project = response;
+        this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(this._projectService.uuidToIri(this.projectUuid)).subscribe(
+            (response: ApiResponseData<ProjectResponse>) => {
+                this.project = response.body.project;
 
                 // set the page title
                 this._setPageTitle();
 
-                // is logged-in user projectAdmin?
-                this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
+                if(this.session){
+                    // is logged-in user projectAdmin?
+                    this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
 
-                this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.session.user.name).subscribe(
-                    (userResponse: ApiResponseData<UserResponse>) => {
-                        this.projectMember = userResponse.body.user.projects.some(p => p.shortcode === this.project.shortcode);
+                    // or at least a project member?
+                    this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.session.user.name).subscribe(
+                        (userResponse: ApiResponseData<UserResponse>) => {
+                            this.projectMember = userResponse.body.user.projects.some(p => p.shortcode === this.project.shortcode);
 
-                        // get the ontologies for this project
-                        this.initOntologiesList();
-                    });
+                            // get the ontologies for this project
+                            this.initOntologiesList();
+                        });
+                }
 
                 this.ontologyForm = this._fb.group({
                     ontology: new UntypedFormControl({

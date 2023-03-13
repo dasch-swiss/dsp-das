@@ -249,13 +249,6 @@ describe('ListComponent', () => {
                 }
             );
 
-            testHostFixture = TestBed.createComponent(TestHostComponent);
-            testHostComponent = testHostFixture.componentInstance;
-            testHostFixture.detectChanges();
-
-            overlayContainer = TestBed.inject(OverlayContainer);
-            rootLoader = TestbedHarnessEnvironment.documentRootLoader(testHostFixture);
-
             // mock projects endpoint
             (dspConnSpy.admin.projectsEndpoint as jasmine.SpyObj<ProjectsEndpointAdmin>).getProjectByIri.and.callFake(
                 () => {
@@ -268,6 +261,13 @@ describe('ListComponent', () => {
                     return of(ApiResponseData.fromAjaxResponse({ response } as AjaxResponse));
                 }
             );
+
+            testHostFixture = TestBed.createComponent(TestHostComponent);
+            testHostComponent = testHostFixture.componentInstance;
+            testHostFixture.detectChanges();
+
+            overlayContainer = TestBed.inject(OverlayContainer);
+            rootLoader = TestbedHarnessEnvironment.documentRootLoader(testHostFixture);
 
             expect(testHostComponent.listComponent.session).toBeTruthy();
             expect(testHostComponent).toBeTruthy();
@@ -389,13 +389,6 @@ describe('ListComponent', () => {
                 }
             );
 
-            testHostFixture = TestBed.createComponent(TestHostComponent);
-            testHostComponent = testHostFixture.componentInstance;
-            testHostFixture.detectChanges();
-
-            overlayContainer = TestBed.inject(OverlayContainer);
-            rootLoader = TestbedHarnessEnvironment.documentRootLoader(testHostFixture);
-
             // mock projects endpoint
             (dspConnSpy.admin.projectsEndpoint as jasmine.SpyObj<ProjectsEndpointAdmin>).getProjectByIri.and.callFake(
                 () => {
@@ -408,6 +401,13 @@ describe('ListComponent', () => {
                     return of(ApiResponseData.fromAjaxResponse({ response } as AjaxResponse));
                 }
             );
+
+            testHostFixture = TestBed.createComponent(TestHostComponent);
+            testHostComponent = testHostFixture.componentInstance;
+            testHostFixture.detectChanges();
+
+            overlayContainer = TestBed.inject(OverlayContainer);
+            rootLoader = TestbedHarnessEnvironment.documentRootLoader(testHostFixture);
 
             expect(testHostComponent.listComponent.session).toBeTruthy();
             expect(testHostComponent).toBeTruthy();
@@ -554,13 +554,6 @@ describe('ListComponent', () => {
                 }
             );
 
-            testHostFixture = TestBed.createComponent(TestHostComponent);
-            testHostComponent = testHostFixture.componentInstance;
-            testHostFixture.detectChanges();
-
-            overlayContainer = TestBed.inject(OverlayContainer);
-            rootLoader = TestbedHarnessEnvironment.documentRootLoader(testHostFixture);
-
             // mock projects endpoint
             (dspConnSpy.admin.projectsEndpoint as jasmine.SpyObj<ProjectsEndpointAdmin>).getProjectByIri.and.callFake(
                 () => {
@@ -573,6 +566,13 @@ describe('ListComponent', () => {
                     return of(ApiResponseData.fromAjaxResponse({ response } as AjaxResponse));
                 }
             );
+
+            testHostFixture = TestBed.createComponent(TestHostComponent);
+            testHostComponent = testHostFixture.componentInstance;
+            testHostFixture.detectChanges();
+
+            overlayContainer = TestBed.inject(OverlayContainer);
+            rootLoader = TestbedHarnessEnvironment.documentRootLoader(testHostFixture);
 
             expect(testHostComponent.listComponent.session).toBeTruthy();
             expect(testHostComponent).toBeTruthy();

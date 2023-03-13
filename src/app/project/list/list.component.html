@@ -2,8 +2,8 @@
     <app-progress-indicator *ngIf="loading"></app-progress-indicator>
 
     <!-- display only when loading is finished and project member has value -->
-    <div *ngIf="!loading && projectMember !== undefined">
-        <div *ngIf="projectMember" class="content large middle">
+    <div *ngIf="!loading">
+        <div class="content large middle">
 
             <!-- header toolbar -->
             <div class="app-toolbar transparent more-space-bottom" *ngIf="!beta">
@@ -92,10 +92,6 @@
                 </app-list-item>
 
             </div>
-        </div>
-
-        <div *ngIf="!projectMember" class="content large middle">
-            <app-status [status]="403"></app-status>
         </div>
     </div>
 </div>

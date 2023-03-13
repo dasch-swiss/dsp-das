@@ -24,7 +24,11 @@
     }
 
     .list {
-        padding: 4% 0%;
+        padding-bottom: 4%;
+        
+        &.top-padding {
+            padding-top: 4%;
+        }
 
         .list-item {
             border: 1px solid $primary_100;
@@ -33,8 +37,12 @@
             padding-left: 2%;
             padding-right: 1%;
             display: grid;
-            grid-template-columns: 24px auto 24px;
+            grid-template-columns: 24px auto 0.7fr 24px;
             align-items: center;
+
+            &.no-click {
+                cursor: default;
+            }
 
             .label {
                 margin-left: 1%;

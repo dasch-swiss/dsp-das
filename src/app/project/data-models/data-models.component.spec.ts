@@ -12,6 +12,7 @@ import { AjaxResponse } from 'rxjs/ajax';
 import { AppInitService } from 'src/app/app-init.service';
 import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { StringifyStringLiteralPipe } from 'src/app/main/pipes/string-transformation/stringify-string-literal.pipe';
+import { Session, SessionService } from 'src/app/main/services/session.service';
 import { OntologyService } from '../ontology/ontology.service';
 
 import { DataModelsComponent } from './data-models.component';
@@ -44,6 +45,8 @@ describe('DataModelsComponent', () => {
         };
 
         const ontoServiceSpy = jasmine.createSpyObj('OntologyService', ['getOntologyName']);
+
+        const sessionServiceSpy = jasmine.createSpyObj('SessionService', ['getSession']);
 
         await TestBed.configureTestingModule({
             declarations: [
@@ -79,11 +82,15 @@ describe('DataModelsComponent', () => {
                                     { path: 'project' }
                                 ],
                                 params: [
-                                    { uuid: '00123001' }
+                                    { uuid: '0123' }
                                 ]
                             }
                         }
                     }
+                },
+                {
+                    provide: SessionService,
+                    useValue: sessionServiceSpy
                 }
             ]
         }).compileComponents();
@@ -121,6 +128,26 @@ describe('DataModelsComponent', () => {
                 response.lists.push(mockList1, mockList2);
 
                 return of(ApiResponseData.fromAjaxResponse({ response } as AjaxResponse));
+            }
+        );
+
+        // mock session service
+        const sessionSpy = TestBed.inject(SessionService);
+
+        (sessionSpy as jasmine.SpyObj<SessionService>).getSession.and.callFake(
+            () => {
+                const session: Session = {
+                    id: 12345,
+                    user: {
+                        name: 'username',
+                        jwt: 'myToken',
+                        lang: 'en',
+                        sysAdmin: true,
+                        projectAdmin: []
+                    }
+                };
+
+                return session;
             }
         );
 
