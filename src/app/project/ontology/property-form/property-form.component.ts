@@ -154,6 +154,7 @@ export class PropertyFormComponent implements OnInit {
         detail: this.canNotSetCardinalityReason,
         hint: ''
     };
+    canChangeCardinalityChecked = false;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
@@ -476,8 +477,11 @@ export class PropertyFormComponent implements OnInit {
         this._dspApiConnection.v2.onto.canReplaceCardinalityOfResourceClassWith(this.resClassIri, this.propertyInfo.propDef.id, targetCardinality).subscribe(
             (response: CanDoResponse) => {
                 this.canSetCardinality = response.canDo;
-                this.canNotSetCardinalityReason = response.cannotDoReason;
-                this.canNotSetCardinalityUiReason = this.getCanNotSetCardinalityUserReason();
+                if (!this.canSetCardinality) {
+                    this.canNotSetCardinalityReason = response.cannotDoReason;
+                    this.canNotSetCardinalityUiReason = this.getCanNotSetCardinalityUserReason();
+                }
+                this.canChangeCardinalityChecked = true;
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);
