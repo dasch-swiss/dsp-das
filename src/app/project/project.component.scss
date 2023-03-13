@@ -1,13 +1,13 @@
-@import "../../assets/style/config";
-@import "../../assets/style/responsive";
+@use "config" as *;
+@use "responsive" as *;
 
 .deactivated {
-  color: $warn;
+  color: $red;
 }
 
 .list-item-deactivated {
   cursor: default;
-  
+
   span {
     opacity: 0.4;
   }
@@ -21,7 +21,7 @@
   }
 
   .section-label {
-    color: #336790;
+    color: $primary;
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -30,7 +30,7 @@
   }
 
   .section-icon {
-    color: #336790;
+    color: $primary;
 
     mat-icon {
       vertical-align: middle;
@@ -81,7 +81,7 @@
   bottom: 0;
   position: absolute;
   width: 92%;
-  background-color: #fff;
+  background-color: $white;
 }
 
 .sidenav-prefix-icon {
@@ -108,11 +108,10 @@ mat-sidenav {
     margin-top: 4.5%;
     right: 1.5%;
     z-index: 1;
-    color: #183145;
 
     .collapse-btn {
-      border-radius: 50%;
-      border: 1px solid #336790;
+      background-color: $primary_contrast;
+      border: 1px solid $primary;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -121,11 +120,6 @@ mat-sidenav {
       width: 40px;
       height: 40px;
       min-width: 40px;
-      background-color: #fff;
-  
-      mat-icon {
-        font-size: 24px;
-      }
     }
   }
 }
@@ -145,11 +139,10 @@ mat-sidenav-content {
     width: auto;
     margin-top: 1%;
     padding-left: 0.3%;
-    color: #183145;
 
     .expand-btn {
-      border-radius: 50%;
-      border: 1px solid #336790;
+      background-color: $primary_contrast;
+      border: 1px solid $primary;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -158,14 +151,9 @@ mat-sidenav-content {
       width: 40px;
       height: 40px;
       min-width: 40px;
-  
-      mat-icon {
-        font-size: 24px;
-      }
     }
   }
 }
-
 
 .sidenav-container {
   .sidenav {
@@ -178,14 +166,4 @@ mat-sidenav-content {
       width: 36px;
     }
   }
-
-  .sidenav-content {
-    .sidenav-collapse-btn {
-      background-color: blue;
-    }
-  }
-
-  // .mat-sidenav-content {
-  //   background: #fff;
-  // }
 }

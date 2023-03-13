@@ -110,7 +110,7 @@
                 </span>
                 <mat-label>Select resource class</mat-label>
                 <mat-select formControlName="guiAttr">
-                    <mat-optgroup *ngFor="let onto of ontologyClasses" 
+                    <mat-optgroup *ngFor="let onto of ontologyClasses"
                         [label]="onto.ontologyLabel">
                         <mat-option *ngFor="let oClass of onto.classes"
                                     [value]="oClass.id">
