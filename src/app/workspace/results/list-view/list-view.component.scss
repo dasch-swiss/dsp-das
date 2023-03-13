@@ -1,4 +1,4 @@
-@import "../../../../assets/style/config";
+@use "config" as *;
 
 .list-view-header {
   display: flex;
@@ -15,7 +15,7 @@
   .pagination-button:disabled {
     span,
     mat-icon{
-      color: #BDBFC1;
+      color: $cool_gray_300;
     }
   }
 
@@ -34,13 +34,13 @@
 
     span,
     mat-icon{
-      color: $primary-new;
+      color: $primary;
       font-weight: 400;
     }
   }
 
   .range{
-    color: #7B7F84;
+    color: $cool_gray_500;
     font-weight: 300;
   }
 }
@@ -56,15 +56,15 @@
 }
 
 .no-results-container {
-  background: #fffae6;
-  color: #aa470a;
+  background: $yellow_100;
+  color: $yellow_700;
   padding: 25px;
   border-radius: 20px;
   display: flex;
   gap: 10px;
 
   mat-icon {
-    color: #f0960f;
+    color: $yellow_500;
     min-width: 25px;
   }
 }
@@ -78,7 +78,7 @@ button.active {
 }
 
 ::ng-deep .selected-resource {
-  background-color: $black-20-opacity;
+  background-color: $primary_100;
 }
 
 .beta {

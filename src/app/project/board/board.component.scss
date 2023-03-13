@@ -1,6 +1,6 @@
-@import "../../../assets/style/responsive";
-@import "../../../assets/style/config";
-@import "../../../assets/style/theme";
+@use "config" as *;
+@use "responsive" as *;
+@use "theme";
 
 section {
   margin: 24px 16px;
@@ -59,6 +59,7 @@ section {
   }
 }
 
+// not used
 .project-info-container {
   width: 98vw;
   max-width: 1280px;
@@ -187,7 +188,7 @@ section {
   }
 
   ::ng-deep .person-name, ::ng-deep .organization-name, ::ng-deep .grant-name{
-    color: $accent_700;
+    color: $yellow_700;
   }
 
   // grid

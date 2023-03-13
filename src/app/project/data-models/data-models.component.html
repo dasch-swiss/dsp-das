@@ -2,6 +2,7 @@
     <div class="header">
         <p class="title">All Data Models</p>
         <mat-icon
+            color="primary"
             class="icon"
             matTooltip="A data model organizes data elements and specifies how they relate to one another and by which properties they are described."
             matTooltipPosition="above">
@@ -9,11 +10,11 @@
         </mat-icon>
     </div>
     <div *ngIf="projectAdmin" class="action-buttons">
-        <button mat-button class="create" (click)="open('add-ontology')">
+        <button color="primary" mat-raised-button class="create" (click)="open('add-ontology')">
             <mat-icon>add_circle</mat-icon>
             Create New
         </button>
-        <button mat-button class="docs" (click)="open('docs')">
+        <button color="primary" mat-stroked-button class="docs" (click)="open('docs')">
             Read Documentation About How To Create Data Models
             <mat-icon>chevron_right</mat-icon>
         </button>
@@ -41,6 +42,7 @@
     <div class="header">
         <p class="title">Controlled Vocabularies</p>
         <mat-icon
+            color="primary"
             class="icon"
             matTooltip="Controlled vocabularies are hierarchical or non-hierarchical lexica of reference terms. Due to their normative or standardized nature, controlled vocabularies improve data quality and make database searching more efficient than free-text fields."
             matTooltipPosition="above">
@@ -48,7 +50,7 @@
         </mat-icon>
     </div>
     <div *ngIf="projectAdmin" class="action-buttons">
-        <button mat-button class="create" (click)="open('add-list')">
+        <button color="primary" mat-raised-button class="create" (click)="open('add-list')">
             <mat-icon>add_circle</mat-icon>
             Create New
         </button>

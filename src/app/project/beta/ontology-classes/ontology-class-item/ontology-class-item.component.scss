@@ -1,4 +1,4 @@
-@import "../../../../../assets/style/config";
+@use "config" as *;
 
 .class-item-container {
   width: 100%;
@@ -15,7 +15,7 @@
     box-shadow: 0 1px 3px rgb(0 0 0 / 10%), 0 1px 2px rgb(0 0 0 / 6%);
 
     &.is-active {
-      background-color: #D6E0E8;
+      background-color: $primary_100;
     }
 
     .box {
@@ -26,12 +26,12 @@
 
       .label {
         width: 200px;
-        color: #74A2CF;
+        color: $secondary;
         padding-left: 4px;
       }
 
       .entry-container {
-        color: #336790;
+        color: $primary;
         display: flex;
         align-items: center;
         gap: 5px;
@@ -43,11 +43,11 @@
     }
 
     .box:hover {
-      background-color: #1F293730;
+      background-color: $primary_100;
     }
 
     .icon {
-      background-color: #336790;
+      background-color: $primary;
       border-radius: 0 7px 7px 0;
       flex-basis: 40px;
       display: flex;
@@ -61,7 +61,7 @@
     }
 
     .icon:hover {
-      background-color: #1F293730;
+      background-color: $primary_100;
     }
   }
 }

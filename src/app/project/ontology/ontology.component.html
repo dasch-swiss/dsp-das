@@ -103,7 +103,7 @@
                     <p class="mat-caption space-reducer">Data model configuration</p>
                     <span
                         [matTooltip]="(projectAdmin ? (ontology.lastModificationDate ? 'Edit data model info' : 'This data model can\'t be edited because of missing lastModificationDate!') : null)">
-                        <button mat-button [disabled]="!ontology.lastModificationDate || !projectAdmin"
+                        <button color="primary" mat-button [disabled]="!ontology.lastModificationDate || !projectAdmin"
                             (click)="$event.stopPropagation(); openOntologyForm('editOntology', ontology.id)">
                             <mat-icon>edit</mat-icon>
                             Edit
@@ -111,7 +111,7 @@
                     </span>
                     <span
                         [matTooltip]="(projectAdmin ? (ontology.lastModificationDate ? (ontologyCanBeDeleted ? 'Delete data model' : 'This data model can\'t be deleted because it is in use!') : 'This data model can\'t be deleted because of missing lastModificationDate!') : null)">
-                        <button mat-button
+                        <button color="warn" mat-button
                             [disabled]="(!ontology.lastModificationDate || !ontologyCanBeDeleted) || (!projectAdmin || !sysAdmin)"
                             (click)="$event.stopPropagation(); delete('Ontology', {iri: ontologyIri, label: ontology.label})">
                             <mat-icon>delete</mat-icon>

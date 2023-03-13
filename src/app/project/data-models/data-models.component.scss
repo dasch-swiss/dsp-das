@@ -1,3 +1,5 @@
+@use "config" as *;
+
 .data-models-container {
     padding-top: 2.5%;
     padding-left: 2%;
@@ -16,15 +18,8 @@
 
     .action-buttons {
         .create {
-            background-color: grey;
-            color: #fff;
             padding: 0% 7%;
             margin-right: 2%;
-        }
-
-        .docs {
-            border: grey 1px solid;
-            color: grey;
         }
     }
 
@@ -36,7 +31,7 @@
         }
 
         .list-item {
-            border: 1px solid #D1D5DB;
+            border: 1px solid $primary_100;
             border-bottom: none;
             cursor: pointer;
             padding-left: 2%;
@@ -55,9 +50,13 @@
         }
 
         .list-item:last-child {
-            border-bottom: 1px solid #D1D5DB;
+            border-bottom: 1px solid $primary_100;
         }
 
+    }
+
+    .icon-prefix, .icon-suffix {
+      color: $primary;
     }
 }
 

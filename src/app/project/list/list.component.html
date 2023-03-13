@@ -72,13 +72,13 @@
 
                         <span class="project-actions" *ngIf="project.status && projectAdmin">
                     <p class="mat-caption space-reducer">List configuration</p>
-                    <button mat-button
+                    <button color="primary" mat-button
                             (click)="$event.stopPropagation(); openDialog('editListInfo', list.labels[0].value, list.id)"
                             matTooltip="Edit list info">
                         <mat-icon>edit</mat-icon>
                         Edit
                     </button>
-                    <button mat-button class="delete"
+                    <button color="warn" mat-button class="delete"
                             (click)="$event.stopPropagation(); openDialog('deleteList', list.labels[0].value, list.id)"
                             matTooltip="Delete list">
                         <mat-icon>delete</mat-icon>

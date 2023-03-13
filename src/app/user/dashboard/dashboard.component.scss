@@ -1,5 +1,4 @@
-@import "../../../assets/style/responsive";
-@import "../../../assets/style/theme";
+@use "responsive" as *;
 
 .app-headline {
   margin: 64px 0;
@@ -44,7 +43,7 @@
 
 // tablet and desktop devices: greater than phone
 @media (min-width: map-get($grid-breakpoints, phone)) {
-   
+
   .toggle-view-mobile {
     display: none;
   }
