@@ -834,17 +834,17 @@ export class PropertyFormComponent implements OnInit {
         }
 
         if (this.resClassIri && !this.propertyInfo.propDef) {
-            // in context of class and with an existing property
+            // in context of class and without an existing property
             this.editMode = 'assignNewProperty';
         }
 
         if (!this.resClassIri && !this.propertyInfo.propDef) {
-            // in properties context and no existing property
+            // in properties context and without an existing property
             this.editMode = 'createProperty';
         }
 
         if (!this.resClassIri && !!this.propertyInfo.propDef) {
-            // in properties context and an existing property
+            // in properties context and with an existing property
             this.editMode = 'editProperty';
         }
     }
