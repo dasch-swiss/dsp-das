@@ -2,61 +2,11 @@
 
     <app-progress-indicator *ngIf="loading"></app-progress-indicator>
 
-    <!-- toolbar: select ontology -->
-    <div class="content large middle" *ngIf="!loading && !beta">
-        <div class="app-toolbar transparent more-space-bottom">
-            <div class="app-toolbar-row toolbar-subtitle">
-                <h3 class="mat-body subtitle">Define your metadata</h3>
-            </div>
-            <div class="app-toolbar-row toolbar-form">
-                <h2 class="mat-title">
-                    <span *ngIf="ontologies.length > 0">
-                        Project has {{ontologies.length | i18nPlural: itemPluralMapping['ontology']}}
-                    </span>
-                    <span *ngIf="ontologies.length === 0 || !ontologies">
-                        It seems there's no data model defined yet
-                    </span>
-                </h2>
-
-                <span class="fill-remaining-space"></span>
-
-                <span class="app-toolbar-action" [class.select-form]="ontologies.length">
-                    <form [formGroup]="ontologyForm" class="form" *ngIf="!loading && ontologies.length > 1">
-
-                        <!-- list to select ontology -->
-                        <div class="form-content">
-                            <mat-form-field class="large-field select-ontology" *ngIf="ontologies.length">
-                                <mat-label>
-                                    Open from list...
-                                </mat-label>
-                                <mat-select [formControl]="ontologyForm.controls['ontology']" [(value)]="ontologyIri">
-                                    <mat-option *ngFor="let onto of ontologies" [value]="onto.id">
-                                        {{onto.label}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </form>
-                </span>
-
-                <span class="fill-remaining-space"></span>
-
-                <span class="app-toolbar-action" [class.select-form]="ontologies.length"
-                    *ngIf="project.status && projectAdmin">
-                    <button mat-raised-button color="primary" class="create-data-model-btn"
-                        (click)="openOntologyForm('createOntology')">
-                        {{ontologies.length ? 'New data model' : 'Create your first data model'}}
-                    </button>
-                </span>
-            </div>
-        </div>
-    </div>
-
     <!-- main content: overview shows resource classes of ontology -->
-    <div *ngIf="!loading && !loadOntology && ontology" class="ontology-editor" [class.beta]="beta">
+    <div *ngIf="!loading && !loadOntology && ontology" class="ontology-editor">
 
         <!-- TODO: add here the select ontology functionality -->
-        <mat-toolbar class="ontology-editor-header" [class.beta]="beta">
+        <mat-toolbar class="ontology-editor-header">
             <mat-toolbar-row>
                 <span class="ontology-info">
                     <h3 class="mat-title"

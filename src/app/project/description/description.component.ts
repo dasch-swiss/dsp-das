@@ -72,8 +72,6 @@ export class DescriptionComponent implements OnInit {
         }
     };
 
-    beta = false;
-
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
@@ -89,9 +87,6 @@ export class DescriptionComponent implements OnInit {
         this._route.parent.paramMap.subscribe((params: Params) => {
             this.projectUuid = params.get('uuid');
         });
-
-        // get feature toggle information if url contains beta
-        this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
 
     }
 
@@ -217,10 +212,6 @@ export class DescriptionComponent implements OnInit {
         if (index >= 0) {
             this.keywords.splice(index, 1);
         }
-    }
-
-    featureToggle() {
-        this._router.navigate([(this.beta ? 'beta' : ''), 'project', this.projectUuid ]);
     }
 
     toggleForm() {

@@ -61,9 +61,6 @@ export class ListInfoFormComponent implements OnInit {
     isLabelTouched = false;
     isCommentTouched = false;
 
-    // feature toggle for new concept
-    beta = false;
-
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _ais: AppInitService,
@@ -73,46 +70,41 @@ export class ListInfoFormComponent implements OnInit {
         private _projectService: ProjectService
     ) {
 
-        // get feature toggle information if url contains beta
         // in case of creating new
         if (this._route.parent) {
             this.mode = 'create';
-            this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
-            if (this.beta) {
-                // get the uuid of the current project
-                this._route.parent.paramMap.subscribe((params: Params) => {
-                    this.projectUuid = params.get('uuid');
 
-                    this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(this._projectService.uuidToIri(this.projectUuid)).subscribe(
-                        (response: ApiResponseData<ProjectResponse>) => {
-                            this.projectIri = response.body.project.id;
-                        },
-                        (error: ApiResponseError) => {
-                            this._errorHandler.showMessage(error);
-                        }
-                    );
-                });
-            }
+            // get the uuid of the current project
+            this._route.parent.paramMap.subscribe((params: Params) => {
+                this.projectUuid = params.get('uuid');
+
+                this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(this._projectService.uuidToIri(this.projectUuid)).subscribe(
+                    (response: ApiResponseData<ProjectResponse>) => {
+                        this.projectIri = response.body.project.id;
+                    },
+                    (error: ApiResponseError) => {
+                        this._errorHandler.showMessage(error);
+                    }
+                );
+            });
         }
         // in case of edit
         if (this._route.firstChild) {
             this.mode = 'update';
-            this.beta = (this._route.firstChild.snapshot.url[0].path === 'beta');
-            if (this.beta) {
-                // get the uuid of the current project
-                this._route.firstChild.paramMap.subscribe((params: Params) => {
-                    this.projectUuid = params.get('uuid');
 
-                    this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(this._projectService.uuidToIri(this.projectUuid)).subscribe(
-                        (response: ApiResponseData<ProjectResponse>) => {
-                            this.projectIri = response.body.project.id;
-                        },
-                        (error: ApiResponseError) => {
-                            this._errorHandler.showMessage(error);
-                        }
-                    );
-                });
-            }
+            // get the uuid of the current project
+            this._route.firstChild.paramMap.subscribe((params: Params) => {
+                this.projectUuid = params.get('uuid');
+
+                this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(this._projectService.uuidToIri(this.projectUuid)).subscribe(
+                    (response: ApiResponseData<ProjectResponse>) => {
+                        this.projectIri = response.body.project.id;
+                    },
+                    (error: ApiResponseError) => {
+                        this._errorHandler.showMessage(error);
+                    }
+                );
+            });
         }
 
     }
@@ -184,17 +176,11 @@ export class ListInfoFormComponent implements OnInit {
 
             this._dspApiConnection.admin.listsEndpoint.createList(listInfoData).subscribe(
                 (response: ApiResponseData<ListResponse>) => {
-                    if (this.beta) {
-                        // go to the new list page
-                        const array = response.body.list.listinfo.id.split('/');
-                        const name = array[array.length - 1];
-                        this._router.navigate(['list', name], { relativeTo: this._route.parent }).then(() => {
-                            window.location.reload();
-                        });
-                    } else {
-                        this.closeDialog.emit(response.body.list);
-                    }
+                    // go to the new list page
                     this.loading = false;
+                    const array = response.body.list.listinfo.id.split('/');
+                    const name = array[array.length - 1];
+                    this._router.navigate(['list', name], { relativeTo: this._route.parent });
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);

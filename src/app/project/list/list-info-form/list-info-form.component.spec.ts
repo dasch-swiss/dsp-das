@@ -10,8 +10,20 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ApiResponseData, CreateListRequest, ListInfoResponse, ListResponse, ListsEndpointAdmin, StringLiteral, UpdateListInfoRequest } from '@dasch-swiss/dsp-js';
+import {
+    ApiResponseData,
+    CreateListRequest,
+    ListInfoResponse,
+    ListResponse,
+    ListsEndpointAdmin,
+    MockProjects,
+    ProjectResponse,
+    ProjectsEndpointAdmin,
+    StringLiteral,
+    UpdateListInfoRequest
+} from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
@@ -20,6 +32,7 @@ import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens'
 import { DialogHeaderComponent } from 'src/app/main/dialog/dialog-header/dialog-header.component';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { StatusComponent } from 'src/app/main/status/status.component';
+import { TestConfig } from 'test.config';
 import { ListInfoFormComponent } from './list-info-form.component';
 
 /**
@@ -81,9 +94,10 @@ describe('ListInfoFormComponent', () => {
     let testHostCreateListFixture: ComponentFixture<TestHostCreateListComponent>;
     let rootLoader: HarnessLoader;
 
-    const listsEndpointSpyObj = {
+    const dspConnSpyObj = {
         admin: {
-            listsEndpoint: jasmine.createSpyObj('listsEndpoint', ['getListInfo', 'updateListInfo', 'createList'])
+            listsEndpoint: jasmine.createSpyObj('listsEndpoint', ['getListInfo', 'updateListInfo', 'createList']),
+            projectsEndpoint: jasmine.createSpyObj('projectsEndpoint', ['getProjectByIri'])
         }
     };
 
@@ -117,12 +131,39 @@ describe('ListInfoFormComponent', () => {
             ],
             providers: [
                 {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        parent: {
+                            paramMap: of({
+                                get: (param: string) => {
+                                    if (param === 'uuid') {
+                                        return TestConfig.ProjectUuid;
+                                    }
+                                }
+                            }),
+                            snapshot: {
+                                url: [
+                                    { path: 'project' }
+                                ]
+                            }
+                        },
+                        params: of(
+                            { list: 'mockList01' },
+                        ),
+                        snapshot: {
+                            params: [
+                                { id: 'http://rdfh.ch/lists/0001/mockList01' }
+                            ]
+                        }
+                    }
+                },
+                {
                     provide: AppInitService,
                     useValue: appInitSpy
                 },
                 {
                     provide: DspApiConnectionToken,
-                    useValue: listsEndpointSpyObj
+                    useValue: dspConnSpyObj
                 },
                 {
                     provide: MAT_DIALOG_DATA,
@@ -140,14 +181,27 @@ describe('ListInfoFormComponent', () => {
     describe('update existing list info', () => {
         beforeEach(() => {
 
-            const listsEndpointSpy = TestBed.inject(DspApiConnectionToken);
+            const dspConnSpy = TestBed.inject(DspApiConnectionToken);
 
-            (listsEndpointSpy.admin.listsEndpoint as jasmine.SpyObj<ListsEndpointAdmin>).getListInfo.and.callFake(
+            (dspConnSpy.admin.listsEndpoint as jasmine.SpyObj<ListsEndpointAdmin>).getListInfo.and.callFake(
                 () => {
                     const response = new ListInfoResponse();
                     response.listinfo.id = 'http://rdfh.ch/lists/0001/otherTreeList';
                     response.listinfo.labels = [{ 'value': 'Other Tree List', 'language': 'en' }];
                     response.listinfo.comments = [{ 'value': 'Other Tree List comment', 'language': 'en' }];
+                    return of(ApiResponseData.fromAjaxResponse({ response } as AjaxResponse));
+                }
+            );
+
+            // mock projects endpoint
+            (dspConnSpy.admin.projectsEndpoint as jasmine.SpyObj<ProjectsEndpointAdmin>).getProjectByIri.and.callFake(
+                () => {
+                    const response = new ProjectResponse();
+
+                    const mockProjects = MockProjects.mockProjects();
+
+                    response.project = mockProjects.body.projects[0];
+
                     return of(ApiResponseData.fromAjaxResponse({ response } as AjaxResponse));
                 }
             );

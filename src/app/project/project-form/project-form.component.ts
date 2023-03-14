@@ -418,8 +418,8 @@ export class ProjectFormComponent implements OnInit {
                                     this.loading = false;
                                     this.closeDialog.emit();
                                     // redirect to (new) project page
-                                    this._router.navigateByUrl('/beta/project', { skipLocationChange: true }).then(() =>
-                                        this._router.navigate(['/beta/project/' + uuid])
+                                    this._router.navigateByUrl('/project', { skipLocationChange: true }).then(() =>
+                                        this._router.navigate(['/project/' + uuid])
                                     );
                                 },
                                 (error: ApiResponseError) => {

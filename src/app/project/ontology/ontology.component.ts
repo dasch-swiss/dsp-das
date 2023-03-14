@@ -125,9 +125,6 @@ export class OntologyComponent implements OnInit {
     // disable content on small devices
     disableContent = false;
 
-    // feature toggle for new concept
-    beta = false;
-
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
@@ -167,27 +164,21 @@ export class OntologyComponent implements OnInit {
             this.view = (this._route.snapshot.params.view ? this._route.snapshot.params.view : 'classes');
         }
 
-        // get feature toggle information if url contains beta
-        this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
-        if (this.beta) {
-            const uuid = this._route.parent.snapshot.params.uuid;
-            this._route.params.subscribe(params => {
-                this.loading = true;
-                this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(this._projectService.uuidToIri(uuid)).subscribe(
-                    (res: ApiResponseData<ProjectResponse>) => {
-                        const shortcode = res.body.project.shortcode;
-                        const iriBase = this._ontologyService.getIriBaseUrl();
-                        const ontologyName = params['onto'];
-                        this.ontologyIri = `${iriBase}/ontology/${shortcode}/${ontologyName}/v2`;
+        const uuid = this._route.parent.snapshot.params.uuid;
 
-                        this.initView();
-                    }
-                );
-            });
-        } else {
-            // to be removed once the beta view is implemented
-            this.initView();
-        }
+        this._route.params.subscribe(params => {
+            this.loading = true;
+            this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(this._projectService.uuidToIri(uuid)).subscribe(
+                (res: ApiResponseData<ProjectResponse>) => {
+                    const shortcode = res.body.project.shortcode;
+                    const iriBase = this._ontologyService.getIriBaseUrl();
+                    const ontologyName = params['onto'];
+                    this.ontologyIri = `${iriBase}/ontology/${shortcode}/${ontologyName}/v2`;
+
+                    this.initView();
+                }
+            );
+        });
     }
 
     initView(): void {
@@ -258,15 +249,6 @@ export class OntologyComponent implements OnInit {
                 if (!response.ontologies.length) {
                     this.setCache();
                 } else {
-                    // in case project has only one ontology: open this ontology
-                    // because there will be no form to select an ontlogy
-                    if (response.ontologies.length === 1 && !this.beta) {
-                        // open this ontology
-                        this.openOntologyRoute(response.ontologies[0].id, this.view);
-                        this.ontologyIri = response.ontologies[0].id;
-                        this.lastModificationDate = response.ontologies[0].lastModificationDate;
-                    }
-
                     response.ontologies.forEach(ontoMeta => {
                         // set list of already existing ontology names
                         // it will be used in ontology form
@@ -496,10 +478,9 @@ export class OntologyComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             // update the view
             this.initOntologiesList();
-            if (this.beta) {
-                // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
-                window.location.reload();
-            }
+
+            // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
+            window.location.reload();
         });
     }
 
@@ -572,10 +553,7 @@ export class OntologyComponent implements OnInit {
                                 // get the ontologies for this project
                                 this.initOntologiesList();
                                 // go to project ontology page
-                                let goto = `/project/${this.projectUuid}/ontologies/`;
-                                if (this.beta) {
-                                    goto = `/beta/project/${this.projectUuid}`;
-                                }
+                                const goto = `/project/${this.projectUuid}`;
                                 this._router.navigateByUrl(goto, { skipLocationChange: false }).then(() => {
                                     // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
                                     window.location.reload();
@@ -599,10 +577,8 @@ export class OntologyComponent implements OnInit {
                             (response: OntologyMetadata) => {
                                 this.loading = false;
                                 this.resetOntology(this.ontologyIri);
-                                if (this.beta) {
-                                    // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
-                                    window.location.reload();
-                                }
+                                // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
+                                window.location.reload();
                             },
                             (error: ApiResponseError) => {
                                 this._errorHandler.showMessage(error);

@@ -61,17 +61,14 @@ describe('UsersListComponent', () => {
                     provide: ActivatedRoute,
                     useValue: {
                         parent: {
-                            paramMap: of({
-                                get: (param: string) => {
-                                    if (param === 'uuid') {
-                                        return TestConfig.ProjectUuid;
-                                    }
-                                }
-                            }),
                             parent: {
-                                snapshot: {
-                                    url: []
-                                }
+                                paramMap: of({
+                                    get: (param: string) => {
+                                        if (param === 'uuid') {
+                                            return TestConfig.ProjectUuid;
+                                        }
+                                    }
+                                })
                             }
                         }
                     }

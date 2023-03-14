@@ -88,9 +88,6 @@ export class ListViewComponent implements OnChanges, OnInit {
     // progress status
     loading = true;
 
-    // feature toggle for new concept
-    beta = false;
-
     // flag to set permission to see resources
     hasPermission = false;
 
@@ -112,14 +109,7 @@ export class ListViewComponent implements OnChanges, OnInit {
         private _errorHandler: ErrorHandlerService,
         private _notification: NotificationService,
         private _route: ActivatedRoute
-    ) {
-
-        // get feature toggle information if url contains beta
-        this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
-        if (this.beta) {
-            console.warn('This is a pre-released (beta) search results view');
-        }
-    }
+    ) {}
 
     ngOnInit(): void {
         this.componentCommsSubscriptions.push(this._componentCommsService.on(

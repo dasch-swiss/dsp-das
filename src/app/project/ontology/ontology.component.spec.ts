@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -37,6 +38,8 @@ import { AppInitService } from 'src/app/app-init.service';
 import { CacheService } from 'src/app/main/cache/cache.service';
 import { DspApiConfigToken, DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { SplitPipe } from 'src/app/main/pipes/split.pipe';
+import { TruncatePipe } from 'src/app/main/pipes/string-transformation/truncate.pipe';
 import { StatusComponent } from 'src/app/main/status/status.component';
 import { ProjectService } from 'src/app/workspace/resource/services/project.service';
 import { TestConfig } from 'test.config';
@@ -83,7 +86,9 @@ describe('OntologyComponent', () => {
                 DialogComponent,
                 StatusComponent,
                 PropertyInfoComponent,
-                ResourceClassInfoComponent
+                ResourceClassInfoComponent,
+                TruncatePipe,
+                SplitPipe
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -96,6 +101,7 @@ describe('OntologyComponent', () => {
                 MatMenuModule,
                 MatOptionModule,
                 MatSelectModule,
+                MatSidenavModule,
                 MatSnackBarModule,
                 MatToolbarModule,
                 MatTooltipModule,
@@ -175,12 +181,23 @@ describe('OntologyComponent', () => {
         // set local storage session data
         localStorage.setItem('session', JSON.stringify(TestConfig.CurrentSession));
 
-        // set cache with current ontology
-        const cacheSpy = TestBed.inject(CacheService);
-
-        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
+        // mock cache service for currentOntology
+        const cacheSpyOnto = TestBed.inject(CacheService);
+        (cacheSpyOnto as jasmine.SpyObj<CacheService>).get.withArgs('currentOntology').and.callFake(
             () => {
                 const response: ReadOntology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
+                return of(response);
+            }
+        );
+
+        // mock cache service for currentProjectOntologies
+        const cacheSpyProjOnto = TestBed.inject(CacheService);
+        (cacheSpyProjOnto as jasmine.SpyObj<CacheService>).get.withArgs('currentProjectOntologies').and.callFake(
+            () => {
+                const ontologies: ReadOntology[] = [];
+                ontologies.push(MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2'));
+                ontologies.push(MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/minimal/v2'));
+                const response: ReadOntology[] = ontologies;
                 return of(response);
             }
         );

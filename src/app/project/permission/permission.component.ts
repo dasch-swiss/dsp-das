@@ -1,14 +1,12 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import {
     ApiResponseError,
-    KnoraApiConnection,
     ReadGroup,
     ReadProject
 } from '@dasch-swiss/dsp-js';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { Session, SessionService } from 'src/app/main/services/session.service';
 import { AddGroupComponent } from './add-group/add-group.component';
@@ -41,7 +39,6 @@ export class PermissionComponent implements OnInit {
 
 
     constructor(
-        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _errorHandler: ErrorHandlerService,
         private _route: ActivatedRoute,
@@ -49,16 +46,9 @@ export class PermissionComponent implements OnInit {
         private _titleService: Title) {
 
         // get the uuid of the current project
-        this._route.parent.paramMap.subscribe((params: Params) => {
+        this._route.parent.parent.paramMap.subscribe((params: Params) => {
             this.projectUuid = params.get('uuid');
         });
-
-        // in case of new beta view, we are in a grand-child route
-        if (this._route.parent.parent.snapshot.url.length) {
-            this._route.parent.parent.paramMap.subscribe((params: Params) => {
-                this.projectUuid = params.get('uuid');
-            });
-        }
 
         // set the page title
         this._titleService.setTitle('Project ' + this.projectUuid + ' | Permission Groups');

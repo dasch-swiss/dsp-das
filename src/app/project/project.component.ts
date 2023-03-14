@@ -56,9 +56,6 @@ export class ProjectComponent implements OnInit {
 
     navigation: MenuItem[] = AppGlobal.projectNav;
 
-    // feature toggle for new concept
-    beta = false;
-
     ontologies: ReadOntology[] = [];
 
     // list of project ontologies
@@ -86,11 +83,6 @@ export class ProjectComponent implements OnInit {
         // get session
         this.session = this._session.getSession();
 
-        // get feature toggle information if url contains beta
-        this.beta = (this._route.snapshot.url[0].path === 'beta');
-        if (this.beta) {
-            console.warn('This is a pre-released (beta) project view');
-        }
     }
 
     ngOnInit() {
@@ -155,43 +147,36 @@ export class ProjectComponent implements OnInit {
                         this._cache.get('groups_of_' + this.projectUuid, this._dspApiConnection.admin.groupsEndpoint.getGroups());
                     }
 
-                    if (this.beta) {
-
-                        // get all project ontologies
-                        this._dspApiConnection.v2.onto.getOntologiesByProjectIri(this.iri).subscribe(
-                            (ontoMeta: OntologiesMetadata) => {
-                                if (ontoMeta.ontologies.length) {
-                                    ontoMeta.ontologies.forEach(onto => {
-                                        this._dspApiConnection.v2.onto.getOntology(onto.id).subscribe(
-                                            (ontology: ReadOntology) => {
-                                                this.projectOntologies.push(ontology);
-                                                this.projectOntologies
-                                                    .sort((o1, o2) => this._compareOntologies(o1, o2));
-                                                this.ontologies.push(ontology);
-                                                if (ontoMeta.ontologies.length === this.ontologies.length) {
-                                                    this._cache.set('currentProjectOntologies', this.ontologies);
-                                                    this.loading = !this._cache.has(this.projectUuid);
-                                                }
-                                            },
-                                            (error: ApiResponseError) => {
-                                                this.loading = false;
-                                                this._errorHandler.showMessage(error);
+                    // get all project ontologies
+                    this._dspApiConnection.v2.onto.getOntologiesByProjectIri(this.iri).subscribe(
+                        (ontoMeta: OntologiesMetadata) => {
+                            if (ontoMeta.ontologies.length) {
+                                ontoMeta.ontologies.forEach(onto => {
+                                    this._dspApiConnection.v2.onto.getOntology(onto.id).subscribe(
+                                        (ontology: ReadOntology) => {
+                                            this.projectOntologies.push(ontology);
+                                            this.projectOntologies
+                                                .sort((o1, o2) => this._compareOntologies(o1, o2));
+                                            this.ontologies.push(ontology);
+                                            if (ontoMeta.ontologies.length === this.ontologies.length) {
+                                                this._cache.set('currentProjectOntologies', this.ontologies);
+                                                this.loading = !this._cache.has(this.projectUuid);
                                             }
-                                        );
-                                    });
-                                } else {
-                                    this.loading = !this._cache.has(this.projectUuid);
-                                }
-                            },
-                            (error: ApiResponseError) => {
-                                this._errorHandler.showMessage(error);
+                                        },
+                                        (error: ApiResponseError) => {
+                                            this.loading = false;
+                                            this._errorHandler.showMessage(error);
+                                        }
+                                    );
+                                });
+                            } else {
+                                this.loading = !this._cache.has(this.projectUuid);
                             }
-                        );
-                    } else {
-                        if (this._cache.has(this.projectUuid)) {
-                            this.loading = false;
+                        },
+                        (error: ApiResponseError) => {
+                            this._errorHandler.showMessage(error);
                         }
-                    }
+                    );
 
                 },
                 (error: ApiResponseError) => {
