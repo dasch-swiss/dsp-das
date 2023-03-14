@@ -281,10 +281,31 @@ describe('PropertyInfoComponent', () => {
     });
 
     beforeEach(() => {
-        // mock cache service for currentOntologyLists
-        const cacheSpy = TestBed.inject(CacheService);
+        // mock cache service for currentOntology
+        const cacheSpyOnto = TestBed.inject(CacheService);
+        (cacheSpyOnto as jasmine.SpyObj<CacheService>).get.withArgs('currentOntology').and.callFake(
+            () => {
+                const response: ReadOntology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
+                return of(response);
+            }
+        );
 
-        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(
+        // mock cache service for currentProjectOntologies
+        const cacheSpyProjOntos = TestBed.inject(CacheService);
+        (cacheSpyProjOntos as jasmine.SpyObj<CacheService>).get.withArgs('currentProjectOntologies').and.callFake(
+            () => {
+                const ontologies: ReadOntology[] = [];
+                ontologies.push(MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2'));
+                ontologies.push(MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/minimal/v2'));
+                const response: ReadOntology[] = ontologies;
+                return of(response);
+            }
+        );
+
+        // mock cache service for currentOntologyLists
+        const cacheSpyOntoLists = TestBed.inject(CacheService);
+
+        (cacheSpyOntoLists as jasmine.SpyObj<CacheService>).get.withArgs('currentOntologyLists').and.callFake(
             () => {
                 const response: ListNodeInfo[] = [{
                     'comments': [],

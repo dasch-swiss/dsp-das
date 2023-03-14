@@ -19,9 +19,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import {
     ApiResponseData,
     CanDoResponse,
+    List,
     ListNodeInfo,
     ListsEndpointAdmin,
     ListsResponse,
+    MockList,
     MockOntology,
     MockProjects,
     MockUsers,
@@ -198,6 +200,57 @@ describe('OntologyComponent', () => {
                 ontologies.push(MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2'));
                 ontologies.push(MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/minimal/v2'));
                 const response: ReadOntology[] = ontologies;
+                return of(response);
+            }
+        );
+
+        // mock cache service for currentOntologyLists
+        const cacheSpyOntoLists = TestBed.inject(CacheService);
+
+        (cacheSpyOntoLists as jasmine.SpyObj<CacheService>).get.withArgs('currentOntologyLists').and.callFake(
+            () => {
+                const response: ListNodeInfo[] = [{
+                    'comments': [],
+                    'id': 'http://rdfh.ch/lists/0001/otherTreeList',
+                    'isRootNode': true,
+                    'labels': [{
+                        'language': 'en',
+                        'value': 'Tree list root'
+                    }],
+                    'projectIri': 'http://rdfh.ch/projects/0001'
+                }, {
+                    'comments': [{
+                        'language': 'en',
+                        'value': 'a list that is not in used in ontology or data'
+                    }],
+                    'id': 'http://rdfh.ch/lists/0001/notUsedList',
+                    'isRootNode': true,
+                    'labels': [{
+                        'language': 'de',
+                        'value': 'unbenutzte Liste'
+                    }, {
+                        'language': 'en',
+                        'value': 'a list that is not used'
+                    }],
+                    'name': 'notUsedList',
+                    'projectIri': 'http://rdfh.ch/projects/0001'
+                }, {
+                    'comments': [{
+                        'language': 'en',
+                        'value': 'Anything Tree List'
+                    }],
+                    'id': 'http://rdfh.ch/lists/0001/treeList',
+                    'isRootNode': true,
+                    'labels': [{
+                        'language': 'de',
+                        'value': 'Listenwurzel'
+                    }, {
+                        'language': 'en',
+                        'value': 'Tree list root'
+                    }],
+                    'name': 'treelistroot',
+                    'projectIri': 'http://rdfh.ch/projects/0001'
+                }];
                 return of(response);
             }
         );
