@@ -227,7 +227,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
 
                     const uuid = this._resourceService.getResourceUuid(this.resource.id);
                     const params = this._route.snapshot.url;
-                    // go to ontology/[ontoname]/[classname]/[classuuid] relative to parent route beta/project/[projectcode]/
+                    // go to ontology/[ontoname]/[classname]/[classuuid] relative to parent route project/[projectcode]/
                     this._router.navigate([params[0].path, params[1].path, params[2].path, uuid],
                         { relativeTo: this._route.parent }).then(() => this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceCreated)));
 
