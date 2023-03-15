@@ -4,7 +4,6 @@ import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens'
 import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
 import { ComponentCommunicationEventService, EmitEvent, Events } from 'src/app/main/services/component-communication-event.service';
 import { NotificationService } from 'src/app/main/services/notification.service';
-import { ActivatedRoute } from '@angular/router';
 import { of, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -88,9 +87,6 @@ export class ListViewComponent implements OnChanges, OnInit {
     // progress status
     loading = true;
 
-    // feature toggle for new concept
-    beta = false;
-
     // flag to set permission to see resources
     hasPermission = false;
 
@@ -111,15 +107,7 @@ export class ListViewComponent implements OnChanges, OnInit {
         private _componentCommsService: ComponentCommunicationEventService,
         private _errorHandler: ErrorHandlerService,
         private _notification: NotificationService,
-        private _route: ActivatedRoute
-    ) {
-
-        // get feature toggle information if url contains beta
-        this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
-        if (this.beta) {
-            console.warn('This is a pre-released (beta) search results view');
-        }
-    }
+    ) {}
 
     ngOnInit(): void {
         this.componentCommsSubscriptions.push(this._componentCommsService.on(

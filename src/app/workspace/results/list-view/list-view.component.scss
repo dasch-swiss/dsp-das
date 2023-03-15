@@ -7,7 +7,7 @@
   align-items: center;
   white-space: nowrap;
   padding: 0 16px;
-  height: 58px;
+  height: 60px;
   width: 100%;
   z-index: 1;
   background: $bright;
@@ -79,8 +79,4 @@ button.active {
 
 ::ng-deep .selected-resource {
   background-color: $primary_100;
-}
-
-.beta {
-  height: 60px;
 }
