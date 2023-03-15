@@ -2,15 +2,6 @@
 
 <div *ngIf="!loading && project"
     class="content large middle">
-    <!-- beta hint with feature toggle to switch between the stable and the beta version  -->
-    <div class="note warning">
-        <span *ngIf="beta">This is a preview of a new project view concept!</span>
-        <span *ngIf="!beta">We are working on a new project view concept. Switch to the beta version.</span>
-        <span class="fill-remaining-space"></span>
-        <mat-slide-toggle [(ngModel)]="beta"
-            [color]="'primary'"
-            (change)="featureToggle()">Beta Preview</mat-slide-toggle>
-    </div>
     <div>
         <p>Project Description</p>
     </div>
