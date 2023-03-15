@@ -6,19 +6,54 @@ DSP-APP offers the possibility for the user to search in 3 different ways: **ful
 
 ## Full-text search
 
-The full-text search performs queries including one or more terms or phrases and returns data that matches the search conditions. By default, the search is performed in all projects stored in DSP. However, it is possible to filter by project using the "Filter by project" menu on the left side of the search bar.
+DSP offers a full-text search that searches through all text values and labels of resources based on one or several terms (or phrase) entered in the search bar.
+It returns data that matches the search conditions.
+By default, the search is performed in all projects stored in DSP. However, it is possible to filter by project using the "Filter by project" menu on the left side of the search bar.
 
-![Filter your full-text search by specific project](../../assets/images/search-fulltext-filterByProject.png)*<https://admin.dasch.swiss> - Search 1: Full-text search*
+![Filter your full-text search by specific project](../../assets/images/search-fulltext-filterByProject.png)*<https://admin.dasch.swiss> - Search 1: Search in one specific project or all projects*
 
-When clicking on the search bar, the search history panel is displayed. The last **10** searches are registered. It is also possible to clear the search history list (*Clear list* button at the bottom of the panel or the *x* at the end of each line).
+When clicking on the search bar, the search history panel is displayed. The last **10** searches are registered. Click on one search item to perform the same full-text search again. It is also possible to clear the search history list (*Clear list* button at the bottom of the panel or the *x* at the end of each line).
 
 ![Search history panel](../../assets/images/search-history.png)*Search history list is accessible for the full-text search from any webpage.*
 
-Special syntax:
+### Search rules
 
-- question mark? can be used as a wildcard symbol for a single character.
-- asterisk* can be used as a wildcard symbol for zero, one, or multiple characters.
-- "quotation marks" searches for the whole pattern.
+* A search value must have a minimum length of **3** characters.
+
+* All terms are interpreted as **lowercase** characters. E.g. "My dearest Maria" is interpreted as "my dearest maria".
+
+* By default, the logical operator `OR` is used when submitting several search terms. I.e. the name "George Sand" is searched as "george" OR "sand". The database will return all results that include the terms "George Sand", "george", "sand". To find the exact name "George Sand", the term must be surrounded by "quotes".
+
+* Each term separated by a **whitespace** is considered a single term. E.g. the term "mon petit chat" will be searched as "mon" OR "petit" OR "chat". To find the exact phrase "mon petit chat", the phrase must be surrounded by "quotes".
+
+### Special syntax
+
+Special characters can be used in order to search for specific text patterns.
+
+Here is the list of characters with special meaning: +, -, &&, ||, !, (, ), [, ], {, }, ^, ", ~, *, ?, :, \, /
+
+For more information about them, please read the [Lucene documentation](https://lucene.apache.org/core/7_7_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html).
+
+> If you want to search for these special characters **explicitly**, note that the punctuation marks `,` and `.` are **NOT** eliminated and stay with the term where they occured. E.g. "To be, or not to be, that is the question." -> when searching for `be`, the term `be,` (comma included) won't be found (so the entire phrase here). We recommend to use the special character `*` or `?` to find the term. E.g. "be*" or "be?"
+Another example, if you search for the term "(1995)" that includes parenthesis in this case, search for "*1995*" or "?1995?".
+
+**Focus on the most common used characters:**
+
+* `*` (asterisk) can be used as a wildcard symbol for zero, one, or multiple characters. E.g. pari* ("Paris", "Parisian", "parity", "parish", etc.)
+* `?` (question mark) can be used as a wildcard symbol for a single character. E.g. Bern? ("Berne", "Bernt")
+* `""` (quotation marks) searches for the whole pattern. E.g. "Bern" (the exact term "Bern")
+
+### Include special characters in the search
+
+If one of the above characters should be included in the search - without any special meaning - it needs to be escaped with the character `\` .
+
+E.g. You want to search for "Notre-Dame de Paris", you will type "Notre`\-`Dame de Paris"
+
+### Conversion
+
+Alphabetic, numeric, symbolic, and diacritical Unicode characters which are not in the [first 127 ASCII characters](https://learn.parallax.com/support/reference/ascii-table-0-127) (the "Basic Latin" Unicode block) are converted into their ASCII equivalents, if one exists, e.g. é or ä are converted into e and a.
+
+In order to make easier searches and independent from special characters, we recommand to use the advanced search. It will narrow down the search and accept special letters or characters. E.g. `rāmāyaṇī` will be accepted and found.
 
 ---
 
