@@ -54,66 +54,7 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                pathMatch: 'full',
-                redirectTo: 'info'
-            },
-            {
-                path: 'info',
                 component: DescriptionComponent
-            },
-            {
-                path: 'collaboration',
-                component: CollaborationComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'permissions',
-                component: PermissionComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'ontologies',
-                component: OntologyComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'ontologies/:id',
-                component: OntologyComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'ontologies/:id/:view',
-                component: OntologyComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'lists',
-                component: ListComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'lists/:id',
-                component: ListComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: '**',
-                component: StatusComponent,
-                data: { status: 404 }
-            }
-        ]
-    },
-    {
-        path: 'beta/project/:uuid',
-        component: ProjectComponent,
-        children: [
-            {
-                path: '',
-                component: DescriptionComponent
-            },
-            {
-                path: 'info', // old path setup to avoid 404 when typing beta in front of project
-                redirectTo: ''
             },
             {
                 path: 'add-ontology',

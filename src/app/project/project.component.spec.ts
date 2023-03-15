@@ -1,12 +1,18 @@
+import { Component, Input, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ApiResponseData, MockOntology, MockProjects, OntologiesEndpointV2, ProjectResponse, ProjectsEndpointAdmin, ReadProject } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ClassDefinition, MockOntology, MockProjects, OntologiesEndpointV2, ProjectResponse, ProjectsEndpointAdmin, ReadOntology, ReadProject } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
 import { AppInitService } from '../app-init.service';
@@ -17,9 +23,30 @@ import { StatusComponent } from '../main/status/status.component';
 import { OntologyService } from './ontology/ontology.service';
 import { ProjectComponent } from './project.component';
 
+@Component({
+    selector: `app-ontology-classes`
+})
+class MockOntologyClassesComponent {
+    @Input() resClasses: ClassDefinition[];
+    @Input() projectMember: boolean;
+}
+
+@Component({
+    selector: 'app-progress-indicator',
+    template: ''
+})
+class MockProgressIndicatorComponent {}
+
+@Component ({
+    template: `<app-project #project></app-project>`
+})
+class TestHostProjectComponent {
+    @ViewChild('project') projectComp: ProjectComponent;
+}
+
 describe('ProjectComponent', () => {
-    let component: ProjectComponent;
-    let fixture: ComponentFixture<ProjectComponent>;
+    let component: TestHostProjectComponent;
+    let fixture: ComponentFixture<TestHostProjectComponent>;
 
     const appInitSpy = {
         dspAppConfig: {
@@ -35,23 +62,31 @@ describe('ProjectComponent', () => {
                 projectsEndpoint: jasmine.createSpyObj('projectsEndpoint', ['getProjectByIri'])
             },
             v2: {
-                onto: jasmine.createSpyObj('onto', ['getOntologiesByProjectIri']),
+                onto: jasmine.createSpyObj('onto', ['getOntologiesByProjectIri', 'getOntology']),
             }
         };
         const ontoServiceSpy = jasmine.createSpyObj('OntologyService', ['getOntologyName']);
 
         TestBed.configureTestingModule({
             declarations: [
+                TestHostProjectComponent,
                 ProjectComponent,
                 DialogComponent,
-                StatusComponent
+                StatusComponent,
+                MockOntologyClassesComponent,
+                MockProgressIndicatorComponent
             ],
             imports: [
                 BrowserAnimationsModule,
                 MatDialogModule,
+                MatDividerModule,
+                MatExpansionModule,
                 MatIconModule,
+                MatListModule,
+                MatSidenavModule,
                 MatSnackBarModule,
                 MatTabsModule,
+                MatTooltipModule,
                 RouterTestingModule
             ],
             providers: [
@@ -128,12 +163,19 @@ describe('ProjectComponent', () => {
             }
         );
 
-        fixture = TestBed.createComponent(ProjectComponent);
+        (dspConnSpy.v2.onto as jasmine.SpyObj<OntologiesEndpointV2>).getOntology.and.callFake(
+            () => {
+                const response: ReadOntology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
+                return of(response);
+            }
+        );
+
+        fixture = TestBed.createComponent(TestHostProjectComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
 
-    xit('should create', () => {
+    it('should create', () => {
         expect(component).toBeTruthy();
     });
 
