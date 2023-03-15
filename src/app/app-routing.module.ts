@@ -6,8 +6,8 @@ import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.compon
 import { AuthGuard } from './main/guard/auth.guard';
 import { HelpComponent } from './main/help/help.component';
 import { StatusComponent } from './main/status/status.component';
-import { OntologyClassInstanceComponent } from './project/beta/ontology-classes/ontology-class-instance/ontology-class-instance.component';
-import { SettingsComponent } from './project/beta/settings/settings.component';
+import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
+import { SettingsComponent } from './project/settings/settings.component';
 // project
 import { DescriptionComponent } from './project/description/description.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';

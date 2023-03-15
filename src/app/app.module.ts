@@ -159,10 +159,10 @@ import { FulltextSearchComponent } from './workspace/search/fulltext-search/full
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
 import { HintComponent } from './main/action/hint/hint.component';
 import { TextComponent } from './workspace/resource/representation/text/text.component';
-import { OntologyClassesComponent } from './project/beta/ontology-classes/ontology-classes.component';
-import { OntologyClassItemComponent } from './project/beta/ontology-classes/ontology-class-item/ontology-class-item.component';
-import { OntologyClassInstanceComponent } from './project/beta/ontology-classes/ontology-class-instance/ontology-class-instance.component';
-import { SettingsComponent } from './project/beta/settings/settings.component';
+import { OntologyClassesComponent } from './project/ontology-classes/ontology-classes.component';
+import { OntologyClassItemComponent } from './project/ontology-classes/ontology-class-item/ontology-class-item.component';
+import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
+import { SettingsComponent } from './project/settings/settings.component';
 import { OverviewComponent } from './user/overview/overview.component';
 import { ProjectTileComponent } from './system/project-tile/project-tile.component';
 import { CommentFormComponent } from './workspace/resource/values/comment-form/comment-form.component';
