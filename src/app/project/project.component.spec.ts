@@ -19,6 +19,7 @@ import { AppInitService } from '../app-init.service';
 import { CacheService } from '../main/cache/cache.service';
 import { DspApiConnectionToken } from '../main/declarations/dsp-api-tokens';
 import { DialogComponent } from '../main/dialog/dialog.component';
+import { Session, SessionService } from '../main/services/session.service';
 import { StatusComponent } from '../main/status/status.component';
 import { OntologyService } from './ontology/ontology.service';
 import { ProjectComponent } from './project.component';
@@ -57,15 +58,22 @@ describe('ProjectComponent', () => {
     beforeEach(waitForAsync(() => {
 
         const cacheServiceSpy = jasmine.createSpyObj('CacheService', ['get', 'set', 'has']);
+
+        // getProjectMembersByIri and getGroups currently have no mock implementation because
+        // their results are stored in the cache but never actually used in the component
+        // so they're irrevelant for this unit test but need to be defined at least
         const dspConnSpyObj = {
             admin: {
-                projectsEndpoint: jasmine.createSpyObj('projectsEndpoint', ['getProjectByIri'])
+                projectsEndpoint: jasmine.createSpyObj('projectsEndpoint', ['getProjectByIri', 'getProjectMembersByIri']),
+                groupsEndpoint: jasmine.createSpyObj('groupsEndpoint',['getGroups'])
             },
             v2: {
                 onto: jasmine.createSpyObj('onto', ['getOntologiesByProjectIri', 'getOntology']),
             }
         };
         const ontoServiceSpy = jasmine.createSpyObj('OntologyService', ['getOntologyName']);
+
+        const sessionServiceSpy = jasmine.createSpyObj('SessionService', ['getSession', 'setSession']);
 
         TestBed.configureTestingModule({
             declarations: [
@@ -118,6 +126,10 @@ describe('ProjectComponent', () => {
                             ]
                         }
                     }
+                },
+                {
+                    provide: SessionService,
+                    useValue: sessionServiceSpy
                 }
             ]
         }).compileComponents();
@@ -167,6 +179,26 @@ describe('ProjectComponent', () => {
             () => {
                 const response: ReadOntology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
                 return of(response);
+            }
+        );
+
+        // mock session service
+        const sessionSpy = TestBed.inject(SessionService);
+
+        (sessionSpy as jasmine.SpyObj<SessionService>).getSession.and.callFake(
+            () => {
+                const session: Session = {
+                    id: 12345,
+                    user: {
+                        name: 'username',
+                        jwt: 'myToken',
+                        lang: 'en',
+                        sysAdmin: true,
+                        projectAdmin: []
+                    }
+                };
+
+                return session;
             }
         );
 
