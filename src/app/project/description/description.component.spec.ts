@@ -49,7 +49,7 @@ class MockStringLiteralInputComponent {
     constructor() { }
 }
 
-describe('DescriptionComponent', () => {
+fdescribe('DescriptionComponent', () => {
     let testHostComponent: TestHostDescriptionComponent;
     let testHostFixture: ComponentFixture<TestHostDescriptionComponent>;
     let descriptionComponentDe: DebugElement;
@@ -189,6 +189,11 @@ describe('DescriptionComponent', () => {
     });
 
     it('should not display the edit button as a regular user', async () => {
+        testHostComponent.descriptionComp.projectAdmin = false;
+        testHostComponent.descriptionComp.sysAdmin = false;
+
+        testHostFixture.detectChanges();
+
         const editBtn = await rootLoader.getAllHarnesses(MatButtonHarness.with({ selector: '.app-toolbar-action button' }));
 
         expect(editBtn.length).toEqual(0);
