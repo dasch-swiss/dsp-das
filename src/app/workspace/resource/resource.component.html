@@ -1,4 +1,4 @@
-<div class="restricted-message" *ngIf="resource.res.userHasPermission=='RV' && showRestrictedMessage">
+<div class="restricted-message" *ngIf="resource && resource.res && resource.res.userHasPermission=='RV' && showRestrictedMessage">
     <mat-icon>report_problem</mat-icon>
     <p>This resource is restricted, file representations may be of lower quality and some properties may be hidden.</p>
     <mat-icon class="close" (click)="showRestrictedMessage = false">clear</mat-icon>
