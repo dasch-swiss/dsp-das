@@ -49,7 +49,7 @@ class MockStringLiteralInputComponent {
     constructor() { }
 }
 
-fdescribe('DescriptionComponent', () => {
+describe('DescriptionComponent', () => {
     let testHostComponent: TestHostDescriptionComponent;
     let testHostFixture: ComponentFixture<TestHostDescriptionComponent>;
     let descriptionComponentDe: DebugElement;
