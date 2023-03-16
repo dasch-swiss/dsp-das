@@ -57,9 +57,9 @@
     "zone.js": "~0.11.8"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^14.2.3",
+    "@angular-devkit/build-angular": "^15.2.4",
     "@angular-eslint/eslint-plugin": "^13.1.0",
-    "@angular/cli": "^14.2.3",
+    "@angular/cli": "^15.2.4",
     "@angular/compiler-cli": "^15.2.2",
     "@angular/language-service": "^15.2.2",
     "@types/jasmine": "~3.8.0",
