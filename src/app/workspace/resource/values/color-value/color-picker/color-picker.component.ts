@@ -3,7 +3,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, DoCheck, ElementRef, HostBinding, Input, OnDestroy, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgControl, NgForm, Validators } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher, mixinErrorState, _AbstractConstructor, _Constructor } from '@angular/material/core';
-import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
 import { Subject } from 'rxjs';
 
 /** error when invalid control is dirty, touched, or submitted. */
