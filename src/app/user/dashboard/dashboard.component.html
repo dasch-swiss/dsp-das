@@ -20,7 +20,7 @@
                 </h2>
                 <span class="fill-remaining-space"></span>
                 <span class="app-toolbar-action">
-                    <button mat-button color="accent" *ngIf="sysAdmin"
+                    <button mat-button color="primary" *ngIf="sysAdmin"
                         (click)="showSystemProjects = !showSystemProjects" class="toggle-view">
                         <span *ngIf="showSystemProjects">Show only my projects</span>
                         <span *ngIf="!showSystemProjects">Show all projects</span>
@@ -30,7 +30,7 @@
             </div>
 
             <!-- customised button for phone -->
-            <button mat-stroked-button color="accent" *ngIf="sysAdmin"
+            <button mat-stroked-button color="primary" *ngIf="sysAdmin"
                 (click)="showSystemProjects = !showSystemProjects" class="toggle-view-mobile">
                 <span *ngIf="showSystemProjects">Show only my projects</span>
                 <span *ngIf="!showSystemProjects">Show all projects</span>
