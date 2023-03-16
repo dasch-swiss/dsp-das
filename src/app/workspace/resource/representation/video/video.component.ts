@@ -384,6 +384,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
     private _getOriginalFilename() {
         const requestOptions = {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
             withCredentials: true
         };

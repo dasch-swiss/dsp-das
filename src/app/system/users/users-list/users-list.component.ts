@@ -49,10 +49,12 @@ export class UsersListComponent implements OnInit {
     // i18n plural mapping
     itemPluralMapping = {
         user: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             '=1': '1 User',
             other: '# Users'
         },
         member: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             '=1': '1 Member',
             other: '# Members'
         }

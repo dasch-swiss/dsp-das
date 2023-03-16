@@ -111,6 +111,7 @@ export class OntologyComponent implements OnInit {
     // data model for ontology
     itemPluralMapping = {
         ontology: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             '=1': '1 data model',
             other: '# data models'
         }

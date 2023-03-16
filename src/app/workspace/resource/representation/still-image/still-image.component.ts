@@ -705,6 +705,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
             tileSources.push({
                 // construct IIIF tileSource configuration according to https://iiif.io/api/image/3.0
                 tileSource: {
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
                     '@context': 'http://iiif.io/api/image/3/context.json',
                     'id': sipiBasePath,
                     height: height,

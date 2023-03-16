@@ -18,6 +18,7 @@ export class IntermediateComponent implements OnInit {
     // i18n plural mapping
     itemPluralMapping = {
         resource: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             '=1': 'Resource',
             other: 'Resources'
         }

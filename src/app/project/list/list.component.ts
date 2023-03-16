@@ -70,6 +70,7 @@ export class ListComponent implements OnInit {
     // i18n plural mapping
     itemPluralMapping = {
         list: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             '=1': '1 list',
             other: '# lists'
         }

@@ -55,6 +55,7 @@ export class ProjectsListComponent implements OnInit {
     // i18n plural mapping
     itemPluralMapping = {
         project: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             '=1': '1 Project',
             other: '# Projects'
         }

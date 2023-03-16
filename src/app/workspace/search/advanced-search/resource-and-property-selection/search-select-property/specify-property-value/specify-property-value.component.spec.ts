@@ -196,15 +196,17 @@ class MockSearchLinkValueComponent {
     @Input() formGroup: UntypedFormGroup;
 
     private _restrictToResourceClass: string;
-    @Input()
-    set restrictResourceClass(value: string) {
-        this._restrictToResourceClass = value;
-    }
+
+    constructor() { }
+
     get restrictResourceClass() {
         return this._restrictToResourceClass;
     }
 
-    constructor() { }
+    @Input()
+    set restrictResourceClass(value: string) {
+        this._restrictToResourceClass = value;
+    }
 }
 
 describe('SpecifyPropertyValueComponent', () => {
