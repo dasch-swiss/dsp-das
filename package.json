@@ -43,7 +43,7 @@
     "ckeditor5-custom-build": "github:dasch-swiss/ckeditor_custom_build#v2.0.0",
     "core-js": "^3.25.2",
     "jdnconvertiblecalendar": "^0.0.7",
-    "jdnconvertiblecalendardateadapter": "^0.0.19",
+    "jdnconvertiblecalendardateadapter": "^1.0.0",
     "json2typescript": "^1.4.1",
     "jsonld": "^6.0.0",
     "moment": "^2.29.4",
