@@ -71,3 +71,7 @@ jobs:
     # deploy to S3
     - name: Deploy static site to S3 bucket
       run: aws s3 sync ./dist/dsp-app s3://app.cdn.dasch.swiss --delete
+      
+    # invalidate path
+    - name: invalidate old version
+      run: aws cloudfront create-invalidation --distribution-id E173GHGBMR0QPJ --paths "/*"
