@@ -26,8 +26,47 @@ jobs:
     - name: Build in prod mode
       run: npm run build-prod
       
-    - name: Copy dev config
-      run: cp ./src/config/config.dev-server.json ./dist/dsp-app/config/config.prod.json
+    #- name: Copy dev config
+    #  run: cp ./src/config/config.dev-server.json ./dist/dsp-app/config/config.prod.json
+    
+    # create config for dev environment
+    - name: create dev config
+      run: |
+           cat > ./dist/dsp-app/config/config.prod.json << EOF
+           {
+             "dspRelease": "${GITHUB_SHA}",
+             "apiProtocol": "https",
+             "apiHost": "api.dev.dasch.swiss",
+             "apiPort": "",
+             "apiPath": "",
+             "iiifProtocol": "https",
+             "iiifHost": "iiif.dev.dasch.swiss",
+             "iiifPort": "",
+             "iiifPath": "",
+             "geonameToken": "knora",
+             "jsonWebToken": "",
+             "logErrors": true,
+             "iriBase": "http://rdfh.ch",
+             "zioPrefix": "/zio",
+             "zioEndpoints": [
+               "/admin/projects"
+             ],
+             "instrumentation": {
+               "environment": "${GITHUB_REF_NAME}",
+               "dataDog": {
+                 "enabled": false,
+                 "applicationId": "",
+                 "clientToken": "",
+                 "site": "",
+                 "service": ""
+               },
+               "rollbar": {
+                 "enabled": false,
+                 "accessToken": ""
+               }
+             }
+           }
+           EOF
     
     # deploy to S3
     - name: Deploy static site to S3 bucket
