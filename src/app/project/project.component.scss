@@ -105,8 +105,8 @@ mat-sidenav {
 
   .sidenav-collapse-btn {
     position: absolute;
-    margin-top: 4.5%;
-    right: 1.5%;
+    margin-top: 7.5%;
+    right: 4.3%;
     z-index: 1;
 
     .collapse-btn {
@@ -117,9 +117,18 @@ mat-sidenav {
       justify-content: center;
       margin-top: 1%;
       padding: 0;
-      width: 40px;
-      height: 40px;
-      min-width: 40px;
+      width: 23px;
+      height: 23px;
+      min-width: 23px;
+
+      mat-icon {
+        font-size: 16px;
+      }
+
+      // material injects this wrapper with a line-height that is too large
+      ::ng-deep .mat-button-wrapper {
+        line-height: initial;
+      }
     }
   }
 }
@@ -146,11 +155,20 @@ mat-sidenav-content {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 1%;
+      margin-top: 1.6%;
       padding: 0;
-      width: 40px;
-      height: 40px;
-      min-width: 40px;
+      width: 23px;
+      height: 23px;
+      min-width: 23px;
+
+      mat-icon {
+        font-size: 16px;
+      }
+
+      // material injects this wrapper with a line-height that is too large
+      ::ng-deep .mat-button-wrapper {
+        line-height: initial;
+      }
     }
   }
 }
