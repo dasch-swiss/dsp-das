@@ -34,7 +34,7 @@ jobs:
       run: |
            cat > ./dist/dsp-app/config/config.prod.json << EOF
            {
-             "dspRelease": "${GITHUB_SHA}",
+             "dspRelease": "${GITHUB_SHA::7}",
              "apiProtocol": "https",
              "apiHost": "api.dev.dasch.swiss",
              "apiPort": "",
