@@ -3,7 +3,7 @@
 
         <!-- button to expand / close node -->
         <div class="expand-close-container">
-            <button *ngIf="projectAdmin || node.children.length !== 0" type="button" mat-icon-button (click)="toggleChildren(node.id)">
+            <button *ngIf="projectAdmin || node.children.length !== 0" type="button" color="primary" mat-icon-button (click)="toggleChildren(node.id)">
                 <mat-icon class="mat-icon-rtl-mirror">
                     {{showChildren(node.id) ? 'expand_more' : 'chevron_right'}}
                 </mat-icon>
