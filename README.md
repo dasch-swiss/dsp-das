@@ -27,20 +27,20 @@ The monorepo is implemented using [NX](https://nx.dev).
 
 The following table shows the basic commands and the coresponding previous command:
 
-| nx            | npm                                   | ng                                                            |
-| -             | -                                     | -                                                             |
-| `npx nx test` | `npm run test-local`                  | `ng test`                                                     |
-|               | `npm run test-ci`                     |                                                               |
-|               | `npm run start-with-test-server`      | `ng serve --configuration test-server`                        |
-|               | `npm run start-with-ls-test-server`   | `ng serve --configuration ls-test-server`                     |
-|               | `npm run start-with-staging-server`   | `ng serve --configuration staging-server`                     |
-|               | `lint-ci`                             | `eslint --color -c .eslintrc.js --ext .ts ./src/app`          |
-|               | `lint-local`                          | `eslint --color --fix -c .eslintrc.js --ext .ts ./src/app`    |
-|               | `e2e`                                 | `ng e2e`                                                      |
-|               | `e2e-ci`                              | `ng e2e --configuration production --protractor-config=./e2e/protractor-ci.conf.js --webdriver-update=false`    |
-|               | `build-prod`                          | `ng build --configuration=production`                         |
-|               | `test-ci`                             | `ng test --watch=false --browsers=ChromeHeadless`             |
-|               | `test-local`                          | `ng test`                                                     |
+| nx            | npm                                 | ng                                                                                                           |
+| ------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `npx nx test` | `npm run test-local`                | `ng test`                                                                                                    |
+|               | `npm run test-ci`                   |                                                                                                              |
+|               | `npm run start-with-test-server`    | `ng serve --configuration test-server`                                                                       |
+|               | `npm run start-with-ls-test-server` | `ng serve --configuration ls-test-server`                                                                    |
+|               | `npm run start-with-staging-server` | `ng serve --configuration staging-server`                                                                    |
+|               | `lint-ci`                           | `eslint --color -c .eslintrc.js --ext .ts ./src/app`                                                         |
+|               | `lint-local`                        | `eslint --color --fix -c .eslintrc.js --ext .ts ./src/app`                                                   |
+|               | `e2e`                               | `ng e2e`                                                                                                     |
+|               | `e2e-ci`                            | `ng e2e --configuration production --protractor-config=./e2e/protractor-ci.conf.js --webdriver-update=false` |
+|               | `build-prod`                        | `ng build --configuration=production`                                                                        |
+|               | `test-ci`                           | `ng test --watch=false --browsers=ChromeHeadless`                                                            |
+|               | `test-local`                        | `ng test`                                                                                                    |
 
 > **_NOTE:_** You can install `nx` globally with `npm install -g nx`. In that case prefixing the commands with `npx` is not necessary.
 
@@ -57,7 +57,7 @@ The following table shows the basic commands and the coresponding previous comma
 ## Contribution
 
 If you would like to contribute to the development of the DSP-APP alongside us,
-please consult the  [general DSP contribution guidelines](https://docs.dasch.swiss/latest/developers/dsp/contribution/).
+please consult the [general DSP contribution guidelines](https://docs.dasch.swiss/latest/developers/dsp/contribution/).
 
 ### Documentation / User guidelines
 

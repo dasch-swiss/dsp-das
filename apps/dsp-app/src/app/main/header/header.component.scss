@@ -1,0 +1,54 @@
+@import '../../../assets/style/config';
+@import '../../../assets/style/responsive';
+
+.toolbar-header {
+  height: $header-height;
+  background-color: #ffffff;
+}
+
+.logo {
+  .home-button {
+    display: inline-block;
+    .mat-icon {
+      margin: 0 6px 6px 0;
+      min-width: 40px;
+      height: auto;
+      max-height: 40px;
+      padding-bottom: 6px;
+
+      &.small {
+        width: 40px;
+      }
+    }
+    .mat-headline {
+      margin-left: 6px;
+    }
+    .app-version {
+      margin: -12px 0;
+    }
+  }
+}
+
+.login-button {
+  margin: 0 16px;
+}
+
+@media (min-width: 1025px) {
+  .desktop-only {
+    display: contents;
+  }
+  .phone-tablet-only {
+    display: none;
+  }
+}
+@media (max-width: 1024px) {
+  .development.badge {
+    font-weight: normal;
+  }
+  .desktop-only {
+    display: none;
+  }
+  .phone-tablet-only {
+    display: contents;
+  }
+}
