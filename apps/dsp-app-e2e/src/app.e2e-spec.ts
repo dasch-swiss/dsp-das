@@ -13,7 +13,7 @@ describe('landing page', () => {
         page.navigateTo();
         await browser.waitForAngularEnabled(true);
         expect(page.getMainTitle()).toEqual(
-            'BRING ALL TOGETHER AND SIMPLIFY YOUR RESEARCH'
+          'BRING ALL TOGETHER AND SIMPLIFY YOUR RESEARCH'
         );
     });
 
@@ -137,7 +137,7 @@ describe('landing page', () => {
         page.getReadMoreBtnOfBEOL().click();
         await browser.waitForAngularEnabled(true);
         expect(page.getBEOLProjectPageTitle()).toEqual(
-            'Bernoulli-Euler Online'
+          'Bernoulli-Euler Online'
         );
     });
 });

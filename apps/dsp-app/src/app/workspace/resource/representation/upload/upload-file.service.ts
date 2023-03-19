@@ -40,7 +40,7 @@ export class UploadFileService {
         const options = {
             params,
             reportProgress: false,
-            observe: 'body' as 'body',
+            observe: 'body' as const,
         };
         return this._http.post<UploadedFileResponse>(uploadUrl, file, options);
     }

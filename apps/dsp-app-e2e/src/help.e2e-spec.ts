@@ -1,7 +1,6 @@
 import { browser } from 'protractor';
 import { HelpPage } from './page-objects/help.po';
-
-const { version: appVersion, name: appName } = require('../../package.json');
+import packageJson from '../../../package.json';
 
 describe('help page', () => {
     let page: HelpPage;
@@ -79,9 +78,9 @@ describe('help page', () => {
                 // perform here any actions needed on the new tab
                 expect(browser.driver.getCurrentUrl()).toMatch(
                     'https://github.com/dasch-swiss/' +
-                        appName +
+                        packageJson.name +
                         '/releases/tag/v' +
-                        appVersion
+                        packageJson.version
                 );
 
                 // close the new tab
