@@ -1,7 +1,7 @@
 ### STAGE 1: Build ###
 
 # We label our stage as 'builder'
-FROM node:18-stretch as builder
+FROM node:18-buster as builder
 
 LABEL maintainer="support@dasch.swiss"
 
@@ -26,7 +26,7 @@ RUN npm install
 
 ## Build the angular app in production mode and store the artifacts in dist folder
 ## should be: $(npm bin)/ng build --prod --env=prod --build-optimizer
-RUN nx build --configuration=production dsp-app
+RUN npm run build-prod
 
 ### STAGE 2: Setup ###
 
