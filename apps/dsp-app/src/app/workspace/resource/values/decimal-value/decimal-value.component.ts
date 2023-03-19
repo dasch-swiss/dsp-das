@@ -15,7 +15,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CustomRegex } from '../custom-regex';
-import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
+import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 
 @Component({
     selector: 'app-decimal-value',

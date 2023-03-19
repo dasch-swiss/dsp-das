@@ -16,7 +16,7 @@ import {
     ReadDateValue,
     UpdateDateValue,
 } from '@dasch-swiss/dsp-js';
-import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
+import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 import { DatePickerComponent } from './date-picker/date-picker.component';
 

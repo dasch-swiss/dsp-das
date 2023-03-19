@@ -23,14 +23,14 @@ import {
     StringLiteral,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { AppGlobal } from 'src/app/app-global';
-import { AppInitService } from 'src/app/app-init.service';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
-import { Session, SessionService } from 'src/app/main/services/session.service';
-import { ProjectService } from 'src/app/workspace/resource/services/project.service';
+import { AppGlobal } from '@dsp-app/src/app/app-global';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
+import { Session, SessionService } from '@dsp-app/src/app/main/services/session.service';
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 
 @Component({
     selector: 'app-list',

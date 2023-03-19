@@ -23,11 +23,12 @@ import {
     ReadValue,
 } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
-import { AppInitService } from 'src/app/app-init.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { Region, StillImageComponent } from './still-image.component';
+import { map } from "rxjs/operators";
 
 // --> TODO: get test data from dsp-js
 // --> TODO: get this from dsp-js: https://dasch.myjetbrains.com/youtrack/issue/DSP-506
@@ -202,7 +203,7 @@ describe('StillImageComponent', () => {
         const representationServiceSpy = TestBed.inject(RepresentationService);
         (
             representationServiceSpy as jasmine.SpyObj<RepresentationService>
-        ).getFileInfo.and.callFake(() => of(knoraJson));
+        ).getFileInfo.and.callFake(() => of(knoraJson).pipe(map((response: any) => response as object)));
 
         testHostFixture = TestBed.createComponent(TestHostComponent);
         testHostComponent = testHostFixture.componentInstance;

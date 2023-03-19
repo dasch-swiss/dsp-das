@@ -29,13 +29,13 @@ import {
     StoredProject,
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
-import { SortingService } from 'src/app/main/services/sorting.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
+import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 import {
     DefaultClass,
     DefaultResourceClasses,
-} from 'src/app/project/ontology/default-data/default-resource-classes';
+} from '@dsp-app/src/app/project/ontology/default-data/default-resource-classes';
 import { ProjectService } from '../services/project.service';
 import { ResourceService } from '../services/resource.service';
 import { SelectOntologyComponent } from './select-ontology/select-ontology.component';

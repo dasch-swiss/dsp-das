@@ -5,7 +5,7 @@ import {
     Validators,
 } from '@angular/forms';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { CustomRegex } from 'src/app/workspace/resource/values/custom-regex';
+import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
 import { PropertyValue, Value, ValueLiteral } from '../operator';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror

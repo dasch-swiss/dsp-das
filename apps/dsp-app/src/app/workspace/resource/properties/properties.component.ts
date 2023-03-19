@@ -41,18 +41,18 @@ import {
     UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 import {
     ConfirmationWithComment,
     DialogComponent,
-} from 'src/app/main/dialog/dialog.component';
+} from '@dsp-app/src/app/main/dialog/dialog.component';
 import {
     ComponentCommunicationEventService,
     EmitEvent,
     Events as CommsEvents,
-} from 'src/app/main/services/component-communication-event.service';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
-import { NotificationService } from 'src/app/main/services/notification.service';
+} from '@dsp-app/src/app/main/services/component-communication-event.service';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
+import { NotificationService } from '@dsp-app/src/app/main/services/notification.service';
 import { DspResource } from '../dsp-resource';
 import { RepresentationConstants } from '../representation/file-representation';
 import { IncomingService } from '../services/incoming.service';

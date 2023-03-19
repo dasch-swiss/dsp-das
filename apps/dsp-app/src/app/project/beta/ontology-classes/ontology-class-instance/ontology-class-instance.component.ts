@@ -7,16 +7,16 @@ import {
     ReadOntology,
     ResourceClassDefinition,
 } from '@dasch-swiss/dsp-js';
-import { AppInitService } from 'src/app/app-init.service';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { OntologyService } from 'src/app/project/ontology/ontology.service';
-import { ProjectService } from 'src/app/workspace/resource/services/project.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { OntologyService } from '@dsp-app/src/app/project/ontology/ontology.service';
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import {
     FilteredResources,
     SearchParams,
-} from 'src/app/workspace/results/list-view/list-view.component';
-import { SplitSize } from 'src/app/workspace/results/results.component';
+} from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
+import { SplitSize } from '@dsp-app/src/app/workspace/results/results.component';
 
 @Component({
     selector: 'app-ontology-class-instance',

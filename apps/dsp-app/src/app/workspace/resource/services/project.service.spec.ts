@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AppInitService } from 'src/app/app-init.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 import { ProjectService } from './project.service';
 
 describe('ProjectService', () => {

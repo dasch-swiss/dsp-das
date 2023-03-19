@@ -18,12 +18,12 @@ import {
     UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
-import { Session } from 'src/app/main/services/session.service';
-import { ProjectService } from 'src/app/workspace/resource/services/project.service';
-import { AutocompleteItem } from 'src/app/workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/operator';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
+import { Session } from '@dsp-app/src/app/main/services/session.service';
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { AutocompleteItem } from '@dsp-app/src/app/workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/operator';
 
 // --> TODO replace it by IPermissions from dsp-js
 export interface IPermissions {

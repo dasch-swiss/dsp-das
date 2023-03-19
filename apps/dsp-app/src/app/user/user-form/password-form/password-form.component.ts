@@ -20,12 +20,12 @@ import {
     ReadUser,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
-import { NotificationService } from 'src/app/main/services/notification.service';
-import { SessionService } from 'src/app/main/services/session.service';
-import { CustomRegex } from 'src/app/workspace/resource/values/custom-regex';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
+import { NotificationService } from '@dsp-app/src/app/main/services/notification.service';
+import { SessionService } from '@dsp-app/src/app/main/services/session.service';
+import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
 
 @Component({
     selector: 'app-password-form',

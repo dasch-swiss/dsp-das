@@ -4,8 +4,8 @@ import { TestBed } from '@angular/core/testing';
 import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
 import { of } from 'rxjs';
-import { AppInitService } from 'src/app/app-init.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 
 import { RepresentationService } from './representation.service';
 
@@ -55,14 +55,17 @@ describe('RepresentationService', () => {
 
     it('should return the file info', () => {
         const httpClientSpy = TestBed.inject(HttpClient);
-        (httpClientSpy as jasmine.SpyObj<HttpClient>).get.and.returnValue(
+        (httpClientSpy as jasmine.SpyObj<HttpClient>)
+          .get
+          .and
+          .returnValue(
             of(knoraJson)
-        );
+          );
 
         service
             .getFileInfo(
                 'http://0.0.0.0:1024/1111/7vpVORXYoFV-FkzJ5Fg4bkU.mp3/file'
             )
-            .subscribe((data) => expect(data).toEqual(knoraJson));
+            .subscribe((data) => expect(data as unknown as string).toEqual(knoraJson));
     });
 });

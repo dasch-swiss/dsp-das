@@ -6,14 +6,12 @@ import {
     KnoraApiConnection,
     VersionResponse,
 } from '@dasch-swiss/dsp-js';
-import { AppInitService } from 'src/app/app-init.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
 import { DspConfig } from '../declarations/dsp-config';
 import { ErrorHandlerService } from '../services/error-handler.service';
 import { GridItem } from '../grid/grid.component';
-
-declare let require: any;
-const { version: appVersion } = require('../../../../package.json');
+import packageJson from '../../../../../../package.json';
 
 @Component({
     selector: 'app-help',
@@ -26,7 +24,7 @@ export class HelpComponent implements OnInit {
     dsp: DspConfig;
     releaseNotesUrl: string;
 
-    appVersion: string = appVersion;
+    appVersion: string = packageJson.version;
     apiStatus: HealthResponse;
     apiVersion: VersionResponse;
 

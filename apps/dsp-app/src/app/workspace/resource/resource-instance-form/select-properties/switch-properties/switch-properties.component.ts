@@ -5,7 +5,7 @@ import {
     ReadResource,
     ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
+import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 @Component({
     selector: 'app-switch-properties',
     templateUrl: './switch-properties.component.html',

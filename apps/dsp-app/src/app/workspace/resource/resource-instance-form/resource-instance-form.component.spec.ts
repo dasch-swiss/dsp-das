@@ -54,11 +54,11 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { AppInitService } from 'src/app/app-init.service';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
-import { Session, SessionService } from 'src/app/main/services/session.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
+import { Session, SessionService } from '@dsp-app/src/app/main/services/session.service';
 import { ValueService } from '../services/value.service';
 import { IntValueComponent } from '../values/int-value/int-value.component';
 import { TextValueAsStringComponent } from '../values/text-value/text-value-as-string/text-value-as-string.component';

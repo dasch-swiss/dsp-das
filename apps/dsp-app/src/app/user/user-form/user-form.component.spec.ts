@@ -20,13 +20,13 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
-import { AppInitService } from 'src/app/app-init.service';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { StatusComponent } from 'src/app/main/status/status.component';
-import { ProjectService } from 'src/app/workspace/resource/services/project.service';
-import { TestConfig } from 'test.config';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { TestConfig } from '@dsp-app/src/test.config';
 import { PasswordFormComponent } from './password-form/password-form.component';
 import { UserFormComponent } from './user-form.component';
 

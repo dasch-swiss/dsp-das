@@ -33,8 +33,8 @@ import {
     SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { of, Subscription } from 'rxjs';
-import { AppInitService } from 'src/app/app-init.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 import { DspResource } from '../dsp-resource';
 import { IncomingService } from '../services/incoming.service';
 import { UserService } from '../services/user.service';

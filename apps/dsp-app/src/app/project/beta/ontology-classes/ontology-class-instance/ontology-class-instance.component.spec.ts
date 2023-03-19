@@ -13,13 +13,13 @@ import {
 import { SplitAreaDirective, SplitComponent } from 'angular-split';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { AppInitService } from 'src/app/app-init.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { OntologyService } from 'src/app/project/ontology/ontology.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { OntologyService } from '@dsp-app/src/app/project/ontology/ontology.service';
 import {
     ListViewComponent,
     SearchParams,
-} from 'src/app/workspace/results/list-view/list-view.component';
+} from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
 import { OntologyClassInstanceComponent } from './ontology-class-instance.component';
 
 /**

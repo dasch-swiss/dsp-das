@@ -30,9 +30,9 @@ import {
     ResourceClassDefinition,
     ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { DialogEvent } from 'src/app/main/dialog/dialog.component';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { DialogEvent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import { SelectPropertiesComponent } from '../../resource-instance-form/select-properties/select-properties.component';
 
 @Component({

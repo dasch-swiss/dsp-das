@@ -14,7 +14,7 @@ import { MatLegacySelectModule as MatSelectModule } from '@angular/material/lega
 import { MatLegacyOptionModule as MatOptionModule } from '@angular/material/legacy-core';
 import { MatLegacySelectHarness as MatSelectHarness } from '@angular/material/legacy-select/testing';
 import { SearchSelectResourceClassComponent } from './search-select-resource-class.component';
-import { SortingService } from 'src/app/main/services/sorting.service';
+import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 
 /**
  * test host component to simulate parent component.

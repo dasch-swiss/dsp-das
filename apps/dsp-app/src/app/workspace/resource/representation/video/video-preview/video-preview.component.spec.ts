@@ -2,7 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReadMovingImageFileValue } from '@dasch-swiss/dsp-js';
-import { TimePipe } from 'src/app/main/pipes/time.pipe';
+import { TimePipe } from '@dsp-app/src/app/main/pipes/time.pipe';
 import { FileRepresentation } from '../../file-representation';
 import { VideoPreviewComponent } from './video-preview.component';
 

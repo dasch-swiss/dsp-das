@@ -8,13 +8,13 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationStart, Router } from '@angular/router';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
-import { AppInitService } from 'src/app/app-init.service';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import {
     ComponentCommunicationEventService,
     Events,
-} from 'src/app/main/services/component-communication-event.service';
-import { SearchParams } from 'src/app/workspace/results/list-view/list-view.component';
+} from '@dsp-app/src/app/main/services/component-communication-event.service';
+import { SearchParams } from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
 import { DspConfig } from '../declarations/dsp-config';
 import { NotificationService } from '../services/notification.service';

@@ -16,8 +16,8 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { AppInitService } from 'src/app/app-init.service';
-import { TestConfig } from 'test.config';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { TestConfig } from '@dsp-app/src/test.config';
 import {
     DspApiConfigToken,
     DspApiConnectionToken,

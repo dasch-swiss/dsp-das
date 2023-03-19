@@ -19,7 +19,7 @@ import {
     Interval,
     IntervalInputComponent,
 } from './interval-input/interval-input.component';
-import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
+import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 
 @Component({
     selector: 'app-interval-value',

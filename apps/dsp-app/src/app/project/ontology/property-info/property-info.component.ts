@@ -27,9 +27,9 @@ import {
     UpdateOntology,
     UpdateResourceClassCardinality,
 } from '@dasch-swiss/dsp-js';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import {
     DefaultProperties,
     DefaultProperty,

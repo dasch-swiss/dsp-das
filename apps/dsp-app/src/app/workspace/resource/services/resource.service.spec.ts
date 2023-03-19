@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { AppInitService } from 'src/app/app-init.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
 import { ResourceService } from './resource.service';
 
 describe('ResourceService with iriBase = http://rdfh.ch', () => {

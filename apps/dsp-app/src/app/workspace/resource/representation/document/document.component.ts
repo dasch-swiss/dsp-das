@@ -25,9 +25,9 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { PdfViewerComponent } from 'ng2-pdf-viewer';
 import { mergeMap } from 'rxjs/operators';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import {
     EmitEvent,
     Events,

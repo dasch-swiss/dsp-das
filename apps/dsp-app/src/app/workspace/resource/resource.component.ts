@@ -36,10 +36,10 @@ import {
     SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
-import { NotificationService } from 'src/app/main/services/notification.service';
-import { Session, SessionService } from 'src/app/main/services/session.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
+import { NotificationService } from '@dsp-app/src/app/main/services/notification.service';
+import { Session, SessionService } from '@dsp-app/src/app/main/services/session.service';
 import { SplitSize } from '../results/results.component';
 import { DspCompoundPosition, DspResource } from './dsp-resource';
 import { PropertyInfoValues } from './properties/properties.component';

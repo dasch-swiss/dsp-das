@@ -18,7 +18,7 @@ import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/m
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatLegacyAutocompleteHarness as MatAutocompleteHarness } from '@angular/material/legacy-autocomplete/testing';
-import { AppInitService } from 'src/app/app-init.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
 import { CommentFormComponent } from '../comment-form/comment-form.component';
 
 /**

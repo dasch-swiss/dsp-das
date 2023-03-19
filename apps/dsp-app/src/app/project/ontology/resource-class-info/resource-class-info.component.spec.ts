@@ -23,16 +23,16 @@ import {
     ReadOntology,
 } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
-import { AppInitService } from 'src/app/app-init.service';
-import { CacheService } from 'src/app/main/cache/cache.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
 import {
     DspApiConfigToken,
     DspApiConnectionToken,
-} from 'src/app/main/declarations/dsp-api-tokens';
-import { SplitPipe } from 'src/app/main/pipes/split.pipe';
-import { TruncatePipe } from 'src/app/main/pipes/string-transformation/truncate.pipe';
-import { SortingService } from 'src/app/main/services/sorting.service';
-import { TestConfig } from 'test.config';
+} from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { SplitPipe } from '@dsp-app/src/app/main/pipes/split.pipe';
+import { TruncatePipe } from '@dsp-app/src/app/main/pipes/string-transformation/truncate.pipe';
+import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
+import { TestConfig } from '@dsp-app/src/test.config';
 import { ResourceClassInfoComponent } from './resource-class-info.component';
 
 /**

@@ -13,7 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HealthEndpointSystem, MockHealth } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
-import { HttpStatusMsg } from 'src/assets/http/statusMsg';
+import { HttpStatusMsg } from '@dsp-app/src/assets/http/statusMsg';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
 import { StatusComponent } from './status.component';
 
@@ -147,7 +147,7 @@ describe('StatusComponent', () => {
         const titleEle = messageEl.query(By.css('.mat-title'));
 
         expect(titleEle.nativeElement.innerText).toEqual(
-            'WARNING 204 | No Content'
+            ' WARNING 204 | No Content '
         );
     });
 

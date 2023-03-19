@@ -15,7 +15,7 @@ import {
     SearchEndpointV2,
 } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 import { ListViewComponent, SearchParams } from './list-view.component';
 
 /**

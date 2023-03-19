@@ -14,7 +14,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormattedBooleanPipe } from 'src/app/main/pipes/formatting/formatted-boolean.pipe';
+import { FormattedBooleanPipe } from '@dsp-app/src/app/main/pipes/formatting/formatted-boolean.pipe';
 import { CommentFormComponent } from '../comment-form/comment-form.component';
 import { MatIconModule } from '@angular/material/icon';
 

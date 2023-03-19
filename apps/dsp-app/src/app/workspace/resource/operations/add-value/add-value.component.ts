@@ -19,8 +19,8 @@ import {
     WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
 import { mergeMap } from 'rxjs/operators';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 import {
     AddedEventValue,
     EmitEvent,

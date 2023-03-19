@@ -8,13 +8,13 @@ import {
     Constants,
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 import {
     ComponentCommunicationEventService,
     Events,
-} from 'src/app/main/services/component-communication-event.service';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
-import { OntologyService } from 'src/app/project/ontology/ontology.service';
+} from '@dsp-app/src/app/main/services/component-communication-event.service';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
+import { OntologyService } from '@dsp-app/src/app/project/ontology/ontology.service';
 
 @Component({
     selector: 'app-ontology-class-item',

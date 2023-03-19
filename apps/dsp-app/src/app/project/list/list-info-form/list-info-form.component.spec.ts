@@ -27,11 +27,11 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { AppInitService } from 'src/app/app-init.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { DialogHeaderComponent } from 'src/app/main/dialog/dialog-header/dialog-header.component';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { StatusComponent } from 'src/app/main/status/status.component';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { DialogHeaderComponent } from '@dsp-app/src/app/main/dialog/dialog-header/dialog-header.component';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
 import { ListInfoFormComponent } from './list-info-form.component';
 
 /**

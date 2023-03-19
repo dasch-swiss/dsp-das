@@ -26,11 +26,11 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { DialogHeaderComponent } from 'src/app/main/dialog/dialog-header/dialog-header.component';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { StringifyStringLiteralPipe } from 'src/app/main/pipes/string-transformation/stringify-string-literal.pipe';
-import { TruncatePipe } from 'src/app/main/pipes/string-transformation/truncate.pipe';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { DialogHeaderComponent } from '@dsp-app/src/app/main/dialog/dialog-header/dialog-header.component';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { StringifyStringLiteralPipe } from '@dsp-app/src/app/main/pipes/string-transformation/stringify-string-literal.pipe';
+import { TruncatePipe } from '@dsp-app/src/app/main/pipes/string-transformation/truncate.pipe';
 import {
     ListItemFormComponent,
     ListNodeOperation,

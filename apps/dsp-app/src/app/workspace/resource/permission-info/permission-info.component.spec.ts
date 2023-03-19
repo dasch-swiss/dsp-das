@@ -7,7 +7,7 @@ import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/le
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockResource, ReadResource } from '@dasch-swiss/dsp-js';
-import { TitleFromCamelCasePipe } from 'src/app/main/pipes/string-transformation/title-from-camel-case.pipe';
+import { TitleFromCamelCasePipe } from '@dsp-app/src/app/main/pipes/string-transformation/title-from-camel-case.pipe';
 import { PermissionInfoComponent } from './permission-info.component';
 
 /**

@@ -18,8 +18,8 @@ import {
     OntologyMetadata,
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import { SearchParams } from '../../results/list-view/list-view.component';
 import { GravsearchGenerationService } from '../services/gravsearch-generation.service';
 import { ResourceAndPropertySelectionComponent } from './resource-and-property-selection/resource-and-property-selection.component';

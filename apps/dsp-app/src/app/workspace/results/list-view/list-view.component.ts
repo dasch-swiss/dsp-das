@@ -15,14 +15,14 @@ import {
     KnoraApiConnection,
     ReadResourceSequence,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import {
     ComponentCommunicationEventService,
     EmitEvent,
     Events,
-} from 'src/app/main/services/component-communication-event.service';
-import { NotificationService } from 'src/app/main/services/notification.service';
+} from '@dsp-app/src/app/main/services/component-communication-event.service';
+import { NotificationService } from '@dsp-app/src/app/main/services/notification.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 

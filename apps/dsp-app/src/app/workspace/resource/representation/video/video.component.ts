@@ -28,10 +28,10 @@ import {
     WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
 import { mergeMap } from 'rxjs/operators';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
-import { SplitSize } from 'src/app/workspace/results/results.component';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
+import { SplitSize } from '@dsp-app/src/app/workspace/results/results.component';
 import {
     EmitEvent,
     Events,

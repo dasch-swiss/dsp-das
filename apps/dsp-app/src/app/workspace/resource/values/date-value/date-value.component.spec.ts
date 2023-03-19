@@ -29,7 +29,7 @@ import {
     UpdateDateValue,
 } from '@dasch-swiss/dsp-js';
 import { Subject } from 'rxjs';
-import { KnoraDatePipe } from 'src/app/main/pipes/formatting/knoradate.pipe';
+import { KnoraDatePipe } from '@dsp-app/src/app/main/pipes/formatting/knoradate.pipe';
 import { CommentFormComponent } from '../comment-form/comment-form.component';
 import { DateValueComponent } from './date-value.component';
 

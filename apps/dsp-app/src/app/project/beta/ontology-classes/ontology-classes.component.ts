@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ClassDefinition, Constants } from '@dasch-swiss/dsp-js';
-import { SortingService } from 'src/app/main/services/sorting.service';
+import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 
 @Component({
     selector: 'app-ontology-classes',

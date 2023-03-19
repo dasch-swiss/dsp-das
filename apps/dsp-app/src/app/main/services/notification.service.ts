@@ -4,7 +4,7 @@ import {
     MatLegacySnackBarConfig as MatSnackBarConfig,
 } from '@angular/material/legacy-snack-bar';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
-import { HttpStatusMsg } from 'src/assets/http/statusMsg';
+import { HttpStatusMsg } from '@dsp-app/src/assets/http/statusMsg';
 
 @Injectable({
     providedIn: 'root',

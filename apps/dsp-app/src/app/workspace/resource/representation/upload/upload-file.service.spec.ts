@@ -3,8 +3,8 @@ import {
     HttpTestingController,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { AppInitService } from 'src/app/app-init.service';
-import { Session, SessionService } from 'src/app/main/services/session.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { Session, SessionService } from '@dsp-app/src/app/main/services/session.service';
 import { UploadedFileResponse, UploadFileService } from './upload-file.service';
 
 describe('UploadFileService', () => {

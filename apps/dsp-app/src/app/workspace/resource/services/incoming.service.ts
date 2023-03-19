@@ -6,7 +6,7 @@ import {
     ReadResourceSequence,
 } from '@dasch-swiss/dsp-js';
 import { Observable } from 'rxjs';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 
 @Injectable({
     providedIn: 'root',

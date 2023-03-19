@@ -7,8 +7,8 @@ import {
     ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
 import { Observable, of } from 'rxjs';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { DspApiConfigToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { DspApiConfigToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 import {
     DefaultProperties,
     DefaultProperty,

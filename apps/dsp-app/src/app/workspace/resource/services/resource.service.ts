@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppInitService } from 'src/app/app-init.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
 
 @Injectable({
     providedIn: 'root',

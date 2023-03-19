@@ -11,7 +11,7 @@ import {
     KnoraApiConnection,
     LogoutResponse,
 } from '@dasch-swiss/dsp-js';
-import { HttpStatusMsg } from './../../assets/http/statusMsg';
+import { HttpStatusMsg } from '../../../assets/http/statusMsg';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
 import { DialogComponent } from '../dialog/dialog.component';
 import { NotificationService } from '../services/notification.service';

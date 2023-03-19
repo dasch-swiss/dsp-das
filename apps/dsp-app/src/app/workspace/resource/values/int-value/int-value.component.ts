@@ -13,7 +13,7 @@ import {
     ReadIntValue,
     UpdateIntValue,
 } from '@dasch-swiss/dsp-js';
-import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
+import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 import { CustomRegex } from '../custom-regex';
 import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 

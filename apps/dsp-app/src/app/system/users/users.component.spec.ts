@@ -19,10 +19,10 @@ import {
     UsersResponse,
 } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
-import { AppInitService } from 'src/app/app-init.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { StatusComponent } from 'src/app/main/status/status.component';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
 import { UsersComponent } from './users.component';
 
 /**

@@ -16,7 +16,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
-import { TestConfig } from 'test.config';
+import { TestConfig } from '@dsp-app/src/test.config';
 import { AppInitService } from '../app-init.service';
 import {
     DspApiConfigToken,

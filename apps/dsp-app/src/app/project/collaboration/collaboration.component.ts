@@ -9,10 +9,10 @@ import {
     ReadProject,
     ReadUser,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
-import { Session, SessionService } from 'src/app/main/services/session.service';
-import { ProjectService } from 'src/app/workspace/resource/services/project.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
+import { Session, SessionService } from '@dsp-app/src/app/main/services/session.service';
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { CacheService } from '../../main/cache/cache.service';
 import { AddUserComponent } from './add-user/add-user.component';
 

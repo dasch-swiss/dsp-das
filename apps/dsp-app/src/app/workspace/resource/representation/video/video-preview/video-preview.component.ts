@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { fromEvent, merge, Observable } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
-import { NotificationService } from 'src/app/main/services/notification.service';
+import { NotificationService } from '@dsp-app/src/app/main/services/notification.service';
 import { FileRepresentation } from '../../file-representation';
 
 export interface MovingImageSidecar {

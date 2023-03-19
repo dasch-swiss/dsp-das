@@ -18,7 +18,7 @@ import {
     ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
-import { SortingService } from 'src/app/main/services/sorting.service';
+import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 import {
     ComparisonOperatorAndValue,
     PropertyWithValue,

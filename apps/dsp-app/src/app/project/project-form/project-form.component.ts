@@ -27,12 +27,12 @@ import {
     UpdateProjectRequest,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { existingNamesValidator } from 'src/app/main/directive/existing-name/existing-name.directive';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
-import { NotificationService } from 'src/app/main/services/notification.service';
-import { SessionService } from 'src/app/main/services/session.service';
-import { ProjectService } from 'src/app/workspace/resource/services/project.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
+import { NotificationService } from '@dsp-app/src/app/main/services/notification.service';
+import { SessionService } from '@dsp-app/src/app/main/services/session.service';
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { CacheService } from '../../main/cache/cache.service';
 
 @Component({

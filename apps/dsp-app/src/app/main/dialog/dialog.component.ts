@@ -4,8 +4,8 @@ import {
     MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
 } from '@angular/material/legacy-dialog';
 import { Cardinality, ReadResource } from '@dasch-swiss/dsp-js';
-import { PropertyInfoObject } from 'src/app/project/ontology/default-data/default-properties';
-import { FilteredResources } from 'src/app/workspace/results/list-view/list-view.component';
+import { PropertyInfoObject } from '@dsp-app/src/app/project/ontology/default-data/default-properties';
+import { FilteredResources } from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
 import { GuiCardinality } from '../../project/ontology/property-info/property-info.component';
 import { PropToDisplay } from '../../project/ontology/resource-class-info/resource-class-info.component';
 

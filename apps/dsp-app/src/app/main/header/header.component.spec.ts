@@ -13,13 +13,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
-import { AppInitService } from 'src/app/app-init.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
 import {
     ComponentCommunicationEventService,
     EmitEvent,
     Events,
-} from 'src/app/main/services/component-communication-event.service';
-import { TestConfig } from 'test.config';
+} from '@dsp-app/src/app/main/services/component-communication-event.service';
+import { TestConfig } from '@dsp-app/src/test.config';
 import {
     DspApiConfigToken,
     DspApiConnectionToken,
@@ -148,7 +148,7 @@ describe('HeaderComponent', () => {
         expect(helpBtn).toBeTruthy();
 
         const helpBtnLabel = helpBtn.nativeElement.innerHTML;
-        expect(helpBtnLabel).toEqual('Help');
+        expect(helpBtnLabel).toEqual(' Help ');
     });
 
     it('should display search panel', () => {

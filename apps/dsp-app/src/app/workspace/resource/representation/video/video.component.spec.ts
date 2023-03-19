@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 import { ReadMovingImageFileValue } from '@dasch-swiss/dsp-js';
-import { TimePipe } from 'src/app/main/pipes/time.pipe';
+import { TimePipe } from '@dsp-app/src/app/main/pipes/time.pipe';
 import { AvTimelineComponent } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
 import { VideoPreviewComponent } from './video-preview/video-preview.component';

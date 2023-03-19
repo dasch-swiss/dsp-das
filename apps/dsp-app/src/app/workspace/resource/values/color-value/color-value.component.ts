@@ -17,7 +17,7 @@ import {
 import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { CustomRegex } from '../custom-regex';
 import { ValueErrorStateMatcher } from '../value-error-state-matcher';
-import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
+import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 
 @Component({
     selector: 'app-color-value',

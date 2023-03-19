@@ -7,10 +7,10 @@ import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ApiResponseError, ReadProject } from '@dasch-swiss/dsp-js';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
-import { Session, SessionService } from 'src/app/main/services/session.service';
-import { CacheService } from '../../main/cache/cache.service';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
+import { Session, SessionService } from '@dsp-app/src/app/main/services/session.service';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
 
 export interface DatasetRadioOption {
     name: string;

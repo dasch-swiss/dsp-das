@@ -20,8 +20,8 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MockProjects, ProjectsEndpointAdmin } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs/internal/observable/of';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { SortingService } from 'src/app/main/services/sorting.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 import { FulltextSearchComponent } from './fulltext-search.component';
 
 /**

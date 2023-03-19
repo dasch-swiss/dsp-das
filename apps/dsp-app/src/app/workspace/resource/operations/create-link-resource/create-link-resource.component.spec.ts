@@ -43,8 +43,8 @@ import { OntologyCache } from '@dasch-swiss/dsp-js/src/cache/ontology-cache/Onto
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 import { SwitchPropertiesComponent } from '../../resource-instance-form/select-properties/switch-properties/switch-properties.component';
 import { ValueService } from '../../services/value.service';
 import { IntValueComponent } from '../../values/int-value/int-value.component';

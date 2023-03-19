@@ -7,12 +7,12 @@ import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/
 import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 import { By } from '@angular/platform-browser';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { AppInitService } from 'src/app/app-init.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
 import {
     DspApiConfigToken,
     DspApiConnectionToken,
-} from 'src/app/main/declarations/dsp-api-tokens';
-import { TestConfig } from 'test.config';
+} from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { TestConfig } from '@dsp-app/src/test.config';
 import { FilteredResources } from '../results/list-view/list-view.component';
 import { IntermediateComponent } from './intermediate.component';
 
@@ -135,7 +135,7 @@ describe('IntermediateComponent', () => {
             const count: DebugElement = hostCompDe.query(By.css('.count'));
             expect(count.nativeElement.innerText).toEqual('1');
             const text: DebugElement = hostCompDe.query(By.css('.text'));
-            expect(text.nativeElement.innerText).toEqual('Resource Selected');
+            expect(text.nativeElement.innerText).toEqual(' Resource Selected ');
         });
 
         it('expect compare button to be disabled', () => {

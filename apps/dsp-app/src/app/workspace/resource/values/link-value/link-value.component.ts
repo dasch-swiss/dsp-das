@@ -31,12 +31,12 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 import {
     DialogComponent,
     DialogEvent,
-} from 'src/app/main/dialog/dialog.component';
-import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
+} from '@dsp-app/src/app/main/dialog/dialog.component';
+import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 
 export function resourceValidator(control: AbstractControl) {
     const invalid = !(

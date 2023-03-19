@@ -13,7 +13,7 @@ import {
     ReadBooleanValue,
     UpdateBooleanValue,
 } from '@dasch-swiss/dsp-js';
-import { BaseValueDirective } from 'src/app/main/directive/base-value.directive';
+import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 
 @Component({
     selector: 'app-boolean-value',

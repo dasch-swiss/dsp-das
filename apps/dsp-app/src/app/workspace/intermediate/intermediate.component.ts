@@ -3,8 +3,8 @@ import {
     MatLegacyDialog as MatDialog,
     MatLegacyDialogConfig as MatDialogConfig,
 } from '@angular/material/legacy-dialog';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import { FilteredResources } from '../results/list-view/list-view.component';
 
 @Component({

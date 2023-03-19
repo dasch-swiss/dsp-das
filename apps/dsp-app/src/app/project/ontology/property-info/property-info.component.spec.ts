@@ -28,16 +28,16 @@ import {
     ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
-import { AppInitService } from 'src/app/app-init.service';
-import { CacheService } from 'src/app/main/cache/cache.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
 import {
     DspApiConfigToken,
     DspApiConnectionToken,
-} from 'src/app/main/declarations/dsp-api-tokens';
-import { DialogHeaderComponent } from 'src/app/main/dialog/dialog-header/dialog-header.component';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { SplitPipe } from 'src/app/main/pipes/split.pipe';
-import { TestConfig } from 'test.config';
+} from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { DialogHeaderComponent } from '@dsp-app/src/app/main/dialog/dialog-header/dialog-header.component';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { SplitPipe } from '@dsp-app/src/app/main/pipes/split.pipe';
+import { TestConfig } from '@dsp-app/src/test.config';
 import { PropertyFormComponent } from '../property-form/property-form.component';
 import { PropertyInfoComponent } from './property-info.component';
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';

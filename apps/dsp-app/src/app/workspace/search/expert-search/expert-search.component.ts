@@ -7,7 +7,7 @@ import {
     ValidatorFn,
     Validators,
 } from '@angular/forms';
-import { OntologyService } from 'src/app/project/ontology/ontology.service';
+import { OntologyService } from '@dsp-app/src/app/project/ontology/ontology.service';
 import { SearchParams } from '../../results/list-view/list-view.component';
 import {
     AdvancedSearchParams,

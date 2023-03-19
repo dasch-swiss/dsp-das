@@ -34,15 +34,15 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { AppInitService } from 'src/app/app-init.service';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { DialogHeaderComponent } from 'src/app/main/dialog/dialog-header/dialog-header.component';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { StringifyStringLiteralPipe } from 'src/app/main/pipes/string-transformation/stringify-string-literal.pipe';
-import { TruncatePipe } from 'src/app/main/pipes/string-transformation/truncate.pipe';
-import { Session, SessionService } from 'src/app/main/services/session.service';
-import { TestConfig } from 'test.config';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { DialogHeaderComponent } from '@dsp-app/src/app/main/dialog/dialog-header/dialog-header.component';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { StringifyStringLiteralPipe } from '@dsp-app/src/app/main/pipes/string-transformation/stringify-string-literal.pipe';
+import { TruncatePipe } from '@dsp-app/src/app/main/pipes/string-transformation/truncate.pipe';
+import { Session, SessionService } from '@dsp-app/src/app/main/services/session.service';
+import { TestConfig } from '@dsp-app/src/test.config';
 import { ListComponent } from './list.component';
 
 /**

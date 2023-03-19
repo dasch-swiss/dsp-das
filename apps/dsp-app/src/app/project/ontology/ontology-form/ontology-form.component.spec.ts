@@ -7,14 +7,14 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection, MockProjects } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
-import { AppInitService } from 'src/app/app-init.service';
-import { CacheService } from 'src/app/main/cache/cache.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
 import {
     DspApiConfigToken,
     DspApiConnectionToken,
-} from 'src/app/main/declarations/dsp-api-tokens';
-import { MaterialModule } from 'src/app/material-module';
-import { TestConfig } from 'test.config';
+} from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { MaterialModule } from '@dsp-app/src/app/material-module';
+import { TestConfig } from '@dsp-app/src/test.config';
 import { OntologyFormComponent } from './ontology-form.component';
 
 describe('OntologyFormComponent', () => {

@@ -43,10 +43,10 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { AppInitService } from 'src/app/app-init.service';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { Session, SessionService } from 'src/app/main/services/session.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { Session, SessionService } from '@dsp-app/src/app/main/services/session.service';
 import { FilteredResources } from '../../results/list-view/list-view.component';
 import { ResourceLinkFormComponent } from './resource-link-form.component';
 

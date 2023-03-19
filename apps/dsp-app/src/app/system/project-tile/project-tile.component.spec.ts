@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoredProject } from '@dasch-swiss/dsp-js';
-import { ProjectService } from 'src/app/workspace/resource/services/project.service';
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 
 import { ProjectTileComponent } from './project-tile.component';
 

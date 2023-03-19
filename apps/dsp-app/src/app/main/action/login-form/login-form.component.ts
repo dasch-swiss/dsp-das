@@ -31,7 +31,7 @@ import {
 import { DatadogRumService } from '../../services/datadog-rum.service';
 import { Session, SessionService } from '../../services/session.service';
 import { Location } from '@angular/common';
-import { ProjectService } from 'src/app/workspace/resource/services/project.service';
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 
 @Component({
     selector: 'app-login-form',

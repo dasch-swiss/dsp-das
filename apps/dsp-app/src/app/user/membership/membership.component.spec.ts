@@ -16,11 +16,11 @@ import {
     UsersEndpointAdmin,
 } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
-import { AppInitService } from 'src/app/app-init.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { StatusComponent } from 'src/app/main/status/status.component';
-import { ProjectService } from 'src/app/workspace/resource/services/project.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { MembershipComponent } from './membership.component';
 
 describe('MembershipComponent', () => {

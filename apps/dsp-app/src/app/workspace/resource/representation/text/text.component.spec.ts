@@ -3,13 +3,14 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
-import { AppInitService } from 'src/app/app-init.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 import { FileRepresentation } from '../file-representation';
 
 import { TextComponent } from './text.component';
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { RepresentationService } from '../representation.service';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -120,7 +121,7 @@ describe('TextComponent', () => {
         const representationServiceSpy = TestBed.inject(RepresentationService);
         (
             representationServiceSpy as jasmine.SpyObj<RepresentationService>
-        ).getFileInfo.and.callFake(() => of(knoraJson));
+        ).getFileInfo.and.callFake(() => of(knoraJson).pipe(map((response: any) => response as object)));
 
         testHostFixture = TestBed.createComponent(TestHostComponent);
         testHostComponent = testHostFixture.componentInstance;

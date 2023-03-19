@@ -20,11 +20,11 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { AppInitService } from 'src/app/app-init.service';
-import { ProgressIndicatorComponent } from 'src/app/main/action/progress-indicator/progress-indicator.component';
-import { CacheService } from 'src/app/main/cache/cache.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { ProjectService } from 'src/app/workspace/resource/services/project.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { ProgressIndicatorComponent } from '@dsp-app/src/app/main/action/progress-indicator/progress-indicator.component';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { EditListItemComponent } from './edit-list-item.component';
 
 /**

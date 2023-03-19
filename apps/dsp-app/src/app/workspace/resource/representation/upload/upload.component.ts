@@ -22,7 +22,7 @@ import {
     UpdateStillImageFileValue,
     UpdateTextFileValue,
 } from '@dasch-swiss/dsp-js';
-import { NotificationService } from 'src/app/main/services/notification.service';
+import { NotificationService } from '@dsp-app/src/app/main/services/notification.service';
 import { UploadedFileResponse, UploadFileService } from './upload-file.service';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror

@@ -7,7 +7,7 @@ import {
     HealthResponse,
     KnoraApiConnection,
 } from '@dasch-swiss/dsp-js';
-import { HttpStatusMsg } from 'src/assets/http/statusMsg';
+import { HttpStatusMsg } from '@dsp-app/src/assets/http/statusMsg';
 import { DspApiConnectionToken } from '../declarations/dsp-api-tokens';
 
 export interface StatusMsg {

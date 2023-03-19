@@ -11,7 +11,7 @@ import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy
 import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
 import { CreateStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
-import { SplitPipe } from 'src/app/main/pipes/split.pipe';
+import { SplitPipe } from '@dsp-app/src/app/main/pipes/split.pipe';
 import { UploadFileService } from './upload-file.service';
 import { UploadComponent } from './upload.component';
 

@@ -20,10 +20,10 @@ import {
     StringLiteral,
     UpdateListInfoRequest,
 } from '@dasch-swiss/dsp-js';
-import { AppInitService } from 'src/app/app-init.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
-import { ProjectService } from 'src/app/workspace/resource/services/project.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 
 @Component({
     selector: 'app-list-info-form',

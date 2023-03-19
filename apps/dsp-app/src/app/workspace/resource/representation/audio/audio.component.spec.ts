@@ -8,11 +8,12 @@ import { MatLegacySliderModule as MatSliderModule } from '@angular/material/lega
 import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { of } from 'rxjs';
-import { AppInitService } from 'src/app/app-init.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { AudioComponent } from './audio.component';
+import { map } from "rxjs/operators";
 
 // --> TODO: get test data from dsp-js or from dsp-api test data
 const audioFileValue = {
@@ -133,7 +134,7 @@ describe('AudioComponent', () => {
         const representationServiceSpy = TestBed.inject(RepresentationService);
         (
             representationServiceSpy as jasmine.SpyObj<RepresentationService>
-        ).getFileInfo.and.callFake(() => of(knoraJson));
+        ).getFileInfo.and.callFake(() => of(knoraJson).pipe(map((response: any) => response as object)));
 
         (
             representationServiceSpy as jasmine.SpyObj<RepresentationService>

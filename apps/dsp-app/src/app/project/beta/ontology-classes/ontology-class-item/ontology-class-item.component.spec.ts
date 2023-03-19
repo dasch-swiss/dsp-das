@@ -5,12 +5,12 @@ import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ClassDefinition, KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { AppInitService } from 'src/app/app-init.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
 import {
     DspApiConfigToken,
     DspApiConnectionToken,
-} from 'src/app/main/declarations/dsp-api-tokens';
-import { TestConfig } from 'test.config';
+} from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { TestConfig } from '@dsp-app/src/test.config';
 import { OntologyClassItemComponent } from './ontology-class-item.component';
 
 /**

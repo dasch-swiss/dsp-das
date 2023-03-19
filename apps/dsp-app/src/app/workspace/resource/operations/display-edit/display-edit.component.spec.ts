@@ -61,8 +61,8 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { of, throwError } from 'rxjs';
 import { AjaxError } from 'rxjs/ajax';
-import { ConfirmationDialogComponent } from 'src/app/main/action/confirmation-dialog/confirmation-dialog.component';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { ConfirmationDialogComponent } from '@dsp-app/src/app/main/action/confirmation-dialog/confirmation-dialog.component';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 import { PropertyInfoValues } from '../../properties/properties.component';
 import { UserService } from '../../services/user.service';
 import {
