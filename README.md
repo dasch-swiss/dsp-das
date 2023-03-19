@@ -25,24 +25,28 @@ under [GNU Affero General Public](http://www.gnu.org/licenses/agpl-3.0.en.html) 
 
 The monorepo is implemented using [NX](https://nx.dev).
 
-The following table shows the basic commands and the coresponding previous command:
-
-| nx            | npm                                 | ng                                                                                                           |
-| ------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `npx nx test` | `npm run test-local`                | `ng test`                                                                                                    |
-|               | `npm run test-ci`                   |                                                                                                              |
-|               | `npm run start-with-test-server`    | `ng serve --configuration test-server`                                                                       |
-|               | `npm run start-with-ls-test-server` | `ng serve --configuration ls-test-server`                                                                    |
-|               | `npm run start-with-staging-server` | `ng serve --configuration staging-server`                                                                    |
-|               | `lint-ci`                           | `eslint --color -c .eslintrc.js --ext .ts ./src/app`                                                         |
-|               | `lint-local`                        | `eslint --color --fix -c .eslintrc.js --ext .ts ./src/app`                                                   |
-|               | `e2e`                               | `ng e2e`                                                                                                     |
-|               | `e2e-ci`                            | `ng e2e --configuration production --protractor-config=./e2e/protractor-ci.conf.js --webdriver-update=false` |
-|               | `build-prod`                        | `ng build --configuration=production`                                                                        |
-|               | `test-ci`                           | `ng test --watch=false --browsers=ChromeHeadless`                                                            |
-|               | `test-local`                        | `ng test`                                                                                                    |
+The most common commands are defined in `package.json`.
 
 > **_NOTE:_** You can install `nx` globally with `npm install -g nx`. In that case prefixing the commands with `npx` is not necessary.
+
+| nx                                                            | npm                                 |
+|---------------------------------------------------------------|-------------------------------------|
+| `nx run dsp-app:test`                                         | `npm run test-local`                |
+| `nx run dsp-app:test --watch=false --browsers=ChromeHeadless` | `npm run test-ci`                   |
+| `nx run dsp-app:serve:test-server`                            | `npm run start-with-test-server`    |
+| `nx run dsp-app:serve:ls-test-server`                         | `npm run start-with-ls-test-server` |
+| `nx run dsp-app:serve:staging-server`                         | `npm run start-with-staging-server` |
+| `nx run dsp-app:lint`                                         | `npm run lint-ci`                   |
+| `nx run dsp-app:lint --fix`                                   | `npm run lint-local`                |
+| `nx run dsp-app-e2e:e2e`                                      | `npm run e2e`                       |
+| `nx run dsp-app-e2e:e2e-ci --webdriver-update=false`          | `npm run e2e-ci`                    |
+| `nx run dsp-app:build`                                        | `build`                             |
+| `nx run dsp-app:build:production`                             | `build-prod`                        |
+
+### IDE plugins
+- https://plugins.jetbrains.com/plugin/15101-nx-console-idea
+- https://marketplace.visualstudio.com/items?itemName=nrwl.angular-console
+
 
 ## Further Documentation
 
