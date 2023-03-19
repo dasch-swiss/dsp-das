@@ -14,24 +14,24 @@ import {
     StoredProject,
     UsersEndpointAdmin,
 } from '@dasch-swiss/dsp-js';
-import { AppInitService } from 'src/app/app-init.service';
-import { CacheService } from 'src/app/main/cache/cache.service';
+import { AppInitService } from '../../app-init.service';
+import { CacheService } from '../../main/cache/cache.service';
 import {
     DspApiConfigToken,
     DspApiConnectionToken,
-} from 'src/app/main/declarations/dsp-api-tokens';
-import { TestConfig } from 'test.config';
+} from '../../main/declarations/dsp-api-tokens';
+import { TestConfig } from '../../../test.config';
 import { of } from 'rxjs';
 import { OverviewComponent } from './overview.component';
 import { Component, Input, ViewChild } from '@angular/core';
-import { ProjectTileComponent } from 'src/app/system/project-tile/project-tile.component';
+import { ProjectTileComponent } from '../../system/project-tile/project-tile.component';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatLegacyButtonHarness as MatButtonHarness } from '@angular/material/legacy-button/testing';
 import { MatLegacyDialogHarness as MatDialogHarness } from '@angular/material/legacy-dialog/testing';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { DialogHeaderComponent } from 'src/app/main/dialog/dialog-header/dialog-header.component';
+import { DialogComponent } from '../../main/dialog/dialog.component';
+import { DialogHeaderComponent } from '../../main/dialog/dialog-header/dialog-header.component';
 import { TranslateModule } from '@ngx-translate/core';
 
 /**
@@ -55,7 +55,7 @@ class TestProjectTileComponent {
     @ViewChild('projectTile') projectTileComp: ProjectTileComponent;
 
     @Input() project: StoredProject;
-    @Input() sysAdmin: Boolean;
+    @Input() sysAdmin: boolean;
 }
 
 /**

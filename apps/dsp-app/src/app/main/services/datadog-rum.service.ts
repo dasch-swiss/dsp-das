@@ -7,7 +7,8 @@ import { DspInstrumentationToken } from '../declarations/dsp-api-tokens';
 import { DspInstrumentationConfig } from '../declarations/dsp-instrumentation-config';
 import { Session, SessionService } from './session.service';
 
-const { version: appVersion } = require('../../../../package.json');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { version: appVersion } = require('../../../../../../package.json');
 
 @Injectable({
     providedIn: 'root',

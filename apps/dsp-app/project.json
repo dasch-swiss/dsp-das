@@ -182,6 +182,13 @@
           }
         ]
       }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/dsp-app/**/*.ts", "apps/dsp-app/**/*.html"]
+      }
     }
   }
 }

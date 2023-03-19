@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
-import { AppInitService } from 'src/app/app-init.service';
-import { TestConfig } from 'test.config';
+import { AppInitService } from './../../app-init.service';
+import { TestConfig } from './../../../test.config';
 import { CacheService } from '../cache/cache.service';
 import {
     DspApiConfigToken,

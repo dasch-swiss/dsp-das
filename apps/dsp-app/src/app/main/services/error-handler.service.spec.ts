@@ -85,6 +85,7 @@ describe('ErrorHandlerService', () => {
     });
 
     xit('api is not healthy: should return 503 server error', () => {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const error = require('../../../assets/test-data/api-error-0.json');
 
         service.showMessage(error);

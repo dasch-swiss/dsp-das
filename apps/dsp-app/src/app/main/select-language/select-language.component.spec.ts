@@ -8,7 +8,9 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { SelectLanguageComponent } from './select-language.component';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const TRANSLATIONS_EN = require('../../../assets/i18n/en.json');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const TRANSLATIONS_DE = require('../../../assets/i18n/de.json');
 
 describe('SelectLanguageComponent', () => {

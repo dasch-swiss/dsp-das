@@ -34,7 +34,7 @@ import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/mater
 import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy-menu';
 import { KnoraDate } from '@dasch-swiss/dsp-js';
 import { Subject } from 'rxjs';
-import { KnoraDatePipe } from 'src/app/main/pipes/formatting/knoradate.pipe';
+import { KnoraDatePipe } from '../../../../../main/pipes/formatting/knoradate.pipe';
 import { ValueService } from '../../../services/value.service';
 
 /** error when invalid control is dirty, touched, or submitted. */

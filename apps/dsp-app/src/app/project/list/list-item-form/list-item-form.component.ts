@@ -30,9 +30,9 @@ import {
     ReadProject,
     StringLiteral,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
+import { DspApiConnectionToken } from '../../../main/declarations/dsp-api-tokens';
+import { DialogComponent } from '../../../main/dialog/dialog.component';
+import { ErrorHandlerService } from '../../../main/services/error-handler.service';
 import {
     Session,
     SessionService,

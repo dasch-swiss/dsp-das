@@ -19,7 +19,7 @@
     *ngIf="
         comparisonOperatorSelected !== undefined &&
         comparisonOperatorSelected !== null &&
-        comparisonOperatorSelected.getClassName() != 'Exists'
+        comparisonOperatorSelected.getClassName() !== 'Exists'
     "
     [ngSwitch]="propertyValueType"
 >
@@ -47,7 +47,7 @@
     <span *ngSwitchCase="Constants.Resource">
         <span
             *ngIf="
-                comparisonOperatorSelected.getClassName() == 'Match';
+                comparisonOperatorSelected.getClassName() === 'Match';
                 else elseBlock
             "
         >

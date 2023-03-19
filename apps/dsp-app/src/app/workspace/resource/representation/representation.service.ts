@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ErrorHandlerService } from 'src/app/main/services/error-handler.service';
+import { ErrorHandlerService } from '../../../main/services/error-handler.service';
 
 @Injectable({
     providedIn: 'root',
@@ -41,7 +41,7 @@ export class RepresentationService {
      * @param imageFilename optional parameter if the file is an image because the url structure differs from other file types
      * @returns an object containing the knora.json file for the given file url
      */
-    getFileInfo(url: string, imageFilename?: string): Observable<Object> {
+    getFileInfo(url: string, imageFilename?: string): Observable<object> {
         const requestOptions = {
             // eslint-disable-next-line @typescript-eslint/naming-convention
             headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

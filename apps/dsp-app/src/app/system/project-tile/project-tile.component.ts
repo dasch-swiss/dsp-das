@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { StoredProject } from '@dasch-swiss/dsp-js';
-import { ProjectService } from 'src/app/workspace/resource/services/project.service';
+import { ProjectService } from '../../workspace/resource/services/project.service';
 
 @Component({
     selector: 'app-project-tile',
@@ -10,7 +10,7 @@ import { ProjectService } from 'src/app/workspace/resource/services/project.serv
 })
 export class ProjectTileComponent implements OnInit {
     @Input() project: StoredProject;
-    @Input() sysAdmin: Boolean; // used to show settings button
+    @Input() sysAdmin: boolean; // used to show settings button
 
     constructor(
         private _router: Router,
