@@ -47,6 +47,7 @@ export class MembershipComponent implements OnInit {
     // i18n plural mapping
     itemPluralMapping = {
         project: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             '=1': '1 project',
             other: '# projects'
         }
@@ -194,13 +195,6 @@ export class MembershipComponent implements OnInit {
      */
     userIsProjectAdmin(permissions: PermissionsData, iri: string): boolean {
         return (permissions.groupsPerProject[iri].indexOf(Constants.ProjectAdminGroupIRI) > -1);
-    }
-
-    openProject(iri: string) {
-        this.closeDialog.emit();
-        this._router.navigateByUrl('/refresh', { skipLocationChange: true }).then(
-            () => this._router.navigate(['/project/' + this._projectService.iriToUuid(iri)])
-        );
     }
 
 }

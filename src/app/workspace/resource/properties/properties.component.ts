@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { PageEvent } from '@angular/material/paginator';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig } from '@angular/material/legacy-dialog';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import {
     ApiResponseData,
     ApiResponseError,
@@ -257,7 +257,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
      */
     openProject(project: ReadProject) {
         const uuid = this._projectService.iriToUuid(project.id);
-        window.open('/beta/project/' + uuid, '_blank');
+        window.open('/project/' + uuid, '_blank');
     }
 
     previewProject(project: ReadProject) {

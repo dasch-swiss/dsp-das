@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig } from '@angular/material/legacy-dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationStart, Router } from '@angular/router';
@@ -122,28 +122,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(() => {
 
             // do something
-
-        });
-    }
-
-    openNewResourceForm(mode: string, name?: string): void {
-        const dialogConfig: MatDialogConfig = {
-            width: '840px',
-            maxHeight: '80vh',
-            position: {
-                top: '112px'
-            },
-            data: { mode: mode, title: 'New resource',  subtitle: 'Create new resource' },
-            disableClose: true
-        };
-
-        const dialogRef = this._dialog.open(
-            DialogComponent,
-            dialogConfig
-        );
-
-        dialogRef.afterClosed().subscribe(() => {
-
 
         });
     }

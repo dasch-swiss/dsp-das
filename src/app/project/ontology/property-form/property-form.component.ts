@@ -56,7 +56,6 @@ export interface ClassToSelect {
 })
 export class PropertyFormComponent implements OnInit {
 
-    editMode: EditMode;
 
     /**
      * propertyInfo contains default property type information
@@ -85,6 +84,8 @@ export class PropertyFormComponent implements OnInit {
      * output closeDialog of property form component to update parent component
      */
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
+
+    editMode: EditMode;
 
     /**
      * form group, errors and validation messages

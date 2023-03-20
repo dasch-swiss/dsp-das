@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { KnoraApiConnection, MockProjects, ProjectResponse, ReadProject } from '@dasch-swiss/dsp-js';
+import { MockProjects, ProjectResponse, ReadProject } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { AppInitService } from 'src/app/app-init.service';
 import { CacheService } from 'src/app/main/cache/cache.service';
-import { DspApiConfigToken, DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
+import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
 import { DialogComponent } from 'src/app/main/dialog/dialog.component';
 import { StatusComponent } from 'src/app/main/status/status.component';
 import { SelectGroupComponent } from 'src/app/project/collaboration/select-group/select-group.component';
@@ -61,14 +61,14 @@ describe('UsersListComponent', () => {
                     provide: ActivatedRoute,
                     useValue: {
                         parent: {
-                            paramMap: of({
-                                get: (param: string) => {
-                                    if (param === 'uuid') {
-                                        return TestConfig.ProjectUuid;
-                                    }
-                                }
-                            }),
                             parent: {
+                                paramMap: of({
+                                    get: (param: string) => {
+                                        if (param === 'uuid') {
+                                            return TestConfig.ProjectUuid;
+                                        }
+                                    }
+                                }),
                                 snapshot: {
                                     url: []
                                 }

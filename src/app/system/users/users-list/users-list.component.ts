@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig } from '@angular/material/legacy-dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
     ApiResponseData,
@@ -49,10 +49,12 @@ export class UsersListComponent implements OnInit {
     // i18n plural mapping
     itemPluralMapping = {
         user: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             '=1': '1 User',
             other: '# Users'
         },
         member: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             '=1': '1 Member',
             other: '# Members'
         }
@@ -104,18 +106,9 @@ export class UsersListComponent implements OnInit {
         private _sortingService: SortingService
     ) {
         // get the uuid of the current project
-        if (this._route.parent.paramMap) {
-            this._route.parent.paramMap.subscribe((params: Params) => {
-                this.projectUuid = params.get('uuid');
-            });
-        }
-
-        // in case of new beta view, we are in a grand-child route
-        if (this._route.parent.parent.snapshot.url.length) {
-            this._route.parent.parent.paramMap.subscribe((params: Params) => {
-                this.projectUuid = params.get('uuid');
-            });
-        }
+        this._route.parent.parent.paramMap.subscribe((params: Params) => {
+            this.projectUuid = params.get('uuid');
+        });
     }
 
     ngOnInit() {

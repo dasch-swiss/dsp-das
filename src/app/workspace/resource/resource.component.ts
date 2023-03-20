@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChange, ViewChild } from '@angular/core';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs';
 import { Title } from '@angular/platform-browser';
 import {
     ActivatedRoute,
@@ -107,6 +107,8 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
 
     valueOperationEventSubscriptions: Subscription[] = [];
 
+    showRestrictedMessage = true;
+
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: ErrorHandlerService,
@@ -178,7 +180,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         this.incomingResource = undefined;
         this.representationsToDisplay = [];
         this.compoundPosition = undefined;
-
+        this.showRestrictedMessage = true;
         // get resource with all necessary information
         // incl. incoming resources and annotations
         if (this.resourceIri) {

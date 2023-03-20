@@ -1,7 +1,7 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
 import { Router } from '@angular/router';
 import {
     ApiResponseData,
@@ -417,9 +417,9 @@ export class ProjectFormComponent implements OnInit {
                                     const uuid = this._projectService.iriToUuid(projectResponse.body.project.id);
                                     this.loading = false;
                                     this.closeDialog.emit();
-                                    // redirect to (new) project page
-                                    this._router.navigateByUrl('/beta/project', { skipLocationChange: true }).then(() =>
-                                        this._router.navigate(['/beta/project/' + uuid])
+                                    // redirect to project page
+                                    this._router.navigateByUrl('/project', { skipLocationChange: true }).then(() =>
+                                        this._router.navigate(['/project/' + uuid])
                                     );
                                 },
                                 (error: ApiResponseError) => {
