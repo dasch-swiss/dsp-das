@@ -6,8 +6,8 @@ import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.compon
 import { AuthGuard } from './main/guard/auth.guard';
 import { HelpComponent } from './main/help/help.component';
 import { StatusComponent } from './main/status/status.component';
-import { OntologyClassInstanceComponent } from './project/beta/ontology-classes/ontology-class-instance/ontology-class-instance.component';
-import { SettingsComponent } from './project/beta/settings/settings.component';
+import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
+import { SettingsComponent } from './project/settings/settings.component';
 // project
 import { DescriptionComponent } from './project/description/description.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
@@ -23,7 +23,6 @@ import { ProjectsComponent } from './system/projects/projects.component';
 import { SystemComponent } from './system/system.component';
 import { UsersComponent } from './system/users/users.component';
 // user
-import { DashboardComponent } from './user/dashboard/dashboard.component';
 import { OverviewComponent } from './user/overview/overview.component';
 import { UserComponent } from './user/user.component';
 // search results and resource viewer
@@ -44,76 +43,12 @@ const routes: Routes = [
         component: LoginFormComponent
     },
     {
-        path: 'dashboard',
-        component: DashboardComponent,
-        canActivate: [AuthGuard]
-    },
-    {
         path: 'project/:uuid',
         component: ProjectComponent,
         children: [
             {
                 path: '',
-                pathMatch: 'full',
-                redirectTo: 'info'
-            },
-            {
-                path: 'info',
                 component: DescriptionComponent
-            },
-            {
-                path: 'collaboration',
-                component: CollaborationComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'permissions',
-                component: PermissionComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'ontologies',
-                component: OntologyComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'ontologies/:id',
-                component: OntologyComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'ontologies/:id/:view',
-                component: OntologyComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'lists',
-                component: ListComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: 'lists/:id',
-                component: ListComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: '**',
-                component: StatusComponent,
-                data: { status: 404 }
-            }
-        ]
-    },
-    {
-        path: 'beta/project/:uuid',
-        component: ProjectComponent,
-        children: [
-            {
-                path: '',
-                component: DescriptionComponent
-            },
-            {
-                path: 'info', // old path setup to avoid 404 when typing beta in front of project
-                redirectTo: ''
             },
             {
                 path: 'add-ontology',

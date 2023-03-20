@@ -88,7 +88,10 @@ export class DataModelsComponent implements OnInit {
                             // id contains the iri
                             this.projectMember = usersProjects.some(p => p.id === iri);
                         }
-                        this.loading = false;
+                        // wait for onto and lists to load
+                        if(this.projectOntologies && this.projectLists) {
+                            this.loading = false;
+                        }
                     },
                     (error: ApiResponseError) => {
                         this._errorHandler.showMessage(error);
@@ -97,7 +100,11 @@ export class DataModelsComponent implements OnInit {
                 );
             } else {
                 this.projectMember = this.projectAdmin;
-                this.loading = false;
+
+                // wait for onto and lists to load
+                if(this.projectOntologies && this.projectLists) {
+                    this.loading = false;
+                }
             }
         }
     }
