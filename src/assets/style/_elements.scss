@@ -423,7 +423,7 @@ a,
 
     //    &:not(:first-child):hover {
     &:hover {
-      background-color: darken(#fff, 15%);
+      background-color: $primary_100;
 
       .hidden {
         display: block;

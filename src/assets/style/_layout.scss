@@ -115,10 +115,22 @@
       .mat-expansion-panel-header {
         padding: 0 16px !important; // override default value
         height: auto !important; // override default value
+
+        .mat-expansion-panel-header-title, .mat-expansion-indicator {
+          color: $primary;
+        }
+
+        .mat-expansion-indicator::after {
+          color: $primary!important;
+        }
       }
 
       .mat-expansion-panel-header.mat-expanded {
         background: $primary_100;
+      }
+
+      .mat-expansion-panel-header:hover {
+        background-color: $primary_100;
       }
 
       .sidenav-panel-header{
