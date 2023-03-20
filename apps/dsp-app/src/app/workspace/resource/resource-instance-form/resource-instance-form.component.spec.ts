@@ -1,17 +1,4 @@
-import { HarnessLoader } from '@angular/cdk/testing';
-import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import {
-    Component,
-    DebugElement,
-    EventEmitter,
-    Inject,
-    Input,
-    OnInit,
-    Output,
-    QueryList,
-    ViewChild,
-    ViewChildren,
-} from '@angular/core';
+import { Component, DebugElement, Inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {
     UntypedFormBuilder,
@@ -21,7 +8,6 @@ import {
     Validators,
 } from '@angular/forms';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { MatLegacyButtonHarness as MatButtonHarness } from '@angular/material/legacy-button/testing';
 import { MatLegacyOptionModule as MatOptionModule } from '@angular/material/legacy-core';
 import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
@@ -29,6 +15,7 @@ import { MatLegacySelectModule as MatSelectModule } from '@angular/material/lega
 import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
     ApiResponseData,
@@ -40,8 +27,7 @@ import {
     MockProjects,
     MockResource,
     MockUsers,
-    OntologiesEndpointV2,
-    OntologiesMetadata,
+    ReadOntology,
     ReadResource,
     ResourceClassAndPropertyDefinitions,
     ResourceClassDefinition,
@@ -51,6 +37,7 @@ import {
     UserResponse,
     UsersEndpointAdmin,
 } from '@dasch-swiss/dsp-js';
+import { OntologyCache } from '@dasch-swiss/dsp-js/src/cache/ontology-cache/OntologyCache';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
@@ -71,100 +58,15 @@ const resolvedPromise = Promise.resolve(null);
  * test host component to simulate parent component.
  */
 @Component({
-    template: ` <app-resource-instance-form
-        #resourceInstanceFormComp
-    ></app-resource-instance-form>`,
+    template: `
+        <app-resource-instance-form #resourceInstanceFormComp [resourceClassIri]="resourceClassIri" [projectIri]="projectIri"></app-resource-instance-form>`
 })
-class TestHostComponent implements OnInit {
-    @ViewChild('resourceInstanceFormComp')
-    resourceInstanceFormComponent: ResourceInstanceFormComponent;
+class TestHostComponent {
 
-    constructor() {}
+    @ViewChild('resourceInstanceFormComp') resourceInstanceFormComponent: ResourceInstanceFormComponent;
+    resourceClassIri = 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing';
+    projectIri = 'http://rdfh.ch/projects/0001';
 
-    ngOnInit() {}
-}
-
-/**
- * mock select-project component to use in tests.
- */
-@Component({
-    selector: 'app-select-project',
-})
-class MockSelectProjectComponent implements OnInit {
-    @Input() formGroup: UntypedFormGroup;
-    @Input() usersProjects: StoredProject[];
-    @Input() selectedProject?: string;
-    @Output() projectSelected = new EventEmitter<string>();
-
-    form: UntypedFormGroup;
-
-    constructor(@Inject(UntypedFormBuilder) private _fb: UntypedFormBuilder) {}
-
-    ngOnInit() {
-        this.form = this._fb.group({
-            projects: [null, Validators.required],
-        });
-
-        resolvedPromise.then(() => {
-            // add form to the parent form group
-            this.formGroup.addControl('projects', this.form);
-        });
-    }
-}
-
-/**
- * mock select-ontology component to use in tests.
- */
-@Component({
-    selector: 'app-select-ontology',
-})
-class MockSelectOntologyComponent implements OnInit {
-    @Input() formGroup: UntypedFormGroup;
-    @Input() ontologiesMetadata: OntologiesMetadata;
-    @Input() selectedOntology?: string;
-    @Output() ontologySelected = new EventEmitter<string>();
-
-    form: UntypedFormGroup;
-
-    constructor(@Inject(UntypedFormBuilder) private _fb: UntypedFormBuilder) {}
-
-    ngOnInit() {
-        this.form = this._fb.group({
-            ontologies: [null, Validators.required],
-        });
-
-        resolvedPromise.then(() => {
-            // add form to the parent form group
-            this.formGroup.addControl('ontologies', this.form);
-        });
-    }
-}
-
-/**
- * mock select-resource-class component to use in tests.
- */
-@Component({
-    selector: 'app-select-resource-class',
-})
-class MockSelectResourceClassComponent implements OnInit {
-    @Input() formGroup: UntypedFormGroup;
-    @Input() resourceClassDefinitions: ResourceClassDefinition[];
-    @Input() selectedResourceClass?: string;
-
-    form: UntypedFormGroup;
-
-    constructor(@Inject(UntypedFormBuilder) private _fb: UntypedFormBuilder) {}
-
-    ngOnInit() {
-        this.form = this._fb.group({
-            resources: [null, Validators.required],
-        });
-
-        resolvedPromise.then(() => {
-            // add form to the parent form group
-            this.formGroup.addControl('resources', this.form);
-        });
-    }
 }
 
 /**
@@ -311,11 +213,18 @@ class MockCreateTextValueComponent implements OnInit {
     updateCommentVisibility(): void {}
 }
 
+@Component({
+    selector: 'app-progress-indicator',
+    template: ''
+})
+class MockProgressIndicatorComponent {
+
+}
+
 describe('ResourceInstanceFormComponent', () => {
     let testHostComponent: TestHostComponent;
     let testHostFixture: ComponentFixture<TestHostComponent>;
     let resourceInstanceFormComponentDe: DebugElement;
-    let loader: HarnessLoader;
 
     beforeEach(waitForAsync(() => {
         const dspConnSpy = {
@@ -350,19 +259,18 @@ describe('ResourceInstanceFormComponent', () => {
                 iriBase: 'http://rdfh.ch',
             },
         };
-        // const routerSpy = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
+
+        const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
         TestBed.configureTestingModule({
             declarations: [
                 ResourceInstanceFormComponent,
                 TestHostComponent,
-                MockSelectProjectComponent,
-                MockSelectOntologyComponent,
-                MockSelectResourceClassComponent,
                 MockSelectPropertiesComponent,
                 MockSwitchPropertiesComponent,
                 MockCreateIntValueComponent,
                 MockCreateTextValueComponent,
+                MockProgressIndicatorComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -393,13 +301,35 @@ describe('ResourceInstanceFormComponent', () => {
                     provide: AppInitService,
                     useValue: appInitSpy,
                 },
-                // {
-                //     provide: Router,
-                //     useValue: routerSpy
-                // },
-                ValueService,
-            ],
-        }).compileComponents();
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        parent: {
+                            snapshot: {
+                                url: [
+                                    { path: 'project' }
+                                ]
+                            }
+                        },
+                        snapshot: {
+                            url: [
+                                { path: 'ontology' },
+                                { path: 'anything' },
+                                { path: 'thing' },
+                                { path: 'add' }
+                            ],
+                        }
+                    }
+                },
+                {
+                    provide: Router,
+                    useValue: routerSpy
+                },
+                ValueService
+            ]
+        })
+            .compileComponents();
+
     }));
 
     beforeEach(() => {
@@ -438,19 +368,35 @@ describe('ResourceInstanceFormComponent', () => {
             );
         });
 
-        testHostFixture = TestBed.createComponent(TestHostComponent);
-        testHostComponent = testHostFixture.componentInstance;
-        loader = TestbedHarnessEnvironment.loader(testHostFixture);
-        testHostFixture.detectChanges();
-
         const dspConnSpy = TestBed.inject(DspApiConnectionToken);
 
-        (
-            dspConnSpy.admin.usersEndpoint as jasmine.SpyObj<UsersEndpointAdmin>
-        ).getUserByUsername.and.callFake(() => {
-            const loggedInUser = MockUsers.mockUser();
-            return of(loggedInUser);
-        });
+        (dspConnSpy.v2.ontologyCache as jasmine.SpyObj<OntologyCache>).getResourceClassDefinition.and.callFake(
+            (resClassIri: string) => of(MockOntology.mockIResourceClassAndPropertyDefinitions('http://0.0.0.0:3333/ontology/0001/anything/v2#Thing'))
+        );
+
+        (dspConnSpy.v2.ontologyCache as jasmine.SpyObj<OntologyCache>).reloadCachedItem.and.callFake(
+            (key: string) => {
+                const response: ReadOntology = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2');
+                return of(response);
+            }
+        );
+
+        // mock router
+        const routerSpy = TestBed.inject(Router);
+
+        (routerSpy as jasmine.SpyObj<Router>).navigate.and.returnValue(Promise.resolve(true));
+
+        testHostFixture = TestBed.createComponent(TestHostComponent);
+        testHostComponent = testHostFixture.componentInstance;
+        testHostFixture.detectChanges();
+
+        (dspConnSpy.admin.usersEndpoint as jasmine.SpyObj<UsersEndpointAdmin>).getUserByUsername.and.callFake(
+            () => {
+                const loggedInUser = MockUsers.mockUser();
+                return of(loggedInUser);
+            }
+        );
+
 
         const hostCompDe = testHostFixture.debugElement;
 
@@ -459,182 +405,7 @@ describe('ResourceInstanceFormComponent', () => {
         );
     });
 
-    it('should initialize the usersProjects array', () => {
-        expect(
-            testHostComponent.resourceInstanceFormComponent.usersProjects.length
-        ).toEqual(1);
-    });
-
-    it('should show the select project component', () => {
-        const comp = resourceInstanceFormComponentDe.query(
-            By.directive(MockSelectProjectComponent)
-        );
-
-        expect(
-            (comp.componentInstance as MockSelectProjectComponent).usersProjects
-                .length
-        ).toEqual(1);
-    });
-
-    it('should show the select ontology component', () => {
-        const dspConnSpy = TestBed.inject(DspApiConnectionToken);
-
-        (
-            dspConnSpy.v2.onto as jasmine.SpyObj<OntologiesEndpointV2>
-        ).getOntologiesByProjectIri.and.callFake(() => {
-            const anythingOnto = MockOntology.mockOntologiesMetadata();
-            return of(anythingOnto);
-        });
-
-        const selectProjectComp = resourceInstanceFormComponentDe.query(
-            By.directive(MockSelectProjectComponent)
-        );
-
-        (
-            selectProjectComp.componentInstance as MockSelectProjectComponent
-        ).projectSelected.emit('http://0.0.0.0:3333/ontology/0001/anything/v2');
-
-        testHostFixture.detectChanges();
-
-        const selectOntoComp = resourceInstanceFormComponentDe.query(
-            By.directive(MockSelectOntologyComponent)
-        );
-
-        expect(
-            (selectOntoComp.componentInstance as MockSelectOntologyComponent)
-                .ontologiesMetadata.ontologies.length
-        ).toEqual(11);
-
-        expect(
-            dspConnSpy.v2.onto.getOntologiesByProjectIri
-        ).toHaveBeenCalledTimes(1);
-    });
-
-    it('should show the select resource class component', () => {
-        const dspConnSpy = TestBed.inject(DspApiConnectionToken);
-
-        (
-            dspConnSpy.v2.onto as jasmine.SpyObj<OntologiesEndpointV2>
-        ).getOntology.and.callFake(() => {
-            const anythingOnto = MockOntology.mockReadOntology(
-                'http://0.0.0.0:3333/ontology/0001/anything/v2'
-            );
-            return of(anythingOnto);
-        });
-
-        testHostComponent.resourceInstanceFormComponent.ontologiesMetadata =
-            MockOntology.mockOntologiesMetadata();
-
-        testHostFixture.detectChanges();
-
-        const selectOntoComp = resourceInstanceFormComponentDe.query(
-            By.directive(MockSelectOntologyComponent)
-        );
-
-        (
-            selectOntoComp.componentInstance as MockSelectOntologyComponent
-        ).ontologySelected.emit(
-            'http://0.0.0.0:3333/ontology/0001/anything/v2'
-        );
-
-        testHostFixture.detectChanges();
-
-        const selectResourceClassComp = resourceInstanceFormComponentDe.query(
-            By.directive(MockSelectResourceClassComponent)
-        );
-
-        expect(
-            (
-                selectResourceClassComp.componentInstance as MockSelectResourceClassComponent
-            ).resourceClassDefinitions.length
-        ).toEqual(12);
-    });
-
-    it('should show the select-properties component', async () => {
-        const dspConnSpy = TestBed.inject(DspApiConnectionToken);
-
-        (
-            dspConnSpy.v2.onto as jasmine.SpyObj<OntologiesEndpointV2>
-        ).getOntology.and.callFake(() => {
-            const anythingOnto = MockOntology.mockReadOntology(
-                'http://0.0.0.0:3333/ontology/0001/anything/v2'
-            );
-            return of(anythingOnto);
-        });
-
-        const nextButton = await loader.getHarness(
-            MatButtonHarness.with({ selector: '.form-next' })
-        );
-
-        const selectProjectComp = resourceInstanceFormComponentDe.query(
-            By.directive(MockSelectProjectComponent)
-        );
-
-        (
-            selectProjectComp.componentInstance as MockSelectProjectComponent
-        ).form.controls.projects.setValue('http://rdfh.ch/projects/0001');
-
-        testHostComponent.resourceInstanceFormComponent.selectedProject =
-            'http://rdfh.ch/projects/0001';
-
-        testHostComponent.resourceInstanceFormComponent.ontologiesMetadata =
-            MockOntology.mockOntologiesMetadata();
-
-        testHostFixture.detectChanges();
-
-        expect(nextButton.isDisabled).toBeTruthy();
-
-        const selectOntoComp = resourceInstanceFormComponentDe.query(
-            By.directive(MockSelectOntologyComponent)
-        );
-
-        (
-            selectOntoComp.componentInstance as MockSelectOntologyComponent
-        ).form.controls.ontologies.setValue(
-            'http://0.0.0.0:3333/ontology/0001/anything/v2'
-        );
-
-        (
-            selectOntoComp.componentInstance as MockSelectOntologyComponent
-        ).ontologySelected.emit(
-            'http://0.0.0.0:3333/ontology/0001/anything/v2'
-        );
-
-        testHostComponent.resourceInstanceFormComponent.selectedOntology =
-            'http://0.0.0.0:3333/ontology/0001/anything/v2';
-
-        testHostFixture.detectChanges();
-
-        expect(nextButton.isDisabled).toBeTruthy();
-
-        const selectResourceClassComp = resourceInstanceFormComponentDe.query(
-            By.directive(MockSelectResourceClassComponent)
-        );
-
-        expect(selectResourceClassComp).toBeTruthy();
-
-        (
-            selectResourceClassComp.componentInstance as MockSelectResourceClassComponent
-        ).form.controls.resources.setValue(
-            'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing'
-        );
-
-        testHostComponent.resourceInstanceFormComponent.selectedResourceClass =
-            (
-                selectResourceClassComp.componentInstance as MockSelectResourceClassComponent
-            ).resourceClassDefinitions[1];
-
-        testHostComponent.resourceInstanceFormComponent.resourceLabel =
-            'My Label';
-
-        testHostFixture.detectChanges();
-
-        expect(
-            testHostComponent.resourceInstanceFormComponent.selectResourceForm
-                .valid
-        ).toBeTruthy();
-
-        await nextButton.click();
+    it('should show the select-properties component', () => {
 
         const selectPropertiesComp = resourceInstanceFormComponentDe.query(
             By.directive(MockSelectPropertiesComponent)
@@ -667,17 +438,12 @@ describe('ResourceInstanceFormComponent', () => {
             ResourceClassDefinition
         );
 
-        testHostComponent.resourceInstanceFormComponent.selectedResourceClass =
-            resourceClasses[1];
+        testHostComponent.resourceInstanceFormComponent.resourceClass = resourceClasses[1];
 
         testHostComponent.resourceInstanceFormComponent.resourceLabel =
             'My Label';
 
-        testHostComponent.resourceInstanceFormComponent.showNextStepForm =
-            false;
-
-        testHostComponent.resourceInstanceFormComponent.properties =
-            new Array<ResourcePropertyDefinition>();
+        testHostComponent.resourceInstanceFormComponent.properties = new Array<ResourcePropertyDefinition>();
 
         MockResource.getTestThing().subscribe((res) => {
             const resourcePropDef = (

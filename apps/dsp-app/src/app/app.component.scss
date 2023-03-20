@@ -1,4 +1,4 @@
-@import '../assets/style/theme';
+@use "config" as *;
 
 .cookie-banner {
   position: fixed;
@@ -15,7 +15,7 @@
     text-align: center;
 
     .link {
-      color: $accent;
+      color: $secondary;
       text-decoration: underline;
     }
   }

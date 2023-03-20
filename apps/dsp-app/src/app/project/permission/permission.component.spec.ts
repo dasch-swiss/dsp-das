@@ -70,14 +70,14 @@ describe('PermissionComponent', () => {
                     provide: ActivatedRoute,
                     useValue: {
                         parent: {
-                            paramMap: of({
-                                get: (param: string) => {
-                                    if (param === 'uuid') {
-                                        return TestConfig.ProjectUuid;
-                                    }
-                                },
-                            }),
                             parent: {
+                                paramMap: of({
+                                    get: (param: string) => {
+                                        if (param === 'uuid') {
+                                            return TestConfig.ProjectUuid;
+                                        }
+                                    }
+                                }),
                                 snapshot: {
                                     url: [],
                                 },

@@ -15,9 +15,9 @@
                     <span>Deactivated</span>
                 </div>
             </div>
-            <div *ngIf="sysAdmin" class="settings">
-                <button
-                    class="settings-button"
+            <div *ngIf="sysAdmin"
+                class="settings">
+                <button color="primary" class="settings-button"
                     mat-icon-button
                     (click)="navigateTo(project.id, 'settings')"
                 >
@@ -27,11 +27,11 @@
         </div>
 
         <div class="icon">
-            <mat-icon>redeem</mat-icon>
+            <mat-icon color="primary">redeem</mat-icon>
         </div>
 
         <div class="title">
-            <p>{{ project.longname }}</p>
+            <p class="title-text">{{project.longname}}</p>
         </div>
 
         <div class="workspace-button-container">
@@ -39,9 +39,8 @@
                 class="workspace-button"
                 mat-flat-button
                 [color]="'primary'"
-                (click)="navigateTo(project.id, 'workspace')"
-            >
-                Go to dashboard
+                (click)="navigateTo(project.id, 'workspace')">
+                Browse Data
             </button>
         </div>
     </div>

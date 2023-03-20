@@ -28,7 +28,11 @@
 
     <div class="form-panel form-action">
         <span>
-            <button mat-button type="button" (click)="closeDialog.emit()">
+            <button
+                mat-button
+                color="primary"
+                type="button"
+                (click)="closeDialog.emit()">
                 {{ 'appLabels.form.action.cancel' | translate }}
             </button>
         </span>
