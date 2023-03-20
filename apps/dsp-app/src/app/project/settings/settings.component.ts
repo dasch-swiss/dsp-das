@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AppGlobal } from '../../../app-global';
-import { MenuItem } from '../../../main/declarations/menu-item';
+import { AppGlobal } from '@dsp-app/src/app/app-global';
+import { MenuItem } from '@dsp-app/src/app/main/declarations/menu-item';
 
 @Component({
     selector: 'app-settings',
