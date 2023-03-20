@@ -23,7 +23,7 @@ import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-ap
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import { SessionService } from '@dsp-app/src/app/main/services/session.service';
-import { CacheService } from '../../main/cache/cache.service';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
 
 @Component({
     selector: 'app-account',

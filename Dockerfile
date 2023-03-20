@@ -1,7 +1,7 @@
 ### STAGE 1: Build ###
 
 # We label our stage as 'builder'
-FROM node:18-buster as builder
+FROM node:18-buster-slim as builder
 
 LABEL maintainer="support@dasch.swiss"
 
@@ -36,4 +36,4 @@ LABEL maintainer="400790+subotic@users.noreply.github.com"
 
 RUN rm -rf /public/*
 
-COPY --from=builder /usr/app/dist/dsp-app /public
+COPY --from=builder /usr/app/dist/apps/dsp-app /public

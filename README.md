@@ -27,7 +27,7 @@ The monorepo is implemented using [NX](https://nx.dev).
 
 The most common commands are defined in `package.json`.
 
-> **_NOTE:_** You can install `nx` globally with `npm install -g nx`. In that case prefixing the commands with `npx` is not necessary.
+> **_NOTE:_** You can install `nx` globally with `npm install -g nx`. If not, then all `nx` commands bellow need to be prefixed with `npx`.
 
 | nx                                                            | npm                                 |
 |---------------------------------------------------------------|-------------------------------------|
