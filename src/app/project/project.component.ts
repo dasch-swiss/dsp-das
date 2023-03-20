@@ -27,10 +27,10 @@ import { Session, SessionService } from '../main/services/session.service';
     styleUrls: ['./project.component.scss']
 })
 export class ProjectComponent implements OnInit {
+    @ViewChild('sidenav') sidenav: MatSidenav;
+
     readonly TAB_DATA_MODEL = 3;
     readonly TAB_LISTS = 4;
-
-    @ViewChild('sidenav') sidenav: MatSidenav;
 
     // loading for progress indicator
     loading: boolean;
@@ -83,6 +83,17 @@ export class ProjectComponent implements OnInit {
         // get session
         this.session = this._session.getSession();
     }
+
+    /**
+     * add keyboard support to expand/collapse sidenav
+     * @param event automatically passed whenever the user types
+     */
+    @HostListener('window:keyup', ['$event'])
+    keyEvent(event: KeyboardEvent) {
+        if(event.key === '['){
+          this.toggleSidenav();
+        }
+      }
 
     ngOnInit() {
 
@@ -207,17 +218,6 @@ export class ProjectComponent implements OnInit {
         this.sideNavOpened = !this.sideNavOpened;
         this.sidenav.toggle();
     }
-
-    /**
-     * add keyboard support to expand/collapse sidenav
-     * @param event automatically passed whenever the user types
-     */
-    @HostListener('window:keyup', ['$event'])
-    keyEvent(event: KeyboardEvent) {
-        if(event.key === '['){
-          this.toggleSidenav();
-        }
-      }
 
     /**
      * compare function which sorts the ontologies in the ascending order.

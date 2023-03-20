@@ -29,7 +29,7 @@ import { By } from '@angular/platform-browser';
 import { MatButtonHarness } from '@angular/material/button/testing';
 
 @Component ({
-    template: `<app-description #description></app-description>`
+    template: '<app-description #description></app-description>'
 })
 class TestHostDescriptionComponent {
     @ViewChild('description') descriptionComp: DescriptionComponent;

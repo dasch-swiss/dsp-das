@@ -13,11 +13,11 @@ import { OntologyService } from 'src/app/project/ontology/ontology.service';
     styleUrls: ['./ontology-class-item.component.scss']
 })
 export class OntologyClassItemComponent implements OnInit, OnDestroy {
-    readonly MAX_LABEL_CHAR = 25;
-
     @Input() resClass: ClassDefinition;
 
     @Input() projectMember: boolean;
+
+    readonly MAX_LABEL_CHAR = 25;
 
     gravsearch: string;
 

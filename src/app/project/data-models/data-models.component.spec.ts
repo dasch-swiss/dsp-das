@@ -19,7 +19,7 @@ import { OntologyService } from '../ontology/ontology.service';
 import { DataModelsComponent } from './data-models.component';
 
 @Component({
-    template: `<app-data-models #dataModels></app-data-models>`
+    template: '<app-data-models #dataModels></app-data-models>'
 })
 class DataModelsTestHostComponent {
     @ViewChild('dataModels') dataModelsComp: DataModelsComponent;

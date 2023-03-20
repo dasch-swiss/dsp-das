@@ -25,7 +25,7 @@ import { OntologyService } from './ontology/ontology.service';
 import { ProjectComponent } from './project.component';
 
 @Component({
-    selector: `app-ontology-classes`
+    selector: 'app-ontology-classes'
 })
 class MockOntologyClassesComponent {
     @Input() resClasses: ClassDefinition[];
@@ -39,7 +39,7 @@ class MockOntologyClassesComponent {
 class MockProgressIndicatorComponent {}
 
 @Component ({
-    template: `<app-project #project></app-project>`
+    template: '<app-project #project></app-project>'
 })
 class TestHostProjectComponent {
     @ViewChild('project') projectComp: ProjectComponent;
