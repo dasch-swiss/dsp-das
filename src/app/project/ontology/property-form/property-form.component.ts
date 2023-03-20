@@ -57,6 +57,7 @@ export interface ClassToSelect {
 export class PropertyFormComponent implements OnInit {
 
 
+
     /**
      * propertyInfo contains default property type information
      * and in case of 'edit' mode also the ResourcePropertyDefintion
