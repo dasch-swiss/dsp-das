@@ -1,0 +1,77 @@
+name: CI
+on: 
+  push:
+    branches:
+      - aws-cdn
+jobs:
+  deploy:
+    environment: "aws-cdn"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-central-1 # Use your bucket region here
+        
+    # build app
+    - name: Set up Node.js ${{ env.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ env.node-version }}
+    - name: Install dependencies
+      run: npm install
+    - name: Build in prod mode
+      run: npm run build-prod
+      
+    #- name: Copy dev config
+    #  run: cp ./src/config/config.dev-server.json ./dist/dsp-app/config/config.prod.json
+    
+    # create config for dev environment
+    - name: create dev config
+      run: |
+           cat > ./dist/dsp-app/config/config.prod.json << EOF
+           {
+             "dspRelease": "${GITHUB_SHA::7}",
+             "apiProtocol": "https",
+             "apiHost": "api.dev.dasch.swiss",
+             "apiPort": "",
+             "apiPath": "",
+             "iiifProtocol": "https",
+             "iiifHost": "iiif.dev.dasch.swiss",
+             "iiifPort": "",
+             "iiifPath": "",
+             "geonameToken": "knora",
+             "jsonWebToken": "",
+             "logErrors": true,
+             "iriBase": "http://rdfh.ch",
+             "zioPrefix": "/zio",
+             "zioEndpoints": [
+               "/admin/projects"
+             ],
+             "instrumentation": {
+               "environment": "${GITHUB_REF_NAME}",
+               "dataDog": {
+                 "enabled": false,
+                 "applicationId": "",
+                 "clientToken": "",
+                 "site": "",
+                 "service": ""
+               },
+               "rollbar": {
+                 "enabled": false,
+                 "accessToken": ""
+               }
+             }
+           }
+           EOF
+    
+    # deploy to S3
+    - name: Deploy static site to S3 bucket
+      run: aws s3 sync ./dist/dsp-app s3://app.cdn.dasch.swiss --delete
+      
+    # invalidate path
+    - name: invalidate old version
+      run: aws cloudfront create-invalidation --distribution-id E173GHGBMR0QPJ --paths "/*"

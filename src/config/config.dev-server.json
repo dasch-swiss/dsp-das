@@ -1,0 +1,33 @@
+{
+  "dspRelease": "aws-cdn-branch",
+  "apiProtocol": "https",
+  "apiHost": "api.dev.dasch.swiss",
+  "apiPort": "",
+  "apiPath": "",
+  "iiifProtocol": "https",
+  "iiifHost": "iiif.dev.dasch.swiss",
+  "iiifPort": "",
+  "iiifPath": "",
+  "geonameToken": "knora",
+  "jsonWebToken": "",
+  "logErrors": true,
+  "iriBase": "http://rdfh.ch",
+  "zioPrefix": "/zio",
+  "zioEndpoints": [
+    "/admin/projects"
+  ],
+  "instrumentation": {
+    "environment": "dev-server",
+    "dataDog": {
+      "enabled": false,
+      "applicationId": "",
+      "clientToken": "",
+      "site": "",
+      "service": ""
+    },
+    "rollbar": {
+      "enabled": false,
+      "accessToken": ""
+    }
+  }
+}

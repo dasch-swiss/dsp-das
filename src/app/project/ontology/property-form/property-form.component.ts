@@ -658,6 +658,7 @@ export class PropertyFormComponent implements OnInit {
         updateComment.comments = this.comments;
         onto4Comment.entity = updateComment;
 
+
         return onto4Comment;
     }
 
@@ -676,6 +677,7 @@ export class PropertyFormComponent implements OnInit {
         const guiAttr = this.propertyForm.controls['guiAttr'].value;
         if (guiAttr) {
             newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
+
         }
         newResProp.guiElement = this.propertyInfo.propType.guiEle;
         newResProp.subPropertyOf = [this.propertyInfo.propType.subPropOf];
@@ -709,6 +711,7 @@ export class PropertyFormComponent implements OnInit {
         if (idx === -1) {
             return;
         }
+
         // set the new cardinality
         changedClass.cardinalities[idx].cardinality = this.getTargetCardinality(this.targetGuiCardinality);
 
