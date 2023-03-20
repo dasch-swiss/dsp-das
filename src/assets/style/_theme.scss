@@ -47,6 +47,9 @@
         background-color: $red !important;
         color: $red_contrast;
       }
+      &.default {
+        background-color: $primary_800 !important;
+      }
     }
   }
 }

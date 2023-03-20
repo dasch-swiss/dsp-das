@@ -32,6 +32,7 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
     // i18n setup
     itemPluralMapping = {
         entry: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             '=1': '1 Entry',
             other: '# Entries'
         }
