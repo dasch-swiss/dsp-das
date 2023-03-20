@@ -129,6 +129,10 @@
         background: $primary_100;
       }
 
+      .mat-expansion-panel-header:hover {
+        background-color: $primary_100;
+      }
+
       .sidenav-panel-header{
         width: 100%;
         mat-panel-title {
