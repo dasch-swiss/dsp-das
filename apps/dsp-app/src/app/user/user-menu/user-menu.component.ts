@@ -3,11 +3,9 @@ import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy
 import {
     ApiResponseData,
     ApiResponseError,
-    KnoraApiConnection,
-    ReadUser,
-    UserResponse,
+    KnoraApiConnection, ReadUser,
+    UserResponse
 } from '@dasch-swiss/dsp-js';
-import { AppGlobal } from '@dsp-app/src/app/app-global';
 import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
@@ -18,9 +16,11 @@ import { MenuItem } from '../../main/declarations/menu-item';
 @Component({
     selector: 'app-user-menu',
     templateUrl: './user-menu.component.html',
-    styleUrls: ['./user-menu.component.scss'],
+    styleUrls: ['./user-menu.component.scss']
 })
 export class UserMenuComponent implements OnChanges {
+
+
     @Input() session: boolean;
 
     @ViewChild(MatMenuTrigger) menuTrigger: MatMenuTrigger;
@@ -34,43 +34,45 @@ export class UserMenuComponent implements OnChanges {
     navigation: MenuItem[];
 
     constructor(
-        @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _auth: AuthenticationService,
         private _cache: CacheService,
         private _errorHandler: ErrorHandlerService,
         private _session: SessionService
-    ) {}
+    ) { }
 
     ngOnChanges() {
-        this.navigation = AppGlobal.userNav;
+
+        this.navigation = [
+            {
+                label: 'DSP-App Home Page',
+                shortLabel: 'home',
+                route: '/',
+                icon: ''
+            },
+            {
+                label: 'My Account',
+                shortLabel: 'Account',
+                route: '/account',
+                icon: ''
+            }
+        ];
 
         if (this.session) {
             this.username = this._session.getSession().user.name;
             this.sysAdmin = this._session.getSession().user.sysAdmin;
 
-            this._cache.get(
-                this.username,
-                this._dspApiConnection.admin.usersEndpoint.getUserByUsername(
-                    this.username
-                )
+            this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username));
+            this._cache.get(this.username, this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username)).subscribe(
+                (response: ApiResponseData<UserResponse>) => {
+                    this.user = response.body.user;
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
             );
-            this._cache
-                .get(
-                    this.username,
-                    this._dspApiConnection.admin.usersEndpoint.getUserByUsername(
-                        this.username
-                    )
-                )
-                .subscribe(
-                    (response: ApiResponseData<UserResponse>) => {
-                        this.user = response.body.user;
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                );
         }
+
     }
 
     /**

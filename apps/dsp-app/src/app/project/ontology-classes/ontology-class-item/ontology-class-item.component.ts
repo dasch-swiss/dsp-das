@@ -21,11 +21,8 @@ import { OntologyService } from '@dsp-app/src/app/project/ontology/ontology.serv
     templateUrl: './ontology-class-item.component.html',
     styleUrls: ['./ontology-class-item.component.scss'],
 })
-<<<<<<<< HEAD:apps/dsp-app/src/app/project/beta/ontology-classes/ontology-class-item/ontology-class-item.component.ts
-export class OntologyClassItemComponent implements OnInit {
-========
+
 export class OntologyClassItemComponent implements OnInit, OnDestroy {
->>>>>>>> main:src/app/project/ontology-classes/ontology-class-item/ontology-class-item.component.ts
     @Input() resClass: ClassDefinition;
 
     @Input() projectMember: boolean;
@@ -77,10 +74,7 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
         this.componentCommsSubscriptions.push(
             this._componentCommsService.on(Events.resourceDeleted, () => {
                 this._getSearchCount();
-<<<<<<<< HEAD:apps/dsp-app/src/app/project/beta/ontology-classes/ontology-class-item/ontology-class-item.component.ts
-            })
-        );
-========
+
             }
         ));
 
@@ -93,7 +87,6 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.componentCommsSubscriptions.forEach(sub => sub.unsubscribe());
->>>>>>>> main:src/app/project/ontology-classes/ontology-class-item/ontology-class-item.component.ts
     }
 
     open(route: string) {

@@ -1,35 +1,35 @@
-@import '../../../../../assets/style/responsive';
-@import '../../../../../assets/style/config';
+@use "config" as *;
+@use "responsive";
 
 .file-representation {
-  width: 100%;
+    width: 100%;
 
-  .container {
-    background: #292929;
-    border-radius: 8px 8px 0px 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 15.5% 0%;
+    .container {
+        background: #292929;
+        border-radius: 8px 8px 0px 0px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 15.5% 0%;
 
-    .contents {
-      color: #ffffff;
+        .contents {
+            color: #FFFFFF;
 
-      .icon {
-        mat-icon {
-          height: 90px;
-          width: 90px;
-          font-size: 90px;
-          line-height: 90px;
+            .icon {
+                mat-icon {
+                    height: 90px;
+                    width: 90px;
+                    font-size: 90px;
+                    line-height: 90px;
+                }
+            }
         }
-      }
     }
-  }
 }
 
 ::ng-deep .mat-menu-custom-black {
-  background: #292929;
-  .menu-content {
-    color: #ffffff;
+    background: #292929;
+    .menu-content {
+      color: #FFFFFF;
+    }
   }
-}

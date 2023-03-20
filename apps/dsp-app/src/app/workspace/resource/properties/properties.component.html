@@ -1,74 +1,43 @@
 <!-- toolbar -->
-<div
-    class="toolbar"
-    *ngIf="project"
-    [class.deleted]="deletedResource || resource.res.isDeleted"
->
+<div class="toolbar" *ngIf="project" [class.deleted]="deletedResource || resource.res.isDeleted">
     <!-- resource info -->
     <h3 class="label mat-title">
-        {{ resource.res.label }} <span *ngIf="deletedResource">(deleted)</span>
+        {{resource.res.label}} <span *ngIf="deletedResource">(deleted)</span>
     </h3>
 
     <span class="fill-remaining-space"></span>
 
     <!-- tools: share, add to favorites, edit, delete etc. -->
     <span class="action">
+
         <!-- Toggle list of properties: all or only the ones with value -->
-        <button
-            mat-icon-button
-            class="toggle-props"
-            *ngIf="!resource.res.isDeleted"
-            [matTooltip]="
-                (showAllProps ? 'Hide empty' : 'Show all') + ' properties'
-            "
-            matTooltipPosition="above"
-            (click)="toggleAllProps(showAllProps)"
-        >
-            <mat-icon>{{
-                showAllProps ? 'unfold_less' : 'unfold_more'
-            }}</mat-icon>
+        <button color="primary" mat-icon-button class="toggle-props" *ngIf="!resource.res.isDeleted"
+            [matTooltip]="(showAllProps ? 'Hide empty' : 'Show all')+' properties'" matTooltipPosition="above"
+            (click)="toggleAllProps(showAllProps)">
+            <mat-icon>{{showAllProps ? 'unfold_less' : 'unfold_more'}}</mat-icon>
             <!-- <span class="desktop-only">{{showAllProps ? 'Hide empty' : 'Show all'}} properties</span> -->
         </button>
 
         <!-- Share resource: copy ark url, add to favorites or open in new tab -->
-        <button
-            mat-icon-button
-            class="share-res"
-            matTooltip="Share resource: {{ resource.res.versionArkUrl }}"
-            matTooltipPosition="above"
-            [disabled]="deletedResource"
-            [matMenuTriggerFor]="share"
-        >
+        <button color="primary" mat-icon-button class="share-res" matTooltip="Share resource: {{resource.res.versionArkUrl}}"
+            matTooltipPosition="above" [disabled]="deletedResource" [matMenuTriggerFor]="share">
             <mat-icon>share</mat-icon>
             <!-- <span class="desktop-only">Citation Link</span> -->
         </button>
         <mat-menu #share="matMenu" class="res-share-menu">
-            <button
-                mat-menu-item
-                matTooltip="Copy ARK url"
-                matTooltipPosition="above"
+            <button mat-menu-item matTooltip="Copy ARK url" matTooltipPosition="above"
                 [cdkCopyToClipboard]="resource.res.versionArkUrl"
-                (click)="openSnackBar('ARK URL copied to clipboard!')"
-            >
+                (click)="openSnackBar('ARK URL copied to clipboard!')">
                 <mat-icon>content_copy</mat-icon>
                 Copy ARK url to clipboard
             </button>
-            <button
-                mat-menu-item
-                matTooltip="Copy internal link"
-                matTooltipPosition="above"
-                [cdkCopyToClipboard]="resource.res.id"
-                (click)="openSnackBar('Internal link copied to clipboard!')"
-            >
+            <button mat-menu-item matTooltip="Copy internal link" matTooltipPosition="above"
+                [cdkCopyToClipboard]="resource.res.id" (click)="openSnackBar('Internal link copied to clipboard!')">
                 <mat-icon>content_copy</mat-icon>
                 Copy internal link to clipboard
             </button>
-            <button
-                mat-menu-item
-                matTooltip="Open in new tab"
-                matTooltipPosition="above"
-                (click)="openResource(resource.res.id)"
-            >
+            <button mat-menu-item matTooltip="Open in new tab" matTooltipPosition="above"
+                (click)="openResource(resource.res.id)">
                 <mat-icon>open_in_new</mat-icon>
                 Open resource in new tab
             </button>
@@ -81,56 +50,28 @@
         </mat-menu>
 
         <!-- permission info: display full info in case of system or project admin; otherwise display only user's permissions -->
-        <app-permission-info
-            *ngIf="adminPermissions"
-            [hasPermissions]="resource.res.hasPermissions"
-            [userHasPermission]="resource.res.userHasPermission"
-        ></app-permission-info>
-        <app-permission-info
-            *ngIf="!adminPermissions"
-            [userHasPermission]="resource.res.userHasPermission"
-        ></app-permission-info>
+        <app-permission-info *ngIf="adminPermissions" [hasPermissions]="resource.res.hasPermissions" [userHasPermission]="resource.res.userHasPermission"></app-permission-info>
+        <app-permission-info *ngIf="!adminPermissions" [userHasPermission]="resource.res.userHasPermission"></app-permission-info>
 
         <!-- more menu with: delete, erase resource -->
-        <button
-            *ngIf="editPermissions && project?.status"
-            mat-icon-button
-            class="more-menu"
-            matTooltip="More"
-            matTooltipPosition="above"
-            [matMenuTriggerFor]="more"
-            [disabled]="deletedResource"
-        >
+        <button color="primary" *ngIf="editPermissions && project?.status" mat-icon-button class="more-menu" matTooltip="More"
+            matTooltipPosition="above" [matMenuTriggerFor]="more" [disabled]="deletedResource">
             <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #more="matMenu" class="res-more-menu">
-            <button
-                mat-menu-item
-                matTooltip="Edit the label of this resource"
-                matTooltipPosition="above"
-                (click)="openDialog('edit')"
-            >
+            <button mat-menu-item matTooltip="Edit the label of this resource" matTooltipPosition="above"
+                (click)="openDialog('edit')">
                 <mat-icon>edit</mat-icon>
                 Edit label
             </button>
-            <button
-                *ngIf="deleteButtonIsVisible"
-                mat-menu-item
-                matTooltip="Move resource to trash bin."
-                matTooltipPosition="above"
-                (click)="openDialog('delete')"
-            >
+            <button *ngIf="deleteButtonIsVisible" mat-menu-item matTooltip="Move resource to trash bin." matTooltipPosition="above"
+                (click)="openDialog('delete')">
                 <mat-icon>delete</mat-icon>
                 Delete resource
                 <!-- TODO: or in case of already deleted resource: re-activate resource -->
             </button>
-            <button
-                *ngIf="adminPermissions"
-                mat-menu-item
-                matTooltip="Erase resource forever. This cannot be undone."
-                matTooltipPosition="above"
-                (click)="openDialog('erase')"
-            >
+            <button *ngIf="adminPermissions" mat-menu-item matTooltip="Erase resource forever. This cannot be undone."
+                matTooltipPosition="above" (click)="openDialog('erase')">
                 <mat-icon>delete_forever</mat-icon>
                 Erase resource
             </button>
@@ -140,171 +81,88 @@
 
 <!-- additional line with project and user information -->
 <div class="infobar mat-caption" *ngIf="project && user">
-    <span *ngIf="displayProjectInfo"
-        >This resource {{ resource.res.isDeleted ? 'belonged' : 'belongs' }} to
-        the project
-        <span
-            class="project link"
-            (click)="openProject(project)"
-            (mouseover)="previewProject(project)"
-        >
-            <strong>{{ project?.shortname }}</strong>
+    <span *ngIf="displayProjectInfo">This resource {{ resource.res.isDeleted ? 'belonged' : 'belongs' }} to the project
+        <span class="project link" (click)="openProject(project)" (mouseover)="previewProject(project)">
+            <strong>{{project?.shortname}}</strong>
             <mat-icon inline>open_in_new</mat-icon>
         </span>
     </span>
     <span class="fill-remaining-space desktop-only"></span>
     <span *ngIf="user || resource.res.creationDate">
         Created
-        <span *ngIf="user"
-            >by
-            {{
-                user.username
-                    ? user.username
-                    : user.givenName + ' ' + user.familyName
-            }}</span
-        >
-        <span *ngIf="resource.res.creationDate">
-            on {{ resource.res.creationDate | date }}</span
-        >
+        <span *ngIf="user">by {{(user.username ? user.username : user.givenName + ' ' + user.familyName)}}</span>
+        <span *ngIf="resource.res.creationDate"> on {{resource.res.creationDate | date}}</span>
     </span>
 </div>
 
 <!-- list of properties -->
 <div class="properties-container">
-    <div
-        class="properties"
-        *ngIf="resource.resProps.length > 0; else noProperties"
-    >
+    <div class="properties" *ngIf="resource.resProps.length > 0; else noProperties">
         <!-- list of properties -->
         <div *ngFor="let prop of resource.resProps; let last = last">
             <!-- show property; all in case of showAll === true or only the ones with prop.values -->
-            <div
-                *ngIf="
-                    (showAllProps ||
-                        (prop.values && prop.values.length > 0) ||
-                        (prop.propDef.id === hasIncomingLinkIri &&
-                            incomingLinkResources.length > 0)) &&
-                    !prop.propDef['isLinkProperty'] &&
-                        prop.propDef.objectType !==
-                            representationConstants.stillImage &&
-                        prop.propDef.objectType !==
-                            representationConstants.movingImage &&
-                        prop.propDef.objectType !==
-                            representationConstants.audio &&
-                        prop.propDef.objectType !==
-                            representationConstants.document &&
-                        prop.propDef.objectType !==
-                            representationConstants.text &&
-                        prop.propDef.objectType !==
-                            representationConstants.archive &&
-                        !(
-                            isAnnotation &&
-                            prop.propDef.subjectType ===
-                                representationConstants.region &&
-                                prop.propDef.objectType !==
-                                    representationConstants.color
-                        )
-                "
-                [class.border-bottom]="prop.values && !last"
-                class="property"
-            >
+            <div *ngIf="(showAllProps || ( prop.values && prop.values.length > 0 ) || (prop.propDef.id === hasIncomingLinkIri && incomingLinkResources.length > 0)) && (
+                !prop.propDef['isLinkProperty'] &&
+                prop.propDef.objectType !== representationConstants.stillImage &&
+                prop.propDef.objectType !== representationConstants.movingImage &&
+                prop.propDef.objectType !== representationConstants.audio &&
+                prop.propDef.objectType !== representationConstants.document &&
+                prop.propDef.objectType !== representationConstants.text &&
+                prop.propDef.objectType !== representationConstants.archive &&
+                !(isAnnotation && (
+                    prop.propDef.subjectType === representationConstants.region &&
+                    prop.propDef.objectType !== representationConstants.color
+                ))
+            )" [class.border-bottom]="prop.values && !last" class="property">
                 <div class="property-label">
                     <!-- label of the property -->
-                    <h3
-                        class="label mat-subheading-1"
-                        [class.label-info]="prop.propDef.comment"
-                        [matTooltip]="prop.propDef.comment"
-                        matTooltipPosition="above"
-                    >
-                        {{ prop.propDef.label }}
+                    <h3 class="label mat-subheading-1" [class.label-info]="prop.propDef.comment"
+                        [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
+                        {{prop.propDef.label}}
                     </h3>
                 </div>
                 <div class="property-value">
                     <!-- the value(s) of the property -->
                     <div *ngFor="let val of prop.values">
-                        <app-display-edit
-                            *ngIf="val"
-                            #displayEdit
-                            [parentResource]="resource.res"
-                            [displayValue]="val"
-                            [propArray]="resource.resProps"
-                            [canDelete]="deleteValueIsAllowed(prop)"
-                            [projectStatus]="project?.status"
-                            [valueUuidToHighlight]="valueUuidToHighlight"
+                        <app-display-edit *ngIf="val" #displayEdit [parentResource]="resource.res" [displayValue]="val"
+                            [propArray]="resource.resProps" [canDelete]="deleteValueIsAllowed(prop)"
+                            [projectStatus]="project?.status" [valueUuidToHighlight]="valueUuidToHighlight"
                             (referredResourceClicked)="openResource($event)"
-                            (referredResourceHovered)="previewResource($event)"
-                        >
+                            (referredResourceHovered)="previewResource($event)">
                         </app-display-edit>
                     </div>
                     <!-- Add value form -->
-                    <div
-                        *ngIf="
-                            addValueFormIsVisible &&
-                            propID === prop.propDef.id &&
-                            project?.status
-                        "
-                    >
-                        <app-add-value
-                            #addValue
-                            class="add-value"
-                            [parentResource]="resource.res"
-                            [resourcePropertyDefinition]="
-                                $any(
-                                    resource.res.entityInfo.properties[
-                                        prop.propDef.id
-                                    ]
-                                )
-                            "
-                            (operationCancelled)="hideAddValueForm()"
-                        >
+                    <div *ngIf="addValueFormIsVisible && propID === prop.propDef.id && project?.status">
+                        <app-add-value #addValue class="add-value" [parentResource]="resource.res"
+                            [resourcePropertyDefinition]="$any(resource.res.entityInfo.properties[prop.propDef.id])"
+                            (operationCancelled)="hideAddValueForm()">
                         </app-add-value>
                     </div>
                     <!-- Add button -->
                     <div *ngIf="addValueIsAllowed(prop) && project?.status">
-                        <button
-                            mat-icon-button
-                            type="button"
-                            class="value-action create"
-                            (click)="showAddValueForm(prop, $event)"
-                            title="Add a new value"
-                        >
+                        <button mat-icon-button type="button" class="value-action create"
+                            (click)="showAddValueForm(prop, $event)" title="Add a new value">
                             <mat-icon>add_box</mat-icon>
                         </button>
                     </div>
 
                     <!-- in case of incoming links we have to display them here -->
-                    <div
-                        *ngIf="
-                            prop.propDef.id === hasIncomingLinkIri &&
-                            incomingLinkResources.length > 0
-                        "
-                    >
-                        <app-progress-indicator
-                            *ngIf="loading"
-                        ></app-progress-indicator>
+                    <div *ngIf="prop.propDef.id === hasIncomingLinkIri && incomingLinkResources.length > 0">
+                        <app-progress-indicator *ngIf="loading"></app-progress-indicator>
                         <div *ngIf="!loading">
                             <!-- the value(s) of the incoming links -->
-                            <a
-                                class="link link-value"
-                                *ngFor="let inRes of incomingLinkResources"
-                                (click)="openResource(inRes.id)"
-                                >{{ inRes.resourceClassLabel }}:
-                                <strong>{{ inRes.label }}</strong></a
-                            >
-                            <mat-paginator
-                                *ngIf="numberOffAllIncomingLinkRes > 25"
-                                [length]="numberOffAllIncomingLinkRes"
-                                [pageSize]="25"
-                                [hidePageSize]="true"
-                                [pageIndex]="pageEvent.pageIndex"
-                                (page)="goToPage($event)"
-                            >
+                            <a class="link link-value" *ngFor="let inRes of incomingLinkResources"
+                                (click)="openResource(inRes.id)">{{inRes.resourceClassLabel}}: <strong>{{inRes.label}}</strong></a>
+                            <mat-paginator *ngIf="numberOffAllIncomingLinkRes > 25" [length]=numberOffAllIncomingLinkRes
+                                [pageSize]="25" [hidePageSize]="true" [pageIndex]="pageEvent.pageIndex"
+                                (page)="goToPage($event)">
                             </mat-paginator>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- deleted resource or resource without any defined properties -->
@@ -313,7 +171,9 @@
             <div class="property border-bottom">
                 <div class="property-label">
                     <!-- delete date -->
-                    <h3 class="label mat-subheading-1">Deleted on</h3>
+                    <h3 class="label mat-subheading-1">
+                        Deleted on
+                    </h3>
                 </div>
                 <div class="property-value">
                     {{ resource.res.deleteDate | date }}
@@ -322,7 +182,9 @@
             <div class="property">
                 <div class="property-label">
                     <!-- Delete comment -->
-                    <h3 class="label mat-subheading-1">Comment</h3>
+                    <h3 class="label mat-subheading-1">
+                        Comment
+                    </h3>
                 </div>
                 <div class="property-value">
                     {{ resource.res.deleteComment }}
@@ -333,7 +195,9 @@
         <div *ngIf="!resource.res.isDeleted" class="properties">
             <div class="property border-bottom">
                 <div class="property-label">
-                    <h3 class="label mat-subheading-1">Info</h3>
+                    <h3 class="label mat-subheading-1">
+                        Info
+                    </h3>
                 </div>
                 <div class="property-value">
                     This resource has no defined properties.

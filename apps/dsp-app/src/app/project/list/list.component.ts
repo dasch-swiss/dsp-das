@@ -1,13 +1,6 @@
 import { Component, HostListener, Inject, OnInit } from '@angular/core';
-import {
-    UntypedFormBuilder,
-    UntypedFormControl,
-    UntypedFormGroup,
-} from '@angular/forms';
-import {
-    MatLegacyDialog as MatDialog,
-    MatLegacyDialogConfig as MatDialogConfig,
-} from '@angular/material/legacy-dialog';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig } from '@angular/material/legacy-dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
@@ -21,7 +14,6 @@ import {
     ProjectResponse,
     ReadProject,
     StringLiteral,
-    UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { AppGlobal } from '@dsp-app/src/app/app-global';
 import { AppInitService } from '@dsp-app/src/app/app-init.service';
@@ -35,9 +27,10 @@ import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/pro
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html',
-    styleUrls: ['./list.component.scss'],
+    styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
+
     // loading for progress indicator
     loading: boolean;
     loadList: boolean;
@@ -63,11 +56,9 @@ export class ListComponent implements OnInit {
     // current selected language
     language: string;
 
-    // form to select list
-    listForm: UntypedFormGroup;
-
     // selected list
     list: ListNodeInfo;
+
     // selected list iri
     listIri: string = undefined;
 
@@ -78,19 +69,15 @@ export class ListComponent implements OnInit {
         list: {
             // eslint-disable-next-line @typescript-eslint/naming-convention
             '=1': '1 list',
-            other: '# lists',
-        },
+            other: '# lists'
+        }
     };
 
     // disable content on small devices
     disableContent = false;
 
-    // feature toggle for new concept
-    beta = false;
-
     constructor(
-        @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _ais: AppInitService,
         private _cache: CacheService,
         private _dialog: MatDialog,
@@ -100,39 +87,17 @@ export class ListComponent implements OnInit {
         private _router: Router,
         private _session: SessionService,
         private _titleService: Title,
-        private _projectService: ProjectService
-    ) {
+        private _projectService: ProjectService) {
+
         // get the uuid of the current project
         this._route.parent.paramMap.subscribe((params: Params) => {
             this.projectUuid = params.get('uuid');
         });
 
-        // get list iri from route
-        if (this._route.snapshot && this._route.snapshot.params.id) {
-            this.listIri = decodeURIComponent(this._route.snapshot.params.id);
-        }
-
-        // get feature toggle information if url contains beta
-        this.beta = this._route.parent.snapshot.url[0].path === 'beta';
-        if (this.beta) {
-            this._dspApiConnection.admin.projectsEndpoint
-                .getProjectByIri(
-                    this._projectService.uuidToIri(this.projectUuid)
-                )
-                .subscribe((res: ApiResponseData<ProjectResponse>) => {
-                    const shortcode = res.body.project.shortcode;
-
-                    // get list iri from list name
-                    this._route.params.subscribe((params) => {
-                        const id = `${this._ais.dspAppConfig.iriBase}/lists/${shortcode}/${params['list']}`;
-                        this.openList(id);
-                    });
-                });
-        }
     }
 
     @HostListener('window:resize', ['$event']) onWindowResize(e: Event) {
-        this.disableContent = window.innerWidth <= 768;
+        this.disableContent = (window.innerWidth <= 768);
         // reset the page title
         if (!this.disableContent) {
             this._setPageTitle();
@@ -140,7 +105,8 @@ export class ListComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.disableContent = window.innerWidth <= 768;
+
+        this.disableContent = (window.innerWidth <= 768);
 
         this.loading = true;
 
@@ -148,60 +114,26 @@ export class ListComponent implements OnInit {
         this.session = this._session.getSession();
 
         // is the logged-in user system admin?
-        this.sysAdmin = this.session.user.sysAdmin;
+        this.sysAdmin = this.session ? this.session.user.sysAdmin : false;
 
-        // get the project data from cache
-        this._cache.get(this.projectUuid).subscribe(
-            (response: ReadProject) => {
-                this.project = response;
+        // get the project
+        this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(this._projectService.uuidToIri(this.projectUuid)).subscribe(
+            (response: ApiResponseData<ProjectResponse>) => {
+                this.project = response.body.project;
 
                 // set the page title
                 this._setPageTitle();
 
                 // is logged-in user projectAdmin?
-                this.projectAdmin = this.sysAdmin
-                    ? this.sysAdmin
-                    : this.session.user.projectAdmin.some(
-                          (e) => e === this.project.id
-                      );
-
-                // or at least project member?
-                if (!this.projectAdmin) {
-                    this._dspApiConnection.admin.usersEndpoint
-                        .getUserByUsername(this.session.user.name)
-                        .subscribe(
-                            (res: ApiResponseData<UserResponse>) => {
-                                const usersProjects = res.body.user.projects;
-                                if (usersProjects.length === 0) {
-                                    // the user is not part of any project
-                                    this.projectMember = false;
-                                } else {
-                                    // check if the user is member of the current project
-                                    this.projectMember = usersProjects.some(
-                                        (p) => p.shortcode === this.projectUuid
-                                    );
-                                }
-                            },
-                            (error: ApiResponseError) => {
-                                this._errorHandler.showMessage(error);
-                            }
-                        );
-                } else {
-                    this.projectMember = this.projectAdmin;
+                if(this.session){
+                    this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
                 }
 
-                this.initList();
-
-                this.listForm = this._fb.group({
-                    list: new UntypedFormControl({
-                        value: this.listIri,
-                        disabled: false,
-                    }),
+                // get list iri from list name
+                this._route.params.subscribe(params => {
+                    this.listIri = `${this._ais.dspAppConfig.iriBase}/lists/${this.project.shortcode}/${params['list']}`;
+                    this.initLists();
                 });
-
-                this.listForm.valueChanges.subscribe((data) =>
-                    this.onValueChanged(data)
-                );
 
                 this.loading = false;
             },
@@ -215,165 +147,83 @@ export class ListComponent implements OnInit {
     /**
      * build the list of lists
      */
-    initList(): void {
+    initLists(): void {
+
         this.loading = true;
 
-        this._dspApiConnection.admin.listsEndpoint
-            .getListsInProject(this.project.id)
-            .subscribe(
-                (response: ApiResponseData<ListsResponse>) => {
-                    this.lists = response.body.lists;
+        this._dspApiConnection.admin.listsEndpoint.getListsInProject(this.project.id).subscribe(
+            (response: ApiResponseData<ListsResponse>) => {
+                this.lists = response.body.lists;
 
-                    if (this.lists.length === 1) {
-                        this.listIri = this.lists[0].id;
-                    }
-
-                    if (this.listIri) {
-                        this.openList(this.listIri);
-                    }
-
-                    this.loading = false;
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
+                if (this.listIri) {
+                    this.list = this.lists.find(i => i.id === this.listIri);
                 }
-            );
-    }
 
-    // update view after selecting a list from dropdown
-    onValueChanged(data?: any) {
-        if (!this.listForm) {
-            return;
-        }
+                this.loading = false;
 
-        // go to page with this id
-        this.openList(data.list);
-    }
-
-    // open list by iri
-    openList(id: string) {
-        this.listIri = id;
-
-        this.loadList = true;
-
-        this.list = this.lists.find((i) => i.id === id);
-
-        if (!this.beta) {
-            const goto =
-                'project/' +
-                this.projectUuid +
-                '/lists/' +
-                encodeURIComponent(id);
-            this._router.navigateByUrl(goto, { skipLocationChange: false });
-        }
-
-        setTimeout(() => {
-            this.loadList = false;
-        });
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+            }
+        );
     }
 
     /**
-     * open dialog in every case of modification:
-     * edit list data, remove list from project etc.
-     *
-     */
+    * open dialog in every case of modification:
+    * edit list data, remove list from project etc.
+    *
+    */
     openDialog(mode: string, name: string, iri?: string): void {
         const dialogConfig: MatDialogConfig = {
             width: '640px',
             maxHeight: '80vh',
             position: {
-                top: '112px',
+                top: '112px'
             },
-            data: {
-                mode: mode,
-                title: name,
-                id: iri,
-                project: this.project.id,
-            },
+            data: { mode: mode, title: name, id: iri, project: this.project.id }
         };
 
-        const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
+        );
 
         dialogRef.afterClosed().subscribe((data) => {
             switch (mode) {
-                case 'createList': {
-                    if (data instanceof List) {
-                        this.listIri = data.listinfo.id;
-                        this.listForm.controls.list.setValue(this.listIri);
-                        this.openList(this.listIri);
-                        this.initList();
-                    }
-                    break;
-                }
                 case 'editListInfo': {
-                    if (this.beta) {
-                        // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
-                        window.location.reload();
-                    } else {
-                        this.initList();
-                    }
+                    window.location.reload();
                     break;
                 }
                 case 'deleteList': {
-                    if (typeof data === 'boolean' && data === true) {
-                        this._dspApiConnection.admin.listsEndpoint
-                            .deleteListNode(this.listIri)
-                            .subscribe(
-                                (res: ApiResponseData<DeleteListResponse>) => {
-                                    this.lists = this.lists.filter(
-                                        (list) => list.id !== res.body.iri
-                                    );
+                    if (typeof(data) === 'boolean' && data === true) {
+                        this._dspApiConnection.admin.listsEndpoint.deleteListNode(this.listIri).subscribe(
+                            (res: ApiResponseData<DeleteListResponse>) => {
+                                this.lists = this.lists.filter(list => list.id !== res.body.iri);
 
-                                    if (this.beta) {
-                                        this._router
-                                            .navigateByUrl(
-                                                `/beta/project/${this.projectUuid}`
-                                            )
-                                            .then(() => {
-                                                // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
-                                                window.location.reload();
-                                            });
-                                    } else {
-                                        // if there are still lists remaining after deleting a list, load the first list among lists
-                                        if (this.lists.length) {
-                                            this.listIri = this.lists[0].id;
-                                            this.listForm.controls.list.setValue(
-                                                this.listIri
-                                            );
-                                            this.openList(this.listIri);
-                                            this.initList();
-                                        } else {
-                                            // else set the list to null to remove it from the UI
-                                            this.list = null;
-                                            this.listIri = undefined;
-                                        }
-                                    }
-                                },
-                                (error: ApiResponseError) => {
-                                    // if DSP-API returns a 400, it is likely that the list node is in use so we inform the user of this
-                                    if (error.status === 400) {
-                                        const errorDialogConfig: MatDialogConfig =
-                                            {
-                                                width: '640px',
-                                                position: {
-                                                    top: '112px',
-                                                },
-                                                data: {
-                                                    mode: 'deleteListNodeError',
-                                                },
-                                            };
+                                this._router.navigateByUrl(`/project/${this.projectUuid}/data-models`).then(() => {
+                                    // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
+                                    window.location.reload();
+                                });
+                            },
+                            (error: ApiResponseError) => {
+                                // if DSP-API returns a 400, it is likely that the list node is in use so we inform the user of this
+                                if (error.status === 400) {
+                                    const errorDialogConfig: MatDialogConfig = {
+                                        width: '640px',
+                                        position: {
+                                            top: '112px'
+                                        },
+                                        data: { mode: 'deleteListNodeError' }
+                                    };
 
-                                        // open the dialog box
-                                        this._dialog.open(
-                                            DialogComponent,
-                                            errorDialogConfig
-                                        );
-                                    } else {
-                                        // use default error behavior
-                                        this._errorHandler.showMessage(error);
-                                    }
+                                    // open the dialog box
+                                    this._dialog.open(DialogComponent, errorDialogConfig);
+                                } else {
+                                    // use default error behavior
+                                    this._errorHandler.showMessage(error);
                                 }
-                            );
+                            }
+                        );
                     }
                     break;
                 }
@@ -382,11 +232,7 @@ export class ListComponent implements OnInit {
     }
 
     private _setPageTitle() {
-        this._titleService.setTitle(
-            'Project ' +
-                this.project?.shortname +
-                ' | List' +
-                (this.listIri ? '' : 's')
-        );
+        this._titleService.setTitle('Project ' + this.project?.shortname + ' | List' + (this.listIri? '' : 's'));
     }
+
 }

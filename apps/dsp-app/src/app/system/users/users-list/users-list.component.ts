@@ -1,15 +1,5 @@
-import {
-    Component,
-    EventEmitter,
-    Inject,
-    Input,
-    OnInit,
-    Output,
-} from '@angular/core';
-import {
-    MatLegacyDialog as MatDialog,
-    MatLegacyDialogConfig as MatDialogConfig,
-} from '@angular/material/legacy-dialog';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig } from '@angular/material/legacy-dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
     ApiResponseData,
@@ -20,7 +10,7 @@ import {
     Permissions,
     ReadProject,
     ReadUser,
-    UserResponse,
+    UserResponse
 } from '@dasch-swiss/dsp-js';
 import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
@@ -32,9 +22,10 @@ import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 @Component({
     selector: 'app-users-list',
     templateUrl: './users-list.component.html',
-    styleUrls: ['./users-list.component.scss'],
+    styleUrls: ['./users-list.component.scss']
 })
 export class UsersListComponent implements OnInit {
+
     // list of users: status active or inactive (deleted)
     @Input() status: boolean;
 
@@ -60,13 +51,13 @@ export class UsersListComponent implements OnInit {
         user: {
             // eslint-disable-next-line @typescript-eslint/naming-convention
             '=1': '1 User',
-            other: '# Users',
+            other: '# Users'
         },
         member: {
             // eslint-disable-next-line @typescript-eslint/naming-convention
             '=1': '1 Member',
-            other: '# Members',
-        },
+            other: '# Members'
+        }
     };
 
     //
@@ -85,28 +76,27 @@ export class UsersListComponent implements OnInit {
     sortProps: any = [
         {
             key: 'familyName',
-            label: 'Last name',
+            label: 'Last name'
         },
         {
             key: 'givenName',
-            label: 'First name',
+            label: 'First name'
         },
         {
             key: 'email',
-            label: 'E-mail',
+            label: 'E-mail'
         },
         {
             key: 'username',
-            label: 'Username',
-        },
+            label: 'Username'
+        }
     ];
 
     // ... and sort by 'username'
     sortBy = 'username';
 
     constructor(
-        @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
+        @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _cache: CacheService,
         private _dialog: MatDialog,
         private _errorHandler: ErrorHandlerService,
@@ -116,21 +106,13 @@ export class UsersListComponent implements OnInit {
         private _sortingService: SortingService
     ) {
         // get the uuid of the current project
-        if (this._route.parent.paramMap) {
-            this._route.parent.paramMap.subscribe((params: Params) => {
-                this.projectUuid = params.get('uuid');
-            });
-        }
-
-        // in case of new beta view, we are in a grand-child route
-        if (this._route.parent.parent.snapshot.url.length) {
-            this._route.parent.parent.paramMap.subscribe((params: Params) => {
-                this.projectUuid = params.get('uuid');
-            });
-        }
+        this._route.parent.parent.paramMap.subscribe((params: Params) => {
+            this.projectUuid = params.get('uuid');
+        });
     }
 
     ngOnInit() {
+
         // get information about the logged-in user
         this.session = this._session.getSession();
 
@@ -138,17 +120,15 @@ export class UsersListComponent implements OnInit {
         this.sysAdmin = this.session.user.sysAdmin;
 
         if (this.projectUuid) {
+
             // get the project data from cache
             this._cache.get(this.projectUuid).subscribe(
                 (response: ReadProject) => {
                     this.project = response;
                     // is logged-in user projectAdmin?
-                    this.projectAdmin = this.sysAdmin
-                        ? this.sysAdmin
-                        : this.session.user.projectAdmin.some(
-                              (e) => e === this.project.id
-                          );
+                    this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
                     this.loading = false;
+
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
@@ -183,9 +163,7 @@ export class UsersListComponent implements OnInit {
             );
         } else {
             // check if the logged-in user is project admin
-            return this.session.user.projectAdmin.some(
-                (e) => e === this.project.id
-            );
+            return this.session.user.projectAdmin.some(e => e === this.project.id);
         }
     }
 
@@ -195,17 +173,13 @@ export class UsersListComponent implements OnInit {
      * @param permissions PermissionData from user profile
      */
     userIsSystemAdmin(permissions: Permissions): boolean {
+
         let admin = false;
-        const groupsPerProjectKeys: string[] = Object.keys(
-            permissions.groupsPerProject
-        );
+        const groupsPerProjectKeys: string[] = Object.keys(permissions.groupsPerProject);
 
         for (const key of groupsPerProjectKeys) {
             if (key === Constants.SystemProjectIRI) {
-                admin =
-                    permissions.groupsPerProject[key].indexOf(
-                        Constants.SystemAdminGroupIRI
-                    ) > -1;
+                admin = permissions.groupsPerProject[key].indexOf(Constants.SystemAdminGroupIRI) > -1;
             }
         }
 
@@ -217,77 +191,59 @@ export class UsersListComponent implements OnInit {
      */
     updateGroupsMembership(id: string, groups: string[]): void {
         const currentUserGroups: string[] = [];
-        this._dspApiConnection.admin.usersEndpoint
-            .getUserGroupMemberships(id)
-            .subscribe(
-                (response: ApiResponseData<GroupsResponse>) => {
-                    for (const group of response.body.groups) {
-                        currentUserGroups.push(group.id);
-                    }
-
-                    if (currentUserGroups.length === 0) {
-                        // add user to group
-                        // console.log('add user to group');
-                        for (const newGroup of groups) {
-                            this._dspApiConnection.admin.usersEndpoint
-                                .addUserToGroupMembership(id, newGroup)
-                                .subscribe(
-                                    (
-                                        ngResponse: ApiResponseData<UserResponse>
-                                    ) => {},
-                                    (ngError: ApiResponseError) => {
-                                        this._errorHandler.showMessage(ngError);
-                                    }
-                                );
-                        }
-                    } else {
-                        // which one is deselected?
-                        // find id in groups --> if not exists: remove from group
-                        for (const oldGroup of currentUserGroups) {
-                            if (groups.indexOf(oldGroup) > -1) {
-                                // already member of this group
-                            } else {
-                                // console.log('remove from group', oldGroup);
-                                // the old group is not anymore one of the selected groups --> remove user from group
-                                this._dspApiConnection.admin.usersEndpoint
-                                    .removeUserFromGroupMembership(id, oldGroup)
-                                    .subscribe(
-                                        (
-                                            ngResponse: ApiResponseData<UserResponse>
-                                        ) => {},
-                                        (ngError: ApiResponseError) => {
-                                            this._errorHandler.showMessage(
-                                                ngError
-                                            );
-                                        }
-                                    );
-                            }
-                        }
-                        for (const newGroup of groups) {
-                            if (currentUserGroups.indexOf(newGroup) > -1) {
-                                // already member of this group
-                            } else {
-                                // console.log('add user to group');
-                                this._dspApiConnection.admin.usersEndpoint
-                                    .addUserToGroupMembership(id, newGroup)
-                                    .subscribe(
-                                        (
-                                            ngResponse: ApiResponseData<UserResponse>
-                                        ) => {},
-                                        (ngError: ApiResponseError) => {
-                                            this._errorHandler.showMessage(
-                                                ngError
-                                            );
-                                        }
-                                    );
-                            }
-                        }
-                    }
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
+        this._dspApiConnection.admin.usersEndpoint.getUserGroupMemberships(id).subscribe(
+            (response: ApiResponseData<GroupsResponse>) => {
+                for (const group of response.body.groups) {
+                    currentUserGroups.push(group.id);
                 }
-            );
+
+                if (currentUserGroups.length === 0) {
+                    // add user to group
+                    // console.log('add user to group');
+                    for (const newGroup of groups) {
+                        this._dspApiConnection.admin.usersEndpoint.addUserToGroupMembership(id, newGroup).subscribe(
+                            (ngResponse: ApiResponseData<UserResponse>) => { },
+                            (ngError: ApiResponseError) => {
+                                this._errorHandler.showMessage(ngError);
+                            }
+                        );
+                    }
+                } else {
+                    // which one is deselected?
+                    // find id in groups --> if not exists: remove from group
+                    for (const oldGroup of currentUserGroups) {
+                        if (groups.indexOf(oldGroup) > -1) {
+                            // already member of this group
+                        } else {
+                            // console.log('remove from group', oldGroup);
+                            // the old group is not anymore one of the selected groups --> remove user from group
+                            this._dspApiConnection.admin.usersEndpoint.removeUserFromGroupMembership(id, oldGroup).subscribe(
+                                (ngResponse: ApiResponseData<UserResponse>) => { },
+                                (ngError: ApiResponseError) => {
+                                    this._errorHandler.showMessage(ngError);
+                                }
+                            );
+                        }
+                    }
+                    for (const newGroup of groups) {
+                        if (currentUserGroups.indexOf(newGroup) > -1) {
+                            // already member of this group
+                        } else {
+                            // console.log('add user to group');
+                            this._dspApiConnection.admin.usersEndpoint.addUserToGroupMembership(id, newGroup).subscribe(
+                                (ngResponse: ApiResponseData<UserResponse>) => { },
+                                (ngError: ApiResponseError) => {
+                                    this._errorHandler.showMessage(ngError);
+                                }
+                            );
+                        }
+                    }
+                }
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+            }
+        );
     }
 
     /**
@@ -297,89 +253,48 @@ export class UsersListComponent implements OnInit {
         if (this.userIsProjectAdmin(permissions)) {
             // true = user is already project admin --> remove from admin rights
 
-            this._dspApiConnection.admin.usersEndpoint
-                .removeUserFromProjectAdminMembership(id, this.project.id)
-                .subscribe(
-                    (response: ApiResponseData<UserResponse>) => {
-                        // if this user is not the logged-in user
-                        if (
-                            this.session.user.name !==
-                            response.body.user.username
-                        ) {
+            this._dspApiConnection.admin.usersEndpoint.removeUserFromProjectAdminMembership(id, this.project.id).subscribe(
+                (response: ApiResponseData<UserResponse>) => {
+
+                    // if this user is not the logged-in user
+                    if (this.session.user.name !== response.body.user.username) {
+                        this.refreshParent.emit();
+                    } else {
+                        // the logged-in user removed himself as project admin
+                        // the list is not available anymore;
+                        // open dialog to confirm and
+                        // redirect to project page
+                        // update the cache of logged-in user and the session
+                        this._session.setSession(this.session.user.jwt, this.session.user.name, 'username').subscribe();
+
+                        if (this.sysAdmin) {
+                            // logged-in user is system admin:
                             this.refreshParent.emit();
                         } else {
-                            // the logged-in user removed himself as project admin
-                            // the list is not available anymore;
-                            // open dialog to confirm and
-                            // redirect to project page
-                            // update the cache of logged-in user and the session
-                            this._session
-                                .setSession(
-                                    this.session.user.jwt,
-                                    this.session.user.name,
-                                    'username'
-                                )
-                                .subscribe();
-
-                            if (this.sysAdmin) {
-                                // logged-in user is system admin:
-                                this.refreshParent.emit();
-                            } else {
-                                // logged-in user is NOT system admin:
-                                // go to project page and reload project admin interface
-                                this._router
-                                    .navigateByUrl('/refresh', {
-                                        skipLocationChange: true,
-                                    })
-                                    .then(() =>
-                                        this._router.navigate([
-                                            '/project/' + this.projectUuid,
-                                        ])
-                                    );
-                            }
+                            // logged-in user is NOT system admin:
+                            // go to project page and reload project admin interface
+                            this._router.navigateByUrl('/refresh', { skipLocationChange: true }).then(
+                                () => this._router.navigate(['/project/' + this.projectUuid])
+                            );
                         }
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
+
                     }
-                );
+
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
         } else {
             // false: user isn't project admin yet --> add admin rights
-            this._dspApiConnection.admin.usersEndpoint
-                .addUserToProjectAdminMembership(id, this.project.id)
-                .subscribe(
-                    (response: ApiResponseData<UserResponse>) => {
-                        if (
-                            this.session.user.name !==
-                            response.body.user.username
-                        ) {
-                            this.refreshParent.emit();
-                        } else {
-                            // the logged-in user (system admin) added himself as project admin
-                            // update the cache of logged-in user and the session
-                            this._session
-                                .setSession(
-                                    this.session.user.jwt,
-                                    this.session.user.name,
-                                    'username'
-                                )
-                                .subscribe();
-                            this.refreshParent.emit();
-                        }
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                );
-        }
-    }
-
-    updateSystemAdminMembership(user: ReadUser, systemAdmin: boolean): void {
-        this._dspApiConnection.admin.usersEndpoint
-            .updateUserSystemAdminMembership(user.id, systemAdmin)
-            .subscribe(
+            this._dspApiConnection.admin.usersEndpoint.addUserToProjectAdminMembership(id, this.project.id).subscribe(
                 (response: ApiResponseData<UserResponse>) => {
-                    if (this.session.user.name !== user.username) {
+                    if (this.session.user.name !== response.body.user.username) {
+                        this.refreshParent.emit();
+                    } else {
+                        // the logged-in user (system admin) added himself as project admin
+                        // update the cache of logged-in user and the session
+                        this._session.setSession(this.session.user.jwt, this.session.user.name, 'username').subscribe();
                         this.refreshParent.emit();
                     }
                 },
@@ -387,6 +302,20 @@ export class UsersListComponent implements OnInit {
                     this._errorHandler.showMessage(error);
                 }
             );
+        }
+    }
+
+    updateSystemAdminMembership(user: ReadUser, systemAdmin: boolean): void {
+        this._dspApiConnection.admin.usersEndpoint.updateUserSystemAdminMembership(user.id, systemAdmin).subscribe(
+            (response: ApiResponseData<UserResponse>) => {
+                if (this.session.user.name !== user.username) {
+                    this.refreshParent.emit();
+                }
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+            }
+        );
     }
 
     /**
@@ -401,14 +330,17 @@ export class UsersListComponent implements OnInit {
             width: '560px',
             maxHeight: '80vh',
             position: {
-                top: '112px',
+                top: '112px'
             },
-            data: { name: name, mode: mode },
+            data: { name: name, mode: mode }
         };
 
-        const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
+        const dialogRef = this._dialog.open(
+            DialogComponent,
+            dialogConfig
+        );
 
-        dialogRef.afterClosed().subscribe((response) => {
+        dialogRef.afterClosed().subscribe(response => {
             if (response === true) {
                 // get the mode
                 switch (mode) {
@@ -436,17 +368,16 @@ export class UsersListComponent implements OnInit {
      * @returns void
      */
     removeUserFromProject(id: string): void {
-        this._dspApiConnection.admin.usersEndpoint
-            .removeUserFromProjectMembership(id, this.project.id)
-            .subscribe(
-                (response: ApiResponseData<UserResponse>) => {
-                    this.refreshParent.emit();
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
+        this._dspApiConnection.admin.usersEndpoint.removeUserFromProjectMembership(id, this.project.id).subscribe(
+            (response: ApiResponseData<UserResponse>) => {
+                this.refreshParent.emit();
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+            }
+        );
     }
+
 
     /**
      * delete resp. deactivate user
@@ -470,26 +401,26 @@ export class UsersListComponent implements OnInit {
      * @param id user's IRI
      */
     activateUser(id: string) {
-        this._dspApiConnection.admin.usersEndpoint
-            .updateUserStatus(id, true)
-            .subscribe(
-                (response: ApiResponseData<UserResponse>) => {
-                    this.refreshParent.emit();
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
+        this._dspApiConnection.admin.usersEndpoint.updateUserStatus(id, true).subscribe(
+            (response: ApiResponseData<UserResponse>) => {
+                this.refreshParent.emit();
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+            }
+        );
     }
 
     disableMenu(): boolean {
+
         // disable menu in case of:
         // project.status = false
         if (this.project && this.project.status === false) {
             return true;
         } else {
-            return !this.sysAdmin && !this.projectAdmin;
+            return (!this.sysAdmin && !this.projectAdmin);
         }
+
     }
 
     sortList(key: any) {
