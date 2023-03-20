@@ -56,9 +56,6 @@ export class ListComponent implements OnInit {
     // current selected language
     language: string;
 
-    // form to select list
-    listForm: UntypedFormGroup;
-
     // selected list
     list: ListNodeInfo;
 
@@ -78,9 +75,6 @@ export class ListComponent implements OnInit {
     // disable content on small devices
     disableContent = false;
 
-    // feature toggle for new concept
-    beta = false;
-
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _ais: AppInitService,
@@ -98,26 +92,6 @@ export class ListComponent implements OnInit {
         this._route.parent.paramMap.subscribe((params: Params) => {
             this.projectUuid = params.get('uuid');
         });
-
-        // get list iri from route
-        if (this._route.snapshot && this._route.snapshot.params.id) {
-            this.listIri = decodeURIComponent(this._route.snapshot.params.id);
-        }
-
-        // get feature toggle information if url contains beta
-        this.beta = (this._route.parent.snapshot.url[0].path === 'beta');
-        if (this.beta) {
-            this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(this._projectService.uuidToIri(this.projectUuid)).subscribe(
-                (res: ApiResponseData<ProjectResponse>) => {
-                    const shortcode = res.body.project.shortcode;
-
-                    // get list iri from list name
-                    this._route.params.subscribe(params => {
-                        const id = `${this._ais.dspAppConfig.iriBase}/lists/${shortcode}/${params['list']}`;
-                        this.openList(id);
-                    });
-                });
-        }
 
     }
 
@@ -154,16 +128,11 @@ export class ListComponent implements OnInit {
                     this.projectAdmin = this.sysAdmin ? this.sysAdmin : this.session.user.projectAdmin.some(e => e === this.project.id);
                 }
 
-                this.initList();
-
-                this.listForm = this._fb.group({
-                    list: new UntypedFormControl({
-                        value: this.listIri, disabled: false
-                    })
+                // get list iri from list name
+                this._route.params.subscribe(params => {
+                    this.listIri = `${this._ais.dspAppConfig.iriBase}/lists/${this.project.shortcode}/${params['list']}`;
+                    this.initLists();
                 });
-
-                this.listForm.valueChanges
-                    .subscribe(data => this.onValueChanged(data));
 
                 this.loading = false;
             },
@@ -177,7 +146,7 @@ export class ListComponent implements OnInit {
     /**
      * build the list of lists
      */
-    initList(): void {
+    initLists(): void {
 
         this.loading = true;
 
@@ -185,12 +154,8 @@ export class ListComponent implements OnInit {
             (response: ApiResponseData<ListsResponse>) => {
                 this.lists = response.body.lists;
 
-                if (this.lists.length === 1) {
-                    this.listIri = this.lists[0].id;
-                }
-
                 if (this.listIri) {
-                    this.openList(this.listIri);
+                    this.list = this.lists.find(i => i.id === this.listIri);
                 }
 
                 this.loading = false;
@@ -200,38 +165,6 @@ export class ListComponent implements OnInit {
                 this._errorHandler.showMessage(error);
             }
         );
-    }
-
-    // update view after selecting a list from dropdown
-    onValueChanged(data?: any) {
-
-        if (!this.listForm) {
-            return;
-        }
-
-        // go to page with this id
-        this.openList(data.list);
-
-    }
-
-    // open list by iri
-    openList(id: string) {
-
-        this.listIri = id;
-
-        this.loadList = true;
-
-        this.list = this.lists.find(i => i.id === id);
-
-        if (!this.beta) {
-            const goto = 'project/' + this.projectUuid + '/lists/' + encodeURIComponent(id);
-            this._router.navigateByUrl(goto, { skipLocationChange: false });
-        }
-
-        setTimeout(() => {
-            this.loadList = false;
-        });
-
     }
 
     /**
@@ -256,22 +189,8 @@ export class ListComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe((data) => {
             switch (mode) {
-                case 'createList': {
-                    if (data instanceof List) {
-                        this.listIri = data.listinfo.id;
-                        this.listForm.controls.list.setValue(this.listIri);
-                        this.openList(this.listIri);
-                        this.initList();
-                    }
-                    break;
-                }
                 case 'editListInfo': {
-                    if (this.beta) {
-                        // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
-                        window.location.reload();
-                    } else {
-                        this.initList();
-                    }
+                    window.location.reload();
                     break;
                 }
                 case 'deleteList': {
@@ -280,23 +199,10 @@ export class ListComponent implements OnInit {
                             (res: ApiResponseData<DeleteListResponse>) => {
                                 this.lists = this.lists.filter(list => list.id !== res.body.iri);
 
-                                if (this.beta) {
-                                    this._router.navigateByUrl(`/beta/project/${this.projectUuid}`).then(() => {
-                                        // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
-                                        window.location.reload();
-                                    });
-                                } else {
-                                    // if there are still lists remaining after deleting a list, load the first list among lists
-                                    if (this.lists.length) {
-                                        this.listIri = this.lists[0].id;
-                                        this.listForm.controls.list.setValue(this.listIri);
-                                        this.openList(this.listIri);
-                                        this.initList();
-                                    } else { // else set the list to null to remove it from the UI
-                                        this.list = null;
-                                        this.listIri = undefined;
-                                    }
-                                }
+                                this._router.navigateByUrl(`/project/${this.projectUuid}/data-models`).then(() => {
+                                    // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
+                                    window.location.reload();
+                                });
                             },
                             (error: ApiResponseError) => {
                                 // if DSP-API returns a 400, it is likely that the list node is in use so we inform the user of this
