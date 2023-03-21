@@ -13,34 +13,16 @@ import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-<<<<<<<< HEAD:apps/dsp-app/src/app/project/board/board.component.spec.ts
-import {
-    KnoraApiConnection,
-    MockProjects,
-    ProjectResponse,
-    ReadProject,
-} from '@dasch-swiss/dsp-js';
-import { of } from 'rxjs';
-import { AppInitService } from '@dsp-app/src/app/app-init.service';
-import {
-    DspApiConfigToken,
-    DspApiConnectionToken,
-} from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
-import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
-import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
-import { TestConfig } from '@dsp-app/src/test.config';
-========
 import { KnoraApiConnection, MockProjects, ProjectResponse, ReadProject, StringLiteral } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
-import { AppInitService } from 'src/app/app-init.service';
-import { DspApiConfigToken, DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { DialogComponent } from 'src/app/main/dialog/dialog.component';
-import { StatusComponent } from 'src/app/main/status/status.component';
-import { ProjectService } from 'src/app/workspace/resource/services/project.service';
-import { TestConfig } from 'test.config';
->>>>>>>> main:src/app/project/description/description.component.spec.ts
-import { CacheService } from '../../main/cache/cache.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { DspApiConfigToken, DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { TestConfig } from '@dsp-app/src/test.config';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
 import { DescriptionComponent } from './description.component';
 import { MatInputModule } from '@angular/material/input';
 import { By } from '@angular/platform-browser';
@@ -74,15 +56,7 @@ describe('DescriptionComponent', () => {
     let rootLoader: HarnessLoader;
 
     beforeEach(waitForAsync(() => {
-<<<<<<<< HEAD:apps/dsp-app/src/app/project/board/board.component.spec.ts
-        const cacheServiceSpy = jasmine.createSpyObj('CacheService', [
-            'get',
-            'set',
-        ]);
 
-        TestBed.configureTestingModule({
-            declarations: [BoardComponent, DialogComponent, StatusComponent],
-========
 
         const cacheServiceSpy = jasmine.createSpyObj('CacheService', ['get', 'set']);
         const projectServiceSpy = jasmine.createSpyObj('ProjectService', ['iriToUuid']);
@@ -95,7 +69,6 @@ describe('DescriptionComponent', () => {
                 DialogComponent,
                 StatusComponent
             ],
->>>>>>>> main:src/app/project/description/description.component.spec.ts
             imports: [
                 FormsModule,
                 BrowserAnimationsModule,
@@ -107,13 +80,9 @@ describe('DescriptionComponent', () => {
                 MatInputModule,
                 MatSlideToggleModule,
                 MatSnackBarModule,
-<<<<<<<< HEAD:apps/dsp-app/src/app/project/board/board.component.spec.ts
-                RouterTestingModule,
-========
                 ReactiveFormsModule,
                 RouterTestingModule,
                 TranslateModule.forRoot()
->>>>>>>> main:src/app/project/description/description.component.spec.ts
             ],
             providers: [
                 {
@@ -144,11 +113,6 @@ describe('DescriptionComponent', () => {
                 },
                 {
                     provide: CacheService,
-<<<<<<<< HEAD:apps/dsp-app/src/app/project/board/board.component.spec.ts
-                    useValue: cacheServiceSpy,
-                },
-            ],
-========
                     useValue: cacheServiceSpy
                 },
                 {
@@ -156,7 +120,6 @@ describe('DescriptionComponent', () => {
                     useValue: projectServiceSpy
                 },
             ]
->>>>>>>> main:src/app/project/description/description.component.spec.ts
         }).compileComponents();
     }));
 

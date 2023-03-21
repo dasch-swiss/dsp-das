@@ -39,6 +39,11 @@
           }
         ],
         "styles": ["apps/dsp-app/src/styles.scss"],
+        "stylePreprocessorOptions": {
+          "includePaths": [
+            "apps/dsp-app/src/assets/style/"
+          ]
+        },
         "scripts": [
           "node_modules/openseadragon/build/openseadragon/openseadragon.min.js"
         ]
@@ -168,6 +173,11 @@
         "tsConfig": "apps/dsp-app/tsconfig.spec.json",
         "karmaConfig": "apps/dsp-app/karma.conf.js",
         "styles": ["apps/dsp-app/src/styles.scss"],
+        "stylePreprocessorOptions": {
+          "includePaths": [
+            "apps/dsp-app/src/assets/style/"
+          ]
+        },
         "scripts": [
           "node_modules/openseadragon/build/openseadragon/openseadragon.min.js"
         ],

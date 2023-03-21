@@ -10,10 +10,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { OntologiesEndpointV2, MockOntology, ApiResponseData, ListNodeInfo, ListsEndpointAdmin, ListsResponse } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { AppInitService } from 'src/app/app-init.service';
-import { DspApiConnectionToken } from 'src/app/main/declarations/dsp-api-tokens';
-import { StringifyStringLiteralPipe } from 'src/app/main/pipes/string-transformation/stringify-string-literal.pipe';
-import { Session, SessionService } from 'src/app/main/services/session.service';
+import { AppInitService } from '@dsp-app/src/app/app-init.service';
+import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
+import { StringifyStringLiteralPipe } from '@dsp-app/src/app/main/pipes/string-transformation/stringify-string-literal.pipe';
+import { Session, SessionService } from '@dsp-app/src/app/main/services/session.service';
 import { OntologyService } from '../ontology/ontology.service';
 
 import { DataModelsComponent } from './data-models.component';
