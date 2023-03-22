@@ -281,8 +281,8 @@ ${statement}
                         'NotEquals'
                     ) {
                         restriction = `FILTER NOT EXISTS {
-                                ${restriction}
-                            }`;
+${restriction}
+}`;
                     }
                 } else {
                     // generate statement to value literal
