@@ -24,7 +24,7 @@ import {
     ValueLiteral,
 } from '../advanced-search/resource-and-property-selection/search-select-property/specify-property-value/operator';
 
-fdescribe('GravsearchGenerationService', () => {
+describe('GravsearchGenerationService', () => {
     let gravSearchGenerationServ: GravsearchGenerationService;
     let searchParamsServiceSpy: jasmine.SpyObj<AdvancedSearchParamsService>; // see https://angular.io/guide/testing#angular-testbed
     let advancedSearchParams: AdvancedSearchParams;
