@@ -2,7 +2,10 @@ FROM nginx:1-alpine-slim
 
 LABEL maintainer="support@dasch.swiss"
 
+# set default internal port for the server
+# can be overriden at runsite
 ENV NGINX_PORT 4200
+EXPOSE ${NGINX_PORT}
 
 ## Add bash
 RUN apk add bash
