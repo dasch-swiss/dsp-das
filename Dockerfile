@@ -1,4 +1,4 @@
-FROM daschswiss/nginx-server:1.1.3
+FROM daschswiss/nginx-server:1.1.3-1-g93e1372
 
 LABEL maintainer="support@dasch.swiss"
 
