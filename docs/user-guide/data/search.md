@@ -43,17 +43,19 @@ Another example, if you search for the term "(1995)" that includes parenthesis i
 * `?` (question mark) can be used as a wildcard symbol for a single character. E.g. Bern? ("Berne", "Bernt")
 * `""` (quotation marks) searches for the whole pattern. E.g. "Bern" (the exact term "Bern")
 
+In order to make easier searches and independent from special characters, we recommand to use the advanced search. It will narrow down the search and accept special letters or characters. E.g. the exact writing `rāmāyaṇī` will be accepted and found.
+
 ### Include special characters in the search
 
 If one of the above characters should be included in the search - without any special meaning - it needs to be escaped with the character `\` .
 
-E.g. You want to search for "Notre-Dame de Paris", you will type "Notre`\-`Dame de Paris"
+E.g. You want to search for "Notre-Dame de Paris", you will type "Notre`\-`Dame de Paris".
 
 ### Conversion
 
 Alphabetic, numeric, symbolic, and diacritical Unicode characters which are not in the [first 127 ASCII characters](https://learn.parallax.com/support/reference/ascii-table-0-127) (the "Basic Latin" Unicode block) are converted into their ASCII equivalents, if one exists, e.g. é or ä are converted into e and a.
 
-In order to make easier searches and independent from special characters, we recommand to use the advanced search. It will narrow down the search and accept special letters or characters. E.g. `rāmāyaṇī` will be accepted and found.
+One exception: `r̥` must be replaced by `rr`.
 
 ---
 
