@@ -1,0 +1,28 @@
+{
+  "name": "@dasch-swiss/jdnconvertiblecalendardateadapter",
+  "version": "1.0.2",
+  "description": "Implementation of Angular Material DateAdapter for JDNConvertibleCalendar",
+  "keywords": [
+    "Angular Material Datepicker",
+    "DateAdapter",
+    "calendar",
+    "conversion"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dhlab-basel/JDNConvertibleCalendarDateAdapter.git"
+  },
+  "author": "Tobias Schweizer <t.schweizer@unibas.ch>, DHLab University of Basel (http://www.dhlab.unibas.ch)",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/dasch-swiss/dsp-app/issues"
+  },
+  "homepage": "https://github.com/dasch-swiss/dsp-app#readme",
+  "peerDependencies": {
+    "@angular/common": "^15.2.2",
+    "@angular/core": "^15.2.2",
+    "@angular/animations": "^15.2.2",
+    "@angular/cdk": "^15.2.3",
+    "@angular/material": "^15.2.3"
+  }
+}

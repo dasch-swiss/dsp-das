@@ -1,0 +1,30 @@
+{
+  "name": "jdnconvertiblecalendardateadapter",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/jdnconvertiblecalendardateadapter/src",
+  "projectType": "library",
+  "prefix": "lib",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:package",
+      "options": {
+        "tsConfig": "libs/jdnconvertiblecalendardateadapter/tsconfig.lib.json",
+        "project": "libs/jdnconvertiblecalendardateadapter/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "project": "libs/jdnconvertiblecalendardateadapter/ng-package.prod.json",
+          "tsConfig": "libs/jdnconvertiblecalendardateadapter/tsconfig.lib.prod.json"
+        }
+      }
+    },
+    "test": {
+      "executor": "@angular-devkit/build-angular:karma",
+      "options": {
+        "main": "libs/jdnconvertiblecalendardateadapter/src/test.ts",
+        "tsConfig": "libs/jdnconvertiblecalendardateadapter/tsconfig.spec.json",
+        "karmaConfig": "libs/jdnconvertiblecalendardateadapter/karma.conf.js"
+      }
+    }
+  }
+}
