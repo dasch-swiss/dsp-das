@@ -34,7 +34,7 @@ Here is the list of characters with special meaning: +, -, &&, ||, !, (, ), [, ]
 
 For more information about them, please read the [Lucene documentation](https://lucene.apache.org/core/7_7_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html).
 
-> If you want to search for these special characters **explicitly**, note that the punctuation marks `,` and `.` are **NOT** eliminated and stay with the term where they occured. E.g. "To be, or not to be, that is the question." -> when searching for `be`, the term `be,` (comma included) won't be found (so the entire phrase here). We recommend to use the special character `*` or `?` to find the term. E.g. "be*" or "be?"
+> If you want to search for these special characters **explicitly**, note that the punctuation marks `,` and `.` are **NOT** eliminated and stay with the term where they occured. E.g. "To be, or not to be, that is the question." -> when searching for `be` the term `be,` (comma included) won't be found (and thus the entire phrase). We recommend to use the special character `*` or `?` to find the term. E.g. "be*" or "be?"
 Another example, if you search for the term "(1995)" that includes parenthesis in this case, search for "*1995*" or "?1995?".
 
 **Focus on the most common used characters:**
