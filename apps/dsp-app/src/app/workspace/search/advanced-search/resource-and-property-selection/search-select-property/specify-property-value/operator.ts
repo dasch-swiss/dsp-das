@@ -73,7 +73,7 @@ export class LessThan implements ComparisonOperator {
 
 export class LessThanEquals implements ComparisonOperator {
     type = ComparisonOperatorConstants.LessThanEqualsComparisonOperator;
-    label = ComparisonOperatorConstants.LessThanQualsComparisonLabel;
+    label = ComparisonOperatorConstants.LessThanEqualsComparisonLabel;
 
     constructor() {}
 
@@ -90,6 +90,19 @@ export class Exists implements ComparisonOperator {
 
     getClassName() {
         return 'Exists';
+    }
+}
+
+export class NotExists implements ComparisonOperator {
+
+    type = ComparisonOperatorConstants.NotExistsComparisonOperator;
+    label = ComparisonOperatorConstants.NotExistsComparisonLabel;
+
+    constructor() {
+    }
+
+    getClassName() {
+        return 'NotExists';
     }
 }
 

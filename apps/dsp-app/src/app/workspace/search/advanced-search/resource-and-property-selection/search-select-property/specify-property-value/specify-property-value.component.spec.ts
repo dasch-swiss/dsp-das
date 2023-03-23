@@ -320,7 +320,7 @@ describe('SpecifyPropertyValueComponent', () => {
     it('should set the correct comparison operators for the given property type', () => {
         expect(
             testHostComponent.specifyProperty.comparisonOperators.length
-        ).toEqual(7);
+        ).toEqual(8);
     });
 
     it('should set the correct comparison operators for a linking property type (on top level)', () => {
@@ -338,7 +338,7 @@ describe('SpecifyPropertyValueComponent', () => {
 
         expect(
             testHostComponent.specifyProperty.comparisonOperators.length
-        ).toEqual(4);
+        ).toEqual(5);
         expect(testHostComponent.topLevel).toBeTrue();
     });
 
@@ -359,7 +359,7 @@ describe('SpecifyPropertyValueComponent', () => {
 
         expect(
             testHostComponent.specifyProperty.comparisonOperators.length
-        ).toEqual(3);
+        ).toEqual(4);
         expect(testHostComponent.topLevel).toBeFalse();
     });
 
@@ -374,7 +374,7 @@ describe('SpecifyPropertyValueComponent', () => {
 
         const options = await select.getOptions();
 
-        expect(options.length).toEqual(7);
+        expect(options.length).toEqual(8);
     });
 
     it('should set the form to valid when a comparison operator has been chosen', async () => {

@@ -19,7 +19,7 @@ import {
     LinkedResource,
     Match,
     NotEquals,
-    // NotExists,
+    NotExists,
     PropertyWithValue,
     ValueLiteral,
 } from '../advanced-search/resource-and-property-selection/search-select-property/specify-property-value/operator';
@@ -323,44 +323,58 @@ OFFSET 0
         ).toHaveBeenCalledTimes(1);
     });
 
-//     it('Gravsearch query string with no existing TEXT property values', () => {
-//         const prop = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2').properties['http://0.0.0.0:3333/ontology/0001/anything/v2#hasText'] as ResourcePropertyDefinition;
-//         const value = new ComparisonOperatorAndValue(new NotExists(), new ValueLiteral(undefined, 'http://www.w3.org/2001/XMLSchema#string'));
-//         const propWithVal = new PropertyWithValue(prop, value, false);
-//
-//         const gravsearch = gravSearchGenerationServ.createGravsearchQuery([propWithVal], 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing', 0);
-//
-//         const expectedGravsearch = `
-// PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
-// CONSTRUCT {
-//
-// ?mainRes knora-api:isMainResource true .
-//
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasText> ?propVal0 .
-//
-// } WHERE {
-//
-// ?mainRes a knora-api:Resource .
-//
-// ?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
-//
-//
-// FILTER NOT EXISTS {
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasText> ?propVal0 .
-//
-//
-// }
-//
-//
-//
-// }
-//
-// OFFSET 0
-// `;
-//
-//         expect(gravsearch).toEqual(expectedGravsearch);
-//         expect(searchParamsServiceSpy.changeSearchParamsMsg).toHaveBeenCalledTimes(1);
-//     });
+    it('Gravsearch query string with no existing TEXT property values', () => {
+        const prop = MockOntology.mockReadOntology(
+            'http://0.0.0.0:3333/ontology/0001/anything/v2'
+        ).properties[
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#hasText'
+        ] as ResourcePropertyDefinition;
+
+        const value = new ComparisonOperatorAndValue(
+            new NotExists(),
+            new ValueLiteral(undefined, 'http://www.w3.org/2001/XMLSchema#string')
+        );
+
+        const propWithVal = new PropertyWithValue(prop, value, false);
+
+        const gravsearch = gravSearchGenerationServ.createGravsearchQuery(
+            [propWithVal],
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+            0
+        );
+
+        const expectedGravsearch = `
+PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+CONSTRUCT {
+
+?mainRes knora-api:isMainResource true .
+
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasText> ?propVal0 .
+
+} WHERE {
+
+?mainRes a knora-api:Resource .
+
+?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
+
+FILTER NOT EXISTS {
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasText> ?propVal0 .
+
+
+}
+
+
+
+}
+
+OFFSET 0
+`;
+
+        expect(gravsearch).toEqual(expectedGravsearch);
+        expect(
+            searchParamsServiceSpy.changeSearchParamsMsg
+        ).toHaveBeenCalledTimes(1);
+    });
 
     it('Gravsearch query string with BOOLEAN property equaling "true"', () => {
         const prop = MockOntology.mockReadOntology(
@@ -469,44 +483,58 @@ OFFSET 0
         ).toHaveBeenCalledTimes(1);
     });
 
-//     it('Gravsearch query string with no existing BOOLEAN property values', () => {
-//         const prop = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2').properties['http://0.0.0.0:3333/ontology/0001/anything/v2#hasBoolean'] as ResourcePropertyDefinition;
-//         const value = new ComparisonOperatorAndValue(new NotExists(), new ValueLiteral(undefined, 'http://www.w3.org/2001/XMLSchema#boolean'));
-//         const propWithVal = new PropertyWithValue(prop, value, false);
-//
-//         const gravsearch = gravSearchGenerationServ.createGravsearchQuery([propWithVal], 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing', 0);
-//
-//         const expectedGravsearch = `
-// PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
-// CONSTRUCT {
-//
-// ?mainRes knora-api:isMainResource true .
-//
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasBoolean> ?propVal0 .
-//
-// } WHERE {
-//
-// ?mainRes a knora-api:Resource .
-//
-// ?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
-//
-//
-// FILTER NOT EXISTS {
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasBoolean> ?propVal0 .
-//
-//
-// }
-//
-//
-//
-// }
-//
-// OFFSET 0
-// `;
-//
-//         expect(gravsearch).toEqual(expectedGravsearch);
-//         expect(searchParamsServiceSpy.changeSearchParamsMsg).toHaveBeenCalledTimes(1);
-//     });
+    it('Gravsearch query string with no existing BOOLEAN property values', () => {
+        const prop = MockOntology.mockReadOntology(
+            'http://0.0.0.0:3333/ontology/0001/anything/v2'
+        ).properties[
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#hasBoolean'
+        ] as ResourcePropertyDefinition;
+
+        const value = new ComparisonOperatorAndValue(
+            new NotExists(),
+            new ValueLiteral(undefined, 'http://www.w3.org/2001/XMLSchema#boolean')
+        );
+
+        const propWithVal = new PropertyWithValue(prop, value, false);
+
+        const gravsearch = gravSearchGenerationServ.createGravsearchQuery(
+            [propWithVal],
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+            0
+        );
+
+        const expectedGravsearch = `
+PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+CONSTRUCT {
+
+?mainRes knora-api:isMainResource true .
+
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasBoolean> ?propVal0 .
+
+} WHERE {
+
+?mainRes a knora-api:Resource .
+
+?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
+
+FILTER NOT EXISTS {
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasBoolean> ?propVal0 .
+
+
+}
+
+
+
+}
+
+OFFSET 0
+`;
+
+        expect(gravsearch).toEqual(expectedGravsearch);
+        expect(
+            searchParamsServiceSpy.changeSearchParamsMsg
+        ).toHaveBeenCalledTimes(1);
+    });
 
     it('Gravsearch query string with URI property equaling a value', () => {
         const prop = MockOntology.mockReadOntology(
@@ -669,44 +697,58 @@ OFFSET 0
         ).toHaveBeenCalledTimes(1);
     });
 
-//     it('Gravsearch query string with no existing URI property values', () => {
-//         const prop = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2').properties['http://0.0.0.0:3333/ontology/0001/anything/v2#hasUri'] as ResourcePropertyDefinition;
-//         const value = new ComparisonOperatorAndValue(new NotExists(), new ValueLiteral('http://www.google.ch', 'http://www.w3.org/2001/XMLSchema#anyURI'));
-//         const propWithVal = new PropertyWithValue(prop, value, false);
-//
-//         const gravsearch = gravSearchGenerationServ.createGravsearchQuery([propWithVal], 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing', 0);
-//
-//         const expectedGravsearch = `
-// PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
-// CONSTRUCT {
-//
-// ?mainRes knora-api:isMainResource true .
-//
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasUri> ?propVal0 .
-//
-// } WHERE {
-//
-// ?mainRes a knora-api:Resource .
-//
-// ?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
-//
-//
-// FILTER NOT EXISTS {
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasUri> ?propVal0 .
-//
-//
-// }
-//
-//
-//
-// }
-//
-// OFFSET 0
-// `;
-//
-//         expect(gravsearch).toEqual(expectedGravsearch);
-//         expect(searchParamsServiceSpy.changeSearchParamsMsg).toHaveBeenCalledTimes(1);
-//     });
+    it('Gravsearch query string with no existing URI property values', () => {
+        const prop = MockOntology.mockReadOntology(
+            'http://0.0.0.0:3333/ontology/0001/anything/v2'
+        ).properties[
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#hasUri'
+        ] as ResourcePropertyDefinition;
+
+        const value = new ComparisonOperatorAndValue(
+            new NotExists(),
+            new ValueLiteral('http://www.google.ch', 'http://www.w3.org/2001/XMLSchema#anyURI')
+        );
+
+        const propWithVal = new PropertyWithValue(prop, value, false);
+
+        const gravsearch = gravSearchGenerationServ.createGravsearchQuery(
+            [propWithVal],
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+            0
+        );
+
+        const expectedGravsearch = `
+PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+CONSTRUCT {
+
+?mainRes knora-api:isMainResource true .
+
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasUri> ?propVal0 .
+
+} WHERE {
+
+?mainRes a knora-api:Resource .
+
+?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
+
+FILTER NOT EXISTS {
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasUri> ?propVal0 .
+
+
+}
+
+
+
+}
+
+OFFSET 0
+`;
+
+        expect(gravsearch).toEqual(expectedGravsearch);
+        expect(
+            searchParamsServiceSpy.changeSearchParamsMsg
+        ).toHaveBeenCalledTimes(1);
+    });
 
     it('Gravsearch query string with INT property equaling a value', () => {
         const prop = MockOntology.mockReadOntology(
@@ -1085,44 +1127,58 @@ OFFSET 0
         ).toHaveBeenCalledTimes(1);
     });
 
-//     it('Gravsearch query string with no existing INT property values', () => {
-//         const prop = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2').properties['http://0.0.0.0:3333/ontology/0001/anything/v2#hasInteger'] as ResourcePropertyDefinition;
-//         const value = new ComparisonOperatorAndValue(new NotExists(), new ValueLiteral(undefined, 'http://www.w3.org/2001/XMLSchema#integer'));
-//         const propWithVal = new PropertyWithValue(prop, value, false);
-//
-//         const gravsearch = gravSearchGenerationServ.createGravsearchQuery([propWithVal], 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing', 0);
-//
-//         const expectedGravsearch = `
-// PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
-// CONSTRUCT {
-//
-// ?mainRes knora-api:isMainResource true .
-//
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasInteger> ?propVal0 .
-//
-// } WHERE {
-//
-// ?mainRes a knora-api:Resource .
-//
-// ?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
-//
-//
-// FILTER NOT EXISTS {
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasInteger> ?propVal0 .
-//
-//
-// }
-//
-//
-//
-// }
-//
-// OFFSET 0
-// `;
-//
-//         expect(gravsearch).toEqual(expectedGravsearch);
-//         expect(searchParamsServiceSpy.changeSearchParamsMsg).toHaveBeenCalledTimes(1);
-//     });
+    it('Gravsearch query string with no existing INT property values', () => {
+        const prop = MockOntology.mockReadOntology(
+            'http://0.0.0.0:3333/ontology/0001/anything/v2'
+        ).properties[
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#hasInteger'
+        ] as ResourcePropertyDefinition;
+
+        const value = new ComparisonOperatorAndValue(
+            new NotExists(),
+            new ValueLiteral(undefined, 'http://www.w3.org/2001/XMLSchema#integer')
+        );
+
+        const propWithVal = new PropertyWithValue(prop, value, false);
+
+        const gravsearch = gravSearchGenerationServ.createGravsearchQuery(
+            [propWithVal],
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+            0
+        );
+
+        const expectedGravsearch = `
+PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+CONSTRUCT {
+
+?mainRes knora-api:isMainResource true .
+
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasInteger> ?propVal0 .
+
+} WHERE {
+
+?mainRes a knora-api:Resource .
+
+?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
+
+FILTER NOT EXISTS {
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasInteger> ?propVal0 .
+
+
+}
+
+
+
+}
+
+OFFSET 0
+`;
+
+        expect(gravsearch).toEqual(expectedGravsearch);
+        expect(
+            searchParamsServiceSpy.changeSearchParamsMsg
+        ).toHaveBeenCalledTimes(1);
+    });
 
     it('Gravsearch query string with DECIMAL property equaling a value', () => {
         const prop = MockOntology.mockReadOntology(
@@ -1501,44 +1557,58 @@ OFFSET 0
         ).toHaveBeenCalledTimes(1);
     });
 
-//     it('Gravsearch query string with no existing DECIMAL property values', () => {
-//         const prop = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2').properties['http://0.0.0.0:3333/ontology/0001/anything/v2#hasDecimal'] as ResourcePropertyDefinition;
-//         const value = new ComparisonOperatorAndValue(new NotExists(), new ValueLiteral(undefined, 'http://www.w3.org/2001/XMLSchema#decimal'));
-//         const propWithVal = new PropertyWithValue(prop, value, false);
-//
-//         const gravsearch = gravSearchGenerationServ.createGravsearchQuery([propWithVal], 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing', 0);
-//
-//         const expectedGravsearch = `
-// PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
-// CONSTRUCT {
-//
-// ?mainRes knora-api:isMainResource true .
-//
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasDecimal> ?propVal0 .
-//
-// } WHERE {
-//
-// ?mainRes a knora-api:Resource .
-//
-// ?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
-//
-//
-// FILTER NOT EXISTS {
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasDecimal> ?propVal0 .
-//
-//
-// }
-//
-//
-//
-// }
-//
-// OFFSET 0
-// `;
-//
-//         expect(gravsearch).toEqual(expectedGravsearch);
-//         expect(searchParamsServiceSpy.changeSearchParamsMsg).toHaveBeenCalledTimes(1);
-//     });
+    it('Gravsearch query string with no existing DECIMAL property values', () => {
+        const prop = MockOntology.mockReadOntology(
+            'http://0.0.0.0:3333/ontology/0001/anything/v2'
+        ).properties[
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#hasDecimal'
+        ] as ResourcePropertyDefinition;
+
+        const value = new ComparisonOperatorAndValue(
+            new NotExists(),
+            new ValueLiteral(undefined, 'http://www.w3.org/2001/XMLSchema#decimal')
+        );
+
+        const propWithVal = new PropertyWithValue(prop, value, false);
+
+        const gravsearch = gravSearchGenerationServ.createGravsearchQuery(
+            [propWithVal],
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+            0
+        );
+
+        const expectedGravsearch = `
+PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+CONSTRUCT {
+
+?mainRes knora-api:isMainResource true .
+
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasDecimal> ?propVal0 .
+
+} WHERE {
+
+?mainRes a knora-api:Resource .
+
+?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
+
+FILTER NOT EXISTS {
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasDecimal> ?propVal0 .
+
+
+}
+
+
+
+}
+
+OFFSET 0
+`;
+
+        expect(gravsearch).toEqual(expectedGravsearch);
+        expect(
+            searchParamsServiceSpy.changeSearchParamsMsg
+        ).toHaveBeenCalledTimes(1);
+    });
 
     it('Gravsearch query string with DATE property equaling a value', () => {
         const prop = MockOntology.mockReadOntology(
@@ -1911,44 +1981,57 @@ OFFSET 0
         ).toHaveBeenCalledTimes(1);
     });
 
-//     it('Gravsearch query string with no existing DATE property values', () => {
-//         const prop = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2').properties['http://0.0.0.0:3333/ontology/0001/anything/v2#hasDate'] as ResourcePropertyDefinition;
-//         const value = new ComparisonOperatorAndValue(new NotExists(), new ValueLiteral(undefined, 'http://api.knora.org/ontology/knora-api/simple/v2#Date'));
-//         const propWithVal = new PropertyWithValue(prop, value, false);
-//
-//         const gravsearch = gravSearchGenerationServ.createGravsearchQuery([propWithVal], 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing', 0);
-//
-//         const expectedGravsearch = `
-// PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
-// CONSTRUCT {
-//
-// ?mainRes knora-api:isMainResource true .
-//
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasDate> ?propVal0 .
-//
-// } WHERE {
-//
-// ?mainRes a knora-api:Resource .
-//
-// ?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
-//
-//
-// FILTER NOT EXISTS {
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasDate> ?propVal0 .
-//
-//
-// }
-//
-//
-//
-// }
-//
-// OFFSET 0
-// `;
-//
-//         expect(gravsearch).toEqual(expectedGravsearch);
-//         expect(searchParamsServiceSpy.changeSearchParamsMsg).toHaveBeenCalledTimes(1);
-//     });
+    it('Gravsearch query string with no existing DATE property values', () => {
+        const prop = MockOntology.mockReadOntology(
+            'http://0.0.0.0:3333/ontology/0001/anything/v2'
+        ).properties[
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#hasDate'
+        ] as ResourcePropertyDefinition;
+
+        const value = new ComparisonOperatorAndValue(
+            new NotExists(),
+            new ValueLiteral(undefined, 'http://api.knora.org/ontology/knora-api/simple/v2#Date')
+        );
+
+        const propWithVal = new PropertyWithValue(prop, value, false);
+
+        const gravsearch = gravSearchGenerationServ.createGravsearchQuery(
+            [propWithVal],
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing', 0
+        );
+
+        const expectedGravsearch = `
+PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+CONSTRUCT {
+
+?mainRes knora-api:isMainResource true .
+
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasDate> ?propVal0 .
+
+} WHERE {
+
+?mainRes a knora-api:Resource .
+
+?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
+
+FILTER NOT EXISTS {
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasDate> ?propVal0 .
+
+
+}
+
+
+
+}
+
+OFFSET 0
+`;
+
+        expect(gravsearch).toEqual(expectedGravsearch);
+        expect(
+            searchParamsServiceSpy.changeSearchParamsMsg
+        ).toHaveBeenCalledTimes(1);
+    });
 
     it('Gravsearch query string with LINK property matching a value (resource type) using MATCH', () => {
 
@@ -2163,44 +2246,54 @@ OFFSET 0
         ).toHaveBeenCalledTimes(1);
     });
 
-//     it('Gravsearch query string with no existing LINK property values', () => {
-//         const prop = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2').properties['http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherThing'] as ResourcePropertyDefinition;
-//         const value = new ComparisonOperatorAndValue(new NotExists(), new ValueLiteral(undefined, 'http://api.knora.org/ontology/knora-api/v2#Resource'));
-//         const propWithVal = new PropertyWithValue(prop, value, false);
-//
-//         const gravsearch = gravSearchGenerationServ.createGravsearchQuery([propWithVal], 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing', 0);
-//
-//         const expectedGravsearch = `
-// PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
-// CONSTRUCT {
-//
-// ?mainRes knora-api:isMainResource true .
-//
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherThing> ?propVal0 .
-//
-// } WHERE {
-//
-// ?mainRes a knora-api:Resource .
-//
-// ?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
-//
-//
-// FILTER NOT EXISTS {
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherThing> ?propVal0 .
-//
-//
-// }
-//
-//
-//
-// }
-//
-// OFFSET 0
-// `;
-//
-//         expect(gravsearch).toEqual(expectedGravsearch);
-//         expect(searchParamsServiceSpy.changeSearchParamsMsg).toHaveBeenCalledTimes(1);
-//     });
+    it('Gravsearch query string with no existing LINK property values', () => {
+        const prop = MockOntology.mockReadOntology(
+            'http://0.0.0.0:3333/ontology/0001/anything/v2'
+        ).properties[
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherThing'
+        ] as ResourcePropertyDefinition;
+
+        const value = new ComparisonOperatorAndValue(
+            new NotExists(),
+            new ValueLiteral(undefined, 'http://api.knora.org/ontology/knora-api/v2#Resource')
+        );
+
+        const propWithVal = new PropertyWithValue(prop, value, false);
+
+        const gravsearch = gravSearchGenerationServ.createGravsearchQuery([propWithVal], 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing', 0);
+
+        const expectedGravsearch = `
+PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+CONSTRUCT {
+
+?mainRes knora-api:isMainResource true .
+
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherThing> ?propVal0 .
+
+} WHERE {
+
+?mainRes a knora-api:Resource .
+
+?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
+
+FILTER NOT EXISTS {
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasOtherThing> ?propVal0 .
+
+
+}
+
+
+
+}
+
+OFFSET 0
+`;
+
+        expect(gravsearch).toEqual(expectedGravsearch);
+        expect(
+            searchParamsServiceSpy.changeSearchParamsMsg
+        ).toHaveBeenCalledTimes(1);
+    });
 
     it('Gravsearch query string with LIST property equaling a value', () => {
         const prop = MockOntology.mockReadOntology(
@@ -2365,44 +2458,58 @@ OFFSET 0
         ).toHaveBeenCalledTimes(1);
     });
 
-//     it('Gravsearch query string with no existing LIST property values', () => {
-//         const prop = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2').properties['http://0.0.0.0:3333/ontology/0001/anything/v2#hasListItem'] as ResourcePropertyDefinition;
-//         const value = new ComparisonOperatorAndValue(new NotExists(), new ValueLiteral(undefined, 'http://api.knora.org/ontology/knora-api/v2#ListValue'));
-//         const propWithVal = new PropertyWithValue(prop, value, false);
-//
-//         const gravsearch = gravSearchGenerationServ.createGravsearchQuery([propWithVal], 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing', 0);
-//
-//         const expectedGravsearch = `
-// PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
-// CONSTRUCT {
-//
-// ?mainRes knora-api:isMainResource true .
-//
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasListItem> ?propVal0 .
-//
-// } WHERE {
-//
-// ?mainRes a knora-api:Resource .
-//
-// ?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
-//
-//
-// FILTER NOT EXISTS {
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasListItem> ?propVal0 .
-//
-//
-// }
-//
-//
-//
-// }
-//
-// OFFSET 0
-// `;
-//
-//         expect(gravsearch).toEqual(expectedGravsearch);
-//         expect(searchParamsServiceSpy.changeSearchParamsMsg).toHaveBeenCalledTimes(1);
-//     });
+    it('Gravsearch query string with no existing LIST property values', () => {
+        const prop = MockOntology.mockReadOntology(
+            'http://0.0.0.0:3333/ontology/0001/anything/v2'
+        ).properties[
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#hasListItem'
+        ] as ResourcePropertyDefinition;
+
+        const value = new ComparisonOperatorAndValue(
+            new NotExists(),
+            new ValueLiteral(undefined, 'http://api.knora.org/ontology/knora-api/v2#ListValue')
+        );
+
+        const propWithVal = new PropertyWithValue(prop, value, false);
+
+        const gravsearch = gravSearchGenerationServ.createGravsearchQuery(
+            [propWithVal],
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+            0
+        );
+
+        const expectedGravsearch = `
+PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+CONSTRUCT {
+
+?mainRes knora-api:isMainResource true .
+
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasListItem> ?propVal0 .
+
+} WHERE {
+
+?mainRes a knora-api:Resource .
+
+?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
+
+FILTER NOT EXISTS {
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasListItem> ?propVal0 .
+
+
+}
+
+
+
+}
+
+OFFSET 0
+`;
+
+        expect(gravsearch).toEqual(expectedGravsearch);
+        expect(
+            searchParamsServiceSpy.changeSearchParamsMsg
+        ).toHaveBeenCalledTimes(1);
+    });
 
     it('Gravsearch query string with existing COLOR property value', () => {
         const prop = MockOntology.mockReadOntology(
@@ -2457,44 +2564,54 @@ OFFSET 0
         ).toHaveBeenCalledTimes(1);
     });
 
-//     it('Gravsearch query string with no existing COLOR property values', () => {
-//         const prop = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2').properties['http://0.0.0.0:3333/ontology/0001/anything/v2#hasColor'] as ResourcePropertyDefinition;
-//         const value = new ComparisonOperatorAndValue(new NotExists(), new ValueLiteral(undefined, 'http://api.knora.org/ontology/knora-api/v2#ColorValue'));
-//         const propWithVal = new PropertyWithValue(prop, value, false);
-//
-//         const gravsearch = gravSearchGenerationServ.createGravsearchQuery([propWithVal], 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing', 0);
-//
-//         const expectedGravsearch = `
-// PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
-// CONSTRUCT {
-//
-// ?mainRes knora-api:isMainResource true .
-//
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasColor> ?propVal0 .
-//
-// } WHERE {
-//
-// ?mainRes a knora-api:Resource .
-//
-// ?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
-//
-//
-// FILTER NOT EXISTS {
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasColor> ?propVal0 .
-//
-//
-// }
-//
-//
-//
-// }
-//
-// OFFSET 0
-// `;
-//
-//         expect(gravsearch).toEqual(expectedGravsearch);
-//         expect(searchParamsServiceSpy.changeSearchParamsMsg).toHaveBeenCalledTimes(1);
-//     });
+    it('Gravsearch query string with no existing COLOR property values', () => {
+        const prop = MockOntology.mockReadOntology(
+            'http://0.0.0.0:3333/ontology/0001/anything/v2'
+        ).properties[
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#hasColor'
+        ] as ResourcePropertyDefinition;
+
+        const value = new ComparisonOperatorAndValue(
+            new NotExists(),
+            new ValueLiteral(undefined, 'http://api.knora.org/ontology/knora-api/v2#ColorValue')
+        );
+
+        const propWithVal = new PropertyWithValue(prop, value, false);
+
+        const gravsearch = gravSearchGenerationServ.createGravsearchQuery([propWithVal], 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing', 0);
+
+        const expectedGravsearch = `
+PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+CONSTRUCT {
+
+?mainRes knora-api:isMainResource true .
+
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasColor> ?propVal0 .
+
+} WHERE {
+
+?mainRes a knora-api:Resource .
+
+?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
+
+FILTER NOT EXISTS {
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasColor> ?propVal0 .
+
+
+}
+
+
+
+}
+
+OFFSET 0
+`;
+
+        expect(gravsearch).toEqual(expectedGravsearch);
+        expect(
+            searchParamsServiceSpy.changeSearchParamsMsg
+        ).toHaveBeenCalledTimes(1);
+    });
 
     it('Gravsearch query string with existing INTERVAL property value', () => {
         const prop = MockOntology.mockReadOntology(
@@ -2549,44 +2666,58 @@ OFFSET 0
         ).toHaveBeenCalledTimes(1);
     });
 
-//     it('Gravsearch query string with no existing INTERVAL property values', () => {
-//         const prop = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2').properties['http://0.0.0.0:3333/ontology/0001/anything/v2#hasInterval'] as ResourcePropertyDefinition;
-//         const value = new ComparisonOperatorAndValue(new NotExists(), new ValueLiteral(undefined, 'http://api.knora.org/ontology/knora-api/v2#IntervalValue'));
-//         const propWithVal = new PropertyWithValue(prop, value, false);
-//
-//         const gravsearch = gravSearchGenerationServ.createGravsearchQuery([propWithVal], 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing', 0);
-//
-//         const expectedGravsearch = `
-// PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
-// CONSTRUCT {
-//
-// ?mainRes knora-api:isMainResource true .
-//
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasInterval> ?propVal0 .
-//
-// } WHERE {
-//
-// ?mainRes a knora-api:Resource .
-//
-// ?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
-//
-//
-// FILTER NOT EXISTS {
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasInterval> ?propVal0 .
-//
-//
-// }
-//
-//
-//
-// }
-//
-// OFFSET 0
-// `;
-//
-//         expect(gravsearch).toEqual(expectedGravsearch);
-//         expect(searchParamsServiceSpy.changeSearchParamsMsg).toHaveBeenCalledTimes(1);
-//     });
+    it('Gravsearch query string with no existing INTERVAL property values', () => {
+        const prop = MockOntology.mockReadOntology(
+            'http://0.0.0.0:3333/ontology/0001/anything/v2'
+        ).properties[
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#hasInterval'
+        ] as ResourcePropertyDefinition;
+
+        const value = new ComparisonOperatorAndValue(
+            new NotExists(),
+            new ValueLiteral(undefined, 'http://api.knora.org/ontology/knora-api/v2#IntervalValue')
+        );
+
+        const propWithVal = new PropertyWithValue(prop, value, false);
+
+        const gravsearch = gravSearchGenerationServ.createGravsearchQuery(
+            [propWithVal],
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+            0
+        );
+
+        const expectedGravsearch = `
+PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+CONSTRUCT {
+
+?mainRes knora-api:isMainResource true .
+
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasInterval> ?propVal0 .
+
+} WHERE {
+
+?mainRes a knora-api:Resource .
+
+?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
+
+FILTER NOT EXISTS {
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasInterval> ?propVal0 .
+
+
+}
+
+
+
+}
+
+OFFSET 0
+`;
+
+        expect(gravsearch).toEqual(expectedGravsearch);
+        expect(
+            searchParamsServiceSpy.changeSearchParamsMsg
+        ).toHaveBeenCalledTimes(1);
+    });
 
     it('Gravsearch query string with existing GEONAME property value', () => {
         const prop = MockOntology.mockReadOntology(
@@ -2641,44 +2772,56 @@ OFFSET 0
         ).toHaveBeenCalledTimes(1);
     });
 
-//     it('Gravsearch query string with no existing GEONAME property values', () => {
-//         const prop = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2').properties['http://0.0.0.0:3333/ontology/0001/anything/v2#hasGeoname'] as ResourcePropertyDefinition;
-//         const value = new ComparisonOperatorAndValue(new NotExists(), new ValueLiteral(undefined, 'http://api.knora.org/ontology/knora-api/v2#GeonameValue'));
-//         const propWithVal = new PropertyWithValue(prop, value, false);
-//
-//         const gravsearch = gravSearchGenerationServ.createGravsearchQuery([propWithVal], 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing', 0);
-//
-//         const expectedGravsearch = `
-// PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
-// CONSTRUCT {
-//
-// ?mainRes knora-api:isMainResource true .
-//
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasGeoname> ?propVal0 .
-//
-// } WHERE {
-//
-// ?mainRes a knora-api:Resource .
-//
-// ?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
-//
-//
-// FILTER NOT EXISTS {
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasGeoname> ?propVal0 .
-//
-//
-// }
-//
-//
-//
-// }
-//
-// OFFSET 0
-// `;
-//
-//         expect(gravsearch).toEqual(expectedGravsearch);
-//         expect(searchParamsServiceSpy.changeSearchParamsMsg).toHaveBeenCalledTimes(1);
-//     });
+    it('Gravsearch query string with no existing GEONAME property values', () => {
+        const prop = MockOntology.mockReadOntology(
+            'http://0.0.0.0:3333/ontology/0001/anything/v2'
+        ).properties[
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#hasGeoname'
+        ] as ResourcePropertyDefinition;
+
+        const value = new ComparisonOperatorAndValue(
+            new NotExists(),
+            new ValueLiteral(undefined, 'http://api.knora.org/ontology/knora-api/v2#GeonameValue')
+        );
+
+        const propWithVal = new PropertyWithValue(prop, value, false);
+
+        const gravsearch = gravSearchGenerationServ.createGravsearchQuery(
+            [propWithVal],
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+            0
+        );
+
+        const expectedGravsearch = `
+PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+CONSTRUCT {
+
+?mainRes knora-api:isMainResource true .
+
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasGeoname> ?propVal0 .
+
+} WHERE {
+
+?mainRes a knora-api:Resource .
+
+?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
+
+FILTER NOT EXISTS {
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasGeoname> ?propVal0 .
+
+
+}
+
+
+
+}
+
+OFFSET 0
+`;
+
+        expect(gravsearch).toEqual(expectedGravsearch);
+        expect(searchParamsServiceSpy.changeSearchParamsMsg).toHaveBeenCalledTimes(1);
+    });
 
     it('Gravsearch query string with existing TIMESTAMP property value', () => {
         const prop = MockOntology.mockReadOntology(
@@ -2733,44 +2876,59 @@ OFFSET 0
         ).toHaveBeenCalledTimes(1);
     });
 
-//     it('Gravsearch query string with no existing TIMEPSTAMP property values', () => {
-//         const prop = MockOntology.mockReadOntology('http://0.0.0.0:3333/ontology/0001/anything/v2').properties['http://0.0.0.0:3333/ontology/0001/anything/v2#hasTimestamp'] as ResourcePropertyDefinition;
-//         const value = new ComparisonOperatorAndValue(new NotExists(), new ValueLiteral(undefined, 'http://api.knora.org/ontology/knora-api/v2#TimeValue'));
-//         const propWithVal = new PropertyWithValue(prop, value, false);
-//
-//         const gravsearch = gravSearchGenerationServ.createGravsearchQuery([propWithVal], 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing', 0);
-//
-//         const expectedGravsearch = `
-// PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
-// CONSTRUCT {
-//
-// ?mainRes knora-api:isMainResource true .
-//
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasTimestamp> ?propVal0 .
-//
-// } WHERE {
-//
-// ?mainRes a knora-api:Resource .
-//
-// ?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
-//
-//
-// FILTER NOT EXISTS {
-// ?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasTimestamp> ?propVal0 .
-//
-//
-// }
-//
-//
-//
-// }
-//
-// OFFSET 0
-// `;
-//
-//         expect(gravsearch).toEqual(expectedGravsearch);
-//         expect(searchParamsServiceSpy.changeSearchParamsMsg).toHaveBeenCalledTimes(1);
-//     });
+    it('Gravsearch query string with no existing TIMEPSTAMP property values', () => {
+        const prop = MockOntology.mockReadOntology(
+            'http://0.0.0.0:3333/ontology/0001/anything/v2'
+        ).properties[
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#hasTimeStamp'
+        ] as ResourcePropertyDefinition;
+
+        const value = new ComparisonOperatorAndValue(
+            new NotExists(),
+            new ValueLiteral(undefined, 'http://api.knora.org/ontology/knora-api/v2#TimeValue')
+        );
+
+        const propWithVal = new PropertyWithValue(prop, value, false);
+
+        const gravsearch = gravSearchGenerationServ.createGravsearchQuery(
+            [propWithVal],
+            'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+            0
+        );
+
+        console.log('a', gravsearch);
+        const expectedGravsearch = `
+PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+CONSTRUCT {
+
+?mainRes knora-api:isMainResource true .
+
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasTimeStamp> ?propVal0 .
+
+} WHERE {
+
+?mainRes a knora-api:Resource .
+
+?mainRes a <http://0.0.0.0:3333/ontology/0001/anything/v2#Thing> .
+
+FILTER NOT EXISTS {
+?mainRes <http://0.0.0.0:3333/ontology/0001/anything/v2#hasTimeStamp> ?propVal0 .
+
+
+}
+
+
+
+}
+
+OFFSET 0
+`;
+
+        expect(gravsearch).toEqual(expectedGravsearch);
+        expect(
+            searchParamsServiceSpy.changeSearchParamsMsg
+        ).toHaveBeenCalledTimes(1);
+    });
 
     it('Gravsearch query string with restriction to a resource class using offset 1', () => {
 
