@@ -191,6 +191,12 @@
             "output": "/assets/"
           }
         ]
+      },
+      "configurations": {
+        "ci": {
+          "watch": false,
+          "browsers": "ChromeHeadless"
+        }
       }
     },
     "lint": {
