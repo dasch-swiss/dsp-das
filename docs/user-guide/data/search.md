@@ -39,9 +39,9 @@ Another example, if you search for the term "(1995)" that includes parenthesis i
 
 **Focus on the most common used characters:**
 
-* `*` (asterisk) can be used as a wildcard symbol for zero, one, or multiple characters. E.g. pari* ("Paris", "Parisian", "parity", "parish", etc.)
-* `?` (question mark) can be used as a wildcard symbol for a single character. E.g. Bern? ("Berne", "Bernt")
-* `""` (quotation marks) searches for the whole pattern. E.g. "Bern" (the exact term "Bern")
+* `*` (asterisk) can be used as a wildcard symbol for zero, one, or multiple characters. E.g. `pari*` ("Paris", "Parisian", "parity", "parish", etc.)
+* `?` (question mark) can be used as a wildcard symbol for a single character. E.g. `Bern?` ("Berne", "Bernt")
+* `""` (quotation marks) searches for the whole pattern. E.g. `"vittāni"` (the exact term "vittāni")
 
 In order to make easier searches and independent from special characters, we recommand to use the advanced search. It will narrow down the search and accept special letters or characters. E.g. the exact writing `rāmāyaṇī` will be accepted and found.
 
@@ -53,7 +53,7 @@ E.g. You want to search for "Notre-Dame de Paris", you will type "Notre`\-`Dame 
 
 ### Conversion
 
-Alphabetic, numeric, symbolic, and diacritical Unicode characters which are not in the [first 127 ASCII characters](https://learn.parallax.com/support/reference/ascii-table-0-127) (the "Basic Latin" Unicode block) are converted into their ASCII equivalents, if one exists, e.g. é or ä are converted into e and a.
+Alphabetic, numeric, symbolic, and diacritical Unicode characters which are not in the [first 127 ASCII characters](https://learn.parallax.com/support/reference/ascii-table-0-127) (the "Basic Latin" Unicode block) are converted into their ASCII equivalents, if one exists, e.g. `é` or `ä` are converted into `e` and `a`.
 
 One exception: `r̥` must be replaced by `rr`.
 
