@@ -8,7 +8,10 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "rules": {}
+      "rules": {
+        "@typescript-eslint/no-namespace": "off",
+        "no-prototype-builtins": "off"
+      }
     },
     {
       "files": ["*.js", "*.jsx"],

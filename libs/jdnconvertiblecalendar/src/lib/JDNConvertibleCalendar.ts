@@ -1,21 +1,6 @@
 /*
- * Copyright © 2020 Lukas Rosenthaler, Rita Gautschy, Benjamin Geer, Ivan Subotic,
- * Tobias Schweizer, André Kilchenmann, and Sepideh Alassi.
- *
- * This file is part of JDNConvertibleCalendar.
- *
- * JDNConvertibleCalendar is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published
- * by the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * JDNConvertibleCalendar is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public
- * License along with JDNConvertibleCalendar.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright © 2021 - 2023 Swiss National Data and Service Center for the Humanities and/or DaSCH Service Platform contributors.
+ *  SPDX-License-Identifier: Apache-2.0
  */
 
 import { JDNConvertibleConversionModule } from './JDNCalendarConversion';
@@ -66,7 +51,7 @@ export abstract class JDNConvertibleCalendar {
     /**
      * Indicates if the year 0 exists in a specific calendar.
      */
-    public abstract readonly yearZeroExists: Boolean;
+    public abstract readonly yearZeroExists: boolean;
 
     //
     // Both calendar dates and JDNs are stored in parallel to avoid unnecessary conversions (JDN to calendar date and possibly back to JDN).
@@ -86,7 +71,7 @@ export abstract class JDNConvertibleCalendar {
     /**
      * Indicates if the date is exact (start and end of the given period are equal).
      */
-    protected exactDate: Boolean;
+    protected exactDate: boolean;
 
     /**
      * Start of given date as JDN.
@@ -214,7 +199,7 @@ export abstract class JDNConvertibleCalendar {
      */
     constructor(period: JDNPeriod);
     constructor(period: CalendarPeriod);
-    constructor(period: any) {
+    constructor(period: JDNPeriod | CalendarPeriod) {
 
         // initialize members (required by TypeScript compiler)
         const julianPeriodStart = new CalendarDate(-4712, 1, 1);
@@ -232,11 +217,11 @@ export abstract class JDNConvertibleCalendar {
         if (period instanceof JDNPeriod) {
             // period is a JDNPeriod
             this.convertJDNPeriodToCalendarPeriod(period);
-        } else {
+        } else  {
             // period is a CalendarPeriod
 
-            let jdnStart = this.calendarToJDN(period.periodStart);
-            let jdnEnd = this.calendarToJDN(period.periodEnd);
+            const jdnStart = this.calendarToJDN(period.periodStart);
+            const jdnEnd = this.calendarToJDN(period.periodEnd);
 
             this.convertJDNPeriodToCalendarPeriod(new JDNPeriod(jdnStart, jdnEnd));
         }
@@ -329,7 +314,7 @@ export abstract class JDNConvertibleCalendar {
         let newJDNPeriod: JDNPeriod;
 
         // indicates if the shifting is towards the future or the past
-        const intoTheFuture: Boolean = (years > 0);
+        const intoTheFuture: boolean = (years > 0);
 
         if (this.exactDate) {
 
@@ -351,7 +336,7 @@ export abstract class JDNConvertibleCalendar {
                 (currentCalendarPeriod.periodStart.day > maxDaysInNewMonth) ? maxDaysInNewMonth : currentCalendarPeriod.periodStart.day
             );
 
-            let newJDN = this.calendarToJDN(newCalendarDate);
+            const newJDN = this.calendarToJDN(newCalendarDate);
 
             newJDNPeriod = new JDNPeriod(newJDN, newJDN);
 
@@ -375,7 +360,7 @@ export abstract class JDNConvertibleCalendar {
                 (currentCalendarPeriod.periodStart.day > maxDaysInNewMonthStart) ? maxDaysInNewMonthStart : currentCalendarPeriod.periodStart.day
             );
 
-            let newJDNStart = this.calendarToJDN(newCalendarDateStart);
+            const newJDNStart = this.calendarToJDN(newCalendarDateStart);
 
             let yearZeroCorrectionEnd = 0;
             // when switching from a negative to a negative year and the year zero does not exist in the calendar used, correct it.
@@ -395,7 +380,7 @@ export abstract class JDNConvertibleCalendar {
                 (currentCalendarPeriod.periodEnd.day > maxDaysInNewMonthEnd) ? maxDaysInNewMonthEnd : currentCalendarPeriod.periodEnd.day
             );
 
-            let newJDNEnd = this.calendarToJDN(newCalendarDateEnd);
+            const newJDNEnd = this.calendarToJDN(newCalendarDateEnd);
 
             newJDNPeriod = new JDNPeriod(newJDNStart, newJDNEnd);
         }
@@ -418,7 +403,7 @@ export abstract class JDNConvertibleCalendar {
         if (!Utils.isInteger(months)) throw new JDNConvertibleCalendarError(`parameter "months" is expected to be an integer`);
 
         // indicates if the shifting is towards the future or the past
-        const intoTheFuture: Boolean = (months > 0);
+        const intoTheFuture: boolean = (months > 0);
 
         // get number of full years to shift
         const yearsToShift = Math.floor(Math.abs(months) / this.monthsInYear);
@@ -562,7 +547,7 @@ export class GregorianCalendarDate extends JDNConvertibleCalendar {
 
     protected JDNToCalendar(jdn: TypeDefinitionsModule.JDN): CalendarDate {
         return JDNConvertibleConversionModule.JDNToGregorian(jdn);
-    };
+    }
 
     protected calendarToJDN(date: CalendarDate): TypeDefinitionsModule.JDN {
         return JDNConvertibleConversionModule.gregorianToJDN(date);
@@ -570,7 +555,7 @@ export class GregorianCalendarDate extends JDNConvertibleCalendar {
 
     protected dayOfWeekFromJDN(jdn: number): number {
         return JDNConvertibleConversionModule.dayOfWeekFromJDC(jdn);
-    };
+    }
 
 }
 
@@ -597,7 +582,7 @@ export class JulianCalendarDate extends JDNConvertibleCalendar {
 
     protected dayOfWeekFromJDN(jdn: TypeDefinitionsModule.JDN): number {
         return JDNConvertibleConversionModule.dayOfWeekFromJDC(jdn);
-    };
+    }
 }
 
 /**
@@ -623,7 +608,7 @@ export class IslamicCalendarDate extends JDNConvertibleCalendar {
 
     protected dayOfWeekFromJDN(jdn: TypeDefinitionsModule.JDN): number {
         return JDNConvertibleConversionModule.dayOfWeekFromJDC(jdn);
-    };
+    }
 }
 
 

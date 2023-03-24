@@ -1,26 +1,12 @@
 /*
- * Copyright © 2020 Lukas Rosenthaler, Rita Gautschy, Benjamin Geer, Ivan Subotic,
- * Tobias Schweizer, André Kilchenmann, and Sepideh Alassi.
- *
- * This file is part of JDNConvertibleCalendar.
- *
- * JDNConvertibleCalendar is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published
- * by the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * JDNConvertibleCalendar is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public
- * License along with JDNConvertibleCalendar.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright © 2021 - 2023 Swiss National Data and Service Center for the Humanities and/or DaSCH Service Platform contributors.
+ *  SPDX-License-Identifier: Apache-2.0
  */
+
 import {TypeDefinitionsModule} from './TypeDefinitions';
 import { CalendarDate } from './CalendarDate';
 
-export module JDNConvertibleConversionModule {
+export namespace JDNConvertibleConversionModule {
 
     /**
      * Removes the fraction from a given number (<https://stackoverflow.com/questions/4912788/truncate-not-round-off-decimal-numbers-in-javascript/9232092#9232092>).
@@ -67,8 +53,8 @@ export module JDNConvertibleConversionModule {
         }
 
         let b = 0;
-        let a = truncateDecimals(year/100.);
-        let idate = year*10000 + month*100 + day;
+        const a = truncateDecimals(year/100.00);
+        const idate = year*10000 + month*100 + day;
         // check whether given date is before October 15th, 1582 (see README)
         if (idate >= 15821015) {
             b = 2 - a + truncateDecimals(a/4.);
@@ -122,7 +108,7 @@ export module JDNConvertibleConversionModule {
         const f = jdc - z;
 
         const alpha = truncateDecimals((z - 1867216.25)/36524.25);
-        let a = z + 1 + alpha - truncateDecimals(alpha/4.);
+        const a = z + 1 + alpha - truncateDecimals(alpha/4.);
 
         const b = a + 1524;
         const c = truncateDecimals((b - 122.1)/365.25);
@@ -145,8 +131,8 @@ export module JDNConvertibleConversionModule {
             year = c - 4715;
         }
 
-        let fullday = truncateDecimals(day);
-        let daytime = day - fullday;
+        const fullday = truncateDecimals(day);
+        const daytime = day - fullday;
         return new CalendarDate(year, month, fullday, undefined, daytime);
     };
 
@@ -262,8 +248,8 @@ export module JDNConvertibleConversionModule {
             year = c - 4715;
         }
 
-        let fullday = truncateDecimals(day);
-        let daytime = day - fullday;
+        const fullday = truncateDecimals(day);
+        const daytime = day - fullday;
         return new CalendarDate(year, month, fullday, undefined, daytime);
     };
 
@@ -443,7 +429,7 @@ export module JDNConvertibleConversionModule {
             if (dl < 0) {
                 dl = dl + 30;
             }
-            
+
             if (dl < 19) {
                 jj = jj - 354;
                 h = h + 1;

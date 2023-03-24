@@ -1,21 +1,6 @@
 /*
- * Copyright © 2020 Lukas Rosenthaler, Rita Gautschy, Benjamin Geer, Ivan Subotic,
- * Tobias Schweizer, André Kilchenmann, and Sepideh Alassi.
- *
- * This file is part of JDNConvertibleCalendar.
- *
- * JDNConvertibleCalendar is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published
- * by the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * JDNConvertibleCalendar is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public
- * License along with JDNConvertibleCalendar.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright © 2021 - 2023 Swiss National Data and Service Center for the Humanities and/or DaSCH Service Platform contributors.
+ *  SPDX-License-Identifier: Apache-2.0
  */
 
 import { CalendarDate } from './CalendarDate';
@@ -23,8 +8,7 @@ import { JDNConvertibleConversionModule } from './JDNCalendarConversion';
 import { GregorianCalendarDate, JulianCalendarDate, IslamicCalendarDate, JDNConvertibleCalendar } from './JDNConvertibleCalendar';
 import { JDNPeriod } from './JDNPeriod';
 import { CalendarPeriod } from './CalendarPeriod';
-
-const assert = require('assert');
+import assert from "assert";
 
 /**
  * Checks if the received calendar date corresponds to the expected calendar date.
@@ -33,7 +17,7 @@ const assert = require('assert');
  * @param {CalendarDate} received received calendar date.
  * @param checkDayOfWeek indicates if week day should be checked.
  */
-const checkCalendarDate = (expected: CalendarDate, received: CalendarDate, checkDayOfWeek: Boolean = true) => {
+const checkCalendarDate = (expected: CalendarDate, received: CalendarDate, checkDayOfWeek = true) => {
 
     assert.strictEqual(received.year, expected.year, `calendar date is wrong: year is ${received.year} instead of ${expected.year}`);
     assert.strictEqual(received.month, expected.month, `calendar date is wrong: month is ${received.month} instead of ${expected.month}`);
