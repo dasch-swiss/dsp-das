@@ -32,7 +32,9 @@ jobs:
       - run: npm install
       - run: npx nx run dsp-app:lint --skip-nx-cache
       - run: npx nx run dsp-app:test:ci --skip-nx-cache
-      # - run: npx nx run dsp-app-e2e:e2e-ci
+        env:
+          TZ: Europe/Zurich
+          CHROME_BIN: /home/runner/actions-runner/_work/_tool/chromium/latest/x64/chrome
 
   dsp-app-tests-github:
     name: DSP-APP tests (github)
@@ -48,7 +50,8 @@ jobs:
       - run: npm install
       - run: npx nx run dsp-app:lint --skip-nx-cache
       - run: npx nx run dsp-app:test:ci --skip-nx-cache
-      # - run: npx nx run dsp-app-e2e:e2e-ci
+        env:
+          TZ: Europe/Zurich
 
   dateadapter-tests:
     name: DateAdapter tests
