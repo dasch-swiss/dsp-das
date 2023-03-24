@@ -175,8 +175,8 @@ export class SpecifyPropertyValueComponent implements OnChanges, OnDestroy {
 
             case Constants.Resource: // tODO: Match is only available on top level
                 this.comparisonOperators = this.topLevel
-                    ? [new Equals(), new NotEquals(), new Exists(), new NotExists(), new Match()]
-                    : [new Equals(), new NotEquals(), new Exists(), new NotExists()];
+                    ? [new Equals(), new NotEquals(), new Exists(), new Match()]
+                    : [new Equals(), new NotEquals(), new Exists()];
                 break;
 
             case Constants.IntValue:
