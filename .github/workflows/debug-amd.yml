@@ -1,7 +1,12 @@
 name: connect
 
 on:
-  workflow_dispatch:
+  pull_request:
+    branches:
+      - '*'
+  push:
+    branches:
+      - master
 
 permissions:
   id-token: write
