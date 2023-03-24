@@ -25,6 +25,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+      - name: add packages
+        run: |
+          sudo apt install -qyyy --no-install-recommends adwaita-icon-theme fontconfig fontconfig-config fonts-liberation gtk-update-icon-cache hicolor-icon-theme humanity-icon-theme libatk-bridge2.0-0 libatk1.0-0 libatk1.0-data libatspi2.0-0 libavahi-client3 libavahi-common-data libavahi-common3 libcairo-gobject2 libcairo2 libcolord2 libcups2 libdatrie1 libdrm-common libdrm2 libepoxy0 libfontconfig1 libfreetype6 libfribidi0 libgbm1 libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-common libgraphite2-3 libgtk-3-0 libgtk-3-common libharfbuzz0b libjbig0 libjpeg-turbo8 libjpeg8 libjson-glib-1.0-0 libjson-glib-1.0-common liblcms2-2 libnspr4 libnss3 libpango-1.0-0 libpangocairo-1.0-0 libpangoft2-1.0-0 libpixman-1-0 libpng16-16 librest-0.7-0 librsvg2-2 librsvg2-common libsoup-gnome2.4-1 libthai-data libthai0 libtiff5 libu2f-udev libvulkan1 libwayland-client0 libwayland-cursor0 libwayland-egl1 libwayland-server0 libwebp6 libxcb-render0 libxcb-shm0 libxcomposite1 libxcursor1 libxdamage1 libxfixes3 libxi6 libxinerama1 libxkbcommon0 libxrandr2 libxrender1 ubuntu-mono xdg-utils xkb-data
       - uses: browser-actions/setup-chrome@v1
       - run: npm install
       - run: npx nx run dsp-app:lint --skip-nx-cache
@@ -41,6 +44,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+      - name: add packages
+        run: |
+          sudo apt install -qyyy --no-install-recommends adwaita-icon-theme fontconfig fontconfig-config fonts-liberation gtk-update-icon-cache hicolor-icon-theme humanity-icon-theme libatk-bridge2.0-0 libatk1.0-0 libatk1.0-data libatspi2.0-0 libavahi-client3 libavahi-common-data libavahi-common3 libcairo-gobject2 libcairo2 libcolord2 libcups2 libdatrie1 libdrm-common libdrm2 libepoxy0 libfontconfig1 libfreetype6 libfribidi0 libgbm1 libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-common libgraphite2-3 libgtk-3-0 libgtk-3-common libharfbuzz0b libjbig0 libjpeg-turbo8 libjpeg8 libjson-glib-1.0-0 libjson-glib-1.0-common liblcms2-2 libnspr4 libnss3 libpango-1.0-0 libpangocairo-1.0-0 libpangoft2-1.0-0 libpixman-1-0 libpng16-16 librest-0.7-0 librsvg2-2 librsvg2-common libsoup-gnome2.4-1 libthai-data libthai0 libtiff5 libu2f-udev libvulkan1 libwayland-client0 libwayland-cursor0 libwayland-egl1 libwayland-server0 libwebp6 libxcb-render0 libxcb-shm0 libxcomposite1 libxcursor1 libxdamage1 libxfixes3 libxi6 libxinerama1 libxkbcommon0 libxrandr2 libxrender1 ubuntu-mono xdg-utils xkb-data
       - uses: browser-actions/setup-chrome@v1
       - run: npm install
       - run: npx nx run dsp-app:lint --skip-nx-cache
