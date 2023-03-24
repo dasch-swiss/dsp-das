@@ -18,13 +18,9 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@dsp-app/*": [
-        "apps/dsp-app/*"
-      ],
-      "@dasch-swiss/jdnconvertiblecalendar": ["libs/jdnconvertiblecalendar/src/index.ts"],
-      "@dasch-swiss/jdnconvertible-calendar-date-adapter/*": [
-        "libs/jdnconvertiblecalendardateadapter/*"
-      ]
+      "@dsp-app/*": ["apps/dsp-app/*"],
+      "@dasch-swiss/jdnconvertiblecalendar/*": ["libs/jdnconvertiblecalendar/*"],
+      "@dasch-swiss/jdnconvertible-calendar-date-adapter/*": ["libs/jdnconvertiblecalendardateadapter/*"]
     }
   },
   "angularCompilerOptions": {

@@ -69,6 +69,13 @@
         "browserTarget": "dateAdapter:build"
       }
     },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/dateAdapter/**/*.ts", "apps/dateAdapter/**/*.html"]
+      }
+    },
     "test": {
       "executor": "@angular-devkit/build-angular:karma",
       "options": {

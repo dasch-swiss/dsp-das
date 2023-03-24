@@ -26,11 +26,11 @@ import {
   IslamicCalendarDate,
   JDNConvertibleCalendar,
   JulianCalendarDate,
-} from 'jdnconvertiblecalendar';
+} from '@dasch-swiss/jdnconvertiblecalendar';
 import {
   ACTIVE_CALENDAR,
   JDNConvertibleCalendarDateAdapter,
-} from 'jdnconvertible-calendar-date-adapter';
+} from '@dasch-swiss/jdnconvertible-calendar-date-adapter';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -179,6 +179,7 @@ const makeCalToken = () => {
     },
   ],
 })
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class JdnDatepicker implements OnChanges, OnDestroy {
   @Input() activeCalendar: 'Gregorian' | 'Julian' | 'Islamic';
 
