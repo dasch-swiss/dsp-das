@@ -16,7 +16,7 @@ jobs:
       - run: ./find-ignored-tests.sh
 
   dsp-app-tests-arm:
-    name: DSP-APP tests
+    name: DSP-APP tests (actuated ARM)
     runs-on: actuated-aarch64
     steps:
       - uses: actions/checkout@v3
@@ -25,13 +25,14 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+      - uses: browser-actions/setup-chrome@v1
       - run: npm install
-      - run: npx nx run dsp-app:lint
-      - run: npx nx run dsp-app:test:ci
+      - run: npx nx run dsp-app:lint --skip-nx-cache
+      - run: npx nx run dsp-app:test:ci --skip-nx-cache
       # - run: npx nx run dsp-app-e2e:test:ci
 
   dsp-app-tests-amd:
-    name: DSP-APP tests
+    name: DSP-APP tests (actuated AMD)
     runs-on: actuated
     steps:
       - uses: actions/checkout@v3
@@ -40,13 +41,14 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+      - uses: browser-actions/setup-chrome@v1
       - run: npm install
-      - run: npx nx run dsp-app:lint
-      - run: npx nx run dsp-app:test:ci
+      - run: npx nx run dsp-app:lint --skip-nx-cache
+      - run: npx nx run dsp-app:test:ci --skip-nx-cache
       # - run: npx nx run dsp-app-e2e:test:ci
 
   dsp-app-tests-github:
-    name: DSP-APP tests
+    name: DSP-APP tests (github)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -55,9 +57,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+      - uses: browser-actions/setup-chrome@v1
       - run: npm install
-      - run: npx nx run dsp-app:lint
-      - run: npx nx run dsp-app:test:ci
+      - run: npx nx run dsp-app:lint --skip-nx-cache
+      - run: npx nx run dsp-app:test:ci --skip-nx-cache
       # - run: npx nx run dsp-app-e2e:test:ci
 
   jdnconvertiblecalendar-tests:
