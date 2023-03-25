@@ -3,8 +3,6 @@
  *  SPDX-License-Identifier: Apache-2.0
  */
 
-export * from './lib/iseven';
-export * from './lib/example';
 export { CalendarDate } from './lib/CalendarDate';
 export { CalendarPeriod } from './lib/CalendarPeriod';
 export { JDNPeriod } from './lib/JDNPeriod';
