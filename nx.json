@@ -52,17 +52,17 @@
   },
   "generators": {
     "@nrwl/angular:application": {
-      "style": "css",
+      "style": "scss",
       "linter": "eslint",
       "unitTestRunner": "jest",
-      "e2eTestRunner": "none"
+      "e2eTestRunner": "cypress"
     },
     "@nrwl/angular:library": {
       "linter": "eslint",
       "unitTestRunner": "jest"
     },
     "@nrwl/angular:component": {
-      "style": "css"
+      "style": "scss"
     }
   }
 }
