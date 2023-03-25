@@ -26,11 +26,11 @@ import {
   IslamicCalendarDate,
   JDNConvertibleCalendar,
   JulianCalendarDate,
-} from '@dasch-swiss/jdnconvertiblecalendar';
+} from '@dasch-swiss/dsp-js';
 import {
   ACTIVE_CALENDAR,
   JDNConvertibleCalendarDateAdapter,
-} from '@dasch-swiss/jdnconvertible-calendar-date-adapter';
+} from '@dasch-swiss/jdnconvertiblecalendardateadapter';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
