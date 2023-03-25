@@ -8,22 +8,14 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e"
-        ],
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
         "accessToken": "MTQxOTM1ODItN2FkMy00ZDg4LWIxNWYtZjViMjQ2YWM5YTYyfHJlYWQtd3JpdGU="
       }
     }
   },
   "namedInputs": {
     "sharedGlobals": [],
-    "default": [
-      "{projectRoot}/**/*",
-      "sharedGlobals"
-    ],
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [
       "default",
       "!{projectRoot}/tsconfig.spec.json",
@@ -36,13 +28,8 @@
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     },
     "test": {
       "inputs": [
@@ -53,10 +40,7 @@
       ]
     },
     "e2e": {
-      "inputs": [
-        "default",
-        "^production"
-      ]
+      "inputs": ["default", "^production"]
     },
     "lint": {
       "inputs": [
@@ -64,6 +48,21 @@
         "{workspaceRoot}/.eslintrc.json",
         "{workspaceRoot}/.eslintignore"
       ]
+    }
+  },
+  "generators": {
+    "@nrwl/angular:application": {
+      "style": "css",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "none"
+    },
+    "@nrwl/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "css"
     }
   }
 }

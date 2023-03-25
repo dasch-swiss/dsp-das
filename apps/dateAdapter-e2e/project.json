@@ -13,7 +13,7 @@
       "configurations": {
         "ci": {
           "watch": false,
-          "browsers": "ChromeHeadless",
+          "browsers": "ChromeHeadless"
         },
         "ci-production": {
           "watch": false,

@@ -73,7 +73,10 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/dateAdapter/**/*.ts", "apps/dateAdapter/**/*.html"]
+        "lintFilePatterns": [
+          "apps/dateAdapter/**/*.ts",
+          "apps/dateAdapter/**/*.html"
+        ]
       }
     },
     "test": {
