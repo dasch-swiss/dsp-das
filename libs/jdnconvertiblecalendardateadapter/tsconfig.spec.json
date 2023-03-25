@@ -1,12 +1,15 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
+    "module": "commonjs",
     "types": ["jasmine", "node"],
     "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "target": "ES2021"
+    "esModuleInterop": true
   },
   "files": ["src/test.ts"],
-  "include": ["**/*.spec.ts", "**/*.d.ts"]
+  "include": [
+    "src/**/*.spec.ts",
+    "src/**/*.d.ts"
+  ]
 }

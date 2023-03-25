@@ -3,7 +3,7 @@
  *  SPDX-License-Identifier: Apache-2.0
  */
 
-import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
+import { Inject, Injectable, Optional } from '@angular/core';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import {
   CalendarDate,
@@ -12,8 +12,8 @@ import {
   JDNConvertibleCalendar,
   JulianCalendarDate,
   IslamicCalendarDate,
-} from "@dasch-swiss/jdnconvertiblecalendar/src";
-import { JDNConvertibleCalendarNames } from '@dasch-swiss/jdnconvertiblecalendar/src';
+} from "@dasch-swiss/jdnconvertiblecalendar";
+import { JDNConvertibleCalendarNames } from '@dasch-swiss/jdnconvertiblecalendar';
 import { ACTIVE_CALENDAR } from './active_calendar_token';
 
 /**
@@ -64,7 +64,7 @@ export class JDNConvertibleCalendarDateAdapter extends DateAdapter<JDNConvertibl
     );
 
     // get active calendar from token
-    this.activeCalendarToken.subscribe((activeCal) => {
+    this.activeCalendarToken.subscribe((activeCal: "Gregorian" | "Julian" | "Islamic") => {
       if (JDNConvertibleCalendar.supportedCalendars.indexOf(activeCal) === -1) {
         throw Error('Invalid value for token ACTIVE_CALENDAR: ' + activeCal);
       }
@@ -95,7 +95,7 @@ export class JDNConvertibleCalendarDateAdapter extends DateAdapter<JDNConvertibl
     }
   }
 
-  setLocale(locale: string) {
+  override setLocale(locale: string) {
     // make locale a two character string
     let shortLocale;
 

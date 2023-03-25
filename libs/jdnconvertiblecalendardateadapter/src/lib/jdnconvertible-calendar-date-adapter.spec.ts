@@ -13,7 +13,7 @@ import {
 import {
   JDNConvertibleCalendarDateAdapter,
   JDNConvertibleCalendarDateAdapterModule,
-} from '../public_api';
+} from '../index';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { DateAdapter } from '@angular/material/core';
 import { ACTIVE_CALENDAR } from './active_calendar_token';
