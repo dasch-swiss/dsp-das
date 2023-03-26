@@ -41,8 +41,8 @@
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
-          "libs/shared-ui/**/*.ts",
-          "libs/shared-ui/**/*.html"
+          "libs/jdnconvertiblecalendardateadapter/**/*.ts",
+          "libs/jdnconvertiblecalendardateadapter/**/*.html"
         ]
       }
     }

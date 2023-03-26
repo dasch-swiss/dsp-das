@@ -7,7 +7,6 @@
   "generators": {},
   "targets": {
     "build": {
-      "defaultConfiguration": "development",
       "executor": "@angular-devkit/build-angular:browser",
       "options": {
         "outputPath": "dist/apps/dateAdapter",
@@ -51,7 +50,7 @@
           "buildOptimizer": true
         }
       },
-      "defaultConfiguration": ""
+      "defaultConfiguration": "production"
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",

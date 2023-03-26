@@ -24,8 +24,7 @@
       ],
       "@dasch-swiss/jdnconvertiblecalendardateadapter": [
         "libs/jdnconvertiblecalendardateadapter/src/index.ts"
-      ],
-      "@dasch-swiss/shared-ui": ["libs/shared-ui/src/index.ts"]
+      ]
     }
   },
   "angularCompilerOptions": {
