@@ -1,7 +1,5 @@
 {
   "compilerOptions": {
-    "target": "es2021",
-    "useDefineForClassFields": true,
     "forceConsistentCasingInFileNames": true,
     "strict": false,
     "noImplicitOverride": true,

@@ -26,7 +26,7 @@ import {
   IslamicCalendarDate,
   JDNConvertibleCalendar,
   JulianCalendarDate,
-} from '@dasch-swiss/dsp-js';
+} from '@dasch-swiss/jdnconvertiblecalendar';
 import {
   ACTIVE_CALENDAR,
   JDNConvertibleCalendarDateAdapter,

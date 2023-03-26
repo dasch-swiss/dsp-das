@@ -3,10 +3,11 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/dateAdapter/src",
   "projectType": "application",
-  "prefix": "app",
+  "prefix": "dasch-swiss",
   "generators": {},
   "targets": {
     "build": {
+      "defaultConfiguration": "development",
       "executor": "@angular-devkit/build-angular:browser",
       "options": {
         "outputPath": "dist/apps/dateAdapter",

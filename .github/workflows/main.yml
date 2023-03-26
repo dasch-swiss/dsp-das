@@ -16,7 +16,7 @@ jobs:
       - run: ./find-ignored-tests.sh
 
   dsp-app-tests-amd:
-    name: DSP-APP tests (actuated AMD)
+    name: DSP-APP (actuated AMD)
     runs-on: actuated
     steps:
       - uses: actions/checkout@v3
@@ -37,7 +37,7 @@ jobs:
           CHROME_BIN: /home/runner/actions-runner/_work/_tool/chromium/latest/x64/chrome
 
   dsp-app-tests-github:
-    name: DSP-APP tests (github)
+    name: DSP-APP (github)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -54,7 +54,7 @@ jobs:
           TZ: Europe/Zurich
 
   dateadapter-tests:
-    name: DateAdapter tests
+    name: DateAdapter
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -69,7 +69,7 @@ jobs:
       - run: npx nx run dateAdaper-e2e:e2e-ci
 
   jdnconvertiblecalendar-tests:
-    name: JDNConvertibleCalendar tests
+    name: JDNConvertibleCalendar
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -83,7 +83,7 @@ jobs:
       - run: npx nx run jdnconvertiblecalendar:test:ci
 
   jdnconvertiblecalendardateadapter-tests:
-    name: JDNConvertibleCalendarDateAdapter tests
+    name: JDNConvertibleCalendarDateAdapter
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

@@ -1,6 +1,6 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent, HeaderComponent } from './app.component';
-import { MatJDNConvertibleCalendarDateAdapterModule } from 'jdnconvertible-calendar-date-adapter';
+import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
 import { MatLegacyOptionModule as MatOptionModule } from '@angular/material/legacy-core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
@@ -9,7 +9,7 @@ import { MatLegacySelectModule as MatSelectModule } from '@angular/material/lega
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { ACTIVE_CALENDAR } from 'jdnconvertible-calendar-date-adapter';
+import { ACTIVE_CALENDAR } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
 import { BehaviorSubject } from 'rxjs';
 
 describe('AppComponent', () => {
