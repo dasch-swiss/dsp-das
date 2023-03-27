@@ -3,11 +3,12 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/dateAdapter/src",
   "projectType": "application",
-  "prefix": "dasch-swiss",
+  "prefix": "dateAdapter",
   "generators": {},
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/dateAdapter",
         "index": "apps/dateAdapter/src/index.html",
@@ -20,34 +21,22 @@
         ],
         "styles": ["apps/dateAdapter/src/styles.scss"],
         "scripts": [],
-        "vendorChunk": true,
-        "extractLicenses": false,
-        "buildOptimizer": false,
-        "sourceMap": true,
-        "optimization": false,
-        "namedChunks": true
       },
       "configurations": {
         "production": {
-          "budgets": [
-            {
-              "type": "anyComponentStyle",
-              "maximumWarning": "6kb"
-            }
-          ],
           "fileReplacements": [
             {
               "replace": "apps/dateAdapter/src/environments/environment.ts",
               "with": "apps/dateAdapter/src/environments/environment.prod.ts"
             }
           ],
-          "optimization": true,
-          "outputHashing": "all",
-          "sourceMap": false,
-          "namedChunks": false,
-          "extractLicenses": true,
-          "vendorChunk": false,
-          "buildOptimizer": true
+          "budgets": [
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "6kb"
+            }
+          ],
+          "outputHashing": "all"
         }
       },
       "defaultConfiguration": "production"
@@ -58,6 +47,9 @@
         "browserTarget": "dateAdapter:build"
       },
       "configurations": {
+        "development": {
+          "browserTarget": "dateAdapter:build:development"
+        },
         "production": {
           "browserTarget": "dateAdapter:build:production"
         }
