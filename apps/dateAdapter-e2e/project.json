@@ -11,18 +11,22 @@
         "devServerTarget": "dateAdapter:serve"
       },
       "configurations": {
-        "ci": {
-          "watch": false,
-          "browsers": "ChromeHeadless"
-        },
-        "ci-production": {
-          "watch": false,
-          "browsers": "ChromeHeadless",
-          "devServerTarget": "dateAdapter:serve:production"
-        },
         "production": {
           "devServerTarget": "dateAdapter:serve:production"
         }
+      }
+    },
+    "e2e-ci": {
+      "executor": "@angular-devkit/build-angular:protractor",
+      "options": {
+        "protractorConfig": "apps/dsp-app-e2e/protractor-ci.conf.js",
+        "devServerTarget": "dsp-app:serve"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "dsp-app:serve:production"
+        }
+
       }
     }
   },
