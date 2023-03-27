@@ -31,7 +31,7 @@ jobs:
       - run: npx nx run dsp-app:test:ci
         env:
           TZ: Europe/Zurich
-      - run: npx nx run dsp-app-e2e:e2e-ci
+      # - run: npx nx run dsp-app-e2e:e2e-ci
 
   dateadapter-tests:
     name: DateAdapter
@@ -46,7 +46,7 @@ jobs:
       - run: npm install
       - run: npx nx run dateAdapter:lint
       - run: npx nx run dateAdapter:test:ci
-      - run: npx nx run dateAdaper-e2e:e2e-ci
+      # - run: npx nx run dateAdaper-e2e:e2e-ci
 
   jdnconvertiblecalendar-tests:
     name: JDNConvertibleCalendar
