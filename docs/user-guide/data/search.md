@@ -18,13 +18,13 @@ When clicking on the search bar, the search history panel is displayed. The last
 
 ### Search rules
 
-* A search value must have a minimum length of **3** characters.
+* A search value must have a minimum length of **3** characters. If your search term has less than three characters (e.g. `is`), please add two asterisks (`*is*`).
 
-* All terms are interpreted as **lowercase** characters. E.g. "My dearest Maria" is interpreted as "my dearest maria".
+* All terms are interpreted as **lowercase** characters. E.g. *My dearest Maria* is interpreted as *my dearest maria*.
 
-* By default, the logical operator `OR` is used when submitting several search terms. I.e. the name "George Sand" is searched as "george" OR "sand". The database will return all results that include the terms "George Sand", "george", "sand". To find the exact name "George Sand", the term must be surrounded by "quotes".
+* By default, the logical operator `OR` is used when submitting several search terms. I.e. the name `George Sand` is searched as `george` OR `sand`. The database will return all results that include the terms `George Sand`, `george`, or `sand`. To find the exact name `George Sand`, the term must be surrounded by quotes: `"George Sand"`.
 
-* Each term separated by a **whitespace** is considered a single term. E.g. the term "mon petit chat" will be searched as "mon" OR "petit" OR "chat". To find the exact phrase "mon petit chat", the phrase must be surrounded by "quotes".
+* Each term separated by a **whitespace** is considered a single term. E.g. the term `mon petit chat` will be searched as `mon` OR `petit` OR `chat`. To find the exact phrase `mon petit chat`, the phrase must be surrounded by quotes: `"mon petit chat"`.
 
 ### Special syntax
 
@@ -34,28 +34,29 @@ Here is the list of characters with special meaning: +, -, &&, ||, !, (, ), [, ]
 
 For more information about them, please read the [Lucene documentation](https://lucene.apache.org/core/7_7_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html).
 
-> If you want to search for these special characters **explicitly**, note that the punctuation marks `,` and `.` are **NOT** eliminated and stay with the term where they occured. E.g. "To be, or not to be, that is the question." -> when searching for `be` the term `be,` (comma included) won't be found (and thus the entire phrase). We recommend to use the special character `*` or `?` to find the term. E.g. "be*" or "be?"
-Another example, if you search for the term "(1995)" that includes parenthesis in this case, search for "*1995*" or "?1995?".
+> If you want to search for these special characters **explicitly**, note that the punctuation marks `,` and `.` are **NOT** eliminated and stay with the term where they occur. E.g. `To be, or not to be, that is the question.` -> when searching for `be` the term `be,` (comma included) won't be found (and thus also not the entire phrase). We recommend to use the special character `*` - thus `be*` - to find all occurrences of a term.
+Another example: If you search for the term `(1995)` that includes parenthesis in this case, you have to search for `*1995*`.
 
 **Focus on the most common used characters:**
 
-* `*` (asterisk) can be used as a wildcard symbol for zero, one, or multiple characters. E.g. `pari*` ("Paris", "Parisian", "parity", "parish", etc.)
-* `?` (question mark) can be used as a wildcard symbol for a single character. E.g. `Bern?` ("Berne", "Bernt")
-* `""` (quotation marks) searches for the whole pattern. E.g. `"vittāni"` (the exact term "vittāni")
+* `*`: The **askerisk** can be used as a wildcard symbol for **zero, one, or multiple characters**. E.g. `pari*` will yield results such as `Paris`, `Parisian`, `parity`, `parish`, etc.
+* `?`: The **question mark** can be used as a wildcard symbol for a **single character**. E.g. `Bern?` will yield results such as `Berne`, `Bernt`, etc.
+* `""`: **Quotation marks** allow searches for the **whole pattern**. E.g. `"vittāni agne"` yields a result for the exact term `vittāni agne`. If your search term consists of more than one word and you intend to do an `AND` search, please use quotation marks.
 
-In order to make easier searches and independent from special characters, we recommand to use the advanced search. It will narrow down the search and accept special letters or characters. E.g. the exact writing `rāmāyaṇī` will be accepted and found.
+In order to make searching easier and independent of special characters, we recommand to use the advanced search. It will narrow down the search and accept special letters or characters. E.g. the exact writing `rāmāyaṇī` will be accepted and found.
 
 ### Include special characters in the search
 
-If one of the above characters should be included in the search - without any special meaning - it needs to be escaped with the character `\` .
+If one of the above characters should be included in the search - without any special meaning - it needs to be escaped by the character `\` .
 
-E.g. You want to search for "Notre-Dame de Paris", you will type "Notre`\-`Dame de Paris".
+E.g. If you want to search for *Notre-Dame de Paris*, you should type `"Notre\-Dame de Paris"`.
 
 ### Conversion
 
-Alphabetic, numeric, symbolic, and diacritical Unicode characters which are not in the [first 127 ASCII characters](https://learn.parallax.com/support/reference/ascii-table-0-127) (the "Basic Latin" Unicode block) are converted into their ASCII equivalents, if one exists, e.g. `é` or `ä` are converted into `e` and `a`.
+Alphabetic, numeric, symbolic, and diacritical Unicode characters which are not part of the [first 127 ASCII characters](https://learn.parallax.com/support/reference/ascii-table-0-127) (the "Basic Latin" Unicode block) are converted into their ASCII equivalents, if one exists. Thus, the full text search is set such that e.g. `é`, `ä`, `š` are converted into `e`, `a`, and `s`. This means that a search for `šumma` will yield results for `šumma`, `summa`, `ṣumma`, `śumma`, etc. If this is not what you need, please use the advanced search option instead.
 
-One exception: `r̥` must be replaced by `rr`.
+For special characters that cannot be converted to ASCII equivalents, we suggest to replace the respective special character by an **asterisk**:
+Such an example is `r̥tasya`, where the `r̥` must be replaced either by `rr` or - simpler - by `*`: thus searches for `rrtasya` or `*tasya` will yield the intended search result, but not `rtasya`.
 
 ---
 
