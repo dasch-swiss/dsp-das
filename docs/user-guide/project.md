@@ -2,17 +2,31 @@
 
 ## Project
 
-Once you are [logged in](index.md#login), the dashboard displays the list of your project(s). If you are a project administrator or a system administrator, you can edit the project information or archive your project from the project menu. Archived projects are stored in a list on your dashboard and they can be "reactivated" at any time.
+Once you are [logged in](index.md#login), the main dashboard displays all the projects hosted at DaSCH.
+Projects can be deactivated only by a system admin and are tagged. No more changes are allowed.
 
-![Project list and project menu](../assets/images/dashboard.png)*<https://admin.dasch.swiss/dashboard> - By clicking on the project name, you get access to the full project information.*
+![Project list and project menu](../assets/images/dashboard.png)*<https://admin.dasch.swiss/dashboard> - DaSCH dashboard*
 
-A system administrator can create a new research project. This currently requires essential information such as the project name, a shortcode and a shortname (both provided by DaSCH). A short project description is optional, but highly recommended.
+ By clicking on the button `Browse Data`, you go to the data browser page. You get access to the project information, the data model (if you are logged in), and the project settings (if you are project admin or system admin).
+
+### Create a new project
+
+Only system administrators can create a new research project, from the dashboard or the page System Administration > All projects.
 
 ![Create a new project](../assets/images/project-create-new.png)<center>*Form to create a new project.*</center>
 
-As project administrator or system administrator, you can define your project, add your team members, create permission groups and - most important - define your data model (ontology) and the lists of your project.
+This currently requires essential information such as the project name, a shortname and a shortcode (provided by DaSCH). A short project description is mandatory, it can be written in several languages as well as keywords.
 
-![Project management available functionalities](../assets/images/project-info.png)*<https://admin.dasch.swiss/project/0803/info> - Project management functionalities; e.g. Incunabula project. Project information page is displayed without restricted content, the other functionalities are reserved for project admin and system admin.*
+### Define your project
+
+From the data browser page, as a project admin (or system admin), you can access:
+
+* **Project Description**: define your project information
+* **Data Model**: define your data model and the lists of controlled vocabularies
+* **List of Resources**: create a new resource instance
+* **Project Settings**: add users as project members
+
+![Project management available functionalities](../assets/images/data-browser.png)*<https://admin.dasch.swiss/project/0803/info> - Project management functionalities; e.g. Incunabula project.*
 
 ---
 
@@ -20,9 +34,13 @@ As project administrator or system administrator, you can define your project, a
 
 As a system administrator or a project administrator, you can add users as project members. A user menu with different actions is accessible for each member of the project (the three-dot icon to the right side of the user line). The admin can grant another user as project admin (or remove this permission), edit user's information, change user's password if forgotten, and remove a user from the project.
 
-![Collaboration page](../assets/images/project-members.png)*<https://admin.dasch.swiss/project/0803/collaboration> - Project members page where project admin and system admin can add new user to the team.*
+![Collaboration page](../assets/images/project-settings.png)*<https://admin.dasch.swiss/project/0803/collaboration> - Project members page where project admin and system admin can add new user to the team.*
 
-<!-- >> **_NOTE:_** **Permissions for project admins to add new users as project member will be implemented soon.** -->
+As a project member, you can:
+
+* View the project information
+* View the data model
+* Get the list of resources with the number of entries
 
 ---
 
@@ -43,8 +61,9 @@ As soon as you have come to a conclusion concerning the structure of your data, 
 
 Go to your project, select the tab `Data model` (step 1) and click the button `New data model` (step 2) as shown below:
 ![Data model.](../assets/images/Fig2.png)
+<!-- image data-model-list-browser.png to replace project-info -->
 
-By clicking `New data model`, a dialog box opens:
+By clicking `New data model`, a dialog box opens: <!-- NO dialog box anymore -->
 ![Define new data model.](../assets/images/Fig3.png)
 
 **Create data model**
