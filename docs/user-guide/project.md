@@ -2,13 +2,15 @@
 
 ## Project
 
-Once you are [logged in](index.md#login), the main dashboard displays all the projects hosted at DaSCH.
+Once you are [logged in](index.md#login), the projects overview page displays all the projects hosted at DaSCH.
 
 Active projects are tagged with the status "Active". Projects tagged as "Deactivated" can no longer be edited. Only a system admin are allowed to change the project status.
 
-![Project list and project menu](../assets/images/dashboard.png)*<https://admin.dasch.swiss/dashboard> - DaSCH dashboard*
+![Project list and project menu](../assets/images/dashboard.png)*<https://admin.dasch.swiss/dashboard> - DSP-APP projects overview page.*
 
- By clicking on the button `Browse Data`, you go to the selected project data browser page. You get access to the project information, the data model (if you are logged in), and the project settings (if you are a project admin or a system admin).
+ By clicking on the button `Browse Data`, you go to the **project workspace**. You get access to the project information, the data model (if you are logged in), and the project settings (if you are logged in and a project admin or a system admin).
+
+ The setting icon on the top right of each project tile is displayed only for projects and system admins. It leads to the project settings page.
 
 ### Create a new project
 
@@ -20,7 +22,7 @@ This currently requires essential information such as the project name, a shortn
 
 ### Define your project
 
-From the data browser page, as a project admin (or a system admin), you can access:
+From the project workspace, as a project admin (or a system admin), you can access:
 
 * **Project Description**: define your project information
 * **Data Model**: define your data model and the lists of controlled vocabularies
@@ -35,7 +37,7 @@ From the data browser page, as a project admin (or a system admin), you can acce
 
 As a project admin (or a system admin), you can add users as project members. The admin can grant another user as project admin (or remove this permission), edit user's information, change user's password if forgotten, and remove a user from the project by clicking on the three-dot icon to the right side of the user line.
 
-![Collaboration page](../assets/images/project-settings.png)*<https://admin.dasch.swiss/project/0803/collaboration> - Project members page where project admin and system admin can add new user to the team.*
+![Collaboration page](../assets/images/project-settings.png)*<https://admin.dasch.swiss/project/0803/collaboration> - Project members page where project admin and system admin can add new users to the team.*
 
 As a project member, you can:
 
