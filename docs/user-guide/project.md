@@ -6,11 +6,12 @@ Once you are [logged in](index.md#login), the projects overview page displays al
 
 Active projects are tagged with the status "Active". Projects tagged as "Deactivated" can no longer be edited. Only a system admin are allowed to change the project status.
 
+ The setting icon on the top right of each project tile is displayed only for projects and system admins. It leads to the project settings page.
+
 ![Project list and project menu](../assets/images/dashboard.png)*<https://admin.dasch.swiss/dashboard> - DSP-APP projects overview page.*
 
  By clicking on the button `Browse Data`, you go to the **project workspace**. You get access to the project information, the data model (if you are logged in), and the project settings (if you are logged in and a project admin or a system admin).
 
- The setting icon on the top right of each project tile is displayed only for projects and system admins. It leads to the project settings page.
 
 ### Create a new project
 
@@ -22,14 +23,14 @@ This currently requires essential information such as the project name, a shortn
 
 ### Define your project
 
-From the project workspace, as a project admin (or a system admin), you can access:
+From the project workspace, as a project admin (or a system admin), you can access from the side panel:
 
 * **Project Description**: define your project information
 * **Data Model**: define your data model and the lists of controlled vocabularies
 * **List of Resources**: create a new resource instance
 * **Project Settings**: add users as project members
 
-![Project management available functionalities](../assets/images/data-browser.png)*<https://admin.dasch.swiss/project/0803/info> - Project management functionalities; e.g. Incunabula project.*
+![Project management available functionalities](../assets/images/project-workspace.png)*<https://admin.dasch.swiss/project/0803/info> - Project management functionalities; e.g. Incunabula project.*
 
 ---
 
@@ -39,7 +40,7 @@ As a project admin (or a system admin), you can add users as project members. Th
 
 ![Collaboration page](../assets/images/project-settings.png)*<https://admin.dasch.swiss/project/0803/collaboration> - Project members page where project admin and system admin can add new users to the team.*
 
-As a project member, you can:
+As a project member, you can from the project workspace:
 
 * View the project information
 * View the data model
@@ -53,23 +54,24 @@ The definition of the data model (*ontology*) is the most important step. The da
 
 The question which you have to answer before you create your data model is **according to which criteria do you organize your data**? In this respect it may be useful to ask yourself:
 
-- *How are your data organized?*
-- *What are the goals you want to achieve, which research questions do you want to answer?*
+* *How are your data organized?*
+* *What are the goals you want to achieve, which research questions do you want to answer?*
 
 As soon as you have come to a conclusion concerning the structure of your data, you're all set to create your data model.
 
+### Data Model overview
+
+To see the list of existing data models and to create a new one, you go to your project workspace and click on the `Data Model` button in the side panel.
+
+![Data model.](../assets/images/data-model-list-browser.png)
+
+If you click on a data model name from the list, you get access to the detailed view of the data model (= ontology editor). It can be edited only by project admins. However, **any other logged-in users can see the data model in read mode only**.
+
 ### Create your data model
 
-**Go to *Data model* and click *New data model***
+From the data model overview page, click on the button `Create New`. You can fill in the creation form with precise information.
 
-Go to your project, select the tab `Data model` (step 1) and click the button `New data model` (step 2) as shown below:
-![Data model.](../assets/images/Fig2.png)
-<!-- image data-model-list-browser.png to replace project-info -->
-
-By clicking `New data model`, a dialog box opens: <!-- NO dialog box anymore -->
-![Define new data model.](../assets/images/Fig3.png)
-
-**Create data model**
+![Create a new data model.](../assets/images/Fig3.png)
 
 Now you have to set a unique name (*please consider the NOTE*) and you can add a comment. Push the button `Create` to create your data model.
 
