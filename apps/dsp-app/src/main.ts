@@ -6,7 +6,6 @@ import { environment } from './environments/environment';
 import { APP_CONFIG } from './app/main/declarations/dsp-api-tokens';
 
 function configListener() {
-    // just adding a comment
     try {
         const configuration = JSON.parse(this.responseText);
 
