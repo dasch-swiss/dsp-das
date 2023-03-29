@@ -181,7 +181,8 @@ export class PropertyFormComponent implements OnInit {
         private _errorHandler: ErrorHandlerService,
         private _fb: UntypedFormBuilder,
         private _os: OntologyService,
-        private _sortingService: SortingService
+        private _sortingService: SortingService,
+        private _notification: NotificationService,
     ) {}
 
     ngOnInit() {
@@ -637,8 +638,7 @@ export class PropertyFormComponent implements OnInit {
                                     ) {
                                         this.replaceGuiElement();
                                     } else {
-                                        this.loading = false;
-                                        this.closeDialog.emit();
+                                        this.onSuccess();
                                     }
                                 },
                                 (error: ApiResponseError) => {
@@ -681,8 +681,7 @@ export class PropertyFormComponent implements OnInit {
                                     ) {
                                         this.replaceGuiElement();
                                     } else {
-                                        this.loading = false;
-                                        this.closeDialog.emit();
+                                        this.onSuccess();
                                     }
                                 },
                                 (error: ApiResponseError) => {
@@ -730,8 +729,7 @@ export class PropertyFormComponent implements OnInit {
         this._dspApiConnection.v2.onto.createResourceProperty(onto).subscribe(
             (response: ResourcePropertyDefinitionWithAllLanguages) => {
                 this.lastModificationDate = response.lastModificationDate;
-                this.loading = false;
-                this.closeDialog.emit();
+                this.onSuccess();
             },
             (error: ApiResponseError) => {
                 this.error = true;
@@ -831,9 +829,7 @@ export class PropertyFormComponent implements OnInit {
             .subscribe(
                 (res: ResourceClassDefinitionWithAllLanguages) => {
                     this.lastModificationDate = res.lastModificationDate;
-                    // close the dialog box
-                    this.loading = false;
-                    this.closeDialog.emit();
+                    this.onSuccess();
                 },
                 (error: ApiResponseError) => {
                     this.error = true;
@@ -869,9 +865,7 @@ export class PropertyFormComponent implements OnInit {
                 ) => {
                     this.lastModificationDate =
                         guiEleResponse.lastModificationDate;
-                    // close the dialog box
-                    this.loading = false;
-                    this.closeDialog.emit();
+                    this.onSuccess();
                 },
                 (error: ApiResponseError) => {
                     this.error = true;
@@ -915,9 +909,7 @@ export class PropertyFormComponent implements OnInit {
             .subscribe(
                 (res: ResourceClassDefinitionWithAllLanguages) => {
                     this.lastModificationDate = res.lastModificationDate;
-                    // close the dialog box
-                    this.loading = false;
-                    this.closeDialog.emit();
+                    this.onSuccess();
                 },
                 (error: ApiResponseError) => {
                     this.error = true;
@@ -1028,5 +1020,27 @@ export class PropertyFormComponent implements OnInit {
             this.editMode = 'editProperty';
             return;
         }
+    }
+
+    onSuccess() {
+        this.loading = false;
+        const msg = this.getNotificationMsg();
+        if (msg) {
+            this._notification.openSnackBar(msg);
+        }
+        this.closeDialog.emit();
+    }
+
+    getNotificationMsg(): string {
+        let msg = '';
+        if (this.editMode === 'editProperty') {
+            msg = `Successfully updated ${this.propertyInfo.propDef.label}.`;
+        }
+        if (this.editMode === 'changeCardinalities') {
+            msg = `Successfully changed the cardinalities of
+                ${this.propertyInfo.propDef.label} on class
+                ${this.resClassIri}`;
+        }
+        return msg;
     }
 }
