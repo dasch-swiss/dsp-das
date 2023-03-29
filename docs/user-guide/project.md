@@ -12,10 +12,9 @@ Active projects are tagged with the status "Active". Projects tagged as "Deactiv
 
  By clicking on the button `Browse Data`, you go to the **project workspace**. You get access to the project information, the data model (if you are logged in), and the project settings (if you are logged in and a project admin or a system admin).
 
-
 ### Create a new project
 
-Only a system admin can create a new research project, from the dashboard or the page System Administration > All projects.
+Only a system admin can create a new research project, from the projects overview page or the page System Administration > All projects.
 
 ![Create a new project](../assets/images/project-create-new.png)<center>*Form to create a new project.*</center>
 
@@ -27,8 +26,10 @@ From the side panel of the project workspace, as a project admin (or a system ad
 
 * **Project Description**: define your project information
 * **Data Model**: define your data model and the lists of controlled vocabulary
-* **List of Resources**: create a new resource instance
+* **List of Resources**: view all resource classes, search by resource class, and create new resource instances
 * **Project Settings**: add users as project members
+
+> Project members and logged-in users from other projects can also view the project description, the data model, and the list of resource classes.
 
 ![Project management available functionalities](../assets/images/project-workspace.png)*<https://admin.dasch.swiss/project/0803/info> - Project management functionalities; e.g. Incunabula project.*
 
@@ -40,11 +41,11 @@ As a project admin (or a system admin), you can add users as project members. Th
 
 ![Collaboration page](../assets/images/project-settings.png)*<https://admin.dasch.swiss/project/0803/collaboration> - Project members page where project admin and system admin can add new users to the team.*
 
-As a project member, you can from the project workspace:
+From the project workspace, as a project member, you can:
 
 * View the project information
 * View the data model
-* Get the list of resources with the number of entries, and click on the tiles to make a search by resource
+* Get the list of resource classes with the number of entries, and click on the tiles to make a search by resource class.
 
 ---
 
