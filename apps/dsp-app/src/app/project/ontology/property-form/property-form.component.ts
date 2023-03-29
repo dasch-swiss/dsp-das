@@ -836,6 +836,7 @@ export class PropertyFormComponent implements OnInit {
                     this.error = true;
                     this.loading = false;
                     this._errorHandler.showMessage(error);
+                    this.closeDialog.emit();
                 }
             );
     }
