@@ -71,7 +71,7 @@ If you click on a data model name from the list, you get access to the detailed 
 
 From the data model overview page, click on the button `Create New`. You can fill in the creation form with precise information.
 
-![Create a new data model.](../assets/images/Fig3.png)
+![Create a new data model.](../assets/images/data-model-create2.png)
 
 Now you have to set a unique name (*please consider the NOTE*) and you can add a comment. Push the button `Create` to create your data model.
 
@@ -163,27 +163,27 @@ If you have single digitized pages of a book in your project, they can be define
 This is how a book and the page class could look like:
 ![Page class as part of Book class](../assets/images/Fig42.png)
 
-### Define Lists
-One of the possible property types to choose from is *List*. Lists are very useful if you want to use controlled vocabulary to describe something. Typical examples are keywords. In your book example it may be useful to define a property which describes to which category of literature your pdf of a book belongs. **Before** you can add a property of type *List* to your data model, you have to define this list. For the definiton of a list you have to change to the `Lists` tab:
-![List tab.](../assets/images/Fig34.png)
+### Define Controlled Vocabularies (or List)
+One of the possible property types to choose from is *List* (= Controlled Vocabulary). Controlled vocabularies are hierarchical or non-hierarchical lexica of reference terms. Due to their normative or standardized nature, controlled vocabularies improve data quality and make database searching more efficient than free-text fields. Typical examples are keywords. In your book example, it may be useful to define a property which describes to which category of literature your pdf of a book belongs. **Before** you can add a property of type *List* to your data model, you have to define this controlled vocabulary. For its definiton, you go to the data model overview page from your project workspace (Step 1):
+![List tab.](../assets/images/controlled-voca-create.png)
 
-Click `Create your first list`. If there is already a list defined, click `New list`. A new window pops up where you have to enter a name for your list (`List label`) and a short description, then click `Create`.
-![Create new list.](../assets/images/Fig35.png)
+Click `Create New` (Step 2). A creation form appears where you enter a label and a short description, then click `Create`.
+![Create new controlled vocabulary.](../assets/images/controlled-voca-create-form.png)
 
-As soon as the list is created you can continue with the definition of your data model. You can define the individual list items later. How to do this will be explained below. We first focus on the definition of a list property in the data model. Currently there is only one option for displaying a property of type *List*, namely *Dropdown*. It is capable of displaying flat as well as hierarchical lists.
+As soon as the controlled vocabulary is created, you can continue with the definition of your data model. You can define the individual controlled vocabulary items later. How to do this will be explained below. We first focus on the definition of a property of type `List` in the data model. Currently, there is only one option for displaying a property of this type, namely *Dropdown*. It is capable of displaying flat as well as hierarchical lists.
 ![Define a property of type *List*.](../assets/images/Fig40.png)
 
 A new window opens up and as in the case of other properties you have to add a label, a desciption and to choose whether multiple values are allowed and/or whether this property is a required field. But in addition you have to select the list which contains your controlled vocabulary.
 ![Select list for list property.](../assets/images/Fig41.png)
 
-#### How to define items in a list
-In our example we have created a list named *Category*. Now it is time to define the list items. We will list some main literature genres as the first hierarchy in our list. Enter the name of the list node and click the `+` as shown below:
-![Define list main nodes.](../assets/images/Fig36.png)
+#### How to define items in a controlled vocabulary
+In our example, we have created a controlled vocabulary named *Category*. Now, it is time to define the items. We will list some main literature genres as the first hierarchy in our controlled vocabulary. Enter the name of the node and click the `+` as shown below:
+![Define main nodes.](../assets/images/Fig36.png)
 
-By clicking on the small arrow on the left a second hierarchical level becomes accessible where you can add items in the same was as for the main hierarchy. 
+By clicking on the small arrow on the left a second hierarchical level becomes accessible where you can add items in the same was as for the main hierarchy.
 ![Define list main nodes.](../assets/images/Fig37.png)
 
-It is possible to add list items at any time. You may rearrange the order of your list items and add a new list item at a specific position in the list.
+It is possible to add controlled vocabulary items at any time. You may rearrange the order of your items and add a new item at a specific position in the list.
 ![Define further list nodes.](../assets/images/Fig39.png)
 
 ### Remove PROPERTIES from a resource class
