@@ -149,7 +149,7 @@ export class PropertyFormComponent implements OnInit {
     ontologyClasses: ClassToSelect[] = [];
 
     loading = false;
-
+    submittingChange = false; // after submit
     error = false;
 
     labels: StringLiteral[] = [];
@@ -796,6 +796,7 @@ export class PropertyFormComponent implements OnInit {
      * target cardinality set in the gui
      */
     submitCardinalitiesChange() {
+        this.submittingChange = true;
         // get the ontology, the class and its properties
         const classUpdate =
             new UpdateOntology<UpdateResourceClassCardinality>();
@@ -823,11 +824,13 @@ export class PropertyFormComponent implements OnInit {
             .subscribe(
                 (res: ResourceClassDefinitionWithAllLanguages) => {
                     this.lastModificationDate = res.lastModificationDate;
+                    this.submittingChange = false;
                     this.onSuccess();
                 },
                 (error: ApiResponseError) => {
                     this.onError(error);
-                }
+                    this.closeDialog.emit();
+                },
             );
     }
 
