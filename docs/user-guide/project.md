@@ -4,7 +4,7 @@
 
 Once you are [logged in](index.md#login), the projects overview page displays all the projects hosted at DaSCH.
 
-Active projects are tagged with the status "Active". Projects tagged as "Deactivated" can no longer be edited. Only a system admin are allowed to change the project status.
+Active projects are tagged with the status "Active". Projects tagged as "Deactivated" can no longer be edited. Only a system admin is allowed to change the project status.
 
  The setting icon on the top right of each project tile is displayed only for projects and system admins. It leads to the project settings page.
 
@@ -19,14 +19,14 @@ Only a system admin can create a new research project, from the dashboard or the
 
 ![Create a new project](../assets/images/project-create-new.png)<center>*Form to create a new project.*</center>
 
-This currently requires essential information such as the project name, a shortname and a shortcode (provided by DaSCH). A short project description is mandatory, it can be written in several languages as well as keywords.
+This currently requires essential information such as the project name, a short name, and a shortcode (provided by DaSCH). A short project description is mandatory, it can be written in several languages as well as keywords.
 
 ### Define your project
 
-From the project workspace, as a project admin (or a system admin), you can access from the side panel:
+From the side panel of the project workspace, as a project admin (or a system admin), you can access:
 
 * **Project Description**: define your project information
-* **Data Model**: define your data model and the lists of controlled vocabularies
+* **Data Model**: define your data model and the lists of controlled vocabulary
 * **List of Resources**: create a new resource instance
 * **Project Settings**: add users as project members
 
@@ -36,7 +36,7 @@ From the project workspace, as a project admin (or a system admin), you can acce
 
 ## Project members
 
-As a project admin (or a system admin), you can add users as project members. The admin can grant another user as project admin (or remove this permission), edit user's information, change user's password if forgotten, and remove a user from the project by clicking on the three-dot icon to the right side of the user line.
+As a project admin (or a system admin), you can add users as project members. The admin can grant another user as project admin (or remove this permission), edit the user's information, change the user's password if forgotten, and remove a user from the project by clicking on the three-dot icon to the right side of the user line.
 
 ![Collaboration page](../assets/images/project-settings.png)*<https://admin.dasch.swiss/project/0803/collaboration> - Project members page where project admin and system admin can add new users to the team.*
 
@@ -50,7 +50,7 @@ As a project member, you can from the project workspace:
 
 ## Data model
 
-The definition of the data model (*ontology*) is the most important step. The data model is indispensable for structuring your data. Our platform provides a tool for an easy creation of one or more project data models. First, you have to know which data and resources you want to work with. The data model can be flexible and customizable.
+The definition of the data model (*ontology*) is the most important step. The data model is indispensable for structuring your data. Our platform provides a tool for the easy creation of one or more project data models. First, you have to know which data and resources you want to work with. The data model can be flexible and customizable.
 
 The question which you have to answer before you create your data model is **according to which criteria do you organize your data**? In this respect it may be useful to ask yourself:
 
@@ -59,7 +59,7 @@ The question which you have to answer before you create your data model is **acc
 
 As soon as you have come to a conclusion concerning the structure of your data, you're all set to create your data model.
 
-### Data Model overview
+### Data Model Overview
 
 To see the list of existing data models and to create a new one, you go to your project workspace and click on the `Data Model` button in the side panel.
 
@@ -88,9 +88,9 @@ Now you have to set a unique name (*please consider the NOTE*) and you can add a
 >   - *shared*
 >   - *simple*
 >   - *standoff*
-> - *the unique name can't be changed afterwards!*
+> - *the unique name can't be changed afterward!*
 
-*The label is a combination of the project's shortname and the unique name. You can replace it with any other string.*
+*The label is a combination of the project's short name and the unique name. You can replace it with any other string.*
 ![Define the name of your data model.](../assets/images/Fig4.png)
 
 After the creation of your data model, your page should look like this:
@@ -163,24 +163,24 @@ If you have single digitized pages of a book in your project, they can be define
 This is how a book and the page class could look like:
 ![Page class as part of Book class](../assets/images/Fig42.png)
 
-### Define Controlled Vocabularies (or List)
-One of the possible property types to choose from is *List* (= Controlled Vocabulary). Controlled vocabularies are hierarchical or non-hierarchical lexica of reference terms. Due to their normative or standardized nature, controlled vocabularies improve data quality and make database searching more efficient than free-text fields. Typical examples are keywords. In your book example, it may be useful to define a property which describes to which category of literature your pdf of a book belongs. **Before** you can add a property of type *List* to your data model, you have to define this controlled vocabulary. For its definiton, you go to the data model overview page from your project workspace (Step 1):
+### Define Controlled Vocabularies
+One of the possible property types to choose from is *List* (= Controlled Vocabulary). Controlled vocabularies are hierarchical or non-hierarchical lexica of reference terms. Due to their normative or standardized nature, controlled vocabularies improve data quality and make database searching more efficient than free-text fields. Typical examples are keywords. In your book example, it may be useful to define a property that describes to which category of literature your pdf of a book belongs. **Before** you can add a property of type *List* to your data model, you have to define this controlled vocabulary. For its definition, you go to the data model overview page from your project workspace (Step 1):
 ![List tab.](../assets/images/controlled-voca-create.png)
 
 Click `Create New` (Step 2). A creation form appears where you enter a label and a short description, then click `Create`.
 ![Create new controlled vocabulary.](../assets/images/controlled-voca-create-form.png)
 
-As soon as the controlled vocabulary is created, you can continue with the definition of your data model. You can define the individual controlled vocabulary items later. How to do this will be explained below. We first focus on the definition of a property of type `List` in the data model. Currently, there is only one option for displaying a property of this type, namely *Dropdown*. It is capable of displaying flat as well as hierarchical lists.
+As soon as the controlled vocabulary is created, you can continue with the definition of your data model. You can define the individually controlled vocabulary items later. How to do this will be explained below. We first focus on the definition of a property of type `List` in the data model. Currently, there is only one option for displaying a property of this type, namely *Dropdown*. It is capable of displaying flat as well as hierarchical lists.
 ![Define a property of type *List*.](../assets/images/Fig40.png)
 
-A new window opens up and as in the case of other properties you have to add a label, a desciption and to choose whether multiple values are allowed and/or whether this property is a required field. But in addition you have to select the list which contains your controlled vocabulary.
+A new window opens up and as in the case of other properties you have to add a label, and a description and choose whether multiple values are allowed and/or whether this property is a required field. But in addition, you have to select the list which contains your controlled vocabulary.
 ![Select list for list property.](../assets/images/Fig41.png)
 
 #### How to define items in a controlled vocabulary
-In our example, we have created a controlled vocabulary named *Category*. Now, it is time to define the items. We will list some main literature genres as the first hierarchy in our controlled vocabulary. Enter the name of the node and click the `+` as shown below:
+In our example, we have created a controlled vocabulary named *Category*. Now, it is time to define the items. We will list some main literary genres as the first hierarchy in our controlled vocabulary. Enter the name of the node and click the `+` as shown below:
 ![Define main nodes.](../assets/images/Fig36.png)
 
-By clicking on the small arrow on the left a second hierarchical level becomes accessible where you can add items in the same was as for the main hierarchy.
+By clicking on the small arrow on the left a second hierarchical level becomes accessible where you can add items in the same way as for the main hierarchy.
 ![Define list main nodes.](../assets/images/Fig37.png)
 
 It is possible to add controlled vocabulary items at any time. You may rearrange the order of your items and add a new item at a specific position in the list.
