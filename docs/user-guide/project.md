@@ -10,7 +10,7 @@ Active projects are tagged with the status "Active". Projects tagged as "Deactiv
 
 ![Project list and project menu](../assets/images/dashboard.png)*<https://admin.dasch.swiss/dashboard> - DSP-APP projects overview page.*
 
- By clicking on the button `Browse Data`, you go to the **project workspace**. You get access to the project information, the data model (if you are logged in), and the project settings (if you are logged in and a project admin or a system admin).
+ By clicking on the button `Browse Data`, you go to the **project workspace**. You get access to the project information, the data model (if you are logged in), and the project settings (if you are logged in as a project admin or a system admin).
 
 ### Create a new project
 
