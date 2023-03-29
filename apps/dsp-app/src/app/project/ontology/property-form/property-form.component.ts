@@ -1010,6 +1010,10 @@ export class PropertyFormComponent implements OnInit {
         }
     }
 
+    /**
+     * onSuccess: handle successful operations: Display a notification if
+     * necessary and close the dialog
+     */
     onSuccess() {
         this.loading = false;
         const msg = this.getNotificationMsg();
@@ -1018,13 +1022,19 @@ export class PropertyFormComponent implements OnInit {
         }
         this.closeDialog.emit();
     }
-
+    
+    /**
+     * onError: handle erratic operations
+     */
     onError(err) {
         this.error = true;
         this.loading = false;
         this._errorHandler.showMessage(err);
     }
 
+    /**
+     * getNotificationMsg: return the message string depending on the editMode
+     */
     getNotificationMsg(): string {
         let msg = '';
         if (this.editMode === 'editProperty') {
