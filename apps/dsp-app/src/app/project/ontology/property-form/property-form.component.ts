@@ -524,6 +524,7 @@ export class PropertyFormComponent implements OnInit {
             targetGuiCardinality.value === true
         ) {
             this.canSetCardinality = false;
+            this.canChangeCardinalityChecked = true;
             return;
         }
         // check if cardinality can be changed
