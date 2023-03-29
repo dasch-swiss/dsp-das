@@ -24,14 +24,14 @@ This currently requires essential information such as the project name, a short 
 
 From the side panel of the project workspace, as a project admin (or a system admin), you can access:
 
-* **Project Description**: define your project information
+* **Project Description**: define your project information or edit it
 * **Data Model**: define your data model and the lists of controlled vocabulary
 * **List of Resources**: view all resource classes, search by resource class, and create new resource instances
 * **Project Settings**: add users as project members
 
 > Project members and logged-in users from other projects can also view the project description, the data model, and the list of resource classes.
 
-![Project management available functionalities](../assets/images/project-workspace.png)*<https://admin.dasch.swiss/project/0803/info> - Project management functionalities; e.g. Incunabula project.*
+![Project management available functionalities](../assets/images/project-workspace.png)*<https://admin.dasch.swiss/project/0803/info> - Project management functionalities; e.g. Incunabula project. The side panel can be opened or close by clicking on the chevron icon at the top.*
 
 ---
 
@@ -66,7 +66,7 @@ To see the list of existing data models and to create a new one, you go to your 
 
 ![Data model.](../assets/images/data-model-list-browser.png)
 
-If you click on a data model name from the list, you get access to the detailed view of the data model (= ontology editor). It can be edited only by project admins. However, **any other logged-in users can see the data model in read mode only**.
+If you click on a data model name from the list, you get access to the detailed view of the data model (= ontology editor). It can be edited only by project admins. However, **any other logged-in users can see the data model in read mode only**. Logged-out users don't have access yet.
 
 ### Create your data model
 
