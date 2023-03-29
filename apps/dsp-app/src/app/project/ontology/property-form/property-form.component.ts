@@ -642,9 +642,7 @@ export class PropertyFormComponent implements OnInit {
                                     }
                                 },
                                 (error: ApiResponseError) => {
-                                    this.error = true;
-                                    this.loading = false;
-                                    this._errorHandler.showMessage(error);
+                                    this.onError(error);
                                 }
                             );
                     } else {
@@ -685,9 +683,7 @@ export class PropertyFormComponent implements OnInit {
                                     }
                                 },
                                 (error: ApiResponseError) => {
-                                    this.error = true;
-                                    this.loading = false;
-                                    this._errorHandler.showMessage(error);
+                                    this.onError(error);
                                 }
                             );
                     }
@@ -732,9 +728,7 @@ export class PropertyFormComponent implements OnInit {
                 this.onSuccess();
             },
             (error: ApiResponseError) => {
-                this.error = true;
-                this.loading = false;
-                this._errorHandler.showMessage(error);
+                this.onError(error);
             }
         );
     }
@@ -832,9 +826,7 @@ export class PropertyFormComponent implements OnInit {
                     this.onSuccess();
                 },
                 (error: ApiResponseError) => {
-                    this.error = true;
-                    this.loading = false;
-                    this._errorHandler.showMessage(error);
+                    this.onError(error);
                 }
             );
     }
@@ -868,9 +860,7 @@ export class PropertyFormComponent implements OnInit {
                     this.onSuccess();
                 },
                 (error: ApiResponseError) => {
-                    this.error = true;
-                    this.loading = false;
-                    this._errorHandler.showMessage(error);
+                    this.onError(error);
                 }
             );
     }
@@ -912,9 +902,7 @@ export class PropertyFormComponent implements OnInit {
                     this.onSuccess();
                 },
                 (error: ApiResponseError) => {
-                    this.error = true;
-                    this.loading = false;
-                    this._errorHandler.showMessage(error);
+                    this.onError(error);
                 }
             );
     }
@@ -1029,6 +1017,12 @@ export class PropertyFormComponent implements OnInit {
             this._notification.openSnackBar(msg);
         }
         this.closeDialog.emit();
+    }
+
+    onError(err) {
+        this.error = true;
+        this.loading = false;
+        this._errorHandler.showMessage(err);
     }
 
     getNotificationMsg(): string {
