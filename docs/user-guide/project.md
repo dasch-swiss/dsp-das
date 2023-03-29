@@ -45,7 +45,8 @@ From the project workspace, as a project member, you can:
 
 * View the project information
 * View the data model
-* Get the list of resource classes with the number of entries, and click on the tiles to make a search by resource class.
+* Get the list of resource classes with the number of entries, and click on the tiles to make a search by resource class
+* Create or edit resources
 
 ---
 
