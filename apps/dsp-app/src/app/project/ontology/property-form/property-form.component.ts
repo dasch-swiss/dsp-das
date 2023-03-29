@@ -50,12 +50,14 @@ import {
 import { OntologyService } from '../ontology.service';
 import { GuiCardinality } from '../property-info/property-info.component';
 import { PropToDisplay } from '../resource-class-info/resource-class-info.component';
+import { NotificationService } from '@dsp-app/src/app/main/services/notification.service';
 
 export type EditMode =
     | 'createProperty'
     | 'editProperty'
     | 'assignExistingProperty'
-    | 'assignNewProperty';
+    | 'assignNewProperty'
+    | 'changeCardinalities';
 
 export interface ClassToSelect {
     ontologyId: string;
@@ -261,7 +263,7 @@ export class PropertyFormComponent implements OnInit {
             this.canEnableRequiredToggle();
         }
 
-        if (this.changeCardinalities) {
+        if (this.editMode === 'changeCardinalities') {
             // request for changing cardinalities
             this.canChangeCardinality(this.targetGuiCardinality);
         }
@@ -583,6 +585,9 @@ export class PropertyFormComponent implements OnInit {
                 break;
             case 'assignExistingProperty':
                 this.assignProperty(this.propertyInfo.propDef);
+                break;
+            case 'changeCardinalities':
+                this.submitCardinalitiesChange();
                 break;
         }
     }
@@ -997,27 +1002,31 @@ export class PropertyFormComponent implements OnInit {
      */
     setEditMode() {
         if (this.changeCardinalities) {
-            // no editMode - just cards
+            this.editMode = 'changeCardinalities';
             return;
         }
         if (this.resClassIri && !!this.propertyInfo.propDef) {
             // in context of class and with an existing property
             this.editMode = 'assignExistingProperty';
+            return;
         }
 
         if (this.resClassIri && !this.propertyInfo.propDef) {
             // in context of class and without an existing property
             this.editMode = 'assignNewProperty';
+            return;
         }
 
         if (!this.resClassIri && !this.propertyInfo.propDef) {
             // in properties context and without an existing property
             this.editMode = 'createProperty';
+            return;
         }
 
         if (!this.resClassIri && !!this.propertyInfo.propDef) {
             // in properties context and with an existing property
             this.editMode = 'editProperty';
+            return;
         }
     }
 }
