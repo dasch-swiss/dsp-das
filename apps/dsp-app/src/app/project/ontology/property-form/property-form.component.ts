@@ -990,19 +990,16 @@ export class PropertyFormComponent implements OnInit {
             this.editMode = 'assignExistingProperty';
             return;
         }
-
         if (this.resClassIri && !this.propertyInfo.propDef) {
             // in context of class and without an existing property
             this.editMode = 'assignNewProperty';
             return;
         }
-
         if (!this.resClassIri && !this.propertyInfo.propDef) {
             // in properties context and without an existing property
             this.editMode = 'createProperty';
             return;
         }
-
         if (!this.resClassIri && !!this.propertyInfo.propDef) {
             // in properties context and with an existing property
             this.editMode = 'editProperty';
@@ -1022,7 +1019,7 @@ export class PropertyFormComponent implements OnInit {
         }
         this.closeDialog.emit();
     }
-    
+
     /**
      * onError: handle erratic operations
      */
