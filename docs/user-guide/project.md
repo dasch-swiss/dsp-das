@@ -182,10 +182,7 @@ If values are missing in the resources and you want to adjust the cardinality so
 
 ### Widening or restricting a cardinality of a property: Special cases
 #### Superclasses and subclasses
-If the cardinality of a superclass is changed, then the subclass is not affected and vice versa the same applies. In general, the cardinality of a subclass can be more or equally restrictive than the cardinality of a superclass.
-
-#### Inherited properties with different naming
-Changing the cardinalities of a superclass and subclass and reversing them does not work if the inherited properties are named differently.
+Changing the cardinality of a superclass and a subclass and reversing it does not work if the properties are in a subproperty relationship or the changed property in the superclass does not exist in the subclass.
 ### Correct property selection in case of special classes
 
 #### Book class with pages as individual classes
