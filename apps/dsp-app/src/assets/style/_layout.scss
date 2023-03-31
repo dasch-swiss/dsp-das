@@ -75,21 +75,21 @@
       }
     }
 
-    .mat-list-base {
+    .mat-mdc-list-base {
       padding-top: 0px;
     }
 
-    .mat-list.main-list {
+    .mat-mdc-list.main-list {
       margin-bottom: calc(#{$header-height} - 8px);
     }
 
-    .mat-title,
-    .mat-subheading-2,
-    .mat-subheading-1 {
+    .mat-headline-6,
+    .mat-subtitle-1,
+    .mat-subtitle-2 {
       margin: 0;
     }
 
-    .mat-list-item {
+    .mat-mdc-list-item {
       height: 48px;
 
       &:hover {
@@ -174,7 +174,7 @@
     height: 72px;
     padding-top: 8px !important;
 
-    .mat-tab-links {
+    .mat-mdc-tab-links {
       margin-top: 24px;
     }
   }

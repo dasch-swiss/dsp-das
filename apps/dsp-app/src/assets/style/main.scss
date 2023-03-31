@@ -47,16 +47,18 @@ body {
   }
 }
 
-.grid-card .mat-card-header > div.mat-card-header-text {
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
+.grid-card .mat-mdc-card-header > div.mat-card-header-text {
   margin: 0 0 !important;
 }
 
 app-color-value {
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   .mat-form-field-flex,
   .color-picker-input {
     cursor: pointer !important;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   .mat-form-field-label span {
     display: block;
     padding: 8px 4px;
@@ -68,13 +70,17 @@ app-color-value {
 // string literal textarea: overwrite material styling !important
 .string-literal {
   &.short-text {
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
     .mat-form-field-infix {
       margin-left: 12px;
     }
   }
 
   &.long-text {
+    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
+    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
     .mat-button-toggle-appearance-standard {
+      /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
       .mat-button-toggle-label-content {
         line-height: 36px !important;
         padding: 0 8px !important;
@@ -82,13 +88,17 @@ app-color-value {
     }
 
     // textarea
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
     .mat-form-field-wrapper {
       width: 100%;
-
+      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
+      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
       .mat-form-field-flex {
         border-left: 1px solid rgba(0, 0, 0, 0.12);
         min-height: calc(4 * 36px + 2px);
-
+        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
         .mat-form-field-infix {
           // negative values are not the best choice,
           // but with this margin-top the placeholder is at the
@@ -100,7 +110,7 @@ app-color-value {
   }
 }
 
-.mat-menu-panel.res-share-menu {
+.mat-mdc-menu-panel.res-share-menu {
   max-width: 360px !important;
   padding: 6px !important;
 }
@@ -110,19 +120,20 @@ app-color-value {
 }
 
 // date picker adaption
-.mat-menu-panel.date-picker {
+.mat-mdc-menu-panel.date-picker {
   max-width: 312px !important;
 }
 
 .year.withButtonToggle {
   top: -0.05em;
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   .mat-form-field-suffix {
     .suffix-toggle-group {
       font-size: 12px;
       border-radius: 0;
       height: calc(36px - 0.25em);
-
+      /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
       .mat-button-toggle-label-content {
         line-height: 36px !important;
       }
@@ -133,6 +144,7 @@ app-color-value {
 .year,
 .month {
   // hide dropdown arrow
+  /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
   .mat-select-arrow {
     border: none;
   }
@@ -150,17 +162,20 @@ app-color-value {
 
 // our own date picker value does not need additional space at the bottom
 // because of the combination with mat-menu which contains the date picker form
-.mat-form-field.date-picker-value {
+.mat-mdc-form-field.date-picker-value {
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   .mat-form-field-wrapper {
     padding-bottom: 0 !important;
-
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
     .mat-form-field-underline {
       bottom: 0 !important;
     }
   }
 }
 
-.mat-form-field.without-border {
+.mat-mdc-form-field.without-border {
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   .mat-form-field-underline {
     display: none;
   }
@@ -192,20 +207,20 @@ button.space-reducer {
 
 // mat-menu with form element
 .form-menu {
-  &.mat-menu-panel {
+  &.mat-mdc-menu-panel {
     min-width: 320px !important;
     max-width: 320px !important;
   }
 }
 
-.mat-menu-panel {
+.mat-mdc-menu-panel {
   min-height: 48px !important;
 }
 
 .full-size-dialog {
   transition: unset !important;
 
-  .mat-dialog-container {
+  .mat-mdc-dialog-container {
     transition: none !important;
     border-radius: 0 !important;
   }
@@ -213,14 +228,15 @@ button.space-reducer {
 
 // moving image player: overwrite mat-slider
 .progress {
+  /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version.*/
   .mat-slider-track-background {
     background-color: whitesmoke !important;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version.*/
   .mat-slider-wrapper {
     top: 12px !important;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version.*/
   .mat-slider-thumb {
     background-color: $yellow !important;
     border-color: $yellow !important;

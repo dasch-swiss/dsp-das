@@ -57,7 +57,7 @@
     align-items: center;
     white-space: nowrap;
 
-    .mat-title {
+    .mat-headline-6 {
       word-wrap: normal;
       white-space: normal;
     }
@@ -175,10 +175,11 @@ a,
   border-bottom: 1px solid rgba($primary, 0.1);
 }
 
-.mat-menu-content {
+.mat-mdc-menu-content {
   padding: 0 !important;
 
   .menu-action {
+    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
     .mat-button-wrapper {
       line-height: unset !important;
     }
@@ -189,9 +190,9 @@ a,
 
 //
 // card
-.mat-card {
-  .mat-card-title,
-  .mat-card-subtitle {
+.mat-mdc-card {
+  .mat-mdc-card-title,
+  .mat-mdc-card-subtitle {
     display: flex;
   }
 
@@ -199,7 +200,7 @@ a,
     box-shadow: none !important;
   }
 
-  .mat-card-actions {
+  .mat-mdc-card-actions {
     text-align: right;
   }
 }
@@ -289,6 +290,7 @@ a,
 
   .action,
   .navigation {
+    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
     .mat-button-disabled {
       color: grey;
     }
@@ -359,7 +361,7 @@ a,
 .simple-list {
   padding: 16px;
 
-  .mat-list-item {
+  .mat-mdc-list-item {
     .list-icon {
       width: 36px;
       height: 36px;
@@ -368,7 +370,7 @@ a,
       position: absolute;
       left: 0;
     }
-
+    /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
     .mat-list-text {
       position: relative;
       left: 48px;
@@ -376,10 +378,10 @@ a,
   }
 }
 
-.mat-list.without-padding {
-  .mat-list-item {
+.mat-mdc-list.without-padding {
+  .mat-mdc-list-item {
     padding: 0 !important;
-
+    /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
     .mat-list-item-content {
       padding: 0 !important;
     }
@@ -444,8 +446,8 @@ a,
       padding: 6px 12px;
       text-align: left;
 
-      h5.mat-subheading-2,
-      p.mat-subheading-1 {
+      h5.mat-subtitle-1,
+      p.mat-subtitle-2 {
         margin: 0;
       }
     }
@@ -531,8 +533,9 @@ $gc-small: $form-width - $gc-large - 4;
 
 // in case of an error:
 .mat-form-field-invalid {
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
   .mat-form-field-label,
-  .mat-hint {
+  .mat-mdc-form-field-hint {
     color: $red;
   }
 }
@@ -603,7 +606,7 @@ $gc-small: $form-width - $gc-large - 4;
   }
 }
 
-.mat-snack-bar-container {
+.mat-mdc-snack-bar-container {
   &.success {
     color: $primary_contrast;
     background-color: rgba($primary, 0.9);
@@ -626,18 +629,19 @@ $gc-small: $form-width - $gc-large - 4;
 //
 // mat tab
 
-.mat-tab-header {
+.mat-mdc-tab-header {
   background: $white;
   position: sticky !important;
   z-index: 1;
 }
 
 @media (max-width: 599px) {
-  .mat-tab-header {
+  .mat-mdc-tab-header {
     top: 56px;
   }
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
 .mat-tab-body-wrapper {
   z-index: 0;
 }
@@ -661,7 +665,7 @@ $gc-small: $form-width - $gc-large - 4;
 // dialog box / material overlay
 
 .cdk-overlay-pane {
-  .mat-dialog-container {
+  .mat-mdc-dialog-container {
     overflow-y: auto;
   }
 }
@@ -754,7 +758,7 @@ $gc-small: $form-width - $gc-large - 4;
   button[mat-menu-item] {
     padding-left: 32px;
 
-    &.mat-menu-item-submenu-trigger {
+    &.mat-mdc-menu-item-submenu-trigger {
       &::after {
         border-width: 5px 5px 5px 0;
         border-color: transparent currentColor transparent transparent;
@@ -770,7 +774,7 @@ $gc-small: $form-width - $gc-large - 4;
 }
 .switch-nested-sub-menu,
 .default-nested-sub-menu {
-  &.mat-menu-panel {
+  &.mat-mdc-menu-panel {
     margin-top: 8px;
     min-height: 48px !important;
   }
@@ -781,9 +785,11 @@ $gc-small: $form-width - $gc-large - 4;
 //
 // slider in compound object viewer
 .navigation.horizontal {
+  /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
   .mat-slider-track-background {
     background-color: $primary_200;
   }
+  /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
   .mat-slider-thumb {
     background-color: $primary_400;
   }

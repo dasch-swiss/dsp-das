@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
-import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
@@ -27,8 +27,8 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { ProjectTileComponent } from '../../system/project-tile/project-tile.component';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { MatLegacyButtonHarness as MatButtonHarness } from '@angular/material/legacy-button/testing';
-import { MatLegacyDialogHarness as MatDialogHarness } from '@angular/material/legacy-dialog/testing';
+import { MatButtonHarness } from '@angular/material/button/testing';
+import { MatDialogHarness } from '@angular/material/dialog/testing';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { DialogComponent } from '../../main/dialog/dialog.component';
 import { DialogHeaderComponent } from '../../main/dialog/dialog-header/dialog-header.component';

@@ -1,14 +1,14 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppInitService } from '@dsp-app/src/app/app-init.service';
 import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 import { FileRepresentation } from '../file-representation';
 
 import { TextComponent } from './text.component';
-import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RepresentationService } from '../representation.service';

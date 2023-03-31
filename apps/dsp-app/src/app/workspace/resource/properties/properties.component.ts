@@ -9,10 +9,10 @@ import {
     Output,
 } from '@angular/core';
 import {
-    MatLegacyDialog as MatDialog,
-    MatLegacyDialogConfig as MatDialogConfig,
-} from '@angular/material/legacy-dialog';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+    MatDialog,
+    MatDialogConfig,
+} from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
 import {
     ApiResponseData,
     ApiResponseError,

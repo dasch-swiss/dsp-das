@@ -7,8 +7,8 @@ import {
     UntypedFormGroup,
     ReactiveFormsModule,
 } from '@angular/forms';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
-import { MatLegacyOptionModule as MatOptionModule } from '@angular/material/legacy-core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { HarnessLoader } from '@angular/cdk/testing';
 import {
@@ -18,16 +18,16 @@ import {
     ResourceClassDefinition,
     ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { MatLegacySelectHarness as MatSelectHarness } from '@angular/material/legacy-select/testing';
-import { MatLegacySlideToggleHarness as MatSlideToggleHarness } from '@angular/material/legacy-slide-toggle/testing';
-import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
+import { MatSelectHarness } from '@angular/material/select/testing';
+import { MatSlideToggleHarness } from '@angular/material/slide-toggle/testing';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
     ComparisonOperatorAndValue,
     Equals,
     ValueLiteral,
 } from './specify-property-value/operator';
 import { SearchSelectPropertyComponent } from './search-select-property.component';
-import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 /**
  * test host component to simulate parent component.

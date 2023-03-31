@@ -30,8 +30,8 @@ import {
     _AbstractConstructor,
     _Constructor,
 } from '@angular/material/core';
-import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
-import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy-menu';
+import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { KnoraDate } from '@dasch-swiss/dsp-js';
 import { Subject } from 'rxjs';
 import { KnoraDatePipe } from '../../../../../main/pipes/formatting/knoradate.pipe';

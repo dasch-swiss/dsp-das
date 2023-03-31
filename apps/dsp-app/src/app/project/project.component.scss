@@ -129,6 +129,7 @@ mat-sidenav {
       }
 
       // material injects this wrapper with a line-height that is too large
+      /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
       ::ng-deep .mat-button-wrapper {
         line-height: initial;
       }
@@ -169,6 +170,7 @@ mat-sidenav-content {
       }
 
       // material injects this wrapper with a line-height that is too large
+      /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
       ::ng-deep .mat-button-wrapper {
         line-height: initial;
       }

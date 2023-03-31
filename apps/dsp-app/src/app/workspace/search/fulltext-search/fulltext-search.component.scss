@@ -95,7 +95,7 @@
     .app-previous-search-list {
       padding-bottom: 8px;
 
-      .mat-list-item {
+      .mat-mdc-list-item {
         .app-previous-search-item {
           cursor: pointer;
           padding: 12px !important;
@@ -148,7 +148,7 @@
 
 .app-project-filter-menu {
   width: $project-filter-width;
-  .mat-menu-item {
+  .mat-mdc-menu-item {
     text-transform: capitalize;
   }
 }
@@ -264,14 +264,15 @@
 
   // TODO: do not use ng-deep anymore!!!
   ::ng-deep .cdk-overlay-pane {
-    .mat-menu-panel {
+    .mat-mdc-menu-panel {
       box-shadow: none;
       max-width: 100% !important;
     }
-
+    /*TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
+    /*TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
     .mat-select-panel-wrap {
       margin-top: 20%;
-      .mat-select-panel {
+      .mat-mdc-select-panel {
         max-height: 100% !important;
       }
     }

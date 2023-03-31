@@ -8,9 +8,9 @@ import {
     FormsModule,
     ReactiveFormsModule,
 } from '@angular/forms';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
-import { MatLegacySelectHarness as MatSelectHarness } from '@angular/material/legacy-select/testing';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSelectHarness } from '@angular/material/select/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MockProjects, StoredProject } from '@dasch-swiss/dsp-js';
 import { SelectProjectComponent } from './select-project.component';

@@ -11,18 +11,18 @@ import {
     NG_VALUE_ACCESSOR,
     ReactiveFormsModule,
 } from '@angular/forms';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatLegacyOptionModule as MatOptionModule } from '@angular/material/legacy-core';
+import { MatOptionModule } from '@angular/material/core';
 import {
-    MatLegacyFormFieldControl as MatFormFieldControl,
-    MatLegacyFormFieldModule as MatFormFieldModule,
-} from '@angular/material/legacy-form-field';
+    MatFormFieldControl,
+    MatFormFieldModule,
+} from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KnoraDate, KnoraPeriod } from '@dasch-swiss/dsp-js';

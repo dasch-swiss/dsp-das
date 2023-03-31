@@ -17,17 +17,15 @@ import {
     NG_VALUE_ACCESSOR,
     ReactiveFormsModule,
 } from '@angular/forms';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { ErrorStateMatcher } from '@angular/material/core';
 import {
-    MatLegacyFormFieldControl as MatFormFieldControl,
-    MatLegacyFormFieldModule as MatFormFieldModule,
-} from '@angular/material/legacy-form-field';
+    MatFormFieldControl,
+    MatFormFieldModule,
+} from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
-import { MatLegacyInputHarness as MatInputHarness } from '@angular/material/legacy-input/testing';
-import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
-import { By } from '@angular/platform-browser';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KnoraDate } from '@dasch-swiss/dsp-js';
 import { Subject } from 'rxjs';

@@ -1,4 +1,4 @@
-.mat-form-field {
+.mat-mdc-form-field {
   width: 100% !important;
 }
 
@@ -9,7 +9,7 @@
 // string literal textarea: overwrite material styling !important
 .string-literal {
   &.short-text {
-    .mat-button.select-lang {
+    .mat-mdc-button.select-lang {
       min-width: 36px !important;
       padding: 0 8px !important;
       border-radius: 4px 0 0 0 !important;
@@ -20,15 +20,17 @@
     display: flex;
 
     // select language
+    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
+    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
     .mat-button-toggle {
       height: 36px;
       width: 56px;
-
+      /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
       .mat-button-toggle-button {
         width: 50px !important;
       }
     }
-
+    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
     .mat-button-toggle-vertical {
       height: calc(5 * 36px + 2px);
       border-radius: 4px 0 0 4px !important;

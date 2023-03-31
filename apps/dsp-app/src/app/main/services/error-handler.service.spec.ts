@@ -5,11 +5,11 @@ import {
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import {
-    MatLegacyDialog as MatDialog,
-    MatLegacyDialogModule as MatDialogModule,
-    MatLegacyDialogRef as MatDialogRef,
-} from '@angular/material/legacy-dialog';
-import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
+    MatDialog,
+    MatDialogModule,
+    MatDialogRef,
+} from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
     BrowserAnimationsModule,
     NoopAnimationsModule,

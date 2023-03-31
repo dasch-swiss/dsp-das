@@ -5,10 +5,10 @@ import {
     UntypedFormGroup,
     ReactiveFormsModule,
 } from '@angular/forms';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
-import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
+import { MatInputModule } from '@angular/material/input';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CreateStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { SplitPipe } from '@dsp-app/src/app/main/pipes/split.pipe';
