@@ -222,7 +222,7 @@ export class ListViewComponent implements OnChanges, OnInit {
                         },
                         (countError: ApiResponseError) => {
                             // if error is a timeout, keep the loading animation
-                            this.loading = countError.status === 504 ? true : false;
+                            this.loading = countError.status === 504;
                             this._errorHandler.showMessage(countError);
                         }
                     );
@@ -304,7 +304,7 @@ export class ListViewComponent implements OnChanges, OnInit {
                 },
                 (countError: ApiResponseError) => {
                     // if error is a timeout, keep the loading animation
-                    this.loading = countError.status === 504 ? true : false;
+                    this.loading = countError.status === 504;
                     this._errorHandler.showMessage(countError);
                 }
             );
