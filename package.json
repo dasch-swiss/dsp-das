@@ -8,6 +8,7 @@
   "scripts": {
     "ng": "ng",
     "start": "nx run dsp-app:serve",
+    "start-dev": "nx run dsp-app:serve:development",
     "start-with-test-server": "nx run dsp-app:serve:test-server",
     "start-with-ls-test-server": "nx run dsp-app:serve:ls-test-server",
     "start-with-staging-server": "nx run dsp-app:serve:staging-server",
@@ -82,6 +83,7 @@
     "@typescript-eslint/parser": "5.55.0",
     "eslint": "^8.36.0",
     "eslint-plugin-angular": "^4.1.0",
+    "eslint-plugin-ban": "^1.6.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsdoc": "^40.0.3",
     "jasmine-core": "~4.6.0",
