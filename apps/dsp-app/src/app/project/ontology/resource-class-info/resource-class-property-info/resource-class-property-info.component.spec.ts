@@ -189,7 +189,7 @@ class ListHostComponent {
     };
 }
 
-fdescribe('ResourceClassPropertyInfoComponent', () => {
+describe('ResourceClassPropertyInfoComponent', () => {
     let simpleTextHostComponent: SimpleTextHostComponent;
     let simpleTextHostFixture: ComponentFixture<SimpleTextHostComponent>;
 
