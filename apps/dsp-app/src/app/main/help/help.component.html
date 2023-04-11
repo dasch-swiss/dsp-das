@@ -3,8 +3,8 @@
         <div class="content medium middle development hint {{ dsp.color }}">
             <p class="mat-subtitle-1 content medium middle">
                 This is a development version of DSP (release
-                <strong>{{ dsp.release }}</strong
-                >) running in the environment
+                <strong>{{ dsp.release }}</strong>
+                ) running in the environment
                 <strong>{{ dsp.environment }}</strong>
             </p>
         </div>
@@ -18,15 +18,16 @@
             <app-grid id="app-grid-documentation" [list]="docs"></app-grid>
         </div>
     </section>
-
     <section class="darken-bg software">
         <div class="content large middle">
             <h2 class="mat-headline-6">Explore our software products</h2>
             <p class="mat-subtitle-1 content medium middle">
-                The DaSCH Service Platform (DSP) is our main product within
-                release <strong>{{ dsp.release }}</strong> &rarr;
+                The DaSCH Service Platform (DSP) is our main product with the current release being
+                <br>
+                <strong>{{ dsp.release }}</strong>
+                <br>
                 <a [href]="releaseNotesUrl"
-                    >here you will get the latest news about this main version
+                    >Click here to get the latest news about this main version
                     <mat-icon class="suffix">launch</mat-icon></a
                 >
                 <br /><br />
