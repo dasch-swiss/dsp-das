@@ -57,7 +57,7 @@
     align-items: center;
     white-space: nowrap;
 
-    .mat-title {
+    .mat-headline-6 {
       word-wrap: normal;
       white-space: normal;
     }
@@ -179,6 +179,7 @@ a,
   padding: 0 !important;
 
   .menu-action {
+    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
     .mat-button-wrapper {
       line-height: unset !important;
     }
@@ -289,6 +290,7 @@ a,
 
   .action,
   .navigation {
+    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
     .mat-button-disabled {
       color: grey;
     }
@@ -444,8 +446,8 @@ a,
       padding: 6px 12px;
       text-align: left;
 
-      h5.mat-subheading-2,
-      p.mat-subheading-1 {
+      h5.mat-subtitle-1,
+      p.mat-body-1 {
         margin: 0;
       }
     }

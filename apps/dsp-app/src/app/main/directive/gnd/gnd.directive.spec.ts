@@ -7,7 +7,7 @@ import { GndDirective } from './gnd.directive';
  * test component for a GND/IAF identifier.
  */
 @Component({
-    template: '<span appGnd [gnd]="\'(DE-588)118696149\'"></span>',
+    template: '<span appGnd [gnd]="'(DE-588)118696149'"></span>',
 })
 class TestGnd1Component {}
 
@@ -15,7 +15,7 @@ class TestGnd1Component {}
  * test component for a VIAF identifier.
  */
 @Component({
-    template: '<span appGnd [gnd]="\'(VIAF)22936072\'"></span>',
+    template: '<span appGnd [gnd]="'(VIAF)22936072'"></span>',
 })
 class TestGnd2Component {}
 
@@ -23,7 +23,7 @@ class TestGnd2Component {}
  * test component for normal text.
  */
 @Component({
-    template: '<span appGnd [gnd]="\'normal text\'"></span>',
+    template: '<span appGnd [gnd]="'normal text'"></span>',
 })
 class TestGnd3Component {}
 

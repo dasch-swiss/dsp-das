@@ -7,7 +7,7 @@
   @media (max-height: 636px) {
     height: 364px;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
   .mat-button-disabled {
     color: $grey !important;
   }
@@ -65,7 +65,7 @@
       &.next {
         right: 0;
       }
-      .mat-button.full-size {
+      .mat-mdc-button.full-size {
         height: 100% !important;
         width: $panel-height !important;
 
