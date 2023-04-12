@@ -177,13 +177,6 @@ a,
 
 .mat-menu-content {
   padding: 0 !important;
-
-  .menu-action {
-    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
-    .mat-button-wrapper {
-      line-height: unset !important;
-    }
-  }
 }
 
 // --------------------------------------
@@ -290,8 +283,8 @@ a,
 
   .action,
   .navigation {
-    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
-    .mat-button-disabled {
+    .mat-mdc-button:disabled,
+    .mat-mdc-icon-button:disabled {
       color: grey;
     }
   }
