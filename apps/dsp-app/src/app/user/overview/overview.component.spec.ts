@@ -27,7 +27,7 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { ProjectTileComponent } from '../../system/project-tile/project-tile.component';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { MatLegacyButtonHarness as MatButtonHarness } from '@angular/material/legacy-button/testing';
+import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatLegacyDialogHarness as MatDialogHarness } from '@angular/material/legacy-dialog/testing';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { DialogComponent } from '../../main/dialog/dialog.component';
