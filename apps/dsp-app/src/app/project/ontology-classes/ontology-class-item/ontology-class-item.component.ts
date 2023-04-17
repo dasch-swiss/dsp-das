@@ -13,7 +13,7 @@ import {
     ComponentCommunicationEventService,
     EmitEvent,
     Events,
-} from "@dsp-app/src/app/main/services/component-communication-event.service";
+} from '@dsp-app/src/app/main/services/component-communication-event.service';
 import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import { OntologyService } from '@dsp-app/src/app/project/ontology/ontology.service';
 
