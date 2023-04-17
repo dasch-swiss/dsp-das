@@ -14,7 +14,7 @@ describe('AppInitService (dev)', () => {
     let service: AppInitService;
 
     const devConfig: IConfig = {
-        dspRelease: '2022.01.01',
+        dspRelease: '2023.04.02',
         apiProtocol: 'http',
         apiHost: '0.0.0.0',
         apiPort: 3333,
@@ -82,7 +82,7 @@ describe('AppInitService (dev)', () => {
     });
 
     it('should process the fully specified config (dev mode)', async () => {
-        expect(service.dspConfig.release).toEqual('2022.01.01');
+        expect(service.dspConfig.release).toEqual('2023.04.02');
         expect(service.dspConfig.environment).toEqual('dev');
         expect(service.dspConfig.color).toEqual('accent');
         expect(service.dspConfig.production).toEqual(false);
