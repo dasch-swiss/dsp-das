@@ -86,16 +86,16 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+      - name: Output docker image tag
+        id: output_docker_image_tag
+        run: echo "tag=$(make docker-image-tag | tr -d '\n')" >> "$GITHUB_OUTPUT"
+        shell: bash # Explicit for fail-fast behaviour
       - uses: docker/setup-buildx-action@v2
       - uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
       - run: make docker-publish
-      - name: Output docker image tag
-        id: output_docker_image_tag
-        run: echo "tag=$(make docker-image-tag | tr -d '\n')" >> "$GITHUB_OUTPUT"
-        shell: bash # Explicit for fail-fast behaviour
 
   trigger-dev-deployment:
     name: Trigger deployment to DEV
