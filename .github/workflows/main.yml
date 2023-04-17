@@ -104,7 +104,7 @@ jobs:
     steps:
       - name: Trigger deployment to DEV
         env:
-          IMAGE_TAG: ${{ needs.publish-from-branch.outputs.tag }}
+          IMAGE_TAG: ${{ needs.publish.outputs.tag }}
           JENKINS_BASIC_AUTH_USER: ${{ secrets.JENKINS_BASIC_AUTH_USER }}
           JENKINS_BASIC_AUTH_PASS: ${{ secrets.JENKINS_BASIC_AUTH_PASS }}
           JENKINS_DEV_WEBHOOK: ${{ secrets.JENKINS_DEV_WEBHOOK }}
