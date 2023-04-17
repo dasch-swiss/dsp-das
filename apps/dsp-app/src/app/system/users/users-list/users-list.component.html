@@ -21,7 +21,7 @@
                 >
                 </app-sort-button>
             </span>
-            <h2 class="mat-title">
+            <h2 class="mat-headline-6">
                 <span *ngIf="projectUuid">{{
                     list.length | i18nPlural : itemPluralMapping['member']
                 }}</span>
@@ -64,11 +64,11 @@
 
             <!-- name and e-mail address -->
             <td class="table-info">
-                <h5 class="mat-subheading-2 info-names">
+                <h5 class="mat-subtitle-1 info-names">
                     <!-- Names hidden on phone devices -->
                     {{ user.givenName }} {{ user.familyName }}
                 </h5>
-                <p class="mat-subheading-1">
+                <p class="mat-subtitle-2">
                     <span class="info-username">{{ user.username }} </span>
                     <!-- Email hidden on phone devices -->
                     <span class="info-email">| {{ user.email }}</span>
@@ -78,18 +78,18 @@
 
             <!-- admin: only in project view -->
             <td class="table-admin-chip">
-                <mat-chip-list *ngIf="projectUuid">
+                <mat-chip-listbox *ngIf="projectUuid">
                     <mat-chip
                         class="admin-chip"
                         *ngIf="userIsProjectAdmin(user.permissions)"
                         >Admin</mat-chip
                     >
-                </mat-chip-list>
-                <mat-chip-list
+                </mat-chip-listbox>
+                <mat-chip-listbox
                     *ngIf="!projectUuid && userIsSystemAdmin(user.permissions)"
                 >
                     <mat-chip class="sys-admin-chip">System Admin</mat-chip>
-                </mat-chip-list>
+                </mat-chip-listbox>
             </td>
 
             <!-- group: only in project view -->
