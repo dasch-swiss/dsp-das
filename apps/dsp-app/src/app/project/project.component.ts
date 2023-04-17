@@ -6,8 +6,6 @@ import {
     ApiResponseData,
     ApiResponseError,
     KnoraApiConnection,
-    ListNodeInfo,
-    ListsResponse,
     OntologiesMetadata,
     ProjectResponse,
     ReadOntology,
@@ -28,9 +26,6 @@ import { Session, SessionService } from '../main/services/session.service';
 })
 export class ProjectComponent implements OnInit {
     @ViewChild('sidenav') sidenav: MatSidenav;
-
-    readonly TAB_DATA_MODEL = 3;
-    readonly TAB_LISTS = 4;
 
     // loading for progress indicator
     loading: boolean;
@@ -60,8 +55,7 @@ export class ProjectComponent implements OnInit {
 
     // list of project ontologies
     projectOntologies: ReadOntology[] = [];
-    projectLists: ListNodeInfo[] = [];
-
+    listItemSelected: string = '';
     sideNavOpened = true;
 
     constructor(
@@ -198,11 +192,12 @@ export class ProjectComponent implements OnInit {
     }
 
     open(route: string) {
+        console.log(route);
         this._router.navigate([route], { relativeTo: this._route });
     }
 
     /**
-     * given an Html element, compare the scrollHeight and the clientHeight
+     * given a Html element, compare the scrollHeight and the clientHeight
      *
      * @param elem the element which has the line-clamp css
      * @returns inverse of comparison between the scrollHeight and the clientHeight of elem
