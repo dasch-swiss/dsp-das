@@ -136,6 +136,10 @@ mat-sidenav {
   }
 }
 
+.active {
+  background-color: $primary_100;
+}
+
 mat-sidenav-content {
   .sidenav-expand-btn,
   .main-content {

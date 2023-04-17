@@ -11,8 +11,9 @@ import { Subscription } from 'rxjs';
 import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 import {
     ComponentCommunicationEventService,
+    EmitEvent,
     Events,
-} from '@dsp-app/src/app/main/services/component-communication-event.service';
+} from "@dsp-app/src/app/main/services/component-communication-event.service";
 import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import { OntologyService } from '@dsp-app/src/app/project/ontology/ontology.service';
 
@@ -89,8 +90,8 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
         this.componentCommsSubscriptions.forEach(sub => sub.unsubscribe());
     }
 
-    open(route: string) {
-        this._router.navigateByUrl(route);
+    selectItem() {
+        this._componentCommsService.emit(new EmitEvent(Events.unselectedListItem));
     }
 
 

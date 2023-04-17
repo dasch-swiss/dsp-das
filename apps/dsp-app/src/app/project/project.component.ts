@@ -9,7 +9,8 @@ import {
     OntologiesMetadata,
     ProjectResponse,
     ReadOntology,
-    ReadProject, UserResponse
+    ReadProject,
+    UserResponse
 } from '@dasch-swiss/dsp-js';
 import { AppGlobal } from '../app-global';
 import { AppInitService } from '../app-init.service';
@@ -17,7 +18,9 @@ import { CacheService } from '../main/cache/cache.service';
 import { DspApiConnectionToken } from '../main/declarations/dsp-api-tokens';
 import { MenuItem } from '../main/declarations/menu-item';
 import { ErrorHandlerService } from '../main/services/error-handler.service';
+import { ComponentCommunicationEventService, Events } from '@dsp-app/src/app/main/services/component-communication-event.service';
 import { Session, SessionService } from '../main/services/session.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-project',
@@ -55,12 +58,17 @@ export class ProjectComponent implements OnInit {
 
     // list of project ontologies
     projectOntologies: ReadOntology[] = [];
-    listItemSelected: string = '';
+
+    listItemSelected = '';
+
+    componentCommsSubscription: Subscription;
+
     sideNavOpened = true;
 
     constructor(
         @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: ErrorHandlerService,
+        private _componentCommsService: ComponentCommunicationEventService,
         private _cache: CacheService,
         private _route: ActivatedRoute,
         private _router: Router,
@@ -90,6 +98,12 @@ export class ProjectComponent implements OnInit {
       }
 
     ngOnInit() {
+        this.componentCommsSubscription = this._componentCommsService.on(
+            Events.unselectedListItem,
+            () => {
+                this.listItemSelected = '';
+            }
+        );
 
         if (!this.error) {
             this.loading = true;
@@ -191,8 +205,15 @@ export class ProjectComponent implements OnInit {
         }
     }
 
+    ngOnDestroy() {
+        // unsubscribe from the ValueOperationEventService when component is destroyed
+        if (this.componentCommsSubscription !== undefined) {
+            this.componentCommsSubscription.unsubscribe();
+        }
+    }
+
     open(route: string) {
-        console.log(route);
+        this.listItemSelected = route;
         this._router.navigate([route], { relativeTo: this._route });
     }
 
