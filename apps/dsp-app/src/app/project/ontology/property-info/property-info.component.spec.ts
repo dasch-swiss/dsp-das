@@ -3,6 +3,7 @@ import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { Pipe, PipeTransform } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import {
     MatLegacyDialogModule as MatDialogModule,
@@ -41,6 +42,10 @@ import { TestConfig } from '@dsp-app/src/test.config';
 import { PropertyFormComponent } from '../property-form/property-form.component';
 import { PropertyInfoComponent } from './property-info.component';
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
+import {
+    StringifyStringLiteralPipe
+} from '@dsp-app/src/app/main/pipes/string-transformation/stringify-string-literal.pipe';
+import { ClassDefinition } from '@dasch-swiss/dsp-js/src/models/v2/ontologies/class-definition';
 
 /**
  * test host component to simulate parent component
@@ -48,7 +53,7 @@ import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-m
  */
 @Component({
     template:
-        '<app-property-info #propertyInfo [propCard]="propertyCardinality" [propDef]="propertyDefinition"></app-property-info>',
+        '<app-property-info #propertyInfo [propDef]="propertyDefinition"></app-property-info>',
 })
 class SimpleTextHostComponent {
     @ViewChild('propertyInfo') propertyInfoComponent: PropertyInfoComponent;
@@ -92,7 +97,7 @@ class SimpleTextHostComponent {
  */
 @Component({
     template:
-        '<app-property-info #propertyInfo [propCard]="propertyCardinality" [propDef]="propertyDefinition"></app-property-info>',
+        '<app-property-info #propertyInfo [propDef]="propertyDefinition"></app-property-info>',
 })
 class LinkHostComponent {
     @ViewChild('propertyInfo') propertyInfoComponent: PropertyInfoComponent;
@@ -143,7 +148,7 @@ class LinkHostComponent {
  */
 @Component({
     template:
-        '<app-property-info #propertyInfo [propCard]="propertyCardinality" [propDef]="propertyDefinition"></app-property-info>',
+        '<app-property-info #propertyInfo [propDef]="propertyDefinition"></app-property-info>',
 })
 class ListHostComponent {
     @ViewChild('propertyInfo') propertyInfoComponent: PropertyInfoComponent;
@@ -188,318 +193,202 @@ class ListHostComponent {
     };
 }
 
-describe('PropertyInfoComponent', () => {
-    let simpleTextHostComponent: SimpleTextHostComponent;
-    let simpleTextHostFixture: ComponentFixture<SimpleTextHostComponent>;
+const propertyDefinition: ResourcePropertyDefinitionWithAllLanguages = {
+    id: 'http://0.0.0.0:3333/ontology/0001/anything/v2#hasListItem',
+    subPropertyOf: ['http://api.knora.org/ontology/knora-api/v2#hasValue'],
+    label: 'Listenelement',
+    guiElement: 'http://api.knora.org/ontology/salsah-gui/v2#List',
+    subjectType: 'http://0.0.0.0:3333/ontology/0001/anything/v2#Thing',
+    objectType: 'http://api.knora.org/ontology/knora-api/v2#ListValue',
+    isLinkProperty: false,
+    isLinkValueProperty: false,
+    isEditable: true,
+    guiAttributes: ['hlist=<http://rdfh.ch/lists/0001/treeList>'],
+    comments: [],
+    labels: [
+        {
+            language: 'de',
+            value: 'Listenelement',
+        },
+        {
+            language: 'en',
+            value: 'List element',
+        },
+        {
+            language: 'fr',
+            value: 'Elément de liste',
+        },
+        {
+            language: 'it',
+            value: 'Elemento di lista',
+        },
+    ],
+};
 
-    let linkHostComponent: LinkHostComponent;
-    let linkHostFixture: ComponentFixture<LinkHostComponent>;
-
-    let listHostComponent: ListHostComponent;
-    let listHostFixture: ComponentFixture<ListHostComponent>;
-
-    let rootLoader: HarnessLoader;
-    let overlayContainer: OverlayContainer;
-
-    beforeEach(waitForAsync(() => {
-        const cacheServiceSpy = jasmine.createSpyObj('CacheService', ['get']);
-
-        const ontologyEndpointSpyObj = {
-            v2: {
-                onto: jasmine.createSpyObj('onto', [
-                    'canDeleteResourceProperty',
-                ]),
+const mockOntologyResponse = [
+    {
+        comments: [],
+        id: 'http://rdfh.ch/lists/0001/otherTreeList',
+        isRootNode: true,
+        labels: [
+            {
+                language: 'en',
+                value: 'Tree list root',
             },
-        };
+        ],
+        projectIri: 'http://rdfh.ch/projects/0001',
+    },
+    {
+        comments: [
+            {
+                language: 'en',
+                value: 'a list that is not in used in ontology or data',
+            },
+        ],
+        id: 'http://rdfh.ch/lists/0001/notUsedList',
+        isRootNode: true,
+        labels: [
+            {
+                language: 'de',
+                value: 'unbenutzte Liste',
+            },
+            {
+                language: 'en',
+                value: 'a list that is not used',
+            },
+        ],
+        name: 'notUsedList',
+        projectIri: 'http://rdfh.ch/projects/0001',
+    },
+    {
+        comments: [
+            {
+                language: 'en',
+                value: 'Anything Tree List',
+            },
+        ],
+        id: 'http://rdfh.ch/lists/0001/treeList',
+        isRootNode: true,
+        labels: [
+            {
+                language: 'de',
+                value: 'Listenwurzel',
+            },
+            {
+                language: 'en',
+                value: 'Tree list root',
+            },
+        ],
+        name: 'treelistroot',
+        projectIri: 'http://rdfh.ch/projects/0001',
+    },
+];
 
-        TestBed.configureTestingModule({
-            declarations: [
-                DialogComponent,
-                DialogHeaderComponent,
-                LinkHostComponent,
-                ListHostComponent,
-                SimpleTextHostComponent,
-                PropertyFormComponent,
-                PropertyInfoComponent,
-                SplitPipe,
-            ],
-            imports: [
-                BrowserAnimationsModule,
-                MatButtonModule,
-                MatDialogModule,
-                MatIconModule,
-                MatListModule,
-                MatMenuModule,
-                MatSlideToggleModule,
-                MatSnackBarModule,
-                MatTooltipModule,
-            ],
-            providers: [
-                AppInitService,
-                {
-                    provide: DspApiConfigToken,
-                    useValue: TestConfig.ApiConfig,
-                },
-                {
-                    provide: DspApiConnectionToken,
-                    useValue: ontologyEndpointSpyObj,
-                },
-                {
-                    provide: CacheService,
-                    useValue: cacheServiceSpy,
-                },
-                {
-                    provide: MAT_DIALOG_DATA,
-                    useValue: {},
-                },
-                {
-                    provide: MatDialogRef,
-                    useValue: {},
-                },
-            ],
-        }).compileComponents();
-    }));
+    describe('Property info component', () => {
+        let component: PropertyInfoComponent;
+        let fixture: ComponentFixture<PropertyInfoComponent>;
 
-    beforeEach(() => {
-        const dspConnSpy = TestBed.inject(DspApiConnectionToken);
-        (
-            dspConnSpy.v2.onto as jasmine.SpyObj<OntologiesEndpointV2>
-        ).canDeleteResourceProperty.and.callFake(() => {
-            const deleteResProp: CanDoResponse = {
-                canDo: false,
+        beforeEach(async () => {
+            const cacheServiceSpy = jasmine.createSpyObj('CacheService', ['get']);
+
+            const ontologyEndpointSpyObj = {
+                v2: {
+                    onto: jasmine.createSpyObj('onto', [
+                        'canDeleteResourceProperty',
+                        'getAllClassDefinitions'
+                    ]),
+                },
             };
 
-            return of(deleteResProp);
+            await TestBed.configureTestingModule({
+                declarations: [
+                    DialogComponent,
+                    DialogHeaderComponent,
+                    LinkHostComponent,
+                    ListHostComponent,
+                    SimpleTextHostComponent,
+                    PropertyFormComponent,
+                    PropertyInfoComponent,
+                    SplitPipe,
+                    StringifyStringLiteralPipe
+                ],
+                imports: [
+                    BrowserAnimationsModule,
+                    MatButtonModule,
+                    MatDialogModule,
+                    MatIconModule,
+                    MatListModule,
+                    MatMenuModule,
+                    MatSlideToggleModule,
+                    MatSnackBarModule,
+                    MatTooltipModule,
+                ],
+                providers: [
+                    AppInitService,
+                    {
+                        provide: DspApiConfigToken,
+                        useValue: TestConfig.ApiConfig,
+                    },
+                    {
+                        provide: DspApiConnectionToken,
+                        useValue: ontologyEndpointSpyObj,
+                    },
+                    {
+                        provide: CacheService,
+                        useValue: cacheServiceSpy,
+                    },
+                    {
+                        provide: MAT_DIALOG_DATA,
+                        useValue: {},
+                    },
+                    {
+                        provide: MatDialogRef,
+                        useValue: {},
+                    },
+                ],
+            }).compileComponents();
+        });
+
+        beforeEach(() => {
+            // mock cache service get requests
+            const cacheSpy = TestBed.inject(CacheService);
+
+            (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake((key: string) => {
+                if (key === 'currentOntologyLists') {
+                    const response: ListNodeInfo[] = mockOntologyResponse;
+                    return of(response);
+                } else if (key === 'currentProjectOntologies') {
+                    const response: ReadOntology[] = [];
+                    return of(response);
+                } else if (key === 'currentOntology') {
+                    const response: ReadOntology = undefined;
+                    return of(response);
+                }else {
+                    // Handle any other keys as needed
+                    return of(null);
+                }
+            });
+
+            const dspConnSpy = TestBed.inject(DspApiConnectionToken);
+            (
+                dspConnSpy.v2.onto as jasmine.SpyObj<OntologiesEndpointV2>
+            ).canDeleteResourceProperty.and.callFake(() => {
+                const deleteResProp: CanDoResponse = {
+                    canDo: false,
+                };
+
+                return of(deleteResProp);
+            });
+
+            fixture = TestBed.createComponent(PropertyInfoComponent);
+            component = fixture.componentInstance;
+            component.propDef = propertyDefinition; // setting ock input
+
+            fixture.detectChanges();
+        });
+
+
+        it('get propDef input', () => {
+            expect(component.propDef).toBeTruthy();
         });
     });
-
-    beforeEach(() => {
-        // mock cache service for currentOntology
-        const cacheSpy = TestBed.inject(CacheService);
-
-        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(() => {
-            const response: ReadOntology = MockOntology.mockReadOntology(
-                'http://0.0.0.0:3333/ontology/0001/anything/v2'
-            );
-            return of(response);
-        });
-
-        simpleTextHostFixture = TestBed.createComponent(
-            SimpleTextHostComponent
-        );
-        simpleTextHostComponent = simpleTextHostFixture.componentInstance;
-        simpleTextHostFixture.detectChanges();
-
-        expect(simpleTextHostComponent).toBeTruthy();
-
-        simpleTextHostComponent.propertyInfoComponent.showActionBubble = true;
-        simpleTextHostFixture.detectChanges();
-
-        overlayContainer = TestBed.inject(OverlayContainer);
-        rootLoader = TestbedHarnessEnvironment.documentRootLoader(
-            simpleTextHostFixture
-        );
-
-        linkHostFixture = TestBed.createComponent(LinkHostComponent);
-        linkHostComponent = linkHostFixture.componentInstance;
-        linkHostFixture.detectChanges();
-
-        expect(linkHostComponent).toBeTruthy();
-    });
-
-    beforeEach(() => {
-        // mock cache service for currentOntologyLists
-        const cacheSpy = TestBed.inject(CacheService);
-
-        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(() => {
-            const response: ListNodeInfo[] = [
-                {
-                    comments: [],
-                    id: 'http://rdfh.ch/lists/0001/otherTreeList',
-                    isRootNode: true,
-                    labels: [
-                        {
-                            language: 'en',
-                            value: 'Tree list root',
-                        },
-                    ],
-                    projectIri: 'http://rdfh.ch/projects/0001',
-                },
-                {
-                    comments: [
-                        {
-                            language: 'en',
-                            value: 'a list that is not in used in ontology or data',
-                        },
-                    ],
-                    id: 'http://rdfh.ch/lists/0001/notUsedList',
-                    isRootNode: true,
-                    labels: [
-                        {
-                            language: 'de',
-                            value: 'unbenutzte Liste',
-                        },
-                        {
-                            language: 'en',
-                            value: 'a list that is not used',
-                        },
-                    ],
-                    name: 'notUsedList',
-                    projectIri: 'http://rdfh.ch/projects/0001',
-                },
-                {
-                    comments: [
-                        {
-                            language: 'en',
-                            value: 'Anything Tree List',
-                        },
-                    ],
-                    id: 'http://rdfh.ch/lists/0001/treeList',
-                    isRootNode: true,
-                    labels: [
-                        {
-                            language: 'de',
-                            value: 'Listenwurzel',
-                        },
-                        {
-                            language: 'en',
-                            value: 'Tree list root',
-                        },
-                    ],
-                    name: 'treelistroot',
-                    projectIri: 'http://rdfh.ch/projects/0001',
-                },
-            ];
-            return of(response);
-        });
-        listHostFixture = TestBed.createComponent(ListHostComponent);
-        listHostComponent = listHostFixture.componentInstance;
-        listHostFixture.detectChanges();
-
-        expect(listHostComponent).toBeTruthy();
-    });
-
-    afterEach(async () => {
-        const dialogs = await rootLoader.getAllHarnesses(MatDialogHarness);
-        await Promise.all(dialogs.map(async (d) => await d.close()));
-
-        // angular won't call this for us so we need to do it ourselves to avoid leaks.
-        overlayContainer.ngOnDestroy();
-    });
-
-    it('should create an instance', () => {
-        expect(simpleTextHostComponent.propertyInfoComponent).toBeTruthy();
-    });
-
-    it('expect cardinality 0 = only one but required value (1)', () => {
-        expect(simpleTextHostComponent.propertyInfoComponent).toBeTruthy();
-        expect(
-            simpleTextHostComponent.propertyInfoComponent.propCard
-        ).toBeDefined();
-        expect(
-            simpleTextHostComponent.propertyInfoComponent.propCard.cardinality
-        ).toBe(0);
-
-        const hostCompDe = simpleTextHostFixture.debugElement;
-
-        const multipleToggle: DebugElement = hostCompDe.query(
-            By.css('mat-slide-toggle[data-name="multiple"]')
-        );
-        const requiredToggle: DebugElement = hostCompDe.query(
-            By.css('mat-slide-toggle[data-name="required"]')
-        );
-
-        function isChecked(toggle: DebugElement): boolean {
-            return (
-                toggle.nativeElement.getAttribute('ng-reflect-checked') ===
-                'true'
-            );
-        }
-
-        // cardinality 0 means 'no multiple values'
-        expect(isChecked(multipleToggle)).toEqual(false);
-        // and cardinality 0 means also 'required value'
-        expect(isChecked(requiredToggle)).toEqual(true);
-    });
-
-    it('expect property type "text" and gui element "simple input"', () => {
-        expect(simpleTextHostComponent.propertyInfoComponent).toBeTruthy();
-        expect(
-            simpleTextHostComponent.propertyInfoComponent.propDef
-        ).toBeDefined();
-        expect(
-            simpleTextHostComponent.propertyInfoComponent.propDef.guiElement
-        ).toBe(Constants.SalsahGui + Constants.HashDelimiter + 'SimpleText');
-
-        const hostCompDe = simpleTextHostFixture.debugElement;
-
-        const typeIcon: DebugElement = hostCompDe.query(By.css('.type'));
-
-        // property type and gui element should be Text: simple Text
-        expect(typeIcon.nativeElement.innerText).toEqual('short_text');
-    });
-
-    it('expect property type "link" and gui element "search box"', () => {
-        expect(linkHostComponent.propertyInfoComponent).toBeTruthy();
-        expect(linkHostComponent.propertyInfoComponent.propDef).toBeDefined();
-        expect(linkHostComponent.propertyInfoComponent.propDef.guiElement).toBe(
-            Constants.SalsahGui + Constants.HashDelimiter + 'Searchbox'
-        );
-
-        const hostCompDe = linkHostFixture.debugElement;
-
-        const typeIcon: DebugElement = hostCompDe.query(By.css('.type'));
-
-        // expect 'link' icon
-        expect(typeIcon.nativeElement.innerText).toEqual('link');
-    });
-
-    it('expect link to other resource called "Thing"', () => {
-        expect(linkHostComponent.propertyInfoComponent).toBeTruthy();
-        expect(linkHostComponent.propertyInfoComponent.propDef).toBeDefined();
-
-        const hostCompDe = linkHostFixture.debugElement;
-
-        const attribute: DebugElement = hostCompDe.query(By.css('.attribute'));
-        // expect linked resource called 'Thing'
-        expect(attribute.nativeElement.innerText).toContain('Thing');
-    });
-
-    it('expect cardinality 2 = not required but multiple values (0-n)', () => {
-        expect(linkHostComponent.propertyInfoComponent).toBeTruthy();
-        expect(linkHostComponent.propertyInfoComponent.propDef).toBeDefined();
-
-        const hostCompDe = linkHostFixture.debugElement;
-
-        expect(hostCompDe).toBeTruthy();
-
-        const multipleToggle: DebugElement = hostCompDe.query(
-            By.css('mat-slide-toggle[data-name="multiple"]')
-        );
-        const requiredToggle: DebugElement = hostCompDe.query(
-            By.css('mat-slide-toggle[data-name="required"]')
-        );
-
-        function isChecked(toggle: DebugElement): boolean {
-            return (
-                toggle.nativeElement.getAttribute('ng-reflect-checked') ===
-                'true'
-            );
-        }
-        // cardinality 2 means 'multiple values'
-        expect(isChecked(multipleToggle)).toEqual(true);
-        // and cardinality 2 means also 'not required value'
-        expect(isChecked(requiredToggle)).toEqual(false);
-    });
-
-    it('expect list property with connection to list "Listenwurzel"', () => {
-        expect(listHostComponent.propertyInfoComponent).toBeTruthy();
-        expect(listHostComponent.propertyInfoComponent.propDef).toBeDefined();
-
-        const hostCompDe = listHostFixture.debugElement;
-
-        const attribute: DebugElement = hostCompDe.query(By.css('.attribute'));
-        // expect list called "Listenwurzel"
-        expect(attribute.nativeElement.innerText).toContain('Listenwurzel');
-    });
-});
