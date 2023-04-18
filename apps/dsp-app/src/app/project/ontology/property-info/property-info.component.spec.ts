@@ -127,7 +127,7 @@ const mockOntologyResponse = [
     },
 ];
 
-fdescribe('Property info component', () => {
+describe('Property info component', () => {
     let component: PropertyInfoComponent;
     let fixture: ComponentFixture<PropertyInfoComponent>;
 
