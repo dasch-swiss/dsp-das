@@ -256,6 +256,7 @@ describe('AppInitService (prod)', () => {
     let service: AppInitService;
 
     const prodConfig: IConfig = {
+        dspRelease: '2023.04.02',
         apiProtocol: 'https',
         apiHost: '0.0.0.0',
         apiPort: undefined,
@@ -324,6 +325,7 @@ describe('AppInitService (prod)', () => {
     });
 
     it('should process the fully specified config (prod mode)', async () => {
+        expect(service.dspConfig.release).toEqual('2023.04.02');
         expect(service.dspConfig.environment).toEqual('production');
         expect(service.dspConfig.color).toEqual('primary');
         expect(service.dspConfig.production).toEqual(true);
