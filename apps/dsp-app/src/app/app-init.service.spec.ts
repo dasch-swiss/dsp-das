@@ -14,6 +14,7 @@ describe('AppInitService (dev)', () => {
     let service: AppInitService;
 
     const devConfig: IConfig = {
+        dspRelease: '2022.01.01',
         apiProtocol: 'http',
         apiHost: '0.0.0.0',
         apiPort: 3333,
