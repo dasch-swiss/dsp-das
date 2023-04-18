@@ -1,5 +1,4 @@
 {
-  "dspRelease": "work.in.progress",
   "apiProtocol": "http",
   "apiHost": "0.0.0.0",
   "apiPort": 3333,

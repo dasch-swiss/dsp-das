@@ -10,6 +10,7 @@ import {
     DspInstrumentationConfig,
     DspRollbarConfig,
 } from './main/declarations/dsp-instrumentation-config';
+import packageJson from '../../../../package.json';
 
 @Injectable({
     providedIn: 'root',
@@ -48,7 +49,7 @@ export class AppInitService {
         }
 
         this._dspConfig = new DspConfig(
-            this._config.dspRelease,
+            packageJson.version,
             env,
             prodMode,
             color
