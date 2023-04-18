@@ -98,6 +98,21 @@ export class ProjectComponent implements OnInit {
       }
 
     ngOnInit() {
+        switch (this._router.url) {
+            case  `/project/${this.projectUuid}`: {
+                this.listItemSelected = this._router.url;
+                break;
+            }
+            case `/project/${this.projectUuid}/data-models`: {
+                this.listItemSelected = 'data-models';
+                break;
+            }
+            case `/project/${this.projectUuid}/settings/collaboration`: {
+                this.listItemSelected = 'settings'
+                break;
+            }
+        }
+
         this.componentCommsSubscription = this._componentCommsService.on(
             Events.unselectedListItem,
             () => {
