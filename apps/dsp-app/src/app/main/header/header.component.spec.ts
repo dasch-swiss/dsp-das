@@ -72,7 +72,7 @@ describe('HeaderComponent', () => {
 
     const appInitSpy = {
         dspConfig: {
-            release: '2023.04.02',
+            release: 'xxxx.xx.xx',
         },
     };
 
