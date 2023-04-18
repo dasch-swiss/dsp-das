@@ -130,7 +130,6 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
     propAttributeComment: string;
 
     propCanBeDeleted: boolean;
-    propCanBeRemovedFromClass: boolean;
 
     ontology: ReadOntology;
 
