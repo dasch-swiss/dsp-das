@@ -1,5 +1,6 @@
-@use "../../../styles/config" as *;
 @use '@angular/material' as mat;
+@use "../../../styles/config" as *;
+@use "../../../styles/typography" as t;
 
 .project-tile {
   border: 1px solid $cool_gray_300;
@@ -92,18 +93,7 @@
     .workspace-button-container {
       margin: 14% 0%;
 
-      $custom-button-typography-level: mat.define-typography-level(
-              $font-size: 16px,
-              $line-height: 24px,
-              $font-weight: 600,
-              $font-family: 'Roboto, "Helvetica Neue", sans-serif',
-              $letter-spacing: normal
-      );
-      $custom-typography: mat.define-typography-config(
-              $button: $custom-button-typography-level
-      );
-
-      @include mat.button-typography($custom-typography);
+      @include mat.button-typography(t.$dsp-typography-config);
 
       button {
         font-size: 16px;

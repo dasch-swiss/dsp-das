@@ -7,6 +7,7 @@
 @use "styles/layout";
 @use "styles/elements";
 @use "styles/search";
+@use "styles/typography" as t;
 @use "styles/viewer";
 @use "styles/ontology";
 
@@ -14,21 +15,10 @@
 @include mat.legacy-core();
 @include mat.core();
 
-$custom-button-typography-level: mat.define-typography-level(
-        $font-size: 16px,
-        $line-height: 24px,
-        $font-weight: 600,
-        $font-family: 'Roboto, "Helvetica Neue", sans-serif',
-        $letter-spacing: normal
-);
-$custom-typography: mat.define-typography-config(
-        $button: $custom-button-typography-level
-);
-
 // Include all typography configurations for the components (now separate from mat.core())
 /* TODO(mdc-migration): Remove all-legacy-component-typographies once all legacy components are migrated*/
 @include mat.all-legacy-component-typographies();
-@include mat.all-component-typographies($custom-typography);
+@include mat.all-component-typographies(t.$dsp-typography-config);
 
 // Define the color palettes for the theme.
 $primary: mat.define-palette(config.$blue_palette, 700, 500, 900);

@@ -1,5 +1,6 @@
-@use "../../../styles/responsive" as *;
 @use '@angular/material' as mat;
+@use "../../../styles/responsive" as *;
+@use "../../../styles/typography" as t;
 
 .overview {
 
@@ -22,18 +23,7 @@
         }
 
         .create-project-button {
-            $custom-button-typography-level: mat.define-typography-level(
-                    $font-size: 16px,
-                    $line-height: 24px,
-                    $font-weight: 600,
-                    $font-family: 'Roboto, "Helvetica Neue", sans-serif',
-                    $letter-spacing: normal
-            );
-            $custom-typography: mat.define-typography-config(
-                    $button: $custom-button-typography-level
-            );
-
-            @include mat.button-typography($custom-typography);
+            @include mat.button-typography(t.$dsp-typography-config);
         }
     }
 
