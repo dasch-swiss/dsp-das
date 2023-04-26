@@ -26,7 +26,6 @@
         "production": {
           "devServerTarget": "dsp-app:serve:production"
         }
-
       }
     }
   },
