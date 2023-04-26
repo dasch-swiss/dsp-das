@@ -113,6 +113,39 @@ interface PolygonsForRegion {
     [key: string]: HTMLElement[];
 }
 
+
+// compares two objects recursively and returns an array of differences
+function deepDiff(previousValue: unknown, currentValue: unknown, parentKey = '', diff: any[] = []): any[] {
+    if (previousValue === currentValue) {
+        return diff;
+    }
+
+    if (Array.isArray(previousValue) && Array.isArray(currentValue)) {
+        for (let i = 0; i < previousValue.length || i < currentValue.length; i++) {
+            deepDiff(previousValue[i], currentValue[i], `${parentKey}[${i}]`, diff);
+        }
+    } else if (typeof previousValue === 'object' && typeof currentValue === 'object') {
+        for (let key in previousValue) {
+            if (Object.prototype.hasOwnProperty.call(previousValue, key)) {
+                deepDiff(previousValue[key], currentValue[key], `${parentKey}.${key}`, diff);
+            }
+        }
+
+        for (let key in currentValue) {
+            if (Object.prototype.hasOwnProperty.call(currentValue, key)) {
+                if (!(key in previousValue)) {
+                    diff.push({ key: `${parentKey}.${key}`, previousValue: undefined, currentValue: currentValue[key] });
+                }
+            }
+        }
+    } else if (previousValue !== currentValue) {
+        diff.push({ key: parentKey, previousValue, currentValue });
+    }
+
+    return diff;
+}
+
+
 @Component({
     selector: 'app-still-image',
     templateUrl: './still-image.component.html',
@@ -200,18 +233,18 @@ export class StillImageComponent
     ngOnChanges(changes: SimpleChanges) {
         if (changes['images'] && changes['images'].isFirstChange()) {
             this._setupViewer();
+            this.loadImages();
         }
         if (changes['images']) {
-            this._rs
-                .getFileInfo(
-                    this.images[0].fileValue.fileUrl,
-                    this.images[0].fileValue.filename
-                )
-                .subscribe((res) => {
-                    this.originalFilename = res['originalFilename'];
-                    this._openImages();
-                    this._unhighlightAllRegions();
-                });
+            // comparing previous state of images and current state because inputs trigger changes unnecessarily ...
+            let diff = deepDiff(changes['images'].previousValue['fileValue'], changes['images'].currentValue['fileValue'], 'images');
+            if (diff.length) { // there are differences
+                this.loadImages();
+            }
+        }
+
+        if (changes['iiifUrl']) {
+            this.loadImages();
         }
 
         if (this.currentTab === 'annotations') {
@@ -236,16 +269,17 @@ export class StillImageComponent
         }
     }
 
-    /**
-     * renders all ReadStillImageFileValues to be found in [[this.images]].
-     * (Although this.images is an Angular Input property, the built-in change detection of Angular does not detect changes in complex objects or arrays, only reassignment of objects/arrays.
-     * Use this method if additional ReadStillImageFileValues were added to this.images after creation/assignment of the this.images array.)
-     */
-    updateImages() {
-        if (!this._viewer) {
-            this._setupViewer();
-        }
-        this._openImages();
+    private loadImages() {
+        this._rs
+            .getFileInfo(
+                this.images[0].fileValue.fileUrl,
+                this.images[0].fileValue.filename
+            )
+            .subscribe((res) => {
+                this.originalFilename = res['originalFilename'];
+                this._openImages();
+                this._unhighlightAllRegions();
+            });
     }
 
     /**
