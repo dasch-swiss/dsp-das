@@ -49,7 +49,7 @@ export class UploadComponent implements OnInit {
     @Output() fileInfo: EventEmitter<CreateFileValue> =
         new EventEmitter<CreateFileValue>();
 
-    
+
     @ViewChild('fileInput') fileInput: ElementRef;
     file: File;
     form: UntypedFormGroup;

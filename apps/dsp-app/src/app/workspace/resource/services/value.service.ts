@@ -16,7 +16,7 @@ import {
     IslamicCalendarDate,
     JDNConvertibleCalendar,
     JulianCalendarDate,
-} from '@dasch-swiss/jdnconvertiblecalendar';
+} from '@dsp/jdnconvertiblecalendar';
 
 @Injectable({
     providedIn: 'root',

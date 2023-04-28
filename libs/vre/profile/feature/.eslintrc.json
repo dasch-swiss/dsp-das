@@ -17,7 +17,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "dasch-swiss",
+            "prefix": "dsp-vre-profile",
             "style": "kebab-case"
           }
         ]

@@ -1,5 +1,5 @@
 {
-  "name": "@dasch-swiss/jdnconvertiblecalendardateadapter",
+  "name": "@dsp/jdnconvertiblecalendardateadapter",
   "version": "1.0.2",
   "description": "Implementation of Angular Material DateAdapter for JDNConvertibleCalendar",
   "keywords": [

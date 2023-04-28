@@ -18,20 +18,18 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@dasch-swiss/jdnconvertiblecalendar": [
+      "@dsp-app/*": ["apps/dsp-app/*"],
+      "@dsp/jdnconvertiblecalendar": [
         "libs/jdnconvertiblecalendar/src/index.ts"
       ],
-      "@dasch-swiss/jdnconvertiblecalendardateadapter": [
+      "@dsp/jdnconvertiblecalendardateadapter": [
         "libs/jdnconvertiblecalendardateadapter/src/index.ts"
       ],
-      "@dasch-swiss/vre/profile/data-access": [
+      "@dsp/vre/profile/data-access": [
         "libs/vre/profile/data-access/src/index.ts"
       ],
-      "@dasch-swiss/vre/profile/feature": [
-        "libs/vre/profile/feature/src/index.ts"
-      ],
-      "@dasch-swiss/vre/profile/ui": ["libs/vre/profile/ui/src/index.ts"],
-      "@dsp-app/*": ["apps/dsp-app/*"]
+      "@dsp/vre/profile/feature": ["libs/vre/profile/feature/src/index.ts"],
+      "@dsp/vre/profile/ui": ["libs/vre/profile/ui/src/index.ts"]
     }
   },
   "angularCompilerOptions": {

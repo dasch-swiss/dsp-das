@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent, HeaderComponent, JdnDatepicker } from './app.component';
-import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
+import { MatJDNConvertibleCalendarDateAdapterModule } from '@dsp/jdnconvertiblecalendardateadapter';
 import { MatLegacyOptionModule as MatOptionModule } from '@angular/material/legacy-core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
