@@ -78,6 +78,12 @@ export class AccountComponent implements OnInit {
 
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
 
+        // After the dialog is closed (assumption is that closing the dialog
+        // happens with clicking on one of the two buttons).
+        // The response containing 'true' indicates that 'yes' was pressed (?)
+        // and after we figure out in which 'mode' the dialog was started,
+        // we can execute the corresponding action.
+        // FIXME: missing unsubscribe
         dialogRef.afterClosed().subscribe((response) => {
             if (response === true) {
                 // get the mode
@@ -98,10 +104,12 @@ export class AccountComponent implements OnInit {
     }
 
     deleteUser(id: string) {
+        // FIXME: needs an unsubscribe on ngDestroy!
         this._dspApiConnection.admin.usersEndpoint.deleteUser(id).subscribe(
             (response: ApiResponseData<UserResponse>) => {
                 // console.log('refresh parent after delete', response);
                 // this action will deactivate own user account. The consequence is a logout
+                // FIXME: needs an unsubscribe on ngDestroy!
                 this._dspApiConnection.v2.auth.logout().subscribe(
                     (logoutResponse: ApiResponseData<LogoutResponse>) => {
                         // destroy cache
@@ -124,7 +132,9 @@ export class AccountComponent implements OnInit {
         );
     }
 
+    // FIXME: the user itself cannot call this anymore, so this is probably not needed.
     activateUser(id: string) {
+        // FIXME: needs an unsubscribe on ngDestroy!
         this._dspApiConnection.admin.usersEndpoint
             .updateUserStatus(id, true)
             .subscribe(
