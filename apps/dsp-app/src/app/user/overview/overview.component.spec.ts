@@ -330,7 +330,7 @@ describe('OverviewComponent', () => {
                 0
             );
             expect(testHostComponent.overviewComp.otherProjects.length).toEqual(
-                7
+                5
             );
         });
 
