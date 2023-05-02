@@ -28,6 +28,7 @@ import { UserComponent } from './user/user.component';
 // search results and resource viewer
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
+import { VreProfileComponent } from "@dsp/vre/profile/feature";
 
 const routes: Routes = [
     {
@@ -141,7 +142,7 @@ const routes: Routes = [
     */
     {
         path: 'profile',
-        component: UserComponent,
+        loadChildren: () => import('@dsp/vre/profile/feature').then(mod => mod.PROFILE_ROUTES),
         canActivate: [AuthGuard],
     },
     {
