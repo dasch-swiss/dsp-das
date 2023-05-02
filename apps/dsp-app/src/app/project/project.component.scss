@@ -1,5 +1,5 @@
-@use "config" as *;
-@use "responsive" as *;
+@use "../../styles/config" as *;
+@use "../../styles/responsive" as *;
 
 .deactivated {
   color: $red;
@@ -137,6 +137,10 @@ mat-sidenav {
       }
     }
   }
+}
+
+.active {
+  background-color: $primary_100;
 }
 
 mat-sidenav-content {
