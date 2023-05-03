@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { StoredProject } from '@dasch-swiss/dsp-js';
-import { routeParams } from '../../user/overview/overview.component';
+import { TileLinks, routeParams } from '@dsp-app/src/app/user/overview/overview.component';
 
 @Component({
     selector: 'app-project-tile',
@@ -14,7 +14,7 @@ export class ProjectTileComponent {
 
     constructor() {}
 
-    emitButtonClicked(id: string, path: 'workspace' | 'settings') {
+    emitButtonClicked(id: string, path: TileLinks) {
         const params: routeParams = { id, path };
         this.buttonClicked.emit(params);
     }

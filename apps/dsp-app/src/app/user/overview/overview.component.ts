@@ -20,9 +20,13 @@ import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handle
 import { Session, SessionService } from '@dsp-app/src/app/main/services/session.service';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 
+// should only be used by this component and child components
+export type TileLinks = 'workspace' | 'settings';
+
+// should only be used by this component and child components
 export interface routeParams {
     id: string,
-    path: 'workspace' | 'settings'
+    path: TileLinks
 }
 
 @Component({
