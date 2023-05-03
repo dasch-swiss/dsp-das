@@ -125,13 +125,13 @@ function deepDiff(previousValue: unknown, currentValue: unknown, parentKey = '',
             deepDiff(previousValue[i], currentValue[i], `${parentKey}[${i}]`, diff);
         }
     } else if (typeof previousValue === 'object' && typeof currentValue === 'object') {
-        for (let key in previousValue) {
+        for (const key in previousValue) {
             if (Object.prototype.hasOwnProperty.call(previousValue, key)) {
                 deepDiff(previousValue[key], currentValue[key], `${parentKey}.${key}`, diff);
             }
         }
 
-        for (let key in currentValue) {
+        for (const key in currentValue) {
             if (Object.prototype.hasOwnProperty.call(currentValue, key)) {
                 if (!(key in previousValue)) {
                     diff.push({ key: `${parentKey}.${key}`, previousValue: undefined, currentValue: currentValue[key] });
