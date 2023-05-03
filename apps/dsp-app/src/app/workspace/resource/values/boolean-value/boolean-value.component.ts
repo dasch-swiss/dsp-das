@@ -34,12 +34,9 @@ export class BooleanValueComponent
         super();
     }
 
-    getInitValue(): boolean | null {
-        if (this.displayValue !== undefined) {
-            return this.displayValue.bool;
-        } else {
-            return false;
-        }
+    // return false as default value if there is no this.displayValue
+    getInitValue(): boolean {
+        return this.displayValue ? this.displayValue.bool : false;
     }
 
     ngOnInit() {
