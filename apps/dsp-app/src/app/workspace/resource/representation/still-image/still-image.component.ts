@@ -17,7 +17,7 @@ import {
 } from '@angular/material/legacy-dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {
     ApiResponseError,
     Constants,
@@ -231,13 +231,13 @@ export class StillImageComponent
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes['images'] && changes['images'].isFirstChange()) {
+        if (changes['images'] && ( changes['images'].isFirstChange()) || !changes['images'].previousValue) {
             this._setupViewer();
             this.loadImages();
         }
-        if (changes['images']) {
+        if (changes['images'] && changes['images'].previousValue) {
             // comparing previous state of images and current state because inputs trigger changes unnecessarily ...
-            let diff = deepDiff(changes['images'].previousValue['fileValue'], changes['images'].currentValue['fileValue'], 'images');
+            const diff = deepDiff(changes['images'].previousValue['fileValue'], changes['images'].currentValue['fileValue'], 'images');
             if (diff.length) { // there are differences
                 this.loadImages();
             }
