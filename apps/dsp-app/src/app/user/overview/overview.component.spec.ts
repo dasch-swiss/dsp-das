@@ -33,6 +33,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { DialogComponent } from '../../main/dialog/dialog.component';
 import { DialogHeaderComponent } from '../../main/dialog/dialog-header/dialog-header.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { ProjectService } from '../../workspace/resource/services/project.service';
 
 /**
  * test host component to simulate parent component as a logged in user.
@@ -65,7 +66,7 @@ class TestProjectTileComponent {
     selector: 'app-project-form',
     template: '',
 })
-class TestProjectFormComponent {}
+class TestProjectFormComponent { }
 
 describe('OverviewComponent', () => {
     beforeEach(async () => {
@@ -82,6 +83,9 @@ describe('OverviewComponent', () => {
         const cacheServiceSpy = jasmine.createSpyObj('CacheService', [
             'get',
             'set',
+        ]);
+        const projectServiceSpy = jasmine.createSpyObj('ProjectService', [
+            'iriToUuid',
         ]);
 
         await TestBed.configureTestingModule({
@@ -117,6 +121,10 @@ describe('OverviewComponent', () => {
                 {
                     provide: CacheService,
                     useValue: cacheServiceSpy,
+                },
+                {
+                    provide: ProjectService,
+                    useValue: projectServiceSpy,
                 },
             ],
         }).compileComponents();
@@ -193,6 +201,12 @@ describe('OverviewComponent', () => {
             testHostComponent = testHostFixture.componentInstance;
             testHostFixture.detectChanges();
 
+            const projectServiceSpy = TestBed.inject(ProjectService);
+
+            (
+                projectServiceSpy as jasmine.SpyObj<ProjectService>
+            ).iriToUuid.and.callFake((iri: string) => '0123');
+
             expect(testHostComponent).toBeTruthy();
         });
 
@@ -201,7 +215,7 @@ describe('OverviewComponent', () => {
                 1
             );
             expect(testHostComponent.overviewComp.otherProjects.length).toEqual(
-                7
+                5
             );
         });
     });
@@ -260,7 +274,7 @@ describe('OverviewComponent', () => {
                 0
             );
             expect(testHostComponent.overviewComp.otherProjects.length).toEqual(
-                8
+                6
             );
         });
 
@@ -326,12 +340,8 @@ describe('OverviewComponent', () => {
         });
 
         it('should populate project lists correctly', () => {
-            expect(testHostComponent.overviewComp.userProjects.length).toEqual(
-                0
-            );
-            expect(testHostComponent.overviewComp.otherProjects.length).toEqual(
-                7
-            );
+            expect(testHostComponent.overviewComp.userProjects.length).toEqual(0);
+            expect(testHostComponent.overviewComp.otherProjects.length).toEqual(5);
         });
 
         it('should NOT show the "Create new project" button', async () => {
