@@ -8,7 +8,12 @@
         [ngClass]="{
             comment: valueFormControlValue,
             'invalid-comment':
-                valueFormControlHasError || !valueFormControlValue
+                valueFormControlHasError ||
+                (
+                    this.valueFormControlValue === '' &&
+                    this.valueFormControlValue === undefined &&
+                    this.valueFormControlValue === null
+                    )
         }"
         placeholder="Comment"
         spellcheck="false"
@@ -25,7 +30,13 @@
     <mat-hint
         *ngIf="
             commentFormControl.value &&
-            (!this.valueFormControlValue || this.valueFormControlHasError)
+            (
+                (
+                    this.valueFormControlValue === '' &&
+                    this.valueFormControlValue === undefined &&
+                    this.valueFormControlValue === null
+                    ) ||
+                this.valueFormControlHasError)
         "
     >
         <span class="custom-error-message"

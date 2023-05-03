@@ -50,7 +50,12 @@ export class CommentFormComponent implements OnChanges {
 
     ngOnChanges() {
         this.disallowed =
-            (!this.valueFormControlValue || this.valueFormControlHasError) &&
+            // this.valueFormControlValue === False is a valid value for
+            // boolean forms
+            (this.valueFormControlValue === null ||
+                this.valueFormControlValue === '' ||
+                this.valueFormControlValue === undefined ||
+                this.valueFormControlHasError ) &&
             !this.commentFormControl.value;
     }
 }
