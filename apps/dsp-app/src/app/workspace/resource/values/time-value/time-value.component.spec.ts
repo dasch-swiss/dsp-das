@@ -58,7 +58,7 @@ class TestTimeInputComponent
     id = 'testid';
     ngControl: NgControl | null;
 
-    onChange = (_: any) => {};
+    onChange = () => {};
 
     writeValue(dateTime: string | null): void {
         this.value = dateTime;
@@ -68,14 +68,14 @@ class TestTimeInputComponent
         this.onChange = fn;
     }
 
-    registerOnTouched(fn: any): void {}
+    registerOnTouched(): void {}
 
-    onContainerClick(event: MouseEvent): void {}
+    onContainerClick(): void {}
 
-    setDescribedByIds(ids: string[]): void {}
+    setDescribedByIds(): void {}
 
     _handleInput(): void {
-        this.onChange(this.value);
+        this.onChange();
     }
 }
 
@@ -386,8 +386,6 @@ describe('TimeValueComponent', () => {
         let testHostComponent: TestHostCreateValueComponent;
         let testHostFixture: ComponentFixture<TestHostCreateValueComponent>;
 
-        let valueComponentDe: DebugElement;
-
         beforeEach(() => {
             testHostFixture = TestBed.createComponent(
                 TestHostCreateValueComponent
@@ -397,12 +395,6 @@ describe('TimeValueComponent', () => {
 
             expect(testHostComponent).toBeTruthy();
             expect(testHostComponent.inputValueComponent).toBeTruthy();
-
-            const hostCompDe = testHostFixture.debugElement;
-
-            valueComponentDe = hostCompDe.query(
-                By.directive(TimeValueComponent)
-            );
         });
 
         it('should create a value', () => {

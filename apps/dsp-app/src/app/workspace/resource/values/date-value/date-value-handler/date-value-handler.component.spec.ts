@@ -1,4 +1,3 @@
-import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Component, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
@@ -116,7 +115,7 @@ class TestDatePickerComponent
     focused = false;
     id = 'testid';
     ngControl: NgControl | null;
-    onChange = (_: any) => {};
+    onChange = () => {};
 
     writeValue(date: KnoraDate | null): void {
         this.value = date;
@@ -126,11 +125,11 @@ class TestDatePickerComponent
         this.onChange = fn;
     }
 
-    registerOnTouched(fn: any): void {}
+    registerOnTouched(): void {}
 
-    onContainerClick(event: MouseEvent): void {}
+    onContainerClick(): void {}
 
-    setDescribedByIds(ids: string[]): void {}
+    setDescribedByIds(): void {}
 
     _handleInput(): void {
         this.onChange(this.value);
@@ -140,7 +139,6 @@ class TestDatePickerComponent
 describe('DateValueHandlerComponent', () => {
     let testHostComponent: TestHostComponent;
     let testHostFixture: ComponentFixture<TestHostComponent>;
-    let loader: HarnessLoader;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -481,7 +479,6 @@ describe('DateValueHandlerComponent', () => {
 describe('DateValueHandlerComponent (no validator required)', () => {
     let testHostComponent: NoValueRequiredTestHostComponent;
     let testHostFixture: ComponentFixture<NoValueRequiredTestHostComponent>;
-    let loader: HarnessLoader;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({

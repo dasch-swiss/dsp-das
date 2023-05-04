@@ -1,5 +1,4 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import {
     Component,
     DebugElement,
@@ -53,7 +52,7 @@ class TestCKEditorComponent implements ControlValueAccessor {
 
     constructor() {}
 
-    onChange = (_: any) => {};
+    onChange = () => {};
 
     writeValue(obj: any) {
         this.value = obj;
@@ -63,10 +62,10 @@ class TestCKEditorComponent implements ControlValueAccessor {
         this.onChange = fn;
     }
 
-    registerOnTouched(fn: any) {}
+    registerOnTouched() {}
 
     _handleInput(): void {
-        this.onChange(this.value);
+        this.onChange();
     }
 }
 
@@ -585,8 +584,6 @@ describe('TextValueAsXMLComponent', () => {
         let testHostFixture: ComponentFixture<TestHostCreateValueComponent>;
         let ckeditorDe: DebugElement;
 
-        let valueComponentDe: DebugElement;
-
         beforeEach(() => {
             testHostFixture = TestBed.createComponent(
                 TestHostCreateValueComponent
@@ -597,10 +594,6 @@ describe('TextValueAsXMLComponent', () => {
             const hostCompDe = testHostFixture.debugElement;
 
             ckeditorDe = hostCompDe.query(By.directive(TestCKEditorComponent));
-
-            valueComponentDe = hostCompDe.query(
-                By.directive(TextValueAsXMLComponent)
-            );
         });
 
         it('should create a value', () => {

@@ -72,7 +72,6 @@ describe('StringLiteralInputComponent', () => {
     let testHostComponent: TestHostStringLiteralInputComponent;
     let testHostFixture: ComponentFixture<TestHostStringLiteralInputComponent>;
     let loader: HarnessLoader;
-    let sessionService: SessionService;
 
     let sliComponentDe: DebugElement;
     let sliMenuDebugElement: DebugElement;

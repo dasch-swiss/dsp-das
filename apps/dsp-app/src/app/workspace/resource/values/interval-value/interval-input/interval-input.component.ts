@@ -129,7 +129,7 @@ export class IntervalInputComponent
     @Input() intervalEndLabel = 'end';
     @Input() valueRequiredValidator = true;
 
-    onChange = (_: any) => {};
+    onChange = () => {};
     onTouched = () => {};
 
     get empty() {
@@ -303,6 +303,6 @@ export class IntervalInputComponent
     _handleInput(): void {
         this.startIntervalControl.updateValueAndValidity();
         this.endIntervalControl.updateValueAndValidity();
-        this.onChange(this.value);
+        this.onChange();
     }
 }

@@ -2,9 +2,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
     ComponentFixture,
-    fakeAsync,
     TestBed,
-    tick,
     waitForAsync,
 } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
@@ -50,7 +48,7 @@ class TestHostFulltextSearchComponent implements OnInit {
 
     ngOnInit() {}
 
-    emitSearch(data: any) {}
+    emitSearch() {}
 }
 
 interface PrevSearchItem {

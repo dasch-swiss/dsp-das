@@ -193,7 +193,7 @@ export class ColorPickerComponent
         this.placeholder = 'Click to select a color';
     }
 
-    onChange = (_: any) => {};
+    onChange = () => {};
 
     onTouched = () => {};
 
@@ -230,6 +230,6 @@ export class ColorPickerComponent
     }
 
     _handleInput() {
-        this.onChange(this.value);
+        this.onChange();
     }
 }

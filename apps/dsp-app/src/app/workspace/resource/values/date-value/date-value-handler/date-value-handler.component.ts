@@ -296,7 +296,7 @@ export class DateValueHandlerComponent
         });
     }
 
-    onChange = (_: any) => {};
+    onChange = () => {};
 
     onTouched = () => {};
 
@@ -355,7 +355,7 @@ export class DateValueHandlerComponent
     }
 
     handleInput(): void {
-        this.onChange(this.value);
+        this.onChange();
     }
 
     togglePeriodControl(ev: Event) {
@@ -363,7 +363,7 @@ export class DateValueHandlerComponent
         this.isPeriodControl.setValue(!this.isPeriodControl.value);
     }
 
-    onContainerClick(event: MouseEvent): void {}
+    onContainerClick(): void {}
 
-    setDescribedByIds(ids: string[]): void {}
+    setDescribedByIds(): void {}
 }

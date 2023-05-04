@@ -1,5 +1,4 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { IntervalValueComponent } from './interval-value.component';
 import {
     Component,
@@ -62,7 +61,7 @@ class TestIntervalInputComponent
     focused = false;
     id = 'testid';
     ngControl: NgControl | null;
-    onChange = (_: any) => {};
+    onChange = () => {};
 
     writeValue(interval: Interval | null): void {
         this.value = interval;
@@ -72,14 +71,14 @@ class TestIntervalInputComponent
         this.onChange = fn;
     }
 
-    registerOnTouched(fn: any): void {}
+    registerOnTouched(): void {}
 
-    onContainerClick(event: MouseEvent): void {}
+    onContainerClick(): void {}
 
-    setDescribedByIds(ids: string[]): void {}
+    setDescribedByIds(): void {}
 
     _handleInput(): void {
-        this.onChange(this.value);
+        this.onChange();
     }
 }
 
@@ -474,8 +473,6 @@ describe('IntervalValueComponent', () => {
         let testHostComponent: TestHostCreateValueComponent;
         let testHostFixture: ComponentFixture<TestHostCreateValueComponent>;
 
-        let valueComponentDe: DebugElement;
-
         beforeEach(() => {
             testHostFixture = TestBed.createComponent(
                 TestHostCreateValueComponent
@@ -485,12 +482,6 @@ describe('IntervalValueComponent', () => {
 
             expect(testHostComponent).toBeTruthy();
             expect(testHostComponent.inputValueComponent).toBeTruthy();
-
-            const hostCompDe = testHostFixture.debugElement;
-
-            valueComponentDe = hostCompDe.query(
-                By.directive(IntervalValueComponent)
-            );
         });
 
         it('should create a value', () => {

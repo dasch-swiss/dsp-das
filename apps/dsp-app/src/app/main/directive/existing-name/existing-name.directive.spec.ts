@@ -99,7 +99,7 @@ class TestHostComponent implements OnInit {
         this.onValueChanged();
     }
 
-    onValueChanged(data?: any) {
+    onValueChanged() {
         if (!this.form) {
             return;
         }

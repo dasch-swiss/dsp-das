@@ -113,7 +113,7 @@ export class TimeInputComponent
     errorState = false;
     controlType = 'app-time-input';
     matcher = new ValueErrorStateMatcher();
-    onChange = (_: any) => {};
+    onChange = () => {};
     onTouched = () => {};
 
     @Input() dateLabel = 'Date';
@@ -314,7 +314,7 @@ export class TimeInputComponent
     _handleInput(): void {
         this.dateFormControl.updateValueAndValidity();
         this.timeFormControl.updateValueAndValidity();
-        this.onChange(this.value);
+        this.onChange();
     }
 
     // return converted Date obj as a string without the milliseconds
