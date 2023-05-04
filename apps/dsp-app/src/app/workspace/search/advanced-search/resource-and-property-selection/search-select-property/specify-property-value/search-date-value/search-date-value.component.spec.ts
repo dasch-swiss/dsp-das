@@ -101,7 +101,7 @@ class TestDatePickerComponent
     setDescribedByIds(): void {}
 
     _handleInput(): void {
-        this.onChange(this.value);
+        this.onChange();
     }
 }
 

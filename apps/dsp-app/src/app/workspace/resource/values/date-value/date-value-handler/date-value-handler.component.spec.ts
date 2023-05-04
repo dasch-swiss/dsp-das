@@ -132,7 +132,7 @@ class TestDatePickerComponent
     setDescribedByIds(): void {}
 
     _handleInput(): void {
-        this.onChange(this.value);
+        this.onChange();
     }
 }
 
@@ -162,7 +162,6 @@ describe('DateValueHandlerComponent', () => {
     beforeEach(() => {
         testHostFixture = TestBed.createComponent(TestHostComponent);
         testHostComponent = testHostFixture.componentInstance;
-        loader = TestbedHarnessEnvironment.loader(testHostFixture);
         testHostFixture.detectChanges();
 
         expect(testHostComponent).toBeTruthy();
@@ -506,7 +505,6 @@ describe('DateValueHandlerComponent (no validator required)', () => {
             NoValueRequiredTestHostComponent
         );
         testHostComponent = testHostFixture.componentInstance;
-        loader = TestbedHarnessEnvironment.loader(testHostFixture);
         testHostFixture.detectChanges();
 
         expect(testHostComponent).toBeTruthy();

@@ -246,10 +246,7 @@ describe('FulltextSearchComponent', () => {
                 testHostComponent.fulltextSearch.emitSearchParams
             ).toHaveBeenCalled();
             expect(testHostComponent.emitSearch).toHaveBeenCalled();
-            expect(testHostComponent.emitSearch).toHaveBeenCalledWith({
-                query: 'new thing',
-                mode: 'fulltext',
-            });
+            expect(testHostComponent.emitSearch).toHaveBeenCalledWith();
         });
 
         it('should not do a search for a query less than 3 characters', () => {

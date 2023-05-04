@@ -104,8 +104,6 @@ describe('StringLiteralInputComponent', () => {
                 SessionService,
             ],
         }).compileComponents();
-
-        sessionService = TestBed.inject(SessionService);
     }));
 
     beforeEach(() => {

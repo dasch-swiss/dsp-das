@@ -75,10 +75,6 @@ class TestDateInputComponent
     onContainerClick(): void {}
 
     setDescribedByIds(): void {}
-
-    handleInput(): void {
-        this.onChange(this.value);
-    }
 }
 
 /**
