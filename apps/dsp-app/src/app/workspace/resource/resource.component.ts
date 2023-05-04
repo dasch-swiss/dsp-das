@@ -156,12 +156,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         this._router.events.subscribe((event) => {
             this._titleService.setTitle('Resource view');
 
-            if (event instanceof NavigationEnd) {
-
-                // hide loading indicator
-                // this.refresh = false;
-            }
-
             if (event instanceof NavigationError) {
                 // present error to user
                 this._errorHandler.showMessage(event.error);
@@ -175,7 +169,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
                     if (newFileValue) {
                         if (this.resourceIri) {
                             this.initResource(this.resourceIri);
-                            // this.getResource(this.resourceIri);
                         }
                     }
                 }
@@ -193,14 +186,12 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         // reset all resources
         this.resource = undefined;
         this.incomingResource = undefined;
-        // this.representationsToDisplay = [];
         this.compoundPosition = undefined;
         this.showRestrictedMessage = true;
         // get resource with all necessary information
         // incl. incoming resources and annotations
         if (this.resourceIri) {
             this.initResource(this.resourceIri);
-            // this.getResource(this.resourceIri);
         }
     }
 
@@ -568,7 +559,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         // general object for all kind of representations
         const representations: FileRepresentation[] = [];
 
-        // --> TODO: use a proper classes and a factory
+        // --> TODO: use proper classes and a factory
         if (resource.res.properties[Constants.HasStillImageFileValue]) {
             // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
             // resource has StillImageFileValues that are directly attached to it (properties)
@@ -710,19 +701,12 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         }
 
         // request incoming regions --> TODO: add case to get incoming sequences in case of video and audio
-        if (
-            resource.res.properties[Constants.HasStillImageFileValue] ||
-            resource.res.properties[Constants.HasDocumentFileValue] ||
-            resource.res.properties[Constants.HasAudioFileValue] ||
-            resource.res.properties[Constants.HasMovingImageFileValue] ||
-            resource.res.properties[Constants.HasArchiveFileValue] ||
-            resource.res.properties[Constants.HasTextFileValue]
-        ) {
+        if (resource.res.properties[Constants.HasStillImageFileValue]) {
             // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
             // the resource is a StillImageRepresentation, check if there are regions pointing to it
 
             this.getIncomingRegions(resource, 0);
-        } else {
+        } else if (this.compoundPosition) {
             // this resource is not a StillImageRepresentation
             // check if there are StillImageRepresentations pointing to this resource
 
