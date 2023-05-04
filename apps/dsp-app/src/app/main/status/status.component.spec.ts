@@ -98,8 +98,6 @@ describe('StatusComponent', () => {
                 },
             ],
         }).compileComponents();
-
-        status = TestBed.inject(HttpStatusMsg);
     }));
 
     beforeEach(() => {
