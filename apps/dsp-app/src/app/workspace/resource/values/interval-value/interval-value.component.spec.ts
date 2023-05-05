@@ -61,7 +61,8 @@ class TestIntervalInputComponent
     focused = false;
     id = 'testid';
     ngControl: NgControl | null;
-    onChange = () => {};
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    onChange = (_: any) => {};
 
     writeValue(interval: Interval | null): void {
         this.value = interval;
@@ -71,14 +72,15 @@ class TestIntervalInputComponent
         this.onChange = fn;
     }
 
-    registerOnTouched(): void {}
+    registerOnTouched(fn: any): void {}
 
-    onContainerClick(): void {}
+    onContainerClick(event: MouseEvent): void {}
 
-    setDescribedByIds(): void {}
+    setDescribedByIds(ids: string[]): void {}
+    /* eslint-enable @typescript-eslint/no-unused-vars */
 
     _handleInput(): void {
-        this.onChange();
+        this.onChange(this.value);
     }
 }
 

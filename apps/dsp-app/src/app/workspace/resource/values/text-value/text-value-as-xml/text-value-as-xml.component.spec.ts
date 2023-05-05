@@ -51,8 +51,8 @@ class TestCKEditorComponent implements ControlValueAccessor {
     value;
 
     constructor() {}
-
-    onChange = () => {};
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    onChange = (_: any) => {};
 
     writeValue(obj: any) {
         this.value = obj;
@@ -62,10 +62,11 @@ class TestCKEditorComponent implements ControlValueAccessor {
         this.onChange = fn;
     }
 
-    registerOnTouched() {}
+    registerOnTouched(fn: any) {}
+    /* eslint-enable @typescript-eslint/no-unused-vars */
 
     _handleInput(): void {
-        this.onChange();
+        this.onChange(this.value);
     }
 }
 

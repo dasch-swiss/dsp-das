@@ -128,8 +128,8 @@ export class IntervalInputComponent
     @Input() intervalStartLabel = 'start';
     @Input() intervalEndLabel = 'end';
     @Input() valueRequiredValidator = true;
-
-    onChange = () => {};
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onChange = (_: any) => {};
     onTouched = () => {};
 
     get empty() {
@@ -303,6 +303,6 @@ export class IntervalInputComponent
     _handleInput(): void {
         this.startIntervalControl.updateValueAndValidity();
         this.endIntervalControl.updateValueAndValidity();
-        this.onChange();
+        this.onChange(this.value);
     }
 }

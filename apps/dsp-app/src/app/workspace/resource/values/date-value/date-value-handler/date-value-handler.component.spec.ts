@@ -1,4 +1,3 @@
-import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Component, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {
@@ -115,7 +114,8 @@ class TestDatePickerComponent
     focused = false;
     id = 'testid';
     ngControl: NgControl | null;
-    onChange = () => {};
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    onChange = (_: any) => {};
 
     writeValue(date: KnoraDate | null): void {
         this.value = date;
@@ -125,14 +125,15 @@ class TestDatePickerComponent
         this.onChange = fn;
     }
 
-    registerOnTouched(): void {}
+    registerOnTouched(fn: any): void {}
 
-    onContainerClick(): void {}
+    onContainerClick(event: MouseEvent): void {}
 
-    setDescribedByIds(): void {}
+    setDescribedByIds(ids: string[]): void {}
+    /* eslint-enable @typescript-eslint/no-unused-vars */
 
     _handleInput(): void {
-        this.onChange();
+        this.onChange(this.value);
     }
 }
 

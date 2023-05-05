@@ -19,7 +19,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MockProjects, ProjectsEndpointAdmin } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs/internal/observable/of';
 import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
-import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 import { FulltextSearchComponent } from './fulltext-search.component';
 
 /**
@@ -40,15 +39,14 @@ import { FulltextSearchComponent } from './fulltext-search.component';
 class TestHostFulltextSearchComponent implements OnInit {
     @ViewChild('fulltextSearch') fulltextSearch: FulltextSearchComponent;
 
-    sortingService: SortingService = new SortingService();
-
     projectfilter?: boolean = true;
 
     limitToProject?: string;
 
     ngOnInit() {}
 
-    emitSearch() {}
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    emitSearch(data: any) {}
 }
 
 interface PrevSearchItem {
@@ -246,7 +244,10 @@ describe('FulltextSearchComponent', () => {
                 testHostComponent.fulltextSearch.emitSearchParams
             ).toHaveBeenCalled();
             expect(testHostComponent.emitSearch).toHaveBeenCalled();
-            expect(testHostComponent.emitSearch).toHaveBeenCalledWith();
+            expect(testHostComponent.emitSearch).toHaveBeenCalledWith({
+                query: 'new thing',
+                mode: 'fulltext',
+            });
         });
 
         it('should not do a search for a query less than 3 characters', () => {

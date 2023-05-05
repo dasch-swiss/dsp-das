@@ -295,8 +295,8 @@ export class DateValueHandlerComponent
             endDate: this.endDate,
         });
     }
-
-    onChange = () => {};
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onChange = (_: any) => {};
 
     onTouched = () => {};
 
@@ -355,15 +355,16 @@ export class DateValueHandlerComponent
     }
 
     handleInput(): void {
-        this.onChange();
+        this.onChange(this.value);
     }
 
     togglePeriodControl(ev: Event) {
         ev.preventDefault();
         this.isPeriodControl.setValue(!this.isPeriodControl.value);
     }
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    onContainerClick(event: MouseEvent): void {}
 
-    onContainerClick(): void {}
-
-    setDescribedByIds(): void {}
+    setDescribedByIds(ids: string[]): void {}
+    /* eslint-enable @typescript-eslint/no-unused-vars */
 }
