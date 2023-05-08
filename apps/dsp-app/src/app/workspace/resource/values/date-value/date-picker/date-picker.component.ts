@@ -4,11 +4,13 @@ import {
     Component,
     DoCheck,
     ElementRef,
+    EventEmitter,
     HostBinding,
     Input,
     OnChanges,
     OnDestroy,
     Optional,
+    Output,
     Self,
     SimpleChanges,
     ViewChild,
@@ -90,7 +92,7 @@ export class DatePickerComponent
     static nextId = 0;
 
     @ViewChild(MatMenuTrigger) popover: MatMenuTrigger;
-
+    @Output() focus: EventEmitter<void> = new EventEmitter();
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     // disable calendar selector in case of end date in a period date value
@@ -497,6 +499,7 @@ export class DatePickerComponent
         if (this.popover) {
             this.popover.closeMenu();
         }
+        this.focus.emit();
     }
 
     private _updateForm() {
@@ -624,5 +627,9 @@ export class DatePickerComponent
             weeks.push(dates.splice(0, 7));
         }
         this.weeks = weeks;
+    }
+    test() {
+        console.log("TEST");
+        this.focus.emit();
     }
 }
