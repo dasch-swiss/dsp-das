@@ -282,10 +282,10 @@ export class DatePickerComponent
 
         this.buildForm();
 
-        this.dateForm.valueChanges.subscribe((data) => this.handleInput());
+        this.dateForm.valueChanges.subscribe(() => this.handleInput());
     }
 
-    onChange = (_: any) => {};
+    onChange = () => {};
 
     onTouched = () => {};
 
@@ -330,7 +330,7 @@ export class DatePickerComponent
     }
 
     handleInput() {
-        this.onChange(this.value);
+        this.onChange();
     }
 
     buildForm() {
@@ -533,8 +533,7 @@ export class DatePickerComponent
         const yearAstro =
             this._valueService.convertHistoricalYearToAstronomicalYear(
                 year,
-                era,
-                calendar.toUpperCase()
+                era
             );
 
         // count the days of the month

@@ -48,7 +48,7 @@ import {
     PropertyInfoObject,
 } from '../default-data/default-properties';
 import { OntologyService } from '../ontology.service';
-import { GuiCardinality } from '../property-info/property-info.component';
+import { GuiCardinality } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
 import { PropToDisplay } from '../resource-class-info/resource-class-info.component';
 import { NotificationService } from '@dsp-app/src/app/main/services/notification.service';
 
@@ -357,17 +357,15 @@ export class PropertyFormComponent implements OnInit {
 
         this.updateAttributeField(this.propertyInfo.propType);
 
-        this.propertyForm.valueChanges.subscribe((data) =>
-            this.onValueChanged(data)
+        this.propertyForm.valueChanges.subscribe(() =>
+            this.onValueChanged()
         );
     }
 
     /**
      * this method is for the form error handling
-     *
-     * @param data Data which changed.
      */
-    onValueChanged(data?: any) {
+    onValueChanged() {
         if (!this.propertyForm) {
             return;
         }

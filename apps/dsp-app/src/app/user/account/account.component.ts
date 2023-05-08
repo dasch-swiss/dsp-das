@@ -15,7 +15,6 @@ import {
     ApiResponseData,
     ApiResponseError,
     KnoraApiConnection,
-    LogoutResponse,
     ReadUser,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
@@ -56,31 +55,14 @@ export class AccountComponent implements OnInit {
     ngOnInit() {
         this.loading = true;
 
-        // set the cache
-        this._cache.get(
-            this.username,
-            this._dspApiConnection.admin.usersEndpoint.getUserByUsername(
-                this.username
-            )
-        );
-
-        // get from cache
-        this._cache
-            .get(
-                this.username,
-                this._dspApiConnection.admin.usersEndpoint.getUserByUsername(
-                    this.username
-                )
-            )
-            .subscribe(
-                (response: ApiResponseData<UserResponse>) => {
-                    this.user = response.body.user;
-                    this.loading = false;
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
+        this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username).subscribe(
+            (response: ApiResponseData<UserResponse>) => {
+                this.user = response.body.user;
+                this.loading = false;
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+        });
     }
 
     openDialog(mode: string, name: string, id?: string): void {
@@ -116,11 +98,11 @@ export class AccountComponent implements OnInit {
 
     deleteUser(id: string) {
         this._dspApiConnection.admin.usersEndpoint.deleteUser(id).subscribe(
-            (response: ApiResponseData<UserResponse>) => {
+            () => {
                 // console.log('refresh parent after delete', response);
                 // this action will deactivate own user account. The consequence is a logout
                 this._dspApiConnection.v2.auth.logout().subscribe(
-                    (logoutResponse: ApiResponseData<LogoutResponse>) => {
+                    () => {
                         // destroy cache
                         this._cache.destroy();
 
@@ -145,7 +127,7 @@ export class AccountComponent implements OnInit {
         this._dspApiConnection.admin.usersEndpoint
             .updateUserStatus(id, true)
             .subscribe(
-                (response: ApiResponseData<UserResponse>) => {
+                () => {
                     // console.log('refresh parent after activate', response);
                     this.refreshParent.emit();
                 },

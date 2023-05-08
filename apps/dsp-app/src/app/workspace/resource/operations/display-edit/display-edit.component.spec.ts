@@ -273,7 +273,6 @@ class TestConfirmationMessageComponent {
  * test host component to simulate parent component.
  */
 @Component({
-    selector: 'lib-host-component',
     template: ` <app-display-edit
         *ngIf="readValue"
         #displayEditVal
@@ -1422,8 +1421,6 @@ describe('DisplayEditComponent', () => {
     });
 
     describe('deleteValue method', () => {
-        let hostCompDe;
-        let displayEditComponentDe;
         let rootLoader: HarnessLoader;
         let overlayContainer: OverlayContainer;
 
@@ -1434,11 +1431,6 @@ describe('DisplayEditComponent', () => {
             testHostFixture.detectChanges();
 
             expect(testHostComponent.displayEditValueComponent).toBeTruthy();
-
-            hostCompDe = testHostFixture.debugElement;
-            displayEditComponentDe = hostCompDe.query(
-                By.directive(DisplayEditComponent)
-            );
 
             testHostComponent.displayEditValueComponent.showActionBubble = true;
             testHostFixture.detectChanges();

@@ -9,7 +9,6 @@ import {
     CreateTextValueAsString,
     CreateValue,
     KnoraApiConnection,
-    ReadOntology,
     ReadResource,
     ResourceClassAndPropertyDefinitions,
     ResourceClassDefinition,
@@ -18,6 +17,7 @@ import {
 import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 import { ComponentCommunicationEventService, EmitEvent, Events as CommsEvents } from '@dsp-app/src/app/main/services/component-communication-event.service';
 import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
+import { NotificationService } from '@dsp-app/src/app/main/services/notification.service';
 import { DefaultClass, DefaultResourceClasses } from '@dsp-app/src/app/project/ontology/default-data/default-resource-classes';
 import { ResourceService } from '../services/resource.service';
 import { SelectPropertiesComponent } from './select-properties/select-properties.component';
@@ -77,6 +77,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
         private _route: ActivatedRoute,
         private _router: Router,
         private _componentCommsService: ComponentCommunicationEventService,
+        private _notification: NotificationService
     ) { }
 
     ngOnInit(): void {
@@ -105,7 +106,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
         this.preparing = true;
         this.loading = true;
         this._dspApiConnection.v2.ontologyCache.reloadCachedItem(this.ontologyIri).subscribe(
-            (res: ReadOntology) => {
+            () => {
                 this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).subscribe(
                     (onto: ResourceClassAndPropertyDefinitions) => {
                         this.ontologyInfo = onto;
@@ -172,7 +173,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
         this.loading = true;
 
         if (this.propertiesParentForm.valid) {
-
             const createResource = new CreateResource();
 
             const resLabelVal = <CreateTextValueAsString>this.selectPropertiesComponent.createValueComponent.getNewValue();
@@ -182,6 +182,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
             createResource.type = this.resourceClass.id;
 
             createResource.attachedToProject = this.projectIri;
+
+            this.propertiesObj = {};
 
             this.selectPropertiesComponent.switchPropertiesComponent.forEach((child) => {
                 const createVal = child.createValueComponent.getNewValue();
@@ -220,7 +222,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
             }
 
             createResource.properties = this.propertiesObj;
-
             this._dspApiConnection.v2.res.createResource(createResource).subscribe(
                 (res: ReadResource) => {
                     this.resource = res;
@@ -235,7 +236,11 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
                 (error: ApiResponseError) => {
                     this.error = true;
                     this.loading = false;
-                    this._errorHandler.showMessage(error);
+                    if (error.status === 400){
+                        this._notification.openSnackBar("Bad request(400): There was an issue with your request. Often this is due to duplicate values in one of your properties.", "error");
+                    } else {
+                        this._errorHandler.showMessage(error);
+                    }
                 }
             );
 

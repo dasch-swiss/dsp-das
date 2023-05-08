@@ -20,7 +20,6 @@ import {
     KnoraApiConnection,
     PropertyDefinition,
     ReadOntology,
-    ReadProject,
     ResourceClassDefinitionWithAllLanguages,
     ResourcePropertyDefinitionWithAllLanguages,
     UpdateOntology,
@@ -44,7 +43,7 @@ import {
 } from '../default-data/default-resource-classes';
 import { PropertyAssignment, OntologyProperties } from '../ontology.component';
 import { OntologyService } from '../ontology.service';
-import { GuiCardinality } from '../property-info/property-info.component';
+import { GuiCardinality } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
 
 export interface PropToDisplay extends IHasProperty {
     propDef?: PropertyDefinition;
@@ -511,7 +510,7 @@ export class ResourceClassInfoComponent implements OnInit {
     openEditDialog(dialogConfig: MatDialogConfig) {
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
 
-        dialogRef.afterClosed().subscribe((result) => {
+        dialogRef.afterClosed().subscribe(() => {
             // update the view: list of properties in resource class
             this.updatePropertyAssignment.emit(this.ontology.id);
         });

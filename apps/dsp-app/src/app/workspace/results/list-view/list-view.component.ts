@@ -7,7 +7,6 @@ import {
     OnInit,
     Output,
 } from '@angular/core';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { ApiResponseError, CountQueryResponse, IFulltextSearchParams, KnoraApiConnection, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dsp-app/src/app/main/declarations/dsp-api-tokens';
 import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
@@ -202,11 +201,11 @@ export class ListViewComponent implements OnChanges, OnInit {
 
         this.loading = true;
 
-        // reset number of results
-        this.numberOfAllResults = 0;
-
         if (this.search.mode === 'fulltext') {
             // search mode: fulltext
+            // reset number of results
+            this.numberOfAllResults = 0;
+
             if (index === 0) {
                 // perform count query
                 this._dspApiConnection.v2.search.doFulltextSearchCountQuery(this.search.query, index, this.search.filter).subscribe(

@@ -4,12 +4,9 @@ import { UntypedFormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
-import { UploadComponent } from '../upload/upload.component';
-
 import { ReplaceFileFormComponent } from './replace-file-form.component';
 
 @Component({
-    selector: 'test-host-component',
     template: `
         <app-replace-file-form
             #replaceFileForm
