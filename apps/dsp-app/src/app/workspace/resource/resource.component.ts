@@ -176,7 +176,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         );
     }
 
-    ngOnChanges(changes: { [propName: string]: SimpleChange }) {
+    ngOnChanges() {
         // do not reload the whole resource when the iri did not change
         if (this.oldResourceIri === this.resourceIri) {
             return;
@@ -533,7 +533,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
             .sort((a, b) => (a.guiDef.guiOrder > b.guiDef.guiOrder ? 1 : -1))
             // to get equal results on all browser engines which implements sorting in different way
             // properties list has to be sorted again, pushing all "has..." properties to the bottom
-            .sort((a, b) => {
+            .sort((a) => {
                 if (a.guiDef.guiOrder === undefined) {
                     return 1;
                 }

@@ -930,13 +930,6 @@ export class StillImageComponent
             location: loc,
         });
 
-        // mouse tracker has to be activated on the open seadragon viewer
-        // solution from: https://github.com/openseadragon/openseadragon/issues/1419#issuecomment-371564878
-        const tracker = new OpenSeadragon.MouseTracker({
-            element: regEle,
-            clickHandler: function (event) {},
-        });
-
         this._regions[regionIri].push(regEle);
 
         const comEle: HTMLElement = this._renderer.createElement('div');
@@ -954,10 +947,10 @@ export class StillImageComponent
                     'px'
             );
         });
-        regEle.addEventListener('mouseleave', (event: MouseEvent) => {
+        regEle.addEventListener('mouseleave', () => {
             comEle.setAttribute('style', 'display: none');
         });
-        regEle.addEventListener('click', (event: MouseEvent) => {
+        regEle.addEventListener('click', () => {
             this.regionClicked.emit(regionIri);
         });
     }
