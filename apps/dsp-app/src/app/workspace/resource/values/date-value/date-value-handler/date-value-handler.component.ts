@@ -120,7 +120,7 @@ export class DateValueHandlerComponent
     startDate: UntypedFormControl;
     endDate: UntypedFormControl;
 
-    touched = false;
+    pickerClosed = false;
     readonly focused = false;
 
     readonly controlType = 'app-date-value-handler';
@@ -367,7 +367,8 @@ export class DateValueHandlerComponent
     onContainerClick(event: MouseEvent): void {}
 
     setDescribedByIds(ids: string[]): void {}
-    handleFocus(){
-        this.touched = true;
+
+    handlePickerClose(){
+        this.pickerClosed = true;
     }
 }
