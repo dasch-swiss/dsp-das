@@ -198,7 +198,6 @@ export class StillImageComponent
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log(this.currentTab);
         if (changes['images'] && changes['images'].isFirstChange()) {
             this._setupViewer();
         }
@@ -274,7 +273,6 @@ export class StillImageComponent
      * adds a ROI-overlay to the viewer for every region of every image in this.images
      */
     renderRegions(): void {
-        console.log("Render regions called");
         /**
          * sorts rectangular regions by surface, so all rectangular regions are clickable.
          * Non-rectangular regions are ignored.
