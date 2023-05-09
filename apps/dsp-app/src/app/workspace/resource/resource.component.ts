@@ -293,7 +293,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         this.resource = resource;
         this.oldResourceIri = this.resourceIri;
 
-
         this.representationsToDisplay =
             this.collectRepresentationsAndAnnotations(
                 resource
@@ -434,7 +433,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         } else {
             this.stillImageComponent.removeOverlays();
         }
-
         this.selectedTabLabel = e.tab.textLabel;
     }
 
