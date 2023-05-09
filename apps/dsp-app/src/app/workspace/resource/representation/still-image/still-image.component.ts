@@ -113,39 +113,6 @@ interface PolygonsForRegion {
     [key: string]: HTMLElement[];
 }
 
-
-// compares two objects recursively and returns an array of differences
-function deepDiff(previousValue: unknown, currentValue: unknown, parentKey = '', diff: any[] = []): any[] {
-    if (previousValue === currentValue) {
-        return diff;
-    }
-
-    if (Array.isArray(previousValue) && Array.isArray(currentValue)) {
-        for (let i = 0; i < previousValue.length || i < currentValue.length; i++) {
-            deepDiff(previousValue[i], currentValue[i], `${parentKey}[${i}]`, diff);
-        }
-    } else if (typeof previousValue === 'object' && typeof currentValue === 'object') {
-        for (const key in previousValue) {
-            if (Object.prototype.hasOwnProperty.call(previousValue, key)) {
-                deepDiff(previousValue[key], currentValue[key], `${parentKey}.${key}`, diff);
-            }
-        }
-
-        for (const key in currentValue) {
-            if (Object.prototype.hasOwnProperty.call(currentValue, key)) {
-                if (!(key in previousValue)) {
-                    diff.push({ key: `${parentKey}.${key}`, previousValue: undefined, currentValue: currentValue[key] });
-                }
-            }
-        }
-    } else if (previousValue !== currentValue) {
-        diff.push({ key: parentKey, previousValue, currentValue });
-    }
-
-    return diff;
-}
-
-
 @Component({
     selector: 'app-still-image',
     templateUrl: './still-image.component.html',
@@ -156,7 +123,6 @@ export class StillImageComponent
 {
     @Input() images: FileRepresentation[];
     @Input() imageCaption?: string;
-    @Input() iiifUrl?: string;
     @Input() resourceIri: string;
     @Input() project: string;
     @Input() activateRegion?: string; // highlight a region
@@ -231,22 +197,14 @@ export class StillImageComponent
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes['images'] && ( changes['images'].isFirstChange()) || !changes['images'].previousValue) {
+        if (changes['images'] && changes['images'].isFirstChange()) {
             this._setupViewer();
             this.loadImages();
         }
-        if (changes['images'] && changes['images'].previousValue) {
-            // comparing previous state of images and current state because inputs trigger changes unnecessarily ...
-            const diff = deepDiff(changes['images'].previousValue['fileValue'], changes['images'].currentValue['fileValue'], 'images');
-            if (diff.length) { // there are differences
-                this.loadImages();
-            }
-        }
-
-        if (changes['iiifUrl']) {
+        // only if the image changed
+        if (changes['images'] && changes['images'].previousValue && changes['images'].currentValue[0].fileValue.fileUrl !== changes['images'].previousValue[0].fileValue.fileUrl) {
             this.loadImages();
         }
-
         if (this.currentTab === 'annotations') {
             this.renderRegions();
         }
@@ -805,10 +763,9 @@ export class StillImageComponent
             this._prepareTileSourcesFromFileValues(fileValues);
 
         this.removeOverlays();
-
         this._viewer.addOnceHandler('open', (args) => {
             // check if the current image exists
-            if (this.iiifUrl.includes(args.source['@id'])) {
+            if (this.images[0].fileValue.fileUrl.includes(args.source['@id'])) {
                 this.failedToLoad = !this._rs.doesFileExist(
                     args.source['@id'] + '/info.json'
                 );
@@ -831,7 +788,6 @@ export class StillImageComponent
                 this.loading = false;
             }
         });
-
         this._viewer.open(tileSources);
     }
 

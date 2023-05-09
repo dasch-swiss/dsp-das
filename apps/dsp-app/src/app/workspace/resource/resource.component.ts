@@ -95,8 +95,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
     selectedTabLabel: string;
 
-    iiifUrl: string;
-
     resourceIsAnnotation: 'region' | 'sequence';
 
     // list of representations to be displayed
@@ -235,7 +233,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         this.compoundPosition.position = position;
         this.compoundPosition.page = page;
         this.representationsToDisplay =
-            this.collectRepresentationsAndAnnotations(this.incomingResource);
+                this.collectRepresentationsAndAnnotations(this.incomingResource);
     }
 
     setPermissionsOnResource(project: string) {
@@ -294,25 +292,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     renderAsMainResource(resource: DspResource) {
         this.resource = resource;
         this.oldResourceIri = this.resourceIri;
-        // if there is no incomingResource and the resource has a still image property, assign the iiiUrl to be passed as an input to the still-image component --> WHY????
-        if (
 
-            !this.incomingResource &&
-            resource.res.properties[
-                Constants.HasStillImageFileValue
-                ]
-        ) {
-            this.iiifUrl = (
-                resource.res.properties[
-                    Constants.HasStillImageFileValue
-                    ][0] as ReadStillImageFileValue
-            ).fileUrl;
-        }
-
-        this.selectedTabLabel =
-            resource.res.entityInfo?.classes[
-                this.resource.res.type
-                ].label;
 
         this.representationsToDisplay =
             this.collectRepresentationsAndAnnotations(
@@ -363,26 +343,11 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     }
 
 
-    renderAsRegion(resource: DspResource) {
-        if (resource.hasOutgoingReferences) {
-            // a region without outgoing references: Nothing to displayß
-            return;
-        }
-        // define resource as annotation of type region
-        this.resourceIsAnnotation = resource.res.entityInfo
-            .classes[Constants.Region]
-            ? 'region'
-            : 'sequence';
-
-        // open annotation`s tab and highlight region
-        this.selectedTabLabel = 'annotations';
-        this.openRegion(resource.res.id);
-        this.selectedRegion = resource.res.id;
-
+    renderAsRegion(region: DspResource) {
         // display the corresponding still-image resource instance
         // find the iri of the parent resource; still-image in case of region, moving-image or audio in case of sequence
         const annotatedRepresentationIri = (
-            resource.res.properties[
+            region.res.properties[
                 Constants.IsRegionOfValue
                 ] as ReadLinkValue[]
         )[0].linkedResourceIri;
@@ -390,9 +355,18 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         this.getResource(annotatedRepresentationIri).subscribe(dspResource => {
             this.resource = dspResource;
             this.renderAsMainResource(dspResource);
+
+            // open annotation`s tab and highlight region
+            this.selectedTabLabel = 'annotations';
+            this.openRegion(region.res.id);
+
+            this.selectedRegion = region.res.id;
+            // define resource as annotation of type region
+            this.resourceIsAnnotation = this.resource.res.entityInfo
+                .classes[Constants.Region]
+                ? 'region'
+                : 'sequence';
         });
-
-
     }
 
     // return whether the main resource
@@ -430,20 +404,8 @@ export class ResourceComponent implements OnChanges, OnDestroy {
                 const res = new DspResource(response);
 
                 this.incomingResource = res;
-                // if the resource is a still image, assign the iiiUrl to be passed as an input to the still-image component
-                if (
-                    this.incomingResource.res.properties[
-                        Constants.HasStillImageFileValue
-                    ]
-                ) {
-                    this.iiifUrl = (
-                        this.incomingResource.res.properties[
-                            Constants.HasStillImageFileValue
-                        ][0] as ReadStillImageFileValue
-                    ).fileUrl;
-                }
-                res.resProps = this.initProps(response);
-                res.systemProps =
+                this.incomingResource.resProps = this.initProps(response);
+                this.incomingResource.systemProps =
                     this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(
                         SystemPropertyDefinition
                     );
