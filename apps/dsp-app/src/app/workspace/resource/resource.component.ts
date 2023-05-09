@@ -292,6 +292,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                     this.getResource(annotationOfIri);
 
                     // open annotation`s tab and highlight region
+                    console.log("setting from 1");
                     this.selectedTabLabel = 'annotations';
                     this.openRegion(iri);
 
@@ -319,11 +320,6 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                                 ][0] as ReadStillImageFileValue
                             ).fileUrl;
                         }
-
-                        this.selectedTabLabel =
-                            this.resource.res.entityInfo?.classes[
-                                this.resource.res.type
-                            ].label;
 
                         // get information about the logged-in user, if one is logged-in
                         if (this._session.getSession()) {
@@ -444,7 +440,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
         } else {
             this.stillImageComponent.removeOverlays();
         }
-
+        console.log("Setting from 3");
         this.selectedTabLabel = e.tab.textLabel;
     }
 
@@ -577,6 +573,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
                     this.selectedRegion === this.resourceIri
                 ) {
                     this.selectedTab = this.incomingResource ? 2 : 1;
+                    console.log("setting from 4");
                     this.selectedTabLabel = 'annotations';
                 }
             }
@@ -706,6 +703,7 @@ export class ResourceComponent implements OnInit, OnChanges, OnDestroy {
      * @param offset the offset to be used (needed for paging). First request uses an offset of 0.
      */
     protected getIncomingRegions(resource: DspResource, offset: number): void {
+        console.log('Called Incoming resources');
         this._incomingService
             .getIncomingRegions(resource.res.id, offset)
             .subscribe(
