@@ -23,8 +23,6 @@ class TestFulltextSearchComponent implements OnInit {
     @Input() limitToProject?: string;
     @Input() show: boolean;
     @Output() showState = new EventEmitter();
-
-    ngOnInit() {}
 }
 
 /**
