@@ -4,11 +4,13 @@ import {
     Component,
     DoCheck,
     ElementRef,
+    EventEmitter,
     HostBinding,
     Input,
     OnChanges,
     OnDestroy,
     Optional,
+    Output,
     Self,
     SimpleChanges,
     ViewChild,
@@ -90,7 +92,7 @@ export class DatePickerComponent
     static nextId = 0;
 
     @ViewChild(MatMenuTrigger) popover: MatMenuTrigger;
-
+    @Output() closed: EventEmitter<void> = new EventEmitter();
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     // disable calendar selector in case of end date in a period date value
@@ -280,10 +282,10 @@ export class DatePickerComponent
 
         this.buildForm();
 
-        this.dateForm.valueChanges.subscribe((data) => this.handleInput());
+        this.dateForm.valueChanges.subscribe(() => this.handleInput());
     }
 
-    onChange = (_: any) => {};
+    onChange = () => {};
 
     onTouched = () => {};
 
@@ -328,7 +330,7 @@ export class DatePickerComponent
     }
 
     handleInput() {
-        this.onChange(this.value);
+        this.onChange();
     }
 
     buildForm() {
@@ -531,8 +533,7 @@ export class DatePickerComponent
         const yearAstro =
             this._valueService.convertHistoricalYearToAstronomicalYear(
                 year,
-                era,
-                calendar.toUpperCase()
+                era
             );
 
         // count the days of the month
@@ -625,4 +626,5 @@ export class DatePickerComponent
         }
         this.weeks = weeks;
     }
+
 }

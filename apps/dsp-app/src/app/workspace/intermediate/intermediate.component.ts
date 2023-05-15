@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
     MatLegacyDialog as MatDialog,
     MatLegacyDialogConfig as MatDialogConfig,
@@ -12,7 +12,7 @@ import { FilteredResources } from '../results/list-view/list-view.component';
     templateUrl: './intermediate.component.html',
     styleUrls: ['./intermediate.component.scss'],
 })
-export class IntermediateComponent implements OnInit {
+export class IntermediateComponent {
     @Input() resources: FilteredResources;
 
     @Output() action: EventEmitter<string> = new EventEmitter<string>();
@@ -30,8 +30,6 @@ export class IntermediateComponent implements OnInit {
         private _dialog: MatDialog,
         private _errorHandler: ErrorHandlerService
     ) {}
-
-    ngOnInit(): void {}
 
     /**
      * opens the dialog box with a form to create a link resource, to edit resources etc.
@@ -56,7 +54,7 @@ export class IntermediateComponent implements OnInit {
 
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
 
-        dialogRef.afterClosed().subscribe((resId: string) => {
+        dialogRef.afterClosed().subscribe(() => {
             // do something with the intermediate view... but what should we do / display? Maybe the new resource...
         });
     }

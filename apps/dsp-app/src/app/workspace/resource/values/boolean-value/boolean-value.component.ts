@@ -4,8 +4,7 @@ import {
     Input,
     OnChanges,
     OnDestroy,
-    OnInit,
-    SimpleChanges
+    OnInit
 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import {
@@ -50,7 +49,7 @@ export class BooleanValueComponent
         super.ngOnInit();
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(): void {
         this.resetFormControl();
     }
 

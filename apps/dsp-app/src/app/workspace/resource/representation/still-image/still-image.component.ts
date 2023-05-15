@@ -17,7 +17,7 @@ import {
 } from '@angular/material/legacy-dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {
     ApiResponseError,
     Constants,
@@ -123,7 +123,6 @@ export class StillImageComponent
 {
     @Input() images: FileRepresentation[];
     @Input() imageCaption?: string;
-    @Input() iiifUrl?: string;
     @Input() resourceIri: string;
     @Input() project: string;
     @Input() activateRegion?: string; // highlight a region
@@ -200,20 +199,12 @@ export class StillImageComponent
     ngOnChanges(changes: SimpleChanges) {
         if (changes['images'] && changes['images'].isFirstChange()) {
             this._setupViewer();
+            this.loadImages();
         }
-        if (changes['images']) {
-            this._rs
-                .getFileInfo(
-                    this.images[0].fileValue.fileUrl,
-                    this.images[0].fileValue.filename
-                )
-                .subscribe((res) => {
-                    this.originalFilename = res['originalFilename'];
-                    this._openImages();
-                    this._unhighlightAllRegions();
-                });
+        // only if the image changed
+        if (changes['images'] && changes['images'].previousValue && changes['images'].currentValue[0].fileValue.fileUrl !== changes['images'].previousValue[0].fileValue.fileUrl) {
+            this.loadImages();
         }
-
         if (this.currentTab === 'annotations') {
             this.renderRegions();
         }
@@ -236,16 +227,17 @@ export class StillImageComponent
         }
     }
 
-    /**
-     * renders all ReadStillImageFileValues to be found in [[this.images]].
-     * (Although this.images is an Angular Input property, the built-in change detection of Angular does not detect changes in complex objects or arrays, only reassignment of objects/arrays.
-     * Use this method if additional ReadStillImageFileValues were added to this.images after creation/assignment of the this.images array.)
-     */
-    updateImages() {
-        if (!this._viewer) {
-            this._setupViewer();
-        }
-        this._openImages();
+    private loadImages() {
+        this._rs
+            .getFileInfo(
+                this.images[0].fileValue.fileUrl,
+                this.images[0].fileValue.filename
+            )
+            .subscribe((res) => {
+                this.originalFilename = res['originalFilename'];
+                this._openImages();
+                this._unhighlightAllRegions();
+            });
     }
 
     /**
@@ -771,10 +763,9 @@ export class StillImageComponent
             this._prepareTileSourcesFromFileValues(fileValues);
 
         this.removeOverlays();
-
         this._viewer.addOnceHandler('open', (args) => {
             // check if the current image exists
-            if (this.iiifUrl.includes(args.source['@id'])) {
+            if (this.images[0].fileValue.fileUrl.includes(args.source['@id'])) {
                 this.failedToLoad = !this._rs.doesFileExist(
                     args.source['@id'] + '/info.json'
                 );
@@ -797,7 +788,6 @@ export class StillImageComponent
                 this.loading = false;
             }
         });
-
         this._viewer.open(tileSources);
     }
 
@@ -896,13 +886,6 @@ export class StillImageComponent
             location: loc,
         });
 
-        // mouse tracker has to be activated on the open seadragon viewer
-        // solution from: https://github.com/openseadragon/openseadragon/issues/1419#issuecomment-371564878
-        const tracker = new OpenSeadragon.MouseTracker({
-            element: regEle,
-            clickHandler: function (event) {},
-        });
-
         this._regions[regionIri].push(regEle);
 
         const comEle: HTMLElement = this._renderer.createElement('div');
@@ -920,10 +903,10 @@ export class StillImageComponent
                     'px'
             );
         });
-        regEle.addEventListener('mouseleave', (event: MouseEvent) => {
+        regEle.addEventListener('mouseleave', () => {
             comEle.setAttribute('style', 'display: none');
         });
-        regEle.addEventListener('click', (event: MouseEvent) => {
+        regEle.addEventListener('click', () => {
             this.regionClicked.emit(regionIri);
         });
     }
