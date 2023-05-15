@@ -31,8 +31,7 @@
                 [class.more-space]="moreSpace"
             >
             </mat-checkbox>
-            <!-- This i like to be on the same height-->
-            <span class="right-align" *ngIf="!boolValIsUnset && newResource">
+            <span class="right-align" *ngIf="!boolValIsUnset && newResource && !valueRequiredValidator">
                 <button
                     mat-icon-button
                     class="value-action cancel"
