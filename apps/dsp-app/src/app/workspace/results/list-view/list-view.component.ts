@@ -203,8 +203,6 @@ export class ListViewComponent implements OnChanges, OnInit {
 
         if (this.search.mode === 'fulltext') {
             // search mode: fulltext
-            // reset number of results
-            this.numberOfAllResults = 0;
 
             if (index === 0) {
                 // perform count query
@@ -220,8 +218,12 @@ export class ListViewComponent implements OnChanges, OnInit {
                             }
                         },
                         (countError: ApiResponseError) => {
-                            // if error is a timeout, keep the loading animation
-                            this.loading = countError.status === 504;
+                            if (countError.status === 400) {
+                                this.numberOfAllResults = 0;
+                            } else if (countError.status === 504) {
+                                // if error is a timeout, keep the loading animation
+                                this.loading = true;
+                            }
                             this._errorHandler.showMessage(countError);
                         }
                     );
