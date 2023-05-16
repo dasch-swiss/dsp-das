@@ -220,10 +220,8 @@ export class ListViewComponent implements OnChanges, OnInit {
                         (countError: ApiResponseError) => {
                             if (countError.status === 400) {
                                 this.numberOfAllResults = 0;
-                            } else if (countError.status === 504) {
-                                // if error is a timeout, keep the loading animation
-                                this.loading = true;
                             }
+                            this.loading = false;
                             this._errorHandler.showMessage(countError);
                         }
                     );
