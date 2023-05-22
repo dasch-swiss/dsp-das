@@ -54,7 +54,7 @@
         <app-comment-form
             [valueFormControlHasError]="hasError()"
             [(commentFormControl)]="commentFormControl"
-            [valueFormControlValue]="valueFormControl.value"
+            [valueFormControlValue]="valueFormControl.value.toString()"
         ></app-comment-form>
     </span>
 </ng-template>
