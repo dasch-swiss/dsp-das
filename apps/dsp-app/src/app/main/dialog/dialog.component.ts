@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import {
     MatDialogRef,
     MAT_DIALOG_DATA,
@@ -47,7 +47,7 @@ export enum DialogEvent {
     templateUrl: './dialog.component.html',
     styleUrls: ['./dialog.component.scss'],
 })
-export class DialogComponent implements OnInit {
+export class DialogComponent {
     notYetImplemented = `The component <strong>${this.data.mode}</strong> is not implemented yet.`;
 
     comment?: string;
@@ -62,9 +62,7 @@ export class DialogComponent implements OnInit {
         }
     }
 
-    ngOnInit() {}
-
-    closeDialog(data: any): void {
+    closeDialog(): void {
         this.dialogRef.close();
     }
 

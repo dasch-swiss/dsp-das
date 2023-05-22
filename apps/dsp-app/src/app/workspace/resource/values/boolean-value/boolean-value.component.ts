@@ -4,8 +4,7 @@ import {
     Input,
     OnChanges,
     OnDestroy,
-    OnInit,
-    SimpleChanges,
+    OnInit
 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import {
@@ -28,25 +27,29 @@ export class BooleanValueComponent
 
     @Input() moreSpace?: boolean;
 
+    // whether a completely new resource is defined or not
+    @Input() newResource = false;
+
     customValidators = [];
+
+    boolValIsUnset = false; // Whether there is no boolVal set at all
 
     constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
         super();
     }
 
-    getInitValue(): boolean | null {
-        if (this.displayValue !== undefined) {
-            return this.displayValue.bool;
-        } else {
-            return false;
-        }
+    // return false as default value if there is no this.displayValue
+    getInitValue(): boolean {
+        return this.displayValue ? this.displayValue.bool : false;
     }
 
     ngOnInit() {
+        // set the boolean value to unset if the new property is not required
+        this.boolValIsUnset = this.mode === 'create' && !this.valueRequiredValidator
         super.ngOnInit();
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(): void {
         this.resetFormControl();
     }
 
@@ -56,7 +59,8 @@ export class BooleanValueComponent
     }
 
     getNewValue(): CreateBooleanValue | false {
-        if (this.mode !== 'create' || !this.form.valid) {
+        if (this.mode !== 'create' || !this.form.valid || this.boolValIsUnset) {
+            // don't provide a new value, leave boolean value unset
             return false;
         }
 

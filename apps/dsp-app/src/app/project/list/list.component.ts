@@ -8,7 +8,6 @@ import {
     ApiResponseError,
     DeleteListResponse,
     KnoraApiConnection,
-    List,
     ListNodeInfo,
     ListsResponse,
     ProjectResponse,
@@ -96,7 +95,7 @@ export class ListComponent implements OnInit {
 
     }
 
-    @HostListener('window:resize', ['$event']) onWindowResize(e: Event) {
+    @HostListener('window:resize', ['$event']) onWindowResize() {
         this.disableContent = (window.innerWidth <= 768);
         // reset the page title
         if (!this.disableContent) {
