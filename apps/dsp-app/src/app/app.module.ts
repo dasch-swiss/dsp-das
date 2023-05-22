@@ -173,6 +173,7 @@ import { DataModelsComponent } from './project/data-models/data-models.component
 import {
     ResourceClassPropertyInfoComponent
 } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
+import { AdvancedSearchNewComponent } from './workspace/search/advanced-search/advanced-search-new/advanced-search-new.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -327,6 +328,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         ProjectTileComponent,
         CommentFormComponent,
         DataModelsComponent,
+        AdvancedSearchNewComponent,
     ],
     imports: [
         AngularSplitModule.forRoot(),

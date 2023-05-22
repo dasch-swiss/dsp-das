@@ -28,6 +28,7 @@ import { UserComponent } from './user/user.component';
 // search results and resource viewer
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
+import { AdvancedSearchNewComponent } from './workspace/search/advanced-search/advanced-search-new/advanced-search-new.component';
 
 const routes: Routes = [
     {
@@ -41,6 +42,10 @@ const routes: Routes = [
     {
         path: 'login',
         component: LoginFormComponent,
+    },
+    {
+        path: 'advanced-search',
+        component: AdvancedSearchNewComponent
     },
     {
         path: 'project/:uuid',
