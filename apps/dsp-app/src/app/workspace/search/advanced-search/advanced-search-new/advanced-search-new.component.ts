@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AdvancedSearchService } from '../../services/advanced-search.service';
 import { OntologiesMetadata } from '@dasch-swiss/dsp-js';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'dsp-app-advanced-search-new',
@@ -19,7 +19,10 @@ export class AdvancedSearchNewComponent implements OnInit {
     ){}
 
     ngOnInit(): void {
-        this.form = this._fb.group({});
+        this.form = this._fb.group({
+            ontologies: ['', Validators.required],
+            resource:['']
+        });
 
         this._advSearchService.getAllOntologies().subscribe(
             (response: OntologiesMetadata) => {

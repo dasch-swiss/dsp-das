@@ -1,3 +1,4 @@
+<p>Advanced Search</p>
 <span *ngIf="ontologiesMetadata !== undefined" [formGroup]="form">
     <mat-form-field class="large-field">
         <mat-select
@@ -10,4 +11,16 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
+    <!-- resource dropdown -->
+    <!-- <mat-form-field class="large-field">
+        <mat-select
+            placeholder="Select a resource class"
+            [formControlName]="'resource'"
+            class="select-resource">
+            <mat-option
+                *ngFor="let onto of ontologiesMetadata.ontologies"
+                [value]="onto.id">{{ onto.label }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field> -->
 </span>
