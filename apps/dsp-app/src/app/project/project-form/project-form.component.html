@@ -8,11 +8,9 @@
     >
         <!-- short and long name -->
         <mat-form-field class="small-field">
+            <mat-label>{{ 'appLabels.form.project.general.shortcode' | translate }}</mat-label>
             <input
                 matInput
-                placeholder="{{
-                    'appLabels.form.project.general.shortcode' | translate
-                }}"
                 [maxlength]="shortcodeMaxLength"
                 [formControl]="form.controls['shortcode']"
             />
@@ -23,12 +21,10 @@
 
         <!-- short name -->
         <mat-form-field class="medium-field">
+            <mat-label>{{ 'appLabels.form.project.general.shortname' | translate }}</mat-label>
             <input
                 matInput
                 [maxlength]="shortnameMaxLength"
-                placeholder="{{
-                    'appLabels.form.project.general.shortname' | translate
-                }}"
                 [formControl]="form.controls['shortname']"
             />
             <mat-hint *ngIf="formErrors.shortname">
@@ -38,11 +34,9 @@
 
         <!-- long name -->
         <mat-form-field class="large-field">
+            <mat-label>{{ 'appLabels.form.project.general.longname' | translate }}</mat-label>
             <input
                 matInput
-                placeholder="{{
-                    'appLabels.form.project.general.longname' | translate
-                }}"
                 [formControl]="form.controls['longname']"
             />
             <mat-hint *ngIf="formErrors.longname">
@@ -89,17 +83,18 @@
                         >cancel</mat-icon
                     >
                 </mat-chip-row>
-                <input
-                    placeholder="{{
-                        'appLabels.form.project.general.keywords' | translate
-                    }} {{ projectIri ? '' : '*' }}"
-                    [formControl]="form.controls['keywords']"
-                    [matChipInputFor]="chipList"
-                    [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
-                    [matChipInputAddOnBlur]="addOnBlur"
-                    (matChipInputTokenEnd)="addKeyword($event)"
-                />
             </mat-chip-grid>
+            <mat-label>
+                {{ 'appLabels.form.project.general.keywords' | translate }} {{ projectIri ? '' : '*' }}
+            </mat-label>
+            <input
+                matInput
+                [formControl]="form.controls['keywords']"
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="addKeyword($event)"
+            />
             <mat-hint *ngIf="formErrors.keywords">
                 {{ formErrors.keywords }}
             </mat-hint>

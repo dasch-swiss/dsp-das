@@ -85,11 +85,12 @@ body {
 }
 
 app-color-value {
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   .mat-form-field-flex,
   .color-picker-input {
     cursor: pointer !important;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   .mat-form-field-label span {
     display: block;
     padding: 8px 4px;
@@ -101,6 +102,7 @@ app-color-value {
 // string literal textarea: overwrite material styling !important
 .string-literal {
   &.short-text {
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
     .mat-form-field-infix {
       margin-left: 12px;
     }
@@ -115,13 +117,17 @@ app-color-value {
     }
 
     // textarea
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
     .mat-form-field-wrapper {
       width: 100%;
-
+      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
+      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
       .mat-form-field-flex {
         border-left: 1px solid rgba(0, 0, 0, 0.12);
         min-height: calc(4 * 36px + 2px);
-
+        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
         .mat-form-field-infix {
           // negative values are not the best choice,
           // but with this margin-top the placeholder is at the
@@ -149,7 +155,7 @@ app-color-value {
 
 .year.withButtonToggle {
   top: -0.05em;
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   .mat-form-field-suffix {
     .suffix-toggle-group {
       font-size: 12px;
@@ -166,6 +172,7 @@ app-color-value {
 .year,
 .month {
   // hide dropdown arrow
+  /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
   .mat-select-arrow {
     border: none;
   }
@@ -183,17 +190,20 @@ app-color-value {
 
 // our own date picker value does not need additional space at the bottom
 // because of the combination with mat-menu which contains the date picker form
-.mat-form-field.date-picker-value {
+.mat-mdc-form-field.date-picker-value {
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   .mat-form-field-wrapper {
     padding-bottom: 0 !important;
-
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
     .mat-form-field-underline {
       bottom: 0 !important;
     }
   }
 }
 
-.mat-form-field.without-border {
+.mat-mdc-form-field.without-border {
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   .mat-form-field-underline {
     display: none;
   }
@@ -269,4 +279,17 @@ button.space-reducer {
 
 .mat-drawer-inner-container::-webkit-scrollbar {
   display: none;
+}
+
+// mat-form-field overrides
+.mdc-text-field--filled:not(.mdc-text-field--disabled){
+  background-color: transparent;
+}
+
+.mat-mdc-form-field-focus-overlay {
+  background-color: whitesmoke;
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-form-field-focus-overlay {
+  opacity: 1;
 }

@@ -323,7 +323,7 @@ export class ProjectFormComponent implements OnInit {
     }
 
     addKeyword(event: MatChipInputEvent): void {
-        const input = event.input;
+        const input = event.chipInput.inputElement;
         const value = event.value;
 
         if (!this.keywords) {

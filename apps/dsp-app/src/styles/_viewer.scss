@@ -27,7 +27,7 @@
 .value-component-comment {
   display: block !important;
 
-  textarea.mat-input-element.cdk-textarea-autosize {
+  textarea.mat-mdc-input-element.cdk-textarea-autosize {
     resize: vertical;
   }
 }
@@ -36,6 +36,7 @@
   margin-top: -2em;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
 .parent-value-component
   .child-value-component
   .mat-form-field-wrapper
@@ -113,7 +114,7 @@
   }
 }
 
-.mat-error {
+.mat-mdc-form-field-error {
   grid-row-start: 1;
   grid-row-end: auto;
   grid-column-start: 3;

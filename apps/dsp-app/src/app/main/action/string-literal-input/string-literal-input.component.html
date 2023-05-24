@@ -38,10 +38,12 @@
             -->
         </mat-menu>
 
+        <mat-label>
+            {{placeholder}}
+        </mat-label>
         <!-- input field-->
         <input
             matInput
-            [placeholder]="placeholder"
             [formControlName]="'text'"
             class="inputValue"
             #textInput
@@ -73,10 +75,10 @@
             </mat-button-toggle>
         </mat-button-toggle-group>
         <mat-form-field class="string-literal-textarea">
+            <mat-label>{{ placeholder }}</mat-label>
             <!-- textarea -->
             <textarea
                 matInput
-                [placeholder]="placeholder"
                 [formControlName]="'text'"
                 (focus)="focus.emit(true)"
                 class="textAreaValue"

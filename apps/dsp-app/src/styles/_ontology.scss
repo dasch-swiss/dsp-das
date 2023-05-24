@@ -11,6 +11,7 @@
   input {
     margin-left: 12px;
   }
+  /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
   mat-select {
     width: calc(100% - 12px);
   }

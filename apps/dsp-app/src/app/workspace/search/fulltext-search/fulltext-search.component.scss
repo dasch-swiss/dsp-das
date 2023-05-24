@@ -268,10 +268,11 @@
       box-shadow: none;
       max-width: 100% !important;
     }
-
+    /*TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
+    /*TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
     .mat-select-panel-wrap {
       margin-top: 20%;
-      .mat-select-panel {
+      .mat-mdc-select-panel {
         max-height: 100% !important;
       }
     }
