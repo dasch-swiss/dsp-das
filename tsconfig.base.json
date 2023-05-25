@@ -29,7 +29,8 @@
         "libs/vre/profile/data-access/src/index.ts"
       ],
       "@dsp/vre/profile/feature": ["libs/vre/profile/feature/src/index.ts"],
-      "@dsp/vre/profile/ui": ["libs/vre/profile/ui/src/index.ts"]
+      "@dsp/vre/profile/ui": ["libs/vre/profile/ui/src/index.ts"],
+      "@dsp/vre/shared/ui": ["libs/vre/shared/ui/src/index.ts"]
     }
   },
   "angularCompilerOptions": {

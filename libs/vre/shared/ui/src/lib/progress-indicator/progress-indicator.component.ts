@@ -1,11 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from "@angular/common";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
-    selector: 'app-progress-indicator',
+    selector: 'dsp-vre-shared-progress-indicator',
+    standalone: true,
+    imports: [CommonModule, MatIconModule],
     templateUrl: './progress-indicator.component.html',
     styleUrls: ['./progress-indicator.component.scss'],
 })
-export class ProgressIndicatorComponent implements OnInit {
+export class ProgressIndicatorComponent {
     /**
      * @param status number relating to status
      *
@@ -31,9 +35,10 @@ export class ProgressIndicatorComponent implements OnInit {
 
     @Input() size: 'small' | 'large' = 'small';
 
-    widthAndHeight: string;
+    widthAndHeight: string | null;
 
-    ngOnInit() {
+    constructor() {
         this.widthAndHeight = this.size === 'small' ? '48px' : '128px';
     }
+
 }

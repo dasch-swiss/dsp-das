@@ -2,10 +2,10 @@ import {
     Component,
     EventEmitter,
     Inject,
-    Input,
+    Input, OnDestroy,
     OnInit,
-    Output,
-} from '@angular/core';
+    Output
+} from "@angular/core";
 import {
     MatLegacyDialog as MatDialog,
     MatLegacyDialogConfig as MatDialogConfig,

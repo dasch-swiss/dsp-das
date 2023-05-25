@@ -3,6 +3,6 @@ import { Route } from "@angular/router";
 import { VreProfileComponent } from "./vre-profile.component";
 
 export const PROFILE_ROUTES: Route[] = [
-  {path: 'account', component: VreProfileComponent},
-  {path: 'projects', component: VreProfileComponent},
+  {path: 'my-account', component: VreProfileComponent},
+  {path: 'my-projects', component: VreProfileComponent},
 ];
