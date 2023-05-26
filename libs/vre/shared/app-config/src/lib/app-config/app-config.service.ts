@@ -1,20 +1,20 @@
 import { Inject, Injectable } from '@angular/core';
 import { KnoraApiConfig } from '@dasch-swiss/dsp-js';
-import { IConfig } from './main/declarations/app-config';
-import { APP_CONFIG } from './main/declarations/dsp-api-tokens';
-import { DspAppConfig } from './main/declarations/dsp-app-config';
-import { DspConfig } from './main/declarations/dsp-config';
-import { DspIiifConfig } from './main/declarations/dsp-iiif-config';
+import { IConfig } from './app-config';
+import { APP_CONFIG } from './dsp-api-tokens';
+import { DspAppConfig } from './dsp-app-config';
+import { DspConfig } from './dsp-config';
+import { DspIiifConfig } from './dsp-iiif-config';
 import {
     DspDataDogConfig,
     DspInstrumentationConfig,
     DspRollbarConfig,
-} from './main/declarations/dsp-instrumentation-config';
+} from './dsp-instrumentation-config';
 
 @Injectable({
     providedIn: 'root',
 })
-export class AppInitService {
+export class AppConfigService {
     private readonly _dspConfig: DspConfig;
     private readonly _dspApiConfig: KnoraApiConfig;
     private readonly _dspIiifConfig: DspIiifConfig;

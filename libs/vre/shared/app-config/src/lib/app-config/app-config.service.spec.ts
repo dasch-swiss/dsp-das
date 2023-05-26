@@ -1,16 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { AppInitService } from './app-init.service';
-import { IConfig } from './main/declarations/app-config';
-import {
-    APP_CONFIG,
-    DspInstrumentationToken,
-} from './main/declarations/dsp-api-tokens';
-import {
-    DspInstrumentationConfig,
-} from './main/declarations/dsp-instrumentation-config';
+import { AppConfigService } from './app-config.service';
+import { IConfig } from './app-config';
+import { APP_CONFIG, DspInstrumentationToken } from './dsp-api-tokens';
+import { DspInstrumentationConfig } from './dsp-instrumentation-config';
 
-describe('AppInitService (dev)', () => {
-    let service: AppInitService;
+describe('AppConfigService (dev)', () => {
+    let service: AppConfigService;
 
     const devConfig: IConfig = {
         dspRelease: '2022.01.01',
@@ -72,7 +67,7 @@ describe('AppInitService (dev)', () => {
                 },
             ],
         });
-        service = TestBed.inject(AppInitService);
+        service = TestBed.inject(AppConfigService);
     });
 
     it('should be created', () => {
@@ -250,22 +245,22 @@ describe('AppInitService (dev)', () => {
     });
 });
 
-describe('AppInitService (prod)', () => {
-    let service: AppInitService;
+describe('AppConfigService (prod)', () => {
+    let service: AppConfigService;
 
     const prodConfig: IConfig = {
         dspRelease: '2023.04.02',
         apiProtocol: 'https',
         apiHost: '0.0.0.0',
-        apiPort: undefined,
+        apiPort: 3333,
         apiPath: '',
         iiifProtocol: 'https',
         iiifHost: '0.0.0.0',
-        iiifPort: undefined,
+        iiifPort: 1024,
         iiifPath: '',
         jsonWebToken: 'mytoken',
         logErrors: true,
-        zioPrefix: undefined,
+        zioPrefix: ':5555',
         zioEndpoints: [],
         geonameToken: 'geoname_token',
         iriBase: 'https://rdfh.ch',
@@ -315,7 +310,7 @@ describe('AppInitService (prod)', () => {
                 },
             ],
         });
-        service = TestBed.inject(AppInitService);
+        service = TestBed.inject(AppConfigService);
     });
 
     it('should be created', () => {
