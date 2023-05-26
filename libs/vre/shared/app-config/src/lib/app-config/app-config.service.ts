@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { KnoraApiConfig } from '@dasch-swiss/dsp-js';
-import { IConfig } from './app-config';
-import { APP_CONFIG } from './dsp-api-tokens';
+import { AppConfig } from './app-config';
+import { AppConfigToken } from './dsp-api-tokens';
 import { DspAppConfig } from './dsp-app-config';
 import { DspConfig } from './dsp-config';
 import { DspIiifConfig } from './dsp-iiif-config';
@@ -21,18 +21,18 @@ export class AppConfigService {
     private readonly _dspAppConfig: DspAppConfig;
     private readonly _dspInstrumentationConfig: DspInstrumentationConfig;
 
-    constructor(@Inject(APP_CONFIG) private _config: IConfig) {
+    constructor(@Inject(AppConfigToken) private _appConfig: AppConfig) {
         // check for presence of apiProtocol and apiHost
         if (
-            typeof this._config.apiProtocol !== 'string' ||
-            typeof this._config.apiHost !== 'string'
+            this._appConfig.apiProtocol.length == 0 ||
+            this._appConfig.apiHost.length == 0
         ) {
             throw new Error(
                 'config misses required members: apiProtocol and/or apiHost'
             );
         }
 
-        const env = this._config.instrumentation.environment;
+        const env = this._appConfig.instrumentation.environment;
 
         const prodMode = env.includes('prod') || env.includes('production');
 
@@ -48,41 +48,33 @@ export class AppConfigService {
         }
 
         this._dspConfig = new DspConfig(
-            this._config.dspRelease,
+            this._appConfig.dspRelease,
             env,
             prodMode,
             color
         );
 
         // make input type safe
-        const apiPort =
-            typeof this._config.apiPort === 'number'
-                ? this._config.apiPort
-                : null;
-        const apiPath =
-            typeof this._config.apiPath === 'string'
-                ? this._config.apiPath
-                : '';
-        const jsonWebToken =
-            typeof this._config.jsonWebToken === 'string'
-                ? this._config.jsonWebToken
-                : '';
-        const logErrors =
-            typeof this._config.logErrors === 'boolean'
-                ? this._config.logErrors
-                : false;
+        const apiPort = this._appConfig.apiPort;
+
+        const apiPath = this._appConfig.apiPath;
+
+        const jsonWebToken = this._appConfig.jsonWebToken;
+
+        const logErrors = this._appConfig.logErrors;
+
         const zioPrefix =
-            this._config.zioPrefix === '/zio' ||
-            this._config.zioPrefix === ':5555'
-                ? this._config.zioPrefix
+            this._appConfig.zioPrefix === '/zio' ||
+            this._appConfig.zioPrefix === ':5555'
+                ? this._appConfig.zioPrefix
                 : '/zio';
-        const zioEndpoints = Array.isArray(this._config.zioEndpoints)
-            ? this._config.zioEndpoints
+        const zioEndpoints = Array.isArray(this._appConfig.zioEndpoints)
+            ? this._appConfig.zioEndpoints
             : [];
 
         this._dspApiConfig = new KnoraApiConfig(
-            this._config.apiProtocol,
-            this._config.apiHost,
+            this._appConfig.apiProtocol,
+            this._appConfig.apiHost,
             apiPort,
             apiPath,
             jsonWebToken,
@@ -91,42 +83,37 @@ export class AppConfigService {
             zioEndpoints
         );
 
-        const iiifPort =
-            typeof this._config.iiifPort === 'number'
-                ? this._config.iiifPort
-                : null;
-        const iiifPath =
-            typeof this._config.iiifPath === 'string'
-                ? this._config.iiifPath
-                : '';
+        const iiifPort = this._appConfig.iiifPort;
+
+        const iiifPath = this._appConfig.iiifPath;
 
         // init iiif configuration
         this._dspIiifConfig = new DspIiifConfig(
-            this._config.iiifProtocol,
-            this._config.iiifHost,
+            this._appConfig.iiifProtocol,
+            this._appConfig.iiifHost,
             iiifPort,
             iiifPath
         );
 
         // init dsp app extended configuration
         this._dspAppConfig = new DspAppConfig(
-            this._config.geonameToken,
-            this._config.iriBase
+            this._appConfig.geonameToken,
+            this._appConfig.iriBase
         );
 
         // init instrumentation configuration
         this._dspInstrumentationConfig = new DspInstrumentationConfig(
-            this._config.instrumentation.environment,
+            this._appConfig.instrumentation.environment,
             new DspDataDogConfig(
-                this._config.instrumentation.dataDog.enabled,
-                this._config.instrumentation.dataDog.applicationId,
-                this._config.instrumentation.dataDog.clientToken,
-                this._config.instrumentation.dataDog.site,
-                this._config.instrumentation.dataDog.service
+                this._appConfig.instrumentation.dataDog.enabled,
+                this._appConfig.instrumentation.dataDog.applicationId,
+                this._appConfig.instrumentation.dataDog.clientToken,
+                this._appConfig.instrumentation.dataDog.site,
+                this._appConfig.instrumentation.dataDog.service
             ),
             new DspRollbarConfig(
-                this._config.instrumentation.rollbar.enabled,
-                this._config.instrumentation.rollbar.accessToken
+                this._appConfig.instrumentation.rollbar.enabled,
+                this._appConfig.instrumentation.rollbar.accessToken
             )
         );
     }

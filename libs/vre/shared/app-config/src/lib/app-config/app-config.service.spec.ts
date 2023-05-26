@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { AppConfigService } from './app-config.service';
-import { IConfig } from './app-config';
-import { APP_CONFIG, DspInstrumentationToken } from './dsp-api-tokens';
+import { AppConfig } from './app-config';
+import { AppConfigToken, DspInstrumentationToken } from './dsp-api-tokens';
 import { DspInstrumentationConfig } from './dsp-instrumentation-config';
 
 describe('AppConfigService (dev)', () => {
     let service: AppConfigService;
 
-    const devConfig: IConfig = {
+    const devConfig: AppConfig = {
         dspRelease: '2022.01.01',
         apiProtocol: 'http',
         apiHost: '0.0.0.0',
@@ -58,7 +58,7 @@ describe('AppConfigService (dev)', () => {
         TestBed.configureTestingModule({
             providers: [
                 {
-                    provide: APP_CONFIG,
+                    provide: AppConfigToken,
                     useValue: devConfig,
                 },
                 {
@@ -248,7 +248,7 @@ describe('AppConfigService (dev)', () => {
 describe('AppConfigService (prod)', () => {
     let service: AppConfigService;
 
-    const prodConfig: IConfig = {
+    const prodConfig: AppConfig = {
         dspRelease: '2023.04.02',
         apiProtocol: 'https',
         apiHost: '0.0.0.0',
@@ -301,7 +301,7 @@ describe('AppConfigService (prod)', () => {
         TestBed.configureTestingModule({
             providers: [
                 {
-                    provide: APP_CONFIG,
+                    provide: AppConfigToken,
                     useValue: prodConfig,
                 },
                 {
