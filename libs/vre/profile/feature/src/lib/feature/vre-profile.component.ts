@@ -6,7 +6,7 @@ import { Session, SessionService } from "@dsp-app/src/app/main/services/session.
 import { CacheService } from "@dsp-app/src/app/main/cache/cache.service";
 import { ActivatedRoute } from "@angular/router";
 import { Title } from "@angular/platform-browser";
-import { ProgressIndicatorComponent } from "@dsp/vre/shared/ui";
+import { ProgressIndicatorComponent } from '@dsp/vre/shared/ui';
 
 @Component({
     selector: 'dsp-vre-profile',
