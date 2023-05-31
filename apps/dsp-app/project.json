@@ -174,13 +174,13 @@
       }
     },
     "test": {
-      "executor": "@angular-devkit/build-angular:karma",
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "main": "apps/dsp-app/src/test.ts",
-        "polyfills": "apps/dsp-app/src/polyfills.ts",
+        "jestConfig": "apps/dsp-app/jest.config.ts",
+        "passWithNoTests": true,
         "tsConfig": "apps/dsp-app/tsconfig.spec.json",
         "inlineStyleLanguage": "scss",
-        "karmaConfig": "apps/dsp-app/karma.conf.js",
         "styles": ["apps/dsp-app/src/styles.scss"],
         "scripts": [
           "node_modules/openseadragon/build/openseadragon/openseadragon.min.js"
