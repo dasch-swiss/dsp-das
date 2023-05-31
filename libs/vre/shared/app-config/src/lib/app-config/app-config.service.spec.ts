@@ -140,7 +140,7 @@ describe('AppConfigService (dev)', () => {
 
         expect(service.dspApiConfig.apiProtocol).toEqual('http');
         expect(service.dspApiConfig.apiHost).toEqual('0.0.0.0');
-        expect(service.dspApiConfig.apiPort).toEqual(null);
+        expect(service.dspApiConfig.apiPort).toEqual(3333);
         expect(service.dspApiConfig.zioPrefix).toEqual(':5555');
         expect(service.dspApiConfig.apiPath).toEqual('');
         expect(service.dspApiConfig.jsonWebToken).toEqual('');
@@ -260,7 +260,7 @@ describe('AppConfigService (prod)', () => {
         iiifPath: '',
         jsonWebToken: 'mytoken',
         logErrors: true,
-        zioPrefix: ':5555',
+        zioPrefix: '/zio',
         zioEndpoints: [],
         geonameToken: 'geoname_token',
         iriBase: 'https://rdfh.ch',
@@ -324,13 +324,13 @@ describe('AppConfigService (prod)', () => {
         expect(service.dspConfig.production).toEqual(true);
         expect(service.dspApiConfig.apiProtocol).toEqual('https');
         expect(service.dspApiConfig.apiHost).toEqual('0.0.0.0');
-        expect(service.dspApiConfig.apiPort).toEqual(null);
+        expect(service.dspApiConfig.apiPort).toEqual(3333);
         expect(service.dspApiConfig.apiPath).toEqual('');
         expect(service.dspApiConfig.zioPrefix).toEqual('/zio');
         expect(service.dspApiConfig.zioEndpoints).toEqual([]);
         expect(service.dspIiifConfig.iiifProtocol).toEqual('https');
         expect(service.dspIiifConfig.iiifHost).toEqual('0.0.0.0');
-        expect(service.dspIiifConfig.iiifPort).toEqual(null);
+        expect(service.dspIiifConfig.iiifPort).toEqual(1024);
         expect(service.dspIiifConfig.iiifPath).toEqual('');
         expect(service.dspApiConfig.jsonWebToken).toEqual('mytoken');
         expect(service.dspApiConfig.logErrors).toEqual(true);
