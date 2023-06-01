@@ -27,7 +27,6 @@ import { TestConfig } from '@dsp-app/src/test.config';
 import { UsersListComponent } from './users-list.component';
 import { Component } from '@angular/core';
 import { Session, SessionService } from '@dsp-app/src/app/main/services/session.service';
-import { beforeEach } from 'node:test';
 import { AjaxResponse } from 'rxjs/ajax';
 
 @Component({
@@ -129,21 +128,21 @@ describe('UsersListComponent', () => {
             }
         );
 
-        // mock API
         const dspConnSpy = TestBed.inject(DspApiConnectionToken);
 
-        // mock projects endpoint
-        ( dspConnSpy.admin.projectsEndpoint as jasmine.SpyObj<ProjectsEndpointAdmin>).getProjectByShortcode.and.callFake(() => {
-            const response = new ProjectResponse();
+        (dspConnSpy.admin.projectsEndpoint as jasmine.SpyObj<ProjectsEndpointAdmin>).getProjectByShortcode.and.callFake(
+            () => {
+                const response = new ProjectResponse();
 
-            const mockProjects = MockProjects.mockProjects();
+                const mockProjects = MockProjects.mockProjects();
 
-            response.project = mockProjects.body.projects[0];
+                response.project = mockProjects.body.projects[0];
 
-            return of(
-                ApiResponseData.fromAjaxResponse({ response } as AjaxResponse)
-            );
-        });
+                return of(
+                    ApiResponseData.fromAjaxResponse({ response } as AjaxResponse)
+                );
+            }
+        );
 
         fixture = TestBed.createComponent(TestHostUsersListComponent);
         component = fixture.componentInstance;
