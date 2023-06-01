@@ -25,7 +25,6 @@ import {
     SessionService,
 } from '@dsp-app/src/app/main/services/session.service';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
-import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
     selector: 'app-description',
@@ -41,7 +40,7 @@ export class DescriptionComponent implements OnInit {
     sysAdmin = false;
     projectAdmin = false;
 
-    // project uuid; as identifier in project cache service
+    // project uuid; as identifier in project
     projectUuid: string;
 
     // project data
@@ -84,7 +83,6 @@ export class DescriptionComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _cache: CacheService,
         private _errorHandler: ErrorHandlerService,
         private _session: SessionService,
         private _route: ActivatedRoute,
@@ -138,10 +136,10 @@ export class DescriptionComponent implements OnInit {
     }
 
     getProject() {
-        // get the project data from cache
-        this._cache.get(this.projectUuid).subscribe(
-            (response: ReadProject) => {
-                this.project = response;
+        // get the project data
+        this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectUuid).subscribe(
+            (response: ApiResponseData<ProjectResponse>) => {
+                this.project = response.body.project;
 
                 // is logged-in user projectAdmin?
                 if (this._session.getSession()) {
@@ -262,12 +260,6 @@ export class DescriptionComponent implements OnInit {
             .subscribe(
                 (response: ApiResponseData<ProjectResponse>) => {
                     this.project = response.body.project;
-
-                    // update cache
-                    this._cache.set(
-                        this._projectService.iriToUuid(this.project.id),
-                        this.project
-                    );
 
                     this._notification.openSnackBar(
                         'You have successfully updated the project information.'
