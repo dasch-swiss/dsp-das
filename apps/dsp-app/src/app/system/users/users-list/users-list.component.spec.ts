@@ -11,40 +11,47 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
+    ApiResponseData,
     MockProjects,
     ProjectResponse,
+    ProjectsEndpointAdmin,
     ReadProject,
 } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
 import { SelectGroupComponent } from '@dsp-app/src/app/project/collaboration/select-group/select-group.component';
 import { TestConfig } from '@dsp-app/src/test.config';
 import { UsersListComponent } from './users-list.component';
+import { Component } from '@angular/core';
+import { Session, SessionService } from '@dsp-app/src/app/main/services/session.service';
+import { beforeEach } from 'node:test';
+import { AjaxResponse } from 'rxjs/ajax';
 
-describe('UsersListComponent', () => {
-    let component: UsersListComponent;
-    let fixture: ComponentFixture<UsersListComponent>;
+@Component({
+    template: '<app-users-list></app-users-list>'
+})
+class TestHostUsersListComponent {}
 
-    const apiSpyObj = {
-        admin: {
-            usersEndpoint: jasmine.createSpyObj('usersEndpoint', [
-                'getUserGroupMemberships',
-                'addUserToGroupMembership',
-                'removeUserFromGroupMembership',
-                'addUserToProjectAdminMembership',
-                'updateUserSystemAdminMembership',
-            ]),
-        },
-    };
+fdescribe('UsersListComponent', () => {
+    let component: TestHostUsersListComponent;
+    let fixture: ComponentFixture<TestHostUsersListComponent>;
 
     beforeEach(waitForAsync(() => {
-        const cacheServiceSpy = jasmine.createSpyObj('CacheService', [
-            'get',
-            'set',
+
+        const apiSpyObj = {
+            admin: {
+                projectsEndpoint: jasmine.createSpyObj('projectsEndpoint', [
+                    'getProjectByShortcode',
+                ]),
+            },
+        };
+
+        const sessionServiceSpy = jasmine.createSpyObj('SessionService', [
+            'getSession',
+            'setSession',
         ]);
 
         TestBed.configureTestingModule({
@@ -53,6 +60,7 @@ describe('UsersListComponent', () => {
                 SelectGroupComponent,
                 DialogComponent,
                 StatusComponent,
+                TestHostUsersListComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -92,76 +100,57 @@ describe('UsersListComponent', () => {
                     useValue: apiSpyObj,
                 },
                 {
-                    provide: CacheService,
-                    useValue: cacheServiceSpy,
+                    provide: SessionService,
+                    useValue: sessionServiceSpy,
                 },
             ],
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        // mock cache service
-        const cacheSpy = TestBed.inject(CacheService);
 
-        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(() => {
-            const response: ProjectResponse = new ProjectResponse();
+        // mock session service
+        const sessionSpy = TestBed.inject(SessionService);
+
+        (sessionSpy as jasmine.SpyObj<SessionService>).getSession.and.callFake(
+            () => {
+                const session: Session = {
+                    id: 12345,
+                    user: {
+                        name: 'username',
+                        jwt: 'myToken',
+                        lang: 'en',
+                        sysAdmin: true,
+                        projectAdmin: [],
+                    },
+                };
+
+                return session;
+            }
+        );
+
+        // mock API
+        const dspConnSpy = TestBed.inject(DspApiConnectionToken);
+
+        // mock projects endpoint
+        ( dspConnSpy.admin.projectsEndpoint as jasmine.SpyObj<ProjectsEndpointAdmin>).getProjectByShortcode.and.callFake(() => {
+            const response = new ProjectResponse();
 
             const mockProjects = MockProjects.mockProjects();
 
             response.project = mockProjects.body.projects[0];
 
-            return of(response.project as ReadProject);
-        });
-    });
-
-    // mock localStorage
-    beforeEach(() => {
-        let store = {};
-
-        spyOn(sessionStorage, 'getItem').and.callFake(
-            (key: string): string => store[key] || null
-        );
-        spyOn(sessionStorage, 'removeItem').and.callFake(
-            (key: string): void => {
-                delete store[key];
-            }
-        );
-        spyOn(sessionStorage, 'setItem').and.callFake(
-            (key: string, value: string): string => (store[key] = <any>value)
-        );
-        spyOn(sessionStorage, 'clear').and.callFake(() => {
-            store = {};
+            return of(
+                ApiResponseData.fromAjaxResponse({ response } as AjaxResponse)
+            );
         });
 
-        spyOn(localStorage, 'getItem').and.callFake(
-            (key: string): string => store[key] || null
-        );
-        spyOn(localStorage, 'removeItem').and.callFake((key: string): void => {
-            delete store[key];
-        });
-        spyOn(localStorage, 'setItem').and.callFake(
-            (key: string, value: string): string => (store[key] = <any>value)
-        );
-        spyOn(localStorage, 'clear').and.callFake(() => {
-            store = {};
-        });
-    });
-
-    beforeEach(() => {
-        localStorage.setItem(
-            'session',
-            JSON.stringify(TestConfig.CurrentSession)
-        );
-
-        fixture = TestBed.createComponent(UsersListComponent);
+        fixture = TestBed.createComponent(TestHostUsersListComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
 
     it('should create', () => {
-        expect<any>(localStorage.getItem('session')).toBe(
-            JSON.stringify(TestConfig.CurrentSession)
-        );
         expect(component).toBeTruthy();
     });
 });

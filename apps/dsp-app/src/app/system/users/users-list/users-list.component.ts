@@ -15,11 +15,11 @@ import {
     GroupsResponse,
     KnoraApiConnection,
     Permissions,
+    ProjectResponse,
     ReadProject,
     ReadUser,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
@@ -107,7 +107,6 @@ export class UsersListComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _cache: CacheService,
         private _dialog: MatDialog,
         private _errorHandler: ErrorHandlerService,
         private _route: ActivatedRoute,
@@ -130,9 +129,9 @@ export class UsersListComponent implements OnInit {
 
         if (this.projectUuid) {
             // get the project data from cache
-            this._cache.get(this.projectUuid).subscribe(
-                (response: ReadProject) => {
-                    this.project = response;
+            this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectUuid).subscribe(
+                (response: ApiResponseData<ProjectResponse>) => {
+                    this.project = response.body.project;
                     // is logged-in user projectAdmin?
                     this.projectAdmin = this.sysAdmin
                         ? this.sysAdmin
