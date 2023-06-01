@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { KnoraApiConfig } from '@dasch-swiss/dsp-js';
-import { AppConfig } from './app-config';
+import { AppConfig, Datadog, DatadogEnabled } from './app-config';
 import { AppConfigToken } from './dsp-api-tokens';
 import { DspAppConfig } from './dsp-app-config';
 import { DspConfig } from './dsp-config';
@@ -10,6 +10,7 @@ import {
     DspInstrumentationConfig,
     DspRollbarConfig,
 } from './dsp-instrumentation-config';
+import { z } from 'zod';
 
 @Injectable({
     providedIn: 'root',
@@ -20,26 +21,19 @@ export class AppConfigService {
     private readonly _dspIiifConfig: DspIiifConfig;
     private readonly _dspAppConfig: DspAppConfig;
     private readonly _dspInstrumentationConfig: DspInstrumentationConfig;
+    private readonly _datadog: Datadog;
 
     /**
      * Watch out for AppConfig. The config.json is simply pressed into
      * this type without type checking!!!
      */
-    constructor(@Inject(AppConfigToken) private _appConfig: AppConfig) {
-        // check for presence of apiProtocol and apiHost
-        if (
-            this._appConfig.apiProtocol.length == 0 ||
-            this._appConfig.apiHost.length == 0
-        ) {
-            throw new Error(
-                'config misses required members: apiProtocol and/or apiHost'
-            );
-        }
+    constructor(@Inject(AppConfigToken) private _configJson: unknown) {
+        // parse the config
+        const c = AppConfig.parse(_configJson);
 
-        const env = this._appConfig.instrumentation.environment;
-
+        // FIXME: find out where color is used and move this logic to there
+        const env = c.instrumentation.environment;
         const prodMode = env.includes('prod') || env.includes('production');
-
         let color = 'primary';
         if (!prodMode) {
             if (env.includes('staging') || env.includes('dev')) {
@@ -52,85 +46,47 @@ export class AppConfigService {
         }
 
         this._dspConfig = new DspConfig(
-            this._appConfig.dspRelease,
-            env,
+            c.dspRelease,
+            c.instrumentation.environment,
             prodMode,
             color
         );
 
-        /**
-         * make input type safe, as AppConfig can contain basically anything as
-         * config.json is simply pressed into this type without type checking!!!
-         */
-        const apiPort =
-          typeof this._appConfig.apiPort === 'number'
-            ? this._appConfig.apiPort
-            : null;
-
-        const apiPath = this._appConfig.apiPath;
-
-        const jsonWebToken = this._appConfig.jsonWebToken;
-
-        const logErrors = this._appConfig.logErrors;
-
-        const zioPrefix =
-            this._appConfig.zioPrefix === '/zio' ||
-            this._appConfig.zioPrefix === ':5555'
-                ? this._appConfig.zioPrefix
-                : '/zio';
-        const zioEndpoints = Array.isArray(this._appConfig.zioEndpoints)
-            ? this._appConfig.zioEndpoints
-            : [];
-
         this._dspApiConfig = new KnoraApiConfig(
-            this._appConfig.apiProtocol,
-            this._appConfig.apiHost,
-            apiPort,
-            apiPath,
-            jsonWebToken,
-            logErrors,
-            zioPrefix,
-            zioEndpoints
+            c.apiProtocol,
+            c.apiHost,
+            c.apiPort,
+            c.apiPath,
+            c.jsonWebToken,
+            c.logErrors,
+            c.zioPrefix,
+            c.zioEndpoints
         );
-
-        /**
-         * make input type safe, as AppConfig can contain basically anything as
-         * config.json is simply pressed into this type without type checking!!!
-         */
-        const iiifPort =
-          typeof this._appConfig.iiifPort === 'number'
-            ? this._appConfig.iiifPort
-            : null;
-
-        const iiifPath = this._appConfig.iiifPath;
 
         // init iiif configuration
         this._dspIiifConfig = new DspIiifConfig(
-            this._appConfig.iiifProtocol,
-            this._appConfig.iiifHost,
-            iiifPort,
-            iiifPath
+            c.iiifProtocol,
+            c.iiifHost,
+            c.iiifPort,
+            c.iiifPath
         );
 
         // init dsp app extended configuration
-        this._dspAppConfig = new DspAppConfig(
-            this._appConfig.geonameToken,
-            this._appConfig.iriBase
-        );
+        this._dspAppConfig = new DspAppConfig(c.geonameToken, c.iriBase);
 
         // init instrumentation configuration
         this._dspInstrumentationConfig = new DspInstrumentationConfig(
-            this._appConfig.instrumentation.environment,
+            c.instrumentation.environment,
             new DspDataDogConfig(
-                this._appConfig.instrumentation.dataDog.enabled,
-                this._appConfig.instrumentation.dataDog.applicationId,
-                this._appConfig.instrumentation.dataDog.clientToken,
-                this._appConfig.instrumentation.dataDog.site,
-                this._appConfig.instrumentation.dataDog.service
+                c.instrumentation.dataDog.enabled,
+                c.instrumentation.dataDog.applicationId,
+                c.instrumentation.dataDog.clientToken,
+                c.instrumentation.dataDog.site,
+                c.instrumentation.dataDog.service
             ),
             new DspRollbarConfig(
-                this._appConfig.instrumentation.rollbar.enabled,
-                this._appConfig.instrumentation.rollbar.accessToken
+                c.instrumentation.rollbar.enabled,
+                c.instrumentation.rollbar.accessToken
             )
         );
     }
