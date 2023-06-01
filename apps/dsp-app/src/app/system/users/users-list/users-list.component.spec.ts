@@ -35,7 +35,7 @@ import { AjaxResponse } from 'rxjs/ajax';
 })
 class TestHostUsersListComponent {}
 
-fdescribe('UsersListComponent', () => {
+describe('UsersListComponent', () => {
     let component: TestHostUsersListComponent;
     let fixture: ComponentFixture<TestHostUsersListComponent>;
 
