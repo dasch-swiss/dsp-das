@@ -1,6 +1,11 @@
+/*
+ * Copyright © 2021 - 2023 Swiss National Data and Service Center for the Humanities and/or DaSCH Service Platform contributors.
+ *  SPDX-License-Identifier: Apache-2.0
+ */
+
 import { Inject, Injectable } from '@angular/core';
 import { KnoraApiConfig } from '@dasch-swiss/dsp-js';
-import { AppConfig, Datadog, DatadogEnabled } from './app-config';
+import { AppConfig } from './app-config';
 import { AppConfigToken } from './dsp-api-tokens';
 import { DspAppConfig } from './dsp-app-config';
 import { DspConfig } from './dsp-config';
@@ -10,7 +15,7 @@ import {
     DspInstrumentationConfig,
     DspRollbarConfig,
 } from './dsp-instrumentation-config';
-import { z } from 'zod';
+import { throwError } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -21,14 +26,14 @@ export class AppConfigService {
     private readonly _dspIiifConfig: DspIiifConfig;
     private readonly _dspAppConfig: DspAppConfig;
     private readonly _dspInstrumentationConfig: DspInstrumentationConfig;
-    private readonly _datadog: Datadog;
 
     /**
      * Watch out for AppConfig. The config.json is simply pressed into
      * this type without type checking!!!
      */
     constructor(@Inject(AppConfigToken) private _configJson: unknown) {
-        // parse the config
+        // parses the config and
+        // throws an error if config is not valid
         const c = AppConfig.parse(_configJson);
 
         // FIXME: find out where color is used and move this logic to there

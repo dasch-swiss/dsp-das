@@ -3,8 +3,7 @@
  *  SPDX-License-Identifier: Apache-2.0
  */
 
-import { AppConfig } from './app-config';
-import { Datadog } from './app-config';
+import { AppConfig, Datadog, Rollbar } from './app-config';
 import { ZodError } from 'zod';
 
 describe('app-config schema tests', () => {
@@ -56,20 +55,58 @@ describe('app-config schema tests', () => {
     };
 
     test('should error for invalid datadog config', () => {
-        expect(
-            Datadog.parse({
-                datadog: {
-                    enabled: true,
-                },
-            })
-        ).toThrowError(ZodError);
+        expect(() => {
+            const data = {
+                enabled: true,
+            };
+            Datadog.parse(data);
+        }).toThrow('ZodError');
+    });
 
-        expect(
-            Datadog.parse({
-                datadog: {
-                    enabled: false,
-                },
-            })
-        ).toBeTruthy();
+    test('should not error for valid datadog config', () => {
+        expect(() => {
+            const data = {
+                enabled: false,
+            };
+            Datadog.parse(data);
+        }).toBeTruthy();
+    });
+
+    test('should throw error for invalid Rollbar config (1)', () => {
+        expect(() => {
+            const data = {
+                enabled: true,
+            };
+            Datadog.parse(data);
+        }).toThrowError(ZodError);
+    });
+
+    test('should throw error for invalid Rollbar config (2)', () => {
+        expect(() => {
+            const data = {
+                enabled: true,
+                accessToken: '',
+            };
+            Rollbar.parse(data);
+        }).toThrowError(ZodError);
+    });
+
+    test('should not throw error for valid Rollbar config (1)', () => {
+        expect(() => {
+            const data = {
+                enabled: false,
+            };
+            Rollbar.parse(data);
+        }).toBeTruthy();
+    });
+
+    test('should not throw error for valid Rollbar config (2)', () => {
+        expect(() => {
+            const data = {
+                enabled: false,
+                accessToken: '1234567890',
+            };
+            Rollbar.parse(data);
+        }).toBeTruthy();
     });
 });

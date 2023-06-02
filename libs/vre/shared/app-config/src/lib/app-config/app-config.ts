@@ -10,10 +10,10 @@ import { z } from 'zod';
 export const Datadog = z
     .object({
         enabled: z.boolean(),
-        applicationId: z.string(),
-        clientToken: z.string(),
-        site: z.string(),
-        service: z.string(),
+        applicationId: z.string().optional(),
+        clientToken: z.string().optional(),
+        site: z.string().optional(),
+        service: z.string().optional(),
     })
     .transform((val, ctx) => {
         if (val.enabled) {
@@ -30,17 +30,26 @@ export type Datadog = z.infer<typeof Datadog>;
  * If enabled, then the following values are required:
  * - accessToken
  */
-export const Rollbar = z
-    .object({
+// export const Rollbar = z
+//     .object({
+//         enabled: z.boolean(),
+//         accessToken: z.string().optional(),
+//     })
+//     .transform((val, ctx) => {
+//         if (val.enabled) {
+//             z.string().nonempty().parse(val.accessToken);
+//         }
+//         return val;
+//     });
+
+export const Rollbar = z.discriminatedUnion('enabled', [
+    z.object({
         enabled: z.literal(true),
         accessToken: z.string().nonempty(),
-    })
-    .transform((val, ctx) => {
-        if (val.enabled) {
-            z.string().nonempty().parse(val.accessToken);
-        }
-        return val;
-    });
+    }),
+    z.object({ enabled: z.literal(false), accessToken: z.string().optional() }),
+]);
+
 export type Rollbar = z.infer<typeof Rollbar>;
 
 export const Instrumentation = z.object({
