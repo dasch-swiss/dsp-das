@@ -54,16 +54,29 @@ describe('app-config schema tests', () => {
         },
     };
 
-    test('should error for invalid datadog config', () => {
+    test('should throw error for invalid datadog config', () => {
         expect(() => {
             const data = {
                 enabled: true,
             };
             Datadog.parse(data);
-        }).toThrow('ZodError');
+        }).toThrow(ZodError);
     });
 
-    test('should not error for valid datadog config', () => {
+    test('should not throw error for valid Datadog config (1)', () => {
+        expect(() => {
+            const data = {
+                enabled: false,
+                applicationId: '1234',
+                clientToken: '1234',
+                site: '1234',
+                service: '1234',
+            };
+            Datadog.parse(data);
+        }).toBeTruthy();
+    });
+
+    test('should not throw error for valid Datadog config (2)', () => {
         expect(() => {
             const data = {
                 enabled: false,

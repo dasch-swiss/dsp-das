@@ -7,41 +7,28 @@ import { z } from 'zod';
  * - site
  * - service
  */
-export const Datadog = z
-    .object({
-        enabled: z.boolean(),
+export const Datadog = z.discriminatedUnion('enabled', [
+    z.object({
+        enabled: z.literal(true),
+        applicationId: z.string().nonempty(),
+        clientToken: z.string().nonempty(),
+        site: z.string().nonempty(),
+        service: z.string().nonempty(),
+    }),
+    z.object({
+        enabled: z.literal(false),
         applicationId: z.string().optional(),
         clientToken: z.string().optional(),
         site: z.string().optional(),
         service: z.string().optional(),
-    })
-    .transform((val, ctx) => {
-        if (val.enabled) {
-            z.string().nonempty().parse(val.applicationId);
-            z.string().nonempty().parse(val.clientToken);
-            z.string().nonempty().parse(val.site);
-            z.string().nonempty().parse(val.service);
-        }
-        return val;
-    });
+    }),
+]);
 export type Datadog = z.infer<typeof Datadog>;
 
 /**
  * If enabled, then the following values are required:
  * - accessToken
  */
-// export const Rollbar = z
-//     .object({
-//         enabled: z.boolean(),
-//         accessToken: z.string().optional(),
-//     })
-//     .transform((val, ctx) => {
-//         if (val.enabled) {
-//             z.string().nonempty().parse(val.accessToken);
-//         }
-//         return val;
-//     });
-
 export const Rollbar = z.discriminatedUnion('enabled', [
     z.object({
         enabled: z.literal(true),
@@ -49,7 +36,6 @@ export const Rollbar = z.discriminatedUnion('enabled', [
     }),
     z.object({ enabled: z.literal(false), accessToken: z.string().optional() }),
 ]);
-
 export type Rollbar = z.infer<typeof Rollbar>;
 
 export const Instrumentation = z.object({

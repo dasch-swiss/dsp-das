@@ -6,15 +6,18 @@
 export class DspDataDogConfig {
     constructor(
         public enabled: boolean,
-        public applicationId: string,
-        public clientToken: string,
-        public site: string,
-        public service: string
+        public applicationId: string | undefined,
+        public clientToken: string | undefined,
+        public site: string | undefined,
+        public service: string | undefined
     ) {}
 }
 
 export class DspRollbarConfig {
-    constructor(public enabled: boolean, public accessToken: string) {}
+    constructor(
+        public enabled: boolean,
+        public accessToken: string | undefined
+    ) {}
 }
 
 export class DspInstrumentationConfig {
