@@ -7,52 +7,76 @@ import { AppConfig, Datadog, Rollbar } from './app-config';
 import { ZodError } from 'zod';
 
 describe('app-config schema tests', () => {
-    const devConfig: AppConfig = {
-        dspRelease: '2022.01.01',
-        apiProtocol: 'http',
-        apiHost: '0.0.0.0',
-        apiPort: 3333,
-        apiPath: 'mypath',
-        iiifProtocol: 'http',
-        iiifHost: '0.0.0.0',
-        iiifPort: 1024,
-        iiifPath: 'mypath',
-        jsonWebToken: 'mytoken',
-        logErrors: true,
-        zioPrefix: ':5555',
-        zioEndpoints: ['/admin/projects'],
-        geonameToken: 'geoname_token',
-        iriBase: 'http://rdfh.ch',
-        instrumentation: {
-            environment: 'dev',
-            dataDog: {
-                enabled: true,
-                applicationId: 'app_id',
-                clientToken: 'client_token',
-                site: 'site',
-                service: 'dsp-app',
+    test('should parse valid config', () => {
+        const validConfig = {
+            dspRelease: '2023.04.02',
+            apiProtocol: 'https',
+            apiHost: '0.0.0.0',
+            apiPort: 3333,
+            apiPath: '',
+            iiifProtocol: 'https',
+            iiifHost: '0.0.0.0',
+            iiifPort: 1024,
+            iiifPath: '',
+            jsonWebToken: 'mytoken',
+            logErrors: true,
+            zioPrefix: '/zio',
+            zioEndpoints: [],
+            geonameToken: 'geoname_token',
+            iriBase: 'http://rdfh.ch',
+            instrumentation: {
+                environment: 'production',
+                dataDog: {
+                    enabled: true,
+                    applicationId: 'app_id',
+                    clientToken: 'client_token',
+                    site: 'site',
+                    service: 'dsp-app',
+                },
+                rollbar: {
+                    enabled: true,
+                    accessToken: 'rollbar_token',
+                },
             },
-            rollbar: {
-                enabled: true,
-                accessToken: 'rollbar_token',
-            },
-        },
-    };
+        };
 
-    const instrumentationConfig: any = {
-        environment: 'dev',
-        dataDog: {
-            enabled: false,
-            applicationId: 'app_id',
-            clientToken: 'client_token',
-            site: 'site',
-            service: 'dsp-app',
-        },
-        rollbar: {
-            enabled: false,
-            accessToken: 'rollbar_token',
-        },
-    };
+        expect(() => {
+            AppConfig.parse(validConfig);
+        }).toBeTruthy();
+    });
+
+    test('should fail for invalid config', () => {
+        const invalidConfig = {
+            dspRelease: '2023.04.02',
+            apiProtocol: 'https',
+            apiHost: '0.0.0.0',
+            apiPort: null, // invalid as we expect either a number or an empty string
+            apiPath: '',
+            iiifProtocol: 'https',
+            iiifHost: '0.0.0.0',
+            iiifPort: null, // invalid as we expect either a number or an empty string
+            iiifPath: '',
+            jsonWebToken: 'mytoken',
+            logErrors: true,
+            zioPrefix: '/zio',
+            zioEndpoints: [],
+            geonameToken: 'geoname_token',
+            iriBase: 'http://rdfh.ch',
+            instrumentation: {
+                environment: 'production',
+                dataDog: {
+                    enabled: false,
+                },
+                rollbar: {
+                    enabled: false,
+                },
+            },
+        };
+
+        expect(() => {
+            AppConfig.parse(invalidConfig);
+        }).toThrowError(ZodError);
+    });
 
     test('should throw error for invalid datadog config', () => {
         expect(() => {
