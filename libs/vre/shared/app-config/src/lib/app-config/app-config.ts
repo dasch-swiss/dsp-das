@@ -53,7 +53,7 @@ export const Instrumentation = z.object({
 export const ApiPort = z
     .number()
     .or(z.string().max(0))
-    .transform((val, ctx) => {
+    .transform((val) => {
         if (typeof val === 'number') {
             return val;
         } else {
@@ -68,7 +68,7 @@ export const ApiPort = z
 export const IiifPort = z
     .number()
     .or(z.string().max(0))
-    .transform((val, ctx) => {
+    .transform((val) => {
         if (typeof val === 'number') {
             return val;
         } else {
