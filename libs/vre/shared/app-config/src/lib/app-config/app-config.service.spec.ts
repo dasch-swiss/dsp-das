@@ -50,11 +50,11 @@ describe('AppConfigService with dev config', () => {
         service = TestBed.inject(AppConfigService);
     });
 
-    test('should be created', () => {
+    it('should be created', () => {
         expect(service).toBeTruthy();
     });
 
-    test('should process the fully specified config (dev mode)', async () => {
+    it('should process the fully specified config (dev mode)', async () => {
         expect(service.dspConfig.environment).toEqual('dev');
         expect(service.dspConfig.color).toEqual('accent');
         expect(service.dspConfig.production).toEqual(false);

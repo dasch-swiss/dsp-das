@@ -7,7 +7,7 @@ import { AppConfig, Datadog, Rollbar } from './app-config';
 import { ZodError } from 'zod';
 
 describe('app-config schema tests', () => {
-    test('should parse valid config', () => {
+    it('should parse valid config', () => {
         const validConfig = {
             dspRelease: '2023.04.02',
             apiProtocol: 'https',
@@ -45,7 +45,7 @@ describe('app-config schema tests', () => {
         }).toBeTruthy();
     });
 
-    test('should fail for invalid config', () => {
+    it('should fail for invalid config', () => {
         const invalidConfig = {
             dspRelease: '2023.04.02',
             apiProtocol: 'https',
@@ -78,7 +78,7 @@ describe('app-config schema tests', () => {
         }).toThrowError(ZodError);
     });
 
-    test('should throw error for invalid datadog config', () => {
+    it('should throw error for invalid datadog config', () => {
         expect(() => {
             const data = {
                 enabled: true,
@@ -87,7 +87,7 @@ describe('app-config schema tests', () => {
         }).toThrow(ZodError);
     });
 
-    test('should not throw error for valid Datadog config (1)', () => {
+    it('should not throw error for valid Datadog config (1)', () => {
         expect(() => {
             const data = {
                 enabled: false,
@@ -100,7 +100,7 @@ describe('app-config schema tests', () => {
         }).toBeTruthy();
     });
 
-    test('should not throw error for valid Datadog config (2)', () => {
+    it('should not throw error for valid Datadog config (2)', () => {
         expect(() => {
             const data = {
                 enabled: false,
@@ -109,7 +109,7 @@ describe('app-config schema tests', () => {
         }).toBeTruthy();
     });
 
-    test('should throw error for invalid Rollbar config (1)', () => {
+    it('should throw error for invalid Rollbar config (1)', () => {
         expect(() => {
             const data = {
                 enabled: true,
@@ -118,7 +118,7 @@ describe('app-config schema tests', () => {
         }).toThrowError(ZodError);
     });
 
-    test('should throw error for invalid Rollbar config (2)', () => {
+    it('should throw error for invalid Rollbar config (2)', () => {
         expect(() => {
             const data = {
                 enabled: true,
@@ -128,7 +128,7 @@ describe('app-config schema tests', () => {
         }).toThrowError(ZodError);
     });
 
-    test('should not throw error for valid Rollbar config (1)', () => {
+    it('should not throw error for valid Rollbar config (1)', () => {
         expect(() => {
             const data = {
                 enabled: false,
@@ -137,7 +137,7 @@ describe('app-config schema tests', () => {
         }).toBeTruthy();
     });
 
-    test('should not throw error for valid Rollbar config (2)', () => {
+    it('should not throw error for valid Rollbar config (2)', () => {
         expect(() => {
             const data = {
                 enabled: false,
