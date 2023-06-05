@@ -27,6 +27,9 @@
       "@dasch-swiss/vre/shared/app-config": [
         "libs/vre/shared/app-config/src/index.ts"
       ],
+      "@dasch-swiss/vre/shared/datadog-rum": [
+        "libs/vre/shared/datadog-rum/src/index.ts"
+      ],
       "@dsp-app/*": ["apps/dsp-app/*"]
     }
   },
