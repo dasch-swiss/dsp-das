@@ -116,7 +116,7 @@ describe('AppConfigService with prod config', () => {
                 enabled: true,
                 applicationId: 'app_id',
                 clientToken: 'client_token',
-                site: 'site',
+                site: 'datadoghq.eu',
                 service: 'dsp-app',
             },
             rollbar: {
