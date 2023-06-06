@@ -171,7 +171,9 @@ describe('AppConfigService with prod config', () => {
         expect(service.dspInstrumentationConfig.dataDog.clientToken).toEqual(
             'client_token'
         );
-        expect(service.dspInstrumentationConfig.dataDog.site).toEqual('site');
+        expect(service.dspInstrumentationConfig.dataDog.site).toEqual(
+            'datadoghq.eu'
+        );
         expect(service.dspInstrumentationConfig.dataDog.service).toEqual(
             'dsp-app'
         );
