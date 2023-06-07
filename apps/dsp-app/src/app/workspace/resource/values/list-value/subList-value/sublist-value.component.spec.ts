@@ -170,7 +170,7 @@ describe('SublistValueComponent', () => {
 
         testHostFixture.detectChanges();
 
-        const listNodeEle = ele.query(By.css('.mat-menu-content button'));
+        const listNodeEle = ele.query(By.css('.mat-mdc-menu-content button'));
 
         // select root node
         listNodeEle.nativeElement.click();

@@ -423,7 +423,7 @@ describe('FulltextSearchComponent', () => {
             testHostFixture.detectChanges();
 
             const projMenuPanelDe = projButtonDe.query(
-                By.css('div.mat-menu-panel')
+                By.css('div.mat-mdc-menu-panel')
             );
             const projMenuPanelNe = projMenuPanelDe.nativeElement;
 
@@ -445,7 +445,7 @@ describe('FulltextSearchComponent', () => {
             testHostFixture.detectChanges();
 
             const projMenuPanelDe = projButtonDe.query(
-                By.css('div.mat-menu-panel')
+                By.css('div.mat-mdc-menu-panel')
             );
             const projPanelItemDe = projMenuPanelDe.query(
                 By.css('.project-item')

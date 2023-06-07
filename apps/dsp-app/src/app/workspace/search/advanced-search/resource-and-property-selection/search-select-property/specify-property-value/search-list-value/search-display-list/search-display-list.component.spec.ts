@@ -8,7 +8,7 @@ import { HarnessLoader } from '@angular/cdk/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatMenuModule } from '@angular/material/menu';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { MatLegacyMenuItemHarness as MatMenuItemHarness } from '@angular/material/legacy-menu/testing';
+import { MatMenuItemHarness as MatMenuItemHarness } from '@angular/material/menu/testing';
 
 /**
  * test host component to simulate parent component.
