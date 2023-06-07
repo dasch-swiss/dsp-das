@@ -28,6 +28,7 @@ import {
     ValueOperationEventService,
 } from '../../services/value-operation-event.service';
 import { ValueService } from '../../services/value.service';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 @Component({
     selector: 'app-add-value',
@@ -69,7 +70,8 @@ export class AddValueComponent implements OnInit, AfterViewInit {
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
         private _valueOperationEventService: ValueOperationEventService,
-        private _valueService: ValueService
+        private _valueService: ValueService,
+        private _logger: AppLoggingService
     ) {}
 
     ngOnInit() {
@@ -174,7 +176,7 @@ export class AddValueComponent implements OnInit, AfterViewInit {
                                     );
                                     break;
                                 default:
-                                    console.log(
+                                    this._logger.error(
                                         'There was an error processing your request. Details: ',
                                         error
                                     );
@@ -183,7 +185,7 @@ export class AddValueComponent implements OnInit, AfterViewInit {
                         }
                     );
             } else {
-                console.error(
+                this._logger.error(
                     'Expected instance of CreateVal, received: ',
                     createVal
                 );
@@ -192,7 +194,9 @@ export class AddValueComponent implements OnInit, AfterViewInit {
                 this.submittingValue = false;
             }
         } else {
-            console.error('A ReadResource is required to save a new value.');
+            this._logger.error(
+                'A ReadResource is required to save a new value.'
+            );
         }
     }
 

@@ -33,6 +33,7 @@ import {
     DialogEvent,
 } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 export function resourceValidator(control: AbstractControl) {
     const invalid = !(
@@ -83,7 +84,8 @@ export class LinkValueComponent
         private _dialog: MatDialog,
         @Inject(FormBuilder) protected _fb: FormBuilder,
         @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection
+        private _dspApiConnection: KnoraApiConnection,
+        private _logger: AppLoggingService
     ) {
         super();
     }
@@ -212,7 +214,7 @@ export class LinkValueComponent
                         );
                 },
                 (error) => {
-                    console.error(error);
+                    this._logger.error(error);
                 }
             );
 

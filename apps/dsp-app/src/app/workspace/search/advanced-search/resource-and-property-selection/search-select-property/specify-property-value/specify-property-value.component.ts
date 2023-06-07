@@ -29,6 +29,7 @@ import {
     PropertyValue,
     Value,
 } from './operator';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 const resolvedPromise = Promise.resolve(null);
@@ -66,7 +67,10 @@ export class SpecifyPropertyValueComponent implements OnChanges, OnDestroy {
 
     private _property: ResourcePropertyDefinition;
 
-    constructor(@Inject(UntypedFormBuilder) private _fb: UntypedFormBuilder) {}
+    constructor(
+        @Inject(UntypedFormBuilder) private _fb: UntypedFormBuilder,
+        private _logger: AppLoggingService
+    ) {}
 
     // getter method for this._property
     get property(): ResourcePropertyDefinition {
@@ -176,18 +180,18 @@ export class SpecifyPropertyValueComponent implements OnChanges, OnDestroy {
             case Constants.Resource: // tODO: Match is only available on top level
                 this.comparisonOperators = this.topLevel
                     ? [
-                        new Equals(),
-                        new NotEquals(),
-                        new Exists(),
-                        new NotExists(),
-                        new Match(),
-                    ]
+                          new Equals(),
+                          new NotEquals(),
+                          new Exists(),
+                          new NotExists(),
+                          new Match(),
+                      ]
                     : [
-                        new Equals(),
-                        new NotEquals(),
-                        new Exists(),
-                        new NotExists(),
-                    ];
+                          new Equals(),
+                          new NotEquals(),
+                          new Exists(),
+                          new NotExists(),
+                      ];
                 break;
 
             case Constants.IntValue:
@@ -225,14 +229,11 @@ export class SpecifyPropertyValueComponent implements OnChanges, OnDestroy {
             case Constants.IntervalValue:
             case Constants.GeonameValue:
             case Constants.TimeValue:
-                this.comparisonOperators = [
-                    new Exists(),
-                    new NotExists(),
-                ];
+                this.comparisonOperators = [new Exists(), new NotExists()];
                 break;
 
             default:
-                console.error(
+                this._logger.error(
                     'Advanced search: Unsupported value type ' +
                         this._property.objectType
                 );
@@ -249,8 +250,10 @@ export class SpecifyPropertyValueComponent implements OnChanges, OnDestroy {
         let value: Value;
 
         // comparison operator 'Exists' does not require a value
-        if (this.comparisonOperatorSelected.getClassName() !== 'Exists' &&
-            this.comparisonOperatorSelected.getClassName() !== 'NotExists') {
+        if (
+            this.comparisonOperatorSelected.getClassName() !== 'Exists' &&
+            this.comparisonOperatorSelected.getClassName() !== 'NotExists'
+        ) {
             value = this.propertyValueComponent.getValue();
         }
 

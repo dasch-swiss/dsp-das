@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { UpdateFileValue } from '@dasch-swiss/dsp-js';
 import { UploadComponent } from '../upload/upload.component';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 @Component({
     selector: 'app-replace-file-form',
@@ -32,7 +33,7 @@ export class ReplaceFileFormComponent implements OnInit {
     fileValue: UpdateFileValue;
     warningMessages: string[];
 
-    constructor() {}
+    constructor(private _logger: AppLoggingService) {}
 
     ngOnInit(): void {
         this._generateWarningMessage(this.representation);
@@ -50,7 +51,7 @@ export class ReplaceFileFormComponent implements OnInit {
             updateVal.id = this.propId;
             this.closeDialog.emit(updateVal);
         } else {
-            console.log('expected UpdateFileValue, got: ', updateVal);
+            this._logger.error('expected UpdateFileValue, got: ', updateVal);
         }
     }
 
