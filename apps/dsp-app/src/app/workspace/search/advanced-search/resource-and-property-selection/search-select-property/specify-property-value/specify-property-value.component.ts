@@ -67,10 +67,7 @@ export class SpecifyPropertyValueComponent implements OnChanges, OnDestroy {
 
     private _property: ResourcePropertyDefinition;
 
-    constructor(
-        @Inject(UntypedFormBuilder) private _fb: UntypedFormBuilder,
-        private _logger: AppLoggingService
-    ) {}
+    constructor(@Inject(UntypedFormBuilder) private _fb: UntypedFormBuilder) {}
 
     // getter method for this._property
     get property(): ResourcePropertyDefinition {
@@ -233,7 +230,7 @@ export class SpecifyPropertyValueComponent implements OnChanges, OnDestroy {
                 break;
 
             default:
-                this._logger.error(
+                console.error(
                     'Advanced search: Unsupported value type ' +
                         this._property.objectType
                 );

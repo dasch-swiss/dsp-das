@@ -22,8 +22,6 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import { IRI, PropertyValue, Value } from '../operator';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
-import { logger } from 'nx/src/utils/logger';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 const resolvedPromise = Promise.resolve(null);
@@ -54,8 +52,7 @@ export class SearchListValueComponent
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
         @Inject(UntypedFormBuilder) private _fb: UntypedFormBuilder,
-        private _errorHandler: ErrorHandlerService,
-        private _logger: AppLoggingService
+        private _errorHandler: ErrorHandlerService
     ) {}
 
     ngOnInit() {
@@ -105,7 +102,7 @@ export class SearchListValueComponent
             const listNodeIri = guiAttr[0].substring(7, guiAttr[0].length - 1); // hlist=<>, get also rid of <>
             return listNodeIri;
         } else {
-            this._logger.error('No root node Iri given for property', guiAttr);
+            console.error('No root node Iri given for property', guiAttr);
         }
     }
 }

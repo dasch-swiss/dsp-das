@@ -33,8 +33,6 @@ export class ReplaceFileFormComponent implements OnInit {
     fileValue: UpdateFileValue;
     warningMessages: string[];
 
-    constructor(private _logger: AppLoggingService) {}
-
     ngOnInit(): void {
         this._generateWarningMessage(this.representation);
     }
@@ -51,7 +49,7 @@ export class ReplaceFileFormComponent implements OnInit {
             updateVal.id = this.propId;
             this.closeDialog.emit(updateVal);
         } else {
-            this._logger.error('expected UpdateFileValue, got: ', updateVal);
+            console.error('expected UpdateFileValue, got: ', updateVal);
         }
     }
 

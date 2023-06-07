@@ -63,7 +63,6 @@ import {
     ValueOperationEventService,
 } from '../services/value-operation-event.service';
 import { ValueService } from '../services/value.service';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 // object of property information from ontology class, properties and property values
 export interface PropertyInfoValues {
@@ -178,8 +177,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         private _valueOperationEventService: ValueOperationEventService,
         private _valueService: ValueService,
         private _componentCommsService: ComponentCommunicationEventService,
-        private _projectService: ProjectService,
-        private _logger: AppLoggingService
+        private _projectService: ProjectService
     ) {}
 
     ngOnInit(): void {
@@ -724,7 +722,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                         });
                 },
                 (err) => {
-                    this._logger.error(err);
+                    console.error(err);
                 }
             );
     }

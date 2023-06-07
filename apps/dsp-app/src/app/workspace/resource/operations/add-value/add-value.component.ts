@@ -70,8 +70,7 @@ export class AddValueComponent implements OnInit, AfterViewInit {
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
         private _valueOperationEventService: ValueOperationEventService,
-        private _valueService: ValueService,
-        private _logger: AppLoggingService
+        private _valueService: ValueService
     ) {}
 
     ngOnInit() {
@@ -176,7 +175,7 @@ export class AddValueComponent implements OnInit, AfterViewInit {
                                     );
                                     break;
                                 default:
-                                    this._logger.error(
+                                    console.error(
                                         'There was an error processing your request. Details: ',
                                         error
                                     );
@@ -185,7 +184,7 @@ export class AddValueComponent implements OnInit, AfterViewInit {
                         }
                     );
             } else {
-                this._logger.error(
+                console.error(
                     'Expected instance of CreateVal, received: ',
                     createVal
                 );
@@ -194,9 +193,7 @@ export class AddValueComponent implements OnInit, AfterViewInit {
                 this.submittingValue = false;
             }
         } else {
-            this._logger.error(
-                'A ReadResource is required to save a new value.'
-            );
+            console.error('A ReadResource is required to save a new value.');
         }
     }
 

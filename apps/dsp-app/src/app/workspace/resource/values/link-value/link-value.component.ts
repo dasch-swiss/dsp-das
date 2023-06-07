@@ -84,8 +84,7 @@ export class LinkValueComponent
         private _dialog: MatDialog,
         @Inject(FormBuilder) protected _fb: FormBuilder,
         @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
-        private _logger: AppLoggingService
+        private _dspApiConnection: KnoraApiConnection
     ) {
         super();
     }
@@ -214,7 +213,7 @@ export class LinkValueComponent
                         );
                 },
                 (error) => {
-                    this._logger.error(error);
+                    console.error(error);
                 }
             );
 

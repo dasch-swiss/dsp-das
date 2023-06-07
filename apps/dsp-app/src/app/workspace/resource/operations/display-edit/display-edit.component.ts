@@ -145,8 +145,7 @@ export class DisplayEditComponent implements OnInit {
         private _valueOperationEventService: ValueOperationEventService,
         private _dialog: MatDialog,
         private _userService: UserService,
-        private _valueService: ValueService,
-        private _logger: AppLoggingService
+        private _valueService: ValueService
     ) {}
 
     ngOnInit() {
@@ -345,7 +344,7 @@ export class DisplayEditComponent implements OnInit {
                                 );
                                 break;
                             default:
-                                this._logger.error(
+                                console.error(
                                     'There was an error processing your request. Details: ',
                                     error
                                 );
@@ -354,7 +353,7 @@ export class DisplayEditComponent implements OnInit {
                     }
                 );
         } else {
-            this._logger.error('invalid value');
+            console.error('invalid value');
 
             // hide the progress indicator
             this.submittingValue = false;
