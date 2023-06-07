@@ -2,7 +2,7 @@ FROM nginx:1
 
 LABEL maintainer="support@dasch.swiss"
 
-ARG build=v0.0.0
+ARG build_tag=v0.0.0
 
 # set default internal port for the server
 # can be overriden at runsite
@@ -18,7 +18,7 @@ COPY ./nginx/nginx-security-headers.conf /etc/nginx/security-headers.conf
 COPY ./dist/apps/dsp-app /public
 
 # Write build tag
-
+RUN echo '{"build_tag": "$build_tag"}' > /public/config/build.json
 
 # start nginx in the foreground
 CMD ["nginx", "-g", "daemon off;"]
