@@ -55,7 +55,7 @@ docker-publish-app: app-build-prod ## publish DSP-APP Docker image to Docker-Hub
       --service=dsp-app \
       --release-version=${DSP_APP_VERSION} \
       --minified-path-prefix=/
-	# docker buildx build --platform linux/amd64,linux/arm64/v8 -t $(DSP_APP_IMAGE) --push .
+	# docker buildx build --platform linux/amd64,linux/arm64/v8 --build-arg build=$() -t $(DSP_APP_IMAGE) --push .
 
 .PHONY: docker-publish
 docker-publish: docker-publish-app ## publish all Docker images in the monorepo.

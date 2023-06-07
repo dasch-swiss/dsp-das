@@ -10,7 +10,7 @@ export class AppErrorHandler implements ErrorHandler {
      * @param error the error to log.
      */
     handleError(error: Error): void {
-        const logger = this._injector.get(AppLoggingService);
+        const logger = this._injector(AppLoggingService);
 
         if (error instanceof HttpErrorResponse) {
             // HTTP related error
