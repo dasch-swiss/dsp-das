@@ -18,6 +18,7 @@ import {
     MockProjects,
     ProjectResponse,
     ProjectsEndpointAdmin,
+    ReadProject,
     StringLiteral,
 } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
@@ -36,6 +37,7 @@ import { MatInputModule } from '@angular/material/input';
 import { By } from '@angular/platform-browser';
 import { MatButtonHarness } from '@angular/material/button/testing';
 import { AjaxResponse } from 'rxjs/ajax';
+import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
     template: '<app-description #description></app-description>',
@@ -76,6 +78,10 @@ describe('DescriptionComponent', () => {
                 ]),
             },
         };
+
+        const cacheServiceSpy = jasmine.createSpyObj('CacheService', [
+            'get',
+        ]);
 
         TestBed.configureTestingModule({
             declarations: [
@@ -131,6 +137,10 @@ describe('DescriptionComponent', () => {
                     provide: ProjectService,
                     useValue: projectServiceSpy,
                 },
+                {
+                    provide: CacheService,
+                    useValue: cacheServiceSpy,
+                },
             ],
         }).compileComponents();
     }));
@@ -158,6 +168,19 @@ describe('DescriptionComponent', () => {
             'session',
             JSON.stringify(TestConfig.CurrentSession)
         );
+
+        // mock cache service
+        const cacheSpy = TestBed.inject(CacheService);
+
+        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(() => {
+            const response: ProjectResponse = new ProjectResponse();
+
+            const mockProjects = MockProjects.mockProjects();
+
+            response.project = mockProjects.body.projects[0];
+
+            return of(response.project as ReadProject);
+        });
 
         const dspConnSpy = TestBed.inject(DspApiConnectionToken);
 

@@ -18,6 +18,7 @@ import {
 } from '@dsp-app/src/app/main/services/session.service';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { AddUserComponent } from './add-user/add-user.component';
+import { CacheService } from '../../main/cache/cache.service';
 
 @Component({
     selector: 'app-collaboration',
@@ -57,7 +58,8 @@ export class CollaborationComponent implements OnInit {
         private _route: ActivatedRoute,
         private _session: SessionService,
         private _titleService: Title,
-        private _projectService: ProjectService
+        private _projectService: ProjectService,
+        private _cache: CacheService
     ) {
         // get the uuid of the current project
         if (this._route.parent.parent.snapshot.url.length) {
@@ -76,9 +78,9 @@ export class CollaborationComponent implements OnInit {
         // is the logged-in user system admin?
         this.sysAdmin = this.session.user.sysAdmin;
 
-        this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectUuid).subscribe(
-            (response: ApiResponseData<ProjectResponse>) => {
-                this.project = response.body.project
+        this._cache.get(this.projectUuid).subscribe(
+            (response: ReadProject) => {
+                this.project = response;
 
                 // set the page title
                 this._titleService.setTitle(
@@ -113,9 +115,12 @@ export class CollaborationComponent implements OnInit {
     initList(): void {
         const projectIri = this._projectService.uuidToIri(this.projectUuid);
 
+        // get project members
         this._dspApiConnection.admin.projectsEndpoint.getProjectMembersByIri(projectIri).subscribe(
             (response: ApiResponseData<MembersResponse>) => {
                 this.projectMembers = response.body.members;
+                // set project members in cache
+                this._cache.set('members_of_' + this.projectUuid, this.projectMembers);
 
                 // clean up list of users
                 this.active = [];

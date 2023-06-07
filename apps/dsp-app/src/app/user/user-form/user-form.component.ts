@@ -19,6 +19,7 @@ import {
     ApiResponseError,
     Constants,
     KnoraApiConnection,
+    MembersResponse,
     ReadUser,
     StringLiteral,
     UpdateUserRequest,
@@ -223,18 +224,10 @@ export class UserFormComponent implements OnInit, OnChanges {
              * create mode: empty form for new user
              */
 
-            // set the cache first: all users to avoid same email-address / username twice
-            this._cache.get(
-                'allUsers',
-                this._dspApiConnection.admin.usersEndpoint.getUsers()
-            );
             // get existing users to avoid same usernames and email addresses
-            this._cache
-                .get(
-                    'allUsers',
-                    this._dspApiConnection.admin.usersEndpoint.getUsers()
-                )
-                .subscribe((response: ApiResponseData<UsersResponse>) => {
+            this._dspApiConnection.admin.usersEndpoint.getUsers().subscribe(
+                (response: ApiResponseData<UsersResponse>) => {
+                    this._cache.set('allUsers', response.body.users)
                     for (const user of response.body.users) {
                         // email address of the user should be unique.
                         // therefore we create a list of existing email addresses to avoid multiple use of user names
@@ -412,7 +405,7 @@ export class UserFormComponent implements OnInit, OnChanges {
                             );
                         }
 
-                        this._cache.set(this.username, response);
+                        this._cache.set(this.username, response.body.user);
 
                         this._notification.openSnackBar(
                             "You have successfully updated the user's profile data."
@@ -447,10 +440,10 @@ export class UserFormComponent implements OnInit, OnChanges {
 
                         // update cache: users list
                         this._cache.del('allUsers');
-                        this._cache.get(
-                            'allUsers',
-                            this._dspApiConnection.admin.usersEndpoint.getUsers()
-                        );
+
+                        this._dspApiConnection.admin.usersEndpoint.getUsers().subscribe(
+                            (response: ApiResponseData<UsersResponse>) => this._cache.set('allUsers', response.body.users)
+                        )
 
                         if (this.projectUuid) {
                             // if a projectUuid exists, add the user to the project
@@ -466,12 +459,11 @@ export class UserFormComponent implements OnInit, OnChanges {
                                 .subscribe(
                                     () => {
                                         // update project cache and member of project cache
-                                        this._cache.get(
-                                            'members_of_' + this.projectUuid,
-                                            this._dspApiConnection.admin.projectsEndpoint.getProjectMembersByIri(
-                                                projectIri
-                                            )
-                                        );
+                                        this._dspApiConnection.admin.projectsEndpoint.getProjectMembersByIri(projectIri).subscribe(
+                                            (response: ApiResponseData<MembersResponse>) =>
+                                                this._cache.set('members_of_' + this.projectUuid, response.body.members)
+                                        )
+
                                         this.closeDialog.emit(this.user);
                                         this.loading = false;
                                     },

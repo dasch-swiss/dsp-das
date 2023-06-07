@@ -9,9 +9,11 @@ import {
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {
+    ApiResponseData,
     ApiResponseError,
     Constants,
     KnoraApiConnection,
+    ProjectResponse,
     StoredProject,
     UpdateProjectRequest,
 } from '@dasch-swiss/dsp-js';
@@ -203,12 +205,11 @@ export class ProjectsListComponent implements OnInit {
                     this.refreshParent.emit();
                     // update project cache
                     this._cache.del(uuid);
-                    this._cache.get(
-                        uuid,
-                        this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(
-                            id
-                        )
-                    );
+
+                    this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(id).subscribe(
+                        (response: ApiResponseData<ProjectResponse>) => this._cache.set(uuid, response.body.project)
+                    )
+
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
@@ -230,12 +231,11 @@ export class ProjectsListComponent implements OnInit {
                     this.refreshParent.emit();
                     // update project cache
                     this._cache.del(uuid);
-                    this._cache.get(
-                        uuid,
-                        this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(
-                            id
-                        )
-                    );
+
+                    this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(id).subscribe(
+                        (response: ApiResponseData<ProjectResponse>) => this._cache.set(uuid, response.body.project)
+                    )
+
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);

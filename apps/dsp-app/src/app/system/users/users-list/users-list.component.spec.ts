@@ -28,6 +28,7 @@ import { UsersListComponent } from './users-list.component';
 import { Component } from '@angular/core';
 import { Session, SessionService } from '@dsp-app/src/app/main/services/session.service';
 import { AjaxResponse } from 'rxjs/ajax';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
 
 @Component({
     template: '<app-users-list></app-users-list>'
@@ -51,6 +52,10 @@ describe('UsersListComponent', () => {
         const sessionServiceSpy = jasmine.createSpyObj('SessionService', [
             'getSession',
             'setSession',
+        ]);
+
+        const cacheServiceSpy = jasmine.createSpyObj('CacheService', [
+            'get',
         ]);
 
         TestBed.configureTestingModule({
@@ -102,11 +107,28 @@ describe('UsersListComponent', () => {
                     provide: SessionService,
                     useValue: sessionServiceSpy,
                 },
+                {
+                    provide: CacheService,
+                    useValue: cacheServiceSpy,
+                },
             ],
         }).compileComponents();
     }));
 
     beforeEach(() => {
+
+        // mock cache service
+        const cacheSpy = TestBed.inject(CacheService);
+
+        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(() => {
+            const response: ProjectResponse = new ProjectResponse();
+
+            const mockProjects = MockProjects.mockProjects();
+
+            response.project = mockProjects.body.projects[0];
+
+            return of(response.project as ReadProject);
+        });
 
         // mock session service
         const sessionSpy = TestBed.inject(SessionService);

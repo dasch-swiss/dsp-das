@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, KnoraApiConnection, UserResponse } from '@dasch-swiss/dsp-js';
 import { AppGlobal } from '../app-global';
 import { CacheService } from '../main/cache/cache.service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -63,12 +63,10 @@ export class UserComponent implements OnInit {
         /**
          * set the cache here for current/logged-in user
          */
-        this._cache.get(
-            this.session.user.name,
-            this._dspApiConnection.admin.usersEndpoint.getUserByUsername(
-                this.session.user.name
-            )
-        );
+        this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.session.user.name).subscribe(
+            (response: ApiResponseData<UserResponse>) => this._cache.set(this.session.user.name, response.body.user)
+        )
+
         this.loading = false;
     }
 

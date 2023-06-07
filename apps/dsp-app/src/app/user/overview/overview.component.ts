@@ -75,13 +75,11 @@ export class OverviewComponent implements OnInit {
         this.loading = true;
 
         if (this.username) {
-            // set the cache
-            this._cache.get(
-                this.username,
-                this._dspApiConnection.admin.usersEndpoint.getUserByUsername(
-                    this.username
-                )
-            );
+            // set user in the cache
+            this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username).subscribe(
+                (response: ApiResponseData<UserResponse>) =>
+                    this._cache.set(this.username, response.body.user)
+            )
         }
 
         // if user is a system admin or not logged in, get all the projects

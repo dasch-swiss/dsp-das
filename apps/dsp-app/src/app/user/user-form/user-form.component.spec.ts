@@ -43,7 +43,7 @@ describe('UserFormComponent', () => {
 
     const cacheServiceSpyAllUsers = jasmine.createSpyObj(
         'CacheServiceAllUsers',
-        ['get']
+        ['get', 'set']
     );
 
     const apiSpyObj = {

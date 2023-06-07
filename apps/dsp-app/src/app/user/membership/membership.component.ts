@@ -13,6 +13,7 @@ import {
     ApiResponseError,
     Constants,
     KnoraApiConnection,
+    MembersResponse,
     ProjectsResponse,
     ReadUser,
     UserResponse,
@@ -71,33 +72,18 @@ export class MembershipComponent implements OnInit {
     ngOnInit() {
         this.loading = true;
 
-        // set the cache
-        this._cache.get(
-            this.username,
-            this._dspApiConnection.admin.usersEndpoint.getUserByUsername(
-                this.username
-            )
+        this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username).subscribe(
+            (response: ApiResponseData<UserResponse>) => {
+                this.user = response.body.user;
+                this._cache.set(this.username, this.user)
+                this.initNewProjects();
+                this.loading = false;
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+                this.loading = false;
+            }
         );
-
-        // get from cache
-        this._cache
-            .get(
-                this.username,
-                this._dspApiConnection.admin.usersEndpoint.getUserByUsername(
-                    this.username
-                )
-            )
-            .subscribe(
-                (response: ApiResponseData<UserResponse>) => {
-                    this.user = response.body.user;
-                    this.initNewProjects();
-                    this.loading = false;
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                    this.loading = false;
-                }
-            );
     }
 
     initNewProjects() {
@@ -157,12 +143,12 @@ export class MembershipComponent implements OnInit {
         const projectUuid: string = this._projectService.iriToUuid(iri);
 
         // reset the cache of project members
-        this._cache.get(
-            'members_of_' + projectUuid,
-            this._dspApiConnection.admin.projectsEndpoint.getProjectMembersByIri(
-                iri
-            )
-        );
+
+        this._dspApiConnection.admin.projectsEndpoint.getProjectMembersByIri(iri).subscribe(
+            (response: ApiResponseData<MembersResponse>) => {
+                this._cache.set('members_of_' + projectUuid, response.body.members)
+            }
+        )
     }
 
     /**
@@ -180,11 +166,9 @@ export class MembershipComponent implements OnInit {
                     this.user = response.body.user;
                     // set new user cache
                     this._cache.del(this.username);
-                    this._cache.get(
+                    this._cache.set(
                         this.username,
-                        this._dspApiConnection.admin.usersEndpoint.getUserByUsername(
-                            this.username
-                        )
+                        this.user
                     );
                     this.initNewProjects();
                     // this.updateProjectCache(iri);
@@ -207,11 +191,9 @@ export class MembershipComponent implements OnInit {
                     this.user = response.body.user;
                     // set new user cache
                     this._cache.del(this.username);
-                    this._cache.get(
+                    this._cache.set(
                         this.username,
-                        this._dspApiConnection.admin.usersEndpoint.getUserByUsername(
-                            this.username
-                        )
+                        this.user
                     );
                     this.initNewProjects();
                     // this.updateProjectCache(iri);

@@ -21,6 +21,7 @@ import {
     UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import {
@@ -112,7 +113,8 @@ export class UsersListComponent implements OnInit {
         private _route: ActivatedRoute,
         private _router: Router,
         private _session: SessionService,
-        private _sortingService: SortingService
+        private _sortingService: SortingService,
+        private _cache: CacheService
     ) {
         // get the uuid of the current project
         this._route.parent.parent.paramMap.subscribe((params: Params) => {
@@ -129,9 +131,9 @@ export class UsersListComponent implements OnInit {
 
         if (this.projectUuid) {
             // get the project data from cache
-            this._dspApiConnection.admin.projectsEndpoint.getProjectByShortcode(this.projectUuid).subscribe(
-                (response: ApiResponseData<ProjectResponse>) => {
-                    this.project = response.body.project;
+            this._cache.get(this.projectUuid).subscribe(
+                (response: ReadProject) => {
+                    this.project = response;
                     // is logged-in user projectAdmin?
                     this.projectAdmin = this.sysAdmin
                         ? this.sysAdmin

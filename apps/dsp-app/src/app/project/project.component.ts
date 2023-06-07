@@ -11,7 +11,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     ApiResponseData,
     ApiResponseError,
+    GroupsResponse,
     KnoraApiConnection,
+    MembersResponse,
     OntologiesMetadata,
     ProjectResponse,
     ReadOntology,
@@ -207,16 +209,16 @@ export class ProjectComponent implements OnInit {
 
                         // set the cache for project members and groups
                         if (this.projectAdmin) {
-                            this._cache.get(
-                                'members_of_' + this.projectUuid,
-                                this._dspApiConnection.admin.projectsEndpoint.getProjectMembersByIri(
-                                    this.iri
-                                )
-                            );
-                            this._cache.get(
-                                'groups_of_' + this.projectUuid,
-                                this._dspApiConnection.admin.groupsEndpoint.getGroups()
-                            );
+
+                            this._dspApiConnection.admin.projectsEndpoint.getProjectMembersByIri(this.iri).subscribe(
+                                (response: ApiResponseData<MembersResponse>) =>
+                                    this._cache.set('members_of_' + this.projectUuid,response.body.members)
+                            )
+
+                            this._dspApiConnection.admin.groupsEndpoint.getGroups().subscribe(
+                                (response: ApiResponseData<GroupsResponse>) =>
+                                    this._cache.set('groups_of_' + this.projectUuid, response.body.groups)
+                            )
                         }
 
                         // get all project ontologies

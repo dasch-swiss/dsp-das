@@ -15,11 +15,16 @@ import { RouterTestingModule } from '@angular/router/testing';
 import {
     ApiResponseData,
     ClassDefinition,
+    GroupsEndpointAdmin,
+    GroupsResponse,
+    MembersResponse,
     MockOntology,
     MockProjects,
+    MockUsers,
     OntologiesEndpointV2,
     ProjectResponse,
     ProjectsEndpointAdmin,
+    ReadGroup,
     ReadOntology,
     ReadProject,
 } from '@dasch-swiss/dsp-js';
@@ -184,6 +189,38 @@ describe('ProjectComponent', () => {
             const mockProjects = MockProjects.mockProjects();
 
             response.project = mockProjects.body.projects[0];
+
+            return of(
+                ApiResponseData.fromAjaxResponse({ response } as AjaxResponse)
+            );
+        });
+
+        // mock project members endpoint
+        (
+            dspConnSpy.admin
+                .projectsEndpoint as jasmine.SpyObj<ProjectsEndpointAdmin>
+        ).getProjectMembersByIri.and.callFake(() => {
+            const response = new MembersResponse();
+
+            const mockUsers = MockUsers.mockUsers();
+
+            response.members = mockUsers.body.users;
+
+            return of(
+                ApiResponseData.fromAjaxResponse({ response } as AjaxResponse)
+            );
+        });
+
+        // mock groups endpoint
+        (
+            dspConnSpy.admin
+                .groupsEndpoint as jasmine.SpyObj<GroupsEndpointAdmin>
+        ).getGroups.and.callFake(() => {
+            const response = new GroupsResponse();
+
+            const groups = [new ReadGroup()];
+
+            response.groups = groups;
 
             return of(
                 ApiResponseData.fromAjaxResponse({ response } as AjaxResponse)

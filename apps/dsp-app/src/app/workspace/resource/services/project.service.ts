@@ -39,14 +39,12 @@ export class ProjectService {
         // get info about logged-in user from the session object
         const session = this._session.getSession();
 
+        // this._dspApiConnection.admin.usersEndpoint.getUserByUsername(
+        //     session.user.name
+        // )
         if (session.user.sysAdmin === false) {
             return this._cache
-                .get(
-                    session.user.name,
-                    this._dspApiConnection.admin.usersEndpoint.getUserByUsername(
-                        session.user.name
-                    )
-                )
+                .get(session.user.name)
                 .pipe(
                     map(
                         (response: ApiResponseData<UserResponse>) => {
