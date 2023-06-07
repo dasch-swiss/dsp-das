@@ -5,6 +5,7 @@ import {
     Constants,
     KnoraApiConnection,
     ProjectsResponse,
+    ReadUser,
     StoredProject,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
@@ -39,16 +40,13 @@ export class ProjectService {
         // get info about logged-in user from the session object
         const session = this._session.getSession();
 
-        // this._dspApiConnection.admin.usersEndpoint.getUserByUsername(
-        //     session.user.name
-        // )
         if (session.user.sysAdmin === false) {
             return this._cache
                 .get(session.user.name)
                 .pipe(
                     map(
-                        (response: ApiResponseData<UserResponse>) => {
-                            for (const project of response.body.user.projects) {
+                        (user: ReadUser) => {
+                            for (const project of user.projects) {
                                 if (project.status) {
                                     usersProjects.push(project);
                                 }

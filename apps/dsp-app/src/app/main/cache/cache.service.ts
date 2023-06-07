@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { ReadUser, ReadProject, ReadOntology, ReadGroup, ListNodeInfo } from '@dasch-swiss/dsp-js';
 import { Observable, of, Subject, throwError } from 'rxjs';
 
 interface CacheContent {
-    expiry: number;
     value: any;
 }
 
@@ -24,13 +24,16 @@ export class CacheService {
      */
     get(
         key: string,
-    ): Observable<any> {
-        if (this._hasValidCachedValue(key)) {
-            // console.log(`%c Getting from cache by key: ${key}`, 'color: green');
-            // console.log(`%c Cache returns:` + JSON.stringify(this.cache.get(key).value), 'color: green');
-            // console.log(`%c Cache returns typeof:` + (typeof of(this.cache.get(key).value)), 'color: green');
-
-            // returns observable
+    ): Observable<
+        ReadUser |
+        ReadUser[] |
+        ReadProject |
+        ReadOntology |
+        ReadOntology[] |
+        ReadGroup[] |
+        ListNodeInfo[]
+    > {
+        if (this.has(key)) {
             return of(this._cache.get(key).value);
         } else {
             return throwError(
@@ -42,8 +45,17 @@ export class CacheService {
     /**
      * sets the value with key in the cache
      */
-    set(key: string, value: any, maxAge: number = this.DEFAULT_MAX_AGE): void {
-        this._cache.set(key, { value: value, expiry: Date.now() + maxAge });
+    set(key: string,
+        value:
+        ReadUser |
+        ReadUser[] |
+        ReadProject |
+        ReadOntology |
+        ReadOntology[] |
+        ReadGroup[] |
+        ListNodeInfo[]
+        ): void {
+        this._cache.set(key, { value: value });
     }
 
     /**
@@ -69,19 +81,4 @@ export class CacheService {
         this._cache.clear();
     }
 
-    /**
-     * checks if the key exists and has not expired.
-     */
-    private _hasValidCachedValue(key: string): boolean {
-        if (this._cache.has(key)) {
-            // if (this._cache.get(key).expiry < Date.now()) {
-            //     this._cache.delete(key);
-            //     console.log('value has expired');
-            //     return false;
-            // }
-            return true;
-        } else {
-            return false;
-        }
-    }
 }
