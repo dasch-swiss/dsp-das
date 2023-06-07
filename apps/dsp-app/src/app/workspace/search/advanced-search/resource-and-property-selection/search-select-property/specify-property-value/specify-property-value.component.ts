@@ -29,7 +29,6 @@ import {
     PropertyValue,
     Value,
 } from './operator';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 const resolvedPromise = Promise.resolve(null);

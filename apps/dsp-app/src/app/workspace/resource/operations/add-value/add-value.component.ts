@@ -28,7 +28,6 @@ import {
     ValueOperationEventService,
 } from '../../services/value-operation-event.service';
 import { ValueService } from '../../services/value.service';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 @Component({
     selector: 'app-add-value',

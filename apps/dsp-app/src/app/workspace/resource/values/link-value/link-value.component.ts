@@ -33,7 +33,6 @@ import {
     DialogEvent,
 } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 export function resourceValidator(control: AbstractControl) {
     const invalid = !(

@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { UpdateFileValue } from '@dasch-swiss/dsp-js';
 import { UploadComponent } from '../upload/upload.component';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 @Component({
     selector: 'app-replace-file-form',
