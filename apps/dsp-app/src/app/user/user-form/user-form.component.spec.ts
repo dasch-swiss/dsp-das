@@ -124,7 +124,7 @@ describe('UserFormComponent', () => {
             () => {
                 const allUsers: ApiResponseData<UsersResponse> =
                     MockUsers.mockUsers();
-                return of(allUsers);
+                return of(allUsers.body.users);
             }
         );
 

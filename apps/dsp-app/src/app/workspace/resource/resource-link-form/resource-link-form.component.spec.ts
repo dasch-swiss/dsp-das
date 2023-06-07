@@ -229,9 +229,7 @@ describe('ResourceLinkFormComponent', () => {
 
             response.user.projects.push(project.body.project);
 
-            return of(
-                ApiResponseData.fromAjaxResponse({ response } as AjaxResponse)
-            );
+            return of(response.user);
         });
 
         testHostFixture = TestBed.createComponent(TestHostComponent);

@@ -369,9 +369,7 @@ describe('ResourceInstanceFormComponent', () => {
 
             response.user.projects.push(project.body.project);
 
-            return of(
-                ApiResponseData.fromAjaxResponse({ response } as AjaxResponse)
-            );
+            return of(response.user);
         });
 
         const dspConnSpy = TestBed.inject(DspApiConnectionToken);

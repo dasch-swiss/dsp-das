@@ -62,7 +62,7 @@ describe('OntologyFormComponent', () => {
 
         (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(() => {
             const response = MockProjects.mockProject();
-            return of(response);
+            return of(response.body.project);
         });
 
         ontologyFormFixture = TestBed.createComponent(OntologyFormComponent);
