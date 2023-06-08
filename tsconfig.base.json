@@ -30,9 +30,6 @@
       "@dasch-swiss/vre/shared/app-error-handler": [
         "libs/vre/shared/app-error-handler/src/index.ts"
       ],
-      "@dasch-swiss/vre/shared/app-init": [
-        "libs/vre/shared/app-init/src/index.ts"
-      ],
       "@dasch-swiss/vre/shared/app-logging": [
         "libs/vre/shared/app-logging/src/index.ts"
       ],
