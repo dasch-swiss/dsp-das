@@ -175,7 +175,8 @@ import { CommentFormComponent } from './workspace/resource/values/comment-form/c
 import { DataModelsComponent } from './project/data-models/data-models.component';
 import { ResourceClassPropertyInfoComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
-import { initializeAppFactory } from '@dasch-swiss/vre/shared/app-init';
+import { BuildTagToken } from '@dasch-swiss/vre/shared/app-config';
+import { buildTagFactory } from '@dasch-swiss/vre/shared/app-config';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -355,16 +356,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         }),
     ],
     providers: [
-        {
-            provide: APP_INITIALIZER,
-            useFactory: initializeAppFactory,
-            deps: [HttpClient],
-            multi: true,
-        },
         AppConfigService,
         DatadogRumService,
         AppLoggingService,
-        BuildTagService,
         {
             provide: DspApiConfigToken,
             useFactory: (appConfigService: AppConfigService) =>
@@ -388,6 +382,11 @@ export function httpLoaderFactory(httpClient: HttpClient) {
             useFactory: (appConfigService: AppConfigService) =>
                 appConfigService.dspInstrumentationConfig,
             deps: [AppConfigService],
+        },
+        {
+            provide: BuildTagToken,
+            useFactory: buildTagFactory,
+            deps: [HttpClient],
         },
         {
             provide: ErrorHandler,
