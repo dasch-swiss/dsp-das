@@ -57,7 +57,6 @@ docker-publish-app: app-build-prod ## publish DSP-APP Docker image to Docker-Hub
       --release-version=${BUILD_TAG} \
       --minified-path-prefix=/
 
-
 .PHONY: docker-publish
 docker-publish: docker-publish-app ## publish all Docker images in the monorepo.
 

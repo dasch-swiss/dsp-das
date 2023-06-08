@@ -2,7 +2,7 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ErrorHandler, NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -14,7 +14,10 @@ import { AngularSplitModule } from 'angular-split';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
+import {
+    AppConfigService,
+    BuildTagService,
+} from '@dasch-swiss/vre/shared/app-config';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmationDialogComponent } from './main/action/confirmation-dialog/confirmation-dialog.component';
@@ -172,6 +175,7 @@ import { CommentFormComponent } from './workspace/resource/values/comment-form/c
 import { DataModelsComponent } from './project/data-models/data-models.component';
 import { ResourceClassPropertyInfoComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { initializeAppFactory } from '@dasch-swiss/vre/shared/app-init';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -351,9 +355,16 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         }),
     ],
     providers: [
+        {
+            provide: APP_INITIALIZER,
+            useFactory: initializeAppFactory,
+            deps: [HttpClient],
+            multi: true,
+        },
         AppConfigService,
         DatadogRumService,
         AppLoggingService,
+        BuildTagService,
         {
             provide: DspApiConfigToken,
             useFactory: (appConfigService: AppConfigService) =>
