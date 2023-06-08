@@ -6,22 +6,35 @@ import { MatLegacySelectModule as MatSelectModule } from '@angular/material/lega
 import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, GroupsEndpointAdmin, GroupsResponse, ReadGroup } from '@dasch-swiss/dsp-js';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import {
-    DspApiConfigToken,
-    DspApiConnectionToken,
-} from '@dasch-swiss/vre/shared/app-config';
+import {  DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
-import { TestConfig } from '@dsp-app/src/test.config';
 import { SelectGroupComponent } from './select-group.component';
+import { of } from 'rxjs';
+import { AjaxResponse } from 'rxjs/ajax';
 
 describe('SelectGroupComponent', () => {
     let component: SelectGroupComponent;
     let fixture: ComponentFixture<SelectGroupComponent>;
 
+    const appInitSpy = {
+        dspAppConfig: {
+            iriBase: 'http://rdfh.ch',
+        },
+    };
+
     beforeEach(waitForAsync(() => {
+
+        const dspConnSpyObj = {
+            admin: {
+                groupsEndpoint: jasmine.createSpyObj('groupsEndpoint', [
+                    'getGroups',
+                ]),
+            },
+        };
+
         TestBed.configureTestingModule({
             declarations: [
                 SelectGroupComponent,
@@ -38,20 +51,35 @@ describe('SelectGroupComponent', () => {
                 RouterTestingModule,
             ],
             providers: [
-                AppConfigService,
                 {
-                    provide: DspApiConfigToken,
-                    useValue: TestConfig.ApiConfig,
+                    provide: AppConfigService,
+                    useValue: appInitSpy,
                 },
                 {
                     provide: DspApiConnectionToken,
-                    useValue: new KnoraApiConnection(TestConfig.ApiConfig),
+                    useValue: dspConnSpyObj,
                 },
             ],
         }).compileComponents();
     }));
 
     beforeEach(() => {
+        // mock API
+        const dspConnSpy = TestBed.inject(DspApiConnectionToken);
+
+        (dspConnSpy.admin.groupsEndpoint as jasmine.SpyObj<GroupsEndpointAdmin>).getGroups.and.callFake(
+            () => {
+                const response = new GroupsResponse();
+
+                const groups = [new ReadGroup()];
+
+                response.groups = groups;
+
+                return of(
+                    ApiResponseData.fromAjaxResponse({ response } as AjaxResponse)
+                );
+            }
+        )
         fixture = TestBed.createComponent(SelectGroupComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

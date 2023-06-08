@@ -111,7 +111,7 @@ export class ProjectsListComponent implements OnInit {
         this.session = this._session.getSession();
 
         // is the logged-in user system admin?
-        this.sysAdmin = this.session.user.sysAdmin;
+        this.sysAdmin = this.session ? this.session.user.sysAdmin : false;
 
         // sort list by defined key
         if (localStorage.getItem('sortProjectsBy')) {
@@ -136,7 +136,7 @@ export class ProjectsListComponent implements OnInit {
      */
     userIsProjectAdmin(id: string): boolean {
         // check if the logged-in user is project admin
-        return this.session.user.projectAdmin.some((e) => e === id);
+        return this.session?.user.projectAdmin.some((e) => e === id);
     }
 
     /**
