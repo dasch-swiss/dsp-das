@@ -2,7 +2,7 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -14,10 +14,7 @@ import { AngularSplitModule } from 'angular-split';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
-import {
-    AppConfigService,
-    BuildTagService,
-} from '@dasch-swiss/vre/shared/app-config';
+import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmationDialogComponent } from './main/action/confirmation-dialog/confirmation-dialog.component';
