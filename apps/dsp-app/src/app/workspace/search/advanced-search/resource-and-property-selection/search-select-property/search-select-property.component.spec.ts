@@ -27,7 +27,7 @@ import {
     ValueLiteral,
 } from './specify-property-value/operator';
 import { SearchSelectPropertyComponent } from './search-select-property.component';
-import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 /**
  * test host component to simulate parent component.
