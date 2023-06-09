@@ -6,7 +6,7 @@
 import { z } from 'zod';
 import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 export const BuildTagSchema = z.object({
