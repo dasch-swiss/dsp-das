@@ -623,7 +623,7 @@ export class PropertyFormComponent implements OnInit {
 
                                     // if property type is supported and is of type TextValue and the guiElement is different from its initial value, call replaceGuiElement() to update the guiElement
                                     // this only works for the TextValue object type currently
-                                    // https://docs.dasch.swiss/latest/DSP-API/03-apis/api-v2/ontology-information/#changing-the-gui-element-and-gui-attributes-of-a-property
+                                    // https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/ontology-information/#changing-the-gui-element-and-gui-attributes-of-a-property
                                     if (
                                         !this.unsupportedPropertyType &&
                                         this.propertyInfo.propDef.objectType ===
@@ -664,7 +664,7 @@ export class PropertyFormComponent implements OnInit {
 
                                     // if property type is supported and is of type TextValue and the guiElement is different from its initial value, call replaceGuiElement() to update the guiElement
                                     // this only works for the TextValue object type currently
-                                    // https://docs.dasch.swiss/latest/DSP-API/03-apis/api-v2/ontology-information/#changing-the-gui-element-and-gui-attributes-of-a-property
+                                    // https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/ontology-information/#changing-the-gui-element-and-gui-attributes-of-a-property
                                     if (
                                         !this.unsupportedPropertyType &&
                                         this.propertyInfo.propDef.objectType ===
