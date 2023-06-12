@@ -52,19 +52,10 @@ export class DefaultProperties {
             group: 'Text',
             elements: [
                 {
-                    icon: 'short_text',
-                    label: 'Short',
-                    description: 'Short text such as title or name',
-                    subPropOf: Constants.HasValue,
-                    objectType: Constants.TextValue,
-                    guiEle: Constants.GuiSimpleText, // better element would be: 'Input',
-                    group: 'Text', // redundant information, but otherwise we don't get the main group name after selecting type
-                },
-                {
                     icon: 'subject',
-                    label: 'Paragraph',
+                    label: 'Unformatted Text',
                     description:
-                        'Long text such as description; could have line breaks',
+                        'Text without formatting options (only line breaks are available)',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.TextValue,
                     guiEle: Constants.GuiTextarea,
@@ -72,13 +63,22 @@ export class DefaultProperties {
                 },
                 {
                     icon: 'line_style',
-                    label: 'Rich Text',
-                    description: 'A rich text editor with formatting options',
+                    label: 'Formatted Text',
+                    description: 'Text in a rich text editor with formatting options e.g. italic, bold, etc.',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.TextValue,
                     guiEle: Constants.GuiRichText,
                     group: 'Text',
                 },
+                // {
+                //     icon: 'integration_instructions',
+                //     label: 'Custom Formatted Text',
+                //     description: 'Like a Formatted Text but formatting options can be defined by yourself',
+                //     subPropOf: Constants.HasValue,
+                //     objectType: Constants.TextValue,
+                //     guiEle: Constants.GuiRichText,
+                //     group: 'Text',
+                // },
             ],
         },
         {
