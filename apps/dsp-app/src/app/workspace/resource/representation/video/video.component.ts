@@ -39,7 +39,6 @@ import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { NotificationService } from '../../../../main/services/notification.service';
-import { fileUrl } from 'ng-packagr/lib/ng-package/nodes';
 import { asyncScheduler, Observable, of } from 'rxjs';
 
 @Component({
