@@ -5,7 +5,7 @@ import {
 } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ApiResponseError, ReadProject } from '@dasch-swiss/dsp-js';
+import { ReadProject } from '@dasch-swiss/dsp-js';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import { Session, SessionService } from '@dsp-app/src/app/main/services/session.service';
@@ -89,9 +89,6 @@ export class BoardComponent implements OnInit {
                 }
 
                 this.loading = false;
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
             }
         );
 

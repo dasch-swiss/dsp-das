@@ -158,10 +158,6 @@ export class OntologyFormComponent implements OnInit {
                 this.project = response;
                 this.buildForm();
                 this.loading = false;
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-                this.loading = false;
             }
         );
 

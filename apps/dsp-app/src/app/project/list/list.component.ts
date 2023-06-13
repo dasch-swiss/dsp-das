@@ -46,7 +46,7 @@ export class ListComponent implements OnInit {
     projectAdmin = false;
     projectMember = undefined;
 
-    // project uuid; as identifier in project cacapplication statehe service
+    // project uuid; as identifier in project application state service
     projectUuid: string;
 
     // project data
