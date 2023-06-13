@@ -19,7 +19,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import { SessionService } from '@dsp-app/src/app/main/services/session.service';
-import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { ApplicationStateService } from '@dsp-app/src/app/main/cache/application-state.service';
 
 @Component({
     selector: 'app-account',
@@ -39,7 +39,7 @@ export class AccountComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _cache: CacheService,
+        private _applicationStateService: ApplicationStateService,
         private _dialog: MatDialog,
         private _errorHandler: ErrorHandlerService,
         private _titleService: Title,
@@ -103,8 +103,8 @@ export class AccountComponent implements OnInit {
                 // this action will deactivate own user account. The consequence is a logout
                 this._dspApiConnection.v2.auth.logout().subscribe(
                     () => {
-                        // destroy cache
-                        this._cache.destroy();
+                        // destroy application state
+                        this._applicationStateService.destroy();
 
                         // destroy (dsp-ui) session
                         this._session.destroySession();

@@ -17,7 +17,7 @@ import {
     StoredProject,
     UpdateProjectRequest,
 } from '@dasch-swiss/dsp-js';
-import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { ApplicationStateService } from '@dsp-app/src/app/main/cache/application-state.service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
@@ -96,7 +96,7 @@ export class ProjectsListComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _cache: CacheService,
+        private _applicationStateService: ApplicationStateService,
         private _errorHandler: ErrorHandlerService,
         private _dialog: MatDialog,
         private _router: Router,
@@ -203,11 +203,11 @@ export class ProjectsListComponent implements OnInit {
             .subscribe(
                 () => {
                     this.refreshParent.emit();
-                    // update project cache
-                    this._cache.del(uuid);
+                    // update project state
+                    this._applicationStateService.del(uuid);
 
                     this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(id).subscribe(
-                        (response: ApiResponseData<ProjectResponse>) => this._cache.set(uuid, response.body.project)
+                        (response: ApiResponseData<ProjectResponse>) => this._applicationStateService.set(uuid, response.body.project)
                     )
 
                 },
@@ -229,11 +229,11 @@ export class ProjectsListComponent implements OnInit {
             .subscribe(
                 () => {
                     this.refreshParent.emit();
-                    // update project cache
-                    this._cache.del(uuid);
+                    // update project state
+                    this._applicationStateService.del(uuid);
 
                     this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(id).subscribe(
-                        (response: ApiResponseData<ProjectResponse>) => this._cache.set(uuid, response.body.project)
+                        (response: ApiResponseData<ProjectResponse>) => this._applicationStateService.set(uuid, response.body.project)
                     )
 
                 },

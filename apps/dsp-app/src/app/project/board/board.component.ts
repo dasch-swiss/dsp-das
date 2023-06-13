@@ -9,7 +9,7 @@ import { ApiResponseError, ReadProject } from '@dasch-swiss/dsp-js';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import { Session, SessionService } from '@dsp-app/src/app/main/services/session.service';
-import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { ApplicationStateService } from '@dsp-app/src/app/main/cache/application-state.service';
 
 export interface DatasetRadioOption {
     name: string;
@@ -31,7 +31,7 @@ export class BoardComponent implements OnInit {
     sysAdmin = false;
     projectAdmin = false;
 
-    // project uuid; as identifier in project cache service
+    // project uuid; as identifier in project application state service
     projectUuid: string;
 
     // project data
@@ -42,7 +42,7 @@ export class BoardComponent implements OnInit {
     beta = false;
 
     constructor(
-        private _cache: CacheService,
+        private _applicationStateService: ApplicationStateService,
         private _errorHandler: ErrorHandlerService,
         private _session: SessionService,
         private _dialog: MatDialog,
@@ -74,8 +74,8 @@ export class BoardComponent implements OnInit {
     }
 
     getProject() {
-        // get the project data from cache
-        this._cache.get(this.projectUuid).subscribe(
+        // get the project data from application state service
+        this._applicationStateService.get(this.projectUuid).subscribe(
             (response: ReadProject) => {
                 this.project = response;
 

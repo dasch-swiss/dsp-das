@@ -12,7 +12,7 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { ApplicationStateService } from '@dsp-app/src/app/main/cache/application-state.service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import { SessionService } from '@dsp-app/src/app/main/services/session.service';
@@ -24,7 +24,7 @@ export class ProjectService {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _cache: CacheService,
+        private _applicationStateService: ApplicationStateService,
         private _errorHandler: ErrorHandlerService,
         private _session: SessionService,
         private _acs: AppConfigService
@@ -41,7 +41,7 @@ export class ProjectService {
         const session = this._session.getSession();
 
         if (session.user.sysAdmin === false) {
-            return this._cache
+            return this._applicationStateService
                 .get(session.user.name)
                 .pipe(
                     map(

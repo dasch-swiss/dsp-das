@@ -31,7 +31,7 @@ import {
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { CacheService } from '../main/cache/cache.service';
+import { ApplicationStateService } from '../main/cache/application-state.service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '../main/dialog/dialog.component';
 import { Session, SessionService } from '../main/services/session.service';
@@ -71,7 +71,7 @@ describe('ProjectComponent', () => {
     };
 
     beforeEach(waitForAsync(() => {
-        const cacheServiceSpy = jasmine.createSpyObj('CacheService', [
+        const applicationStateServiceSpy = jasmine.createSpyObj('ApplicationStateService', [
             'get',
             'set',
             'has',
@@ -138,8 +138,8 @@ describe('ProjectComponent', () => {
                     useValue: dspConnSpyObj,
                 },
                 {
-                    provide: CacheService,
-                    useValue: cacheServiceSpy,
+                    provide: ApplicationStateService,
+                    useValue: applicationStateServiceSpy,
                 },
                 {
                     provide: OntologyService,
@@ -163,10 +163,10 @@ describe('ProjectComponent', () => {
     }));
 
     beforeEach(() => {
-        // mock cache service
-        const cacheSpy = TestBed.inject(CacheService);
+        // mock application state service
+        const applicationStateServiceSpy = TestBed.inject(ApplicationStateService);
 
-        (cacheSpy as jasmine.SpyObj<CacheService>).get.and.callFake(() => {
+        (applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>).get.and.callFake(() => {
             const response: ProjectResponse = new ProjectResponse();
 
             const mockProjects = MockProjects.mockProjects();

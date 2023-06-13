@@ -15,7 +15,7 @@ import {
     UsersEndpointAdmin,
 } from '@dasch-swiss/dsp-js';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { CacheService } from '../../main/cache/cache.service';
+import { ApplicationStateService } from '../../main/cache/application-state.service';
 import {
     DspApiConfigToken,
     DspApiConnectionToken,
@@ -89,7 +89,7 @@ describe('OverviewComponent', () => {
                 ]),
             },
         };
-        const cacheServiceSpy = jasmine.createSpyObj('CacheService', [
+        const applicationStateServiceSpy = jasmine.createSpyObj('ApplicationStateService', [
             'get',
             'set',
         ]);
@@ -128,8 +128,8 @@ describe('OverviewComponent', () => {
                     useValue: dspConnSpy,
                 },
                 {
-                    provide: CacheService,
-                    useValue: cacheServiceSpy,
+                    provide: ApplicationStateService,
+                    useValue: applicationStateServiceSpy,
                 },
                 {
                     provide: ProjectService,

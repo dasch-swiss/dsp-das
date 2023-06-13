@@ -24,7 +24,7 @@ import {
     Session,
     SessionService,
 } from '../../../main/services/session.service';
-import { CacheService } from '../../../main/cache/cache.service';
+import { ApplicationStateService } from '../../../main/cache/application-state.service';
 
 @Component({
     selector: 'app-list-item',
@@ -62,7 +62,7 @@ export class ListItemComponent implements OnInit {
         private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: ErrorHandlerService,
         private _session: SessionService,
-        private _cache: CacheService
+        private _applicationStateService: ApplicationStateService
     ) {}
 
     ngOnInit() {
@@ -73,8 +73,8 @@ export class ListItemComponent implements OnInit {
         this.sysAdmin = this.session ? this.session.user.sysAdmin : false;
 
         if (this.session) {
-            // get the project data from cache
-            this._cache.get(this.projectUuid).subscribe(
+            // get the project data from application state service
+            this._applicationStateService.get(this.projectUuid).subscribe(
                 (response: ReadProject) => {
                     // is logged-in user projectAdmin?
                     this.projectAdmin = this.sysAdmin

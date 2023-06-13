@@ -13,7 +13,7 @@ import {
     GroupsResponse,
     KnoraApiConnection,
 } from '@dasch-swiss/dsp-js';
-import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { ApplicationStateService } from '@dsp-app/src/app/main/cache/application-state.service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import { AutocompleteItem } from '@dsp-app/src/app/workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/operator';
@@ -50,7 +50,7 @@ export class SelectGroupComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _cache: CacheService,
+        private _applicationStateService: ApplicationStateService,
         private _errorHandler: ErrorHandlerService
     ) {}
 
@@ -65,7 +65,7 @@ export class SelectGroupComponent implements OnInit {
         // update list of groups with the project specific groups
         this._dspApiConnection.admin.groupsEndpoint.getGroups().subscribe(
             (response: ApiResponseData<GroupsResponse>) => {
-                this._cache.set('groups_of_' + this.projectCode, response.body.groups);
+                this._applicationStateService.set('groups_of_' + this.projectCode, response.body.groups);
                 for (const group of response.body.groups) {
                     if (group.project.id === this.projectid) {
                         this.projectGroups.push({

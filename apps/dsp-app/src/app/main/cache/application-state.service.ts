@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ReadUser, ReadProject, ReadOntology, ReadGroup, ListNodeInfo } from '@dasch-swiss/dsp-js';
-import { Observable, of, Subject, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 
 interface CacheContent {
     value: any;
@@ -10,12 +10,12 @@ interface CacheContent {
     providedIn: 'root',
 })
 /**
- * cache Service is an observables based in-memory cache implementation
- * Keeps track of in-flight observables and sets a default expiry for cached values
+ * Application State Service is an observables based in-memory cache implementation
+ * Used to keep track of the state of the application
  * @export
- * @class CacheService
+ * @class ApplicationStateService
  */
-export class CacheService {
+export class ApplicationStateService {
     readonly DEFAULT_MAX_AGE: number = 5000; // 3600000ms => 1 Hour
     private _cache: Map<string, CacheContent> = new Map<string, CacheContent>();
 

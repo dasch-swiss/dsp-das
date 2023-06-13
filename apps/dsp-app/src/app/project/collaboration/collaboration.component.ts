@@ -18,7 +18,7 @@ import {
 } from '@dsp-app/src/app/main/services/session.service';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { AddUserComponent } from './add-user/add-user.component';
-import { CacheService } from '../../main/cache/cache.service';
+import { ApplicationStateService } from '../../main/cache/application-state.service';
 
 @Component({
     selector: 'app-collaboration',
@@ -36,7 +36,7 @@ export class CollaborationComponent implements OnInit {
     sysAdmin = false;
     projectAdmin = false;
 
-    // project uuid; as identifier in project cache service
+    // project uuid; as identifier in project application state service
     projectUuid: string;
 
     // project data
@@ -59,7 +59,7 @@ export class CollaborationComponent implements OnInit {
         private _session: SessionService,
         private _titleService: Title,
         private _projectService: ProjectService,
-        private _cache: CacheService
+        private _applicationStateService: ApplicationStateService
     ) {
         // get the uuid of the current project
         if (this._route.parent.parent.snapshot.url.length) {
@@ -78,7 +78,7 @@ export class CollaborationComponent implements OnInit {
         // is the logged-in user system admin?
         this.sysAdmin = this.session.user.sysAdmin;
 
-        this._cache.get(this.projectUuid).subscribe(
+        this._applicationStateService.get(this.projectUuid).subscribe(
             (response: ReadProject) => {
                 this.project = response;
 
@@ -119,8 +119,8 @@ export class CollaborationComponent implements OnInit {
         this._dspApiConnection.admin.projectsEndpoint.getProjectMembersByIri(projectIri).subscribe(
             (response: ApiResponseData<MembersResponse>) => {
                 this.projectMembers = response.body.members;
-                // set project members in cache
-                this._cache.set('members_of_' + this.projectUuid, this.projectMembers);
+                // set project members state in application state service
+                this._applicationStateService.set('members_of_' + this.projectUuid, this.projectMembers);
 
                 // clean up list of users
                 this.active = [];

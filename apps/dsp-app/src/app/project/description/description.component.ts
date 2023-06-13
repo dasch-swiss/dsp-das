@@ -25,7 +25,7 @@ import {
     SessionService,
 } from '@dsp-app/src/app/main/services/session.service';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
-import { CacheService } from '../../main/cache/cache.service';
+import { ApplicationStateService } from '../../main/cache/application-state.service';
 
 @Component({
     selector: 'app-description',
@@ -91,7 +91,7 @@ export class DescriptionComponent implements OnInit {
         private _fb: FormBuilder,
         private _projectService: ProjectService,
         private _notification: NotificationService,
-        private _cache: CacheService
+        private _applicationStateService: ApplicationStateService
     ) {
         // get the uuid of the current project
         this._route.parent.paramMap.subscribe((params: Params) => {
@@ -139,7 +139,7 @@ export class DescriptionComponent implements OnInit {
 
     getProject() {
         // get the project data
-        this._cache.get(this.projectUuid).subscribe(
+        this._applicationStateService.get(this.projectUuid).subscribe(
             (response: ReadProject) => {
                 this.project = response;
 
@@ -263,8 +263,8 @@ export class DescriptionComponent implements OnInit {
                 (response: ApiResponseData<ProjectResponse>) => {
                     this.project = response.body.project;
 
-                    // update cache
-                    this._cache.set(
+                    // update application state
+                    this._applicationStateService.set(
                         this._projectService.iriToUuid(this.project.id),
                         this.project
                     );

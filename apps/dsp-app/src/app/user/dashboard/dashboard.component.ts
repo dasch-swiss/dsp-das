@@ -7,7 +7,7 @@ import {
     ReadUser,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { CacheService } from '@dsp-app/src/app/main/cache/cache.service';
+import { ApplicationStateService } from '@dsp-app/src/app/main/cache/application-state.service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import {
@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _cache: CacheService,
+        private _applicationStateService: ApplicationStateService,
         private _errorHandler: ErrorHandlerService,
         private _session: SessionService,
         private _titleService: Title
@@ -54,7 +54,7 @@ export class DashboardComponent implements OnInit {
         this.loading = true;
 
         // set the cache
-        this._cache.get(
+        this._applicationStateService.get(
             this.username,
             this._dspApiConnection.admin.usersEndpoint.getUserByUsername(
                 this.username
@@ -62,7 +62,7 @@ export class DashboardComponent implements OnInit {
         );
 
         // get from cache
-        this._cache
+        this._applicationStateService
             .get(
                 this.username,
                 this._dspApiConnection.admin.usersEndpoint.getUserByUsername(
