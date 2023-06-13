@@ -1,9 +1,22 @@
 import { Injectable } from '@angular/core';
-import { ReadUser, ReadProject, ReadOntology, ReadGroup, ListNodeInfo } from '@dasch-swiss/dsp-js';
+import {
+    ReadUser,
+    ReadProject,
+    ReadOntology,
+    ReadGroup,
+    ListNodeInfo,
+} from '@dasch-swiss/dsp-js';
 import { Observable, of, throwError } from 'rxjs';
 
 interface StateContent {
-    value: any;
+    value:
+        | ReadUser
+        | ReadUser[]
+        | ReadProject
+        | ReadOntology
+        | ReadOntology[]
+        | ReadGroup[]
+        | ListNodeInfo[];
 }
 
 @Injectable({
@@ -16,28 +29,32 @@ interface StateContent {
  * @class ApplicationStateService
  */
 export class ApplicationStateService {
-    readonly DEFAULT_MAX_AGE: number = 5000; // 3600000ms => 1 Hour
-    private _applicationState: Map<string, StateContent> = new Map<string, StateContent>();
+    private _applicationState: Map<string, StateContent> = new Map<
+        string,
+        StateContent
+    >();
 
     /**
      * gets the value from a state if the key is provided.
      */
     get(
-        key: string,
+        key: string
     ): Observable<
-        ReadUser |
-        ReadUser[] |
-        ReadProject |
-        ReadOntology |
-        ReadOntology[] |
-        ReadGroup[] |
-        ListNodeInfo[]
+        | ReadUser
+        | ReadUser[]
+        | ReadProject
+        | ReadOntology
+        | ReadOntology[]
+        | ReadGroup[]
+        | ListNodeInfo[]
     > {
         if (this.has(key)) {
             return of(this._applicationState.get(key).value);
         } else {
             return throwError(
-                'Requested key "' + key + '" is not available in the application state'
+                'Requested key "' +
+                    key +
+                    '" is not available in the application state'
             );
         }
     }
@@ -45,16 +62,17 @@ export class ApplicationStateService {
     /**
      * sets the value with key in the application state
      */
-    set(key: string,
+    set(
+        key: string,
         value:
-        ReadUser |
-        ReadUser[] |
-        ReadProject |
-        ReadOntology |
-        ReadOntology[] |
-        ReadGroup[] |
-        ListNodeInfo[]
-        ): void {
+            | ReadUser
+            | ReadUser[]
+            | ReadProject
+            | ReadOntology
+            | ReadOntology[]
+            | ReadGroup[]
+            | ListNodeInfo[]
+    ): void {
         this._applicationState.set(key, { value: value });
     }
 
@@ -80,5 +98,4 @@ export class ApplicationStateService {
         sessionStorage.clear();
         this._applicationState.clear();
     }
-
 }
