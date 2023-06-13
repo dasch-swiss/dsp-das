@@ -437,7 +437,7 @@ export class OntologyComponent implements OnInit {
                 ] = ontology;
                 this._applicationStateService.set('currentProjectOntologies', ontologies);
             },
-            () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the cache
+            () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the application state
         );
 
         // grab the onto class information to display

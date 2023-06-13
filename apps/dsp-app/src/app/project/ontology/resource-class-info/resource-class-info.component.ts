@@ -145,7 +145,7 @@ export class ResourceClassInfoComponent implements OnInit {
                     this.ontoProperties.push(prepareList);
                 });
             },
-            () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the cache
+            () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the application state
         );
 
         // get currently selected ontology

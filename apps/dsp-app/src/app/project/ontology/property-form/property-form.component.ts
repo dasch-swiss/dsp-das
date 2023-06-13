@@ -243,7 +243,7 @@ export class PropertyFormComponent implements OnInit {
                     }
                 });
             },
-            () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the cache
+            () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the application state
         );
 
         // b) in case of list value:

@@ -149,7 +149,7 @@ export class OntologyFormComponent implements OnInit {
                         this.existingOntologyNames.push(name);
                     });
                 },
-                () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the cache
+                () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the application state
             );
         }
 

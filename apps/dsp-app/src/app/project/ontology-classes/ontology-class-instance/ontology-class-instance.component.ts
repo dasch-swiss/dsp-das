@@ -157,7 +157,7 @@ export class OntologyClassInstanceComponent implements OnChanges {
                     classes[classes.findIndex((res) => res.id === this.classId)]
                 );
             },
-            () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the cache
+            () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the application state
         );
     }
 

@@ -78,7 +78,7 @@ describe('ProjectComponent', () => {
         ]);
 
         // getProjectMembersByIri and getGroups currently have no mock implementation because
-        // their results are stored in the cache but never actually used in the component
+        // their results are stored in the application state but never actually used in the component
         // so they're irrevelant for this unit test but need to be defined at least
         const dspConnSpyObj = {
             admin: {
