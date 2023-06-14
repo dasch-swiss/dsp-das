@@ -9,9 +9,9 @@ import {
     DspInstrumentationConfig,
     DspInstrumentationToken,
 } from '@dasch-swiss/vre/shared/app-config';
-import { Session, SessionService } from './session.service';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
+import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
 
 @Injectable({
     providedIn: 'root',

@@ -29,9 +29,9 @@ import {
     Events,
 } from '../../services/component-communication-event.service';
 import { DatadogRumService } from '../../services/datadog-rum.service';
-import { Session, SessionService } from '../../services/session.service';
 import { Location } from '@angular/common';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
 
 @Component({
     selector: 'app-login-form',
@@ -140,6 +140,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
             // returns a result if session is still valid
             if (result) {
                 this.session = JSON.parse(localStorage.getItem('session'));
+                console.log('valid session:', this.session);
             } else {
                 // session is invalid, build the login form
                 this.buildLoginForm();
@@ -188,6 +189,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
                         .subscribe(() => {
                             this.loginSuccess.emit(true);
                             this.session = this._session.getSession();
+                            console.log('logged in:', this.session);
 
                             this._componentCommsService.emit(
                                 new EmitEvent(Events.loginSuccess, true)
