@@ -65,7 +65,7 @@ export class DatadogRumService {
     }
 
     setActiveUser(
-        identifier: any,
+        identifier: string,
         identifierType: 'iri' | 'email' | 'username'
     ): void {
         if (datadogRum.getInternalContext().application_id) {

@@ -140,7 +140,6 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
             // returns a result if session is still valid
             if (result) {
                 this.session = JSON.parse(localStorage.getItem('session'));
-                console.log('valid session:', this.session);
             } else {
                 // session is invalid, build the login form
                 this.buildLoginForm();
@@ -170,8 +169,8 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
         this.isError = false;
 
         // grab values from form
-        const identifier = this.form.get('username').value;
-        const password = this.form.get('password').value;
+        const identifier: string = this.form.get('username').value;
+        const password: string = this.form.get('password').value;
 
         const identifierType: 'iri' | 'email' | 'username' =
             identifier.indexOf('@') > -1 ? 'email' : 'username';
@@ -189,7 +188,6 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
                         .subscribe(() => {
                             this.loginSuccess.emit(true);
                             this.session = this._session.getSession();
-                            console.log('logged in:', this.session);
 
                             this._componentCommsService.emit(
                                 new EmitEvent(Events.loginSuccess, true)
