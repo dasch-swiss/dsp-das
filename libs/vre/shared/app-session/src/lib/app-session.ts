@@ -108,7 +108,6 @@ export class SessionService {
         if (sessionData) {
             const session = JSON.parse(sessionData);
             const tsNow: number = this._setTimestamp();
-
             this._dspApiConnection.v2.jsonWebToken = session.user.jwt;
 
             // check if the session is still valid:
@@ -231,7 +230,7 @@ export class SessionService {
         timestamp: number
     ): boolean {
         if (credentials instanceof ApiResponseData) {
-            // the knora api credentials are still valid
+            // the dsp api credentials are still valid
             // update the session.id
             session.id = timestamp;
             localStorage.setItem('session', JSON.stringify(session));
