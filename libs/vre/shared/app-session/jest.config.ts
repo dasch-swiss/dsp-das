@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-    displayName: 'vre-shared-app-session',
+    displayName: 'app-session',
     preset: '../../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../../../coverage/libs/vre/shared/app-session',

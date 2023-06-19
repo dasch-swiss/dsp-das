@@ -173,6 +173,7 @@ export class SessionService {
             let sysAdmin = false;
             const projectAdmin: string[] = [];
 
+            // get permission information: a) is user sysadmin? b) get list of project iri's where user is project admin
             const groupsPerProject =
                 response.body.user.permissions.groupsPerProject;
 

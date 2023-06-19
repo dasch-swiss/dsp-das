@@ -1,5 +1,5 @@
 {
-  "name": "vre-shared-app-session",
+  "name": "app-session",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/vre/shared/app-session/src",
   "prefix": "dasch-swiss",
