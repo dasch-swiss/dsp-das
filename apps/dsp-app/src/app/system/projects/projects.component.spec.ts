@@ -16,9 +16,9 @@ import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
 import { TestConfig } from '@dsp-app/src/test.config';
 import { ProjectsListComponent } from './projects-list/projects-list.component';
 import { ProjectsComponent } from './projects.component';
-import { SessionService } from '../../main/services/session.service';
 import { of } from 'rxjs';
 import { SortButtonComponent } from '../../main/action/sort-button/sort-button.component';
+import { SessionService } from '@dasch-swiss/vre/shared/app-session';
 
 /**
  * test component to simulate child component, here progress-indicator from action module.

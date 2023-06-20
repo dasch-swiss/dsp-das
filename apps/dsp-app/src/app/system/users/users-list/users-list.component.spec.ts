@@ -26,9 +26,9 @@ import { SelectGroupComponent } from '@dsp-app/src/app/project/collaboration/sel
 import { TestConfig } from '@dsp-app/src/test.config';
 import { UsersListComponent } from './users-list.component';
 import { Component } from '@angular/core';
-import { Session, SessionService } from '@dsp-app/src/app/main/services/session.service';
 import { AjaxResponse } from 'rxjs/ajax';
 import { ApplicationStateService } from '@dsp-app/src/app/main/cache/application-state.service';
+import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
 
 @Component({
     template: '<app-users-list></app-users-list>'
