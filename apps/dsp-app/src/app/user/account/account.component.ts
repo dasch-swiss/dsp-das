@@ -42,7 +42,6 @@ export class AccountComponent implements OnInit {
         private _dialog: MatDialog,
         private _errorHandler: ErrorHandlerService,
         private _titleService: Title,
-        private _session: ApplicationStateService
     ) {
         // set the page title
         this._titleService.setTitle('Your account');
