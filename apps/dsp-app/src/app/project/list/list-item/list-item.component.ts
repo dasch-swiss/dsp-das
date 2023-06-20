@@ -23,8 +23,8 @@ import { ListNodeOperation } from '../list-item-form/list-item-form.component';
 import {
     Session,
     SessionService,
-} from '../../../main/services/session.service';
-import { ApplicationStateService } from '../../../main/cache/application-state.service';
+} from '@dasch-swiss/vre/shared/app-session';
+import { ApplicationStateService } from '@dsp-app/src/app/main/cache/application-state.service';
 
 @Component({
     selector: 'app-list-item',

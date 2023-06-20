@@ -23,7 +23,7 @@ import { NotificationService } from '@dsp-app/src/app/main/services/notification
 import {
     Session,
     SessionService,
-} from '@dsp-app/src/app/main/services/session.service';
+} from '@dasch-swiss/vre/shared/app-session';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { ApplicationStateService } from '../../main/cache/application-state.service';
 

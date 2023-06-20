@@ -33,8 +33,8 @@ import { ErrorHandlerService } from '../../../main/services/error-handler.servic
 import {
     Session,
     SessionService,
-} from '../../../main/services/session.service';
-import { ApplicationStateService } from '../../../main/cache/application-state.service';
+} from '@dasch-swiss/vre/shared/app-session';
+import { ApplicationStateService } from '@dsp-app/src/app/main/cache/application-state.service';
 
 export class ListNodeOperation {
     operation: 'create' | 'insert' | 'update' | 'delete' | 'reposition';

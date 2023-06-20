@@ -4,7 +4,7 @@ import { ApplicationStateService } from '../cache/application-state.service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ErrorHandlerService } from '../services/error-handler.service';
 import { DatadogRumService } from './datadog-rum.service';
-import { SessionService } from './session.service';
+import { SessionService } from '@dasch-swiss/vre/shared/app-session';
 
 @Injectable({
     providedIn: 'root',

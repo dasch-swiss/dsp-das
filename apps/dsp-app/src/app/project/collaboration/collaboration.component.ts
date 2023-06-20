@@ -15,7 +15,7 @@ import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handle
 import {
     Session,
     SessionService,
-} from '@dsp-app/src/app/main/services/session.service';
+} from '@dasch-swiss/vre/shared/app-session';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { AddUserComponent } from './add-user/add-user.component';
 import { ApplicationStateService } from '../../main/cache/application-state.service';
