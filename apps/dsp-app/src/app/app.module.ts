@@ -176,6 +176,8 @@ import {
     buildTagFactory,
     BuildTagToken,
 } from '@dasch-swiss/vre/shared/app-config';
+import { UnformattedTextValueComponent } from './workspace/resource/values/text-value/unformatted-text-value/unformatted-text-value.component';
+import { FormattedTextValueComponent } from './workspace/resource/values/text-value/formatted-text-value/formatted-text-value.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -330,6 +332,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         ProjectTileComponent,
         CommentFormComponent,
         DataModelsComponent,
+        UnformattedTextValueComponent,
+        FormattedTextValueComponent,
     ],
     imports: [
         AngularSplitModule,

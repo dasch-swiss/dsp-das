@@ -6,7 +6,7 @@
     ></span>
     <span class="rm-comment" *ngIf="shouldShowComment">{{
         commentFormControl.value
-    }}</span>
+        }}</span>
 </span>
 <ng-template #showForm>
     <span [formGroup]="form">
@@ -31,7 +31,7 @@
                 "
             >
                 <span class="custom-error-message"
-                    >New value must be different than the current value.</span
+                >New value must be different than the current value.</span
                 >
             </mat-error>
             <mat-error *ngIf="valueFormControl.hasError('required')">
@@ -39,7 +39,7 @@
             </mat-error>
             <mat-error *ngIf="valueFormControl.hasError('duplicateValue')">
                 <span class="custom-error-message"
-                    >This value already exists for this property. Duplicate
+                >This value already exists for this property. Duplicate
                     values are not allowed.</span
                 >
             </mat-error>

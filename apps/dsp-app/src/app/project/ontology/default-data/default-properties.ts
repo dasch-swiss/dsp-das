@@ -53,11 +53,39 @@ export class DefaultProperties {
             elements: [
                 {
                     icon: 'subject',
+                    label: 'Before: Simple Text',
+                    description: '',
+                    subPropOf: Constants.HasValue,
+                    objectType: Constants.TextValue,
+                    guiEle: Constants.GuiSimpleText,
+                    group: 'Text',
+                },
+                {
+                    icon: 'subject',
+                    label: 'Before: Text Area/ Paragraph',
+                    description: '',
+                    subPropOf: Constants.HasValue,
+                    objectType: Constants.TextValue,
+                    guiEle: Constants.GuiTextarea,
+                    group: 'Text',
+                },
+                {
+                    icon: 'line_style',
+                    label: 'Before: Rich text',
+                    description: '',
+                    subPropOf: Constants.HasValue,
+                    objectType: Constants.TextValue,
+                    guiEle: Constants.GuiRichText,
+                    group: 'Text',
+                },
+                {
+                    icon: 'subject',
                     label: 'Unformatted Text',
                     description:
                         'Text without formatting options (only line breaks are available)',
                     subPropOf: Constants.HasValue,
-                    objectType: Constants.TextValue,
+                    objectType: Constants.UnformattedTextValue,
+                    // should be eliminated soon
                     guiEle: Constants.GuiTextarea,
                     group: 'Text',
                 },
@@ -66,7 +94,8 @@ export class DefaultProperties {
                     label: 'Formatted Text',
                     description: 'Text in a rich text editor with formatting options e.g. italic, bold, etc.',
                     subPropOf: Constants.HasValue,
-                    objectType: Constants.TextValue,
+                    objectType: Constants.FormattedTextValue,
+                    // should be eliminated soon
                     guiEle: Constants.GuiRichText,
                     group: 'Text',
                 },
@@ -75,8 +104,8 @@ export class DefaultProperties {
                 //     label: 'Custom Formatted Text',
                 //     description: 'Like a Formatted Text but formatting options can be defined by yourself',
                 //     subPropOf: Constants.HasValue,
-                //     objectType: Constants.TextValue,
-                //     guiEle: Constants.GuiRichText,
+                //     objectType: Constants.CustomFormattedTextValue,
+                //     guiEle: Constants.GuiRichText, ???
                 //     group: 'Text',
                 // },
             ],

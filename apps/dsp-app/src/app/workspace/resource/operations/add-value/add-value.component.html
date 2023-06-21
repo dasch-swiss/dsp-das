@@ -5,7 +5,6 @@
                 #createVal
                 *ngSwitchCase="'ReadTextValueAsString'"
                 [mode]="mode"
-                [guiElement]="textValueGuiEle"
             ></app-text-value-as-string>
             <app-text-value-as-html
                 #createVal
@@ -17,6 +16,16 @@
                 *ngSwitchCase="'ReadTextValueAsXml'"
                 [mode]="mode"
             ></app-text-value-as-xml>
+            <app-unformatted-text-value
+                #createVal
+                *ngSwitchCase="constants.UnformattedTextValue"
+                [mode]="mode"
+            ></app-unformatted-text-value>
+<!--            <app-formatted-text-value-->
+<!--                #createVal-->
+<!--                *ngSwitchCase="constants.FormattedTextValue"-->
+<!--                [mode]="mode"-->
+<!--            ></app-formatted-text-value>-->
             <app-int-value
                 #createVal
                 *ngSwitchCase="constants.IntValue"

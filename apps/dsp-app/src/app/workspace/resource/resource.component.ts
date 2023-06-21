@@ -5,14 +5,12 @@ import {
     Input,
     OnChanges,
     OnDestroy,
-    SimpleChange,
     ViewChild,
 } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import {
     ActivatedRoute,
-    NavigationEnd,
     NavigationError,
     Router,
 } from '@angular/router';

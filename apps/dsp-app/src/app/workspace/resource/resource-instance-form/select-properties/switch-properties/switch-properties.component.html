@@ -6,7 +6,6 @@
         [valueRequiredValidator]="isRequiredProp"
         [parentForm]="parentForm"
         [formName]="formName"
-        [textArea]="textArea"
     ></app-text-value-as-string>
     <app-text-value-as-xml
         #createVal
@@ -16,6 +15,11 @@
         [parentForm]="parentForm"
         [formName]="formName"
     ></app-text-value-as-xml>
+    <app-unformatted-text-value
+        #createVal
+        *ngSwitchCase="constants.UnformattedTextValue"
+        [mode]="mode"
+    ></app-unformatted-text-value>
     <app-int-value
         #createVal
         *ngSwitchCase="constants.IntValue"
