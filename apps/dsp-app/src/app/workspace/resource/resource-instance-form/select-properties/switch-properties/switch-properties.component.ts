@@ -28,8 +28,6 @@ export class SwitchPropertiesComponent implements OnInit {
 
     mode = 'create';
 
-    textArea = false;
-
     constants = Constants;
 
     constructor() {}
@@ -38,12 +36,5 @@ export class SwitchPropertiesComponent implements OnInit {
         // the input isRequiredProp provided by KeyValuePair is stored as a number
         // a conversion from a number to a boolean is required by the input valueRequiredValidator
         this.isRequiredProp = !!+this.isRequiredProp;
-
-        if (
-            this.property.guiElement ===
-            Constants.SalsahGui + Constants.HashDelimiter + 'Textarea'
-        ) {
-            this.textArea = true;
-        }
     }
 }

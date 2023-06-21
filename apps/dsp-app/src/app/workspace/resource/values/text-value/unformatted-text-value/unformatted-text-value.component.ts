@@ -1,30 +1,23 @@
+import {Component, Inject, Input, OnChanges, OnDestroy, OnInit} from "@angular/core";
+import {BaseValueDirective} from "@dsp-app/src/app/main/directive/base-value.directive";
 import {
-    Component,
-    Inject,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-} from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import {
-    CreateTextValueAsString,
-    ReadTextValueAsString,
-    UpdateTextValueAsString,
-} from '@dasch-swiss/dsp-js';
-import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
-import { ValueErrorStateMatcher } from '../../value-error-state-matcher';
+    CreateUnformattedTextValue,
+    ReadUnformattedTextValue,
+    UpdateUnformattedTextValue,
+} from "@dasch-swiss/dsp-js";
+import {FormBuilder} from "@angular/forms";
+import {ValueErrorStateMatcher} from "@dsp-app/src/app/workspace/resource/values/value-error-state-matcher";
 
 @Component({
-    selector: 'app-text-value-as-string',
-    templateUrl: './text-value-as-string.component.html',
-    styleUrls: ['./text-value-as-string.component.scss'],
+    selector: 'app-unformatted-text-value',
+    templateUrl: './unformatted-text-value.component.html',
+    styleUrls: ['./unformatted-text-value.component.scss'],
 })
-export class TextValueAsStringComponent
+export class UnformattedTextValueComponent
     extends BaseValueDirective
     implements OnInit, OnChanges, OnDestroy
 {
-    @Input() displayValue?: ReadTextValueAsString;
+    @Input() displayValue: ReadUnformattedTextValue;
 
     matcher = new ValueErrorStateMatcher();
     customValidators = [];
@@ -55,12 +48,14 @@ export class TextValueAsStringComponent
         super.ngOnDestroy();
     }
 
-    getNewValue(): CreateTextValueAsString | false {
+    getNewValue(): CreateUnformattedTextValue | false {
         if (this.mode !== 'create' || !this.form.valid || this.isEmptyVal()) {
+            console.log("returning false");
             return false;
         }
 
-        const newTextValue = new CreateTextValueAsString();
+        const newTextValue = new CreateUnformattedTextValue();
+
 
         newTextValue.text = this.valueFormControl.value;
 
@@ -71,15 +66,16 @@ export class TextValueAsStringComponent
             newTextValue.valueHasComment = this.commentFormControl.value;
         }
 
+        console.log(newTextValue);
         return newTextValue;
     }
 
-    getUpdatedValue(): UpdateTextValueAsString | false {
+    getUpdatedValue(): UpdateUnformattedTextValue | false {
         if (this.mode !== 'update' || !this.form.valid) {
             return false;
         }
 
-        const updatedTextValue = new UpdateTextValueAsString();
+        const updatedTextValue = new UpdateUnformattedTextValue();
 
         updatedTextValue.id = this.displayValue.id;
 
