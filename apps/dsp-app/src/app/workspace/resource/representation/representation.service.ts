@@ -58,20 +58,6 @@ export class RepresentationService {
     }
 
     /**
-     * return the jwt token from the session to authenticate
-     * @return the token
-     */
-    public getTokenFromLocalStorage(): string {
-        let token: string;
-        const session = localStorage.getItem('session');
-        if (session) {
-            const s = JSON.parse(session);
-            token = s.user.jwt;
-        }
-        return token;
-    }
-
-    /**
      * downloads the file
      * @param url url of the file
      * @param imageFilename optional parameter if the file is an image because the url structure differs from other file types
