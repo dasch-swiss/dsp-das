@@ -43,7 +43,7 @@ export class RepresentationService {
      * @returns an object containing the knora.json file for the given file url
      */
     getFileInfo(url: string, imageFilename?: string): Observable<unknown> {
-        const token = this.getTokenFromLocalStorage();
+        const token = this._getTokenFromLocalStorage();
         const headersConfig: { [header: string]: string } = {
             'Content-Type': 'application/json',
         };
@@ -118,7 +118,7 @@ export class RepresentationService {
      * return the jwt token from the session to authenticate
      * @return the token
      */
-    private getTokenFromLocalStorage(): string {
+    private _getTokenFromLocalStorage(): string {
         let token: string;
         const session = localStorage.getItem('session');
         if (session) {
