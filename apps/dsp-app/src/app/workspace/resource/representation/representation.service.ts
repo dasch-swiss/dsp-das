@@ -19,8 +19,9 @@ export class RepresentationService {
      * @param imageFilename optional parameter if the file is an image because the url structure differs from other file types
      * @returns an object containing the knora.json file for the given file url
      */
-    getFileInfo(url: string, imageFilename?: string): Observable<object> {
-        const token = this.getTokenFromLocalStorage();
+    getFileInfo(url: string, imageFilename?: string): Observable<unknown> {
+        const token = this._getTokenFromLocalStorage();
+
         const headersConfig: { [header: string]: string } = {
             'Content-Type': 'application/json',
         };
@@ -104,5 +105,19 @@ export class RepresentationService {
         } catch (e) {
             this._errorHandler.showMessage(e);
         }
+    }
+
+    /**
+     * return the jwt token from the session to authenticate
+     * @return the token
+     */
+    private _getTokenFromLocalStorage(): string {
+        let token: string;
+        const session = localStorage.getItem('session');
+        if (session) {
+            const s = JSON.parse(session);
+            token = s.user.jwt;
+        }
+        return token;
     }
 }
