@@ -363,21 +363,12 @@ a,
       position: absolute;
       left: 0;
     }
-    /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
-    .mat-list-text {
-      position: relative;
-      left: 48px;
-    }
   }
 }
 
 .mat-mdc-list.without-padding {
   .mat-mdc-list-item {
     padding: 0 !important;
-    /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
-    .mat-list-item-content {
-      padding: 0 !important;
-    }
   }
 }
 
