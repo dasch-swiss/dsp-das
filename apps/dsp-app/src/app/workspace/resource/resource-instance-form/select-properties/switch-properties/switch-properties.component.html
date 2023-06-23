@@ -20,6 +20,14 @@
         *ngSwitchCase="constants.UnformattedTextValue"
         [mode]="mode"
     ></app-unformatted-text-value>
+    <app-formatted-text-value
+        #createVal
+        *ngSwitchCase="constants.FormattedTextValue"
+        [mode]="mode"
+        [valueRequiredValidator]="isRequiredProp"
+        [parentForm]="parentForm"
+        [formName]="formName"
+    ></app-formatted-text-value>
     <app-int-value
         #createVal
         *ngSwitchCase="constants.IntValue"
