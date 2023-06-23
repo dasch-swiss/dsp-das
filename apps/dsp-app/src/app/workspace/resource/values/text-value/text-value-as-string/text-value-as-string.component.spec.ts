@@ -186,7 +186,7 @@ describe('TextValueAsStringComponent', () => {
             testHostFixture.detectChanges();
 
             valueInputDebugElement = valueComponentDe.query(
-                By.css('input.value')
+                By.css('textarea.value')
             );
             valueInputNativeElement = valueInputDebugElement.nativeElement;
 
@@ -228,7 +228,7 @@ describe('TextValueAsStringComponent', () => {
             testHostFixture.detectChanges();
 
             valueInputDebugElement = valueComponentDe.query(
-                By.css('input.value')
+                By.css('textarea.value')
             );
             valueInputNativeElement = valueInputDebugElement.nativeElement;
 
@@ -264,7 +264,7 @@ describe('TextValueAsStringComponent', () => {
             testHostFixture.detectChanges();
 
             valueInputDebugElement = valueComponentDe.query(
-                By.css('input.value')
+                By.css('textarea.value')
             );
             valueInputNativeElement = valueInputDebugElement.nativeElement;
 
@@ -369,7 +369,7 @@ describe('TextValueAsStringComponent', () => {
             testHostFixture.detectChanges();
 
             valueInputDebugElement = valueComponentDe.query(
-                By.css('input.value')
+                By.css('textarea.value')
             );
             valueInputNativeElement = valueInputDebugElement.nativeElement;
 
@@ -419,7 +419,7 @@ describe('TextValueAsStringComponent', () => {
             testHostFixture.detectChanges();
 
             valueInputDebugElement = valueComponentDe.query(
-                By.css('input.value')
+                By.css('textarea.value')
             );
             valueInputNativeElement = valueInputDebugElement.nativeElement;
 
@@ -459,7 +459,7 @@ describe('TextValueAsStringComponent', () => {
             testHostFixture.detectChanges();
 
             valueInputDebugElement = valueComponentDe.query(
-                By.css('input.value')
+                By.css('textarea.value')
             );
             valueInputNativeElement = valueInputDebugElement.nativeElement;
 
@@ -554,7 +554,7 @@ describe('TextValueAsStringComponent', () => {
                 By.directive(TextValueAsStringComponent)
             );
             valueInputDebugElement = valueComponentDe.query(
-                By.css('input.value')
+                By.css('textarea.value')
             );
             valueInputNativeElement = valueInputDebugElement.nativeElement;
 

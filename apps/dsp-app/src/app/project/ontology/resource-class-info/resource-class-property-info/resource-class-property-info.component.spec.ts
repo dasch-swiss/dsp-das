@@ -51,7 +51,7 @@ import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
     template:
         '<app-resource-class-property-info #propertyInfo [propCard]="propertyCardinality" [propDef]="propertyDefinition"></app-resource-class-property-info>',
 })
-class SimpleTextHostComponent {
+class UnformattedTextHostComponent {
     @ViewChild('propertyInfo')
     propertyInfoComponent: ResourceClassPropertyInfoComponent;
 
@@ -67,8 +67,8 @@ class SimpleTextHostComponent {
         subPropertyOf: ['http://api.knora.org/ontology/knora-api/v2#hasValue'],
         comment: 'Beschreibt einen Namen',
         label: 'Name',
-        guiElement: 'http://api.knora.org/ontology/salsah-gui/v2#SimpleText',
-        objectType: 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+        // guiElement: 'http://api.knora.org/ontology/salsah-gui/v2#SimpleText',
+        objectType: 'http://api.knora.org/ontology/knora-api/v2#UnformattedTextValue',
         isLinkProperty: false,
         isLinkValueProperty: false,
         isEditable: true,
@@ -203,8 +203,8 @@ class ListHostComponent {
 }
 
 describe('ResourceClassPropertyInfoComponent', () => {
-    let simpleTextHostComponent: SimpleTextHostComponent;
-    let simpleTextHostFixture: ComponentFixture<SimpleTextHostComponent>;
+    let unformattedTextHostComponent: UnformattedTextHostComponent;
+    let unformattedTextHostFixture: ComponentFixture<UnformattedTextHostComponent>;
 
     let linkHostComponent: LinkHostComponent;
     let linkHostFixture: ComponentFixture<LinkHostComponent>;
@@ -235,7 +235,7 @@ describe('ResourceClassPropertyInfoComponent', () => {
                 DialogHeaderComponent,
                 LinkHostComponent,
                 ListHostComponent,
-                SimpleTextHostComponent,
+                UnformattedTextHostComponent,
                 SplitPipe,
                 ResourceClassPropertyInfoComponent,
                 MockNgxSkeletonLoaderComponent
@@ -306,17 +306,17 @@ describe('ResourceClassPropertyInfoComponent', () => {
             return of(response);
         });
 
-        simpleTextHostFixture = TestBed.createComponent(
-            SimpleTextHostComponent
+        unformattedTextHostFixture = TestBed.createComponent(
+            UnformattedTextHostComponent
         );
-        simpleTextHostComponent = simpleTextHostFixture.componentInstance;
-        simpleTextHostFixture.detectChanges();
+        unformattedTextHostComponent = unformattedTextHostFixture.componentInstance;
+        unformattedTextHostFixture.detectChanges();
 
-        expect(simpleTextHostComponent).toBeTruthy();
+        expect(unformattedTextHostComponent).toBeTruthy();
 
         overlayContainer = TestBed.inject(OverlayContainer);
         rootLoader = TestbedHarnessEnvironment.documentRootLoader(
-            simpleTextHostFixture
+            unformattedTextHostFixture
         );
 
         linkHostFixture = TestBed.createComponent(LinkHostComponent);
@@ -411,19 +411,19 @@ describe('ResourceClassPropertyInfoComponent', () => {
     });
 
     it('should create an instance', () => {
-        expect(simpleTextHostComponent.propertyInfoComponent).toBeTruthy();
+        expect(unformattedTextHostComponent.propertyInfoComponent).toBeTruthy();
     });
 
     it('expect cardinality 0 = only one but required value (1)', () => {
-        expect(simpleTextHostComponent.propertyInfoComponent).toBeTruthy();
+        expect(unformattedTextHostComponent.propertyInfoComponent).toBeTruthy();
         expect(
-            simpleTextHostComponent.propertyInfoComponent.propCard
+            unformattedTextHostComponent.propertyInfoComponent.propCard
         ).toBeDefined();
         expect(
-            simpleTextHostComponent.propertyInfoComponent.propCard.cardinality
+            unformattedTextHostComponent.propertyInfoComponent.propCard.cardinality
         ).toBe(0);
 
-        const hostCompDe = simpleTextHostFixture.debugElement;
+        const hostCompDe = unformattedTextHostFixture.debugElement;
 
         const multipleToggle: DebugElement = hostCompDe.query(
             By.css('mat-slide-toggle[data-name="multiple"]')
@@ -445,21 +445,18 @@ describe('ResourceClassPropertyInfoComponent', () => {
         expect(isChecked(requiredToggle)).toEqual(true);
     });
 
-    it('expect property type "text" and gui element "simple input"', () => {
-        expect(simpleTextHostComponent.propertyInfoComponent).toBeTruthy();
+    it('expect property type "unformatted text"', () => {
+        expect(unformattedTextHostComponent.propertyInfoComponent).toBeTruthy();
         expect(
-            simpleTextHostComponent.propertyInfoComponent.propDef
+            unformattedTextHostComponent.propertyInfoComponent.propDef
         ).toBeDefined();
-        expect(
-            simpleTextHostComponent.propertyInfoComponent.propDef.guiElement
-        ).toBe(Constants.SalsahGui + Constants.HashDelimiter + 'SimpleText');
 
-        const hostCompDe = simpleTextHostFixture.debugElement;
+        const hostCompDe = unformattedTextHostFixture.debugElement;
 
         const typeIcon: DebugElement = hostCompDe.query(By.css('.type'));
 
-        // property type and gui element should be Text: simple Text
-        expect(typeIcon.nativeElement.innerText).toEqual('short_text');
+        // property type should be Unformatted Text
+        expect(typeIcon.nativeElement.innerText).toEqual('subject');
     });
 
     it('expect property type "link" and gui element "search box"', () => {
