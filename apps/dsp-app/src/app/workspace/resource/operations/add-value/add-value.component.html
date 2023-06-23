@@ -21,11 +21,11 @@
                 *ngSwitchCase="constants.UnformattedTextValue"
                 [mode]="mode"
             ></app-unformatted-text-value>
-<!--            <app-formatted-text-value-->
-<!--                #createVal-->
-<!--                *ngSwitchCase="constants.FormattedTextValue"-->
-<!--                [mode]="mode"-->
-<!--            ></app-formatted-text-value>-->
+            <app-formatted-text-value
+                #createVal
+                *ngSwitchCase="constants.FormattedTextValue"
+                [mode]="mode"
+            ></app-formatted-text-value>
             <app-int-value
                 #createVal
                 *ngSwitchCase="constants.IntValue"

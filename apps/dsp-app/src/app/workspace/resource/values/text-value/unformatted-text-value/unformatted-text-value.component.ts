@@ -50,7 +50,6 @@ export class UnformattedTextValueComponent
 
     getNewValue(): CreateUnformattedTextValue | false {
         if (this.mode !== 'create' || !this.form.valid || this.isEmptyVal()) {
-            console.log("returning false");
             return false;
         }
 
