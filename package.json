@@ -41,6 +41,7 @@
     "@dasch-swiss/dsp-js": "^8.2.5",
     "@datadog/browser-logs": "^4.42.2",
     "@datadog/browser-rum": "^4.42.2",
+    "@material/snackbar": "^15.0.0-canary.684e33d25.0",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "7.0.0",
     "@nx/angular": "16.2.2",
