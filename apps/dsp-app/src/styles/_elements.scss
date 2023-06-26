@@ -306,7 +306,7 @@ a,
     }
 
     &.overlay {
-      background: #292929;
+      background: $dark;
     }
 
     &.vertical {
@@ -346,7 +346,7 @@ a,
 // file representation menu styling
 .representation-menu {
   &.mdc-menu-surface {
-    @include menu-surface.fill-color(#292929);
+    @include menu-surface.fill-color($dark);
     @include menu-surface.ink-color($white);
   }
 }
