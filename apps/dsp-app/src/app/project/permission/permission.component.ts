@@ -104,7 +104,7 @@ export class PermissionComponent implements OnInit {
         // referesh the component
         this.loading = true;
         // update the application state
-        this._applicationStateService.del('members_of_' + this.projectUuid);
+        this._applicationStateService.delete('members_of_' + this.projectUuid);
 
         this.initList();
 

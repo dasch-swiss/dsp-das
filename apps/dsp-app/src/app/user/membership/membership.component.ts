@@ -165,7 +165,7 @@ export class MembershipComponent implements OnInit {
                 (response: ApiResponseData<UserResponse>) => {
                     this.user = response.body.user;
                     // set new user state
-                    this._applicationStateService.del(this.username);
+                    this._applicationStateService.delete(this.username);
                     this._applicationStateService.set(
                         this.username,
                         this.user
@@ -190,7 +190,7 @@ export class MembershipComponent implements OnInit {
                 (response: ApiResponseData<UserResponse>) => {
                     this.user = response.body.user;
                     // set new user state
-                    this._applicationStateService.del(this.username);
+                    this._applicationStateService.delete(this.username);
                     this._applicationStateService.set(
                         this.username,
                         this.user

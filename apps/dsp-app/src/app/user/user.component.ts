@@ -51,7 +51,7 @@ export class UserComponent implements OnInit {
     initContent() {
         this.loading = true;
 
-        this._applicationStateService.del(this.session.user.name);
+        this._applicationStateService.delete(this.session.user.name);
 
         // update session
         this._session.setSession(

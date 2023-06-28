@@ -568,7 +568,7 @@ export class ProjectFormComponent implements OnInit {
         // refresh the component
         this.loading = true;
         // update the application state
-        this._applicationStateService.del(this._projectService.iriToUuid(this.projectIri));
+        this._applicationStateService.delete(this._projectService.iriToUuid(this.projectIri));
         this._dspApiConnection.admin.projectsEndpoint
             .getProjectByIri(this.projectIri)
             .subscribe(

@@ -439,7 +439,7 @@ export class UserFormComponent implements OnInit, OnChanges {
                         this.buildForm(this.user);
 
                         // update application state: users list
-                        this._applicationStateService.del('allUsers');
+                        this._applicationStateService.delete('allUsers');
 
                         this._dspApiConnection.admin.usersEndpoint.getUsers().subscribe(
                             (response: ApiResponseData<UsersResponse>) => this._applicationStateService.set('allUsers', response.body.users)

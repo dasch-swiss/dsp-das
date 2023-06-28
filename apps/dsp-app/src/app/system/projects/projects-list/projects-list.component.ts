@@ -204,7 +204,7 @@ export class ProjectsListComponent implements OnInit {
                 () => {
                     this.refreshParent.emit();
                     // update project state
-                    this._applicationStateService.del(uuid);
+                    this._applicationStateService.delete(uuid);
 
                     this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(id).subscribe(
                         (response: ApiResponseData<ProjectResponse>) => this._applicationStateService.set(uuid, response.body.project)
@@ -230,7 +230,7 @@ export class ProjectsListComponent implements OnInit {
                 () => {
                     this.refreshParent.emit();
                     // update project state
-                    this._applicationStateService.del(uuid);
+                    this._applicationStateService.delete(uuid);
 
                     this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(id).subscribe(
                         (response: ApiResponseData<ProjectResponse>) => this._applicationStateService.set(uuid, response.body.project)
