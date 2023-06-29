@@ -1,9 +1,9 @@
 /* eslint-disable */
 export default {
-    displayName: 'vre-shared-app-log',
+    displayName: 'vre-shared-app-logging',
     preset: '../../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-    coverageDirectory: '../../../../coverage/libs/vre/shared/app-log',
+    coverageDirectory: '../../../../coverage/libs/vre/shared/app-logging',
     transform: {
         '^.+\\.(ts|mjs|js|html)$': [
             'jest-preset-angular',
