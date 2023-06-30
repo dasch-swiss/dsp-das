@@ -24,12 +24,18 @@
   font-family: 'Courier New', Courier, monospace;
 }
 
-.form-content {
+.app-form-content {
   margin: 24px auto;
   width: 472px;
 
   // TODO: css class to move in the main stylesheet in assets/style
   .large-field {
     min-width: 472px;
+  }
+
+  .app-form-action {
+    position: static;
+    width: 100%;
+    display: inline-flex;
   }
 }

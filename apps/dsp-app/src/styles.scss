@@ -72,8 +72,17 @@ body {
 
 // The following styles will override material design!
 
-.mat-mdc-text-field-wrapper {
-  background-color: transparent !important;
+// mat-form-field overrides
+.mdc-text-field--filled:not(.mdc-text-field--disabled){
+  background-color: transparent;
+}
+
+.mat-mdc-form-field-focus-overlay {
+  background-color: whitesmoke;
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-form-field-focus-overlay {
+  opacity: 1;
 }
 
 // jdnconvertiblecalendar main style
