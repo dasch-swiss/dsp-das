@@ -16,12 +16,11 @@ import {
 import { HealthEndpointSystem, MockHealth } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { DialogComponent } from '../dialog/dialog.component';
-import { ErrorHandlerService } from './error-handler.service';
+import { AppErrorHandler } from './app-error-handler';
 
-describe('ErrorHandlerService', () => {
+describe('AppErrorHandler', () => {
     let httpTestingController: HttpTestingController;
-    let service: ErrorHandlerService;
+    let service: AppErrorHandler;
 
     let dialog: MatDialog;
 
@@ -56,7 +55,7 @@ describe('ErrorHandlerService', () => {
                 },
             ],
         });
-        service = TestBed.inject(ErrorHandlerService);
+        service = TestBed.inject(AppErrorHandler);
 
         httpTestingController = TestBed.inject(HttpTestingController);
 
