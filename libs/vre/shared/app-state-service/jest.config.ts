@@ -1,9 +1,9 @@
 /* eslint-disable */
 export default {
-    displayName: 'vre-shared-app-logging',
+    displayName: 'app-state-service',
     preset: '../../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-    coverageDirectory: '../../../../coverage/libs/vre/shared/app-logging',
+    coverageDirectory: '../../../../coverage/libs/vre/shared/app-state-service',
     transform: {
         '^.+\\.(ts|mjs|js|html)$': [
             'jest-preset-angular',
@@ -13,7 +13,6 @@ export default {
             },
         ],
     },
-    // fix: SyntaxError: Unexpected token 'export' of js-lib
     transformIgnorePatterns: ['node_modules/(?!@angular|@dasch-swiss)'],
     snapshotSerializers: [
         'jest-preset-angular/build/serializers/no-ng-attributes',
