@@ -5,6 +5,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ErrorHandlerService } from '../services/error-handler.service';
 import { DatadogRumService } from './datadog-rum.service';
 import { SessionService } from '@dasch-swiss/vre/shared/app-session';
+import {Router} from "@angular/router";
 
 @Injectable({
     providedIn: 'root',
@@ -16,7 +17,8 @@ export class AuthenticationService {
         private _applicationStateService: ApplicationStateService,
         private _datadogRumService: DatadogRumService,
         private _errorHandler: ErrorHandlerService,
-        private _session: SessionService
+        private _session: SessionService,
+        private _router: Router
     ) {}
 
     /**
@@ -31,8 +33,11 @@ export class AuthenticationService {
                 // destroy application state
                 this._applicationStateService.destroy();
 
-                // reload the page
-                window.location.reload();
+                // redirect to home and reload that page
+                this._router.navigate([''])
+                    .then(() => {
+                        window.location.reload();
+                    });
 
                 // remove active datadog user
                 this._datadogRumService.removeActiveUser();
