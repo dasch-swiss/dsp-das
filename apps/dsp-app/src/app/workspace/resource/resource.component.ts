@@ -311,7 +311,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
         this.representationsToDisplay =
             this.collectRepresentationsAndAnnotations(resource);
-            // .warn(this.representationsToDisplay )
         if (!this.representationsToDisplay.length && !this.compoundPosition) {
             // the resource could be a compound object
             if (this.stillImageRepresentationsForCompoundResourceSub) {
