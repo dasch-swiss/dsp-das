@@ -450,7 +450,7 @@ describe('PropertiesComponent', () => {
 
             expect(testHostComponent).toBeTruthy();
 
-            testHostComponent.propertiesComponent.addButtonIsVisible = true;
+            testHostComponent.propertiesComponent.userCanEdit = true;
             testHostComponent.propertiesComponent.addValueFormIsVisible = false;
             testHostFixture.detectChanges();
         });
