@@ -3,7 +3,7 @@
  *  SPDX-License-Identifier: Apache-2.0
  */
 
-import { ErrorHandler, inject, Inject, Injectable } from '@angular/core';
+import { ErrorHandler, inject, Injectable } from '@angular/core';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
@@ -13,25 +13,23 @@ import {
     KnoraApiConnection,
 } from '@dasch-swiss/dsp-js';
 import { HttpStatusMsg } from '@dasch-swiss/vre/shared/assets/status-msg';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { AjaxError } from 'rxjs/ajax';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AppErrorHandler implements ErrorHandler {
-    constructor(
-        @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
-        private _notification: NotificationService,
-        private _session: SessionService,
-        private _statusMsg: HttpStatusMsg
-    ) {}
+    logger: AppLoggingService = inject(AppLoggingService);
+    dspApiConnection: KnoraApiConnection = inject(DspApiConnectionToken);
+    notificationService: NotificationService = inject(NotificationService);
+    sessionService: SessionService = inject(SessionService);
+    httpStatusMsg: HttpStatusMsg = inject(HttpStatusMsg);
 
-    logger = inject(AppLoggingService);
     /**
      * Logs out the error using the logging service.
      * @param error the error to log.
@@ -54,11 +52,14 @@ export class AppErrorHandler implements ErrorHandler {
 
     showMessage(error: ApiResponseError) {
         // in case of (internal) server error
-        const apiServerError = error.error && ! (error.error instanceof AjaxError && error.error['response']);
+        const apiServerError =
+            error.error &&
+            !(error.error instanceof AjaxError && error.error['response']);
 
-        const apiResponseMessage = (error.error instanceof AjaxError && error.error['response'])
-            ? error.error['response'].error
-            : undefined;
+        const apiResponseMessage =
+            error.error instanceof AjaxError && error.error['response']
+                ? error.error['response'].error
+                : undefined;
 
         if (
             ((error.status > 499 && error.status < 600) || apiServerError) &&
@@ -67,8 +68,12 @@ export class AppErrorHandler implements ErrorHandler {
             let status = apiServerError ? 503 : error.status;
 
             // check if the api is healthy:
-            (this._dspApiConnection.system.healthEndpoint
-                .getHealthStatus() as Observable<ApiResponseData<HealthResponse>>)
+            (
+                this.dspApiConnection.system.healthEndpoint.getHealthStatus() as Observable<
+                    ApiResponseData<HealthResponse>
+                >
+            )
+                .pipe(take(1))
                 .subscribe(
                     (response: ApiResponseData<HealthResponse>) => {
                         if (!response.body.status) {
@@ -80,64 +85,80 @@ export class AppErrorHandler implements ErrorHandler {
                             };
                             status = 500;
                             error = healthError;
-                            throw new Error(
+                            this.logger.error(
                                 `ERROR ${status}: Server side error — dsp-api is not healthy`
                             );
                         } else {
-                            throw new Error(
+                            this.logger.error(
                                 `ERROR ${status}: Server side error — dsp-api not responding`
                             );
                         }
                     },
                     (healthError: ApiResponseError) => {
+                        this.logger.error(
+                            `ERROR ${status}: Server side error — dsp-api not responding`,
+                            healthError
+                        );
                         error = healthError;
                     }
                 );
 
             error.status = status;
-            this._notification.openSnackBar(error);
+            this.notificationService.openSnackBar(error);
         } else if (error.status === 401 && typeof error.error !== 'string') {
             // logout if error status is a 401 error and comes from a DSP-JS request
-            this._dspApiConnection.v2.auth.logout().subscribe(
+            this.dspApiConnection.v2.auth.logout().subscribe(
                 () => {
                     // destroy session
-                    this._session.destroySession();
+                    this.sessionService.destroySession();
 
                     // reload the page
                     window.location.reload();
                 },
                 (logoutError: ApiResponseError) => {
-                    this._notification.openSnackBar(logoutError);
-                    if (logoutError.error instanceof AjaxError){
-                        throw new Error(logoutError.error['message']);
+                    this.notificationService.openSnackBar(logoutError);
+                    if (logoutError.error instanceof AjaxError) {
+                        this.logger.error(
+                            `Logout ajax error`,
+                            {},
+                            new Error(logoutError.error['message'])
+                        );
                     } else {
-                        throw new Error(logoutError.error);
+                        this.logger.error(
+                            `Logout other error`,
+                            {},
+                            new Error(logoutError.error)
+                        );
                     }
-                    
                 }
             );
         } else {
             // open snack bar in any other case
-            this._notification.openSnackBar(error);
+            this.notificationService.openSnackBar(error);
             // log error to Rollbar (done automatically by simply throwing a new Error)
             if (error instanceof ApiResponseError) {
                 if (
-                    error.error && error.error instanceof AjaxError &&
+                    error.error &&
+                    error.error instanceof AjaxError &&
                     !error.error['message'].startsWith('ajax error')
                 ) {
                     // the Api response error contains a complex error message from dsp-js-lib
-                    throw new Error(error.error['message']);
+                    this.logger.error(
+                        `Api response error`,
+                        {},
+                        new Error(error.error['message'])
+                    );
                 } else {
-                    const defaultStatusMsg = this._statusMsg.default;
+                    const defaultStatusMsg = this.httpStatusMsg.default;
                     const message = `${
                         defaultStatusMsg[error.status].message
                     } (${error.status}): ${
                         defaultStatusMsg[error.status].description
                     }`;
-                    throw new Error(message);
+                    this.logger.error(`Error`, {}, new Error(message));
                 }
             } else {
-                throw new Error(error);
+                this.logger.error(`Error`, {}, new Error(error));
             }
         }
     }

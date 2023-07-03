@@ -13,29 +13,26 @@ import {
     BrowserAnimationsModule,
     NoopAnimationsModule,
 } from '@angular/platform-browser/animations';
-import { HealthEndpointSystem, MockHealth } from '@dasch-swiss/dsp-js';
+import {
+    ApiResponseError,
+    HealthEndpointSystem,
+    KnoraApiConnection,
+    MockHealth,
+} from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from './app-error-handler';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { MockProvider, MockService } from 'ng-mocks';
+import { createSpyFromClass, Spy } from 'jest-auto-spies';
+import { SystemEndpoint } from '@dasch-swiss/dsp-js/src/api/system/system-endpoint';
 
 describe('AppErrorHandler', () => {
     let httpTestingController: HttpTestingController;
     let service: AppErrorHandler;
-
-    let dialog: MatDialog;
+    let dspConnSpy: KnoraApiConnection;
 
     beforeEach(() => {
-        const apiEndpointSpyObj = {
-            v2: {
-                auth: jasmine.createSpyObj('auth', ['logout']),
-            },
-            system: {
-                healthEndpoint: jasmine.createSpyObj('healthEndpoint', [
-                    'getHealthStatus',
-                ]),
-            },
-        };
-
         TestBed.configureTestingModule({
             imports: [
                 BrowserAnimationsModule,
@@ -45,30 +42,30 @@ describe('AppErrorHandler', () => {
                 NoopAnimationsModule,
             ],
             providers: [
+                MockProvider(AppLoggingService),
                 {
                     provide: MatDialog,
                     useValue: { open: () => of({ id: 1 }) },
                 },
-                {
-                    provide: DspApiConnectionToken,
-                    useValue: apiEndpointSpyObj,
-                },
+                MockProvider(
+                    DspApiConnectionToken,
+                    MockService(KnoraApiConnection)
+                ),
             ],
         });
         service = TestBed.inject(AppErrorHandler);
 
         httpTestingController = TestBed.inject(HttpTestingController);
 
-        const dspConnSpy = TestBed.inject(DspApiConnectionToken);
-        (
-            dspConnSpy.system
-                .healthEndpoint as jasmine.SpyObj<HealthEndpointSystem>
-        ).getHealthStatus.and.callFake(() => {
-            const health = MockHealth.mockRunning();
-            return of(health);
-        });
+        dspConnSpy = TestBed.inject(DspApiConnectionToken);
 
-        dialog = TestBed.inject(MatDialog);
+        // (
+        //     dspConnSpy.system
+        //         .healthEndpoint as jasmine.SpyObj<HealthEndpointSystem>
+        // ).getHealthStatus.and.callFake(() => {
+        //     const health = MockHealth.mockRunning();
+        //     return of(health);
+        // });
     });
 
     afterEach(() => {
@@ -79,15 +76,10 @@ describe('AppErrorHandler', () => {
         expect(service).toBeTruthy();
     });
 
-    xit('api is not healthy: should return 503 server error', () => {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const error = require('../../../assets/test-data/api-error-0.json');
-
-        service.showMessage(error);
-
-        spyOn(dialog, 'open').and.returnValue({
-            afterClosed: () => of({ id: 1 }),
-        } as MatDialogRef<typeof DialogComponent>);
-        expect(dialog).toBeDefined();
+    // https://www.beyondjava.net/jest-mocking-an-angular-service
+    it('api is not healthy: should log 503 server error', () => {
+        dspConnSpy.system.healthEndpoint.getHealthStatus() = jest.fn(() => {});
+        service.showMessage(<ApiResponseError>{ error: 'gaga' });
+        expect(dspConnSpy).toHaveBeenCalled();
     });
 });
