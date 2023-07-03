@@ -321,7 +321,8 @@ export class ResourceComponent implements OnChanges, OnDestroy {
                     resource.res.id,
                     0,
                     true
-                ).subscribe(
+                )
+                .subscribe(
                     (countQuery: CountQueryResponse) => {
                         if (countQuery.numberOfResults > 0) {
                             this.compoundPosition = new DspCompoundPosition(
@@ -679,7 +680,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         }
 
         // request incoming regions --> TODO: add case to get incoming sequences in case of video and audio
-        if (resource.res.properties[Constants.HasStillImageFileValue] && !this.compoundPosition) {
+        if (resource.res.properties[Constants.HasStillImageFileValue]) {
             // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
             // the resource is a StillImageRepresentation, check if there are regions pointing to it
 
