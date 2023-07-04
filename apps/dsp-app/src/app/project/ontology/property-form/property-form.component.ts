@@ -302,11 +302,6 @@ export class PropertyFormComponent implements OnInit {
                 // in case e.g. richtext can't be changed to simple text, then we shouldn't list the simple text item
                 const slice = 0;
 
-                // there's only the object type "text", where we can change the gui element;
-                disablePropType =
-                    this.propertyInfo.propType.objectType !==
-                    Constants.TextValue;
-
                 this.restrictedPropertyTypes[0].elements =
                     restrictedElements.slice(slice);
             } else {
@@ -621,22 +616,7 @@ export class PropertyFormComponent implements OnInit {
                                     this.lastModificationDate =
                                         propertyCommentResponse.lastModificationDate;
 
-                                    // if property type is supported and is of type TextValue and the guiElement is different from its initial value, call replaceGuiElement() to update the guiElement
-                                    // this only works for the TextValue object type currently
-                                    // https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/ontology-information/#changing-the-gui-element-and-gui-attributes-of-a-property
-                                    if (
-                                        !this.unsupportedPropertyType &&
-                                        this.propertyInfo.propDef.objectType ===
-                                            Constants.TextValue &&
-                                        this.propertyInfo.propDef.guiElement !==
-                                            this.propertyForm.controls[
-                                                'propType'
-                                            ].value.guiEle
-                                    ) {
-                                        this.replaceGuiElement();
-                                    } else {
-                                        this.onSuccess();
-                                    }
+                                    this.onSuccess();
                                 },
                                 (error: ApiResponseError) => {
                                     this.onError(error);
@@ -662,22 +642,7 @@ export class PropertyFormComponent implements OnInit {
                                     this.lastModificationDate =
                                         deleteCommentResponse.lastModificationDate;
 
-                                    // if property type is supported and is of type TextValue and the guiElement is different from its initial value, call replaceGuiElement() to update the guiElement
-                                    // this only works for the TextValue object type currently
-                                    // https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/ontology-information/#changing-the-gui-element-and-gui-attributes-of-a-property
-                                    if (
-                                        !this.unsupportedPropertyType &&
-                                        this.propertyInfo.propDef.objectType ===
-                                            Constants.TextValue &&
-                                        this.propertyInfo.propDef.guiElement !==
-                                            this.propertyForm.controls[
-                                                'propType'
-                                            ].value.guiEle
-                                    ) {
-                                        this.replaceGuiElement();
-                                    } else {
-                                        this.onSuccess();
-                                    }
+                                    this.onSuccess();
                                 },
                                 (error: ApiResponseError) => {
                                     this.onError(error);

@@ -28,7 +28,7 @@ import {
     ReadProject,
     ReadResource,
     ReadResourceSequence,
-    ReadTextValueAsXml,
+    ReadFormattedTextValue,
     ReadUser,
     ReadValue,
     ResourcePropertyDefinition,
@@ -524,7 +524,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                     propInfoValue.values.push(valueToAdd); // push new value to array
                 });
 
-            if (valueToAdd instanceof ReadTextValueAsXml) {
+            if (valueToAdd instanceof ReadFormattedTextValue) {
                 this._updateStandoffLinkValue();
             }
         } else {
@@ -560,7 +560,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                         }
                     });
                 });
-            if (updatedValue instanceof ReadTextValueAsXml) {
+            if (updatedValue instanceof ReadFormattedTextValue) {
                 this._updateStandoffLinkValue();
             }
             // if annotations tab is active;
@@ -609,7 +609,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                             // find the value that was deleted using the id
                             filteredpropInfoValueArray.values.splice(index, 1); // remove the value from the values array
 
-                            if (val instanceof ReadTextValueAsXml) {
+                            if (val instanceof ReadFormattedTextValue) {
                                 this._updateStandoffLinkValue();
                             }
                         }

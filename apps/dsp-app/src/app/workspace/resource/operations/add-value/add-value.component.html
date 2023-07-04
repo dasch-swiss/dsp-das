@@ -1,21 +1,6 @@
 <div class="grid-container">
     <div class="value-component">
         <span [ngSwitch]="resourcePropertyDefinition.objectType">
-            <app-text-value-as-string
-                #createVal
-                *ngSwitchCase="'ReadTextValueAsString'"
-                [mode]="mode"
-            ></app-text-value-as-string>
-            <app-text-value-as-html
-                #createVal
-                *ngSwitchCase="'ReadTextValueAsHtml'"
-                [mode]="mode"
-            ></app-text-value-as-html>
-            <app-text-value-as-xml
-                #createVal
-                *ngSwitchCase="'ReadTextValueAsXml'"
-                [mode]="mode"
-            ></app-text-value-as-xml>
             <app-unformatted-text-value
                 #createVal
                 *ngSwitchCase="constants.UnformattedTextValue"

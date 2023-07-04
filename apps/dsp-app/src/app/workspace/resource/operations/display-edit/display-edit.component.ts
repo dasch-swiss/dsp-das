@@ -163,9 +163,7 @@ export class DisplayEditComponent implements OnInit {
         // check if comment toggle button should be shown
         this.checkCommentToggleVisibility();
 
-        this.valueTypeOrClass = this._valueService.getValueTypeOrClass(
-            this.displayValue
-        );
+        this.valueTypeOrClass = this.displayValue.type;
 
         // get the resource property definition
         const resPropDef = this.parentResource.entityInfo

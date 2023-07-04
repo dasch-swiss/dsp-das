@@ -27,10 +27,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
-    ApiResponseData,
     CreateIntValue,
     CreateResource,
-    CreateTextValueAsString,
+    CreateUnformattedTextValue,
     CreateValue,
     MockOntology,
     MockProjects,
@@ -49,7 +48,6 @@ import {
 import { OntologyCache } from '@dasch-swiss/dsp-js/src/cache/ontology-cache/OntologyCache';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
-import { AjaxResponse } from 'rxjs/ajax';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -60,9 +58,11 @@ import {
 } from '@dasch-swiss/vre/shared/app-session';
 import { ValueService } from '../services/value.service';
 import { IntValueComponent } from '../values/int-value/int-value.component';
-import { TextValueAsStringComponent } from '../values/text-value/text-value-as-string/text-value-as-string.component';
 import { ResourceInstanceFormComponent } from './resource-instance-form.component';
 import { SwitchPropertiesComponent } from './select-properties/switch-properties/switch-properties.component';
+import {
+    UnformattedTextValueComponent
+} from '@dsp-app/src/app/workspace/resource/values/text-value/unformatted-text-value/unformatted-text-value.component';
 
 /**
  * test host component to simulate parent component.
@@ -191,7 +191,7 @@ class MockCreateIntValueComponent implements OnInit {
     selector: 'app-text-value-as-string',
 })
 class MockCreateTextValueComponent implements OnInit {
-    @ViewChild('createVal') createValueComponent: TextValueAsStringComponent;
+    @ViewChild('createVal') createValueComponent: UnformattedTextValueComponent;
 
     @Input() parentForm: UntypedFormGroup;
 
@@ -218,7 +218,7 @@ class MockCreateTextValueComponent implements OnInit {
         });
     }
     getNewValue(): CreateValue {
-        const createTextVal = new CreateTextValueAsString();
+        const createTextVal = new CreateUnformattedTextValue();
         createTextVal.text = 'My Label';
         return createTextVal;
     }
@@ -476,7 +476,7 @@ describe('ResourceInstanceFormComponent', () => {
 
         expect(selectPropertiesComp).toBeTruthy();
 
-        const label = new CreateTextValueAsString();
+        const label = new CreateUnformattedTextValue();
         label.text = 'My Label';
 
         const props = {};

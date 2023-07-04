@@ -132,9 +132,6 @@ import { JDNDatepickerDirective } from './workspace/resource/values/jdn-datepick
 import { LinkValueComponent } from './workspace/resource/values/link-value/link-value.component';
 import { ListValueComponent } from './workspace/resource/values/list-value/list-value.component';
 import { SublistValueComponent } from './workspace/resource/values/list-value/subList-value/sublist-value.component';
-import { TextValueAsHtmlComponent } from './workspace/resource/values/text-value/text-value-as-html/text-value-as-html.component';
-import { TextValueAsStringComponent } from './workspace/resource/values/text-value/text-value-as-string/text-value-as-string.component';
-import { TextValueAsXMLComponent } from './workspace/resource/values/text-value/text-value-as-xml/text-value-as-xml.component';
 import { TimeInputComponent } from './workspace/resource/values/time-value/time-input/time-input.component';
 import { TimeValueComponent } from './workspace/resource/values/time-value/time-value.component';
 import { UriValueComponent } from './workspace/resource/values/uri-value/uri-value.component';
@@ -305,9 +302,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         SublistValueComponent,
         SwitchPropertiesComponent,
         SystemComponent,
-        TextValueAsHtmlComponent,
-        TextValueAsStringComponent,
-        TextValueAsXMLComponent,
         TextValueHtmlLinkDirective,
         TimeInputComponent,
         TimePipe,

@@ -26,7 +26,7 @@ import {
     ApiResponseData,
     CreateIntValue,
     CreateResource,
-    CreateTextValueAsString,
+    CreateUnformattedTextValue,
     CreateValue,
     MockOntology,
     MockProjects,
@@ -48,9 +48,10 @@ import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.d
 import { SwitchPropertiesComponent } from '../../resource-instance-form/select-properties/switch-properties/switch-properties.component';
 import { ValueService } from '../../services/value.service';
 import { IntValueComponent } from '../../values/int-value/int-value.component';
-import { TextValueAsStringComponent } from '../../values/text-value/text-value-as-string/text-value-as-string.component';
-
 import { CreateLinkResourceComponent } from './create-link-resource.component';
+import {
+    UnformattedTextValueComponent
+} from '@dsp-app/src/app/workspace/resource/values/text-value/unformatted-text-value/unformatted-text-value.component';
 
 /**
  * test host component to simulate parent component.
@@ -187,10 +188,10 @@ class MockCreateIntValueComponent implements OnInit {
  * mock value component to use in tests.
  */
 @Component({
-    selector: 'app-text-value-as-string',
+    selector: 'app-unformatted-text-value',
 })
 class MockCreateTextValueComponent implements OnInit {
-    @ViewChild('createVal') createValueComponent: TextValueAsStringComponent;
+    @ViewChild('createVal') createValueComponent: UnformattedTextValueComponent;
 
     @Input() parentForm: UntypedFormGroup;
 
@@ -217,7 +218,7 @@ class MockCreateTextValueComponent implements OnInit {
         });
     }
     getNewValue(): CreateValue {
-        const createTextVal = new CreateTextValueAsString();
+        const createTextVal = new CreateUnformattedTextValue();
         createTextVal.text = 'My Label';
         return createTextVal;
     }
@@ -355,7 +356,7 @@ describe('CreateLinkResourceComponent', () => {
 
         expect(selectPropertiesComp).toBeTruthy();
 
-        const label = new CreateTextValueAsString();
+        const label = new CreateUnformattedTextValue();
         label.text = 'My Label';
 
         const props = {};

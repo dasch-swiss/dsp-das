@@ -46,9 +46,8 @@ import {
     ReadLinkValue,
     ReadListValue,
     ReadResource,
-    ReadTextValueAsHtml,
-    ReadTextValueAsString,
-    ReadTextValueAsXml,
+    ReadFormattedTextValue,
+    ReadUnformattedTextValue,
     ReadTimeValue,
     ReadUriValue,
     ReadValue,
@@ -79,8 +78,8 @@ import { DisplayEditComponent } from './display-edit.component';
     selector: 'app-text-value-as-string',
     template: '',
 })
-class TestTextValueAsStringComponent {
-    @Input() displayValue?: ReadTextValueAsString;
+class TestUnformattedTextValueComponent {
+    @Input() displayValue?: ReadUnformattedTextValue;
     @Input() textArea?: boolean = false;
 
     @Input() mode;
@@ -120,20 +119,10 @@ class TestLinkValueComponent {
 }
 
 @Component({
-    selector: 'app-text-value-as-html',
+    selector: 'app-formatted-text-value',
     template: '',
 })
-class TestTextValueAsHtmlComponent {
-    @Input() mode;
-
-    @Input() displayValue;
-}
-
-@Component({
-    selector: 'app-text-value-as-xml',
-    template: '',
-})
-class TestTextValueAsXmlComponent {
+class TestFormattedTextValueComponent {
     @Input() mode;
 
     @Input() displayValue;
@@ -393,8 +382,6 @@ describe('DisplayEditComponent', () => {
         const userServiceSpy = jasmine.createSpyObj('UserService', ['getUser']);
 
         const valueServiceSpy = jasmine.createSpyObj('ValueService', [
-            'getValueTypeOrClass',
-            'getTextValueGuiEle',
             'isReadOnly',
         ]);
 
@@ -410,9 +397,8 @@ describe('DisplayEditComponent', () => {
                 DisplayEditComponent,
                 ConfirmationDialogComponent,
                 TestHostDisplayValueComponent,
-                TestTextValueAsStringComponent,
-                TestTextValueAsHtmlComponent,
-                TestTextValueAsXmlComponent,
+                TestUnformattedTextValueComponent,
+                TestFormattedTextValueComponent,
                 TestIntValueComponent,
                 TestLinkValueComponent,
                 TestIntervalValueComponent,
@@ -471,20 +457,6 @@ describe('DisplayEditComponent', () => {
         // mocking the service's behaviour would duplicate the actual implementation
         const valueService = new ValueService();
 
-        // spy for getValueTypeOrClass
-        (
-            valueServiceSpy as jasmine.SpyObj<ValueService>
-        ).getValueTypeOrClass.and.callFake((value: ReadValue) =>
-            valueService.getValueTypeOrClass(value)
-        );
-
-        // spy for getTextValueGuiEle
-        (
-            valueServiceSpy as jasmine.SpyObj<ValueService>
-        ).getTextValueGuiEle.and.callFake((guiEle: string) =>
-            valueService.getTextValueGuiEle(guiEle)
-        );
-
         // spy for isReadOnly
         (
             valueServiceSpy as jasmine.SpyObj<ValueService>
@@ -517,12 +489,12 @@ describe('DisplayEditComponent', () => {
             expect(
                 testHostComponent.displayEditValueComponent
                     .displayValueComponent instanceof
-                    TestTextValueAsStringComponent
+                    TestUnformattedTextValueComponent
             ).toBe(true);
             expect(
                 testHostComponent.displayEditValueComponent
                     .displayValueComponent.displayValue instanceof
-                    ReadTextValueAsString
+                    ReadUnformattedTextValue
             ).toBe(true);
             expect(
                 testHostComponent.displayEditValueComponent
@@ -531,20 +503,11 @@ describe('DisplayEditComponent', () => {
 
             // make sure the value service has been called as expected on initialization
 
-            expect(valueServiceSpy.getValueTypeOrClass).toHaveBeenCalledTimes(
-                1
-            );
-            expect(valueServiceSpy.getValueTypeOrClass).toHaveBeenCalledWith(
-                jasmine.objectContaining({
-                    type: 'http://api.knora.org/ontology/knora-api/v2#TextValue',
-                })
-            );
-
             expect(valueServiceSpy.isReadOnly).toHaveBeenCalledTimes(1);
             expect(valueServiceSpy.isReadOnly).toHaveBeenCalledWith(
-                'ReadTextValueAsString',
+                'ReadUnformattedTextValue',
                 jasmine.objectContaining({
-                    type: 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+                    type: 'http://api.knora.org/ontology/knora-api/v2#UnformattedTextValue',
                 }),
                 jasmine.objectContaining({
                     id: 'http://0.0.0.0:3333/ontology/0001/anything/v2#hasText',
@@ -561,12 +524,12 @@ describe('DisplayEditComponent', () => {
             expect(
                 testHostComponent.displayEditValueComponent
                     .displayValueComponent instanceof
-                    TestTextValueAsXmlComponent
+                    TestFormattedTextValueComponent
             ).toBe(true);
             expect(
                 testHostComponent.displayEditValueComponent
                     .displayValueComponent.displayValue instanceof
-                    ReadTextValueAsXml
+                    ReadFormattedTextValue
             ).toBe(true);
             expect(
                 testHostComponent.displayEditValueComponent
@@ -585,7 +548,7 @@ describe('DisplayEditComponent', () => {
 
             (
                 testHostComponent.displayEditValueComponent
-                    .displayValueComponent as unknown as TestTextValueAsXmlComponent
+                    .displayValueComponent as unknown as TestFormattedTextValueComponent
             ).internalLinkClicked.emit('testIri');
 
             expect(
@@ -610,7 +573,7 @@ describe('DisplayEditComponent', () => {
 
             (
                 testHostComponent.displayEditValueComponent
-                    .displayValueComponent as unknown as TestTextValueAsXmlComponent
+                    .displayValueComponent as unknown as TestFormattedTextValueComponent
             ).internalLinkClicked.emit('testIri');
 
             expect(testHostComponent.linkValClicked).toEqual('init');
@@ -627,7 +590,7 @@ describe('DisplayEditComponent', () => {
 
             (
                 testHostComponent.displayEditValueComponent
-                    .displayValueComponent as unknown as TestTextValueAsXmlComponent
+                    .displayValueComponent as unknown as TestFormattedTextValueComponent
             ).internalLinkHovered.emit('testIri');
 
             expect(
@@ -652,46 +615,46 @@ describe('DisplayEditComponent', () => {
 
             (
                 testHostComponent.displayEditValueComponent
-                    .displayValueComponent as unknown as TestTextValueAsXmlComponent
+                    .displayValueComponent as unknown as TestFormattedTextValueComponent
             ).internalLinkHovered.emit('testIri');
 
             expect(testHostComponent.linkValHovered).toEqual('init');
         });
 
-        it('should choose the apt component for an HTML text value in the template', () => {
-            const inputVal: ReadTextValueAsHtml = new ReadTextValueAsHtml();
-
-            inputVal.property =
-                'http://0.0.0.0:3333/ontology/0001/anything/v2#hasRichtext';
-            inputVal.hasPermissions =
-                'CR knora-admin:Creator|M knora-admin:ProjectMember|V knora-admin:KnownUser|RV knora-admin:UnknownUser';
-            inputVal.userHasPermission = 'CR';
-            inputVal.type =
-                'http://api.knora.org/ontology/knora-api/v2#TextValue';
-            inputVal.id =
-                'http://rdfh.ch/0001/H6gBWUuJSuuO-CilHV8kQw/values/TEST_ID';
-            inputVal.html =
-                '<p>This is a <b>very</b> simple HTML document with a <a href="https://www.google.ch" target="_blank" class="app-link">link</a></p>';
-
-            testHostComponent.readValue = inputVal;
-
-            testHostFixture.detectChanges();
-
-            expect(
-                testHostComponent.displayEditValueComponent
-                    .displayValueComponent instanceof
-                    TestTextValueAsHtmlComponent
-            ).toBe(true);
-            expect(
-                testHostComponent.displayEditValueComponent
-                    .displayValueComponent.displayValue instanceof
-                    ReadTextValueAsHtml
-            ).toBe(true);
-            expect(
-                testHostComponent.displayEditValueComponent
-                    .displayValueComponent.mode
-            ).toEqual('read');
-        });
+        // it('should choose the apt component for an HTML text value in the template', () => {
+        //     const inputVal: ReadTextValueAsHtml = new ReadTextValueAsHtml();
+        //
+        //     inputVal.property =
+        //         'http://0.0.0.0:3333/ontology/0001/anything/v2#hasRichtext';
+        //     inputVal.hasPermissions =
+        //         'CR knora-admin:Creator|M knora-admin:ProjectMember|V knora-admin:KnownUser|RV knora-admin:UnknownUser';
+        //     inputVal.userHasPermission = 'CR';
+        //     inputVal.type =
+        //         'http://api.knora.org/ontology/knora-api/v2#TextValue';
+        //     inputVal.id =
+        //         'http://rdfh.ch/0001/H6gBWUuJSuuO-CilHV8kQw/values/TEST_ID';
+        //     inputVal.html =
+        //         '<p>This is a <b>very</b> simple HTML document with a <a href="https://www.google.ch" target="_blank" class="app-link">link</a></p>';
+        //
+        //     testHostComponent.readValue = inputVal;
+        //
+        //     testHostFixture.detectChanges();
+        //
+        //     expect(
+        //         testHostComponent.displayEditValueComponent
+        //             .displayValueComponent instanceof
+        //             TestTextValueAsHtmlComponent
+        //     ).toBe(true);
+        //     expect(
+        //         testHostComponent.displayEditValueComponent
+        //             .displayValueComponent.displayValue instanceof
+        //             ReadTextValueAsHtml
+        //     ).toBe(true);
+        //     expect(
+        //         testHostComponent.displayEditValueComponent
+        //             .displayValueComponent.mode
+        //     ).toEqual('read');
+        // });
 
         it('should choose the apt component for an integer value in the template', () => {
             testHostComponent.assignValue(
@@ -1238,42 +1201,42 @@ describe('DisplayEditComponent', () => {
         });
     });
 
-    describe('do not change from display to edit mode for an html text value', () => {
-        let hostCompDe;
-        let displayEditComponentDe;
-
-        it('should not display the edit button', () => {
-            const inputVal: ReadTextValueAsHtml = new ReadTextValueAsHtml();
-
-            inputVal.property =
-                'http://0.0.0.0:3333/ontology/0001/anything/v2#hasRichtext';
-            inputVal.hasPermissions =
-                'CR knora-admin:Creator|M knora-admin:ProjectMember|V knora-admin:KnownUser|RV knora-admin:UnknownUser';
-            inputVal.userHasPermission = 'CR';
-            inputVal.type =
-                'http://api.knora.org/ontology/knora-api/v2#TextValue';
-            inputVal.id =
-                'http://rdfh.ch/0001/H6gBWUuJSuuO-CilHV8kQw/values/TEST_ID';
-            inputVal.html =
-                '<p>This is a <b>very</b> simple HTML document with a <a href="https://www.google.ch" target="_blank" class="app-link">link</a></p>';
-
-            testHostComponent.readValue = inputVal;
-
-            testHostFixture.detectChanges();
-
-            expect(testHostComponent.displayEditValueComponent).toBeTruthy();
-
-            hostCompDe = testHostFixture.debugElement;
-            displayEditComponentDe = hostCompDe.query(
-                By.directive(DisplayEditComponent)
-            );
-
-            const editButtonDebugElement = displayEditComponentDe.query(
-                By.css('button.edit')
-            );
-            expect(editButtonDebugElement).toBe(null);
-        });
-    });
+    // describe('do not change from display to edit mode for an html text value', () => {
+    //     let hostCompDe;
+    //     let displayEditComponentDe;
+    //
+    //     it('should not display the edit button', () => {
+    //         const inputVal: ReadTextValueAsHtml = new ReadTextValueAsHtml();
+    //
+    //         inputVal.property =
+    //             'http://0.0.0.0:3333/ontology/0001/anything/v2#hasRichtext';
+    //         inputVal.hasPermissions =
+    //             'CR knora-admin:Creator|M knora-admin:ProjectMember|V knora-admin:KnownUser|RV knora-admin:UnknownUser';
+    //         inputVal.userHasPermission = 'CR';
+    //         inputVal.type =
+    //             'http://api.knora.org/ontology/knora-api/v2#TextValue';
+    //         inputVal.id =
+    //             'http://rdfh.ch/0001/H6gBWUuJSuuO-CilHV8kQw/values/TEST_ID';
+    //         inputVal.html =
+    //             '<p>This is a <b>very</b> simple HTML document with a <a href="https://www.google.ch" target="_blank" class="app-link">link</a></p>';
+    //
+    //         testHostComponent.readValue = inputVal;
+    //
+    //         testHostFixture.detectChanges();
+    //
+    //         expect(testHostComponent.displayEditValueComponent).toBeTruthy();
+    //
+    //         hostCompDe = testHostFixture.debugElement;
+    //         displayEditComponentDe = hostCompDe.query(
+    //             By.directive(DisplayEditComponent)
+    //         );
+    //
+    //         const editButtonDebugElement = displayEditComponentDe.query(
+    //             By.css('button.edit')
+    //         );
+    //         expect(editButtonDebugElement).toBe(null);
+    //     });
+    // });
 
     describe('comment toggle button', () => {
         let hostCompDe;

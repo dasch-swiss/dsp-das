@@ -22,7 +22,7 @@ import {
     CreateGeomValue,
     CreateLinkValue,
     CreateResource,
-    CreateTextValueAsString,
+    CreateUnformattedTextValue,
     KnoraApiConnection,
     Point2D,
     ReadColorValue,
@@ -569,8 +569,8 @@ export class StillImageComponent
         const linkVal = new CreateLinkValue();
         linkVal.type = Constants.LinkValue;
         linkVal.linkedResourceIri = this.resourceIri;
-        const commentVal = new CreateTextValueAsString();
-        commentVal.type = Constants.TextValue;
+        const commentVal = new CreateUnformattedTextValue();
+        commentVal.type = Constants.UnformattedTextValue;
         commentVal.text = comment;
 
         createResource.properties = {
