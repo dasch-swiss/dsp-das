@@ -81,15 +81,17 @@
     <div class="crud-buttons">
         <button
             mat-icon-button
+            *ngIf="createModeActive"
             class="value-action save"
             title="save"
-            [disabled]="!createValueComponent?.form?.valid"
+            [disabled]="!createValueComponent.form.valid"
             (click)="saveAddValue()"
         >
             <mat-icon>save</mat-icon>
         </button>
         <button
             mat-icon-button
+            *ngIf="createModeActive"
             class="value-action cancel"
             title="cancel"
             (click)="cancelAddValue()"

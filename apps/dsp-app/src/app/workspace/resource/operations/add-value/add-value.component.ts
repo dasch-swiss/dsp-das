@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     Component,
     EventEmitter,
     Inject,
@@ -33,7 +34,7 @@ import { ValueService } from '../../services/value.service';
     templateUrl: './add-value.component.html',
     styleUrls: ['./add-value.component.scss'],
 })
-export class AddValueComponent implements OnInit {
+export class AddValueComponent implements OnInit, AfterViewInit {
     @ViewChild('createVal') createValueComponent: BaseValueDirective;
 
     @Input() resourcePropertyDefinition: ResourcePropertyDefinition;
@@ -47,6 +48,8 @@ export class AddValueComponent implements OnInit {
     constants = Constants;
 
     mode: 'read' | 'update' | 'create' | 'search';
+
+    createModeActive = false;
 
     submittingValue = false;
 
@@ -98,11 +101,20 @@ export class AddValueComponent implements OnInit {
         }
     }
 
+    // wait to show the save/cancel buttons until the form is initialized so that the template checks using the form's validity work
+    ngAfterViewInit() {
+        setTimeout(() => {
+            this.createModeActive = true;
+        }, 0);
+    }
+
     /**
      * add a new value to an existing property of a resource.
      */
     saveAddValue() {
         if (this.parentResource) {
+            // hide the CRUD buttons
+            this.createModeActive = false;
 
             // show the progress indicator
             this.submittingValue = true;
@@ -152,6 +164,9 @@ export class AddValueComponent implements OnInit {
                             // hide the progress indicator
                             this.submittingValue = false;
 
+                            // show the CRUD buttons
+                            this.createModeActive = true;
+
                             switch (error.status) {
                                 case 400:
                                     this.createValueComponent.valueFormControl.setErrors(
@@ -185,6 +200,9 @@ export class AddValueComponent implements OnInit {
      * cancel the add value operation and hide the add value form.
      */
     cancelAddValue() {
+        // show the CRUD buttons
+        this.createModeActive = false;
+
         // emit an event to trigger hideAddValueForm() in property-view component to hide the create value form
         this.operationCancelled.emit();
     }
