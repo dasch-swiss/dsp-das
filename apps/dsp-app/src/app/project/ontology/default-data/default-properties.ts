@@ -53,33 +53,6 @@ export class DefaultProperties {
             elements: [
                 {
                     icon: 'subject',
-                    label: 'Before: Simple Text',
-                    description: '',
-                    subPropOf: Constants.HasValue,
-                    objectType: Constants.TextValue,
-                    guiEle: Constants.GuiSimpleText,
-                    group: 'Text',
-                },
-                {
-                    icon: 'subject',
-                    label: 'Before: Text Area/ Paragraph',
-                    description: '',
-                    subPropOf: Constants.HasValue,
-                    objectType: Constants.TextValue,
-                    guiEle: Constants.GuiTextarea,
-                    group: 'Text',
-                },
-                {
-                    icon: 'line_style',
-                    label: 'Before: Rich text',
-                    description: '',
-                    subPropOf: Constants.HasValue,
-                    objectType: Constants.TextValue,
-                    guiEle: Constants.GuiRichText,
-                    group: 'Text',
-                },
-                {
-                    icon: 'subject',
                     label: 'Unformatted Text',
                     description:
                         'Text without formatting options (only line breaks are available)',

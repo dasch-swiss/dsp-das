@@ -70,7 +70,12 @@
     <app-search-text-value
         #propertyValue
         [formGroup]="form"
-        *ngSwitchCase="Constants.TextValue"
+        *ngSwitchCase="Constants.FormattedTextValue"
+    ></app-search-text-value>
+    <app-search-text-value
+        #propertyValue
+        [formGroup]="form"
+        *ngSwitchCase="Constants.UnformattedTextValue"
     ></app-search-text-value>
     <app-search-list-value
         #propertyValue

@@ -22,7 +22,8 @@ export class GravsearchGenerationService {
         [Constants.IntValue]: Constants.IntValueAsInt,
         [Constants.DecimalValue]: Constants.DecimalValueAsDecimal,
         [Constants.BooleanValue]: Constants.BooleanValueAsBoolean,
-        [Constants.TextValue]: Constants.ValueAsString,
+        [Constants.FormattedTextValue]: Constants.ValueAsString,
+        [Constants.UnformattedTextValue]: Constants.ValueAsString,
         [Constants.UriValue]: Constants.UriValueAsUri,
         [Constants.ListValue]: Constants.ListValueAsListNode,
     };

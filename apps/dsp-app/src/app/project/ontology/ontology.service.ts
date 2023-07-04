@@ -199,7 +199,7 @@ export class OntologyService {
                                     i.subPropOf === Constants.SeqNum
                             );
                         } else if (
-                            property.objectType === Constants.TextValue
+                            property.objectType === Constants.UnformattedTextValue
                         ) {
                             // if the property is of type text value, we have to check the gui element
                             // to get the correct default prop params
