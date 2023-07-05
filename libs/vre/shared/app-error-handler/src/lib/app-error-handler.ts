@@ -10,7 +10,6 @@ import {
     ApiResponseData,
     ApiResponseError,
     HealthResponse,
-    KnoraApiConnection,
 } from '@dasch-swiss/dsp-js';
 import { HttpStatusMsg } from '@dasch-swiss/vre/shared/assets/status-msg';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -18,14 +17,14 @@ import { SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { AjaxError } from 'rxjs/ajax';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { DataAccessService } from './data-access.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AppErrorHandler implements ErrorHandler {
-    logger: AppLoggingService = inject(AppLoggingService);
-    dspApiConnection: KnoraApiConnection = inject(DspApiConnectionToken);
+    appLoggingService: AppLoggingService = inject(AppLoggingService);
+    dataAccessService: DataAccessService = inject(DataAccessService);
     notificationService: NotificationService = inject(NotificationService);
     sessionService: SessionService = inject(SessionService);
     httpStatusMsg: HttpStatusMsg = inject(HttpStatusMsg);
@@ -37,16 +36,20 @@ export class AppErrorHandler implements ErrorHandler {
     handleError(error: Error): void {
         if (error instanceof HttpErrorResponse) {
             // HTTP related error
-            this.logger.error('Caught HttpErrorResponse error', {}, error);
+            this.appLoggingService.error(
+                'Caught HttpErrorResponse error',
+                {},
+                error
+            );
         } else if (error instanceof TypeError) {
             // Runtime exceptions mostly introduced by Developer's code
-            this.logger.error('Caught TypeError', {}, error);
+            this.appLoggingService.error('Caught TypeError', {}, error);
         } else if (error instanceof ReferenceError) {
             // Runtime exceptions mostly introduced by Developer's code
-            this.logger.error('Caught ReferenceError', {}, error);
+            this.appLoggingService.error('Caught ReferenceError', {}, error);
         } else {
             // catch-all: catch rest of errors
-            this.logger.error('Caught other error', {}, error);
+            this.appLoggingService.error('Caught other error', {}, error);
         }
     }
 
@@ -69,7 +72,7 @@ export class AppErrorHandler implements ErrorHandler {
 
             // check if the api is healthy:
             (
-                this.dspApiConnection.system.healthEndpoint.getHealthStatus() as Observable<
+                this.dataAccessService.getHealthStatus() as Observable<
                     ApiResponseData<HealthResponse>
                 >
             )
@@ -85,17 +88,17 @@ export class AppErrorHandler implements ErrorHandler {
                             };
                             status = 500;
                             error = healthError;
-                            this.logger.error(
+                            this.appLoggingService.error(
                                 `ERROR ${status}: Server side error — dsp-api is not healthy`
                             );
                         } else {
-                            this.logger.error(
+                            this.appLoggingService.error(
                                 `ERROR ${status}: Server side error — dsp-api not responding`
                             );
                         }
                     },
                     (healthError: ApiResponseError) => {
-                        this.logger.error(
+                        this.appLoggingService.error(
                             `ERROR ${status}: Server side error — dsp-api not responding`,
                             healthError
                         );
@@ -107,7 +110,7 @@ export class AppErrorHandler implements ErrorHandler {
             this.notificationService.openSnackBar(error);
         } else if (error.status === 401 && typeof error.error !== 'string') {
             // logout if error status is a 401 error and comes from a DSP-JS request
-            this.dspApiConnection.v2.auth.logout().subscribe(
+            this.dataAccessService.logout().subscribe(
                 () => {
                     // destroy session
                     this.sessionService.destroySession();
@@ -118,13 +121,13 @@ export class AppErrorHandler implements ErrorHandler {
                 (logoutError: ApiResponseError) => {
                     this.notificationService.openSnackBar(logoutError);
                     if (logoutError.error instanceof AjaxError) {
-                        this.logger.error(
+                        this.appLoggingService.error(
                             `Logout ajax error`,
                             {},
                             new Error(logoutError.error['message'])
                         );
                     } else {
-                        this.logger.error(
+                        this.appLoggingService.error(
                             `Logout other error`,
                             {},
                             new Error(logoutError.error)
@@ -143,7 +146,7 @@ export class AppErrorHandler implements ErrorHandler {
                     !error.error['message'].startsWith('ajax error')
                 ) {
                     // the Api response error contains a complex error message from dsp-js-lib
-                    this.logger.error(
+                    this.appLoggingService.error(
                         `Api response error`,
                         {},
                         new Error(error.error['message'])
@@ -155,10 +158,14 @@ export class AppErrorHandler implements ErrorHandler {
                     } (${error.status}): ${
                         defaultStatusMsg[error.status].description
                     }`;
-                    this.logger.error(`Error`, {}, new Error(message));
+                    this.appLoggingService.error(
+                        `Error`,
+                        {},
+                        new Error(message)
+                    );
                 }
             } else {
-                this.logger.error(`Error`, {}, new Error(error));
+                this.appLoggingService.error(`Error`, {}, new Error(error));
             }
         }
     }

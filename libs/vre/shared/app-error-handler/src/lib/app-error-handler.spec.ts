@@ -3,73 +3,57 @@ import {
     HttpTestingController,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import {
-    MatDialog,
-    MatDialogModule,
-    MatDialogRef,
-} from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
     BrowserAnimationsModule,
     NoopAnimationsModule,
 } from '@angular/platform-browser/animations';
 import {
+    ApiResponseData,
     ApiResponseError,
-    HealthEndpointSystem,
-    KnoraApiConnection,
-    MockHealth,
+    HealthResponse,
 } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from './app-error-handler';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { HttpStatusMsg } from '@dasch-swiss/vre/shared/assets/status-msg';
+import { SessionService } from '@dasch-swiss/vre/shared/app-session';
+import { DataAccessService } from './data-access.service';
+import { AjaxResponse } from 'rxjs/ajax';
 import { MockProvider, MockService } from 'ng-mocks';
-import { createSpyFromClass, Spy } from 'jest-auto-spies';
-import { SystemEndpoint } from '@dasch-swiss/dsp-js/src/api/system/system-endpoint';
 
 describe('AppErrorHandler', () => {
     let httpTestingController: HttpTestingController;
     let service: AppErrorHandler;
-    let dspConnSpy: KnoraApiConnection;
+    const notificationMock = MockService(NotificationService);
+    const dataAccessMock = MockService(DataAccessService);
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 BrowserAnimationsModule,
                 HttpClientTestingModule,
-                MatDialogModule,
                 MatSnackBarModule,
                 NoopAnimationsModule,
             ],
             providers: [
                 MockProvider(AppLoggingService),
+                MockProvider(NotificationService, notificationMock),
+                MockProvider(DataAccessService, dataAccessMock),
+                MockProvider(SessionService),
                 {
-                    provide: MatDialog,
-                    useValue: { open: () => of({ id: 1 }) },
+                    provide: HttpStatusMsg,
                 },
-                MockProvider(
-                    DspApiConnectionToken,
-                    MockService(KnoraApiConnection)
-                ),
             ],
         });
         service = TestBed.inject(AppErrorHandler);
-
         httpTestingController = TestBed.inject(HttpTestingController);
-
-        dspConnSpy = TestBed.inject(DspApiConnectionToken);
-
-        // (
-        //     dspConnSpy.system
-        //         .healthEndpoint as jasmine.SpyObj<HealthEndpointSystem>
-        // ).getHealthStatus.and.callFake(() => {
-        //     const health = MockHealth.mockRunning();
-        //     return of(health);
-        // });
     });
 
     afterEach(() => {
         httpTestingController.verify();
+        jest.clearAllMocks();
     });
 
     it('should be created', () => {
@@ -77,9 +61,22 @@ describe('AppErrorHandler', () => {
     });
 
     // https://www.beyondjava.net/jest-mocking-an-angular-service
-    it('api is not healthy: should log 503 server error', () => {
-        dspConnSpy.system.healthEndpoint.getHealthStatus() = jest.fn(() => {});
-        service.showMessage(<ApiResponseError>{ error: 'gaga' });
-        expect(dspConnSpy).toHaveBeenCalled();
+    it('api is healthy: should call notification service', () => {
+        const getStatusSpy = jest.spyOn(dataAccessMock, 'getHealthStatus');
+        const response = new HealthResponse();
+        response.status = true;
+        getStatusSpy.mockImplementation(() =>
+            of(
+                ApiResponseData.fromAjaxResponse({
+                    response,
+                } as AjaxResponse)
+            )
+        );
+        const expectedMessage = <ApiResponseError>{ error: 'gaga' };
+        service.showMessage(expectedMessage);
+        expect(getStatusSpy).toHaveBeenCalled();
+        expect(notificationMock.openSnackBar).toHaveBeenCalledWith(
+            expectedMessage
+        );
     });
 });
