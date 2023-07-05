@@ -1,5 +1,4 @@
 import {
-    ChangeDetectionStrategy,
     Component,
     EventEmitter,
     Inject,
@@ -7,7 +6,7 @@ import {
     OnChanges,
     OnDestroy,
     OnInit,
-    Output, SimpleChanges
+    Output
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -75,8 +74,7 @@ export interface PropertyInfoValues {
 @Component({
     selector: 'app-properties',
     templateUrl: './properties.component.html',
-    styleUrls: ['./properties.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./properties.component.scss']
 })
 export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     /**
