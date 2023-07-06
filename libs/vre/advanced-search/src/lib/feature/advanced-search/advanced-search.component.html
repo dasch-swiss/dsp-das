@@ -1,0 +1,10 @@
+<div>
+    <h2>Advanced search</h2>
+</div>
+<div
+    *ngIf="{ ontologies: ontologies$ | async } as asyncData"
+>
+    <dasch-swiss-ontology-resource-form
+        [ontologies]="asyncData.ontologies"
+    ></dasch-swiss-ontology-resource-form>
+</div>

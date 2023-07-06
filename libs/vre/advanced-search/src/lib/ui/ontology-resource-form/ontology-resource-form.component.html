@@ -1,0 +1,11 @@
+<form>
+    <mat-form-field>
+      <mat-label>Select ontology</mat-label>
+      <mat-select [(ngModel)]="selectedValue" name="food">
+        <mat-option *ngFor="let onto of ontologies" [value]="onto">
+          {{onto}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+</form>
+
