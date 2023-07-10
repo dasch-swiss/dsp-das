@@ -2,9 +2,17 @@
     <h2>Advanced search</h2>
 </div>
 <div
-    *ngIf="{ ontologies: ontologies$ | async } as asyncData"
+    *ngIf="{
+        ontologies: ontologies$ | async,
+        resourceClasses: resourceClasses$ | async,
+        searchButtonDisabled: searchButtonDisabled$ | async
+    } as asyncData"
 >
     <dasch-swiss-ontology-resource-form
         [ontologies]="asyncData.ontologies"
+        [resourceClasses]="asyncData.resourceClasses"
+        (emitSelectedOntology)="handleSelectedOntology($event)"
+        (emitSelectedResourceClass)="handleSelectedResourceClass($event)"
     ></dasch-swiss-ontology-resource-form>
+    <dasch-swiss-form-actions [searchButtonDisabled]="asyncData.searchButtonDisabled"></dasch-swiss-form-actions>
 </div>

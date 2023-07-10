@@ -1,11 +1,20 @@
-<form>
+<div>
     <mat-form-field>
       <mat-label>Select ontology</mat-label>
-      <mat-select [(ngModel)]="selectedValue" name="food">
+      <mat-select #ontologiesList (selectionChange)="onSelectedOntologyChanged()" name="ontologies">
         <mat-option *ngFor="let onto of ontologies" [value]="onto">
           {{onto}}
         </mat-option>
       </mat-select>
     </mat-form-field>
-</form>
+    <mat-form-field>
+        <mat-label>Select resource class</mat-label>
+        <mat-select #resourceClassesList (selectionChange)="onSelectedResourceClassChanged()" name="resourceClass">
+            <mat-option>None</mat-option>
+            <mat-option *ngFor="let class of resourceClasses" [value]="class">
+            {{class}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+</div>
 
