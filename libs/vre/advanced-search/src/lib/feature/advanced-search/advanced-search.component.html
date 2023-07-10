@@ -5,7 +5,9 @@
     *ngIf="{
         ontologies: ontologies$ | async,
         resourceClasses: resourceClasses$ | async,
-        searchButtonDisabled: searchButtonDisabled$ | async
+        searchButtonDisabled: searchButtonDisabled$ | async,
+        propertyFormList: propertyFormList$ | async,
+        properties: properties$ | async
     } as asyncData"
 >
     <dasch-swiss-ontology-resource-form
@@ -14,5 +16,15 @@
         (emitSelectedOntology)="handleSelectedOntology($event)"
         (emitSelectedResourceClass)="handleSelectedResourceClass($event)"
     ></dasch-swiss-ontology-resource-form>
-    <dasch-swiss-form-actions [searchButtonDisabled]="asyncData.searchButtonDisabled"></dasch-swiss-form-actions>
+    <dasch-swiss-property-form
+        *ngFor="let propertyForm of asyncData.propertyFormList"
+        [propertyFormItem]="propertyForm"
+        [properties]="asyncData.properties"
+        (emitRemovePropertyForm)="handleRemovePropertyForm($event)"
+    ></dasch-swiss-property-form>
+    <dasch-swiss-form-actions
+        [searchButtonDisabled]="asyncData.searchButtonDisabled"
+        (emitAddPropertyForm)="handleAddPropertyForm()"
+    >
+    </dasch-swiss-form-actions>
 </div>

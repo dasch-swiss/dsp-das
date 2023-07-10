@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OntologyResourceFormComponent } from '../../ui/ontology-resource-form/ontology-resource-form.component';
-import { AdvancedSearchStoreService } from '../../data-access/advanced-search-store/advanced-search-store.service';
+import { AdvancedSearchStoreService, PropertyFormItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
+import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
 
 @Component({
     selector: 'dasch-swiss-advanced-search',
     standalone: true,
-    imports: [CommonModule, OntologyResourceFormComponent, FormActionsComponent],
+    imports: [CommonModule, OntologyResourceFormComponent, PropertyFormComponent, FormActionsComponent],
     providers: [AdvancedSearchStoreService],
     templateUrl: './advanced-search.component.html',
     styleUrls: ['./advanced-search.component.scss'],
@@ -21,6 +22,8 @@ export class AdvancedSearchComponent implements OnInit {
     resourceClasses$ = this.store.resourceClasses$;
     selectedOntology$ = this.store.selectedOntology$;
     selectedResourceClass$ = this.store.selectedResourceClass$;
+    propertyFormList$ = this.store.propertyFormList$;
+    properties$ = this.store.properties$;
     searchButtonDisabled$ = this.store.searchButtonDisabled$;
 
     ngOnInit(): void {
@@ -30,6 +33,8 @@ export class AdvancedSearchComponent implements OnInit {
             resourceClasses: ['res1', 'res2', 'res3'],
             selectedOntology: undefined,
             selectedResourceClass: undefined,
+            propertyFormList: [],
+            properties: ['prop1', 'prop2', 'prop3']
         });
     }
 
@@ -41,6 +46,16 @@ export class AdvancedSearchComponent implements OnInit {
     // pass-through method to notify the store to update the state of the selected resource class
     handleSelectedResourceClass(resourceClass: string): void {
         this.store.updateSelectedResourceClass(resourceClass);
+    }
+
+    handleAddPropertyForm(): void {
+        // mock uuid using timestamp
+        const uuid = Date.now().toString();
+        this.store.updatePropertyFormList('add', { id: uuid, label: 'property ' + uuid });
+    }
+
+    handleRemovePropertyForm(property: PropertyFormItem): void {
+        this.store.updatePropertyFormList('delete', property);
     }
 
 }
