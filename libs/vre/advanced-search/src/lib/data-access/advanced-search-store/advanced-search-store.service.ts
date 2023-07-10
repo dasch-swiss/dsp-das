@@ -17,7 +17,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     selectedOntology$: Observable<string | undefined> = this.select((state) => state.selectedOntology);
     selectedResourceClass$: Observable<string | undefined> = this.select((state) => state.selectedResourceClass);
 
-    // combined selectors
+    /** combined selectors */
 
     // search button is disabled if no ontology and no resource class are selected
     searchButtonDisabled$: Observable<boolean> = this.select(

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -9,10 +9,6 @@ import { MatButtonModule } from '@angular/material/button';
     templateUrl: './form-actions.component.html',
     styleUrls: ['./form-actions.component.scss'],
 })
-export class FormActionsComponent implements OnInit {
+export class FormActionsComponent {
     @Input() searchButtonDisabled: boolean | null = true;
-
-    ngOnInit(): void {
-        console.log('disabled:', this.searchButtonDisabled);
-    }
 }

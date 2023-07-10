@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OntologyResourceFormComponent } from '../../ui/ontology-resource-form/ontology-resource-form.component';
 import { AdvancedSearchStoreService } from '../../data-access/advanced-search-store/advanced-search-store.service';
@@ -11,6 +11,7 @@ import { FormActionsComponent } from '../../ui/form-actions/form-actions.compone
     providers: [AdvancedSearchStoreService],
     templateUrl: './advanced-search.component.html',
     styleUrls: ['./advanced-search.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdvancedSearchComponent implements OnInit {
 
@@ -23,6 +24,7 @@ export class AdvancedSearchComponent implements OnInit {
     searchButtonDisabled$ = this.store.searchButtonDisabled$;
 
     ngOnInit(): void {
+        // mock values for the time being
         this.store.setState({
             ontologies: ['onto1', 'onto2', 'onto3'],
             resourceClasses: ['res1', 'res2', 'res3'],
@@ -31,10 +33,12 @@ export class AdvancedSearchComponent implements OnInit {
         });
     }
 
+    // pass-through method to notify the store to update the state of the selected ontology
     handleSelectedOntology(ontology: string): void {
         this.store.updateSelectedOntology(ontology);
     }
 
+    // pass-through method to notify the store to update the state of the selected resource class
     handleSelectedResourceClass(resourceClass: string): void {
         this.store.updateSelectedResourceClass(resourceClass);
     }
