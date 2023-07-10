@@ -31,8 +31,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     // search button is disabled if no ontology and no resource class are selected
     searchButtonDisabled$: Observable<boolean> = this.select(
         this.selectedOntology$,
-        this.selectedResourceClass$,
-        (ontology, resourceClass) => !(ontology && resourceClass)
+        this.propertyFormList$,
+        (ontology, propertyFormList) => !(ontology && propertyFormList.length && propertyFormList.every(prop => !!prop.selectedProperty))
     );
 
     updateSelectedOntology(ontology: string): void {
@@ -45,23 +45,30 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
     updatePropertyFormList(operation: 'add' | 'delete', property: PropertyFormItem): void {
         const currentPropertyFormList = this.get((state) => state.propertyFormList);
+        let updatedPropertyFormList: PropertyFormItem[];
+
         if (operation === 'add') {
-            currentPropertyFormList.push(property);
+            updatedPropertyFormList = [...currentPropertyFormList, property];
         } else {
-            const index = currentPropertyFormList.indexOf(property);
-            currentPropertyFormList.splice(index, 1);
+            updatedPropertyFormList = currentPropertyFormList.filter(item => item !== property);
         }
-        console.log('currentPropFormList:', currentPropertyFormList);
-        this.patchState({ propertyFormList: currentPropertyFormList });
+
+        this.patchState({ propertyFormList: updatedPropertyFormList });
     }
 
     updateSelectedProperty(property: PropertyFormItem): void {
         const currentPropertyFormList = this.get((state) => state.propertyFormList);
-        // todo: figure out how this actually works
         const index = currentPropertyFormList.indexOf(property);
-        currentPropertyFormList[index] = property;
-        console.log('updated:', currentPropertyFormList);
-        this.patchState({ propertyFormList: currentPropertyFormList });
+
+        if (index > -1) {  // Only update if the property is found
+            const updatedPropertyFormList = [
+                ...currentPropertyFormList.slice(0, index),  // Elements before the one to update
+                property,  // The updated property
+                ...currentPropertyFormList.slice(index + 1)  // Elements after the one to update
+            ];
+
+            this.patchState({ propertyFormList: updatedPropertyFormList });
+        }
     }
 
     onSearch() {
