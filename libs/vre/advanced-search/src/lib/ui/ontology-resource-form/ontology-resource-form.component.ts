@@ -12,7 +12,7 @@ import { MatSelect, MatSelectModule } from '@angular/material/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OntologyResourceFormComponent {
-    @Input() ontologies: string[] | null = [];
+    @Input() ontologies: string[] | null = []; // todo: handle null case in html
     @Input() resourceClasses: string[] | null = [];
 
     @Output() emitSelectedOntology = new EventEmitter<string>();

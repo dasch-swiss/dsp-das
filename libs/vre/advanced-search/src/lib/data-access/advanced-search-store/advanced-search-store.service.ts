@@ -13,7 +13,7 @@ export interface AdvancedSearchState {
 
 export interface PropertyFormItem {
     id: string;
-    label: string;
+    selectedProperty: string | undefined;
 }
 
 @Injectable()
@@ -53,5 +53,23 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         }
         console.log('currentPropFormList:', currentPropertyFormList);
         this.patchState({ propertyFormList: currentPropertyFormList });
+    }
+
+    updateSelectedProperty(property: PropertyFormItem): void {
+        const currentPropertyFormList = this.get((state) => state.propertyFormList);
+        // todo: figure out how this actually works
+        const index = currentPropertyFormList.indexOf(property);
+        currentPropertyFormList[index] = property;
+        console.log('updated:', currentPropertyFormList);
+        this.patchState({ propertyFormList: currentPropertyFormList });
+    }
+
+    onSearch() {
+        const selectedOntology = this.get((state) => state.selectedOntology);
+        const selectedResourceClass = this.get((state) => state.selectedResourceClass);
+        const propertyFormList = this.get((state) => state.propertyFormList);
+        console.log('selectedOnto:', selectedOntology);
+        console.log('selectedResClass:', selectedResourceClass);
+        propertyFormList.forEach((prop) => console.log('prop:', prop));
     }
 }

@@ -51,11 +51,19 @@ export class AdvancedSearchComponent implements OnInit {
     handleAddPropertyForm(): void {
         // mock uuid using timestamp
         const uuid = Date.now().toString();
-        this.store.updatePropertyFormList('add', { id: uuid, label: 'property ' + uuid });
+        this.store.updatePropertyFormList('add', { id: uuid, selectedProperty: undefined });
     }
 
     handleRemovePropertyForm(property: PropertyFormItem): void {
         this.store.updatePropertyFormList('delete', property);
+    }
+
+    handleSelectedProperty(property: PropertyFormItem): void {
+        this.store.updateSelectedProperty(property);
+    }
+
+    handleSearchButtonClicked(): void {
+        this.store.onSearch();
     }
 
 }

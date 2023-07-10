@@ -1,4 +1,10 @@
 <button mat-icon-button (click)="onAddPropertyFormClicked()">
     <mat-icon>add_circle</mat-icon>
 </button>
-<button mat-button [disabled]="searchButtonDisabled">Search</button>
+<button
+    mat-button
+    [disabled]="searchButtonDisabled"
+    (click)="onSearchButtonClicked()"
+>
+    Search
+</button>

@@ -21,10 +21,12 @@
         [propertyFormItem]="propertyForm"
         [properties]="asyncData.properties"
         (emitRemovePropertyForm)="handleRemovePropertyForm($event)"
+        (emitSelectedProperty)="handleSelectedProperty($event)"
     ></dasch-swiss-property-form>
     <dasch-swiss-form-actions
         [searchButtonDisabled]="asyncData.searchButtonDisabled"
         (emitAddPropertyForm)="handleAddPropertyForm()"
+        (emitSearchButtonClicked)="handleSearchButtonClicked()"
     >
     </dasch-swiss-form-actions>
 </div>

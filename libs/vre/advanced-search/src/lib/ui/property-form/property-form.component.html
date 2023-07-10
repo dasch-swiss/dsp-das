@@ -1,7 +1,7 @@
 <div>
     <mat-form-field>
         <mat-label>Select property</mat-label>
-        <mat-select #propertiesList name="properties">
+        <mat-select #propertiesList (selectionChange)="onSelectedPropertyChanged($event)" name="properties">
             <mat-option *ngFor="let prop of properties" [value]="prop">
                 {{ prop }}
             </mat-option>
