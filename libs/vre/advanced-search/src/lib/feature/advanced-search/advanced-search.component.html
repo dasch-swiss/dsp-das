@@ -7,12 +7,18 @@
         resourceClasses: resourceClasses$ | async,
         searchButtonDisabled: searchButtonDisabled$ | async,
         propertyFormList: propertyFormList$ | async,
-        properties: properties$ | async
+        properties: properties$ | async,
+        addButtonDisabled: addButtonDisabled$ | async,
+        resetButtonDisabled: resetButtonDisabled$ | async,
+        selectedOntology: selectedOntology$ | async,
+        selectedResourceClass: selectedResourceClass$ | async
     } as asyncData"
 >
     <dasch-swiss-ontology-resource-form
         [ontologies]="asyncData.ontologies"
         [resourceClasses]="asyncData.resourceClasses"
+        [selectedOntology]="asyncData.selectedOntology"
+        [selectedResourceClass]="asyncData.selectedResourceClass"
         (emitSelectedOntology)="handleSelectedOntology($event)"
         (emitSelectedResourceClass)="handleSelectedResourceClass($event)"
     ></dasch-swiss-ontology-resource-form>
@@ -24,8 +30,11 @@
         (emitSelectedProperty)="handleSelectedProperty($event)"
     ></dasch-swiss-property-form>
     <dasch-swiss-form-actions
+        [addButtonDisabled]="asyncData.addButtonDisabled"
+        [resetButtonDisabled]="asyncData.resetButtonDisabled"
         [searchButtonDisabled]="asyncData.searchButtonDisabled"
         (emitAddPropertyForm)="handleAddPropertyForm()"
+        (emitResetButtonClicked)="handleResetButtonClicked()"
         (emitSearchButtonClicked)="handleSearchButtonClicked()"
     >
     </dasch-swiss-form-actions>

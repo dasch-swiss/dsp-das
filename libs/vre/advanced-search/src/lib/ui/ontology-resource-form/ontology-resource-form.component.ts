@@ -15,6 +15,24 @@ export class OntologyResourceFormComponent {
     @Input() ontologies: string[] | null = []; // todo: handle null case in html
     @Input() resourceClasses: string[] | null = [];
 
+    @Input() set selectedOntology(ontology: string | null | undefined) {
+        if(!this.ontologiesList) return;
+        if (ontology) {
+            this.ontologiesList.value = ontology;
+        } else {
+            this.ontologiesList.value = '';
+        }
+    }
+
+    @Input() set selectedResourceClass(resourceClass: string | null | undefined) {
+        if(!this.resourceClassesList) return;
+        if (resourceClass) {
+            this.resourceClassesList.value = resourceClass;
+        } else {
+            this.resourceClassesList.value = '';
+        }
+    }
+
     @Output() emitSelectedOntology = new EventEmitter<string>();
     @Output() emitSelectedResourceClass = new EventEmitter<string>();
 

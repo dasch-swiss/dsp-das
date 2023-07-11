@@ -28,11 +28,25 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
     /** combined selectors */
 
-    // search button is disabled if no ontology and no resource class are selected
+    // search button is disabled if no ontology and no resource class is selected
     searchButtonDisabled$: Observable<boolean> = this.select(
         this.selectedOntology$,
         this.propertyFormList$,
         (ontology, propertyFormList) => !(ontology && propertyFormList.length && propertyFormList.every(prop => !!prop.selectedProperty))
+    );
+
+    // add button is disabled if no ontology is selected
+    addButtonDisabled$: Observable<boolean> = this.select(
+        this.selectedOntology$,
+        (ontology) => !ontology
+    );
+
+    // reset button is disabled if no ontology and no resource class is selected and the list of property forms is empty
+    resetButtonDisabled$: Observable<boolean> = this.select(
+        this.selectedOntology$,
+        this.selectedResourceClass$,
+        this.propertyFormList$,
+        (ontology, resourceClass, propertyFormList) => !(ontology || resourceClass || propertyFormList.length)
     );
 
     updateSelectedOntology(ontology: string): void {
@@ -52,7 +66,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         } else {
             updatedPropertyFormList = currentPropertyFormList.filter(item => item !== property);
         }
-
+        console.log('updated list:', updatedPropertyFormList);
         this.patchState({ propertyFormList: updatedPropertyFormList });
     }
 
@@ -78,5 +92,11 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         console.log('selectedOnto:', selectedOntology);
         console.log('selectedResClass:', selectedResourceClass);
         propertyFormList.forEach((prop) => console.log('prop:', prop));
+    }
+
+    onReset() {
+        this.patchState({ selectedOntology: undefined });
+        this.patchState({ selectedResourceClass: undefined });
+        this.patchState({ propertyFormList: [] });
     }
 }

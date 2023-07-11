@@ -12,13 +12,20 @@ import { MatIconModule } from '@angular/material/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormActionsComponent {
+    @Input() addButtonDisabled: boolean | null = true;
+    @Input() resetButtonDisabled: boolean | null = true;
     @Input() searchButtonDisabled: boolean | null = true;
 
     @Output() emitAddPropertyForm = new EventEmitter<void>();
+    @Output() emitResetButtonClicked = new EventEmitter<void>();
     @Output() emitSearchButtonClicked = new EventEmitter<void>();
 
     onAddPropertyFormClicked(): void {
         this.emitAddPropertyForm.emit();
+    }
+
+    onResetButtonClicked(): void {
+        this.emitResetButtonClicked.emit();
     }
 
     onSearchButtonClicked(): void {

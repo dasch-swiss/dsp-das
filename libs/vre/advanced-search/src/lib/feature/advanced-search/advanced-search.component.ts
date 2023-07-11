@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { OntologyResourceFormComponent } from '../../ui/ontology-resource-form/ontology-resource-form.component';
 import { AdvancedSearchStoreService, PropertyFormItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
-import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
 import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
+import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
 
 @Component({
     selector: 'dasch-swiss-advanced-search',
@@ -25,6 +25,8 @@ export class AdvancedSearchComponent implements OnInit {
     propertyFormList$ = this.store.propertyFormList$;
     properties$ = this.store.properties$;
     searchButtonDisabled$ = this.store.searchButtonDisabled$;
+    addButtonDisabled$ = this.store.addButtonDisabled$;
+    resetButtonDisabled$ = this.store.resetButtonDisabled$;
 
     ngOnInit(): void {
         // mock values for the time being
@@ -64,6 +66,10 @@ export class AdvancedSearchComponent implements OnInit {
 
     handleSearchButtonClicked(): void {
         this.store.onSearch();
+    }
+
+    handleResetButtonClicked(): void {
+        this.store.onReset();
     }
 
 }

@@ -3,7 +3,8 @@ import {
     Component,
     EventEmitter,
     Input,
-    Output
+    Output,
+    ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -34,6 +35,8 @@ export class PropertyFormComponent {
 
     @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();
     @Output() emitSelectedProperty = new EventEmitter<PropertyFormItem>();
+
+    @ViewChild('propertiesList') propertiesList!: MatSelect;
 
     onRemovePropertyFormClicked(propFormItem: PropertyFormItem | null): void {
         if (propFormItem) {
