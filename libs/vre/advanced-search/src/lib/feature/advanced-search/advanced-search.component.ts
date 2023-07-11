@@ -4,6 +4,7 @@ import { OntologyResourceFormComponent } from '../../ui/ontology-resource-form/o
 import { AdvancedSearchStoreService, PropertyFormItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
+import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
 
 @Component({
     selector: 'dasch-swiss-advanced-search',
@@ -31,17 +32,22 @@ export class AdvancedSearchComponent implements OnInit {
     ngOnInit(): void {
         // mock values for the time being
         this.store.setState({
-            ontologies: ['onto1', 'onto2', 'onto3'],
-            resourceClasses: ['res1', 'res2', 'res3'],
-            selectedOntology: undefined,
+            ontologies: [],
+            resourceClasses: [],
+            selectedOntology: { iri: '', label: '' },
             selectedResourceClass: undefined,
             propertyFormList: [],
             properties: ['prop1', 'prop2', 'prop3']
         });
+
+        // hardcoded project for now
+        this.store.ontologiesList('http://rdfh.ch/projects/yTerZGyxjZVqFMNNKXCDPF');
+
+        this.store.resourceClassesList(this.selectedOntology$);
     }
 
     // pass-through method to notify the store to update the state of the selected ontology
-    handleSelectedOntology(ontology: string): void {
+    handleSelectedOntology(ontology: ApiData): void {
         this.store.updateSelectedOntology(ontology);
     }
 

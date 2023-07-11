@@ -3,7 +3,7 @@
       <mat-label>Select ontology</mat-label>
       <mat-select #ontologiesList (selectionChange)="onSelectedOntologyChanged()" name="ontologies">
         <mat-option *ngFor="let onto of ontologies" [value]="onto">
-          {{onto}}
+          {{onto.label}}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -12,7 +12,7 @@
         <mat-select #resourceClassesList (selectionChange)="onSelectedResourceClassChanged()" name="resourceClass">
             <mat-option>None</mat-option>
             <mat-option *ngFor="let class of resourceClasses" [value]="class">
-            {{class}}
+            {{class.label}}
           </mat-option>
         </mat-select>
       </mat-form-field>

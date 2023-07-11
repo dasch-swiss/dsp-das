@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
+import { AdvancedSearchService, ApiData } from '../advanced-search-service/advanced-search.service';
+import { switchMap, tap, catchError } from 'rxjs/operators';
 
 export interface AdvancedSearchState {
-    ontologies: string[];
-    resourceClasses: string[];
-    selectedOntology: string | undefined;
+    ontologies: ApiData[];
+    resourceClasses: ApiData[];
+    selectedOntology: ApiData;
     selectedResourceClass: string | undefined;
     propertyFormList: PropertyFormItem[];
     properties: string[];
@@ -19,9 +21,9 @@ export interface PropertyFormItem {
 @Injectable()
 export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchState> {
 
-    ontologies$: Observable<string[]> = this.select((state) => state.ontologies);
-    resourceClasses$: Observable<string[]> = this.select((state) => state.resourceClasses);
-    selectedOntology$: Observable<string | undefined> = this.select((state) => state.selectedOntology);
+    ontologies$: Observable<ApiData[]> = this.select((state) => state.ontologies);
+    resourceClasses$: Observable<ApiData[]> = this.select((state) => state.resourceClasses);
+    selectedOntology$: Observable<ApiData> = this.select((state) => state.selectedOntology);
     selectedResourceClass$: Observable<string | undefined> = this.select((state) => state.selectedResourceClass);
     propertyFormList$: Observable<PropertyFormItem[]> = this.select((state) => state.propertyFormList);
     properties$: Observable<string[]> = this.select((state) => state.properties);
@@ -77,7 +79,12 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         (ontology, resourceClass, propertyFormList) => !(ontology || resourceClass || propertyFormList.length)
     );
 
-    updateSelectedOntology(ontology: string): void {
+    constructor(private _advancedSearchService: AdvancedSearchService) {
+        super();
+    }
+
+    updateSelectedOntology(ontology: ApiData): void {
+        console.log('selected Onto:', ontology);
         this.patchState({ selectedOntology: ontology });
     }
 
@@ -127,4 +134,37 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         this.patchState({ selectedResourceClass: undefined });
         this.patchState({ propertyFormList: [] });
     }
+
+    getResClasses() {
+        this._advancedSearchService.resourceClassesList('http://0.0.0.0:3333/ontology/0801/beol/v2');
+    }
+
+    // intialize list of ontologies
+    readonly ontologiesList = this.effect((iri$: Observable<string>) =>
+    iri$.pipe(
+        switchMap((iri) =>
+            this._advancedSearchService.ontologiesList(iri).pipe(
+                tap({
+                    next: (response) => this.patchState({ ontologies: response }),
+                    // error: (error) => this.patchState({ error }),
+                }),
+                catchError(() => EMPTY)
+            )
+        )
+        )
+    );
+
+    readonly resourceClassesList = this.effect((iri$: Observable<ApiData>) =>
+    iri$.pipe(
+        switchMap((iri) =>
+            this._advancedSearchService.resourceClassesList(iri.iri).pipe(
+                tap({
+                    next: (response) => this.patchState({ resourceClasses: response }),
+                    // error: (error) => this.patchState({ error }),
+                }),
+                catchError(() => EMPTY)
+            )
+        )
+        )
+    );
 }

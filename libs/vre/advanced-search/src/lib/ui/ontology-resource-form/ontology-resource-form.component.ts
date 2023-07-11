@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewCh
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
+import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
 
 @Component({
     selector: 'dasch-swiss-ontology-resource-form',
@@ -12,10 +13,10 @@ import { MatSelect, MatSelectModule } from '@angular/material/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OntologyResourceFormComponent {
-    @Input() ontologies: string[] | null = []; // todo: handle null case in html
-    @Input() resourceClasses: string[] | null = [];
+    @Input() ontologies: ApiData[] | null = []; // todo: handle null case in html
+    @Input() resourceClasses: ApiData[] | null = [];
 
-    @Input() set selectedOntology(ontology: string | null | undefined) {
+    @Input() set selectedOntology(ontology: ApiData | null | undefined) {
         if(!this.ontologiesList) return;
         if (ontology) {
             this.ontologiesList.value = ontology;
@@ -24,7 +25,7 @@ export class OntologyResourceFormComponent {
         }
     }
 
-    @Input() set selectedResourceClass(resourceClass: string | null | undefined) {
+    @Input() set selectedResourceClass(resourceClass: ApiData | null | undefined) {
         if(!this.resourceClassesList) return;
         if (resourceClass) {
             this.resourceClassesList.value = resourceClass;
@@ -33,8 +34,8 @@ export class OntologyResourceFormComponent {
         }
     }
 
-    @Output() emitSelectedOntology = new EventEmitter<string>();
-    @Output() emitSelectedResourceClass = new EventEmitter<string>();
+    @Output() emitSelectedOntology = new EventEmitter<ApiData>();
+    @Output() emitSelectedResourceClass = new EventEmitter<ApiData>();
 
     @ViewChild('ontologiesList') ontologiesList!: MatSelect;
     @ViewChild('resourceClassesList') resourceClassesList!: MatSelect;
