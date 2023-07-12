@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, OntologiesMetadata, ProjectResponse } from '@dasch-swiss/dsp-js';
 import { inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 
 export interface ApiData {
@@ -27,12 +27,11 @@ export class AdvancedSearchService {
           map(
             // type this
             (data: any) => data.ontologies.map((onto: { id: string; label: string; }) => {return {iri: onto.id, label: onto.label}}),
-            (error: ApiResponseError) => console.error(error)
           ),
-        //   catchError(err => {
-        //     console.error(err);
-        //     return of([]);  // Return an empty array on error.
-        //   }),
+          catchError(err => {
+            this._handleError(err);
+            return [];  // Return an empty array on error.
+          }),
         );
     }
 
@@ -45,13 +44,22 @@ export class AdvancedSearchService {
                     console.log('data:', data);
                     return Object.keys(data.classes).map((key) => {
                         const resClass = data.classes[key];
-                        console.log('resClass:', resClass);
                         return {iri: resClass.id, label: resClass.label}
-                })},
-                (error: ApiResponseError) => console.error(error)
+                })}
             ),
+            catchError(err => {
+                this._handleError(err);
+                return [];  // Return an empty array on error.
+            }),
         );
+    }
 
+    private _handleError(error: any) {
+        if (error instanceof ApiResponseError) {
+            console.error('API error: ', error);
+        } else {
+            console.error('An error occurred: ', error);
+        }
     }
 
 }

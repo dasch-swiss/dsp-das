@@ -11,6 +11,7 @@ export interface AdvancedSearchState {
     selectedResourceClass: string | undefined;
     propertyFormList: PropertyFormItem[];
     properties: string[];
+    error?: any;
 }
 
 export interface PropertyFormItem {
@@ -141,30 +142,35 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
     // intialize list of ontologies
     readonly ontologiesList = this.effect((iri$: Observable<string>) =>
-    iri$.pipe(
-        switchMap((iri) =>
-            this._advancedSearchService.ontologiesList(iri).pipe(
-                tap({
-                    next: (response) => this.patchState({ ontologies: response }),
-                    // error: (error) => this.patchState({ error }),
-                }),
-                catchError(() => EMPTY)
+        iri$.pipe(
+            switchMap((iri) =>
+                this._advancedSearchService.ontologiesList(iri).pipe(
+                    tap({
+                        next: (response) =>
+                            this.patchState({ ontologies: response }),
+                        error: (error) => this.patchState({ error }),
+                    }),
+                    catchError(() => EMPTY)
+                )
             )
-        )
         )
     );
 
-    readonly resourceClassesList = this.effect((iri$: Observable<ApiData>) =>
-    iri$.pipe(
-        switchMap((iri) =>
-            this._advancedSearchService.resourceClassesList(iri.iri).pipe(
-                tap({
-                    next: (response) => this.patchState({ resourceClasses: response }),
-                    // error: (error) => this.patchState({ error }),
-                }),
-                catchError(() => EMPTY)
-            )
-        )
+    readonly resourceClassesList = this.effect((data$: Observable<ApiData>) =>
+        data$.pipe(
+            switchMap((data) => {
+                if (!data.iri) return EMPTY;
+                return this._advancedSearchService
+                    .resourceClassesList(data.iri)
+                    .pipe(
+                        tap({
+                            next: (response) =>
+                                this.patchState({ resourceClasses: response }),
+                            error: (error) => this.patchState({ error }),
+                        }),
+                        catchError(() => EMPTY)
+                    );
+            })
         )
     );
 }
