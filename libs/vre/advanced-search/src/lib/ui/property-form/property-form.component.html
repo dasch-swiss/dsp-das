@@ -3,7 +3,7 @@
         <mat-label>Select property</mat-label>
         <mat-select #propertiesList (selectionChange)="onSelectedPropertyChanged($event)" name="properties">
             <mat-option *ngFor="let prop of properties" [value]="prop">
-                {{ prop }}
+                {{ prop.label }}
             </mat-option>
         </mat-select>
     </mat-form-field>

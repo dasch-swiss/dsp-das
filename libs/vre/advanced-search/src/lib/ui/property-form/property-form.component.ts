@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { PropertyFormItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
 
 @Component({
     selector: 'dasch-swiss-property-form',
@@ -31,7 +32,7 @@ import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/s
 })
 export class PropertyFormComponent {
     @Input() propertyFormItem: PropertyFormItem | null = null;
-    @Input() properties: string[] | null = [];
+    @Input() properties: ApiData[] | null = [];
 
     @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();
     @Output() emitSelectedProperty = new EventEmitter<PropertyFormItem>();

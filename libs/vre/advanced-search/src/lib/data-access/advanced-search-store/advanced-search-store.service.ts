@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
-import { EMPTY, Observable } from 'rxjs';
+import { EMPTY, Observable, combineLatest, forkJoin, of } from 'rxjs';
 import { AdvancedSearchService, ApiData } from '../advanced-search-service/advanced-search.service';
 import { switchMap, tap, catchError } from 'rxjs/operators';
 
@@ -8,9 +8,9 @@ export interface AdvancedSearchState {
     ontologies: ApiData[];
     resourceClasses: ApiData[];
     selectedOntology: ApiData;
-    selectedResourceClass: string | undefined;
+    selectedResourceClass: ApiData;
     propertyFormList: PropertyFormItem[];
-    properties: string[];
+    properties: ApiData[];
     error?: any;
 }
 
@@ -25,9 +25,9 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     ontologies$: Observable<ApiData[]> = this.select((state) => state.ontologies);
     resourceClasses$: Observable<ApiData[]> = this.select((state) => state.resourceClasses);
     selectedOntology$: Observable<ApiData> = this.select((state) => state.selectedOntology);
-    selectedResourceClass$: Observable<string | undefined> = this.select((state) => state.selectedResourceClass);
+    selectedResourceClass$: Observable<ApiData> = this.select((state) => state.selectedResourceClass);
     propertyFormList$: Observable<PropertyFormItem[]> = this.select((state) => state.propertyFormList);
-    properties$: Observable<string[]> = this.select((state) => state.properties);
+    properties$: Observable<ApiData[]> = this.select((state) => state.properties);
 
     /** combined selectors */
 
@@ -69,7 +69,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     // add button is disabled if no ontology is selected
     addButtonDisabled$: Observable<boolean> = this.select(
         this.selectedOntology$,
-        (ontology) => !ontology
+        (ontology) => (!ontology.iri || ontology.iri === '')
     );
 
     // reset button is disabled if no ontology and no resource class is selected and the list of property forms is empty
@@ -89,7 +89,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         this.patchState({ selectedOntology: ontology });
     }
 
-    updateSelectedResourceClass(resourceClass: string): void {
+    updateSelectedResourceClass(resourceClass: ApiData): void {
         this.patchState({ selectedResourceClass: resourceClass });
     }
 
@@ -136,9 +136,16 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         this.patchState({ propertyFormList: [] });
     }
 
+    getProperties() {
+        this._advancedSearchService.propertiesListLog(
+            'http://0.0.0.0:3333/ontology/0801/beol/v2',
+            'http://0.0.0.0:3333/ontology/0801/beol/v2#Archive'
+        );
+    }
+
     // intialize list of ontologies
-    readonly ontologiesList = this.effect((iri$: Observable<string>) =>
-        iri$.pipe(
+    readonly ontologiesList = this.effect((ontologyIri$: Observable<string>) =>
+        ontologyIri$.pipe(
             switchMap((iri) =>
                 this._advancedSearchService.ontologiesList(iri).pipe(
                     tap({
@@ -152,8 +159,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         )
     );
 
-    readonly resourceClassesList = this.effect((data$: Observable<ApiData>) =>
-        data$.pipe(
+    readonly resourceClassesList = this.effect((resourceClassIri$: Observable<ApiData>) =>
+        resourceClassIri$.pipe(
             switchMap((data) => {
                 if (!data.iri) return EMPTY;
                 return this._advancedSearchService
@@ -169,4 +176,25 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             })
         )
     );
+
+    readonly propertiesList = this.effect((ontologyIri$: Observable<ApiData>) =>
+        ontologyIri$.pipe(
+            switchMap((onto) => {
+                if (!onto.iri) return EMPTY;
+                return this._advancedSearchService
+                    .propertiesList(onto.iri, undefined)
+                    .pipe(
+                        tap({
+                            next: (response) => {
+                                console.log('response:', response);
+                                this.patchState({ properties: response })
+                            },
+                            error: (error) => this.patchState({ error }),
+                        }),
+                        catchError(() => EMPTY)
+                    );
+            })
+        )
+    );
+
 }

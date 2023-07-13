@@ -5,6 +5,7 @@ import { AdvancedSearchStoreService, PropertyFormItem } from '../../data-access/
 import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'dasch-swiss-advanced-search',
@@ -35,15 +36,19 @@ export class AdvancedSearchComponent implements OnInit {
             ontologies: [],
             resourceClasses: [],
             selectedOntology: { iri: '', label: '' },
-            selectedResourceClass: undefined,
+            selectedResourceClass: { iri: '', label: '' },
             propertyFormList: [],
-            properties: ['prop1', 'prop2', 'prop3']
+            properties: []
         });
 
         // hardcoded project for now
         this.store.ontologiesList('http://rdfh.ch/projects/yTerZGyxjZVqFMNNKXCDPF');
 
         this.store.resourceClassesList(this.selectedOntology$);
+
+        this.store.propertiesList(this.selectedOntology$);
+
+        this.store.getProperties();
     }
 
     // pass-through method to notify the store to update the state of the selected ontology
@@ -52,7 +57,7 @@ export class AdvancedSearchComponent implements OnInit {
     }
 
     // pass-through method to notify the store to update the state of the selected resource class
-    handleSelectedResourceClass(resourceClass: string): void {
+    handleSelectedResourceClass(resourceClass: ApiData): void {
         this.store.updateSelectedResourceClass(resourceClass);
     }
 
