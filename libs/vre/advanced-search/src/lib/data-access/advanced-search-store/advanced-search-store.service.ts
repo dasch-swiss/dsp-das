@@ -136,10 +136,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         this.patchState({ propertyFormList: [] });
     }
 
-    getResClasses() {
-        this._advancedSearchService.resourceClassesList('http://0.0.0.0:3333/ontology/0801/beol/v2');
-    }
-
     // intialize list of ontologies
     readonly ontologiesList = this.effect((iri$: Observable<string>) =>
         iri$.pipe(

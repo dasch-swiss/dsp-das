@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, OntologiesMetadata, ProjectResponse } from '@dasch-swiss/dsp-js';
-import { inject } from '@angular/core';
+import { ApiResponseError, KnoraApiConnection, ReadOntology, ResourceClassDefinition } from '@dasch-swiss/dsp-js';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -25,12 +24,15 @@ export class AdvancedSearchService {
     ): Observable<ApiData[]> => {
         return this._dspApiConnection.v2.onto.getOntologiesByProjectIri(projectIri).pipe(
           map(
-            // type this
-            (data: any) => data.ontologies.map((onto: { id: string; label: string; }) => {return {iri: onto.id, label: onto.label}}),
+            // todo: type this
+            (data: any) => {
+                console.log('onto:', data);
+                return data.ontologies.map((onto: { id: string; label: string; }) => {return {iri: onto.id, label: onto.label}})
+            },
           ),
           catchError(err => {
             this._handleError(err);
-            return [];  // Return an empty array on error.
+            return [];  // return an empty array on error
           }),
         );
     }
@@ -39,21 +41,30 @@ export class AdvancedSearchService {
         ontologyIri: string
     ): Observable<ApiData[]> => {
         return this._dspApiConnection.v2.onto.getOntology(ontologyIri).pipe(
-            map(
-                (data: any) => {
-                    console.log('data:', data);
-                    return Object.keys(data.classes).map((key) => {
-                        const resClass = data.classes[key];
-                        return {iri: resClass.id, label: resClass.label}
-                })}
-            ),
-            catchError(err => {
+            map((response: ApiResponseError | ReadOntology) => {
+                if (response instanceof ApiResponseError) {
+                  throw response; // caught by catchError operator
+                }
+                // todo: idk how to test subclasses so maybe this doesn't get them
+                const resClasses = response.getClassDefinitionsByType(ResourceClassDefinition);
+                return resClasses
+                .sort((a: ResourceClassDefinition, b: ResourceClassDefinition) =>
+                    (a.label || '').localeCompare(b.label || '')
+                )
+                .map((resClassDef: ResourceClassDefinition) => {
+                  // label can be undefined
+                  const label = resClassDef.label || '';
+                  return { iri: resClassDef.id, label: label };
+                });
+              }),
+              catchError((err) => {
                 this._handleError(err);
-                return [];  // Return an empty array on error.
-            }),
+                return []; // return an empty array on error
+              })
         );
     }
 
+    // todo: check if we can type this
     private _handleError(error: any) {
         if (error instanceof ApiResponseError) {
             console.error('API error: ', error);
