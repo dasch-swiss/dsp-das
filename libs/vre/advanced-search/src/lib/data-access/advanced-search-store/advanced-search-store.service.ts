@@ -17,7 +17,7 @@ export interface AdvancedSearchState {
 
 export interface PropertyFormItem {
     id: string;
-    selectedProperty: string | undefined;
+    selectedProperty: ApiData | undefined;
 }
 
 @Injectable()
@@ -90,12 +90,18 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         console.log('selected Onto:', ontology);
         this.patchState({ selectedOntology: ontology });
         this.patchState({ selectedResourceClass: { iri: '', label: '' } });
+        this.patchState({ filteredProperties: [] });
         this.patchState({ propertyFormList: [] });
     }
 
     updateSelectedResourceClass(resourceClass: ApiData): void {
-        this.patchState({ selectedResourceClass: resourceClass });
-        this.patchState({ propertyFormList: [] });
+        if(resourceClass) {
+            this.patchState({ selectedResourceClass: resourceClass });
+        } else { // none was selected
+            this.patchState({ selectedResourceClass: { iri: '', label: '' } });
+            this.patchState({ filteredProperties: [] });
+        }
+        // this.patchState({ propertyFormList: [] });
     }
 
     updatePropertyFormList(operation: 'add' | 'delete', property: PropertyFormItem): void {
