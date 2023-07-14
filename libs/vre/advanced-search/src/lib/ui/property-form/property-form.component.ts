@@ -32,6 +32,10 @@ import { ApiData } from '../../data-access/advanced-search-service/advanced-sear
 })
 export class PropertyFormComponent {
     @Input() propertyFormItem: PropertyFormItem | null = null;
+
+    // this can contain either a list of all properties of an ontology
+    // OR
+    // a list of properties filtered by a resource class
     @Input() properties: ApiData[] | null = [];
 
     @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();

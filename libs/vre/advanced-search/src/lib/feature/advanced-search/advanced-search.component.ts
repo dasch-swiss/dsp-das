@@ -26,6 +26,7 @@ export class AdvancedSearchComponent implements OnInit {
     selectedResourceClass$ = this.store.selectedResourceClass$;
     propertyFormList$ = this.store.propertyFormList$;
     properties$ = this.store.properties$;
+    filteredProperties$ = this.store.filteredProperties$;
     searchButtonDisabled$ = this.store.searchButtonDisabled$;
     addButtonDisabled$ = this.store.addButtonDisabled$;
     resetButtonDisabled$ = this.store.resetButtonDisabled$;
@@ -38,7 +39,8 @@ export class AdvancedSearchComponent implements OnInit {
             selectedOntology: { iri: '', label: '' },
             selectedResourceClass: { iri: '', label: '' },
             propertyFormList: [],
-            properties: []
+            properties: [],
+            filteredProperties: [],
         });
 
         // hardcoded project for now
@@ -48,7 +50,7 @@ export class AdvancedSearchComponent implements OnInit {
 
         this.store.propertiesList(this.selectedOntology$);
 
-        this.store.getProperties();
+        this.store.filteredropertiesList(this.selectedResourceClass$);
     }
 
     // pass-through method to notify the store to update the state of the selected ontology

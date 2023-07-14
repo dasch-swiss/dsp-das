@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { ApiResponseError, KnoraApiConnection, ReadOntology, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, KnoraApiConnection, OntologiesMetadata, ReadOntology, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -19,15 +19,18 @@ export class AdvancedSearchService {
         private _dspApiConnection: KnoraApiConnection
     ) {}
 
+    // API call to get the list of ontologies
     ontologiesList = (
         projectIri: string
     ): Observable<ApiData[]> => {
         return this._dspApiConnection.v2.onto.getOntologiesByProjectIri(projectIri).pipe(
-          map(
-            // todo: type this
-            (data: any) => {
-                console.log('onto:', data);
-                return data.ontologies.map((onto: { id: string; label: string; }) => {return {iri: onto.id, label: onto.label}})
+          map((response: OntologiesMetadata | ApiResponseError) => {
+                if(response instanceof ApiResponseError) {
+                    throw response; // caught by catchError operator
+                }
+                return response.ontologies.map((onto: { id: string; label: string; }) => {
+                    return {iri: onto.id, label: onto.label}
+                });
             },
           ),
           catchError(err => {
@@ -37,6 +40,8 @@ export class AdvancedSearchService {
         );
     }
 
+
+    // API call to get the list of resource classes
     resourceClassesList = (
         ontologyIri: string
     ): Observable<ApiData[]> => {
@@ -45,9 +50,10 @@ export class AdvancedSearchService {
                 if (response instanceof ApiResponseError) {
                   throw response; // caught by catchError operator
                 }
+
                 // todo: idk how to test subclasses so maybe this doesn't get them
                 const resClasses = response.getClassDefinitionsByType(ResourceClassDefinition);
-                console.log('resClasses:', resClasses);
+
                 return resClasses
                 .sort((a: ResourceClassDefinition, b: ResourceClassDefinition) =>
                     (a.label || '').localeCompare(b.label || '')
@@ -65,41 +71,20 @@ export class AdvancedSearchService {
         );
     }
 
+    // API call to get the list of properties
     propertiesList = (
-        ontologyIri: string,
-        resourceClassIri?: string
+        ontologyIri: string
     ): Observable<ApiData[]> => {
-        if(!resourceClassIri) {
-            return this._dspApiConnection.v2.ontologyCache.getOntology(ontologyIri).pipe(
-                map((onto: Map<string, ReadOntology>) => {
-                    const ontology = onto.get(ontologyIri);
-                    if(!ontology) return [];
-                    const props = ontology.getPropertyDefinitionsByType(ResourcePropertyDefinition)
-                    .filter(
-                        (propDef) => propDef.isEditable && !propDef.isLinkValueProperty
-                    );
+        return this._dspApiConnection.v2.ontologyCache.getOntology(ontologyIri).pipe(
+            map((onto: Map<string, ReadOntology>) => {
+                const ontology = onto.get(ontologyIri);
 
-                    console.log('all props:', props);
+                if(!ontology) return [];
 
-                    return props
-                    .sort((a: ResourcePropertyDefinition, b: ResourcePropertyDefinition) =>
-                        (a.label || '').localeCompare(b.label || '')
-                    )
-                    .map((propDef: ResourcePropertyDefinition) => {
-                        // label can be undefined
-                        const label = propDef.label || '';
-                        return { iri: propDef.id, label: label };
-                    });
-                })
-            )
-        }
-        return this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).pipe(
-            map((onto: ResourceClassAndPropertyDefinitions) => {
-                const props = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition)
+                const props = ontology.getPropertyDefinitionsByType(ResourcePropertyDefinition)
                 .filter(
                     (propDef) => propDef.isEditable && !propDef.isLinkValueProperty
                 );
-                console.log('limited props:', props);
 
                 return props
                 .sort((a: ResourcePropertyDefinition, b: ResourcePropertyDefinition) =>
@@ -110,38 +95,41 @@ export class AdvancedSearchService {
                     const label = propDef.label || '';
                     return { iri: propDef.id, label: label };
                 });
+            }),
+            catchError((err) => {
+                this._handleError(err);
+                return []; // return an empty array on error
             })
         )
     }
 
-    propertiesListLog = (
-        ontologyIri: string,
-        resourceClassIri?: string
-    ): any => {
-        if(!resourceClassIri) {
-            return this._dspApiConnection.v2.ontologyCache.getOntology(ontologyIri).subscribe(
-                (onto: Map<string, ReadOntology>) => {
-                    const ontology = onto.get(ontologyIri);
-                    if(!ontology) return;
-                    const props = ontology.getPropertyDefinitionsByType(ResourcePropertyDefinition)
-                    .filter(
-                        (propDef) => propDef.isEditable && !propDef.isLinkValueProperty
-                    );
-                    console.log('LOG all props:', props);
-                }
-            )
-        }
-        return this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).subscribe(
-            (onto: ResourceClassAndPropertyDefinitions) => {
+    // API call to get the list of properties filtered by resource class
+    filteredPropertiesList = (
+        resourceClassIri: string
+    ): Observable<ApiData[]> => {
+        return this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).pipe(
+            map((onto: ResourceClassAndPropertyDefinitions) => {
                 const props = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition)
                 .filter(
                     (propDef) => propDef.isEditable && !propDef.isLinkValueProperty
                 );
-                console.log('LOG limited props:', props);
-            }
+
+                return props
+                .sort((a: ResourcePropertyDefinition, b: ResourcePropertyDefinition) =>
+                    (a.label || '').localeCompare(b.label || '')
+                )
+                .map((propDef: ResourcePropertyDefinition) => {
+                    // label can be undefined
+                    const label = propDef.label || '';
+                    return { iri: propDef.id, label: label };
+                });
+            }),
+            catchError((err) => {
+                this._handleError(err);
+                return []; // return an empty array on error
+            })
         )
     }
-
 
     // todo: check if we can type this
     private _handleError(error: any) {

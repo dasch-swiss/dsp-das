@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
-import { EMPTY, Observable, combineLatest, forkJoin, of } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { AdvancedSearchService, ApiData } from '../advanced-search-service/advanced-search.service';
 import { switchMap, tap, catchError } from 'rxjs/operators';
 
@@ -11,6 +11,7 @@ export interface AdvancedSearchState {
     selectedResourceClass: ApiData;
     propertyFormList: PropertyFormItem[];
     properties: ApiData[];
+    filteredProperties: ApiData[];
     error?: any;
 }
 
@@ -28,6 +29,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     selectedResourceClass$: Observable<ApiData> = this.select((state) => state.selectedResourceClass);
     propertyFormList$: Observable<PropertyFormItem[]> = this.select((state) => state.propertyFormList);
     properties$: Observable<ApiData[]> = this.select((state) => state.properties);
+    filteredProperties$: Observable<ApiData[]> = this.select((state) => state.filteredProperties);
 
     /** combined selectors */
 
@@ -87,10 +89,13 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     updateSelectedOntology(ontology: ApiData): void {
         console.log('selected Onto:', ontology);
         this.patchState({ selectedOntology: ontology });
+        this.patchState({ selectedResourceClass: { iri: '', label: '' } });
+        this.patchState({ propertyFormList: [] });
     }
 
     updateSelectedResourceClass(resourceClass: ApiData): void {
         this.patchState({ selectedResourceClass: resourceClass });
+        this.patchState({ propertyFormList: [] });
     }
 
     updatePropertyFormList(operation: 'add' | 'delete', property: PropertyFormItem): void {
@@ -136,14 +141,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         this.patchState({ propertyFormList: [] });
     }
 
-    getProperties() {
-        this._advancedSearchService.propertiesListLog(
-            'http://0.0.0.0:3333/ontology/0801/beol/v2',
-            'http://0.0.0.0:3333/ontology/0801/beol/v2#Archive'
-        );
-    }
-
-    // intialize list of ontologies
+    // load list of ontologies
     readonly ontologiesList = this.effect((ontologyIri$: Observable<string>) =>
         ontologyIri$.pipe(
             switchMap((iri) =>
@@ -159,12 +157,13 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         )
     );
 
-    readonly resourceClassesList = this.effect((resourceClassIri$: Observable<ApiData>) =>
-        resourceClassIri$.pipe(
-            switchMap((data) => {
-                if (!data.iri) return EMPTY;
+    // load list of resource classes
+    readonly resourceClassesList = this.effect((resourceClass$: Observable<ApiData>) =>
+        resourceClass$.pipe(
+            switchMap((resClass) => {
+                if (!resClass.iri) return EMPTY;
                 return this._advancedSearchService
-                    .resourceClassesList(data.iri)
+                    .resourceClassesList(resClass.iri)
                     .pipe(
                         tap({
                             next: (response) =>
@@ -177,18 +176,34 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         )
     );
 
-    readonly propertiesList = this.effect((ontologyIri$: Observable<ApiData>) =>
-        ontologyIri$.pipe(
+    // load list of properties
+    readonly propertiesList = this.effect((ontology$: Observable<ApiData>) =>
+        ontology$.pipe(
             switchMap((onto) => {
                 if (!onto.iri) return EMPTY;
                 return this._advancedSearchService
-                    .propertiesList(onto.iri, undefined)
+                    .propertiesList(onto.iri)
                     .pipe(
                         tap({
-                            next: (response) => {
-                                console.log('response:', response);
-                                this.patchState({ properties: response })
-                            },
+                            next: (response) => this.patchState({ properties: response }),
+                            error: (error) => this.patchState({ error }),
+                        }),
+                        catchError(() => EMPTY)
+                    );
+            })
+        )
+    );
+
+    // load list of filtered properties
+    readonly filteredropertiesList = this.effect((resourceClass$: Observable<ApiData>) =>
+        resourceClass$.pipe(
+            switchMap((resClass) => {
+                if (!resClass.iri) return EMPTY;
+                return this._advancedSearchService
+                    .filteredPropertiesList(resClass.iri)
+                    .pipe(
+                        tap({
+                            next: (response) => this.patchState({ filteredProperties: response }),
                             error: (error) => this.patchState({ error }),
                         }),
                         catchError(() => EMPTY)
