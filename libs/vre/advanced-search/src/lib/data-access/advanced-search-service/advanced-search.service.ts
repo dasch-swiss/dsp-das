@@ -9,6 +9,14 @@ export interface ApiData {
     label: string
 }
 
+// maybe we can combine this with ApiData
+// objectType can be undefined anyways so we can just make it optional
+export interface PropertyData {
+    iri: string,
+    label: string,
+    objectType: string
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -74,7 +82,7 @@ export class AdvancedSearchService {
     // API call to get the list of properties
     propertiesList = (
         ontologyIri: string
-    ): Observable<ApiData[]> => {
+    ): Observable<PropertyData[]> => {
         return this._dspApiConnection.v2.ontologyCache.getOntology(ontologyIri).pipe(
             map((onto: Map<string, ReadOntology>) => {
                 const ontology = onto.get(ontologyIri);
@@ -93,7 +101,11 @@ export class AdvancedSearchService {
                 .map((propDef: ResourcePropertyDefinition) => {
                     // label can be undefined
                     const label = propDef.label || '';
-                    return { iri: propDef.id, label: label };
+
+                    // objectType can be undefined but I'm not really sure if this is true
+                    const objectType = propDef.objectType || '';
+
+                    return { iri: propDef.id, label: label, objectType: objectType };
                 });
             }),
             catchError((err) => {
@@ -106,7 +118,7 @@ export class AdvancedSearchService {
     // API call to get the list of properties filtered by resource class
     filteredPropertiesList = (
         resourceClassIri: string
-    ): Observable<ApiData[]> => {
+    ): Observable<PropertyData[]> => {
         return this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).pipe(
             map((onto: ResourceClassAndPropertyDefinitions) => {
                 const props = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition)
@@ -121,7 +133,11 @@ export class AdvancedSearchService {
                 .map((propDef: ResourcePropertyDefinition) => {
                     // label can be undefined
                     const label = propDef.label || '';
-                    return { iri: propDef.id, label: label };
+
+                    // objectType can be undefined but I'm not really sure if this is true
+                    const objectType = propDef.objectType || '';
+
+                    return { iri: propDef.id, label: label, objectType: objectType };
                 });
             }),
             catchError((err) => {

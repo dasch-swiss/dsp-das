@@ -28,7 +28,7 @@
         [propertyFormItem]="propertyForm"
         [properties]="asyncData.filteredProperties.length ? asyncData.filteredProperties : asyncData.properties"
         (emitRemovePropertyForm)="handleRemovePropertyForm($event)"
-        (emitSelectedProperty)="handleSelectedProperty($event)"
+        (emitPropertyFormItemChanged)="handlePropertyFormChanged($event)"
     ></dasch-swiss-property-form>
     <dasch-swiss-form-actions
         [addButtonDisabled]="asyncData.addButtonDisabled"

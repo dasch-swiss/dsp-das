@@ -5,6 +5,7 @@ import { AdvancedSearchStoreService, PropertyFormItem } from '../../data-access/
 import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
+import { Constants } from '@dasch-swiss/dsp-js';
 
 @Component({
     selector: 'dasch-swiss-advanced-search',
@@ -66,15 +67,15 @@ export class AdvancedSearchComponent implements OnInit {
         // mock uuid using timestamp
         const uuid = Date.now().toString();
 
-        this.store.updatePropertyFormList('add', { id: uuid, selectedProperty: undefined });
+        this.store.updatePropertyFormList('add', { id: uuid, selectedProperty: undefined, selectedOperator: undefined, searchValue: undefined });
     }
 
     handleRemovePropertyForm(property: PropertyFormItem): void {
         this.store.updatePropertyFormList('delete', property);
     }
 
-    handleSelectedProperty(property: PropertyFormItem): void {
-        this.store.updateSelectedProperty(property);
+    handlePropertyFormChanged(property: PropertyFormItem): void {
+        this.store.updatePropertyFormItem(property);
     }
 
     handleSearchButtonClicked(): void {

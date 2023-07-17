@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
 import { EMPTY, Observable } from 'rxjs';
-import { AdvancedSearchService, ApiData } from '../advanced-search-service/advanced-search.service';
+import { AdvancedSearchService, ApiData, PropertyData } from '../advanced-search-service/advanced-search.service';
 import { switchMap, tap, catchError } from 'rxjs/operators';
+import { Operators } from '../../ui/property-form/property-form.component';
 
 export interface AdvancedSearchState {
     ontologies: ApiData[];
@@ -10,14 +11,16 @@ export interface AdvancedSearchState {
     selectedOntology: ApiData | undefined;
     selectedResourceClass: ApiData | undefined;
     propertyFormList: PropertyFormItem[];
-    properties: ApiData[];
-    filteredProperties: ApiData[];
+    properties: PropertyData[];
+    filteredProperties: PropertyData[];
     error?: any;
 }
 
 export interface PropertyFormItem {
     id: string;
-    selectedProperty: ApiData | undefined;
+    selectedProperty: PropertyData | undefined;
+    selectedOperator: string | undefined;
+    searchValue: string | undefined;
 }
 
 @Injectable()
@@ -28,15 +31,15 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     selectedOntology$: Observable<ApiData | undefined> = this.select((state) => state.selectedOntology);
     selectedResourceClass$: Observable<ApiData | undefined> = this.select((state) => state.selectedResourceClass);
     propertyFormList$: Observable<PropertyFormItem[]> = this.select((state) => state.propertyFormList);
-    properties$: Observable<ApiData[]> = this.select((state) => state.properties);
-    filteredProperties$: Observable<ApiData[]> = this.select((state) => state.filteredProperties);
+    properties$: Observable<PropertyData[]> = this.select((state) => state.properties);
+    filteredProperties$: Observable<PropertyData[]> = this.select((state) => state.filteredProperties);
 
     /** combined selectors */
 
     // search button is disabled if:
     // no ontology and no resource class is selected
     // OR
-    // no ontology is selected and the list of property forms is empty or at least one selected property is undefined
+    // an ontology is selected and the list of property forms is empty or at least one PropertyFormItem is invalid
     searchButtonDisabled$: Observable<boolean> = this.select(
         this.selectedOntology$,
         this.selectedResourceClass$,
@@ -46,16 +49,32 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             const isResourceClassUndefined = !resourceClass;
             const isPropertyFormListEmpty = !propertyFormList.length;
 
-            // returns true as soon as it encounters the first element where selectedProperty is undefined
-            const areSomeSelectedPropertiesUndefined =
-            propertyFormList.some((prop) => !prop.selectedProperty);
-
-            if(!isPropertyFormListEmpty) { // list not empty
-                // at least one selected property is undefined or onto is undefined
-                if(areSomeSelectedPropertiesUndefined || isOntologyUndefined)
+            const areSomePropertyFormItemsInvalid =
+            propertyFormList.some((prop) => {
+                // no property selected
+                if(!prop.selectedProperty)
                     return true;
 
-                // onto is defined, list not empty and all selected properties are defined
+                // selected operator is 'exists' or 'does not exist'
+                if( prop.selectedOperator === Operators.Exists ||
+                    prop.selectedOperator === Operators.NotExists)
+                    return false;
+
+                // selected operator is NOT 'exists' or 'does not exist'
+                // AND
+                // search value is undefined or empty
+                if(!prop.searchValue || prop.searchValue === '')
+                    return true;
+                return false;
+
+            });
+
+            if(!isPropertyFormListEmpty) { // list not empty
+                // at least one PropertyFormItem is invalid or onto is undefined
+                if(areSomePropertyFormItemsInvalid || isOntologyUndefined)
+                    return true;
+
+                // onto is defined, list not empty and all PropertyFormItems are valid
                 return false;
             } else { // list empty
                 // no onto or resclass selected
@@ -87,7 +106,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     }
 
     updateSelectedOntology(ontology: ApiData): void {
-        console.log('selected Onto:', ontology);
         this.patchState({ selectedOntology: ontology });
         this.patchState({ selectedResourceClass: undefined });
         this.patchState({ filteredProperties: [] });
@@ -97,7 +115,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     updateSelectedResourceClass(resourceClass: ApiData): void {
         if(resourceClass) {
             this.patchState({ selectedResourceClass: resourceClass });
-        } else { // none was selected
+        } else { // 'none' was selected
             this.patchState({ selectedResourceClass: undefined });
             this.patchState({ filteredProperties: [] });
         }
@@ -117,7 +135,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         this.patchState({ propertyFormList: updatedPropertyFormList });
     }
 
-    updateSelectedProperty(property: PropertyFormItem): void {
+    updatePropertyFormItem(property: PropertyFormItem): void {
+        console.log('form item changed:', property);
         const currentPropertyFormList = this.get((state) => state.propertyFormList);
         const index = currentPropertyFormList.indexOf(property);
 
