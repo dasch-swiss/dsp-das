@@ -5,7 +5,6 @@ import { AdvancedSearchStoreService, PropertyFormItem } from '../../data-access/
 import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
-import { Observable } from 'rxjs';
 
 @Component({
     selector: 'dasch-swiss-advanced-search',
@@ -36,8 +35,8 @@ export class AdvancedSearchComponent implements OnInit {
         this.store.setState({
             ontologies: [],
             resourceClasses: [],
-            selectedOntology: { iri: '', label: '' },
-            selectedResourceClass: { iri: '', label: '' },
+            selectedOntology: undefined,
+            selectedResourceClass: undefined,
             propertyFormList: [],
             properties: [],
             filteredProperties: [],
@@ -66,6 +65,7 @@ export class AdvancedSearchComponent implements OnInit {
     handleAddPropertyForm(): void {
         // mock uuid using timestamp
         const uuid = Date.now().toString();
+
         this.store.updatePropertyFormList('add', { id: uuid, selectedProperty: undefined });
     }
 

@@ -7,8 +7,8 @@ import { switchMap, tap, catchError } from 'rxjs/operators';
 export interface AdvancedSearchState {
     ontologies: ApiData[];
     resourceClasses: ApiData[];
-    selectedOntology: ApiData;
-    selectedResourceClass: ApiData;
+    selectedOntology: ApiData | undefined;
+    selectedResourceClass: ApiData | undefined;
     propertyFormList: PropertyFormItem[];
     properties: ApiData[];
     filteredProperties: ApiData[];
@@ -25,8 +25,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
     ontologies$: Observable<ApiData[]> = this.select((state) => state.ontologies);
     resourceClasses$: Observable<ApiData[]> = this.select((state) => state.resourceClasses);
-    selectedOntology$: Observable<ApiData> = this.select((state) => state.selectedOntology);
-    selectedResourceClass$: Observable<ApiData> = this.select((state) => state.selectedResourceClass);
+    selectedOntology$: Observable<ApiData | undefined> = this.select((state) => state.selectedOntology);
+    selectedResourceClass$: Observable<ApiData | undefined> = this.select((state) => state.selectedResourceClass);
     propertyFormList$: Observable<PropertyFormItem[]> = this.select((state) => state.propertyFormList);
     properties$: Observable<ApiData[]> = this.select((state) => state.properties);
     filteredProperties$: Observable<ApiData[]> = this.select((state) => state.filteredProperties);
@@ -71,7 +71,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     // add button is disabled if no ontology is selected
     addButtonDisabled$: Observable<boolean> = this.select(
         this.selectedOntology$,
-        (ontology) => (!ontology.iri || ontology.iri === '')
+        (ontology) => (!ontology || ontology.iri === '')
     );
 
     // reset button is disabled if no ontology and no resource class is selected and the list of property forms is empty
@@ -89,7 +89,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     updateSelectedOntology(ontology: ApiData): void {
         console.log('selected Onto:', ontology);
         this.patchState({ selectedOntology: ontology });
-        this.patchState({ selectedResourceClass: { iri: '', label: '' } });
+        this.patchState({ selectedResourceClass: undefined });
         this.patchState({ filteredProperties: [] });
         this.patchState({ propertyFormList: [] });
     }
@@ -98,7 +98,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         if(resourceClass) {
             this.patchState({ selectedResourceClass: resourceClass });
         } else { // none was selected
-            this.patchState({ selectedResourceClass: { iri: '', label: '' } });
+            this.patchState({ selectedResourceClass: undefined });
             this.patchState({ filteredProperties: [] });
         }
         // this.patchState({ propertyFormList: [] });
@@ -164,10 +164,10 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     );
 
     // load list of resource classes
-    readonly resourceClassesList = this.effect((resourceClass$: Observable<ApiData>) =>
+    readonly resourceClassesList = this.effect((resourceClass$: Observable<ApiData | undefined>) =>
         resourceClass$.pipe(
             switchMap((resClass) => {
-                if (!resClass.iri) return EMPTY;
+                if (!resClass) return EMPTY;
                 return this._advancedSearchService
                     .resourceClassesList(resClass.iri)
                     .pipe(
@@ -183,10 +183,10 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     );
 
     // load list of properties
-    readonly propertiesList = this.effect((ontology$: Observable<ApiData>) =>
+    readonly propertiesList = this.effect((ontology$: Observable<ApiData | undefined>) =>
         ontology$.pipe(
             switchMap((onto) => {
-                if (!onto.iri) return EMPTY;
+                if (!onto) return EMPTY;
                 return this._advancedSearchService
                     .propertiesList(onto.iri)
                     .pipe(
@@ -201,10 +201,10 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     );
 
     // load list of filtered properties
-    readonly filteredropertiesList = this.effect((resourceClass$: Observable<ApiData>) =>
+    readonly filteredropertiesList = this.effect((resourceClass$: Observable<ApiData | undefined>) =>
         resourceClass$.pipe(
             switchMap((resClass) => {
-                if (!resClass.iri) return EMPTY;
+                if (!resClass) return EMPTY;
                 return this._advancedSearchService
                     .filteredPropertiesList(resClass.iri)
                     .pipe(
