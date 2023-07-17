@@ -6,7 +6,7 @@ import {
     OnChanges,
     OnDestroy,
     OnInit,
-    Output,
+    Output
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -47,8 +47,8 @@ import {
     EmitEvent,
     Events as CommsEvents,
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
-import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
-import { NotificationService } from '@dsp-app/src/app/main/services/notification.service';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { DspResource } from '../dsp-resource';
 import { RepresentationConstants } from '../representation/file-representation';
 import { IncomingService } from '../services/incoming.service';
@@ -74,7 +74,7 @@ export interface PropertyInfoValues {
 @Component({
     selector: 'app-properties',
     templateUrl: './properties.component.html',
-    styleUrls: ['./properties.component.scss'],
+    styleUrls: ['./properties.component.scss']
 })
 export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     /**
@@ -93,11 +93,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
      * does the logged-in user has system or project admin permissions?
      */
     @Input() adminPermissions = false;
-
-    /**
-     * is the logged-in user project member?
-     */
-    @Input() editPermissions = false;
 
     /**
      * in case properties belongs to an annotation (e.g. region in still images)
@@ -142,8 +137,10 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
 
     deletedResource = false;
 
-    deleteButtonIsVisible: boolean;
-    addButtonIsVisible: boolean; // used to toggle add value button
+    userCanDelete: boolean;
+    cantDeleteReason = '';
+
+    userCanEdit: boolean;
     addValueFormIsVisible: boolean; // used to toggle add value form field
     propID: string; // used in template to show only the add value form of the corresponding value
 
@@ -169,7 +166,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
         private _dialog: MatDialog,
-        private _errorHandler: ErrorHandlerService,
+        private _errorHandler: AppErrorHandler,
         private _incomingService: IncomingService,
         private _notification: NotificationService,
         private _resourceService: ResourceService,
@@ -202,11 +199,10 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
             this.lastModificationDate = this.resource.res.lastModificationDate;
 
             // if user has modify permissions, set addButtonIsVisible to true so the user see's the add button
-            this.addButtonIsVisible =
-                allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
+            this.userCanEdit = allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
 
-            // if user has delete permissions, set deleteButtonIsVisible to true so the user see's the delete button
-            this.deleteButtonIsVisible =
+            // if user has delete permissions
+            this.userCanDelete =
                 allPermissions.indexOf(PermissionUtil.Permissions.D) !== -1;
         }
 
@@ -472,7 +468,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
      */
     hideAddValueForm() {
         this.addValueFormIsVisible = false;
-        this.addButtonIsVisible = true;
         this.propID = undefined;
     }
 
@@ -504,7 +499,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         return (
             isAllowed &&
             this.propID !== prop.propDef.id &&
-            this.addButtonIsVisible
+            this.userCanEdit
         );
     }
 
@@ -578,11 +573,20 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
      * @param prop the resource property
      */
     deleteValueIsAllowed(prop: PropertyInfoValues): boolean {
-        return CardinalityUtil.deleteValueForPropertyAllowed(
+        const card = CardinalityUtil.deleteValueForPropertyAllowed(
             prop.propDef.id,
             prop.values.length,
             this.resource.res.entityInfo.classes[this.resource.res.type]
-        );
+        )
+            if (!card) {
+                this.cantDeleteReason = 'This value can not be deleted because it is required.';
+            }
+
+            if (!this.userCanDelete) {
+                this.cantDeleteReason = 'You do not have teh permission to delete this value.';
+            }
+
+            return card && this.userCanDelete;
     }
 
     /**

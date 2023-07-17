@@ -1,13 +1,13 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
@@ -29,6 +29,8 @@ import { AddUserComponent } from './add-user/add-user.component';
 import { CollaborationComponent } from './collaboration.component';
 import { SelectGroupComponent } from './select-group/select-group.component';
 import { Component } from '@angular/core';
+import { MockProvider } from 'ng-mocks';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test component to simulate child component, here progress-indicator from action module.
@@ -50,7 +52,6 @@ describe('CollaborationComponent', () => {
     };
 
     beforeEach(waitForAsync(() => {
-
         const projectServiceSpy = jasmine.createSpyObj('ProjectService', [
             'uuidToIri',
         ]);
@@ -63,7 +64,7 @@ describe('CollaborationComponent', () => {
                 SelectGroupComponent,
                 DialogComponent,
                 StatusComponent,
-                TestProgressIndicatorComponent
+                TestProgressIndicatorComponent,
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -81,6 +82,7 @@ describe('CollaborationComponent', () => {
                 TranslateModule.forRoot(),
             ],
             providers: [
+                MockProvider(AppLoggingService),
                 {
                     provide: ActivatedRoute,
                     useValue: {

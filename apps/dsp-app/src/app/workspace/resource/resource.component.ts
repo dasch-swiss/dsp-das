@@ -5,14 +5,12 @@ import {
     Input,
     OnChanges,
     OnDestroy,
-    SimpleChange,
     ViewChild,
 } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import {
     ActivatedRoute,
-    NavigationEnd,
     NavigationError,
     Router,
 } from '@angular/router';
@@ -36,8 +34,8 @@ import {
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
-import { NotificationService } from '@dsp-app/src/app/main/services/notification.service';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
     Session,
     SessionService,
@@ -124,7 +122,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     // permissions of logged-in user
     session: Session;
     adminPermissions = false;
-    editPermissions = false;
 
     navigationSubscription: Subscription;
 
@@ -135,7 +132,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: ErrorHandlerService,
+        private _errorHandler: AppErrorHandler,
         private _incomingService: IncomingService,
         private _notification: NotificationService,
         private _resourceService: ResourceService,
@@ -251,13 +248,10 @@ export class ResourceComponent implements OnChanges, OnDestroy {
             this.collectRepresentationsAndAnnotations(this.incomingResource);
     }
 
-    setPermissionsOnResource(project: string) {
-        // get information about the logged-in user, if one is logged-in
-        if (this._session.getSession()) {
-            this.session = this._session.getSession();
-            // is the logged-in user project member?
-            // --> TODO: as soon as we know how to handle the permissions, set this value the correct way
-            this.editPermissions = true;
+    setAdminPermissionsOnResource(project: string) {
+        const session = this._session.getSession();
+        if (session) {
+            this.session = session;
             // is the logged-in user system admin or project admin?
             this.adminPermissions = this.session.user.sysAdmin
                 ? this.session.user.sysAdmin
@@ -302,7 +296,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         } else {
             this.renderAsMainResource(resource);
         }
-        this.setPermissionsOnResource(resource.res.attachedToProject);
+        this.setAdminPermissionsOnResource(resource.res.attachedToProject);
     }
 
     renderAsMainResource(resource: DspResource) {

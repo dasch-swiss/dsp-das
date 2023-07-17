@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -16,6 +16,8 @@ import { MockProjects, ProjectsEndpointAdmin } from '@dasch-swiss/dsp-js';
 import { of } from 'rxjs/internal/observable/of';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { FulltextSearchComponent } from './fulltext-search.component';
+import { MockProvider } from 'ng-mocks';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test host component to simulate parent component.
@@ -88,6 +90,7 @@ describe('FulltextSearchComponent', () => {
                 OverlayModule,
             ],
             providers: [
+                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConnectionToken,
                     useValue: dspConnSpy,

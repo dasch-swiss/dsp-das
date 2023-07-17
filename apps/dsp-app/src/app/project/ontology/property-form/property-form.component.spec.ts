@@ -2,14 +2,14 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component, DebugElement, ViewChild, Input } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import { MatLegacyOptionModule as MatOptionModule } from '@angular/material/legacy-core';
+import { MatOptionModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -31,6 +31,8 @@ import {
 import { TestConfig } from '@dsp-app/src/test.config';
 import { PropertyInfoObject } from '../default-data/default-properties';
 import { PropertyFormComponent } from './property-form.component';
+import { MockProvider } from 'ng-mocks';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test host component to simulate parent component
@@ -312,7 +314,10 @@ describe('PropertyFormComponent', () => {
     let listHostFixture: ComponentFixture<ListHostComponent>;
 
     beforeEach(waitForAsync(() => {
-        const applicationStateServiceSpy = jasmine.createSpyObj('ApplicationStateService', ['get']);
+        const applicationStateServiceSpy = jasmine.createSpyObj(
+            'ApplicationStateService',
+            ['get']
+        );
 
         TestBed.configureTestingModule({
             declarations: [
@@ -340,6 +345,7 @@ describe('PropertyFormComponent', () => {
             ],
             providers: [
                 AppConfigService,
+                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig,
