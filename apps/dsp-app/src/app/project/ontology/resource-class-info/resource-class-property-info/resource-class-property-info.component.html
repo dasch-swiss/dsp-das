@@ -24,7 +24,7 @@
                             (click)="removePropertyFromClass.emit({iri: propDef.id, label: propDef.label})">
                         <mat-icon>link_off</mat-icon>
                         <ngx-skeleton-loader
-                            *ngIf="propCanBeRemovedFromClass === undefined || propCanBeRemovedFromClass == null"
+                            *ngIf="propCanBeRemovedFromClass === undefined || propCanBeRemovedFromClass === null"
                             count="1"
                             appearance="line"
                             class='skeleton'
