@@ -1,11 +1,40 @@
 <div>
     <mat-form-field>
         <mat-label>Select property</mat-label>
-        <mat-select #propertiesList (selectionChange)="onSelectedPropertyChanged($event)" name="properties">
+        <mat-select
+            #propertiesList
+            (selectionChange)="onSelectedPropertyChanged($event)"
+            name="properties"
+        >
             <mat-option *ngFor="let prop of properties" [value]="prop">
                 {{ prop.label }}
             </mat-option>
         </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Select operator</mat-label>
+        <mat-select
+            #operatorsList
+            (selectionChange)="onSelectedOperatorChanged($event)"
+            name="operators"
+        >
+            <mat-option
+                *ngFor="let operator of filteredOperators"
+                [value]="operator"
+            >
+                {{ operator }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field
+        *ngIf="
+            propertyFormItem.selectedOperator &&
+            propertyFormItem.selectedOperator !== operators.Exists &&
+            propertyFormItem.selectedOperator !== operators.NotExists
+        "
+    >
+        <mat-label>Value</mat-label>
+        <input #propertyValue matInput type="text" [formControl]="inputControl" />
     </mat-form-field>
     <button
         mat-icon-button
