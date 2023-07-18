@@ -26,7 +26,7 @@
     <dasch-swiss-property-form
         *ngFor="let propertyForm of asyncData.propertyFormList"
         [propertyFormItem]="propertyForm"
-        [properties]="asyncData.filteredProperties.length ? asyncData.filteredProperties : asyncData.properties"
+        [properties]="asyncData.filteredProperties?.length ? asyncData.filteredProperties : asyncData.properties"
         (emitRemovePropertyForm)="handleRemovePropertyForm($event)"
         (emitPropertyFormItemChanged)="handlePropertyFormChanged($event)"
     ></dasch-swiss-property-form>

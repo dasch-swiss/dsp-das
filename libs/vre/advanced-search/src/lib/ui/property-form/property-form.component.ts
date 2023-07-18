@@ -3,7 +3,6 @@ import {
     Component,
     EventEmitter,
     Input,
-    OnInit,
     Output,
     ViewChild
 } from '@angular/core';
@@ -12,12 +11,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { PropertyFormItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { PropertyData } from '../../data-access/advanced-search-service/advanced-search.service';
-import { debounceTime } from 'rxjs/operators';
 import { Operators } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { PropertyFormValueComponent } from './property-form-value/property-form-value.component';
+
 @Component({
     selector: 'dasch-swiss-property-form',
     standalone: true,
@@ -36,32 +35,19 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
     styleUrls: ['./property-form.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyFormComponent implements OnInit {
+export class PropertyFormComponent {
     @Input() propertyFormItem: PropertyFormItem = { id: '', selectedProperty: undefined, selectedOperator: undefined, searchValue: undefined, operators: []};
 
     // this can contain either a list of all properties of an ontology
     // OR
     // a list of properties filtered by a resource class
-    @Input() properties: PropertyData[] = [];
+    @Input() properties: PropertyData[] | null = [];
     @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();
     @Output() emitPropertyFormItemChanged = new EventEmitter<PropertyFormItem>();
 
     @ViewChild('propertiesList') propertiesList!: MatSelect;
 
     operators = Operators; // in order to use it in the template
-
-    ngOnInit(): void {
-        /*
-        this.inputControl.valueChanges
-            .pipe(debounceTime(300))
-            .subscribe((value) => {
-                const propFormItem = this.propertyFormItem;
-                if (propFormItem) {
-                    propFormItem.searchValue = value;
-                    this.emitPropertyFormItemChanged.emit(propFormItem);
-                }
-            });*/
-    }
 
     onRemovePropertyFormClicked(propFormItem: PropertyFormItem | null): void {
         if (propFormItem) {
