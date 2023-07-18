@@ -220,7 +220,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     );
 
     // load list of filtered properties
-    readonly filteredropertiesList = this.effect((resourceClass$: Observable<ApiData | undefined>) =>
+    readonly filteredPropertiesList = this.effect((resourceClass$: Observable<ApiData | undefined>) =>
         resourceClass$.pipe(
             switchMap((resClass) => {
                 if (!resClass) return EMPTY;

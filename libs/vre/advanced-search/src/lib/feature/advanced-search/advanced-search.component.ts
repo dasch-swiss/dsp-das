@@ -50,7 +50,7 @@ export class AdvancedSearchComponent implements OnInit {
 
         this.store.propertiesList(this.selectedOntology$);
 
-        this.store.filteredropertiesList(this.selectedResourceClass$);
+        this.store.filteredPropertiesList(this.selectedResourceClass$);
     }
 
     // pass-through method to notify the store to update the state of the selected ontology
