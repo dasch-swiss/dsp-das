@@ -3,7 +3,7 @@ import { ComponentStore } from '@ngrx/component-store';
 import { EMPTY, Observable } from 'rxjs';
 import { AdvancedSearchService, ApiData, PropertyData } from '../advanced-search-service/advanced-search.service';
 import { switchMap, tap, catchError } from 'rxjs/operators';
-import { Operators } from '../../ui/property-form/property-form.component';
+import { Constants } from '@dasch-swiss/dsp-js';
 
 export interface AdvancedSearchState {
     ontologies: ApiData[];
@@ -21,6 +21,20 @@ export interface PropertyFormItem {
     selectedProperty: PropertyData | undefined;
     selectedOperator: string | undefined;
     searchValue: string | undefined;
+    operators: string[] | undefined;
+}
+
+export enum Operators {
+    Equals = 'equals',
+    NotEquals = 'does not equal',
+    Exists = 'exists',
+    NotExists = 'does not exist',
+    GreaterThan = 'greater than',
+    GreaterThanEquals = 'greater than or equal to',
+    LessThan = 'less than',
+    LessThanEquals = 'less than or equal to',
+    IsLike = 'is like',
+    Matches = 'matches',
 }
 
 @Injectable()
@@ -50,35 +64,35 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             const isPropertyFormListEmpty = !propertyFormList.length;
 
             const areSomePropertyFormItemsInvalid =
-            propertyFormList.some((prop) => {
-                // no property selected
-                if(!prop.selectedProperty)
-                    return true;
+                propertyFormList.some((prop) => {
+                    // no property selected
+                    if (!prop.selectedProperty)
+                        return true;
 
-                // selected operator is 'exists' or 'does not exist'
-                if( prop.selectedOperator === Operators.Exists ||
-                    prop.selectedOperator === Operators.NotExists)
+                    // selected operator is 'exists' or 'does not exist'
+                    if (prop.selectedOperator === Operators.Exists ||
+                        prop.selectedOperator === Operators.NotExists)
+                        return false;
+
+                    // selected operator is NOT 'exists' or 'does not exist'
+                    // AND
+                    // search value is undefined or empty
+                    if (!prop.searchValue || prop.searchValue === '')
+                        return true;
                     return false;
 
-                // selected operator is NOT 'exists' or 'does not exist'
-                // AND
-                // search value is undefined or empty
-                if(!prop.searchValue || prop.searchValue === '')
-                    return true;
-                return false;
+                });
 
-            });
-
-            if(!isPropertyFormListEmpty) { // list not empty
+            if (!isPropertyFormListEmpty) { // list not empty
                 // at least one PropertyFormItem is invalid or onto is undefined
-                if(areSomePropertyFormItemsInvalid || isOntologyUndefined)
+                if (areSomePropertyFormItemsInvalid || isOntologyUndefined)
                     return true;
 
                 // onto is defined, list not empty and all PropertyFormItems are valid
                 return false;
             } else { // list empty
                 // no onto or resclass selected
-                if(isOntologyUndefined || isResourceClassUndefined)
+                if (isOntologyUndefined || isResourceClassUndefined)
                     return true;
 
                 // onto and resclass are selected
@@ -113,7 +127,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     }
 
     updateSelectedResourceClass(resourceClass: ApiData): void {
-        if(resourceClass) {
+        if (resourceClass) {
             this.patchState({ selectedResourceClass: resourceClass });
         } else { // 'none' was selected
             this.patchState({ selectedResourceClass: undefined });
@@ -141,6 +155,27 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         const index = currentPropertyFormList.indexOf(property);
 
         if (index > -1) {  // only update if the property is found
+            const objectType = property.selectedProperty?.objectType;
+            let operators;
+            if (objectType) {
+                // filter available operators based on the object type of the selected property
+                operators = Array.from(this.getOperators().entries())
+                    .filter(([_, values]) => values.includes(objectType))
+                    .map(([key, _]) => key);
+
+                // if there are no matching operators in the map it means it's a link property
+                // i.e. http://0.0.0.0:3333/ontology/0801/newton/v2#letter
+                if (!operators.length) {
+                    operators = [
+                        Operators.Equals,
+                        Operators.NotEquals,
+                        Operators.Exists,
+                        Operators.NotExists,
+                        Operators.Matches, // apparently this is only available at the top level but idk what that means right now
+                    ];
+                }
+            }
+            property.operators = operators;
             const updatedPropertyFormList = [
                 ...currentPropertyFormList.slice(0, index),  // elements before the one to update
                 property,  // the updated property
@@ -149,6 +184,23 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
             this.patchState({ propertyFormList: updatedPropertyFormList });
         }
+    }
+
+    // key: operator, value: allowed object types
+    
+    getOperators(): Map<string, string[]> {
+        return new Map([
+            [Operators.Equals, [Constants.TextValue, Constants.UriValue]],
+            [Operators.NotEquals, [Constants.TextValue, Constants.UriValue]],
+            [Operators.Exists, [Constants.TextValue, Constants.UriValue]],
+            [Operators.NotExists, [Constants.TextValue, Constants.UriValue]],
+            [Operators.GreaterThan, [Constants.IntValue, Constants.DecimalValue]],
+            [Operators.GreaterThanEquals, [Constants.IntValue, Constants.DecimalValue]],
+            [Operators.LessThan, [Constants.IntValue, Constants.DecimalValue]],
+            [Operators.LessThanEquals, [Constants.IntValue, Constants.DecimalValue]],
+            [Operators.IsLike, [Constants.TextValue]],
+            [Operators.Matches, [Constants.TextValue]],
+        ]);
     }
 
     onSearch() {

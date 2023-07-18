@@ -1,0 +1,16 @@
+<!--TODO: We need to add a metric shit ton of validation here-->
+<div class="container" [ngSwitch]="objectType">
+    <input (keyup)="handleInputChanged($event.target.value)" *ngSwitchCase="constants.TextValue"/>
+    <mat-select (selectionChange)="handleInputChanged($event.value)" *ngSwitchCase="constants.BooleanValue" style="background-color: pink;">
+        <mat-option value="true">
+            True
+        </mat-option>
+        <mat-option  value="false">
+            False
+        </mat-option>
+    </mat-select>
+    <input (keyup)="handleInputChanged($event.target.value)" *ngSwitchCase="constants.UriValue"/>
+    <input type="number" (keyup)="handleInputChanged($event.target.value)" *ngSwitchCase="constants.IntValue"/>
+    <input type="number" (keyup)="handleInputChanged($event.target.value)" *ngSwitchCase="constants.DecimalValue"/>
+</div>
+{{objectType}}

@@ -5,7 +5,7 @@ import { AdvancedSearchStoreService, PropertyFormItem } from '../../data-access/
 import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
-import { Constants } from '@dasch-swiss/dsp-js';
+
 
 @Component({
     selector: 'dasch-swiss-advanced-search',
@@ -44,7 +44,7 @@ export class AdvancedSearchComponent implements OnInit {
         });
 
         // hardcoded project for now
-        this.store.ontologiesList('http://rdfh.ch/projects/yTerZGyxjZVqFMNNKXCDPF');
+        this.store.ontologiesList('http://rdfh.ch/projects/GRlCJl3iSW2JeIt3V22rPA');
 
         this.store.resourceClassesList(this.selectedOntology$);
 
@@ -67,7 +67,7 @@ export class AdvancedSearchComponent implements OnInit {
         // mock uuid using timestamp
         const uuid = Date.now().toString();
 
-        this.store.updatePropertyFormList('add', { id: uuid, selectedProperty: undefined, selectedOperator: undefined, searchValue: undefined });
+        this.store.updatePropertyFormList('add', { id: uuid, selectedProperty: undefined, selectedOperator: undefined, searchValue: undefined, operators: [] });
     }
 
     handleRemovePropertyForm(property: PropertyFormItem): void {
