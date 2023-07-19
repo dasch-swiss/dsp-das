@@ -27,12 +27,12 @@ jobs:
       run: npm run build-prod
       
     #- name: Copy dev config
-    #  run: cp ./src/config/config.dev-server.json ./dist/dsp-app/config/config.prod.json
+    #  run: cp ./src/config/config.dev-server.json ./dist/apps/dsp-app/config/config.prod.json
     
     # create config for dev environment
     - name: create dev config
       run: |
-           cat > ./dist/dsp-app/config/config.prod.json << EOF
+           cat > ./dist/apps/dsp-app/config/config.prod.json << EOF
            {
              "dspRelease": "${GITHUB_SHA::7}",
              "apiProtocol": "https",
@@ -70,7 +70,7 @@ jobs:
     
     # deploy to S3
     - name: Deploy static site to S3 bucket
-      run: aws s3 sync ./dist/dsp-app s3://app.cdn-test.aws-dev.dasch.swiss --delete
+      run: aws s3 sync ./dist/apps/dsp-app s3://app.cdn-test.aws-dev.dasch.swiss --delete
       
     # invalidate path
     - name: invalidate old version
