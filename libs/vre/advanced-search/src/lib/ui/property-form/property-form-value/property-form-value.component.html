@@ -2,8 +2,8 @@
 <div class="container" *ngIf="objectType" [ngSwitch]="objectType">
     <mat-form-field>
         <mat-label>Value</mat-label>
-        <input matInput (keyup)="handleInputChanged($event.target.value)" *ngSwitchCase="constants.TextValue"/>
-        <mat-select (selectionChange)="handleInputChanged($event.value)" *ngSwitchCase="constants.BooleanValue">
+        <input matInput (keyup)="handleInputChanged($event)" *ngSwitchCase="constants.TextValue"/>
+        <mat-select (selectionChange)="handleInputChanged($event)" *ngSwitchCase="constants.BooleanValue">
             <mat-option value="true">
                 True
             </mat-option>
@@ -11,9 +11,10 @@
                 False
             </mat-option>
         </mat-select>
-        <input matInput (keyup)="handleInputChanged($event.target.value)" *ngSwitchCase="constants.UriValue"/>
-        <input matInput type="number" (keyup)="handleInputChanged($event.target.value)" *ngSwitchCase="constants.IntValue"/>
-        <input matInput type="number" (keyup)="handleInputChanged($event.target.value)" *ngSwitchCase="constants.DecimalValue"/>
+        <input matInput (keyup)="handleInputChanged($event)" *ngSwitchCase="constants.UriValue"/>
+        <input matInput type="number" (keyup)="handleInputChanged($event)" *ngSwitchCase="constants.IntValue"/>
+        <input matInput type="number" (keyup)="handleInputChanged($event)" *ngSwitchCase="constants.DecimalValue"/>
+        <input matInput type="date" (keyup)="handleInputChanged($event)" *ngSwitchCase="constants.DateValue"/>
     </mat-form-field>
 </div>
 {{objectType}}

@@ -29,6 +29,11 @@ export class PropertyFormValueComponent {
     }
 
     handleInputChanged(event: any) {
-        this.valueChangedSubject.next(event);
+        const inputElement = event.target as HTMLInputElement;
+        if(inputElement) {
+            this.valueChangedSubject.next(inputElement.value);
+        } else {
+            this.emitValueChanged.emit(event.value)
+        }
     }
 }
