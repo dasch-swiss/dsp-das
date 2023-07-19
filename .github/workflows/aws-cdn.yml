@@ -14,7 +14,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-central-1 # Use your bucket region here
+        aws-region: eu-central-2
         
     # build app
     - name: Set up Node.js ${{ env.node-version }}
@@ -70,8 +70,8 @@ jobs:
     
     # deploy to S3
     - name: Deploy static site to S3 bucket
-      run: aws s3 sync ./dist/dsp-app s3://app.cdn.dasch.swiss --delete
+      run: aws s3 sync ./dist/dsp-app s3://app.cdn-test.aws-dev.dasch.swiss --delete
       
     # invalidate path
     - name: invalidate old version
-      run: aws cloudfront create-invalidation --distribution-id E173GHGBMR0QPJ --paths "/*"
+      run: aws cloudfront create-invalidation --distribution-id E3CJ99YDDMB0TL --paths "/*"
