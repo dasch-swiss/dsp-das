@@ -1,0 +1,29 @@
+.warning {
+  background-color: #fffbeb;
+  border-radius: 5px;
+
+  .container {
+    padding: 2%;
+    text-align: center;
+
+    .icon,
+    .message {
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    .icon {
+      color: #fbbf24;
+    }
+
+    .message {
+      padding-left: 2%;
+      color: #92400e;
+
+      p {
+        margin-block-start: 0em;
+        margin-block-end: 0em;
+      }
+    }
+  }
+}

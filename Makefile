@@ -40,26 +40,33 @@ docs-clean: ## cleans the project directory
 #################################
 # Build and publish targets
 #################################
-.PHONY: docker-build
-docker-build: ## build and publish DSP-APP Docker image locally
-	docker buildx build -t $(DSP_APP_IMAGE) -t $(DSP_APP_REPO):latest --load .
+.PHONY: docker-build-app
+docker-build-app: app-build-prod ## build and publish DSP-APP Docker image locally
+	docker buildx build -t $(DSP_APP_IMAGE) --load .
+
+.PHONY: docker-image-tag
+docker-image-tag: ## prints the docker image tag
+	@echo $(BUILD_TAG)
+
+.PHONY: docker-publish-app
+docker-publish-app: app-build-prod ## publish DSP-APP Docker image to Docker-Hub for AMD64 and ARM64
+	docker buildx build --platform linux/amd64,linux/arm64/v8 --build-arg build_tag=$(BUILD_TAG) -t $(DSP_APP_IMAGE) --push .
+	# publish source maps to DataDog
+	npx datadog-ci sourcemaps upload ${CURRENT_DIR}/dist/apps/dsp-app \
+      --service=dsp-app \
+      --release-version=${BUILD_TAG} \
+      --minified-path-prefix=/
 
 .PHONY: docker-publish
-docker-publish: ## publish DSP-APP Docker image to Docker-Hub for AMD64 and ARM64 with latest tag
-	docker buildx build --platform linux/amd64,linux/arm64/v8 -t $(DSP_APP_IMAGE) -t $(DSP_APP_REPO):latest --push .
+docker-publish: docker-publish-app ## publish all Docker images in the monorepo.
 
-.PHONY: docker-publish-from-branch
-docker-publish-from-branch: ## publish DSP-APP Docker image to Docker-Hub for AMD64 and ARM64 w/o latest tag
-	docker buildx build --platform linux/amd64,linux/arm64/v8 -t $(DSP_APP_IMAGE) --push .
+.PHONY: app-build-prod
+app-build-prod: install-dependencies
+	npx nx run dsp-app:build:production
 
-.PHONY: build-dsp-app-image
-build-dsp-app-image: ## build DSP APP image locally
-	docker build -t $(DSP_APP_IMAGE) .
-	docker tag $(DSP_APP_IMAGE) $(DSP_APP_REPO):latest
-
-.PHONY: publish-dsp-app-image
-publish-dsp-app-image: build-dsp-app-image ## publish DSP APP Docker image to Docker-Hub
-	docker image push --all-tags $(DSP_APP_REPO)
+.PHONY: install-dependencies
+install-dependencies:
+	npm install
 
 .PHONY: help
 help: ## this help

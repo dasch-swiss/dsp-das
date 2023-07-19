@@ -1,0 +1,57 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": ".",
+    "downlevelIteration": true,
+    "importHelpers": true,
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "target": "ES2021",
+    "module": "ES2020",
+    "lib": ["ES2021", "dom"],
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "typeRoots": ["node_modules/@types"],
+    "useDefineForClassFields": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@dasch-swiss/jdnconvertiblecalendar": [
+        "libs/jdnconvertiblecalendar/src/index.ts"
+      ],
+      "@dasch-swiss/jdnconvertiblecalendardateadapter": [
+        "libs/jdnconvertiblecalendardateadapter/src/index.ts"
+      ],
+      "@dasch-swiss/vre/shared/app-config": [
+        "libs/vre/shared/app-config/src/index.ts"
+      ],
+      "@dasch-swiss/vre/shared/app-error-handler": [
+        "libs/vre/shared/app-error-handler/src/index.ts"
+      ],
+      "@dasch-swiss/vre/shared/app-logging": [
+        "libs/vre/shared/app-logging/src/index.ts"
+      ],
+      "@dasch-swiss/vre/shared/app-notification": [
+        "libs/vre/shared/app-notification/src/index.ts"
+      ],
+      "@dasch-swiss/vre/shared/app-session": [
+        "libs/vre/shared/app-session/src/index.ts"
+      ],
+      "@dasch-swiss/vre/shared/assets/status-msg": [
+        "libs/vre/shared/assets/status-msg/src/index.ts"
+       ],
+      "@dasch-swiss/vre/shared/app-state-service": [
+        "libs/vre/shared/app-state-service/src/index.ts"
+      ],
+      "@dsp-app/*": ["apps/dsp-app/*"]
+    }
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "preserveWhitespaces": true,
+    "strictTemplate": true
+  },
+  "exclude": ["node_modules", "tmp"]
+}

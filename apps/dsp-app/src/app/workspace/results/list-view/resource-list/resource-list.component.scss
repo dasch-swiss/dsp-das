@@ -1,0 +1,66 @@
+@use "../../../../../styles/config" as *;
+
+.resource-list {
+  cursor: default;
+  .mat-mdc-list-item {
+    cursor: default;
+    height: auto;
+    min-height: 40px;
+
+    &.border-bottom {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    .mat-line {
+      white-space: normal !important;
+    }
+  }
+}
+
+.res-list-item-container {
+  display: flex;
+  align-items: center;
+}
+
+.res-list-item-content {
+  display: flex;
+  flex-grow: 1; /* grow to fill remaining space */
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.res-list-item-text{
+  width: 85%;
+  padding-left: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.res-class-label,
+.res-prop-label {
+  color: $cool_gray_500;
+}
+
+.res-class-label,
+.res-class-value {
+  margin: 4px 0;
+}
+
+.res-class-label {
+  font-size: 14px !important;
+}
+
+.res-class-value {
+  width: 85%;
+  font-weight: bold !important;
+  font-size: 16px !important;
+  line-height: 1.5;
+}
+
+.res-prop-label {
+  font-style: italic;
+}
+
+.res-checkbox {
+  min-width: 3em;
+}
