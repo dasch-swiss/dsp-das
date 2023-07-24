@@ -26,7 +26,7 @@ export class NotificationService {
         let message: string;
 
         const conf: MatSnackBarConfig = {
-            duration: 50000,
+            duration: 5000,
             horizontalPosition: 'center',
             verticalPosition: 'top',
             panelClass: type ? type : 'error',
