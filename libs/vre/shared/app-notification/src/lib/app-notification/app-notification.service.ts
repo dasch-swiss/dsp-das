@@ -26,7 +26,7 @@ export class NotificationService {
         let message: string;
 
         const conf: MatSnackBarConfig = {
-            duration: 5000,
+            duration: 50000,
             horizontalPosition: 'center',
             verticalPosition: 'top',
             panelClass: type ? type : 'error',
@@ -35,7 +35,7 @@ export class NotificationService {
         if (notification instanceof ApiResponseError) {
             conf.panelClass = type ? type : 'error';
             notification = notification as ApiResponseError;
-            if ( 
+            if (
                 notification.error && notification.error instanceof AjaxError &&
                 !notification.error['message'].startsWith('ajax error')
             ) {
