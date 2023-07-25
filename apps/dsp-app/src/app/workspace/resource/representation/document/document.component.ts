@@ -87,7 +87,6 @@ export class DocumentComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         if (this.fileType === 'pdf') {
             this.elem = document.getElementsByClassName('pdf-viewer')[0];
-            console.log(this.elem);
         }
         this.loaded.emit(true);
     }
