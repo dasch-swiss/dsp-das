@@ -124,7 +124,6 @@ export class GeonameService {
      */
     searchPlace(searchString: string): Observable<SearchPlace[]> {
         const url = `https://ws.geonames.net/searchJSON?userName=${this._appConfigService.dspAppConfig.geonameToken}&lang=en&style=full&maxRows=12&name_startsWith=${encodeURIComponent(searchString)}`;
-        console.log(url);
 
         return this._http.get<GeonameResponse>(url).pipe(
             map(response => {
