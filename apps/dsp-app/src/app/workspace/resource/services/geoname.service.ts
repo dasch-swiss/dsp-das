@@ -133,7 +133,7 @@ export class GeonameService {
                     .map(geo => {
                         return {
                             id: geo.geonameId.toString(),
-                            displayName: `${geo.name}${geo.adminName1 ? ', ' + geo.adminName1 : ''}${geo.countryName ? ', ' + geo.countryCode : ''}`,
+                            displayName: `${geo.name}${geo.adminName1 ? ', ' + geo.adminName1 : ''}${geo.countryName ? ', ' + geo.countryName : ''}`,
                             name: geo.name,
                             administrativeName: geo.adminName1,
                             country: geo.countryName,
