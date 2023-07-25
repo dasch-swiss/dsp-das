@@ -12,7 +12,8 @@
         addButtonDisabled: addButtonDisabled$ | async,
         resetButtonDisabled: resetButtonDisabled$ | async,
         selectedOntology: selectedOntology$ | async,
-        selectedResourceClass: selectedResourceClass$ | async
+        selectedResourceClass: selectedResourceClass$ | async,
+        resourcesSearchResults: resourcesSearchResults$ | async
     } as asyncData"
 >
     <dasch-swiss-ontology-resource-form
@@ -25,10 +26,12 @@
     ></dasch-swiss-ontology-resource-form>
     <dasch-swiss-property-form
         *ngFor="let propertyForm of asyncData.propertyFormList"
+        [resourcesSearchResults]="asyncData.resourcesSearchResults"
         [propertyFormItem]="propertyForm"
         [properties]="asyncData.filteredProperties?.length ? asyncData.filteredProperties : asyncData.properties"
         (emitRemovePropertyForm)="handleRemovePropertyForm($event)"
-        (emitPropertyFormItemChanged)="handlePropertyFormChanged($event)"
+        (emitPropertyFormItemChanged)="handlePropertyFormItemChanged($event)"
+        (emitResourceSearchValueChanged)="handleSearchValueChanged($event)"
     ></dasch-swiss-property-form>
     <dasch-swiss-form-actions
         [addButtonDisabled]="asyncData.addButtonDisabled"

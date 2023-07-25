@@ -19,23 +19,29 @@
             name="operators"
         >
             <mat-option
-                *ngFor="let operator of propertyFormItem.operators"
+                *ngFor="let operator of propertyFormItem?.operators"
                 [value]="operator"
             >
                 {{ operator }}
             </mat-option>
         </mat-select>
     </mat-form-field>
-    <dasch-swiss-property-form-value
+    <!-- <dasch-swiss-property-form-value
         *ngIf="
             propertyFormItem.selectedOperator &&
             propertyFormItem.selectedOperator !== operators.Exists &&
             propertyFormItem.selectedOperator !== operators.NotExists
         "
         [objectType]="propertyFormItem.selectedProperty?.objectType"
+        [resourcesList]="propertyFormItem.resourcesList"
         (emitValueChanged)="handleValueChanged($event)"
-    />
-
+        (emitSearchValueChanged)="handleSearchValueChanged($event)"
+    /> -->
+    <dasch-swiss-property-form-link-value
+        [resourcesSearchResults]="resourcesSearchResults"
+        (emitResourceSearchValueChanged)="handleResourceSearchValueChanged($event)"
+        (emitResourceSelected)="onValueChanged($event)"
+    ></dasch-swiss-property-form-link-value>
     <button
         mat-icon-button
         (click)="onRemovePropertyFormClicked(propertyFormItem)"

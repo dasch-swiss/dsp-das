@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OntologyResourceFormComponent } from '../../ui/ontology-resource-form/ontology-resource-form.component';
-import { AdvancedSearchStoreService, PropertyFormItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
+import { AdvancedSearchStoreService, PropertyFormItem, SearchItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
@@ -30,6 +30,7 @@ export class AdvancedSearchComponent implements OnInit {
     searchButtonDisabled$ = this.store.searchButtonDisabled$;
     addButtonDisabled$ = this.store.addButtonDisabled$;
     resetButtonDisabled$ = this.store.resetButtonDisabled$;
+    resourcesSearchResults$ = this.store.resourcesSearchResults$;
 
     ngOnInit(): void {
         // mock values for the time being
@@ -41,10 +42,13 @@ export class AdvancedSearchComponent implements OnInit {
             propertyFormList: [],
             properties: [],
             filteredProperties: [],
+            resourcesSearchResults: [],
         });
 
         // hardcoded project for now
-        this.store.ontologiesList('http://rdfh.ch/projects/GRlCJl3iSW2JeIt3V22rPA');
+        // BEOL: yTerZGyxjZVqFMNNKXCDPF
+        // Eric: GRlCJl3iSW2JeIt3V22rPA
+        this.store.ontologiesList('http://rdfh.ch/projects/yTerZGyxjZVqFMNNKXCDPF');
 
         this.store.resourceClassesList(this.selectedOntology$);
 
@@ -74,8 +78,12 @@ export class AdvancedSearchComponent implements OnInit {
         this.store.updatePropertyFormList('delete', property);
     }
 
-    handlePropertyFormChanged(property: PropertyFormItem): void {
+    handlePropertyFormItemChanged(property: PropertyFormItem): void {
         this.store.updatePropertyFormItem(property);
+    }
+
+    handleSearchValueChanged(searchItem: SearchItem): void {
+        this.store.updateResourcesSearchResults(searchItem);
     }
 
     handleSearchButtonClicked(): void {

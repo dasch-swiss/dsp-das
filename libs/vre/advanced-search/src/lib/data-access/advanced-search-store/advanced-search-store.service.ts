@@ -13,6 +13,7 @@ export interface AdvancedSearchState {
     propertyFormList: PropertyFormItem[];
     properties: PropertyData[];
     filteredProperties: PropertyData[];
+    resourcesSearchResults: ApiData[];
     error?: any;
 }
 
@@ -22,6 +23,11 @@ export interface PropertyFormItem {
     selectedOperator: string | undefined;
     searchValue: string | undefined;
     operators: string[] | undefined;
+}
+
+export interface SearchItem {
+    value: string;
+    objectType: string;
 }
 
 export enum Operators {
@@ -47,6 +53,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     propertyFormList$: Observable<PropertyFormItem[]> = this.select((state) => state.propertyFormList);
     properties$: Observable<PropertyData[]> = this.select((state) => state.properties);
     filteredProperties$: Observable<PropertyData[]> = this.select((state) => state.filteredProperties);
+    resourcesSearchResults$: Observable<ApiData[]> = this.select((state) => state.resourcesSearchResults);
 
     /** combined selectors */
 
@@ -157,6 +164,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         if (index > -1) {  // only update if the property is found
             const objectType = property.selectedProperty?.objectType;
             let operators;
+            // todo: this should probably only update when the selected property changes
             if (objectType) {
                 // filter available operators based on the object type of the selected property
                 operators = Array.from(this.getOperators().entries())
@@ -176,6 +184,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                 }
             }
             property.operators = operators;
+            console.log('property:', property);
+
             const updatedPropertyFormList = [
                 ...currentPropertyFormList.slice(0, index),  // elements before the one to update
                 property,  // the updated property
@@ -186,8 +196,13 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         }
     }
 
+    updateResourcesSearchResults(searchItem: SearchItem): void {
+        this._advancedSearchService.getResourcesList(searchItem.value, searchItem.objectType).subscribe(
+            (resources) => this.patchState({ resourcesSearchResults: resources })
+        );
+    }
+
     // key: operator, value: allowed object types
-    
     getOperators(): Map<string, string[]> {
         return new Map([
             [Operators.Equals, [Constants.TextValue, Constants.UriValue]],
@@ -288,5 +303,26 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             })
         )
     );
+
+    // readonly resourcesList = this.effect((propertyFormList$: Observable<PropertyFormItem[]>) =>
+    //     propertyFormList$.pipe(
+    //         switchMap((propertyFormList) => {
+    //             if (!propertyFormList) return EMPTY;
+
+    //             propertyFormList.forEach((prop) => {
+    //                 if (prop.searchValue && prop.selectedProperty && !(prop.selectedProperty.objectType.includes(Constants.KnoraApiV2))) {
+    //                     this._advancedSearchService.resourcesList(prop.searchValue, prop.selectedProperty.objectType).subscribe(
+    //                         (resources) => {
+    //                             console.log('data:', resources);
+    //                             prop.resourcesList = resources;
+    //                             // this.updatePropertyFormItem(prop);
+    //                         }
+    //                     );
+    //                 }
+    //             });
+    //             return EMPTY;
+    //         })
+    //     )
+    // );
 
 }

@@ -10,12 +10,13 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { PropertyFormItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
+import { PropertyFormItem, SearchItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
-import { PropertyData } from '../../data-access/advanced-search-service/advanced-search.service';
+import { PropertyData, ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
 import { Operators } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { PropertyFormValueComponent } from './property-form-value/property-form-value.component';
+import { PropertyFormLinkValueComponent } from './property-form-link-value/property-form-link-value.component';
 
 @Component({
     selector: 'dasch-swiss-property-form',
@@ -28,7 +29,8 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
         FormsModule,
         ReactiveFormsModule,
         MatSelectModule,
-        PropertyFormValueComponent
+        PropertyFormValueComponent,
+        PropertyFormLinkValueComponent
     ],
     providers: [MatSelect,],
     templateUrl: './property-form.component.html',
@@ -36,14 +38,18 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyFormComponent {
-    @Input() propertyFormItem: PropertyFormItem = { id: '', selectedProperty: undefined, selectedOperator: undefined, searchValue: undefined, operators: []};
+    @Input() propertyFormItem: PropertyFormItem = { id: '', selectedProperty: undefined, selectedOperator: undefined, searchValue: undefined, operators: [] };
+
+    @Input() resourcesSearchResults: ApiData[] | null = [];
 
     // this can contain either a list of all properties of an ontology
     // OR
     // a list of properties filtered by a resource class
     @Input() properties: PropertyData[] | null = [];
+
     @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();
     @Output() emitPropertyFormItemChanged = new EventEmitter<PropertyFormItem>();
+    @Output() emitResourceSearchValueChanged = new EventEmitter<SearchItem>();
 
     @ViewChild('propertiesList') propertiesList!: MatSelect;
 
@@ -81,8 +87,19 @@ export class PropertyFormComponent {
         }
     }
 
-    handleValueChanged(event: string){
-        console.log(event);
+    onValueChanged(event: string){
+        const propFormItem = this.propertyFormItem;
+        if (propFormItem) {
+            propFormItem.searchValue = event;
+            this.emitPropertyFormItemChanged.emit(propFormItem);
+        }
+    }
+
+    handleResourceSearchValueChanged(event: string){
+        const propFormItem = this.propertyFormItem;
+        if (propFormItem && propFormItem.selectedProperty) {
+            this.emitResourceSearchValueChanged.emit({ value: event, objectType: propFormItem.selectedProperty?.objectType });
+        }
     }
 
 }

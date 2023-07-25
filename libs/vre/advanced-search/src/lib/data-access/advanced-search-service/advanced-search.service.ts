@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { ApiResponseError, KnoraApiConnection, OntologiesMetadata, ReadOntology, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, KnoraApiConnection, OntologiesMetadata, ReadOntology, ReadResource, ReadResourceSequence, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -146,6 +146,45 @@ export class AdvancedSearchService {
             })
         )
     }
+
+    resourcesList = (
+        searchValue: string,
+        resourceClassIri: string
+    ): Observable<ApiData[]> => {
+        return this._dspApiConnection.v2.search.doSearchByLabel(searchValue, 0, {
+            limitToResourceClass: resourceClassIri,
+        }).pipe(
+            map((response: ReadResourceSequence | ApiResponseError) => {
+                if (response instanceof ApiResponseError) {
+                    throw response; // caught by catchError operator
+                }
+                return response.resources.map((res: ReadResource) => {
+                    return {iri: res.id, label: res.label}
+                });
+            }
+        ));
+    }
+
+    getResourcesList(searchValue: string, resourceClassIri: string): Observable<ApiData[]> {
+        return this._dspApiConnection.v2.search
+          .doSearchByLabel(searchValue, 0, {
+            limitToResourceClass: resourceClassIri,
+          })
+          .pipe(
+            map((response: ReadResourceSequence | ApiResponseError) => {
+              if (response instanceof ApiResponseError) {
+                throw response; // caught by catchError operator
+              }
+              return response.resources.map((res: ReadResource) => {
+                return { iri: res.id, label: res.label };
+              });
+            }),
+            catchError((err) => {
+              this._handleError(err);
+              return []; // return an empty array on error
+            })
+          );
+      }
 
     // todo: check if we can type this
     private _handleError(error: any) {
