@@ -82,7 +82,7 @@ export class AdvancedSearchComponent implements OnInit {
         this.store.updatePropertyFormItem(property);
     }
 
-    handleSearchValueChanged(searchItem: SearchItem): void {
+    handleResourceSearchValueChanged(searchItem: SearchItem): void {
         this.store.updateResourcesSearchResults(searchItem);
     }
 
