@@ -5,6 +5,7 @@ import {
     DspInstrumentationConfig,
     DspInstrumentationToken,
 } from '@dasch-swiss/vre/shared/app-config';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
     providedIn: 'root',
@@ -16,17 +17,23 @@ export class PendoAnalyticsService {
 
     constructor() {
         // FIXME: so that updates to the session state are reflected in specified user
-        this.session.isSessionValid().subscribe((response: boolean) => {
-            if (response) {
-                const session: Session | null = this.session.getSession();
-                if (session?.user?.name) {
-                    const id: string = uuidv5(session.user.name, uuidv5.URL);
-                    this.setActiveUser(id);
-                } else {
-                    this.removeActiveUser();
+        this.session
+            .isSessionValid()
+            .pipe(takeUntilDestroyed())
+            .subscribe((response: boolean) => {
+                if (response) {
+                    const session: Session | null = this.session.getSession();
+                    if (session?.user?.name) {
+                        const id: string = uuidv5(
+                            session.user.name,
+                            uuidv5.URL
+                        );
+                        this.setActiveUser(id);
+                    } else {
+                        this.removeActiveUser();
+                    }
                 }
-            }
-        });
+            });
     }
 
     /**
