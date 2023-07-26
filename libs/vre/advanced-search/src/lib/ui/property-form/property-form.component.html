@@ -26,27 +26,36 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
-    <dasch-swiss-property-form-value
+    <div
         *ngIf="
             propertyFormItem.selectedOperator &&
             propertyFormItem.selectedOperator !== operators.Exists &&
-            propertyFormItem.selectedOperator !== operators.NotExists &&
-            propertyFormItem.selectedProperty?.objectType?.includes(constants.KnoraApiV2)
+            propertyFormItem.selectedOperator !== operators.NotExists
         "
-        [objectType]="propertyFormItem.selectedProperty?.objectType"
-        (emitValueChanged)="onValueChanged($event)"
-    />
-    <dasch-swiss-property-form-link-value
-        *ngIf="
-            propertyFormItem.selectedOperator &&
-            propertyFormItem.selectedOperator !== operators.Exists &&
-            propertyFormItem.selectedOperator !== operators.NotExists &&
-            !propertyFormItem.selectedProperty?.objectType?.includes(constants.KnoraApiV2)
-        "
-        [resourcesSearchResults]="resourcesSearchResults"
-        (emitResourceSearchValueChanged)="onResourceSearchValueChanged($event)"
-        (emitResourceSelected)="onValueChanged($event)"
-    ></dasch-swiss-property-form-link-value>
+    >
+        <dasch-swiss-property-form-value
+            *ngIf="
+                propertyFormItem.selectedProperty?.objectType?.includes(
+                    constants.KnoraApiV2
+                )
+            "
+            [objectType]="propertyFormItem.selectedProperty?.objectType"
+            (emitValueChanged)="onValueChanged($event)"
+        />
+        <dasch-swiss-property-form-link-value
+            *ngIf="
+                !propertyFormItem.selectedProperty?.objectType?.includes(
+                    constants.KnoraApiV2
+                )
+            "
+            [resourcesSearchResults]="resourcesSearchResults"
+            (emitResourceSearchValueChanged)="
+                onResourceSearchValueChanged($event)
+            "
+            (emitResourceSelected)="onValueChanged($event)"
+        ></dasch-swiss-property-form-link-value>
+    </div>
+
     <button
         mat-icon-button
         (click)="onRemovePropertyFormClicked(propertyFormItem)"
