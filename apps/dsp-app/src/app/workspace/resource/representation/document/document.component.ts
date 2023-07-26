@@ -73,9 +73,6 @@ export class DocumentComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.fileType = this._getFileType(this.src.fileValue.filename);
-        if (this.fileType === 'pdf') {
-            this.elem = document.getElementsByClassName('pdf-viewer')[0];
-        }
 
         this._rs
             .getFileInfo(this.src.fileValue.fileUrl)
@@ -88,6 +85,9 @@ export class DocumentComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
+        if (this.fileType === 'pdf') {
+            this.elem = document.getElementsByClassName('pdf-viewer')[0];
+        }
         this.loaded.emit(true);
     }
 
@@ -140,6 +140,9 @@ export class DocumentComponent implements OnInit, AfterViewInit {
     }
 
     openFullscreen() {
+        if (!this.elem) {
+            return; // guard
+        }
         if (this.elem.requestFullscreen) {
             this.elem.requestFullscreen();
         } else if (this.elem.mozRequestFullScreen) {
