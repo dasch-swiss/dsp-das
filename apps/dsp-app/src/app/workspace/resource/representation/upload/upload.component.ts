@@ -50,6 +50,8 @@ export class UploadComponent implements OnInit {
     @Output() fileInfo: EventEmitter<CreateFileValue> =
         new EventEmitter<CreateFileValue>();
 
+    @Output() forceReload = new EventEmitter<void>();
+
 
     @ViewChild('fileInput') fileInput: ElementRef;
     file: File;
@@ -154,6 +156,8 @@ export class UploadComponent implements OnInit {
                         this.isLoading = false;
                         this.file = null;
                         this.thumbnailUrl = null;
+                        this._errorHandler.handleError(e);
+                        this.forceReload.emit();
                     }
                 );
             }
