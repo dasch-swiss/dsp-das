@@ -184,7 +184,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                 }
             }
             property.operators = operators;
-            console.log('property:', property);
 
             const updatedPropertyFormList = [
                 ...currentPropertyFormList.slice(0, index),  // elements before the one to update

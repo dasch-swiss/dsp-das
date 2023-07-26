@@ -17,6 +17,7 @@ import { PropertyData, ApiData } from '../../data-access/advanced-search-service
 import { Operators } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { PropertyFormValueComponent } from './property-form-value/property-form-value.component';
 import { PropertyFormLinkValueComponent } from './property-form-link-value/property-form-link-value.component';
+import { Constants } from '@dasch-swiss/dsp-js';
 
 @Component({
     selector: 'dasch-swiss-property-form',
@@ -54,6 +55,7 @@ export class PropertyFormComponent {
     @ViewChild('propertiesList') propertiesList!: MatSelect;
 
     operators = Operators; // in order to use it in the template
+    constants = Constants;
 
     onRemovePropertyFormClicked(propFormItem: PropertyFormItem | null): void {
         if (propFormItem) {
@@ -95,7 +97,7 @@ export class PropertyFormComponent {
         }
     }
 
-    handleResourceSearchValueChanged(event: string){
+    onResourceSearchValueChanged(event: string){
         const propFormItem = this.propertyFormItem;
         if (propFormItem && propFormItem.selectedProperty) {
             this.emitResourceSearchValueChanged.emit({ value: event, objectType: propFormItem.selectedProperty?.objectType });

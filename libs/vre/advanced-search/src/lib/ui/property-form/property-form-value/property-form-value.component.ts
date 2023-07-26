@@ -6,7 +6,6 @@ import { debounceTime } from 'rxjs/operators';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
-import { ApiData } from '../../../data-access/advanced-search-service/advanced-search.service';
 import { PropertyFormLinkValueComponent } from '../property-form-link-value/property-form-link-value.component';
 @Component({
     selector: 'dasch-swiss-property-form-value',
@@ -17,10 +16,8 @@ import { PropertyFormLinkValueComponent } from '../property-form-link-value/prop
 })
 export class PropertyFormValueComponent {
     @Input() objectType: string | undefined = '';
-    @Input() resourcesList: ApiData[] | undefined = [];
 
     @Output() emitValueChanged = new EventEmitter<string>();
-    @Output() emitSearchValueChanged = new EventEmitter<string>();
 
     private valueChangedSubject = new Subject<string>();
 
@@ -41,7 +38,4 @@ export class PropertyFormValueComponent {
         }
     }
 
-    handleSearchValueChanged(value: string) {
-        this.emitSearchValueChanged.emit(value);
-    }
 }

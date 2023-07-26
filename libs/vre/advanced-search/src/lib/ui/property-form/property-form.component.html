@@ -26,20 +26,25 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
-    <!-- <dasch-swiss-property-form-value
+    <dasch-swiss-property-form-value
         *ngIf="
             propertyFormItem.selectedOperator &&
             propertyFormItem.selectedOperator !== operators.Exists &&
-            propertyFormItem.selectedOperator !== operators.NotExists
+            propertyFormItem.selectedOperator !== operators.NotExists &&
+            propertyFormItem.selectedProperty?.objectType?.includes(constants.KnoraApiV2)
         "
         [objectType]="propertyFormItem.selectedProperty?.objectType"
-        [resourcesList]="propertyFormItem.resourcesList"
-        (emitValueChanged)="handleValueChanged($event)"
-        (emitSearchValueChanged)="handleSearchValueChanged($event)"
-    /> -->
+        (emitValueChanged)="onValueChanged($event)"
+    />
     <dasch-swiss-property-form-link-value
+        *ngIf="
+            propertyFormItem.selectedOperator &&
+            propertyFormItem.selectedOperator !== operators.Exists &&
+            propertyFormItem.selectedOperator !== operators.NotExists &&
+            !propertyFormItem.selectedProperty?.objectType?.includes(constants.KnoraApiV2)
+        "
         [resourcesSearchResults]="resourcesSearchResults"
-        (emitResourceSearchValueChanged)="handleResourceSearchValueChanged($event)"
+        (emitResourceSearchValueChanged)="onResourceSearchValueChanged($event)"
         (emitResourceSelected)="onValueChanged($event)"
     ></dasch-swiss-property-form-link-value>
     <button
