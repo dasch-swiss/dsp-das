@@ -18,6 +18,7 @@ import { Operators } from '../../data-access/advanced-search-store/advanced-sear
 import { PropertyFormValueComponent } from './property-form-value/property-form-value.component';
 import { PropertyFormLinkValueComponent } from './property-form-link-value/property-form-link-value.component';
 import { Constants } from '@dasch-swiss/dsp-js';
+import { PropertyFormListValueComponent } from './property-form-list-value/property-form-list-value.component';
 
 @Component({
     selector: 'dasch-swiss-property-form',
@@ -31,7 +32,8 @@ import { Constants } from '@dasch-swiss/dsp-js';
         ReactiveFormsModule,
         MatSelectModule,
         PropertyFormValueComponent,
-        PropertyFormLinkValueComponent
+        PropertyFormLinkValueComponent,
+        PropertyFormListValueComponent
     ],
     providers: [MatSelect,],
     templateUrl: './property-form.component.html',
@@ -39,7 +41,7 @@ import { Constants } from '@dasch-swiss/dsp-js';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyFormComponent {
-    @Input() propertyFormItem: PropertyFormItem = { id: '', selectedProperty: undefined, selectedOperator: undefined, searchValue: undefined, operators: [] };
+    @Input() propertyFormItem: PropertyFormItem = { id: '', selectedProperty: undefined, selectedOperator: undefined, searchValue: undefined, operators: [], list: undefined };
 
     @Input() resourcesSearchResults: ApiData[] | null = [];
 

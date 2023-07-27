@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { ApiResponseError, KnoraApiConnection, OntologiesMetadata, ReadOntology, ReadResource, ReadResourceSequence, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, Constants, KnoraApiConnection, ListNodeV2, OntologiesMetadata, ReadOntology, ReadResource, ReadResourceSequence, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -14,7 +14,8 @@ export interface ApiData {
 export interface PropertyData {
     iri: string,
     label: string,
-    objectType: string
+    objectType: string,
+    listIri?: string // only for list values
 }
 
 @Injectable({
@@ -137,6 +138,18 @@ export class AdvancedSearchService {
                     // objectType can be undefined but I'm not really sure if this is true
                     const objectType = propDef.objectType || '';
 
+                    if (objectType === Constants.ListValue) {
+                        const guiAttr = propDef.guiAttributes;
+                        if (guiAttr.length === 1 && guiAttr[0].startsWith('hlist=')) {
+                            // get list node iri from gui attribute
+                            // i.e. hlist=<http://rdfh.ch/lists/0420/6-Vp0F_1TfSS-DS_9q-Ucw>
+                            const listNodeIri = guiAttr[0].substring(7, guiAttr[0].length - 1);
+                            return { iri: propDef.id, label: label, objectType: objectType, listIri: listNodeIri };
+                        } else {
+                            console.error('No root node Iri given for property', guiAttr);
+                        }
+                    }
+
                     return { iri: propDef.id, label: label, objectType: objectType };
                 });
             }),
@@ -167,24 +180,39 @@ export class AdvancedSearchService {
 
     getResourcesList(searchValue: string, resourceClassIri: string): Observable<ApiData[]> {
         return this._dspApiConnection.v2.search
-          .doSearchByLabel(searchValue, 0, {
-            limitToResourceClass: resourceClassIri,
-          })
-          .pipe(
+            .doSearchByLabel(searchValue, 0, {
+                limitToResourceClass: resourceClassIri,
+        }).pipe(
             map((response: ReadResourceSequence | ApiResponseError) => {
-              if (response instanceof ApiResponseError) {
-                throw response; // caught by catchError operator
-              }
-              return response.resources.map((res: ReadResource) => {
-                return { iri: res.id, label: res.label };
-              });
+                if (response instanceof ApiResponseError) {
+                    throw response; // caught by catchError operator
+                }
+                return response.resources.map((res: ReadResource) => {
+                    return { iri: res.id, label: res.label };
+                });
             }),
             catchError((err) => {
-              this._handleError(err);
-              return []; // return an empty array on error
+                this._handleError(err);
+                return []; // return an empty array on error
             })
-          );
-      }
+        );
+    }
+
+    getList(rootNodeIri: string): Observable<ListNodeV2> {
+        return this._dspApiConnection.v2.list.getList(rootNodeIri)
+            .pipe(
+                map((response: ListNodeV2 | ApiResponseError) => {
+                    if (response instanceof ApiResponseError) {
+                        throw response; // caught by catchError operator
+                    }
+                    return response;
+                }),
+                catchError((err) => {
+                    this._handleError(err);
+                    return []; // return an empty array on error
+                })
+            );
+    }
 
     // todo: check if we can type this
     private _handleError(error: any) {

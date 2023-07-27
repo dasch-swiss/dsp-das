@@ -48,7 +48,7 @@ export class AdvancedSearchComponent implements OnInit {
         // hardcoded project for now
         // BEOL: yTerZGyxjZVqFMNNKXCDPF
         // Eric: GRlCJl3iSW2JeIt3V22rPA
-        this.store.ontologiesList('http://rdfh.ch/projects/yTerZGyxjZVqFMNNKXCDPF');
+        this.store.ontologiesList('http://rdfh.ch/projects/GRlCJl3iSW2JeIt3V22rPA');
 
         this.store.resourceClassesList(this.selectedOntology$);
 
@@ -71,7 +71,7 @@ export class AdvancedSearchComponent implements OnInit {
         // mock uuid using timestamp
         const uuid = Date.now().toString();
 
-        this.store.updatePropertyFormList('add', { id: uuid, selectedProperty: undefined, selectedOperator: undefined, searchValue: undefined, operators: [] });
+        this.store.updatePropertyFormList('add', { id: uuid, selectedProperty: undefined, selectedOperator: undefined, searchValue: undefined, operators: [], list: undefined });
     }
 
     handleRemovePropertyForm(property: PropertyFormItem): void {

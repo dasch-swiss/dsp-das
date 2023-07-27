@@ -26,7 +26,6 @@ export class PropertyFormLinkValueComponent implements OnInit {
         this.inputControl.valueChanges
         .pipe(debounceTime(300), distinctUntilChanged())
         .subscribe((value) => {
-            console.log('value changed:', value);
             if(value.length >= 3) {
                 this.emitResourceSearchValueChanged.emit(value);
             }

@@ -69,6 +69,7 @@ export class SearchListValueComponent
 
         this._dspApiConnection.v2.list.getList(rootNodeIri).subscribe(
             (response: ListNodeV2) => {
+                console.log('response:', response);
                 this.listRootNode = response;
             },
             (error: ApiResponseError) => {

@@ -3,7 +3,7 @@ import { ComponentStore } from '@ngrx/component-store';
 import { EMPTY, Observable } from 'rxjs';
 import { AdvancedSearchService, ApiData, PropertyData } from '../advanced-search-service/advanced-search.service';
 import { switchMap, tap, catchError } from 'rxjs/operators';
-import { Constants } from '@dasch-swiss/dsp-js';
+import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
 
 export interface AdvancedSearchState {
     ontologies: ApiData[];
@@ -23,6 +23,7 @@ export interface PropertyFormItem {
     selectedOperator: string | undefined;
     searchValue: string | undefined;
     operators: string[] | undefined;
+    list: ListNodeV2 | undefined;
 }
 
 export interface SearchItem {
@@ -185,13 +186,29 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             }
             property.operators = operators;
 
-            const updatedPropertyFormList = [
-                ...currentPropertyFormList.slice(0, index),  // elements before the one to update
-                property,  // the updated property
-                ...currentPropertyFormList.slice(index + 1)  // elements after the one to update
-            ];
+            // make this better
+            if (property.selectedProperty?.listIri) {
+                this._advancedSearchService.getList(property.selectedProperty.listIri).subscribe(
+                    (list) => {
+                        property.list = list;
 
-            this.patchState({ propertyFormList: updatedPropertyFormList });
+                        const updatedPropertyFormList = [
+                            ...currentPropertyFormList.slice(0, index),  // elements before the one to update
+                            property,  // the updated property
+                            ...currentPropertyFormList.slice(index + 1)  // elements after the one to update
+                        ];
+                        this.patchState({ propertyFormList: updatedPropertyFormList });
+                    });
+            } else {
+                const updatedPropertyFormList = [
+                    ...currentPropertyFormList.slice(0, index),  // elements before the one to update
+                    property,  // the updated property
+                    ...currentPropertyFormList.slice(index + 1)  // elements after the one to update
+                ];
+
+                this.patchState({ propertyFormList: updatedPropertyFormList });
+            }
+
         }
     }
 

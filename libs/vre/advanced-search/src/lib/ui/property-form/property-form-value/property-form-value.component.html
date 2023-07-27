@@ -1,20 +1,62 @@
-<!--TODO: We need to add a metric shit ton of validation here-->
 <div class="container" *ngIf="objectType" [ngSwitch]="objectType">
-    <mat-form-field>
+
+    <!-- text value -->
+    <mat-form-field *ngSwitchCase="constants.TextValue">
+        <mat-label>Text Value</mat-label>
+        <input matInput [formControl]="inputControl" />
+    </mat-form-field>
+
+    <!-- boolean value -->
+    <mat-form-field *ngSwitchCase="constants.BooleanValue">
         <mat-label>Value</mat-label>
-        <input matInput (keyup)="handleInputChanged($event)" *ngSwitchCase="constants.TextValue"/>
-        <mat-select (selectionChange)="handleInputChanged($event)" *ngSwitchCase="constants.BooleanValue">
+        <mat-select [formControl]="inputControl">
             <mat-option value="true">
                 True
             </mat-option>
             <mat-option  value="false">
                 False
             </mat-option>
+            <!-- check what is actually expected for an undefined boolean in the gravsearch query -->
+            <mat-option  value="undefined">
+                Undefined
+            </mat-option>
         </mat-select>
-        <input matInput (keyup)="handleInputChanged($event)" *ngSwitchCase="constants.UriValue"/>
-        <input matInput type="number" (keyup)="handleInputChanged($event)" *ngSwitchCase="constants.IntValue"/>
-        <input matInput type="number" (keyup)="handleInputChanged($event)" *ngSwitchCase="constants.DecimalValue"/>
-        <input matInput type="date" (keyup)="handleInputChanged($event)" *ngSwitchCase="constants.DateValue"/>
     </mat-form-field>
+
+    <!-- uri value -->
+    <mat-form-field *ngSwitchCase="constants.UriValue">
+        <mat-label>URI Value</mat-label>
+        <input matInput [formControl]="inputControl" [errorStateMatcher]="matcher" />
+        <mat-error *ngIf="inputControl.hasError('pattern')">
+            <span class="custom-error-message">
+                Value must be a URI value.
+            </span>
+        </mat-error>
+    </mat-form-field>
+
+    <!-- integer value -->
+    <mat-form-field *ngSwitchCase="constants.IntValue">
+        <mat-label>Integer Value</mat-label>
+        <input matInput type="number" [formControl]="inputControl" [errorStateMatcher]="matcher" />
+        <mat-error *ngIf="inputControl.hasError('pattern')">
+            <span class="custom-error-message">
+                Value must be an integer value.
+            </span>
+        </mat-error>
+    </mat-form-field>
+
+    <!-- decimal value -->
+    <mat-form-field *ngSwitchCase="constants.DecimalValue">
+        <mat-label>Decimal Value</mat-label>
+        <input matInput type="number" [formControl]="inputControl" [errorStateMatcher]="matcher" />
+        <mat-error *ngIf="inputControl.hasError('pattern')">
+            <span class="custom-error-message">
+                Value must be a decimal value.
+            </span>
+        </mat-error>
+    </mat-form-field>
+    <!-- <mat-form-field>
+        <input matInput type="date" (keyup)="handleInputChanged($event)" *ngSwitchCase="constants.DateValue"/>
+    </mat-form-field> -->
 </div>
-<!-- {{objectType}} -->
+{{ objectType }}

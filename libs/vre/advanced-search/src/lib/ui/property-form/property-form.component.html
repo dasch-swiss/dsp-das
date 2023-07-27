@@ -37,11 +37,23 @@
             *ngIf="
                 propertyFormItem.selectedProperty?.objectType?.includes(
                     constants.KnoraApiV2
-                )
+                ) &&
+                propertyFormItem.selectedProperty?.objectType !==
+                    constants.ListValue
             "
             [objectType]="propertyFormItem.selectedProperty?.objectType"
             (emitValueChanged)="onValueChanged($event)"
         />
+        <dasch-swiss-property-form-list-value
+            *ngIf="
+                propertyFormItem.selectedProperty?.objectType ===
+                constants.ListValue
+            "
+            [list]="propertyFormItem.list"
+            (emitValueChanged)="onValueChanged($event)"
+        >
+        </dasch-swiss-property-form-list-value>
+
         <dasch-swiss-property-form-link-value
             *ngIf="
                 !propertyFormItem.selectedProperty?.objectType?.includes(
