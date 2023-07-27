@@ -40,9 +40,6 @@ export class AuthenticationService {
 
                 // remove active datadog user
                 this._datadogRumService.removeActiveUser();
-
-                // remove active pendo user
-                this._pendoAnalyticsService.removeActiveUser();
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);

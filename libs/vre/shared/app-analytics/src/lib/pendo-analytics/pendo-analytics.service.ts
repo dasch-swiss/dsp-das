@@ -1,39 +1,34 @@
 import { inject, Injectable } from '@angular/core';
-import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
+import { SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { v5 as uuidv5 } from 'uuid';
 import {
     DspInstrumentationConfig,
     DspInstrumentationToken,
 } from '@dasch-swiss/vre/shared/app-config';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
 })
 export class PendoAnalyticsService {
     private config: DspInstrumentationConfig = inject(DspInstrumentationToken);
-    private session: SessionService = inject(SessionService);
+    private sessionService: SessionService = inject(SessionService);
     private environment: string = this.config.environment;
 
     constructor() {
-        // FIXME: so that updates to the session state are reflected in specified user
-        this.session
-            .isSessionValid()
-            .pipe(takeUntilDestroyed())
-            .subscribe((response: boolean) => {
-                if (response) {
-                    const session: Session | null = this.session.getSession();
-                    if (session?.user?.name) {
-                        const id: string = uuidv5(
-                            session.user.name,
-                            uuidv5.URL
-                        );
-                        this.setActiveUser(id);
-                    } else {
-                        this.removeActiveUser();
-                    }
+        this.sessionService.checkSession();
+        this.sessionService.session$.pipe(
+            takeUntilDestroyed(),
+            map((response) => {
+                if (response?.user?.name) {
+                    const id: string = uuidv5(response.user.name, uuidv5.URL);
+                    this.setActiveUser(id);
+                } else {
+                    this.removeActiveUser();
                 }
-            });
+            })
+        );
     }
 
     /**

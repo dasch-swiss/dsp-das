@@ -1,15 +1,15 @@
-import { Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
     ApiResponseData,
     ApiResponseError,
     Constants,
     CredentialsResponse,
-    KnoraApiConnection,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { map, takeLast } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 /**
  * information about the current user
@@ -43,6 +43,10 @@ export interface Session {
     providedIn: 'root',
 })
 export class SessionService {
+    private _dspApiConnection = inject(DspApiConnectionToken);
+    private sessionSubject = new BehaviorSubject<Session | null>(null);
+    session$: Observable<Session | null> = this.sessionSubject.asObservable();
+
     /**
      * max session time in milliseconds
      * default value (24h = 24 * 60 * 60 * 1000): 86400000
@@ -50,10 +54,14 @@ export class SessionService {
      */
     readonly MAX_SESSION_TIME: number = 3600;
 
-    constructor(
-        @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection
-    ) {}
+    constructor() {
+        // get session information from localstorage and set it to the sessionSubject
+        const sessionData = localStorage.getItem('session');
+        if (sessionData) {
+            const session = JSON.parse(sessionData);
+            this.sessionSubject.next(session);
+        }
+    }
 
     /**
      * get session information from localstorage
@@ -122,12 +130,11 @@ export class SessionService {
                                 | ApiResponseData<CredentialsResponse>
                                 | ApiResponseError
                         ) => {
-                            const idUpdated = this._updateSessionId(
+                            return this._updateSessionId(
                                 credentials,
                                 session,
                                 tsNow
                             );
-                            return idUpdated;
                         }
                     )
                 );
@@ -143,11 +150,25 @@ export class SessionService {
     }
 
     /**
+     * check if the session is still valid and update the session subject if
+     * necessary
+     */
+    checkSession(): void {
+        this.isSessionValid().pipe(
+            takeUntilDestroyed(),
+            map((valid) => {
+                if (!valid) this.destroySession();
+            })
+        );
+    }
+
+    /**
      * destroy session by removing the session from local storage
      *
      */
     destroySession() {
         localStorage.removeItem('session');
+        this.sessionSubject.next(null);
     }
 
     /**
@@ -213,8 +234,10 @@ export class SessionService {
 
             // update localStorage
             localStorage.setItem('session', JSON.stringify(session));
+            this.sessionSubject.next(session);
         } else {
             localStorage.removeItem('session');
+            this.sessionSubject.next(null);
             // console.error(response);
         }
     }
@@ -235,6 +258,7 @@ export class SessionService {
             // update the session.id
             session.id = timestamp;
             localStorage.setItem('session', JSON.stringify(session));
+            this.sessionSubject.next(session);
             return true;
         } else {
             // a user is not authenticated anymore!

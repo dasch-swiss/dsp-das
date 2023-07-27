@@ -36,13 +36,14 @@ import { Location } from '@angular/common';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { v5 as uuidv5 } from 'uuid';
+import { map, takeLast } from 'rxjs/operators';
 
 @Component({
     selector: 'app-login-form',
     templateUrl: './login-form.component.html',
     styleUrls: ['./login-form.component.scss'],
 })
-export class LoginFormComponent implements OnInit, AfterViewInit {
+export class LoginFormComponent implements OnInit {
     /**
      * set whether or not you want icons to display in the input fields
      *
@@ -66,11 +67,6 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
      */
     @Output() logoutSuccess: EventEmitter<boolean> =
         new EventEmitter<boolean>();
-
-    // @ViewChild('username') usernameInput: ElementRef;
-
-    // is there already a valid session?
-    session: Session;
 
     // form
     form: UntypedFormGroup;
@@ -130,7 +126,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
         private _pendoAnalytics: PendoAnalyticsService,
         private _errorHandler: AppErrorHandler,
         private _fb: UntypedFormBuilder,
-        private _session: SessionService,
+        private sessionService: SessionService,
         private _route: ActivatedRoute,
         private _router: Router,
         private _location: Location,
@@ -140,22 +136,16 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        // if session is valid (a user is logged-in) show a message, otherwise build the form
-        this._session.isSessionValid().subscribe((result) => {
-            // returns a result if session is still valid
-            if (result) {
-                this.session = JSON.parse(localStorage.getItem('session'));
-            } else {
-                // session is invalid, build the login form
-                this.buildLoginForm();
-            }
-        });
-    }
-
-    ngAfterViewInit() {
-        if (this.session) {
-            // this.usernameInput.nativeElement.focus();
-        }
+        // if session is valid (a user is logged-in) do nothing, otherwise build the form
+        this.sessionService.checkSession();
+        this.sessionService.session$.pipe(
+            takeLast(1),
+            map((session: Session | null) => {
+                if (!session) {
+                    this.buildLoginForm();
+                }
+            })
+        );
     }
 
     buildLoginForm(): void {
@@ -185,7 +175,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
             .login(identifierType, identifier, password)
             .subscribe(
                 (response: ApiResponseData<LoginResponse>) => {
-                    this._session
+                    this.sessionService
                         .setSession(
                             response.body.token,
                             identifier,
@@ -193,7 +183,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
                         )
                         .subscribe(() => {
                             this.loginSuccess.emit(true);
-                            this.session = this._session.getSession();
+                            this.session = this.sessionService.getSession();
 
                             this._componentCommsService.emit(
                                 new EmitEvent(Events.loginSuccess, true)
