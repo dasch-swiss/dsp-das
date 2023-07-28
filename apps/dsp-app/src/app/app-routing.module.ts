@@ -39,16 +39,12 @@ const routes: Routes = [
         component: HelpComponent,
     },
     {
-        path: 'login',
-        component: LoginFormComponent,
-    },
-    {
         path: 'project/:uuid',
         component: ProjectComponent,
         children: [
             {
                 path: '',
-                component: DescriptionComponent
+                component: DescriptionComponent,
             },
             {
                 path: 'add-ontology',
@@ -62,7 +58,7 @@ const routes: Routes = [
             },
             {
                 path: 'data-models',
-                component: DataModelsComponent
+                component: DataModelsComponent,
             },
             {
                 path: 'ontology/:onto',
@@ -104,7 +100,7 @@ const routes: Routes = [
             },
             {
                 path: 'list/:list',
-                component: ListComponent
+                component: ListComponent,
             },
             {
                 path: 'settings',
@@ -223,7 +219,12 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
+    imports: [
+        RouterModule.forRoot(routes, {
+            bindToComponentInputs: true,
+            onSameUrlNavigation: 'reload',
+        }),
+    ],
     exports: [RouterModule],
 })
 export class AppRoutingModule {}

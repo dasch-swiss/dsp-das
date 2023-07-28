@@ -1,12 +1,12 @@
-import { inject, Injectable } from '@angular/core';
-import { SessionService } from '@dasch-swiss/vre/shared/app-session';
+import { inject, Injectable, WritableSignal } from '@angular/core';
+import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { v5 as uuidv5 } from 'uuid';
 import {
     DspInstrumentationConfig,
     DspInstrumentationToken,
 } from '@dasch-swiss/vre/shared/app-config';
+import { Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -16,25 +16,26 @@ export class PendoAnalyticsService {
     private sessionService: SessionService = inject(SessionService);
     private environment: string = this.config.environment;
 
+    session: WritableSignal<Session | undefined> = this.sessionService.session;
+    session$: Observable<Session | undefined> = this.sessionService.session$;
+
     constructor() {
-        this.sessionService.checkSession();
-        this.sessionService.session$.pipe(
-            takeUntilDestroyed(),
-            map((response) => {
-                if (response?.user?.name) {
-                    const id: string = uuidv5(response.user.name, uuidv5.URL);
-                    this.setActiveUser(id);
+        this.session$
+            .pipe(takeUntilDestroyed())
+            .subscribe((session: Session | undefined) => {
+                if (session !== undefined) {
+                    this.setActiveUser(session.user.name);
                 } else {
                     this.removeActiveUser();
                 }
-            })
-        );
+            });
     }
 
     /**
      * set active user
      */
     setActiveUser(id: string): void {
+        console.log('setActiveUser', id);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         pendo.initialize({
@@ -69,6 +70,7 @@ export class PendoAnalyticsService {
      * remove active user
      */
     removeActiveUser(): void {
+        console.log('removeActiveUser');
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         pendo.initialize({

@@ -1,5 +1,5 @@
 <!-- if user is looged-in: display user's avatar and user menu -->
-<button *ngIf="session" mat-button [matMenuTriggerFor]="userMenu" class="main-toolbar-button user-menu">
+<button *ngIf="session()" mat-button [matMenuTriggerFor]="userMenu" class="main-toolbar-button user-menu">
     <img appAdminImage [image]="user?.email" [type]="'user'" class="avatar" />
 </button>
 
@@ -49,7 +49,7 @@
 </mat-menu>
 
 <!-- login form -->
-<button mat-raised-button color="primary" [matMenuTriggerFor]="loginForm" *ngIf="!session" class="login-button">
+<button mat-raised-button color="primary" [matMenuTriggerFor]="loginForm" *ngIf="!session()" class="login-button">
     LOGIN
 </button>
 <mat-menu #loginForm xPosition="before" class="form-menu">

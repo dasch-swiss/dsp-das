@@ -4,13 +4,13 @@ import {
     ApiResponseData,
     ApiResponseError,
     KnoraApiConnection,
+    ReadProject,
     ReadUser,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { AuthenticationService } from '@dsp-app/src/app/main/services/authentication.service';
 import { SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { MenuItem } from '../../main/declarations/menu-item';
 
@@ -20,7 +20,7 @@ import { MenuItem } from '../../main/declarations/menu-item';
     styleUrls: ['./user-menu.component.scss'],
 })
 export class UserMenuComponent implements OnChanges {
-    @Input() session: boolean;
+    session = this.sessionService.session;
 
     @ViewChild(MatMenuTrigger) menuTrigger: MatMenuTrigger;
 
@@ -33,15 +33,12 @@ export class UserMenuComponent implements OnChanges {
     navigation: MenuItem[];
 
     constructor(
-        @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
-        private _auth: AuthenticationService,
         private _applicationStateService: ApplicationStateService,
-        private _errorHandler: AppErrorHandler,
-        private _session: SessionService
+        private sessionService: SessionService
     ) {}
 
     ngOnChanges() {
+        console.log('user menu component ngOnChanges');
         this.navigation = [
             {
                 label: 'DSP-App Home Page',
@@ -57,21 +54,15 @@ export class UserMenuComponent implements OnChanges {
             },
         ];
 
-        if (this.session) {
-            this.username = this._session.getSession().user.name;
-            this.sysAdmin = this._session.getSession().user.sysAdmin;
+        if (this.session()) {
+            this.username = this.session().user.name;
+            this.sysAdmin = this.session().user.sysAdmin;
 
-            this._dspApiConnection.admin.usersEndpoint
-                .getUserByUsername(this.username)
-                .subscribe(
-                    (response: ApiResponseData<UserResponse>) => {
-                        this.user = response.body.user;
-                        this._applicationStateService.set(this.username, this.user);
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                );
+            this._applicationStateService
+                .get(this.session().user.name)
+                .subscribe((response: ReadUser) => {
+                    this.user = response;
+                });
         }
     }
 
@@ -80,7 +71,7 @@ export class UserMenuComponent implements OnChanges {
      *
      */
     logout() {
-        this._auth.logout();
+        this.sessionService.logout();
     }
 
     /**

@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import {
     ApiResponseData,
     ApiResponseError,
@@ -6,46 +6,25 @@ import {
     CredentialsResponse,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, takeLast } from 'rxjs/operators';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
-/**
- * information about the current user
- */
-interface CurrentUser {
-    // username
-    name: string;
-
-    // json web token
-    jwt?: string;
-
-    // default language for ui
-    lang: string;
-
-    // is system admin?
-    sysAdmin: boolean;
-
-    // list of project shortcodes where the user is project admin
-    projectAdmin: string[];
-}
-
-/**
- * session with id (= login timestamp) and inforamtion about logged-in user
- */
-export interface Session {
-    id: number;
-    user: CurrentUser;
-}
+import { LoginError, ServerError } from './error';
+import { Observable, of, throwError } from 'rxjs';
+import { map, switchMap, takeLast } from 'rxjs/operators';
+import { Session } from './session';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Injectable({
     providedIn: 'root',
 })
 export class SessionService {
+    private _applicationStateService = inject(ApplicationStateService);
     private _dspApiConnection = inject(DspApiConnectionToken);
-    private sessionSubject = new BehaviorSubject<Session | null>(null);
-    session$: Observable<Session | null> = this.sessionSubject.asObservable();
+    private _errorHandler = inject(AppErrorHandler);
+
+    session = signal<Session | undefined>(undefined);
+    session$ = toObservable(this.session);
 
     /**
      * max session time in milliseconds
@@ -55,12 +34,106 @@ export class SessionService {
     readonly MAX_SESSION_TIME: number = 3600;
 
     constructor() {
-        // get session information from localstorage and set it to the sessionSubject
-        const sessionData = localStorage.getItem('session');
-        if (sessionData) {
-            const session = JSON.parse(sessionData);
-            this.sessionSubject.next(session);
+        // check if the (possibly) existing session is still valid and if not, destroy it
+        this.isSessionValid()
+            .pipe(takeLast(1))
+            .subscribe((valid) => {
+                if (!valid) {
+                    this.destroySession();
+                }
+            });
+
+        if (this.session()) {
+            /**
+             * set the application state for current/logged-in user
+             */
+            const session = this.session() as Session;
+            this._dspApiConnection.admin.usersEndpoint
+                .getUserByUsername(session.user.name as string)
+                .subscribe(
+                    (
+                        response:
+                            | ApiResponseData<UserResponse>
+                            | ApiResponseError
+                    ) => {
+                        if (response instanceof ApiResponseData) {
+                            this._applicationStateService.set(
+                                session.user.name,
+                                response.body.user
+                            );
+                        }
+                    }
+                );
         }
+    }
+
+    /**
+     * Login user
+     * @param identifier can be the email or the username
+     * @param password the password of the user
+     * @returns an Either with the session or an error message
+     */
+    login(identifier: string, password: string): Observable<boolean> {
+        const identifierType: 'iri' | 'email' | 'username' =
+            identifier.indexOf('@') > -1 ? 'email' : 'username';
+
+        return this._dspApiConnection.v2.auth
+            .login(identifierType, identifier, password)
+            .pipe(
+                takeLast(1),
+                switchMap((response) => {
+                    if (response instanceof ApiResponseData) {
+                        this.setSession(
+                            response.body.token,
+                            identifier,
+                            identifierType
+                        );
+                        return of(true);
+                    } else {
+                        // error handling
+                        if (
+                            response.status === 401 ||
+                            response.status === 403
+                        ) {
+                            // wrong credentials
+                            return throwError(<LoginError>{
+                                type: 'login',
+                                status: response.status,
+                                msg: 'Wrong credentials',
+                            });
+                        } else {
+                            // server error
+                            this._errorHandler.showMessage(response);
+                            return throwError(<ServerError>{
+                                type: 'server',
+                                status: response.status,
+                                msg: 'Server error',
+                            });
+                        }
+                    }
+                })
+            );
+    }
+
+    /**
+     * logout service
+     */
+    logout() {
+        this._dspApiConnection.v2.auth.logout().subscribe(
+            () => {
+                // destroy session
+                this.destroySession();
+
+                // destroy application state
+                this._applicationStateService.destroy();
+
+                // reload the page
+                window.location.reload();
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+            }
+        );
     }
 
     /**
@@ -140,6 +213,7 @@ export class SessionService {
                 );
             } else {
                 // the internal session is still valid
+                this.session.set(session);
                 return of(true);
             }
         } else {
@@ -150,25 +224,12 @@ export class SessionService {
     }
 
     /**
-     * check if the session is still valid and update the session subject if
-     * necessary
-     */
-    checkSession(): void {
-        this.isSessionValid().pipe(
-            takeUntilDestroyed(),
-            map((valid) => {
-                if (!valid) this.destroySession();
-            })
-        );
-    }
-
-    /**
      * destroy session by removing the session from local storage
      *
      */
     destroySession() {
         localStorage.removeItem('session');
-        this.sessionSubject.next(null);
+        this.session.set(undefined);
     }
 
     /**
@@ -234,10 +295,10 @@ export class SessionService {
 
             // update localStorage
             localStorage.setItem('session', JSON.stringify(session));
-            this.sessionSubject.next(session);
+            this.session.set(session);
         } else {
             localStorage.removeItem('session');
-            this.sessionSubject.next(null);
+            this.session.set(undefined);
             // console.error(response);
         }
     }
@@ -258,7 +319,7 @@ export class SessionService {
             // update the session.id
             session.id = timestamp;
             localStorage.setItem('session', JSON.stringify(session));
-            this.sessionSubject.next(session);
+            this.session.set(session);
             return true;
         } else {
             // a user is not authenticated anymore!
