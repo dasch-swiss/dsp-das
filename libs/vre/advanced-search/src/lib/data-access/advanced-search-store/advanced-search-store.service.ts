@@ -213,9 +213,17 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     }
 
     updateResourcesSearchResults(searchItem: SearchItem): void {
-        this._advancedSearchService.getResourcesList(searchItem.value, searchItem.objectType).subscribe(
-            (resources) => this.patchState({ resourcesSearchResults: resources })
-        );
+        if (searchItem.value && searchItem.value.length >= 3) {
+            this._advancedSearchService.getResourcesList(searchItem.value, searchItem.objectType).subscribe(
+                (resources) => this.patchState({ resourcesSearchResults: resources })
+            );
+        } else {
+            this.patchState({ resourcesSearchResults: [] });
+        }
+    }
+
+    resetResourcesSearchResults(): void {
+        this.patchState({ resourcesSearchResults: [] });
     }
 
     // key: operator, value: allowed object types

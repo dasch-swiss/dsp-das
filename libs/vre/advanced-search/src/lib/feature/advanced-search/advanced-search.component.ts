@@ -5,6 +5,7 @@ import { AdvancedSearchStoreService, PropertyFormItem, SearchItem } from '../../
 import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
+import { Constants } from '@dasch-swiss/dsp-js';
 
 
 @Component({
@@ -32,6 +33,8 @@ export class AdvancedSearchComponent implements OnInit {
     resetButtonDisabled$ = this.store.resetButtonDisabled$;
     resourcesSearchResults$ = this.store.resourcesSearchResults$;
 
+    constants = Constants;
+
     ngOnInit(): void {
         // mock values for the time being
         this.store.setState({
@@ -48,7 +51,7 @@ export class AdvancedSearchComponent implements OnInit {
         // hardcoded project for now
         // BEOL: yTerZGyxjZVqFMNNKXCDPF
         // Eric: GRlCJl3iSW2JeIt3V22rPA
-        this.store.ontologiesList('http://rdfh.ch/projects/GRlCJl3iSW2JeIt3V22rPA');
+        this.store.ontologiesList('http://rdfh.ch/projects/ GRlCJl3iSW2JeIt3V22rPA');
 
         this.store.resourceClassesList(this.selectedOntology$);
 
@@ -79,6 +82,11 @@ export class AdvancedSearchComponent implements OnInit {
     }
 
     handlePropertyFormItemChanged(property: PropertyFormItem): void {
+        // if the selected property is a linked resource
+        if(!(property.selectedProperty?.objectType.includes(this.constants.KnoraApiV2))) {
+            // reset the search results
+            this.store.resetResourcesSearchResults();
+        }
         this.store.updatePropertyFormItem(property);
     }
 

@@ -26,9 +26,7 @@ export class PropertyFormLinkValueComponent implements OnInit {
         this.inputControl.valueChanges
         .pipe(debounceTime(300), distinctUntilChanged())
         .subscribe((value) => {
-            if(value.length >= 3) {
-                this.emitResourceSearchValueChanged.emit(value);
-            }
+            this.emitResourceSearchValueChanged.emit(value);
         });
     }
 
@@ -38,6 +36,10 @@ export class PropertyFormLinkValueComponent implements OnInit {
         if(data) {
             this.emitResourceSelected.emit(data.iri);
         }
+    }
+
+    onInputFocused() {
+        this.emitResourceSearchValueChanged.emit(this.inputControl.value);
     }
 
     /**
