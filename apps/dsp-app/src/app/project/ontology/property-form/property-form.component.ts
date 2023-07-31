@@ -271,7 +271,7 @@ export class PropertyFormComponent implements OnInit {
     }
 
     buildForm() {
-        let disablePropType = true;
+        const disablePropType = true;
 
         // if property definition exists
         // we are in edit mode: prepare form to edit label and/or comment
