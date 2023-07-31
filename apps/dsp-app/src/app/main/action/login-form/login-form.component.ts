@@ -21,17 +21,21 @@ import {
     UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ErrorHandlerService } from '../../services/error-handler.service';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { AuthenticationService } from '../../services/authentication.service';
 import {
     ComponentCommunicationEventService,
     EmitEvent,
     Events,
 } from '../../services/component-communication-event.service';
-import { DatadogRumService } from '../../services/datadog-rum.service';
+import {
+    DatadogRumService,
+    PendoAnalyticsService,
+} from '@dasch-swiss/vre/shared/app-analytics';
 import { Location } from '@angular/common';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
+import { v5 as uuidv5 } from 'uuid';
 
 @Component({
     selector: 'app-login-form',
@@ -123,7 +127,8 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
         private _auth: AuthenticationService,
         private _componentCommsService: ComponentCommunicationEventService,
         private _datadogRumService: DatadogRumService,
-        private _errorHandler: ErrorHandlerService,
+        private _pendoAnalytics: PendoAnalyticsService,
+        private _errorHandler: AppErrorHandler,
         private _fb: UntypedFormBuilder,
         private _session: SessionService,
         private _route: ActivatedRoute,
@@ -175,6 +180,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
         const identifierType: 'iri' | 'email' | 'username' =
             identifier.indexOf('@') > -1 ? 'email' : 'username';
 
+        // FIXME: remove authentication business logic from component into authentication service
         this._dspApiConnection.v2.auth
             .login(identifierType, identifier, password)
             .subscribe(
@@ -250,10 +256,9 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
                             } else {
                                 window.location.reload();
                             }
-                            this._datadogRumService.setActiveUser(
-                                identifier,
-                                identifierType
-                            );
+                            const uuid: string = uuidv5(identifier, uuidv5.URL);
+                            this._datadogRumService.setActiveUser(uuid);
+                            this._pendoAnalytics.setActiveUser(uuid);
                             this.loading = false;
                         });
                 },
@@ -272,9 +277,6 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
                     this.isError = true;
 
                     this.loading = false;
-
-                    // log error to Rollbar (done automatically by simply throwing a new Error)
-                    throw new Error('login failed');
                 }
             );
     }

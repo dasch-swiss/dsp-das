@@ -1,10 +1,12 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
     MatSnackBar,
     MatSnackBarConfig,
 } from '@angular/material/snack-bar';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
-import { HttpStatusMsg } from '@dsp-app/src/assets/http/statusMsg';
+import {HttpStatusMsg} from '@dasch-swiss/vre/shared/assets/status-msg';
+import { AjaxError } from 'rxjs/ajax';
 
 @Injectable({
     providedIn: 'root',
@@ -19,7 +21,7 @@ export class NotificationService {
     // action: string = 'x', duration: number = 4200
     // and / or type: 'note' | 'warning' | 'error' | 'success'; which can be used for the panelClass
     openSnackBar(
-        notification: string | ApiResponseError,
+        notification: string | HttpErrorResponse | ApiResponseError,
         type?: 'success' | 'error'
     ): void {
         let message: string;
@@ -33,8 +35,9 @@ export class NotificationService {
 
         if (notification instanceof ApiResponseError) {
             conf.panelClass = type ? type : 'error';
+            notification = notification as ApiResponseError;
             if (
-                notification.error &&
+                notification.error && notification.error instanceof AjaxError &&
                 !notification.error['message'].startsWith('ajax error')
             ) {
                 // the Api response error contains a complex error message from dsp-js-lib
@@ -49,7 +52,7 @@ export class NotificationService {
                     message += `There was a timeout issue with one or several requests.
                                 The resource(s) or a part of it cannot be displayed correctly.
                                 Failed on ${notification.url}`;
-                    conf.duration = null;
+                    conf.duration = undefined;
                 } else {
                     message += `${
                         defaultStatusMsg[notification.status].description
@@ -58,9 +61,17 @@ export class NotificationService {
             }
         } else {
             conf.panelClass = type ? type : 'success';
-            message = notification;
-        }
+            if (notification instanceof HttpErrorResponse) {
+                message = notification.message;
+                // sipi error
+                if(message.includes('knora.json: 0 Unknown Error')){
+                    message = 'IIIF server error: The image could not be loaded. Please try again later.';
+                }
 
+            } else {
+                message = notification;
+            }
+        }
         this._snackBar.open(message, 'x', conf);
     }
 }

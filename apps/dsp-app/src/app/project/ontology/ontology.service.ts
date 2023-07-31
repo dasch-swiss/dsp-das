@@ -146,10 +146,10 @@ export class OntologyService {
                     this._applicationStateService.get('currentProjectOntologies').subscribe(
                         (ontologies: ReadOntology[]) => {
                             const onto = ontologies.find(
-                                (i) => i.id === baseOntoIri
+                                (i) => i?.id === baseOntoIri
                             );
                             superPropIri =
-                                onto.properties[subProp].subPropertyOf[0];
+                                onto?.properties[subProp].subPropertyOf[0];
                         },
                         () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the application state
                     );

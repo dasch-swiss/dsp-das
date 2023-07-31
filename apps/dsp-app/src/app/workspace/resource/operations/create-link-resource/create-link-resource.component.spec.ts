@@ -18,7 +18,7 @@ import {
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -52,6 +52,8 @@ import { CreateLinkResourceComponent } from './create-link-resource.component';
 import {
     UnformattedTextValueComponent
 } from '@dsp-app/src/app/workspace/resource/values/text-value/unformatted-text-value/unformatted-text-value.component';
+import { MockProvider } from 'ng-mocks';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test host component to simulate parent component.
@@ -265,6 +267,7 @@ describe('CreateLinkResourceComponent', () => {
                 TranslateModule.forRoot(),
             ],
             providers: [
+                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConnectionToken,
                     useValue: dspConnSpy,

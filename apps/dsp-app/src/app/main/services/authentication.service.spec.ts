@@ -9,8 +9,13 @@ import {
     DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
 import { AuthenticationService } from './authentication.service';
-import { DatadogRumService } from './datadog-rum.service';
+import {
+    DatadogRumService,
+    PendoAnalyticsService,
+} from '@dasch-swiss/vre/shared/app-analytics';
 import { SessionService } from '@dasch-swiss/vre/shared/app-session';
+import { MockProvider } from 'ng-mocks';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 describe('AuthenticationService', () => {
     let service: AuthenticationService;
@@ -21,7 +26,10 @@ describe('AuthenticationService', () => {
         },
     };
 
-    const applicationStateServiceSpy = jasmine.createSpyObj('ApplicationStateService', ['destroy']);
+    const applicationStateServiceSpy = jasmine.createSpyObj(
+        'ApplicationStateService',
+        ['destroy']
+    );
 
     const datadogRumServiceSpy = jasmine.createSpyObj('datadogRumService', [
         '',
@@ -33,6 +41,8 @@ describe('AuthenticationService', () => {
             imports: [MatDialogModule, MatSnackBarModule],
             providers: [
                 AppConfigService,
+                MockProvider(AppLoggingService),
+                MockProvider(PendoAnalyticsService),
                 SessionService,
                 {
                     provide: DspApiConfigToken,

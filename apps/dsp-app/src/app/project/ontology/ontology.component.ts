@@ -35,7 +35,7 @@ import {
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
-import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
     Session,
     SessionService,
@@ -150,7 +150,7 @@ export class OntologyComponent implements OnInit {
         private _dspApiConnection: KnoraApiConnection,
         private _applicationStateService: ApplicationStateService,
         private _dialog: MatDialog,
-        private _errorHandler: ErrorHandlerService,
+        private _errorHandler: AppErrorHandler,
         private _fb: UntypedFormBuilder,
         private _ontologyService: OntologyService,
         private _route: ActivatedRoute,
@@ -326,6 +326,7 @@ export class OntologyComponent implements OnInit {
         this._dspApiConnection.v2.onto.getOntology(iri, true).subscribe(
             (response: ReadOntology) => {
                 this.resetOntologyView(response);
+                this._dspApiConnection.v2.ontologyCache.reloadCachedItem(response.id);
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);

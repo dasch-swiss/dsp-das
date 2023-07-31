@@ -17,10 +17,10 @@ import {
     Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatLegacyOptionModule as MatOptionModule } from '@angular/material/legacy-core';
+import { MatOptionModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -52,10 +52,7 @@ import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
-import {
-    Session,
-    SessionService,
-} from '@dasch-swiss/vre/shared/app-session';
+import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { ValueService } from '../services/value.service';
 import { IntValueComponent } from '../values/int-value/int-value.component';
 import { ResourceInstanceFormComponent } from './resource-instance-form.component';
@@ -63,6 +60,8 @@ import { SwitchPropertiesComponent } from './select-properties/switch-properties
 import {
     UnformattedTextValueComponent
 } from '@dsp-app/src/app/workspace/resource/values/text-value/unformatted-text-value/unformatted-text-value.component';
+import { MockProvider } from 'ng-mocks';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test host component to simulate parent component.
@@ -262,7 +261,10 @@ describe('ResourceInstanceFormComponent', () => {
             'getSession',
         ]);
 
-        const applicationStateServiceSpy = jasmine.createSpyObj('ApplicationStateService', ['get']);
+        const applicationStateServiceSpy = jasmine.createSpyObj(
+            'ApplicationStateService',
+            ['get']
+        );
 
         const appInitSpy = {
             dspAppConfig: {
@@ -295,6 +297,7 @@ describe('ResourceInstanceFormComponent', () => {
                 TranslateModule.forRoot(),
             ],
             providers: [
+                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConnectionToken,
                     useValue: dspConnSpy,
@@ -358,9 +361,13 @@ describe('ResourceInstanceFormComponent', () => {
             }
         );
 
-        const applicationStateServiceSpy = TestBed.inject(ApplicationStateService);
+        const applicationStateServiceSpy = TestBed.inject(
+            ApplicationStateService
+        );
 
-        (applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>).get.and.callFake(() => {
+        (
+            applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>
+        ).get.and.callFake(() => {
             const response: UserResponse = new UserResponse();
 
             const project = MockProjects.mockProject();
