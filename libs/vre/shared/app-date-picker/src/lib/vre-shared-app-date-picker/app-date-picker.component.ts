@@ -35,7 +35,7 @@ import {
     _AbstractConstructor,
     _Constructor,
 } from '@angular/material/core';
-import { MatFormField, MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { KnoraDate } from '@dasch-swiss/dsp-js';
 import { Subject } from 'rxjs';
@@ -48,6 +48,8 @@ import {
 } from '@dasch-swiss/jdnconvertiblecalendar';
 import { MatIconModule} from '@angular/material/icon';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatInputModule } from '@angular/material/input';
+
 //import { KnoraDatePipe } from '../../../../../main/pipes/formatting/knoradate.pipe';
 //import { ValueService } from '../../../services/value.service';
 
@@ -88,6 +90,7 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
         FormsModule,
         ReactiveFormsModule,
         MatIconModule,
+        MatInputModule,
         MatFormFieldModule,
         MatOptionModule,
         MatMenuModule,
@@ -102,7 +105,7 @@ MatFormFieldControl<KnoraDate>,
 OnChanges,
 DoCheck,
 CanUpdateErrorState,
-OnDestroy 
+OnDestroy
 {
     static nextId = 0;
 
@@ -537,8 +540,8 @@ OnDestroy
 
         const form = this.form;
 
-        
-        
+
+
         /*Object.keys(this.formErrors).map((field) => {
             this.formErrors[field] = '';
             const control = form.get(field);
