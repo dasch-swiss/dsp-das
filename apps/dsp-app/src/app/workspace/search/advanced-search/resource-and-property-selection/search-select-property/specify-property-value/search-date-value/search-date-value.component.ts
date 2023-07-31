@@ -6,7 +6,7 @@ import {
 } from '@angular/forms';
 import { Constants, KnoraDate } from '@dasch-swiss/dsp-js';
 import { PropertyValue, Value, ValueLiteral } from '../operator';
-
+import {AppDatePickerComponent} from '@dasch-swiss/vre/shared/app-date-picker';
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 const resolvedPromise = Promise.resolve(null);
 
