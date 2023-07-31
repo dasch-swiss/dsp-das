@@ -86,7 +86,7 @@ class TestHostComponent {
 @Component({
     selector: 'app-select-properties',
     template: `
-        <app-text-value-as-string
+        <app-unformatted-text-value
             #createVal
             [mode]="'create'"
             [commentDisabled]="true"
@@ -94,7 +94,7 @@ class TestHostComponent {
             [parentForm]="parentForm"
             [formName]="'label'"
         >
-        </app-text-value-as-string>
+        </app-unformatted-text-value>
     `,
 })
 class MockSelectPropertiesComponent {
@@ -187,7 +187,7 @@ class MockCreateIntValueComponent implements OnInit {
  * mock value component to use in tests.
  */
 @Component({
-    selector: 'app-text-value-as-string',
+    selector: 'app-unformatted-text-value',
 })
 class MockCreateTextValueComponent implements OnInit {
     @ViewChild('createVal') createValueComponent: UnformattedTextValueComponent;

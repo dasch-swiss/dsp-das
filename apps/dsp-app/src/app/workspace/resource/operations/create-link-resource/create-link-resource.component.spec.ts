@@ -91,7 +91,7 @@ class TestHostComponent implements OnInit {
 @Component({
     selector: 'app-select-properties',
     template: `
-        <app-text-value-as-string
+        <app-unformatted-text-value
             #createVal
             [mode]="'create'"
             [commentDisabled]="true"
@@ -99,7 +99,7 @@ class TestHostComponent implements OnInit {
             [parentForm]="parentForm"
             [formName]="'label'"
         >
-        </app-text-value-as-string>
+        </app-unformatted-text-value>
     `,
 })
 class MockSelectPropertiesComponent {
