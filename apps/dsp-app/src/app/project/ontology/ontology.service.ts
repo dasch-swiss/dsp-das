@@ -145,6 +145,9 @@ export class OntologyService {
                     // get property iri from another ontology
                     this._applicationStateService.get('currentProjectOntologies').subscribe(
                         (ontologies: ReadOntology[]) => {
+                            if (!ontologies || !ontologies.length) {
+                                return;
+                            }
                             const onto = ontologies.find(
                                 (i) => i?.id === baseOntoIri
                             );
