@@ -15,8 +15,6 @@ import {
 import { TestConfig } from '@dsp-app/src/test.config';
 import { FilteredResources } from '../results/list-view/list-view.component';
 import { IntermediateComponent } from './intermediate.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test host component to simulate parent component
@@ -99,7 +97,6 @@ describe('IntermediateComponent', () => {
             ],
             providers: [
                 AppConfigService,
-                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig,

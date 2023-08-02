@@ -7,8 +7,8 @@ import {
     UntypedFormGroup,
     ReactiveFormsModule,
 } from '@angular/forms';
-import { MatSelectModule } from '@angular/material/select';
-import { MatOptionModule } from '@angular/material/core';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatLegacyOptionModule as MatOptionModule } from '@angular/material/legacy-core';
 import {
     Constants,
     MockOntology,
@@ -17,8 +17,7 @@ import {
 import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { MatSelectHarness } from '@angular/material/select/testing';
-
+import { MatLegacySelectHarness as MatSelectHarness } from '@angular/material/legacy-select/testing';
 import { IRI, Value, ValueLiteral } from './operator';
 
 /**

@@ -14,15 +14,10 @@ import {
     DspApiConfigToken,
     DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
-import {
-    DatadogRumService,
-    PendoAnalyticsService,
-} from '@dasch-swiss/vre/shared/app-analytics';
+import { DatadogRumService } from '@dsp-app/src/app/main/services/datadog-rum.service';
 import { SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { TestConfig } from '@dsp-app/src/test.config';
 import { UserMenuComponent } from './user-menu.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test component to simulate login form component.
@@ -57,8 +52,6 @@ describe('UserMenuComponent', () => {
             ],
             providers: [
                 AppConfigService,
-                MockProvider(AppLoggingService),
-                MockProvider(PendoAnalyticsService),
                 SessionService,
                 {
                     provide: DspApiConfigToken,

@@ -11,7 +11,7 @@ import {
     MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
@@ -39,8 +39,6 @@ import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { TestConfig } from '@dsp-app/src/test.config';
 import { ListInfoFormComponent } from './list-info-form.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test host component to simulate parent component for creating a new list.
@@ -151,7 +149,6 @@ describe('ListInfoFormComponent', () => {
                     provide: AppConfigService,
                     useValue: appInitSpy,
                 },
-                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConnectionToken,
                     useValue: listsEndpointSpyObj,

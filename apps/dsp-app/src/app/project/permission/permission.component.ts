@@ -9,7 +9,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import {
     Session,
     SessionService,
@@ -45,7 +45,7 @@ export class PermissionComponent implements OnInit {
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
         private _applicationStateService: ApplicationStateService,
-        private _errorHandler: AppErrorHandler,
+        private _errorHandler: ErrorHandlerService,
         private _route: ActivatedRoute,
         private _session: SessionService,
         private _titleService: Title

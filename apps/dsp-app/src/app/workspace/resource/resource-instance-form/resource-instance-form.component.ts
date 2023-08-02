@@ -28,8 +28,8 @@ import {
     EmitEvent,
     Events as CommsEvents,
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
+import { NotificationService } from '@dsp-app/src/app/main/services/notification.service';
 import {
     DefaultClass,
     DefaultResourceClasses,
@@ -93,7 +93,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: AppErrorHandler,
+        private _errorHandler: ErrorHandlerService,
         private _fb: UntypedFormBuilder,
         private _resourceService: ResourceService,
         private _route: ActivatedRoute,

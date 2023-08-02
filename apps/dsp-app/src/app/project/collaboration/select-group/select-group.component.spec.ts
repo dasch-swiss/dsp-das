@@ -1,19 +1,12 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import {
-    ApiResponseData,
-    GroupsEndpointAdmin,
-    GroupsResponse,
-    MockProjects,
-    ReadGroup,
-    StoredProject,
-} from '@dasch-swiss/dsp-js';
+import { ApiResponseData, GroupsEndpointAdmin, GroupsResponse, MockProjects, ReadGroup, StoredProject } from '@dasch-swiss/dsp-js';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
@@ -22,15 +15,12 @@ import { SelectGroupComponent } from './select-group.component';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
 import { Component, ViewChild } from '@angular/core';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test host component to simulate parent component.
  */
 @Component({
-    template:
-        '<app-select-group #selectGroup projectCode="00FF" [projectid]="iri"></app-select-group>',
+    template: '<app-select-group #selectGroup projectCode="00FF" [projectid]="iri"></app-select-group>',
 })
 class TestHostHeaderComponent {
     @ViewChild('selectGroup') selectGroupComp: SelectGroupComponent;
@@ -48,6 +38,7 @@ describe('SelectGroupComponent', () => {
     };
 
     beforeEach(waitForAsync(() => {
+
         const dspConnSpyObj = {
             admin: {
                 groupsEndpoint: jasmine.createSpyObj('groupsEndpoint', [
@@ -77,7 +68,6 @@ describe('SelectGroupComponent', () => {
                     provide: AppConfigService,
                     useValue: appInitSpy,
                 },
-                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConnectionToken,
                     useValue: dspConnSpyObj,
@@ -90,30 +80,29 @@ describe('SelectGroupComponent', () => {
         // mock API
         const dspConnSpy = TestBed.inject(DspApiConnectionToken);
 
-        (
-            dspConnSpy.admin
-                .groupsEndpoint as jasmine.SpyObj<GroupsEndpointAdmin>
-        ).getGroups.and.callFake(() => {
-            const response = new GroupsResponse();
+        (dspConnSpy.admin.groupsEndpoint as jasmine.SpyObj<GroupsEndpointAdmin>).getGroups.and.callFake(
+            () => {
+                const response = new GroupsResponse();
 
-            const projectResponse = MockProjects.mockProject();
+                const projectResponse = MockProjects.mockProject();
 
-            let storedProject = new StoredProject();
-            storedProject = projectResponse.body.project;
+                let storedProject = new StoredProject();
+                storedProject = projectResponse.body.project
 
-            const group = new ReadGroup();
-            group.id = 'http://rdfh.ch/groups/00FF/01234';
-            group.name = 'test group';
-            group.project = storedProject;
+                const group = new ReadGroup();
+                group.id = 'http://rdfh.ch/groups/00FF/01234';
+                group.name = 'test group';
+                group.project = storedProject;
 
-            const groups = [group];
+                const groups = [group];
 
-            response.groups = groups;
+                response.groups = groups;
 
-            return of(
-                ApiResponseData.fromAjaxResponse({ response } as AjaxResponse)
-            );
-        });
+                return of(
+                    ApiResponseData.fromAjaxResponse({ response } as AjaxResponse)
+                );
+            }
+        )
         fixture = TestBed.createComponent(TestHostHeaderComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

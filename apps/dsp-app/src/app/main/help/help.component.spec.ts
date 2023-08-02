@@ -18,8 +18,6 @@ import { StatusComponent } from '../status/status.component';
 import { FooterComponent } from '../footer/footer.component';
 import { GridComponent } from '../grid/grid.component';
 import { HelpComponent } from './help.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 describe('HelpComponent', () => {
     let component: HelpComponent;
@@ -51,7 +49,6 @@ describe('HelpComponent', () => {
             ],
             providers: [
                 AppConfigService,
-                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig,

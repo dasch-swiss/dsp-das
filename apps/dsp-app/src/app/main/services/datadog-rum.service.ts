@@ -12,7 +12,6 @@ import {
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
-import { v5 as uuidv5 } from 'uuid';
 
 @Injectable({
     providedIn: 'root',
@@ -20,14 +19,10 @@ import { v5 as uuidv5 } from 'uuid';
 export class DatadogRumService {
     private buildTag$: Observable<BuildTag> = inject(BuildTagToken);
     private config: DspInstrumentationConfig = inject(DspInstrumentationToken);
-    private session: SessionService = inject(SessionService);
+    private session = inject(SessionService);
     constructor() {
         this.buildTag$.pipe(first()).subscribe((tag) => {
-            if (
-                this.config.dataDog.enabled &&
-                this.config.dataDog.applicationId &&
-                this.config.dataDog.clientToken
-            ) {
+            if (this.config.dataDog.enabled) {
                 datadogRum.init({
                     applicationId: this.config.dataDog.applicationId,
                     clientToken: this.config.dataDog.clientToken,
@@ -59,36 +54,30 @@ export class DatadogRumService {
                 });
 
                 // if session is valid: setActiveUser
-                // FIXME: so that updates to the session state are reflected in the specified user
                 this.session.isSessionValid().subscribe((response: boolean) => {
                     if (response) {
-                        const session: Session | null =
-                            this.session.getSession();
-                        if (session?.user?.name) {
-                            const id: string = uuidv5(
-                                session.user.name,
-                                uuidv5.URL
-                            );
-                            this.setActiveUser(id);
-                        } else {
-                            this.removeActiveUser();
-                        }
+                        const session: Session = this.session.getSession();
+                        this.setActiveUser(session.user.name, 'username');
                     }
                 });
             }
         });
     }
 
-    setActiveUser(identifier: string): void {
-        if (datadogRum.getInternalContext()?.application_id) {
+    setActiveUser(
+        identifier: string,
+        identifierType: 'iri' | 'email' | 'username'
+    ): void {
+        if (datadogRum.getInternalContext().application_id) {
             datadogRum.setUser({
                 id: identifier,
+                identifierType: identifierType,
             });
         }
     }
 
     removeActiveUser(): void {
-        if (datadogRum.getInternalContext()?.application_id) {
+        if (datadogRum.getInternalContext().application_id) {
             datadogRum.removeUser();
         }
     }

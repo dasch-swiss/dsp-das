@@ -23,8 +23,7 @@
       "!{projectRoot}/karma.conf.js",
       "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
-      "!{projectRoot}/jest.config.[jt]s",
-      "!{projectRoot}/src/test-setup.[jt]s"
+      "!{projectRoot}/jest.config.[jt]s"
     ]
   },
   "targetDefaults": {

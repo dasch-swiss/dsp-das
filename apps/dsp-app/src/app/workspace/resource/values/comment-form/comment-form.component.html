@@ -8,7 +8,7 @@
         [ngClass]="{
             comment: valueFormControlValue,
             'invalid-comment':
-                valueFormControlHasError
+                valueFormControlHasError || !valueFormControlValue
         }"
         placeholder="Comment"
         spellcheck="false"

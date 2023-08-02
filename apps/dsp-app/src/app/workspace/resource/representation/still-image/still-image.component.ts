@@ -40,8 +40,8 @@ import * as OpenSeadragon from 'openseadragon';
 import { mergeMap } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '../../../../main/dialog/dialog.component';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { ErrorHandlerService } from '../../../../main/services/error-handler.service';
+import { NotificationService } from '../../../../main/services/notification.service';
 import { DspCompoundPosition } from '../../dsp-resource';
 import {
     EmitEvent,
@@ -155,7 +155,7 @@ export class StillImageComponent
         private _dialog: MatDialog,
         private _domSanitizer: DomSanitizer,
         private _elementRef: ElementRef,
-        private _errorHandler: AppErrorHandler,
+        private _errorHandler: ErrorHandlerService,
         private _matIconRegistry: MatIconRegistry,
         private _notification: NotificationService,
         private _renderer: Renderer2,
@@ -521,7 +521,7 @@ export class StillImageComponent
         overlay: Element
     ): void {
         const dialogConfig: MatDialogConfig = {
-            width: '560px',
+            width: '337px',
             maxHeight: '80vh',
             position: {
                 top: '112px',

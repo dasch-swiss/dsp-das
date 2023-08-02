@@ -12,14 +12,14 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatOptionModule } from '@angular/material/core';
+import { MatLegacyOptionModule as MatOptionModule } from '@angular/material/legacy-core';
 import {
-    MatFormFieldControl,
-    MatFormFieldModule,
-} from '@angular/material/form-field';
+    MatLegacyFormFieldControl as MatFormFieldControl,
+    MatLegacyFormFieldModule as MatFormFieldModule,
+} from '@angular/material/legacy-form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

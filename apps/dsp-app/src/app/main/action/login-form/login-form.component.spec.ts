@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatInputModule } from '@angular/material/input';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -22,11 +22,9 @@ import {
     DspApiConfigToken,
     DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
-import { DatadogRumService } from '@dasch-swiss/vre/shared/app-analytics';
+import { DatadogRumService } from '../../services/datadog-rum.service';
 import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { LoginFormComponent } from './login-form.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test host component to simulate login-form component.
@@ -90,7 +88,6 @@ xdescribe('LoginFormComponent', () => {
             ],
             providers: [
                 AppConfigService,
-                MockProvider(AppLoggingService),
                 DatadogRumService,
                 SessionService,
                 {

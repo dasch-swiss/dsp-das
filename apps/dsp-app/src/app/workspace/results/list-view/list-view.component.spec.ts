@@ -16,8 +16,6 @@ import {
 import { of } from 'rxjs';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ListViewComponent, SearchParams } from './list-view.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test component to simulate child component, here resource-list.
@@ -119,7 +117,6 @@ describe('ListViewComponent', () => {
                 MatSnackBarModule,
             ],
             providers: [
-                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConnectionToken,
                     useValue: searchSpyObj,

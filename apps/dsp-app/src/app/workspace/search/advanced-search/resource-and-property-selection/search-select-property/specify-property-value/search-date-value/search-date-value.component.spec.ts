@@ -17,11 +17,11 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { ErrorStateMatcher } from '@angular/material/core';
 import {
-    MatFormFieldControl,
-    MatFormFieldModule,
-} from '@angular/material/form-field';
+    MatLegacyFormFieldControl as MatFormFieldControl,
+    MatLegacyFormFieldModule as MatFormFieldModule,
+} from '@angular/material/legacy-form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { MatMenuModule } from '@angular/material/menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KnoraDate } from '@dasch-swiss/dsp-js';

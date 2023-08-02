@@ -21,8 +21,6 @@ import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { DocumentComponent } from './document.component';
 import { map } from 'rxjs/operators';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 const documentPdfFileValue = {
     type: 'http://api.knora.org/ontology/knora-api/v2#DocumentFileValue',
@@ -176,7 +174,6 @@ describe('DocumentComponent', () => {
             ],
             providers: [
                 AppConfigService,
-                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConnectionToken,
                     useValue: appInitSpy,

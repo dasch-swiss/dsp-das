@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, OnChanges } from '@angular/core';
+import { Component, Inject, OnChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     ApiResponseData,
@@ -12,7 +12,7 @@ import {
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import {
     Session,
     SessionService,
@@ -67,8 +67,7 @@ export class OntologyClassInstanceComponent implements OnChanges {
         private _projectService: ProjectService,
         private _sessionService: SessionService,
         private _router: Router,
-        private _errorHandler: AppErrorHandler,
-        private _cdr: ChangeDetectorRef
+        private _errorHandler: ErrorHandlerService
     ) {
         // parameters from the url
         const uuid = this._route.parent.snapshot.params.uuid;
@@ -139,7 +138,7 @@ export class OntologyClassInstanceComponent implements OnChanges {
                         // display all resource instances of this resource class
                         this.searchParams = {
                             query: this._setGravsearch(this.classId),
-                            mode: 'gravsearch'
+                            mode: 'gravsearch',
                         };
                     }
                 });
@@ -173,7 +172,6 @@ export class OntologyClassInstanceComponent implements OnChanges {
                     res && res.count > 0 ? 'intermediate' : 'single';
             }
         }
-        this._cdr.detectChanges();
     }
 
     private _setGravsearch(iri: string): string {

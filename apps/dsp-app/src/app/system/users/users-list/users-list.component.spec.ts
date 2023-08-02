@@ -5,7 +5,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatSelectModule } from '@angular/material/select';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
@@ -29,11 +29,9 @@ import { Component } from '@angular/core';
 import { AjaxResponse } from 'rxjs/ajax';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 @Component({
-    template: '<app-users-list></app-users-list>',
+    template: '<app-users-list></app-users-list>'
 })
 class TestHostUsersListComponent {}
 
@@ -42,6 +40,7 @@ describe('UsersListComponent', () => {
     let fixture: ComponentFixture<TestHostUsersListComponent>;
 
     beforeEach(waitForAsync(() => {
+
         const apiSpyObj = {
             admin: {
                 projectsEndpoint: jasmine.createSpyObj('projectsEndpoint', [
@@ -55,10 +54,9 @@ describe('UsersListComponent', () => {
             'setSession',
         ]);
 
-        const applicationStateServiceSpy = jasmine.createSpyObj(
-            'ApplicationStateService',
-            ['get']
-        );
+        const applicationStateServiceSpy = jasmine.createSpyObj('ApplicationStateService', [
+            'get',
+        ]);
 
         TestBed.configureTestingModule({
             declarations: [
@@ -66,7 +64,7 @@ describe('UsersListComponent', () => {
                 SelectGroupComponent,
                 DialogComponent,
                 StatusComponent,
-                TestHostUsersListComponent,
+                TestHostUsersListComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -101,7 +99,6 @@ describe('UsersListComponent', () => {
                     },
                 },
                 AppConfigService,
-                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConnectionToken,
                     useValue: apiSpyObj,
@@ -119,14 +116,11 @@ describe('UsersListComponent', () => {
     }));
 
     beforeEach(() => {
-        // mock application state service
-        const applicationStateServiceSpy = TestBed.inject(
-            ApplicationStateService
-        );
 
-        (
-            applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>
-        ).get.and.callFake(() => {
+        // mock application state service
+        const applicationStateServiceSpy = TestBed.inject(ApplicationStateService);
+
+        (applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>).get.and.callFake(() => {
             const response: ProjectResponse = new ProjectResponse();
 
             const mockProjects = MockProjects.mockProjects();
@@ -158,20 +152,19 @@ describe('UsersListComponent', () => {
 
         const dspConnSpy = TestBed.inject(DspApiConnectionToken);
 
-        (
-            dspConnSpy.admin
-                .projectsEndpoint as jasmine.SpyObj<ProjectsEndpointAdmin>
-        ).getProjectByShortcode.and.callFake(() => {
-            const response = new ProjectResponse();
+        (dspConnSpy.admin.projectsEndpoint as jasmine.SpyObj<ProjectsEndpointAdmin>).getProjectByShortcode.and.callFake(
+            () => {
+                const response = new ProjectResponse();
 
-            const mockProjects = MockProjects.mockProjects();
+                const mockProjects = MockProjects.mockProjects();
 
-            response.project = mockProjects.body.projects[0];
+                response.project = mockProjects.body.projects[0];
 
-            return of(
-                ApiResponseData.fromAjaxResponse({ response } as AjaxResponse)
-            );
-        });
+                return of(
+                    ApiResponseData.fromAjaxResponse({ response } as AjaxResponse)
+                );
+            }
+        );
 
         fixture = TestBed.createComponent(TestHostUsersListComponent);
         component = fixture.componentInstance;

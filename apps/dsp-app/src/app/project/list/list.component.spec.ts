@@ -12,7 +12,7 @@ import {
 } from '@angular/material/dialog';
 import { MatDialogHarness } from '@angular/material/dialog/testing';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSelectModule } from '@angular/material/select';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -38,11 +38,12 @@ import { DialogHeaderComponent } from '@dsp-app/src/app/main/dialog/dialog-heade
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { StringifyStringLiteralPipe } from '@dsp-app/src/app/main/pipes/string-transformation/stringify-string-literal.pipe';
 import { TruncatePipe } from '@dsp-app/src/app/main/pipes/string-transformation/truncate.pipe';
-import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
+import {
+    Session,
+    SessionService,
+} from '@dasch-swiss/vre/shared/app-session';
 import { TestConfig } from '@dsp-app/src/test.config';
 import { ListComponent } from './list.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test Host Component
@@ -99,10 +100,7 @@ describe('ListComponent', () => {
             'getSession',
         ]);
 
-        const applicationStateServiceSpy = jasmine.createSpyObj(
-            'ApplicationStateService',
-            ['get']
-        );
+        const applicationStateServiceSpy = jasmine.createSpyObj('ApplicationStateService', ['get']);
 
         const routerSpy = jasmine.createSpyObj('Router', [
             'navigate',
@@ -160,7 +158,6 @@ describe('ListComponent', () => {
                     provide: AppConfigService,
                     useValue: appInitSpy,
                 },
-                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConnectionToken,
                     useValue: dspConnSpyObj,
@@ -221,13 +218,9 @@ describe('ListComponent', () => {
             });
 
             // mock application state service
-            const applicationStateServiceSpy = TestBed.inject(
-                ApplicationStateService
-            );
+            const applicationStateServiceSpy = TestBed.inject(ApplicationStateService);
 
-            (
-                applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>
-            ).get.and.callFake(() => {
+            (applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>).get.and.callFake(() => {
                 const response: ProjectResponse = new ProjectResponse();
 
                 const mockProjects = MockProjects.mockProjects();

@@ -16,8 +16,6 @@ import {
 import { MaterialModule } from '@dsp-app/src/app/material-module';
 import { TestConfig } from '@dsp-app/src/test.config';
 import { OntologyFormComponent } from './ontology-form.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 describe('OntologyFormComponent', () => {
     let ontologyFormComponent: OntologyFormComponent;
@@ -25,10 +23,7 @@ describe('OntologyFormComponent', () => {
 
     const formBuilder: UntypedFormBuilder = new UntypedFormBuilder();
 
-    const applicationStateServiceSpy = jasmine.createSpyObj(
-        'ApplicationStateService',
-        ['get']
-    );
+    const applicationStateServiceSpy = jasmine.createSpyObj('ApplicationStateService', ['get']);
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -45,7 +40,6 @@ describe('OntologyFormComponent', () => {
                 // reference the new instance of formBuilder from above
                 { provide: UntypedFormBuilder, useValue: formBuilder },
                 AppConfigService,
-                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig,
@@ -64,13 +58,9 @@ describe('OntologyFormComponent', () => {
 
     beforeEach(() => {
         // mock application state service for currentOntology
-        const applicationStateServiceSpy = TestBed.inject(
-            ApplicationStateService
-        );
+        const applicationStateServiceSpy = TestBed.inject(ApplicationStateService);
 
-        (
-            applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>
-        ).get.and.callFake(() => {
+        (applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>).get.and.callFake(() => {
             const response = MockProjects.mockProject();
             return of(response.body.project);
         });

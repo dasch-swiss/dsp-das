@@ -15,10 +15,10 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import {
-    MatFormFieldControl,
-    MatFormFieldModule,
-} from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+    MatLegacyFormFieldControl as MatFormFieldControl,
+    MatLegacyFormFieldModule as MatFormFieldModule,
+} from '@angular/material/legacy-form-field';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {

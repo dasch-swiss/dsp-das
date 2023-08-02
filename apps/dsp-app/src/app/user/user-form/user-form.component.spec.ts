@@ -6,8 +6,8 @@ import {
 } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -29,8 +29,6 @@ import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/pro
 import { TestConfig } from '@dsp-app/src/test.config';
 import { PasswordFormComponent } from './password-form/password-form.component';
 import { UserFormComponent } from './user-form.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 describe('UserFormComponent', () => {
     let component: UserFormComponent;
@@ -86,7 +84,6 @@ describe('UserFormComponent', () => {
                     provide: AppConfigService,
                     useValue: appInitSpy,
                 },
-                MockProvider(AppLoggingService),
                 {
                     provide: ProjectService,
                     useValue: projectServiceSpy,
@@ -123,13 +120,13 @@ describe('UserFormComponent', () => {
         });
 
         const cacheSpyAllUsers = TestBed.inject(ApplicationStateService);
-        (
-            cacheSpyAllUsers as jasmine.SpyObj<ApplicationStateService>
-        ).get.and.callFake(() => {
-            const allUsers: ApiResponseData<UsersResponse> =
-                MockUsers.mockUsers();
-            return of(allUsers.body.users);
-        });
+        (cacheSpyAllUsers as jasmine.SpyObj<ApplicationStateService>).get.and.callFake(
+            () => {
+                const allUsers: ApiResponseData<UsersResponse> =
+                    MockUsers.mockUsers();
+                return of(allUsers.body.users);
+            }
+        );
 
         fixture = TestBed.createComponent(UserFormComponent);
         component = fixture.componentInstance;

@@ -8,8 +8,6 @@ import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 
 import { RepresentationService } from './representation.service';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 const appInitSpy = {
     dspAppConfig: {
@@ -40,7 +38,6 @@ describe('RepresentationService', () => {
             ],
             providers: [
                 AppConfigService,
-                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConnectionToken,
                     useValue: appInitSpy,

@@ -24,7 +24,7 @@ import { PdfViewerComponent } from 'ng2-pdf-viewer';
 import { mergeMap } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import {
     EmitEvent,
     Events,
@@ -66,13 +66,16 @@ export class DocumentComponent implements OnInit, AfterViewInit {
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
         private _dialog: MatDialog,
-        private _errorHandler: AppErrorHandler,
+        private _errorHandler: ErrorHandlerService,
         private _rs: RepresentationService,
         private _valueOperationEventService: ValueOperationEventService
     ) {}
 
     ngOnInit(): void {
         this.fileType = this._getFileType(this.src.fileValue.filename);
+        if (this.fileType === 'pdf') {
+            this.elem = document.getElementsByClassName('pdf-viewer')[0];
+        }
 
         this._rs
             .getFileInfo(this.src.fileValue.fileUrl)
@@ -85,21 +88,18 @@ export class DocumentComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        if (this.fileType === 'pdf') {
-            this.elem = document.getElementsByClassName('pdf-viewer')[0];
-        }
         this.loaded.emit(true);
     }
 
     searchQueryChanged(newQuery: string) {
         if (newQuery !== this.pdfQuery) {
             this.pdfQuery = newQuery;
-            this._pdfComponent.eventBus.dispatch('find', {
+            this._pdfComponent.pdfFindController.executeCommand('find', {
                 query: this.pdfQuery,
                 highlightAll: true,
             });
         } else {
-            this._pdfComponent.eventBus.dispatch('findagain', {
+            this._pdfComponent.pdfFindController.executeCommand('findagain', {
                 query: this.pdfQuery,
                 highlightAll: true,
             });
@@ -140,9 +140,6 @@ export class DocumentComponent implements OnInit, AfterViewInit {
     }
 
     openFullscreen() {
-        if (!this.elem) {
-            return; // guard
-        }
         if (this.elem.requestFullscreen) {
             this.elem.requestFullscreen();
         } else if (this.elem.mozRequestFullScreen) {

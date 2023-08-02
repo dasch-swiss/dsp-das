@@ -5,9 +5,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -31,8 +31,6 @@ import { CollectionListComponent } from './collection-list/collection-list.compo
 import { ProfileComponent } from './profile/profile.component';
 import { PasswordFormComponent } from './user-form/password-form/password-form.component';
 import { UserComponent } from './user.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test component to simulate child component, here progress-indicator from action module.
@@ -102,7 +100,6 @@ describe('UserComponent', () => {
                     },
                 },
                 AppConfigService,
-                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig,

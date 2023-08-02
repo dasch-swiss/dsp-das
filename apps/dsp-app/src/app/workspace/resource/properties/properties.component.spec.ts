@@ -47,8 +47,6 @@ import {
     PropertiesComponent,
     PropertyInfoValues,
 } from './properties.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test host component to simulate parent component.
@@ -148,7 +146,6 @@ class TestDisplayValueComponent {
     @Input() parentResource: DspResource;
     @Input() configuration?: object;
     @Input() canDelete: boolean;
-    @Input() cantDeleteReason: string;
     @Input() projectStatus: boolean;
     @Input() valueUuidToHighlight: string;
 
@@ -227,7 +224,6 @@ describe('PropertiesComponent', () => {
             providers: [
                 ValueOperationEventService,
                 AppConfigService,
-                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConnectionToken,
                     useValue: adminSpyObj,
@@ -454,7 +450,7 @@ describe('PropertiesComponent', () => {
 
             expect(testHostComponent).toBeTruthy();
 
-            testHostComponent.propertiesComponent.userCanEdit = true;
+            testHostComponent.propertiesComponent.addButtonIsVisible = true;
             testHostComponent.propertiesComponent.addValueFormIsVisible = false;
             testHostFixture.detectChanges();
         });

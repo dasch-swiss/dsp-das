@@ -26,8 +26,6 @@ import { GroupsListComponent } from '@dsp-app/src/app/system/groups/groups-list/
 import { TestConfig } from '@dsp-app/src/test.config';
 import { AddGroupComponent } from './add-group/add-group.component';
 import { PermissionComponent } from './permission.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * mocked linkify pipe from main/pipes.
@@ -45,10 +43,10 @@ describe('PermissionComponent', () => {
     let fixture: ComponentFixture<PermissionComponent>;
 
     beforeEach(waitForAsync(() => {
-        const applicationStateServiceSpy = jasmine.createSpyObj(
-            'ApplicationStateService',
-            ['get', 'set']
-        );
+        const applicationStateServiceSpy = jasmine.createSpyObj('ApplicationStateService', [
+            'get',
+            'set',
+        ]);
 
         TestBed.configureTestingModule({
             declarations: [
@@ -88,7 +86,6 @@ describe('PermissionComponent', () => {
                     },
                 },
                 AppConfigService,
-                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig,
@@ -107,13 +104,9 @@ describe('PermissionComponent', () => {
 
     beforeEach(() => {
         // mock application state service
-        const applicationStateServiceSpy = TestBed.inject(
-            ApplicationStateService
-        );
+        const applicationStateServiceSpy = TestBed.inject(ApplicationStateService);
 
-        (
-            applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>
-        ).get.and.callFake(() => {
+        (applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>).get.and.callFake(() => {
             const response: ProjectResponse = new ProjectResponse();
 
             const mockProjects = MockProjects.mockProjects();

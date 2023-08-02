@@ -24,7 +24,7 @@ import {
     StoredProject,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import { FilteredResources } from '../../results/list-view/list-view.component';
 import { ProjectService } from '../services/project.service';
 import { ResourceService } from '../services/resource.service';
@@ -64,7 +64,7 @@ export class ResourceLinkFormComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: AppErrorHandler,
+        private _errorHandler: ErrorHandlerService,
         private _fb: UntypedFormBuilder,
         private _project: ProjectService,
         private _resourceService: ResourceService,

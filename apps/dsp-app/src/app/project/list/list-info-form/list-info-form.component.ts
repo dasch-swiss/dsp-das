@@ -21,7 +21,7 @@ import {
     UpdateListInfoRequest,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 
 @Component({
@@ -70,7 +70,7 @@ export class ListInfoFormComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: AppErrorHandler,
+        private _errorHandler: ErrorHandlerService,
         private _route: ActivatedRoute,
         private _router: Router,
         private _projectService: ProjectService

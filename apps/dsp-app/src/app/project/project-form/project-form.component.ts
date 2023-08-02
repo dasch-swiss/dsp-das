@@ -29,8 +29,8 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
+import { NotificationService } from '@dsp-app/src/app/main/services/notification.service';
 import { SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
@@ -170,7 +170,7 @@ export class ProjectFormComponent implements OnInit {
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
         private _applicationStateService: ApplicationStateService,
-        private _errorHandler: AppErrorHandler,
+        private _errorHandler: ErrorHandlerService,
         private _notification: NotificationService,
         private _fb: UntypedFormBuilder,
         private _router: Router,

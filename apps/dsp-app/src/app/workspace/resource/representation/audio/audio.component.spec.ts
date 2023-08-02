@@ -14,8 +14,6 @@ import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { AudioComponent } from './audio.component';
 import { map } from 'rxjs/operators';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 // --> TODO: get test data from dsp-js or from dsp-api test data
 const audioFileValue = {
@@ -113,7 +111,6 @@ describe('AudioComponent', () => {
             ],
             providers: [
                 AppConfigService,
-                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConnectionToken,
                     useValue: appInitSpy,

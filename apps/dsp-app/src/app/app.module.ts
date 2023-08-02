@@ -52,10 +52,7 @@ import { TitleFromCamelCasePipe } from './main/pipes/string-transformation/title
 import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './main/pipes/time.pipe';
 import { SelectLanguageComponent } from './main/select-language/select-language.component';
-import {
-    DatadogRumService,
-    PendoAnalyticsService,
-} from '@dasch-swiss/vre/shared/app-analytics';
+import { DatadogRumService } from './main/services/datadog-rum.service';
 import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
 import { DescriptionComponent } from './project/description/description.component';
@@ -361,7 +358,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         AppConfigService,
         DatadogRumService,
         AppLoggingService,
-        PendoAnalyticsService,
         {
             provide: DspApiConfigToken,
             useFactory: (appConfigService: AppConfigService) =>

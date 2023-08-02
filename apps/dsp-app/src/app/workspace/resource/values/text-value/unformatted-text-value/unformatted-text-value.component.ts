@@ -65,6 +65,7 @@ export class UnformattedTextValueComponent
             newTextValue.valueHasComment = this.commentFormControl.value;
         }
 
+        console.log(newTextValue);
         return newTextValue;
     }
 

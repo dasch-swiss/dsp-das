@@ -20,7 +20,7 @@ import {
     ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import { IRI, PropertyValue, Value } from '../operator';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
@@ -52,7 +52,7 @@ export class SearchListValueComponent
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
         @Inject(UntypedFormBuilder) private _fb: UntypedFormBuilder,
-        private _errorHandler: AppErrorHandler
+        private _errorHandler: ErrorHandlerService
     ) {}
 
     ngOnInit() {

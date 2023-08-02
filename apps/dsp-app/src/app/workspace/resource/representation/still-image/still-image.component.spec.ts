@@ -26,8 +26,6 @@ import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { Region, StillImageComponent } from './still-image.component';
 import { map } from 'rxjs/operators';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 // --> TODO: get test data from dsp-js
 // --> TODO: get this from dsp-js: https://dasch.myjetbrains.com/youtrack/issue/DSP-506
@@ -173,7 +171,6 @@ describe('StillImageComponent', () => {
             ],
             providers: [
                 AppConfigService,
-                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConnectionToken,
                     useValue: adminSpyObj,

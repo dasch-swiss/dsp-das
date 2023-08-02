@@ -27,7 +27,7 @@
 .value-component-comment {
   display: block !important;
 
-  textarea.mat-mdc-input-element.cdk-textarea-autosize {
+  textarea.mat-input-element.cdk-textarea-autosize {
     resize: vertical;
   }
 }
@@ -38,8 +38,8 @@
 
 .parent-value-component
   .child-value-component
-  .mat-mdc-form-field-wrapper
-  .mat-mdc-form-field-infix {
+  .mat-form-field-wrapper
+  .mat-form-field-infix {
   border-top: 0em solid transparent;
 }
 
@@ -113,7 +113,7 @@
   }
 }
 
-.mat-mdc-form-field-error {
+.mat-error {
   grid-row-start: 1;
   grid-row-end: auto;
   grid-column-start: 3;

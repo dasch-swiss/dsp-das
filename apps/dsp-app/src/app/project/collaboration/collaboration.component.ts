@@ -11,7 +11,7 @@ import {
     ReadUser,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
 import {
     Session,
     SessionService,
@@ -54,7 +54,7 @@ export class CollaborationComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: AppErrorHandler,
+        private _errorHandler: ErrorHandlerService,
         private _route: ActivatedRoute,
         private _session: SessionService,
         private _titleService: Title,

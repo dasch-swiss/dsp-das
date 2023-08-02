@@ -35,10 +35,11 @@ import {
     ListItemFormComponent,
     ListNodeOperation,
 } from './list-item-form.component';
-import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
+import {
+    Session,
+    SessionService,
+} from '@dasch-swiss/vre/shared/app-session';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test host component to simulate parent component.
@@ -114,10 +115,7 @@ describe('ListItemFormComponent', () => {
             'getSession',
         ]);
 
-        const applicationStateServiceSpy = jasmine.createSpyObj(
-            'ApplicationStateService',
-            ['get']
-        );
+        const applicationStateServiceSpy = jasmine.createSpyObj('ApplicationStateService', ['get']);
 
         TestBed.configureTestingModule({
             declarations: [
@@ -138,7 +136,6 @@ describe('ListItemFormComponent', () => {
                 TranslateModule.forRoot(),
             ],
             providers: [
-                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConnectionToken,
                     useValue: listsEndpointSpyObj,
@@ -185,13 +182,9 @@ describe('ListItemFormComponent', () => {
         );
 
         // mock application state service
-        const applicationStateServiceSpy = TestBed.inject(
-            ApplicationStateService
-        );
+        const applicationStateServiceSpy = TestBed.inject(ApplicationStateService);
 
-        (
-            applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>
-        ).get.and.callFake(() => {
+        (applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>).get.and.callFake(() => {
             const response: ProjectResponse = new ProjectResponse();
 
             const mockProjects = MockProjects.mockProjects();
