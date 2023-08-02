@@ -2,15 +2,15 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component, Input } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
-import { MatLegacyOptionModule as MatOptionModule } from '@angular/material/legacy-core';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatOptionModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -35,6 +35,8 @@ import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
 import { TestConfig } from '@dsp-app/src/test.config';
 import { PropertyFormComponent } from '../property-form/property-form.component';
 import { ResourceClassFormComponent } from './resource-class-form.component';
+import { MockProvider } from 'ng-mocks';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test host component to simulate parent component.
@@ -58,7 +60,10 @@ describe('ResourceClassFormComponent', () => {
     let component: TestHostResourceClassFormComponent;
     let fixture: ComponentFixture<TestHostResourceClassFormComponent>;
 
-    const applicationStateServiceSpy = jasmine.createSpyObj('ApplicationStateService', ['get']);
+    const applicationStateServiceSpy = jasmine.createSpyObj(
+        'ApplicationStateService',
+        ['get']
+    );
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -91,6 +96,7 @@ describe('ResourceClassFormComponent', () => {
             ],
             providers: [
                 AppConfigService,
+                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig,
@@ -109,9 +115,13 @@ describe('ResourceClassFormComponent', () => {
 
     beforeEach(() => {
         // mock application state service for currentOntology
-        const applicationStateServiceSpy = TestBed.inject(ApplicationStateService);
+        const applicationStateServiceSpy = TestBed.inject(
+            ApplicationStateService
+        );
 
-        (applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>).get.and.callFake(() => {
+        (
+            applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>
+        ).get.and.callFake(() => {
             const response: ReadOntology = MockOntology.mockReadOntology(
                 'http://0.0.0.0:3333/ontology/0001/anything/v2'
             );

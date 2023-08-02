@@ -2,7 +2,7 @@ import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -22,6 +22,8 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { CommentFormComponent } from '../comment-form/comment-form.component';
 import { ListValueComponent } from './list-value.component';
 import { SublistValueComponent } from './subList-value/sublist-value.component';
+import { MockProvider } from 'ng-mocks';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test host component to simulate parent component.
@@ -112,6 +114,7 @@ describe('ListValueComponent', () => {
                 ReactiveFormsModule,
             ],
             providers: [
+                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConnectionToken,
                     useValue: valuesSpyObj,

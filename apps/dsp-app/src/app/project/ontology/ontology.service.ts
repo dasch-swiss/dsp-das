@@ -149,7 +149,7 @@ export class OntologyService {
                                 return;
                             }
                             const onto = ontologies.find(
-                                (i) => i.id === baseOntoIri
+                                (i) => i?.id === baseOntoIri
                             );
                             superPropIri =
                                 onto?.properties[subProp].subPropertyOf[0];

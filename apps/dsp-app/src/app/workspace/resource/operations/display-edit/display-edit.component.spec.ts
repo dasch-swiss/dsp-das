@@ -75,16 +75,12 @@ import { ValueService } from '../../services/value.service';
 import { DisplayEditComponent } from './display-edit.component';
 
 @Component({
-    selector: 'app-text-value-as-string',
+    selector: 'app-unformatted-text-value',
     template: '',
 })
 class TestUnformattedTextValueComponent {
     @Input() displayValue?: ReadUnformattedTextValue;
-    @Input() textArea?: boolean = false;
-
     @Input() mode;
-
-    @Input() guiElement: 'simpleText' | 'textArea' | 'richText' = 'simpleText';
 }
 
 @Component({

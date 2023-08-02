@@ -5,7 +5,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -22,6 +22,8 @@ import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { MembershipComponent } from './membership.component';
+import { MockProvider } from 'ng-mocks';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 describe('MembershipComponent', () => {
     let component: MembershipComponent;
@@ -75,6 +77,7 @@ describe('MembershipComponent', () => {
                     provide: AppConfigService,
                     useValue: appInitSpy,
                 },
+                MockProvider(AppLoggingService),
                 {
                     provide: ProjectService,
                     useValue: projectServiceSpy,

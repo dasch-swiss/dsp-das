@@ -1,7 +1,7 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, Input, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import {
@@ -40,6 +40,8 @@ import { SplitPipe } from '@dsp-app/src/app/main/pipes/split.pipe';
 import { TestConfig } from '@dsp-app/src/test.config';
 import { MatMenuModule } from '@angular/material/menu';
 import { ResourceClassPropertyInfoComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
+import { MockProvider } from 'ng-mocks';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test host component to simulate parent component
@@ -138,6 +140,16 @@ class LinkHostComponent {
     };
 }
 
+@Component({
+    selector: 'ngx-skeleton-loader',
+    template: '',
+})
+class MockNgxSkeletonLoaderComponent {
+    @Input() theme: string;
+    // Add any other necessary input properties here
+}
+
+
 /**
  * test host component to simulate parent component
  * Property is of type list dropdown
@@ -204,7 +216,10 @@ describe('ResourceClassPropertyInfoComponent', () => {
     let overlayContainer: OverlayContainer;
 
     beforeEach(waitForAsync(() => {
-        const applicationStateServiceSpy = jasmine.createSpyObj('ApplicationStateService', ['get']);
+        const applicationStateServiceSpy = jasmine.createSpyObj(
+            'ApplicationStateService',
+            ['get']
+        );
 
         const ontologyEndpointSpyObj = {
             v2: {
@@ -223,6 +238,7 @@ describe('ResourceClassPropertyInfoComponent', () => {
                 UnformattedTextHostComponent,
                 SplitPipe,
                 ResourceClassPropertyInfoComponent,
+                MockNgxSkeletonLoaderComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -237,6 +253,7 @@ describe('ResourceClassPropertyInfoComponent', () => {
             ],
             providers: [
                 AppConfigService,
+                MockProvider(AppLoggingService),
                 {
                     provide: DspApiConfigToken,
                     useValue: TestConfig.ApiConfig,
@@ -256,7 +273,7 @@ describe('ResourceClassPropertyInfoComponent', () => {
                 {
                     provide: MatDialogRef,
                     useValue: {},
-                },
+                }
             ],
         }).compileComponents();
     }));
@@ -276,9 +293,13 @@ describe('ResourceClassPropertyInfoComponent', () => {
 
     beforeEach(() => {
         // mock application state service for currentOntology
-        const applicationStateServiceSpy = TestBed.inject(ApplicationStateService);
+        const applicationStateServiceSpy = TestBed.inject(
+            ApplicationStateService
+        );
 
-        (applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>).get.and.callFake(() => {
+        (
+            applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>
+        ).get.and.callFake(() => {
             const response: ReadOntology = MockOntology.mockReadOntology(
                 'http://0.0.0.0:3333/ontology/0001/anything/v2'
             );
@@ -307,9 +328,13 @@ describe('ResourceClassPropertyInfoComponent', () => {
 
     beforeEach(() => {
         // mock application state service for currentOntologyLists
-        const applicationStateServiceSpy = TestBed.inject(ApplicationStateService);
+        const applicationStateServiceSpy = TestBed.inject(
+            ApplicationStateService
+        );
 
-        (applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>).get.and.callFake(() => {
+        (
+            applicationStateServiceSpy as jasmine.SpyObj<ApplicationStateService>
+        ).get.and.callFake(() => {
             const response: ListNodeInfo[] = [
                 {
                     comments: [],

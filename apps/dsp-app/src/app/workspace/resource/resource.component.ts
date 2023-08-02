@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 import {
+    ChangeDetectorRef,
     Component,
     Inject,
     Input,
@@ -34,8 +35,8 @@ import {
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ErrorHandlerService } from '@dsp-app/src/app/main/services/error-handler.service';
-import { NotificationService } from '@dsp-app/src/app/main/services/notification.service';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
     Session,
     SessionService,
@@ -122,7 +123,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     // permissions of logged-in user
     session: Session;
     adminPermissions = false;
-    editPermissions = false;
 
     navigationSubscription: Subscription;
 
@@ -133,7 +133,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: ErrorHandlerService,
+        private _errorHandler: AppErrorHandler,
         private _incomingService: IncomingService,
         private _notification: NotificationService,
         private _resourceService: ResourceService,
@@ -141,7 +141,8 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         private _router: Router,
         private _session: SessionService,
         private _titleService: Title,
-        private _valueOperationEventService: ValueOperationEventService
+        private _valueOperationEventService: ValueOperationEventService,
+        private _cdr:ChangeDetectorRef
     ) {
         this._route.params.subscribe((params) => {
             this.projectCode = params['project'];
@@ -249,13 +250,10 @@ export class ResourceComponent implements OnChanges, OnDestroy {
             this.collectRepresentationsAndAnnotations(this.incomingResource);
     }
 
-    setPermissionsOnResource(project: string) {
-        // get information about the logged-in user, if one is logged-in
-        if (this._session.getSession()) {
-            this.session = this._session.getSession();
-            // is the logged-in user project member?
-            // --> TODO: as soon as we know how to handle the permissions, set this value the correct way
-            this.editPermissions = true;
+    setAdminPermissionsOnResource(project: string) {
+        const session = this._session.getSession();
+        if (session) {
+            this.session = session;
             // is the logged-in user system admin or project admin?
             this.adminPermissions = this.session.user.sysAdmin
                 ? this.session.user.sysAdmin
@@ -300,7 +298,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         } else {
             this.renderAsMainResource(resource);
         }
-        this.setPermissionsOnResource(resource.res.attachedToProject);
+        this.setAdminPermissionsOnResource(resource.res.attachedToProject);
     }
 
     renderAsMainResource(resource: DspResource) {
@@ -444,15 +442,16 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
     tabChanged(e: MatTabChangeEvent) {
         if (e.tab.textLabel === 'annotations') {
-            this.stillImageComponent.renderRegions();
+            this.stillImageComponent?.renderRegions();
         } else {
-            this.stillImageComponent.removeOverlays();
+            this.stillImageComponent?.removeOverlays();
         }
         this.selectedTabLabel = e.tab.textLabel;
     }
 
     representationLoaded(e: boolean) {
         this.loading = !e;
+        this._cdr.detectChanges();
     }
 
     /**
@@ -647,6 +646,9 @@ export class ResourceComponent implements OnChanges, OnDestroy {
             )
             .subscribe(
                 (incomingImageRepresentations: ReadResourceSequence) => {
+                    if (!this.resource) {
+                        return; // if there is no resource anymore when the response arrives, do nothing
+                    }
                     if (incomingImageRepresentations.resources.length > 0) {
                         // set the incoming representations for the current offset only
                         this.resource.incomingRepresentations =
@@ -738,12 +740,16 @@ export class ResourceComponent implements OnChanges, OnDestroy {
      */
     protected getIncomingLinks(offset: number): void {
         this._incomingService
-            .getIncomingLinksForResource(this.resource.res.id, offset)
+            .getIncomingLinksForResource(this.resource?.res.id, offset)
             .subscribe(
                 (incomingResources: ReadResourceSequence) => {
+                    // Check if incomingReferences is initialized, if not, initialize it as an empty array
+                    if (!this.resource?.res.incomingReferences) {
+                        this.resource.res.incomingReferences = [];
+                    }
                     // append elements incomingResources to this.resource.incomingLinks
                     Array.prototype.push.apply(
-                        this.resource.res.incomingReferences,
+                        this.resource?.res.incomingReferences,
                         incomingResources.resources
                     );
                 },
