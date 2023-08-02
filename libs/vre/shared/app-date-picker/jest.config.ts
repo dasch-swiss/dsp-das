@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-    displayName: 'vre-shared-app-date-picker',
+    displayName: 'app-date-picker',
     preset: '../../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory: '../../../../coverage/libs/vre/shared/app-date-picker',
