@@ -24,19 +24,16 @@ import {
     NgControl,
     NgForm,
     Validators,
-    FormsModule,
-    ReactiveFormsModule,
 } from '@angular/forms';
 import {
     CanUpdateErrorState,
     ErrorStateMatcher,
-    MatOptionModule,
     mixinErrorState,
     _AbstractConstructor,
     _Constructor,
 } from '@angular/material/core';
-import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
-import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { KnoraDate } from '@dasch-swiss/dsp-js';
 import { Subject } from 'rxjs';
 import {
@@ -46,12 +43,6 @@ import {
     IslamicCalendarDate,
     JulianCalendarDate,
 } from '@dasch-swiss/jdnconvertiblecalendar';
-import { MatIconModule} from '@angular/material/icon';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatInputModule } from '@angular/material/input';
-
-//import { KnoraDatePipe } from '../../../../../main/pipes/formatting/knoradate.pipe';
-//import { ValueService } from '../../../services/value.service';
 
 /** error when invalid control is dirty, touched, or submitted. */
 export class DatePickerErrorStateMatcher implements ErrorStateMatcher {
@@ -71,6 +62,16 @@ export class DatePickerErrorStateMatcher implements ErrorStateMatcher {
 type CanUpdateErrorStateCtor = _Constructor<CanUpdateErrorState> &
     _AbstractConstructor<CanUpdateErrorState>;
 
+interface FormErrors {
+    [key: string]: string;
+}
+
+interface ValidationMessages {
+    [key: string]: {
+        [key: string]: string;
+    };
+}
+
 class MatInputBase {
     constructor(
         public _defaultErrorStateMatcher: ErrorStateMatcher,
@@ -85,27 +86,18 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
 
 @Component({
     selector: 'dasch-swiss-app-date-picker',
-    standalone: true,
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        MatIconModule,
-        MatInputModule,
-        MatFormFieldModule,
-        MatOptionModule,
-        MatMenuModule,
-        MatButtonToggleModule
-    ],
     templateUrl: './app-date-picker.component.html',
     styleUrls: ['./app-date-picker.component.scss'],
 })
-export class AppDatePickerComponent extends _MatInputMixinBase implements
-ControlValueAccessor,
-MatFormFieldControl<KnoraDate>,
-OnChanges,
-DoCheck,
-CanUpdateErrorState,
-OnDestroy
+export class AppDatePickerComponent
+    extends _MatInputMixinBase
+    implements
+        ControlValueAccessor,
+        MatFormFieldControl<KnoraDate>,
+        OnChanges,
+        DoCheck,
+        CanUpdateErrorState,
+        OnDestroy
 {
     static nextId = 0;
 
@@ -119,23 +111,25 @@ OnDestroy
     // set predefinde calendar
     @Input() calendar = 'GREGORIAN';
 
-    @HostBinding() id = `app-date-picker-${AppDatePickerComponent.nextId++}`;
+    @HostBinding()
+    id = `dasch-swiss-app-date-picker-${AppDatePickerComponent.nextId++}`;
 
     @HostBinding('attr.aria-describedby') describedBy = '';
     dateForm: UntypedFormGroup;
     focused = false;
     override errorState = false;
-    controlType = 'app-date-picker';
+    controlType = 'dasch-swiss-app-date-picker';
     matcher = new DatePickerErrorStateMatcher();
 
     // own date picker variables
     date!: KnoraDate;
     form!: UntypedFormGroup;
-    formErrors = {
+
+    formErrors: FormErrors = {
         year: '',
     };
 
-    validationMessages = {
+    validationMessages: ValidationMessages = {
         year: {
             required: 'At least the year has to be set.',
             min: 'A valid year is greater than 0.',
@@ -187,14 +181,31 @@ OnDestroy
         return this._required;
     }
 
+    set required(req) {
+        this._required = coerceBooleanProperty(req);
+        this.stateChanges.next();
+    }
+
     @Input()
     get disabled(): boolean {
         return this._disabled;
     }
 
+    set disabled(value: boolean) {
+        this._disabled = coerceBooleanProperty(value);
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this._disabled ? this.dateForm.disable() : this.dateForm.enable();
+        this.stateChanges.next();
+    }
+
     @Input()
     get placeholder() {
         return this._placeholder;
+    }
+
+    set placeholder(plh) {
+        this._placeholder = plh;
+        this.stateChanges.next();
     }
 
     @Input()
@@ -206,36 +217,10 @@ OnDestroy
         return null;
     }
 
-    get empty() {
-        const dateInput = this.dateForm.value;
-        return !dateInput.knoraDate;
-    }
-
-    set required(req) {
-        this._required = coerceBooleanProperty(req);
-        this.stateChanges.next();
-    }
-
-    set disabled(value: boolean) {
-        this._disabled = coerceBooleanProperty(value);
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this._disabled ? this.dateForm.disable() : this.dateForm.enable();
-        this.stateChanges.next();
-    }
-
-    set placeholder(plh) {
-        this._placeholder = plh;
-        this.stateChanges.next();
-    }
-
     set value(dateValue: KnoraDate | null) {
         if (dateValue !== null) {
             this.dateForm.setValue({
-                date: this.transform(
-                    dateValue,
-                    'dd.MM.YYYY',
-                    'era'
-                ),
+                date: this.transform(dateValue, 'dd.MM.YYYY', 'era'),
                 knoraDate: dateValue,
             });
             this.calendar = dateValue.calendar;
@@ -246,7 +231,7 @@ OnDestroy
                     ? 'CE'
                     : dateValue.era;
 
-                this.day = dateValue.day;
+            this.day = dateValue.day;
             this.month = dateValue.month ? dateValue.month : 0;
             this.year = dateValue.year;
         } else {
@@ -255,6 +240,11 @@ OnDestroy
 
         this.stateChanges.next();
         this.buildForm();
+    }
+
+    get empty() {
+        const dateInput = this.dateForm.value;
+        return !dateInput.knoraDate;
     }
 
     setDescribedByIds(ids: string[]) {
@@ -301,9 +291,10 @@ OnDestroy
 
         this.dateForm.valueChanges.subscribe(() => this.handleInput());
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
     onChange = (_: any) => {};
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     onTouched = () => {};
 
     ngOnChanges(changes: SimpleChanges) {
@@ -452,7 +443,7 @@ OnDestroy
      * @param str
      * @returns string
      */
-     titleCase(str: string): string {
+    titleCase(str: string): string {
         return str
             .split(' ')
             .map((w) => w[0].toUpperCase() + w.substring(1).toLowerCase())
@@ -540,18 +531,16 @@ OnDestroy
 
         const form = this.form;
 
-
-
-        /*Object.keys(this.formErrors).map((field) => {
+        Object.keys(this.formErrors).map((field: string) => {
             this.formErrors[field] = '';
             const control = form.get(field);
-            if (control && control.dirty && !control.valid) {
+            if (control && control.dirty && !control.valid && control.errors !== null) {
                 const messages = this.validationMessages[field];
-                Object.keys(control.errors).map((key) => {
+                Object.keys(control.errors).map((key: string) => {
                     this.formErrors[field] += messages[key] + ' ';
                 });
             }
-        });*/
+        });
 
         this.setDate(this.day);
     }
@@ -581,6 +570,13 @@ OnDestroy
         let month: number;
         let year: number;
 
+        let islamicDay: string;
+        let islamicMonth: string;
+        let islamicYear: string;
+
+        let julianDate: Date;
+        let difference: number;
+
         this.era = 'CE';
 
         switch (this.calendar) {
@@ -588,18 +584,15 @@ OnDestroy
             case 'ISLAMIC':
                 // found solution and formula here:
                 // https://medium.com/@Saf_Bes/get-today-hijri-date-in-javascript-90855d3cd45b
-                const islamicDay = new Intl.DateTimeFormat(
-                    'en-TN-u-ca-islamic',
-                    { day: 'numeric' }
-                ).format(today);
-                const islamicMonth = new Intl.DateTimeFormat(
-                    'en-TN-u-ca-islamic',
-                    { month: 'numeric' }
-                ).format(today);
-                const islamicYear = new Intl.DateTimeFormat(
-                    'en-TN-u-ca-islamic',
-                    { year: 'numeric' }
-                ).format(today);
+                islamicDay = new Intl.DateTimeFormat('en-TN-u-ca-islamic', {
+                    day: 'numeric',
+                }).format(today);
+                islamicMonth = new Intl.DateTimeFormat('en-TN-u-ca-islamic', {
+                    month: 'numeric',
+                }).format(today);
+                islamicYear = new Intl.DateTimeFormat('en-TN-u-ca-islamic', {
+                    year: 'numeric',
+                }).format(today);
                 day = parseInt(islamicDay, 10);
                 month = parseInt(islamicMonth, 10);
                 year = parseInt(islamicYear.substring(0, 4), 10);
@@ -610,8 +603,8 @@ OnDestroy
             case 'JULIAN':
                 // found solution and formula here:
                 // https://sciencing.com/convert-julian-date-calender-date-6017669.html
-                const julianDate = new Date();
-                const difference =
+                julianDate = new Date();
+                difference =
                     parseInt(
                         (julianDate.getFullYear() + '').substring(0, 2),
                         10
@@ -666,10 +659,7 @@ OnDestroy
      * @param year year of the given date.
      * @param era era of the given date.
      */
-     convertHistoricalYearToAstronomicalYear(
-        year: number,
-        era: string
-    ) {
+    convertHistoricalYearToAstronomicalYear(year: number, era: string) {
         let yearAstro = year;
         if (era === 'BCE') {
             // convert historical date to astronomical date
@@ -685,7 +675,7 @@ OnDestroy
      * @param year the date's year.
      * @param month the date's month.
      */
-     calculateDaysInMonth(
+    calculateDaysInMonth(
         calendar: string,
         year: number,
         month: number
@@ -725,11 +715,10 @@ OnDestroy
         year: number,
         month: number
     ) {
-        const yearAstro =
-            this.convertHistoricalYearToAstronomicalYear(
-                year,
-                era
-            );
+        const yearAstro = this.convertHistoricalYearToAstronomicalYear(
+            year,
+            era
+        );
 
         // count the days of the month
         let days = this.calculateDaysInMonth(

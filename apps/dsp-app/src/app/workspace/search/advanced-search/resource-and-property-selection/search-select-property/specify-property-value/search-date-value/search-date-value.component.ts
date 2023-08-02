@@ -1,6 +1,5 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-    UntypedFormBuilder,
+import {UntypedFormBuilder,
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';

@@ -1,1 +1,1 @@
-export * from './lib/vre-shared-app-date-picker/app-date-picker.component';
+export * from './lib/app-date-picker.module';
