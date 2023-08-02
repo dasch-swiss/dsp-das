@@ -609,10 +609,7 @@ describe('DisplayEditComponent', () => {
 
             expect(testHostComponent.linkValHovered).toEqual('init');
 
-            (
-                testHostComponent.displayEditValueComponent
-                    .displayValueComponent as unknown as TestFormattedTextValueComponent
-            ).internalLinkHovered.emit('testIri');
+            testHostComponent.displayEditValueComponent.standoffLinkHovered('testIri');
 
             expect(testHostComponent.linkValHovered).toEqual('init');
         });
