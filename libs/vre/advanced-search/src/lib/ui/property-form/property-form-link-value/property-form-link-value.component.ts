@@ -12,9 +12,11 @@ import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/ma
     imports: [CommonModule, FormsModule, ReactiveFormsModule, MatInputModule, MatAutocompleteModule],
     templateUrl: './property-form-link-value.component.html',
     styleUrls: ['./property-form-link-value.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyFormLinkValueComponent implements OnInit {
+    @Input() resourcesSearchResultsLoading: boolean | null = false;
+    @Input() resourcesSearchResultsCount: number | null = 0;
     @Input() resourcesSearchResults: ApiData[] | null = null;
 
     @Output() emitResourceSearchValueChanged = new EventEmitter<string>();
@@ -31,9 +33,10 @@ export class PropertyFormLinkValueComponent implements OnInit {
     }
 
     onResourceSelected(event: MatAutocompleteSelectedEvent) {
-        console.log('onResourceSelected: ', event.option.value);
-        const data = (event.option.value as ApiData);
-        if(data) {
+        if(event.option.value === 'viewAll') {
+            console.log('show all resources');
+        } else {
+            const data = (event.option.value as ApiData);
             this.emitResourceSelected.emit(data.iri);
         }
     }

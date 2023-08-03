@@ -31,6 +31,8 @@ export class AdvancedSearchComponent implements OnInit {
     searchButtonDisabled$ = this.store.searchButtonDisabled$;
     addButtonDisabled$ = this.store.addButtonDisabled$;
     resetButtonDisabled$ = this.store.resetButtonDisabled$;
+    resourcesSearchResultsLoading$ = this.store.resourcesSearchResultsLoading$;
+    resourcesSearchResultsCount$ = this.store.resourcesSearchResultsCount$;
     resourcesSearchResults$ = this.store.resourcesSearchResults$;
 
     constants = Constants;
@@ -45,13 +47,15 @@ export class AdvancedSearchComponent implements OnInit {
             propertyFormList: [],
             properties: [],
             filteredProperties: [],
+            resourcesSearchResultsLoading: false,
+            resourcesSearchResultsCount: 0,
             resourcesSearchResults: [],
         });
 
         // hardcoded project for now
         // BEOL: yTerZGyxjZVqFMNNKXCDPF
         // Eric: GRlCJl3iSW2JeIt3V22rPA
-        this.store.ontologiesList('http://rdfh.ch/projects/GRlCJl3iSW2JeIt3V22rPA');
+        this.store.ontologiesList('http://rdfh.ch/projects/yTerZGyxjZVqFMNNKXCDPF');
 
         this.store.resourceClassesList(this.selectedOntology$);
 

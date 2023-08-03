@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { ApiResponseError, Constants, KnoraApiConnection, ListNodeV2, OntologiesMetadata, ReadOntology, ReadResource, ReadResourceSequence, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, Constants, CountQueryResponse, KnoraApiConnection, ListNodeV2, OntologiesMetadata, ReadOntology, ReadResource, ReadResourceSequence, ResourceClassAndPropertyDefinitions, ResourceClassDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -174,6 +174,19 @@ export class AdvancedSearchService {
                 return response.resources.map((res: ReadResource) => {
                     return {iri: res.id, label: res.label}
                 });
+            }
+        ));
+    }
+
+    getResourceListCount(searchValue: string, resourceClassIri: string): Observable<number> {
+        return this._dspApiConnection.v2.search.doSearchByLabelCountQuery(searchValue, {
+            limitToResourceClass: resourceClassIri,
+        }).pipe(
+            map((response: CountQueryResponse | ApiResponseError) => {
+                if (response instanceof ApiResponseError) {
+                    throw response; // caught by catchError operator
+                }
+                return response.numberOfResults;
             }
         ));
     }

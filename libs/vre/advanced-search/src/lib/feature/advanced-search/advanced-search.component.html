@@ -13,6 +13,8 @@
         resetButtonDisabled: resetButtonDisabled$ | async,
         selectedOntology: selectedOntology$ | async,
         selectedResourceClass: selectedResourceClass$ | async,
+        resourcesSearchResultsLoading: resourcesSearchResultsLoading$ | async,
+        resourcesSearchResultsCount: resourcesSearchResultsCount$ | async,
         resourcesSearchResults: resourcesSearchResults$ | async
     } as asyncData"
 >
@@ -26,6 +28,8 @@
     ></dasch-swiss-ontology-resource-form>
     <dasch-swiss-property-form
         *ngFor="let propertyForm of asyncData.propertyFormList"
+        [resourcesSearchResultsLoading]="asyncData.resourcesSearchResultsLoading"
+        [resourcesSearchResultsCount] = "asyncData.resourcesSearchResultsCount"
         [resourcesSearchResults]="asyncData.resourcesSearchResults"
         [propertyFormItem]="propertyForm"
         [properties]="asyncData.filteredProperties?.length ? asyncData.filteredProperties : asyncData.properties"

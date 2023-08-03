@@ -1,9 +1,20 @@
 <mat-form-field>
     <input matInput [matAutocomplete]="auto" [formControl]="inputControl" (focus)="onInputFocused()"/>
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource" (optionSelected)="onResourceSelected($event)">
-        <mat-option *ngFor="let res of resourcesSearchResults" [value]="res">
-            {{ res?.label }}
+        <mat-option *ngIf="resourcesSearchResultsLoading" [disabled]="true">
+            Loading...
         </mat-option>
+        <mat-option *ngIf="!resourcesSearchResultsLoading && resourcesSearchResultsCount === 0" [value]="null" [disabled]="true">
+            No results found
+        </mat-option>
+        <mat-option *ngIf="!resourcesSearchResultsLoading && resourcesSearchResultsCount! > 25" [value]="'viewAll'">
+            {{ resourcesSearchResultsCount }} results found
+        </mat-option>
+        <ng-container *ngIf="!resourcesSearchResultsLoading">
+            <mat-option *ngFor="let res of resourcesSearchResults" [value]="res">
+                {{ res?.label }}
+            </mat-option>
+        </ng-container>
     </mat-autocomplete>
 </mat-form-field>
 <!-- <mat-list>

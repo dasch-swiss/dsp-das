@@ -13,6 +13,8 @@ export interface AdvancedSearchState {
     propertyFormList: PropertyFormItem[];
     properties: PropertyData[];
     filteredProperties: PropertyData[];
+    resourcesSearchResultsLoading: boolean;
+    resourcesSearchResultsCount: number;
     resourcesSearchResults: ApiData[];
     error?: any;
 }
@@ -54,6 +56,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     propertyFormList$: Observable<PropertyFormItem[]> = this.select((state) => state.propertyFormList);
     properties$: Observable<PropertyData[]> = this.select((state) => state.properties);
     filteredProperties$: Observable<PropertyData[]> = this.select((state) => state.filteredProperties);
+    resourcesSearchResultsLoading$: Observable<boolean> = this.select((state) => state.resourcesSearchResultsLoading);
+    resourcesSearchResultsCount$: Observable<number> = this.select((state) => state.resourcesSearchResultsCount);
     resourcesSearchResults$: Observable<ApiData[]> = this.select((state) => state.resourcesSearchResults);
 
     /** combined selectors */
@@ -214,10 +218,28 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
     updateResourcesSearchResults(searchItem: SearchItem): void {
         if (searchItem.value && searchItem.value.length >= 3) {
-            this._advancedSearchService.getResourcesList(searchItem.value, searchItem.objectType).subscribe(
-                (resources) => this.patchState({ resourcesSearchResults: resources })
+            this.patchState({ resourcesSearchResultsLoading: true });
+            this._advancedSearchService.getResourceListCount(searchItem.value, searchItem.objectType).subscribe(
+                (count) => {
+                    this.patchState({ resourcesSearchResultsCount: count });
+                    this.patchState({ resourcesSearchResultsLoading: false });
+                    // since we have the count, we don't need to execute the search if there are no results
+                    if(count > 0) {
+                        this.patchState({ resourcesSearchResultsLoading: true });
+                        // not ideal to do it this way but we should get the count before executing the search
+                        this._advancedSearchService.getResourcesList(searchItem.value, searchItem.objectType).subscribe(
+                            (resources) => {
+                                this.patchState({ resourcesSearchResults: resources });
+                                this.patchState({ resourcesSearchResultsLoading: false });
+                            }
+                        );
+                    }
+                }
             );
+
+
         } else {
+            this.patchState({ resourcesSearchResultsCount: 0 });
             this.patchState({ resourcesSearchResults: [] });
         }
     }

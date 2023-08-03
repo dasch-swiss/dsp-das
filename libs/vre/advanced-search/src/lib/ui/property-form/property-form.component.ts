@@ -43,6 +43,8 @@ import { PropertyFormListValueComponent } from './property-form-list-value/prope
 export class PropertyFormComponent {
     @Input() propertyFormItem: PropertyFormItem = { id: '', selectedProperty: undefined, selectedOperator: undefined, searchValue: undefined, operators: [], list: undefined };
 
+    @Input() resourcesSearchResultsLoading: boolean | null = false;
+    @Input() resourcesSearchResultsCount: number | null = 0;
     @Input() resourcesSearchResults: ApiData[] | null = [];
 
     // this can contain either a list of all properties of an ontology
