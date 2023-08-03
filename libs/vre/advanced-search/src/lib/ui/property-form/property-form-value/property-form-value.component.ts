@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MatSelectModule } from '@angular/material/select';
 import {
@@ -13,9 +12,9 @@ import {
 } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
-import { PropertyFormLinkValueComponent } from '../property-form-link-value/property-form-link-value.component';
 import { MatButtonModule } from '@angular/material/button';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { AppDatePickerModule } from '@dasch-swiss/vre/shared/app-date-picker';
 @Component({
     selector: 'dasch-swiss-property-form-value',
     standalone: true,
@@ -27,7 +26,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
         MatSelectModule,
         FormsModule,
         ReactiveFormsModule,
-        PropertyFormLinkValueComponent,
+        AppDatePickerModule,
     ],
     templateUrl: './property-form-value.component.html',
     styleUrls: ['./property-form-value.component.scss'],
@@ -37,18 +36,10 @@ export class PropertyFormValueComponent implements OnInit {
 
     @Output() emitValueChanged = new EventEmitter<string>();
 
-    private valueChangedSubject = new Subject<string>();
-
     constants = Constants;
 
     matcher = new ValueErrorStateMatcher();
     inputControl = new FormControl();
-
-    constructor() {
-        // this.valueChangedSubject
-        //     .pipe(debounceTime(300))
-        //     .subscribe((value) => this.emitValueChanged.emit(value));
-    }
 
     ngOnInit() {
         this.inputControl.valueChanges
@@ -58,6 +49,10 @@ export class PropertyFormValueComponent implements OnInit {
             });
 
         this.inputControl.setValidators(this._getValidators(this.objectType));
+    }
+
+    onDateSelected(value: string) {
+        this.inputControl.setValue(value);
     }
 
     private _getValidators(objectType: string | undefined): ValidatorFn[] {
@@ -84,16 +79,6 @@ export class PropertyFormValueComponent implements OnInit {
         if (this.inputControl.valid && value)
             this.emitValueChanged.emit(value.toString());
         else this.emitValueChanged.emit(undefined);
-    }
-
-    // the problem with this is that it's very hard to handle validation
-    handleInputChanged(event: any) {
-        const inputElement = event.target as HTMLInputElement;
-        if (inputElement) {
-            this.valueChangedSubject.next(inputElement.value);
-        } else {
-            this.emitValueChanged.emit(event.value);
-        }
     }
 }
 

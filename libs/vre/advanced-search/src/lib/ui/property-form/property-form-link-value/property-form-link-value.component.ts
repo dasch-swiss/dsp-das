@@ -43,9 +43,9 @@ export class PropertyFormLinkValueComponent implements OnInit {
     }
 
     /**
-     * displays a selected resource using its label.
+     * used in the template to display the label of the selected resource.
      *
-     * @param resource the resource to be displayed (or no selection yet).
+     * @param resource the resource containing the label to be displayed (or no selection yet).
      */
     displayResource(resource: ApiData | null): string {
         // null is the initial value (no selection yet)

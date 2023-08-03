@@ -51,7 +51,7 @@ export class AdvancedSearchComponent implements OnInit {
         // hardcoded project for now
         // BEOL: yTerZGyxjZVqFMNNKXCDPF
         // Eric: GRlCJl3iSW2JeIt3V22rPA
-        this.store.ontologiesList('http://rdfh.ch/projects/ GRlCJl3iSW2JeIt3V22rPA');
+        this.store.ontologiesList('http://rdfh.ch/projects/GRlCJl3iSW2JeIt3V22rPA');
 
         this.store.resourceClassesList(this.selectedOntology$);
 

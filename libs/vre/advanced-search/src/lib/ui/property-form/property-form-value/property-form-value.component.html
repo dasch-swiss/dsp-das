@@ -55,8 +55,9 @@
             </span>
         </mat-error>
     </mat-form-field>
-    <!-- <mat-form-field>
-        <input matInput type="date" (keyup)="handleInputChanged($event)" *ngSwitchCase="constants.DateValue"/>
-    </mat-form-field> -->
+
+    <!-- date value -->
+    <dasch-swiss-app-date-picker *ngSwitchCase="constants.DateValue" (emitDateChanged)="onDateSelected($event)"></dasch-swiss-app-date-picker>
+
 </div>
 {{ objectType }}
