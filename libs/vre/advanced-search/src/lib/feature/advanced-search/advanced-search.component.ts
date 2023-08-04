@@ -6,7 +6,7 @@ import { PropertyFormComponent } from '../../ui/property-form/property-form.comp
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
 import { Constants } from '@dasch-swiss/dsp-js';
-
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'dasch-swiss-advanced-search',
@@ -23,6 +23,7 @@ export class AdvancedSearchComponent implements OnInit {
 
     ontologies$ = this.store.ontologies$;
     resourceClasses$ = this.store.resourceClasses$;
+    selectedProject$ = this.store.selectedProject$;
     selectedOntology$ = this.store.selectedOntology$;
     selectedResourceClass$ = this.store.selectedResourceClass$;
     propertyFormList$ = this.store.propertyFormList$;
@@ -37,11 +38,15 @@ export class AdvancedSearchComponent implements OnInit {
 
     constants = Constants;
 
+    constructor(private _route: ActivatedRoute) {}
+
     ngOnInit(): void {
-        // mock values for the time being
+        const uuid: string = this._route.snapshot.parent?.params['uuid'];
+
         this.store.setState({
             ontologies: [],
             resourceClasses: [],
+            selectedProject: uuid ? 'http://rdfh.ch/projects/' + uuid : undefined,
             selectedOntology: undefined,
             selectedResourceClass: undefined,
             propertyFormList: [],
@@ -52,10 +57,10 @@ export class AdvancedSearchComponent implements OnInit {
             resourcesSearchResults: [],
         });
 
-        // hardcoded project for now
         // BEOL: yTerZGyxjZVqFMNNKXCDPF
         // Eric: GRlCJl3iSW2JeIt3V22rPA
-        this.store.ontologiesList('http://rdfh.ch/projects/yTerZGyxjZVqFMNNKXCDPF');
+        // this.store.ontologiesList('http://rdfh.ch/projects/yTerZGyxjZVqFMNNKXCDPF');
+        this.store.ontologiesList(this.selectedProject$);
 
         this.store.resourceClassesList(this.selectedOntology$);
 

@@ -8,6 +8,7 @@ import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
 export interface AdvancedSearchState {
     ontologies: ApiData[];
     resourceClasses: ApiData[];
+    selectedProject: string | undefined;
     selectedOntology: ApiData | undefined;
     selectedResourceClass: ApiData | undefined;
     propertyFormList: PropertyFormItem[];
@@ -51,6 +52,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
     ontologies$: Observable<ApiData[]> = this.select((state) => state.ontologies);
     resourceClasses$: Observable<ApiData[]> = this.select((state) => state.resourceClasses);
+    selectedProject$: Observable<string | undefined> = this.select((state) => state.selectedProject);
     selectedOntology$: Observable<ApiData | undefined> = this.select((state) => state.selectedOntology);
     selectedResourceClass$: Observable<ApiData | undefined> = this.select((state) => state.selectedResourceClass);
     propertyFormList$: Observable<PropertyFormItem[]> = this.select((state) => state.propertyFormList);
@@ -280,18 +282,30 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     }
 
     // load list of ontologies
-    readonly ontologiesList = this.effect((ontologyIri$: Observable<string>) =>
+    readonly ontologiesList = this.effect((ontologyIri$: Observable<string | undefined>) =>
         ontologyIri$.pipe(
-            switchMap((iri) =>
-                this._advancedSearchService.ontologiesList(iri).pipe(
+            switchMap((iri) => {
+                if (!iri)  {
+                    // no project iri, get all ontologies
+                    return this._advancedSearchService.allOntologiesList().pipe(
+                        tap({
+                            next: (response) =>
+                                this.patchState({ ontologies: response }),
+                            error: (error) => this.patchState({ error }),
+                        }),
+                        catchError(() => EMPTY)
+                    );
+                }
+                // project iri, get ontologies in project
+                return this._advancedSearchService.ontologiesInProjectList(iri).pipe(
                     tap({
                         next: (response) =>
                             this.patchState({ ontologies: response }),
                         error: (error) => this.patchState({ error }),
                     }),
                     catchError(() => EMPTY)
-                )
-            )
+                );
+            })
         )
     );
 

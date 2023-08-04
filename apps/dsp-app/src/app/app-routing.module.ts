@@ -132,6 +132,10 @@ const routes: Routes = [
                 ],
             },
             {
+                path: 'advanced-search',
+                component: AdvancedSearchComponent,
+            },
+            {
                 path: '**',
                 component: StatusComponent,
                 data: { status: 404 },

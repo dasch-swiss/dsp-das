@@ -4,16 +4,26 @@ import {
     EventEmitter,
     Input,
     Output,
-    ViewChild
+    ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { PropertyFormItem, SearchItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
+import {
+    PropertyFormItem,
+    SearchItem,
+} from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
-import { PropertyData, ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
+import {
+    MatSelect,
+    MatSelectChange,
+    MatSelectModule,
+} from '@angular/material/select';
+import {
+    PropertyData,
+    ApiData,
+} from '../../data-access/advanced-search-service/advanced-search.service';
 import { Operators } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { PropertyFormValueComponent } from './property-form-value/property-form-value.component';
 import { PropertyFormLinkValueComponent } from './property-form-link-value/property-form-link-value.component';
@@ -33,15 +43,22 @@ import { PropertyFormListValueComponent } from './property-form-list-value/prope
         MatSelectModule,
         PropertyFormValueComponent,
         PropertyFormLinkValueComponent,
-        PropertyFormListValueComponent
+        PropertyFormListValueComponent,
     ],
-    providers: [MatSelect,],
+    providers: [MatSelect],
     templateUrl: './property-form.component.html',
     styleUrls: ['./property-form.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyFormComponent {
-    @Input() propertyFormItem: PropertyFormItem = { id: '', selectedProperty: undefined, selectedOperator: undefined, searchValue: undefined, operators: [], list: undefined };
+    @Input() propertyFormItem: PropertyFormItem = {
+        id: '',
+        selectedProperty: undefined,
+        selectedOperator: undefined,
+        searchValue: undefined,
+        operators: [],
+        list: undefined,
+    };
 
     @Input() resourcesSearchResultsLoading: boolean | null = false;
     @Input() resourcesSearchResultsCount: number | null = 0;
@@ -53,7 +70,8 @@ export class PropertyFormComponent {
     @Input() properties: PropertyData[] | null = [];
 
     @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();
-    @Output() emitPropertyFormItemChanged = new EventEmitter<PropertyFormItem>();
+    @Output() emitPropertyFormItemChanged =
+        new EventEmitter<PropertyFormItem>();
     @Output() emitResourceSearchValueChanged = new EventEmitter<SearchItem>();
 
     @ViewChild('propertiesList') propertiesList!: MatSelect;
@@ -81,11 +99,10 @@ export class PropertyFormComponent {
             propFormItem.selectedOperator = event.value;
 
             // reset search value if operator is 'exists' or 'does not exist'
-            if (propFormItem.selectedOperator === Operators.Exists ||
-                propFormItem.selectedOperator === Operators.NotExists) {
-                // this causes the form control to emit a value change event as well
-                // which isn't exactly ideal but it emits the same thing as this method so it's fine
-                //this.inputControl.setValue(undefined);
+            if (
+                propFormItem.selectedOperator === Operators.Exists ||
+                propFormItem.selectedOperator === Operators.NotExists
+            ) {
                 propFormItem.searchValue = undefined;
             }
 
@@ -93,7 +110,7 @@ export class PropertyFormComponent {
         }
     }
 
-    onValueChanged(event: string){
+    onValueChanged(event: string) {
         const propFormItem = this.propertyFormItem;
         if (propFormItem) {
             propFormItem.searchValue = event;
@@ -101,11 +118,13 @@ export class PropertyFormComponent {
         }
     }
 
-    onResourceSearchValueChanged(event: string){
+    onResourceSearchValueChanged(event: string) {
         const propFormItem = this.propertyFormItem;
         if (propFormItem && propFormItem.selectedProperty) {
-            this.emitResourceSearchValueChanged.emit({ value: event, objectType: propFormItem.selectedProperty?.objectType });
+            this.emitResourceSearchValueChanged.emit({
+                value: event,
+                objectType: propFormItem.selectedProperty?.objectType,
+            });
         }
     }
-
 }
