@@ -273,6 +273,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         console.log('selectedOnto:', selectedOntology);
         console.log('selectedResClass:', selectedResourceClass);
         propertyFormList.forEach((prop) => console.log('prop:', prop));
+        this._advancedSearchService.generateGravSearchQuery(selectedResourceClass?.iri, propertyFormList);
     }
 
     onReset() {

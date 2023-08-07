@@ -235,7 +235,9 @@ export class AppDatePickerComponent
             this.day = dateValue.day;
             this.month = dateValue.month ? dateValue.month : 0;
             this.year = dateValue.year;
-            this.emitDateChanged.emit(this.transform(dateValue, 'dd-MM-YYYY', 'gravsearch'))
+            this.emitDateChanged.emit(
+                this.transform(dateValue, 'YYYY-dd-MM', 'gravsearch')
+            );
         } else {
             this.dateForm.setValue({ date: null, knoraDate: null });
         }
@@ -330,7 +332,12 @@ export class AppDatePickerComponent
     transform(
         date: KnoraDate,
         format?: string,
-        displayOptions?: 'era' | 'calendar' | 'calendarOnly' | 'gravsearch' | 'all'
+        displayOptions?:
+            | 'era'
+            | 'calendar'
+            | 'calendarOnly'
+            | 'gravsearch'
+            | 'all'
     ): string {
         if (!(date instanceof KnoraDate)) {
             // console.error('Non-KnoraDate provided. Expected a valid KnoraDate');
@@ -382,6 +389,16 @@ export class AppDatePickerComponent
                 } else {
                     return `${date.year}`;
                 }
+            case 'YYYY-dd-MM':
+                if (date.precision === 2) {
+                    return `${date.year}-${this.leftPadding(
+                        date.month
+                    )}-${this.leftPadding(date.day)}`;
+                } else if (date.precision === 1) {
+                    return `${this.leftPadding(date.month)}-${date.year}`;
+                } else {
+                    return `${date.year}`;
+                }
             default:
                 if (date.precision === 2) {
                     return `${this.leftPadding(date.day)}.${this.leftPadding(
@@ -427,12 +444,7 @@ export class AppDatePickerComponent
                 // GREGORIAN:2023-8-2
                 // CE is default era so no need to add it
                 era = date.era === 'BCE' ? ' BCE' : '';
-                return (
-                    date.calendar +
-                    ':' +
-                    value +
-                    era
-                );
+                return date.calendar + ':' + value + era;
             case 'all':
                 // displays date with era (only as BCE) and selected calendar type
                 return (
@@ -548,7 +560,12 @@ export class AppDatePickerComponent
         Object.keys(this.formErrors).map((field: string) => {
             this.formErrors[field] = '';
             const control = form.get(field);
-            if (control && control.dirty && !control.valid && control.errors !== null) {
+            if (
+                control &&
+                control.dirty &&
+                !control.valid &&
+                control.errors !== null
+            ) {
                 const messages = this.validationMessages[field];
                 Object.keys(control.errors).map((key: string) => {
                     this.formErrors[field] += messages[key] + ' ';

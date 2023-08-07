@@ -19,6 +19,7 @@ import {
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { Operators, PropertyFormItem } from '../advanced-search-store/advanced-search-store.service';
 
 export interface ApiData {
     iri: string;
@@ -32,6 +33,11 @@ export interface PropertyData {
     label: string;
     objectType: string;
     listIri?: string; // only for list values
+}
+
+export interface GravsearchPropertyString {
+    linkString: string;
+    valueString?: string;
 }
 
 @Injectable({
@@ -343,6 +349,125 @@ export class AdvancedSearchService {
                 return []; // return an empty array on error
             })
         );
+    }
+
+    generateGravSearchQuery(
+        resourceClassIri: string | undefined,
+        properties: PropertyFormItem[]
+    ): void {
+        // class restriction for the resource searched for
+        let restrictToResourceClass = '';
+
+        // if given, create the class restriction for the main resource
+        if (resourceClassIri !== undefined) {
+            restrictToResourceClass = `?mainRes a <${resourceClassIri}> .`;
+        }
+
+        const propertyStrings: GravsearchPropertyString[] = properties.map((prop, index) => this._propertyStringHelper(prop, index));
+
+        const orderByString = '';
+
+        // properties.forEach((property, index) => {
+        //     if (property.orderBy) {
+        //         orderByString = `ORDER BY ?prop${index}`;
+        //     }
+        // });
+
+        const gravSearch = `
+            PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+            CONSTRUCT {
+                ?mainRes knora-api:isMainResource true .
+                ${propertyStrings.map((prop) => prop.linkString).join('\n')}
+
+            } WHERE {
+            ?mainRes a knora-api:Resource .
+
+            ${restrictToResourceClass}
+
+            ${propertyStrings.map((prop) => prop.linkString).join('\n')}
+
+            ${propertyStrings.map((prop) => prop.valueString).join('\n')}
+            }
+
+            ${orderByString}
+        `;
+
+        console.log('gravSearch: ', gravSearch);
+    }
+
+    private _propertyStringHelper(property: PropertyFormItem, index: number): GravsearchPropertyString {
+        let valueString = '';
+        const linkString = '?mainRes <' + property.selectedProperty?.iri + '> ?prop' + index + ' .';
+        if (!(property.selectedOperator === 'exists' || property.selectedOperator === 'notExists')) {
+            valueString = this._valueStringHelper(property, index);
+        }
+        return { linkString: linkString, valueString: valueString };
+    }
+
+    private _valueStringHelper(property: PropertyFormItem, index: number): string {
+        switch (property.selectedProperty?.objectType) {
+            case Constants.TextValue:
+                switch (property.selectedOperator) {
+                    case Operators.Equals:
+                    case Operators.NotEquals:
+                        return '?prop' + index + ' <' + Constants.ValueAsString + '> ' + '?prop' + index + 'Literal' + ' .\n'
+                        + 'FILTER (?prop' + index + 'Literal ' + this._operatorToSymbol(property.selectedOperator) + ' "' + property.searchValue + '"^^<' + Constants.XsdString + '>)' + ' .';
+                    case Operators.IsLike:
+                        // only equals is supported for text values
+                        return '?prop' + index + ' <' + Constants.ValueAsString + '> ' + '?prop' + index + 'Literal' + ' .\n'
+                        + 'FILTER ' + this._operatorToSymbol(property.selectedOperator) + '(?prop' + index + 'Literal' + ', "' + property.searchValue + '"^^<' + Constants.XsdString + '> ' + ', "i")' + ' .';
+                    default:
+                        // throw an error or something
+                        return '';
+                }
+            case Constants.IntValue:
+                return '?prop' + index + ' <' + Constants.IntValueAsInt + '> ' + '?prop' + index + 'Literal' + ' .\n'
+                + 'FILTER (?prop' + index + 'Literal ' + this._operatorToSymbol(property.selectedOperator) + ' "' + property.searchValue + '"^^<' + Constants.XsdInteger + '>)' + ' .';
+            case Constants.DecimalValue:
+                return '?prop' + index + ' <' + Constants.DecimalValueAsDecimal + '> ' + '?prop' + index + 'Literal' + ' .\n'
+                + 'FILTER (?prop' + index + 'Literal ' + this._operatorToSymbol(property.selectedOperator) + ' "' + property.searchValue + '"^^<' + Constants.XsdDecimal + '>)' + ' .';
+            case Constants.BooleanValue:
+                return '?prop' + index + ' <' + Constants.BooleanValueAsBoolean + '> ' + '?prop' + index + 'Literal' + ' .\n'
+                + 'FILTER (?prop' + index + 'Literal ' + this._operatorToSymbol(property.selectedOperator) + ' "' + property.searchValue + '"^^<' + Constants.XsdBoolean + '>)' + ' .';
+            case Constants.DateValue:
+                return 'FILTER(knora-api:toSimpleDate(?prop' + index + ') ' + this._operatorToSymbol(property.selectedOperator) + ' "' + property.searchValue + '"^^<' + Constants.KnoraApi + '/ontology/knora-api/simple/v2' + Constants.HashDelimiter + 'Date>) .';
+            case Constants.ListValue:
+                return '?prop' + index + ' <' + Constants.ListValueAsListNode + '> <' + property.searchValue + '> .';
+            case Constants.UriValue:
+                return '?prop' + index + ' <' + Constants.UriValueAsUri + '> ' + '?prop' + index + 'Literal' + ' .\n'
+                + 'FILTER (?prop' + index + 'Literal ' + this._operatorToSymbol(property.selectedOperator) + ' "' + property.searchValue + '"^^<' + Constants.XsdAnyUri + '>)' + ' .';
+            default:
+                // eric wants me to do this later
+                // throw an error or something
+                return '';
+        }
+    }
+
+    private _operatorToSymbol(operator: string | undefined): string {
+        switch (operator) {
+            case Operators.Equals:
+                return '=';
+            case Operators.NotEquals:
+                return '!=';
+            case Operators.GreaterThan:
+                return '>';
+            case Operators.GreaterThanEquals:
+                return '>=';
+            case Operators.LessThan:
+                return '<';
+            case Operators.LessThanEquals:
+                return '<=';
+            case Operators.Exists:
+                return 'E';
+            case Operators.NotExists:
+                return '!E';
+            case Operators.IsLike:
+                return 'regex';
+            case Operators.Matches:
+                return 'contains';
+            default:
+                return '';
+        }
     }
 
     // todo: check if we can type this
