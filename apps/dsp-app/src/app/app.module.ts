@@ -52,7 +52,10 @@ import { TitleFromCamelCasePipe } from './main/pipes/string-transformation/title
 import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './main/pipes/time.pipe';
 import { SelectLanguageComponent } from './main/select-language/select-language.component';
-import { DatadogRumService } from './main/services/datadog-rum.service';
+import {
+    DatadogRumService,
+    PendoAnalyticsService,
+} from '@dasch-swiss/vre/shared/app-analytics';
 import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
 import { DescriptionComponent } from './project/description/description.component';
@@ -120,7 +123,6 @@ import { ResourceComponent } from './workspace/resource/resource.component';
 import { BooleanValueComponent } from './workspace/resource/values/boolean-value/boolean-value.component';
 import { ColorPickerComponent } from './workspace/resource/values/color-value/color-picker/color-picker.component';
 import { ColorValueComponent } from './workspace/resource/values/color-value/color-value.component';
-import { DatePickerComponent } from './workspace/resource/values/date-value/date-picker/date-picker.component';
 import { DateValueHandlerComponent } from './workspace/resource/values/date-value/date-value-handler/date-value-handler.component';
 import { DateValueComponent } from './workspace/resource/values/date-value/date-value.component';
 import { DecimalValueComponent } from './workspace/resource/values/decimal-value/decimal-value.component';
@@ -177,6 +179,7 @@ import {
     BuildTagToken,
 } from '@dasch-swiss/vre/shared/app-config';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { AppDatePickerModule } from '@dasch-swiss/vre/shared/app-date-picker';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -208,7 +211,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         ConfirmationMessageComponent,
         CookiePolicyComponent,
         CreateLinkResourceComponent,
-        DatePickerComponent,
         DateValueComponent,
         DateValueHandlerComponent,
         DecimalValueComponent,
@@ -334,6 +336,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ],
     imports: [
         AngularSplitModule,
+        AppDatePickerModule,
         AppRoutingModule,
         BrowserAnimationsModule,
         BrowserModule,
@@ -360,6 +363,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         AppConfigService,
         DatadogRumService,
         AppLoggingService,
+        PendoAnalyticsService,
         {
             provide: DspApiConfigToken,
             useFactory: (appConfigService: AppConfigService) =>

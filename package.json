@@ -1,6 +1,6 @@
 {
   "name": "dsp-app",
-  "version": "10.22.0",
+  "version": "10.23.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/dasch-swiss/dsp-app.git"
@@ -39,7 +39,7 @@
     "@angular/platform-browser-dynamic": "^16.1.5",
     "@angular/router": "^16.1.5",
     "@ckeditor/ckeditor5-angular": "^5.2.0",
-    "@dasch-swiss/dsp-js": "^8.2.7",
+    "@dasch-swiss/dsp-js": "^8.3.1",
     "@datadog/browser-logs": "^4.42.2",
     "@datadog/browser-rum": "^4.42.2",
     "@ngx-translate/core": "^14.0.0",
@@ -86,6 +86,7 @@
     "@types/jest": "^29.4.0",
     "@types/node": "^18.11.18",
     "@types/openseadragon": "3.0.0",
+    "@types/uuid": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
     "cypress": "^12.17.2",
@@ -117,7 +118,8 @@
     "protractor": "^7.0.0",
     "ts-jest": "29.1.0",
     "ts-node": "~10.9.1",
-    "typescript": "~5.1.6"
+    "typescript": "~5.1.6",
+    "uuid": "9.0.0"
   },
   "optionalDependencies": {
     "@nx/nx-darwin-arm64": "16.5.3",
