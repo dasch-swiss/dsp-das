@@ -410,36 +410,34 @@ export class AdvancedSearchService {
                 switch (property.selectedOperator) {
                     case Operators.Equals:
                     case Operators.NotEquals:
-                        return '?prop' + index + ' <' + Constants.ValueAsString + '> ' + '?prop' + index + 'Literal' + ' .\n'
-                        + 'FILTER (?prop' + index + 'Literal ' + this._operatorToSymbol(property.selectedOperator) + ' "' + property.searchValue + '"^^<' + Constants.XsdString + '>)' + ' .';
+                        return `?prop${index} <${Constants.ValueAsString}> ?prop${index}Literal .\n
+                        FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdString}>) .`;
                     case Operators.IsLike:
-                        // only equals is supported for text values
-                        return '?prop' + index + ' <' + Constants.ValueAsString + '> ' + '?prop' + index + 'Literal' + ' .\n'
-                        + 'FILTER ' + this._operatorToSymbol(property.selectedOperator) + '(?prop' + index + 'Literal' + ', "' + property.searchValue + '"^^<' + Constants.XsdString + '> ' + ', "i")' + ' .';
+                        return `?prop${index} <${Constants.ValueAsString}> ?prop${index}Literal .\n
+                        FILTER ${this._operatorToSymbol(property.selectedOperator)}(?prop${index}Literal, "${property.searchValue}"^^<${Constants.XsdString}>, "i") .`;
+                    case Operators.Matches:
+                        return `FILTER <${this._operatorToSymbol(property.selectedOperator)}>(?prop${index}, "${property.searchValue}"^^<${Constants.XsdString}>) .`;
                     default:
-                        // throw an error or something
-                        return '';
+                        throw new Error('Invalid operator for text value');
                 }
             case Constants.IntValue:
-                return '?prop' + index + ' <' + Constants.IntValueAsInt + '> ' + '?prop' + index + 'Literal' + ' .\n'
-                + 'FILTER (?prop' + index + 'Literal ' + this._operatorToSymbol(property.selectedOperator) + ' "' + property.searchValue + '"^^<' + Constants.XsdInteger + '>)' + ' .';
+                return `?prop${index} <${Constants.IntValueAsInt}> ?prop${index}Literal .\n
+                FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdInteger}>) .`;
             case Constants.DecimalValue:
-                return '?prop' + index + ' <' + Constants.DecimalValueAsDecimal + '> ' + '?prop' + index + 'Literal' + ' .\n'
-                + 'FILTER (?prop' + index + 'Literal ' + this._operatorToSymbol(property.selectedOperator) + ' "' + property.searchValue + '"^^<' + Constants.XsdDecimal + '>)' + ' .';
+                return `?prop${index} <${Constants.DecimalValueAsDecimal}> ?prop${index}Literal .\n
+                FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdDecimal}>) .`;
             case Constants.BooleanValue:
-                return '?prop' + index + ' <' + Constants.BooleanValueAsBoolean + '> ' + '?prop' + index + 'Literal' + ' .\n'
-                + 'FILTER (?prop' + index + 'Literal ' + this._operatorToSymbol(property.selectedOperator) + ' "' + property.searchValue + '"^^<' + Constants.XsdBoolean + '>)' + ' .';
+                return `?prop${index} <${Constants.BooleanValueAsBoolean}> ?prop${index}Literal .\n
+                FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdBoolean}>) .`;
             case Constants.DateValue:
-                return 'FILTER(knora-api:toSimpleDate(?prop' + index + ') ' + this._operatorToSymbol(property.selectedOperator) + ' "' + property.searchValue + '"^^<' + Constants.KnoraApi + '/ontology/knora-api/simple/v2' + Constants.HashDelimiter + 'Date>) .';
+                return `FILTER(knora-api:toSimpleDate(?prop${index}) ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.KnoraApi}/ontology/knora-api/simple/v2${Constants.HashDelimiter}Date>) .`;
             case Constants.ListValue:
-                return '?prop' + index + ' <' + Constants.ListValueAsListNode + '> <' + property.searchValue + '> .';
+                return `?prop${index} <${Constants.ListValueAsListNode}> <${property.searchValue}> .\n`;
             case Constants.UriValue:
-                return '?prop' + index + ' <' + Constants.UriValueAsUri + '> ' + '?prop' + index + 'Literal' + ' .\n'
-                + 'FILTER (?prop' + index + 'Literal ' + this._operatorToSymbol(property.selectedOperator) + ' "' + property.searchValue + '"^^<' + Constants.XsdAnyUri + '>)' + ' .';
+                return `?prop${index} <${Constants.UriValueAsUri}> ?prop${index}Literal .\n
+                FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdAnyUri}>) .`
             default:
-                // eric wants me to do this later
-                // throw an error or something
-                return '';
+                throw new Error('Invalid object type');
         }
     }
 
@@ -464,7 +462,7 @@ export class AdvancedSearchService {
             case Operators.IsLike:
                 return 'regex';
             case Operators.Matches:
-                return 'contains';
+                return Constants.MatchText;
             default:
                 return '';
         }
