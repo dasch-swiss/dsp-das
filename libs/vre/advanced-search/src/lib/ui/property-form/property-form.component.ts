@@ -74,7 +74,7 @@ export class PropertyFormComponent {
         new EventEmitter<PropertyFormItem>();
     @Output() emitResourceSearchValueChanged = new EventEmitter<SearchItem>();
 
-    @ViewChild('propertiesList') propertiesList!: MatSelect;
+    @ViewChild('propertyFormValue') propertyFormValueComponent!: PropertyFormValueComponent;
 
     operators = Operators; // in order to use it in the template
     constants = Constants;
@@ -89,6 +89,16 @@ export class PropertyFormComponent {
         const propFormItem = this.propertyFormItem;
         if (propFormItem) {
             propFormItem.selectedProperty = event.value;
+
+            // reset search value because it might be invalid for the newly selected property
+            propFormItem.searchValue = undefined;
+
+            // this isn't great but we need to reset the value of the input control
+            // because the input will not clear itself if the input switches to an input of the same type
+            // i.e. from an integer input to a decimal input, the entered integer value will remain in the input
+            if(this.propertyFormValueComponent) {
+                this.propertyFormValueComponent.inputControl.setValue('');
+            }
             this.emitPropertyFormItemChanged.emit(propFormItem);
         }
     }
