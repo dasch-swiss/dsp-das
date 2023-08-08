@@ -29,3 +29,20 @@ import './commands'
 //     cy.get('div.cdk-overlay-container span.mdc-button__label span').click();
 //     cy.contains('Login successful');
 // });
+
+beforeEach(() => {
+    cy.log(Cypress.spec.relative);
+    if(Cypress.spec.relative.startsWith('cypress/e2e/System_Admin')) {
+        cy.log('Logging in as admin');
+        cy.login('root', 'test');
+        // the cookie name will differ depending on the environment
+        cy.getCookie("KnoraAuthenticationGAXDALRQFYYDUMZTGMZQ9999").should('exist');
+    }
+
+    if(Cypress.spec.relative.startsWith('cypress/e2e/Project_Member')) {
+        cy.log('Logging in as project member');
+        cy.login('projectMember', 'test1234');
+        // the cookie name will differ depending on the environment
+        cy.getCookie("KnoraAuthenticationGAXDALRQFYYDUMZTGMZQ9999").should('exist');
+    }
+});

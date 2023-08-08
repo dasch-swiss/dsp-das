@@ -11,7 +11,15 @@
 //
 //
 // -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
+Cypress.Commands.add('login', (username: string, password: string) => {
+    cy.visit('http://0.0.0.0:4200/');
+    cy.get('app-user-menu .login-button').click();
+    cy.get('#mat-input-0').click();
+    cy.get('#mat-input-0').type(username);
+    cy.get('#mat-input-1').type(password);
+    cy.get('div.cdk-overlay-container span.mdc-button__label span').click();
+    cy.contains('Login successful');
+ })
 //
 //
 // -- This is a child command --
