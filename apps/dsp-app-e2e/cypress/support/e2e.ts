@@ -46,3 +46,11 @@ beforeEach(() => {
         cy.getCookie("KnoraAuthenticationGAXDALRQFYYDUMZTGMZQ9999").should('exist');
     }
 });
+
+afterEach(() => {
+    cy.log('after each test');
+    cy.get('app-user-menu .user-menu').click();
+    cy.get('mat-list-item:last span.mdc-button__label > span').click();
+    cy.get('app-user-menu span.mdc-button__label').click();
+    cy.getCookie("KnoraAuthenticationGAXDALRQFYYDUMZTGMZQ9999").should('not.exist');
+});
