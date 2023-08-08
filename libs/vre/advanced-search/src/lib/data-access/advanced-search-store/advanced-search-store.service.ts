@@ -186,7 +186,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                         Operators.NotEquals,
                         Operators.Exists,
                         Operators.NotExists,
-                        Operators.Matches, // apparently this is only available at the top level but idk what that means right now
+                        Operators.Matches,
                     ];
                 }
             }
@@ -253,16 +253,120 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     // key: operator, value: allowed object types
     getOperators(): Map<string, string[]> {
         return new Map([
-            [Operators.Equals, [Constants.TextValue, Constants.UriValue]],
-            [Operators.NotEquals, [Constants.TextValue, Constants.UriValue]],
-            [Operators.Exists, [Constants.TextValue, Constants.UriValue]],
-            [Operators.NotExists, [Constants.TextValue, Constants.UriValue]],
-            [Operators.GreaterThan, [Constants.IntValue, Constants.DecimalValue]],
-            [Operators.GreaterThanEquals, [Constants.IntValue, Constants.DecimalValue]],
-            [Operators.LessThan, [Constants.IntValue, Constants.DecimalValue]],
-            [Operators.LessThanEquals, [Constants.IntValue, Constants.DecimalValue]],
-            [Operators.IsLike, [Constants.TextValue]],
-            [Operators.Matches, [Constants.TextValue]],
+            [
+                Operators.Equals,
+                [
+                    Constants.TextValue,
+                    Constants.IntValue,
+                    Constants.DecimalValue,
+                    Constants.BooleanValue,
+                    Constants.DateValue,
+                    Constants.UriValue,
+                    Constants.ListValue,
+                ],
+            ],
+            [
+                Operators.NotEquals,
+                [
+                    Constants.TextValue,
+                    Constants.IntValue,
+                    Constants.DecimalValue,
+                    Constants.DateValue,
+                    Constants.UriValue,
+                    Constants.ListValue,
+                ],
+            ],
+            [
+                Operators.Exists,
+                [
+                    Constants.TextValue,
+                    Constants.IntValue,
+                    Constants.DecimalValue,
+                    Constants.BooleanValue,
+                    Constants.DateValue,
+                    Constants.UriValue,
+                    Constants.ListValue,
+                    Constants.GeomValue,
+                    Constants.FileValue,
+                    Constants.AudioFileValue,
+                    Constants.StillImageFileValue,
+                    Constants.DDDFileValue,
+                    Constants.MovingImageFileValue,
+                    Constants.TextFileValue,
+                    Constants.ColorValue,
+                    Constants.IntervalValue,
+                    Constants.GeonameValue,
+                    Constants.TimeValue,
+                ],
+            ],
+            [
+                Operators.NotExists,
+                [
+                    Constants.TextValue,
+                    Constants.IntValue,
+                    Constants.DecimalValue,
+                    Constants.BooleanValue,
+                    Constants.DateValue,
+                    Constants.UriValue,
+                    Constants.ListValue,
+                    Constants.GeomValue,
+                    Constants.FileValue,
+                    Constants.AudioFileValue,
+                    Constants.StillImageFileValue,
+                    Constants.DDDFileValue,
+                    Constants.MovingImageFileValue,
+                    Constants.TextFileValue,
+                    Constants.ColorValue,
+                    Constants.IntervalValue,
+                    Constants.GeonameValue,
+                    Constants.TimeValue,
+                ],
+            ],
+            [
+                Operators.GreaterThan,
+                [
+                    Constants.IntValue,
+                    Constants.IntValue,
+                    Constants.DateValue,
+                    Constants.DecimalValue,
+                ],
+            ],
+            [
+                Operators.GreaterThanEquals,
+                [
+                    Constants.IntValue,
+                    Constants.DecimalValue,
+                    Constants.DateValue,
+                ]
+            ],
+            [
+                Operators.LessThan,
+                [
+                    Constants.IntValue,
+                    Constants.DecimalValue,
+                    Constants.DateValue,
+                ]
+            ],
+            [
+                Operators.LessThanEquals,
+                [
+                    Constants.IntValue,
+                    Constants.DecimalValue,
+                    Constants.DateValue,
+                ],
+            ],
+            [
+                Operators.IsLike,
+                [
+                    Constants.TextValue,
+                ]
+            ],
+            [
+                Operators.Matches,
+                [
+                    Constants.TextValue,
+                ]
+            ],
         ]);
     }
 
