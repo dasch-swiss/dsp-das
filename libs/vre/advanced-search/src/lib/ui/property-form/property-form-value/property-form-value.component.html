@@ -1,5 +1,11 @@
 <div class="container" *ngIf="objectType" [ngSwitch]="objectType">
 
+    <!-- property label -->
+    <mat-form-field *ngSwitchCase="constants.Label">
+        <mat-label>Property Label</mat-label>
+        <input matInput [formControl]="inputControl" />
+    </mat-form-field>
+
     <!-- text value -->
     <mat-form-field *ngSwitchCase="constants.TextValue">
         <mat-label>Text Value</mat-label>

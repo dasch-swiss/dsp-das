@@ -396,8 +396,12 @@ export class AdvancedSearchService {
     }
 
     private _propertyStringHelper(property: PropertyFormItem, index: number): GravsearchPropertyString {
+        let linkString = '';
         let valueString = '';
-        const linkString = '?mainRes <' + property.selectedProperty?.iri + '> ?prop' + index + ' .';
+        if(property.selectedProperty?.objectType !== Constants.Label &&
+            property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)) {
+            linkString = '?mainRes <' + property.selectedProperty?.iri + '> ?prop' + index + ' .';
+        }
         if (!(property.selectedOperator === 'exists' || property.selectedOperator === 'notExists')) {
             valueString = this._valueStringHelper(property, index);
         }
@@ -405,39 +409,65 @@ export class AdvancedSearchService {
     }
 
     private _valueStringHelper(property: PropertyFormItem, index: number): string {
-        switch (property.selectedProperty?.objectType) {
-            case Constants.TextValue:
-                switch (property.selectedOperator) {
-                    case Operators.Equals:
-                    case Operators.NotEquals:
-                        return `?prop${index} <${Constants.ValueAsString}> ?prop${index}Literal .\n
-                        FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdString}>) .`;
-                    case Operators.IsLike:
-                        return `?prop${index} <${Constants.ValueAsString}> ?prop${index}Literal .\n
-                        FILTER ${this._operatorToSymbol(property.selectedOperator)}(?prop${index}Literal, "${property.searchValue}"^^<${Constants.XsdString}>, "i") .`;
-                    case Operators.Matches:
-                        return `FILTER <${this._operatorToSymbol(property.selectedOperator)}>(?prop${index}, "${property.searchValue}"^^<${Constants.XsdString}>) .`;
-                    default:
-                        throw new Error('Invalid operator for text value');
-                }
-            case Constants.IntValue:
-                return `?prop${index} <${Constants.IntValueAsInt}> ?prop${index}Literal .\n
-                FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdInteger}>) .`;
-            case Constants.DecimalValue:
-                return `?prop${index} <${Constants.DecimalValueAsDecimal}> ?prop${index}Literal .\n
-                FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdDecimal}>) .`;
-            case Constants.BooleanValue:
-                return `?prop${index} <${Constants.BooleanValueAsBoolean}> ?prop${index}Literal .\n
-                FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdBoolean}>) .`;
-            case Constants.DateValue:
-                return `FILTER(knora-api:toSimpleDate(?prop${index}) ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.KnoraApi}/ontology/knora-api/simple/v2${Constants.HashDelimiter}Date>) .`;
-            case Constants.ListValue:
-                return `?prop${index} <${Constants.ListValueAsListNode}> <${property.searchValue}> .\n`;
-            case Constants.UriValue:
-                return `?prop${index} <${Constants.UriValueAsUri}> ?prop${index}Literal .\n
-                FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdAnyUri}>) .`
-            default:
-                throw new Error('Invalid object type');
+        if(!property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)) {
+            switch (property.selectedOperator) {
+                case Operators.Equals:
+                    return `?mainRes <${property.selectedProperty?.iri}> <${property.searchValue}> .`
+                case Operators.NotEquals:
+                    return `FILTER NOT EXISTS { \n
+                    ?mainRes <${property.selectedProperty?.iri}> <${property.searchValue}> . }`
+                default:
+                    throw new Error('Invalid operator for linked resource');
+            }
+        } else {
+            switch (property.selectedProperty?.objectType) {
+                case Constants.Label:
+                    switch (property.selectedOperator) {
+                        case Operators.Equals:
+                        case Operators.NotEquals:
+                            return `?mainRes rdfs:label ?label .\n
+                            FILTER (?label ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}") .`;
+                        case Operators.IsLike:
+                            return `?mainRes rdfs:label ?label .\n
+                            FILTER regex(?label, "${property.searchValue}", "i") .`;
+                        case Operators.Matches:
+                            return `FILTER knora-api:matchLabel(?mainRes, "${property.searchValue}") .`
+                        default:
+                            throw new Error('Invalid operator for resource label');
+                    }
+                case Constants.TextValue:
+                    switch (property.selectedOperator) {
+                        case Operators.Equals:
+                        case Operators.NotEquals:
+                            return `?prop${index} <${Constants.ValueAsString}> ?prop${index}Literal .\n
+                            FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdString}>) .`;
+                        case Operators.IsLike:
+                            return `?prop${index} <${Constants.ValueAsString}> ?prop${index}Literal .\n
+                            FILTER ${this._operatorToSymbol(property.selectedOperator)}(?prop${index}Literal, "${property.searchValue}"^^<${Constants.XsdString}>, "i") .`;
+                        case Operators.Matches:
+                            return `FILTER <${this._operatorToSymbol(property.selectedOperator)}>(?prop${index}, "${property.searchValue}"^^<${Constants.XsdString}>) .`;
+                        default:
+                            throw new Error('Invalid operator for text value');
+                    }
+                case Constants.IntValue:
+                    return `?prop${index} <${Constants.IntValueAsInt}> ?prop${index}Literal .\n
+                    FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdInteger}>) .`;
+                case Constants.DecimalValue:
+                    return `?prop${index} <${Constants.DecimalValueAsDecimal}> ?prop${index}Literal .\n
+                    FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdDecimal}>) .`;
+                case Constants.BooleanValue:
+                    return `?prop${index} <${Constants.BooleanValueAsBoolean}> ?prop${index}Literal .\n
+                    FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdBoolean}>) .`;
+                case Constants.DateValue:
+                    return `FILTER(knora-api:toSimpleDate(?prop${index}) ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.KnoraApi}/ontology/knora-api/simple/v2${Constants.HashDelimiter}Date>) .`;
+                case Constants.ListValue:
+                    return `?prop${index} <${Constants.ListValueAsListNode}> <${property.searchValue}> .\n`;
+                case Constants.UriValue:
+                    return `?prop${index} <${Constants.UriValueAsUri}> ?prop${index}Literal .\n
+                    FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdAnyUri}>) .`
+                default:
+                    throw new Error('Invalid object type');
+            }
         }
     }
 

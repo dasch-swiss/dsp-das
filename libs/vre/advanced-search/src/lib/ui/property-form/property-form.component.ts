@@ -79,6 +79,8 @@ export class PropertyFormComponent {
     operators = Operators; // in order to use it in the template
     constants = Constants;
 
+    resourceLabel = { iri: 'resourceLabel', label: 'Resource Label', objectType: this.constants.Label};
+
     onRemovePropertyFormClicked(propFormItem: PropertyFormItem | null): void {
         if (propFormItem) {
             this.emitRemovePropertyForm.emit(propFormItem);

@@ -186,7 +186,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                         Operators.NotEquals,
                         Operators.Exists,
                         Operators.NotExists,
-                        Operators.Matches,
+                        // Operators.Matches, // do we want to support this?
                     ];
                 }
             }
@@ -256,6 +256,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             [
                 Operators.Equals,
                 [
+                    Constants.Label,
                     Constants.TextValue,
                     Constants.IntValue,
                     Constants.DecimalValue,
@@ -268,6 +269,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             [
                 Operators.NotEquals,
                 [
+                    Constants.Label,
                     Constants.TextValue,
                     Constants.IntValue,
                     Constants.DecimalValue,
@@ -358,12 +360,14 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             [
                 Operators.IsLike,
                 [
+                    Constants.Label,
                     Constants.TextValue,
                 ]
             ],
             [
                 Operators.Matches,
                 [
+                    Constants.Label,
                     Constants.TextValue,
                 ]
             ],

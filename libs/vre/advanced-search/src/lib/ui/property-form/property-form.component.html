@@ -6,6 +6,9 @@
             (selectionChange)="onSelectedPropertyChanged($event)"
             name="properties"
         >
+            <mat-option [value]="resourceLabel">{{
+                resourceLabel.label
+            }}</mat-option>
             <mat-option *ngFor="let prop of properties" [value]="prop">
                 {{ prop.label }}
             </mat-option>
@@ -36,9 +39,11 @@
         <dasch-swiss-property-form-value
             #propertyFormValue
             *ngIf="
-                propertyFormItem.selectedProperty?.objectType?.includes(
+                (propertyFormItem.selectedProperty?.objectType?.includes(
                     constants.KnoraApiV2
-                ) &&
+                ) ||
+                    propertyFormItem.selectedProperty?.objectType ===
+                        constants.Label) &&
                 propertyFormItem.selectedProperty?.objectType !==
                     constants.ListValue
             "
@@ -59,7 +64,9 @@
             *ngIf="
                 !propertyFormItem.selectedProperty?.objectType?.includes(
                     constants.KnoraApiV2
-                )
+                ) &&
+                propertyFormItem.selectedProperty?.objectType !==
+                    constants.Label
             "
             [resourcesSearchResultsLoading]="resourcesSearchResultsLoading"
             [resourcesSearchResultsCount]="resourcesSearchResultsCount"
