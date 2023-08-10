@@ -12,7 +12,7 @@
         (optionsScroll)="onScroll()"
         (optionSelected)="onResourceSelected($event)"
     >
-        <mat-option
+        <!-- <mat-option
             *ngIf="
                 !resourcesSearchResultsLoading &&
                 resourcesSearchResultsCount === 0 &&
@@ -21,7 +21,7 @@
             [disabled]="true"
         >
             No results found
-        </mat-option>
+        </mat-option> -->
 
         <mat-option *ngFor="let res of resourcesSearchResults" [value]="res">
             {{ res?.label }}
