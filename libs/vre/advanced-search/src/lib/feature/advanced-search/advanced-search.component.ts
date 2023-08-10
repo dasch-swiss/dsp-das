@@ -54,6 +54,7 @@ export class AdvancedSearchComponent implements OnInit {
             filteredProperties: [],
             resourcesSearchResultsLoading: false,
             resourcesSearchResultsCount: 0,
+            resourcesSearchResultsPageNumber: 0,
             resourcesSearchResults: [],
         });
 
@@ -101,6 +102,10 @@ export class AdvancedSearchComponent implements OnInit {
 
     handleResourceSearchValueChanged(searchItem: SearchItem): void {
         this.store.updateResourcesSearchResults(searchItem);
+    }
+
+    handleLoadMoreSearchResults(searchItem: SearchItem): void {
+        this.store.loadMoreResourcesSearchResults(searchItem);
     }
 
     handleSearchButtonClicked(): void {

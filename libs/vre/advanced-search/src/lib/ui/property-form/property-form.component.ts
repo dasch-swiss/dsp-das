@@ -70,9 +70,9 @@ export class PropertyFormComponent {
     @Input() properties: PropertyData[] | null = [];
 
     @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();
-    @Output() emitPropertyFormItemChanged =
-        new EventEmitter<PropertyFormItem>();
+    @Output() emitPropertyFormItemChanged = new EventEmitter<PropertyFormItem>();
     @Output() emitResourceSearchValueChanged = new EventEmitter<SearchItem>();
+    @Output() emitLoadMoreSearchResults = new EventEmitter<SearchItem>();
 
     @ViewChild('propertyFormValue') propertyFormValueComponent!: PropertyFormValueComponent;
 
@@ -122,19 +122,29 @@ export class PropertyFormComponent {
         }
     }
 
-    onValueChanged(event: string) {
+    onValueChanged(value: string) {
         const propFormItem = this.propertyFormItem;
         if (propFormItem) {
-            propFormItem.searchValue = event;
+            propFormItem.searchValue = value;
             this.emitPropertyFormItemChanged.emit(propFormItem);
         }
     }
 
-    onResourceSearchValueChanged(event: string) {
+    onResourceSearchValueChanged(searchValue: string) {
         const propFormItem = this.propertyFormItem;
         if (propFormItem && propFormItem.selectedProperty) {
             this.emitResourceSearchValueChanged.emit({
-                value: event,
+                value: searchValue,
+                objectType: propFormItem.selectedProperty?.objectType,
+            });
+        }
+    }
+
+    onLoadMoreSearchResults(searchValue: string) {
+        const propFormItem = this.propertyFormItem;
+        if (propFormItem && propFormItem.selectedProperty) {
+            this.emitLoadMoreSearchResults.emit({
+                value: searchValue,
                 objectType: propFormItem.selectedProperty?.objectType,
             });
         }

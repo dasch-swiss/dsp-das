@@ -314,10 +314,11 @@ export class AdvancedSearchService {
 
     getResourcesList(
         searchValue: string,
-        resourceClassIri: string
+        resourceClassIri: string,
+        offset = 0
     ): Observable<ApiData[]> {
         return this._dspApiConnection.v2.search
-            .doSearchByLabel(searchValue, 0, {
+            .doSearchByLabel(searchValue, offset, {
                 limitToResourceClass: resourceClassIri,
             })
             .pipe(

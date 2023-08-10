@@ -16,6 +16,7 @@ export interface AdvancedSearchState {
     filteredProperties: PropertyData[];
     resourcesSearchResultsLoading: boolean;
     resourcesSearchResultsCount: number;
+    resourcesSearchResultsPageNumber: number;
     resourcesSearchResults: ApiData[];
     error?: any;
 }
@@ -221,6 +222,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     updateResourcesSearchResults(searchItem: SearchItem): void {
         if (searchItem.value && searchItem.value.length >= 3) {
             this.patchState({ resourcesSearchResultsLoading: true });
+            this.patchState({ resourcesSearchResults: [] });
+            this.patchState({ resourcesSearchResultsPageNumber: 0 });
             this._advancedSearchService.getResourceListCount(searchItem.value, searchItem.objectType).subscribe(
                 (count) => {
                     this.patchState({ resourcesSearchResultsCount: count });
@@ -248,6 +251,27 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
     resetResourcesSearchResults(): void {
         this.patchState({ resourcesSearchResults: [] });
+        this.patchState({ resourcesSearchResultsCount: 0 });
+        this.patchState({ resourcesSearchResultsPageNumber: 0 });
+    }
+
+    loadMoreResourcesSearchResults(searchItem: SearchItem): void {
+        const count = this.get((state) => state.resourcesSearchResultsCount);
+        const results = this.get((state) => state.resourcesSearchResults);
+
+        // only load more results if there are more results to load
+        if (count > results.length) {
+            const nextPageNumber = this.get((state) => state.resourcesSearchResultsPageNumber) + 1;
+            this.patchState({ resourcesSearchResultsLoading: true });
+            this._advancedSearchService.getResourcesList(searchItem.value, searchItem.objectType, nextPageNumber).subscribe(
+                (resources) => {
+                    this.patchState({ resourcesSearchResultsPageNumber: nextPageNumber });
+                    const newResourcesSearchResults = this.get((state) => state.resourcesSearchResults.concat(resources));
+                    this.patchState({ resourcesSearchResults: newResourcesSearchResults });
+                    this.patchState({ resourcesSearchResultsLoading: false });
+                }
+            );
+        }
     }
 
     // key: operator, value: allowed object types
