@@ -1,20 +1,28 @@
-<div>
-    <mat-form-field>
-      <mat-label>Select ontology</mat-label>
-      <mat-select #ontologiesList (selectionChange)="onSelectedOntologyChanged()" name="ontologies">
-        <mat-option *ngFor="let onto of ontologies" [value]="onto">
-          {{onto.label}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-        <mat-label>Select resource class</mat-label>
-        <mat-select #resourceClassesList (selectionChange)="onSelectedResourceClassChanged()" name="resourceClass">
-            <mat-option>None</mat-option>
-            <mat-option *ngFor="let class of resourceClasses" [value]="class">
-            {{class.label}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+<div class="parent-container">
+    <div class="dropdown-container">
+        <div class="content">
+            <p class="label">Select a data model</p>
+            <mat-form-field>
+                <mat-select #ontologiesList (selectionChange)="onSelectedOntologyChanged()" name="ontologies" placeholder="Select a value">
+                  <mat-option *ngFor="let onto of ontologies" [value]="onto">
+                    {{onto.label}}
+                  </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="dropdown-container">
+        <div class="content">
+            <p class="label">Select a resource class (optional)</p>
+            <mat-form-field>
+                <mat-select #resourceClassesList (selectionChange)="onSelectedResourceClassChanged()" name="resourceClass" placeholder="Select a value">
+                    <mat-option>None</mat-option>
+                    <mat-option *ngFor="let class of resourceClasses" [value]="class">
+                    {{class.label}}
+                  </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
 </div>
 

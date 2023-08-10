@@ -194,6 +194,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             property.operators = operators;
 
             // make this better
+            // triggers when any part of the form item changes
             if (property.selectedProperty?.listIri) {
                 this._advancedSearchService.getList(property.selectedProperty.listIri).subscribe(
                     (list) => {

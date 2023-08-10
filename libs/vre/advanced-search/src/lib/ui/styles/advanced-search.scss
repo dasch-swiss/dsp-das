@@ -1,0 +1,44 @@
+.parent-container {
+  width: 100%;
+
+  .dropdown-container {
+    width: 49%;
+    display: inline-flex;
+
+    .content {
+      width: 100%;
+
+      .label {
+        margin-block-end: 0%;
+        font-size: 14px;
+      }
+
+      mat-form-field {
+        width: 90%;
+        &.operator {
+          width: 40%
+        }
+      }
+    }
+  }
+}
+
+.add-remove-property-button {
+  height: 44px;
+  width: 44px;
+  padding: 0px;
+
+  &.add:not(:disabled) {
+    color: #336790;
+  }
+  &.remove {
+    color: #E11D48;
+  }
+
+  mat-icon {
+    height: 44px;
+    width: 44px;
+    font-size: 44px;
+
+  }
+}

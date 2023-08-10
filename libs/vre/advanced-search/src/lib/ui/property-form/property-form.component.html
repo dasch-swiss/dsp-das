@@ -1,88 +1,105 @@
-<div>
-    <mat-form-field>
-        <mat-label>Select property</mat-label>
-        <mat-select
-            #propertiesList
-            (selectionChange)="onSelectedPropertyChanged($event)"
-            name="properties"
-        >
-            <mat-option [value]="resourceLabel">{{
-                resourceLabel.label
-            }}</mat-option>
-            <mat-option *ngFor="let prop of properties" [value]="prop">
-                {{ prop.label }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-        <mat-label>Select operator</mat-label>
-        <mat-select
-            #operatorsList
-            (selectionChange)="onSelectedOperatorChanged($event)"
-            name="operators"
-        >
-            <mat-option
-                *ngFor="let operator of propertyFormItem?.operators"
-                [value]="operator"
-            >
-                {{ operator }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-    <div
-        *ngIf="
-            propertyFormItem.selectedOperator &&
-            propertyFormItem.selectedOperator !== operators.Exists &&
-            propertyFormItem.selectedOperator !== operators.NotExists
-        "
-    >
-        <dasch-swiss-property-form-value
-            #propertyFormValue
+<div class="parent-container">
+    <div class="form-fields-container">
+        <div class="dropdown-container">
+            <div class="content">
+                <p class="label">Select a property</p>
+                <mat-form-field>
+                    <mat-select
+                        #propertiesList
+                        (selectionChange)="onSelectedPropertyChanged($event)"
+                        placeholder="Select a value"
+                        name="properties"
+                    >
+                        <mat-option [value]="resourceLabel">{{
+                            resourceLabel.label
+                        }}</mat-option>
+                        <mat-option *ngFor="let prop of properties" [value]="prop">
+                            {{ prop.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="dropdown-container">
+            <div class="content">
+                <p class="label">Comparison Operator</p>
+                <mat-form-field class="operator">
+                    <mat-select
+                        #operatorsList
+                        (selectionChange)="onSelectedOperatorChanged($event)"
+                        placeholder="Select a value"
+                        name="operators"
+                    >
+                        <mat-option
+                            *ngFor="let operator of propertyFormItem?.operators"
+                            [value]="operator"
+                        >
+                            {{ operator }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div
             *ngIf="
-                (propertyFormItem.selectedProperty?.objectType?.includes(
-                    constants.KnoraApiV2
-                ) ||
+                propertyFormItem.selectedOperator &&
+                propertyFormItem.selectedOperator !== operators.Exists &&
+                propertyFormItem.selectedOperator !== operators.NotExists
+            "
+            class="value-container"
+        >
+            <dasch-swiss-property-form-value
+                #propertyFormValue
+                *ngIf="
+                    (propertyFormItem.selectedProperty?.objectType?.includes(
+                        constants.KnoraApiV2
+                    ) ||
+                        propertyFormItem.selectedProperty?.objectType ===
+                            constants.Label) &&
+                    propertyFormItem.selectedProperty?.objectType !==
+                        constants.ListValue
+                "
+                [objectType]="propertyFormItem.selectedProperty?.objectType"
+                (emitValueChanged)="onValueChanged($event)"
+            />
+            <dasch-swiss-property-form-list-value
+                *ngIf="
                     propertyFormItem.selectedProperty?.objectType ===
-                        constants.Label) &&
-                propertyFormItem.selectedProperty?.objectType !==
                     constants.ListValue
-            "
-            [objectType]="propertyFormItem.selectedProperty?.objectType"
-            (emitValueChanged)="onValueChanged($event)"
-        />
-        <dasch-swiss-property-form-list-value
-            *ngIf="
-                propertyFormItem.selectedProperty?.objectType ===
-                constants.ListValue
-            "
-            [list]="propertyFormItem.list"
-            (emitValueChanged)="onValueChanged($event)"
-        >
-        </dasch-swiss-property-form-list-value>
+                "
+                [list]="propertyFormItem.list"
+                (emitValueChanged)="onValueChanged($event)"
+            >
+            </dasch-swiss-property-form-list-value>
 
-        <dasch-swiss-property-form-link-value
-            *ngIf="
-                !propertyFormItem.selectedProperty?.objectType?.includes(
-                    constants.KnoraApiV2
-                ) &&
-                propertyFormItem.selectedProperty?.objectType !==
-                    constants.Label
-            "
-            [resourcesSearchResultsLoading]="resourcesSearchResultsLoading"
-            [resourcesSearchResultsCount]="resourcesSearchResultsCount"
-            [resourcesSearchResults]="resourcesSearchResults"
-            (emitResourceSearchValueChanged)="
-                onResourceSearchValueChanged($event)
-            "
-            (emitLoadMoreSearchResults)="onLoadMoreSearchResults($event)"
-            (emitResourceSelected)="onValueChanged($event)"
-        ></dasch-swiss-property-form-link-value>
+            <dasch-swiss-property-form-link-value
+                *ngIf="
+                    !propertyFormItem.selectedProperty?.objectType?.includes(
+                        constants.KnoraApiV2
+                    ) &&
+                    propertyFormItem.selectedProperty?.objectType !==
+                        constants.Label
+                "
+                [resourcesSearchResultsLoading]="resourcesSearchResultsLoading"
+                [resourcesSearchResultsCount]="resourcesSearchResultsCount"
+                [resourcesSearchResults]="resourcesSearchResults"
+                (emitResourceSearchValueChanged)="
+                    onResourceSearchValueChanged($event)
+                "
+                (emitLoadMoreSearchResults)="onLoadMoreSearchResults($event)"
+                (emitResourceSelected)="onValueChanged($event)"
+            ></dasch-swiss-property-form-link-value>
+        </div>
     </div>
 
-    <button
-        mat-icon-button
-        (click)="onRemovePropertyFormClicked(propertyFormItem)"
-    >
-        <mat-icon>remove_circle</mat-icon>
-    </button>
+
+    <div class="remove-property-container">
+        <button
+            mat-icon-button
+            (click)="onRemovePropertyFormClicked(propertyFormItem)"
+            class="add-remove-property-button remove"
+        >
+            <mat-icon>remove_circle</mat-icon>
+        </button>
+    </div>
 </div>

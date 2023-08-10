@@ -1,0 +1,15 @@
+@use '../styles/advanced-search.scss' as *;
+
+.form-fields-container,
+.remove-property-container {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.form-fields-container {
+  width: 90%;
+}
+
+.remove-property-container {
+  width: 9%;
+}

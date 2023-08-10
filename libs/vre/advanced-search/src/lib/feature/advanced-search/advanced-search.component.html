@@ -1,50 +1,52 @@
-<div>
-    <h2>Advanced search</h2>
-</div>
-<div
-    *ngIf="{
-        ontologies: ontologies$ | async,
-        resourceClasses: resourceClasses$ | async,
-        searchButtonDisabled: searchButtonDisabled$ | async,
-        propertyFormList: propertyFormList$ | async,
-        properties: properties$ | async,
-        filteredProperties: filteredProperties$ | async,
-        addButtonDisabled: addButtonDisabled$ | async,
-        resetButtonDisabled: resetButtonDisabled$ | async,
-        selectedOntology: selectedOntology$ | async,
-        selectedResourceClass: selectedResourceClass$ | async,
-        resourcesSearchResultsLoading: resourcesSearchResultsLoading$ | async,
-        resourcesSearchResultsCount: resourcesSearchResultsCount$ | async,
-        resourcesSearchResults: resourcesSearchResults$ | async
-    } as asyncData"
->
-    <dasch-swiss-ontology-resource-form
-        [ontologies]="asyncData.ontologies"
-        [resourceClasses]="asyncData.resourceClasses"
-        [selectedOntology]="asyncData.selectedOntology"
-        [selectedResourceClass]="asyncData.selectedResourceClass"
-        (emitSelectedOntology)="handleSelectedOntology($event)"
-        (emitSelectedResourceClass)="handleSelectedResourceClass($event)"
-    ></dasch-swiss-ontology-resource-form>
-    <dasch-swiss-property-form
-        *ngFor="let propertyForm of asyncData.propertyFormList"
-        [resourcesSearchResultsLoading]="asyncData.resourcesSearchResultsLoading"
-        [resourcesSearchResultsCount] = "asyncData.resourcesSearchResultsCount"
-        [resourcesSearchResults]="asyncData.resourcesSearchResults"
-        [propertyFormItem]="propertyForm"
-        [properties]="asyncData.filteredProperties?.length ? asyncData.filteredProperties : asyncData.properties"
-        (emitRemovePropertyForm)="handleRemovePropertyForm($event)"
-        (emitPropertyFormItemChanged)="handlePropertyFormItemChanged($event)"
-        (emitResourceSearchValueChanged)="handleResourceSearchValueChanged($event)"
-        (emitLoadMoreSearchResults)="handleLoadMoreSearchResults($event)"
-    ></dasch-swiss-property-form>
-    <dasch-swiss-form-actions
-        [addButtonDisabled]="asyncData.addButtonDisabled"
-        [resetButtonDisabled]="asyncData.resetButtonDisabled"
-        [searchButtonDisabled]="asyncData.searchButtonDisabled"
-        (emitAddPropertyForm)="handleAddPropertyForm()"
-        (emitResetButtonClicked)="handleResetButtonClicked()"
-        (emitSearchButtonClicked)="handleSearchButtonClicked()"
+<div class="advanced-search-container">
+    <div>
+        <p class="title">Advanced search</p>
+    </div>
+    <div
+        *ngIf="{
+            ontologies: ontologies$ | async,
+            resourceClasses: resourceClasses$ | async,
+            searchButtonDisabled: searchButtonDisabled$ | async,
+            propertyFormList: propertyFormList$ | async,
+            properties: properties$ | async,
+            filteredProperties: filteredProperties$ | async,
+            addButtonDisabled: addButtonDisabled$ | async,
+            resetButtonDisabled: resetButtonDisabled$ | async,
+            selectedOntology: selectedOntology$ | async,
+            selectedResourceClass: selectedResourceClass$ | async,
+            resourcesSearchResultsLoading: resourcesSearchResultsLoading$ | async,
+            resourcesSearchResultsCount: resourcesSearchResultsCount$ | async,
+            resourcesSearchResults: resourcesSearchResults$ | async
+        } as asyncData"
     >
-    </dasch-swiss-form-actions>
+        <dasch-swiss-ontology-resource-form
+            [ontologies]="asyncData.ontologies"
+            [resourceClasses]="asyncData.resourceClasses"
+            [selectedOntology]="asyncData.selectedOntology"
+            [selectedResourceClass]="asyncData.selectedResourceClass"
+            (emitSelectedOntology)="handleSelectedOntology($event)"
+            (emitSelectedResourceClass)="handleSelectedResourceClass($event)"
+        ></dasch-swiss-ontology-resource-form>
+        <dasch-swiss-property-form
+            *ngFor="let propertyForm of asyncData.propertyFormList"
+            [resourcesSearchResultsLoading]="asyncData.resourcesSearchResultsLoading"
+            [resourcesSearchResultsCount] = "asyncData.resourcesSearchResultsCount"
+            [resourcesSearchResults]="asyncData.resourcesSearchResults"
+            [propertyFormItem]="propertyForm"
+            [properties]="asyncData.filteredProperties?.length ? asyncData.filteredProperties : asyncData.properties"
+            (emitRemovePropertyForm)="handleRemovePropertyForm($event)"
+            (emitPropertyFormItemChanged)="handlePropertyFormItemChanged($event)"
+            (emitResourceSearchValueChanged)="handleResourceSearchValueChanged($event)"
+            (emitLoadMoreSearchResults)="handleLoadMoreSearchResults($event)"
+        ></dasch-swiss-property-form>
+        <dasch-swiss-form-actions
+            [addButtonDisabled]="asyncData.addButtonDisabled"
+            [resetButtonDisabled]="asyncData.resetButtonDisabled"
+            [searchButtonDisabled]="asyncData.searchButtonDisabled"
+            (emitAddPropertyForm)="handleAddPropertyForm()"
+            (emitResetButtonClicked)="handleResetButtonClicked()"
+            (emitSearchButtonClicked)="handleSearchButtonClicked()"
+        >
+        </dasch-swiss-form-actions>
+    </div>
 </div>
