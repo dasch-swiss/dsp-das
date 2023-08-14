@@ -5,10 +5,13 @@
     <div
         *ngIf="{
             ontologies: ontologies$ | async,
+            ontologiesLoading: ontologiesLoading$ | async,
             resourceClasses: resourceClasses$ | async,
+            resourceClassesLoading: resourceClassesLoading$ | async,
             searchButtonDisabled: searchButtonDisabled$ | async,
             propertyFormList: propertyFormList$ | async,
             properties: properties$ | async,
+            propertiesLoading: propertiesLoading$ | async,
             filteredProperties: filteredProperties$ | async,
             addButtonDisabled: addButtonDisabled$ | async,
             resetButtonDisabled: resetButtonDisabled$ | async,
@@ -21,7 +24,9 @@
     >
         <dasch-swiss-ontology-resource-form
             [ontologies]="asyncData.ontologies"
+            [ontologiesLoading]="asyncData.ontologiesLoading"
             [resourceClasses]="asyncData.resourceClasses"
+            [resourceClassesLoading]="asyncData.resourceClassesLoading"
             [selectedOntology]="asyncData.selectedOntology"
             [selectedResourceClass]="asyncData.selectedResourceClass"
             (emitSelectedOntology)="handleSelectedOntology($event)"
@@ -34,6 +39,7 @@
             [resourcesSearchResults]="asyncData.resourcesSearchResults"
             [propertyFormItem]="propertyForm"
             [properties]="asyncData.filteredProperties?.length ? asyncData.filteredProperties : asyncData.properties"
+            [propertiesLoading]="asyncData.propertiesLoading"
             (emitRemovePropertyForm)="handleRemovePropertyForm($event)"
             (emitPropertyFormItemChanged)="handlePropertyFormItemChanged($event)"
             (emitResourceSearchValueChanged)="handleResourceSearchValueChanged($event)"

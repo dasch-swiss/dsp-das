@@ -20,37 +20,43 @@ import { ActivatedRoute } from '@angular/router';
 export class AdvancedSearchComponent implements OnInit {
 
     store: AdvancedSearchStoreService = inject(AdvancedSearchStoreService);
+    route: ActivatedRoute = inject(ActivatedRoute);
 
     ontologies$ = this.store.ontologies$;
+    ontologiesLoading$ = this.store.ontologiesLoading$;
     resourceClasses$ = this.store.resourceClasses$;
+    resourceClassesLoading$ = this.store.resourceClassesLoading$;
     selectedProject$ = this.store.selectedProject$;
     selectedOntology$ = this.store.selectedOntology$;
     selectedResourceClass$ = this.store.selectedResourceClass$;
     propertyFormList$ = this.store.propertyFormList$;
     properties$ = this.store.properties$;
+    propertiesLoading$ = this.store.propertiesLoading$;
     filteredProperties$ = this.store.filteredProperties$;
     searchButtonDisabled$ = this.store.searchButtonDisabled$;
     addButtonDisabled$ = this.store.addButtonDisabled$;
     resetButtonDisabled$ = this.store.resetButtonDisabled$;
     resourcesSearchResultsLoading$ = this.store.resourcesSearchResultsLoading$;
     resourcesSearchResultsCount$ = this.store.resourcesSearchResultsCount$;
+    resourcesSearchResultsPageNumber$ = this.store.resourcesSearchResultsPageNumber$;
     resourcesSearchResults$ = this.store.resourcesSearchResults$;
 
     constants = Constants;
 
-    constructor(private _route: ActivatedRoute) {}
-
     ngOnInit(): void {
-        const uuid: string = this._route.snapshot.parent?.params['uuid'];
+        const uuid: string = this.route.snapshot.parent?.params['uuid'];
 
         this.store.setState({
             ontologies: [],
+            ontologiesLoading: false,
             resourceClasses: [],
+            resourceClassesLoading: false,
             selectedProject: uuid ? 'http://rdfh.ch/projects/' + uuid : undefined,
             selectedOntology: undefined,
             selectedResourceClass: undefined,
             propertyFormList: [],
             properties: [],
+            propertiesLoading: false,
             filteredProperties: [],
             resourcesSearchResultsLoading: false,
             resourcesSearchResultsCount: 0,

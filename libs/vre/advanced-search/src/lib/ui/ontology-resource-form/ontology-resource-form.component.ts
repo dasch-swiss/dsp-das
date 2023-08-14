@@ -14,7 +14,9 @@ import { ApiData } from '../../data-access/advanced-search-service/advanced-sear
 })
 export class OntologyResourceFormComponent {
     @Input() ontologies: ApiData[] | null = []; // todo: handle null case in html
+    @Input() ontologiesLoading: boolean | null = false;
     @Input() resourceClasses: ApiData[] | null = [];
+    @Input() resourceClassesLoading: boolean | null = false;
 
     @Input() set selectedOntology(ontology: ApiData | null | undefined) {
         if(!this.ontologiesList) return;

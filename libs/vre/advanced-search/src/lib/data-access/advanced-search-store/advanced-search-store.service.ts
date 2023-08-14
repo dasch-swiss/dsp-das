@@ -7,12 +7,15 @@ import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
 
 export interface AdvancedSearchState {
     ontologies: ApiData[];
+    ontologiesLoading: boolean;
     resourceClasses: ApiData[];
+    resourceClassesLoading: boolean;
     selectedProject: string | undefined;
     selectedOntology: ApiData | undefined;
     selectedResourceClass: ApiData | undefined;
     propertyFormList: PropertyFormItem[];
     properties: PropertyData[];
+    propertiesLoading: boolean;
     filteredProperties: PropertyData[];
     resourcesSearchResultsLoading: boolean;
     resourcesSearchResultsCount: number;
@@ -52,15 +55,19 @@ export enum Operators {
 export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchState> {
 
     ontologies$: Observable<ApiData[]> = this.select((state) => state.ontologies);
+    ontologiesLoading$: Observable<boolean> = this.select((state) => state.ontologiesLoading);
     resourceClasses$: Observable<ApiData[]> = this.select((state) => state.resourceClasses);
+    resourceClassesLoading$: Observable<boolean> = this.select((state) => state.resourceClassesLoading);
     selectedProject$: Observable<string | undefined> = this.select((state) => state.selectedProject);
     selectedOntology$: Observable<ApiData | undefined> = this.select((state) => state.selectedOntology);
     selectedResourceClass$: Observable<ApiData | undefined> = this.select((state) => state.selectedResourceClass);
     propertyFormList$: Observable<PropertyFormItem[]> = this.select((state) => state.propertyFormList);
     properties$: Observable<PropertyData[]> = this.select((state) => state.properties);
+    propertiesLoading$: Observable<boolean> = this.select((state) => state.propertiesLoading);
     filteredProperties$: Observable<PropertyData[]> = this.select((state) => state.filteredProperties);
     resourcesSearchResultsLoading$: Observable<boolean> = this.select((state) => state.resourcesSearchResultsLoading);
     resourcesSearchResultsCount$: Observable<number> = this.select((state) => state.resourcesSearchResultsCount);
+    resourcesSearchResultsPageNumber$: Observable<number> = this.select((state) => state.resourcesSearchResultsPageNumber);
     resourcesSearchResults$: Observable<ApiData[]> = this.select((state) => state.resourcesSearchResults);
 
     /** combined selectors */
@@ -419,25 +426,42 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     readonly ontologiesList = this.effect((ontologyIri$: Observable<string | undefined>) =>
         ontologyIri$.pipe(
             switchMap((iri) => {
+                this.patchState({ ontologiesLoading: true });
                 if (!iri)  {
                     // no project iri, get all ontologies
                     return this._advancedSearchService.allOntologiesList().pipe(
                         tap({
-                            next: (response) =>
-                                this.patchState({ ontologies: response }),
-                            error: (error) => this.patchState({ error }),
+                            next: (response) => {
+                                this.patchState({ ontologies: response });
+                                this.patchState({ ontologiesLoading: false });
+                            },
+                            error: (error) => {
+                                this.patchState({ error });
+                                this.patchState({ ontologiesLoading: false });
+                            },
                         }),
-                        catchError(() => EMPTY)
+                        catchError(() => {
+                            this.patchState({ ontologiesLoading: false });
+                            return EMPTY;
+                        })
                     );
                 }
                 // project iri, get ontologies in project
                 return this._advancedSearchService.ontologiesInProjectList(iri).pipe(
                     tap({
-                        next: (response) =>
-                            this.patchState({ ontologies: response }),
-                        error: (error) => this.patchState({ error }),
+                        next: (response) => {
+                            this.patchState({ ontologies: response });
+                            this.patchState({ ontologiesLoading: false });
+                        },
+                        error: (error) => {
+                            this.patchState({ error });
+                            this.patchState({ ontologiesLoading: false });
+                        },
                     }),
-                    catchError(() => EMPTY)
+                    catchError(() => {
+                        this.patchState({ ontologiesLoading: false });
+                        return EMPTY;
+                    })
                 );
             })
         )
@@ -447,16 +471,28 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     readonly resourceClassesList = this.effect((resourceClass$: Observable<ApiData | undefined>) =>
         resourceClass$.pipe(
             switchMap((resClass) => {
-                if (!resClass) return EMPTY;
+                this.patchState({ resourceClassesLoading: true });
+                if (!resClass) {
+                    this.patchState({ resourceClassesLoading: false });
+                    return EMPTY;
+                }
                 return this._advancedSearchService
                     .resourceClassesList(resClass.iri)
                     .pipe(
                         tap({
-                            next: (response) =>
-                                this.patchState({ resourceClasses: response }),
-                            error: (error) => this.patchState({ error }),
+                            next: (response) => {
+                                this.patchState({ resourceClasses: response });
+                                this.patchState({ resourceClassesLoading: false });
+                            },
+                            error: (error) => {
+                                this.patchState({ error });
+                                this.patchState({ resourceClassesLoading: false });
+                            },
                         }),
-                        catchError(() => EMPTY)
+                        catchError(() => {
+                            this.patchState({ resourceClassesLoading: false });
+                            return EMPTY;
+                        })
                     );
             })
         )
@@ -466,15 +502,28 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     readonly propertiesList = this.effect((ontology$: Observable<ApiData | undefined>) =>
         ontology$.pipe(
             switchMap((onto) => {
-                if (!onto) return EMPTY;
+                this.patchState({ propertiesLoading: true });
+                if (!onto) {
+                    this.patchState({ propertiesLoading: false });
+                    return EMPTY;
+                }
                 return this._advancedSearchService
                     .propertiesList(onto.iri)
                     .pipe(
                         tap({
-                            next: (response) => this.patchState({ properties: response }),
-                            error: (error) => this.patchState({ error }),
+                            next: (response) => {
+                                this.patchState({ properties: response });
+                                this.patchState({ propertiesLoading: false });
+                            },
+                            error: (error) => {
+                                this.patchState({ error });
+                                this.patchState({ propertiesLoading: false });
+                            },
                         }),
-                        catchError(() => EMPTY)
+                        catchError(() => {
+                            this.patchState({ propertiesLoading: false });
+                            return EMPTY;
+                        })
                     );
             })
         )
@@ -484,15 +533,28 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     readonly filteredPropertiesList = this.effect((resourceClass$: Observable<ApiData | undefined>) =>
         resourceClass$.pipe(
             switchMap((resClass) => {
-                if (!resClass) return EMPTY;
+                this.patchState({ propertiesLoading: true });
+                if (!resClass) {
+                    this.patchState({ propertiesLoading: false });
+                    return EMPTY;
+                }
                 return this._advancedSearchService
                     .filteredPropertiesList(resClass.iri)
                     .pipe(
                         tap({
-                            next: (response) => this.patchState({ filteredProperties: response }),
-                            error: (error) => this.patchState({ error }),
+                            next: (response) => {
+                                this.patchState({ filteredProperties: response });
+                                this.patchState({ propertiesLoading: false });
+                            },
+                            error: (error) => {
+                                this.patchState({ error });
+                                this.patchState({ propertiesLoading: false });
+                            },
                         }),
-                        catchError(() => EMPTY)
+                        catchError(() => {
+                            this.patchState({ propertiesLoading: false });
+                            return EMPTY;
+                        })
                     );
             })
         )

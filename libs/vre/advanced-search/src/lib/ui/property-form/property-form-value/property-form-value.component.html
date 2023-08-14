@@ -3,13 +3,13 @@
     <!-- property label -->
     <mat-form-field *ngSwitchCase="constants.Label">
         <mat-label>Property Label</mat-label>
-        <input matInput [formControl]="inputControl" />
+        <input matInput type="text" [formControl]="inputControl" />
     </mat-form-field>
 
     <!-- text value -->
     <mat-form-field *ngSwitchCase="constants.TextValue">
         <mat-label>Text Value</mat-label>
-        <input matInput [formControl]="inputControl" />
+        <input matInput type="text" [formControl]="inputControl" />
     </mat-form-field>
 
     <!-- boolean value -->

@@ -10,12 +10,15 @@
                         placeholder="Select a value"
                         name="properties"
                     >
-                        <mat-option [value]="resourceLabel">{{
-                            resourceLabel.label
-                        }}</mat-option>
-                        <mat-option *ngFor="let prop of properties" [value]="prop">
-                            {{ prop.label }}
-                        </mat-option>
+                        <mat-option *ngIf="propertiesLoading" disabled="true">Loading...</mat-option>
+                        <ng-container *ngIf="!propertiesLoading">
+                            <mat-option [value]="resourceLabel">{{
+                                resourceLabel.label
+                            }}</mat-option>
+                            <mat-option *ngFor="let prop of properties" [value]="prop">
+                                {{ prop.label }}
+                            </mat-option>
+                        </ng-container>
                     </mat-select>
                 </mat-form-field>
             </div>

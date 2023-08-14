@@ -29,12 +29,15 @@ export class MatAutocompleteOptionsScrollDirective implements OnDestroy {
                     // the panel will be available on next tick
                     // the panel wil NOT open if there are no options to display
 
-                    // remove listener just for safety, in case the close event is skipped.
-                    this.removeScrollEventListener();
-                    this.autoComplete.panel.nativeElement.addEventListener(
-                        'scroll',
-                        this.onScroll.bind(this)
-                    );
+                    // setTimeout is needed but we don't like it
+                    setTimeout(() => {
+                        // Note: remove listner just for safety, in case the close event is skipped.
+                        this.removeScrollEventListener();
+                        this.autoComplete.panel.nativeElement.addEventListener(
+                          'scroll',
+                          this.onScroll.bind(this)
+                        );
+                      }, 500);
                 }),
                 takeUntil(this._onDestroy)
             )

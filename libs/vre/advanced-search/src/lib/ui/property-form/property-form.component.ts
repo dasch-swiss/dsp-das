@@ -68,6 +68,7 @@ export class PropertyFormComponent {
     // OR
     // a list of properties filtered by a resource class
     @Input() properties: PropertyData[] | null = [];
+    @Input() propertiesLoading: boolean | null = false;
 
     @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();
     @Output() emitPropertyFormItemChanged = new EventEmitter<PropertyFormItem>();
