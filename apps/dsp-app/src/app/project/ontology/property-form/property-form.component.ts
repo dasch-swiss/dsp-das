@@ -884,19 +884,9 @@ export class PropertyFormComponent implements OnInit {
             case Constants.GuiRadio:
                 guiAttributes = ['hlist=<' + guiAttr + '>'];
                 break;
-            case Constants.GuiSimpleText:
-                // --> TODO could have two guiAttr fields: size and maxlength
-                // we suggest to use default value for size; we do not support this guiAttr in DSP-App
-                guiAttributes = ['maxlength=' + guiAttr];
-                break;
             case Constants.GuiSpinbox:
                 // --> TODO could have two guiAttr fields: min and max
                 guiAttributes = ['min=' + guiAttr, 'max=' + guiAttr];
-                break;
-            case Constants.GuiTextarea:
-                // --> TODO could have four guiAttr fields: width, cols, rows, wrap
-                // we suggest to use default values; we do not support this guiAttr in DSP-App
-                guiAttributes = ['width=100%'];
                 break;
         }
 

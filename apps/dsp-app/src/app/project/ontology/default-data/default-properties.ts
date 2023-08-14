@@ -31,7 +31,7 @@ export interface DefaultProperty {
     description: string;
     subPropOf: string;
     objectType?: string;
-    guiEle: string;
+    guiEle?: string;
     group: string;
 }
 
@@ -58,8 +58,6 @@ export class DefaultProperties {
                         'Text without formatting options (only line breaks are available)',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.UnformattedTextValue,
-                    // should be eliminated soon
-                    guiEle: Constants.GuiTextarea,
                     group: 'Text',
                 },
                 {
@@ -68,19 +66,8 @@ export class DefaultProperties {
                     description: 'Text in a rich text editor with formatting options e.g. italic, bold, etc.',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.FormattedTextValue,
-                    // should be eliminated soon
-                    guiEle: Constants.GuiRichText,
                     group: 'Text',
                 },
-                // {
-                //     icon: 'integration_instructions',
-                //     label: 'Custom Formatted Text',
-                //     description: 'Like a Formatted Text but formatting options can be defined by yourself',
-                //     subPropOf: Constants.HasValue,
-                //     objectType: Constants.CustomFormattedTextValue,
-                //     guiEle: Constants.GuiRichText, ???
-                //     group: 'Text',
-                // },
             ],
         },
         {

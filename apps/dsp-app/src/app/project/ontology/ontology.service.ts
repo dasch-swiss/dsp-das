@@ -201,16 +201,6 @@ export class OntologyService {
                                     i.objectType === property.objectType &&
                                     i.subPropOf === Constants.SeqNum
                             );
-                        } else if (
-                            property.objectType === Constants.UnformattedTextValue
-                        ) {
-                            // if the property is of type text value, we have to check the gui element
-                            // to get the correct default prop params
-                            propType = group.elements.find(
-                                (i) =>
-                                    i.guiEle === property.guiElement &&
-                                    i.objectType === property.objectType
-                            );
                         } else {
                             // in all other cases the gui-element resp. the subProp is not relevant
                             // because the object type is unique
