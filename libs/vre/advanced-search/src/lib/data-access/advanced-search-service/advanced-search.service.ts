@@ -410,7 +410,8 @@ export class AdvancedSearchService {
     }
 
     private _valueStringHelper(property: PropertyFormItem, index: number): string {
-        if(!property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)) {
+        if(property.selectedProperty?.objectType !== Constants.Label &&
+            !property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)) {
             switch (property.selectedOperator) {
                 case Operators.Equals:
                     return `?mainRes <${property.selectedProperty?.iri}> <${property.searchValue}> .`
