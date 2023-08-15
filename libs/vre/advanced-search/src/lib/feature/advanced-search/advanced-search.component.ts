@@ -1,17 +1,18 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OntologyResourceFormComponent } from '../../ui/ontology-resource-form/ontology-resource-form.component';
-import { AdvancedSearchStoreService, PropertyFormItem, SearchItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
+import { AdvancedSearchStoreService, OrderByItem, PropertyFormItem, SearchItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { ActivatedRoute } from '@angular/router';
+import { OrderByComponent } from '../../ui/order-by/order-by.component';
 
 @Component({
     selector: 'dasch-swiss-advanced-search',
     standalone: true,
-    imports: [CommonModule, OntologyResourceFormComponent, PropertyFormComponent, FormActionsComponent],
+    imports: [CommonModule, OrderByComponent, OntologyResourceFormComponent, PropertyFormComponent, FormActionsComponent],
     providers: [AdvancedSearchStoreService],
     templateUrl: './advanced-search.component.html',
     styleUrls: ['./advanced-search.component.scss'],
@@ -40,6 +41,7 @@ export class AdvancedSearchComponent implements OnInit {
     resourcesSearchResultsCount$ = this.store.resourcesSearchResultsCount$;
     resourcesSearchResultsPageNumber$ = this.store.resourcesSearchResultsPageNumber$;
     resourcesSearchResults$ = this.store.resourcesSearchResults$;
+    orderByButtonDisabled$ = this.store.orderByButtonDisabled$;
 
     constants = Constants;
 
@@ -57,6 +59,7 @@ export class AdvancedSearchComponent implements OnInit {
             propertyFormList: [],
             properties: [],
             propertiesLoading: false,
+            propertiesOrderBy: [],
             filteredProperties: [],
             resourcesSearchResultsLoading: false,
             resourcesSearchResultsCount: 0,
@@ -99,7 +102,8 @@ export class AdvancedSearchComponent implements OnInit {
 
     handlePropertyFormItemChanged(property: PropertyFormItem): void {
         // if the selected property is a linked resource
-        if(!(property.selectedProperty?.objectType.includes(this.constants.KnoraApiV2))) {
+        if(property.selectedProperty?.objectType !== Constants.Label &&
+            !property.selectedProperty?.objectType.includes(this.constants.KnoraApiV2)) {
             // reset the search results
             this.store.resetResourcesSearchResults();
         }
@@ -112,6 +116,10 @@ export class AdvancedSearchComponent implements OnInit {
 
     handleLoadMoreSearchResults(searchItem: SearchItem): void {
         this.store.loadMoreResourcesSearchResults(searchItem);
+    }
+
+    handlePropertyOrderByChanged(orderByList: OrderByItem[]): void {
+        this.store.updatePropertyOrderBy(orderByList);
     }
 
     handleSearchButtonClicked(): void {

@@ -19,9 +19,16 @@
             selectedResourceClass: selectedResourceClass$ | async,
             resourcesSearchResultsLoading: resourcesSearchResultsLoading$ | async,
             resourcesSearchResultsCount: resourcesSearchResultsCount$ | async,
-            resourcesSearchResults: resourcesSearchResults$ | async
+            resourcesSearchResults: resourcesSearchResults$ | async,
+            orderByButtonDisabled: orderByButtonDisabled$ | async,
         } as asyncData"
     >
+        <dasch-swiss-order-by
+            [properties]="asyncData.propertyFormList"
+            [orderByDisabled]="asyncData.orderByButtonDisabled"
+            (emitPropertyOrderByChanged)="handlePropertyOrderByChanged($event)"
+        >
+        </dasch-swiss-order-by>
         <dasch-swiss-ontology-resource-form
             [ontologies]="asyncData.ontologies"
             [ontologiesLoading]="asyncData.ontologiesLoading"

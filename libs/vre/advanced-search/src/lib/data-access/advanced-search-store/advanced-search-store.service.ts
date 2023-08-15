@@ -16,6 +16,7 @@ export interface AdvancedSearchState {
     propertyFormList: PropertyFormItem[];
     properties: PropertyData[];
     propertiesLoading: boolean;
+    propertiesOrderBy: OrderByItem[];
     filteredProperties: PropertyData[];
     resourcesSearchResultsLoading: boolean;
     resourcesSearchResultsCount: number;
@@ -36,6 +37,12 @@ export interface PropertyFormItem {
 export interface SearchItem {
     value: string;
     objectType: string;
+}
+
+export interface OrderByItem {
+    id: string;
+    label: string;
+    orderBy: boolean;
 }
 
 export enum Operators {
@@ -123,6 +130,21 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         }
     );
 
+    orderByButtonDisabled$: Observable<boolean> = this.select(
+        this.selectedResourceClass$,
+        this.propertyFormList$,
+        (resourceClass, propertyFormList) => {
+            const areSomePropertyFormItemsInvalid =
+                propertyFormList.some((prop) => {
+                    // no property selected
+                    if (!prop.selectedProperty)
+                        return true;
+                    return false;
+                });
+            return (!resourceClass || !propertyFormList.length || areSomePropertyFormItemsInvalid)
+        }
+    );
+
     // add button is disabled if no ontology is selected
     addButtonDisabled$: Observable<boolean> = this.select(
         this.selectedOntology$,
@@ -138,6 +160,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     );
 
     constructor(private _advancedSearchService: AdvancedSearchService) {
+        console.log('hello');
+
         super();
     }
 
@@ -255,6 +279,11 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             this.patchState({ resourcesSearchResultsCount: 0 });
             this.patchState({ resourcesSearchResults: [] });
         }
+    }
+
+    updatePropertyOrderBy(orderByList: OrderByItem[]): void {
+        console.log('orderByList:', orderByList);
+        this.patchState({ propertiesOrderBy: orderByList });
     }
 
     resetResourcesSearchResults(): void {
@@ -410,10 +439,11 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         const selectedOntology = this.get((state) => state.selectedOntology);
         const selectedResourceClass = this.get((state) => state.selectedResourceClass);
         const propertyFormList = this.get((state) => state.propertyFormList);
+        const orderByList = this.get((state) => state.propertiesOrderBy);
         console.log('selectedOnto:', selectedOntology);
         console.log('selectedResClass:', selectedResourceClass);
         propertyFormList.forEach((prop) => console.log('prop:', prop));
-        this._advancedSearchService.generateGravSearchQuery(selectedResourceClass?.iri, propertyFormList);
+        this._advancedSearchService.generateGravSearchQuery(selectedResourceClass?.iri, propertyFormList, orderByList);
     }
 
     onReset() {

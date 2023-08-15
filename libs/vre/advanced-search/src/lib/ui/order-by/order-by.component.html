@@ -1,0 +1,31 @@
+<div>
+    <!-- This button triggers the overlay and is it's origin -->
+    <button
+        [disabled]="orderByDisabled"
+        (click)="isOpen = !isOpen"
+        type="button"
+        cdkOverlayOrigin
+        #trigger="cdkOverlayOrigin"
+    >
+        {{ isOpen ? 'Close' : 'Open' }}
+    </button>
+
+    <!-- This template displays the overlay content and is connected to the button -->
+    <ng-template
+        cdkConnectedOverlay
+        [cdkConnectedOverlayOrigin]="trigger"
+        [cdkConnectedOverlayOpen]="isOpen"
+        (overlayOutsideClick)="isOpen = !isOpen"
+    >
+        <mat-selection-list #sortOrderSelectionList cdkDropList class="sort-list" (cdkDropListDropped)="drop($event)" (selectionChange)="onSelectionChange($event)">
+            <mat-list-option *ngFor="let item of sortOrderList" class="sort-item" [value]="item.id" cdkDrag>
+                <span cdkDragHandle matListItemIcon class="drag-handle">
+                    <mat-icon>drag_indicator</mat-icon>
+                </span>
+                <span matListItemTitle>
+                    {{ item.label }}
+                </span>
+            </mat-list-option>
+        </mat-selection-list>
+    </ng-template>
+</div>

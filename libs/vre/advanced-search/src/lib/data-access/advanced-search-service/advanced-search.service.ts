@@ -19,7 +19,7 @@ import {
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { Operators, PropertyFormItem } from '../advanced-search-store/advanced-search-store.service';
+import { Operators, OrderByItem, PropertyFormItem } from '../advanced-search-store/advanced-search-store.service';
 
 export interface ApiData {
     iri: string;
@@ -354,7 +354,8 @@ export class AdvancedSearchService {
 
     generateGravSearchQuery(
         resourceClassIri: string | undefined,
-        properties: PropertyFormItem[]
+        properties: PropertyFormItem[],
+        orderByList: OrderByItem[]
     ): void {
         // class restriction for the resource searched for
         let restrictToResourceClass = '';
@@ -366,13 +367,19 @@ export class AdvancedSearchService {
 
         const propertyStrings: GravsearchPropertyString[] = properties.map((prop, index) => this._propertyStringHelper(prop, index));
 
-        const orderByString = '';
+        let orderByString = '';
+        const orderByProps: string[] = [];
 
-        // properties.forEach((property, index) => {
-        //     if (property.orderBy) {
-        //         orderByString = `ORDER BY ?prop${index}`;
-        //     }
-        // });
+        // use the id in the orderByList to loop through properties to find the index of the property in the properties list
+        // then add the string with the index to orderByProps
+        orderByList.forEach((orderByItem) => {
+            const index = properties.findIndex((prop) => prop.id === orderByItem.id);
+            if (index > -1) {
+                orderByProps.push(`?prop${index}`);
+            }
+        });
+
+        orderByString = orderByProps.length ? `ORDER BY ${orderByProps.join(' ')}` : '';
 
         const gravSearch = `
             PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
@@ -399,6 +406,9 @@ export class AdvancedSearchService {
     private _propertyStringHelper(property: PropertyFormItem, index: number): GravsearchPropertyString {
         let linkString = '';
         let valueString = '';
+        // add ResourceLabel to js-lib Constants with this structure
+        // Constants.KnoraApiV2 + Constants.HashDelimiter + "resourceLabel";
+        // so that we don't need to do this label check
         if(property.selectedProperty?.objectType !== Constants.Label &&
             property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)) {
             linkString = '?mainRes <' + property.selectedProperty?.iri + '> ?prop' + index + ' .';
