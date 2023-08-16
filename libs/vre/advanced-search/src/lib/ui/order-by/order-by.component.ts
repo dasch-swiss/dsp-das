@@ -3,13 +3,11 @@ import {
     Component,
     EventEmitter,
     Input,
-    OnChanges,
-    OnInit,
     Output,
     ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OrderByItem, PropertyFormItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
+import { OrderByItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import {
     MatListModule,
     MatSelectionList,
@@ -24,17 +22,27 @@ import {
 } from '@angular/cdk/drag-drop';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'dasch-swiss-order-by',
     standalone: true,
-    imports: [CommonModule, CdkDrag, CdkDragHandle, CdkDropList, MatIconModule, MatListModule, OverlayModule],
+    imports: [
+        CommonModule,
+        CdkDrag,
+        CdkDragHandle,
+        CdkDropList,
+        MatButtonModule,
+        MatIconModule,
+        MatListModule,
+        OverlayModule,
+    ],
     templateUrl: './order-by.component.html',
     styleUrls: ['./order-by.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OrderByComponent implements OnChanges {
-    @Input() properties: PropertyFormItem[] | null = [];
+export class OrderByComponent {
+    @Input() orderByList: OrderByItem[] | null = [];
     @Input() orderByDisabled: boolean | null = false;
 
     @Output() emitPropertyOrderByChanged = new EventEmitter<OrderByItem[]>();
@@ -42,45 +50,25 @@ export class OrderByComponent implements OnChanges {
     @ViewChild('sortOrderSelectionList')
     sortOrderSelectionList!: MatSelectionList;
 
-    sortOrderList: OrderByItem[] = [];
     isOpen = false;
 
-    ngOnChanges() {
-        if (this.properties) {
-            console.log('changes properties:', this.properties);
-            this.sortOrderList = this.properties.map((prop) => {
-                return {
-                    id: prop.id,
-                    label: prop.selectedProperty?.label || '',
-                    orderBy: false,
-                };
-            });
-            console.log('sortOrderList:', this.sortOrderList);
-        }
-    }
-
     drop(event: CdkDragDrop<string[]>) {
-        if (!this.sortOrderList) return;
+        if (!this.orderByList) return;
+
         moveItemInArray(
-            this.sortOrderList,
+            this.orderByList,
             event.previousIndex,
             event.currentIndex
         );
 
-        // create copy of sortOrderList
-        // yeet any items that are not selected
-        // emit the copy
-        const copy = [...this.sortOrderList];
-        const filtered = copy.filter((item) => item.orderBy === true);
-        this.emitPropertyOrderByChanged.emit(filtered);
-        // console.log('items:', this.sortOrderList);
-        // console.log('filtered:', filtered);
-
+        this.emitPropertyOrderByChanged.emit(this.orderByList);
     }
 
     onSelectionChange(event: MatSelectionListChange) {
+        if (!this.orderByList) return;
+
         event.options.forEach((option) => {
-            const selectedItem = this.sortOrderList?.find(
+            const selectedItem = this.orderByList?.find(
                 (item) => item.id === option.value
             );
             if (selectedItem) {
@@ -88,14 +76,6 @@ export class OrderByComponent implements OnChanges {
             }
         });
 
-        // create copy of sortOrderList
-        // yeet any items that are not selected
-        // emit the copy
-        const copy = [...this.sortOrderList];
-        const filtered = copy.filter((item) => item.orderBy === true);
-        this.emitPropertyOrderByChanged.emit(filtered);
-        // console.log('items:', this.sortOrderList);
-        // console.log('filtered:', filtered);
+        this.emitPropertyOrderByChanged.emit(this.orderByList);
     }
-
 }

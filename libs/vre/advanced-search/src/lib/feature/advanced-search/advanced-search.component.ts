@@ -31,6 +31,7 @@ export class AdvancedSearchComponent implements OnInit {
     selectedOntology$ = this.store.selectedOntology$;
     selectedResourceClass$ = this.store.selectedResourceClass$;
     propertyFormList$ = this.store.propertyFormList$;
+    propertiesOrderByList$ = this.store.propertiesOrderByList$;
     properties$ = this.store.properties$;
     propertiesLoading$ = this.store.propertiesLoading$;
     filteredProperties$ = this.store.filteredProperties$;
@@ -59,7 +60,7 @@ export class AdvancedSearchComponent implements OnInit {
             propertyFormList: [],
             properties: [],
             propertiesLoading: false,
-            propertiesOrderBy: [],
+            propertiesOrderByList: [],
             filteredProperties: [],
             resourcesSearchResultsLoading: false,
             resourcesSearchResultsCount: 0,
@@ -98,6 +99,10 @@ export class AdvancedSearchComponent implements OnInit {
 
     handleRemovePropertyForm(property: PropertyFormItem): void {
         this.store.updatePropertyFormList('delete', property);
+    }
+
+    handlePropertySelected(property: PropertyFormItem): void {
+        this.store.updateSelectedProperty(property);
     }
 
     handlePropertyFormItemChanged(property: PropertyFormItem): void {

@@ -16,7 +16,7 @@ export interface AdvancedSearchState {
     propertyFormList: PropertyFormItem[];
     properties: PropertyData[];
     propertiesLoading: boolean;
-    propertiesOrderBy: OrderByItem[];
+    propertiesOrderByList: OrderByItem[];
     filteredProperties: PropertyData[];
     resourcesSearchResultsLoading: boolean;
     resourcesSearchResultsCount: number;
@@ -69,6 +69,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     selectedOntology$: Observable<ApiData | undefined> = this.select((state) => state.selectedOntology);
     selectedResourceClass$: Observable<ApiData | undefined> = this.select((state) => state.selectedResourceClass);
     propertyFormList$: Observable<PropertyFormItem[]> = this.select((state) => state.propertyFormList);
+    propertiesOrderByList$: Observable<OrderByItem[]> = this.select((state) => state.propertiesOrderByList);
     properties$: Observable<PropertyData[]> = this.select((state) => state.properties);
     propertiesLoading$: Observable<boolean> = this.select((state) => state.propertiesLoading);
     filteredProperties$: Observable<PropertyData[]> = this.select((state) => state.filteredProperties);
@@ -159,10 +160,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         (ontology, resourceClass, propertyFormList) => !(ontology || resourceClass || propertyFormList.length)
     );
 
-    constructor(private _advancedSearchService: AdvancedSearchService) {
-        console.log('hello');
-
-        super();
+    constructor(private _advancedSearchService: AdvancedSearchService) {super();
     }
 
     updateSelectedOntology(ontology: ApiData): void {
@@ -182,19 +180,43 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         // this.patchState({ propertyFormList: [] });
     }
 
+    // use enum for operation
     updatePropertyFormList(operation: 'add' | 'delete', property: PropertyFormItem): void {
         const currentPropertyFormList = this.get((state) => state.propertyFormList);
+        const currentOrderByList = this.get((state) => state.propertiesOrderByList);
         let updatedPropertyFormList: PropertyFormItem[];
+        let updatedOrderByList: OrderByItem[];
 
         if (operation === 'add') {
             updatedPropertyFormList = [...currentPropertyFormList, property];
+            updatedOrderByList = [...currentOrderByList, { id: property.id, label: '', orderBy: false}];
         } else {
             updatedPropertyFormList = currentPropertyFormList.filter(item => item !== property);
+            updatedOrderByList = currentOrderByList.filter(item => item.id !== property.id);
         }
 
         this.patchState({ propertyFormList: updatedPropertyFormList });
+        this.patchState({ propertiesOrderByList: updatedOrderByList });
     }
 
+    updateSelectedProperty(property: PropertyFormItem): void {
+        const currentOrderByList = this.get((state) => state.propertiesOrderByList);
+        const index = currentOrderByList.findIndex((item) => item.id === property.id);
+
+        if (index > -1) {  // only update if the property is found
+            const updatedOrderByList = [
+                ...currentOrderByList.slice(0, index),  // elements before the one to update
+                { id: property.id, label: property.selectedProperty?.label || '', orderBy: false },  // the updated property
+                ...currentOrderByList.slice(index + 1)  // elements after the one to update
+            ];
+            console.log('propertiesOrderByList:', updatedOrderByList);
+            this.patchState({ propertiesOrderByList: updatedOrderByList });
+        }
+    }
+
+    // this is doing too much
+    // split it up
+    // i'm a senior dev
     updatePropertyFormItem(property: PropertyFormItem): void {
         console.log('form item changed:', property);
         const currentPropertyFormList = this.get((state) => state.propertyFormList);
@@ -283,7 +305,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
     updatePropertyOrderBy(orderByList: OrderByItem[]): void {
         console.log('orderByList:', orderByList);
-        this.patchState({ propertiesOrderBy: orderByList });
+        this.patchState({ propertiesOrderByList: orderByList });
     }
 
     resetResourcesSearchResults(): void {
@@ -439,7 +461,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         const selectedOntology = this.get((state) => state.selectedOntology);
         const selectedResourceClass = this.get((state) => state.selectedResourceClass);
         const propertyFormList = this.get((state) => state.propertyFormList);
-        const orderByList = this.get((state) => state.propertiesOrderBy);
+        const orderByList = this.get((state) => state.propertiesOrderByList);
         console.log('selectedOnto:', selectedOntology);
         console.log('selectedResClass:', selectedResourceClass);
         propertyFormList.forEach((prop) => console.log('prop:', prop));
@@ -450,6 +472,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         this.patchState({ selectedOntology: undefined });
         this.patchState({ selectedResourceClass: undefined });
         this.patchState({ propertyFormList: [] });
+        this.patchState({ propertiesOrderByList: [] });
     }
 
     // load list of ontologies

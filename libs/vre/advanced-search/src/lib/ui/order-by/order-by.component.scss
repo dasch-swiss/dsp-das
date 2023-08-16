@@ -1,3 +1,21 @@
+.order-by-button {
+  border: 1px solid;
+  width: 44%;
+
+  .label-icon-container {
+    display: flex;
+    align-items: center;
+
+    .icon {
+      display: inline-block;
+      height: 24px;
+      margin-left: 5px;
+    }
+  }
+}
+
+
+// the width should equal to the width of the button until a certain lower bound
 .sort-list {
   width: 500px;
   max-width: 100%;

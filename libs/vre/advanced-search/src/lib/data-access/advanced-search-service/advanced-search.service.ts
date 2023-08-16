@@ -372,7 +372,9 @@ export class AdvancedSearchService {
 
         // use the id in the orderByList to loop through properties to find the index of the property in the properties list
         // then add the string with the index to orderByProps
-        orderByList.forEach((orderByItem) => {
+        orderByList
+        .filter((orderByItem) => orderByItem.orderBy === true)
+        .forEach((orderByItem) => {
             const index = properties.findIndex((prop) => prop.id === orderByItem.id);
             if (index > -1) {
                 orderByProps.push(`?prop${index}`);

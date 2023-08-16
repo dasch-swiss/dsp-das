@@ -10,6 +10,7 @@
             resourceClassesLoading: resourceClassesLoading$ | async,
             searchButtonDisabled: searchButtonDisabled$ | async,
             propertyFormList: propertyFormList$ | async,
+            propertiesOrderByList: propertiesOrderByList$ | async,
             properties: properties$ | async,
             propertiesLoading: propertiesLoading$ | async,
             filteredProperties: filteredProperties$ | async,
@@ -24,7 +25,7 @@
         } as asyncData"
     >
         <dasch-swiss-order-by
-            [properties]="asyncData.propertyFormList"
+            [orderByList]="asyncData.propertiesOrderByList"
             [orderByDisabled]="asyncData.orderByButtonDisabled"
             (emitPropertyOrderByChanged)="handlePropertyOrderByChanged($event)"
         >
@@ -48,6 +49,7 @@
             [properties]="asyncData.filteredProperties?.length ? asyncData.filteredProperties : asyncData.properties"
             [propertiesLoading]="asyncData.propertiesLoading"
             (emitRemovePropertyForm)="handleRemovePropertyForm($event)"
+            (emitSelectedPropertyChanged)="handlePropertySelected($event)"
             (emitPropertyFormItemChanged)="handlePropertyFormItemChanged($event)"
             (emitResourceSearchValueChanged)="handleResourceSearchValueChanged($event)"
             (emitLoadMoreSearchResults)="handleLoadMoreSearchResults($event)"

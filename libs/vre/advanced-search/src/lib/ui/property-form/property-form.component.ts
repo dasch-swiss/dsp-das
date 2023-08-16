@@ -71,6 +71,7 @@ export class PropertyFormComponent {
     @Input() propertiesLoading: boolean | null = false;
 
     @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();
+    @Output() emitSelectedPropertyChanged = new EventEmitter<PropertyFormItem>();
     @Output() emitPropertyFormItemChanged = new EventEmitter<PropertyFormItem>();
     @Output() emitResourceSearchValueChanged = new EventEmitter<SearchItem>();
     @Output() emitLoadMoreSearchResults = new EventEmitter<SearchItem>();
@@ -103,6 +104,7 @@ export class PropertyFormComponent {
                 this.propertyFormValueComponent.inputControl.setValue('');
             }
             this.emitPropertyFormItemChanged.emit(propFormItem);
+            this.emitSelectedPropertyChanged.emit(propFormItem);
         }
     }
 
