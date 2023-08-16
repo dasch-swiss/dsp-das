@@ -7,5 +7,3 @@ cy.get('.login-form').submit();
 cy.get('.mdc-snackbar__label').click(); // Change to check snackbar Text = Login successful
 cy.get('.avatar').click();
 cy.get('.active-link .label').click();
-cy.get('#mat-input-3').type('PleaseCh4ngeMe!');// I don't know why it recorded this line because i was already logged in
-// Add a check my account -> Missing: Check if the logged in user is correct (First and Last name)

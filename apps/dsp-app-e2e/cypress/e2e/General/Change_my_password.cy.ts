@@ -7,7 +7,6 @@ cy.get('.login-form').submit();
 cy.get('.mdc-snackbar__label').click(); //Check if snackbar text = Login successful
 cy.get('.avatar').click();
 cy.get('.active-link .label').click();
-cy.get('#mat-input-3').type('PleaseCh4ngeMe!'); //Nothing to type here
 cy.get('#mat-input-4').click();
 cy.get('#mat-input-4').type('PleaseCh4ngeMe!');
 cy.get('#mat-input-5').click();

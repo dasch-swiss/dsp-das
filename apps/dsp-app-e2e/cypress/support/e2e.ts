@@ -31,17 +31,21 @@ import './commands'
 // });
 
 beforeEach(() => {
+    cy.readFile('/dsp-app/apps/dsp-app-e2e/cypress/fixtures/User_profiles.json').then((json) => {
+        
+        // read JSON data file
+       });
     cy.log(Cypress.spec.relative);
     if(Cypress.spec.relative.startsWith('cypress/e2e/System_Admin')) {
         cy.log('Logging in as admin');
-        cy.login('root', 'test');
+        cy.login('SystemAdmin_username', 'SystemAdmin_password');
         // the cookie name will differ depending on the environment
         cy.getCookie("KnoraAuthenticationGAXDALRQFYYDUMZTGMZQ9999").should('exist');
     }
 
     if(Cypress.spec.relative.startsWith('cypress/e2e/Project_Member')) {
         cy.log('Logging in as project member');
-        cy.login('projectMember', 'test1234');
+        cy.login('ProjectMember_username', 'ProjectMember_password');
         // the cookie name will differ depending on the environment
         cy.getCookie("KnoraAuthenticationGAXDALRQFYYDUMZTGMZQ9999").should('exist');
     }
