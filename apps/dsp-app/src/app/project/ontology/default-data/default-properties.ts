@@ -193,7 +193,6 @@ export class DefaultProperties {
                     description: 'Link to an external website',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.UriValue,
-                    guiEle: Constants.GuiSimpleText,
                     group: 'Link / Relation',
                 },
             ],
