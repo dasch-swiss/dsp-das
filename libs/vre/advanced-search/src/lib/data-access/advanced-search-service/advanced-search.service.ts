@@ -356,7 +356,7 @@ export class AdvancedSearchService {
         resourceClassIri: string | undefined,
         properties: PropertyFormItem[],
         orderByList: OrderByItem[]
-    ): void {
+    ): string {
         // class restriction for the resource searched for
         let restrictToResourceClass = '';
 
@@ -400,9 +400,13 @@ export class AdvancedSearchService {
             }
 
             ${orderByString}
+
+            OFFSET 0
         `;
 
-        console.log('gravSearch: ', gravSearch);
+        // console.log('gravSearch: ', gravSearch);
+
+        return gravSearch;
     }
 
     private _propertyStringHelper(property: PropertyFormItem, index: number): GravsearchPropertyString {

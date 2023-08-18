@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
 import { EMPTY, Observable } from 'rxjs';
-import { AdvancedSearchService, ApiData, PropertyData } from '../advanced-search-service/advanced-search.service';
+import {
+    AdvancedSearchService,
+    ApiData,
+    PropertyData,
+} from '../advanced-search-service/advanced-search.service';
 import { switchMap, tap, catchError } from 'rxjs/operators';
 import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
 
@@ -60,23 +64,54 @@ export enum Operators {
 
 @Injectable()
 export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchState> {
-
-    ontologies$: Observable<ApiData[]> = this.select((state) => state.ontologies);
-    ontologiesLoading$: Observable<boolean> = this.select((state) => state.ontologiesLoading);
-    resourceClasses$: Observable<ApiData[]> = this.select((state) => state.resourceClasses);
-    resourceClassesLoading$: Observable<boolean> = this.select((state) => state.resourceClassesLoading);
-    selectedProject$: Observable<string | undefined> = this.select((state) => state.selectedProject);
-    selectedOntology$: Observable<ApiData | undefined> = this.select((state) => state.selectedOntology);
-    selectedResourceClass$: Observable<ApiData | undefined> = this.select((state) => state.selectedResourceClass);
-    propertyFormList$: Observable<PropertyFormItem[]> = this.select((state) => state.propertyFormList);
-    propertiesOrderByList$: Observable<OrderByItem[]> = this.select((state) => state.propertiesOrderByList);
-    properties$: Observable<PropertyData[]> = this.select((state) => state.properties);
-    propertiesLoading$: Observable<boolean> = this.select((state) => state.propertiesLoading);
-    filteredProperties$: Observable<PropertyData[]> = this.select((state) => state.filteredProperties);
-    resourcesSearchResultsLoading$: Observable<boolean> = this.select((state) => state.resourcesSearchResultsLoading);
-    resourcesSearchResultsCount$: Observable<number> = this.select((state) => state.resourcesSearchResultsCount);
-    resourcesSearchResultsPageNumber$: Observable<number> = this.select((state) => state.resourcesSearchResultsPageNumber);
-    resourcesSearchResults$: Observable<ApiData[]> = this.select((state) => state.resourcesSearchResults);
+    ontologies$: Observable<ApiData[]> = this.select(
+        (state) => state.ontologies
+    );
+    ontologiesLoading$: Observable<boolean> = this.select(
+        (state) => state.ontologiesLoading
+    );
+    resourceClasses$: Observable<ApiData[]> = this.select(
+        (state) => state.resourceClasses
+    );
+    resourceClassesLoading$: Observable<boolean> = this.select(
+        (state) => state.resourceClassesLoading
+    );
+    selectedProject$: Observable<string | undefined> = this.select(
+        (state) => state.selectedProject
+    );
+    selectedOntology$: Observable<ApiData | undefined> = this.select(
+        (state) => state.selectedOntology
+    );
+    selectedResourceClass$: Observable<ApiData | undefined> = this.select(
+        (state) => state.selectedResourceClass
+    );
+    propertyFormList$: Observable<PropertyFormItem[]> = this.select(
+        (state) => state.propertyFormList
+    );
+    propertiesOrderByList$: Observable<OrderByItem[]> = this.select(
+        (state) => state.propertiesOrderByList
+    );
+    properties$: Observable<PropertyData[]> = this.select(
+        (state) => state.properties
+    );
+    propertiesLoading$: Observable<boolean> = this.select(
+        (state) => state.propertiesLoading
+    );
+    filteredProperties$: Observable<PropertyData[]> = this.select(
+        (state) => state.filteredProperties
+    );
+    resourcesSearchResultsLoading$: Observable<boolean> = this.select(
+        (state) => state.resourcesSearchResultsLoading
+    );
+    resourcesSearchResultsCount$: Observable<number> = this.select(
+        (state) => state.resourcesSearchResultsCount
+    );
+    resourcesSearchResultsPageNumber$: Observable<number> = this.select(
+        (state) => state.resourcesSearchResultsPageNumber
+    );
+    resourcesSearchResults$: Observable<ApiData[]> = this.select(
+        (state) => state.resourcesSearchResults
+    );
 
     /** combined selectors */
 
@@ -93,15 +128,16 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             const isResourceClassUndefined = !resourceClass;
             const isPropertyFormListEmpty = !propertyFormList.length;
 
-            const areSomePropertyFormItemsInvalid =
-                propertyFormList.some((prop) => {
+            const areSomePropertyFormItemsInvalid = propertyFormList.some(
+                (prop) => {
                     // no property selected
-                    if (!prop.selectedProperty)
-                        return true;
+                    if (!prop.selectedProperty) return true;
 
                     // selected operator is 'exists' or 'does not exist'
-                    if (prop.selectedOperator === Operators.Exists ||
-                        prop.selectedOperator === Operators.NotExists)
+                    if (
+                        prop.selectedOperator === Operators.Exists ||
+                        prop.selectedOperator === Operators.NotExists
+                    )
                         return false;
 
                     // selected operator is NOT 'exists' or 'does not exist'
@@ -110,17 +146,19 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                     if (!prop.searchValue || prop.searchValue === '')
                         return true;
                     return false;
+                }
+            );
 
-                });
-
-            if (!isPropertyFormListEmpty) { // list not empty
+            if (!isPropertyFormListEmpty) {
+                // list not empty
                 // at least one PropertyFormItem is invalid or onto is undefined
                 if (areSomePropertyFormItemsInvalid || isOntologyUndefined)
                     return true;
 
                 // onto is defined, list not empty and all PropertyFormItems are valid
                 return false;
-            } else { // list empty
+            } else {
+                // list empty
                 // no onto or resclass selected
                 if (isOntologyUndefined || isResourceClassUndefined)
                     return true;
@@ -134,22 +172,28 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     orderByButtonDisabled$: Observable<boolean> = this.select(
         this.selectedResourceClass$,
         this.propertyFormList$,
-        (resourceClass, propertyFormList) => {
-            const areSomePropertyFormItemsInvalid =
-                propertyFormList.some((prop) => {
+        this.propertiesOrderByList$,
+        (resourceClass, propertyFormList, orderBylist) => {
+            const areSomePropertyFormItemsInvalid = propertyFormList.some(
+                (prop) => {
                     // no property selected
-                    if (!prop.selectedProperty)
-                        return true;
+                    if (!prop.selectedProperty) return true;
                     return false;
-                });
-            return (!resourceClass || !propertyFormList.length || areSomePropertyFormItemsInvalid)
+                }
+            );
+            return (
+                !resourceClass ||
+                !orderBylist.length ||
+                !propertyFormList.length ||
+                areSomePropertyFormItemsInvalid
+            );
         }
     );
 
     // add button is disabled if no ontology is selected
     addButtonDisabled$: Observable<boolean> = this.select(
         this.selectedOntology$,
-        (ontology) => (!ontology || ontology.iri === '')
+        (ontology) => !ontology || ontology.iri === ''
     );
 
     // reset button is disabled if no ontology and no resource class is selected and the list of property forms is empty
@@ -157,10 +201,12 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         this.selectedOntology$,
         this.selectedResourceClass$,
         this.propertyFormList$,
-        (ontology, resourceClass, propertyFormList) => !(ontology || resourceClass || propertyFormList.length)
+        (ontology, resourceClass, propertyFormList) =>
+            !(ontology || resourceClass || propertyFormList.length)
     );
 
-    constructor(private _advancedSearchService: AdvancedSearchService) {super();
+    constructor(private _advancedSearchService: AdvancedSearchService) {
+        super();
     }
 
     updateSelectedOntology(ontology: ApiData): void {
@@ -173,7 +219,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     updateSelectedResourceClass(resourceClass: ApiData): void {
         if (resourceClass) {
             this.patchState({ selectedResourceClass: resourceClass });
-        } else { // 'none' was selected
+        } else {
+            // 'none' was selected
             this.patchState({ selectedResourceClass: undefined });
             this.patchState({ filteredProperties: [] });
         }
@@ -181,18 +228,32 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     }
 
     // use enum for operation
-    updatePropertyFormList(operation: 'add' | 'delete', property: PropertyFormItem): void {
-        const currentPropertyFormList = this.get((state) => state.propertyFormList);
-        const currentOrderByList = this.get((state) => state.propertiesOrderByList);
+    updatePropertyFormList(
+        operation: 'add' | 'delete',
+        property: PropertyFormItem
+    ): void {
+        const currentPropertyFormList = this.get(
+            (state) => state.propertyFormList
+        );
+        const currentOrderByList = this.get(
+            (state) => state.propertiesOrderByList
+        );
         let updatedPropertyFormList: PropertyFormItem[];
         let updatedOrderByList: OrderByItem[];
 
         if (operation === 'add') {
             updatedPropertyFormList = [...currentPropertyFormList, property];
-            updatedOrderByList = [...currentOrderByList, { id: property.id, label: '', orderBy: false}];
+            updatedOrderByList = [
+                ...currentOrderByList,
+                { id: property.id, label: '', orderBy: false },
+            ];
         } else {
-            updatedPropertyFormList = currentPropertyFormList.filter(item => item !== property);
-            updatedOrderByList = currentOrderByList.filter(item => item.id !== property.id);
+            updatedPropertyFormList = currentPropertyFormList.filter(
+                (item) => item !== property
+            );
+            updatedOrderByList = currentOrderByList.filter(
+                (item) => item.id !== property.id
+            );
         }
 
         this.patchState({ propertyFormList: updatedPropertyFormList });
@@ -200,32 +261,24 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     }
 
     updateSelectedProperty(property: PropertyFormItem): void {
-        const currentOrderByList = this.get((state) => state.propertiesOrderByList);
-        const index = currentOrderByList.findIndex((item) => item.id === property.id);
+        const currentPropertyFormList = this.get(
+            (state) => state.propertyFormList
+        );
+        const indexInPropertyFormList =
+            currentPropertyFormList.indexOf(property);
 
-        if (index > -1) {  // only update if the property is found
-            const updatedOrderByList = [
-                ...currentOrderByList.slice(0, index),  // elements before the one to update
-                { id: property.id, label: property.selectedProperty?.label || '', orderBy: false },  // the updated property
-                ...currentOrderByList.slice(index + 1)  // elements after the one to update
-            ];
-            console.log('propertiesOrderByList:', updatedOrderByList);
-            this.patchState({ propertiesOrderByList: updatedOrderByList });
-        }
-    }
+        const currentOrderByList = this.get(
+            (state) => state.propertiesOrderByList
+        );
+        const indexInCurrentOrderByList = currentOrderByList.findIndex(
+            (item) => item.id === property.id
+        );
 
-    // this is doing too much
-    // split it up
-    // i'm a senior dev
-    updatePropertyFormItem(property: PropertyFormItem): void {
-        console.log('form item changed:', property);
-        const currentPropertyFormList = this.get((state) => state.propertyFormList);
-        const index = currentPropertyFormList.indexOf(property);
-
-        if (index > -1) {  // only update if the property is found
+        if (indexInPropertyFormList > -1) {
+            // only update if the property is found
             const objectType = property.selectedProperty?.objectType;
             let operators;
-            // todo: this should probably only update when the selected property changes
+
             if (objectType) {
                 // filter available operators based on the object type of the selected property
                 operators = Array.from(this.getOperators().entries())
@@ -246,31 +299,109 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             }
             property.operators = operators;
 
-            // make this better
-            // triggers when any part of the form item changes
-            if (property.selectedProperty?.listIri) {
-                this._advancedSearchService.getList(property.selectedProperty.listIri).subscribe(
-                    (list) => {
-                        property.list = list;
+            // reset selected operator and search value because it might be invalid for the newly selected property
+            property.selectedOperator = undefined;
+            property.searchValue = undefined;
 
-                        const updatedPropertyFormList = [
-                            ...currentPropertyFormList.slice(0, index),  // elements before the one to update
-                            property,  // the updated property
-                            ...currentPropertyFormList.slice(index + 1)  // elements after the one to update
-                        ];
-                        this.patchState({ propertyFormList: updatedPropertyFormList });
+            if (property.selectedProperty?.listIri) {
+                this._advancedSearchService
+                    .getList(property.selectedProperty.listIri)
+                    .subscribe((list) => {
+                        property.list = list;
+                        this.updatePropertyFormListItem(
+                            currentPropertyFormList,
+                            property,
+                            indexInPropertyFormList
+                        );
                     });
             } else {
-                const updatedPropertyFormList = [
-                    ...currentPropertyFormList.slice(0, index),  // elements before the one to update
-                    property,  // the updated property
-                    ...currentPropertyFormList.slice(index + 1)  // elements after the one to update
-                ];
+                this.updatePropertyFormListItem(
+                    currentPropertyFormList,
+                    property,
+                    indexInPropertyFormList
+                );
+            }
+        }
 
-                this.patchState({ propertyFormList: updatedPropertyFormList });
+        console.log('updated property form list:', currentPropertyFormList);
+
+        if (indexInCurrentOrderByList > -1) {
+            let updatedOrderByList = [];
+            if (property.selectedProperty?.objectType === Constants.Label) {
+                updatedOrderByList = currentOrderByList.filter(
+                    (item) => item.id !== property.id
+                );
+            } else {
+                updatedOrderByList = [
+                    ...currentOrderByList.slice(0, indexInCurrentOrderByList),
+                    {
+                        id: property.id,
+                        label: property.selectedProperty?.label || '',
+                        orderBy: false,
+                    },
+                    ...currentOrderByList.slice(indexInCurrentOrderByList + 1),
+                ];
+            }
+            console.log('propertiesOrderByList:', updatedOrderByList);
+            this.patchState({ propertiesOrderByList: updatedOrderByList });
+        }
+    }
+
+    updateSelectedOperator(property: PropertyFormItem): void {
+        const currentPropertyFormList = this.get(
+            (state) => state.propertyFormList
+        );
+        const index = currentPropertyFormList.indexOf(property);
+
+        if (index > -1) {
+
+            // reset search value if operator is 'exists' or 'does not exist'
+            if (
+                property.selectedOperator === Operators.Exists ||
+                property.selectedOperator === Operators.NotExists
+            ) {
+                property.searchValue = undefined;
             }
 
+            this.updatePropertyFormListItem(
+                currentPropertyFormList,
+                property,
+                index
+            );
+
+            console.log('updated property form list:', currentPropertyFormList);
         }
+    }
+
+    // doesn't seem very DRY to me
+    updateSearchValue(property: PropertyFormItem): void {
+        const currentPropertyFormList = this.get(
+            (state) => state.propertyFormList
+        );
+        const index = currentPropertyFormList.indexOf(property);
+
+        if (index > -1) {
+            this.updatePropertyFormListItem(
+                currentPropertyFormList,
+                property,
+                index
+            );
+
+            console.log('updated property form list:', currentPropertyFormList);
+        }
+    }
+
+    updatePropertyFormListItem(
+        propertyFormList: PropertyFormItem[],
+        property: PropertyFormItem,
+        index: number
+    ): void {
+        const updatedPropertyFormList = [
+            ...propertyFormList.slice(0, index),
+            property,
+            ...propertyFormList.slice(index + 1),
+        ];
+        this.patchState({ propertyFormList: updatedPropertyFormList });
     }
 
     updateResourcesSearchResults(searchItem: SearchItem): void {
@@ -278,25 +409,32 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             this.patchState({ resourcesSearchResultsLoading: true });
             this.patchState({ resourcesSearchResults: [] });
             this.patchState({ resourcesSearchResultsPageNumber: 0 });
-            this._advancedSearchService.getResourceListCount(searchItem.value, searchItem.objectType).subscribe(
-                (count) => {
+            this._advancedSearchService
+                .getResourceListCount(searchItem.value, searchItem.objectType)
+                .subscribe((count) => {
                     this.patchState({ resourcesSearchResultsCount: count });
                     this.patchState({ resourcesSearchResultsLoading: false });
                     // since we have the count, we don't need to execute the search if there are no results
-                    if(count > 0) {
-                        this.patchState({ resourcesSearchResultsLoading: true });
+                    if (count > 0) {
+                        this.patchState({
+                            resourcesSearchResultsLoading: true,
+                        });
                         // not ideal to do it this way but we should get the count before executing the search
-                        this._advancedSearchService.getResourcesList(searchItem.value, searchItem.objectType).subscribe(
-                            (resources) => {
-                                this.patchState({ resourcesSearchResults: resources });
-                                this.patchState({ resourcesSearchResultsLoading: false });
-                            }
-                        );
+                        this._advancedSearchService
+                            .getResourcesList(
+                                searchItem.value,
+                                searchItem.objectType
+                            )
+                            .subscribe((resources) => {
+                                this.patchState({
+                                    resourcesSearchResults: resources,
+                                });
+                                this.patchState({
+                                    resourcesSearchResultsLoading: false,
+                                });
+                            });
                     }
-                }
-            );
-
-
+                });
         } else {
             this.patchState({ resourcesSearchResultsCount: 0 });
             this.patchState({ resourcesSearchResults: [] });
@@ -320,16 +458,27 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
         // only load more results if there are more results to load
         if (count > results.length) {
-            const nextPageNumber = this.get((state) => state.resourcesSearchResultsPageNumber) + 1;
+            const nextPageNumber =
+                this.get((state) => state.resourcesSearchResultsPageNumber) + 1;
             this.patchState({ resourcesSearchResultsLoading: true });
-            this._advancedSearchService.getResourcesList(searchItem.value, searchItem.objectType, nextPageNumber).subscribe(
-                (resources) => {
-                    this.patchState({ resourcesSearchResultsPageNumber: nextPageNumber });
-                    const newResourcesSearchResults = this.get((state) => state.resourcesSearchResults.concat(resources));
-                    this.patchState({ resourcesSearchResults: newResourcesSearchResults });
+            this._advancedSearchService
+                .getResourcesList(
+                    searchItem.value,
+                    searchItem.objectType,
+                    nextPageNumber
+                )
+                .subscribe((resources) => {
+                    this.patchState({
+                        resourcesSearchResultsPageNumber: nextPageNumber,
+                    });
+                    const newResourcesSearchResults = this.get((state) =>
+                        state.resourcesSearchResults.concat(resources)
+                    );
+                    this.patchState({
+                        resourcesSearchResults: newResourcesSearchResults,
+                    });
                     this.patchState({ resourcesSearchResultsLoading: false });
-                }
-            );
+                });
         }
     }
 
@@ -422,7 +571,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                     Constants.IntValue,
                     Constants.DecimalValue,
                     Constants.DateValue,
-                ]
+                ],
             ],
             [
                 Operators.LessThan,
@@ -430,7 +579,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                     Constants.IntValue,
                     Constants.DecimalValue,
                     Constants.DateValue,
-                ]
+                ],
             ],
             [
                 Operators.LessThanEquals,
@@ -440,32 +589,26 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                     Constants.DateValue,
                 ],
             ],
-            [
-                Operators.IsLike,
-                [
-                    Constants.Label,
-                    Constants.TextValue,
-                ]
-            ],
-            [
-                Operators.Matches,
-                [
-                    Constants.Label,
-                    Constants.TextValue,
-                ]
-            ],
+            [Operators.IsLike, [Constants.Label, Constants.TextValue]],
+            [Operators.Matches, [Constants.Label, Constants.TextValue]],
         ]);
     }
 
-    onSearch() {
+    onSearch(): string {
         const selectedOntology = this.get((state) => state.selectedOntology);
-        const selectedResourceClass = this.get((state) => state.selectedResourceClass);
+        const selectedResourceClass = this.get(
+            (state) => state.selectedResourceClass
+        );
         const propertyFormList = this.get((state) => state.propertyFormList);
         const orderByList = this.get((state) => state.propertiesOrderByList);
         console.log('selectedOnto:', selectedOntology);
         console.log('selectedResClass:', selectedResourceClass);
         propertyFormList.forEach((prop) => console.log('prop:', prop));
-        this._advancedSearchService.generateGravSearchQuery(selectedResourceClass?.iri, propertyFormList, orderByList);
+        return this._advancedSearchService.generateGravSearchQuery(
+            selectedResourceClass?.iri,
+            propertyFormList,
+            orderByList
+        );
     }
 
     onReset() {
@@ -476,141 +619,179 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     }
 
     // load list of ontologies
-    readonly ontologiesList = this.effect((ontologyIri$: Observable<string | undefined>) =>
-        ontologyIri$.pipe(
-            switchMap((iri) => {
-                this.patchState({ ontologiesLoading: true });
-                if (!iri)  {
-                    // no project iri, get all ontologies
-                    return this._advancedSearchService.allOntologiesList().pipe(
-                        tap({
-                            next: (response) => {
-                                this.patchState({ ontologies: response });
+    readonly ontologiesList = this.effect(
+        (ontologyIri$: Observable<string | undefined>) =>
+            ontologyIri$.pipe(
+                switchMap((iri) => {
+                    this.patchState({ ontologiesLoading: true });
+                    if (!iri) {
+                        // no project iri, get all ontologies
+                        return this._advancedSearchService
+                            .allOntologiesList()
+                            .pipe(
+                                tap({
+                                    next: (response) => {
+                                        this.patchState({
+                                            ontologies: response,
+                                        });
+                                        this.patchState({
+                                            ontologiesLoading: false,
+                                        });
+                                    },
+                                    error: (error) => {
+                                        this.patchState({ error });
+                                        this.patchState({
+                                            ontologiesLoading: false,
+                                        });
+                                    },
+                                }),
+                                catchError(() => {
+                                    this.patchState({
+                                        ontologiesLoading: false,
+                                    });
+                                    return EMPTY;
+                                })
+                            );
+                    }
+                    // project iri, get ontologies in project
+                    return this._advancedSearchService
+                        .ontologiesInProjectList(iri)
+                        .pipe(
+                            tap({
+                                next: (response) => {
+                                    this.patchState({ ontologies: response });
+                                    this.patchState({
+                                        ontologiesLoading: false,
+                                    });
+                                },
+                                error: (error) => {
+                                    this.patchState({ error });
+                                    this.patchState({
+                                        ontologiesLoading: false,
+                                    });
+                                },
+                            }),
+                            catchError(() => {
                                 this.patchState({ ontologiesLoading: false });
-                            },
-                            error: (error) => {
-                                this.patchState({ error });
-                                this.patchState({ ontologiesLoading: false });
-                            },
-                        }),
-                        catchError(() => {
-                            this.patchState({ ontologiesLoading: false });
-                            return EMPTY;
-                        })
-                    );
-                }
-                // project iri, get ontologies in project
-                return this._advancedSearchService.ontologiesInProjectList(iri).pipe(
-                    tap({
-                        next: (response) => {
-                            this.patchState({ ontologies: response });
-                            this.patchState({ ontologiesLoading: false });
-                        },
-                        error: (error) => {
-                            this.patchState({ error });
-                            this.patchState({ ontologiesLoading: false });
-                        },
-                    }),
-                    catchError(() => {
-                        this.patchState({ ontologiesLoading: false });
-                        return EMPTY;
-                    })
-                );
-            })
-        )
+                                return EMPTY;
+                            })
+                        );
+                })
+            )
     );
 
     // load list of resource classes
-    readonly resourceClassesList = this.effect((resourceClass$: Observable<ApiData | undefined>) =>
-        resourceClass$.pipe(
-            switchMap((resClass) => {
-                this.patchState({ resourceClassesLoading: true });
-                if (!resClass) {
-                    this.patchState({ resourceClassesLoading: false });
-                    return EMPTY;
-                }
-                return this._advancedSearchService
-                    .resourceClassesList(resClass.iri)
-                    .pipe(
-                        tap({
-                            next: (response) => {
-                                this.patchState({ resourceClasses: response });
-                                this.patchState({ resourceClassesLoading: false });
-                            },
-                            error: (error) => {
-                                this.patchState({ error });
-                                this.patchState({ resourceClassesLoading: false });
-                            },
-                        }),
-                        catchError(() => {
-                            this.patchState({ resourceClassesLoading: false });
-                            return EMPTY;
-                        })
-                    );
-            })
-        )
+    readonly resourceClassesList = this.effect(
+        (resourceClass$: Observable<ApiData | undefined>) =>
+            resourceClass$.pipe(
+                switchMap((resClass) => {
+                    this.patchState({ resourceClassesLoading: true });
+                    if (!resClass) {
+                        this.patchState({ resourceClassesLoading: false });
+                        return EMPTY;
+                    }
+                    return this._advancedSearchService
+                        .resourceClassesList(resClass.iri)
+                        .pipe(
+                            tap({
+                                next: (response) => {
+                                    this.patchState({
+                                        resourceClasses: response,
+                                    });
+                                    this.patchState({
+                                        resourceClassesLoading: false,
+                                    });
+                                },
+                                error: (error) => {
+                                    this.patchState({ error });
+                                    this.patchState({
+                                        resourceClassesLoading: false,
+                                    });
+                                },
+                            }),
+                            catchError(() => {
+                                this.patchState({
+                                    resourceClassesLoading: false,
+                                });
+                                return EMPTY;
+                            })
+                        );
+                })
+            )
     );
 
     // load list of properties
-    readonly propertiesList = this.effect((ontology$: Observable<ApiData | undefined>) =>
-        ontology$.pipe(
-            switchMap((onto) => {
-                this.patchState({ propertiesLoading: true });
-                if (!onto) {
-                    this.patchState({ propertiesLoading: false });
-                    return EMPTY;
-                }
-                return this._advancedSearchService
-                    .propertiesList(onto.iri)
-                    .pipe(
-                        tap({
-                            next: (response) => {
-                                this.patchState({ properties: response });
+    readonly propertiesList = this.effect(
+        (ontology$: Observable<ApiData | undefined>) =>
+            ontology$.pipe(
+                switchMap((onto) => {
+                    this.patchState({ propertiesLoading: true });
+                    if (!onto) {
+                        this.patchState({ propertiesLoading: false });
+                        return EMPTY;
+                    }
+                    return this._advancedSearchService
+                        .propertiesList(onto.iri)
+                        .pipe(
+                            tap({
+                                next: (response) => {
+                                    this.patchState({ properties: response });
+                                    this.patchState({
+                                        propertiesLoading: false,
+                                    });
+                                },
+                                error: (error) => {
+                                    this.patchState({ error });
+                                    this.patchState({
+                                        propertiesLoading: false,
+                                    });
+                                },
+                            }),
+                            catchError(() => {
                                 this.patchState({ propertiesLoading: false });
-                            },
-                            error: (error) => {
-                                this.patchState({ error });
-                                this.patchState({ propertiesLoading: false });
-                            },
-                        }),
-                        catchError(() => {
-                            this.patchState({ propertiesLoading: false });
-                            return EMPTY;
-                        })
-                    );
-            })
-        )
+                                return EMPTY;
+                            })
+                        );
+                })
+            )
     );
 
     // load list of filtered properties
-    readonly filteredPropertiesList = this.effect((resourceClass$: Observable<ApiData | undefined>) =>
-        resourceClass$.pipe(
-            switchMap((resClass) => {
-                this.patchState({ propertiesLoading: true });
-                if (!resClass) {
-                    this.patchState({ propertiesLoading: false });
-                    return EMPTY;
-                }
-                return this._advancedSearchService
-                    .filteredPropertiesList(resClass.iri)
-                    .pipe(
-                        tap({
-                            next: (response) => {
-                                this.patchState({ filteredProperties: response });
+    readonly filteredPropertiesList = this.effect(
+        (resourceClass$: Observable<ApiData | undefined>) =>
+            resourceClass$.pipe(
+                switchMap((resClass) => {
+                    this.patchState({ propertiesLoading: true });
+                    if (!resClass) {
+                        this.patchState({ propertiesLoading: false });
+                        return EMPTY;
+                    }
+                    return this._advancedSearchService
+                        .filteredPropertiesList(resClass.iri)
+                        .pipe(
+                            tap({
+                                next: (response) => {
+                                    this.patchState({
+                                        filteredProperties: response,
+                                    });
+                                    this.patchState({
+                                        propertiesLoading: false,
+                                    });
+                                },
+                                error: (error) => {
+                                    this.patchState({ error });
+                                    this.patchState({
+                                        propertiesLoading: false,
+                                    });
+                                },
+                            }),
+                            catchError(() => {
                                 this.patchState({ propertiesLoading: false });
-                            },
-                            error: (error) => {
-                                this.patchState({ error });
-                                this.patchState({ propertiesLoading: false });
-                            },
-                        }),
-                        catchError(() => {
-                            this.patchState({ propertiesLoading: false });
-                            return EMPTY;
-                        })
-                    );
-            })
-        )
+                                return EMPTY;
+                            })
+                        );
+                })
+            )
     );
 
     // readonly resourcesList = this.effect((propertyFormList$: Observable<PropertyFormItem[]>) =>
@@ -633,5 +814,4 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     //         })
     //     )
     // );
-
 }

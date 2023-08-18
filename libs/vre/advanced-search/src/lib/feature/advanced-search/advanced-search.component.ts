@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OntologyResourceFormComponent } from '../../ui/ontology-resource-form/ontology-resource-form.component';
 import { AdvancedSearchStoreService, OrderByItem, PropertyFormItem, SearchItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
@@ -8,17 +8,25 @@ import { ApiData } from '../../data-access/advanced-search-service/advanced-sear
 import { Constants } from '@dasch-swiss/dsp-js';
 import { ActivatedRoute } from '@angular/router';
 import { OrderByComponent } from '../../ui/order-by/order-by.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'dasch-swiss-advanced-search',
     standalone: true,
-    imports: [CommonModule, OrderByComponent, OntologyResourceFormComponent, PropertyFormComponent, FormActionsComponent],
+    imports: [CommonModule, OrderByComponent, OntologyResourceFormComponent, PropertyFormComponent, FormActionsComponent, MatIconModule],
     providers: [AdvancedSearchStoreService],
     templateUrl: './advanced-search.component.html',
     styleUrls: ['./advanced-search.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AdvancedSearchComponent implements OnInit {
+export class NewAdvancedSearchComponent implements OnInit {
+
+    // either the uuid of the project or the shortcode
+    // new projects use uuid, old projects use shortcode
+    @Input() uuid: string | undefined = undefined;
+
+    @Output() emitGravesearchQuery = new EventEmitter<string>();
+    @Output() emitBackButtonClicked = new EventEmitter<void>();
 
     store: AdvancedSearchStoreService = inject(AdvancedSearchStoreService);
     route: ActivatedRoute = inject(ActivatedRoute);
@@ -47,14 +55,23 @@ export class AdvancedSearchComponent implements OnInit {
     constants = Constants;
 
     ngOnInit(): void {
-        const uuid: string = this.route.snapshot.parent?.params['uuid'];
+
+        // if a uuid is not provided, try to get it from the route
+        // maybe this is too smart because it knows about the route structure of the app
+        // but if you route directly to this component, there's no other way to pass the uuid
+        if(!this.uuid) {
+            const uuidFromRoute = this.route.snapshot.parent?.params['uuid'];
+            if(uuidFromRoute) {
+                this.uuid = uuidFromRoute;
+            }
+        }
 
         this.store.setState({
             ontologies: [],
             ontologiesLoading: false,
             resourceClasses: [],
             resourceClassesLoading: false,
-            selectedProject: uuid ? 'http://rdfh.ch/projects/' + uuid : undefined,
+            selectedProject: this.uuid ? 'http://rdfh.ch/projects/' + this.uuid : undefined,
             selectedOntology: undefined,
             selectedResourceClass: undefined,
             propertyFormList: [],
@@ -101,18 +118,21 @@ export class AdvancedSearchComponent implements OnInit {
         this.store.updatePropertyFormList('delete', property);
     }
 
-    handlePropertySelected(property: PropertyFormItem): void {
-        this.store.updateSelectedProperty(property);
-    }
-
-    handlePropertyFormItemChanged(property: PropertyFormItem): void {
-        // if the selected property is a linked resource
+    handleSelectedPropertyChanged(property: PropertyFormItem): void {
         if(property.selectedProperty?.objectType !== Constants.Label &&
             !property.selectedProperty?.objectType.includes(this.constants.KnoraApiV2)) {
             // reset the search results
             this.store.resetResourcesSearchResults();
         }
-        this.store.updatePropertyFormItem(property);
+        this.store.updateSelectedProperty(property);
+    }
+
+    handleSelectedOperatorChanged(property: PropertyFormItem): void {
+        this.store.updateSelectedOperator(property);
+    }
+
+    handleSearchValueChanged(property: PropertyFormItem): void {
+        this.store.updateSearchValue(property);
     }
 
     handleResourceSearchValueChanged(searchItem: SearchItem): void {
@@ -128,11 +148,15 @@ export class AdvancedSearchComponent implements OnInit {
     }
 
     handleSearchButtonClicked(): void {
-        this.store.onSearch();
+        this.emitGravesearchQuery.emit(this.store.onSearch());
     }
 
     handleResetButtonClicked(): void {
         this.store.onReset();
+    }
+
+    handleBackButtonClicked(): void {
+        this.emitBackButtonClicked.emit();
     }
 
 }
