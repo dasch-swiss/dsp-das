@@ -9,6 +9,9 @@ import { Constants } from '@dasch-swiss/dsp-js';
 import { ActivatedRoute } from '@angular/router';
 import { OrderByComponent } from '../../ui/order-by/order-by.component';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../ui/dialog/confirmation-dialog/confirmation-dialog.component';
+import { boolean } from 'zod';
 
 @Component({
     selector: 'dasch-swiss-advanced-search',
@@ -53,6 +56,8 @@ export class NewAdvancedSearchComponent implements OnInit {
     orderByButtonDisabled$ = this.store.orderByButtonDisabled$;
 
     constants = Constants;
+
+    constructor(private _dialog: MatDialog) { }
 
     ngOnInit(): void {
 
@@ -152,7 +157,13 @@ export class NewAdvancedSearchComponent implements OnInit {
     }
 
     handleResetButtonClicked(): void {
-        this.store.onReset();
+        const dialogRef = this._dialog.open(ConfirmationDialogComponent, {});
+
+        dialogRef.afterClosed().subscribe((result: boolean) => {
+            if(result) {
+                this.store.onReset();
+            }
+        });
     }
 
     handleBackButtonClicked(): void {
