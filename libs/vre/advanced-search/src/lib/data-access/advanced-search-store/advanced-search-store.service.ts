@@ -327,6 +327,10 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
         if (indexInCurrentOrderByList > -1) {
             let updatedOrderByList = [];
+
+            // apparently there is a gravsearch bug that doesn't allows users to order by resource label
+            // so we need to prevent the user from doing that for now
+            // https://linear.app/dasch/issue/DEV-2546/gravsearch-order-by-resource-label
             if (property.selectedProperty?.objectType === Constants.Label) {
                 updatedOrderByList = currentOrderByList.filter(
                     (item) => item.id !== property.id
