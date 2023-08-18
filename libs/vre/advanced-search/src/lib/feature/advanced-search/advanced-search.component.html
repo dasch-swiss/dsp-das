@@ -1,6 +1,14 @@
 <div class="advanced-search-container">
-    <div>
-        <p class="title">Advanced search</p>
+    <div class="header">
+        <div class="title">
+            <p>Advanced search</p>
+        </div>
+        <div class="back">
+            <a class="back-button" (click)="handleBackButtonClicked()">
+                <mat-icon>chevron_left</mat-icon>
+                <span>Back</span>
+            </a>
+        </div>
     </div>
     <div
         *ngIf="{
@@ -49,8 +57,9 @@
             [properties]="asyncData.filteredProperties?.length ? asyncData.filteredProperties : asyncData.properties"
             [propertiesLoading]="asyncData.propertiesLoading"
             (emitRemovePropertyForm)="handleRemovePropertyForm($event)"
-            (emitSelectedPropertyChanged)="handlePropertySelected($event)"
-            (emitPropertyFormItemChanged)="handlePropertyFormItemChanged($event)"
+            (emitSelectedPropertyChanged)="handleSelectedPropertyChanged($event)"
+            (emitSelectedOperatorChanged)="handleSelectedOperatorChanged($event)"
+            (emitSearchValueChanged)="handleSearchValueChanged($event)"
             (emitResourceSearchValueChanged)="handleResourceSearchValueChanged($event)"
             (emitLoadMoreSearchResults)="handleLoadMoreSearchResults($event)"
         ></dasch-swiss-property-form>
