@@ -40,6 +40,7 @@ export class PropertyFormLinkMatchPropertyComponent implements OnInit {
     @Output() emitSelectedOperatorChanged = new EventEmitter<PropertyFormItem>();
     @Output() emitValueChanged = new EventEmitter<PropertyFormItem>();
     @Output() emitResourceSearchValueChanged = new EventEmitter<SearchItem>();
+    @Output() emitLoadMoreSearchResults = new EventEmitter<SearchItem>();
 
     operators = Operators; // in order to use it in the template
     constants = Constants;
@@ -97,6 +98,13 @@ export class PropertyFormLinkMatchPropertyComponent implements OnInit {
     }
 
     onLoadMoreSearchResults(value: string, index: number): void {
+         // maybe make this better
+        if(this.values) {
+            const objectType = this.values[index].selectedProperty?.objectType;
+            if(objectType) {
+                this.emitLoadMoreSearchResults.emit({ value: value, objectType: objectType});
+            }
+        }
         console.log('load more search results:', value);
     }
 }

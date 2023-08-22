@@ -159,6 +159,10 @@ export class PropertyFormComponent {
         }
     }
 
+    onChildLoadMoreSearchResults(searchItem: SearchItem): void {
+        this.emitLoadMoreSearchResults.emit(searchItem);
+    }
+
     onAddChildPropertyFormClicked(): void {
         const propFormItem = this.propertyFormItem;
         this.emitAddChildPropertyForm.emit(propFormItem);

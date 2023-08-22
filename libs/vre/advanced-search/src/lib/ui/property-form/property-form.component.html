@@ -104,12 +104,16 @@
                 propertyFormItem.selectedOperator === operators.Matches"
                 [values]="getValues(propertyFormItem.searchValue)"
                 [properties]="propertyFormItem.childPropertiesList"
+                [resourcesSearchResultsLoading]="resourcesSearchResultsLoading"
+                [resourcesSearchResultsCount]="resourcesSearchResultsCount"
+                [resourcesSearchResults]="resourcesSearchResults"
                 (emitAddPropertyForm)="onAddChildPropertyFormClicked()"
                 (emitRemovePropertyForm)="onRemoveChildPropertyFormClicked($event)"
                 (emitSelectedPropertyChanged)="onChildSelectedPropertyChanged($event)"
                 (emitSelectedOperatorChanged)="onChildSelectedOperatorChanged($event)"
                 (emitValueChanged)="onChildValueChanged($event)"
                 (emitResourceSearchValueChanged)="onChildResourceSearchValueChanged($event)"
+                (emitLoadMoreSearchResults)="onChildLoadMoreSearchResults($event)"
             >
 
             </dasch-swiss-property-form-link-match-property>
