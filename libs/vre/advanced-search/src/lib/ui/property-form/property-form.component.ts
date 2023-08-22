@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import {
+    ChildPropertyItem,
     PropertyFormItem,
     SearchItem,
 } from '../../data-access/advanced-search-store/advanced-search-store.service';
@@ -29,6 +30,7 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
 import { PropertyFormLinkValueComponent } from './property-form-link-value/property-form-link-value.component';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { PropertyFormListValueComponent } from './property-form-list-value/property-form-list-value.component';
+import { PropertyFormLinkMatchPropertyComponent } from './property-form-link-match-property/property-form-link-match-property.component';
 
 @Component({
     selector: 'dasch-swiss-property-form',
@@ -43,6 +45,7 @@ import { PropertyFormListValueComponent } from './property-form-list-value/prope
         MatSelectModule,
         PropertyFormValueComponent,
         PropertyFormLinkValueComponent,
+        PropertyFormLinkMatchPropertyComponent,
         PropertyFormListValueComponent,
     ],
     providers: [MatSelect],
@@ -76,6 +79,11 @@ export class PropertyFormComponent {
     @Output() emitSearchValueChanged = new EventEmitter<PropertyFormItem>();
     @Output() emitResourceSearchValueChanged = new EventEmitter<SearchItem>();
     @Output() emitLoadMoreSearchResults = new EventEmitter<SearchItem>();
+    @Output() emitAddChildPropertyForm = new EventEmitter<PropertyFormItem>();
+    @Output() emitRemoveChildPropertyForm = new EventEmitter<ChildPropertyItem>();
+    @Output() emitChildSelectedPropertyChanged = new EventEmitter<ChildPropertyItem>();
+    @Output() emitChildSelectedOperatorChanged = new EventEmitter<ChildPropertyItem>();
+    @Output() emitChildValueChanged = new EventEmitter<ChildPropertyItem>();
 
     @ViewChild('operatorsList') operatorsList!: MatSelect;
     @ViewChild('propertyFormValue') propertyFormValueComponent!: PropertyFormValueComponent;
@@ -122,7 +130,7 @@ export class PropertyFormComponent {
         }
     }
 
-    onValueChanged(value: string) {
+    onValueChanged(value: string | PropertyFormItem[]) {
         const propFormItem = this.propertyFormItem;
         if (propFormItem) {
             propFormItem.searchValue = value;
@@ -150,4 +158,37 @@ export class PropertyFormComponent {
             });
         }
     }
+
+    onAddChildPropertyFormClicked(): void {
+        const propFormItem = this.propertyFormItem;
+        this.emitAddChildPropertyForm.emit(propFormItem);
+    }
+
+    onRemoveChildPropertyFormClicked(childProperty: PropertyFormItem) {
+        this.emitRemoveChildPropertyForm.emit({parentProperty: this.propertyFormItem, childProperty: childProperty});
+    }
+
+    onChildSelectedPropertyChanged(childProperty: PropertyFormItem): void {
+        this.emitChildSelectedPropertyChanged.emit({parentProperty: this.propertyFormItem, childProperty: childProperty});
+    }
+
+    onChildSelectedOperatorChanged(childProperty: PropertyFormItem): void {
+        this.emitChildSelectedOperatorChanged.emit({parentProperty: this.propertyFormItem, childProperty: childProperty});
+    }
+
+    onChildValueChanged(childProperty: PropertyFormItem): void {
+        this.emitChildValueChanged.emit({parentProperty: this.propertyFormItem, childProperty: childProperty});
+    }
+
+    onChildResourceSearchValueChanged(searchValue: SearchItem) {
+        this.emitResourceSearchValueChanged.emit(searchValue);
+    }
+
+    getValues(value: string | PropertyFormItem[] | undefined): PropertyFormItem[] | undefined {
+        if (Array.isArray(value)) {
+          return value;
+        } else {
+          return undefined;
+        }
+      }
 }

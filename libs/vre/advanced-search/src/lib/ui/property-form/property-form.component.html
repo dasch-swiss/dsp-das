@@ -82,6 +82,8 @@
                     ) &&
                     propertyFormItem.selectedProperty?.objectType !==
                         constants.Label
+                        &&
+                    propertyFormItem.selectedOperator !== operators.Matches
                 "
                 [resourcesSearchResultsLoading]="resourcesSearchResultsLoading"
                 [resourcesSearchResultsCount]="resourcesSearchResultsCount"
@@ -92,6 +94,25 @@
                 (emitLoadMoreSearchResults)="onLoadMoreSearchResults($event)"
                 (emitResourceSelected)="onValueChanged($event)"
             ></dasch-swiss-property-form-link-value>
+            <dasch-swiss-property-form-link-match-property
+                *ngIf="!propertyFormItem.selectedProperty?.objectType?.includes(
+                    constants.KnoraApiV2
+                ) &&
+                propertyFormItem.selectedProperty?.objectType !==
+                    constants.Label
+                    &&
+                propertyFormItem.selectedOperator === operators.Matches"
+                [values]="getValues(propertyFormItem.searchValue)"
+                [properties]="propertyFormItem.childPropertiesList"
+                (emitAddPropertyForm)="onAddChildPropertyFormClicked()"
+                (emitRemovePropertyForm)="onRemoveChildPropertyFormClicked($event)"
+                (emitSelectedPropertyChanged)="onChildSelectedPropertyChanged($event)"
+                (emitSelectedOperatorChanged)="onChildSelectedOperatorChanged($event)"
+                (emitValueChanged)="onChildValueChanged($event)"
+                (emitResourceSearchValueChanged)="onChildResourceSearchValueChanged($event)"
+            >
+
+            </dasch-swiss-property-form-link-match-property>
         </div>
     </div>
 

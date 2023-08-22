@@ -33,9 +33,11 @@ export interface PropertyFormItem {
     id: string;
     selectedProperty: PropertyData | undefined;
     selectedOperator: string | undefined;
-    searchValue: string | undefined;
+    searchValue: string | PropertyFormItem[] | undefined;
     operators: string[] | undefined;
     list: ListNodeV2 | undefined;
+    isChildProperty?: boolean;
+    childPropertiesList?: PropertyData[];
 }
 
 export interface SearchItem {
@@ -47,6 +49,11 @@ export interface OrderByItem {
     id: string;
     label: string;
     orderBy: boolean;
+}
+
+export interface ChildPropertyItem {
+    parentProperty: PropertyFormItem;
+    childProperty: PropertyFormItem;
 }
 
 export enum Operators {
@@ -260,6 +267,72 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         this.patchState({ propertiesOrderByList: updatedOrderByList });
     }
 
+    // use enum for operation
+    addChildPropertyFormList(property: PropertyFormItem): void {
+        const currentPropertyFormList = this.get(
+            (state) => state.propertyFormList
+        );
+
+        const indexInPropertyFormList =
+            currentPropertyFormList.indexOf(property);
+
+        const currentSearchValue = currentPropertyFormList[
+            indexInPropertyFormList
+        ].searchValue as PropertyFormItem[];
+
+        // mock uuid using timestamp
+        const uuid = Date.now().toString();
+
+        const updatedSearchValue = [
+            ...currentSearchValue,
+            {
+                id: uuid,
+                selectedProperty: undefined,
+                selectedOperator: undefined,
+                searchValue: undefined,
+                operators: [],
+                list: undefined,
+                isChildProperty: true,
+            },
+        ];
+
+        const newProp = currentPropertyFormList[indexInPropertyFormList];
+        newProp.searchValue = updatedSearchValue;
+
+        this.updatePropertyFormListItem(
+            currentPropertyFormList,
+            newProp,
+            indexInPropertyFormList
+        );
+    }
+
+    deleteChildPropertyFormList(property: ChildPropertyItem): void {
+        const currentPropertyFormList = this.get(
+            (state) => state.propertyFormList
+        );
+
+        const indexInPropertyFormList = currentPropertyFormList.indexOf(
+            property.parentProperty
+        );
+
+        const currentSearchValue = currentPropertyFormList[
+            indexInPropertyFormList
+        ].searchValue as PropertyFormItem[];
+
+        const updatedSearchValue = currentSearchValue.filter(
+            (item) => item.id !== property.childProperty.id
+        );
+
+        const newProp = currentPropertyFormList[indexInPropertyFormList];
+        newProp.searchValue = updatedSearchValue;
+
+        this.updatePropertyFormListItem(
+            currentPropertyFormList,
+            newProp,
+            indexInPropertyFormList
+        );
+    }
+
     updateSelectedProperty(property: PropertyFormItem): void {
         const currentPropertyFormList = this.get(
             (state) => state.propertyFormList
@@ -293,7 +366,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                         Operators.NotEquals,
                         Operators.Exists,
                         Operators.NotExists,
-                        // Operators.Matches, // do we want to support this?
+                        Operators.Matches, // do we want to support this?
                     ];
                 }
             }
@@ -358,7 +431,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         const index = currentPropertyFormList.indexOf(property);
 
         if (index > -1) {
-
             // reset search value if operator is 'exists' or 'does not exist'
             if (
                 property.selectedOperator === Operators.Exists ||
@@ -367,17 +439,37 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                 property.searchValue = undefined;
             }
 
-            this.updatePropertyFormListItem(
-                currentPropertyFormList,
-                property,
-                index
-            );
+            if (
+                property.selectedOperator === Operators.Matches &&
+                property.selectedProperty?.objectType &&
+                property.selectedProperty?.objectType !== Constants.Label
+            ) {
+                // maybe this should be takeOne
+                this._advancedSearchService
+                    .filteredPropertiesList(
+                        property.selectedProperty?.objectType
+                    )
+                    .subscribe((properties) => {
+                        property.childPropertiesList = properties;
+                        property.searchValue = [];
+                        this.updatePropertyFormListItem(
+                            currentPropertyFormList,
+                            property,
+                            index
+                        );
+                    });
+            } else {
+                this.updatePropertyFormListItem(
+                    currentPropertyFormList,
+                    property,
+                    index
+                );
+            }
 
             console.log('updated property form list:', currentPropertyFormList);
         }
     }
 
-    // doesn't seem very DRY to me
     updateSearchValue(property: PropertyFormItem): void {
         const currentPropertyFormList = this.get(
             (state) => state.propertyFormList
@@ -405,6 +497,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             property,
             ...propertyFormList.slice(index + 1),
         ];
+
+        console.log('property FORM LIST:', updatedPropertyFormList);
         this.patchState({ propertyFormList: updatedPropertyFormList });
     }
 
@@ -448,6 +542,167 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     updatePropertyOrderBy(orderByList: OrderByItem[]): void {
         console.log('orderByList:', orderByList);
         this.patchState({ propertiesOrderByList: orderByList });
+    }
+
+    updateChildSelectedProperty(property: ChildPropertyItem): void {
+        const currentPropertyFormList = this.get(
+            (state) => state.propertyFormList
+        );
+        const indexInPropertyFormList = currentPropertyFormList.indexOf(
+            property.parentProperty
+        );
+
+        const currentSearchValue = currentPropertyFormList[
+            indexInPropertyFormList
+        ].searchValue as PropertyFormItem[];
+
+        const indexInCurrentSearchValue = currentSearchValue.findIndex(
+            (item) => item.id === property.childProperty.id
+        );
+
+        if (indexInCurrentSearchValue > -1) {
+            // only update if the property is found
+            const objectType =
+                property.childProperty.selectedProperty?.objectType;
+
+            let operators;
+
+            if (objectType) {
+                // filter available operators based on the object type of the selected property
+                operators = Array.from(this.getOperators().entries())
+                    .filter(([_, values]) => values.includes(objectType))
+                    .map(([key, _]) => key);
+
+                // if there are no matching operators in the map it means it's a link property
+                // i.e. http://0.0.0.0:3333/ontology/0801/newton/v2#letter
+                if (!operators.length) {
+                    operators = [
+                        Operators.Equals,
+                        Operators.NotEquals,
+                        Operators.Exists,
+                        Operators.NotExists,
+                    ];
+                }
+            }
+            property.childProperty.operators = operators;
+
+            const newProp = currentPropertyFormList[indexInPropertyFormList];
+            newProp.searchValue = [
+                ...currentSearchValue.slice(0, indexInCurrentSearchValue),
+                property.childProperty,
+                ...currentSearchValue.slice(indexInCurrentSearchValue + 1),
+            ];
+
+            // reset selected operator and search value because it might be invalid for the newly selected property
+            property.childProperty.selectedOperator = undefined;
+            property.childProperty.searchValue = undefined;
+
+            if (property.childProperty.selectedProperty?.listIri) {
+                // this should be a takeOne
+                this._advancedSearchService
+                    .getList(property.childProperty.selectedProperty?.listIri)
+                    .subscribe((list) => {
+                        property.childProperty.list = list;
+                        newProp.searchValue = [
+                            ...currentSearchValue.slice(0, indexInCurrentSearchValue),
+                            property.childProperty,
+                            ...currentSearchValue.slice(indexInCurrentSearchValue + 1),
+                        ];
+
+                        this.updatePropertyFormListItem(
+                            currentPropertyFormList,
+                            newProp,
+                            indexInPropertyFormList
+                        );
+                    });
+            } else {
+                newProp.searchValue = [
+                    ...currentSearchValue.slice(0, indexInCurrentSearchValue),
+                    property.childProperty,
+                    ...currentSearchValue.slice(indexInCurrentSearchValue + 1),
+                ];
+
+                this.updatePropertyFormListItem(
+                    currentPropertyFormList,
+                    newProp,
+                    indexInPropertyFormList
+                );
+            }
+        }
+    }
+
+    updateChildSelectedOperator(property: ChildPropertyItem): void {
+        const currentPropertyFormList = this.get(
+            (state) => state.propertyFormList
+        );
+        const indexInPropertyFormList = currentPropertyFormList.indexOf(
+            property.parentProperty
+        );
+
+        const currentSearchValue = currentPropertyFormList[
+            indexInPropertyFormList
+        ].searchValue as PropertyFormItem[];
+
+        const indexInCurrentSearchValue = currentSearchValue.findIndex(
+            (item) => item.id === property.childProperty.id
+        );
+
+        if (indexInPropertyFormList > -1 && indexInCurrentSearchValue > -1) {
+            // reset search value if operator is 'exists' or 'does not exist'
+            if (
+                property.childProperty.selectedOperator === Operators.Exists ||
+                property.childProperty.selectedOperator === Operators.NotExists
+            ) {
+                property.childProperty.searchValue = undefined;
+            }
+
+            property.parentProperty.searchValue = [
+                ...currentSearchValue.slice(0, indexInCurrentSearchValue),
+                property.childProperty,
+                ...currentSearchValue.slice(indexInCurrentSearchValue + 1),
+            ];
+
+            this.updatePropertyFormListItem(
+                currentPropertyFormList,
+                property.parentProperty,
+                indexInPropertyFormList
+            );
+
+            console.log('updated property form list:', currentPropertyFormList);
+        }
+    }
+
+    updateChildValue(property: ChildPropertyItem): void {
+        const currentPropertyFormList = this.get(
+            (state) => state.propertyFormList
+        );
+        const indexInPropertyFormList = currentPropertyFormList.indexOf(
+            property.parentProperty
+        );
+
+        const currentSearchValue = currentPropertyFormList[
+            indexInPropertyFormList
+        ].searchValue as PropertyFormItem[];
+
+        const indexInCurrentSearchValue = currentSearchValue.findIndex(
+            (item) => item.id === property.childProperty.id
+        );
+
+        if (indexInPropertyFormList > -1 && indexInCurrentSearchValue > -1) {
+            property.parentProperty.searchValue = [
+                ...currentSearchValue.slice(0, indexInCurrentSearchValue),
+                property.childProperty,
+                ...currentSearchValue.slice(indexInCurrentSearchValue + 1),
+            ];
+
+            this.updatePropertyFormListItem(
+                currentPropertyFormList,
+                property.parentProperty,
+                indexInPropertyFormList
+            );
+
+            console.log('updated property form list:', currentPropertyFormList);
+        }
     }
 
     resetResourcesSearchResults(): void {

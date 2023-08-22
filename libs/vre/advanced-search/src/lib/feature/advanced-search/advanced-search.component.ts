@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OntologyResourceFormComponent } from '../../ui/ontology-resource-form/ontology-resource-form.component';
-import { AdvancedSearchStoreService, OrderByItem, PropertyFormItem, SearchItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
+import { AdvancedSearchStoreService, ChildPropertyItem, OrderByItem, PropertyFormItem, SearchItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
@@ -11,7 +11,6 @@ import { OrderByComponent } from '../../ui/order-by/order-by.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../ui/dialog/confirmation-dialog/confirmation-dialog.component';
-import { boolean } from 'zod';
 
 @Component({
     selector: 'dasch-swiss-advanced-search',
@@ -22,7 +21,7 @@ import { boolean } from 'zod';
     styleUrls: ['./advanced-search.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewAdvancedSearchComponent implements OnInit {
+export class AdvancedSearchComponent implements OnInit {
 
     // either the uuid of the project or the shortcode
     // new projects use uuid, old projects use shortcode
@@ -168,6 +167,26 @@ export class NewAdvancedSearchComponent implements OnInit {
 
     handleBackButtonClicked(): void {
         this.emitBackButtonClicked.emit();
+    }
+
+    handleAddChildPropertyForm(property: PropertyFormItem): void {
+        this.store.addChildPropertyFormList(property);
+    }
+
+    handleRemoveChildPropertyForm(property: ChildPropertyItem): void {
+        this.store.deleteChildPropertyFormList(property);
+    }
+
+    handleChildSelectedPropertyChanged(property: ChildPropertyItem): void {
+        this.store.updateChildSelectedProperty(property);
+    }
+
+    handleChildSelectedOperatorChanged(property: ChildPropertyItem): void {
+        this.store.updateChildSelectedOperator(property);
+    }
+
+    handleChildValueChanged(property: ChildPropertyItem): void {
+        this.store.updateChildValue(property);
     }
 
 }

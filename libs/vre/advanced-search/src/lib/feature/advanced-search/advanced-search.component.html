@@ -62,6 +62,11 @@
             (emitSearchValueChanged)="handleSearchValueChanged($event)"
             (emitResourceSearchValueChanged)="handleResourceSearchValueChanged($event)"
             (emitLoadMoreSearchResults)="handleLoadMoreSearchResults($event)"
+            (emitAddChildPropertyForm)="handleAddChildPropertyForm($event)"
+            (emitRemoveChildPropertyForm)="handleRemoveChildPropertyForm($event)"
+            (emitChildSelectedPropertyChanged)="handleChildSelectedPropertyChanged($event)"
+            (emitChildSelectedOperatorChanged)="handleChildSelectedOperatorChanged($event)"
+            (emitChildValueChanged)="handleChildValueChanged($event)"
         ></dasch-swiss-property-form>
         <dasch-swiss-form-actions
             [addButtonDisabled]="asyncData.addButtonDisabled"
