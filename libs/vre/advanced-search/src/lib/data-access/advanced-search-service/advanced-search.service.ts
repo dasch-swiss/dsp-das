@@ -417,20 +417,28 @@ export class AdvancedSearchService {
     private _propertyStringHelper(property: PropertyFormItem, index: number): GravsearchPropertyString {
         let linkString = '';
         let valueString = '';
-        // add ResourceLabel to js-lib Constants with this structure
+        // TODO: add ResourceLabel to js-lib Constants with this structure
         // Constants.KnoraApiV2 + Constants.HashDelimiter + "resourceLabel";
         // so that we don't need to do this label check
         if(property.selectedProperty?.objectType !== Constants.Label &&
             property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)) {
             linkString = '?mainRes <' + property.selectedProperty?.iri + '> ?prop' + index + ' .';
+        } else {//link property
+            if(Array.isArray(property.searchValue)) {
+                linkString = '?mainRes <' + property.selectedProperty?.iri + '> ?prop' + index + ' .';
+                property.searchValue.forEach((value, i) => {
+                    linkString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
+                });
+            }
         }
         if (!(property.selectedOperator === 'exists' || property.selectedOperator === 'notExists')) {
-            valueString = this._valueStringHelper(property, index);
+            valueString = this._valueStringHelper(property, index, '?prop');
         }
         return { linkString: linkString, valueString: valueString };
     }
 
-    private _valueStringHelper(property: PropertyFormItem, index: number): string {
+    private _valueStringHelper(property: PropertyFormItem, index: number, identifier: string): string {
+        // link property
         if(property.selectedProperty?.objectType !== Constants.Label &&
             !property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)) {
             switch (property.selectedOperator) {
@@ -439,6 +447,15 @@ export class AdvancedSearchService {
                 case Operators.NotEquals:
                     return `FILTER NOT EXISTS { \n
                     ?mainRes <${property.selectedProperty?.iri}> <${property.searchValue}> . }`
+                case Operators.Matches:
+                    // eslint-disable-next-line no-case-declarations
+                    let valueString = '';
+                    if(Array.isArray(property.searchValue)) {
+                        property.searchValue.forEach((value, i) => {
+                            valueString += this._valueStringHelper(value, i, '?linkProp' + index);
+                        });
+                    }
+                    return valueString;
                 default:
                     throw new Error('Invalid operator for linked resource');
             }
@@ -463,32 +480,32 @@ export class AdvancedSearchService {
                     switch (property.selectedOperator) {
                         case Operators.Equals:
                         case Operators.NotEquals:
-                            return `?prop${index} <${Constants.ValueAsString}> ?prop${index}Literal .\n
-                            FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdString}>) .`;
+                            return `${identifier}${index} <${Constants.ValueAsString}> ${identifier}${index}Literal .\n
+                            FILTER (${identifier}${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdString}>) .`;
                         case Operators.IsLike:
-                            return `?prop${index} <${Constants.ValueAsString}> ?prop${index}Literal .\n
-                            FILTER ${this._operatorToSymbol(property.selectedOperator)}(?prop${index}Literal, "${property.searchValue}"^^<${Constants.XsdString}>, "i") .`;
+                            return `${identifier}${index} <${Constants.ValueAsString}> ${identifier}${index}Literal .\n
+                            FILTER ${this._operatorToSymbol(property.selectedOperator)}(${identifier}${index}Literal, "${property.searchValue}"^^<${Constants.XsdString}>, "i") .`;
                         case Operators.Matches:
-                            return `FILTER <${this._operatorToSymbol(property.selectedOperator)}>(?prop${index}, "${property.searchValue}"^^<${Constants.XsdString}>) .`;
+                            return `FILTER <${this._operatorToSymbol(property.selectedOperator)}>(${identifier}${index}, "${property.searchValue}"^^<${Constants.XsdString}>) .`;
                         default:
                             throw new Error('Invalid operator for text value');
                     }
                 case Constants.IntValue:
-                    return `?prop${index} <${Constants.IntValueAsInt}> ?prop${index}Literal .\n
-                    FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdInteger}>) .`;
+                    return `${identifier}${index} <${Constants.IntValueAsInt}> ${identifier}${index}Literal .\n
+                    FILTER (${identifier}${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdInteger}>) .`;
                 case Constants.DecimalValue:
-                    return `?prop${index} <${Constants.DecimalValueAsDecimal}> ?prop${index}Literal .\n
-                    FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdDecimal}>) .`;
+                    return `${identifier}${index} <${Constants.DecimalValueAsDecimal}> ${identifier}${index}Literal .\n
+                    FILTER (${identifier}${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdDecimal}>) .`;
                 case Constants.BooleanValue:
-                    return `?prop${index} <${Constants.BooleanValueAsBoolean}> ?prop${index}Literal .\n
-                    FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdBoolean}>) .`;
+                    return `${identifier}${index} <${Constants.BooleanValueAsBoolean}> ${identifier}${index}Literal .\n
+                    FILTER (${identifier}${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdBoolean}>) .`;
                 case Constants.DateValue:
-                    return `FILTER(knora-api:toSimpleDate(?prop${index}) ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.KnoraApi}/ontology/knora-api/simple/v2${Constants.HashDelimiter}Date>) .`;
+                    return `FILTER(knora-api:toSimpleDate(${identifier}${index}) ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.KnoraApi}/ontology/knora-api/simple/v2${Constants.HashDelimiter}Date>) .`;
                 case Constants.ListValue:
-                    return `?prop${index} <${Constants.ListValueAsListNode}> <${property.searchValue}> .\n`;
+                    return `${identifier}${index} <${Constants.ListValueAsListNode}> <${property.searchValue}> .\n`;
                 case Constants.UriValue:
-                    return `?prop${index} <${Constants.UriValueAsUri}> ?prop${index}Literal .\n
-                    FILTER (?prop${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdAnyUri}>) .`
+                    return `${identifier}${index} <${Constants.UriValueAsUri}> ${identifier}${index}Literal .\n
+                    FILTER (${identifier}${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdAnyUri}>) .`
                 default:
                     throw new Error('Invalid object type');
             }
