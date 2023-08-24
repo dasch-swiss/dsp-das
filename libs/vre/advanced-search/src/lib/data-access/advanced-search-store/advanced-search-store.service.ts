@@ -136,24 +136,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             const isPropertyFormListEmpty = !propertyFormList.length;
 
             const areSomePropertyFormItemsInvalid = propertyFormList.some(
-                (prop) => {
-                    // no property selected
-                    if (!prop.selectedProperty) return true;
-
-                    // selected operator is 'exists' or 'does not exist'
-                    if (
-                        prop.selectedOperator === Operators.Exists ||
-                        prop.selectedOperator === Operators.NotExists
-                    )
-                        return false;
-
-                    // selected operator is NOT 'exists' or 'does not exist'
-                    // AND
-                    // search value is undefined or empty
-                    if (!prop.searchValue || prop.searchValue === '')
-                        return true;
-                    return false;
-                }
+                (prop) => this.isPropertyFormItemListInvalid(prop)
             );
 
             if (!isPropertyFormListEmpty) {
@@ -216,6 +199,37 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         super();
     }
 
+    isPropertyFormItemListInvalid(prop: PropertyFormItem): boolean {
+        // no property selected
+        if (!prop.selectedProperty)
+            return true;
+
+        // selected operator is 'exists' or 'does not exist'
+        if (
+            prop.selectedOperator === Operators.Exists ||
+            prop.selectedOperator === Operators.NotExists
+        )
+            return false;
+
+        if (Array.isArray(prop.searchValue)) {
+            if (!prop.searchValue.length)
+                return true;
+
+            return prop.searchValue.some((childProp) => {
+                const temp = this.isPropertyFormItemListInvalid(childProp);
+                return temp;
+            });
+        }
+
+        // selected operator is NOT 'exists' or 'does not exist'
+        // AND
+        // search value is undefined or empty
+        if (!prop.searchValue || prop.searchValue === '')
+            return true;
+
+        return false;
+    }
+
     updateSelectedOntology(ontology: ApiData): void {
         this.patchState({ selectedOntology: ontology });
         this.patchState({ selectedResourceClass: undefined });
@@ -231,7 +245,9 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             this.patchState({ selectedResourceClass: undefined });
             this.patchState({ filteredProperties: [] });
         }
-        // this.patchState({ propertyFormList: [] });
+
+        this.patchState({ propertyFormList: [] });
+        this.patchState({ propertiesOrderByList: [] });
     }
 
     // use enum for operation

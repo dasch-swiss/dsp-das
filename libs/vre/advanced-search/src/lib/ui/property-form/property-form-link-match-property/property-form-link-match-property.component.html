@@ -1,30 +1,46 @@
-<button mat-button (click)="addPropertyForm()">Add property</button>
-
-<div *ngFor="let item of values; let i = index">
-    {{ item.id }}
-    <mat-form-field>
-        <mat-select (selectionChange)="onSelectedPropertyChanged($event, i)" placeholder="Select a value" name="properties">
-            <mat-option *ngFor="let prop of properties" [value]="prop">
-                {{ prop.label }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-    <mat-form-field class="operator">
-        <mat-select
-            #operatorsList
-            (selectionChange)="onSelectedOperatorChanged($event, i)"
-            placeholder="Select a value"
-            name="operators"
-        >
-            <mat-option
-                *ngFor="let operator of item.operators"
-                [value]="operator"
-            >
-                {{ operator }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-    <div
+<div
+    *ngFor="let item of values; let i = index"
+    class="parent-container child-property-list"
+>
+    <div class="form-fields-container">
+        <div class="dropdown-container">
+            <div class="content">
+                <mat-form-field>
+                    <mat-select
+                        (selectionChange)="onSelectedPropertyChanged($event, i)"
+                        placeholder="Select a value"
+                        name="properties"
+                    >
+                        <mat-option
+                            *ngFor="let prop of properties"
+                            [value]="prop"
+                        >
+                            {{ prop.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="dropdown-container">
+            <div class="content">
+                <mat-form-field class="operator">
+                    <mat-select
+                        #operatorsList
+                        (selectionChange)="onSelectedOperatorChanged($event, i)"
+                        placeholder="Select a value"
+                        name="operators"
+                    >
+                        <mat-option
+                            *ngFor="let operator of item.operators"
+                            [value]="operator"
+                        >
+                            {{ operator }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div
             *ngIf="
                 item.selectedOperator &&
                 item.selectedOperator !== operators.Exists &&
@@ -38,21 +54,19 @@
                     (item.selectedProperty?.objectType?.includes(
                         constants.KnoraApiV2
                     ) ||
-                    item.selectedProperty?.objectType ===
+                        item.selectedProperty?.objectType ===
                             constants.Label) &&
-                            item.selectedProperty?.objectType !==
-                        constants.ListValue
+                    item.selectedProperty?.objectType !== constants.ListValue
                 "
                 [objectType]="item.selectedProperty?.objectType"
                 (emitValueChanged)="onValueChanged($event, i)"
             />
             <dasch-swiss-property-form-list-value
                 *ngIf="
-                    item.selectedProperty?.objectType ===
-                    constants.ListValue
+                    item.selectedProperty?.objectType === constants.ListValue
                 "
                 [list]="item.list"
-                (emitValueChanged)="onValueChanged($event,i)"
+                (emitValueChanged)="onValueChanged($event, i)"
             >
             </dasch-swiss-property-form-list-value>
             <dasch-swiss-property-form-link-value
@@ -60,9 +74,7 @@
                     !item.selectedProperty?.objectType?.includes(
                         constants.KnoraApiV2
                     ) &&
-                    item.selectedProperty?.objectType !==
-                        constants.Label
-                        &&
+                    item.selectedProperty?.objectType !== constants.Label &&
                     item.selectedOperator !== operators.Matches
                 "
                 [resourcesSearchResultsLoading]="resourcesSearchResultsLoading"
@@ -74,9 +86,25 @@
                 (emitLoadMoreSearchResults)="onLoadMoreSearchResults($event, i)"
                 (emitResourceSelected)="onValueChanged($event, i)"
             ></dasch-swiss-property-form-link-value>
+        </div>
     </div>
+    <div class="remove-property-container">
+        <button
+            mat-icon-button
+            (click)="onRemovePropertyFormClicked(item)"
+            class="add-remove-property-button remove"
+        >
+            <mat-icon>remove_circle</mat-icon>
+        </button>
+    </div>
+</div>
 
-    <button mat-button (click)="deletePropertyForm(item)">
-        Delete property
+<div class="parent-container child-property-list">
+    <button
+        mat-icon-button
+        class="add-remove-property-button add"
+        (click)="onAddPropertyFormClicked()"
+    >
+        <mat-icon>add_circle</mat-icon>
     </button>
 </div>

@@ -9,6 +9,7 @@ import { PropertyFormValueComponent } from '../property-form-value/property-form
 import { Constants } from '@dasch-swiss/dsp-js';
 import { PropertyFormListValueComponent } from '../property-form-list-value/property-form-list-value.component';
 import { PropertyFormLinkValueComponent } from '../property-form-link-value/property-form-link-value.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'dasch-swiss-property-form-link-match-property',
@@ -18,6 +19,7 @@ import { PropertyFormLinkValueComponent } from '../property-form-link-value/prop
         FormsModule,
         ReactiveFormsModule,
         MatButtonModule,
+        MatIconModule,
         MatSelectModule,
         PropertyFormValueComponent,
         PropertyFormListValueComponent,
@@ -49,13 +51,13 @@ export class PropertyFormLinkMatchPropertyComponent implements OnInit {
         console.log('propFormItem:', this.values);
     }
 
-    addPropertyForm(): void {
+    onAddPropertyFormClicked(): void {
         if (this.values) {
             this.emitAddPropertyForm.emit();
         }
     }
 
-    deletePropertyForm(propFormItem: PropertyFormItem): void {
+    onRemovePropertyFormClicked(propFormItem: PropertyFormItem): void {
         if (propFormItem) {
             this.emitRemovePropertyForm.emit(propFormItem);
         }

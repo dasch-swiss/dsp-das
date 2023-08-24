@@ -1,6 +1,24 @@
 .parent-container {
   width: 100%;
 
+  &.child-property-list {
+    padding-left: 5%;
+  }
+
+  .form-fields-container,
+  .remove-property-container {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .form-fields-container {
+    width: 90%;
+  }
+
+  .remove-property-container {
+    width: 9%;
+  }
+
   .dropdown-container {
     width: 49%;
     display: inline-flex;
