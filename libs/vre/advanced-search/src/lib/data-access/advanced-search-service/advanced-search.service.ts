@@ -377,7 +377,12 @@ export class AdvancedSearchService {
         .forEach((orderByItem) => {
             const index = properties.findIndex((prop) => prop.id === orderByItem.id);
             if (index > -1) {
-                orderByProps.push(`?prop${index}`);
+                if(properties[index].selectedProperty?.objectType === Constants.Label) {
+                    orderByProps.push('?label');
+                } else {
+                    orderByProps.push(`?prop${index}`);
+                }
+
             }
         });
 
@@ -404,7 +409,7 @@ export class AdvancedSearchService {
             OFFSET 0
         `;
 
-        // console.log('gravSearch: ', gravSearch);
+        console.log('gravSearch: ', gravSearch);
 
         return gravSearch;
     }
@@ -449,7 +454,8 @@ export class AdvancedSearchService {
                             return `?mainRes rdfs:label ?label .\n
                             FILTER regex(?label, "${property.searchValue}", "i") .`;
                         case Operators.Matches:
-                            return `FILTER knora-api:matchLabel(?mainRes, "${property.searchValue}") .`
+                            return `?mainRes rdfs:label ?label .\n
+                            FILTER knora-api:matchLabel(?mainRes, "${property.searchValue}") .`
                         default:
                             throw new Error('Invalid operator for resource label');
                     }

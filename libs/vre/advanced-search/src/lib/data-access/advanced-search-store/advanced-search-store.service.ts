@@ -174,8 +174,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             return (
                 !resourceClass ||
                 !orderBylist.length ||
-                !propertyFormList.length ||
-                areSomePropertyFormItemsInvalid
+                !propertyFormList.length
             );
         }
     );
@@ -266,10 +265,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
         if (operation === 'add') {
             updatedPropertyFormList = [...currentPropertyFormList, property];
-            updatedOrderByList = [
-                ...currentOrderByList,
-                { id: property.id, label: '', orderBy: false },
-            ];
         } else {
             updatedPropertyFormList = currentPropertyFormList.filter(
                 (item) => item !== property
@@ -277,10 +272,12 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             updatedOrderByList = currentOrderByList.filter(
                 (item) => item.id !== property.id
             );
+
+            this.patchState({ propertiesOrderByList: updatedOrderByList });
         }
 
         this.patchState({ propertyFormList: updatedPropertyFormList });
-        this.patchState({ propertiesOrderByList: updatedOrderByList });
+
     }
 
     // use enum for operation
@@ -414,30 +411,26 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
         console.log('updated property form list:', currentPropertyFormList);
 
+        let updatedOrderByList = [];
         if (indexInCurrentOrderByList > -1) {
-            let updatedOrderByList = [];
-
-            // apparently there is a gravsearch bug that doesn't allows users to order by resource label
-            // so we need to prevent the user from doing that for now
-            // https://linear.app/dasch/issue/DEV-2546/gravsearch-order-by-resource-label
-            if (property.selectedProperty?.objectType === Constants.Label) {
-                updatedOrderByList = currentOrderByList.filter(
-                    (item) => item.id !== property.id
-                );
-            } else {
-                updatedOrderByList = [
-                    ...currentOrderByList.slice(0, indexInCurrentOrderByList),
-                    {
-                        id: property.id,
-                        label: property.selectedProperty?.label || '',
-                        orderBy: false,
-                    },
-                    ...currentOrderByList.slice(indexInCurrentOrderByList + 1),
-                ];
-            }
-            console.log('propertiesOrderByList:', updatedOrderByList);
-            this.patchState({ propertiesOrderByList: updatedOrderByList });
+            updatedOrderByList = [
+                ...currentOrderByList.slice(0, indexInCurrentOrderByList),
+                {
+                    id: property.id,
+                    label: property.selectedProperty?.label || '',
+                    orderBy: false,
+                },
+                ...currentOrderByList.slice(indexInCurrentOrderByList + 1),
+            ];
+        } else {
+            updatedOrderByList = [
+                ...currentOrderByList,
+                { id: property.id, label: property.selectedProperty?.label || '', orderBy: false },
+            ];
         }
+
+        console.log('propertiesOrderByList:', updatedOrderByList);
+        this.patchState({ propertiesOrderByList: updatedOrderByList });
     }
 
     updateSelectedOperator(property: PropertyFormItem): void {
