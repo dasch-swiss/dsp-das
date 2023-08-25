@@ -26,7 +26,7 @@
             mat-flat-button
             *ngIf="advanced"
             [class.active]="showAdvanced"
-            (click)="openPanelWithBackdrop('advanced')"
+            (click)="routeToAdvancedSearch()"
         >
             <mat-icon matPrefix>manage_search</mat-icon>
             <span class="desktop-only">advanced</span>
@@ -67,11 +67,6 @@
             </span>
         </div>
         <div class="app-menu-content" [ngSwitch]="true">
-            <app-advanced-search
-                *ngSwitchCase="showAdvanced"
-                [limitToProject]="limitToProject"
-                (search)="emitSearch($event)"
-            ></app-advanced-search>
             <app-expert-search
                 *ngSwitchCase="showExpert"
                 (search)="emitSearch($event)"

@@ -26,8 +26,6 @@ export interface ApiData {
     label: string;
 }
 
-// maybe we can combine this with ApiData
-// objectType can be undefined anyways so we can just make it optional
 export interface PropertyData {
     iri: string;
     label: string;

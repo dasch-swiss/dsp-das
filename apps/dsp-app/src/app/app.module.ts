@@ -143,7 +143,7 @@ import { UriValueComponent } from './workspace/resource/values/uri-value/uri-val
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
 import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
 import { ResultsComponent } from './workspace/results/results.component';
-import { AdvancedSearchComponent } from './workspace/search/advanced-search/advanced-search.component';
+import { AdvancedSearchContainerComponent } from './workspace/search/advanced-search/advanced-search-container.component';
 import { ResourceAndPropertySelectionComponent } from './workspace/search/advanced-search/resource-and-property-selection/resource-and-property-selection.component';
 import { SearchSelectPropertyComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/search-select-property.component';
 import { SearchBooleanValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-boolean-value/search-boolean-value.component';
@@ -180,6 +180,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-config';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { AppDatePickerModule } from '@dasch-swiss/vre/shared/app-date-picker';
+import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -194,7 +195,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         AddUserComponent,
         AddValueComponent,
         AdminImageDirective,
-        AdvancedSearchComponent,
+        AdvancedSearchContainerComponent,
         AppComponent,
         ArchiveComponent,
         AudioComponent,
@@ -351,6 +352,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         NgxSkeletonLoaderModule,
         PdfViewerModule,
         ReactiveFormsModule,
+        AdvancedSearchComponent,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

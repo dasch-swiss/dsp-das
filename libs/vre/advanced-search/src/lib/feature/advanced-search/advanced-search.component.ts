@@ -63,12 +63,12 @@ export class AdvancedSearchComponent implements OnInit {
         // if a uuid is not provided, try to get it from the route
         // maybe this is too smart because it knows about the route structure of the app
         // but if you route directly to this component, there's no other way to pass the uuid
-        if(!this.uuid) {
-            const uuidFromRoute = this.route.snapshot.parent?.params['uuid'];
-            if(uuidFromRoute) {
-                this.uuid = uuidFromRoute;
-            }
-        }
+        // if(!this.uuid) {
+        //     const uuidFromRoute = this.route.snapshot.parent?.params['uuid'];
+        //     if(uuidFromRoute) {
+        //         this.uuid = uuidFromRoute;
+        //     }
+        // }
 
         this.store.setState({
             ontologies: [],

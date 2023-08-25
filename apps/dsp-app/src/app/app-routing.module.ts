@@ -29,6 +29,7 @@ import { UserComponent } from './user/user.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
+import { AdvancedSearchContainerComponent } from './workspace/search/advanced-search/advanced-search-container.component';
 
 const routes: Routes = [
     {
@@ -37,7 +38,7 @@ const routes: Routes = [
     },
     {
         path: 'advanced-search',
-        component: AdvancedSearchComponent,
+        component: AdvancedSearchContainerComponent,
     },
     {
         path: 'help',
