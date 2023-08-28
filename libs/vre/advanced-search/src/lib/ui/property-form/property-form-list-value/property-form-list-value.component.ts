@@ -28,10 +28,4 @@ export class PropertyFormListValueComponent {
         this.emitValueChanged.emit(item.id);
     }
 
-    // hasChildren(node: ListNodeV2 | undefined): boolean {
-    //     if(node)
-    //         return node?.children?.length > 0;
-    //     return false;
-    // }
-
 }

@@ -50,6 +50,7 @@ export class AdvancedSearchComponent implements OnInit {
     resetButtonDisabled$ = this.store.resetButtonDisabled$;
     resourcesSearchResultsLoading$ = this.store.resourcesSearchResultsLoading$;
     resourcesSearchResultsCount$ = this.store.resourcesSearchResultsCount$;
+    resourcesSearchNoResults$ = this.store.resourcesSearchNoResults$;
     resourcesSearchResultsPageNumber$ = this.store.resourcesSearchResultsPageNumber$;
     resourcesSearchResults$ = this.store.resourcesSearchResults$;
     orderByButtonDisabled$ = this.store.orderByButtonDisabled$;
@@ -85,6 +86,7 @@ export class AdvancedSearchComponent implements OnInit {
             filteredProperties: [],
             resourcesSearchResultsLoading: false,
             resourcesSearchResultsCount: 0,
+            resourcesSearchNoResults: false,
             resourcesSearchResultsPageNumber: 0,
             resourcesSearchResults: [],
         });

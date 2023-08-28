@@ -30,12 +30,14 @@ export interface PropertyData {
     iri: string;
     label: string;
     objectType: string;
+    isLinkProperty: boolean;
     listIri?: string; // only for list values
 }
 
 export interface GravsearchPropertyString {
     linkString: string;
     valueString?: string;
+    isOperatorNotExists?: boolean;
 }
 
 @Injectable({
@@ -186,10 +188,13 @@ export class AdvancedSearchService {
                             // objectType can be undefined but I'm not really sure if this is true
                             const objectType = propDef.objectType || '';
 
+                            const linkProperty = !propDef.objectType?.includes(Constants.KnoraApiV2);
+
                             return {
                                 iri: propDef.id,
                                 label: label,
                                 objectType: objectType,
+                                isLinkProperty: linkProperty,
                             };
                         });
                 }),
@@ -232,6 +237,8 @@ export class AdvancedSearchService {
                             // objectType can be undefined but I'm not really sure if this is true
                             const objectType = propDef.objectType || '';
 
+                            const linkProperty = !propDef.objectType?.includes(Constants.KnoraApiV2);
+
                             if (objectType === Constants.ListValue) {
                                 const guiAttr = propDef.guiAttributes;
                                 if (
@@ -248,6 +255,7 @@ export class AdvancedSearchService {
                                         iri: propDef.id,
                                         label: label,
                                         objectType: objectType,
+                                        isLinkProperty: linkProperty,
                                         listIri: listNodeIri,
                                     };
                                 } else {
@@ -262,6 +270,7 @@ export class AdvancedSearchService {
                                 iri: propDef.id,
                                 label: label,
                                 objectType: objectType,
+                                isLinkProperty: linkProperty,
                             };
                         });
                 }),
@@ -385,7 +394,7 @@ export class AdvancedSearchService {
         });
 
         orderByString = orderByProps.length ? `ORDER BY ${orderByProps.join(' ')}` : '';
-
+        console.log(propertyStrings);
         const gravSearch = `
             PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
             CONSTRUCT {
@@ -397,7 +406,7 @@ export class AdvancedSearchService {
 
             ${restrictToResourceClass}
 
-            ${propertyStrings.map((prop) => prop.linkString).join('\n')}
+            ${propertyStrings.map((prop) => prop.isOperatorNotExists ? `FILTER NOT EXISTS {\n${prop.linkString}\n }` : prop.linkString).join('\n')}
 
             ${propertyStrings.map((prop) => prop.valueString).join('\n')}
             }
@@ -429,16 +438,17 @@ export class AdvancedSearchService {
                 });
             }
         }
-        if (!(property.selectedOperator === 'exists' || property.selectedOperator === 'notExists')) {
+        if (!(property.selectedOperator === Operators.Exists || property.selectedOperator === Operators.NotExists)) {
             valueString = this._valueStringHelper(property, index, '?prop');
         }
-        return { linkString: linkString, valueString: valueString };
+        return { linkString: linkString, valueString: valueString, isOperatorNotExists: property.selectedOperator === Operators.NotExists };
     }
 
     private _valueStringHelper(property: PropertyFormItem, index: number, identifier: string): string {
         // link property
         if(property.selectedProperty?.objectType !== Constants.Label &&
             !property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)) {
+            let valueString ='';
             switch (property.selectedOperator) {
                 case Operators.Equals:
                     return `?mainRes <${property.selectedProperty?.iri}> <${property.searchValue}> .`
@@ -446,8 +456,6 @@ export class AdvancedSearchService {
                     return `FILTER NOT EXISTS { \n
                     ?mainRes <${property.selectedProperty?.iri}> <${property.searchValue}> . }`
                 case Operators.Matches:
-                    // eslint-disable-next-line no-case-declarations
-                    let valueString = '';
                     if(Array.isArray(property.searchValue)) {
                         property.searchValue.forEach((value, i) => {
                             valueString += this._valueStringHelper(value, i, '?linkProp' + index);

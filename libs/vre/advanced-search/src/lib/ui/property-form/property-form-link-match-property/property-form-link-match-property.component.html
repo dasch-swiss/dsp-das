@@ -48,14 +48,11 @@
             "
             class="value-container"
         >
+            <!-- choose correct component based on objectType -->
             <dasch-swiss-property-form-value
                 #propertyFormValue
                 *ngIf="
-                    (item.selectedProperty?.objectType?.includes(
-                        constants.KnoraApiV2
-                    ) ||
-                        item.selectedProperty?.objectType ===
-                            constants.Label) &&
+                    !item.selectedProperty?.isLinkProperty &&
                     item.selectedProperty?.objectType !== constants.ListValue
                 "
                 [objectType]="item.selectedProperty?.objectType"
@@ -70,16 +67,11 @@
             >
             </dasch-swiss-property-form-list-value>
             <dasch-swiss-property-form-link-value
-                *ngIf="
-                    !item.selectedProperty?.objectType?.includes(
-                        constants.KnoraApiV2
-                    ) &&
-                    item.selectedProperty?.objectType !== constants.Label &&
-                    item.selectedOperator !== operators.Matches
-                "
+                *ngIf="item.selectedProperty?.isLinkProperty"
                 [resourcesSearchResultsLoading]="resourcesSearchResultsLoading"
                 [resourcesSearchResultsCount]="resourcesSearchResultsCount"
                 [resourcesSearchResults]="resourcesSearchResults"
+                [resourcesSearchNoResults]="resourcesSearchNoResults"
                 (emitResourceSearchValueChanged)="
                     onResourceSearchValueChanged($event, i)
                 "

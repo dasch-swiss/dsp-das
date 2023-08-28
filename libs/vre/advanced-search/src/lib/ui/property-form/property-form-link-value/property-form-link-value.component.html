@@ -12,16 +12,9 @@
         (optionsScroll)="onScroll()"
         (optionSelected)="onResourceSelected($event)"
     >
-        <!-- <mat-option
-            *ngIf="
-                !resourcesSearchResultsLoading &&
-                resourcesSearchResultsCount === 0 &&
-                inputControl.value?.length >= 3
-            "
-            [disabled]="true"
-        >
+        <mat-option *ngIf="resourcesSearchNoResults && !resourcesSearchResultsLoading" [disabled]="true">
             No results found
-        </mat-option> -->
+        </mat-option>
 
         <mat-option *ngFor="let res of resourcesSearchResults" [value]="res">
             {{ res?.label }}

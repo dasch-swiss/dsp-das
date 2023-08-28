@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Operators, PropertyFormItem, SearchItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,12 +29,13 @@ import { MatIconModule } from '@angular/material/icon';
     styleUrls: ['./property-form-link-match-property.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyFormLinkMatchPropertyComponent implements OnInit {
+export class PropertyFormLinkMatchPropertyComponent {
     @Input() values: PropertyFormItem[] | undefined = [];
     @Input() properties: PropertyData[] | undefined = [];
     @Input() resourcesSearchResultsLoading: boolean | null = false;
     @Input() resourcesSearchResultsCount: number | null = 0;
     @Input() resourcesSearchResults: ApiData[] | null = [];
+    @Input() resourcesSearchNoResults: boolean | null = false;
 
     @Output() emitAddPropertyForm = new EventEmitter<void>();
     @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();
@@ -46,10 +47,6 @@ export class PropertyFormLinkMatchPropertyComponent implements OnInit {
 
     operators = Operators; // in order to use it in the template
     constants = Constants;
-
-    ngOnInit() {
-        console.log('propFormItem:', this.values);
-    }
 
     onAddPropertyFormClicked(): void {
         if (this.values) {
@@ -66,7 +63,6 @@ export class PropertyFormLinkMatchPropertyComponent implements OnInit {
     onSelectedPropertyChanged(event: MatSelectChange, index: number): void {
         if (this.values) {
             this.values[index].selectedProperty = event.value;
-            console.log('values:', this.values);
             this.emitSelectedPropertyChanged.emit(this.values[index]);
         }
     }
@@ -74,7 +70,6 @@ export class PropertyFormLinkMatchPropertyComponent implements OnInit {
     onSelectedOperatorChanged(event: MatSelectChange, index: number): void {
         if (this.values) {
             this.values[index].selectedOperator = event.value;
-            console.log('values:', this.values);
             this.emitSelectedOperatorChanged.emit(this.values[index]);
         }
     }
@@ -82,15 +77,11 @@ export class PropertyFormLinkMatchPropertyComponent implements OnInit {
     onValueChanged(value: string, index: number): void {
         if (this.values) {
             this.values[index].searchValue = value;
-            console.log('values:', this.values);
             this.emitValueChanged.emit(this.values[index]);
         }
     }
 
     onResourceSearchValueChanged(value: string, index: number): void {
-        console.log('values:', this.values);
-        console.log('search value changed:', value);
-        // maybe make this better
         if(this.values) {
             const objectType = this.values[index].selectedProperty?.objectType;
             if(objectType) {
@@ -100,13 +91,11 @@ export class PropertyFormLinkMatchPropertyComponent implements OnInit {
     }
 
     onLoadMoreSearchResults(value: string, index: number): void {
-         // maybe make this better
         if(this.values) {
             const objectType = this.values[index].selectedProperty?.objectType;
             if(objectType) {
                 this.emitLoadMoreSearchResults.emit({ value: value, objectType: objectType});
             }
         }
-        console.log('load more search results:', value);
     }
 }

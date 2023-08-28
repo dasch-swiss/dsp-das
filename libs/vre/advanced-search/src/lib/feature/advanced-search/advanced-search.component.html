@@ -29,6 +29,7 @@
             resourcesSearchResultsLoading: resourcesSearchResultsLoading$ | async,
             resourcesSearchResultsCount: resourcesSearchResultsCount$ | async,
             resourcesSearchResults: resourcesSearchResults$ | async,
+            resourcesSearchNoResults: resourcesSearchNoResults$ | async,
             orderByButtonDisabled: orderByButtonDisabled$ | async,
         } as asyncData"
     >
@@ -53,6 +54,7 @@
             [resourcesSearchResultsLoading]="asyncData.resourcesSearchResultsLoading"
             [resourcesSearchResultsCount] = "asyncData.resourcesSearchResultsCount"
             [resourcesSearchResults]="asyncData.resourcesSearchResults"
+            [resourcesSearchNoResults]="asyncData.resourcesSearchNoResults"
             [propertyFormItem]="propertyForm"
             [properties]="asyncData.filteredProperties?.length ? asyncData.filteredProperties : asyncData.properties"
             [propertiesLoading]="asyncData.propertiesLoading"

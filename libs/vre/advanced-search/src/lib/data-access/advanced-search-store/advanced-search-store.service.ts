@@ -24,6 +24,7 @@ export interface AdvancedSearchState {
     filteredProperties: PropertyData[];
     resourcesSearchResultsLoading: boolean;
     resourcesSearchResultsCount: number;
+    resourcesSearchNoResults: boolean;
     resourcesSearchResultsPageNumber: number;
     resourcesSearchResults: ApiData[];
     error?: any;
@@ -112,6 +113,9 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     );
     resourcesSearchResultsCount$: Observable<number> = this.select(
         (state) => state.resourcesSearchResultsCount
+    );
+    resourcesSearchNoResults$: Observable<boolean> = this.select(
+        (state) => state.resourcesSearchNoResults
     );
     resourcesSearchResultsPageNumber$: Observable<number> = this.select(
         (state) => state.resourcesSearchResultsPageNumber
@@ -521,6 +525,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                 .subscribe((count) => {
                     this.patchState({ resourcesSearchResultsCount: count });
                     this.patchState({ resourcesSearchResultsLoading: false });
+                    this.patchState({ resourcesSearchNoResults: false });
                     // since we have the count, we don't need to execute the search if there are no results
                     if (count > 0) {
                         this.patchState({
@@ -540,6 +545,10 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                                     resourcesSearchResultsLoading: false,
                                 });
                             });
+                    } else {
+                        this.patchState({
+                            resourcesSearchNoResults: true,
+                        });
                     }
                 });
         } else {

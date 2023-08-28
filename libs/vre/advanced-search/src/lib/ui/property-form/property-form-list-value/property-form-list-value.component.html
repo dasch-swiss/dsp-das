@@ -31,33 +31,3 @@
         </span>
     </span>
 </mat-menu>
-
-<!-- I still think this can be done all in this component
-    without the need for a child component
-    but I just want to get it working -->
-
-<!-- <div class="list-menu" *ngIf="list">
-    <ng-container *ngIf="hasChildren(list)">
-      <button mat-menu-item [matMenuTriggerFor]="menu">
-        {{ list.label }}
-      </button>
-      <mat-menu #menu="matMenu" [overlapTrigger]="false">
-        <ng-container *ngFor="let item of list.children">
-          <ng-container *ngIf="hasChildren(item); else leafItem">
-            <button mat-menu-item [matMenuTriggerFor]="submenu">
-              {{ item.label }}
-            </button>
-            <mat-menu #submenu="matMenu" [overlapTrigger]="false">
-              <dasch-swiss-property-form-list-value [list]="item"></dasch-swiss-property-form-list-value>
-            </mat-menu>
-          </ng-container>
-          <ng-template #leafItem>
-            <button>{{ item.label }}</button>
-          </ng-template>
-        </ng-container>
-      </mat-menu>
-    </ng-container>
-    <ng-container *ngIf="!hasChildren(list)">
-      <button>{{ list.label }}</button>
-    </ng-container>
-  </div> -->

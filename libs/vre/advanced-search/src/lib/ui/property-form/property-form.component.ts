@@ -66,6 +66,7 @@ export class PropertyFormComponent {
     @Input() resourcesSearchResultsLoading: boolean | null = false;
     @Input() resourcesSearchResultsCount: number | null = 0;
     @Input() resourcesSearchResults: ApiData[] | null = [];
+    @Input() resourcesSearchNoResults: boolean | null = false;
 
     // this can contain either a list of all properties of an ontology
     // OR
@@ -91,7 +92,8 @@ export class PropertyFormComponent {
     operators = Operators; // in order to use it in the template
     constants = Constants;
 
-    resourceLabel = { iri: 'resourceLabel', label: 'Resource Label', objectType: this.constants.Label};
+    // objectType is manually set so that it uses the KnoraApiV2 string for boolean checks later
+    resourceLabel = { iri: 'resourceLabel', label: 'Resource Label', objectType: this.constants.KnoraApiV2 + 'Label'};
 
     onRemovePropertyFormClicked(propFormItem: PropertyFormItem | null): void {
         if (propFormItem) {
