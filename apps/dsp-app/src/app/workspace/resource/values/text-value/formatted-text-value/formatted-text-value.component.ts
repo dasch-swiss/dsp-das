@@ -64,12 +64,11 @@ export class FormattedTextValueComponent
     }
 
     getInitValue(): string | null {
-        // check for standard mapping
         if (
-            this.displayValue !== undefined &&
-            this.displayValue.mapping === this.standardMapping
+            this.displayValue !== undefined
         ) {
-            return this._handleXML(this.displayValue.xml, true);
+            let iniVal = this._handleXML(this.displayValue.xml, true);
+            return this.decodeHtmlEntities(iniVal);
         } else {
             return null;
         }
@@ -179,5 +178,12 @@ export class FormattedTextValueComponent
                 return xml;
             }
         }
+    }
+
+    decodeHtmlEntities(input: string): string {
+        console.log('input', input)
+        const txt = document.createElement('textarea');
+        txt.innerHTML = input;
+        return txt.value;
     }
 }
