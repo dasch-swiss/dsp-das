@@ -15,6 +15,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { AppDatePickerModule } from '@dasch-swiss/vre/shared/app-date-picker';
+import { ResourceLabel } from '../../../data-access/advanced-search-service/advanced-search.service';
 @Component({
     selector: 'dasch-swiss-property-form-value',
     standalone: true,
@@ -37,6 +38,7 @@ export class PropertyFormValueComponent implements OnInit {
     @Output() emitValueChanged = new EventEmitter<string>();
 
     constants = Constants;
+    resourceLabel = ResourceLabel;
 
     matcher = new ValueErrorStateMatcher();
     inputControl = new FormControl();

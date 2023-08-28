@@ -5,6 +5,7 @@ import {
     AdvancedSearchService,
     ApiData,
     PropertyData,
+    ResourceLabel,
 } from '../advanced-search-service/advanced-search.service';
 import { switchMap, tap, catchError } from 'rxjs/operators';
 import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
@@ -383,7 +384,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                         Operators.NotEquals,
                         Operators.Exists,
                         Operators.NotExists,
-                        Operators.Matches, // do we want to support this?
+                        Operators.Matches,
                     ];
                 }
             }
@@ -765,7 +766,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             [
                 Operators.Equals,
                 [
-                    Constants.Label,
+                    ResourceLabel,
                     Constants.TextValue,
                     Constants.IntValue,
                     Constants.DecimalValue,
@@ -778,7 +779,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             [
                 Operators.NotEquals,
                 [
-                    Constants.Label,
+                    ResourceLabel,
                     Constants.TextValue,
                     Constants.IntValue,
                     Constants.DecimalValue,
@@ -866,8 +867,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                     Constants.DateValue,
                 ],
             ],
-            [Operators.IsLike, [Constants.Label, Constants.TextValue]],
-            [Operators.Matches, [Constants.Label, Constants.TextValue]],
+            [Operators.IsLike, [ResourceLabel, Constants.TextValue]],
+            [Operators.Matches, [ResourceLabel, Constants.TextValue]],
         ]);
     }
 

@@ -40,6 +40,8 @@ export interface GravsearchPropertyString {
     isOperatorNotExists?: boolean;
 }
 
+export const ResourceLabel = Constants.KnoraApiV2 + Constants.HashDelimiter + 'ResourceLabel';
+
 @Injectable({
     providedIn: 'root',
 })
@@ -384,7 +386,7 @@ export class AdvancedSearchService {
         .forEach((orderByItem) => {
             const index = properties.findIndex((prop) => prop.id === orderByItem.id);
             if (index > -1) {
-                if(properties[index].selectedProperty?.objectType === Constants.Label) {
+                if(properties[index].selectedProperty?.objectType === ResourceLabel) {
                     orderByProps.push('?label');
                 } else {
                     orderByProps.push(`?prop${index}`);
@@ -424,11 +426,9 @@ export class AdvancedSearchService {
     private _propertyStringHelper(property: PropertyFormItem, index: number): GravsearchPropertyString {
         let linkString = '';
         let valueString = '';
-        // TODO: add ResourceLabel to js-lib Constants with this structure
-        // Constants.KnoraApiV2 + Constants.HashDelimiter + "resourceLabel";
-        // so that we don't need to do this label check
-        if(property.selectedProperty?.objectType !== Constants.Label &&
-            property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)) {
+
+        if(property.selectedProperty?.objectType.includes(Constants.KnoraApiV2) &&
+            property.selectedProperty?.objectType !== ResourceLabel) {
             linkString = '?mainRes <' + property.selectedProperty?.iri + '> ?prop' + index + ' .';
         } else {//link property
             if(Array.isArray(property.searchValue)) {
@@ -446,8 +446,7 @@ export class AdvancedSearchService {
 
     private _valueStringHelper(property: PropertyFormItem, index: number, identifier: string): string {
         // link property
-        if(property.selectedProperty?.objectType !== Constants.Label &&
-            !property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)) {
+        if(!property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)) {
             let valueString ='';
             switch (property.selectedOperator) {
                 case Operators.Equals:
@@ -467,7 +466,7 @@ export class AdvancedSearchService {
             }
         } else {
             switch (property.selectedProperty?.objectType) {
-                case Constants.Label:
+                case ResourceLabel:
                     switch (property.selectedOperator) {
                         case Operators.Equals:
                         case Operators.NotEquals:
