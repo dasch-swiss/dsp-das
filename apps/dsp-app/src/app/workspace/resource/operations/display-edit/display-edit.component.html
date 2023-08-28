@@ -25,6 +25,15 @@
                 (internalLinkClicked)="standoffLinkClicked($event)"
                 (internalLinkHovered)="standoffLinkHovered($event)"
             ></app-formatted-text-value>
+            <app-formatted-text-value
+                class="parent-value-component"
+                #displayVal
+                *ngSwitchCase="constants.CustomFormattedTextValue"
+                [mode]="mode"
+                [displayValue]="$any(displayValue)"
+                (internalLinkClicked)="standoffLinkClicked($event)"
+                (internalLinkHovered)="standoffLinkHovered($event)"
+            ></app-formatted-text-value>
             <app-int-value
                 class="parent-value-component"
                 #displayVal
