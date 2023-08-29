@@ -8,15 +8,16 @@ import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy
 import { MatMenuModule } from '@angular/material/menu';
 import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DatePickerComponent } from './date-picker.component';
+import { AppDatePickerComponent } from './app-date-picker.component'
+import { Subject } from 'rxjs';
 
 describe('DatePickerComponent', () => {
-    let component: DatePickerComponent;
-    let fixture: ComponentFixture<DatePickerComponent>;
+    let component: AppDatePickerComponent;
+    let fixture: ComponentFixture<AppDatePickerComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatePickerComponent],
+            declarations: [AppDatePickerComponent],
             imports: [
                 BrowserAnimationsModule,
                 MatButtonModule,
@@ -28,11 +29,12 @@ describe('DatePickerComponent', () => {
                 MatSelectModule,
                 ReactiveFormsModule,
             ],
+            providers: [Subject],
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(DatePickerComponent);
+        fixture = TestBed.createComponent(AppDatePickerComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

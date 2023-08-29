@@ -109,7 +109,8 @@
                             [adminPermissions]="adminPermissions"
                             [editPermissions]="editPermissions"
                             [valueUuidToHighlight]="valueUuid"
-                            (regionChanged)="updateRegion()">
+                            (regionChanged)="updateRegion()"
+                            (regionDeleted)="reloadWithResource()">
                         </app-properties>
                     </div>
 
