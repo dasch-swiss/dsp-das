@@ -180,6 +180,10 @@ export class FormattedTextValueComponent
         }
     }
 
+    /**
+     * decode html entities.
+     * @param input the html string to be decoded
+     */
     decodeHtmlEntities(input: string): string {
         const txt = document.createElement('textarea');
         txt.innerHTML = input;
