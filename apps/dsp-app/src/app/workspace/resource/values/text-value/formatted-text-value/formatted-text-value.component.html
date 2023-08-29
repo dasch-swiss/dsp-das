@@ -1,6 +1,5 @@
 <span *ngIf="mode === 'read'; else showForm" class="read-mode-view">
     <div
-        *ngIf="this.displayValue?.mapping === standardMapping; else sourceMode"
         class="rm-value"
         appHtmlLink
         [innerHTML]="valueFormControl.value"
