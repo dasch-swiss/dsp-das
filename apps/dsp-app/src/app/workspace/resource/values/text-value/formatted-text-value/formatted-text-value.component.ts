@@ -181,7 +181,6 @@ export class FormattedTextValueComponent
     }
 
     decodeHtmlEntities(input: string): string {
-        console.log('input', input)
         const txt = document.createElement('textarea');
         txt.innerHTML = input;
         return txt.value;
