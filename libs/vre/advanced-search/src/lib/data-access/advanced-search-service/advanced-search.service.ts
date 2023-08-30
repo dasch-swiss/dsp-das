@@ -427,17 +427,23 @@ export class AdvancedSearchService {
         let linkString = '';
         let valueString = '';
 
+        // not a linked resource, not a resource label
         if(property.selectedProperty?.objectType.includes(Constants.KnoraApiV2) &&
             property.selectedProperty?.objectType !== ResourceLabel) {
             linkString = '?mainRes <' + property.selectedProperty?.iri + '> ?prop' + index + ' .';
-        } else {//link property
-            if(Array.isArray(property.searchValue)) {
-                linkString = '?mainRes <' + property.selectedProperty?.iri + '> ?prop' + index + ' .';
-                property.searchValue.forEach((value, i) => {
-                    linkString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
-                });
-            }
         }
+
+        // linked resource
+        if(!property.selectedProperty?.objectType.includes(Constants.KnoraApiV2) &&
+                property.selectedProperty?.objectType !== ResourceLabel) {
+                    linkString = '?mainRes <' + property.selectedProperty?.iri + '> ?prop' + index + ' .';
+                    if(Array.isArray(property.searchValue)) {
+                        property.searchValue.forEach((value, i) => {
+                            linkString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
+                        });
+                    }
+        }
+
         if (!(property.selectedOperator === Operators.Exists || property.selectedOperator === Operators.NotExists)) {
             valueString = this._valueStringHelper(property, index, '?prop');
         }
@@ -445,7 +451,7 @@ export class AdvancedSearchService {
     }
 
     private _valueStringHelper(property: PropertyFormItem, index: number, identifier: string): string {
-        // link property
+        // linked resource
         if(!property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)) {
             let valueString ='';
             switch (property.selectedOperator) {

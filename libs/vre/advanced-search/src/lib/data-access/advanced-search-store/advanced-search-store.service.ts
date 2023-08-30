@@ -376,7 +376,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                     .filter(([_, values]) => values.includes(objectType))
                     .map(([key, _]) => key);
 
-                // if there are no matching operators in the map it means it's a link property
+                // if there are no matching operators in the map it means the property is a linked resource
                 // i.e. http://0.0.0.0:3333/ontology/0801/newton/v2#letter
                 if (!operators.length) {
                     operators = [
@@ -592,7 +592,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                     .filter(([_, values]) => values.includes(objectType))
                     .map(([key, _]) => key);
 
-                // if there are no matching operators in the map it means it's a link property
+                // if there are no matching operators in the map it means the property is a linked resource
                 // i.e. http://0.0.0.0:3333/ontology/0801/newton/v2#letter
                 if (!operators.length) {
                     operators = [
