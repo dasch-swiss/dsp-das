@@ -3,9 +3,7 @@ import {
     Constants,
     KnoraDate,
     Precision,
-    ReadTextValueAsHtml,
-    ReadTextValueAsString,
-    ReadTextValueAsXml,
+    ReadFormattedTextValue,
     ReadValue,
     ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
@@ -24,69 +22,7 @@ import {
 export class ValueService {
     constants = Constants;
 
-    private readonly _readTextValueAsString = 'ReadTextValueAsString';
-
-    private readonly _readTextValueAsXml = 'ReadTextValueAsXml';
-
-    private readonly _readTextValueAsHtml = 'ReadTextValueAsHtml';
-
     constructor() {}
-
-    /**
-     * given a value, determines the type or class representing it.
-     *
-     * For text values, this method determines the specific class in use.
-     * For all other types, the given type is returned.
-     *
-     * @param value the given value.
-     */
-    getValueTypeOrClass(value: ReadValue): string {
-        if (value.type === this.constants.TextValue) {
-            if (value instanceof ReadTextValueAsString) {
-                return this._readTextValueAsString;
-            } else if (value instanceof ReadTextValueAsXml) {
-                return this._readTextValueAsXml;
-            } else if (value instanceof ReadTextValueAsHtml) {
-                return this._readTextValueAsHtml;
-            } else {
-                throw new Error(`unknown TextValue class ${value}`);
-            }
-        } else {
-            return value.type;
-        }
-    }
-
-    /**
-     * given a ResourcePropertyDefinition of a #hasText property, determines the class representing it.
-     *
-     * @param resourcePropDef the given ResourcePropertyDefinition.
-     */
-    getTextValueClass(resourcePropDef: ResourcePropertyDefinition): string {
-        switch (resourcePropDef.guiElement) {
-            case 'http://api.knora.org/ontology/salsah-gui/v2#SimpleText':
-                return this._readTextValueAsString;
-            case 'http://api.knora.org/ontology/salsah-gui/v2#Richtext':
-                return this._readTextValueAsXml;
-            default:
-                return this._readTextValueAsString;
-        }
-    }
-
-    /**
-     * given a salsah gui element IRI, determines the short type of it
-     *
-     * @param guiEle the given salsah gui element iri.
-     */
-    getTextValueGuiEle(guiEle: string): 'simpleText' | 'textArea' | 'richText' {
-        switch (guiEle) {
-            case 'http://api.knora.org/ontology/salsah-gui/v2#Textarea':
-                return 'textArea';
-            case 'http://api.knora.org/ontology/salsah-gui/v2#Richtext':
-                return 'richText';
-            default:
-                return 'simpleText';
-        }
-    }
 
     /**
      * given the ObjectType of a PropertyDefinition, compares it to the provided value type.
@@ -99,15 +35,7 @@ export class ValueService {
         objectType: string,
         valueType: string
     ): boolean {
-        return (
-            (objectType === this._readTextValueAsString &&
-                valueType === this.constants.TextValue) ||
-            (objectType === this._readTextValueAsHtml &&
-                valueType === this.constants.TextValue) ||
-            (objectType === this._readTextValueAsXml &&
-                valueType === this.constants.TextValue) ||
-            objectType === valueType
-        );
+        return objectType === valueType;
     }
 
     /**
@@ -115,7 +43,7 @@ export class ValueService {
      *
      * @param textValue the text value to be checked.
      */
-    isTextEditable(textValue: ReadTextValueAsXml): boolean {
+    isTextEditable(textValue: ReadFormattedTextValue): boolean {
         return textValue.mapping === Constants.StandardMapping;
     }
 
@@ -139,12 +67,12 @@ export class ValueService {
 
         // only texts complying with the standard mapping can be edited using CKEditor.
         const xmlValueNonStandardMapping =
-            valueTypeOrClass === this._readTextValueAsXml &&
-            value instanceof ReadTextValueAsXml &&
+            valueTypeOrClass === this.constants.FormattedTextValue &&
+            value instanceof ReadFormattedTextValue &&
             !this.isTextEditable(value);
 
         return (
-            valueTypeOrClass === this._readTextValueAsHtml ||
+            valueTypeOrClass === this.constants.CustomFormattedTextValue ||
             valueTypeOrClass === this.constants.GeomValue ||
             xmlValueNonStandardMapping
         );

@@ -271,7 +271,7 @@ export class PropertyFormComponent implements OnInit {
     }
 
     buildForm() {
-        let disablePropType = true;
+        const disablePropType = true;
 
         // if property definition exists
         // we are in edit mode: prepare form to edit label and/or comment
@@ -301,11 +301,6 @@ export class PropertyFormComponent implements OnInit {
                 // because there was the idea to shorten the array of restricted elements
                 // in case e.g. richtext can't be changed to simple text, then we shouldn't list the simple text item
                 const slice = 0;
-
-                // there's only the object type "text", where we can change the gui element;
-                disablePropType =
-                    this.propertyInfo.propType.objectType !==
-                    Constants.TextValue;
 
                 this.restrictedPropertyTypes[0].elements =
                     restrictedElements.slice(slice);
@@ -621,22 +616,7 @@ export class PropertyFormComponent implements OnInit {
                                     this.lastModificationDate =
                                         propertyCommentResponse.lastModificationDate;
 
-                                    // if property type is supported and is of type TextValue and the guiElement is different from its initial value, call replaceGuiElement() to update the guiElement
-                                    // this only works for the TextValue object type currently
-                                    // https://docs.dasch.swiss/latest/DSP-API/03-apis/api-v2/ontology-information/#changing-the-gui-element-and-gui-attributes-of-a-property
-                                    if (
-                                        !this.unsupportedPropertyType &&
-                                        this.propertyInfo.propDef.objectType ===
-                                            Constants.TextValue &&
-                                        this.propertyInfo.propDef.guiElement !==
-                                            this.propertyForm.controls[
-                                                'propType'
-                                            ].value.guiEle
-                                    ) {
-                                        this.replaceGuiElement();
-                                    } else {
-                                        this.onSuccess();
-                                    }
+                                    this.onSuccess();
                                 },
                                 (error: ApiResponseError) => {
                                     this.onError(error);
@@ -662,22 +642,7 @@ export class PropertyFormComponent implements OnInit {
                                     this.lastModificationDate =
                                         deleteCommentResponse.lastModificationDate;
 
-                                    // if property type is supported and is of type TextValue and the guiElement is different from its initial value, call replaceGuiElement() to update the guiElement
-                                    // this only works for the TextValue object type currently
-                                    // https://docs.dasch.swiss/latest/DSP-API/03-apis/api-v2/ontology-information/#changing-the-gui-element-and-gui-attributes-of-a-property
-                                    if (
-                                        !this.unsupportedPropertyType &&
-                                        this.propertyInfo.propDef.objectType ===
-                                            Constants.TextValue &&
-                                        this.propertyInfo.propDef.guiElement !==
-                                            this.propertyForm.controls[
-                                                'propType'
-                                            ].value.guiEle
-                                    ) {
-                                        this.replaceGuiElement();
-                                    } else {
-                                        this.onSuccess();
-                                    }
+                                    this.onSuccess();
                                 },
                                 (error: ApiResponseError) => {
                                     this.onError(error);
@@ -919,19 +884,9 @@ export class PropertyFormComponent implements OnInit {
             case Constants.GuiRadio:
                 guiAttributes = ['hlist=<' + guiAttr + '>'];
                 break;
-            case Constants.GuiSimpleText:
-                // --> TODO could have two guiAttr fields: size and maxlength
-                // we suggest to use default value for size; we do not support this guiAttr in DSP-App
-                guiAttributes = ['maxlength=' + guiAttr];
-                break;
             case Constants.GuiSpinbox:
                 // --> TODO could have two guiAttr fields: min and max
                 guiAttributes = ['min=' + guiAttr, 'max=' + guiAttr];
-                break;
-            case Constants.GuiTextarea:
-                // --> TODO could have four guiAttr fields: width, cols, rows, wrap
-                // we suggest to use default values; we do not support this guiAttr in DSP-App
-                guiAttributes = ['width=100%'];
                 break;
         }
 

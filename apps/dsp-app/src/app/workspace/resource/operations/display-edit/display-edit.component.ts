@@ -132,8 +132,6 @@ export class DisplayEditComponent implements OnInit {
 
     showDateLabels = false;
 
-    textArea = false;
-
     dateFormat: string;
 
     user: ReadUser;
@@ -167,9 +165,7 @@ export class DisplayEditComponent implements OnInit {
         // check if comment toggle button should be shown
         this.checkCommentToggleVisibility();
 
-        this.valueTypeOrClass = this._valueService.getValueTypeOrClass(
-            this.displayValue
-        );
+        this.valueTypeOrClass = this.displayValue.type;
 
         // get the resource property definition
         const resPropDef = this.parentResource.entityInfo
@@ -178,13 +174,6 @@ export class DisplayEditComponent implements OnInit {
                 (propDef: ResourcePropertyDefinition) =>
                     propDef.id === this.displayValue.property
             );
-
-        if (
-            resPropDef[0].guiElement ===
-            Constants.SalsahGui + Constants.HashDelimiter + 'Textarea'
-        ) {
-            this.textArea = true;
-        }
 
         if (resPropDef.length !== 1) {
             // this should never happen because we always have the property info for the given value

@@ -5,11 +5,10 @@ import {
     KnoraDate,
     MockResource,
     ReadDateValue,
+    ReadFormattedTextValue,
     ReadIntValue,
     ReadLinkValue,
-    ReadTextValueAsHtml,
-    ReadTextValueAsString,
-    ReadTextValueAsXml,
+    ReadUnformattedTextValue,
     ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { ValueService } from './value.service';
@@ -26,42 +25,22 @@ describe('ValueService', () => {
         expect(service).toBeTruthy();
     });
 
-    describe('getValueTypeOrClass', () => {
-        it('should return type of int', () => {
-            const readIntValue = new ReadIntValue();
-            readIntValue.type =
-                'http://api.knora.org/ontology/knora-api/v2#IntValue';
-            expect(service.getValueTypeOrClass(readIntValue)).toEqual(
-                'http://api.knora.org/ontology/knora-api/v2#IntValue'
-            );
-        });
-
-        it('should return class of ReadTextValueAsString', () => {
-            const readTextValueAsString = new ReadTextValueAsString();
-            readTextValueAsString.type =
-                'http://api.knora.org/ontology/knora-api/v2#TextValue';
-            expect(service.getValueTypeOrClass(readTextValueAsString)).toEqual(
-                'ReadTextValueAsString'
-            );
-        });
-    });
-
     describe('isTextEditable', () => {
         it('should determine if a given text with the standard mapping is editable', () => {
-            const readTextValueAsXml = new ReadTextValueAsXml();
-            readTextValueAsXml.type =
-                'http://api.knora.org/ontology/knora-api/v2#TextValue';
-            readTextValueAsXml.mapping = Constants.StandardMapping;
-            expect(service.isTextEditable(readTextValueAsXml)).toBeTruthy();
+            const readFormattedTextValue = new ReadFormattedTextValue();
+            readFormattedTextValue.type =
+                'http://api.knora.org/ontology/knora-api/v2#FormattedTextValue';
+            readFormattedTextValue.mapping = Constants.StandardMapping;
+            expect(service.isTextEditable(readFormattedTextValue)).toBeTruthy();
         });
 
         it('should determine if a given text with a custom mapping is editable', () => {
-            const readTextValueAsXml = new ReadTextValueAsXml();
-            readTextValueAsXml.type =
-                'http://api.knora.org/ontology/knora-api/v2#TextValue';
-            readTextValueAsXml.mapping =
+            const readFormattedTextValue = new ReadFormattedTextValue();
+            readFormattedTextValue.type =
+                'http://api.knora.org/ontology/knora-api/v2#FormattedTextValue';
+            readFormattedTextValue.mapping =
                 'http://rdfh.ch/standoff/mappings/CustomMapping';
-            expect(service.isTextEditable(readTextValueAsXml)).toBeFalsy();
+            expect(service.isTextEditable(readFormattedTextValue)).toBeFalsy();
         });
     });
 
@@ -74,74 +53,55 @@ describe('ValueService', () => {
             const resPropDef = new ResourcePropertyDefinition();
             resPropDef.isEditable = true;
 
-            const valueClass = service.getValueTypeOrClass(readIntValue);
             expect(
-                service.isReadOnly(valueClass, readIntValue, resPropDef)
+                service.isReadOnly(readIntValue.type, readIntValue, resPropDef)
             ).toBeFalsy();
         });
 
-        it('should not mark ReadTextValueAsString as ReadOnly', () => {
-            const readTextValueAsString = new ReadTextValueAsString();
-            readTextValueAsString.type =
-                'http://api.knora.org/ontology/knora-api/v2#TextValue';
+        it('should not mark ReadUnformattedTextValue as ReadOnly', () => {
+            const readUnformattedTextValue = new ReadUnformattedTextValue();
+            readUnformattedTextValue.type =
+                'http://api.knora.org/ontology/knora-api/v2#UnformattedTextValue';
 
             const resPropDef = new ResourcePropertyDefinition();
             resPropDef.isEditable = true;
 
-            const valueClass = service.getValueTypeOrClass(
-                readTextValueAsString
-            );
             expect(
                 service.isReadOnly(
-                    valueClass,
-                    readTextValueAsString,
+                    readUnformattedTextValue.type,
+                    readUnformattedTextValue,
                     resPropDef
                 )
             ).toBeFalsy();
         });
 
-        it('should mark ReadTextValueAsHtml as ReadOnly', () => {
-            const readTextValueAsHtml = new ReadTextValueAsHtml();
-            readTextValueAsHtml.type =
-                'http://api.knora.org/ontology/knora-api/v2#TextValue';
-
-            const resPropDef = new ResourcePropertyDefinition();
-            resPropDef.isEditable = true;
-
-            const valueClass = service.getValueTypeOrClass(readTextValueAsHtml);
-            expect(
-                service.isReadOnly(valueClass, readTextValueAsHtml, resPropDef)
-            ).toBeTruthy();
-        });
-
         it('should not mark ReadTextValueAsXml with standard mapping as ReadOnly', () => {
-            const readTextValueAsXml = new ReadTextValueAsXml();
-            readTextValueAsXml.type =
-                'http://api.knora.org/ontology/knora-api/v2#TextValue';
-            readTextValueAsXml.mapping = Constants.StandardMapping;
+            const readFormattedTextValue = new ReadFormattedTextValue();
+            readFormattedTextValue.type =
+                'http://api.knora.org/ontology/knora-api/v2#FormattedTextValue';
+            readFormattedTextValue.mapping = Constants.StandardMapping;
 
             const resPropDef = new ResourcePropertyDefinition();
             resPropDef.isEditable = true;
 
-            const valueClass = service.getValueTypeOrClass(readTextValueAsXml);
+            // const valueClass = service.getValueTypeOrClass(readTextValueAsXml);
             expect(
-                service.isReadOnly(valueClass, readTextValueAsXml, resPropDef)
+                service.isReadOnly(readFormattedTextValue.type, readFormattedTextValue, resPropDef)
             ).toBeFalsy();
         });
 
         it('should mark ReadTextValueAsXml with custom mapping as ReadOnly', () => {
-            const readTextValueAsXml = new ReadTextValueAsXml();
-            readTextValueAsXml.type =
-                'http://api.knora.org/ontology/knora-api/v2#TextValue';
-            readTextValueAsXml.mapping =
+            const readFormattedTextValue = new ReadFormattedTextValue();
+            readFormattedTextValue.type =
+                'http://api.knora.org/ontology/knora-api/v2#FormattedTextValue';
+            readFormattedTextValue.mapping =
                 'http://rdfh.ch/standoff/mappings/CustomMapping';
 
             const resPropDef = new ResourcePropertyDefinition();
             resPropDef.isEditable = true;
 
-            const valueClass = service.getValueTypeOrClass(readTextValueAsXml);
             expect(
-                service.isReadOnly(valueClass, readTextValueAsXml, resPropDef)
+                service.isReadOnly(readFormattedTextValue.type, readFormattedTextValue, resPropDef)
             ).toBeTruthy();
         });
 
@@ -153,12 +113,9 @@ describe('ValueService', () => {
             const resPropDef = new ResourcePropertyDefinition();
             resPropDef.isEditable = false;
 
-            const valueClass = service.getValueTypeOrClass(
-                readStandoffLinkValue
-            );
             expect(
                 service.isReadOnly(
-                    valueClass,
+                    readStandoffLinkValue.type,
                     readStandoffLinkValue,
                     resPropDef
                 )
@@ -177,9 +134,8 @@ describe('ValueService', () => {
                 const resPropDef = new ResourcePropertyDefinition();
                 resPropDef.isEditable = true;
 
-                const valueClass = service.getValueTypeOrClass(date);
                 expect(
-                    service.isReadOnly(valueClass, date, resPropDef)
+                    service.isReadOnly(date.type, date, resPropDef)
                 ).toBeFalsy();
 
                 done();
@@ -198,9 +154,8 @@ describe('ValueService', () => {
                 const resPropDef = new ResourcePropertyDefinition();
                 resPropDef.isEditable = true;
 
-                const valueClass = service.getValueTypeOrClass(date);
                 expect(
-                    service.isReadOnly(valueClass, date, resPropDef)
+                    service.isReadOnly(date.type, date, resPropDef)
                 ).toBeFalsy();
 
                 done();
@@ -209,29 +164,20 @@ describe('ValueService', () => {
     });
 
     describe('compareObjectTypeWithValueType', () => {
-        it('should successfully compare "http://api.knora.org/ontology/knora-api/v2#TextValue" with "ReadTextValueAsString"', () => {
+        it('should successfully compare "http://api.knora.org/ontology/knora-api/v2#UnformattedTextValue" with "UnformattedTextValue"', () => {
             expect(
                 service.compareObjectTypeWithValueType(
-                    'ReadTextValueAsString',
-                    'http://api.knora.org/ontology/knora-api/v2#TextValue'
+                    'http://api.knora.org/ontology/knora-api/v2#UnformattedTextValue',
+                    'http://api.knora.org/ontology/knora-api/v2#UnformattedTextValue'
                 )
             ).toBeTruthy();
         });
 
-        it('should successfully compare "http://api.knora.org/ontology/knora-api/v2#TextValue" with "ReadTextValueAsHtml"', () => {
+        it('should successfully compare "http://api.knora.org/ontology/knora-api/v2#FormattedTextValue" with "ReadFormattedTextValue"', () => {
             expect(
                 service.compareObjectTypeWithValueType(
-                    'ReadTextValueAsHtml',
-                    'http://api.knora.org/ontology/knora-api/v2#TextValue'
-                )
-            ).toBeTruthy();
-        });
-
-        it('should successfully compare "http://api.knora.org/ontology/knora-api/v2#TextValue" with "ReadTextValueAsXml"', () => {
-            expect(
-                service.compareObjectTypeWithValueType(
-                    'ReadTextValueAsXml',
-                    'http://api.knora.org/ontology/knora-api/v2#TextValue'
+                    'http://api.knora.org/ontology/knora-api/v2#FormattedTextValue',
+                    'http://api.knora.org/ontology/knora-api/v2#FormattedTextValue'
                 )
             ).toBeTruthy();
         });
@@ -254,10 +200,10 @@ describe('ValueService', () => {
             ).toBeFalsy();
         });
 
-        it('should fail to compare "http://api.knora.org/ontology/knora-api/v2#IntValue" with "ReadTextValueAsString"', () => {
+        it('should fail to compare "http://api.knora.org/ontology/knora-api/v2#IntValue" with "http://api.knora.org/ontology/knora-api/v2#UnformattedTextValue"', () => {
             expect(
                 service.compareObjectTypeWithValueType(
-                    'ReadTextValueAsString',
+                    'http://api.knora.org/ontology/knora-api/v2#UnformattedTextValue',
                     'http://api.knora.org/ontology/knora-api/v2#IntValue'
                 )
             ).toBeFalsy();

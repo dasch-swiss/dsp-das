@@ -9,33 +9,31 @@
         }"
     >
         <span [ngSwitch]="valueTypeOrClass">
-            <!-- display value is cast as 'any' because the compiler cannot infer the value type expected by the child component -->
-            <app-text-value-as-string
+            <app-unformatted-text-value
                 class="parent-value-component"
                 #displayVal
-                *ngSwitchCase="'ReadTextValueAsString'"
+                *ngSwitchCase="constants.UnformattedTextValue"
                 [mode]="mode"
                 [displayValue]="$any(displayValue)"
-                [textArea]="textArea"
-            ></app-text-value-as-string>
-            <app-text-value-as-html
+            ></app-unformatted-text-value>
+            <app-formatted-text-value
                 class="parent-value-component"
                 #displayVal
-                *ngSwitchCase="'ReadTextValueAsHtml'"
-                [mode]="mode"
-                [displayValue]="$any(displayValue)"
-                (internalLinkClicked)="standoffLinkClicked($event)"
-                (internalLinkHovered)="standoffLinkHovered($event)"
-            ></app-text-value-as-html>
-            <app-text-value-as-xml
-                class="parent-value-component"
-                #displayVal
-                *ngSwitchCase="'ReadTextValueAsXml'"
+                *ngSwitchCase="constants.FormattedTextValue"
                 [mode]="mode"
                 [displayValue]="$any(displayValue)"
                 (internalLinkClicked)="standoffLinkClicked($event)"
                 (internalLinkHovered)="standoffLinkHovered($event)"
-            ></app-text-value-as-xml>
+            ></app-formatted-text-value>
+            <app-formatted-text-value
+                class="parent-value-component"
+                #displayVal
+                *ngSwitchCase="constants.CustomFormattedTextValue"
+                [mode]="mode"
+                [displayValue]="$any(displayValue)"
+                (internalLinkClicked)="standoffLinkClicked($event)"
+                (internalLinkHovered)="standoffLinkHovered($event)"
+            ></app-formatted-text-value>
             <app-int-value
                 class="parent-value-component"
                 #displayVal

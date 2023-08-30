@@ -1,21 +1,17 @@
 <span [ngSwitch]="property.objectType">
-    <app-text-value-as-string
+    <app-unformatted-text-value
         #createVal
-        *ngSwitchCase="'ReadTextValueAsString'"
+        *ngSwitchCase="constants.UnformattedTextValue"
+        [mode]="mode"
+    ></app-unformatted-text-value>
+    <app-formatted-text-value
+        #createVal
+        *ngSwitchCase="constants.FormattedTextValue"
         [mode]="mode"
         [valueRequiredValidator]="isRequiredProp"
         [parentForm]="parentForm"
         [formName]="formName"
-        [textArea]="textArea"
-    ></app-text-value-as-string>
-    <app-text-value-as-xml
-        #createVal
-        *ngSwitchCase="'ReadTextValueAsXml'"
-        [mode]="mode"
-        [valueRequiredValidator]="isRequiredProp"
-        [parentForm]="parentForm"
-        [formName]="formName"
-    ></app-text-value-as-xml>
+    ></app-formatted-text-value>
     <app-int-value
         #createVal
         *ngSwitchCase="constants.IntValue"

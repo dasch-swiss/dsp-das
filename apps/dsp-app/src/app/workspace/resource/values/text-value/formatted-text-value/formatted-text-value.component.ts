@@ -1,36 +1,25 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+import {Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output} from "@angular/core";
+import {BaseValueDirective} from "@dsp-app/src/app/main/directive/base-value.directive";
 import {
-    Component,
-    EventEmitter,
-    Inject,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
-} from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import {
-    Constants,
-    CreateTextValueAsXml,
-    ReadTextValueAsXml,
-    UpdateTextValueAsXml,
-} from '@dasch-swiss/dsp-js';
+    Constants, CreateFormattedTextValue,
+    ReadFormattedTextValue,
+    UpdateFormattedTextValue,
+} from "@dasch-swiss/dsp-js";
+import {ValueErrorStateMatcher} from "@dsp-app/src/app/workspace/resource/values/value-error-state-matcher";
 import * as Editor from 'ckeditor5-custom-build';
-import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
-import { ValueErrorStateMatcher } from '../../value-error-state-matcher';
-import { ckEditor } from '../ck-editor';
+import {FormBuilder} from "@angular/forms";
+import {ckEditor} from "@dsp-app/src/app/workspace/resource/values/text-value/ck-editor";
 
 @Component({
-    selector: 'app-text-value-as-xml',
-    templateUrl: './text-value-as-xml.component.html',
-    styleUrls: ['./text-value-as-xml.component.scss'],
+    selector: 'app-formatted-text-value',
+    templateUrl: './formatted-text-value.component.html',
+    styleUrls: ['./formatted-text-value.component.scss'],
 })
-export class TextValueAsXMLComponent
+export class FormattedTextValueComponent
     extends BaseValueDirective
     implements OnInit, OnChanges, OnDestroy
 {
-    @Input() displayValue?: ReadTextValueAsXml;
+    @Input() displayValue?: ReadFormattedTextValue;
 
     @Output() internalLinkClicked: EventEmitter<string> =
         new EventEmitter<string>();
@@ -75,12 +64,11 @@ export class TextValueAsXMLComponent
     }
 
     getInitValue(): string | null {
-        // check for standard mapping
         if (
-            this.displayValue !== undefined &&
-            this.displayValue.mapping === this.standardMapping
+            this.displayValue !== undefined
         ) {
-            return this._handleXML(this.displayValue.xml, true);
+            let iniVal = this._handleXML(this.displayValue.xml, true);
+            return this.decodeHtmlEntities(iniVal);
         } else {
             return null;
         }
@@ -103,12 +91,12 @@ export class TextValueAsXMLComponent
         super.ngOnDestroy();
     }
 
-    getNewValue(): CreateTextValueAsXml | false {
+    getNewValue(): CreateFormattedTextValue | false {
         if (this.mode !== 'create' || !this.form.valid || this.isEmptyVal()) {
             return false;
         }
 
-        const newTextValue = new CreateTextValueAsXml();
+        const newTextValue = new CreateFormattedTextValue();
 
         newTextValue.xml = this._handleXML(this.valueFormControl.value, false);
         newTextValue.mapping = this.standardMapping;
@@ -123,12 +111,12 @@ export class TextValueAsXMLComponent
         return newTextValue;
     }
 
-    getUpdatedValue(): UpdateTextValueAsXml | false {
+    getUpdatedValue(): UpdateFormattedTextValue | false {
         if (this.mode !== 'update' || !this.form.valid) {
             return false;
         }
 
-        const updatedTextValue = new UpdateTextValueAsXml();
+        const updatedTextValue = new UpdateFormattedTextValue();
 
         updatedTextValue.id = this.displayValue.id;
 
@@ -190,5 +178,15 @@ export class TextValueAsXMLComponent
                 return xml;
             }
         }
+    }
+
+    /**
+     * decode html entities.
+     * @param input the html string to be decoded
+     */
+    decodeHtmlEntities(input: string): string {
+        const txt = document.createElement('textarea');
+        txt.innerHTML = input;
+        return txt.value;
     }
 }

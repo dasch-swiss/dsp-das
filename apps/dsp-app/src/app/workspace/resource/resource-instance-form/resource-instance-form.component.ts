@@ -14,7 +14,7 @@ import {
     Constants,
     CreateFileValue,
     CreateResource,
-    CreateTextValueAsString,
+    CreateUnformattedTextValue,
     CreateValue,
     KnoraApiConnection,
     ReadResource,
@@ -234,7 +234,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
         if (this.propertiesParentForm.valid) {
             const createResource = new CreateResource();
 
-            const resLabelVal = <CreateTextValueAsString>(
+            const resLabelVal = <CreateUnformattedTextValue>(
                 this.selectPropertiesComponent.createValueComponent.getNewValue()
             );
 

@@ -13,15 +13,14 @@
             </div>
             <div class="property-value large-field">
                 <div class="value">
-                    <app-text-value-as-string
+                    <app-unformatted-text-value
                         #createVal
                         [mode]="'create'"
                         [commentDisabled]="true"
                         [valueRequiredValidator]="true"
                         [parentForm]="parentForm"
                         [formName]="'label'"
-                    >
-                    </app-text-value-as-string>
+                    ></app-unformatted-text-value>
                 </div>
             </div>
         </div>

@@ -8,13 +8,14 @@ import {
     ViewChild,
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { ApiResponseData, ProjectResponse } from '@dasch-swiss/dsp-js';
 import {
+    ApiResponseData,
     ApiResponseError,
+    ProjectResponse,
     Constants,
     CreateFileValue,
     CreateResource,
-    CreateTextValueAsString,
+    CreateUnformattedTextValue,
     CreateValue,
     KnoraApiConnection,
     ReadResource,
@@ -114,7 +115,7 @@ export class CreateLinkResourceComponent implements OnInit {
                 .subscribe((project: ApiResponseData<ProjectResponse>) => {
                     const createResource = new CreateResource();
 
-                    const resLabelVal = <CreateTextValueAsString>(
+                    const resLabelVal = <CreateUnformattedTextValue>(
                         this.selectPropertiesComponent.createValueComponent.getNewValue()
                     );
 

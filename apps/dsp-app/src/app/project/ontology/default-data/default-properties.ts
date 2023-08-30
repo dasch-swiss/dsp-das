@@ -31,7 +31,7 @@ export interface DefaultProperty {
     description: string;
     subPropOf: string;
     objectType?: string;
-    guiEle: string;
+    guiEle?: string;
     group: string;
 }
 
@@ -52,31 +52,20 @@ export class DefaultProperties {
             group: 'Text',
             elements: [
                 {
-                    icon: 'short_text',
-                    label: 'Short',
-                    description: 'Short text such as title or name',
-                    subPropOf: Constants.HasValue,
-                    objectType: Constants.TextValue,
-                    guiEle: Constants.GuiSimpleText, // better element would be: 'Input',
-                    group: 'Text', // redundant information, but otherwise we don't get the main group name after selecting type
-                },
-                {
                     icon: 'subject',
-                    label: 'Paragraph',
+                    label: 'Unformatted Text',
                     description:
-                        'Long text such as description; could have line breaks',
+                        'Text without formatting options (only line breaks are available)',
                     subPropOf: Constants.HasValue,
-                    objectType: Constants.TextValue,
-                    guiEle: Constants.GuiTextarea,
+                    objectType: Constants.UnformattedTextValue,
                     group: 'Text',
                 },
                 {
                     icon: 'line_style',
-                    label: 'Rich Text',
-                    description: 'A rich text editor with formatting options',
+                    label: 'Formatted Text',
+                    description: 'Text in a rich text editor with formatting options e.g. italic, bold, etc.',
                     subPropOf: Constants.HasValue,
-                    objectType: Constants.TextValue,
-                    guiEle: Constants.GuiRichText,
+                    objectType: Constants.FormattedTextValue,
                     group: 'Text',
                 },
             ],
@@ -204,7 +193,6 @@ export class DefaultProperties {
                     description: 'Link to an external website',
                     subPropOf: Constants.HasValue,
                     objectType: Constants.UriValue,
-                    guiEle: Constants.GuiSimpleText,
                     group: 'Link / Relation',
                 },
             ],

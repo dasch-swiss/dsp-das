@@ -77,34 +77,6 @@ export class AddValueComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.ontoIri = this.parentResource.type.split('#')[0];
         this.mode = 'create';
-
-        // since simple text values and rich text values share the same object type 'TextValue',
-        // we need to use the ValueTypeService in order to assign it the correct object type for the ngSwitch in the template
-        if (
-            this.resourcePropertyDefinition.objectType ===
-                Constants.TextValue ||
-            this.resourcePropertyDefinition.objectType ===
-                'ReadTextValueAsString'
-        ) {
-            this.resourcePropertyDefinition.objectType =
-                this._valueService.getTextValueClass(
-                    this.resourcePropertyDefinition
-                );
-
-            if (
-                this.resourcePropertyDefinition.objectType ===
-                'ReadTextValueAsString'
-            ) {
-                // handle the correct gui element depending on guiEle property
-                this.textValueGuiEle = this._valueService.getTextValueGuiEle(
-                    this.resourcePropertyDefinition.guiElement
-                );
-
-                if (this.textValueGuiEle === 'textArea') {
-                    this.textArea = true;
-                }
-            }
-        }
     }
 
     // wait to show the save/cancel buttons until the form is initialized so that the template checks using the form's validity work

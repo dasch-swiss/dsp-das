@@ -145,6 +145,9 @@ export class OntologyService {
                     // get property iri from another ontology
                     this._applicationStateService.get('currentProjectOntologies').subscribe(
                         (ontologies: ReadOntology[]) => {
+                            if (!ontologies || !ontologies.length) {
+                                return;
+                            }
                             const onto = ontologies.find(
                                 (i) => i?.id === baseOntoIri
                             );
@@ -197,16 +200,6 @@ export class OntologyService {
                                 (i) =>
                                     i.objectType === property.objectType &&
                                     i.subPropOf === Constants.SeqNum
-                            );
-                        } else if (
-                            property.objectType === Constants.TextValue
-                        ) {
-                            // if the property is of type text value, we have to check the gui element
-                            // to get the correct default prop params
-                            propType = group.elements.find(
-                                (i) =>
-                                    i.guiEle === property.guiElement &&
-                                    i.objectType === property.objectType
                             );
                         } else {
                             // in all other cases the gui-element resp. the subProp is not relevant

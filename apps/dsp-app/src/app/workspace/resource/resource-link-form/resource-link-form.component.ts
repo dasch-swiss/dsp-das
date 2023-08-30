@@ -18,7 +18,7 @@ import {
     Constants,
     CreateLinkValue,
     CreateResource,
-    CreateTextValueAsString,
+    CreateUnformattedTextValue,
     KnoraApiConnection,
     ReadResource,
     StoredProject,
@@ -142,8 +142,8 @@ export class ResourceLinkFormComponent implements OnInit {
 
         const comment = this.form.controls['comment'].value;
         if (comment) {
-            const commentVal = new CreateTextValueAsString();
-            commentVal.type = Constants.TextValue;
+            const commentVal = new CreateUnformattedTextValue();
+            commentVal.type = Constants.UnformattedTextValue;
             commentVal.text = comment;
             linkObj.properties = {
                 [Constants.HasLinkToValue]: hasLinkToValue,

@@ -57,14 +57,6 @@ export class SelectPropertiesComponent implements OnInit {
         if (this.properties) {
             for (const prop of this.properties) {
                 if (prop) {
-                    if (
-                        prop.objectType ===
-                        'http://api.knora.org/ontology/knora-api/v2#TextValue'
-                    ) {
-                        prop.objectType =
-                            this._valueService.getTextValueClass(prop);
-                    }
-
                     // each property will have at least one value so add one by default
                     this.propertyValuesKeyValuePair[prop.id] = [0];
 

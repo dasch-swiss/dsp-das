@@ -21,7 +21,7 @@ export class SearchTextValueComponent
     // parent FormGroup
     @Input() formGroup: UntypedFormGroup;
 
-    type = Constants.TextValue;
+    type: string;
 
     form: UntypedFormGroup;
 

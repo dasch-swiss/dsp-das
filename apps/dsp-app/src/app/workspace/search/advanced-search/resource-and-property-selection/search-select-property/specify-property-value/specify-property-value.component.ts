@@ -133,27 +133,24 @@ export class SpecifyPropertyValueComponent implements OnChanges, OnDestroy {
         }
 
         switch (this.propertyValueType) {
-            case Constants.TextValue:
-                if (
-                    this._property.guiElement ===
-                    Constants.SalsahGui + Constants.HashDelimiter + 'Richtext'
-                ) {
-                    this.comparisonOperators = [
-                        new Like(),
-                        new Match(),
-                        new Exists(),
-                        new NotExists(),
-                    ];
-                } else {
-                    this.comparisonOperators = [
-                        new Like(),
-                        new Match(),
-                        new Equals(),
-                        new NotEquals(),
-                        new Exists(),
-                        new NotExists(),
-                    ];
-                }
+            case Constants.UnformattedTextValue:
+                this.comparisonOperators = [
+                    new Like(),
+                    new Match(),
+                    new Equals(),
+                    new NotEquals(),
+                    new Exists(),
+                    new NotExists(),
+                ];
+                break;
+
+            case Constants.FormattedTextValue:
+                this.comparisonOperators = [
+                    new Like(),
+                    new Match(),
+                    new Exists(),
+                    new NotExists(),
+                ];
                 break;
 
             case Constants.BooleanValue:
