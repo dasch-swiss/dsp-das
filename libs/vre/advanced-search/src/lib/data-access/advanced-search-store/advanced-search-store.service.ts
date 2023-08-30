@@ -938,6 +938,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                             tap({
                                 next: (response) => {
                                     this.patchState({ ontologies: response });
+                                    this.patchState({ selectedOntology: response[0] })
                                     this.patchState({
                                         ontologiesLoading: false,
                                     });
