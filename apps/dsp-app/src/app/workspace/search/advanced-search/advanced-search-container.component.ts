@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-advanced-search-container',
@@ -9,7 +10,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class AdvancedSearchContainerComponent implements OnInit {
     uuid: string;
 
-    constructor(private _router: Router, private _route: ActivatedRoute) {}
+    constructor(
+        private _router: Router,
+        private _route: ActivatedRoute,
+        private _location: Location
+    ) {}
 
     ngOnInit(): void {
         this.uuid = this._route.parent.snapshot.params.uuid;
@@ -21,6 +26,6 @@ export class AdvancedSearchContainerComponent implements OnInit {
     }
 
     onBackClicked(): void {
-        this._router.navigate(['/']);
+        this._location.back();
     }
 }
