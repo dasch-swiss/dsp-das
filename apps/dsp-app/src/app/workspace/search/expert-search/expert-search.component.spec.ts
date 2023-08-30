@@ -48,7 +48,7 @@ describe('ExpertSearchComponent', () => {
     let hostCompDe: DebugElement;
 
     let searchParamsServiceSpy: jasmine.SpyObj<SearchParamsService>;
-    let advancedSearchParams: SearchParams;
+    let gravsearchSearchParams: GravsearchSearchParams;
 
     beforeEach(waitForAsync(() => {
         const spy = jasmine.createSpyObj('SearchParamsService', [
@@ -92,8 +92,8 @@ describe('ExpertSearchComponent', () => {
             SearchParamsService
         ) as jasmine.SpyObj<SearchParamsService>;
         searchParamsServiceSpy.changeSearchParamsMsg.and.callFake(
-            (searchParams: SearchParams) => {
-                advancedSearchParams = searchParams;
+            (searchParams: GravsearchSearchParams) => {
+                gravsearchSearchParams = searchParams;
             }
         );
 
@@ -187,8 +187,8 @@ CONSTRUCT {
         expect(
             searchParamsServiceSpy.changeSearchParamsMsg
         ).toHaveBeenCalledTimes(1);
-        expect(advancedSearchParams).toBeDefined();
-        expect(advancedSearchParams.generateGravsearch(0)).toEqual(
+        expect(gravsearchSearchParams).toBeDefined();
+        expect(gravsearchSearchParams.generateGravsearch(0)).toEqual(
             expectedGravsearch
         );
     });

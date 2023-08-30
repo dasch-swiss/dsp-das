@@ -10,6 +10,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AdvancedSearchContainerComponent } from './advanced-search-container.component';
 import { MockProvider } from 'ng-mocks';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { ActivatedRoute } from '@angular/router';
 
 /**
  * test component to simulate select ontology component.
@@ -34,7 +35,7 @@ class TestHostComponent implements OnInit {
     ngOnInit() {}
 }
 
-describe('AdvancedSearchComponent', () => {
+describe('AdvancedSearchContainerComponent', () => {
     let testHostComponent: TestHostComponent;
     let testHostFixture: ComponentFixture<TestHostComponent>;
 
@@ -59,6 +60,17 @@ describe('AdvancedSearchComponent', () => {
                 {
                     provide: DspApiConnectionToken,
                     useValue: dspConnSpy,
+                },
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        parent: {
+                            snapshot: {
+                                url: [{ path: 'project' }],
+                                params: [{ uuid: '0123' }],
+                            },
+                        },
+                    },
                 },
             ],
         }).compileComponents();
