@@ -1,23 +1,21 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-advanced-search-container',
     templateUrl: './advanced-search-container.component.html',
     styleUrls: ['./advanced-search-container.component.scss'],
 })
-export class AdvancedSearchContainerComponent {
-
+export class AdvancedSearchContainerComponent implements OnInit {
     uuid: string;
 
-    constructor(private _router: Router) { }
+    constructor(private _router: Router, private _route: ActivatedRoute) {}
 
-    // ngOnInit(): void {
-    //     this.uuid = history.state.uuid;
-    // }
+    ngOnInit(): void {
+        this.uuid = this._route.parent.snapshot.params.uuid;
+    }
 
     onSearch(query: string): void {
-        console.log(query);
         const route = `/search/gravsearch/${encodeURIComponent(query)}`;
         this._router.navigate([route]);
     }

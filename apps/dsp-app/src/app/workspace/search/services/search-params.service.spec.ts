@@ -1,16 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 
 import {
-    AdvancedSearchParams,
-    AdvancedSearchParamsService,
-} from './advanced-search-params.service';
+    GravsearchSearchParams,
+    SearchParamsService,
+} from './search-params.service';
 
 describe('SearchParamsService', () => {
-    let service: AdvancedSearchParamsService;
+    let service: SearchParamsService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
-        service = TestBed.inject(AdvancedSearchParamsService);
+        service = TestBed.inject(SearchParamsService);
     });
 
     it('should be created', () => {
@@ -18,7 +18,7 @@ describe('SearchParamsService', () => {
     });
 
     it('should return false when initialized', () => {
-        const searchParams: AdvancedSearchParams = service.getSearchParams();
+        const searchParams: GravsearchSearchParams = service.getSearchParams();
 
         expect(searchParams.generateGravsearch(0)).toBeFalsy();
     });
@@ -26,9 +26,9 @@ describe('SearchParamsService', () => {
     it('should set the parameters of an advanced search', () => {
         const testMethod1 = () => 'test1';
 
-        service.changeSearchParamsMsg(new AdvancedSearchParams(testMethod1));
+        service.changeSearchParamsMsg(new GravsearchSearchParams(testMethod1));
 
-        const searchParams: AdvancedSearchParams = service.getSearchParams();
+        const searchParams: GravsearchSearchParams = service.getSearchParams();
 
         expect(searchParams.generateGravsearch(0)).toEqual('test1');
 
@@ -37,9 +37,9 @@ describe('SearchParamsService', () => {
 
         const testMethod2 = () => 'test2';
 
-        service.changeSearchParamsMsg(new AdvancedSearchParams(testMethod2));
+        service.changeSearchParamsMsg(new GravsearchSearchParams(testMethod2));
 
-        const searchParams2: AdvancedSearchParams = service.getSearchParams();
+        const searchParams2: GravsearchSearchParams = service.getSearchParams();
 
         expect(searchParams2.generateGravsearch(0)).toEqual('test2');
 

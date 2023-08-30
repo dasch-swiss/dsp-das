@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 /*
  * represents the parameters of an advanced search.
  */
-export class AdvancedSearchParams {
+export class GravsearchSearchParams {
     /**
      *
      * @param generateGravsearch a function that generates a Gravsearch query.
@@ -21,14 +21,14 @@ export class AdvancedSearchParams {
 @Injectable({
     providedIn: 'root',
 })
-export class AdvancedSearchParamsService {
+export class SearchParamsService {
     private _currentSearchParams;
 
     constructor() {
         // init with a dummy function that returns false
         // if the application is reloaded, this will be returned
-        this._currentSearchParams = new BehaviorSubject<AdvancedSearchParams>(
-            new AdvancedSearchParams(() => false)
+        this._currentSearchParams = new BehaviorSubject<GravsearchSearchParams>(
+            new GravsearchSearchParams(() => false)
         );
     }
 
@@ -37,7 +37,7 @@ export class AdvancedSearchParamsService {
      *
      * @param searchParams new advanced search params.
      */
-    changeSearchParamsMsg(searchParams: AdvancedSearchParams): void {
+    changeSearchParamsMsg(searchParams: GravsearchSearchParams): void {
         this._currentSearchParams.next(searchParams);
     }
 
@@ -45,7 +45,7 @@ export class AdvancedSearchParamsService {
      * gets the search params of an advanced search.
      *
      */
-    getSearchParams(): AdvancedSearchParams {
+    getSearchParams(): GravsearchSearchParams {
         return this._currentSearchParams.getValue();
     }
 }

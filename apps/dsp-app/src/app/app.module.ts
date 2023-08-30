@@ -144,21 +144,6 @@ import { ListViewComponent } from './workspace/results/list-view/list-view.compo
 import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
 import { ResultsComponent } from './workspace/results/results.component';
 import { AdvancedSearchContainerComponent } from './workspace/search/advanced-search/advanced-search-container.component';
-import { ResourceAndPropertySelectionComponent } from './workspace/search/advanced-search/resource-and-property-selection/resource-and-property-selection.component';
-import { SearchSelectPropertyComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/search-select-property.component';
-import { SearchBooleanValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-boolean-value/search-boolean-value.component';
-import { SearchDateValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-date-value/search-date-value.component';
-import { SearchDecimalValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-decimal-value/search-decimal-value.component';
-import { SearchIntValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-int-value/search-int-value.component';
-import { SearchLinkValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-link-value/search-link-value.component';
-import { SearchDisplayListComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-list-value/search-display-list/search-display-list.component';
-import { SearchListValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-list-value/search-list-value.component';
-import { SearchResourceComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-resource/search-resource.component';
-import { SearchTextValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-text-value/search-text-value.component';
-import { SearchUriValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-uri-value/search-uri-value.component';
-import { SpecifyPropertyValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/specify-property-value.component';
-import { SearchSelectResourceClassComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-resource-class/search-select-resource-class.component';
-import { SearchSelectOntologyComponent } from './workspace/search/advanced-search/search-select-ontology/search-select-ontology.component';
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
@@ -266,7 +251,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         PropertyFormComponent,
         PropertyInfoComponent,
         ReplaceFileFormComponent,
-        ResourceAndPropertySelectionComponent,
         ResourceClassFormComponent,
         ResourceClassInfoComponent,
         ResourceClassPropertyInfoComponent,
@@ -275,20 +259,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         ResourceLinkFormComponent,
         ResourceListComponent,
         ResultsComponent,
-        SearchBooleanValueComponent,
-        SearchDateValueComponent,
-        SearchDecimalValueComponent,
-        SearchDisplayListComponent,
-        SearchIntValueComponent,
-        SearchLinkValueComponent,
-        SearchListValueComponent,
         SearchPanelComponent,
-        SearchResourceComponent,
-        SearchSelectOntologyComponent,
-        SearchSelectPropertyComponent,
-        SearchSelectResourceClassComponent,
-        SearchTextValueComponent,
-        SearchUriValueComponent,
         SelectedResourcesComponent,
         SelectGroupComponent,
         SelectLanguageComponent,
@@ -297,7 +268,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         SelectPropertiesComponent,
         SelectResourceClassComponent,
         SortButtonComponent,
-        SpecifyPropertyValueComponent,
         SplitPipe,
         StatusComponent,
         StillImageComponent,

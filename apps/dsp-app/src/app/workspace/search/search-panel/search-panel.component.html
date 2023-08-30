@@ -21,16 +21,6 @@
             <span class="desktop-only">How to search</span>
         </button>
         <span class="fill-remaining-space"></span>
-        <!-- advanced search button: if advanced === true -->
-        <button
-            mat-flat-button
-            *ngIf="advanced"
-            [class.active]="showAdvanced"
-            (click)="routeToAdvancedSearch()"
-        >
-            <mat-icon matPrefix>manage_search</mat-icon>
-            <span class="desktop-only">advanced</span>
-        </button>
 
         <!-- expert search button: if expert === true -->
         <button
