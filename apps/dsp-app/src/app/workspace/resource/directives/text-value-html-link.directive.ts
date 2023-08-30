@@ -16,6 +16,7 @@ export class TextValueHtmlLinkDirective {
      */
     @HostListener('click', ['$event'])
     onClick(event: MouseEvent) {
+        console.log('TextValueHtmlLinkDirective.onClick()');
         const targetElement = event.target as HTMLAnchorElement;
         if (
             !targetElement ||
@@ -53,6 +54,7 @@ export class TextValueHtmlLinkDirective {
      */
     @HostListener('mousedown', ['$event'])
     onMouseDown(event: MouseEvent) {
+        console.log('TextValueHtmlLinkDirective.onMouseDown()');
         const targetElement = event.target as HTMLAnchorElement;
 
         if (!targetElement || targetElement.nodeName.toLowerCase() !== 'a') {
