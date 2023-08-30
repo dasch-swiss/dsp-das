@@ -1,6 +1,8 @@
-<button mat-icon-button class="add-remove-property-button add" [disabled]="addButtonDisabled" (click)="onAddPropertyFormClicked()">
-    <mat-icon>add_circle</mat-icon>
-</button>
+<div class="add-property-button">
+    <button mat-button [disabled]="addButtonDisabled" (click)="onAddPropertyFormClicked()">
+        Add search criteria
+    </button>
+</div>
 <div class="action-buttons">
     <button mat-button class="reset-button" [disabled]="resetButtonDisabled" (click)="onResetButtonClicked()">Reset</button>
     <button

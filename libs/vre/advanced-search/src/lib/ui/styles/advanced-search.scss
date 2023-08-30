@@ -41,17 +41,31 @@
   }
 }
 
-.add-remove-property-button {
+.add-property-button {
+  button {
+    padding: 0% 3%;
+    height: 50px;
+    margin: 1% 0%;
+  }
+
+  button:disabled {
+    border: 1px solid #BDBFC1;
+    background-color: #BDBFC1;
+    color: white;
+  }
+
+  button:not(:disabled) {
+    border: 1px solid #336790;
+    background-color: #336790;
+    color: white;
+  }
+}
+
+.remove-property-button {
   height: 44px;
   width: 44px;
   padding: 0px;
-
-  &.add:not(:disabled) {
-    color: #336790;
-  }
-  &.remove {
-    color: #E11D48;
-  }
+  color: #E11D48;
 
   mat-icon {
     height: 44px;

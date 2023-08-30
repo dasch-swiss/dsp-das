@@ -84,7 +84,7 @@
         <button
             mat-icon-button
             (click)="onRemovePropertyFormClicked(item)"
-            class="add-remove-property-button remove"
+            class="remove-property-button"
         >
             <mat-icon>remove_circle</mat-icon>
         </button>
@@ -92,11 +92,9 @@
 </div>
 
 <div class="parent-container child-property-list">
-    <button
-        mat-icon-button
-        class="add-remove-property-button add"
-        (click)="onAddPropertyFormClicked()"
-    >
-        <mat-icon>add_circle</mat-icon>
-    </button>
+    <div class="add-property-button">
+        <button mat-button (click)="onAddPropertyFormClicked()">
+            Add search criteria
+        </button>
+    </div>
 </div>
