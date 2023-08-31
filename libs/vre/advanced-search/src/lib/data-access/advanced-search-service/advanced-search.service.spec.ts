@@ -1,8 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
 import { AdvancedSearchService } from './advanced-search.service';
-import { KnoraApiConfig, KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { DspApiConfigToken, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import {
+    KnoraApiConfig,
+    KnoraApiConnection,
+} from '@dasch-swiss/dsp-js';
+import {
+    DspApiConfigToken,
+    DspApiConnectionToken,
+} from '@dasch-swiss/vre/shared/app-config';
 import { of } from 'rxjs';
 
 describe('AdvancedSearchService', () => {
@@ -17,7 +23,9 @@ describe('AdvancedSearchService', () => {
                 },
                 {
                     provide: DspApiConnectionToken,
-                    useValue: new KnoraApiConnection(new KnoraApiConfig('http', '0.0.0.0', 3333)),
+                    useValue: new KnoraApiConnection(
+                        new KnoraApiConfig('http', '0.0.0.0', 3333)
+                    ),
                 },
             ],
         });
@@ -28,34 +36,79 @@ describe('AdvancedSearchService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should return a list of projects', (done) => {
-        const mockProjectsResponse = {
-          body: {
-            projects: [
-              { id: 'project1', shortname: 'proj1' },
-              { id: 'project2', shortname: 'proj2' },
-            ],
-          },
-        };
+    describe('projects', () => {
+        it('should return a list of projects', (done) => {
+            const mockProjectsResponse = {
+                body: {
+                    projects: [
+                        { id: 'project1', shortname: 'proj1' },
+                        { id: 'project2', shortname: 'proj2' },
+                    ],
+                },
+            };
 
-        // Mock the API call using a mock value
-        const mockDspApiConnection = {
-          admin: {
-            projectsEndpoint: {
-              getProjects: jest.fn().mockReturnValue(of(mockProjectsResponse)),
-            },
-          },
-        };
+            // Mock the API call using a mock value
+            const mockDspApiConnection = {
+                admin: {
+                    projectsEndpoint: {
+                        getProjects: jest
+                            .fn()
+                            .mockReturnValue(of(mockProjectsResponse)),
+                    },
+                },
+            };
 
-        // any is needed here so that we don't have to mock the entire DspApiConnection object
-        service['_dspApiConnection'] = mockDspApiConnection as any;
+            // any is needed here so that we don't have to mock the entire DspApiConnection object
+            service['_dspApiConnection'] = mockDspApiConnection as any;
 
-        service.projectsList().subscribe((projects) => {
-          expect(projects).toEqual([
-            { iri: 'project1', label: 'proj1' },
-            { iri: 'project2', label: 'proj2' },
-          ]);
-          done();
+            service.projectsList().subscribe((projects) => {
+                expect(projects).toEqual([
+                    { iri: 'project1', label: 'proj1' },
+                    { iri: 'project2', label: 'proj2' },
+                ]);
+                done();
+            });
         });
-      });
+    });
+
+    describe('ontologies', () => {
+        it('should return a list of ontologies', (done) => {
+            const mockOntologiesResponse = {
+                ontologies: [
+                    {
+                        id: 'ontology1',
+                        label: 'Ontology 1',
+                        attachedToProject: 'project1',
+                    },
+                    {
+                        id: 'ontology2',
+                        label: 'Ontology 2',
+                        attachedToProject: 'project2',
+                    },
+                ],
+            };
+
+            // Mock the API call using a mock value
+            const mockDspApiConnection = {
+                v2: {
+                    onto: {
+                        getOntologiesMetadata: jest
+                            .fn()
+                            .mockReturnValue(of(mockOntologiesResponse)),
+                    },
+                },
+            };
+
+            // Use type assertion to bypass type checking for the mock connection
+            service['_dspApiConnection'] = mockDspApiConnection as any;
+
+            service.allOntologiesList().subscribe((ontologies) => {
+                expect(ontologies).toEqual([
+                    { iri: 'ontology1', label: 'Ontology 1' },
+                    { iri: 'ontology2', label: 'Ontology 2' },
+                ]);
+                done();
+            });
+        });
+    });
 });
