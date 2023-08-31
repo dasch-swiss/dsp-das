@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PropertyFormComponent } from './property-form.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('PropertyFormComponent', () => {
     let component: PropertyFormComponent;
@@ -7,7 +8,7 @@ describe('PropertyFormComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [PropertyFormComponent],
+            imports: [PropertyFormComponent, BrowserAnimationsModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(PropertyFormComponent);

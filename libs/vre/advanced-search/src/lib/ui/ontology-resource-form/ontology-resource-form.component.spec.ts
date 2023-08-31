@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { OntologyResourceFormComponent } from './ontology-resource-form.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('OntologyResourceFormComponent', () => {
     let component: OntologyResourceFormComponent;
@@ -7,7 +8,7 @@ describe('OntologyResourceFormComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [OntologyResourceFormComponent],
+            imports: [OntologyResourceFormComponent, BrowserAnimationsModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(OntologyResourceFormComponent);

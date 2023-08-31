@@ -19,7 +19,11 @@ import {
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { Operators, OrderByItem, PropertyFormItem } from '../advanced-search-store/advanced-search-store.service';
+import {
+    Operators,
+    OrderByItem,
+    PropertyFormItem,
+} from '../advanced-search-store/advanced-search-store.service';
 
 export interface ApiData {
     iri: string;
@@ -30,7 +34,7 @@ export interface PropertyData {
     iri: string;
     label: string;
     objectType: string;
-    isLinkProperty: boolean;
+    isLinkProperty: boolean; // todo: should this be called linkProperty or linkedResource?
     listIri?: string; // only for list values
 }
 
@@ -40,7 +44,13 @@ export interface GravsearchPropertyString {
     isOperatorNotExists?: boolean;
 }
 
-export const ResourceLabel = Constants.KnoraApiV2 + Constants.HashDelimiter + 'ResourceLabel';
+export const ResourceLabel =
+    Constants.KnoraApiV2 + Constants.HashDelimiter + 'ResourceLabel';
+
+// I think this should be possible instead of importing it from an external library
+// export const DspApiConnectionToken = new InjectionToken<KnoraApiConnection>(
+//     'DSP api connection instance'
+// );
 
 @Injectable({
     providedIn: 'root',
@@ -190,7 +200,9 @@ export class AdvancedSearchService {
                             // objectType can be undefined but I'm not really sure if this is true
                             const objectType = propDef.objectType || '';
 
-                            const linkProperty = !propDef.objectType?.includes(Constants.KnoraApiV2);
+                            const linkProperty = !propDef.objectType?.includes(
+                                Constants.KnoraApiV2
+                            );
 
                             return {
                                 iri: propDef.id,
@@ -239,7 +251,9 @@ export class AdvancedSearchService {
                             // objectType can be undefined but I'm not really sure if this is true
                             const objectType = propDef.objectType || '';
 
-                            const linkProperty = !propDef.objectType?.includes(Constants.KnoraApiV2);
+                            const linkProperty = !propDef.objectType?.includes(
+                                Constants.KnoraApiV2
+                            );
 
                             if (objectType === Constants.ListValue) {
                                 const guiAttr = propDef.guiAttributes;
@@ -374,7 +388,9 @@ export class AdvancedSearchService {
             restrictToResourceClass = `?mainRes a <${resourceClassIri}> .`;
         }
 
-        const propertyStrings: GravsearchPropertyString[] = properties.map((prop, index) => this._propertyStringHelper(prop, index));
+        const propertyStrings: GravsearchPropertyString[] = properties.map(
+            (prop, index) => this._propertyStringHelper(prop, index)
+        );
 
         let orderByString = '';
         const orderByProps: string[] = [];
@@ -382,20 +398,26 @@ export class AdvancedSearchService {
         // use the id in the orderByList to loop through properties to find the index of the property in the properties list
         // then add the string with the index to orderByProps
         orderByList
-        .filter((orderByItem) => orderByItem.orderBy === true)
-        .forEach((orderByItem) => {
-            const index = properties.findIndex((prop) => prop.id === orderByItem.id);
-            if (index > -1) {
-                if(properties[index].selectedProperty?.objectType === ResourceLabel) {
-                    orderByProps.push('?label');
-                } else {
-                    orderByProps.push(`?prop${index}`);
+            .filter((orderByItem) => orderByItem.orderBy === true)
+            .forEach((orderByItem) => {
+                const index = properties.findIndex(
+                    (prop) => prop.id === orderByItem.id
+                );
+                if (index > -1) {
+                    if (
+                        properties[index].selectedProperty?.objectType ===
+                        ResourceLabel
+                    ) {
+                        orderByProps.push('?label');
+                    } else {
+                        orderByProps.push(`?prop${index}`);
+                    }
                 }
+            });
 
-            }
-        });
-
-        orderByString = orderByProps.length ? `ORDER BY ${orderByProps.join(' ')}` : '';
+        orderByString = orderByProps.length
+            ? `ORDER BY ${orderByProps.join(' ')}`
+            : '';
         console.log(propertyStrings);
         const gravSearch = `
             PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
@@ -408,7 +430,13 @@ export class AdvancedSearchService {
 
             ${restrictToResourceClass}
 
-            ${propertyStrings.map((prop) => prop.isOperatorNotExists ? `FILTER NOT EXISTS {\n${prop.linkString}\n }` : prop.linkString).join('\n')}
+            ${propertyStrings
+                .map((prop) =>
+                    prop.isOperatorNotExists
+                        ? `FILTER NOT EXISTS {\n${prop.linkString}\n }`
+                        : prop.linkString
+                )
+                .join('\n')}
 
             ${propertyStrings.map((prop) => prop.valueString).join('\n')}
             }
@@ -423,47 +451,90 @@ export class AdvancedSearchService {
         return gravSearch;
     }
 
-    private _propertyStringHelper(property: PropertyFormItem, index: number): GravsearchPropertyString {
+    private _propertyStringHelper(
+        property: PropertyFormItem,
+        index: number
+    ): GravsearchPropertyString {
         let linkString = '';
         let valueString = '';
 
         // not a linked resource, not a resource label
-        if(property.selectedProperty?.objectType.includes(Constants.KnoraApiV2) &&
-            property.selectedProperty?.objectType !== ResourceLabel) {
-            linkString = '?mainRes <' + property.selectedProperty?.iri + '> ?prop' + index + ' .';
+        if (
+            property.selectedProperty?.objectType.includes(
+                Constants.KnoraApiV2
+            ) &&
+            property.selectedProperty?.objectType !== ResourceLabel
+        ) {
+            linkString =
+                '?mainRes <' +
+                property.selectedProperty?.iri +
+                '> ?prop' +
+                index +
+                ' .';
         }
 
         // linked resource
-        if(!property.selectedProperty?.objectType.includes(Constants.KnoraApiV2) &&
-                property.selectedProperty?.objectType !== ResourceLabel) {
-                    linkString = '?mainRes <' + property.selectedProperty?.iri + '> ?prop' + index + ' .';
-                    if(Array.isArray(property.searchValue)) {
-                        property.searchValue.forEach((value, i) => {
-                            linkString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
-                        });
-                    }
+        if (
+            !property.selectedProperty?.objectType.includes(
+                Constants.KnoraApiV2
+            ) &&
+            property.selectedProperty?.objectType !== ResourceLabel
+        ) {
+            linkString =
+                '?mainRes <' +
+                property.selectedProperty?.iri +
+                '> ?prop' +
+                index +
+                ' .';
+            if (Array.isArray(property.searchValue)) {
+                property.searchValue.forEach((value, i) => {
+                    linkString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
+                });
+            }
         }
 
-        if (!(property.selectedOperator === Operators.Exists || property.selectedOperator === Operators.NotExists)) {
+        if (
+            !(
+                property.selectedOperator === Operators.Exists ||
+                property.selectedOperator === Operators.NotExists
+            )
+        ) {
             valueString = this._valueStringHelper(property, index, '?prop');
         }
-        return { linkString: linkString, valueString: valueString, isOperatorNotExists: property.selectedOperator === Operators.NotExists };
+        return {
+            linkString: linkString,
+            valueString: valueString,
+            isOperatorNotExists:
+                property.selectedOperator === Operators.NotExists,
+        };
     }
 
-    private _valueStringHelper(property: PropertyFormItem, index: number, identifier: string): string {
+    private _valueStringHelper(
+        property: PropertyFormItem,
+        index: number,
+        identifier: string
+    ): string {
         // linked resource
-        if(!property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)) {
-            let valueString ='';
+        if (
+            !property.selectedProperty?.objectType.includes(
+                Constants.KnoraApiV2
+            )
+        ) {
+            let valueString = '';
             switch (property.selectedOperator) {
                 case Operators.Equals:
-                    return `?mainRes <${property.selectedProperty?.iri}> <${property.searchValue}> .`
+                    return `?mainRes <${property.selectedProperty?.iri}> <${property.searchValue}> .`;
                 case Operators.NotEquals:
                     return `FILTER NOT EXISTS { \n
-                    ?mainRes <${property.selectedProperty?.iri}> <${property.searchValue}> . }`
+                    ?mainRes <${property.selectedProperty?.iri}> <${property.searchValue}> . }`;
                 case Operators.Matches:
-                    if(Array.isArray(property.searchValue)) {
+                    if (Array.isArray(property.searchValue)) {
                         property.searchValue.forEach((value, i) => {
-                            valueString += this._valueStringHelper(value, i, '?linkProp' + index);
+                            valueString += this._valueStringHelper(
+                                value,
+                                i,
+                                '?linkProp' + index
+                            );
                         });
                     }
                     return valueString;
@@ -477,46 +548,88 @@ export class AdvancedSearchService {
                         case Operators.Equals:
                         case Operators.NotEquals:
                             return `?mainRes rdfs:label ?label .\n
-                            FILTER (?label ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}") .`;
+                            FILTER (?label ${this._operatorToSymbol(
+                                property.selectedOperator
+                            )} "${property.searchValue}") .`;
                         case Operators.IsLike:
                             return `?mainRes rdfs:label ?label .\n
                             FILTER regex(?label, "${property.searchValue}", "i") .`;
                         case Operators.Matches:
                             return `?mainRes rdfs:label ?label .\n
-                            FILTER knora-api:matchLabel(?mainRes, "${property.searchValue}") .`
+                            FILTER knora-api:matchLabel(?mainRes, "${property.searchValue}") .`;
                         default:
-                            throw new Error('Invalid operator for resource label');
+                            throw new Error(
+                                'Invalid operator for resource label'
+                            );
                     }
                 case Constants.TextValue:
                     switch (property.selectedOperator) {
                         case Operators.Equals:
                         case Operators.NotEquals:
-                            return `${identifier}${index} <${Constants.ValueAsString}> ${identifier}${index}Literal .\n
-                            FILTER (${identifier}${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdString}>) .`;
+                            return `${identifier}${index} <${
+                                Constants.ValueAsString
+                            }> ${identifier}${index}Literal .\n
+                            FILTER (${identifier}${index}Literal ${this._operatorToSymbol(
+                                property.selectedOperator
+                            )} "${property.searchValue}"^^<${
+                                Constants.XsdString
+                            }>) .`;
                         case Operators.IsLike:
-                            return `${identifier}${index} <${Constants.ValueAsString}> ${identifier}${index}Literal .\n
-                            FILTER ${this._operatorToSymbol(property.selectedOperator)}(${identifier}${index}Literal, "${property.searchValue}"^^<${Constants.XsdString}>, "i") .`;
+                            return `${identifier}${index} <${
+                                Constants.ValueAsString
+                            }> ${identifier}${index}Literal .\n
+                            FILTER ${this._operatorToSymbol(
+                                property.selectedOperator
+                            )}(${identifier}${index}Literal, "${
+                                property.searchValue
+                            }"^^<${Constants.XsdString}>, "i") .`;
                         case Operators.Matches:
-                            return `FILTER <${this._operatorToSymbol(property.selectedOperator)}>(${identifier}${index}, "${property.searchValue}"^^<${Constants.XsdString}>) .`;
+                            return `FILTER <${this._operatorToSymbol(
+                                property.selectedOperator
+                            )}>(${identifier}${index}, "${
+                                property.searchValue
+                            }"^^<${Constants.XsdString}>) .`;
                         default:
                             throw new Error('Invalid operator for text value');
                     }
                 case Constants.IntValue:
-                    return `${identifier}${index} <${Constants.IntValueAsInt}> ${identifier}${index}Literal .\n
-                    FILTER (${identifier}${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdInteger}>) .`;
+                    return `${identifier}${index} <${
+                        Constants.IntValueAsInt
+                    }> ${identifier}${index}Literal .\n
+                    FILTER (${identifier}${index}Literal ${this._operatorToSymbol(
+                        property.selectedOperator
+                    )} "${property.searchValue}"^^<${Constants.XsdInteger}>) .`;
                 case Constants.DecimalValue:
-                    return `${identifier}${index} <${Constants.DecimalValueAsDecimal}> ${identifier}${index}Literal .\n
-                    FILTER (${identifier}${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdDecimal}>) .`;
+                    return `${identifier}${index} <${
+                        Constants.DecimalValueAsDecimal
+                    }> ${identifier}${index}Literal .\n
+                    FILTER (${identifier}${index}Literal ${this._operatorToSymbol(
+                        property.selectedOperator
+                    )} "${property.searchValue}"^^<${Constants.XsdDecimal}>) .`;
                 case Constants.BooleanValue:
-                    return `${identifier}${index} <${Constants.BooleanValueAsBoolean}> ${identifier}${index}Literal .\n
-                    FILTER (${identifier}${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdBoolean}>) .`;
+                    return `${identifier}${index} <${
+                        Constants.BooleanValueAsBoolean
+                    }> ${identifier}${index}Literal .\n
+                    FILTER (${identifier}${index}Literal ${this._operatorToSymbol(
+                        property.selectedOperator
+                    )} "${property.searchValue}"^^<${Constants.XsdBoolean}>) .`;
                 case Constants.DateValue:
-                    return `FILTER(knora-api:toSimpleDate(${identifier}${index}) ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.KnoraApi}/ontology/knora-api/simple/v2${Constants.HashDelimiter}Date>) .`;
+                    return `FILTER(knora-api:toSimpleDate(${identifier}${index}) ${this._operatorToSymbol(
+                        property.selectedOperator
+                    )} "${property.searchValue}"^^<${
+                        Constants.KnoraApi
+                    }/ontology/knora-api/simple/v2${
+                        Constants.HashDelimiter
+                    }Date>) .`;
                 case Constants.ListValue:
                     return `${identifier}${index} <${Constants.ListValueAsListNode}> <${property.searchValue}> .\n`;
                 case Constants.UriValue:
-                    return `${identifier}${index} <${Constants.UriValueAsUri}> ${identifier}${index}Literal .\n
-                    FILTER (${identifier}${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${property.searchValue}"^^<${Constants.XsdAnyUri}>) .`
+                    return `${identifier}${index} <${
+                        Constants.UriValueAsUri
+                    }> ${identifier}${index}Literal .\n
+                    FILTER (${identifier}${index}Literal ${this._operatorToSymbol(
+                        property.selectedOperator
+                    )} "${property.searchValue}"^^<${Constants.XsdAnyUri}>) .`;
                 default:
                     throw new Error('Invalid object type');
             }
