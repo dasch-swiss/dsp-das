@@ -414,8 +414,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             }
         }
 
-        console.log('updated property form list:', currentPropertyFormList);
-
         let updatedOrderByList = [];
         if (indexInCurrentOrderByList > -1) {
             updatedOrderByList = [
@@ -434,7 +432,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             ];
         }
 
-        console.log('propertiesOrderByList:', updatedOrderByList);
         this.patchState({ propertiesOrderByList: updatedOrderByList });
     }
 
@@ -479,8 +476,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                     index
                 );
             }
-
-            console.log('updated property form list:', currentPropertyFormList);
         }
     }
 
@@ -496,8 +491,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                 property,
                 index
             );
-
-            console.log('updated property form list:', currentPropertyFormList);
         }
     }
 
@@ -512,7 +505,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             ...propertyFormList.slice(index + 1),
         ];
 
-        console.log('property FORM LIST:', updatedPropertyFormList);
         this.patchState({ propertyFormList: updatedPropertyFormList });
     }
 
@@ -559,7 +551,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     }
 
     updatePropertyOrderBy(orderByList: OrderByItem[]): void {
-        console.log('orderByList:', orderByList);
         this.patchState({ propertiesOrderByList: orderByList });
     }
 
@@ -686,8 +677,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                 property.parentProperty,
                 indexInPropertyFormList
             );
-
-            console.log('updated property form list:', currentPropertyFormList);
         }
     }
 
@@ -719,8 +708,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                 property.parentProperty,
                 indexInPropertyFormList
             );
-
-            console.log('updated property form list:', currentPropertyFormList);
         }
     }
 
@@ -873,15 +860,12 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     }
 
     onSearch(): string {
-        const selectedOntology = this.get((state) => state.selectedOntology);
         const selectedResourceClass = this.get(
             (state) => state.selectedResourceClass
         );
         const propertyFormList = this.get((state) => state.propertyFormList);
         const orderByList = this.get((state) => state.propertiesOrderByList);
-        console.log('selectedOnto:', selectedOntology);
-        console.log('selectedResClass:', selectedResourceClass);
-        propertyFormList.forEach((prop) => console.log('prop:', prop));
+
         return this._advancedSearchService.generateGravSearchQuery(
             selectedResourceClass?.iri,
             propertyFormList,
@@ -1072,25 +1056,4 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                 })
             )
     );
-
-    // readonly resourcesList = this.effect((propertyFormList$: Observable<PropertyFormItem[]>) =>
-    //     propertyFormList$.pipe(
-    //         switchMap((propertyFormList) => {
-    //             if (!propertyFormList) return EMPTY;
-
-    //             propertyFormList.forEach((prop) => {
-    //                 if (prop.searchValue && prop.selectedProperty && !(prop.selectedProperty.objectType.includes(Constants.KnoraApiV2))) {
-    //                     this._advancedSearchService.resourcesList(prop.searchValue, prop.selectedProperty.objectType).subscribe(
-    //                         (resources) => {
-    //                             console.log('data:', resources);
-    //                             prop.resourcesList = resources;
-    //                             // this.updatePropertyFormItem(prop);
-    //                         }
-    //                     );
-    //                 }
-    //             });
-    //             return EMPTY;
-    //         })
-    //     )
-    // );
 }
