@@ -69,7 +69,6 @@ export class MatAutocompleteOptionsScrollDirective implements OnDestroy {
 
     onScroll(event: Event) {
         if (this.thresholdPercent === undefined) {
-            console.log('undefined');
             this.scrollEvent.next({
                 autoComplete: this.autoComplete,
                 scrollEvent: event,

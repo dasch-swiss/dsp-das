@@ -418,7 +418,6 @@ export class AdvancedSearchService {
         orderByString = orderByProps.length
             ? `ORDER BY ${orderByProps.join(' ')}`
             : '';
-        console.log(propertyStrings);
         // this was in the CONSTRUCT but idk if it's necessary
         // if it's needed, we will need a better way to handle the case when searching for a property
         // of a linked resource where a value does not exist. look at the current implementation of
