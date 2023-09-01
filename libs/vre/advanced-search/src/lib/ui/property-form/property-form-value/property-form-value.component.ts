@@ -78,7 +78,7 @@ export class PropertyFormValueComponent implements OnInit {
     private _emitValueChanged(value: string) {
         // value could be 0 in the case of a number
         if (this.inputControl.valid && value !== null && value !== undefined)
-            this.emitValueChanged.emit(value.toString());
+            this.emitValueChanged.emit(value.toString().trim());
         else this.emitValueChanged.emit(undefined);
     }
 }
