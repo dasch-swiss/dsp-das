@@ -46,9 +46,7 @@ export class PropertyFormValueComponent implements OnInit {
     ngOnInit() {
         this.inputControl.valueChanges
             .pipe(debounceTime(300), distinctUntilChanged())
-            .subscribe((value) => {
-                this._emitValueChanged(value);
-            });
+            .subscribe((value) => this._emitValueChanged(value));
 
         this.inputControl.setValidators(this._getValidators(this.objectType));
     }
@@ -78,7 +76,8 @@ export class PropertyFormValueComponent implements OnInit {
     }
 
     private _emitValueChanged(value: string) {
-        if (this.inputControl.valid && value)
+        // value could be 0 in the case of a number
+        if (this.inputControl.valid && value !== null && value !== undefined)
             this.emitValueChanged.emit(value.toString());
         else this.emitValueChanged.emit(undefined);
     }
