@@ -389,7 +389,8 @@ export class AdvancedSearchService {
         }
 
         const propertyStrings: GravsearchPropertyString[] = properties.map(
-            (prop, index) => this._propertyStringHelper(prop, index)
+            (prop, index) =>
+                this._propertyStringHelper(prop, index)
         );
 
         let orderByString = '';
@@ -419,12 +420,12 @@ export class AdvancedSearchService {
             ? `ORDER BY ${orderByProps.join(' ')}`
             : '';
         console.log(propertyStrings);
+        // this was in the CONSTRUCT but idk if it's necessary
+        //${propertyStrings.map((prop) => prop.linkString).join('\n')}
         const gravSearch = `
             PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
             CONSTRUCT {
                 ?mainRes knora-api:isMainResource true .
-                ${propertyStrings.map((prop) => prop.linkString).join('\n')}
-
             } WHERE {
             ?mainRes a knora-api:Resource .
 
@@ -453,7 +454,7 @@ export class AdvancedSearchService {
 
     private _propertyStringHelper(
         property: PropertyFormItem,
-        index: number
+        index: number,
     ): GravsearchPropertyString {
         let linkString = '';
         let valueString = '';
@@ -480,15 +481,24 @@ export class AdvancedSearchService {
             ) &&
             property.selectedProperty?.objectType !== ResourceLabel
         ) {
-            linkString =
-                '?mainRes <' +
-                property.selectedProperty?.iri +
-                '> ?prop' +
-                index +
-                ' .';
+            if (property.selectedOperator !== Operators.NotEquals) {
+                linkString =
+                    '?mainRes <' +
+                    property.selectedProperty?.iri +
+                    '> ?prop' +
+                    index +
+                    ' .';
+            }
             if (Array.isArray(property.searchValue)) {
                 property.searchValue.forEach((value, i) => {
-                    linkString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
+                    if (value.selectedOperator === Operators.NotExists) {
+                        linkString +=
+                            `\nFILTER NOT EXISTS { \n` +
+                            `?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .\n` +
+                            `}\n`;
+                    } else {
+                        linkString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
+                    }
                 });
             }
         }
@@ -499,7 +509,11 @@ export class AdvancedSearchService {
                 property.selectedOperator === Operators.NotExists
             )
         ) {
-            valueString = this._valueStringHelper(property, index, '?prop');
+            valueString = this._valueStringHelper(
+                property,
+                index,
+                '?prop',
+            );
         }
         return {
             linkString: linkString,
@@ -512,7 +526,7 @@ export class AdvancedSearchService {
     private _valueStringHelper(
         property: PropertyFormItem,
         index: number,
-        identifier: string
+        identifier: string,
     ): string {
         // linked resource
         if (
@@ -530,11 +544,16 @@ export class AdvancedSearchService {
                 case Operators.Matches:
                     if (Array.isArray(property.searchValue)) {
                         property.searchValue.forEach((value, i) => {
-                            valueString += this._valueStringHelper(
-                                value,
-                                i,
-                                '?linkProp' + index
-                            );
+                            if (
+                                value.selectedOperator !== Operators.Exists &&
+                                value.selectedOperator !== Operators.NotExists
+                            ) {
+                                valueString += this._valueStringHelper(
+                                    value,
+                                    i,
+                                    '?linkProp' + index,
+                                );
+                            }
                         });
                     }
                     return valueString;
