@@ -39,9 +39,8 @@ export interface PropertyData {
 }
 
 export interface GravsearchPropertyString {
-    linkString: string;
-    valueString?: string;
-    isOperatorNotExists?: boolean;
+    constructString: string;
+    whereString: string;
 }
 
 export const ResourceLabel =
@@ -427,17 +426,11 @@ export class AdvancedSearchService {
             `PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>\n` +
             `CONSTRUCT {\n` +
             `?mainRes knora-api:isMainResource true .\n` +
+            `${propertyStrings.map((prop) => prop.constructString).join('\n')}\n` +
             `} WHERE {\n` +
             `?mainRes a knora-api:Resource .\n` +
             `${restrictToResourceClass}\n` +
-            `${propertyStrings
-                .map((prop) =>
-                    prop.isOperatorNotExists
-                        ? `FILTER NOT EXISTS {\n${prop.linkString}\n }`
-                        : prop.linkString
-                )
-                .join('\n')}\n` +
-            `${propertyStrings.map((prop) => prop.valueString).join('\n')}\n` +
+            `${propertyStrings.map((prop) => prop.whereString).join('\n')}\n` +
             `}\n` +
             `${orderByString}\n` +
             `OFFSET 0`;
@@ -450,8 +443,8 @@ export class AdvancedSearchService {
         property: PropertyFormItem,
         index: number
     ): GravsearchPropertyString {
-        let linkString = '';
-        let valueString = '';
+        let constructString = '';
+        let whereString = '';
 
         // not a linked resource, not a resource label
         if (
@@ -460,12 +453,13 @@ export class AdvancedSearchService {
             ) &&
             property.selectedProperty?.objectType !== ResourceLabel
         ) {
-            linkString =
+            constructString =
                 '?mainRes <' +
                 property.selectedProperty?.iri +
                 '> ?prop' +
                 index +
                 ' .';
+            whereString = constructString;
         }
 
         // linked resource
@@ -476,22 +470,24 @@ export class AdvancedSearchService {
             property.selectedProperty?.objectType !== ResourceLabel
         ) {
             if (property.selectedOperator !== Operators.NotEquals) {
-                linkString =
+                constructString =
                     '?mainRes <' +
                     property.selectedProperty?.iri +
                     '> ?prop' +
                     index +
                     ' .';
+                whereString = constructString;
             }
             if (Array.isArray(property.searchValue)) {
                 property.searchValue.forEach((value, i) => {
+                    constructString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
                     if (value.selectedOperator === Operators.NotExists) {
-                        linkString +=
+                        whereString +=
                             `\nFILTER NOT EXISTS { \n` +
                             `?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .\n` +
                             `}\n`;
                     } else {
-                        linkString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
+                        whereString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
                     }
                 });
             }
@@ -503,13 +499,14 @@ export class AdvancedSearchService {
                 property.selectedOperator === Operators.NotExists
             )
         ) {
-            valueString = this._valueStringHelper(property, index, '?prop');
+            whereString += this._valueStringHelper(property, index, '?prop');
+        } else if (property.selectedOperator === Operators.NotExists) {
+            whereString = `FILTER NOT EXISTS { \n` + whereString + `}\n`;
         }
+
         return {
-            linkString: linkString,
-            valueString: valueString,
-            isOperatorNotExists:
-                property.selectedOperator === Operators.NotExists,
+            constructString: constructString,
+            whereString: whereString
         };
     }
 
