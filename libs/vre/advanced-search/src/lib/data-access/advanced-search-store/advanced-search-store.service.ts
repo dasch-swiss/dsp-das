@@ -414,25 +414,31 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             }
         }
 
-        let updatedOrderByList = [];
-        if (indexInCurrentOrderByList > -1) {
-            updatedOrderByList = [
-                ...currentOrderByList.slice(0, indexInCurrentOrderByList),
-                {
-                    id: property.id,
-                    label: property.selectedProperty?.label || '',
-                    orderBy: false,
-                },
-                ...currentOrderByList.slice(indexInCurrentOrderByList + 1),
-            ];
-        } else {
-            updatedOrderByList = [
-                ...currentOrderByList,
-                { id: property.id, label: property.selectedProperty?.label || '', orderBy: false },
-            ];
-        }
 
-        this.patchState({ propertiesOrderByList: updatedOrderByList });
+        // do not add linked resource properties to orderByList because it's currently not possible
+        // https://linear.app/dasch/issue/DEV-2607/gravsearch-order-by-linked-resource-issue
+        if(property.selectedProperty?.objectType === Constants.Label ||
+           property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)) {
+            let updatedOrderByList = [];
+            if (indexInCurrentOrderByList > -1) {
+                updatedOrderByList = [
+                    ...currentOrderByList.slice(0, indexInCurrentOrderByList),
+                    {
+                        id: property.id,
+                        label: property.selectedProperty?.label || '',
+                        orderBy: false,
+                    },
+                    ...currentOrderByList.slice(indexInCurrentOrderByList + 1),
+                ];
+            } else {
+                updatedOrderByList = [
+                    ...currentOrderByList,
+                    { id: property.id, label: property.selectedProperty?.label || '', orderBy: false },
+                ];
+            }
+
+            this.patchState({ propertiesOrderByList: updatedOrderByList });
+        }
     }
 
     updateSelectedOperator(property: PropertyFormItem): void {
