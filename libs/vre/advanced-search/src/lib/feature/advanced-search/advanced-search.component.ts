@@ -11,6 +11,7 @@ import { OrderByComponent } from '../../ui/order-by/order-by.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../ui/dialog/confirmation-dialog/confirmation-dialog.component';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
     selector: 'dasch-swiss-advanced-search',
@@ -103,8 +104,7 @@ export class AdvancedSearchComponent implements OnInit {
     }
 
     handleAddPropertyForm(): void {
-        // mock uuid using timestamp
-        const uuid = Date.now().toString();
+        const uuid = uuidv4();
 
         this.store.updatePropertyFormList('add', { id: uuid, selectedProperty: undefined, selectedOperator: undefined, searchValue: undefined, operators: [], list: undefined });
     }

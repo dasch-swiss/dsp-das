@@ -9,6 +9,7 @@ import {
 } from '../advanced-search-service/advanced-search.service';
 import { switchMap, tap, catchError } from 'rxjs/operators';
 import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface AdvancedSearchState {
     ontologies: ApiData[];
@@ -298,8 +299,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             indexInPropertyFormList
         ].searchValue as PropertyFormItem[];
 
-        // mock uuid using timestamp
-        const uuid = Date.now().toString();
+        const uuid = uuidv4();
 
         const updatedSearchValue = [
             ...currentSearchValue,
