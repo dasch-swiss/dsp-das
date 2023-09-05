@@ -281,10 +281,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             );
 
             this.patchState({ propertiesOrderByList: updatedOrderByList });
-            console.log('orderByList:', updatedOrderByList);
         }
 
-        console.log('prop form list:', updatedPropertyFormList);
         this.patchState({ propertyFormList: updatedPropertyFormList });
     }
 
