@@ -10,6 +10,7 @@ import {
 import { switchMap, tap, catchError } from 'rxjs/operators';
 import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { v4 as uuidv4 } from 'uuid';
+import { GravsearchService } from '../gravsearch-service/gravsearch.service';
 
 export interface AdvancedSearchState {
     ontologies: ApiData[];
@@ -200,14 +201,16 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             !(ontology || resourceClass || propertyFormList.length)
     );
 
-    constructor(private _advancedSearchService: AdvancedSearchService) {
+    constructor(
+        private _advancedSearchService: AdvancedSearchService,
+        private _gravsearchService: GravsearchService
+    ) {
         super();
     }
 
     isPropertyFormItemListInvalid(prop: PropertyFormItem): boolean {
         // no property selected
-        if (!prop.selectedProperty)
-            return true;
+        if (!prop.selectedProperty) return true;
 
         // selected operator is 'exists' or 'does not exist'
         if (
@@ -217,8 +220,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             return false;
 
         if (Array.isArray(prop.searchValue)) {
-            if (!prop.searchValue.length)
-                return true;
+            if (!prop.searchValue.length) return true;
 
             return prop.searchValue.some((childProp) => {
                 const temp = this.isPropertyFormItemListInvalid(childProp);
@@ -229,8 +231,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         // selected operator is NOT 'exists' or 'does not exist'
         // AND
         // search value is undefined or empty
-        if (!prop.searchValue || prop.searchValue === '')
-            return true;
+        if (!prop.searchValue || prop.searchValue === '') return true;
 
         return false;
     }
@@ -283,7 +284,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         }
 
         this.patchState({ propertyFormList: updatedPropertyFormList });
-
     }
 
     // use enum for operation
@@ -414,11 +414,12 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             }
         }
 
-
         // do not add linked resource properties to orderByList because it's currently not possible
         // https://linear.app/dasch/issue/DEV-2607/gravsearch-order-by-linked-resource-issue
-        if(property.selectedProperty?.objectType === Constants.Label ||
-           property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)) {
+        if (
+            property.selectedProperty?.objectType === Constants.Label ||
+            property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)
+        ) {
             let updatedOrderByList = [];
             if (indexInCurrentOrderByList > -1) {
                 updatedOrderByList = [
@@ -433,7 +434,11 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             } else {
                 updatedOrderByList = [
                     ...currentOrderByList,
-                    { id: property.id, label: property.selectedProperty?.label || '', orderBy: false },
+                    {
+                        id: property.id,
+                        label: property.selectedProperty?.label || '',
+                        orderBy: false,
+                    },
                 ];
             }
 
@@ -620,9 +625,14 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                     .subscribe((list) => {
                         property.childProperty.list = list;
                         newProp.searchValue = [
-                            ...currentSearchValue.slice(0, indexInCurrentSearchValue),
+                            ...currentSearchValue.slice(
+                                0,
+                                indexInCurrentSearchValue
+                            ),
                             property.childProperty,
-                            ...currentSearchValue.slice(indexInCurrentSearchValue + 1),
+                            ...currentSearchValue.slice(
+                                indexInCurrentSearchValue + 1
+                            ),
                         ];
 
                         this.updatePropertyFormListItem(
@@ -872,7 +882,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         const propertyFormList = this.get((state) => state.propertyFormList);
         const orderByList = this.get((state) => state.propertiesOrderByList);
 
-        return this._advancedSearchService.generateGravSearchQuery(
+        return this._gravsearchService.generateGravSearchQuery(
             selectedResourceClass?.iri,
             propertyFormList,
             orderByList
@@ -928,7 +938,9 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                             tap({
                                 next: (response) => {
                                     this.patchState({ ontologies: response });
-                                    this.patchState({ selectedOntology: response[0] })
+                                    this.patchState({
+                                        selectedOntology: response[0],
+                                    });
                                     this.patchState({
                                         ontologiesLoading: false,
                                     });
