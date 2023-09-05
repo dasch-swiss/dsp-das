@@ -55,32 +55,6 @@ export class AdvancedSearchService {
         private _dspApiConnection: KnoraApiConnection
     ) {}
 
-    // API call to get the list of projects
-    projectsList = (): Observable<ApiData[]> => {
-        return this._dspApiConnection.admin.projectsEndpoint.getProjects().pipe(
-            map(
-                (
-                    response:
-                        | ApiResponseData<ProjectsResponse>
-                        | ApiResponseError
-                ) => {
-                    if (response instanceof ApiResponseError) {
-                        throw response; // caught by catchError operator
-                    }
-                    return response.body.projects.map(
-                        (proj: { id: string; shortname: string }) => {
-                            return { iri: proj.id, label: proj.shortname };
-                        }
-                    );
-                }
-            ),
-            catchError((err) => {
-                this._handleError(err);
-                return []; // return an empty array on error
-            })
-        );
-    };
-
     // API call to get the list of ontologies
     allOntologiesList = (): Observable<ApiData[]> => {
         return this._dspApiConnection.v2.onto.getOntologiesMetadata().pipe(

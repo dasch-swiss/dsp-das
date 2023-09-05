@@ -1,7 +1,22 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OntologyResourceFormComponent } from '../../ui/ontology-resource-form/ontology-resource-form.component';
-import { AdvancedSearchStoreService, ChildPropertyItem, OrderByItem, PropertyFormItem, SearchItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
+import {
+    AdvancedSearchStoreService,
+    ChildPropertyItem,
+    OrderByItem,
+    PropertyFormItem,
+    PropertyFormItemOperations,
+    SearchItem,
+} from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
@@ -16,14 +31,20 @@ import { v4 as uuidv4 } from 'uuid';
 @Component({
     selector: 'dasch-swiss-advanced-search',
     standalone: true,
-    imports: [CommonModule, OrderByComponent, OntologyResourceFormComponent, PropertyFormComponent, FormActionsComponent, MatIconModule],
+    imports: [
+        CommonModule,
+        OrderByComponent,
+        OntologyResourceFormComponent,
+        PropertyFormComponent,
+        FormActionsComponent,
+        MatIconModule,
+    ],
     providers: [AdvancedSearchStoreService],
     templateUrl: './advanced-search.component.html',
     styleUrls: ['./advanced-search.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdvancedSearchComponent implements OnInit {
-
     // either the uuid of the project or the shortcode
     // new projects use uuid, old projects use shortcode
     @Input() uuid: string | undefined = undefined;
@@ -52,13 +73,14 @@ export class AdvancedSearchComponent implements OnInit {
     resourcesSearchResultsLoading$ = this.store.resourcesSearchResultsLoading$;
     resourcesSearchResultsCount$ = this.store.resourcesSearchResultsCount$;
     resourcesSearchNoResults$ = this.store.resourcesSearchNoResults$;
-    resourcesSearchResultsPageNumber$ = this.store.resourcesSearchResultsPageNumber$;
+    resourcesSearchResultsPageNumber$ =
+        this.store.resourcesSearchResultsPageNumber$;
     resourcesSearchResults$ = this.store.resourcesSearchResults$;
     orderByButtonDisabled$ = this.store.orderByButtonDisabled$;
 
     constants = Constants;
 
-    constructor(private _dialog: MatDialog) { }
+    constructor(private _dialog: MatDialog) {}
 
     ngOnInit(): void {
         this.store.setState({
@@ -66,7 +88,9 @@ export class AdvancedSearchComponent implements OnInit {
             ontologiesLoading: false,
             resourceClasses: [],
             resourceClassesLoading: false,
-            selectedProject: this.uuid ? 'http://rdfh.ch/projects/' + this.uuid : undefined,
+            selectedProject: this.uuid
+                ? 'http://rdfh.ch/projects/' + this.uuid
+                : undefined,
             selectedOntology: undefined,
             selectedResourceClass: undefined,
             propertyFormList: [],
@@ -81,9 +105,6 @@ export class AdvancedSearchComponent implements OnInit {
             resourcesSearchResults: [],
         });
 
-        // BEOL: yTerZGyxjZVqFMNNKXCDPF
-        // Eric: GRlCJl3iSW2JeIt3V22rPA
-        // this.store.ontologiesList('http://rdfh.ch/projects/yTerZGyxjZVqFMNNKXCDPF');
         this.store.ontologiesList(this.selectedProject$);
 
         this.store.resourceClassesList(this.selectedOntology$);
@@ -106,16 +127,30 @@ export class AdvancedSearchComponent implements OnInit {
     handleAddPropertyForm(): void {
         const uuid = uuidv4();
 
-        this.store.updatePropertyFormList('add', { id: uuid, selectedProperty: undefined, selectedOperator: undefined, searchValue: undefined, operators: [], list: undefined });
+        this.store.updatePropertyFormList(PropertyFormItemOperations.Add, {
+            id: uuid,
+            selectedProperty: undefined,
+            selectedOperator: undefined,
+            searchValue: undefined,
+            operators: [],
+            list: undefined,
+        });
     }
 
     handleRemovePropertyForm(property: PropertyFormItem): void {
-        this.store.updatePropertyFormList('delete', property);
+        this.store.updatePropertyFormList(
+            PropertyFormItemOperations.Delete,
+            property
+        );
     }
 
     handleSelectedPropertyChanged(property: PropertyFormItem): void {
-        if(property.selectedProperty?.objectType !== Constants.Label &&
-            !property.selectedProperty?.objectType.includes(this.constants.KnoraApiV2)) {
+        if (
+            property.selectedProperty?.objectType !== Constants.Label &&
+            !property.selectedProperty?.objectType.includes(
+                this.constants.KnoraApiV2
+            )
+        ) {
             // reset the search results
             this.store.resetResourcesSearchResults();
         }
@@ -150,7 +185,7 @@ export class AdvancedSearchComponent implements OnInit {
         const dialogRef = this._dialog.open(ConfirmationDialogComponent, {});
 
         dialogRef.afterClosed().subscribe((result: boolean) => {
-            if(result) {
+            if (result) {
                 this.store.onReset();
             }
         });
@@ -179,5 +214,4 @@ export class AdvancedSearchComponent implements OnInit {
     handleChildValueChanged(property: ChildPropertyItem): void {
         this.store.updateChildValue(property);
     }
-
 }

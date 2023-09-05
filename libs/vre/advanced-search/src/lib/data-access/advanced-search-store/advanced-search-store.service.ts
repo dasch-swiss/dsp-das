@@ -73,6 +73,11 @@ export enum Operators {
     Matches = 'matches',
 }
 
+export enum PropertyFormItemOperations {
+    Add = 'add',
+    Delete = 'delete',
+}
+
 @Injectable()
 export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchState> {
     ontologies$: Observable<ApiData[]> = this.select(
@@ -130,9 +135,9 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     /** combined selectors */
 
     // search button is disabled if:
-    // no ontology and no resource class is selected
-    // OR
-    // an ontology is selected and the list of property forms is empty or at least one PropertyFormItem is invalid
+    // no ontology and no resource class is selected OR
+    // an ontology is selected and the list of property forms is empty OR
+    // at least one PropertyFormItem is invalid
     searchButtonDisabled$: Observable<boolean> = this.select(
         this.selectedOntology$,
         this.selectedResourceClass$,
@@ -166,33 +171,29 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         }
     );
 
+    // order by button is disabled if:
+    // no resource class is selected OR
+    // orderByList is empty OR
+    // propertyFormList is empty
     orderByButtonDisabled$: Observable<boolean> = this.select(
         this.selectedResourceClass$,
         this.propertyFormList$,
         this.propertiesOrderByList$,
-        (resourceClass, propertyFormList, orderBylist) => {
-            const areSomePropertyFormItemsInvalid = propertyFormList.some(
-                (prop) => {
-                    // no property selected
-                    if (!prop.selectedProperty) return true;
-                    return false;
-                }
-            );
-            return (
-                !resourceClass ||
-                !orderBylist.length ||
-                !propertyFormList.length
-            );
-        }
+        (resourceClass, propertyFormList, orderBylist) =>
+            !resourceClass || !orderBylist.length || !propertyFormList.length
     );
 
-    // add button is disabled if no ontology is selected
+    // add button is disabled if:
+    // no ontology is selected
     addButtonDisabled$: Observable<boolean> = this.select(
         this.selectedOntology$,
         (ontology) => !ontology || ontology.iri === ''
     );
 
-    // reset button is disabled if no ontology and no resource class is selected and the list of property forms is empty
+    // reset button is disabled if:
+    // no ontology is selected AND
+    // no resource class is selected AND
+    // the list of property forms is empty
     resetButtonDisabled$: Observable<boolean> = this.select(
         this.selectedOntology$,
         this.selectedResourceClass$,
@@ -228,8 +229,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             });
         }
 
-        // selected operator is NOT 'exists' or 'does not exist'
-        // AND
+        // selected operator is NOT 'exists' or 'does not exist' AND
         // search value is undefined or empty
         if (!prop.searchValue || prop.searchValue === '') return true;
 
@@ -258,7 +258,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
     // use enum for operation
     updatePropertyFormList(
-        operation: 'add' | 'delete',
+        operation: PropertyFormItemOperations,
         property: PropertyFormItem
     ): void {
         const currentPropertyFormList = this.get(
@@ -270,7 +270,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         let updatedPropertyFormList: PropertyFormItem[];
         let updatedOrderByList: OrderByItem[];
 
-        if (operation === 'add') {
+        if (operation === PropertyFormItemOperations.Add) {
             updatedPropertyFormList = [...currentPropertyFormList, property];
         } else {
             updatedPropertyFormList = currentPropertyFormList.filter(
