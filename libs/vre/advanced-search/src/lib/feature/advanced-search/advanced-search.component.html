@@ -52,7 +52,7 @@
         <dasch-swiss-property-form
             *ngFor="let propertyForm of asyncData.propertyFormList"
             [resourcesSearchResultsLoading]="asyncData.resourcesSearchResultsLoading"
-            [resourcesSearchResultsCount] = "asyncData.resourcesSearchResultsCount"
+            [resourcesSearchResultsCount]="asyncData.resourcesSearchResultsCount"
             [resourcesSearchResults]="asyncData.resourcesSearchResults"
             [resourcesSearchNoResults]="asyncData.resourcesSearchNoResults"
             [propertyFormItem]="propertyForm"

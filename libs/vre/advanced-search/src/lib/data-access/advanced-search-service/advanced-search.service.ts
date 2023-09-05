@@ -374,6 +374,7 @@ export class AdvancedSearchService {
         );
     }
 
+    // move to another service
     generateGravSearchQuery(
         resourceClassIri: string | undefined,
         properties: PropertyFormItem[],
@@ -417,11 +418,7 @@ export class AdvancedSearchService {
         orderByString = orderByProps.length
             ? `ORDER BY ${orderByProps.join(' ')}`
             : '';
-        // this was in the CONSTRUCT but idk if it's necessary
-        // if it's needed, we will need a better way to handle the case when searching for a property
-        // of a linked resource where a value does not exist. look at the current implementation of
-        // the advanced search to see the issue
-        //${propertyStrings.map((prop) => prop.linkString).join('\n')}
+
         const gravSearch =
             `PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>\n` +
             `CONSTRUCT {\n` +

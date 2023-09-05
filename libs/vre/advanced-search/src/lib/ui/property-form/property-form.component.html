@@ -103,7 +103,7 @@
                     constants.Label
                     &&
                 propertyFormItem.selectedOperator === operators.Matches"
-                [values]="getValues(propertyFormItem.searchValue)"
+                [values]="getLinkMatchPropertyFormItems(propertyFormItem.searchValue)"
                 [properties]="propertyFormItem.childPropertiesList"
                 [resourcesSearchResultsLoading]="resourcesSearchResultsLoading"
                 [resourcesSearchResultsCount]="resourcesSearchResultsCount"

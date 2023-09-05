@@ -190,7 +190,8 @@ export class PropertyFormComponent {
         this.emitResourceSearchValueChanged.emit(searchValue);
     }
 
-    getValues(value: string | PropertyFormItem[] | undefined): PropertyFormItem[] | undefined {
+    // get the list of child properties of a linked resource
+    getLinkMatchPropertyFormItems(value: string | PropertyFormItem[] | undefined): PropertyFormItem[] | undefined {
         if (Array.isArray(value)) {
           return value;
         } else {
