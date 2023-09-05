@@ -1,0 +1,37 @@
+<div
+    *ngIf='!formDef.hidden'
+    [formGroup]="formGroup"
+    class="form-field-container">
+    <mat-form-field [class]='formDef.formSizeClass'>
+        <mat-label>{{ formDef.label }}</mat-label>
+        <input
+           matInput
+           type="text"
+           name="{{ formDef.label }}"
+           [formControl]="formControl"
+           [formControlName]="formDef.formControlName"
+           [name]="formDef.label"
+           [required]="formDef.required"
+           [minlength]="formDef.minLength"
+           [maxlength]="formDef.maxLength"
+           [pattern]="formDef.pattern"
+        >
+        <button
+            mat-icon-button
+            matSuffix
+            color="primary"
+            class="restore-icon"
+            *ngIf="formControl.dirty"
+            (click)="resetValue()"
+        >
+            <mat-icon>restore</mat-icon>
+        </button>
+    </mat-form-field>
+    <mat-hint *ngIf="formControl.invalid && formControl.dirty" class="hint-content">
+        <div *ngIf="formControl.errors?.required">{{ formDef.label }} is required</div>
+        <div *ngIf="formControl.errors?.minlength">{{ formDef.label }} must be at least {{ formDef.minLength }} characters long</div>
+        <div *ngIf="formControl.errors?.maxlength">{{ formDef.label }} can not be more than {{ formDef.maxLength }} characters long</div>
+        <div *ngIf="formControl.errors?.pattern">{{ formDef.patternErrMsg }}</div>
+        <div *ngIf="formControl.errors?.existingname">{{ formDef.value }} for {{ formDef.label }} is already taken</div>
+    </mat-hint>
+</div>

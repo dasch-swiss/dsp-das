@@ -1,6 +1,5 @@
-<div *ngIf="list && !loading" class="app-projects-list">
+<div *ngIf="list && !loading && !editing" class="app-projects-list">
     <!-- header toolbar -->
-    <div>todelete OOOOOLD</div>
     <div class="app-toolbar" *ngIf="list.length > 0">
         <div class="app-toolbar-row">
             <h3 class="mat-body subtitle">
@@ -12,7 +11,7 @@
         </div>
         <div class="app-toolbar-row">
             <span class="app-toolbar-action button left">
-                <!-- sort button if more than one item in the list -->
+                <!-- sort button if more than one item in the list
                 <app-sort-button
                     *ngIf="list.length > 1"
                     [icon]="'sort_by_alpha'"
@@ -20,7 +19,7 @@
                     [activeKey]="sortBy"
                     (sortKeyChange)="sortList($event)"
                 >
-                </app-sort-button>
+                </app-sort-button> -->
             </span>
             <h2 class="mat-headline-6">
                 {{ list.length | i18nPlural : itemPluralMapping['project'] }}
@@ -105,6 +104,19 @@
                     >
                         Edit project information
                     </button>
+
+                    <button
+                        mat-menu-item
+                        *ngIf="status"
+                        (click)="
+                            openEditComponent(
+                                project.id
+                            )
+                        "
+                    >
+                        Edit new project information
+                    </button>
+
                     <!-- disable the deactivate-button for the following two projects:
                     - http://www.knora.org/ontology/knora-admin#SystemProject
                     - http://www.knora.org/ontology/knora-admin#DefaultSharedOntologiesProject
@@ -139,4 +151,7 @@
             </td>
         </tr>
     </table>
+</div>
+<div *ngIf='editing'>
+    <vre-app-project-edit [projectIri]='selectedProject' (cancel)="onCancel()"></vre-app-project-edit>
 </div>

@@ -180,6 +180,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-config';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { AppDatePickerModule } from '@dasch-swiss/vre/shared/app-date-picker';
+import { VreProjectsModule } from "../../../../libs/vre/library/vre-projects/src/lib/vre-projects-module/vre-projects.module";
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -335,6 +336,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         DataModelsComponent,
     ],
     imports: [
+        VreProjectsModule,
         AngularSplitModule,
         AppDatePickerModule,
         AppRoutingModule,
@@ -359,6 +361,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
             },
         }),
     ],
+
     providers: [
         AppConfigService,
         DatadogRumService,

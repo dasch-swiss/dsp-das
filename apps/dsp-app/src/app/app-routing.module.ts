@@ -28,6 +28,7 @@ import { UserComponent } from './user/user.component';
 // search results and resource viewer
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
+import {VreProjectsComponent} from "@dasch-swiss/vre/library/vre-projects";
 
 const routes: Routes = [
     {
@@ -171,7 +172,7 @@ const routes: Routes = [
             },
             {
                 path: 'projects',
-                component: ProjectsComponent,
+                component: VreProjectsComponent,
             },
             {
                 path: 'users',

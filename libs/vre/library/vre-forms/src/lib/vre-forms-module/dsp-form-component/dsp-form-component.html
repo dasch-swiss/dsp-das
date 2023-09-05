@@ -1,0 +1,67 @@
+<div *ngFor="let formDef of fgHandler.formDefs; let i = index">
+    <form [formGroup]="fgHandler.formGroup" class='form'>
+        <dsp-app-generic-text-form-component-n
+            *ngIf='!formDef.hidden'
+            [formDef]='formDef'
+            [formGroup]="fgHandler.formGroup"
+        >
+        </dsp-app-generic-text-form-component-n>
+        <!-- add button -->
+        <button
+            mat-icon-button
+            *ngIf='formDef.hasMultipleCard'
+            (click)='fgHandler.duplicateForm(formDef.formControlName)'
+        >
+            <mat-icon>add_box</mat-icon>
+        </button>
+        <!-- remove button -->
+        <button
+            mat-icon-button
+            *ngIf='formDef.unStoredValue && !fgHandler.isLastOfARequiredForm(formDef.label)'
+            (click)='fgHandler.removeControl(formDef.formControlName)'
+        >
+            <mat-icon>cancel</mat-icon>
+        </button>
+        <!-- delete button -->
+        <button
+            mat-icon-button
+            *ngIf='!formDef.unStoredValue
+                && !fgHandler.isLastOfARequiredForm(formDef.label)
+                && formDef.canBeDeleted'
+            (click)='fgHandler.deleteControl(formDef.formControlName)'
+        >
+            <mat-icon>delete</mat-icon>
+        </button>
+    </form>
+</div>
+<div class="form-panel form-action">
+    <span>
+        <button color="primary"
+                mat-button
+                type="reset"
+                (click)="onCancel()">
+            Cancel
+        </button>
+    </span>
+    <span class="fill-remaining-space"></span>
+    <span>
+        <button
+            mat-raised-button
+            type="submit"
+            color="primary"
+            [disabled]="!fgHandler.formGroup.valid || fgHandler.formGroup.pristine"
+            (click) ='onSubmit()'
+        >
+            Submit
+        </button>
+        <button
+            mat-button
+            matSuffix
+            color="primary"
+            class="restore-icon"
+            [disabled]="fgHandler.formGroup.pristine && formGroupUnChanged()"
+            (click)='resetAll()'
+        >
+            <mat-icon>restore</mat-icon> Reset</button>
+    </span>
+</div>

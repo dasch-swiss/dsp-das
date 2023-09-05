@@ -29,17 +29,17 @@
 
                 <!-- user profile -->
                 <div *ngSwitchCase="'profile'" class="full-width">
-                    <app-projects [username]="session.user.name"></app-projects>
+                    <app-vre-projects [username]="session.user.name"></app-vre-projects>
                 </div>
 
                 <!-- edit user data -->
                 <div *ngSwitchCase="'account'" class="full-width">
-                    <app-account [username]="session.user.name" (refreshParent)="refresh()"></app-account>
+                    <app-vre-projects [username]="session.user.name"></app-vre-projects>
                 </div>
 
                 <!-- user's projects -->
                 <div *ngSwitchCase="'projects'" class="full-width">
-                    <app-projects [username]="session.user.name"></app-projects>
+                    <app-vre-projects [username]="session.user.name"></app-vre-projects>
                 </div>
 
                 <!-- user's collections (!!!NOT YET IMPLEMENTED!!!) -->

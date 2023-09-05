@@ -1,0 +1,14 @@
+<button
+    mat-icon-button
+    *ngIf='!hasDuplicates'
+    (click)='onDuplicate.emit(true)'
+>
+    <mat-icon>add_box</mat-icon>
+</button>
+<button
+    mat-icon-button
+    *ngIf='isDuplicate'
+    (click)='onRemove.emit(true)'
+>
+    <mat-icon>cancel</mat-icon>
+</button>

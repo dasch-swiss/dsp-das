@@ -1,0 +1,8 @@
+
+<div *ngIf="project">
+    <app-dsp-form-component
+        [formControlDefinitions] = project.dspFormControlDefs
+        (cancel) ='onCancel()'
+        (submit)='onSubmit($event)'
+    ></app-dsp-form-component>
+</div>
