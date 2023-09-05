@@ -281,8 +281,10 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             );
 
             this.patchState({ propertiesOrderByList: updatedOrderByList });
+            console.log('orderByList:', updatedOrderByList);
         }
 
+        console.log('prop form list:', updatedPropertyFormList);
         this.patchState({ propertyFormList: updatedPropertyFormList });
     }
 
@@ -441,6 +443,15 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                     },
                 ];
             }
+
+            this.patchState({ propertiesOrderByList: updatedOrderByList });
+        } else {
+            // if selected property is changed to a linked resource property
+            // remove from orderByList
+            // this should be removed once the bug is fixed
+            const updatedOrderByList = currentOrderByList.filter(
+                (item) => item.id !== property.id
+            );
 
             this.patchState({ propertiesOrderByList: updatedOrderByList });
         }
