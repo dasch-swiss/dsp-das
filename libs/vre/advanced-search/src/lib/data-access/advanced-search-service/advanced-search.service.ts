@@ -285,30 +285,6 @@ export class AdvancedSearchService {
             );
     };
 
-    resourcesList = (
-        searchValue: string,
-        resourceClassIri: string
-    ): Observable<ApiData[]> => {
-        return this._dspApiConnection.v2.search
-            .doSearchByLabel(searchValue, 0, {
-                limitToResourceClass: resourceClassIri,
-            })
-            .pipe(
-                map((response: ReadResourceSequence | ApiResponseError) => {
-                    if (response instanceof ApiResponseError) {
-                        throw response; // caught by catchError operator
-                    }
-                    return response.resources.map((res: ReadResource) => {
-                        return { iri: res.id, label: res.label };
-                    });
-                }),
-                catchError((err) => {
-                    this._handleError(err);
-                    return []; // return an empty array on error
-                })
-            );
-    };
-
     getResourceListCount(
         searchValue: string,
         resourceClassIri: string

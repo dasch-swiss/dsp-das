@@ -30,7 +30,7 @@ export interface AdvancedSearchState {
     resourcesSearchNoResults: boolean;
     resourcesSearchResultsPageNumber: number;
     resourcesSearchResults: ApiData[];
-    error?: any;
+    error?: unknown;
 }
 
 export interface PropertyFormItem {
