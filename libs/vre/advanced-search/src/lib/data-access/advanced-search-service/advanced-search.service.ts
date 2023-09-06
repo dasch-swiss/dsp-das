@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
 import {
-    ApiResponseData,
     ApiResponseError,
     Constants,
     CountQueryResponse,
@@ -8,7 +7,6 @@ import {
     ListNodeV2,
     OntologiesMetadata,
     OntologyMetadata,
-    ProjectsResponse,
     ReadOntology,
     ReadResource,
     ReadResourceSequence,
@@ -16,7 +14,7 @@ import {
     ResourceClassDefinition,
     ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 
@@ -29,7 +27,7 @@ export interface PropertyData {
     iri: string;
     label: string;
     objectType: string;
-    isLinkProperty: boolean; // todo: should this be called linkProperty or linkedResource?
+    isLinkedResourceProperty: boolean;
     listIri?: string; // only for list values
 }
 
@@ -40,11 +38,6 @@ export interface GravsearchPropertyString {
 
 export const ResourceLabel =
     Constants.KnoraApiV2 + Constants.HashDelimiter + 'ResourceLabel';
-
-// I think this should be possible instead of importing it from an external library
-// export const DspApiConnectionToken = new InjectionToken<KnoraApiConnection>(
-//     'DSP api connection instance'
-// );
 
 @Injectable({
     providedIn: 'root',
@@ -176,7 +169,7 @@ export class AdvancedSearchService {
                                 iri: propDef.id,
                                 label: label,
                                 objectType: objectType,
-                                isLinkProperty: linkProperty,
+                                isLinkedResourceProperty: linkProperty,
                             };
                         });
                 }),
@@ -216,7 +209,7 @@ export class AdvancedSearchService {
                             // label can be undefined
                             const label = propDef.label || '';
 
-                            // objectType can be undefined but I'm not really sure if this is true
+                            // objectType can be undefined
                             const objectType = propDef.objectType || '';
 
                             const linkProperty = !propDef.objectType?.includes(
@@ -239,7 +232,7 @@ export class AdvancedSearchService {
                                         iri: propDef.id,
                                         label: label,
                                         objectType: objectType,
-                                        isLinkProperty: linkProperty,
+                                        isLinkedResourceProperty: linkProperty,
                                         listIri: listNodeIri,
                                     };
                                 } else {
@@ -254,7 +247,7 @@ export class AdvancedSearchService {
                                 iri: propDef.id,
                                 label: label,
                                 objectType: objectType,
-                                isLinkProperty: linkProperty,
+                                isLinkedResourceProperty: linkProperty,
                             };
                         });
                 }),
@@ -281,6 +274,10 @@ export class AdvancedSearchService {
                     return response.resources.map((res: ReadResource) => {
                         return { iri: res.id, label: res.label };
                     });
+                }),
+                catchError((err) => {
+                    this._handleError(err);
+                    return []; // return an empty array on error
                 })
             );
     };
@@ -299,6 +296,10 @@ export class AdvancedSearchService {
                         throw response; // caught by catchError operator
                     }
                     return response.numberOfResults;
+                }),
+                catchError((err) => {
+                    this._handleError(err);
+                    return of(0); // return 0 on error
                 })
             );
     }
@@ -328,7 +329,7 @@ export class AdvancedSearchService {
             );
     }
 
-    getList(rootNodeIri: string): Observable<ListNodeV2> {
+    getList(rootNodeIri: string): Observable<ListNodeV2 | undefined> {
         return this._dspApiConnection.v2.list.getList(rootNodeIri).pipe(
             map((response: ListNodeV2 | ApiResponseError) => {
                 if (response instanceof ApiResponseError) {
@@ -338,13 +339,12 @@ export class AdvancedSearchService {
             }),
             catchError((err) => {
                 this._handleError(err);
-                return []; // return an empty array on error
+                return of(undefined); // return undefined on error
             })
         );
     }
 
-    // todo: check if we can type this
-    private _handleError(error: any) {
+    private _handleError(error: unknown) {
         if (error instanceof ApiResponseError) {
             console.error('API error: ', error);
         } else {

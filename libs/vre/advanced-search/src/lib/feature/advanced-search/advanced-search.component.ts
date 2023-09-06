@@ -14,7 +14,7 @@ import {
     ChildPropertyItem,
     OrderByItem,
     PropertyFormItem,
-    PropertyFormItemOperations,
+    PropertyFormListOperations,
     SearchItem,
 } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
@@ -127,7 +127,7 @@ export class AdvancedSearchComponent implements OnInit {
     handleAddPropertyForm(): void {
         const uuid = uuidv4();
 
-        this.store.updatePropertyFormList(PropertyFormItemOperations.Add, {
+        this.store.updatePropertyFormList(PropertyFormListOperations.Add, {
             id: uuid,
             selectedProperty: undefined,
             selectedOperator: undefined,
@@ -139,7 +139,7 @@ export class AdvancedSearchComponent implements OnInit {
 
     handleRemovePropertyForm(property: PropertyFormItem): void {
         this.store.updatePropertyFormList(
-            PropertyFormItemOperations.Delete,
+            PropertyFormListOperations.Delete,
             property
         );
     }

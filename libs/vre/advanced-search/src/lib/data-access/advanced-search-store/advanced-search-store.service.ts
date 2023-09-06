@@ -7,7 +7,7 @@ import {
     PropertyData,
     ResourceLabel,
 } from '../advanced-search-service/advanced-search.service';
-import { switchMap, tap, catchError } from 'rxjs/operators';
+import { switchMap, tap, catchError, take } from 'rxjs/operators';
 import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { v4 as uuidv4 } from 'uuid';
 import { GravsearchService } from '../gravsearch-service/gravsearch.service';
@@ -73,7 +73,7 @@ export enum Operators {
     Matches = 'matches',
 }
 
-export enum PropertyFormItemOperations {
+export enum PropertyFormListOperations {
     Add = 'add',
     Delete = 'delete',
 }
@@ -256,9 +256,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         this.patchState({ propertiesOrderByList: [] });
     }
 
-    // use enum for operation
     updatePropertyFormList(
-        operation: PropertyFormItemOperations,
+        operation: PropertyFormListOperations,
         property: PropertyFormItem
     ): void {
         const currentPropertyFormList = this.get(
@@ -270,7 +269,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         let updatedPropertyFormList: PropertyFormItem[];
         let updatedOrderByList: OrderByItem[];
 
-        if (operation === PropertyFormItemOperations.Add) {
+        if (operation === PropertyFormListOperations.Add) {
             updatedPropertyFormList = [...currentPropertyFormList, property];
         } else {
             updatedPropertyFormList = currentPropertyFormList.filter(
@@ -286,7 +285,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         this.patchState({ propertyFormList: updatedPropertyFormList });
     }
 
-    // use enum for operation
     addChildPropertyFormList(property: PropertyFormItem): void {
         const currentPropertyFormList = this.get(
             (state) => state.propertyFormList
@@ -446,7 +444,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         } else {
             // if selected property is changed to a linked resource property
             // remove from orderByList
-            // this should be removed once the bug is fixed
+            // this should be removed once the bug linked above is fixed
             const updatedOrderByList = currentOrderByList.filter(
                 (item) => item.id !== property.id
             );
@@ -475,10 +473,11 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                 property.selectedProperty?.objectType &&
                 property.selectedProperty?.objectType !== Constants.Label
             ) {
-                // maybe this should be takeOne
                 this._advancedSearchService
                     .filteredPropertiesList(
                         property.selectedProperty?.objectType
+                    ).pipe(
+                        take(1),
                     )
                     .subscribe((properties) => {
                         property.childPropertiesList = properties;
@@ -535,6 +534,9 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             this.patchState({ resourcesSearchResultsPageNumber: 0 });
             this._advancedSearchService
                 .getResourceListCount(searchItem.value, searchItem.objectType)
+                .pipe(
+                    take(1),
+                )
                 .subscribe((count) => {
                     this.patchState({ resourcesSearchResultsCount: count });
                     this.patchState({ resourcesSearchResultsLoading: false });
@@ -628,9 +630,11 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             property.childProperty.searchValue = undefined;
 
             if (property.childProperty.selectedProperty?.listIri) {
-                // this should be a takeOne
                 this._advancedSearchService
                     .getList(property.childProperty.selectedProperty?.listIri)
+                    .pipe(
+                        take(1),
+                    )
                     .subscribe((list) => {
                         property.childProperty.list = list;
                         newProp.searchValue = [
@@ -756,6 +760,9 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                     searchItem.value,
                     searchItem.objectType,
                     nextPageNumber
+                )
+                .pipe(
+                    take(1),
                 )
                 .subscribe((resources) => {
                     this.patchState({
@@ -1010,7 +1017,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             )
     );
 
-    // load list of properties
+    // load list of all properties
     readonly propertiesList = this.effect(
         (ontology$: Observable<ApiData | undefined>) =>
             ontology$.pipe(
@@ -1046,7 +1053,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             )
     );
 
-    // load list of filtered properties
+    // load list of filtered properties, limited to a resource class
     readonly filteredPropertiesList = this.effect(
         (resourceClass$: Observable<ApiData | undefined>) =>
             resourceClass$.pipe(
