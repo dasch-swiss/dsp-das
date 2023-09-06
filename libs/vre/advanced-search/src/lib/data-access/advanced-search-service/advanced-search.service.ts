@@ -165,6 +165,33 @@ export class AdvancedSearchService {
                                 Constants.KnoraApiV2
                             );
 
+                            if (objectType === Constants.ListValue) {
+                                const guiAttr = propDef.guiAttributes;
+                                if (
+                                    guiAttr.length === 1 &&
+                                    guiAttr[0].startsWith('hlist=')
+                                ) {
+                                    // get list node iri from gui attribute
+                                    // i.e. hlist=<http://rdfh.ch/lists/0420/6-Vp0F_1TfSS-DS_9q-Ucw>
+                                    const listNodeIri = guiAttr[0].substring(
+                                        7,
+                                        guiAttr[0].length - 1
+                                    );
+                                    return {
+                                        iri: propDef.id,
+                                        label: label,
+                                        objectType: objectType,
+                                        isLinkedResourceProperty: linkProperty,
+                                        listIri: listNodeIri,
+                                    };
+                                } else {
+                                    console.error(
+                                        'No root node Iri given for property',
+                                        guiAttr
+                                    );
+                                }
+                            }
+
                             return {
                                 iri: propDef.id,
                                 label: label,
