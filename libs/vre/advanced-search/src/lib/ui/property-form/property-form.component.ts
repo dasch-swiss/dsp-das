@@ -24,6 +24,7 @@ import {
 import {
     PropertyData,
     ApiData,
+    ResourceLabel,
 } from '../../data-access/advanced-search-service/advanced-search.service';
 import { Operators } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { PropertyFormValueComponent } from './property-form-value/property-form-value.component';
@@ -93,7 +94,7 @@ export class PropertyFormComponent {
     constants = Constants;
 
     // objectType is manually set so that it uses the KnoraApiV2 string for boolean checks later
-    resourceLabel = { iri: 'resourceLabel', label: 'Resource Label', objectType: this.constants.KnoraApiV2 + this.constants.HashDelimiter + 'ResourceLabel'};
+    resourceLabel = { iri: 'resourceLabel', label: 'Resource Label', objectType: ResourceLabel};
 
     onRemovePropertyFormClicked(propFormItem: PropertyFormItem | null): void {
         if (propFormItem) {
