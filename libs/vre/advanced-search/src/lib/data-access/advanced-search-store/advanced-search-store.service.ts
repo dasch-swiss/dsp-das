@@ -53,6 +53,7 @@ export interface OrderByItem {
     id: string;
     label: string;
     orderBy: boolean;
+    disabled?: boolean;
 }
 
 export interface ChildPropertyItem {
@@ -412,45 +413,43 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             }
         }
 
-        // do not add linked resource properties to orderByList because it's currently not possible
-        // https://linear.app/dasch/issue/DEV-2607/gravsearch-order-by-linked-resource-issue
-        if (
-            property.selectedProperty?.objectType === Constants.Label ||
-            property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)
-        ) {
-            let updatedOrderByList = [];
-            if (indexInCurrentOrderByList > -1) {
-                updatedOrderByList = [
-                    ...currentOrderByList.slice(0, indexInCurrentOrderByList),
-                    {
-                        id: property.id,
-                        label: property.selectedProperty?.label || '',
-                        orderBy: false,
-                    },
-                    ...currentOrderByList.slice(indexInCurrentOrderByList + 1),
-                ];
-            } else {
-                updatedOrderByList = [
-                    ...currentOrderByList,
-                    {
-                        id: property.id,
-                        label: property.selectedProperty?.label || '',
-                        orderBy: false,
-                    },
-                ];
-            }
-
-            this.patchState({ propertiesOrderByList: updatedOrderByList });
+        let updatedOrderByList = [];
+        if (indexInCurrentOrderByList > -1) {
+            updatedOrderByList = [
+                ...currentOrderByList.slice(0, indexInCurrentOrderByList),
+                {
+                    id: property.id,
+                    label: property.selectedProperty?.label || '',
+                    orderBy: false,
+                    disabled: !(
+                        property.selectedProperty?.objectType ===
+                            ResourceLabel ||
+                        property.selectedProperty?.objectType?.includes(
+                            Constants.KnoraApiV2
+                        )
+                    ),
+                },
+                ...currentOrderByList.slice(indexInCurrentOrderByList + 1),
+            ];
         } else {
-            // if selected property is changed to a linked resource property
-            // remove from orderByList
-            // this should be removed once the bug linked above is fixed
-            const updatedOrderByList = currentOrderByList.filter(
-                (item) => item.id !== property.id
-            );
-
-            this.patchState({ propertiesOrderByList: updatedOrderByList });
+            updatedOrderByList = [
+                ...currentOrderByList,
+                {
+                    id: property.id,
+                    label: property.selectedProperty?.label || '',
+                    orderBy: false,
+                    disabled: !(
+                        property.selectedProperty?.objectType ===
+                            ResourceLabel ||
+                        property.selectedProperty?.objectType?.includes(
+                            Constants.KnoraApiV2
+                        )
+                    ),
+                },
+            ];
         }
+
+        this.patchState({ propertiesOrderByList: updatedOrderByList });
     }
 
     updateSelectedOperator(property: PropertyFormItem): void {
@@ -476,9 +475,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                 this._advancedSearchService
                     .filteredPropertiesList(
                         property.selectedProperty?.objectType
-                    ).pipe(
-                        take(1),
                     )
+                    .pipe(take(1))
                     .subscribe((properties) => {
                         property.childPropertiesList = properties;
                         property.searchValue = [];
@@ -534,9 +532,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             this.patchState({ resourcesSearchResultsPageNumber: 0 });
             this._advancedSearchService
                 .getResourceListCount(searchItem.value, searchItem.objectType)
-                .pipe(
-                    take(1),
-                )
+                .pipe(take(1))
                 .subscribe((count) => {
                     this.patchState({ resourcesSearchResultsCount: count });
                     this.patchState({ resourcesSearchResultsLoading: false });
@@ -632,9 +628,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             if (property.childProperty.selectedProperty?.listIri) {
                 this._advancedSearchService
                     .getList(property.childProperty.selectedProperty?.listIri)
-                    .pipe(
-                        take(1),
-                    )
+                    .pipe(take(1))
                     .subscribe((list) => {
                         property.childProperty.list = list;
                         newProp.searchValue = [
@@ -761,9 +755,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                     searchItem.objectType,
                     nextPageNumber
                 )
-                .pipe(
-                    take(1),
-                )
+                .pipe(take(1))
                 .subscribe((resources) => {
                     this.patchState({
                         resourcesSearchResultsPageNumber: nextPageNumber,

@@ -23,6 +23,7 @@ import {
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'dasch-swiss-order-by',
@@ -35,6 +36,7 @@ import { MatButtonModule } from '@angular/material/button';
         MatButtonModule,
         MatIconModule,
         MatListModule,
+        MatTooltipModule,
         OverlayModule,
     ],
     templateUrl: './order-by.component.html',
@@ -51,6 +53,7 @@ export class OrderByComponent {
     sortOrderSelectionList!: MatSelectionList;
 
     isOpen = false;
+    tooltipText = 'Search cannot be ordered by a property that links to a resource.';
 
     drop(event: CdkDragDrop<string[]>) {
         if (!this.orderByList) return;

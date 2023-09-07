@@ -23,11 +23,28 @@
         [cdkConnectedOverlayOrigin]="trigger"
         [cdkConnectedOverlayOpen]="isOpen"
         [cdkConnectedOverlayHasBackdrop]="true"
-        [cdkConnectedOverlayBackdropClass]="['cdk-overlay-transparent-backdrop']"
+        [cdkConnectedOverlayBackdropClass]="[
+            'cdk-overlay-transparent-backdrop'
+        ]"
         (backdropClick)="isOpen = false"
     >
-        <mat-selection-list #sortOrderSelectionList cdkDropList class="sort-list" (cdkDropListDropped)="drop($event)" (selectionChange)="onSelectionChange($event)">
-            <mat-list-option *ngFor="let item of orderByList" class="sort-item" [selected]="item.orderBy" [value]="item.id" cdkDrag>
+        <mat-selection-list
+            #sortOrderSelectionList
+            cdkDropList
+            class="sort-list"
+            (cdkDropListDropped)="drop($event)"
+            (selectionChange)="onSelectionChange($event)"
+        >
+            <mat-list-option
+                *ngFor="let item of orderByList"
+                class="sort-item"
+                [selected]="item.orderBy"
+                [value]="item.id"
+                [disabled]="item.disabled"
+                [matTooltip]="tooltipText"
+                [matTooltipDisabled]="!item.disabled"
+                cdkDrag
+            >
                 <span cdkDragHandle matListItemIcon class="drag-handle">
                     <mat-icon>drag_indicator</mat-icon>
                 </span>
