@@ -57,12 +57,11 @@
         </section>
     </div>
     <!-- edit form -->
-    <div *ngIf="displayEditForm">
+    <div *ngIf="displayEditForm" class="description-form">
         <app-project-form
             [projectIri]="project.id"
             (closeWithChanges)="onProjectFormClose($event)"
             >
         </app-project-form>
-
     </div>
 </div>
