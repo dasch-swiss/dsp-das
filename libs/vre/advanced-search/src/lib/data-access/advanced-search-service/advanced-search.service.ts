@@ -285,7 +285,7 @@ export class AdvancedSearchService {
             );
     };
 
-    getResourceListCount(
+    getResourcesListCount(
         searchValue: string,
         resourceClassIri: string
     ): Observable<number> {

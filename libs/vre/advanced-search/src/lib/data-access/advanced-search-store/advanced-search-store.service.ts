@@ -56,7 +56,7 @@ export interface OrderByItem {
     disabled?: boolean;
 }
 
-export interface ChildPropertyItem {
+export interface ParentChildPropertyPair {
     parentProperty: PropertyFormItem;
     childProperty: PropertyFormItem;
 }
@@ -225,8 +225,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             if (!prop.searchValue.length) return true;
 
             return prop.searchValue.some((childProp) => {
-                const temp = this.isPropertyFormItemListInvalid(childProp);
-                return temp;
+                return this.isPropertyFormItemListInvalid(childProp);
             });
         }
 
@@ -244,7 +243,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         this.patchState({ propertyFormList: [] });
     }
 
-    updateSelectedResourceClass(resourceClass: ApiData): void {
+    updateSelectedResourceClass(resourceClass: ApiData | undefined): void {
         if (resourceClass) {
             this.patchState({ selectedResourceClass: resourceClass });
         } else {
@@ -313,17 +312,17 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             },
         ];
 
-        const newProp = currentPropertyFormList[indexInPropertyFormList];
-        newProp.searchValue = updatedSearchValue;
+        const updatedProp = currentPropertyFormList[indexInPropertyFormList];
+        updatedProp.searchValue = updatedSearchValue;
 
         this.updatePropertyFormListItem(
             currentPropertyFormList,
-            newProp,
+            updatedProp,
             indexInPropertyFormList
         );
     }
 
-    deleteChildPropertyFormList(property: ChildPropertyItem): void {
+    deleteChildPropertyFormList(property: ParentChildPropertyPair): void {
         const currentPropertyFormList = this.get(
             (state) => state.propertyFormList
         );
@@ -340,12 +339,12 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             (item) => item.id !== property.childProperty.id
         );
 
-        const newProp = currentPropertyFormList[indexInPropertyFormList];
-        newProp.searchValue = updatedSearchValue;
+        const updatedProp = currentPropertyFormList[indexInPropertyFormList];
+        updatedProp.searchValue = updatedSearchValue;
 
         this.updatePropertyFormListItem(
             currentPropertyFormList,
-            newProp,
+            updatedProp,
             indexInPropertyFormList
         );
     }
@@ -371,7 +370,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
             if (objectType) {
                 // filter available operators based on the object type of the selected property
-                operators = Array.from(this.getOperators().entries())
+                operators = Array.from(this.operatorsMap().entries())
                     .filter(([_, values]) => values.includes(objectType))
                     .map(([key, _]) => key);
 
@@ -452,6 +451,98 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         this.patchState({ propertiesOrderByList: updatedOrderByList });
     }
 
+    updateChildSelectedProperty(property: ParentChildPropertyPair): void {
+        const currentPropertyFormList = this.get(
+            (state) => state.propertyFormList
+        );
+        const indexInPropertyFormList = currentPropertyFormList.indexOf(
+            property.parentProperty
+        );
+
+        const currentSearchValue = currentPropertyFormList[
+            indexInPropertyFormList
+        ].searchValue as PropertyFormItem[];
+
+        const indexInCurrentSearchValue = currentSearchValue.findIndex(
+            (item) => item.id === property.childProperty.id
+        );
+
+        if (indexInCurrentSearchValue > -1) {
+            // only update if the property is found
+            const objectType =
+                property.childProperty.selectedProperty?.objectType;
+
+            let operators;
+
+            if (objectType) {
+                // filter available operators based on the object type of the selected property
+                operators = Array.from(this.operatorsMap().entries())
+                    .filter(([_, values]) => values.includes(objectType))
+                    .map(([key, _]) => key);
+
+                // if there are no matching operators in the map it means the property is a linked resource
+                // i.e. http://0.0.0.0:3333/ontology/0801/newton/v2#letter
+                if (!operators.length) {
+                    operators = [
+                        Operators.Equals,
+                        Operators.NotEquals,
+                        Operators.Exists,
+                        Operators.NotExists,
+                    ];
+                }
+            }
+            property.childProperty.operators = operators;
+
+            const updatedProp = currentPropertyFormList[indexInPropertyFormList];
+            updatedProp.searchValue = [
+                ...currentSearchValue.slice(0, indexInCurrentSearchValue),
+                property.childProperty,
+                ...currentSearchValue.slice(indexInCurrentSearchValue + 1),
+            ];
+
+            // reset selected operator and search value because it might be invalid for the newly selected property
+            property.childProperty.selectedOperator = undefined;
+            property.childProperty.searchValue = undefined;
+
+            if (property.childProperty.selectedProperty?.listIri) {
+                this._advancedSearchService
+                    .getList(property.childProperty.selectedProperty?.listIri)
+                    .pipe(take(1))
+                    .subscribe((list) => {
+                        property.childProperty.list = list;
+                        updatedProp.searchValue = [
+                            ...currentSearchValue.slice(
+                                0,
+                                indexInCurrentSearchValue
+                            ),
+                            property.childProperty,
+                            ...currentSearchValue.slice(
+                                indexInCurrentSearchValue + 1
+                            ),
+                        ];
+
+                        this.updatePropertyFormListItem(
+                            currentPropertyFormList,
+                            updatedProp,
+                            indexInPropertyFormList
+                        );
+                    });
+            } else {
+                updatedProp.searchValue = [
+                    ...currentSearchValue.slice(0, indexInCurrentSearchValue),
+                    property.childProperty,
+                    ...currentSearchValue.slice(indexInCurrentSearchValue + 1),
+                ];
+
+                this.updatePropertyFormListItem(
+                    currentPropertyFormList,
+                    updatedProp,
+                    indexInPropertyFormList
+                );
+            }
+        }
+    }
+
     updateSelectedOperator(property: PropertyFormItem): void {
         const currentPropertyFormList = this.get(
             (state) => state.propertyFormList
@@ -469,8 +560,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
             if (
                 property.selectedOperator === Operators.Matches &&
-                property.selectedProperty?.objectType &&
-                property.selectedProperty?.objectType !== Constants.Label
+                property.selectedProperty?.isLinkedResourceProperty
             ) {
                 this._advancedSearchService
                     .filteredPropertiesList(
@@ -496,6 +586,45 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         }
     }
 
+    updateChildSelectedOperator(property: ParentChildPropertyPair): void {
+        const currentPropertyFormList = this.get(
+            (state) => state.propertyFormList
+        );
+        const indexInPropertyFormList = currentPropertyFormList.indexOf(
+            property.parentProperty
+        );
+
+        const currentSearchValue = currentPropertyFormList[
+            indexInPropertyFormList
+        ].searchValue as PropertyFormItem[];
+
+        const indexInCurrentSearchValue = currentSearchValue.findIndex(
+            (item) => item.id === property.childProperty.id
+        );
+
+        if (indexInPropertyFormList > -1 && indexInCurrentSearchValue > -1) {
+            // reset search value if operator is 'exists' or 'does not exist'
+            if (
+                property.childProperty.selectedOperator === Operators.Exists ||
+                property.childProperty.selectedOperator === Operators.NotExists
+            ) {
+                property.childProperty.searchValue = undefined;
+            }
+
+            property.parentProperty.searchValue = [
+                ...currentSearchValue.slice(0, indexInCurrentSearchValue),
+                property.childProperty,
+                ...currentSearchValue.slice(indexInCurrentSearchValue + 1),
+            ];
+
+            this.updatePropertyFormListItem(
+                currentPropertyFormList,
+                property.parentProperty,
+                indexInPropertyFormList
+            );
+        }
+    }
+
     updateSearchValue(property: PropertyFormItem): void {
         const currentPropertyFormList = this.get(
             (state) => state.propertyFormList
@@ -507,6 +636,37 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                 currentPropertyFormList,
                 property,
                 index
+            );
+        }
+    }
+
+    updateChildSearchValue(property: ParentChildPropertyPair): void {
+        const currentPropertyFormList = this.get(
+            (state) => state.propertyFormList
+        );
+        const indexInPropertyFormList = currentPropertyFormList.indexOf(
+            property.parentProperty
+        );
+
+        const currentSearchValue = currentPropertyFormList[
+            indexInPropertyFormList
+        ].searchValue as PropertyFormItem[];
+
+        const indexInCurrentSearchValue = currentSearchValue.findIndex(
+            (item) => item.id === property.childProperty.id
+        );
+
+        if (indexInPropertyFormList > -1 && indexInCurrentSearchValue > -1) {
+            property.parentProperty.searchValue = [
+                ...currentSearchValue.slice(0, indexInCurrentSearchValue),
+                property.childProperty,
+                ...currentSearchValue.slice(indexInCurrentSearchValue + 1),
+            ];
+
+            this.updatePropertyFormListItem(
+                currentPropertyFormList,
+                property.parentProperty,
+                indexInPropertyFormList
             );
         }
     }
@@ -531,7 +691,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             this.patchState({ resourcesSearchResults: [] });
             this.patchState({ resourcesSearchResultsPageNumber: 0 });
             this._advancedSearchService
-                .getResourceListCount(searchItem.value, searchItem.objectType)
+                .getResourcesListCount(searchItem.value, searchItem.objectType)
                 .pipe(take(1))
                 .subscribe((count) => {
                     this.patchState({ resourcesSearchResultsCount: count });
@@ -572,168 +732,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         this.patchState({ propertiesOrderByList: orderByList });
     }
 
-    updateChildSelectedProperty(property: ChildPropertyItem): void {
-        const currentPropertyFormList = this.get(
-            (state) => state.propertyFormList
-        );
-        const indexInPropertyFormList = currentPropertyFormList.indexOf(
-            property.parentProperty
-        );
-
-        const currentSearchValue = currentPropertyFormList[
-            indexInPropertyFormList
-        ].searchValue as PropertyFormItem[];
-
-        const indexInCurrentSearchValue = currentSearchValue.findIndex(
-            (item) => item.id === property.childProperty.id
-        );
-
-        if (indexInCurrentSearchValue > -1) {
-            // only update if the property is found
-            const objectType =
-                property.childProperty.selectedProperty?.objectType;
-
-            let operators;
-
-            if (objectType) {
-                // filter available operators based on the object type of the selected property
-                operators = Array.from(this.getOperators().entries())
-                    .filter(([_, values]) => values.includes(objectType))
-                    .map(([key, _]) => key);
-
-                // if there are no matching operators in the map it means the property is a linked resource
-                // i.e. http://0.0.0.0:3333/ontology/0801/newton/v2#letter
-                if (!operators.length) {
-                    operators = [
-                        Operators.Equals,
-                        Operators.NotEquals,
-                        Operators.Exists,
-                        Operators.NotExists,
-                    ];
-                }
-            }
-            property.childProperty.operators = operators;
-
-            const newProp = currentPropertyFormList[indexInPropertyFormList];
-            newProp.searchValue = [
-                ...currentSearchValue.slice(0, indexInCurrentSearchValue),
-                property.childProperty,
-                ...currentSearchValue.slice(indexInCurrentSearchValue + 1),
-            ];
-
-            // reset selected operator and search value because it might be invalid for the newly selected property
-            property.childProperty.selectedOperator = undefined;
-            property.childProperty.searchValue = undefined;
-
-            if (property.childProperty.selectedProperty?.listIri) {
-                this._advancedSearchService
-                    .getList(property.childProperty.selectedProperty?.listIri)
-                    .pipe(take(1))
-                    .subscribe((list) => {
-                        property.childProperty.list = list;
-                        newProp.searchValue = [
-                            ...currentSearchValue.slice(
-                                0,
-                                indexInCurrentSearchValue
-                            ),
-                            property.childProperty,
-                            ...currentSearchValue.slice(
-                                indexInCurrentSearchValue + 1
-                            ),
-                        ];
-
-                        this.updatePropertyFormListItem(
-                            currentPropertyFormList,
-                            newProp,
-                            indexInPropertyFormList
-                        );
-                    });
-            } else {
-                newProp.searchValue = [
-                    ...currentSearchValue.slice(0, indexInCurrentSearchValue),
-                    property.childProperty,
-                    ...currentSearchValue.slice(indexInCurrentSearchValue + 1),
-                ];
-
-                this.updatePropertyFormListItem(
-                    currentPropertyFormList,
-                    newProp,
-                    indexInPropertyFormList
-                );
-            }
-        }
-    }
-
-    updateChildSelectedOperator(property: ChildPropertyItem): void {
-        const currentPropertyFormList = this.get(
-            (state) => state.propertyFormList
-        );
-        const indexInPropertyFormList = currentPropertyFormList.indexOf(
-            property.parentProperty
-        );
-
-        const currentSearchValue = currentPropertyFormList[
-            indexInPropertyFormList
-        ].searchValue as PropertyFormItem[];
-
-        const indexInCurrentSearchValue = currentSearchValue.findIndex(
-            (item) => item.id === property.childProperty.id
-        );
-
-        if (indexInPropertyFormList > -1 && indexInCurrentSearchValue > -1) {
-            // reset search value if operator is 'exists' or 'does not exist'
-            if (
-                property.childProperty.selectedOperator === Operators.Exists ||
-                property.childProperty.selectedOperator === Operators.NotExists
-            ) {
-                property.childProperty.searchValue = undefined;
-            }
-
-            property.parentProperty.searchValue = [
-                ...currentSearchValue.slice(0, indexInCurrentSearchValue),
-                property.childProperty,
-                ...currentSearchValue.slice(indexInCurrentSearchValue + 1),
-            ];
-
-            this.updatePropertyFormListItem(
-                currentPropertyFormList,
-                property.parentProperty,
-                indexInPropertyFormList
-            );
-        }
-    }
-
-    updateChildValue(property: ChildPropertyItem): void {
-        const currentPropertyFormList = this.get(
-            (state) => state.propertyFormList
-        );
-        const indexInPropertyFormList = currentPropertyFormList.indexOf(
-            property.parentProperty
-        );
-
-        const currentSearchValue = currentPropertyFormList[
-            indexInPropertyFormList
-        ].searchValue as PropertyFormItem[];
-
-        const indexInCurrentSearchValue = currentSearchValue.findIndex(
-            (item) => item.id === property.childProperty.id
-        );
-
-        if (indexInPropertyFormList > -1 && indexInCurrentSearchValue > -1) {
-            property.parentProperty.searchValue = [
-                ...currentSearchValue.slice(0, indexInCurrentSearchValue),
-                property.childProperty,
-                ...currentSearchValue.slice(indexInCurrentSearchValue + 1),
-            ];
-
-            this.updatePropertyFormListItem(
-                currentPropertyFormList,
-                property.parentProperty,
-                indexInPropertyFormList
-            );
-        }
-    }
-
     resetResourcesSearchResults(): void {
         this.patchState({ resourcesSearchResults: [] });
         this.patchState({ resourcesSearchResultsCount: 0 });
@@ -772,7 +770,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     }
 
     // key: operator, value: allowed object types
-    getOperators(): Map<string, string[]> {
+    operatorsMap(): Map<string, string[]> {
         return new Map([
             [
                 Operators.Equals,

@@ -11,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import {
-    ChildPropertyItem,
+    ParentChildPropertyPair,
     PropertyFormItem,
     SearchItem,
 } from '../../data-access/advanced-search-store/advanced-search-store.service';
@@ -82,10 +82,10 @@ export class PropertyFormComponent {
     @Output() emitResourceSearchValueChanged = new EventEmitter<SearchItem>();
     @Output() emitLoadMoreSearchResults = new EventEmitter<SearchItem>();
     @Output() emitAddChildPropertyForm = new EventEmitter<PropertyFormItem>();
-    @Output() emitRemoveChildPropertyForm = new EventEmitter<ChildPropertyItem>();
-    @Output() emitChildSelectedPropertyChanged = new EventEmitter<ChildPropertyItem>();
-    @Output() emitChildSelectedOperatorChanged = new EventEmitter<ChildPropertyItem>();
-    @Output() emitChildValueChanged = new EventEmitter<ChildPropertyItem>();
+    @Output() emitRemoveChildPropertyForm = new EventEmitter<ParentChildPropertyPair>();
+    @Output() emitChildSelectedPropertyChanged = new EventEmitter<ParentChildPropertyPair>();
+    @Output() emitChildSelectedOperatorChanged = new EventEmitter<ParentChildPropertyPair>();
+    @Output() emitChildValueChanged = new EventEmitter<ParentChildPropertyPair>();
 
     @ViewChild('operatorsList') operatorsList!: MatSelect;
     @ViewChild('propertyFormValue') propertyFormValueComponent!: PropertyFormValueComponent;

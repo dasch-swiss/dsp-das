@@ -418,7 +418,7 @@ describe('AdvancedSearchService', () => {
             } as unknown as KnoraApiConnection;
 
             service
-                .getResourceListCount(searchValue, resourceClassIri)
+                .getResourcesListCount(searchValue, resourceClassIri)
                 .subscribe((count) => {
                     expect(count).toEqual(123);
                     done();

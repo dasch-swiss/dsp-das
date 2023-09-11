@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 import { OntologyResourceFormComponent } from '../../ui/ontology-resource-form/ontology-resource-form.component';
 import {
     AdvancedSearchStoreService,
-    ChildPropertyItem,
+    ParentChildPropertyPair,
     OrderByItem,
     PropertyFormItem,
     PropertyFormListOperations,
@@ -199,19 +199,19 @@ export class AdvancedSearchComponent implements OnInit {
         this.store.addChildPropertyFormList(property);
     }
 
-    handleRemoveChildPropertyForm(property: ChildPropertyItem): void {
+    handleRemoveChildPropertyForm(property: ParentChildPropertyPair): void {
         this.store.deleteChildPropertyFormList(property);
     }
 
-    handleChildSelectedPropertyChanged(property: ChildPropertyItem): void {
+    handleChildSelectedPropertyChanged(property: ParentChildPropertyPair): void {
         this.store.updateChildSelectedProperty(property);
     }
 
-    handleChildSelectedOperatorChanged(property: ChildPropertyItem): void {
+    handleChildSelectedOperatorChanged(property: ParentChildPropertyPair): void {
         this.store.updateChildSelectedOperator(property);
     }
 
-    handleChildValueChanged(property: ChildPropertyItem): void {
-        this.store.updateChildValue(property);
+    handleChildValueChanged(property: ParentChildPropertyPair): void {
+        this.store.updateChildSearchValue(property);
     }
 }
