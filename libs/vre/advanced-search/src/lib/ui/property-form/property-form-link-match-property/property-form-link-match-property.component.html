@@ -52,7 +52,7 @@
             <dasch-swiss-property-form-value
                 #propertyFormValue
                 *ngIf="
-                    !item.selectedProperty?.isLinkProperty &&
+                    !item.selectedProperty?.isLinkedResourceProperty &&
                     item.selectedProperty?.objectType !== constants.ListValue
                 "
                 [objectType]="item.selectedProperty?.objectType"
@@ -67,7 +67,7 @@
             >
             </dasch-swiss-property-form-list-value>
             <dasch-swiss-property-form-link-value
-                *ngIf="item.selectedProperty?.isLinkProperty"
+                *ngIf="item.selectedProperty?.isLinkedResourceProperty"
                 [resourcesSearchResultsLoading]="resourcesSearchResultsLoading"
                 [resourcesSearchResultsCount]="resourcesSearchResultsCount"
                 [resourcesSearchResults]="resourcesSearchResults"
