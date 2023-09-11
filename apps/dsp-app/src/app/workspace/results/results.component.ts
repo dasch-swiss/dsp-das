@@ -58,6 +58,7 @@ export class ResultsComponent {
         });
 
         // set the page title
+        // TODO: This uses mode while the above subscription might still change the mode.
         this._titleService.setTitle(
             'Search results for ' + this.searchParams.mode + ' search'
         );
