@@ -2,7 +2,7 @@ import {
     Component,
     EventEmitter,
     Inject,
-    Input,
+    Input, OnDestroy,
     OnInit,
     Output,
 } from '@angular/core';
@@ -22,23 +22,20 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
-    ComponentCommunicationEventService,
-    EmitEvent,
-    Events,
-} from '@dsp-app/src/app/main/services/component-communication-event.service';
-import {
     Session,
     SessionService,
 } from '@dasch-swiss/vre/shared/app-session';
 import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import {SortProp} from "@dsp-app/src/app/main/action/sort-button/sort-button.component";
+import {Subscription} from "rxjs";
 
 @Component({
     selector: 'app-projects-list',
     templateUrl: './projects-list.component.html',
     styleUrls: ['./projects-list.component.scss'],
 })
-export class ProjectsListComponent implements OnInit {
+export class ProjectsListComponent implements OnInit, OnDestroy {
     // list of users: status active or inactive (deleted)
     @Input() status: boolean;
 
@@ -49,15 +46,20 @@ export class ProjectsListComponent implements OnInit {
     @Input() createNew = false;
 
     // in case of modification
-    @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
+    @Output() refreshParent: EventEmitter<void> = new EventEmitter<void>();
+
+    activateProjectSub: Subscription; // subscription to the activate project's response
+    deactivateProjectSub: Subscription; // subscription to the deactivate project's response
 
     // loading for progess indicator
     loading: boolean;
 
-    // permissions of logged-in user
+    selectedProject: string;
+    displayEditForm = false; // whether to display the edit form instead of the list
+
+    // permissions of the logged-in user
     session: Session;
     sysAdmin = false;
-    projectAdmin = false;
 
     // list of default, dsp-specific projects, which are not able to be deleted or to be editied
     doNotDelete: string[] = [
@@ -75,7 +77,7 @@ export class ProjectsListComponent implements OnInit {
     };
 
     // sort properties
-    sortProps: any = [
+    sortProps: SortProp[] = [
         {
             key: 'shortcode',
             label: 'Short code',
@@ -90,8 +92,7 @@ export class ProjectsListComponent implements OnInit {
         },
     ];
 
-    // ... and sort by 'longname'
-    sortBy = 'longname';
+    sortBy = 'longname'; // default sort by
 
     constructor(
         @Inject(DspApiConnectionToken)
@@ -102,7 +103,6 @@ export class ProjectsListComponent implements OnInit {
         private _router: Router,
         private _session: SessionService,
         private _sortingService: SortingService,
-        private _componentCommsService: ComponentCommunicationEventService,
         private _projectService: ProjectService
     ) {}
 
@@ -111,32 +111,30 @@ export class ProjectsListComponent implements OnInit {
         this.session = this._session.getSession();
 
         // is the logged-in user system admin?
-        this.sysAdmin = this.session ? this.session.user.sysAdmin : false;
+        this.sysAdmin = this.session?.user?.sysAdmin;
 
         // sort list by defined key
-        if (localStorage.getItem('sortProjectsBy')) {
-            this.sortBy = localStorage.getItem('sortProjectsBy');
-        } else {
-            localStorage.setItem('sortProjectsBy', this.sortBy);
-        }
-
-        if (this.list) {
-            this.sortList(this.sortBy);
-        }
+        this.sortBy = localStorage.getItem('sortProjectsBy') || this.sortBy;
+        this.sortList(this.sortBy);
     }
 
     /**
-     * returns true, when the user is project admin;
-     * when the parameter permissions is not set,
-     * it returns the value for the logged-in user
+     * return true, when the user is entitled to edit a project. This is
+     * the case when a user either system admin or project admin of the given project.
      *
-     *
-     * @param  id project iri
-     * @returns boolean
+     * @param  projectId the iri of the project to be checked
      */
-    userIsProjectAdmin(id: string): boolean {
-        // check if the logged-in user is project admin
-        return this.session?.user.projectAdmin.some((e) => e === id);
+    userIsEntitled(projectId: string): boolean {
+        return this.sysAdmin || this.userIsEntitled(projectId);
+    }
+
+    /**
+     * return true, when the user is project admin of the given project.
+     *
+     * @param  projectId the iri of the project to be checked
+     */
+    userIsProjectAdmin(projectId: string): boolean {
+        return this.session?.user.projectAdmin.some((e) => e === projectId);
     }
 
     /**
@@ -176,19 +174,14 @@ export class ProjectsListComponent implements OnInit {
                         this.activateProject(id);
                         break;
                 }
-            } else {
-                if (mode === 'createProject') {
-                    // update the view
-                    this.refreshParent.emit();
-                    this._componentCommsService.emit(
-                        new EmitEvent(Events.projectCreated, true)
-                    );
-                }
             }
         });
     }
 
     sortList(key: any) {
+        if (!this.list) { // guard
+            return;
+        }
         this.list = this._sortingService.keySortByAlphabetical(this.list, key);
         localStorage.setItem('sortProjectsBy', key);
     }
@@ -197,18 +190,13 @@ export class ProjectsListComponent implements OnInit {
         const uuid = this._projectService.iriToUuid(id);
 
         // the deleteProject() method in js-lib sets the project's status to false, it is not actually deleted
-        this._dspApiConnection.admin.projectsEndpoint
+        this.deactivateProjectSub = this._dspApiConnection.admin.projectsEndpoint
             .deleteProject(id)
             .subscribe(
-                () => {
-                    this.refreshParent.emit();
+                (response: ApiResponseData<ProjectResponse>) => {
                     // update project state
-                    this._applicationStateService.delete(uuid);
-
-                    this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(id).subscribe(
-                        (response: ApiResponseData<ProjectResponse>) => this._applicationStateService.set(uuid, response.body.project)
-                    )
-
+                    this._applicationStateService.set(uuid, response.body.project);
+                    this.refreshParent.emit();
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
@@ -217,28 +205,39 @@ export class ProjectsListComponent implements OnInit {
     }
 
     activateProject(id: string) {
-        // hack because of issue #100 in dsp-js
+        // As there is no activate route implemented in the js lib, we use the update route to set the status to true
         const data: UpdateProjectRequest = new UpdateProjectRequest();
         data.status = true;
 
         const uuid = this._projectService.iriToUuid(id);
 
-        this._dspApiConnection.admin.projectsEndpoint
+        this.activateProjectSub = this._dspApiConnection.admin.projectsEndpoint
             .updateProject(id, data)
             .subscribe(
-                () => {
+                (response: ApiResponseData<ProjectResponse>) => {
+                    this._applicationStateService.set(uuid, response.body.project);
                     this.refreshParent.emit();
-                    // update project state
-                    this._applicationStateService.delete(uuid);
-
-                    this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(id).subscribe(
-                        (response: ApiResponseData<ProjectResponse>) => this._applicationStateService.set(uuid, response.body.project)
-                    )
-
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
                 }
             );
+    }
+
+    closeProjectForm(changes: boolean = false) {
+        this.displayEditForm = false;
+        this.selectedProject = undefined;
+        if (changes) {
+            this.refreshParent.emit();
+        }
+    }
+
+    ngOnDestroy() {
+        if (this.activateProjectSub) {
+            this.activateProjectSub.unsubscribe();
+        }
+        if (this.deactivateProjectSub) {
+            this.deactivateProjectSub.unsubscribe();
+        }
     }
 }

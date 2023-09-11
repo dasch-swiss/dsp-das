@@ -1,5 +1,4 @@
 <div class="no-shadow">
-    <!-- content -->
     <form
         *ngIf="!loading && project.status"
         [formGroup]="form"
@@ -122,7 +121,7 @@
                 <button color="primary"
                     mat-button
                     type="reset"
-                    (click)="closeDialog.emit()">
+                    (click)="closeWithChanges.emit(false)">
                     {{ 'appLabels.form.action.cancel' | translate }}
                 </button>
             </span>

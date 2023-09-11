@@ -52,7 +52,7 @@ export class ProjectFormComponent implements OnInit {
      * output of project form component:
      * emits info to parent that dialog box was closed
      */
-    @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
+    @Output() closeWithChanges: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     project: ReadProject;
     description: StringLiteral[];
@@ -428,7 +428,7 @@ export class ProjectFormComponent implements OnInit {
                             'You have successfully updated the project information.'
                         );
 
-                        this.closeDialog.emit(this.project);
+                        this.closeWithChanges.emit(true);
                     },
                     (error: ApiResponseError) => {
                         this._errorHandler.showMessage(error);
@@ -485,7 +485,6 @@ export class ProjectFormComponent implements OnInit {
                                                             .project.id
                                                     );
                                                 this.loading = false;
-                                                this.closeDialog.emit();
                                                 // redirect to project page
                                                 this._router
                                                     .navigateByUrl('/project', {
