@@ -224,7 +224,7 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
             );
     }
 
-    closeProjectForm(changes: boolean = false) {
+    closeProjectForm(changes = false) {
         this.displayEditForm = false;
         this.selectedProject = undefined;
         if (changes) {
