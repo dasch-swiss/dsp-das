@@ -3,12 +3,16 @@
 
   &.child-property-list {
     padding-left: 5%;
+
+    .side-container {
+      margin-top: 0%;
+    }
   }
 
   .form-fields-container,
   .side-container {
     display: inline-block;
-    vertical-align: middle;
+    vertical-align: top;
   }
 
   .form-fields-container {
@@ -17,6 +21,7 @@
 
   .side-container {
     width: 9%;
+    margin-top: 2%;
   }
 
   .dropdown-container {
