@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AdvancedSearchComponent } from './advanced-search.component';
-import { MockProvider } from 'ng-mocks';
 import {
     AdvancedSearchStoreService,
     PropertyFormItem,
@@ -10,7 +9,6 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
-    AdvancedSearchService,
     ApiData,
     PropertyData,
 } from '../../data-access/advanced-search-service/advanced-search.service';
@@ -32,26 +30,13 @@ export class MockAdvancedSearchStoreService {
     resourcesSearchResults$ = new Observable<ApiData[]>();
     error?: any;
 
-    constructor() {
-        // console.log('MockAdvancedSearchStoreService constructor called');
-    }
-
     setState(state: any): void {
         // Mocked implementation
-        // console.log('state:', state);
-        // this.selectedProject$ = of(state.selectedProject);
-        // console.log('selectedProject:', this.selectedProject$.subscribe(
-        //     (value) => {
-        //         console.log('value:', value);
-        //     }
-        // ));
 
     }
 
     ontologiesList(selectedProject: string | Observable<string>): void {
         // Mocked implementation
-        // console.log('mock ontologiesList called');
-        // console.log('selected Project:', selectedProject);
 
     }
 

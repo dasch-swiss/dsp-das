@@ -27,6 +27,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../ui/dialog/confirmation-dialog/confirmation-dialog.component';
 import { v4 as uuidv4 } from 'uuid';
+import { map, take } from 'rxjs/operators';
+
+export interface QueryObject {
+    query: string;
+    properties: PropertyFormItem[];
+}
 
 @Component({
     selector: 'dasch-swiss-advanced-search',
@@ -49,7 +55,7 @@ export class AdvancedSearchComponent implements OnInit {
     // new projects use uuid, old projects use shortcode
     @Input() uuid: string | undefined = undefined;
 
-    @Output() emitGravesearchQuery = new EventEmitter<string>();
+    @Output() emitGravesearchQuery = new EventEmitter<QueryObject>();
     @Output() emitBackButtonClicked = new EventEmitter<void>();
 
     store: AdvancedSearchStoreService = inject(AdvancedSearchStoreService);
@@ -178,7 +184,14 @@ export class AdvancedSearchComponent implements OnInit {
     }
 
     handleSearchButtonClicked(): void {
-        this.emitGravesearchQuery.emit(this.store.onSearch());
+        this.propertyFormList$.pipe(take(1)).subscribe((propertyFormList) => {
+            const queryObject: QueryObject = {
+                query: this.store.onSearch(),
+                properties: propertyFormList,
+            };
+
+            this.emitGravesearchQuery.emit(queryObject);
+        });
     }
 
     handleResetButtonClicked(): void {
