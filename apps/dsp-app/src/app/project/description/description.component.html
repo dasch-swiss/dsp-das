@@ -7,7 +7,7 @@
     <!--  mobile version: status and edit icon displayed before the title -->
     <div class="app-toolbar-mobile">
         <span class="app-toolbar-action-edit"
-            *ngIf="userIsEntitled">
+            *ngIf="userHasPermission">
             <button mat-icon-button
                 *ngIf="project.status"
                 class="right"
@@ -27,7 +27,7 @@
             <span class="fill-remaining-space"></span>
             <span class="app-toolbar-action">
                 <button mat-button
-                    *ngIf="userIsEntitled && project.status"
+                    *ngIf="userHasPermission && project.status"
                     class="right"
                     (click)="editProject()"
                     color="primary">

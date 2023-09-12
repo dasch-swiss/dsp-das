@@ -243,7 +243,7 @@ describe('DescriptionComponent', () => {
     });
 
     it('should not display the edit button as a regular user', async () => {
-        testHostComponent.descriptionComp.userIsEntitled = false;
+        testHostComponent.descriptionComp.userHasPermission = false;
 
         testHostFixture.detectChanges();
 
@@ -255,7 +255,7 @@ describe('DescriptionComponent', () => {
     });
 
     it('should display the edit button as an admin', async () => {
-        testHostComponent.descriptionComp.userIsEntitled = true;
+        testHostComponent.descriptionComp.userHasPermission = true;
 
         testHostFixture.detectChanges();
 

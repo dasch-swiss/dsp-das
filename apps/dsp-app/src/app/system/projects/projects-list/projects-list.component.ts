@@ -122,7 +122,7 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
      *
      * @param  projectId the iri of the project to be checked
      */
-    userIsEntitled(projectId: string): boolean {
+    userHasPermission(projectId: string): boolean {
         return this.sysAdmin || this.userIsProjectAdmin(projectId);
     }
 

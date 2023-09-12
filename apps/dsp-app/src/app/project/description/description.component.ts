@@ -22,7 +22,7 @@ export class DescriptionComponent implements OnInit {
 
     // permissions of the logged-in user
     session: Session;
-    userIsEntitled = false;
+    userHasPermission = false;
 
     // project uuid coming from the route
     projectUuid: string;
@@ -47,7 +47,7 @@ export class DescriptionComponent implements OnInit {
 
         // get information about the logged-in user, if one is logged-in
         this.session = this._session.getSession();
-        this.userIsEntitled = this.session?.user?.sysAdmin; // if the user is sysadmin, he is entitled to edit the project
+        this.userHasPermission = this.session?.user?.sysAdmin; // if the user is sysadmin, he has the permission to edit the project
 
         // get project info from backend
         this.initProject();
@@ -55,7 +55,7 @@ export class DescriptionComponent implements OnInit {
 
     /**
      * initProject: get the project data from the application state service and update
-     * if the user is entitled to edit the project if not a sysadmin
+     * if the user has permission to edit the project if not a sysadmin
      */
     initProject() {
         // get the project data
@@ -63,9 +63,9 @@ export class DescriptionComponent implements OnInit {
             (response: ReadProject) => {
                 this.project = response;
 
-                // if the user is not entitled because not sysadmin, check if he is project admin
-                if (!this.userIsEntitled) {
-                    this.userIsEntitled = this.session.user.projectAdmin.some(
+                // if the user is not sysadmin, check if he is project admin
+                if (!this.userHasPermission) {
+                    this.userHasPermission = this.session.user.projectAdmin.some(
                         (e) => e === this.project.id
                     );
                 }

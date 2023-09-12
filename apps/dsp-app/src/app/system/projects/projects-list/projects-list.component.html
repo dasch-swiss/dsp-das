@@ -80,7 +80,7 @@
                     mat-icon-button
                     [matMenuTriggerFor]="projectMenu"
                     [disabled]="
-                        (!userIsEntitled(project.id)) ||
+                        (!userHasPermission(project.id)) ||
                         doNotDelete.includes(project.id)
                     "
                 >
