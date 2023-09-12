@@ -7,7 +7,7 @@ import {
     Output,
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {
     ApiResponseData,
     ApiResponseError,
@@ -54,9 +54,6 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
     // loading for progess indicator
     loading: boolean;
 
-    selectedProject: string;
-    displayEditForm = false; // whether to display the edit form instead of the list
-
     // permissions of the logged-in user
     session: Session;
     sysAdmin = false;
@@ -100,6 +97,7 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
         private _applicationStateService: ApplicationStateService,
         private _errorHandler: AppErrorHandler,
         private _dialog: MatDialog,
+        private _route: ActivatedRoute,
         private _router: Router,
         private _session: SessionService,
         private _sortingService: SortingService,
@@ -148,6 +146,15 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
         this._router
             .navigateByUrl('/refresh', { skipLocationChange: true })
             .then(() => this._router.navigate(['project/' + uuid]));
+    }
+
+    createNewProject() {
+        this._router.navigate(['project', 'create-new']);
+    }
+
+    editProject(iri: string) {
+        const uuid = this._projectService.iriToUuid(iri);
+        this._router.navigate(['project', uuid, 'edit']);
     }
 
     openDialog(mode: string, name?: string, id?: string): void {
@@ -222,14 +229,6 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
                     this._errorHandler.showMessage(error);
                 }
             );
-    }
-
-    closeProjectForm(changes = false) {
-        this.displayEditForm = false;
-        this.selectedProject = undefined;
-        if (changes) {
-            this.refreshParent.emit();
-        }
     }
 
     ngOnDestroy() {

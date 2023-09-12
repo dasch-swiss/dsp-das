@@ -1,11 +1,9 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
     Component,
-    EventEmitter,
     Inject,
     Input,
-    OnInit,
-    Output,
+    OnInit
 } from '@angular/core';
 import {
     UntypedFormBuilder,
@@ -14,7 +12,8 @@ import {
     Validators,
 } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import { Location } from "@angular/common";
 import {
     ApiResponseData,
     ApiResponseError,
@@ -34,6 +33,7 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
+import {Observable} from "rxjs";
 
 @Component({
     selector: 'app-project-form',
@@ -48,19 +48,11 @@ export class ProjectFormComponent implements OnInit {
      */
     @Input() projectIri?: string;
 
-    /**
-     * output of project form component:
-     * emits info to parent that dialog box was closed
-     */
-    @Output() closeWithChanges: EventEmitter<boolean> = new EventEmitter<boolean>();
-
     project: ReadProject;
+    projectUuid: string;
     description: StringLiteral[];
 
     loading = true;
-
-    // is the logged-in user system admin?
-    sysAdmin = false;
 
     /**
      * shortcode and shortname must be unique
@@ -173,15 +165,23 @@ export class ProjectFormComponent implements OnInit {
         private _errorHandler: AppErrorHandler,
         private _notification: NotificationService,
         private _fb: UntypedFormBuilder,
+        private _route: ActivatedRoute,
         private _router: Router,
+        private _location: Location,
         private _session: SessionService,
         private _projectService: ProjectService
-    ) {}
+    ) {
+        // get the uuid of the current project
+        this._route.parent.paramMap.subscribe((params: Params) => {
+            this.projectUuid = params.get('uuid');
+        });
+    }
 
     ngOnInit() {
-        // if projectIri exists, we are in edit mode
+        // if a projectUuid exists, we are in edit mode
         // otherwise create new project
-        if (this.projectIri) {
+        if (this.projectUuid) {
+            this.projectIri = this._projectService.uuidToIri(this.projectUuid)
             // edit existing project
             // get origin project data first
             this._dspApiConnection.admin.projectsEndpoint
@@ -428,7 +428,7 @@ export class ProjectFormComponent implements OnInit {
                             'You have successfully updated the project information.'
                         );
 
-                        this.closeWithChanges.emit(true);
+                        this._location.back();
                     },
                     (error: ApiResponseError) => {
                         this._errorHandler.showMessage(error);
@@ -517,76 +517,7 @@ export class ProjectFormComponent implements OnInit {
         }
     }
 
-    /**
-     * deactivate project
-     * @param id Project Iri
-     */
-    delete(id: string) {
-        this._dspApiConnection.admin.projectsEndpoint
-            .deleteProject(id)
-            .subscribe(
-                () => {
-                    // reload page
-                    this.loading = true;
-                    this.refresh();
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
-    }
-
-    /**
-     * activate already deleted project
-     *
-     * @param id Project Iri
-     */
-    activate(id: string) {
-        // hack because of issue #100 in dsp-js
-        const data: UpdateProjectRequest = new UpdateProjectRequest();
-        data.status = true;
-
-        this._dspApiConnection.admin.projectsEndpoint
-            .updateProject(id, data)
-            .subscribe(
-                () => {
-                    // reload page
-                    this.loading = true;
-                    this.refresh();
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
-    }
-
-    /**
-     * refresh the page after significant change (e.g. delete project)
-     */
-    refresh(): void {
-        // refresh the component
-        this.loading = true;
-        // update the application state
-        this._applicationStateService.delete(this._projectService.iriToUuid(this.projectIri));
-        this._dspApiConnection.admin.projectsEndpoint
-            .getProjectByIri(this.projectIri)
-            .subscribe(
-                (response: ApiResponseData<ProjectResponse>) => {
-                    this.project = response.body.project;
-
-                    this._applicationStateService.set(
-                        this._projectService.iriToUuid(this.projectIri),
-                        this.project
-                    );
-
-                    this.buildForm(this.project);
-                    window.location.reload();
-                    this.loading = false;
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                    this.loading = false;
-                }
-            );
+    goBack(): void {
+        this._location.back();
     }
 }

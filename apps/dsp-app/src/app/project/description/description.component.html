@@ -9,7 +9,7 @@
         <span class="app-toolbar-action-edit"
             *ngIf="userIsEntitled">
             <button mat-icon-button
-                *ngIf="project.status && !displayEditForm"
+                *ngIf="project.status"
                 class="right"
                 color="primary">
                 <mat-icon>edit_square</mat-icon>
@@ -27,9 +27,9 @@
             <span class="fill-remaining-space"></span>
             <span class="app-toolbar-action">
                 <button mat-button
-                    *ngIf="userIsEntitled && project.status && !displayEditForm"
+                    *ngIf="userIsEntitled && project.status"
                     class="right"
-                    (click)="displayEditForm = true;"
+                    (click)="editProject()"
                     color="primary">
                     <mat-icon>edit_square</mat-icon>
                     Edit project description
@@ -38,7 +38,7 @@
         </div>
     </div>
     <!-- description -->
-    <div *ngIf="!displayEditForm" class="description-rm">
+    <div class="description-rm">
         <div>
             <p>{{project.longname}}</p>
         </div>
@@ -55,13 +55,5 @@
                 <mat-chip *ngFor="let k of project.keywords">{{k}}</mat-chip>
             </mat-chip-listbox>
         </section>
-    </div>
-    <!-- edit form -->
-    <div *ngIf="displayEditForm" class="description-form">
-        <app-project-form
-            [projectIri]="project.id"
-            (closeWithChanges)="onProjectFormClose($event)"
-            >
-        </app-project-form>
     </div>
 </div>

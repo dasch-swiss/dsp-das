@@ -1,4 +1,4 @@
-<div *ngIf="list && !loading && !displayEditForm" class="app-projects-list">
+<div *ngIf="list && !loading" class="app-projects-list">
     <!-- header toolbar -->
     <div class="app-toolbar" *ngIf="list.length > 0">
         <div class="app-toolbar-row">
@@ -32,7 +32,7 @@
                 <button
                     mat-flat-button
                     [color]="'primary'"
-                    (click)="displayEditForm = true"
+                    (click)="createNewProject()"
                 >
                     Create new
                 </button>
@@ -94,7 +94,7 @@
                     <button
                         mat-menu-item
                         *ngIf="status"
-                        (click)="selectedProject = project.id; displayEditForm = true"
+                        (click)="editProject(project.id)"
                     >
                         Edit project information
                     </button>
@@ -128,7 +128,4 @@
             </td>
         </tr>
     </table>
-</div>
-<div *ngIf="displayEditForm">
-    <app-project-form [projectIri]="selectedProject" (closeWithChanges)="closeProjectForm($event)"></app-project-form>
 </div>

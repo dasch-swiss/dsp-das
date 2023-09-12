@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {
     ApiResponseError,
     ReadProject
@@ -30,13 +30,11 @@ export class DescriptionComponent implements OnInit {
     // project data to be displayed
     project: ReadProject;
 
-    // whether the edit form is displayed or the project description
-    displayEditForm = false;
-
     constructor(
         private _errorHandler: AppErrorHandler,
         private _session: SessionService,
         private _route: ActivatedRoute,
+        private _router: Router,
         private _applicationStateService: ApplicationStateService
     ) {
         // get the uuid of the current project
@@ -56,7 +54,7 @@ export class DescriptionComponent implements OnInit {
     }
 
     /**
-     * getProject: get the project data from the application state service and update
+     * initProject: get the project data from the application state service and update
      * if the user is entitled to edit the project if not a sysadmin
      */
     initProject() {
@@ -79,14 +77,7 @@ export class DescriptionComponent implements OnInit {
         this.loading = false;
     }
 
-    /**
-     * onProjectFormClose: hide the edit form; refresh the project data via run
-     * initProject() again if the project has been updated
-     */
-    onProjectFormClose(updated = false) {
-        this.displayEditForm = false;
-        if (updated) {
-            this.initProject();
-        }
+    editProject() {
+        this._router.navigate(['project', this.projectUuid, 'edit']);
     }
 }
