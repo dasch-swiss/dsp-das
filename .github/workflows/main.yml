@@ -172,7 +172,6 @@ jobs:
             {"type": "style", "section": "Maintenance", "hidden": false },
             {"type": "docs", "section": "Documentation", "hidden": false }
             ]'
-          pull-request-title-pattern: 'chore: release ${version}'
 
 # build documentation
   docs-build-test:
