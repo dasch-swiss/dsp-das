@@ -2,7 +2,7 @@ import {
     Component,
     EventEmitter,
     Inject,
-    Input, OnDestroy,
+    Input,
     OnInit,
     Output,
 } from '@angular/core';
@@ -29,13 +29,14 @@ import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import {SortProp} from "@dsp-app/src/app/main/action/sort-button/sort-button.component";
 import {Subscription} from "rxjs";
+import {tap} from "rxjs/operators";
 
 @Component({
     selector: 'app-projects-list',
     templateUrl: './projects-list.component.html',
     styleUrls: ['./projects-list.component.scss'],
 })
-export class ProjectsListComponent implements OnInit, OnDestroy {
+export class ProjectsListComponent implements OnInit {
     // list of users: status active or inactive (deleted)
     @Input() status: boolean;
 
@@ -47,9 +48,6 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
 
     // in case of modification
     @Output() refreshParent: EventEmitter<void> = new EventEmitter<void>();
-
-    activateProjectSub: Subscription; // subscription to the activate project's response
-    deactivateProjectSub: Subscription; // subscription to the deactivate project's response
 
     // loading for progess indicator
     loading: boolean;
@@ -195,20 +193,20 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
 
     deactivateProject(id: string) {
         const uuid = this._projectService.iriToUuid(id);
-
         // the deleteProject() method in js-lib sets the project's status to false, it is not actually deleted
-        this.deactivateProjectSub = this._dspApiConnection.admin.projectsEndpoint
+
+        this._dspApiConnection.admin.projectsEndpoint
             .deleteProject(id)
-            .subscribe(
-                (response: ApiResponseData<ProjectResponse>) => {
-                    // update project state
+            .pipe(
+                tap((response: ApiResponseData<ProjectResponse>) => {
                     this._applicationStateService.set(uuid, response.body.project);
                     this.refreshParent.emit();
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
                 }
-            );
+            )
+        );
     }
 
     activateProject(id: string) {
@@ -218,25 +216,18 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
 
         const uuid = this._projectService.iriToUuid(id);
 
-        this.activateProjectSub = this._dspApiConnection.admin.projectsEndpoint
+        this._dspApiConnection.admin.projectsEndpoint
             .updateProject(id, data)
-            .subscribe(
-                (response: ApiResponseData<ProjectResponse>) => {
+            .pipe(
+                tap((response: ApiResponseData<ProjectResponse>) => {
                     this._applicationStateService.set(uuid, response.body.project);
                     this.refreshParent.emit();
+
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
                 }
-            );
-    }
-
-    ngOnDestroy() {
-        if (this.activateProjectSub) {
-            this.activateProjectSub.unsubscribe();
-        }
-        if (this.deactivateProjectSub) {
-            this.deactivateProjectSub.unsubscribe();
-        }
+            )
+        );
     }
 }
