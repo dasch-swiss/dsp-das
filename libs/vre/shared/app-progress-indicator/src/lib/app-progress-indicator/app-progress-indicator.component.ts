@@ -32,7 +32,7 @@ export class AppProgressIndicatorComponent implements OnInit {
 
     @Input() size: 'small' | 'large' = 'small';
 
-    widthAndHeight: string;
+    widthAndHeight!: string;
 
     ngOnInit() {
         this.widthAndHeight = this.size === 'small' ? '48px' : '128px';
