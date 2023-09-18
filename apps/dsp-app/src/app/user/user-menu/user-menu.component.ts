@@ -1,69 +1,56 @@
-import { Component, Inject, Input, OnChanges, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import {
-    ApiResponseData,
-    ApiResponseError,
-    KnoraApiConnection,
-    ReadProject,
-    ReadUser,
-    UserResponse,
+    User,
 } from '@dasch-swiss/dsp-js';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { SessionService } from '@dasch-swiss/vre/shared/app-session';
-import { MenuItem } from '../../main/declarations/menu-item';
+import { AuthService } from '@dasch-swiss/vre/shared/app-session';
+import { MenuItem } from '@dsp-app/src/app/main/declarations/menu-item';
+import { UserSelectors } from '@dsp-app/src/app/state/user/user.selectors';
+import { Observable, Subject } from 'rxjs';
+import { Select } from '@ngxs/store';
+import { RouteConstants } from 'libs/vre/shared/app-config/src/lib/app-config/app-constants';
 
 @Component({
     selector: 'app-user-menu',
     templateUrl: './user-menu.component.html',
     styleUrls: ['./user-menu.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserMenuComponent implements OnChanges {
-    session = this.sessionService.session;
-
+export class UserMenuComponent implements OnInit, OnDestroy {
     @ViewChild(MatMenuTrigger) menuTrigger: MatMenuTrigger;
-
-    user: ReadUser;
-
-    username: string;
-
-    sysAdmin = false;
-
+    
+    routeConstants = RouteConstants;
     navigation: MenuItem[];
 
+    private ngUnsubscribe: Subject<void> = new Subject<void>();
+    
+    isLoggedIn$: Observable<boolean> = this._authService.isLoggedIn$;
+    @Select(UserSelectors.user) user$: Observable<User>;
+
     constructor(
-        private _applicationStateService: ApplicationStateService,
-        private sessionService: SessionService
+        private _authService: AuthService,
     ) {}
 
-    ngOnChanges() {
-        console.log('user menu component ngOnChanges');
+    ngOnInit() {
         this.navigation = [
             {
                 label: 'DSP-App Home Page',
                 shortLabel: 'home',
-                route: '/',
+                route: this.routeConstants.homeRelative,
                 icon: '',
             },
             {
                 label: 'My Account',
                 shortLabel: 'Account',
-                route: '/account',
+                route: this.routeConstants.userAccountRelative,
                 icon: '',
             },
         ];
+    }
 
-        if (this.session()) {
-            this.username = this.session().user.name;
-            this.sysAdmin = this.session().user.sysAdmin;
-
-            this._applicationStateService
-                .get(this.session().user.name)
-                .subscribe((response: ReadUser) => {
-                    this.user = response;
-                });
-        }
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     /**
@@ -71,7 +58,7 @@ export class UserMenuComponent implements OnChanges {
      *
      */
     logout() {
-        this.sessionService.logout();
+        this._authService.logout();
     }
 
     /**

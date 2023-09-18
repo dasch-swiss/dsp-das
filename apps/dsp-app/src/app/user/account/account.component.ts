@@ -1,3 +1,4 @@
+import { LoadUserAction } from '@dsp-app/src/app/state/user/user.actions';
 import {
     Component,
     EventEmitter,
@@ -9,16 +10,18 @@ import {
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import {
-    ApiResponseData,
     ApiResponseError,
     KnoraApiConnection,
     ReadUser,
-    UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
+import { UserSelectors } from '@dsp-app/src/app/state/user/user.selectors';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-account',
@@ -31,9 +34,10 @@ export class AccountComponent implements OnInit {
 
     @Input() username: string;
 
-    loading: boolean;
+    @Select(UserSelectors.user) user$: Observable<ReadUser>;
+    @Select(UserSelectors.isLoading) isLoading$: Observable<boolean>;
 
-    user: ReadUser;
+    userId = null;
 
     constructor(
         @Inject(DspApiConnectionToken)
@@ -42,25 +46,16 @@ export class AccountComponent implements OnInit {
         private _dialog: MatDialog,
         private _errorHandler: AppErrorHandler,
         private _titleService: Title,
+        private store: Store,
     ) {
         // set the page title
         this._titleService.setTitle('Your account');
     }
 
     ngOnInit() {
-        this.loading = true;
-
-        this._dspApiConnection.admin.usersEndpoint
-            .getUserByUsername(this.username)
-            .subscribe(
-                (response: ApiResponseData<UserResponse>) => {
-                    this.user = response.body.user;
-                    this.loading = false;
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
+        this.store.dispatch(new LoadUserAction(this.username)).pipe(
+            tap((user: ReadUser) => this.userId = user.id)
+        );
     }
 
     openDialog(mode: string, name: string, id?: string): void {

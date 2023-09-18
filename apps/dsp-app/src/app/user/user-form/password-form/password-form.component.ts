@@ -17,13 +17,17 @@ import {
     ApiResponseError,
     KnoraApiConnection,
     ReadUser,
+    User,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { SessionService } from '@dasch-swiss/vre/shared/app-session';
+import { UserSelectors } from '@dsp-app/src/app/state/user/user.selectors';
 import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-password-form',
@@ -41,12 +45,7 @@ export class PasswordFormComponent implements OnInit {
     @Output() sendToParent: EventEmitter<string> = new EventEmitter<string>();
 
     // progress indicator and error status
-    loading: boolean;
     error: boolean;
-
-    user: ReadUser;
-
-    loggedInUserName: string;
 
     // who is logged in?
     // loggedInUserName: string;
@@ -99,39 +98,24 @@ export class PasswordFormComponent implements OnInit {
         private _errorHandler: AppErrorHandler,
         private _fb: UntypedFormBuilder,
         private _notification: NotificationService,
-        private _session: SessionService
+        private store: Store,
     ) {}
 
     ngOnInit() {
-        this.loading = true;
-
-        const session = this._session.getSession();
-
+        const usernameFromState = this.store.selectSnapshot(UserSelectors.username);
+        const userFromState = this.store.selectSnapshot(UserSelectors.user) as User;
         if (this.username) {
             // edit mode
-            if (session.user.name === this.username) {
+            if (usernameFromState === this.username) {
                 // update own password
                 this.updateOwn = true;
             } else {
                 // update not own password, if logged-in user is system admin
-                if (session.user.sysAdmin) {
-                    this.loggedInUserName = session.user.name;
+                if (userFromState.systemAdmin) {
                     this.updateOwn = false;
                 }
             }
             this.showPasswordForm = this.updateOwn;
-
-            this._dspApiConnection.admin.usersEndpoint
-                .getUserByUsername(this.username)
-                .subscribe(
-                    (response: ApiResponseData<UserResponse>) => {
-                        this.user = response.body.user;
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                );
-
             if (!this.updateOwn) {
                 this.buildConfirmForm();
             } else {
@@ -161,8 +145,6 @@ export class PasswordFormComponent implements OnInit {
         });
 
         this.onValueChanged(this.confirmForm); // (re)set validation messages now
-
-        this.loading = false;
     }
 
     buildForm() {
@@ -234,8 +216,6 @@ export class PasswordFormComponent implements OnInit {
         });
 
         this.onValueChanged(this.form); // (re)set validation messages now
-
-        this.loading = false;
     }
 
     onValueChanged(form: UntypedFormGroup) {
@@ -255,69 +235,69 @@ export class PasswordFormComponent implements OnInit {
 
     // confirm sys admin
     nextStep() {
-        this.loading = true;
+        // this.loading = true;
 
-        // submit requester password with logged-in username
-        this._dspApiConnection.v2.auth
-            .login(
-                'username',
-                this.loggedInUserName,
-                this.confirmForm.controls.requesterPassword.value
-            )
-            .subscribe(
-                () => {
-                    // go to next step with password form
-                    this.showPasswordForm = !this.showPasswordForm;
-                    // this.requesterPass = this.confirmForm.controls.requesterPassword.value;
-                    this.buildForm();
-                    this.loading = false;
-                },
-                () => {
-                    this.confirmForm.controls.requesterPassword.setErrors({
-                        incorrectPassword: true,
-                    });
-                    this.loading = false;
-                    this.error = true;
-                }
-            );
+        // // submit requester password with logged-in username
+        // this._dspApiConnection.v2.auth
+        //     .login(
+        //         'username',
+        //         this.loggedInUserName,
+        //         this.confirmForm.controls.requesterPassword.value
+        //     )
+        //     .subscribe(
+        //         () => {
+        //             // go to next step with password form
+        //             this.showPasswordForm = !this.showPasswordForm;
+        //             // this.requesterPass = this.confirmForm.controls.requesterPassword.value;
+        //             this.buildForm();
+        //             this.loading = false;
+        //         },
+        //         () => {
+        //             this.confirmForm.controls.requesterPassword.setErrors({
+        //                 incorrectPassword: true,
+        //             });
+        //             this.loading = false;
+        //             this.error = true;
+        //         }
+        //     );
     }
 
     submitData() {
-        this.loading = true;
+        // this.loading = true;
 
-        const requesterPassword = this.updateOwn
-            ? this.form.controls.requesterPassword.value
-            : this.confirmForm.controls.requesterPassword.value;
+        // const requesterPassword = this.updateOwn
+        //     ? this.form.controls.requesterPassword.value
+        //     : this.confirmForm.controls.requesterPassword.value;
 
-        this._dspApiConnection.admin.usersEndpoint
-            .updateUserPassword(
-                this.user.id,
-                requesterPassword,
-                this.form.controls.password.value
-            )
-            .subscribe(
-                () => {
-                    const successResponse =
-                        'You have successfully updated ' +
-                        (this.updateOwn ? 'your' : "user's") +
-                        ' password.';
-                    this._notification.openSnackBar(successResponse);
-                    this.closeDialog.emit();
-                    this.form.reset();
-                    this.loading = false;
-                },
-                (error: ApiResponseError) => {
-                    if (error.status === 403) {
-                        // incorrect old password
-                        this.form.controls.requesterPassword.setErrors({
-                            incorrectPassword: true,
-                        });
-                    } else {
-                        this._errorHandler.showMessage(error);
-                    }
-                    this.loading = false;
-                    this.error = true;
-                }
-            );
+        // this._dspApiConnection.admin.usersEndpoint
+        //     .updateUserPassword(
+        //         this.user.id,
+        //         requesterPassword,
+        //         this.form.controls.password.value
+        //     )
+        //     .subscribe(
+        //         () => {
+        //             const successResponse =
+        //                 'You have successfully updated ' +
+        //                 (this.updateOwn ? 'your' : "user's") +
+        //                 ' password.';
+        //             this._notification.openSnackBar(successResponse);
+        //             this.closeDialog.emit();
+        //             this.form.reset();
+        //             this.loading = false;
+        //         },
+        //         (error: ApiResponseError) => {
+        //             if (error.status === 403) {
+        //                 // incorrect old password
+        //                 this.form.controls.requesterPassword.setErrors({
+        //                     incorrectPassword: true,
+        //                 });
+        //             } else {
+        //                 this._errorHandler.showMessage(error);
+        //             }
+        //             this.loading = false;
+        //             this.error = true;
+        //         }
+        //     );
     }
 }

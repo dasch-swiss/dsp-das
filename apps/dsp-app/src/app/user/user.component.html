@@ -1,10 +1,10 @@
-<app-progress-indicator *ngIf="loading"></app-progress-indicator>
+<app-progress-indicator *ngIf="!(username$ | async)"></app-progress-indicator>
 <app-status *ngIf="error"></app-status>
 
-<div class="content large middle" *ngIf="!loading">
+<div class="content large middle" *ngIf="username$ | async">
 
     <div class="content-sidebar user-data">
-        <app-profile [username]="session().user.name" [loggedInUser]="true"></app-profile>
+        <app-profile [username]="username$ | async" [loggedInUser]="true"></app-profile>
     </div>
 
     <div class="content-container">
@@ -25,21 +25,21 @@
 
         <mat-tab-nav-panel #tabPanel>
             <!-- main content: router outlet -->
-            <div class="content middle" [ngSwitch]="route" *ngIf="!loading && route">
+            <div class="content middle" [ngSwitch]="route" *ngIf="route">
 
                 <!-- user profile -->
                 <div *ngSwitchCase="'profile'" class="full-width">
-                    <app-projects [username]="session().user.name"></app-projects>
+                    <app-projects [username]="username$ | async"></app-projects>
                 </div>
 
                 <!-- edit user data -->
                 <div *ngSwitchCase="'account'" class="full-width">
-                    <app-account [username]="session().user.name"></app-account>
+                    <app-account [username]="username$ | async"></app-account>
                 </div>
 
                 <!-- user's projects -->
                 <div *ngSwitchCase="'projects'" class="full-width">
-                    <app-projects [username]="session().user.name"></app-projects>
+                    <app-projects [username]="username$ | async"></app-projects>
                 </div>
 
                 <!-- user's collections (!!!NOT YET IMPLEMENTED!!!) -->

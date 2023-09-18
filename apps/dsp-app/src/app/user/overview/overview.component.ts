@@ -1,3 +1,4 @@
+import { UserSelectors } from '@dsp-app/src/app/state/user/user.selectors';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
@@ -5,20 +6,21 @@ import { Router } from '@angular/router';
 import {
     KnoraApiConnection,
     ApiResponseData,
-    UserResponse,
     ApiResponseError,
     StoredProject,
     ProjectsResponse,
+    ReadUser,
 } from '@dasch-swiss/dsp-js';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import {
-    Session,
-    SessionService,
-} from '@dasch-swiss/vre/shared/app-session';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { AuthService } from '@dasch-swiss/vre/shared/app-session';
+import { LoadUserProjectsAction } from '@dsp-app/src/app/state/projects/projects.actions';
+import { ProjectsSelectors } from '@dsp-app/src/app/state/projects/projects.selectors';
+import { take } from 'rxjs/operators';
 
 // should only be used by this component and child components
 export type TileLinks = 'workspace' | 'settings';
@@ -37,66 +39,50 @@ export interface routeParams {
 export class OverviewComponent implements OnInit {
     loading = true;
 
-    session: Session;
     username: string;
     sysAdmin = false;
-
-    // list of projects a user is a member of
-    userProjects: StoredProject[] = [];
 
     // list of projects a user is NOT a member of
     otherProjects: StoredProject[] = [];
 
+    isLoggedIn$ = this._authService.isLoggedIn$;
+    
+    @Select(UserSelectors.user) user$: Observable<ReadUser>;
+    // list of projects a user is a member of
+    @Select(UserSelectors.userActiveProjects) userActiveProjects$: Observable<StoredProject>;
+    @Select(ProjectsSelectors.userOtherActiveProjects) userOtherActiveProjects$: Observable<StoredProject>;
+
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _applicationStateService: ApplicationStateService,
         private _errorHandler: AppErrorHandler,
-        private _session: SessionService,
         private _dialog: MatDialog,
         private _titleService: Title,
         private _router: Router,
-        private _projectService: ProjectService
+        private _projectService: ProjectService,
+        private _authService: AuthService,
+        private store: Store,
     ) {
-        // get username
-        this.session = this._session.getSession();
-
-        // if session is null, user is not logged in
-        if (this.session) {
-            this.username = this.session.user.name;
-            this.sysAdmin = this.session.user.sysAdmin;
-        }
-
         // set the page title
         this._titleService.setTitle('Projects Overview');
     }
 
     ngOnInit() {
         this.loading = true;
-
-        if (this.username) {
-            // set user in the application state
-            this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username).subscribe(
-                (response: ApiResponseData<UserResponse>) =>
-                    this._applicationStateService.set(this.username, response.body.user)
-            )
-        }
-
         // if user is a system admin or not logged in, get all the projects
         // system admin can create new projects and edit projects
         // users not logged in can only view projects
-        if (this.sysAdmin || !this.session) {
+        if (this.sysAdmin || !this._authService.isLoggedIn()) {
             this._dspApiConnection.admin.projectsEndpoint
                 .getProjects()
                 .subscribe(
                     (response: ApiResponseData<ProjectsResponse>) => {
                         // reset the lists:
-                        this.userProjects = [];
                         this.otherProjects = [];
 
                         for (const project of response.body.projects) {
                             // for not logged in user don't display deactivated projects
-                            if (!this.session && project.status !== false) {
+                            if (!this._authService.isLoggedIn() && project.status !== false) {
                                 this.otherProjects.push(project);
                             }
                             if (this.sysAdmin) {
@@ -112,53 +98,9 @@ export class OverviewComponent implements OnInit {
                 );
         } else {
             // logged-in user is NOT a system admin: get all projects the user is a member of
-            this._dspApiConnection.admin.usersEndpoint
-                .getUserByUsername(this.username)
-                .subscribe(
-                    (userResponse: ApiResponseData<UserResponse>) => {
-                        // reset the lists:
-                        this.userProjects = [];
-                        this.otherProjects = [];
-
-                        // get list of all projects the user is a member of except the deactivated ones
-                        for (const project of userResponse.body.user.projects) {
-                            if (project.status !== false) {
-                                this.userProjects.push(project);
-                            }
-                        }
-
-                        this._dspApiConnection.admin.projectsEndpoint
-                            .getProjects()
-                            .subscribe(
-                                (
-                                    projectsResponse: ApiResponseData<ProjectsResponse>
-                                ) => {
-                                    // get list of all projects the user is NOT a member of
-                                    for (const project of projectsResponse.body
-                                        .projects) {
-                                        if (
-                                            this.userProjects.findIndex(
-                                                (userProj) =>
-                                                    userProj.id === project.id
-                                            ) === -1
-                                        ) {
-                                            this.otherProjects.push(project);
-                                        }
-                                    }
-
-                                    this.loading = false;
-                                },
-                                (error: ApiResponseError) => {
-                                    this._errorHandler.showMessage(error);
-                                }
-                            );
-
-                        this.loading = false;
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                );
+            this.store.dispatch(new LoadUserProjectsAction())
+                .pipe(take(1))
+                .subscribe(() => this.loading = false);
         }
     }
 

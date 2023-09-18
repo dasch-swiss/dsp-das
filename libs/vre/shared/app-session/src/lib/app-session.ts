@@ -69,75 +69,6 @@ export class SessionService {
     }
 
     /**
-     * Login user
-     * @param identifier can be the email or the username
-     * @param password the password of the user
-     * @returns an Either with the session or an error message
-     */
-    login(identifier: string, password: string): Observable<boolean> {
-        const identifierType: 'iri' | 'email' | 'username' =
-            identifier.indexOf('@') > -1 ? 'email' : 'username';
-
-        return this._dspApiConnection.v2.auth
-            .login(identifierType, identifier, password)
-            .pipe(
-                takeLast(1),
-                switchMap((response) => {
-                    if (response instanceof ApiResponseData) {
-                        this.setSession(
-                            response.body.token,
-                            identifier,
-                            identifierType
-                        );
-                        return of(true);
-                    } else {
-                        // error handling
-                        if (
-                            response.status === 401 ||
-                            response.status === 403
-                        ) {
-                            // wrong credentials
-                            return throwError(<LoginError>{
-                                type: 'login',
-                                status: response.status,
-                                msg: 'Wrong credentials',
-                            });
-                        } else {
-                            // server error
-                            this._errorHandler.showMessage(response);
-                            return throwError(<ServerError>{
-                                type: 'server',
-                                status: response.status,
-                                msg: 'Server error',
-                            });
-                        }
-                    }
-                })
-            );
-    }
-
-    /**
-     * logout service
-     */
-    logout() {
-        this._dspApiConnection.v2.auth.logout().subscribe(
-            () => {
-                // destroy session
-                this.destroySession();
-
-                // destroy application state
-                this._applicationStateService.destroy();
-
-                // reload the page
-                window.location.reload();
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-            }
-        );
-    }
-
-    /**
      * get session information from localstorage
      */
     getSession(): Session | null {
@@ -157,7 +88,7 @@ export class SessionService {
         jwt: string,
         identifier: string,
         type: 'email' | 'username'
-    ): Observable<void> {
+    ): Observable<boolean> {
         this._dspApiConnection.v2.jsonWebToken = jwt ? jwt : '';
 
         // get user information
@@ -172,7 +103,7 @@ export class SessionService {
                     ) => {
                         this._storeSessionInLocalStorage(response, jwt);
                         // return type is void
-                        return;
+                        return true;
                     }
                 )
             );

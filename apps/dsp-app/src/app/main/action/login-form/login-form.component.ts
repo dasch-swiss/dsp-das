@@ -1,10 +1,11 @@
 import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     Input,
     OnInit,
     Output,
-    signal,
 } from '@angular/core';
 import {
     UntypedFormBuilder,
@@ -17,18 +18,23 @@ import {
     Events,
 } from '../../services/component-communication-event.service';
 import {
+    AuthService,
     AuthError,
-    Session,
-    SessionService,
 } from '@dasch-swiss/vre/shared/app-session';
-import { takeLast } from 'rxjs/operators';
+import { take, takeLast } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-login-form',
     templateUrl: './login-form.component.html',
     styleUrls: ['./login-form.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginFormComponent implements OnInit {
+    private readonly returnUrlParameterName = 'returnUrl';
+    private destroyed$ = new Subject<void>();
     /**
      * set whether or not you want icons to display in the input fields
      *
@@ -52,8 +58,6 @@ export class LoginFormComponent implements OnInit {
      */
     @Output() logoutSuccess: EventEmitter<boolean> =
         new EventEmitter<boolean>();
-
-    session = signal<Session | undefined>(undefined);
 
     // form
     form: UntypedFormGroup;
@@ -100,12 +104,19 @@ export class LoginFormComponent implements OnInit {
             required: 'password is required',
         },
     };
-
+    
+    returnUrl: string;
+    
     constructor(
         private _componentCommsService: ComponentCommunicationEventService,
         private _fb: UntypedFormBuilder,
-        private _sessionService: SessionService
-    ) {}
+        private router: Router,
+        private _authService: AuthService,
+        private route: ActivatedRoute,
+        private location: Location,
+        private cd: ChangeDetectorRef,
+    ) {
+    }
 
     /**
      * The login form is currently only shown from the user-menu.component.ts.
@@ -113,8 +124,13 @@ export class LoginFormComponent implements OnInit {
      * to /login?returnUrl=... was removed.
      */
     ngOnInit() {
-        console.log('login form init');
         this.buildLoginForm();
+        this.returnUrl = this.getReturnUrl() || '/';
+    }
+
+    ngOnDestroy(): void {
+        this.destroyed$.next();
+        this.destroyed$.complete();
     }
 
     buildLoginForm(): void {
@@ -135,22 +151,26 @@ export class LoginFormComponent implements OnInit {
         const identifier: string = this.form.get('username').value;
         const password: string = this.form.get('password').value;
 
-        this._sessionService
-            .login(identifier, password)
+        this._authService
+            .apiLogin$(identifier, password)
             .pipe(takeLast(1))
-            .subscribe(
-                (loginResult) => {
+            .subscribe({
+                next: (loginResult) => {
                     if (loginResult) {
-                        this.loginSuccess.emit(true);
-
                         this._componentCommsService.emit(
                             new EmitEvent(Events.loginSuccess, true)
                         );
-                        window.location.reload();
+                        
+                        return this._authService.loadUser(identifier)
+                            .pipe(take(1))
+                            .subscribe(() => {
+                                this.loading = false;
+                                this.cd.markForCheck();
+                                this.router.navigate([this.returnUrl]);
+                            });
                     }
-                    this.loading = false;
                 },
-                (error: AuthError) => {
+                error: (error: AuthError) => {
                     this.loginSuccess.emit(false);
 
                     this._componentCommsService.emit(
@@ -165,12 +185,31 @@ export class LoginFormComponent implements OnInit {
                     } else {
                         this.loginErrorServer = true;
                     }
-                }
-            );
+                },
+            });
     }
 
-    logout() {
-        // bring back the logout method and use it in the parent (somehow)
-        this._sessionService.logout();
+    private getReturnUrl(): string {
+        const returnUrl = this.route.snapshot.queryParams[this.returnUrlParameterName];
+        this.location.go(this.removeParameterFromUrl(this.location.path(), this.returnUrlParameterName, returnUrl));
+        return returnUrl;
+    }
+
+    private removeParameterFromUrl(path: string, parameterName: string, parameterValue: string): string {
+        const urlSegments = path.split('?');
+        const queryString = urlSegments.pop();
+        if (!queryString) {
+            return path;
+        }
+        const params = queryString.split('&');
+        const newQuerystring = params
+            .filter((item) => item !== `${parameterName}=${encodeURIComponent(parameterValue)}`)
+            .join('&');
+
+        if (newQuerystring) {
+            urlSegments.push(newQuerystring);
+        }
+
+        return urlSegments.join('?');
     }
 }

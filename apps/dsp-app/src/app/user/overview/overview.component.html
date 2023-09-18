@@ -1,9 +1,9 @@
 <div class="content extra-large middle">
     <app-progress-indicator *ngIf="loading"></app-progress-indicator>
 
-    <div *ngIf="!loading" class="overview">
+    <div class="overview">
         <!-- user is a system admin -->
-        <div *ngIf="sysAdmin">
+        <div *ngIf="sysAdmin && !loading">
             <!-- list all projects -->
             <div class="title-bar admin">
                 <div class="title">
@@ -34,7 +34,7 @@
         </div>
 
         <!-- user is logged in and not a system admin -->
-        <div *ngIf="!sysAdmin && this.session">
+        <div *ngIf="!sysAdmin && isLoggedIn$ | async">
             <div class="title-bar">
                 <div class="title">
                     <p>My Projects</p>
@@ -42,7 +42,7 @@
             </div>
             <div class="project-tiles">
                 <div
-                    *ngFor="let userProj of userProjects"
+                    *ngFor="let userProj of userActiveProjects$ | async"
                     class="project-tile-container"
                 >
                     <app-project-tile
@@ -59,7 +59,7 @@
             </div>
             <div class="project-tiles">
                 <div
-                    *ngFor="let otherProj of otherProjects"
+                    *ngFor="let otherProj of userOtherActiveProjects$ | async"
                     class="project-tile-container"
                 >
                     <app-project-tile
@@ -72,7 +72,7 @@
         </div>
 
         <!-- user is not logged in -->
-        <div *ngIf="!sysAdmin && !this.session">
+        <div *ngIf="!loading && !sysAdmin && !(isLoggedIn$ | async)">
             <!-- list all projects -->
             <div class="title-bar admin">
                 <div class="title">
