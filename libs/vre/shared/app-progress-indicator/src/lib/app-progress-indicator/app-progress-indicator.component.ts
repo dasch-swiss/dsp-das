@@ -1,7 +1,14 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {NgIf} from "@angular/common";
+import {MatIconModule} from "@angular/material/icon";
 
 @Component({
+    standalone: true,
     selector: 'dasch-swiss-app-progress-indicator',
+    imports: [
+        NgIf,
+        MatIconModule
+    ],
     templateUrl: './app-progress-indicator.component.html',
     styleUrls: ['./app-progress-indicator.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

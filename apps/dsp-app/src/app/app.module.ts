@@ -179,7 +179,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-config';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { AppDatePickerModule } from '@dasch-swiss/vre/shared/app-date-picker';
-import { AppProgressIndicatorModule } from "@dasch-swiss/vre/shared/app-progress-indicator";
+import { AppProgressIndicatorComponent } from "@dasch-swiss/vre/shared/app-progress-indicator";
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -336,7 +336,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     imports: [
         AngularSplitModule,
         AppDatePickerModule,
-        AppProgressIndicatorModule,
+        AppProgressIndicatorComponent,
         AppRoutingModule,
         BrowserAnimationsModule,
         BrowserModule,
