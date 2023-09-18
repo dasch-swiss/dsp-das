@@ -33,7 +33,6 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
-import {Observable} from "rxjs";
 
 @Component({
     selector: 'app-project-form',
