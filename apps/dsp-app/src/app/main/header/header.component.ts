@@ -32,7 +32,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     componentCommsSubscription: Subscription;
 
     constructor(
-        @Inject(DspApiConnectionToken)
         private _appConfigService: AppConfigService,
         private _componentCommsService: ComponentCommunicationEventService,
         private _dialog: MatDialog,

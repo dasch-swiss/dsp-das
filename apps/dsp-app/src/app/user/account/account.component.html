@@ -1,5 +1,5 @@
 <app-progress-indicator *ngIf="isLoading$ | async"></app-progress-indicator>
-<div *ngIf="!(isLoading$ | async)">
+<div *ngIf="(isLoading$ | async) === false">
     <!-- password update: header -->
     <div class="app-toolbar more-space-bottom">
         <div class="app-toolbar-row">
