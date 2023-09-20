@@ -2,6 +2,7 @@
     <app-progress-indicator *ngIf="loading"></app-progress-indicator>
 
     <div class="overview">
+
         <!-- user is a system admin -->
         <div *ngIf="sysAdmin && !loading">
             <!-- list all projects -->
@@ -34,7 +35,7 @@
         </div>
 
         <!-- user is logged in and not a system admin -->
-        <div *ngIf="!sysAdmin && isLoggedIn$ | async">
+        <div *ngIf="!sysAdmin && (isLoggedIn$ | async) === true">
             <div class="title-bar">
                 <div class="title">
                     <p>My Projects</p>
@@ -72,7 +73,7 @@
         </div>
 
         <!-- user is not logged in -->
-        <div *ngIf="!loading && !sysAdmin && (isLoggedIn$ | async) === false">
+        <div *ngIf="!loading && (isLoggedIn$ | async) === false">
             <!-- list all projects -->
             <div class="title-bar admin">
                 <div class="title">
@@ -92,5 +93,6 @@
                 </div>
             </div>
         </div>
+
     </div>
 </div>
