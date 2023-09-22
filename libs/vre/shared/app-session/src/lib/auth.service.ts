@@ -124,7 +124,6 @@ export class AuthService {
      */
     apiLogin$(identifier: string, password: string): Observable<boolean> {
         const identifierType: 'iri' | 'email' | 'username' = identifier.indexOf('@') > -1 ? 'email' : 'username';
-
         return this._dspApiConnection.v2.auth
             .login(identifierType, identifier, password)
             .pipe(
@@ -211,7 +210,7 @@ export class AuthService {
         return !!this.getAccessToken();
     }
 
-    getAccessToken() {
+    getAccessToken(): string | null {
         return localStorage.getItem(Auth.AccessToken);
     }
 

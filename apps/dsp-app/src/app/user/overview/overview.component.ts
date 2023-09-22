@@ -4,23 +4,18 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import {
-    KnoraApiConnection,
-    ApiResponseData,
-    ApiResponseError,
     StoredProject,
-    ProjectsResponse,
     ReadUser,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
-import { LoadUserProjectsAction } from '@dsp-app/src/app/state/projects/projects.actions';
+import { LoadAllProjectsAction, LoadUserProjectsAction } from '@dsp-app/src/app/state/projects/projects.actions';
 import { ProjectsSelectors } from '@dsp-app/src/app/state/projects/projects.selectors';
-import { take } from 'rxjs/operators';
+import { RouteConstants } from 'libs/vre/shared/app-config/src/lib/app-config/app-constants';
 
 // should only be used by this component and child components
 export type TileLinks = 'workspace' | 'settings';
@@ -37,25 +32,19 @@ export interface routeParams {
     styleUrls: ['./overview.component.scss'],
 })
 export class OverviewComponent implements OnInit {
-    loading = true;
-
-    username: string;
-    sysAdmin = false;
-
-    // list of projects a user is NOT a member of
-    otherProjects: StoredProject[] = [];
-
     isLoggedIn$ = this._authService.isLoggedIn$;
     
     @Select(UserSelectors.user) user$: Observable<ReadUser>;
     // list of projects a user is a member of
     @Select(UserSelectors.userActiveProjects) userActiveProjects$: Observable<StoredProject>;
     @Select(ProjectsSelectors.userOtherActiveProjects) userOtherActiveProjects$: Observable<StoredProject>;
+    @Select(ProjectsSelectors.allProjects) allProjects$: Observable<StoredProject>;
+    @Select(ProjectsSelectors.allActiveProjects) allActiveProjects$: Observable<StoredProject>;
+    @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
+    @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
 
     constructor(
         @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: AppErrorHandler,
         private _dialog: MatDialog,
         private _titleService: Title,
         private _router: Router,
@@ -63,44 +52,19 @@ export class OverviewComponent implements OnInit {
         private _authService: AuthService,
         private store: Store,
     ) {
-        // set the page title
         this._titleService.setTitle('Projects Overview');
     }
 
     ngOnInit() {
-        this.loading = true;
+        const isSysAdmin = this.store.selectSnapshot(UserSelectors.isSysAdmin);
         // if user is a system admin or not logged in, get all the projects
         // system admin can create new projects and edit projects
         // users not logged in can only view projects
-        if (this.sysAdmin || !this._authService.isLoggedIn()) {
-            this._dspApiConnection.admin.projectsEndpoint
-                .getProjects()
-                .subscribe(
-                    (response: ApiResponseData<ProjectsResponse>) => {
-                        // reset the lists:
-                        this.otherProjects = [];
-
-                        for (const project of response.body.projects) {
-                            // for not logged in user don't display deactivated projects
-                            if (!this._authService.isLoggedIn() && project.status !== false) {
-                                this.otherProjects.push(project);
-                            }
-                            if (this.sysAdmin) {
-                                this.otherProjects.push(project);
-                            }
-                        }
-
-                        this.loading = false;
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                );
+        if (isSysAdmin || !this._authService.isLoggedIn()) {
+            this.store.dispatch(new LoadAllProjectsAction());
         } else {
             // logged-in user is NOT a system admin: get all projects the user is a member of
-            this.store.dispatch(new LoadUserProjectsAction())
-                .pipe(take(1))
-                .subscribe(() => this.loading = false);
+            this.store.dispatch(new LoadUserProjectsAction());
         }
     }
 
@@ -122,13 +86,11 @@ export class OverviewComponent implements OnInit {
 
         switch (params.path) {
             case 'workspace':
-                this._router.navigate(['/project/' + uuid]);
+                this._router.navigate([`${RouteConstants.projectRelative}/` + uuid]);
                 break;
 
             case 'settings':
-                this._router.navigate([
-                    '/project/' + uuid + '/settings/collaboration',
-                ]);
+                this._router.navigate([`${RouteConstants.projectRelative}/${uuid}/${RouteConstants.settings}/${RouteConstants.collaboration}`]);
                 break;
 
             default:
@@ -137,6 +99,6 @@ export class OverviewComponent implements OnInit {
     }
 
     createNewProject() {
-        this._router.navigate(['project', 'create-new']);
+        this._router.navigate([RouteConstants.newProjectRelative]);
     }
 }

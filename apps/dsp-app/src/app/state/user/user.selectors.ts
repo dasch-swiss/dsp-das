@@ -19,6 +19,11 @@ export class UserSelectors {
     static username(state: UserStateModel): string | null {
         return state.user?.username;
     }
+
+    @Selector([UserState])
+    static isSysAdmin(state: UserStateModel): boolean {
+        return state.user && state.user.systemAdmin ? state.user.systemAdmin : false;
+    }
     
     @Selector([UserState])
     static displayName(state: UserStateModel): string | null {

@@ -1,11 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, State, StateContext } from '@ngxs/store';
 import { of } from 'rxjs';
-import { map, take, tap } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import {
     SetUserAction,
     LogUserOutAction,
-    SetReadUserAction,
     LoadUserAction,
 } from './user.actions';
 import { UserStateModel } from './user.state-model';
@@ -15,7 +14,6 @@ import { ApiResponseData, ApiResponseError, KnoraApiConnection, User, UserRespon
 const defaults = {
     isLoading: false,
     user: null,
-    readUser: null
 };
 
 @State<UserStateModel>({
@@ -57,20 +55,10 @@ export class UserState {
     }
 
     @Action(SetUserAction)
-    setUser(
-        ctx: StateContext<UserStateModel>,
+    setUser(        ctx: StateContext<UserStateModel>,
         { user }: SetUserAction
     ) {
         ctx.setState({ ...ctx.getState(), isLoading: false, user });
-    }
-
-    @Action(SetReadUserAction)
-    setReadUser(
-        ctx: StateContext<UserStateModel>,
-        { readUser }: SetReadUserAction
-    ) {
-        ctx.patchState({ isLoading: true });
-        ctx.setState({ ...ctx.getState(), isLoading: false, readUser });
     }
 
     @Action(LogUserOutAction)

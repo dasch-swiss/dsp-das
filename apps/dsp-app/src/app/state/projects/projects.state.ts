@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, State, StateContext, Store } from '@ngxs/store';
 import { ProjectsStateModel } from './projects.state-model';
-import { LoadUserProjectsAction as LoadUserOtherProjectsAction } from './projects.actions';
+import { LoadAllProjectsAction, LoadUserProjectsAction as LoadUserOtherProjectsAction } from './projects.actions';
 import { UserSelectors } from '../user/user.selectors';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectsResponse, ReadUser } from '@dasch-swiss/dsp-js';
@@ -10,6 +10,7 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 const defaults = {
     isLoading: false,
     userOtherActiveProjects: [],
+    allProjects: [],
 };
 
 @State<ProjectsStateModel>({
@@ -38,21 +39,29 @@ export class ProjectsState {
                     (
                         projectsResponse: ApiResponseData<ProjectsResponse>
                     ) => {
-                        const otherProjects = [];
                         // get list of all projects the user is NOT a member of
-                        for (const project of projectsResponse.body
-                            .projects) {
-                            if (
-                                userActiveProjects.findIndex(
-                                    (userProj) =>
-                                        userProj.id === project.id
-                                ) === -1
-                            ) {
-                                otherProjects.push(project);
-                            }
-                        }
+                        const otherProjects = projectsResponse.body.projects.filter(project => 
+                            userActiveProjects.findIndex((userProj) => userProj.id === project.id) === -1);
 
                         ctx.setState({ ...ctx.getState(), isLoading: false, userOtherActiveProjects: otherProjects });
+                    },
+                    (error: ApiResponseError) => {
+                        this._errorHandler.showMessage(error);
+                    }
+                );
+    }
+
+    @Action(LoadAllProjectsAction, { cancelUncompleted: true })
+    loadAllProjectsAction(
+        ctx: StateContext<ProjectsStateModel>,
+        { }: LoadAllProjectsAction
+    ) {
+        ctx.patchState({ isLoading: true });
+        this._dspApiConnection.admin.projectsEndpoint
+                .getProjects()
+                .subscribe(
+                    (response: ApiResponseData<ProjectsResponse>) => {
+                        ctx.setState({ ...ctx.getState(), isLoading: false, allProjects: response.body.projects });
                     },
                     (error: ApiResponseError) => {
                         this._errorHandler.showMessage(error);

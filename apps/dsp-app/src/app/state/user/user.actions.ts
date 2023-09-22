@@ -10,11 +10,6 @@ export class SetUserAction {
     constructor(public user: User) {}
 }
 
-export class SetReadUserAction {
-    static readonly type = '[User] Set Read User';
-    constructor(public readUser: ReadUser) {}
-}
-
 export class LogUserOutAction {
     static readonly type = '[User] Log user out';
     constructor() {}

@@ -30,7 +30,7 @@ export class UserComponent implements OnDestroy {
 
     constructor(
         private _route: ActivatedRoute,
-        private _titleService: Title
+        private _titleService: Title,
     ) {
         // get the activated route; we need it for the viewer switch
         this.route = this._route.pathFromRoot[1].snapshot.url[0].path;

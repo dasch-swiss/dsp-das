@@ -22,11 +22,13 @@ import { UserSelectors } from '@dsp-app/src/app/state/user/user.selectors';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { apiConnectionTokenProvider } from '../../providers/api-connection-token.provider';
 
 @Component({
     selector: 'app-account',
     templateUrl: './account.component.html',
     styleUrls: ['./account.component.scss'],
+    providers: [apiConnectionTokenProvider]
 })
 export class AccountComponent implements OnInit {
     // in case of modification
@@ -54,7 +56,9 @@ export class AccountComponent implements OnInit {
 
     ngOnInit() {
         this.store.dispatch(new LoadUserAction(this.username)).pipe(
-            tap((user: ReadUser) => this.userId = user.id)
+            tap((user: ReadUser) => {
+                this.userId = user.id;
+            })
         );
     }
 

@@ -12,7 +12,6 @@ import {
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
 import { SearchParams } from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
 import {
-    DspApiConnectionToken,
     DspConfig,
 } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';

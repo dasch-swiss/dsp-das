@@ -64,7 +64,9 @@ export class UserMenuComponent implements OnInit, OnDestroy {
     /**
      * closes menu in case of submitting login form
      */
-    closeMenu() {
-        this.menuTrigger.closeMenu();
+    closeMenu(loginSuccess: boolean) {
+        if (loginSuccess) {
+            this.menuTrigger.closeMenu();
+        }
     }
 }
