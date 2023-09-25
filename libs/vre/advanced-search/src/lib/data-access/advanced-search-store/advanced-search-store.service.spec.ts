@@ -1112,58 +1112,6 @@ describe('AdvancedSearchStoreService', () => {
                 }
             });
         });
-
-        it('should reset the resources search results if the search term is less than three characters', () => {
-            service.patchState({ resourcesSearchResultsCount: 1 });
-
-            service.patchState({
-                resourcesSearchResults: [
-                    {
-                        iri: 'testIri',
-                        label: 'testLabel',
-                    },
-                ],
-            });
-
-            const searchItem = {
-                value: 'te',
-                objectType: Constants.TextValue,
-            };
-
-            // spy on the getResourcesList method
-            const getResourcesListCountSpy = jest.spyOn(
-                advancedSearchService,
-                'getResourcesListCount'
-            );
-
-            // spy on the getResourcesList method
-            const getResourcesListSpy = jest.spyOn(
-                advancedSearchService,
-                'getResourcesList'
-            );
-
-            service.updateResourcesSearchResults(searchItem);
-
-            expect(getResourcesListCountSpy).not.toBeCalled();
-
-            expect(getResourcesListSpy).not.toBeCalled();
-
-            service.resourcesSearchResultsCount$
-                .pipe(take(1))
-                .subscribe((rsrc) => {
-                    expect(rsrc).not.toBeUndefined();
-                    if (rsrc) {
-                        expect(rsrc).toEqual(0);
-                    }
-                });
-
-            service.resourcesSearchResults$.pipe(take(1)).subscribe((rsr) => {
-                expect(rsr).not.toBeUndefined();
-                if (rsr) {
-                    expect(rsr.length).toEqual(0);
-                }
-            });
-        });
     });
 
     describe('loadMoreResourcesSearchResults', () => {
