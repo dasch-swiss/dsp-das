@@ -15,6 +15,12 @@
         <mat-option *ngIf="resourcesSearchNoResults && !resourcesSearchResultsLoading" [disabled]="true">
             No results found
         </mat-option>
+        <mat-option
+            *ngIf="!resourcesSearchNoResults && !resourcesSearchResultsLoading && resourcesSearchResultsCount"
+            [disabled]="true"
+        >
+            {{resourcesSearchResultsCount}} results found
+        </mat-option>
 
         <mat-option *ngFor="let res of resourcesSearchResults" [value]="res">
             {{ res?.label }}
