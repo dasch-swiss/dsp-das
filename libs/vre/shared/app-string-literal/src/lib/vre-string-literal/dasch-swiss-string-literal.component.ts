@@ -38,7 +38,7 @@ import { SessionService } from '@dasch-swiss/vre/shared/app-session';
         ReactiveFormsModule,
     ],
     templateUrl: './dasch-swiss-string-literal.component.html',
-    styleUrls: ['./dasch-swiss-string-literal.component.css'],
+    styleUrls: ['./dasch-swiss-string-literal.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppStringLiteralComponent implements OnInit, OnChanges {
