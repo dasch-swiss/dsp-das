@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
-import { EMPTY, Observable } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import {
     AdvancedSearchService,
     ApiData,
@@ -493,7 +493,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             }
             property.childProperty.operators = operators;
 
-            const updatedProp = currentPropertyFormList[indexInPropertyFormList];
+            const updatedProp =
+                currentPropertyFormList[indexInPropertyFormList];
             updatedProp.searchValue = [
                 ...currentSearchValue.slice(0, indexInCurrentSearchValue),
                 property.childProperty,
@@ -686,46 +687,38 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     }
 
     updateResourcesSearchResults(searchItem: SearchItem): void {
-        if (searchItem.value && searchItem.value.length >= 3) {
-            this.patchState({ resourcesSearchResultsLoading: true });
-            this.patchState({ resourcesSearchResults: [] });
-            this.patchState({ resourcesSearchResultsPageNumber: 0 });
-            this._advancedSearchService
-                .getResourcesListCount(searchItem.value, searchItem.objectType)
-                .pipe(take(1))
-                .subscribe((count) => {
-                    this.patchState({ resourcesSearchResultsCount: count });
-                    this.patchState({ resourcesSearchResultsLoading: false });
-                    this.patchState({ resourcesSearchNoResults: false });
-                    // since we have the count, we don't need to execute the search if there are no results
+        this.patchState({ resourcesSearchResultsLoading: true });
+        this.patchState({ resourcesSearchResults: [] });
+        this.patchState({ resourcesSearchResultsPageNumber: 0 });
+
+        this._advancedSearchService
+            .getResourcesListCount(searchItem.value, searchItem.objectType)
+            .pipe(
+                take(1),
+                switchMap((count) => {
                     if (count > 0) {
-                        this.patchState({
-                            resourcesSearchResultsLoading: true,
-                        });
-                        // not ideal to do it this way but we should get the count before executing the search
-                        this._advancedSearchService
+                        return this._advancedSearchService
                             .getResourcesList(
                                 searchItem.value,
                                 searchItem.objectType
                             )
-                            .subscribe((resources) => {
-                                this.patchState({
-                                    resourcesSearchResults: resources,
-                                });
-                                this.patchState({
-                                    resourcesSearchResultsLoading: false,
-                                });
-                            });
+                            .pipe(take(1));
                     } else {
-                        this.patchState({
-                            resourcesSearchNoResults: true,
-                        });
+                        this.patchState({ resourcesSearchNoResults: true });
+                        return of([]);
                     }
+                })
+            )
+            .subscribe((resources) => {
+                this.patchState({
+                    resourcesSearchResultsCount: resources.length,
                 });
-        } else {
-            this.patchState({ resourcesSearchResultsCount: 0 });
-            this.patchState({ resourcesSearchResults: [] });
-        }
+                this.patchState({ resourcesSearchResults: resources });
+                this.patchState({ resourcesSearchResultsLoading: false });
+                this.patchState({
+                    resourcesSearchNoResults: (resources.length === 0 && searchItem.value?.length >= 3),
+                });
+            });
     }
 
     updatePropertyOrderBy(orderByList: OrderByItem[]): void {

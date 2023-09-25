@@ -14,8 +14,8 @@ import {
     ResourceClassDefinition,
     ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, Subject, of } from 'rxjs';
+import { catchError, map, switchMap, takeUntil } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 
 export interface ApiData {
@@ -43,6 +43,10 @@ export const ResourceLabel =
     providedIn: 'root',
 })
 export class AdvancedSearchService {
+    // subjects to handle canceling of previous search requests when searching for a linked resource
+    private cancelPreviousCountRequest$ = new Subject<void>();
+    private cancelPreviousSearchRequest$ = new Subject<void>();
+
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection
@@ -289,16 +293,23 @@ export class AdvancedSearchService {
         searchValue: string,
         resourceClassIri: string
     ): Observable<number> {
+        // Cancel the previous count request
+        this.cancelPreviousCountRequest$.next();
+
+        if(!searchValue || searchValue.length <= 2)
+            return of(0);
+
         return this._dspApiConnection.v2.search
             .doSearchByLabelCountQuery(searchValue, {
                 limitToResourceClass: resourceClassIri,
             })
             .pipe(
-                map((response: CountQueryResponse | ApiResponseError) => {
+                takeUntil(this.cancelPreviousCountRequest$), // Cancel previous request
+                switchMap((response: CountQueryResponse | ApiResponseError) => {
                     if (response instanceof ApiResponseError) {
                         throw response; // caught by catchError operator
                     }
-                    return response.numberOfResults;
+                    return of(response.numberOfResults);
                 }),
                 catchError((err) => {
                     this._handleError(err);
@@ -312,22 +323,34 @@ export class AdvancedSearchService {
         resourceClassIri: string,
         offset = 0
     ): Observable<ApiData[]> {
+        // Cancel the previous search request
+        this.cancelPreviousSearchRequest$.next();
+
+        if(!searchValue || searchValue.length <= 2)
+            return of([]);
+
         return this._dspApiConnection.v2.search
             .doSearchByLabel(searchValue, offset, {
                 limitToResourceClass: resourceClassIri,
             })
             .pipe(
-                map((response: ReadResourceSequence | ApiResponseError) => {
-                    if (response instanceof ApiResponseError) {
-                        throw response; // caught by catchError operator
+                takeUntil(this.cancelPreviousSearchRequest$), // Cancel previous request
+                switchMap(
+                    (response: ReadResourceSequence | ApiResponseError) => {
+                        if (response instanceof ApiResponseError) {
+                            throw response; // caught by catchError operator
+                        }
+                        return of(
+                            response.resources.map((res: ReadResource) => ({
+                                iri: res.id,
+                                label: res.label,
+                            }))
+                        );
                     }
-                    return response.resources.map((res: ReadResource) => {
-                        return { iri: res.id, label: res.label };
-                    });
-                }),
+                ),
                 catchError((err) => {
                     this._handleError(err);
-                    return []; // return an empty array on error
+                    return of([]); // return an empty array on error wrapped in an observable
                 })
             );
     }
