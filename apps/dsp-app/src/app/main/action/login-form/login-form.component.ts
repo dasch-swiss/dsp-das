@@ -21,10 +21,11 @@ import {
     AuthService,
     AuthError,
 } from '@dasch-swiss/vre/shared/app-session';
-import { take, takeLast } from 'rxjs/operators';
+import { map, take, takeLast } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { Location } from '@angular/common';
+import { UserStateModel } from '@dasch-swiss/vre/shared/app-state';
 
 @Component({
     selector: 'app-login-form',
@@ -163,8 +164,10 @@ export class LoginFormComponent implements OnInit {
                         
                         return this._authService.loadUser(identifier)
                             .pipe(take(1))
-                            .subscribe(() => {
+                            .pipe(map((result: any) => result.user))
+                            .subscribe((user: UserStateModel) => {
                                 this.loading = false;
+                                this._authService.loginSuccessfulEvent.emit(user.user);
                                 this.cd.markForCheck();
                                 this.router.navigate([this.returnUrl]);
                             });

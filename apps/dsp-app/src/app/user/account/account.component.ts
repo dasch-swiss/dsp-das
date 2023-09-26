@@ -1,4 +1,3 @@
-import { LoadUserAction } from '@dsp-app/src/app/state/user/user.actions';
 import {
     Component,
     EventEmitter,
@@ -18,11 +17,11 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
-import { UserSelectors } from '@dsp-app/src/app/state/user/user.selectors';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { apiConnectionTokenProvider } from '../../providers/api-connection-token.provider';
+import { LoadUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 
 @Component({
     selector: 'app-account',

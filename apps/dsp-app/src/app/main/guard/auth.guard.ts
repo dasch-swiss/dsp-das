@@ -1,15 +1,13 @@
-import { CurrentPageSelectors } from '@dsp-app/src/app/state/current-page/current-page.selectors';
-import { SetUserAction } from '@dsp-app/src/app/state/user/user.actions';
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject, Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { concatMap, map, switchMap } from 'rxjs/operators';
-import { UserSelectors } from '@dsp-app/src/app/state/user/user.selectors';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { RouteConstants } from 'libs/vre/shared/app-config/src/lib/app-config/app-constants';
+import { CurrentPageSelectors, SetUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 
 
 @Injectable({

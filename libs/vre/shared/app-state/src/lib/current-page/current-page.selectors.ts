@@ -15,6 +15,6 @@ export class CurrentPageSelectors {
 
     @Selector([CurrentPageState])
     static loginReturnLink(state: CurrentPageStateModel): string {
-        return state.loginReturnLink;
+        return state?.loginReturnLink != null ? state.loginReturnLink : '';
     }
 }

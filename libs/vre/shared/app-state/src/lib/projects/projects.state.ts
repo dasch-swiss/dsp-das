@@ -4,8 +4,9 @@ import { ProjectsStateModel } from './projects.state-model';
 import { LoadAllProjectsAction, LoadUserProjectsAction as LoadUserOtherProjectsAction } from './projects.actions';
 import { UserSelectors } from '../user/user.selectors';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectsResponse, ReadUser } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectsResponse, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { map } from 'rxjs/operators';
 
 const defaults = {
     isLoading: false,
@@ -35,6 +36,11 @@ export class ProjectsState {
         const userActiveProjects = this.store.selectSnapshot(UserSelectors.userActiveProjects);
         this._dspApiConnection.admin.projectsEndpoint
                 .getProjects()
+                .pipe(
+                    map((projectsResponse: ApiResponseData<ProjectsResponse> | ApiResponseError) => {
+                            return projectsResponse as ApiResponseData<ProjectsResponse>;
+                        }),
+                )
                 .subscribe(
                     (
                         projectsResponse: ApiResponseData<ProjectsResponse>
@@ -59,6 +65,11 @@ export class ProjectsState {
         ctx.patchState({ isLoading: true });
         this._dspApiConnection.admin.projectsEndpoint
                 .getProjects()
+                .pipe(
+                    map((projectsResponse: ApiResponseData<ProjectsResponse> | ApiResponseError) => {
+                            return projectsResponse as ApiResponseData<ProjectsResponse>;
+                        }),
+                )
                 .subscribe(
                     (response: ApiResponseData<ProjectsResponse>) => {
                         ctx.setState({ ...ctx.getState(), isLoading: false, allProjects: response.body.projects });

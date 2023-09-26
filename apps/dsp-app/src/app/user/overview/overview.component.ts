@@ -1,20 +1,19 @@
-import { UserSelectors } from '@dsp-app/src/app/state/user/user.selectors';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import {
     StoredProject,
     ReadUser,
+    User,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
-import { LoadAllProjectsAction, LoadUserProjectsAction } from '@dsp-app/src/app/state/projects/projects.actions';
-import { ProjectsSelectors } from '@dsp-app/src/app/state/projects/projects.selectors';
+import { LoadAllProjectsAction, LoadUserProjectsAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { RouteConstants } from 'libs/vre/shared/app-config/src/lib/app-config/app-constants';
 
 // should only be used by this component and child components
@@ -31,7 +30,10 @@ export interface routeParams {
     templateUrl: './overview.component.html',
     styleUrls: ['./overview.component.scss'],
 })
-export class OverviewComponent implements OnInit {
+export class OverviewComponent implements OnInit, OnDestroy {
+    private destroyed$ = new Subject<void>();
+    
+    loginSuccessfulSubscription: Subscription;
     isLoggedIn$ = this._authService.isLoggedIn$;
     
     @Select(UserSelectors.user) user$: Observable<ReadUser>;
@@ -53,6 +55,11 @@ export class OverviewComponent implements OnInit {
         private store: Store,
     ) {
         this._titleService.setTitle('Projects Overview');
+        this.loginSuccessfulSubscription = this._authService.loginSuccessfulEvent.subscribe((user: User) => {
+            if (!user.systemAdmin) {
+                this.store.dispatch(new LoadUserProjectsAction());
+            }
+        });
     }
 
     ngOnInit() {
@@ -63,7 +70,7 @@ export class OverviewComponent implements OnInit {
         if (isSysAdmin || !this._authService.isLoggedIn()) {
             this.store.dispatch(new LoadAllProjectsAction());
         } else {
-            // logged-in user is NOT a system admin: get all projects the user is a member of
+            // logged-in user is NOT a system admin: get all projects the user is a member of. Acts on refresh/init.
             this.store.dispatch(new LoadUserProjectsAction());
         }
     }
@@ -100,5 +107,11 @@ export class OverviewComponent implements OnInit {
 
     createNewProject() {
         this._router.navigate([RouteConstants.newProjectRelative]);
+    }
+    
+    ngOnDestroy(): void {
+        this.loginSuccessfulSubscription.unsubscribe();
+        this.destroyed$.next();
+        this.destroyed$.complete();
     }
 }

@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component, Inject, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import {
     User,
 } from '@dasch-swiss/dsp-js';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { MenuItem } from '@dsp-app/src/app/main/declarations/menu-item';
-import { UserSelectors } from '@dsp-app/src/app/state/user/user.selectors';
 import { Observable, Subject } from 'rxjs';
 import { Select } from '@ngxs/store';
 import { RouteConstants } from 'libs/vre/shared/app-config/src/lib/app-config/app-constants';
+import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 
 @Component({
     selector: 'app-user-menu',

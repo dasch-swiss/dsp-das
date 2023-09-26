@@ -1,7 +1,6 @@
 import {
     Component,
     EventEmitter,
-    Inject,
     Input,
     OnInit,
     Output,
@@ -13,21 +12,11 @@ import {
     Validators,
 } from '@angular/forms';
 import {
-    ApiResponseData,
-    ApiResponseError,
-    KnoraApiConnection,
-    ReadUser,
     User,
-    UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { SessionService } from '@dasch-swiss/vre/shared/app-session';
-import { UserSelectors } from '@dsp-app/src/app/state/user/user.selectors';
+import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
-import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
 
 @Component({
     selector: 'app-password-form',
@@ -93,11 +82,7 @@ export class PasswordFormComponent implements OnInit {
     showConfirmPassword = false;
 
     constructor(
-        @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: AppErrorHandler,
         private _fb: UntypedFormBuilder,
-        private _notification: NotificationService,
         private store: Store,
     ) {}
 

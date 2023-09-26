@@ -4,9 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { AppGlobal } from '../app-global';
 import { MenuItem } from '../main/declarations/menu-item';
 import { Select } from '@ngxs/store';
-import { UserSelectors } from '@dsp-app/src/app/state/user/user.selectors';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 
 @Component({
     selector: 'app-user',

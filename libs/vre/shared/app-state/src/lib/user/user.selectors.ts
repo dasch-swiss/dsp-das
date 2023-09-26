@@ -6,17 +6,17 @@ import { StoredProject } from "@dasch-swiss/dsp-js/src/models/admin/stored-proje
 
 export class UserSelectors {
     @Selector([UserState])
-    static isLoading(state: UserStateModel): boolean {
+    static isLoading(state: UserStateModel): boolean | undefined {
         return state.isLoading;
     }
 
     @Selector([UserState])
-    static user(state: UserStateModel): User | ReadUser {
+    static user(state: UserStateModel): User | ReadUser | null | undefined {
         return state.user;
     }
 
     @Selector([UserState])
-    static username(state: UserStateModel): string | null {
+    static username(state: UserStateModel): string | null | undefined {
         return state.user?.username;
     }
 

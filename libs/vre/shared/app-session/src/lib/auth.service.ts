@@ -1,7 +1,6 @@
 import { Router } from '@angular/router';
-import { LogUserOutAction, LoadUserAction } from '@dsp-app/src/app/state/user/user.actions';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
-import { Injectable, inject } from '@angular/core';
+import { EventEmitter, Injectable, Output, inject } from '@angular/core';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, mapTo, tap, switchMap, map, takeLast, take } from 'rxjs/operators';
 import { IntervalWrapperService } from '../../../../../../apps/dsp-app/src/app/main/services/interval-wrapper.service';
@@ -11,6 +10,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoginError, ServerError } from './error';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { Store } from '@ngxs/store';
+import { LoadUserAction, LogUserOutAction, UserStateModel } from '@dasch-swiss/vre/shared/app-state';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -24,6 +24,8 @@ export class AuthService {
     get tokenUser() {
         return this.getTokenUser();
     }
+    
+    @Output() loginSuccessfulEvent = new EventEmitter<User>();
 
     constructor(
         private store: Store,
@@ -107,7 +109,7 @@ export class AuthService {
         }
     }
 
-    loadUser(username: string) {
+    loadUser(username: string): Observable<UserStateModel> {
         return this.store.dispatch(new LoadUserAction(username))
             .pipe(
                 tap(() => {

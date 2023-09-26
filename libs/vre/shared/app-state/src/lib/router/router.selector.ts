@@ -5,21 +5,21 @@ import { RouterStateModel } from './router-state.model';
 export class RouterSelectors {
     @Selector([RouterState])
     static data({ state }: RouterStateOuterModel<RouterStateModel>) {
-        return state.data;
+        return state?.data;
     }
 
     @Selector([RouterState])
     static params({ state }: RouterStateOuterModel<RouterStateModel>) {
-        return state.params;
+        return state?.params;
     }
 
     @Selector([RouterState])
     static queryParams({ state }: RouterStateOuterModel<RouterStateModel>) {
-        return state.queryParams;
+        return state?.queryParams;
     }
 
     @Selector([RouterState])
     static url({ state }: RouterStateOuterModel<RouterStateModel>) {
-        return state.url;
+        return state?.url;
     }
 }
