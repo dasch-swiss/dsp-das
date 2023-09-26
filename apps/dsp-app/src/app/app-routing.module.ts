@@ -28,7 +28,7 @@ import { UserComponent } from './user/user.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
 import {ProjectFormComponent} from "@dsp-app/src/app/project/project-form/project-form.component";
-import { RouteConstants } from 'libs/vre/shared/app-config/src/lib/app-config/app-constants';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 
 const routes: Routes = [
     {
