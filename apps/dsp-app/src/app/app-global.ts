@@ -9,7 +9,7 @@ export class AppGlobal {
         {
             label: 'Project information',
             shortLabel: 'Project',
-            route: 'info',
+            route: RouteConstants.info,
             icon: 'assignment',
         },
         {
@@ -21,19 +21,19 @@ export class AppGlobal {
         {
             label: 'Permission groups',
             shortLabel: 'Groups',
-            route: 'permissions',
+            route: RouteConstants.permissions,
             icon: 'lock_open',
         },
         {
             label: 'Data model',
             shortLabel: 'Data model',
-            route: 'ontologies',
+            route: RouteConstants.ontologies,
             icon: 'bubble_chart',
         },
         {
             label: 'Lists',
             shortLabel: 'Lists',
-            route: 'lists',
+            route: RouteConstants.lists,
             icon: 'list',
         },
     ];
@@ -43,13 +43,13 @@ export class AppGlobal {
         {
             label: 'Dashboard',
             shortLabel: 'Dashboard',
-            route: '/dashboard',
+            route: RouteConstants.dashboardRelative,
             icon: 'dashboard',
         },
         {
             label: 'My Projects',
             shortLabel: 'Projects',
-            route: '/projects',
+            route: RouteConstants.projectRelative,
             icon: 'assignment',
         },
         // label to reactivate when dsp-app will be used as a research platform again: -->
@@ -62,7 +62,7 @@ export class AppGlobal {
         {
             label: 'My Account',
             shortLabel: 'Account',
-            route: '/account',
+            route: RouteConstants.userAccountRelative,
             icon: 'settings',
         },
     ];
@@ -72,13 +72,13 @@ export class AppGlobal {
         {
             label: 'All projects',
             shortLabel: 'Projects',
-            route: 'projects',
+            route: RouteConstants.projects,
             icon: 'assignment',
         },
         {
             label: 'All users',
             shortLabel: 'Users',
-            route: 'users',
+            route: RouteConstants.users,
             icon: 'group',
         },
     ];
@@ -116,3 +116,4 @@ export class AppGlobal {
         },
     ];
 }
+
