@@ -1,3 +1,4 @@
+import { RouteConstants } from 'libs/vre/shared/app-config/src/lib/app-config/app-constants';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
 
 import { MenuItem } from './main/declarations/menu-item';
@@ -14,7 +15,7 @@ export class AppGlobal {
         {
             label: 'Project members',
             shortLabel: 'Members',
-            route: 'collaboration',
+            route: RouteConstants.collaboration,
             icon: 'group',
         },
         {
