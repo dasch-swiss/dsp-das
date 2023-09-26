@@ -1,13 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { GravsearchPropertyString, ResourceLabel } from '../advanced-search-service/advanced-search.service';
-import { PropertyFormItem, OrderByItem, Operators } from '../advanced-search-store/advanced-search-store.service';
-
+import {
+    GravsearchPropertyString,
+    ResourceLabel,
+} from '../advanced-search-service/advanced-search.service';
+import {
+    PropertyFormItem,
+    OrderByItem,
+    Operators,
+} from '../advanced-search-store/advanced-search-store.service';
 @Injectable({
     providedIn: 'root',
 })
 export class GravsearchService {
-
     generateGravSearchQuery(
         resourceClassIri: string | undefined,
         properties: PropertyFormItem[],
@@ -41,7 +46,11 @@ export class GravsearchService {
                         properties[index].selectedProperty?.objectType ===
                         ResourceLabel
                     ) {
-                        orderByProps.push('?label');
+                        // add first 8 characters of the property id to create unique identifier for the variable name when searching for a resource label
+                        // it's sliced because gravsearch doesn't allow minus signs in variable names
+                        orderByProps.push(
+                            `?label${properties[index].id.slice(0, 8)}`
+                        );
                     } else {
                         orderByProps.push(`?prop${index}`);
                     }
@@ -112,14 +121,16 @@ export class GravsearchService {
             }
             if (Array.isArray(property.searchValue)) {
                 property.searchValue.forEach((value, i) => {
-                    constructString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
-                    if (value.selectedOperator === Operators.NotExists) {
-                        whereString +=
-                            `\nFILTER NOT EXISTS { \n` +
-                            `?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .\n` +
-                            `}\n`;
-                    } else {
-                        whereString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
+                    if (value.selectedProperty?.objectType !== ResourceLabel) {
+                        constructString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
+                        if (value.selectedOperator === Operators.NotExists) {
+                            whereString +=
+                                `\nFILTER NOT EXISTS { \n` +
+                                `?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .\n` +
+                                `}\n`;
+                        } else {
+                            whereString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
+                        }
                     }
                 });
             }
@@ -131,7 +142,12 @@ export class GravsearchService {
                 property.selectedOperator === Operators.NotExists
             )
         ) {
-            whereString += this._valueStringHelper(property, index, '?prop');
+            whereString += this._valueStringHelper(
+                property,
+                index,
+                '?prop',
+                '?mainRes'
+            );
         } else if (property.selectedOperator === Operators.NotExists) {
             whereString = `FILTER NOT EXISTS { \n` + whereString + `}\n`;
         }
@@ -142,11 +158,24 @@ export class GravsearchService {
         };
     }
 
+    /**
+     *
+     * @param property the PropertyFormItem to create the value string for
+     * @param index index of the property in the properties list
+     * @param identifier indentifier for the property, either ?prop or ?linkProp + index
+     * @param labelRes variable name for which resource the label is searched on, either ?mainRes or ?prop + index
+     * @returns a gravsearch value string
+     */
     private _valueStringHelper(
         property: PropertyFormItem,
         index: number,
-        identifier: string
+        identifier: string,
+        labelRes: string
     ): string {
+        // add first 8 characters of the property id to create unique identifier for the variable name when searching for a resource label
+        // it's sliced because gravsearch doesn't allow minus signs in variable names
+        const labelVariableName = `?label${property.id.slice(0, 8)}`;
+
         // linked resource
         if (
             !property.selectedProperty?.objectType.includes(
@@ -173,7 +202,8 @@ export class GravsearchService {
                                 valueString += this._valueStringHelper(
                                     value,
                                     i,
-                                    '?linkProp' + index
+                                    '?linkProp' + index,
+                                    '?prop' + index
                                 );
                             }
                         });
@@ -189,20 +219,20 @@ export class GravsearchService {
                         case Operators.Equals:
                         case Operators.NotEquals:
                             return (
-                                `?mainRes rdfs:label ?label .\n` +
-                                `FILTER (?label ${this._operatorToSymbol(
+                                `${labelRes} rdfs:label ${labelVariableName} .\n` +
+                                `FILTER (${labelVariableName} ${this._operatorToSymbol(
                                     property.selectedOperator
                                 )} "${property.searchValue}") .`
                             );
                         case Operators.IsLike:
                             return (
-                                `?mainRes rdfs:label ?label .\n` +
-                                `FILTER regex(?label, "${property.searchValue}", "i") .`
+                                `${labelRes} rdfs:label ${labelVariableName} .\n` +
+                                `FILTER regex(${labelVariableName}, "${property.searchValue}", "i") .`
                             );
                         case Operators.Matches:
                             return (
-                                `?mainRes rdfs:label ?label .\n` +
-                                `FILTER knora-api:matchLabel(?mainRes, "${property.searchValue}") .`
+                                `${labelRes} rdfs:label ${labelVariableName} .\n` +
+                                `FILTER knora-api:matchLabel(${labelRes}, "${property.searchValue}") .`
                             );
                         default:
                             throw new Error(

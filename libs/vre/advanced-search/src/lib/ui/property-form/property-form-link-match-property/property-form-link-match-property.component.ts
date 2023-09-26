@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { CommonModule } from '@angular/common';
 import { Operators, PropertyFormItem, SearchItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
 import { MatButtonModule } from '@angular/material/button';
-import { ApiData, PropertyData } from '../../../data-access/advanced-search-service/advanced-search.service';
+import { ApiData, PropertyData, ResourceLabelObject } from '../../../data-access/advanced-search-service/advanced-search.service';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PropertyFormValueComponent } from '../property-form-value/property-form-value.component';
@@ -47,6 +47,9 @@ export class PropertyFormLinkMatchPropertyComponent {
 
     operators = Operators; // in order to use it in the template
     constants = Constants;
+
+    // objectType is manually set so that it uses the KnoraApiV2 string for boolean checks later
+    resourceLabelObj = ResourceLabelObject;
 
     onAddPropertyFormClicked(): void {
         if (this.values) {

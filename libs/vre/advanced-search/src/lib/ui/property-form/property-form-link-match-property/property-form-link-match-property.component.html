@@ -11,6 +11,9 @@
                         placeholder="Select a value"
                         name="properties"
                     >
+                        <mat-option [value]="resourceLabelObj">{{
+                            resourceLabelObj.label
+                        }}</mat-option>
                         <mat-option
                             *ngFor="let prop of properties"
                             [value]="prop"

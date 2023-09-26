@@ -27,7 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../ui/dialog/confirmation-dialog/confirmation-dialog.component';
 import { v4 as uuidv4 } from 'uuid';
-import { map, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 export interface QueryObject {
     query: string;

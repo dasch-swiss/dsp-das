@@ -39,6 +39,9 @@ export interface GravsearchPropertyString {
 export const ResourceLabel =
     Constants.KnoraApiV2 + Constants.HashDelimiter + 'ResourceLabel';
 
+// objectType is manually set so that it uses the KnoraApiV2 string for boolean checks later
+export const ResourceLabelObject = { iri: 'resourceLabel', label: 'Resource Label', objectType: ResourceLabel};
+
 @Injectable({
     providedIn: 'root',
 })

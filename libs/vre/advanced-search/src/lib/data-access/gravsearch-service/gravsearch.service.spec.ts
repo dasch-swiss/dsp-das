@@ -72,8 +72,8 @@ CONSTRUCT {
 } WHERE {
 ?mainRes a knora-api:Resource .
 ?mainRes a <http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#test> .
-?mainRes rdfs:label ?label .
-FILTER (?label = "test") .
+?mainRes rdfs:label ?labeld708083b .
+FILTER (?labeld708083b = "test") .
 ?mainRes <http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#int> ?prop1 .
 ?mainRes <http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#dectest> ?prop2 .?prop2 <http://api.knora.org/ontology/knora-api/v2#decimalValueAsDecimal> ?prop2Literal .
 FILTER (?prop2Literal < "1"^^<http://www.w3.org/2001/XMLSchema#decimal>) .
@@ -228,13 +228,13 @@ CONSTRUCT {
 } WHERE {
 ?mainRes a knora-api:Resource .
 ?mainRes a <http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#test> .
-?mainRes rdfs:label ?label .
-FILTER (?label = "test") .
+?mainRes rdfs:label ?label83fa06a4 .
+FILTER (?label83fa06a4 = "test") .
 ?mainRes <http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#int> ?prop1 .
 ?mainRes <http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#dectest> ?prop2 .?prop2 <http://api.knora.org/ontology/knora-api/v2#decimalValueAsDecimal> ?prop2Literal .
 FILTER (?prop2Literal < "1"^^<http://www.w3.org/2001/XMLSchema#decimal>) .
 }
-ORDER BY ?prop1 ?label ?prop2
+ORDER BY ?prop1 ?label83fa06a4 ?prop2
 OFFSET 0`
             );
         });
