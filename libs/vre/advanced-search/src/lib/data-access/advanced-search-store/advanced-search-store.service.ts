@@ -696,6 +696,9 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
             .pipe(
                 take(1),
                 switchMap((count) => {
+                    this.patchState({
+                        resourcesSearchResultsCount: count,
+                    });
                     if (count > 0) {
                         return this._advancedSearchService
                             .getResourcesList(
@@ -710,9 +713,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                 })
             )
             .subscribe((resources) => {
-                this.patchState({
-                    resourcesSearchResultsCount: resources.length,
-                });
                 this.patchState({ resourcesSearchResults: resources });
                 this.patchState({ resourcesSearchResultsLoading: false });
                 this.patchState({
