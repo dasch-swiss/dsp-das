@@ -36,6 +36,18 @@ export class MockAdvancedSearchService {
         return of(new ListNodeV2());
     }
 
+    resourceClassesList(
+        ontologyIri: string,
+        restrictToClass?: string
+    ): Observable<ApiData[]> {
+        return of([
+            {
+                iri: 'testIri',
+                label: 'testLabel',
+            },
+        ]);
+    }
+
     filteredPropertiesList(iri: string): Observable<PropertyData[]> {
         return of([
             {
@@ -112,6 +124,7 @@ describe('AdvancedSearchStoreService', () => {
             propertiesLoading: false,
             propertiesOrderByList: [],
             filteredProperties: [],
+            matchResourceClassesLoading: false,
             resourcesSearchResultsLoading: false,
             resourcesSearchResultsCount: 0,
             resourcesSearchNoResults: false,
@@ -888,8 +901,64 @@ describe('AdvancedSearchStoreService', () => {
             };
 
             service.patchState({ propertyFormList: [propFormItem] });
+            service.patchState({
+                selectedOntology: { iri: 'ontoIri', label: 'ontoLabel' },
+            });
 
             propFormItem.selectedOperator = Operators.Matches;
+
+            // spy on the resourceClassesList method
+            const resourceClassesList = jest.spyOn(
+                advancedSearchService,
+                'resourceClassesList'
+            );
+
+            service.updateSelectedOperator(propFormItem);
+
+            expect(resourceClassesList).toHaveBeenCalledWith(
+                'ontoIri',
+                'linkedResourceIri'
+            );
+
+            // fix this
+            service.propertyFormList$.pipe(take(1)).subscribe((pfl) => {
+                expect(pfl).not.toBeUndefined();
+                expect(pfl[0].selectedOperator).toEqual(Operators.Exists);
+                expect(pfl[0].searchValue).toHaveLength(0);
+                expect(pfl[0].childPropertiesList).toHaveLength(1);
+            });
+        });
+    });
+
+    describe('updateSelectedMatchPropertyResourceClass', () => {
+        it('should update the selected resource class', () => {
+            const propFormItem = {
+                id: '1',
+                selectedProperty: undefined as PropertyData | undefined,
+                selectedOperator: undefined as Operators | undefined,
+                searchValue: undefined,
+                operators: [],
+                list: undefined,
+                selectedMatchPropertyResourceClass: undefined as
+                    | ApiData
+                    | undefined,
+            };
+
+            propFormItem.selectedProperty = {
+                iri: 'testIri',
+                label: 'test label',
+                objectType: 'linkedResourceIri',
+                isLinkedResourceProperty: true,
+            };
+
+            propFormItem.selectedOperator = Operators.Matches;
+
+            service.patchState({ propertyFormList: [propFormItem] });
+
+            propFormItem.selectedMatchPropertyResourceClass = {
+                iri: 'matchPropResClassIri',
+                label: 'test label',
+            };
 
             // spy on the filteredPropertiesList method
             const filteredPropertiesList = jest.spyOn(
@@ -897,18 +966,11 @@ describe('AdvancedSearchStoreService', () => {
                 'filteredPropertiesList'
             );
 
-            service.updateSelectedOperator(propFormItem);
+            service.updateSelectedMatchPropertyResourceClass(propFormItem);
 
             expect(filteredPropertiesList).toHaveBeenCalledWith(
-                propFormItem.selectedProperty.objectType
+                'matchPropResClassIri'
             );
-
-            service.propertyFormList$.pipe(take(1)).subscribe((pfl) => {
-                expect(pfl).not.toBeUndefined();
-                expect(pfl[0].selectedOperator).toEqual(Operators.Exists);
-                expect(pfl[0].searchValue).toHaveLength(0);
-                expect(pfl[0].childPropertiesList).toHaveLength(1);
-            });
         });
     });
 

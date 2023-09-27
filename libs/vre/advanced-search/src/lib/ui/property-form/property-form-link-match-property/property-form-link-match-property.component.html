@@ -5,6 +5,7 @@
     <div class="form-fields-container">
         <div class="dropdown-container">
             <div class="content">
+                <p class="label">Select a property</p>
                 <mat-form-field>
                     <mat-select
                         (selectionChange)="onSelectedPropertyChanged($event, i)"
@@ -26,6 +27,7 @@
         </div>
         <div class="dropdown-container">
             <div class="content">
+                <p class="label">Comparison Operator</p>
                 <mat-form-field class="operator">
                     <mat-select
                         #operatorsList
@@ -97,7 +99,7 @@
 <div class="parent-container child-property-list">
     <div class="add-property-button">
         <button mat-button (click)="onAddPropertyFormClicked()">
-            Add Sub-criteria
+            Add Subcriteria
         </button>
     </div>
 </div>

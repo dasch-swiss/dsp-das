@@ -28,6 +28,11 @@
     width: 49%;
     display: inline-flex;
 
+    &.match-resource-class {
+      width: 44%;
+      margin-left: 5%;
+    }
+
     .content {
       width: 100%;
 

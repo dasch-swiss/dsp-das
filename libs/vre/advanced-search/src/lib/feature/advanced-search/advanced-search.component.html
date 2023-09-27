@@ -26,6 +26,7 @@
             resetButtonDisabled: resetButtonDisabled$ | async,
             selectedOntology: selectedOntology$ ? (selectedOntology$ | async) : undefined,
             selectedResourceClass: selectedResourceClass$ ? (selectedResourceClass$| async) : undefined,
+            matchResourceClassesLoading: matchResourceClassesLoading$ | async,
             resourcesSearchResultsLoading: resourcesSearchResultsLoading$ | async,
             resourcesSearchResultsCount: resourcesSearchResultsCount$ | async,
             resourcesSearchResults: resourcesSearchResults$ | async,
@@ -51,6 +52,7 @@
         ></dasch-swiss-ontology-resource-form>
         <dasch-swiss-property-form
             *ngFor="let propertyForm of asyncData.propertyFormList"
+            [matchResourceClassesLoading]="asyncData.matchResourceClassesLoading"
             [resourcesSearchResultsLoading]="asyncData.resourcesSearchResultsLoading"
             [resourcesSearchResultsCount]="asyncData.resourcesSearchResultsCount"
             [resourcesSearchResults]="asyncData.resourcesSearchResults"
@@ -61,6 +63,7 @@
             (emitRemovePropertyForm)="handleRemovePropertyForm($event)"
             (emitSelectedPropertyChanged)="handleSelectedPropertyChanged($event)"
             (emitSelectedOperatorChanged)="handleSelectedOperatorChanged($event)"
+            (emitSelectedMatchPropertyResourceClassChanged)="handleSelectedMatchPropertyResourceClassChanged($event)"
             (emitSearchValueChanged)="handleSearchValueChanged($event)"
             (emitResourceSearchValueChanged)="handleResourceSearchValueChanged($event)"
             (emitLoadMoreSearchResults)="handleLoadMoreSearchResults($event)"

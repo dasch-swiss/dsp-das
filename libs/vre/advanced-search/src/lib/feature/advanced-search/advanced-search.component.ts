@@ -76,6 +76,7 @@ export class AdvancedSearchComponent implements OnInit {
     searchButtonDisabled$ = this.store.searchButtonDisabled$;
     addButtonDisabled$ = this.store.addButtonDisabled$;
     resetButtonDisabled$ = this.store.resetButtonDisabled$;
+    matchResourceClassesLoading$ = this.store.matchResourceClassesLoading$;
     resourcesSearchResultsLoading$ = this.store.resourcesSearchResultsLoading$;
     resourcesSearchResultsCount$ = this.store.resourcesSearchResultsCount$;
     resourcesSearchNoResults$ = this.store.resourcesSearchNoResults$;
@@ -104,6 +105,7 @@ export class AdvancedSearchComponent implements OnInit {
             propertiesLoading: false,
             propertiesOrderByList: [],
             filteredProperties: [],
+            matchResourceClassesLoading: false,
             resourcesSearchResultsLoading: false,
             resourcesSearchResultsCount: 0,
             resourcesSearchNoResults: false,
@@ -165,6 +167,10 @@ export class AdvancedSearchComponent implements OnInit {
 
     handleSelectedOperatorChanged(property: PropertyFormItem): void {
         this.store.updateSelectedOperator(property);
+    }
+
+    handleSelectedMatchPropertyResourceClassChanged(property: PropertyFormItem): void {
+        this.store.updateSelectedMatchPropertyResourceClass(property);
     }
 
     handleSearchValueChanged(property: PropertyFormItem): void {

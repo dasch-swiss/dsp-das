@@ -40,7 +40,11 @@ export const ResourceLabel =
     Constants.KnoraApiV2 + Constants.HashDelimiter + 'ResourceLabel';
 
 // objectType is manually set so that it uses the KnoraApiV2 string for boolean checks later
-export const ResourceLabelObject = { iri: 'resourceLabel', label: 'Resource Label', objectType: ResourceLabel};
+export const ResourceLabelObject = {
+    iri: 'resourceLabel',
+    label: 'Resource Label',
+    objectType: ResourceLabel,
+};
 
 @Injectable({
     providedIn: 'root',
@@ -102,17 +106,40 @@ export class AdvancedSearchService {
     };
 
     // API call to get the list of resource classes
-    resourceClassesList = (ontologyIri: string): Observable<ApiData[]> => {
+    resourceClassesList = (
+        ontologyIri: string,
+        restrictToClass?: string
+    ): Observable<ApiData[]> => {
         return this._dspApiConnection.v2.onto.getOntology(ontologyIri).pipe(
             map((response: ApiResponseError | ReadOntology) => {
                 if (response instanceof ApiResponseError) {
                     throw response; // caught by catchError operator
                 }
 
-                // todo: idk how to test subclasses so maybe this doesn't get them
-                const resClasses = response.getClassDefinitionsByType(
+                let resClasses = response.getClassDefinitionsByType(
                     ResourceClassDefinition
                 );
+
+                let resClassesFiltered: ResourceClassDefinition[] = [];
+
+                // filter the list of resource classes by the restrictToClass parameter
+                if (restrictToClass) {
+                    resClassesFiltered = resClasses.filter(
+                        (resClassDef: ResourceClassDefinition) =>
+                            resClassDef.id === restrictToClass
+                    );
+                    const subclasses = resClasses.filter(
+                        (resClassDef: ResourceClassDefinition) =>
+                            resClassDef.subClassOf.indexOf(restrictToClass) > -1
+                    );
+
+                    resClassesFiltered = resClassesFiltered.concat(subclasses);
+
+                }
+
+                if(resClassesFiltered.length) {
+                    resClasses = resClassesFiltered;
+                }
 
                 return resClasses
                     .sort(
@@ -299,8 +326,7 @@ export class AdvancedSearchService {
         // Cancel the previous count request
         this.cancelPreviousCountRequest$.next();
 
-        if(!searchValue || searchValue.length <= 2)
-            return of(0);
+        if (!searchValue || searchValue.length <= 2) return of(0);
 
         return this._dspApiConnection.v2.search
             .doSearchByLabelCountQuery(searchValue, {
@@ -329,8 +355,7 @@ export class AdvancedSearchService {
         // Cancel the previous search request
         this.cancelPreviousSearchRequest$.next();
 
-        if(!searchValue || searchValue.length <= 2)
-            return of([]);
+        if (!searchValue || searchValue.length <= 2) return of([]);
 
         return this._dspApiConnection.v2.search
             .doSearchByLabel(searchValue, offset, {

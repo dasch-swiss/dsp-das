@@ -10,12 +10,17 @@
                         placeholder="Select a value"
                         name="properties"
                     >
-                        <mat-option *ngIf="propertiesLoading" disabled="true">Loading...</mat-option>
+                        <mat-option *ngIf="propertiesLoading" disabled="true"
+                            >Loading...</mat-option
+                        >
                         <ng-container *ngIf="!propertiesLoading">
                             <mat-option [value]="resourceLabelObj">{{
                                 resourceLabelObj.label
                             }}</mat-option>
-                            <mat-option *ngFor="let prop of properties" [value]="prop">
+                            <mat-option
+                                *ngFor="let prop of properties"
+                                [value]="prop"
+                            >
                                 {{ prop.label }}
                             </mat-option>
                         </ng-container>
@@ -39,6 +44,44 @@
                         >
                             {{ operator }}
                         </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div
+            *ngIf="
+                !propertyFormItem.selectedProperty?.objectType?.includes(
+                    constants.KnoraApiV2
+                ) && propertyFormItem.selectedOperator === operators.Matches
+            "
+            class="dropdown-container match-resource-class"
+        >
+            <div class="content">
+                <p class="label">Resource Class</p>
+                <mat-form-field class="resource-class">
+                    <mat-select
+                        #operatorsList
+                        (selectionChange)="
+                            onSelectedMatchPropertyResourceClassChanged($event)
+                        "
+                        placeholder="Select a value"
+                        name="resource-classes"
+                    >
+                        <mat-option
+                            *ngIf="matchResourceClassesLoading"
+                            disabled="true"
+                            >Loading...</mat-option
+                        >
+                        <ng-container *ngIf="!matchResourceClassesLoading">
+                            <mat-option
+                                *ngFor="
+                                    let resClass of propertyFormItem?.matchPropertyResourceClasses
+                                "
+                                [value]="resClass"
+                            >
+                                {{ resClass.label }}
+                            </mat-option>
+                        </ng-container>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -81,8 +124,7 @@
                         constants.KnoraApiV2
                     ) &&
                     propertyFormItem.selectedProperty?.objectType !==
-                        constants.Label
-                        &&
+                        constants.Label &&
                     propertyFormItem.selectedOperator !== operators.Matches
                 "
                 [resourcesSearchResultsLoading]="resourcesSearchResultsLoading"
@@ -96,32 +138,44 @@
                 (emitResourceSelected)="onValueChanged($event)"
             ></dasch-swiss-property-form-link-value>
             <dasch-swiss-property-form-link-match-property
-                *ngIf="!propertyFormItem.selectedProperty?.objectType?.includes(
-                    constants.KnoraApiV2
-                ) &&
-                propertyFormItem.selectedProperty?.objectType !==
-                    constants.Label
-                    &&
-                propertyFormItem.selectedOperator === operators.Matches"
-                [values]="getLinkMatchPropertyFormItems(propertyFormItem.searchValue)"
+                *ngIf="
+                    !propertyFormItem.selectedProperty?.objectType?.includes(
+                        constants.KnoraApiV2
+                    ) &&
+                    propertyFormItem.selectedProperty?.objectType !==
+                        constants.Label &&
+                    propertyFormItem.selectedOperator === operators.Matches &&
+                    propertyFormItem.selectedMatchPropertyResourceClass
+                "
+                [values]="
+                    getLinkMatchPropertyFormItems(propertyFormItem.searchValue)
+                "
                 [properties]="propertyFormItem.childPropertiesList"
                 [resourcesSearchResultsLoading]="resourcesSearchResultsLoading"
                 [resourcesSearchResultsCount]="resourcesSearchResultsCount"
                 [resourcesSearchResults]="resourcesSearchResults"
                 [resourcesSearchNoResults]="resourcesSearchNoResults"
                 (emitAddPropertyForm)="onAddChildPropertyFormClicked()"
-                (emitRemovePropertyForm)="onRemoveChildPropertyFormClicked($event)"
-                (emitSelectedPropertyChanged)="onChildSelectedPropertyChanged($event)"
-                (emitSelectedOperatorChanged)="onChildSelectedOperatorChanged($event)"
+                (emitRemovePropertyForm)="
+                    onRemoveChildPropertyFormClicked($event)
+                "
+                (emitSelectedPropertyChanged)="
+                    onChildSelectedPropertyChanged($event)
+                "
+                (emitSelectedOperatorChanged)="
+                    onChildSelectedOperatorChanged($event)
+                "
                 (emitValueChanged)="onChildValueChanged($event)"
-                (emitResourceSearchValueChanged)="onChildResourceSearchValueChanged($event)"
-                (emitLoadMoreSearchResults)="onChildLoadMoreSearchResults($event)"
+                (emitResourceSearchValueChanged)="
+                    onChildResourceSearchValueChanged($event)
+                "
+                (emitLoadMoreSearchResults)="
+                    onChildLoadMoreSearchResults($event)
+                "
             >
-
             </dasch-swiss-property-form-link-match-property>
         </div>
     </div>
-
 
     <div class="side-container">
         <button

@@ -25,6 +25,7 @@ export interface AdvancedSearchState {
     propertiesLoading: boolean;
     propertiesOrderByList: OrderByItem[];
     filteredProperties: PropertyData[];
+    matchResourceClassesLoading: boolean;
     resourcesSearchResultsLoading: boolean;
     resourcesSearchResultsCount: number;
     resourcesSearchNoResults: boolean;
@@ -40,6 +41,8 @@ export interface PropertyFormItem {
     searchValue: string | PropertyFormItem[] | undefined;
     operators: string[] | undefined;
     list: ListNodeV2 | undefined;
+    matchPropertyResourceClasses?: ApiData[] | undefined;
+    selectedMatchPropertyResourceClass?: ApiData | undefined;
     isChildProperty?: boolean;
     childPropertiesList?: PropertyData[];
 }
@@ -116,6 +119,9 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     );
     filteredProperties$: Observable<PropertyData[]> = this.select(
         (state) => state.filteredProperties
+    );
+    matchResourceClassesLoading$: Observable<boolean> = this.select(
+        (state) => state.matchResourceClassesLoading
     );
     resourcesSearchResultsLoading$: Observable<boolean> = this.select(
         (state) => state.resourcesSearchResultsLoading
@@ -495,6 +501,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
             const updatedProp =
                 currentPropertyFormList[indexInPropertyFormList];
+
             updatedProp.searchValue = [
                 ...currentSearchValue.slice(0, indexInCurrentSearchValue),
                 property.childProperty,
@@ -545,6 +552,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     }
 
     updateSelectedOperator(property: PropertyFormItem): void {
+        const currentOntology = this.get((state) => state.selectedOntology);
         const currentPropertyFormList = this.get(
             (state) => state.propertyFormList
         );
@@ -563,14 +571,20 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                 property.selectedOperator === Operators.Matches &&
                 property.selectedProperty?.isLinkedResourceProperty
             ) {
+                // get list of resource classes that are allowed for the selected property
+                if (!currentOntology?.iri) return;
+
+                this.patchState({ matchResourceClassesLoading: true });
+
                 this._advancedSearchService
-                    .filteredPropertiesList(
-                        property.selectedProperty?.objectType
+                    .resourceClassesList(
+                        currentOntology?.iri,
+                        property.selectedProperty.objectType
                     )
                     .pipe(take(1))
-                    .subscribe((properties) => {
-                        property.childPropertiesList = properties;
-                        property.searchValue = [];
+                    .subscribe((resourceClasses) => {
+                        this.patchState({ matchResourceClassesLoading: false });
+                        property.matchPropertyResourceClasses = resourceClasses;
                         this.updatePropertyFormListItem(
                             currentPropertyFormList,
                             property,
@@ -584,6 +598,28 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                     index
                 );
             }
+        }
+    }
+
+    updateSelectedMatchPropertyResourceClass(property: PropertyFormItem): void {
+        const currentPropertyFormList = this.get(
+            (state) => state.propertyFormList
+        );
+        const index = currentPropertyFormList.indexOf(property);
+
+        if (index > -1 && property.selectedMatchPropertyResourceClass) {
+            this._advancedSearchService
+                .filteredPropertiesList(property.selectedMatchPropertyResourceClass?.iri)
+                .pipe(take(1))
+                .subscribe((properties) => {
+                    property.childPropertiesList = properties;
+                    property.searchValue = [];
+                    this.updatePropertyFormListItem(
+                        currentPropertyFormList,
+                        property,
+                        index
+                    );
+                });
         }
     }
 
@@ -716,7 +752,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                 this.patchState({ resourcesSearchResults: resources });
                 this.patchState({ resourcesSearchResultsLoading: false });
                 this.patchState({
-                    resourcesSearchNoResults: (resources.length === 0 && searchItem.value?.length >= 3),
+                    resourcesSearchNoResults:
+                        resources.length === 0 && searchItem.value?.length >= 3,
                 });
             });
     }

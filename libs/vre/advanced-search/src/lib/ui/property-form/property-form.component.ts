@@ -64,7 +64,7 @@ export class PropertyFormComponent {
         operators: [],
         list: undefined,
     };
-
+    @Input() matchResourceClassesLoading: boolean | null = false;
     @Input() resourcesSearchResultsLoading: boolean | null = false;
     @Input() resourcesSearchResultsCount: number | null = 0;
     @Input() resourcesSearchResults: ApiData[] | null = [];
@@ -79,6 +79,7 @@ export class PropertyFormComponent {
     @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();
     @Output() emitSelectedPropertyChanged = new EventEmitter<PropertyFormItem>();
     @Output() emitSelectedOperatorChanged = new EventEmitter<PropertyFormItem>();
+    @Output() emitSelectedMatchPropertyResourceClassChanged = new EventEmitter<PropertyFormItem>();
     @Output() emitSearchValueChanged = new EventEmitter<PropertyFormItem>();
     @Output() emitResourceSearchValueChanged = new EventEmitter<SearchItem>();
     @Output() emitLoadMoreSearchResults = new EventEmitter<SearchItem>();
@@ -129,8 +130,15 @@ export class PropertyFormComponent {
         const propFormItem = this.propertyFormItem;
         if (propFormItem) {
             propFormItem.selectedOperator = event.value;
-
             this.emitSelectedOperatorChanged.emit(propFormItem);
+        }
+    }
+
+    onSelectedMatchPropertyResourceClassChanged(event: MatSelectChange): void {
+        const propFormItem = this.propertyFormItem;
+        if (propFormItem) {
+            propFormItem.selectedMatchPropertyResourceClass = event.value;
+            this.emitSelectedMatchPropertyResourceClassChanged.emit(propFormItem);
         }
     }
 
@@ -138,7 +146,6 @@ export class PropertyFormComponent {
         const propFormItem = this.propertyFormItem;
         if (propFormItem) {
             propFormItem.searchValue = value;
-
             this.emitSearchValueChanged.emit(propFormItem);
         }
     }

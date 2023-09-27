@@ -1,9 +1,30 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    QueryList,
+    ViewChild,
+    ViewChildren,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Operators, PropertyFormItem, SearchItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
+import {
+    Operators,
+    PropertyFormItem,
+    SearchItem,
+} from '../../../data-access/advanced-search-store/advanced-search-store.service';
 import { MatButtonModule } from '@angular/material/button';
-import { ApiData, PropertyData, ResourceLabelObject } from '../../../data-access/advanced-search-service/advanced-search.service';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import {
+    ApiData,
+    PropertyData,
+    ResourceLabelObject,
+} from '../../../data-access/advanced-search-service/advanced-search.service';
+import {
+    MatSelect,
+    MatSelectChange,
+    MatSelectModule,
+} from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PropertyFormValueComponent } from '../property-form-value/property-form-value.component';
 import { Constants } from '@dasch-swiss/dsp-js';
@@ -23,7 +44,7 @@ import { MatIconModule } from '@angular/material/icon';
         MatSelectModule,
         PropertyFormValueComponent,
         PropertyFormListValueComponent,
-        PropertyFormLinkValueComponent
+        PropertyFormLinkValueComponent,
     ],
     templateUrl: './property-form-link-match-property.component.html',
     styleUrls: ['./property-form-link-match-property.component.scss'],
@@ -39,11 +60,17 @@ export class PropertyFormLinkMatchPropertyComponent {
 
     @Output() emitAddPropertyForm = new EventEmitter<void>();
     @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();
-    @Output() emitSelectedPropertyChanged = new EventEmitter<PropertyFormItem>();
-    @Output() emitSelectedOperatorChanged = new EventEmitter<PropertyFormItem>();
+    @Output() emitSelectedPropertyChanged =
+        new EventEmitter<PropertyFormItem>();
+    @Output() emitSelectedOperatorChanged =
+        new EventEmitter<PropertyFormItem>();
     @Output() emitValueChanged = new EventEmitter<PropertyFormItem>();
     @Output() emitResourceSearchValueChanged = new EventEmitter<SearchItem>();
     @Output() emitLoadMoreSearchResults = new EventEmitter<SearchItem>();
+
+    @ViewChildren('operatorsList') operatorsList!: QueryList<MatSelect>;
+    @ViewChild('propertyFormValue')
+    propertyFormValueComponent!: PropertyFormValueComponent;
 
     operators = Operators; // in order to use it in the template
     constants = Constants;
@@ -66,6 +93,13 @@ export class PropertyFormLinkMatchPropertyComponent {
     onSelectedPropertyChanged(event: MatSelectChange, index: number): void {
         if (this.values) {
             this.values[index].selectedProperty = event.value;
+
+            // when the selected property changes, we need to reset the selected operator at the specified index in the UI
+            // because the selected operator might not be valid for the new selected property
+            if (this.operatorsList.length) {
+                this.operatorsList.toArray()[index].value = undefined;
+            }
+
             this.emitSelectedPropertyChanged.emit(this.values[index]);
         }
     }
@@ -85,19 +119,25 @@ export class PropertyFormLinkMatchPropertyComponent {
     }
 
     onResourceSearchValueChanged(value: string, index: number): void {
-        if(this.values) {
+        if (this.values) {
             const objectType = this.values[index].selectedProperty?.objectType;
-            if(objectType) {
-                this.emitResourceSearchValueChanged.emit({ value: value, objectType: objectType});
+            if (objectType) {
+                this.emitResourceSearchValueChanged.emit({
+                    value: value,
+                    objectType: objectType,
+                });
             }
         }
     }
 
     onLoadMoreSearchResults(value: string, index: number): void {
-        if(this.values) {
+        if (this.values) {
             const objectType = this.values[index].selectedProperty?.objectType;
-            if(objectType) {
-                this.emitLoadMoreSearchResults.emit({ value: value, objectType: objectType});
+            if (objectType) {
+                this.emitLoadMoreSearchResults.emit({
+                    value: value,
+                    objectType: objectType,
+                });
             }
         }
     }
