@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DaschSwissStringLiteralComponent } from './vre-string-literal.component';
+import { AppStringLiteralComponent } from './dasch-swiss-string-literal.component';
 
 describe('AppStringLiteralComponent', () => {
-    let component: DaschSwissStringLiteralComponent;
-    let fixture: ComponentFixture<DaschSwissStringLiteralComponent>;
+    let component: AppStringLiteralComponent;
+    let fixture: ComponentFixture<AppStringLiteralComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [DaschSwissStringLiteralComponent],
+            imports: [AppStringLiteralComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(DaschSwissStringLiteralComponent);
+        fixture = TestBed.createComponent(AppStringLiteralComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
