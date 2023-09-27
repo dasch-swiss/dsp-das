@@ -26,6 +26,7 @@ export class RouteConstants {
     static readonly resource = 'resource';
     static readonly profile = 'profile';
 
+    static readonly advancedSearch = 'advanced-search';
     static readonly search = 'search';
     static readonly system = 'system';
     static readonly systemProjects = 'projects';

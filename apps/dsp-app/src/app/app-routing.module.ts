@@ -134,7 +134,7 @@ const routes: Routes = [
                 ],
             },
             {
-                path: 'advanced-search',
+                path: RouteConstants.advancedSearch,
                 component: AdvancedSearchContainerComponent,
             },
             {
