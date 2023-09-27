@@ -25,8 +25,8 @@
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
-          "libs/vre/library/vre-string-literal/**/*.ts",
-          "libs/vre/library/vre-string-literal/**/*.html"
+          "libs/vre/shared/app-string-literal/**/*.ts",
+          "libs/vre/shared/app-string-literal/**/*.html"
         ]
       }
     }
