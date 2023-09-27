@@ -7,7 +7,7 @@ import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { MenuItem } from '@dsp-app/src/app/main/declarations/menu-item';
 import { Observable, Subject } from 'rxjs';
 import { Select } from '@ngxs/store';
-import { RouteConstants } from 'libs/vre/shared/app-config/src/lib/app-config/app-constants';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 
 @Component({

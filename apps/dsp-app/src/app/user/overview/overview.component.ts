@@ -14,7 +14,7 @@ import { Select, Store } from '@ngxs/store';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { LoadAllProjectsAction, LoadUserProjectsAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { RouteConstants } from 'libs/vre/shared/app-config/src/lib/app-config/app-constants';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 
 // should only be used by this component and child components
 export type TileLinks = 'workspace' | 'settings';

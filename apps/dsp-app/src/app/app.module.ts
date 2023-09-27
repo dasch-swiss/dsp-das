@@ -180,7 +180,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { AppDatePickerModule } from '@dasch-swiss/vre/shared/app-date-picker';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { apiConnectionTokenProvider } from './providers/api-connection-token.provider';
-import { NgxsStoreModule } from 'libs/vre/shared/app-state/src/store.module';
+import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {

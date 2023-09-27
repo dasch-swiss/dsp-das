@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { concatMap, map, switchMap } from 'rxjs/operators';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
-import { RouteConstants } from 'libs/vre/shared/app-config/src/lib/app-config/app-constants';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { CurrentPageSelectors, SetUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 
 

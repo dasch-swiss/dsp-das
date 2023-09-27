@@ -110,7 +110,7 @@ const routes: Routes = [
             },
             {
                 path: `${RouteConstants.list}/:${RouteConstants.listParameter}`,
-(??)                component: ListComponent
+                component: ListComponent
             },
             {
                 path: RouteConstants.settings,
