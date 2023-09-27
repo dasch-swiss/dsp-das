@@ -1,7 +1,7 @@
 {
-  "name": "vre-library-vre-string-literal",
+  "name": "vre-library-app-string-literal",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/vre/library/vre-string-literal/src",
+  "sourceRoot": "libs/vre/library/app-string-literal/src",
   "prefix": "dasch-swiss",
   "tags": [],
   "projectType": "library",
@@ -10,7 +10,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/vre/library/vre-string-literal/jest.config.ts",
+        "jestConfig": "libs/vre/library/app-string-literal/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {
