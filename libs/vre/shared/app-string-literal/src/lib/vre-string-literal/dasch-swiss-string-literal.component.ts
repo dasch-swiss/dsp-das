@@ -113,7 +113,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
      *
      * @emits {boolean} focus
      */
-    @Output() focus: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output() onFocus: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     @ViewChild('textInput', { static: false }) textInput: ElementRef;
 
