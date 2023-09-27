@@ -1,10 +1,10 @@
 /* eslint-disable */
 export default {
-    displayName: 'vre-library-vre-string-literal',
+    displayName: 'vre-library-app-string-literal',
     preset: '../../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     coverageDirectory:
-        '../../../../coverage/libs/vre/library/vre-string-literal',
+        '../../../../coverage/libs/vre/library/app-string-literal',
     transform: {
         '^.+\\.(ts|mjs|js|html)$': [
             'jest-preset-angular',
