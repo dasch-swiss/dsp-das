@@ -1,4 +1,4 @@
-import { RouteConstants } from 'libs/vre/shared/app-config/src/lib/app-config/app-constants';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
 
 import { MenuItem } from './main/declarations/menu-item';
@@ -116,4 +116,3 @@ export class AppGlobal {
         },
     ];
 }
-
