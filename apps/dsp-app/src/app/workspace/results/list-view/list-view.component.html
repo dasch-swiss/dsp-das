@@ -1,16 +1,24 @@
 <!-- header / toolbar to select view and pagination -->
-<div *ngIf="numberOfAllResults !== 0 && loading === false" class="list-view-header">
-    <button mat-button class="pagination-button previous" [disabled]="0 >= currentIndex" (click)="goToPage('previous')">
-        <mat-icon>west</mat-icon>
-        <span>Previous</span>
-    </button>
-    <span class="fill-remaining-space"></span>
-    <div class="range">{{currentRangeStart}} - {{currentRangeEnd}} of {{numberOfAllResults}}</div>
-    <span class="fill-remaining-space"></span>
-    <button mat-button class="pagination-button next" [disabled]="(pageSize > numberOfAllResults) || nextDisabled" (click)="goToPage('next')">
-        <span>Next</span>
-        <mat-icon>east</mat-icon>
-    </button>
+<div *ngIf="numberOfAllResults !== 0 && !loading" class="list-view-header">
+    <div *ngIf="search.mode === 'gravsearch' && search.projectUuid && !loading" class="back">
+        <button mat-button class="back-button" (click)="handleBackButtonClicked()">
+            <span>Go Back to Search Form</span>
+            <mat-icon iconPositionEnd>chevron_right</mat-icon>
+        </button>
+    </div>
+    <div class="navigation">
+        <button mat-button class="pagination-button previous" [disabled]="0 >= currentIndex" (click)="goToPage('previous')">
+            <mat-icon>west</mat-icon>
+            <span>Previous</span>
+        </button>
+        <span class="fill-remaining-space"></span>
+        <div class="range">{{currentRangeStart}} - {{currentRangeEnd}} of {{numberOfAllResults}}</div>
+        <span class="fill-remaining-space"></span>
+        <button mat-button class="pagination-button next" [disabled]="(pageSize > numberOfAllResults) || nextDisabled" (click)="goToPage('next')">
+            <span>Next</span>
+            <mat-icon>east</mat-icon>
+        </button>
+    </div>
 </div>
 
 <!-- container with search results -->

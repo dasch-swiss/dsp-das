@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { QueryObject, PropertyFormItem } from '@dasch-swiss/vre/advanced-search';
+import {
+    QueryObject,
+    PropertyFormItem,
+} from '@dasch-swiss/vre/advanced-search';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 
 @Component({
     selector: 'app-advanced-search-container',
@@ -25,8 +29,12 @@ export class AdvancedSearchContainerComponent implements OnInit {
 
     onSearch(queryObject: QueryObject): void {
         this.logProperties(queryObject.properties);
-        const route = `/search/gravsearch/${encodeURIComponent(queryObject.query)}`;
-        this._router.navigate([route]);
+
+        const route = `./${RouteConstants.advancedSearch}/${
+            RouteConstants.gravsearch
+        }/${encodeURIComponent(queryObject.query)}`;
+
+        this._router.navigate([route], { relativeTo: this._route.parent });
     }
 
     onBackClicked(): void {
@@ -38,22 +46,22 @@ export class AdvancedSearchContainerComponent implements OnInit {
     logProperties(propFormList: PropertyFormItem[]): void {
         // strip any irrelevant data from the PropertyFormList for logging
         const logObject = propFormList.map((propertyForm) => {
-                let valueObject: object | undefined = undefined;
-                if(Array.isArray(propertyForm.searchValue)) {
-                    valueObject = propertyForm.searchValue.map((v) => {
-                        return {
-                            property: v.selectedProperty,
-                            operator: v.selectedOperator,
-                            value: v.searchValue,
-                        }
-                    });
-                }
-                return {
-                    property: propertyForm.selectedProperty,
-                    operator: propertyForm.selectedOperator,
-                    value: valueObject ? valueObject : propertyForm.searchValue,
-                };
-            });
+            let valueObject: object | undefined = undefined;
+            if (Array.isArray(propertyForm.searchValue)) {
+                valueObject = propertyForm.searchValue.map((v) => {
+                    return {
+                        property: v.selectedProperty,
+                        operator: v.selectedOperator,
+                        value: v.searchValue,
+                    };
+                });
+            }
+            return {
+                property: propertyForm.selectedProperty,
+                operator: propertyForm.selectedOperator,
+                value: valueObject ? valueObject : propertyForm.searchValue,
+            };
+        });
 
         this._loggingService.info('Search properties', logObject);
     }

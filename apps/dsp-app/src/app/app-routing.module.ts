@@ -138,6 +138,10 @@ const routes: Routes = [
                 component: AdvancedSearchContainerComponent,
             },
             {
+                path: RouteConstants.advancedSearchResultsRelative,
+                component: ResultsComponent,
+            },
+            {
                 path: RouteConstants.notFoundWildcard,
                 component: StatusComponent,
                 data: { status: RouteConstants.notFound },

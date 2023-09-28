@@ -27,6 +27,7 @@ export class RouteConstants {
     static readonly profile = 'profile';
 
     static readonly advancedSearch = 'advanced-search';
+    static readonly gravsearch = 'gravsearch';
     static readonly search = 'search';
     static readonly system = 'system';
     static readonly systemProjects = 'projects';
@@ -76,6 +77,7 @@ export class RouteConstants {
     static readonly OntologyClassConfRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/:${RouteConstants.classParameter}/${RouteConstants.conf}`;
     static readonly OntologyClassInstanceRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/:${RouteConstants.classParameter}/:${RouteConstants.instanceParameter}`;
 
+    static readonly advancedSearchResultsRelative = `${RouteConstants.advancedSearch}/:${RouteConstants.modeParameter}/:${RouteConstants.qParameter}`;
     static readonly searchProjectRelative = `:${RouteConstants.modeParameter}/:${RouteConstants.qParameter}/:${RouteConstants.projectParameter}`;
     static readonly searchRelative = `:${RouteConstants.modeParameter}/:${RouteConstants.qParameter}`;
 
