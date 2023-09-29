@@ -9,9 +9,10 @@
 
   .back {
     text-align: right;
+    padding: 3% 0%;
+
     .back-button {
         border: 1px solid $primary;
-        margin-top: 2%;
         margin-right: 2%;
         color: $primary;
     }
