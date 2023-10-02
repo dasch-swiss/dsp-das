@@ -4,8 +4,13 @@
   &.child-property-list {
     padding-left: 5%;
 
+    .form-fields-container {
+      width: 95%;
+    }
+
     .side-container {
       margin-top: 0%;
+      width: 4%;
     }
   }
 

@@ -24,7 +24,6 @@ import {
 import {
     PropertyData,
     ApiData,
-    ResourceLabel,
     ResourceLabelObject,
 } from '../../data-access/advanced-search-service/advanced-search.service';
 import { Operators } from '../../data-access/advanced-search-store/advanced-search-store.service';
