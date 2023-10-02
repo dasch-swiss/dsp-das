@@ -51,6 +51,12 @@
         </div>
         <!-- Case B: user clicked on the class item -->
         <div *ngIf="search.mode !== 'fulltext'">
+            <div *ngIf="search.mode === 'gravsearch' && search.projectUuid" class="back">
+                <button mat-button class="back-button" (click)="handleBackButtonClicked()">
+                    <span>Go Back to Search Form</span>
+                    <mat-icon iconPositionEnd>chevron_right</mat-icon>
+                </button>
+            </div>
             <!-- Case B1: there is no resources created-->
             <div *ngIf="hasPermission" class="no-results-container">
                 <mat-icon>warning</mat-icon>

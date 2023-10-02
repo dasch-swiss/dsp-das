@@ -76,6 +76,18 @@
   }
 }
 
+.no-results {
+  .back {
+    padding: 0% 0% 3% 0%;
+
+    .back-button {
+        border: 1px solid $primary;
+        margin-right: 2%;
+        color: $primary;
+    }
+  }
+}
+
 button.active {
   background-color: $black-12-opacity;
 }
