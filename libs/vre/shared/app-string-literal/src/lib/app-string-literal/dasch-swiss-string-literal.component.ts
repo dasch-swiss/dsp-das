@@ -54,7 +54,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
      *
      * @param  {string} language
      */
-    @Input() language: string;
+    @Input() language = '';
 
     /**
      * optional form field input type: textarea? set to true for textarea
@@ -62,7 +62,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
      *
      * @param  {boolean} [textarea=false]
      */
-    @Input() textarea: boolean;
+    @Input() textarea = true;
 
     /**
      * optional form field value of type StringLiteral[]
@@ -76,14 +76,14 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
      *
      * @param {boolean}: [disabled=false]
      */
-    @Input() disabled: boolean;
+    @Input() disabled = true;
 
     /**
      * the readonly attribute specifies whether the control may be modified by the user.
      *
      * @param {boolean}: [readonly=false]
      */
-    @Input() readonly: boolean;
+    @Input() readonly = false;
 
     /**
      * returns (output) an array of StringLiteral on any change on the input field.
@@ -115,12 +115,12 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
      */
     @Output() inFocus: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    @ViewChild('textInput', { static: false }) textInput: ElementRef;
+    @ViewChild('textInput', { static: false }) textInput!: ElementRef;
 
     @ViewChild('btnToSelectLanguage', { static: false })
-    btnToSelectLanguage: MatMenuTrigger;
+    btnToSelectLanguage!: MatMenuTrigger;
 
-    form: UntypedFormGroup;
+    form!: UntypedFormGroup;
     languages: string[] = ['de', 'fr', 'it', 'en', 'rm'];
 
     constructor(
@@ -129,9 +129,9 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
     ) {
         // set selected language, if it's not defined yet
         if (!this.language) {
-            if (this._sessionService.getSession() !== null) {
-                // get language from the logged-in user profile data
-                this.language = this._sessionService.getSession().user.lang;
+            const usersLanguage = this._sessionService.getSession()?.user?.lang;
+            if (usersLanguage) {
+                this.language = usersLanguage
             } else {
                 // get default language from browser
                 this.language = navigator.language.substring(0, 2);
@@ -180,9 +180,9 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
 
         const form = this.form;
         const control = form.get('text');
-        this.touched.emit(control.dirty || control.touched);
+        this.touched.emit(control?.dirty || control?.touched);
 
-        this.updateStringLiterals(this.language, this.form.controls.text.value);
+        this.updateStringLiterals(this.language, this.form.controls['text'].value);
 
         this.dataChanged.emit(this.value);
     }
@@ -200,7 +200,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
             // clean stringLIteral value for previous language, if text field is empty
             this.updateStringLiterals(
                 this.language,
-                this.form.controls.text.value
+                this.form.controls['text'].value
             );
 
             this.language = lang;
@@ -224,7 +224,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
         }
 
         if (!this.disabled) {
-            this.form.controls.text.enable();
+            this.form.controls['text'].enable();
             this.textInput.nativeElement.focus();
         }
     }
@@ -234,7 +234,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
      */
     menuClosed() {
         if (!this.disabled) {
-            this.form.controls.text.enable();
+            this.form.controls['text'].enable();
             this.textInput.nativeElement.focus();
         }
     }
@@ -249,13 +249,13 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
         if (!this.form) {
             return;
         }
-        this.form.controls.text.setValue(value);
+        this.form.controls['text'].setValue(value);
     }
 
     /**
      * update the array of StringLiterals depending on value / empty value add or remove item from array.
      */
-    updateStringLiterals(lang: string, value?: string) {
+    updateStringLiterals(lang: string, value = '') {
         const index = this.value.findIndex((i) => i.language === lang);
 
         if (index > -1 && this.value[index].value.length > 0) {
@@ -298,7 +298,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
             if (
                 this.value.findIndex((i) => i.language === this.language) === -1
             ) {
-                this.language = this.value[0].language;
+                this.language = this.value[0].language || '';
             }
         } else {
             this.value = [];
@@ -315,7 +315,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
         if (this.value[index] && this.value[index].value.length > 0) {
             return this.value[index].value;
         } else {
-            return undefined;
+            return '';
         }
     }
 }
