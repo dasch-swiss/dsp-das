@@ -1,6 +1,6 @@
 <!-- header / toolbar to select view and pagination -->
-<div *ngIf="numberOfAllResults !== 0 && !loading" class="list-view-header">
-    <div *ngIf="search.mode === 'gravsearch' && search.projectUuid && !loading" class="back">
+<div *ngIf="!loading && (numberOfAllResults > 0 && resources.resources.length)" class="list-view-header">
+    <div *ngIf="search.mode === 'gravsearch' && search.projectUuid && (numberOfAllResults > 0 && resources.resources.length)" class="back">
         <button mat-button class="back-button" (click)="handleBackButtonClicked()">
             <span>Go Back to Search Form</span>
             <mat-icon iconPositionEnd>chevron_right</mat-icon>
