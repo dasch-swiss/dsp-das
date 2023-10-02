@@ -23,7 +23,7 @@
                 type="button"
                 class="lang-button"
                 *ngFor="let lang of languages"
-                (click)="setLanguage(lang); switchFocus()"
+                (click)="setLanguage(lang)"
             >
                 <span
                     [class.existing-value]="getValueFromStringLiteral(lang)"

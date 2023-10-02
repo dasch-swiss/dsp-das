@@ -187,10 +187,6 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
         this.dataChanged.emit(this.value);
     }
 
-    toggleAll() {
-        // tODO: open/show all languages with their values
-    }
-
     /**
      * set the language after selecting;
      * this updates the array of StringLiterals: adds item with the selected language if it doesn't exist
@@ -207,6 +203,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
             // update form field value / reset in case of no value
             const val = this.getValueFromStringLiteral(lang);
             this.updateFormField(val);
+            this.switchFocus()
         }
     }
 
