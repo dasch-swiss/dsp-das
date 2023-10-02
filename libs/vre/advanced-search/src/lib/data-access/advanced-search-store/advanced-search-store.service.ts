@@ -426,12 +426,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                     id: property.id,
                     label: property.selectedProperty?.label || '',
                     orderBy: false,
-                    disabled: !(
-                        property.selectedProperty?.objectType ===
-                            ResourceLabel ||
-                        property.selectedProperty?.objectType?.includes(
-                            Constants.KnoraApiV2
-                        )
+                    disabled: this._isOrderByItemDisabled(
+                        property.selectedProperty
                     ),
                 },
                 ...currentOrderByList.slice(indexInCurrentOrderByList + 1),
@@ -443,12 +439,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                     id: property.id,
                     label: property.selectedProperty?.label || '',
                     orderBy: false,
-                    disabled: !(
-                        property.selectedProperty?.objectType ===
-                            ResourceLabel ||
-                        property.selectedProperty?.objectType?.includes(
-                            Constants.KnoraApiV2
-                        )
+                    disabled: this._isOrderByItemDisabled(
+                        property.selectedProperty
                     ),
                 },
             ];
@@ -609,7 +601,9 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
         if (index > -1 && property.selectedMatchPropertyResourceClass) {
             this._advancedSearchService
-                .filteredPropertiesList(property.selectedMatchPropertyResourceClass?.iri)
+                .filteredPropertiesList(
+                    property.selectedMatchPropertyResourceClass?.iri
+                )
                 .pipe(take(1))
                 .subscribe((properties) => {
                     property.childPropertiesList = properties;
@@ -1110,4 +1104,13 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
                 })
             )
     );
+
+    private _isOrderByItemDisabled(data: PropertyData | undefined): boolean {
+        if (!data) return true;
+        if (data.objectType === Constants.UriValue) return true;
+        return !(
+            data.objectType === ResourceLabel ||
+            data.objectType?.includes(Constants.KnoraApiV2)
+        );
+    }
 }

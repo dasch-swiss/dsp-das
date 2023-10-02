@@ -53,7 +53,7 @@ export class OrderByComponent {
     sortOrderSelectionList!: MatSelectionList;
 
     isOpen = false;
-    tooltipText = 'Search cannot be ordered by a property that links to a resource.';
+    tooltipText = 'Search cannot be ordered by a URI property or a property that links to a resource.';
 
     drop(event: CdkDragDrop<string[]>) {
         if (!this.orderByList) return;
