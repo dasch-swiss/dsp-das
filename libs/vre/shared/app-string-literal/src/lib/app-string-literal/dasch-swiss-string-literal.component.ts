@@ -23,7 +23,7 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import {MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
 import { SessionService } from '@dasch-swiss/vre/shared/app-session';
-
+import {MatIconModule} from "@angular/material/icon";
 
 @Component({
     selector: 'dasch-swiss-app-string-literal',
@@ -32,6 +32,7 @@ import { SessionService } from '@dasch-swiss/vre/shared/app-session';
         CommonModule,
         MatButtonModule,
         MatButtonToggleModule,
+        MatIconModule,
         MatInputModule,
         MatMenuModule,
         FormsModule,
@@ -62,7 +63,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
      *
      * @param  {boolean} [textarea=false]
      */
-    @Input() textarea = true;
+    @Input() textarea = false;
 
     /**
      * optional form field value of type StringLiteral[]
@@ -76,7 +77,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
      *
      * @param {boolean}: [disabled=false]
      */
-    @Input() disabled = true;
+    @Input() disabled = false;
 
     /**
      * the readonly attribute specifies whether the control may be modified by the user.
