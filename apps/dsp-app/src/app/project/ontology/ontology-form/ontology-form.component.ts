@@ -47,12 +47,12 @@ export class OntologyFormComponent implements OnInit {
     // ontology iri in case of edit
     @Input() iri: string;
 
-    // existing ontology names; name has to be unique
-    existingOntologyNames: string[] = [];
-
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
     @Output() updateParent: EventEmitter<string> = new EventEmitter<string>();
+
+    // existing ontology names; name has to be unique
+    existingOntologyNames: string[] = [];
 
     loading: boolean;
 
