@@ -20,7 +20,7 @@ import {
     LoginResponse,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import {DspApiConnectionToken, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { AuthenticationService } from '../../services/authentication.service';
 import {
@@ -229,19 +229,19 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
                                                     .length === 1
                                             ) {
                                                 this._router
-                                                    .navigateByUrl('/refresh', {
+                                                    .navigateByUrl(RouteConstants.refresh, {
                                                         skipLocationChange:
                                                             true,
                                                     })
                                                     .then(() =>
                                                         this._router.navigate([
-                                                            '/project/' + uuid,
+                                                            RouteConstants.project, uuid
                                                         ])
                                                     );
                                             } else {
                                                 // if user is a sysAdmin or a member of multiple projects, redirect them to the overview
                                                 this._router
-                                                    .navigateByUrl('/refresh', {
+                                                    .navigateByUrl(RouteConstants.refresh, {
                                                         skipLocationChange:
                                                             true,
                                                     })
