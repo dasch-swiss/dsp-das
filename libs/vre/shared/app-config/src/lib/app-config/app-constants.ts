@@ -55,6 +55,8 @@ export class RouteConstants {
     static readonly classParameter = 'class';
     static readonly instanceParameter = 'instance';
     static readonly listParameter = 'list';
+    static readonly classes = 'classes';
+
 
     static readonly homeRelative = `/${RouteConstants.home}`;
     static readonly dashboardRelative = `/${RouteConstants.dashboard}`;
