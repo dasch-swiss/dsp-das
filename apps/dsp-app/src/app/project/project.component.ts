@@ -21,7 +21,7 @@ import {
     UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { AppGlobal } from '../app-global';
-import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
+import {AppConfigService, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { MenuItem } from '../main/declarations/menu-item';
@@ -32,6 +32,8 @@ import {
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
 import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { Subscription } from 'rxjs';
+
+type ProjectRoute = typeof RouteConstants.project | typeof RouteConstants.settings | typeof RouteConstants.dataModels
 
 @Component({
     selector: 'app-project',
@@ -111,16 +113,16 @@ export class ProjectComponent implements OnInit {
 
     ngOnInit() {
         switch (this._router.url) {
-            case `/project/${this.projectUuid}`: {
+            case `/${RouteConstants.project}/${this.projectUuid}`: {
                 this.listItemSelected = this._router.url;
                 break;
             }
-            case `/project/${this.projectUuid}/data-models`: {
-                this.listItemSelected = 'data-models';
+            case `/${RouteConstants.project}/${this.projectUuid}/${RouteConstants.dataModels}`: {
+                this.listItemSelected = RouteConstants.dataModels;
                 break;
             }
-            case `/project/${this.projectUuid}/settings/collaboration`: {
-                this.listItemSelected = 'settings';
+            case `/${RouteConstants.project}/${this.projectUuid}/${RouteConstants.settings}/${RouteConstants.collaboration}`: {
+                this.listItemSelected = RouteConstants.settings;
                 break;
             }
         }
@@ -300,9 +302,9 @@ export class ProjectComponent implements OnInit {
         }
     }
 
-    open(route: string) {
-        this.listItemSelected = route;
-        this._router.navigate([route], { relativeTo: this._route });
+    open(route: ProjectRoute, id = '') {
+        this.listItemSelected = `/${route}/${id}`;
+        this._router.navigate([route, id], { relativeTo: this._route });
     }
 
     /**

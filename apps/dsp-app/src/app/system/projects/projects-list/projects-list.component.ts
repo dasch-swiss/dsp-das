@@ -142,7 +142,7 @@ export class ProjectsListComponent implements OnInit {
         const uuid = this._projectService.iriToUuid(iri);
 
         this._router
-            .navigateByUrl(RouteConstants.refresh, { skipLocationChange: true })
+            .navigateByUrl(`/${RouteConstants.refresh}`, { skipLocationChange: true })
             .then(() => this._router.navigate([RouteConstants.project, uuid]));
     }
 

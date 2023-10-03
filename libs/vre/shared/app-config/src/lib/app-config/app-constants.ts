@@ -30,6 +30,7 @@ export class RouteConstants {
     static readonly system = 'system';
     static readonly systemProjects = 'projects';
     static readonly systemUsers = 'users';
+    static readonly gravSearch = 'gravsearch'
 
     static readonly editor = 'editor';
     static readonly conf = 'conf';

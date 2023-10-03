@@ -486,7 +486,7 @@ export class ProjectFormComponent implements OnInit {
                                                 this.loading = false;
                                                 // redirect to project page
                                                 this._router
-                                                    .navigateByUrl(RouteConstants.project, {
+                                                    .navigateByUrl(`/${RouteConstants.project}`, {
                                                         skipLocationChange:
                                                             true,
                                                     })

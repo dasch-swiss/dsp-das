@@ -9,7 +9,7 @@ import {
     ResourceClassDefinition,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
+import {AppConfigService, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
@@ -98,7 +98,7 @@ export class OntologyClassInstanceComponent implements OnChanges {
                         if (this.instanceId === 'add') {
                             if (!this.session) {
                                 // user isn't signed in, redirect to project description
-                                this._router.navigateByUrl('/project/' + uuid);
+                                this._router.navigateByUrl(`/${RouteConstants.project}/${uuid}`);
                             } else {
                                 this._dspApiConnection.admin.usersEndpoint
                                     .getUserByUsername(this.session.user.name)
@@ -120,7 +120,7 @@ export class OntologyClassInstanceComponent implements OnChanges {
                                             } else {
                                                 // user is not a member of the project or a systemAdmin, redirect to project description
                                                 this._router.navigateByUrl(
-                                                    '/project/' + uuid
+                                                    `/${RouteConstants.project}/${uuid}`
                                                 );
                                             }
                                         },

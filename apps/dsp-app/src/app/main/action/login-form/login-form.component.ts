@@ -207,7 +207,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
                                 !this._location.path() ||
                                 (this._route.snapshot.url.length &&
                                     this._route.snapshot.url[0].path ===
-                                        'login')
+                                        RouteConstants.login)
                             ) {
                                 // if user is on "/" or "/login"
                                 const username = this.session.user.name;
@@ -229,7 +229,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
                                                     .length === 1
                                             ) {
                                                 this._router
-                                                    .navigateByUrl(RouteConstants.refresh, {
+                                                    .navigateByUrl(`/${RouteConstants.refresh}`, {
                                                         skipLocationChange:
                                                             true,
                                                     })
@@ -241,7 +241,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
                                             } else {
                                                 // if user is a sysAdmin or a member of multiple projects, redirect them to the overview
                                                 this._router
-                                                    .navigateByUrl(RouteConstants.refresh, {
+                                                    .navigateByUrl(`/${RouteConstants.refresh}`, {
                                                         skipLocationChange:
                                                             true,
                                                     })

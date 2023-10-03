@@ -33,7 +33,7 @@ import {
     UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import {DspApiConnectionToken, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
@@ -404,14 +404,14 @@ export class OntologyComponent implements OnInit {
         view: 'classes' | 'properties' | 'graph' = 'classes'
     ) {
         this.view = view;
-        const goto =
-            'project/' +
-            this.projectUuid +
-            '/ontologies/' +
-            encodeURIComponent(id) +
-            '/' +
-            view;
-        this._router.navigateByUrl(goto, { skipLocationChange: false });
+
+        this._router.navigate([
+            RouteConstants.project,
+            this.projectUuid,
+            RouteConstants.ontologies,
+            encodeURIComponent(id),
+            view
+        ], { skipLocationChange: false });
     }
 
     /**
