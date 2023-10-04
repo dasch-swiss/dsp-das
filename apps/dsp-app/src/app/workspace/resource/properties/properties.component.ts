@@ -36,7 +36,7 @@ import {
     UpdateResourceMetadataResponse,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { Subscription } from 'rxjs';
+import {Observable, Subscription, forkJoin} from 'rxjs';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import {
     ConfirmationWithComment,
@@ -63,6 +63,7 @@ import {
     ValueOperationEventService,
 } from '../services/value-operation-event.service';
 import { ValueService } from '../services/value.service';
+import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 
 // object of property information from ontology class, properties and property values
 export interface PropertyInfoValues {
@@ -133,6 +134,11 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     @Output() regionChanged: EventEmitter<ReadValue> =
         new EventEmitter<ReadValue>();
 
+    @Output() regionDeleted: EventEmitter<void> =
+        new EventEmitter<void>();
+
+    readonly amount_resources = 25;
+
     lastModificationDate: string;
 
     deletedResource = false;
@@ -148,16 +154,15 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
 
     representationConstants = RepresentationConstants;
 
-    booleanValueTypeIri = Constants.BooleanValue;
-
+    numberOffAllIncomingLinkRes: number;
+    allIncomingLinkResources: ReadResource[] = [];
+    displayedIncomingLinkResources: ReadResource[] = [];
     hasIncomingLinkIri = Constants.HasIncomingLinkValue;
 
     project: ReadProject;
     user: ReadUser;
 
-    incomingLinkResources: ReadResource[] = [];
     pageEvent: PageEvent;
-    numberOffAllIncomingLinkRes: number;
     loading = false;
 
     showAllProps = false; // show or hide empty properties
@@ -174,7 +179,8 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         private _valueOperationEventService: ValueOperationEventService,
         private _valueService: ValueService,
         private _componentCommsService: ComponentCommunicationEventService,
-        private _projectService: ProjectService
+        private _projectService: ProjectService,
+        private _sortingService: SortingService,
     ) {}
 
     ngOnInit(): void {
@@ -182,7 +188,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         this.pageEvent = new PageEvent();
         this.pageEvent.pageIndex = 0;
 
-        this._getIncomingLinks();
+        this._getAllIncomingLinkRes();
 
         if (this.resource.res) {
             // get user permissions
@@ -285,7 +291,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                 this.user = response.user;
             });
 
-        this._getIncomingLinks();
+        this._getAllIncomingLinkRes();
     }
 
     ngOnDestroy() {
@@ -316,7 +322,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
      */
     goToPage(page: PageEvent) {
         this.pageEvent = page;
-        this._getIncomingLinks();
+        this._getDisplayedIncomingLinkRes();
     }
 
     /**
@@ -349,6 +355,10 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
 
         dialogRef.afterClosed().subscribe((answer: ConfirmationWithComment) => {
+            if (!answer) {
+                // if the user clicks outside of the dialog window, answer is undefined
+                return;
+            }
             if (answer.confirmed === true) {
                 if (type !== 'edit') {
                     const payload = new DeleteResource();
@@ -375,6 +385,9 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                                                 CommsEvents.resourceDeleted
                                             )
                                         );
+                                        if (this.isAnnotation) {
+                                            this.regionDeleted.emit();
+                                        }
                                     },
                                     (error: ApiResponseError) => {
                                         this._errorHandler.showMessage(error);
@@ -398,6 +411,11 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                                                 CommsEvents.resourceDeleted
                                             )
                                         );
+                                        // if it is an Annotation/Region which has been erases, we emit the
+                                        // regionChanged event, in order to refresh the page
+                                        if (this.isAnnotation) {
+                                            this.regionDeleted.emit();
+                                        }
                                     },
                                     (error: ApiResponseError) => {
                                         this._errorHandler.showMessage(error);
@@ -633,39 +651,49 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
      * gets the number of incoming links and gets the incoming links.
      * @private
      */
-    private _getIncomingLinks() {
-        this.loading = true;
+    private _getAllIncomingLinkRes() {
         if (this.pageEvent) {
-            if (this.pageEvent.pageIndex === 0) {
-                this._incomingService
-                    .getIncomingLinks(
-                        this.resource.res.id,
-                        this.pageEvent.pageIndex,
-                        true
-                    )
-                    .subscribe((response: CountQueryResponse) => {
-                        this.numberOffAllIncomingLinkRes =
-                            response.numberOfResults;
-                    });
-            }
-
+            this.loading = true;
             this._incomingService
                 .getIncomingLinks(
                     this.resource.res.id,
-                    this.pageEvent.pageIndex
+                    0,
+                    true
                 )
-                .subscribe(
-                    (response: ReadResourceSequence) => {
-                        if (response.resources.length > 0) {
-                            this.incomingLinkResources = response.resources;
-                        }
-                        this.loading = false;
-                    },
-                    () => {
-                        this.loading = false;
+                .subscribe((response: CountQueryResponse) => {
+                    this.numberOffAllIncomingLinkRes = response.numberOfResults;
+                    const round = this.numberOffAllIncomingLinkRes > this.amount_resources ?
+                        Math.ceil(this.numberOffAllIncomingLinkRes/this.amount_resources) : 1;
+
+                    const arr = new Array<Observable<ReadResourceSequence | CountQueryResponse | ApiResponseError>>(round);
+
+                    for (let i = 0; i < round ; i++) {
+                        arr[i] = this._incomingService.getIncomingLinks(this.resource.res.id, i);
                     }
-                );
+
+                    forkJoin(arr)
+                        .subscribe((data: ReadResourceSequence[]) => {
+                            const flattenIncomingRes = data.flatMap((a) => a.resources);
+                            this.allIncomingLinkResources = this._sortingService.keySortByAlphabetical(
+                                flattenIncomingRes,
+                                "resourceClassLabel",
+                                "label"
+                            );
+
+                            this._getDisplayedIncomingLinkRes();
+                            this.loading = false;
+                        }, () => {
+                                this.loading = false;
+                        });
+                },() => {
+                this.loading = false;
+            });
         }
+    }
+
+    private _getDisplayedIncomingLinkRes() {
+        const startIndex = this.pageEvent.pageIndex * this.amount_resources;
+        this.displayedIncomingLinkResources = this.allIncomingLinkResources.slice(startIndex, startIndex + this.amount_resources);
     }
 
     /**

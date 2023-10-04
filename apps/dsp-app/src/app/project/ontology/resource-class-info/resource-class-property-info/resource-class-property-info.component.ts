@@ -153,11 +153,11 @@ export class ResourceClassPropertyInfoComponent
                 this._applicationStateService.get('currentProjectOntologies').subscribe(
                     (ontologies: ReadOntology[]) => {
                         const onto = ontologies.find((i) => i.id === baseOnto);
-                        if (
-                            !onto &&
-                            this.propDef.objectType === Constants.Region
-                        ) {
-                            this.propAttribute = 'Region';
+                        if ( !onto ) {
+                            if (this.propDef.objectType === Constants.Region) {
+                                this.propAttribute = 'Region';
+                            }  // else no ontology found
+
                         } else {
                             this.propAttribute =
                                 onto.classes[this.propDef.objectType].label;
@@ -185,7 +185,7 @@ export class ResourceClassPropertyInfoComponent
                     const listIri = this.propDef.guiAttributes[0].match(re)[1];
                     const listUrl = `/project/${
                         this.projectUuid
-                    }/lists/${encodeURIComponent(listIri)}`;
+                    }/list/${listIri.split('/').pop()}`;
                     const list = response.find((i) => i.id === listIri);
                     this.propAttribute = `<a href="${listUrl}">${list.labels[0].value}</a>`;
                     this.propAttributeComment = list.comments.length

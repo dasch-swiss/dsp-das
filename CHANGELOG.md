@@ -1,5 +1,69 @@
 # Changelog
 
+## [10.23.6](https://github.com/dasch-swiss/dsp-das/compare/v10.23.5...v10.23.6) (2023-10-03)
+
+
+### Bug Fixes
+
+* **ontology form:** remove the input decorator ([#1212](https://github.com/dasch-swiss/dsp-das/issues/1212)) ([64100e7](https://github.com/dasch-swiss/dsp-das/commit/64100e7385f0985e1b7eca7b087e99c413a85368))
+
+## [10.23.5](https://github.com/dasch-swiss/dsp-das/compare/v10.23.4...v10.23.5) (2023-09-29)
+
+
+### Bug Fixes
+
+* **app:** sort incoming links for more than 25 ([#1203](https://github.com/dasch-swiss/dsp-das/issues/1203)) ([7a17d7c](https://github.com/dasch-swiss/dsp-das/commit/7a17d7c8569e5005f48ed1011bd6f26053d5a989))
+* **link to controlled vocabulary:** Link to correct route ([#1207](https://github.com/dasch-swiss/dsp-das/issues/1207)) ([51bae4b](https://github.com/dasch-swiss/dsp-das/commit/51bae4bba2588f138b7ca95434895ab105fe4c1f))
+
+
+### Maintenance
+
+* **app-global, app-routing-module:** Replaces string literals with constants ([#1210](https://github.com/dasch-swiss/dsp-das/issues/1210)) ([a70388c](https://github.com/dasch-swiss/dsp-das/commit/a70388cee52e4ad56c68019da048e33bba4b5435))
+* **deps:** bump js-lib version to 8.3.5 ([#1211](https://github.com/dasch-swiss/dsp-das/issues/1211)) ([a6682e9](https://github.com/dasch-swiss/dsp-das/commit/a6682e9e05f498df83f65c0c0ed47e09bacbf8da))
+* **progress indicator:** move app progress indicator into shared lib ([#1204](https://github.com/dasch-swiss/dsp-das/issues/1204)) ([95d843d](https://github.com/dasch-swiss/dsp-das/commit/95d843d9c1c3231244c67f4712d0bbfc2365a2fa))
+* **project edit dialog:** remove dialog and replace in component ([#1202](https://github.com/dasch-swiss/dsp-das/issues/1202)) ([7a42167](https://github.com/dasch-swiss/dsp-das/commit/7a421679caab8405a1e0a8d112656c3b06a2bc53))
+
+## [10.23.4](https://github.com/dasch-swiss/dsp-das/compare/v10.23.3...v10.23.4) (2023-09-15)
+
+
+### Maintenance
+
+* **CI:** add PR title check ([#1205](https://github.com/dasch-swiss/dsp-das/issues/1205)) ([3acf5be](https://github.com/dasch-swiss/dsp-das/commit/3acf5be36bf2ab28d554b652729758b4579d7dc0))
+* **deps-dev:** bump @types/node from 18.15.9 to 20.5.9 ([#1200](https://github.com/dasch-swiss/dsp-das/issues/1200)) ([81c666e](https://github.com/dasch-swiss/dsp-das/commit/81c666ed66c4eb30a3f9383147363adf8cef2847))
+* update dsp-js to v8.3.4 ([#1206](https://github.com/dasch-swiss/dsp-das/issues/1206)) ([2ce2fe1](https://github.com/dasch-swiss/dsp-das/commit/2ce2fe1cf3dc6fc5500c604d33efe4081e0ce723))
+
+## [10.23.3](https://github.com/dasch-swiss/dsp-das/compare/v10.23.2...v10.23.3) (2023-09-01)
+
+
+### Bug Fixes
+
+* **sorting:** sorts incoming links by res class then res label ([#1197](https://github.com/dasch-swiss/dsp-das/issues/1197)) ([85f1af6](https://github.com/dasch-swiss/dsp-das/commit/85f1af699385674df6d5c414ea8ed30a499d6c80))
+
+
+### Maintenance
+
+* update dsp-js-lib to v8.3.3 ([#1199](https://github.com/dasch-swiss/dsp-das/issues/1199)) ([a0717c2](https://github.com/dasch-swiss/dsp-das/commit/a0717c22f0c832356fa35ae66ce74c92524accca))
+
+## [10.23.2](https://github.com/dasch-swiss/dsp-das/compare/v10.23.1...v10.23.2) (2023-08-18)
+
+
+### Bug Fixes
+
+* **regions:** reload the resource after deletion of regions ([#1185](https://github.com/dasch-swiss/dsp-das/issues/1185)) ([c5a14e6](https://github.com/dasch-swiss/dsp-das/commit/c5a14e62009f8ed4ecbfa9dd5076bdd16d142091))
+* **runtime errors:** fix errors thrown ([#1178](https://github.com/dasch-swiss/dsp-das/issues/1178)) ([55f56cd](https://github.com/dasch-swiss/dsp-das/commit/55f56cd1a1b86850b8be26ee1877071bb8d26a2e))
+* **session service:** destroy session and return of false if an error… ([#1183](https://github.com/dasch-swiss/dsp-das/issues/1183)) ([3ead94d](https://github.com/dasch-swiss/dsp-das/commit/3ead94d4a1c971d446136fa9a8d0d016a86e2731))
+
+
+### Maintenance
+
+* **deps:** bump js-lib to 8.3.2 ([#1187](https://github.com/dasch-swiss/dsp-das/issues/1187)) ([d5ba644](https://github.com/dasch-swiss/dsp-das/commit/d5ba6443fca26dda9fac4055e3f8ab09b3dbab3f))
+* **msg text:** Change notification message text for 404 not found ([#1184](https://github.com/dasch-swiss/dsp-das/issues/1184)) ([20d5d0b](https://github.com/dasch-swiss/dsp-das/commit/20d5d0b81b6773107f1960b38a3e31216c36785b))
+
+
+### Documentation
+
+* fix expert search docs ([#1180](https://github.com/dasch-swiss/dsp-das/issues/1180)) ([2b786a6](https://github.com/dasch-swiss/dsp-das/commit/2b786a6d310ddc9a00ec970d358d2fea3535d3f9))
+
 ## [10.23.1](https://github.com/dasch-swiss/dsp-das/compare/v10.23.0...v10.23.1) (2023-08-04)
 
 

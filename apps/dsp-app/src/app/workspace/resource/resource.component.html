@@ -106,7 +106,8 @@
                             [isAnnotation]="true"
                             [adminPermissions]="adminPermissions"
                             [valueUuidToHighlight]="valueUuid"
-                            (regionChanged)="updateRegion()">
+                            (regionChanged)="updateRegion()"
+                            (regionDeleted)="reloadWithResource()">
                         </app-properties>
                     </div>
 
@@ -119,7 +120,7 @@
             </ng-template>
         </div>
         <!-- progress indicator -->
-        <app-progress-indicator *ngIf="loading"></app-progress-indicator>
+        <dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
     </div>
 
     <!-- resource not found  -->

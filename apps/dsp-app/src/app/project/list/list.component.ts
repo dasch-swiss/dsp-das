@@ -1,8 +1,6 @@
 import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import {
-    UntypedFormBuilder,
-    UntypedFormControl,
-    UntypedFormGroup,
+    UntypedFormBuilder
 } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
@@ -203,7 +201,6 @@ export class ListComponent implements OnInit {
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
 
         dialogRef.afterClosed().subscribe((data) => {
-            console.log('data: ', data);
             switch (mode) {
                 case 'editListInfo': {
                     window.location.reload();
