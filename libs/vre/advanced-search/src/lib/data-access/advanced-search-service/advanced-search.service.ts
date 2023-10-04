@@ -134,10 +134,9 @@ export class AdvancedSearchService {
                     );
 
                     resClassesFiltered = resClassesFiltered.concat(subclasses);
-
                 }
 
-                if(resClassesFiltered.length) {
+                if (resClassesFiltered.length) {
                     resClasses = resClassesFiltered;
                 }
 
@@ -171,6 +170,7 @@ export class AdvancedSearchService {
 
                     if (!ontology) return [];
 
+                    // get props and filter out properties that shouldn't be able to be selected
                     const props = ontology
                         .getPropertyDefinitionsByType(
                             ResourcePropertyDefinition
@@ -192,7 +192,7 @@ export class AdvancedSearchService {
                             // label can be undefined
                             const label = propDef.label || '';
 
-                            // objectType can be undefined but I'm not really sure if this is true
+                            // objectType can be undefined but it really never should be
                             const objectType = propDef.objectType || '';
 
                             const linkProperty = !propDef.objectType?.includes(
@@ -249,15 +249,11 @@ export class AdvancedSearchService {
             .getResourceClassDefinition(resourceClassIri)
             .pipe(
                 map((onto: ResourceClassAndPropertyDefinitions) => {
-                    const props = onto
-                        .getPropertyDefinitionsByType(
-                            ResourcePropertyDefinition
-                        )
-                        .filter(
-                            (propDef) =>
-                                propDef.isEditable &&
-                                !propDef.isLinkValueProperty
-                        );
+                    // filter out properties that shouldn't be able to be selected
+                    // this is a bit different than how the propertiesList method does it
+                    // because the getResourceClassDefintion method return more props
+                    // that should be filtered out
+                    const props = this._filterProperties(onto);
 
                     return props
                         .sort(
@@ -396,6 +392,24 @@ export class AdvancedSearchService {
                 return of(undefined); // return undefined on error
             })
         );
+    }
+
+    private _filterProperties(
+        resPropDefs: ResourceClassAndPropertyDefinitions
+    ): ResourcePropertyDefinition[] {
+        return resPropDefs
+            .getPropertyDefinitionsByType(ResourcePropertyDefinition)
+            .filter(
+                (propDef) =>
+                    propDef.isEditable &&
+                    !propDef.isLinkValueProperty &&
+                    propDef.objectType !== Constants.AudioFileValue &&
+                    propDef.objectType !== Constants.DDDFileValue &&
+                    propDef.objectType !== Constants.DocumentFileValue &&
+                    propDef.objectType !== Constants.MovingImageFileValue &&
+                    propDef.objectType !== Constants.StillImageFileValue &&
+                    propDef.objectType !== Constants.TextFileValue
+            );
     }
 
     private _handleError(error: unknown) {
