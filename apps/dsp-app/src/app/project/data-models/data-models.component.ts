@@ -164,7 +164,7 @@ export class DataModelsComponent implements OnInit {
                 'https://docs.dasch.swiss/latest/DSP-APP/user-guide/project/#data-model',
                 '_blank'
             );
-            return;;
+            return;
         } else {
             // default routing
             this._router.navigate([route], { relativeTo: this._route.parent });
