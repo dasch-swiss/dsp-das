@@ -1,3 +1,4 @@
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -6,17 +7,17 @@ import {
     KnoraApiConnection,
     ListNodeInfo,
     ListsResponse,
-    OntologiesMetadata,
-    UserResponse,
+    OntologyMetadata,
+    ReadUser,
 } from '@dasch-swiss/dsp-js';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import {
-    Session,
-    SessionService,
-} from '@dasch-swiss/vre/shared/app-session';
 import { OntologyService } from '../ontology/ontology.service';
+import { Select, Store } from '@ngxs/store';
+import { OntologiesSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-data-models',
@@ -24,16 +25,34 @@ import { OntologyService } from '../ontology/ontology.service';
     styleUrls: ['./data-models.component.scss'],
 })
 export class DataModelsComponent implements OnInit {
-    projectOntologies: OntologiesMetadata;
     projectLists: ListNodeInfo[];
 
-    loading: boolean;
-
     // permissions of logged-in user
-    session: Session;
-    sysAdmin = false;
-    projectAdmin = false;
-    projectMember = false;
+    isProjectAdmin = false;
+
+
+    get ontologiesMetadata$(): Observable<OntologyMetadata[]> {
+        const uuid = this._route.parent.snapshot.params.uuid;
+        const iri = `${this._appInit.dspAppConfig.iriBase}/projects/${uuid}`;
+        if (!uuid) {
+            return of({} as OntologyMetadata[]);
+        }
+        
+        return this.store.select(OntologiesSelectors.projectOntologies)
+            .pipe(
+                map(ontologies => {
+                    if (!ontologies || !ontologies[iri]) {
+                        return [];
+                    }
+
+                    return ontologies[iri].ontologiesMetadata;
+                })
+            )
+    }
+
+
+    @Select(UserSelectors.isLoggedIn) isLoggedIn$: Observable<boolean>;
+    @Select(OntologiesSelectors.isLoading) isLoading$: Observable<boolean>;
 
     constructor(
         @Inject(DspApiConnectionToken)
@@ -43,24 +62,14 @@ export class DataModelsComponent implements OnInit {
         private _router: Router,
         private _appInit: AppConfigService,
         private _ontologyService: OntologyService,
-        private _session: SessionService
+        private store: Store,
+        private projectService: ProjectService,
     ) {
-        // get session
-        this.session = this._session.getSession();
     }
 
     ngOnInit(): void {
-        this.loading = true;
         const uuid = this._route.parent.snapshot.params.uuid;
         const iri = `${this._appInit.dspAppConfig.iriBase}/projects/${uuid}`;
-        this._dspApiConnection.v2.onto
-            .getOntologiesByProjectIri(iri)
-            .subscribe((ontologies: OntologiesMetadata) => {
-                this.projectOntologies = ontologies;
-                if (this.projectLists) {
-                    this.loading = false;
-                }
-            });
 
         // get all project lists
         this._dspApiConnection.admin.listsEndpoint
@@ -68,62 +77,17 @@ export class DataModelsComponent implements OnInit {
             .subscribe(
                 (lists: ApiResponseData<ListsResponse>) => {
                     this.projectLists = lists.body.lists;
-                    if (this.projectOntologies) {
-                        this.loading = false;
-                    }
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
                 }
             );
-
+        
+        const user = this.store.selectSnapshot(UserSelectors.user) as ReadUser;
+        const userProjectGroups = this.store.selectSnapshot(UserSelectors.userProjectGroups);
         // is logged-in user projectAdmin?
-        if (this.session) {
-            this.loading = true;
-
-            // is the logged-in user system admin?
-            this.sysAdmin = this.session.user.sysAdmin;
-
-            // is the logged-in user project admin?
-            this.projectAdmin = this.sysAdmin
-                ? this.sysAdmin
-                : this.session.user.projectAdmin.some((e) => e === iri);
-
-            // or at least project member?
-            if (!this.projectAdmin) {
-                this._dspApiConnection.admin.usersEndpoint
-                    .getUserByUsername(this.session.user.name)
-                    .subscribe(
-                        (res: ApiResponseData<UserResponse>) => {
-                            const usersProjects = res.body.user.projects;
-                            if (usersProjects.length === 0) {
-                                // the user is not part of any project
-                                this.projectMember = false;
-                            } else {
-                                // check if the user is member of the current project
-                                // id contains the iri
-                                this.projectMember = usersProjects.some(
-                                    (p) => p.id === iri
-                                );
-                            }
-                            // wait for onto and lists to load
-                            if (this.projectOntologies && this.projectLists) {
-                                this.loading = false;
-                            }
-                        },
-                        (error: ApiResponseError) => {
-                            this._errorHandler.showMessage(error);
-                            this.loading = false;
-                        }
-                    );
-            } else {
-                this.projectMember = this.projectAdmin;
-
-                // wait for onto and lists to load
-                if (this.projectOntologies && this.projectLists) {
-                    this.loading = false;
-                }
-            }
+        if (user) {
+            this.isProjectAdmin = this.projectService.isProjectAdmin(user, userProjectGroups, uuid);
         }
     }
 

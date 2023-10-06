@@ -10,7 +10,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoginError, ServerError } from './error';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { Store } from '@ngxs/store';
-import { LoadUserAction, LogUserOutAction, UserStateModel } from '@dasch-swiss/vre/shared/app-state';
+import { LoadUserAction, LogProjectsOutAction, LogUserOutAction, UserStateModel } from '@dasch-swiss/vre/shared/app-state';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -203,7 +203,7 @@ export class AuthService {
     doLogoutUser() {
         this._isLoggedIn$.next(false);
         this.removeTokens();
-        this.store.dispatch(new LogUserOutAction());
+        this.store.dispatch([new LogUserOutAction(), new LogProjectsOutAction()]);
         clearTimeout(this.tokenRefreshIntervalId);
         this.router.navigate([RouteConstants.home], { replaceUrl: true });
     }

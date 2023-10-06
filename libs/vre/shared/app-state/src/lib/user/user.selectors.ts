@@ -3,6 +3,7 @@ import { UserState } from './user.state';
 import { UserStateModel } from './user.state-model';
 import { ReadUser, User } from '@dasch-swiss/dsp-js';
 import { StoredProject } from "@dasch-swiss/dsp-js/src/models/admin/stored-project";
+import { Auth } from '@dasch-swiss/vre/shared/app-config';
 
 export class UserSelectors {
     @Selector([UserState])
@@ -11,6 +12,14 @@ export class UserSelectors {
     }
 
     @Selector([UserState])
+    static isLoggedIn(state: UserStateModel): boolean {
+        return !state.isLoading 
+            && !!localStorage.getItem(Auth.AccessToken) 
+            && state.user !== null 
+            && state.user?.username !== '';
+    }
+    
+    @Selector([UserState])
     static user(state: UserStateModel): User | ReadUser | null | undefined {
         return state.user;
     }
@@ -18,6 +27,21 @@ export class UserSelectors {
     @Selector([UserState])
     static username(state: UserStateModel): string | null | undefined {
         return state.user?.username;
+    }
+
+    @Selector([UserState])
+    static language(state: UserStateModel): string | null | undefined {
+        return state.user?.lang;
+    }
+
+    @Selector([UserState])
+    static isMemberOfSystemAdminGroup(state: UserStateModel): boolean {
+        return state.isMemberOfSystemAdminGroup;
+    }
+
+    @Selector([UserState])
+    static userProjectGroups(state: UserStateModel): string[] {
+        return state.userProjectGroups;
     }
 
     @Selector([UserState])

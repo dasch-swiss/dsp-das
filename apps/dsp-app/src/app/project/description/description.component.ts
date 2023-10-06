@@ -1,15 +1,12 @@
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {
-    ApiResponseError,
-    ReadProject
-} from '@dasch-swiss/dsp-js';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import {
-    Session,
-    SessionService,
-} from '@dasch-swiss/vre/shared/app-session';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
+    ReadProject, ReadUser} from '@dasch-swiss/dsp-js';
+import { Observable, combineLatest, of } from 'rxjs';
+import { Select, Store } from '@ngxs/store';
+import { map, take } from 'rxjs/operators';
+import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 
 @Component({
     selector: 'app-description',
@@ -17,25 +14,45 @@ import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-servi
     styleUrls: ['./description.component.scss'],
 })
 export class DescriptionComponent implements OnInit {
-    // loading for progress indicator
-    loading = true;
-
-    // permissions of the logged-in user
-    session: Session;
-    userHasPermission = false;
-
     // project uuid coming from the route
     projectUuid: string;
 
-    // project data to be displayed
-    project: ReadProject;
+    get readProject$(): Observable<ReadProject> {
+        if (!this.projectUuid) {
+            return of({} as ReadProject);
+        }
+
+        return this.readProjects$.pipe(
+            take(1),
+            map(projects => this.getCurrentProject(projects))
+        );
+    }
+
+    get userHasPermission$(): Observable<boolean> {
+        return combineLatest([
+            this.user$,
+            this.readProject$,
+            this.store.select(UserSelectors.userProjectGroups)
+        ]).pipe(
+            map(([user, readProject, userProjectGroups]: [ReadUser, ReadProject, string[]]) => {
+                if (readProject == null || userProjectGroups.length === 0) {
+                    return false;
+                }
+                
+                return this.projectService.isProjectAdmin(user, userProjectGroups, readProject.id);
+            })
+        );
+    }
+
+    @Select(UserSelectors.user) user$: Observable<ReadUser>;
+    @Select(ProjectsSelectors.readProjects) readProjects$: Observable<ReadProject[]>;
+    @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
 
     constructor(
-        private _errorHandler: AppErrorHandler,
-        private _session: SessionService,
         private _route: ActivatedRoute,
         private _router: Router,
-        private _applicationStateService: ApplicationStateService
+        private store: Store,
+        private projectService: ProjectService,
     ) {
         // get the uuid of the current project
         this._route.parent.paramMap.subscribe((params: Params) => {
@@ -44,12 +61,6 @@ export class DescriptionComponent implements OnInit {
     }
 
     ngOnInit() {
-
-        // get information about the logged-in user, if one is logged-in
-        this.session = this._session.getSession();
-        this.userHasPermission = this.session?.user?.sysAdmin; // if the user is sysadmin, he has the permission to edit the project
-
-        // get project info from backend
         this.initProject();
     }
 
@@ -58,26 +69,18 @@ export class DescriptionComponent implements OnInit {
      * if the user has permission to edit the project if not a sysadmin
      */
     initProject() {
-        // get the project data
-        this._applicationStateService.get(this.projectUuid).subscribe(
-            (response: ReadProject) => {
-                this.project = response;
-
-                // if the user is not sysadmin, check if he is project admin
-                if (!this.userHasPermission) {
-                    this.userHasPermission = this.session.user.projectAdmin.some(
-                        (e) => e === this.project.id
-                    );
-                }
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-            }
-        );
-        this.loading = false;
+        
     }
-
+    
     editProject() {
         this._router.navigate(['project', this.projectUuid, 'edit']);
+    }
+
+    private getCurrentProject(projects: ReadProject[]): ReadProject {
+        if (!projects) {
+            return null;
+        }
+
+        return projects.find(x => x.id.split('/').pop() === this.projectUuid);
     }
 }

@@ -55,6 +55,7 @@
     "ckeditor5-custom-build": "github:dasch-swiss/ckeditor_custom_build#v2.0.0",
     "core-js": "^3.25.2",
     "effect": "^2.0.0-next.21",
+    "immer": "^10.0.3",
     "json2typescript": "^1.4.1",
     "jsonld": "^6.0.0",
     "jwt-decode": "^3.1.2",

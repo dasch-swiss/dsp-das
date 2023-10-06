@@ -1,7 +1,7 @@
 import { Selector } from '@ngxs/store';
 import { ProjectsState } from './projects.state';
 import { ProjectsStateModel } from './projects.state-model';
-import { StoredProject } from '@dasch-swiss/dsp-js';
+import { ReadProject, StoredProject } from '@dasch-swiss/dsp-js';
 
 export class ProjectsSelectors {
     @Selector([ProjectsState])
@@ -22,5 +22,15 @@ export class ProjectsSelectors {
     @Selector([ProjectsState])
     static isProjectsLoading(state: ProjectsStateModel): boolean {
         return state.isLoading;
+    }
+
+    @Selector([ProjectsState])
+    static hasLoadingErrors(state: ProjectsStateModel): boolean {
+        return state.hasLoadingErrors;
+    }
+
+    @Selector([ProjectsState])
+    static readProjects(state: ProjectsStateModel): ReadProject[] {
+        return state.readProjects;
     }
 }

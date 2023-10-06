@@ -1,4 +1,4 @@
-<div *ngIf="!loading" class="data-models-container">
+<div *ngIf="(isLoading$ | async) === false" class="data-models-container">
     <div class="header">
         <p class="title">All Data Models</p>
         <mat-icon
@@ -9,7 +9,7 @@
             info
         </mat-icon>
     </div>
-    <div *ngIf="projectAdmin" class="action-buttons">
+    <div *ngIf="isProjectAdmin" class="action-buttons">
         <button color="primary" mat-raised-button class="create" (click)="open('add-ontology')">
             <mat-icon class="v-align-middle">add_circle</mat-icon>
             <span class="v-align-middle">Create New</span>
@@ -19,19 +19,19 @@
             <mat-icon>chevron_right</mat-icon>
         </button>
     </div>
-    <div *ngIf="projectOntologies" class="projectOntos">
-        <div class="list" [class.top-padding]="projectAdmin">
+    <div *ngIf="ontologiesMetadata$ | async" class="projectOntos">
+        <div class="list" [class.top-padding]="isProjectAdmin">
             <div
                 class="list-item ontos"
-                [class.no-click]="!session"
-                *ngFor="let onto of projectOntologies.ontologies"
-                (click)="session ? open('ontology', onto.id) : null">
+                [class.no-click]="isLoggedIn$ | async"
+                *ngFor="let onto of ontologiesMetadata$ | async"
+                (click)="open('ontology', onto.id)">
                 <mat-icon class="icon-prefix">bubble_chart</mat-icon>
                 <p
                     class="label"
                     matTooltip="You must be logged in to view data models"
                     matTooltipPosition="right"
-                    [matTooltipDisabled]="session">
+                    [matTooltipDisabled]="isLoggedIn$ | async">
                     {{onto.label}}
                 </p>
                 <span class="fill-remaining-space"></span>
@@ -49,14 +49,14 @@
             info
         </mat-icon>
     </div>
-    <div *ngIf="projectAdmin" class="action-buttons">
+    <div *ngIf="isProjectAdmin" class="action-buttons">
         <button color="primary" mat-raised-button class="create" (click)="open('add-list')">
             <mat-icon class="v-align-middle">add_circle</mat-icon>
             <span class="v-align-middle">Create New</span>
         </button>
     </div>
     <div *ngIf="projectLists" class="projectLists">
-        <div class="list" [class.top-padding]="projectAdmin">
+        <div class="list" [class.top-padding]="isProjectAdmin">
             <div class="list-item" *ngFor="let list of projectLists" (click)="open('list', list.id)">
                 <mat-icon class="icon-prefix">list</mat-icon>
                 <p class="label">{{list.labels | appStringifyStringLiteral}}</p>

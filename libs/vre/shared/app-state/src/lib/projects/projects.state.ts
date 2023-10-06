@@ -1,17 +1,23 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, State, StateContext, Store } from '@ngxs/store';
 import { ProjectsStateModel } from './projects.state-model';
-import { LoadAllProjectsAction, LoadUserProjectsAction as LoadUserOtherProjectsAction } from './projects.actions';
+import { LoadAllProjectsAction, LoadProjectAction, LoadUserProjectsAction, LogProjectsOutAction, SetProjectGroupsAction, SetProjectMembersAction } from './projects.actions';
 import { UserSelectors } from '../user/user.selectors';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection, ProjectsResponse, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
+import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { ApiResponseData, ApiResponseError, GroupsResponse, KnoraApiConnection, MembersResponse, ProjectResponse, ProjectsResponse, ReadProject } from '@dasch-swiss/dsp-js';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { map } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
+import { produce } from 'immer';
+import { of } from 'rxjs';
 
-const defaults = {
+let defaults = {
     isLoading: false,
+    hasLoadingErrors: false,
     userOtherActiveProjects: [],
     allProjects: [],
+    readProjects: [],
+    projectMembers: {},
+    projectGroups: {},
 };
 
 @State<ProjectsStateModel>({
@@ -24,17 +30,18 @@ export class ProjectsState {
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
         private store: Store,
-        private _errorHandler: AppErrorHandler,
+        private errorHandler: AppErrorHandler,
+        private _acs: AppConfigService,
     ) {}
 
-    @Action(LoadUserOtherProjectsAction, { cancelUncompleted: true })
+    @Action(LoadUserProjectsAction, { cancelUncompleted: true })
     loadUserProjects(
         ctx: StateContext<ProjectsStateModel>,
-        { }: LoadUserOtherProjectsAction
+        { }: LoadUserProjectsAction
     ) {
         ctx.patchState({ isLoading: true });
         const userActiveProjects = this.store.selectSnapshot(UserSelectors.userActiveProjects);
-        this._dspApiConnection.admin.projectsEndpoint
+        return this._dspApiConnection.admin.projectsEndpoint
                 .getProjects()
                 .pipe(
                     map((projectsResponse: ApiResponseData<ProjectsResponse> | ApiResponseError) => {
@@ -52,7 +59,8 @@ export class ProjectsState {
                         ctx.setState({ ...ctx.getState(), isLoading: false, userOtherActiveProjects: otherProjects });
                     },
                     (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
+                        ctx.setState({ ...ctx.getState(), hasLoadingErrors: true });
+                        this.errorHandler.showMessage(error);
                     }
                 );
     }
@@ -63,7 +71,7 @@ export class ProjectsState {
         { }: LoadAllProjectsAction
     ) {
         ctx.patchState({ isLoading: true });
-        this._dspApiConnection.admin.projectsEndpoint
+        return this._dspApiConnection.admin.projectsEndpoint
                 .getProjects()
                 .pipe(
                     map((projectsResponse: ApiResponseData<ProjectsResponse> | ApiResponseError) => {
@@ -75,8 +83,119 @@ export class ProjectsState {
                         ctx.setState({ ...ctx.getState(), isLoading: false, allProjects: response.body.projects });
                     },
                     (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
+                        ctx.setState({ ...ctx.getState(), hasLoadingErrors: true });
+                        this.errorHandler.showMessage(error);
                     }
                 );
+    }
+
+    @Action(SetProjectMembersAction)
+    setProjectMembersAction(
+        ctx: StateContext<ProjectsStateModel>,
+        { projectUuid }: SetProjectMembersAction
+    ) {
+        ctx.patchState({ isLoading: true });
+        return this._dspApiConnection.admin.projectsEndpoint.getProjectMembersByIri(projectUuid)
+            .pipe(
+                take(1),
+                map((membersResponse: ApiResponseData<MembersResponse> | ApiResponseError) => {
+                    return membersResponse as ApiResponseData<MembersResponse>;
+                }),
+                tap({
+                    next: (response: ApiResponseData<MembersResponse>) => 
+                        ctx.setState({ 
+                            ...ctx.getState(), 
+                            isLoading: false,
+                            projectMembers: { [projectUuid] : { value: response.body.members } }
+                        }),
+                    error: (error) => {
+                        this.errorHandler.showMessage(error);
+                    }
+                })
+            );
+    }
+
+    @Action(SetProjectGroupsAction)
+    setProjectGroupsAction(
+        ctx: StateContext<ProjectsStateModel>,
+        { projectUuid }: SetProjectGroupsAction
+    ) {
+        ctx.patchState({ isLoading: true });
+        return this._dspApiConnection.admin.groupsEndpoint.getGroups()
+            .pipe(
+                take(1),
+                map((groupsResponse: ApiResponseData<GroupsResponse> | ApiResponseError) => {
+                    return groupsResponse as ApiResponseData<GroupsResponse>;
+                }),
+                tap({
+                    next: (response: ApiResponseData<GroupsResponse>) => 
+                    ctx.setState({ 
+                        ...ctx.getState(), 
+                        isLoading: false, 
+                        projectGroups: { [projectUuid] : { value: response.body.groups } }
+                    }),
+                    error: (error) => {
+                        this.errorHandler.showMessage(error);
+                    }
+                })
+            );
+    }
+    
+    @Action(LoadProjectAction, { cancelUncompleted: true })
+    loadProjectAction(
+        ctx: StateContext<ProjectsStateModel>,
+        { projectUuid }: LoadProjectAction
+    ) {
+        // create the project iri
+        const iri = `${this._acs.dspAppConfig.iriBase}/projects/${projectUuid}`;
+
+        ctx.patchState({ isLoading: true });
+    
+        // get current project data, project members and project groups
+        // and set the project state here
+        return this._dspApiConnection.admin.projectsEndpoint
+            .getProjectByIri(iri)
+            .pipe(
+                take(1),
+                map((projectsResponse: ApiResponseData<ProjectResponse> | ApiResponseError) => {
+                        return projectsResponse as ApiResponseData<ProjectResponse>;
+                    }),
+                tap({
+                    next:(response: ApiResponseData<ProjectResponse>) => {
+                        const project = response.body.project;
+        
+                        let state = ctx.getState();
+                        if (!state.readProjects) {
+                            state.readProjects = [];
+                        }
+                        
+                        state = produce(state, draft => {
+                            const index = draft.readProjects.findIndex(p => p.id === project.id);
+                            index > -1 
+                                ? draft.readProjects[index] = project
+                                : draft.readProjects.push(project);
+                            draft.isLoading = false;
+                        });
+                            
+                        ctx.patchState(state);
+                        return project;
+                    },
+                    error: (error: ApiResponseError) => {
+                        ctx.setState({ ...ctx.getState(), hasLoadingErrors: true });
+                        this.errorHandler.showMessage(error);
+                    }
+                })
+            );
+    }
+    
+    @Action(LogProjectsOutAction)
+    logUserOut(ctx: StateContext<ProjectsStateModel>) {
+        return of(ctx.getState()).pipe(
+            map(currentState => {
+                defaults.allProjects = currentState.allProjects as any;
+                ctx.patchState(defaults);
+                return currentState;
+            })
+        );
     }
 }

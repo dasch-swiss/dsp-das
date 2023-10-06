@@ -1,7 +1,7 @@
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import {
     Component,
     HostListener,
-    Inject,
     OnInit,
     ViewChild,
 } from '@angular/core';
@@ -9,29 +9,21 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    ApiResponseData,
-    ApiResponseError,
-    GroupsResponse,
-    KnoraApiConnection,
-    MembersResponse,
-    OntologiesMetadata,
-    ProjectResponse,
     ReadOntology,
     ReadProject,
-    UserResponse,
+    ReadUser,
 } from '@dasch-swiss/dsp-js';
 import { AppGlobal } from '../app-global';
-import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { MenuItem } from '../main/declarations/menu-item';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
     ComponentCommunicationEventService,
     Events,
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
-import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, of, combineLatest } from 'rxjs';
+import { Select, Store } from '@ngxs/store';
+import { LoadProjectAction, LoadProjectOntologiesAction, OntologiesSelectors, ProjectsSelectors, SetProjectGroupsAction, SetProjectMembersAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { map, take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-project',
@@ -41,34 +33,21 @@ import { Subscription } from 'rxjs';
 export class ProjectComponent implements OnInit {
     @ViewChild('sidenav') sidenav: MatSidenav;
 
-    // loading for progress indicator
-    loading: boolean;
+    routeConstants = RouteConstants;
+
+    color = 'primary';
+
     // error in case of wrong project code
     error: boolean;
 
     // permissions of logged-in user
-    session: Session;
-    sysAdmin = false;
-    projectAdmin = false;
-    projectMember = false;
+    isProjectAdmin = false;
+    isProjectMember = false;
 
     // project uuid; as identifier in project application state service
     projectUuid: string;
 
-    // project iri; used for API requests
-    iri: string;
-
-    // project data
-    project: ReadProject;
-
-    color = 'primary';
-
     navigation: MenuItem[] = AppGlobal.projectNav;
-
-    ontologies: ReadOntology[] = [];
-
-    // list of project ontologies
-    projectOntologies: ReadOntology[] = [];
 
     listItemSelected = '';
 
@@ -76,26 +55,58 @@ export class ProjectComponent implements OnInit {
 
     sideNavOpened = true;
 
+    get readProject$(): Observable<ReadProject> {
+        if (!this.projectUuid) {
+            return of({} as ReadProject);
+        }
+
+        return this.readProjects$.pipe(
+            take(1),
+            map(projects => this.getCurrentProject(projects))
+        );
+    }
+
+    get projectOntologies$(): Observable<ReadOntology[]> {
+        if (!this.projectUuid) {
+            return of({} as ReadOntology[]);
+        }
+        
+        return this.store.select(OntologiesSelectors.projectOntologies)
+            .pipe(
+                map(ontologies => {
+                    if (!ontologies || !ontologies[this.projectUuid]) {
+                        return [];
+                    }
+
+                    ontologies[this.projectUuid].readOntologies
+                })
+            )
+    }
+
+    get isLoading$(): Observable<boolean> {
+        return combineLatest([this.isOntologiesLoading$, this.isProjectsLoading$])
+            .pipe(
+                map(([isOntologiesLoading, isProjectsLoading]) => {
+                    return isOntologiesLoading === true || isProjectsLoading === true;
+                })
+            )
+    }
+
+    @Select(ProjectsSelectors.readProjects) readProjects$: Observable<ReadProject[]>;
+    @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
+    @Select(OntologiesSelectors.isLoading) isOntologiesLoading$: Observable<boolean>;
+    @Select(OntologiesSelectors.hasLoadingErrors) hasLoadingErrors$: Observable<boolean>;
+    
     constructor(
-        @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: AppErrorHandler,
         private _componentCommsService: ComponentCommunicationEventService,
-        private _applicationStateService: ApplicationStateService,
         private _route: ActivatedRoute,
         private _router: Router,
-        private _session: SessionService,
         private _titleService: Title,
-        private _acs: AppConfigService
+        private projectService: ProjectService,
+        private store: Store,
     ) {
         // get the uuid of the current project
         this.projectUuid = this._route.snapshot.params.uuid;
-
-        // create the project iri
-        this.iri = `${this._acs.dspAppConfig.iriBase}/projects/${this.projectUuid}`;
-
-        // get session
-        this.session = this._session.getSession();
     }
 
     /**
@@ -111,186 +122,37 @@ export class ProjectComponent implements OnInit {
 
     ngOnInit() {
         switch (this._router.url) {
-            case `/project/${this.projectUuid}`: {
+            case `${RouteConstants.project}/${this.projectUuid}`: {
                 this.listItemSelected = this._router.url;
                 break;
             }
-            case `/project/${this.projectUuid}/data-models`: {
-                this.listItemSelected = 'data-models';
+            case `${RouteConstants.project}/${this.projectUuid}/${RouteConstants.dataModels}`: {
+                this.listItemSelected = RouteConstants.dataModels;
                 break;
             }
-            case `/project/${this.projectUuid}/settings/collaboration`: {
-                this.listItemSelected = 'settings';
+            case `${RouteConstants.project}/${this.projectUuid}/${RouteConstants.settings}/${RouteConstants.collaboration}`: {
+                this.listItemSelected = RouteConstants.settings;
                 break;
             }
         }
 
         this.componentCommsSubscription = this._componentCommsService.on(
             Events.unselectedListItem,
-            () => {
-                this.listItemSelected = '';
-            }
+            () => this.listItemSelected = ''
         );
 
-        if (!this.error) {
-            this.loading = true;
-            // get current project data, project members and project groups
-            // and set the project state here
-            this._dspApiConnection.admin.projectsEndpoint
-                .getProjectByIri(this.iri)
-                .subscribe(
-                    (response: ApiResponseData<ProjectResponse>) => {
-                        this.project = response.body.project;
-
-                        // set the page title
-                        this._titleService.setTitle(this.project.shortname);
-
-                        this._applicationStateService.set(this.projectUuid, this.project);
-
-                        if (!this.project.status) {
-                            this.color = 'warn';
-                        }
-
-                        this.navigation[0].label =
-                            'Project: ' +
-                            response.body.project.shortname.toUpperCase();
-
-                        // is logged-in user projectAdmin?
-                        if (this.session) {
-                            this._session.setSession(
-                                this.session.user.jwt,
-                                this.session.user.name,
-                                'username'
-                            );
-                            this.session = this._session.getSession();
-
-                            // is the logged-in user system admin?
-                            this.sysAdmin = this.session.user.sysAdmin;
-
-                            // is the logged-in user project admin?
-                            this.projectAdmin = this.sysAdmin
-                                ? this.sysAdmin
-                                : this.session.user.projectAdmin.some(
-                                      (e) => e === this.project.id
-                                  );
-
-                            // or at least project member?
-                            if (!this.projectAdmin) {
-                                this._dspApiConnection.admin.usersEndpoint
-                                    .getUserByUsername(this.session.user.name)
-                                    .subscribe(
-                                        (
-                                            res: ApiResponseData<UserResponse>
-                                        ) => {
-                                            const usersProjects =
-                                                res.body.user.projects;
-                                            if (usersProjects.length === 0) {
-                                                // the user is not part of any project
-                                                this.projectMember = false;
-                                            } else {
-                                                // check if the user is member of the current project
-                                                // id contains the iri
-                                                this.projectMember =
-                                                    usersProjects.some(
-                                                        (p) => p.id === this.iri
-                                                    );
-                                            }
-                                        },
-                                        (error: ApiResponseError) => {
-                                            this._errorHandler.showMessage(
-                                                error
-                                            );
-                                        }
-                                    );
-                            } else {
-                                this.projectMember = this.projectAdmin;
-                            }
-                        }
-
-                        // set the state of project members and groups
-                        if (this.projectAdmin) {
-
-                            this._dspApiConnection.admin.projectsEndpoint.getProjectMembersByIri(this.iri).subscribe(
-                                (response: ApiResponseData<MembersResponse>) =>
-                                    this._applicationStateService.set('members_of_' + this.projectUuid,response.body.members)
-                            )
-
-                            this._dspApiConnection.admin.groupsEndpoint.getGroups().subscribe(
-                                (response: ApiResponseData<GroupsResponse>) =>
-                                    this._applicationStateService.set('groups_of_' + this.projectUuid, response.body.groups)
-                            )
-                        }
-
-                        // get all project ontologies
-                        this._dspApiConnection.v2.onto
-                            .getOntologiesByProjectIri(this.iri)
-                            .subscribe(
-                                (ontoMeta: OntologiesMetadata) => {
-                                    if (ontoMeta.ontologies.length) {
-                                        ontoMeta.ontologies.forEach((onto) => {
-                                            this._dspApiConnection.v2.onto
-                                                .getOntology(onto.id)
-                                                .subscribe(
-                                                    (
-                                                        ontology: ReadOntology
-                                                    ) => {
-                                                        this.projectOntologies.push(
-                                                            ontology
-                                                        );
-                                                        this.projectOntologies.sort(
-                                                            (o1, o2) =>
-                                                                this._compareOntologies(
-                                                                    o1,
-                                                                    o2
-                                                                )
-                                                        );
-                                                        this.ontologies.push(
-                                                            ontology
-                                                        );
-                                                        if (
-                                                            ontoMeta.ontologies
-                                                                .length ===
-                                                            this.ontologies
-                                                                .length
-                                                        ) {
-                                                            this._applicationStateService.set(
-                                                                'currentProjectOntologies',
-                                                                this.ontologies
-                                                            );
-                                                            this.loading =
-                                                                !this._applicationStateService.has(
-                                                                    this
-                                                                        .projectUuid
-                                                                );
-                                                        }
-                                                    },
-                                                    (
-                                                        error: ApiResponseError
-                                                    ) => {
-                                                        this.loading = false;
-                                                        this._errorHandler.showMessage(
-                                                            error
-                                                        );
-                                                    }
-                                                );
-                                        });
-                                    } else {
-                                        this.loading = !this._applicationStateService.has(
-                                            this.projectUuid
-                                        );
-                                    }
-                                },
-                                (error: ApiResponseError) => {
-                                    this._errorHandler.showMessage(error);
-                                }
-                            );
-                    },
-                    () => {
-                        this.error = true;
-                        this.loading = false;
-                    }
-                );
-        }
+        // get current project data, project members and project groups
+        // and set the project state here
+        this.store.dispatch(new LoadProjectAction(this.projectUuid))
+            .pipe(
+                take(1),
+                map((state: any) => {
+                    return state.projects.readProjects;
+                })
+            )
+            .subscribe((readProjects: ReadProject[]) => {
+                return this.SetProjectData(this.getCurrentProject(readProjects));
+            });
     }
 
     ngOnDestroy() {
@@ -323,22 +185,42 @@ export class ProjectComponent implements OnInit {
         this.sidenav.toggle();
     }
 
-    /**
-     * compare function which sorts the ontologies in the ascending order.
-     *
-     * @param o1 ontology 1
-     * @param o2 ontology 2
-     * @private
-     */
-    private _compareOntologies(o1: ReadOntology, o2: ReadOntology) {
-        if (o1.label > o2.label) {
-            return 1;
+    private getCurrentProject(projects: ReadProject[]): ReadProject {
+        if (!projects) {
+            return null;
         }
 
-        if (o1.label < o2.label) {
-            return -1;
+        return projects.find(x => x.id.split('/').pop() === this.projectUuid);
+    }
+
+    private SetProjectData(readProject: ReadProject): void {
+        if (!readProject) {
+            return;
         }
 
-        return 0;
+        // set the page title
+        this._titleService.setTitle(readProject.shortname);
+
+        if (!readProject.status) {
+            this.color = 'warn';
+        }
+
+        this.navigation[0].label = 'Project: ' + readProject.shortname.toUpperCase();
+
+        const user = this.store.selectSnapshot(UserSelectors.user) as ReadUser;
+        const userProjectGroups = this.store.selectSnapshot(UserSelectors.userProjectGroups);
+        // is logged-in user projectAdmin?
+        if (user) {
+            this.isProjectAdmin = this.projectService.isProjectAdmin(user, userProjectGroups, readProject.id);
+            this.isProjectMember = this.projectService.isProjectMember(user, userProjectGroups, readProject.id);
+        }
+
+        // set the state of project members and groups
+        if (this.isProjectAdmin) {
+            this.store.dispatch(new SetProjectMembersAction(readProject.id));
+            this.store.dispatch(new SetProjectGroupsAction(readProject.id));
+        }
+
+        this.store.dispatch(new LoadProjectOntologiesAction(readProject.id));
     }
 }

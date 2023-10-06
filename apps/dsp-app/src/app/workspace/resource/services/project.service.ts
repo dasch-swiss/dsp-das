@@ -7,7 +7,6 @@ import {
     ProjectsResponse,
     ReadUser,
     StoredProject,
-    UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -101,5 +100,22 @@ export class ProjectService {
         }
 
         return '';
+    }
+
+    isProjectAdmin(user: ReadUser, userProjectGroups: string[], projectUuid: string): boolean
+    {
+        return user.systemAdmin 
+            ? true 
+            : userProjectGroups.some((e) => e === this.uuidToIri(projectUuid));
+    }
+
+    isProjectMember(user: ReadUser, userProjectGroups: string[], projectUuid: string): boolean
+    {
+        const isProjectAdmin = this.isProjectAdmin(user, userProjectGroups, projectUuid);
+        const iri = this.uuidToIri(projectUuid);
+        return isProjectAdmin
+            // check if the user is member of the current project(id contains the iri)
+            ? true
+            : user.projects.length === 0 ? false : user.projects.some((p) => p.id === iri);
     }
 }

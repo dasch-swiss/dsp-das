@@ -15,7 +15,8 @@ import {
 } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
-import { SessionService } from '@dasch-swiss/vre/shared/app-session';
+import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
 
 @Component({
     selector: 'app-string-literal-input',
@@ -106,17 +107,12 @@ export class StringLiteralInputComponent implements OnInit, OnChanges {
 
     constructor(
         private _fb: UntypedFormBuilder,
-        private _sessionService: SessionService
+        private store: Store,
     ) {
         // set selected language, if it's not defined yet
         if (!this.language) {
-            if (this._sessionService.getSession() !== null) {
-                // get language from the logged-in user profile data
-                this.language = this._sessionService.getSession().user.lang;
-            } else {
-                // get default language from browser
-                this.language = navigator.language.substring(0, 2);
-            }
+            const userLanguage = this.store.selectSnapshot(UserSelectors.language);
+            this.language = userLanguage != null ? userLanguage : navigator.language.substring(0, 2);
         }
 
         // does the defined language exists in our supported languages list?
