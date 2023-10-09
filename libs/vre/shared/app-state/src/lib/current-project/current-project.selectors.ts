@@ -1,0 +1,42 @@
+import { CurrentProjectState } from './current-project.state';
+import { Selector } from '@ngxs/store';
+import { CurrentProjectStateModel } from './current-project.state-model';
+import { ReadGroup, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
+import { IKeyValuePairs } from '../model-interfaces';
+
+export class CurrentProjectSelectors {
+    @Selector([CurrentProjectState])
+    static isProjectsLoading(state: CurrentProjectStateModel): boolean {
+        return state.isLoading;
+    }
+
+    @Selector([CurrentProjectState])
+    static hasLoadingErrors(state: CurrentProjectStateModel): boolean {
+        return state.hasLoadingErrors;
+    }
+
+    @Selector([CurrentProjectState])
+    static isProjectMember(state: CurrentProjectStateModel): boolean {
+        return state.isProjectMember;
+    }
+
+    @Selector([CurrentProjectState])
+    static isProjectAdmin(state: CurrentProjectStateModel): boolean {
+        return state.isProjectAdmin;
+    }
+
+    @Selector([CurrentProjectState])
+    static projectMembers(state: CurrentProjectStateModel): IKeyValuePairs<ReadUser> {
+        return state.projectMembers;
+    }
+
+    @Selector([CurrentProjectState])
+    static projectGroups(state: CurrentProjectStateModel): IKeyValuePairs<ReadGroup> {
+        return state.projectGroups;
+    }
+
+    @Selector([CurrentProjectState])
+    static project(state: CurrentProjectStateModel): ReadProject | undefined {
+        return state.project;
+    }
+}

@@ -3,11 +3,13 @@ import { Action, State, StateContext } from '@ngxs/store';
 import { map, take, tap } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ApiResponseError, KnoraApiConnection, OntologiesMetadata, ReadOntology } from '@dasch-swiss/dsp-js';
-import { IProjectOntologiesKeyValuePairs, OntologiesStateModel } from './ontologies.state-model';
-import { LoadOntologyAction, LoadProjectOntologiesAction } from './ontologies.actions';
+import { OntologiesStateModel } from './ontologies.state-model';
+import { ClearProjectOntologiesAction, LoadOntologyAction, LoadProjectOntologiesAction } from './ontologies.actions';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { IProjectOntologiesKeyValuePairs } from '../model-interfaces';
+import { of } from 'rxjs';
 
-const defaults = <OntologiesStateModel>{
+const defaults: OntologiesStateModel = <OntologiesStateModel>{
     isLoading: false,
     projectOntologies: {},
     hasLoadingErrors: false
@@ -26,7 +28,7 @@ export class OntologiesState {
     ) {}
 
     @Action(LoadProjectOntologiesAction)
-    loadOntologiesByIriAction(
+    loadProjectOntologiesAction(
         ctx: StateContext<OntologiesStateModel>,
         { projectUuid }: LoadProjectOntologiesAction
     ) {
@@ -58,7 +60,7 @@ export class OntologiesState {
                         );
                     }, 
                     error: (error: ApiResponseError) => {
-                        ctx.setState({ ...ctx.getState(), hasLoadingErrors: true });
+                        ctx.patchState({ hasLoadingErrors: true });
                         this._errorHandler.showMessage(error);
                     }
                 })
@@ -102,11 +104,21 @@ export class OntologiesState {
                         });
                     },
                     error: (error: ApiResponseError) => {
-                        ctx.setState({ ...ctx.getState(), hasLoadingErrors: true });
+                        ctx.patchState({ hasLoadingErrors: true });
                         this._errorHandler.showMessage(error);
                     }
                 })
             );
+    }
+    
+    @Action(ClearProjectOntologiesAction)
+    clearProjectOntologies(ctx: StateContext<OntologiesStateModel>) {
+        return of(ctx.getState()).pipe(
+            map(currentState => {
+                ctx.patchState(defaults);
+                return currentState;
+            })
+        );
     }
 
     /**

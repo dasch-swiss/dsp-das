@@ -5,8 +5,10 @@ import {
     Constants,
     KnoraApiConnection,
     ProjectsResponse,
+    Permissions,
     ReadUser,
     StoredProject,
+    User,
 } from '@dasch-swiss/dsp-js';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -102,7 +104,7 @@ export class ProjectService {
         return '';
     }
 
-    isProjectAdmin(user: ReadUser, userProjectGroups: string[], projectUuid: string): boolean
+    isProjectAdmin(user: ReadUser | User, userProjectGroups: string[], projectUuid: string): boolean
     {
         return user.systemAdmin 
             ? true 

@@ -1,6 +1,7 @@
 import { Selector } from '@ngxs/store';
-import { IProjectOntologiesKeyValuePairs, OntologiesStateModel } from './ontologies.state-model';
+import { OntologiesStateModel } from './ontologies.state-model';
 import { OntologiesState } from './ontologies.state';
+import { IProjectOntologiesKeyValuePairs } from '../model-interfaces';
 
 export class OntologiesSelectors {
     @Selector([OntologiesState])

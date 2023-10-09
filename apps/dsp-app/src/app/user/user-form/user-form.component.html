@@ -70,7 +70,7 @@
 
         <div class="large-field">
             <mat-slide-toggle formControlName="systemAdmin"
-                *ngIf="sysAdmin">
+                *ngIf="isSysAdmin$ | async">
                 {{ 'appLabels.form.user.general.sysAdmin' | translate }}
             </mat-slide-toggle>
         </div>

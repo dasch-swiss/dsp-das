@@ -16,7 +16,8 @@ const defaults = <UserStateModel>{
     isLoading: false,
     user: null,
     userProjectGroups: [],
-    isMemberOfSystemAdminGroup: false
+    isMemberOfSystemAdminGroup: false,
+    isProjectAdmin: false,
 };
 
 @State<UserStateModel>({
@@ -47,7 +48,7 @@ export class UserState {
                             | ApiResponseError
                     ) => {
                         if (response instanceof ApiResponseData) {
-                            ctx.patchState({ ...ctx.getState(), isLoading: false, user: response.body.user });
+                            ctx.setState({ ...ctx.getState(), isLoading: false, user: response.body.user });
                             ctx.dispatch(new SetUserProjectGroupsDataAction(response.body.user));
                             return response.body.user;
                         } else {
@@ -97,7 +98,7 @@ export class UserState {
     logUserOut(ctx: StateContext<UserStateModel>) {
         return of(ctx.getState()).pipe(
             map(currentState => {
-               ctx.patchState(defaults);
+               ctx.setState(defaults);
                return currentState;
             })
         );

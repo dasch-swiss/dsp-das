@@ -62,6 +62,7 @@ export class RouteConstants {
     static readonly dashboardRelative = `/${RouteConstants.dashboard}`;
     static readonly userAccountRelative = `/${RouteConstants.userAccount}`;
     static readonly systemAdminRelative = `/${RouteConstants.systemAdmin}`;
+    static readonly refreshRelative = `/${RouteConstants.refresh}`;
 
     static readonly projectsRelative = `/${RouteConstants.projects}`;
     static readonly projectRelative = `/${RouteConstants.project}`;

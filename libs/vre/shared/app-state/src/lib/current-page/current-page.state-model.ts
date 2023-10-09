@@ -1,5 +1,5 @@
 export class CurrentPageStateModel {
-    page: string;
-    appInit: boolean;
+    page: string | undefined;
+    appInit: boolean | undefined;
     loginReturnLink?: string;
 }

@@ -6,19 +6,18 @@ import {
     ApiResponseError,
     KnoraApiConnection,
     MembersResponse,
-    ProjectResponse,
     ReadProject,
     ReadUser,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import {
-    Session,
-    SessionService,
-} from '@dasch-swiss/vre/shared/app-session';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { AddUserComponent } from './add-user/add-user.component';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
+import { Select, Store } from '@ngxs/store';
+import { CurrentProjectSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-collaboration',
@@ -31,10 +30,7 @@ export class CollaborationComponent implements OnInit {
     // loading for progess indicator
     loading: boolean;
 
-    // permissions of logged-in user
-    session: Session;
-    sysAdmin = false;
-    projectAdmin = false;
+    isProjectAdmin = false;
 
     // project uuid; as identifier in project application state service
     projectUuid: string;
@@ -51,15 +47,19 @@ export class CollaborationComponent implements OnInit {
     // list of inactive (deleted) users
     inactive: ReadUser[] = [];
 
+    @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
+    @Select(UserSelectors.user) user$: Observable<ReadUser>;
+    @Select(CurrentProjectSelectors.project) project$: Observable<ReadProject>;
+    
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: AppErrorHandler,
         private _route: ActivatedRoute,
-        private _session: SessionService,
-        private _titleService: Title,
         private _projectService: ProjectService,
-        private _applicationStateService: ApplicationStateService
+        private _titleService: Title,
+        private _applicationStateService: ApplicationStateService,
+        private _store: Store
     ) {
         // get the uuid of the current project
         if (this._route.parent.parent.snapshot.url.length) {
@@ -72,30 +72,23 @@ export class CollaborationComponent implements OnInit {
     ngOnInit() {
         this.loading = true;
 
-        // get information about the logged-in user
-        this.session = this._session.getSession();
-
-        // is the logged-in user system admin?
-        this.sysAdmin = this.session.user.sysAdmin;
-
-        this._applicationStateService.get(this.projectUuid).subscribe(
-            (response: ReadProject) => {
-                this.project = response;
+        const userProjectGroups = this._store.selectSnapshot(UserSelectors.userProjectGroups);
+        const user = this._store.selectSnapshot(UserSelectors.user);
+        this.project$
+            .pipe(take(1))
+            .subscribe((project: ReadProject) => {
+                this.project = project;
 
                 // set the page title
                 this._titleService.setTitle(
                     'Project ' + this.project.shortname + ' | Collaboration'
                 );
-
+                
                 // is logged-in user projectAdmin?
-                this.projectAdmin = this.sysAdmin
-                    ? this.sysAdmin
-                    : this.session.user.projectAdmin.some(
-                          (e) => e === this.project.id
-                      );
+                this.isProjectAdmin = this._projectService.isProjectAdmin(user, userProjectGroups, this.project.id);
 
                 // get list of project members and groups
-                if (this.projectAdmin) {
+                if (this.isProjectAdmin) {
                     this.refresh();
                 }
 

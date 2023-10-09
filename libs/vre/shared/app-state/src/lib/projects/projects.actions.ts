@@ -8,22 +8,17 @@ export class LoadAllProjectsAction {
     constructor() {}
 }
 
-export class SetProjectMembersAction {
-    static readonly type = '[Projects] Set Project Members Action';
-    constructor(public projectUuid: string) {}
-}
-
-export class SetProjectGroupsAction {
-    static readonly type = '[Projects] Set Project Groups Action';
-    constructor(public projectUuid: string) {}
-}
-
 export class LoadProjectAction {
     static readonly type = '[Projects] Load Project';
     constructor(public projectUuid: string) {}
 }
 
-export class LogProjectsOutAction {
+export class ClearProjectsAction {
     static readonly type = '[Projects] Log projects out';
     constructor() {}
+}
+
+export class RemoveUserFromProjectAction {
+    static readonly type = '[Projects] Remove User From Project';
+    constructor(public userId: string, public projectId: string) {}
 }

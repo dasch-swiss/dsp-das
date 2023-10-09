@@ -39,6 +39,10 @@ import {
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
+import { Observable } from 'rxjs';
+import { Select } from '@ngxs/store';
+import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-user-form',
@@ -172,9 +176,8 @@ export class UserFormComponent implements OnInit, OnChanges {
      */
     languagesList: StringLiteral[] = AppGlobal.languagesList;
 
-    // permissions of logged-in user
-    session: Session;
-    sysAdmin = false;
+    @Select(UserSelectors.user) user$: Observable<ReadUser>;
+    @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
 
     constructor(
         @Inject(DspApiConnectionToken)
@@ -199,26 +202,16 @@ export class UserFormComponent implements OnInit, OnChanges {
     ngOnInit() {
         this.loadingData = true;
 
-        // get information about the logged-in user
-        this.session = this._session.getSession();
-        // is the logged-in user system admin?
-        this.sysAdmin = this.session.user.sysAdmin;
-
         if (this.username) {
             this.title = this.username;
             this.subtitle = "'appLabels.form.user.title.edit' | translate";
 
-            this._dspApiConnection.admin.usersEndpoint
-                .getUserByUsername(this.username)
-                .subscribe(
-                    (response: ApiResponseData<UserResponse>) => {
-                        this.user = response.body.user;
-                        this.loadingData = !this.buildForm(this.user);
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                );
+            this.user$
+                .pipe(take(1))
+                .subscribe((user: ReadUser) => {
+                    this.user = user;
+                    this.loadingData = !this.buildForm(this.user);
+                });
         } else {
             /**
              * create mode: empty form for new user

@@ -1,4 +1,4 @@
-<div *ngIf="list && !loading">
+<div *ngIf="list && (((isProjectsLoading$ | async) === false) && ((isUsersLoading$ | async) === false))">
     <!-- header toolbar -->
     <div class="app-toolbar" *ngIf="list.length > 0">
         <div class="app-toolbar-row">
@@ -32,7 +32,7 @@
             <span class="fill-remaining-space"></span>
             <span
                 class="app-toolbar-action button right"
-                *ngIf="status && createNew && sysAdmin"
+                *ngIf="status && createNew && (isSysAdmin$ | async)"
             >
                 <button
                     mat-flat-button
@@ -95,11 +95,11 @@
             <!-- group: only in project view -->
             <td class="table-select-group">
                 <app-select-group
-                    *ngIf="projectAdmin && projectUuid"
-                    [projectCode]="project.shortcode"
-                    [projectid]="project.id"
+                    *ngIf="(isProjectAdmin$ | async) && projectUuid"
+                    [projectCode]="(project$ | async)?.shortcode"
+                    [projectid]="(project$ | async)?.id"
                     [permissions]="
-                        user.permissions.groupsPerProject[project.id]
+                        user.permissions.groupsPerProject[(project$ | async)?.id]
                     "
                     [disabled]="!status"
                     (groupChange)="updateGroupsMembership(user.id, $event)"
@@ -145,9 +145,9 @@
                         mat-menu-item
                         *ngIf="
                             !projectUuid &&
-                            user.status &&
-                            sysAdmin &&
-                            user.username !== session.user.name
+                            (user$ | async)?.status &&
+                            (isSysAdmin$ | async) &&
+                            user.username !== (username$ | async)
                         "
                         (click)="
                             updateSystemAdminMembership(
@@ -167,14 +167,14 @@
                     <!-- update user's profile data; only for system admin -->
                     <button
                         mat-menu-item
-                        *ngIf="sysAdmin && user.status"
+                        *ngIf="(isSysAdmin$ | async) && user.status"
                         (click)="openDialog('editUser', user.username)"
                     >
                         {{ projectUuid ? 'Edit member' : 'Edit user' }}
                     </button>
                     <button
                         mat-menu-item
-                        *ngIf="sysAdmin && user.status"
+                        *ngIf="(isSysAdmin$ | async) && user.status"
                         (click)="openDialog('editPassword', user.username)"
                     >
                         {{
@@ -200,7 +200,7 @@
                     <!-- manage project membership; only in system view -->
                     <button
                         mat-menu-item
-                        *ngIf="user.status && sysAdmin && !projectUuid"
+                        *ngIf="user.status && (isSysAdmin$ | async) && !projectUuid"
                         (click)="
                             openDialog('manageProjectMembership', user.username)
                         "
@@ -210,7 +210,7 @@
                     <!-- delete / reactivate user -->
                     <button
                         mat-menu-item
-                        *ngIf="user.status && sysAdmin && !projectUuid"
+                        *ngIf="user.status && (isSysAdmin$ | async) && !projectUuid"
                         (click)="
                             openDialog('deleteUser', user.username, user.id)
                         "
@@ -219,7 +219,7 @@
                     </button>
                     <button
                         mat-menu-item
-                        *ngIf="!user.status && sysAdmin && !projectUuid"
+                        *ngIf="!user.status && (isSysAdmin$ | async) && !projectUuid"
                         (click)="
                             openDialog('activateUser', user.username, user.id)
                         "

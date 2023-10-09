@@ -50,6 +50,11 @@ export class UserSelectors {
     }
     
     @Selector([UserState])
+    static isProjectAdmin(state: UserStateModel): boolean {
+        return state.isProjectAdmin;
+    }
+    
+    @Selector([UserState])
     static displayName(state: UserStateModel): string | null {
         return state.user?.familyName && state.user?.givenName
             ? `${state.user.familyName} ${state.user.givenName}`

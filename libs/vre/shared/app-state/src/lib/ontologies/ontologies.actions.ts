@@ -11,3 +11,8 @@ export class LoadOntologyAction {
         public stopLoadingWhenCompleted: boolean = true
     ) {}
 }
+
+export class ClearProjectOntologiesAction {
+    static readonly type = '[Ontologies] Clear Project Ontologies';
+    constructor(public projectUuid: string) {}
+}

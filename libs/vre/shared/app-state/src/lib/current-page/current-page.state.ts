@@ -8,7 +8,7 @@ import {
 } from './current-page.actions';
 import { CurrentPageStateModel } from './current-page.state-model';
 
-const defaults = {
+const defaults: CurrentPageStateModel = {
     appInit: false,
     loginReturnLink: '',
     page: '',

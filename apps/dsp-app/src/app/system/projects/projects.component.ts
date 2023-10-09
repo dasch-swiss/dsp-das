@@ -1,5 +1,4 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import {
     ApiResponseData,
@@ -13,9 +12,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
     Session,
-    SessionService,
 } from '@dasch-swiss/vre/shared/app-session';
-import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/shared/app-progress-indicator';
 
 /**
  * projects component handles the list of projects
@@ -62,9 +59,7 @@ export class ProjectsComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _dialog: MatDialog,
         private _errorHandler: AppErrorHandler,
-        private _session: SessionService,
         private _titleService: Title
     ) {
         // set the page title
@@ -76,8 +71,6 @@ export class ProjectsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.session = this._session.getSession();
-
         this.initList();
     }
 

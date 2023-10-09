@@ -22,7 +22,7 @@ import {
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
 import { Observable, Subscription, of, combineLatest } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { LoadProjectAction, LoadProjectOntologiesAction, OntologiesSelectors, ProjectsSelectors, SetProjectGroupsAction, SetProjectMembersAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { LoadProjectAction, LoadProjectOntologiesAction, OntologiesSelectors, ProjectsSelectors, SetCurrentProjectAction, LoadCurrentProjectGroupsAction, LoadCurrentProjectMembersAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { map, take } from 'rxjs/operators';
 
 @Component({
@@ -54,6 +54,10 @@ export class ProjectComponent implements OnInit {
     componentCommsSubscription: Subscription;
 
     sideNavOpened = true;
+
+    get isCurrentProject(): boolean {
+        return this.projectUuid === this._route.snapshot.params.uuid
+    }
 
     get readProject$(): Observable<ReadProject> {
         if (!this.projectUuid) {
@@ -220,11 +224,14 @@ export class ProjectComponent implements OnInit {
         }
 
         // set the state of project members and groups
-        if (this.isProjectAdmin) {
-            this.store.dispatch(new SetProjectMembersAction(readProject.id));
-            this.store.dispatch(new SetProjectGroupsAction(readProject.id));
+        if (this.isCurrentProject) {
+            this.store.dispatch(new SetCurrentProjectAction(readProject, this.isProjectAdmin));
+            if (this.isProjectAdmin) {
+                this.store.dispatch(new LoadCurrentProjectMembersAction(readProject.id));
+                this.store.dispatch(new LoadCurrentProjectGroupsAction(readProject.id));
+            }
         }
-
+        
         this.store.dispatch(new LoadProjectOntologiesAction(readProject.id));
     }
 }

@@ -1,11 +1,4 @@
-import { OntologyMetadata, ReadOntology } from "@dasch-swiss/dsp-js";
-
-export interface IProjectOntologiesKeyValuePairs  {
-    [key: string]: { 
-        ontologiesMetadata: OntologyMetadata[] 
-        readOntologies: ReadOntology[] 
-    };
-}
+import { IProjectOntologiesKeyValuePairs } from "../model-interfaces";
 
 export class OntologiesStateModel {
     isLoading: boolean | undefined;
