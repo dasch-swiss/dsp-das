@@ -64,12 +64,12 @@ Such an example is `r̥tasya`, where the `r̥` must be replaced either by `rr` o
 
 ![Advanced search link is findable in the search menu at the right of the full-text search field.](../../assets/images/search-advanced-link.png)
 
-The advanced search allows the creation of complex queries using a form.
+The advanced search allows the creation of complex queries using a form. The Advanced Search can be accessed from the Data Browser of any Project.  
 The form creates a string representing a Gravsearch (SPARQL) query to be sent to DSP-API.
 
 A query consists of the following elements:
 
-- selection of the data model
+- selection of the data model (if you have more than 1 data model within your project)
 - selection of a resource class belonging to the selected data model (optional)
 - specification of properties, comparison operators, and values (optional).
 
