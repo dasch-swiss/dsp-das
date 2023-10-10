@@ -6,4 +6,5 @@ export class UserStateModel {
     userProjectGroups: string[] = []; //before was projectAdmin
     isMemberOfSystemAdminGroup: boolean = false;
     isProjectAdmin: boolean = false;
+    allUsers: ReadUser[] = [];
 }

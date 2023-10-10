@@ -22,7 +22,7 @@ import {
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
 import { Observable, Subscription, of, combineLatest } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { LoadProjectAction, LoadProjectOntologiesAction, OntologiesSelectors, ProjectsSelectors, SetCurrentProjectAction, LoadCurrentProjectGroupsAction, LoadCurrentProjectMembersAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { LoadProjectAction, LoadProjectGroupsAction, LoadProjectMembersAction, LoadProjectOntologiesAction, OntologiesSelectors, ProjectsSelectors, SetCurrentProjectAction,  UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { map, take } from 'rxjs/operators';
 
 @Component({
@@ -227,8 +227,8 @@ export class ProjectComponent implements OnInit {
         if (this.isCurrentProject) {
             this.store.dispatch(new SetCurrentProjectAction(readProject, this.isProjectAdmin));
             if (this.isProjectAdmin) {
-                this.store.dispatch(new LoadCurrentProjectMembersAction(readProject.id));
-                this.store.dispatch(new LoadCurrentProjectGroupsAction(readProject.id));
+                this.store.dispatch(new LoadProjectMembersAction(readProject.id));
+                this.store.dispatch(new LoadProjectGroupsAction(readProject.id));
             }
         }
         

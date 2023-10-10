@@ -1,13 +1,13 @@
-import { ReadProject } from "@dasch-swiss/dsp-js";
+import { ReadGroup, ReadProject, ReadUser } from "@dasch-swiss/dsp-js";
 
-export class LoadCurrentProjectMembersAction {
-    static readonly type = '[CurrentProject] Load Current Project Members Action';
-    constructor(public projectUuid: string) {}
+export class SetCurrentProjectMembersAction {
+    static readonly type = '[CurrentProject] Set Current Project Members Action';
+    constructor(public members: ReadUser[]) {}
 }
 
-export class LoadCurrentProjectGroupsAction {
-    static readonly type = '[CurrentProject] Load Current Project Groups Action';
-    constructor(public projectUuid: string) {}
+export class SetCurrentProjectGroupsAction {
+    static readonly type = '[CurrentProject] Set Current Project Groups Action';
+    constructor(public groups: ReadGroup[]) {}
 }
 
 export class SetCurrentProjectAction {

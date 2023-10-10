@@ -1,16 +1,20 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, State, StateContext } from '@ngxs/store';
 import { of } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import {
     SetUserAction,
     LogUserOutAction,
     LoadUserAction,
     SetUserProjectGroupsAction as SetUserProjectGroupsDataAction,
+    LoadUsersAction,
+    ResetUsersAction as ResetUsersAction,
+    CreateUserAction,
 } from './user.actions';
 import { UserStateModel } from './user.state-model';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, User, UserResponse } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, User, UserResponse, UsersResponse } from '@dasch-swiss/dsp-js';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 
 const defaults = <UserStateModel>{
     isLoading: false,
@@ -18,6 +22,7 @@ const defaults = <UserStateModel>{
     userProjectGroups: [],
     isMemberOfSystemAdminGroup: false,
     isProjectAdmin: false,
+    allUsers: [],
 };
 
 @State<UserStateModel>({
@@ -29,6 +34,7 @@ export class UserState {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
+        private _errorHandler: AppErrorHandler
     ) {}
 
     @Action(LoadUserAction)
@@ -102,5 +108,66 @@ export class UserState {
                return currentState;
             })
         );
+    }
+
+    @Action(LoadUsersAction)
+    loadUsersAction(
+        ctx: StateContext<UserStateModel>,
+        { }: LoadUsersAction
+    ) {
+        ctx.patchState({ isLoading: true });
+        return this._dspApiConnection.admin.usersEndpoint.getUsers()
+            .pipe(
+                take(1),
+                map((response: ApiResponseData<UsersResponse> | ApiResponseError) => {
+                    return response as ApiResponseData<UsersResponse>;
+                }),
+                tap({
+                    next: (response: ApiResponseData<UsersResponse>) => {
+                        ctx.setState({ 
+                            ...ctx.getState(), 
+                            isLoading: false, 
+                            allUsers: response.body.users
+                        });
+                    },
+                    error: (error) => {
+                        this._errorHandler.showMessage(error);
+                    }
+                })
+            );
+    }
+
+    @Action(ResetUsersAction)
+    resetUsers(ctx: StateContext<UserStateModel>,
+        { }: ResetUsersAction
+    ) {
+        ctx.patchState({ allUsers: defaults.allUsers });
+    }
+
+    
+    @Action(CreateUserAction)
+    createUserAction(
+        ctx: StateContext<UserStateModel>,
+        { userData }: CreateUserAction
+    ) {
+        ctx.patchState({ isLoading: true });
+        return this._dspApiConnection.admin.usersEndpoint.createUser(userData)
+            .pipe(
+                take(1),
+                map((response: ApiResponseData<UserResponse> | ApiResponseError) => {
+                    return response as ApiResponseData<UserResponse>;
+                }),
+                tap({
+                    next: (response: ApiResponseData<UserResponse>) => {
+                        const state = ctx.getState()
+                        state.allUsers.push(response.body.user);
+                        state.isLoading = false;
+                        ctx.patchState(state);
+                    },
+                    error: (error) => {
+                        this._errorHandler.showMessage(error);
+                    }
+                })
+            );
     }
 }

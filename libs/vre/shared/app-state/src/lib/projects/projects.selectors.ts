@@ -1,7 +1,8 @@
 import { Selector } from '@ngxs/store';
 import { ProjectsState } from './projects.state';
 import { ProjectsStateModel } from './projects.state-model';
-import { ReadProject, StoredProject } from '@dasch-swiss/dsp-js';
+import { ReadGroup, ReadProject, ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
+import { IKeyValuePairs } from '../model-interfaces';
 
 export class ProjectsSelectors {
     @Selector([ProjectsState])
@@ -32,5 +33,15 @@ export class ProjectsSelectors {
     @Selector([ProjectsState])
     static readProjects(state: ProjectsStateModel): ReadProject[] {
         return state.readProjects;
+    }
+    
+    @Selector([ProjectsState])
+    static projectMembers(state: ProjectsStateModel): IKeyValuePairs<ReadUser> {
+        return state.projectMembers;
+    }
+
+    @Selector([ProjectsState])
+    static projectGroups(state: ProjectsStateModel): IKeyValuePairs<ReadGroup> {
+        return state.projectGroups;
     }
 }

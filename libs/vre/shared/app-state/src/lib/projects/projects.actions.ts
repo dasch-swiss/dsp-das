@@ -22,3 +22,18 @@ export class RemoveUserFromProjectAction {
     static readonly type = '[Projects] Remove User From Project';
     constructor(public userId: string, public projectId: string) {}
 }
+
+export class AddUserToProjectMembershipAction {
+    static readonly type = '[Projects] Add User To Project Membership';
+    constructor(public userId: string, public projectIri: string) {}
+}
+
+export class LoadProjectMembersAction {
+    static readonly type = '[Projects] Load Project Members Action';
+    constructor(public projectUuid: string) {}
+}
+
+export class LoadProjectGroupsAction {
+    static readonly type = '[Projects] Load Project Groups Action';
+    constructor(public projectUuid: string) {}
+}

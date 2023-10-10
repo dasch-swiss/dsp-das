@@ -2,19 +2,19 @@ import { ClearProjectOntologiesAction } from './../ontologies/ontologies.actions
 import { Inject, Injectable } from '@angular/core';
 import { Action, State, StateContext } from '@ngxs/store';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ApiResponseData, ApiResponseError, GroupsResponse, KnoraApiConnection, MembersResponse } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { map, take, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { CurrentProjectStateModel } from './current-project.state-model';
-import { LoadCurrentProjectGroupsAction, LoadCurrentProjectMembersAction, LogCurrentProjectOutAction as ClearCurrentProjectAction, SetCurrentProjectAction } from './current-project.actions';
+import { LogCurrentProjectOutAction as ClearCurrentProjectAction, SetCurrentProjectAction, SetCurrentProjectGroupsAction, SetCurrentProjectMembersAction } from './current-project.actions';
 
 let defaults: CurrentProjectStateModel = {
     isLoading: false,
     hasLoadingErrors: false,
     project: undefined,
-    projectMembers: {},
-    projectGroups: {},
+    members: [],
+    groups: [],
     isProjectAdmin: false,
     isProjectMember: false,
 };
@@ -31,56 +31,21 @@ export class CurrentProjectState {
         private _errorHandler: AppErrorHandler,
     ) {}
 
-    @Action(LoadCurrentProjectMembersAction)
-    loadProjectMembersAction(
+    @Action(SetCurrentProjectMembersAction)
+    setProjectMembersAction(
         ctx: StateContext<CurrentProjectStateModel>,
-        { projectUuid }: LoadCurrentProjectMembersAction
+        { members }: SetCurrentProjectMembersAction
     ) {
-        ctx.patchState({ isLoading: true });
-        return this._dspApiConnection.admin.projectsEndpoint.getProjectMembersByIri(projectUuid)
-            .pipe(
-                take(1),
-                map((membersResponse: ApiResponseData<MembersResponse> | ApiResponseError) => {
-                    return membersResponse as ApiResponseData<MembersResponse>;
-                }),
-                tap({
-                    next: (response: ApiResponseData<MembersResponse>) => 
-                        ctx.setState({ 
-                            ...ctx.getState(), 
-                            isLoading: false,
-                            projectMembers: { [projectUuid] : { value: response.body.members } }
-                        }),
-                    error: (error) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                })
-            );
+        return ctx.setState({ ...ctx.getState(), members });
     }
 
-    @Action(LoadCurrentProjectGroupsAction)
-    loadProjectGroupsAction(
+    
+    @Action(SetCurrentProjectGroupsAction)
+    setProjectGroupsAction(
         ctx: StateContext<CurrentProjectStateModel>,
-        { projectUuid }: LoadCurrentProjectGroupsAction
+        { groups }: SetCurrentProjectGroupsAction
     ) {
-        ctx.patchState({ isLoading: true });
-        return this._dspApiConnection.admin.groupsEndpoint.getGroups()
-            .pipe(
-                take(1),
-                map((groupsResponse: ApiResponseData<GroupsResponse> | ApiResponseError) => {
-                    return groupsResponse as ApiResponseData<GroupsResponse>;
-                }),
-                tap({
-                    next: (response: ApiResponseData<GroupsResponse>) => 
-                    ctx.setState({ 
-                        ...ctx.getState(), 
-                        isLoading: false, 
-                        projectGroups: { [projectUuid] : { value: response.body.groups } }
-                    }),
-                    error: (error) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                })
-            );
+        return ctx.setState({ ...ctx.getState(), groups });
     }
     
     @Action(SetCurrentProjectAction, { cancelUncompleted: true })
