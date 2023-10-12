@@ -65,7 +65,7 @@ Such an example is `r̥tasya`, where the `r̥` must be replaced either by `rr` o
 
 ![search-advanced-link Advanced search link is findable in the search menu at the right of the full-text search field.](https://github.com/dasch-swiss/dsp-das/assets/136320187/a550b36a-3de9-4788-8fb9-13bd575c1199)
 
-The advanced search allows the creation of complex queries using a form. The Advanced Search can be accessed from the Data Browser of any Project. 
+The advanced search allows the creation of complex queries using a form. The advanced search can be accessed from the data browser of any project. 
 The form creates a string representing a Gravsearch (SPARQL) query to be sent to DSP-API. 
 
 A query consists of the following elements:
@@ -128,7 +128,7 @@ This search finds "Jacob" as well as "Jakob".
 
 **Note the difference between regular expressions and Lucene parser syntax!**
 
-![matches-operaotr](https://github.com/dasch-swiss/dsp-das/assets/136320187/8097ae8c-4265-4f5a-91fa-e1f10007dd36)
+![matches-operator](https://github.com/dasch-swiss/dsp-das/assets/136320187/8097ae8c-4265-4f5a-91fa-e1f10007dd36)
 
 ![matches_results](https://github.com/dasch-swiss/dsp-das/assets/136320187/f53cc01d-b588-4ec4-87c2-8715218f1447)
 
