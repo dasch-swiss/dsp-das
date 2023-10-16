@@ -113,6 +113,10 @@ export class ProjectComponent implements OnInit {
 
     ngOnInit() {
         switch (this._router.url) {
+            case `/project/${this.projectUuid}/advanced-search`: {
+                this.listItemSelected = 'advanced-search';
+                break;
+            }
             case `/${RouteConstants.project}/${this.projectUuid}`: {
                 this.listItemSelected = this._router.url;
                 break;
