@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -15,7 +15,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { AppDatePickerModule } from '@dasch-swiss/vre/shared/app-date-picker';
-import { ResourceLabel } from '../../../data-access/advanced-search-service/advanced-search.service';
+import { ApiData, ResourceLabel } from '../../../data-access/advanced-search-service/advanced-search.service';
+import { PropertyFormItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
 @Component({
     selector: 'dasch-swiss-property-form-value',
     standalone: true,
@@ -32,8 +33,9 @@ import { ResourceLabel } from '../../../data-access/advanced-search-service/adva
     templateUrl: './property-form-value.component.html',
     styleUrls: ['./property-form-value.component.scss'],
 })
-export class PropertyFormValueComponent implements OnInit {
+export class PropertyFormValueComponent implements OnInit, AfterViewInit {
     @Input() objectType: string | undefined = '';
+    @Input() value: string | PropertyFormItem[] | undefined = '';
 
     @Output() emitValueChanged = new EventEmitter<string>();
 
@@ -49,6 +51,12 @@ export class PropertyFormValueComponent implements OnInit {
             .subscribe((value) => this._emitValueChanged(value));
 
         this.inputControl.setValidators(this._getValidators(this.objectType));
+    }
+
+    ngAfterViewInit(): void {
+        if (this.value) {
+            this.inputControl.setValue(this.value);
+        }
     }
 
     onDateSelected(value: string) {

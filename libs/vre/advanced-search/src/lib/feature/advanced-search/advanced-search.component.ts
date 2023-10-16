@@ -16,6 +16,7 @@ import {
     PropertyFormItem,
     PropertyFormListOperations,
     SearchItem,
+    AdvancedSearchStateSnapshot,
 } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
@@ -196,7 +197,7 @@ export class AdvancedSearchComponent implements OnInit {
                 properties: propertyFormList,
             };
 
-            this.emitGravesearchQuery.emit(queryObject);
+            // this.emitGravesearchQuery.emit(queryObject);
         });
     }
 
@@ -232,5 +233,34 @@ export class AdvancedSearchComponent implements OnInit {
 
     handleChildValueChanged(property: ParentChildPropertyPair): void {
         this.store.updateChildSearchValue(property);
+    }
+
+    loadPreviousSearch(): void {
+        const prevSearch = localStorage.getItem('advanced-search-previous-search');
+        if(prevSearch) {
+            const prevSearchObject: AdvancedSearchStateSnapshot = JSON.parse(prevSearch);
+            console.log('prevSearchObject:', prevSearchObject);
+
+            this.store.setState({
+                ontologies: prevSearchObject.ontologies,
+                ontologiesLoading: false,
+                resourceClasses: prevSearchObject.resourceClasses,
+                resourceClassesLoading: false,
+                selectedProject: prevSearchObject.selectedProject,
+                selectedOntology: prevSearchObject.selectedOntology,
+                selectedResourceClass: prevSearchObject.selectedResourceClass,
+                propertyFormList: prevSearchObject.propertyFormList,
+                properties: prevSearchObject.properties,
+                propertiesLoading: false,
+                propertiesOrderByList: prevSearchObject.propertiesOrderByList,
+                filteredProperties: prevSearchObject.filteredProperties,
+                matchResourceClassesLoading: false,
+                resourcesSearchResultsLoading: false,
+                resourcesSearchResultsCount: 0,
+                resourcesSearchNoResults: false,
+                resourcesSearchResultsPageNumber: 0,
+                resourcesSearchResults: [],
+            });
+        }
     }
 }
