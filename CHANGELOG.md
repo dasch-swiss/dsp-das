@@ -1,5 +1,32 @@
 # Changelog
 
+## [10.24.0](https://github.com/dasch-swiss/dsp-das/compare/v10.23.7...v10.24.0) (2023-10-13)
+
+
+### Enhancements
+
+* **advanced-search:** advanced search library ([#1131](https://github.com/dasch-swiss/dsp-das/issues/1131)) ([7e0a550](https://github.com/dasch-swiss/dsp-das/commit/7e0a5505610cacc5af3deeee4fb4fcc1e0049c0a))
+* dev-2557-update-the-documentation-1 ([#1221](https://github.com/dasch-swiss/dsp-das/issues/1221)) ([e1c741d](https://github.com/dasch-swiss/dsp-das/commit/e1c741dea08a835a21f69e1740bcdd520a672e7d))
+
+
+### Maintenance
+
+* update dsp-js to v8.3.6 ([#1224](https://github.com/dasch-swiss/dsp-das/issues/1224)) ([543c0d8](https://github.com/dasch-swiss/dsp-das/commit/543c0d8d59a828a8f14e1671f320898c9f15dbf0))
+
+## [10.23.7](https://github.com/dasch-swiss/dsp-das/compare/v10.23.6...v10.23.7) (2023-10-04)
+
+
+### Bug Fixes
+
+* **resource:** resources do not load from url ([#1214](https://github.com/dasch-swiss/dsp-das/issues/1214)) ([689acbe](https://github.com/dasch-swiss/dsp-das/commit/689acbe6933e3da508268c8c65dfd76c74afeeb9))
+
+## [10.23.6](https://github.com/dasch-swiss/dsp-das/compare/v10.23.5...v10.23.6) (2023-10-03)
+
+
+### Bug Fixes
+
+* **ontology form:** remove the input decorator ([#1212](https://github.com/dasch-swiss/dsp-das/issues/1212)) ([64100e7](https://github.com/dasch-swiss/dsp-das/commit/64100e7385f0985e1b7eca7b087e99c413a85368))
+
 ## [10.23.5](https://github.com/dasch-swiss/dsp-das/compare/v10.23.4...v10.23.5) (2023-09-29)
 
 
