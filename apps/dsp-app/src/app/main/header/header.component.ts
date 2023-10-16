@@ -28,10 +28,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     session = false;
     show = false;
     searchParams: SearchParams;
+    helpLink = RouteConstants.help
 
     dsp: DspConfig;
 
     componentCommsSubscription: Subscription;
+
+    homeLink = RouteConstants.home;
 
     constructor(
         @Inject(DspApiConnectionToken)

@@ -78,24 +78,27 @@ export class OntologyClassInstanceComponent implements OnChanges {
         this.session = this._sessionService.getSession();
 
         this._route.params.subscribe((params) => {
+            console.log('params', params);
             this._dspApiConnection.admin.projectsEndpoint
                 .getProjectByIri(this.projectIri)
                 .subscribe((res: ApiResponseData<ProjectResponse>) => {
                     const shortcode = res.body.project.shortcode;
                     const iriBase = this._ontologyService.getIriBaseUrl();
 
-                    const ontologyName = params['onto'];
-                    const className = params['class'];
+                    const ontologyName = params[RouteConstants.ontoParameter];
+                    const className = params[RouteConstants.classParameter];
 
-                    // get the resource class id from route
+                    // get the resource ids from the route. Do not use the RouteConstants ontology route constant here,
+                    // because the ontology and class ids are not defined within the apps domain. They are defined by
+                    // the api and can not be changed generically via route constants.
                     this.ontoId = `${iriBase}/ontology/${shortcode}/${ontologyName}/v2`;
                     this.classId = `${this.ontoId}#${className}`;
 
-                    this.instanceId = params['instance'];
+                    this.instanceId = params[RouteConstants.instanceParameter];
                     if (this.instanceId) {
                         // single instance view
 
-                        if (this.instanceId === 'add') {
+                        if (this.instanceId === RouteConstants.addClassInstance) {
                             if (!this.session) {
                                 // user isn't signed in, redirect to project description
                                 this._router.navigateByUrl(`/${RouteConstants.project}/${uuid}`);

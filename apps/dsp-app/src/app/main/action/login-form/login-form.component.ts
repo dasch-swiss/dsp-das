@@ -247,7 +247,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
                                                     })
                                                     .then(() =>
                                                         this._router.navigate([
-                                                            '/',
+                                                            RouteConstants.home,
                                                         ])
                                                     );
                                             }

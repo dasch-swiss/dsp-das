@@ -145,6 +145,10 @@ export class OntologyComponent implements OnInit {
     // disable content on small devices
     disableContent = false;
 
+    // route to classes view
+    classesLink = `../${RouteConstants.classes}`;
+    propertiesLink = `../${RouteConstants.properties}`;
+
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,

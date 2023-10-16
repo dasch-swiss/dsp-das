@@ -38,6 +38,8 @@ export class RouteConstants {
     static readonly list = 'list';
     static readonly addList = 'add-list';
 
+    static readonly addClassInstance = 'add';
+
     static readonly cookiePolicy = 'cookie-policy';
     static readonly teapot = 'teapot';
     static readonly noNetworkError = 'no-network';
@@ -57,6 +59,7 @@ export class RouteConstants {
     static readonly instanceParameter = 'instance';
     static readonly listParameter = 'list';
     static readonly classes = 'classes';
+    static readonly properties = 'properties';
 
 
     static readonly homeRelative = `/${RouteConstants.home}`;
