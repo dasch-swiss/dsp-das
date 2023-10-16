@@ -492,7 +492,7 @@ export class ProjectFormComponent implements OnInit {
                                                     })
                                                     .then(() =>
                                                         this._router.navigate([
-                                                            RouteConstants.project + uuid,
+                                                            RouteConstants.project, uuid,
                                                         ])
                                                     );
                                             },

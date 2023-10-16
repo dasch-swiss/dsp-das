@@ -195,6 +195,6 @@ export class OverviewComponent implements OnInit {
     }
 
     createNewProject() {
-        this._router.navigate([RouteConstants.projects, RouteConstants.createNew]);
+        this._router.navigate([RouteConstants.project, RouteConstants.createNew]);
     }
 }
