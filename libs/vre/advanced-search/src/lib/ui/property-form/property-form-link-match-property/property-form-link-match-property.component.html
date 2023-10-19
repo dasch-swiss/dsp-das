@@ -78,6 +78,7 @@
             <dasch-swiss-property-form-link-value
                 *ngIf="item.selectedProperty?.isLinkedResourceProperty"
                 [value]="item.searchValue"
+                [label]="item.searchValueLabel"
                 [resourcesSearchResultsLoading]="resourcesSearchResultsLoading"
                 [resourcesSearchResultsCount]="resourcesSearchResultsCount"
                 [resourcesSearchResults]="resourcesSearchResults"

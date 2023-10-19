@@ -57,6 +57,7 @@ export interface PropertyFormItem {
     selectedMatchPropertyResourceClass?: ApiData | undefined;
     isChildProperty?: boolean;
     childPropertiesList?: PropertyData[];
+    searchValueLabel?: string;
 }
 
 export interface SearchItem {

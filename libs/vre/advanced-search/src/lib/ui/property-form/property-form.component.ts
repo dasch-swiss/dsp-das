@@ -173,10 +173,18 @@ export class PropertyFormComponent implements AfterViewInit {
         }
     }
 
-    onValueChanged(value: string | PropertyFormItem[]) {
+    // the parameter will be an ApiData object when the input is a link value
+    // the parameter will be a PropertyFormItem[] when the input is a child value
+    // the parameter will be a string when the input is anything other than the two above
+    onValueChanged(value: string | ApiData | PropertyFormItem[]) {
         const propFormItem = this.propertyFormItem;
         if (propFormItem) {
-            propFormItem.searchValue = value;
+            if (this._isApiData(value)) {
+                propFormItem.searchValue = value.iri;
+                propFormItem.searchValueLabel = value.label;
+            } else {
+                propFormItem.searchValue = value;
+            }
             this.emitSearchValueChanged.emit(propFormItem);
         }
     }
@@ -255,5 +263,10 @@ export class PropertyFormComponent implements AfterViewInit {
 
     compareObjects(object1: PropertyData | ApiData, object2: PropertyData | ApiData) {
         return object1 && object2 && object1.iri == object2.iri;
+    }
+
+    // Type guard function to check if the value adheres to ApiData interface
+    _isApiData(value: any): value is ApiData {
+        return value && typeof value === 'object' && 'iri' in value && 'label' in value;
     }
 }

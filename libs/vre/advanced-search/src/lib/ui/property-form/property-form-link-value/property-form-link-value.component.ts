@@ -35,6 +35,7 @@ import { PropertyFormItem } from '../../../data-access/advanced-search-store/adv
 })
 export class PropertyFormLinkValueComponent implements OnInit, AfterViewInit {
     @Input() value: string | PropertyFormItem[] | undefined = undefined;
+    @Input() label: string | undefined = undefined;
     @Input() resourcesSearchResultsLoading: boolean | null = false;
     @Input() resourcesSearchResultsCount: number | null = 0;
     @Input() resourcesSearchResults: ApiData[] | null = null;
@@ -42,7 +43,7 @@ export class PropertyFormLinkValueComponent implements OnInit, AfterViewInit {
 
     @Output() emitResourceSearchValueChanged = new EventEmitter<string>();
     @Output() emitLoadMoreSearchResults = new EventEmitter<string>();
-    @Output() emitResourceSelected = new EventEmitter<string>();
+    @Output() emitResourceSelected = new EventEmitter<ApiData>();
 
     inputControl = new FormControl();
 
@@ -55,14 +56,14 @@ export class PropertyFormLinkValueComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        if (this.value && typeof this.value === 'string') {
-            this.inputControl.setValue(this.value);
+        if (this.value && typeof this.value === 'string' && this.label) {
+            this.inputControl.setValue({ label: this.label, iri: this.value });
         }
     }
 
     onResourceSelected(event: MatAutocompleteSelectedEvent) {
         const data = event.option.value as ApiData;
-        this.emitResourceSelected.emit(data.iri);
+        this.emitResourceSelected.emit(data);
     }
 
     onInputFocused() {
@@ -76,7 +77,8 @@ export class PropertyFormLinkValueComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * used in the template to display the label of the selected resource.
+     * used in the template to display the label of the selected resource
+     * because the value we want to display is different than the value we want to emit
      *
      * @param resource the resource containing the label to be displayed (or no selection yet).
      */

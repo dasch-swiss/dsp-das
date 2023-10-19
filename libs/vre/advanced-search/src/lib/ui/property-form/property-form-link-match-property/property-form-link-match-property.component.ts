@@ -127,9 +127,14 @@ export class PropertyFormLinkMatchPropertyComponent implements AfterViewInit {
         }
     }
 
-    onValueChanged(value: string, index: number): void {
+    onValueChanged(value: string | ApiData, index: number): void {
         if (this.values) {
-            this.values[index].searchValue = value;
+            if(this._isApiData(value)) {
+                this.values[index].searchValue = value.iri;
+                this.values[index].searchValueLabel = value.label;
+            } else {
+                this.values[index].searchValue = value;
+            }
             this.emitValueChanged.emit(this.values[index]);
         }
     }
@@ -160,5 +165,10 @@ export class PropertyFormLinkMatchPropertyComponent implements AfterViewInit {
 
     compareObjects(object1: PropertyData | ApiData, object2: PropertyData | ApiData) {
         return object1 && object2 && object1.iri == object2.iri;
+    }
+
+    // Type guard function to check if the value adheres to ApiData interface
+    _isApiData(value: any): value is ApiData {
+        return value && typeof value === 'object' && 'iri' in value && 'label' in value;
     }
 }
