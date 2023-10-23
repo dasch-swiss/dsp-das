@@ -5,7 +5,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { ListItemComponent } from './list-item/list-item.component';
 import { PropertyFormItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
-import { ApiData } from '../../../data-access/advanced-search-service/advanced-search.service';
 
 @Component({
     selector: 'dasch-swiss-property-form-list-value',

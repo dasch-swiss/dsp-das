@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Constants } from '@dasch-swiss/dsp-js';
+import { Constants, KnoraDate } from '@dasch-swiss/dsp-js';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MatSelectModule } from '@angular/material/select';
 import {
     FormControl,
+    FormGroup,
     FormsModule,
     ReactiveFormsModule,
     ValidatorFn,
@@ -15,7 +16,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { AppDatePickerModule } from '@dasch-swiss/vre/shared/app-date-picker';
-import { ApiData, ResourceLabel } from '../../../data-access/advanced-search-service/advanced-search.service';
+import { ResourceLabel } from '../../../data-access/advanced-search-service/advanced-search.service';
 import { PropertyFormItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
 @Component({
     selector: 'dasch-swiss-property-form-value',
@@ -45,6 +46,10 @@ export class PropertyFormValueComponent implements OnInit, AfterViewInit {
     matcher = new ValueErrorStateMatcher();
     inputControl = new FormControl();
 
+    // separate control and FormGroup needed for the date picker
+    dateControl = new FormControl();
+    dateFormGroup = new FormGroup({date: this.dateControl});
+
     ngOnInit() {
         this.inputControl.valueChanges
             .pipe(debounceTime(300), distinctUntilChanged())
@@ -54,13 +59,37 @@ export class PropertyFormValueComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        if (this.value) {
+        if (!this.value || typeof(this.value) !== 'string') return;
+        if (this.objectType !== Constants.DateValue) {
             this.inputControl.setValue(this.value);
+        } else {
+            const knoraDate = this._transformDateStringToKnoraDateObject(this.value as string);
+            this.dateControl.setValue(knoraDate);
         }
     }
 
     onDateSelected(value: string) {
         this.inputControl.setValue(value);
+    }
+
+    // we need to provide the date-picker with a KnoraDate but we store the value as a string
+    // so we need to convert it back to a KnoraDate
+    // the date string format is specific to gravsearch so we can't put this logic in the date-picker itself
+    _transformDateStringToKnoraDateObject(dateString: string): KnoraDate {
+        let era = ''
+        const [calendar, dateAndEra] = dateString.split(':');
+        const [datePart, eraPart] = dateAndEra.split(' ');
+        const [year, month, day] = datePart.split('-').map(part => parseInt(part));
+
+        era = eraPart ? eraPart : 'CE';
+
+        if (day) {
+            return new KnoraDate(calendar, era, year, month, day);
+        } else if (month) {
+            return new KnoraDate(calendar, era, year, month);
+        } else {
+            return new KnoraDate(calendar, era, year);
+        }
     }
 
     private _getValidators(objectType: string | undefined): ValidatorFn[] {

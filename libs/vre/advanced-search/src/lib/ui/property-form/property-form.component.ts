@@ -4,9 +4,7 @@ import {
     Component,
     EventEmitter,
     Input,
-    OnChanges,
     Output,
-    SimpleChanges,
     ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
