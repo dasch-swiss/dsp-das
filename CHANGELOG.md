@@ -1,5 +1,31 @@
 # Changelog
 
+## [10.24.2](https://github.com/dasch-swiss/dsp-das/compare/v10.24.1...v10.24.2) (2023-10-20)
+
+
+### Bug Fixes
+
+* **date-picker:** fix YYYY-MM-dd formatting ([#1235](https://github.com/dasch-swiss/dsp-das/issues/1235)) ([f641ccb](https://github.com/dasch-swiss/dsp-das/commit/f641ccb9a71bb03c4adaff34f0f7cbb9f6fe5283))
+* **gravsearch-service:** incorrect gravsearch generated when searching for a linked property ([#1232](https://github.com/dasch-swiss/dsp-das/issues/1232)) ([200bbc0](https://github.com/dasch-swiss/dsp-das/commit/200bbc085c9ac3d67b06c3d2217faaa4bb7a203e))
+* **project:** host listener triggers when user types in an input or textarea ([#1233](https://github.com/dasch-swiss/dsp-das/issues/1233)) ([9f2a790](https://github.com/dasch-swiss/dsp-das/commit/9f2a7905db8967f32b60124bce13604f65e68f27))
+
+
+### Maintenance
+
+* Reconfigure all "zio" endpoints to use the original address ([#1222](https://github.com/dasch-swiss/dsp-das/issues/1222)) ([eaaefc9](https://github.com/dasch-swiss/dsp-das/commit/eaaefc915757800b9156e6d33754e3814735d7ce))
+
+## [10.24.1](https://github.com/dasch-swiss/dsp-das/compare/v10.24.0...v10.24.1) (2023-10-17)
+
+
+### Bug Fixes
+
+* **advanced-search:** generate correct gravsearch for linked resources with property values ([#1229](https://github.com/dasch-swiss/dsp-das/issues/1229)) ([2caa0a2](https://github.com/dasch-swiss/dsp-das/commit/2caa0a2b576eff4206557b65512bf5fc4a162cda))
+
+
+### Maintenance
+
+* **string literal component:** move app string literal component into shared lib ([#1209](https://github.com/dasch-swiss/dsp-das/issues/1209)) ([3f2a562](https://github.com/dasch-swiss/dsp-das/commit/3f2a562b4999bcf625e257b425e2f75e47079bc1))
+
 ## [10.24.0](https://github.com/dasch-swiss/dsp-das/compare/v10.23.7...v10.24.0) (2023-10-13)
 
 
