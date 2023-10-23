@@ -1,10 +1,10 @@
 <div class="advanced-search-container">
     <div class="header">
         <div class="title">
-            <p>Advanced search</p>
+            <p>Advanced Search</p>
         </div>
-        <div>
-            <button (click)="loadPreviousSearch()">Use Previous search</button>
+        <div *ngIf="previousSearchObject" class="action-buttons right-margin">
+            <button class="previous-search-button" mat-button (click)="loadPreviousSearch()">Use Previous Search</button>
         </div>
     </div>
     <div

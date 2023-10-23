@@ -29,6 +29,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../ui/dialog/confirmation-dialog/confirmation-dialog.component';
 import { v4 as uuidv4 } from 'uuid';
 import { take } from 'rxjs/operators';
+import { MatButtonModule } from '@angular/material/button';
 
 export interface QueryObject {
     query: string;
@@ -44,6 +45,7 @@ export interface QueryObject {
         OntologyResourceFormComponent,
         PropertyFormComponent,
         FormActionsComponent,
+        MatButtonModule,
         MatIconModule,
     ],
     providers: [AdvancedSearchStoreService],
@@ -87,6 +89,7 @@ export class AdvancedSearchComponent implements OnInit {
     orderByButtonDisabled$ = this.store.orderByButtonDisabled$;
 
     constants = Constants;
+    previousSearchObject: string | null = null;
 
     constructor(private _dialog: MatDialog) {}
 
@@ -121,6 +124,8 @@ export class AdvancedSearchComponent implements OnInit {
         this.store.propertiesList(this.selectedOntology$);
 
         this.store.filteredPropertiesList(this.selectedResourceClass$);
+
+        this.previousSearchObject = localStorage.getItem('advanced-search-previous-search');
     }
 
     // pass-through method to notify the store to update the state of the selected ontology
@@ -197,7 +202,7 @@ export class AdvancedSearchComponent implements OnInit {
                 properties: propertyFormList,
             };
 
-            // this.emitGravesearchQuery.emit(queryObject);
+            this.emitGravesearchQuery.emit(queryObject);
         });
     }
 
@@ -236,9 +241,8 @@ export class AdvancedSearchComponent implements OnInit {
     }
 
     loadPreviousSearch(): void {
-        const prevSearch = localStorage.getItem('advanced-search-previous-search');
-        if(prevSearch) {
-            const prevSearchObject: AdvancedSearchStateSnapshot = JSON.parse(prevSearch);
+        if(this.previousSearchObject) {
+            const prevSearchObject: AdvancedSearchStateSnapshot = JSON.parse(this.previousSearchObject);
             console.log('prevSearchObject:', prevSearchObject);
 
             this.store.setState({
