@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HintComponent } from './main/action/hint/hint.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { HelpComponent } from './main/help/help.component';
@@ -63,11 +62,6 @@ const routes: Routes = [
                 canActivate: [AuthGuard],
             },
             {
-                path: RouteConstants.ontology,
-                component: HintComponent,
-                data: { topic: 'ontology' },
-            },
-            {
                 path: RouteConstants.dataModels,
                 component: DataModelsComponent,
             },
@@ -103,11 +97,6 @@ const routes: Routes = [
                 path: RouteConstants.addList,
                 component: ListInfoFormComponent,
                 canActivate: [AuthGuard],
-            },
-            {
-                path: RouteConstants.list,
-                component: HintComponent,
-                data: { topic: 'list' },
             },
             {
                 path: `${RouteConstants.list}/:${RouteConstants.listParameter}`,
