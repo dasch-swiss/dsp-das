@@ -14,7 +14,6 @@ export class RouteConstants {
     static readonly createNew = 'create-new';
     static readonly collaboration = 'collaboration';
     static readonly info = 'info';
-    static readonly permissions = 'permissions';
     static readonly ontologies = 'ontologies';
     static readonly lists = 'lists';
     static readonly edit = 'edit';

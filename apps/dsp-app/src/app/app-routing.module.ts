@@ -14,7 +14,6 @@ import { ListInfoFormComponent } from './project/list/list-info-form/list-info-f
 import { ListComponent } from './project/list/list.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
-import { PermissionComponent } from './project/permission/permission.component';
 import { ProjectComponent } from './project/project.component';
 import { ProjectsComponent } from './system/projects/projects.component';
 // system
@@ -115,10 +114,6 @@ const routes: Routes = [
                     {
                         path: RouteConstants.collaboration,
                         component: CollaborationComponent,
-                    },
-                    {
-                        path: RouteConstants.permissions,
-                        component: PermissionComponent,
                     },
                 ],
             },

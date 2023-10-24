@@ -71,8 +71,6 @@ import { PropertyFormComponent } from './project/ontology/property-form/property
 import { PropertyInfoComponent } from './project/ontology/property-info/property-info.component';
 import { ResourceClassFormComponent } from './project/ontology/resource-class-form/resource-class-form.component';
 import { ResourceClassInfoComponent } from './project/ontology/resource-class-info/resource-class-info.component';
-import { AddGroupComponent } from './project/permission/add-group/add-group.component';
-import { PermissionComponent } from './project/permission/permission.component';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ProjectComponent } from './project/project.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
@@ -175,7 +173,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
 @NgModule({
     declarations: [
         AccountComponent,
-        AddGroupComponent,
         AddRegionFormComponent,
         AddUserComponent,
         AddValueComponent,
@@ -239,7 +236,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         OntologyComponent,
         OntologyFormComponent,
         PasswordFormComponent,
-        PermissionComponent,
         PermissionInfoComponent,
         ProfileComponent,
         ProjectComponent,
