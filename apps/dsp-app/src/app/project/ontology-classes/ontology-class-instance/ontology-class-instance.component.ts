@@ -78,7 +78,6 @@ export class OntologyClassInstanceComponent implements OnChanges {
         this.session = this._sessionService.getSession();
 
         this._route.params.subscribe((params) => {
-            console.log('params', params);
             this._dspApiConnection.admin.projectsEndpoint
                 .getProjectByIri(this.projectIri)
                 .subscribe((res: ApiResponseData<ProjectResponse>) => {
