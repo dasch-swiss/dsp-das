@@ -4,39 +4,6 @@ import { StringLiteral } from '@dasch-swiss/dsp-js';
 import { MenuItem } from './main/declarations/menu-item';
 
 export class AppGlobal {
-    // project navigation
-    public static projectNav: MenuItem[] = [
-        {
-            label: 'Project information',
-            shortLabel: 'Project',
-            route: RouteConstants.info,
-            icon: 'assignment',
-        },
-        {
-            label: 'Project members',
-            shortLabel: 'Members',
-            route: RouteConstants.collaboration,
-            icon: 'group',
-        },
-        {
-            label: 'Permission groups',
-            shortLabel: 'Groups',
-            route: RouteConstants.permissions,
-            icon: 'lock_open',
-        },
-        {
-            label: 'Data model',
-            shortLabel: 'Data model',
-            route: RouteConstants.ontologies,
-            icon: 'bubble_chart',
-        },
-        {
-            label: 'Lists',
-            shortLabel: 'Lists',
-            route: RouteConstants.lists,
-            icon: 'list',
-        },
-    ];
 
     // user navigation
     public static userNav: MenuItem[] = [
