@@ -125,7 +125,9 @@ export class AdvancedSearchComponent implements OnInit {
 
         this.store.filteredPropertiesList(this.selectedResourceClass$);
 
-        this.previousSearchObject = localStorage.getItem('advanced-search-previous-search');
+        this.previousSearchObject = localStorage.getItem(
+            'advanced-search-previous-search'
+        );
     }
 
     // pass-through method to notify the store to update the state of the selected ontology
@@ -175,7 +177,9 @@ export class AdvancedSearchComponent implements OnInit {
         this.store.updateSelectedOperator(property);
     }
 
-    handleSelectedMatchPropertyResourceClassChanged(property: PropertyFormItem): void {
+    handleSelectedMatchPropertyResourceClassChanged(
+        property: PropertyFormItem
+    ): void {
         this.store.updateSelectedMatchPropertyResourceClass(property);
     }
 
@@ -228,11 +232,15 @@ export class AdvancedSearchComponent implements OnInit {
         this.store.deleteChildPropertyFormList(property);
     }
 
-    handleChildSelectedPropertyChanged(property: ParentChildPropertyPair): void {
+    handleChildSelectedPropertyChanged(
+        property: ParentChildPropertyPair
+    ): void {
         this.store.updateChildSelectedProperty(property);
     }
 
-    handleChildSelectedOperatorChanged(property: ParentChildPropertyPair): void {
+    handleChildSelectedOperatorChanged(
+        property: ParentChildPropertyPair
+    ): void {
         this.store.updateChildSelectedOperator(property);
     }
 
@@ -241,30 +249,31 @@ export class AdvancedSearchComponent implements OnInit {
     }
 
     loadPreviousSearch(): void {
-        if(this.previousSearchObject) {
-            const prevSearchObject: AdvancedSearchStateSnapshot = JSON.parse(this.previousSearchObject);
-            console.log('prevSearchObject:', prevSearchObject);
+        if (!this.previousSearchObject) return;
 
-            this.store.setState({
-                ontologies: prevSearchObject.ontologies,
-                ontologiesLoading: false,
-                resourceClasses: prevSearchObject.resourceClasses,
-                resourceClassesLoading: false,
-                selectedProject: prevSearchObject.selectedProject,
-                selectedOntology: prevSearchObject.selectedOntology,
-                selectedResourceClass: prevSearchObject.selectedResourceClass,
-                propertyFormList: prevSearchObject.propertyFormList,
-                properties: prevSearchObject.properties,
-                propertiesLoading: false,
-                propertiesOrderByList: prevSearchObject.propertiesOrderByList,
-                filteredProperties: prevSearchObject.filteredProperties,
-                matchResourceClassesLoading: false,
-                resourcesSearchResultsLoading: false,
-                resourcesSearchResultsCount: 0,
-                resourcesSearchNoResults: false,
-                resourcesSearchResultsPageNumber: 0,
-                resourcesSearchResults: [],
-            });
-        }
+        const prevSearchObject: AdvancedSearchStateSnapshot = JSON.parse(
+            this.previousSearchObject
+        );
+
+        this.store.setState({
+            ontologies: prevSearchObject.ontologies,
+            ontologiesLoading: false,
+            resourceClasses: prevSearchObject.resourceClasses,
+            resourceClassesLoading: false,
+            selectedProject: prevSearchObject.selectedProject,
+            selectedOntology: prevSearchObject.selectedOntology,
+            selectedResourceClass: prevSearchObject.selectedResourceClass,
+            propertyFormList: prevSearchObject.propertyFormList,
+            properties: prevSearchObject.properties,
+            propertiesLoading: false,
+            propertiesOrderByList: prevSearchObject.propertiesOrderByList,
+            filteredProperties: prevSearchObject.filteredProperties,
+            matchResourceClassesLoading: false,
+            resourcesSearchResultsLoading: false,
+            resourcesSearchResultsCount: 0,
+            resourcesSearchNoResults: false,
+            resourcesSearchResultsPageNumber: 0,
+            resourcesSearchResults: [],
+        });
     }
 }
