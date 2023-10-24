@@ -27,24 +27,14 @@
             <!-- main content: router outlet -->
             <div class="content middle" [ngSwitch]="route" *ngIf="!loading && route">
 
-                <!-- user profile -->
-                <div *ngSwitchCase="'profile'" class="full-width">
-                    <app-projects [username]="session.user.name"></app-projects>
-                </div>
-
                 <!-- edit user data -->
-                <div *ngSwitchCase="'account'" class="full-width">
+                <div *ngSwitchCase="routeConstants.userAccount" class="full-width">
                     <app-account [username]="session.user.name" (refreshParent)="refresh()"></app-account>
                 </div>
 
                 <!-- user's projects -->
-                <div *ngSwitchCase="'projects'" class="full-width">
+                <div *ngSwitchCase="routeConstants.projects" class="full-width">
                     <app-projects [username]="session.user.name"></app-projects>
-                </div>
-
-                <!-- user's collections (!!!NOT YET IMPLEMENTED!!!) -->
-                <div *ngSwitchCase="'collections'" class="full-width">
-                    <app-collection-list></app-collection-list>
                 </div>
 
             </div>
