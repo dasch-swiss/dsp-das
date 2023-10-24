@@ -82,7 +82,6 @@ import { SystemComponent } from './system/system.component';
 import { UsersListComponent } from './system/users/users-list/users-list.component';
 import { UsersComponent } from './system/users/users.component';
 import { AccountComponent } from './user/account/account.component';
-import { CollectionListComponent } from './user/collection-list/collection-list.component';
 import { MembershipComponent } from './user/membership/membership.component';
 import { ProfileComponent } from './user/profile/profile.component';
 import { PasswordFormComponent } from './user/user-form/password-form/password-form.component';
@@ -185,7 +184,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         DescriptionComponent,
         BooleanValueComponent,
         CollaborationComponent,
-        CollectionListComponent,
         ColorPickerComponent,
         ColorValueComponent,
         CommentFormComponent,
