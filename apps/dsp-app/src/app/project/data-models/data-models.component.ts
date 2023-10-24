@@ -10,7 +10,7 @@ import {
     OntologyMetadata,
     ReadUser,
 } from '@dasch-swiss/dsp-js';
-import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
+import {AppConfigService, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { OntologyService } from '../ontology/ontology.service';
@@ -18,6 +18,14 @@ import { Select, Store } from '@ngxs/store';
 import { OntologiesSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable, Subject, combineLatest, of } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
+
+// the routes available for navigation
+type DataModelRoute =
+    typeof RouteConstants.ontology
+    | typeof RouteConstants.addOntology
+    | typeof RouteConstants.list
+    | typeof RouteConstants.addList
+    | 'docs';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -104,40 +112,33 @@ export class DataModelsComponent implements OnInit, OnDestroy {
      * @param route path to route to
      * @param id optional ontology id or list id
      */
-    open(route: string, id?: string) {
-        let name;
+    open(route: DataModelRoute, id?: string) {
 
-        if (route === 'ontology' && id) {
+        if (route === RouteConstants.ontology && id) {
             // get name of ontology
-            name = OntologyService.getOntologyName(id);
+            const ontoName = OntologyService.getOntologyName(id);
+            this._router.navigate(
+                [route, encodeURIComponent(ontoName), RouteConstants.editor, RouteConstants.classes],
+                { relativeTo: this._route.parent }
+            );
+            return;
         }
-        if (route === 'list' && id) {
-            // get name of list
-            const array = id.split('/');
-            const pos = array.length - 1;
-            name = array[pos];
-        }
-        if (name) {
-            if (route === 'ontology') {
-                // route to the onto editor
-                this._router.navigate(
-                    [route, encodeURIComponent(name), 'editor', 'classes'],
-                    { relativeTo: this._route.parent }
-                );
-            } else {
-                // route to the list editor
-                this._router.navigate([route, encodeURIComponent(name)], {
-                    relativeTo: this._route.parent,
-                });
-            }
+        if (route === RouteConstants.list && id) {
+            const listName = id.split('/').pop();
+            // route to the list editor
+            this._router.navigate([route, encodeURIComponent(listName)], {
+                relativeTo: this._route.parent,
+            });
+            return;
         } else if (route === 'docs') {
             // route to the external docs
             window.open(
                 'https://docs.dasch.swiss/latest/DSP-APP/user-guide/project/#data-model',
                 '_blank'
             );
+            return;
         } else {
-            // fallback default routing
+            // default routing
             this._router.navigate([route], { relativeTo: this._route.parent });
         }
     }

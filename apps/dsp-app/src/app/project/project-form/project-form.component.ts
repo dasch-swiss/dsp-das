@@ -16,7 +16,7 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import { Location } from "@angular/common";
 import {
     ApiResponseData,
-    ApiResponseError,
+    ApiResponseError, 
     KnoraApiConnection,
     Project,
     ProjectResponse,
@@ -26,14 +26,13 @@ import {
     StringLiteral,
     UpdateProjectRequest,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import {DspApiConnectionToken, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
 import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import { CurrentProjectSelectors, UpdateProjectAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-project-form',
@@ -459,22 +458,16 @@ export class ProjectFormComponent implements OnInit {
                             )
                             .subscribe(
                                 () => {
-                                    const uuid =
-                                        this._projectService.iriToUuid(
-                                            projectResponse.body
-                                                .project.id
-                                        );
+                                    const uuid = this._projectService.iriToUuid(projectResponse.body.project.id);
                                     this.loading = false;
                                     // redirect to project page
                                     this._router
-                                        .navigateByUrl('/project', {
+                                        .navigateByUrl(`${RouteConstants.projectRelative}`, {
                                             skipLocationChange:
-                                                true,
+                                            true,
                                         })
                                         .then(() =>
-                                            this._router.navigate([
-                                                '/project/' + uuid,
-                                            ])
+                                            this._router.navigate([`${RouteConstants.projectRelative}/${uuid}`])
                                         );
                                 },
                                 (error: ApiResponseError) => {

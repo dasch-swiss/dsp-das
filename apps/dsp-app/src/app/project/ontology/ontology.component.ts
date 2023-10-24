@@ -116,6 +116,10 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     // disable content on small devices
     disableContent = false;
 
+    // route to classes view
+    classesLink = `../${RouteConstants.classes}`;
+    propertiesLink = `../${RouteConstants.properties}`;
+
     get isAdmin$(): Observable<boolean> {
         return combineLatest([this.user$, this.userProjectAdminGroups$, this._route.parent.params])
             .pipe(
@@ -333,14 +337,14 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
         view: 'classes' | 'properties' | 'graph' = 'classes'
     ) {
         this.view = view;
-        const goto =
-            'project/' +
-            this.projectUuid +
-            '/ontologies/' +
-            encodeURIComponent(id) +
-            '/' +
-            view;
-        this._router.navigateByUrl(goto, { skipLocationChange: false });
+
+        this._router.navigate([
+            RouteConstants.project,
+            this.projectUuid,
+            RouteConstants.ontologies,
+            encodeURIComponent(id),
+            view
+        ], { skipLocationChange: false });
     }
 
     /**

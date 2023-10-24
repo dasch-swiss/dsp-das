@@ -33,7 +33,7 @@
                     <mat-divider></mat-divider>
                     <mat-list-item [ngClass]="{ 'active': listItemSelected === routeConstants.projectRelative + '/' + projectUuid }"
                         class="section-title" 
-                        (click)="open(routeConstants.projectRelative + '/' + projectUuid)"
+                        (click)="open(routeConstants.project, projectUuid)"
                     >
                         <span matListItemTitle class="section-label">
                             <mat-icon class="sidenav-prefix-icon">description</mat-icon>
@@ -45,7 +45,7 @@
 
                     <!-- Ontology Section -->
                     <mat-divider></mat-divider>
-                    <mat-list-item [ngClass]="{ 'active': listItemSelected === 'data-models'}" class="section-title" (click)="open('data-models')">
+                    <mat-list-item [ngClass]="{ 'active': listItemSelected === dataModelsRoute}" class="section-title" (click)="open(dataModelsRoute)">
                         <span matListItemTitle class="section-label">
                             <mat-icon class="sidenav-prefix-icon">bubble_chart</mat-icon>
                             <p>Data Model</p>
@@ -80,8 +80,8 @@
 
                     <div class="sidenav-footer"
                         *ngIf="isProjectAdmin">
-                        <mat-list-item [ngClass]="{ 'active': listItemSelected === 'settings'}" class="section-title footer"
-                            (click)="open('settings')">
+                        <mat-list-item [ngClass]="{ 'active': listItemSelected === settingsRoute}" class="section-title footer"
+                            (click)="open(settingsRoute)">
                             <span matListItemTitle class="section-label">
                                 <mat-icon class="sidenav-prefix-icon">settings</mat-icon>
                                 <div>Project Settings</div>

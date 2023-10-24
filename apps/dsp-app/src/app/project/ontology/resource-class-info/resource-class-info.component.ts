@@ -20,7 +20,7 @@ import {
     ReadOntology,
     ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import {DspApiConnectionToken, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent, DialogEvent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -501,7 +501,7 @@ CONSTRUCT {
 
 OFFSET 0`;
 
-        const doSearchRoute = `/search/gravsearch/${encodeURIComponent(
+        const doSearchRoute = `/${RouteConstants.search}/${RouteConstants.gravSearch}/${encodeURIComponent(
             gravsearch
         )}`;
         window.open(doSearchRoute, '_blank');

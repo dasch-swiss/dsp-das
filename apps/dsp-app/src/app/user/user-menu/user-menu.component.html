@@ -30,7 +30,7 @@
             <mat-list-item *ngIf="(user$ | async)?.sysAdmin" class="nav-item">
                 <button
                     mat-button
-                    [routerLink]="routeConstants.systemAdminRelative"
+                    [routerLink]="systemLink"
                     routerLinkActive="active-link"
                     class="nav-item button">
                     <span class="label">System Administration</span>

@@ -7,6 +7,7 @@ import { Observable, combineLatest, of } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import { map, take } from 'rxjs/operators';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import {RouteConstants} from "@dasch-swiss/vre/shared/app-config";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -74,7 +75,7 @@ export class DescriptionComponent implements OnInit {
     }
     
     editProject() {
-        this._router.navigate(['project', this.projectUuid, 'edit']);
+        this._router.navigate([RouteConstants.project, this.projectUuid, RouteConstants.edit]);
     }
 
     private getCurrentProject(projects: ReadProject[]): ReadProject {

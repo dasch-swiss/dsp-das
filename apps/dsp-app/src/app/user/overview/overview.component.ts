@@ -7,14 +7,13 @@ import {
     ReadUser,
     User,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import {DspApiConnectionToken, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { LoadAllProjectsAction, LoadUserProjectsAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 
 // should only be used by this component and child components
 export type TileLinks = 'workspace' | 'settings';
@@ -93,11 +92,13 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
         switch (params.path) {
             case 'workspace':
-                this._router.navigate([`${RouteConstants.projectRelative}/` + uuid]);
+                this._router.navigate([RouteConstants.project, uuid]);
                 break;
 
             case 'settings':
-                this._router.navigate([`${RouteConstants.projectRelative}/${uuid}/${RouteConstants.settings}/${RouteConstants.collaboration}`]);
+                this._router.navigate([
+                    RouteConstants.project, uuid, RouteConstants.settings, RouteConstants.collaboration
+                ]);
                 break;
 
             default:

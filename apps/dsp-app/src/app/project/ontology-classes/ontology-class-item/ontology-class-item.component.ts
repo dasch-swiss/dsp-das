@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {
     ClassDefinition,
     KnoraApiConnection,
@@ -8,7 +8,7 @@ import {
     Constants,
 } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import {DspApiConnectionToken, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
 import {
     ComponentCommunicationEventService,
     EmitEvent,
@@ -33,7 +33,7 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
 
     results: number;
 
-    link: string;
+    classLink: string;
 
     icon: string;
 
@@ -52,9 +52,7 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: AppErrorHandler,
-        private _ontologyService: OntologyService,
         private _route: ActivatedRoute,
-        private _router: Router,
         private _componentCommsService: ComponentCommunicationEventService
     ) {}
 
@@ -62,7 +60,7 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
         const uuid = this._route.snapshot.params.uuid;
         const splitIri = this.resClass.id.split('#');
         const ontologyName = OntologyService.getOntologyName(splitIri[0]);
-        this.link = `/project/${uuid}/ontology/${ontologyName}/${splitIri[1]}`;
+        this.classLink = `${RouteConstants.projectRelative}/${uuid}/${RouteConstants.ontology}/${ontologyName}/${splitIri[1]}`;
 
         this.gravsearch = this._setGravsearch(this.resClass.id);
 
@@ -153,5 +151,9 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
                     this._errorHandler.showMessage(error);
                 }
             );
+    }
+
+    getAddClassInstanceLink(): string {
+        return `${this.classLink}/${RouteConstants.addClassInstance}`;
     }
 }

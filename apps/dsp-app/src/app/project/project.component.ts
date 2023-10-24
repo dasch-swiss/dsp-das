@@ -1,3 +1,6 @@
+import {MatSidenav} from '@angular/material/sidenav';
+import {Title} from '@angular/platform-browser';
+import {ActivatedRoute, Router} from '@angular/router';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import {
     ChangeDetectionStrategy,
@@ -7,9 +10,6 @@ import {
     OnInit,
     ViewChild,
 } from '@angular/core';
-import { MatSidenav } from '@angular/material/sidenav';
-import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
 import {
     ReadOntology,
     ReadProject,
@@ -20,11 +20,13 @@ import {
     Events,
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
 import { Observable, Subscription, of, combineLatest } from 'rxjs';
-import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { LoadProjectOntologiesAction, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Actions, Select, Store } from '@ngxs/store';
+import { OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { map, take } from 'rxjs/operators';
 import { ProjectBase } from './project-base';
 import { ClassAndPropertyDefinitions } from '@dasch-swiss/dsp-js/src/models/v2/ontologies/ClassAndPropertyDefinitions';
+
+type AvailableRoute = typeof RouteConstants.project | typeof RouteConstants.settings | typeof RouteConstants.dataModels | typeof RouteConstants.advancedSearch;
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,6 +46,12 @@ export class ProjectComponent extends ProjectBase implements OnInit {
     classAndPropertyDefinitions: ClassAndPropertyDefinitions;
 
     sideNavOpened = true;
+
+    // routes for sidenav
+    projectRoute: AvailableRoute = RouteConstants.project;
+    settingsRoute: AvailableRoute = RouteConstants.settings;
+    dataModelsRoute: AvailableRoute = RouteConstants.dataModels;
+    advancedSearchRoute: AvailableRoute = RouteConstants.advancedSearch;
 
     get color$(): Observable<string> {
         return this.readProject$.pipe(
@@ -115,7 +123,8 @@ export class ProjectComponent extends ProjectBase implements OnInit {
      */
     @HostListener('window:keyup', ['$event'])
     keyEvent(event: KeyboardEvent) {
-        if (event.key === '[') {
+        const element = event.target as HTMLElement;
+        if (event.key === '[' && !element.matches('input, textarea')) {
             this.toggleSidenav();
         }
     }
@@ -154,9 +163,11 @@ export class ProjectComponent extends ProjectBase implements OnInit {
         }
     }
 
-    open(route: string) {
-        this.listItemSelected = route;
-        this._router.navigate([route], { relativeTo: this._route });
+    open(route: AvailableRoute, id = '') {
+        const routeCommands = id ? [route, id] : [route];
+        const extras = route === RouteConstants.project ? {} : { relativeTo: this._route }
+        this.listItemSelected = `/${route}/${id}`;
+        this._router.navigate(routeCommands, extras);
     }
 
     /**

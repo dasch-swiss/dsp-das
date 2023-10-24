@@ -27,6 +27,8 @@ export class UserMenuComponent implements OnInit, OnDestroy {
     isLoggedIn$: Observable<boolean> = this._authService.isLoggedIn$;
     @Select(UserSelectors.user) user$: Observable<User>;
 
+    systemLink = RouteConstants.system;
+
     constructor(
         private _authService: AuthService,
     ) {}

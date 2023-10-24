@@ -21,7 +21,6 @@ import { ConfirmationMessageComponent } from './main/action/confirmation-dialog/
 import { LoginFormComponent } from './main/action/login-form/login-form.component';
 import { SelectedResourcesComponent } from './main/action/selected-resources/selected-resources.component';
 import { SortButtonComponent } from './main/action/sort-button/sort-button.component';
-import { StringLiteralInputComponent } from './main/action/string-literal-input/string-literal-input.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import {
     DspApiConfigToken,
@@ -167,6 +166,7 @@ import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { apiConnectionTokenProvider } from './providers/api-connection-token.provider';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import { AppProgressIndicatorComponent } from "@dasch-swiss/vre/shared/app-progress-indicator";
+import {AppStringLiteralComponent} from "@dasch-swiss/vre/shared/app-string-literal";
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -272,7 +272,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         StatusComponent,
         StillImageComponent,
         StringifyStringLiteralPipe,
-        StringLiteralInputComponent,
         SublistValueComponent,
         SwitchPropertiesComponent,
         SystemComponent,
@@ -331,6 +330,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
                 deps: [HttpClient],
             },
         }),
+        AppStringLiteralComponent,
         NgxsStoreModule,
         NgxsStoragePluginModule.forRoot(),
     ],
