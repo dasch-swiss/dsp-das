@@ -1,20 +1,16 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import {
-    ApiResponseError,
-    KnoraApiConnection,
     ReadGroup,
     ReadProject,
+    ReadUser,
 } from '@dasch-swiss/dsp-js';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import {
-    Session,
-    SessionService,
-} from '@dasch-swiss/vre/shared/app-session';
 import { AddGroupComponent } from './add-group/add-group.component';
+import { Observable } from 'rxjs';
+import { Select, Store } from '@ngxs/store';
+import { CurrentProjectSelectors, SetCurrentProjectMembersAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ProjectService } from '../../workspace/resource/services/project.service';
 
 @Component({
     selector: 'app-permission',
@@ -27,10 +23,7 @@ export class PermissionComponent implements OnInit {
     // loading for progess indicator
     loading: boolean;
 
-    // permissions of logged-in user
-    session: Session;
-    sysAdmin = false;
-    projectAdmin = false;
+    isProjectAdmin = false;
 
     // project uuid; as identifier in project application state service
     projectUuid: string;
@@ -41,56 +34,31 @@ export class PermissionComponent implements OnInit {
     // project members
     projectGroups: ReadGroup[] = [];
 
+    @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
+    @Select(CurrentProjectSelectors.project) project$: Observable<ReadProject>;
+
     constructor(
-        @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
-        private _applicationStateService: ApplicationStateService,
-        private _errorHandler: AppErrorHandler,
+        private _projectService: ProjectService,
         private _route: ActivatedRoute,
-        private _session: SessionService,
-        private _titleService: Title
+        private _titleService: Title,
+        private _store: Store,
     ) {
         this._route.parent.parent.paramMap.subscribe((params: Params) => {
             this.projectUuid = params.get('uuid');
         });
 
         // set the page title
-        this._titleService.setTitle(
-            'Project ' + this.projectUuid + ' | Permission Groups'
-        );
+        this._titleService.setTitle('Project ' + this.projectUuid + ' | Permission Groups');
     }
 
     ngOnInit() {
-        // get information about the logged-in user
-        this.session = this._session.getSession();
+        this.project = this._store.selectSnapshot(CurrentProjectSelectors.project);
+        const user = this._store.selectSnapshot(UserSelectors.user) as ReadUser;
+        const userProjectGroups = this._store.selectSnapshot(UserSelectors.userProjectAdminGroups);
+        // is logged-in user projectAdmin?
+        this.isProjectAdmin = this._projectService.isProjectAdminOrSysAdmin(user, userProjectGroups, this.project.id);;
 
-        // is the logged-in user system admin?
-        this.sysAdmin = this.session.user.sysAdmin;
-
-        // is the logged-in user system admin?
-        this.sysAdmin = this.session.user.sysAdmin;
-
-        // get the project data from application state
-        this._applicationStateService.get(this.projectUuid).subscribe(
-            (response: ReadProject) => {
-                this.project = response;
-
-                // is logged-in user projectAdmin?
-                this.projectAdmin = this.sysAdmin
-                    ? this.sysAdmin
-                    : this.session.user.projectAdmin.some(
-                          (e) => e === this.project.id
-                      );
-
-                this.initList();
-
-                this.loading = false;
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-                this.loading = false;
-            }
-        );
+        this.initList();
     }
 
     /**
@@ -101,11 +69,7 @@ export class PermissionComponent implements OnInit {
      * refresh list of members after adding a new user to the team
      */
     refresh(): void {
-        // referesh the component
-        this.loading = true;
-        // update the application state
-        this._applicationStateService.delete('members_of_' + this.projectUuid);
-
+        this._store.dispatch(new SetCurrentProjectMembersAction([]));
         this.initList();
 
         // refresh child component: add user

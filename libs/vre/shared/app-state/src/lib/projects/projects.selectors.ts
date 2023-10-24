@@ -3,6 +3,7 @@ import { ProjectsState } from './projects.state';
 import { ProjectsStateModel } from './projects.state-model';
 import { ReadGroup, ReadProject, ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
 import { IKeyValuePairs } from '../model-interfaces';
+import { CurrentProjectSelectors } from '../current-project/current-project.selectors';
 
 export class ProjectsSelectors {
     @Selector([ProjectsState])

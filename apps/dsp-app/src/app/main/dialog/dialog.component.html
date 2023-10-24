@@ -493,7 +493,7 @@
             [propertyInfo]="data.propInfo"
             [resClassIri]="data.parentIri"
             [guiOrder]="data.position"
-            (closeDialog)="dialogRef.close()"
+            (closeDialog)="dialogRef.close($event)"
         >
         </app-property-form>
     </div>

@@ -97,23 +97,31 @@ export class ProjectService {
     }
 
     uuidToIri(uuid: string): string {
-        if (uuid) {
+        if (uuid && !uuid.startsWith(this._acs.dspAppConfig.iriBase)) {
             return `${this._acs.dspAppConfig.iriBase}/projects/${uuid}`;
-        }
+        } 
 
-        return '';
+        return uuid;
     }
 
-    isProjectAdmin(user: ReadUser | User, userProjectGroups: string[], projectUuid: string): boolean
+    isProjectAdmin = (userProjectGroups: string[], projectUuid: string): boolean =>
+        userProjectGroups.some((e) => e === this.uuidToIri(projectUuid));
+
+    isProjectAdminOrSysAdmin(user: ReadUser, userProjectGroups: string[], projectUuid: string): boolean
     {
-        return user.systemAdmin 
-            ? true 
-            : userProjectGroups.some((e) => e === this.uuidToIri(projectUuid));
+        const isMemberOfSystemAdminGroup = 
+            user
+                && user.permissions.groupsPerProject
+                && user.permissions.groupsPerProject[Constants.SystemProjectIRI] 
+                && (user.permissions.groupsPerProject[Constants.SystemProjectIRI].indexOf(Constants.SystemAdminGroupIRI) > -1);
+
+        return this.isProjectAdmin(userProjectGroups, projectUuid) || isMemberOfSystemAdminGroup;
     }
+
 
     isProjectMember(user: ReadUser, userProjectGroups: string[], projectUuid: string): boolean
     {
-        const isProjectAdmin = this.isProjectAdmin(user, userProjectGroups, projectUuid);
+        const isProjectAdmin = this.isProjectAdmin(userProjectGroups, projectUuid);
         const iri = this.uuidToIri(projectUuid);
         return isProjectAdmin
             // check if the user is member of the current project(id contains the iri)

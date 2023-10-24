@@ -31,11 +31,11 @@ import {
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
-    DefaultClass,
     DefaultResourceClasses,
 } from '@dsp-app/src/app/project/ontology/default-data/default-resource-classes';
 import { ResourceService } from '../services/resource.service';
 import { SelectPropertiesComponent } from './select-properties/select-properties.component';
+import { DefaultClass } from '@dasch-swiss/vre/shared/app-state';
 
 @Component({
     selector: 'app-resource-instance-form',

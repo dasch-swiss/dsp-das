@@ -7,7 +7,7 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { CurrentProjectStateModel } from './current-project.state-model';
-import { LogCurrentProjectOutAction as ClearCurrentProjectAction, SetCurrentProjectAction, SetCurrentProjectGroupsAction, SetCurrentProjectMembersAction } from './current-project.actions';
+import { ClearCurrentProjectAction as ClearCurrentProjectAction, SetCurrentProjectAction, SetCurrentProjectGroupsAction, SetCurrentProjectMembersAction } from './current-project.actions';
 
 let defaults: CurrentProjectStateModel = {
     isLoading: false,

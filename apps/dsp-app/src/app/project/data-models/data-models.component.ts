@@ -1,5 +1,5 @@
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     ApiResponseData,
@@ -16,20 +16,30 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { OntologyService } from '../ontology/ontology.service';
 import { Select, Store } from '@ngxs/store';
 import { OntologiesSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject, combineLatest, of } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-data-models',
     templateUrl: './data-models.component.html',
     styleUrls: ['./data-models.component.scss'],
 })
-export class DataModelsComponent implements OnInit {
+export class DataModelsComponent implements OnInit, OnDestroy {
+    private ngUnsubscribe: Subject<void> = new Subject<void>();
+    
     projectLists: ListNodeInfo[];
 
     // permissions of logged-in user
-    isProjectAdmin = false;
-
+    get isAdmin$(): Observable<boolean> {
+        return combineLatest([this.user$, this.userProjectAdminGroups$, this._route.parent.params])
+            .pipe(
+                takeUntil(this.ngUnsubscribe),
+                map(([user, userProjectGroups, params]) => {
+                    return this._projectService.isProjectAdminOrSysAdmin(user, userProjectGroups, params.uuid);
+                })
+            )
+    }
 
     get ontologiesMetadata$(): Observable<OntologyMetadata[]> {
         const uuid = this._route.parent.snapshot.params.uuid;
@@ -38,7 +48,7 @@ export class DataModelsComponent implements OnInit {
             return of({} as OntologyMetadata[]);
         }
         
-        return this.store.select(OntologiesSelectors.projectOntologies)
+        return this._store.select(OntologiesSelectors.projectOntologies)
             .pipe(
                 map(ontologies => {
                     if (!ontologies || !ontologies[iri]) {
@@ -50,7 +60,8 @@ export class DataModelsComponent implements OnInit {
             )
     }
 
-
+    @Select(UserSelectors.user) user$: Observable<ReadUser>;
+    @Select(UserSelectors.userProjectAdminGroups) userProjectAdminGroups$: Observable<string[]>;
     @Select(UserSelectors.isLoggedIn) isLoggedIn$: Observable<boolean>;
     @Select(OntologiesSelectors.isLoading) isLoading$: Observable<boolean>;
 
@@ -61,9 +72,8 @@ export class DataModelsComponent implements OnInit {
         private _route: ActivatedRoute,
         private _router: Router,
         private _appInit: AppConfigService,
-        private _ontologyService: OntologyService,
-        private store: Store,
-        private projectService: ProjectService,
+        private _store: Store,
+        private _projectService: ProjectService,
     ) {
     }
 
@@ -82,13 +92,11 @@ export class DataModelsComponent implements OnInit {
                     this._errorHandler.showMessage(error);
                 }
             );
-        
-        const user = this.store.selectSnapshot(UserSelectors.user) as ReadUser;
-        const userProjectGroups = this.store.selectSnapshot(UserSelectors.userProjectGroups);
-        // is logged-in user projectAdmin?
-        if (user) {
-            this.isProjectAdmin = this.projectService.isProjectAdmin(user, userProjectGroups, uuid);
-        }
+    }
+
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     /**
@@ -101,7 +109,7 @@ export class DataModelsComponent implements OnInit {
 
         if (route === 'ontology' && id) {
             // get name of ontology
-            name = this._ontologyService.getOntologyName(id);
+            name = OntologyService.getOntologyName(id);
         }
         if (route === 'list' && id) {
             // get name of list

@@ -61,7 +61,7 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         const uuid = this._route.snapshot.params.uuid;
         const splitIri = this.resClass.id.split('#');
-        const ontologyName = this._ontologyService.getOntologyName(splitIri[0]);
+        const ontologyName = OntologyService.getOntologyName(splitIri[0]);
         this.link = `/project/${uuid}/ontology/${ontologyName}/${splitIri[1]}`;
 
         this.gravsearch = this._setGravsearch(this.resClass.id);

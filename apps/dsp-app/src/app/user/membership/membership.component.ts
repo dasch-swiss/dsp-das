@@ -7,24 +7,24 @@ import {
     Output,
 } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { Router } from '@angular/router';
 import {
     ApiResponseData,
     ApiResponseError,
     Constants,
     KnoraApiConnection,
-    MembersResponse,
     ProjectsResponse,
     ReadUser,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { Session } from '@dasch-swiss/vre/shared/app-session';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { AutocompleteItem } from '../../workspace/search/operator';
+import { Select, Store } from '@ngxs/store';
+import { RemoveUserFromProjectAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 // --> TODO replace it by IPermissions from dsp-js
 export interface IPermissions {
@@ -44,8 +44,6 @@ export class MembershipComponent implements OnInit {
 
     loading: boolean;
 
-    session: Session;
-
     user: ReadUser;
 
     projects: AutocompleteItem[] = [];
@@ -59,31 +57,20 @@ export class MembershipComponent implements OnInit {
             other: '# projects',
         },
     };
+    
+    @Select(UserSelectors.user) user$: Observable<ReadUser>;
 
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _applicationStateService: ApplicationStateService,
         private _errorHandler: AppErrorHandler,
-        private _router: Router,
-        private _projectService: ProjectService
+        private _projectService: ProjectService,
+        private _store: Store
     ) {}
 
     ngOnInit() {
-        this.loading = true;
-
-        this._dspApiConnection.admin.usersEndpoint.getUserByUsername(this.username).subscribe(
-            (response: ApiResponseData<UserResponse>) => {
-                this.user = response.body.user;
-                this._applicationStateService.set(this.username, this.user)
-                this.initNewProjects();
-                this.loading = false;
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-                this.loading = false;
-            }
-        );
+        this.user = this._store.selectSnapshot(UserSelectors.user) as ReadUser;
+        this.initNewProjects();
     }
 
     initNewProjects() {
@@ -139,18 +126,6 @@ export class MembershipComponent implements OnInit {
         );
     }
 
-    updateProjectCache(iri: string) {
-        const projectUuid: string = this._projectService.iriToUuid(iri);
-
-        // reset the application state of project members
-
-        this._dspApiConnection.admin.projectsEndpoint.getProjectMembersByIri(iri).subscribe(
-            (response: ApiResponseData<MembersResponse>) => {
-                this._applicationStateService.set('members_of_' + projectUuid, response.body.members)
-            }
-        )
-    }
-
     /**
      * remove user from project
      *
@@ -158,52 +133,27 @@ export class MembershipComponent implements OnInit {
      */
     removeFromProject(iri: string) {
         this.loading = true;
-
-        this._dspApiConnection.admin.usersEndpoint
-            .removeUserFromProjectMembership(this.user.id, iri)
-            .subscribe(
-                (response: ApiResponseData<UserResponse>) => {
+        this._store.dispatch(new RemoveUserFromProjectAction(this.user.id, iri))
+            .pipe(take(1))
+            .subscribe((response: ApiResponseData<UserResponse>) => {
                     this.user = response.body.user;
-                    // set new user state
-                    this._applicationStateService.delete(this.username);
-                    this._applicationStateService.set(
-                        this.username,
-                        this.user
-                    );
                     this.initNewProjects();
                     // this.updateProjectCache(iri);
                     this.loading = false;
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                    this.loading = false;
-                }
-            );
+            });
     }
 
     addToProject(iri: string) {
         this.loading = true;
-
-        this._dspApiConnection.admin.usersEndpoint
-            .addUserToProjectMembership(this.user.id, iri)
+        this._store.dispatch(new RemoveUserFromProjectAction(this.user.id, iri))
+            .pipe(take(1))
             .subscribe(
                 (response: ApiResponseData<UserResponse>) => {
                     this.user = response.body.user;
-                    // set new user state
-                    this._applicationStateService.delete(this.username);
-                    this._applicationStateService.set(
-                        this.username,
-                        this.user
-                    );
                     this.initNewProjects();
                     // this.updateProjectCache(iri);
                     this.loading = false;
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                    this.loading = false;
-                }
-            );
+            });
     }
 
     /**

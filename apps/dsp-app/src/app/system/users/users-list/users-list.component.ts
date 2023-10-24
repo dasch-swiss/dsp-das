@@ -146,7 +146,7 @@ export class UsersListComponent implements OnInit {
                 ) > -1
             );
         } else {
-            const userProjectGroups = this.store.selectSnapshot(UserSelectors.userProjectGroups);
+            const userProjectGroups = this.store.selectSnapshot(UserSelectors.userProjectAdminGroups);
             // check if the logged-in user is project admin
             return userProjectGroups.some((e) => e === this.project.id);
         }

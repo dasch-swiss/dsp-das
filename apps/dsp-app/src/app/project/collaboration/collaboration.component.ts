@@ -4,7 +4,6 @@ import { ActivatedRoute, Params } from '@angular/router';
 import {
     ApiResponseData,
     ApiResponseError,
-    KnoraApiConnection,
     MembersResponse,
     ReadProject,
     ReadUser,
@@ -13,9 +12,8 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { AddUserComponent } from './add-user/add-user.component';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
-import { Select, Store } from '@ngxs/store';
-import { CurrentProjectSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
+import { CurrentProjectSelectors, LoadProjectMembersAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
@@ -52,14 +50,12 @@ export class CollaborationComponent implements OnInit {
     @Select(CurrentProjectSelectors.project) project$: Observable<ReadProject>;
     
     constructor(
-        @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: AppErrorHandler,
         private _route: ActivatedRoute,
         private _projectService: ProjectService,
         private _titleService: Title,
-        private _applicationStateService: ApplicationStateService,
-        private _store: Store
+        private _store: Store,
+        private _actions$: Actions,
     ) {
         // get the uuid of the current project
         if (this._route.parent.parent.snapshot.url.length) {
@@ -72,8 +68,8 @@ export class CollaborationComponent implements OnInit {
     ngOnInit() {
         this.loading = true;
 
-        const userProjectGroups = this._store.selectSnapshot(UserSelectors.userProjectGroups);
-        const user = this._store.selectSnapshot(UserSelectors.user);
+        const userProjectGroups = this._store.selectSnapshot(UserSelectors.userProjectAdminGroups);
+        const user = this._store.selectSnapshot(UserSelectors.user) as ReadUser;
         this.project$
             .pipe(take(1))
             .subscribe((project: ReadProject) => {
@@ -85,7 +81,7 @@ export class CollaborationComponent implements OnInit {
                 );
                 
                 // is logged-in user projectAdmin?
-                this.isProjectAdmin = this._projectService.isProjectAdmin(user, userProjectGroups, this.project.id);
+                this.isProjectAdmin = this._projectService.isProjectAdminOrSysAdmin(user, userProjectGroups, this.project.id);
 
                 // get list of project members and groups
                 if (this.isProjectAdmin) {
@@ -107,13 +103,11 @@ export class CollaborationComponent implements OnInit {
      */
     initList(): void {
         const projectIri = this._projectService.uuidToIri(this.projectUuid);
-
-        // get project members
-        this._dspApiConnection.admin.projectsEndpoint.getProjectMembersByIri(projectIri).subscribe(
-            (response: ApiResponseData<MembersResponse>) => {
-                this.projectMembers = response.body.members;
-                // set project members state in application state service
-                this._applicationStateService.set('members_of_' + this.projectUuid, this.projectMembers);
+        this._store.dispatch(new LoadProjectMembersAction(projectIri));
+        this._actions$.pipe(ofActionSuccessful(LoadProjectMembersAction))
+            .pipe(take(1))
+            .subscribe(() => {
+                this.projectMembers = this._store.selectSnapshot(ProjectsSelectors.projectMembers)[this.projectUuid].value;
 
                 // clean up list of users
                 this.active = [];
@@ -128,11 +122,7 @@ export class CollaborationComponent implements OnInit {
                 }
 
                 this.loading = false;
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-            }
-        );
+            });
     }
 
     /**

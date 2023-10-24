@@ -19,7 +19,7 @@ export class SetCurrentProjectAction {
     ) {}
 }
 
-export class LogCurrentProjectOutAction {
-    static readonly type = '[CurrentProject] Log user out';
+export class ClearCurrentProjectAction {
+    static readonly type = '[CurrentProject] Clear Current Project';
     constructor() {}
 }

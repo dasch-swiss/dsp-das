@@ -22,17 +22,18 @@ import {
     ProjectResponse,
     ProjectsResponse,
     ReadProject,
+    ReadUser,
     StringLiteral,
     UpdateProjectRequest,
-    UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
+import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
+import { CurrentProjectSelectors, UpdateProjectAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-project-form',
@@ -160,15 +161,15 @@ export class ProjectFormComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _applicationStateService: ApplicationStateService,
         private _errorHandler: AppErrorHandler,
         private _notification: NotificationService,
         private _fb: UntypedFormBuilder,
         private _route: ActivatedRoute,
         private _router: Router,
         private _location: Location,
-        private _session: SessionService,
-        private _projectService: ProjectService
+        private _projectService: ProjectService,
+        private _store: Store,
+        private _actions$: Actions,
     ) {
         // get the uuid of the current project
         this._route.parent.paramMap.subscribe((params: Params) => {
@@ -410,27 +411,14 @@ export class ProjectFormComponent implements OnInit {
             }
 
             // edit / update project data
-            this._dspApiConnection.admin.projectsEndpoint
-                .updateProject(this.project.id, projectData)
-                .subscribe(
-                    (response: ApiResponseData<ProjectResponse>) => {
+            this._store.dispatch(new UpdateProjectAction(this.project.id, projectData));
+            this._actions$.pipe(ofActionSuccessful(UpdateProjectAction))
+                .subscribe(() => {
                         this.success = true;
-                        this.project = response.body.project;
-
-                        // update application state
-                        this._applicationStateService.set(
-                            this._projectService.iriToUuid(this.projectIri),
-                            this.project
-                        );
-
-                        this._notification.openSnackBar(
-                            'You have successfully updated the project information.'
-                        );
-
+                        const currentProject = this._store.selectSnapshot(CurrentProjectSelectors.project);
+                        this.project = currentProject;
+                        this._notification.openSnackBar('You have successfully updated the project information.');
                         this._location.back();
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
                         this.loading = false;
                     }
                 );
@@ -463,48 +451,36 @@ export class ProjectFormComponent implements OnInit {
 
                         // add logged-in user to the project
                         // who am I?
+                        const user = this._store.selectSnapshot(UserSelectors.user) as ReadUser;
                         this._dspApiConnection.admin.usersEndpoint
-                            .getUserByUsername(
-                                this._session.getSession().user.name
+                            .addUserToProjectMembership(
+                                user.id,
+                                projectResponse.body.project.id
                             )
                             .subscribe(
-                                (
-                                    userResponse: ApiResponseData<UserResponse>
-                                ) => {
-                                    this._dspApiConnection.admin.usersEndpoint
-                                        .addUserToProjectMembership(
-                                            userResponse.body.user.id,
-                                            projectResponse.body.project.id
-                                        )
-                                        .subscribe(
-                                            () => {
-                                                const uuid =
-                                                    this._projectService.iriToUuid(
-                                                        projectResponse.body
-                                                            .project.id
-                                                    );
-                                                this.loading = false;
-                                                // redirect to project page
-                                                this._router
-                                                    .navigateByUrl('/project', {
-                                                        skipLocationChange:
-                                                            true,
-                                                    })
-                                                    .then(() =>
-                                                        this._router.navigate([
-                                                            '/project/' + uuid,
-                                                        ])
-                                                    );
-                                            },
-                                            (error: ApiResponseError) => {
-                                                this._errorHandler.showMessage(
-                                                    error
-                                                );
-                                            }
+                                () => {
+                                    const uuid =
+                                        this._projectService.iriToUuid(
+                                            projectResponse.body
+                                                .project.id
+                                        );
+                                    this.loading = false;
+                                    // redirect to project page
+                                    this._router
+                                        .navigateByUrl('/project', {
+                                            skipLocationChange:
+                                                true,
+                                        })
+                                        .then(() =>
+                                            this._router.navigate([
+                                                '/project/' + uuid,
+                                            ])
                                         );
                                 },
                                 (error: ApiResponseError) => {
-                                    this._errorHandler.showMessage(error);
+                                    this._errorHandler.showMessage(
+                                        error
+                                    );
                                 }
                             );
                     },

@@ -33,8 +33,8 @@ import {
     PropertyCategory,
     PropertyInfoObject,
 } from '../default-data/default-properties';
-import { DefaultClass } from '../default-data/default-resource-classes';
 import { OntologyService } from '../ontology.service';
+import { DefaultClass } from '@dasch-swiss/vre/shared/app-state';
 
 // property data structure
 export class Property {

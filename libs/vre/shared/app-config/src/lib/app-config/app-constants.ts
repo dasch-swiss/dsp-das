@@ -91,3 +91,9 @@ export enum Auth {
     Bearer = 'Bearer',
 }
 
+export enum MaterialColor {
+    Primary = 'primary',
+    Warn = 'warn',
+    Accent = 'accent',
+    Default = 'default',
+}

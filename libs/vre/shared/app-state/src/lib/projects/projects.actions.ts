@@ -1,3 +1,5 @@
+import { UpdateProjectRequest } from "@dasch-swiss/dsp-js";
+
 export class LoadUserProjectsAction {
     static readonly type = '[Projects] Load User Projects';
     constructor() {}
@@ -14,7 +16,7 @@ export class LoadProjectAction {
 }
 
 export class ClearProjectsAction {
-    static readonly type = '[Projects] Log projects out';
+    static readonly type = '[Projects] Clear projects';
     constructor() {}
 }
 
@@ -29,11 +31,16 @@ export class AddUserToProjectMembershipAction {
 }
 
 export class LoadProjectMembersAction {
-    static readonly type = '[Projects] Load Project Members Action';
+    static readonly type = '[Projects] Load Project Members';
     constructor(public projectUuid: string) {}
 }
 
 export class LoadProjectGroupsAction {
-    static readonly type = '[Projects] Load Project Groups Action';
+    static readonly type = '[Projects] Load Project Groups';
     constructor(public projectUuid: string) {}
+}
+
+export class UpdateProjectAction {
+    static readonly type = '[Projects] Update Project';
+    constructor(public projectUuid: string, public projectData: UpdateProjectRequest) {}
 }

@@ -71,7 +71,7 @@
                                 </div>
                             </mat-expansion-panel-header>
                             <!-- list of ontology classes -->
-                            <app-ontology-classes [resClasses]="onto.getAllClassDefinitions()"
+                            <app-ontology-classes [resClasses]="getAllEntityDefinitionsAsArray(onto.classes)"
                                 [projectMember]="isProjectMember">
                             </app-ontology-classes>
                         </mat-expansion-panel>

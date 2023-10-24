@@ -1,7 +1,10 @@
 import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     HostListener,
     Inject,
+    OnDestroy,
     OnInit,
     ViewChild,
     ViewContainerRef,
@@ -15,31 +18,20 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
-    ApiResponseData,
     ApiResponseError,
-    CanDoResponse,
     ClassDefinition,
     Constants,
     DeleteResourceClass,
     DeleteResourceProperty,
     KnoraApiConnection,
-    ListsResponse,
-    OntologiesMetadata,
-    ProjectResponse,
     PropertyDefinition,
     ReadOntology,
-    ReadProject,
+    ReadUser,
     UpdateOntology,
-    UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken, RouteConstants, getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import {
-    Session,
-    SessionService,
-} from '@dasch-swiss/vre/shared/app-session';
 import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import {
@@ -48,69 +40,48 @@ import {
     PropertyInfoObject,
 } from './default-data/default-properties';
 import {
-    DefaultClass,
     DefaultResourceClasses,
 } from './default-data/default-resource-classes';
 import { OntologyService } from './ontology.service';
-
-/**
- * contains the information about the assignment of a property to a class
- **/
-export interface PropertyAssignment {
-    resClass: ClassDefinition;
-    property: PropertyInfoObject;
-}
-
-export interface OntologyProperties {
-    ontology: string;
-    properties: PropertyDefinition[];
-}
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
+import { ClearCurrentOntologyAction, CurrentOntologyCanBeDeletedAction, DefaultClass, LoadOntologyAction, LoadProjectOntologiesAction, OntologiesSelectors, OntologyProperties, ProjectsSelectors, RemoveProjectOntologyAction, SetCurrentOntologyAction, SetCurrentProjectOntologyPropertiesAction, SetOntologiesLoadingAction, UpdateProjectOntologyAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Observable, Subject, combineLatest } from 'rxjs';
+import { map, take, takeUntil } from 'rxjs/operators';
+import { ProjectBase } from '../project-base';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-ontology',
     templateUrl: './ontology.component.html',
     styleUrls: ['./ontology.component.scss'],
 })
-export class OntologyComponent implements OnInit {
+export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy {
+    private ngUnsubscribe: Subject<void> = new Subject<void>();
+    
     @ViewChild('ontologyEditor', { read: ViewContainerRef })
     ontologyEditor: ViewContainerRef;
 
-    // general loading status for progess indicator
-    loading: boolean;
-
-    // loading status during open-ontology-process
-    loadOntology: boolean;
-
-    // permissions of logged-in user
-    session: Session;
-    // system admin, project admin, and project member are by default false
-    sysAdmin = false;
-    projectAdmin = false;
-    projectMember = false;
-
-    // project uuid; used as identifier in application state service
-    projectUuid: string;
-
-    // project data
-    project: ReadProject;
-
-    // all project ontologies
-    ontologies: ReadOntology[] = [];
-
-    // existing project ontology names
-    existingOntologyNames: string[] = [];
-
     // id of current ontology
-    ontologyIri: string = undefined;
-
-    // current ontology
-    ontology: ReadOntology;
+    get ontologyIri$(): Observable<string> {
+        const iriBase = this._ontologyService.getIriBaseUrl();
+        return combineLatest([this._route.params, this.project$])
+            .pipe(
+                takeUntil(this.ngUnsubscribe),
+                map(([params, project]) => {
+                    const ontologyIri = `${iriBase}/${RouteConstants.ontology}/${project.shortcode}/${params['onto']}/v2`;
+                    return ontologyIri;
+                })
+            );
+    }
 
     // the lastModificationDate is the most important key
     // when updating something inside the ontology
-    lastModificationDate: string;
-
-    ontologyCanBeDeleted: boolean;
+    get lastModificationDate$(): Observable<string> {
+        return this.currentOntology$.pipe(
+            takeUntil(this.ngUnsubscribe),
+            map(x => x?.lastModificationDate)
+        );
+    };
 
     // all resource classes in the current ontology
     ontoClasses: ClassDefinition[];
@@ -145,33 +116,64 @@ export class OntologyComponent implements OnInit {
     // disable content on small devices
     disableContent = false;
 
+    get isAdmin$(): Observable<boolean> {
+        return combineLatest([this.user$, this.userProjectAdminGroups$, this._route.parent.params])
+            .pipe(
+                takeUntil(this.ngUnsubscribe),
+                map(([user, userProjectGroups, params]) => {
+                    return this._projectService.isProjectAdminOrSysAdmin(user, userProjectGroups, params.uuid);
+                })
+            )
+    }
+    
+    get isLoading$(): Observable<boolean> {
+        return combineLatest([this.isOntologiesLoading$, this.isProjectsLoading$])
+            .pipe(
+                takeUntil(this.ngUnsubscribe),
+                map(([isOntologiesLoading, isProjectsLoading]) => {
+                    return isOntologiesLoading === true || isProjectsLoading === true;
+                })
+            )
+    }
+
+    @Select(UserSelectors.user) user$: Observable<ReadUser>;
+    @Select(UserSelectors.userProjectAdminGroups) userProjectAdminGroups$: Observable<string[]>;
+    @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
+    @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
+    @Select(OntologiesSelectors.isLoading) isOntologiesLoading$: Observable<boolean>;
+    @Select(OntologiesSelectors.currentProjectOntologies) currentProjectOntologies$: Observable<ReadOntology[]>;
+    @Select(OntologiesSelectors.currentOntology) currentOntology$: Observable<ReadOntology>;
+    @Select(OntologiesSelectors.currentOntologyCanBeDeleted) currentOntologyCanBeDeleted$: Observable<boolean>;
+
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _applicationStateService: ApplicationStateService,
         private _dialog: MatDialog,
         private _errorHandler: AppErrorHandler,
         private _fb: UntypedFormBuilder,
         private _ontologyService: OntologyService,
-        private _route: ActivatedRoute,
-        private _router: Router,
-        private _sessionService: SessionService,
         private _sortingService: SortingService,
-        private _titleService: Title,
-        private _projectService: ProjectService
-    ) {}
+        protected _actions$: Actions,
+        protected _router: Router,
+        protected _route: ActivatedRoute,
+        protected _store: Store,
+        protected _titleService: Title,
+        protected _projectService: ProjectService,
+        protected _cd: ChangeDetectorRef,
+    ) {
+        super(_store, _route, _projectService, _titleService, _router, _cd, _actions$);
+    }
 
     @HostListener('window:resize', ['$event']) onWindowResize() {
         this.disableContent = window.innerWidth <= 768;
         // reset the page title
         if (!this.disableContent) {
-            this._setPageTitle();
+            this.setTitle();
         }
     }
 
     ngOnInit() {
-        this.loading = true;
-
+        super.ngOnInit();
         // get the uuid of the current project
         this._route.parent.paramMap.subscribe((params: Params) => {
             this.projectUuid = params.get('uuid');
@@ -183,63 +185,26 @@ export class OntologyComponent implements OnInit {
                 ? this._route.snapshot.params.view
                 : 'classes';
         }
-
-        const uuid = this._route.parent.snapshot.params.uuid;
-        this._route.params.subscribe((params) => {
-            this.loading = true;
-            this._dspApiConnection.admin.projectsEndpoint
-                .getProjectByIri(this._projectService.uuidToIri(uuid))
-                .subscribe((res: ApiResponseData<ProjectResponse>) => {
-                    this.project = res.body.project;
-                    const shortcode = res.body.project.shortcode;
-                    const iriBase = this._ontologyService.getIriBaseUrl();
-                    const ontologyName = params['onto'];
-                    this.ontologyIri = `${iriBase}/ontology/${shortcode}/${ontologyName}/v2`;
-
-                    this.initView();
-                });
-        });
+        
+        this.initOntology();
     }
 
-    initView(): void {
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+        this._store.dispatch(new ClearCurrentOntologyAction());
+    }
+
+    initView(ontology: ReadOntology): void {
         this.disableContent = window.innerWidth <= 768;
 
-        // get information about the logged-in user
-        this.session = this._sessionService.getSession();
-
-        // is the logged-in user system admin?
-        this.sysAdmin = this.session ? this.session.user.sysAdmin : false;
-
-        // default value for projectAdmin
-        this.projectAdmin = this.sysAdmin;
-
         // set the page title
-        this._setPageTitle();
-
-        if (this.session) {
-            // is logged-in user projectAdmin?
-            this.projectAdmin = this.sysAdmin
-                ? this.sysAdmin
-                : this.session.user.projectAdmin.some(
-                      (e) => e === this.project.id
-                  );
-
-            // or at least a project member?
-            this._dspApiConnection.admin.usersEndpoint
-                .getUserByUsername(this.session.user.name)
-                .subscribe((userResponse: ApiResponseData<UserResponse>) => {
-                    this.projectMember = userResponse.body.user.projects.some(
-                        (p) => p.shortcode === this.project.shortcode
-                    );
-
-                    // get the ontologies for this project
-                    this.initOntologiesList();
-                });
-        }
+        this.setTitle();
+        //this.initOntologiesList();
 
         this.ontologyForm = this._fb.group({
             ontology: new UntypedFormControl({
-                value: this.ontologyIri,
+                value: ontology.id,
                 disabled: false,
             }),
         });
@@ -254,84 +219,45 @@ export class OntologyComponent implements OnInit {
      * and set the state of currentProjectOntologies
      */
     initOntologiesList(): void {
-        this.loading = true;
-
-        // reset existing ontology names and ontologies
-        this.existingOntologyNames = [];
-        this.ontologies = [];
-
-        this._dspApiConnection.v2.onto
-            .getOntologiesByProjectIri(this.project.id)
-            .subscribe(
-                (response: OntologiesMetadata) => {
-                    if (!response.ontologies.length) {
-                        this.setCache();
-                    } else {
-                        response.ontologies.forEach((ontoMeta) => {
-                            // set list of already existing ontology names
-                            // it will be used in ontology form
-                            // because ontology name has to be unique
-                            const name = this._ontologyService.getOntologyName(
-                                ontoMeta.id
-                            );
-                            this.existingOntologyNames.push(name);
-
-                            // get each ontology
-                            this._dspApiConnection.v2.onto
-                                .getOntology(ontoMeta.id, true)
-                                .subscribe(
-                                    (readOnto: ReadOntology) => {
-                                        this.ontologies.push(readOnto);
-
-                                        if (ontoMeta.id === this.ontologyIri) {
-                                            // one ontology is selected:
-                                            // get all information to display this ontology
-                                            // with all classes, properties and connected lists
-                                            this.loadOntology = true;
-                                            this.resetOntologyView(readOnto);
-                                        }
-                                        if (
-                                            response.ontologies.length ===
-                                            this.ontologies.length
-                                        ) {
-                                            this.ontologies =
-                                                this._sortingService.keySortByAlphabetical(
-                                                    this.ontologies,
-                                                    'label'
-                                                );
-
-                                            this._applicationStateService.set(
-                                                'currentProjectOntologies',
-                                                this.ontologies
-                                            );
-                                            this.setCache();
-                                        }
-                                    },
-                                    (error: ApiResponseError) => {
-                                        this._errorHandler.showMessage(error);
-                                    }
-                                );
-                        });
+        this._store.dispatch(new LoadProjectOntologiesAction(this.projectUuid));
+        combineLatest([this._actions$.pipe(ofActionSuccessful(LoadProjectOntologiesAction)), this.currentProjectOntologies$, this.ontologyIri$])
+            .pipe(
+                take(1),
+                map(([loadProjectOntologiesAction, currentProjectOntologies, ontologyIri]) => {
+                    const readOnto = currentProjectOntologies.find((x) => x.id === ontologyIri);
+                    if (readOnto) {
+                        // one ontology is selected:
+                        // get all information to display this ontology
+                        // with all classes, properties and connected lists
+                        this.resetOntologyView(readOnto);
                     }
-                },
-                (error: ApiResponseError) => {
-                    this.ontologies = [];
-                    this._errorHandler.showMessage(error);
-                    this.loading = false;
-                }
-            );
+                }));
     }
 
-    initOntology(iri: string) {
-        this._dspApiConnection.v2.onto.getOntology(iri, true).subscribe(
-            (response: ReadOntology) => {
-                this.resetOntologyView(response);
-                this._dspApiConnection.v2.ontologyCache.reloadCachedItem(response.id);
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-            }
-        );
+    initOntology() {
+        const currentOntology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+        if (!currentOntology) {
+            const projectOntologies = this._store.selectSnapshot(OntologiesSelectors.projectOntologies);
+            this.ontologyIri$
+                .pipe(take(1))
+                .subscribe(iri => {
+                    const projectIri = this._projectService.uuidToIri(this.projectUuid);
+                    const currentOntology = projectOntologies[projectIri]?.readOntologies.find(o => o.id === iri);
+                    if (currentOntology) {
+                        this.resetOntologyView(currentOntology);
+                    } else {
+                        this._store.select(OntologiesSelectors.isLoading)
+                            .pipe(takeUntil(this.ngUnsubscribe))
+                            .subscribe(isLoading => {
+                                if (isLoading === false) {
+                                    this._store.dispatch(new LoadOntologyAction(iri, this.projectUuid, true));
+                                }
+                            });
+                    } 
+                });
+        } else {
+            this.resetOntologyView(currentOntology);
+        }
     }
 
     initOntoClasses(allOntoClasses: ClassDefinition[]) {
@@ -352,13 +278,10 @@ export class OntologyComponent implements OnInit {
         });
         // sort classes by label
         // --> TODO: add sort functionallity to the gui
-        this.ontoClasses = this._sortingService.keySortByAlphabetical(
-            this.ontoClasses,
-            'label'
-        );
+        this.ontoClasses = this._sortingService.keySortByAlphabetical(this.ontoClasses, 'label');
     }
 
-    initOntoProperties(allOntoProperties: PropertyDefinition[]) {
+    initOntoProperties(ontology: ReadOntology, allOntoProperties: PropertyDefinition[]) {
         // reset the ontology properties
         const listOfProperties = [];
 
@@ -374,7 +297,7 @@ export class OntologyComponent implements OnInit {
 
         // sort properties by label
         this.ontoProperties = {
-            ontology: this.ontology.id,
+            ontology: ontology.id,
             properties: this._sortingService.keySortByAlphabetical(
                 listOfProperties,
                 'label'
@@ -392,6 +315,12 @@ export class OntologyComponent implements OnInit {
         }
         // reset and open selected ontology
         this.resetOntology(id);
+    }
+
+    onLastModificationDateChange(lastModificationDate): void {
+        const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+        //TODO reload or just update lastModificationDate in the state?
+        this._store.dispatch(new LoadOntologyAction(ontology.id, this.projectUuid, true));
     }
 
     /**
@@ -419,47 +348,26 @@ export class OntologyComponent implements OnInit {
      * @param id
      */
     resetOntology(id: string) {
-        this.ontology = undefined;
+        this._store.dispatch([new SetCurrentOntologyAction(null), new CurrentOntologyCanBeDeletedAction()]);
         this.ontoClasses = [];
         this.openOntologyRoute(id, this.view);
         this.initOntologiesList();
     }
 
     resetOntologyView(ontology: ReadOntology) {
-        this.ontology = ontology;
-        this.lastModificationDate = this.ontology.lastModificationDate;
-        this._applicationStateService.set('currentOntology', ontology);
-
-        this._applicationStateService.get('currentProjectOntologies').subscribe(
-            (ontologies: ReadOntology[]) => {
-                // update current list of project ontologies
-                ontologies[
-                    ontologies.findIndex((onto) => onto.id === ontology.id)
-                ] = ontology;
-                this._applicationStateService.set('currentProjectOntologies', ontologies);
-            },
-            () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the application state
-        );
-
+        this.initView(ontology);
+        this._dspApiConnection.v2.ontologyCache.reloadCachedItem(ontology.id);
         // grab the onto class information to display
-        this.initOntoClasses(ontology.getAllClassDefinitions());
-
+        this.initOntoClasses(getAllEntityDefinitionsAsArray(ontology.classes));
         // grab the onto properties information to display
-        this.initOntoProperties(ontology.getAllPropertyDefinitions());
+        this.initOntoProperties(ontology, getAllEntityDefinitionsAsArray(ontology.properties));
 
-        // check if the ontology can be deleted
-        this._dspApiConnection.v2.onto
-            .canDeleteOntology(this.ontology.id)
-            .subscribe(
-                (response: CanDoResponse) => {
-                    this.ontologyCanBeDeleted = response.canDo;
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
-
-        this.loadOntology = false;
+        const projectIri = this._projectService.uuidToIri(this.projectUuid);
+        this._store.dispatch([
+            new SetCurrentOntologyAction(ontology),
+            new SetCurrentProjectOntologyPropertiesAction(projectIri),
+            new CurrentOntologyCanBeDeletedAction()
+        ]);
     }
 
     /**
@@ -479,9 +387,11 @@ export class OntologyComponent implements OnInit {
         mode: 'createOntology' | 'editOntology',
         iri?: string
     ): void {
-        const title = iri ? this.ontology.label : 'Data model';
+        const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+        const title = iri ? ontology.label : 'Data model';
 
-        const uuid = this._projectService.iriToUuid(this.project.id);
+        const uuid = this._projectService.iriToUuid(this.projectUuid);
+        const existingOntologyNames = this._store.selectSnapshot(OntologiesSelectors.currentProjectExistingOntologyNames);
 
         const dialogConfig: MatDialogConfig = {
             width: '640px',
@@ -494,7 +404,7 @@ export class OntologyComponent implements OnInit {
                 title: title,
                 id: iri,
                 project: uuid,
-                existing: this.existingOntologyNames,
+                existing: existingOntologyNames,
             },
         };
 
@@ -503,11 +413,9 @@ export class OntologyComponent implements OnInit {
         dialogRef.afterClosed().subscribe((ontologyId: string) => {
             // in case of new ontology, go to correct route and update the view
             if (ontologyId) {
-                this.ontologyIri = ontologyId;
+                //this.ontologyIri = ontologyId;
                 // reset and open selected ontology
-                this.ontologyForm.controls['ontology'].setValue(
-                    this.ontologyIri
-                );
+                this.ontologyForm.controls['ontology'].setValue(ontologyId);
             } else {
                 this.initOntologiesList();
             }
@@ -580,7 +488,7 @@ export class OntologyComponent implements OnInit {
             // get the ontologies for this project
             this.initOntologiesList();
             // update the view of resource class or list of properties
-            this.initOntology(this.ontologyIri);
+            this.initOntology();
         });
     }
 
@@ -607,21 +515,23 @@ export class OntologyComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe((answer) => {
             if (answer === true) {
+                const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
                 // delete and refresh the view
                 switch (mode) {
                     case 'Ontology':
-                        this.loading = true;
-                        this.loadOntology = true;
-                        const ontology = new UpdateOntology();
-                        ontology.id = this.ontology.id;
-                        ontology.lastModificationDate =
-                            this.ontology.lastModificationDate;
+                        this._store.dispatch(new SetOntologiesLoadingAction(true));
+                        const updateOntology = new UpdateOntology();
+                        updateOntology.id = ontology.id;
+                        updateOntology.lastModificationDate = ontology.lastModificationDate;
                         this._dspApiConnection.v2.onto
-                            .deleteOntology(ontology)
+                            .deleteOntology(updateOntology)
                             .subscribe(
                                 () => {
                                     // reset current ontology
-                                    this.ontology = undefined;
+                                    this._store.dispatch([
+                                        new SetCurrentOntologyAction(null), 
+                                        new RemoveProjectOntologyAction(updateOntology.id, this.projectUuid)
+                                    ]);
                                     // get the ontologies for this project
                                     this.initOntologiesList();
                                     // go to project ontology page
@@ -637,57 +547,50 @@ export class OntologyComponent implements OnInit {
                                 },
                                 (error: ApiResponseError) => {
                                     this._errorHandler.showMessage(error);
-                                    this.loading = false;
-                                    this.loadOntology = false;
+                                    this._store.dispatch(new SetOntologiesLoadingAction(false));
                                 }
                             );
                         break;
 
                     case 'ResourceClass':
                         // delete resource class and refresh the view
-                        this.loadOntology = true;
+                        this._store.dispatch(new SetOntologiesLoadingAction(true));
                         const resClass: DeleteResourceClass =
                             new DeleteResourceClass();
                         resClass.id = info.iri;
-                        resClass.lastModificationDate =
-                            this.ontology.lastModificationDate;
+                        resClass.lastModificationDate = ontology.lastModificationDate;
                         this._dspApiConnection.v2.onto
                             .deleteResourceClass(resClass)
                             .subscribe(
                                 () => {
-                                    this.loading = false;
+                                    this._store.dispatch(new SetOntologiesLoadingAction(false));
                                     // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
                                     window.location.reload();
                                 },
                                 (error: ApiResponseError) => {
                                     this._errorHandler.showMessage(error);
-                                    this.loading = false;
-                                    this.loadOntology = false;
                                 }
                             );
                         break;
                     case 'Property':
                         // delete resource property and refresh the view
-                        this.loadOntology = true;
+                        this._store.dispatch(new SetOntologiesLoadingAction(true));
                         const resProp: DeleteResourceProperty =
                             new DeleteResourceProperty();
                         resProp.id = info.iri;
-                        resProp.lastModificationDate =
-                            this.ontology.lastModificationDate;
+                        resProp.lastModificationDate = ontology.lastModificationDate;
                         this._dspApiConnection.v2.onto
                             .deleteResourceProperty(resProp)
                             .subscribe(
                                 () => {
-                                    this.loading = false;
+                                    this._store.dispatch(new SetOntologiesLoadingAction(false));
                                     // get the ontologies for this project
                                     this.initOntologiesList();
                                     // update the view of resource class or list of properties
-                                    this.initOntology(this.ontologyIri);
+                                    this.initOntology();
                                 },
                                 (error: ApiResponseError) => {
                                     this._errorHandler.showMessage(error);
-                                    this.loading = false;
-                                    this.loadOntology = false;
                                 }
                             );
                         break;
@@ -696,34 +599,12 @@ export class OntologyComponent implements OnInit {
         });
     }
 
-    setCache() {
-        // get all lists from the project
-        // it will be used to set gui attribute in a list property
-        this._dspApiConnection.admin.listsEndpoint
-            .getListsInProject(this.project.id)
-            .subscribe(
-                (response: ApiResponseData<ListsResponse>) => {
-                    this._applicationStateService.set(
-                        'currentOntologyLists',
-                        response.body.lists
-                    );
-                    this.loadOntology = false;
-                    this.loading = false;
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                    this.loading = false;
-                    this.loadOntology = false;
-                }
-            );
+    private setTitle() {
+        combineLatest([ProjectBase.navigationEndFilter(this._router.events), this.project$, this.currentOntology$])
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(([event, project, currentOntology]) => {
+                this._titleService.setTitle(`Project ${project.shortname} | Data model ${currentOntology.id ? '' : 's'}`);
+            });
     }
-
-    private _setPageTitle() {
-        this._titleService.setTitle(
-            'Project ' +
-                this.project.shortname +
-                ' | Data model' +
-                (this.ontologyIri ? '' : 's')
-        );
-    }
+    
 }

@@ -1,16 +1,17 @@
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { Inject, Injectable } from '@angular/core';
 import { Action, State, StateContext, Store } from '@ngxs/store';
 import { ProjectsStateModel } from './projects.state-model';
-import { LoadAllProjectsAction, LoadProjectAction, LoadUserProjectsAction, ClearProjectsAction, RemoveUserFromProjectAction, AddUserToProjectMembershipAction, LoadProjectMembersAction, LoadProjectGroupsAction } from './projects.actions';
+import { LoadAllProjectsAction, LoadProjectAction, LoadUserProjectsAction, ClearProjectsAction, RemoveUserFromProjectAction, AddUserToProjectMembershipAction, LoadProjectMembersAction, LoadProjectGroupsAction, UpdateProjectAction } from './projects.actions';
 import { UserSelectors } from '../user/user.selectors';
 import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ApiResponseData, ApiResponseError, GroupsResponse, KnoraApiConnection, MembersResponse, ProjectResponse, ProjectsResponse, UserResponse } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, GroupsResponse, KnoraApiConnection, MembersResponse, ProjectResponse, ProjectsResponse, ReadUser, UserResponse } from '@dasch-swiss/dsp-js';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { map, take, tap } from 'rxjs/operators';
 import { produce } from 'immer';
 import { of } from 'rxjs';
 import { CurrentProjectSelectors } from '../current-project/current-project.selectors';
-import { SetCurrentProjectGroupsAction, SetCurrentProjectMembersAction } from '../current-project/current-project.actions';
+import { SetCurrentProjectAction, SetCurrentProjectGroupsAction, SetCurrentProjectMembersAction } from '../current-project/current-project.actions';
 
 let defaults: ProjectsStateModel = {
     isLoading: false,
@@ -34,6 +35,7 @@ export class ProjectsState {
         private store: Store,
         private errorHandler: AppErrorHandler,
         private _acs: AppConfigService,
+        private projectService: ProjectService
     ) {}
 
     @Action(LoadUserProjectsAction, { cancelUncompleted: true })
@@ -96,15 +98,12 @@ export class ProjectsState {
         ctx: StateContext<ProjectsStateModel>,
         { projectUuid }: LoadProjectAction
     ) {
-        // create the project iri
-        const iri = `${this._acs.dspAppConfig.iriBase}/projects/${projectUuid}`;
-
         ctx.patchState({ isLoading: true });
     
         // get current project data, project members and project groups
         // and set the project state here
         return this._dspApiConnection.admin.projectsEndpoint
-            .getProjectByIri(iri)
+            .getProjectByIri(this.projectService.uuidToIri(projectUuid))
             .pipe(
                 take(1),
                 map((projectsResponse: ApiResponseData<ProjectResponse> | ApiResponseError) => {
@@ -255,6 +254,39 @@ export class ProjectsState {
                         if (currentProject?.id === projectUuid) {
                             ctx.dispatch(new SetCurrentProjectGroupsAction(response.body.groups));
                         }
+                    },
+                    error: (error) => {
+                        this.errorHandler.showMessage(error);
+                    }
+                })
+            );
+    }
+
+    @Action(UpdateProjectAction)
+    updateProjectAction(
+        ctx: StateContext<ProjectsStateModel>,
+        { projectUuid, projectData }: UpdateProjectAction
+    ) {
+        ctx.patchState({ isLoading: true });
+        return this._dspApiConnection.admin.projectsEndpoint.updateProject(projectUuid, projectData)
+            .pipe(
+                take(1),
+                map((response: ApiResponseData<ProjectResponse> | ApiResponseError) => {
+                    return response as ApiResponseData<ProjectResponse>;
+                }),
+                tap({
+                    next: (response: ApiResponseData<ProjectResponse>) => {
+                        ctx.dispatch(new LoadAllProjectsAction());
+                        const currentProject = this.store.selectSnapshot(CurrentProjectSelectors.project);
+                        if (currentProject?.id === projectUuid) {
+                            const user = this.store.selectSnapshot(UserSelectors.user) as ReadUser;
+                            const userProjectGroups = this.store.selectSnapshot(UserSelectors.userProjectAdminGroups);
+                            const isProjectAdmin = this.projectService.isProjectAdminOrSysAdmin(user, userProjectGroups, response.body.project.id);
+                            const isProjectMember = this.projectService.isProjectMember(user, userProjectGroups, response.body.project.id);
+                            ctx.dispatch(new SetCurrentProjectAction(response.body.project, isProjectAdmin, isProjectMember));
+                        }
+                        
+                        return response.body.project;
                     },
                     error: (error) => {
                         this.errorHandler.showMessage(error);

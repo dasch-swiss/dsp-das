@@ -1,7 +1,7 @@
-<div *ngIf="projectAdmin" class="content large middle">
+<div *ngIf="isProjectAdmin" class="content large middle">
     <!-- add group to the project -->
     <app-add-group
-        *ngIf="project?.status && sysAdmin"
+        *ngIf="project?.status && (isSysAdmin$ | async) === true"
         [projectUuid]="projectUuid"
         (refreshParent)="refresh()"
         #addGroupComponent
@@ -19,6 +19,6 @@
     </div>
 </div>
 
-<div *ngIf="!projectAdmin" class="content large middle">
+<div *ngIf="!isProjectAdmin" class="content large middle">
     <app-status [status]="403"></app-status>
 </div>

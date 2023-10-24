@@ -1,5 +1,7 @@
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     HostListener,
     OnInit,
@@ -11,52 +13,44 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     ReadOntology,
     ReadProject,
-    ReadUser,
 } from '@dasch-swiss/dsp-js';
-import { AppGlobal } from '../app-global';
-import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { MenuItem } from '../main/declarations/menu-item';
+import { MaterialColor, RouteConstants, getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-config';
 import {
     ComponentCommunicationEventService,
     Events,
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
 import { Observable, Subscription, of, combineLatest } from 'rxjs';
-import { Select, Store } from '@ngxs/store';
-import { LoadProjectAction, LoadProjectGroupsAction, LoadProjectMembersAction, LoadProjectOntologiesAction, OntologiesSelectors, ProjectsSelectors, SetCurrentProjectAction,  UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
+import { LoadProjectOntologiesAction, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { map, take } from 'rxjs/operators';
+import { ProjectBase } from './project-base';
+import { ClassAndPropertyDefinitions } from '@dasch-swiss/dsp-js/src/models/v2/ontologies/ClassAndPropertyDefinitions';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-project',
     templateUrl: './project.component.html',
     styleUrls: ['./project.component.scss'],
 })
-export class ProjectComponent implements OnInit {
+export class ProjectComponent extends ProjectBase implements OnInit {
     @ViewChild('sidenav') sidenav: MatSidenav;
 
     routeConstants = RouteConstants;
 
-    color = 'primary';
-
-    // error in case of wrong project code
-    error: boolean;
-
-    // permissions of logged-in user
-    isProjectAdmin = false;
-    isProjectMember = false;
-
-    // project uuid; as identifier in project application state service
-    projectUuid: string;
-
-    navigation: MenuItem[] = AppGlobal.projectNav;
-
     listItemSelected = '';
 
+    getAllEntityDefinitionsAsArray = getAllEntityDefinitionsAsArray;
     componentCommsSubscription: Subscription;
+    classAndPropertyDefinitions: ClassAndPropertyDefinitions;
 
     sideNavOpened = true;
 
-    get isCurrentProject(): boolean {
-        return this.projectUuid === this._route.snapshot.params.uuid
+    get color$(): Observable<string> {
+        return this.readProject$.pipe(
+            map(readProject => !readProject.status 
+                ? MaterialColor.Warn 
+                : MaterialColor.Primary)
+        );
     }
 
     get readProject$(): Observable<ReadProject> {
@@ -75,14 +69,15 @@ export class ProjectComponent implements OnInit {
             return of({} as ReadOntology[]);
         }
         
-        return this.store.select(OntologiesSelectors.projectOntologies)
+        return this._store.select(OntologiesSelectors.projectOntologies)
             .pipe(
                 map(ontologies => {
-                    if (!ontologies || !ontologies[this.projectUuid]) {
+                    const projectIri = this._projectService.uuidToIri(this.projectUuid);
+                    if (!ontologies || !ontologies[projectIri]) {
                         return [];
                     }
 
-                    ontologies[this.projectUuid].readOntologies
+                    return ontologies[projectIri].readOntologies;
                 })
             )
     }
@@ -103,14 +98,15 @@ export class ProjectComponent implements OnInit {
     
     constructor(
         private _componentCommsService: ComponentCommunicationEventService,
-        private _route: ActivatedRoute,
-        private _router: Router,
-        private _titleService: Title,
-        private projectService: ProjectService,
-        private store: Store,
+        protected _cd: ChangeDetectorRef,
+        protected _actions$: Actions,
+        protected _router: Router,
+        protected _store: Store,
+        protected _route: ActivatedRoute,
+        _titleService: Title,
+        _projectService: ProjectService,
     ) {
-        // get the uuid of the current project
-        this.projectUuid = this._route.snapshot.params.uuid;
+        super(_store, _route, _projectService, _titleService, _router, _cd, _actions$);
     }
 
     /**
@@ -125,6 +121,7 @@ export class ProjectComponent implements OnInit {
     }
 
     ngOnInit() {
+        super.ngOnInit();
         switch (this._router.url) {
             case `${RouteConstants.project}/${this.projectUuid}/${RouteConstants.advancedSearch}`: {
                 this.listItemSelected = RouteConstants.advancedSearch;
@@ -148,19 +145,6 @@ export class ProjectComponent implements OnInit {
             Events.unselectedListItem,
             () => this.listItemSelected = ''
         );
-
-        // get current project data, project members and project groups
-        // and set the project state here
-        this.store.dispatch(new LoadProjectAction(this.projectUuid))
-            .pipe(
-                take(1),
-                map((state: any) => {
-                    return state.projects.readProjects;
-                })
-            )
-            .subscribe((readProjects: ReadProject[]) => {
-                return this.SetProjectData(this.getCurrentProject(readProjects));
-            });
     }
 
     ngOnDestroy() {
@@ -191,47 +175,5 @@ export class ProjectComponent implements OnInit {
     toggleSidenav() {
         this.sideNavOpened = !this.sideNavOpened;
         this.sidenav.toggle();
-    }
-
-    private getCurrentProject(projects: ReadProject[]): ReadProject {
-        if (!projects) {
-            return null;
-        }
-
-        return projects.find(x => x.id.split('/').pop() === this.projectUuid);
-    }
-
-    private SetProjectData(readProject: ReadProject): void {
-        if (!readProject) {
-            return;
-        }
-
-        // set the page title
-        this._titleService.setTitle(readProject.shortname);
-
-        if (!readProject.status) {
-            this.color = 'warn';
-        }
-
-        this.navigation[0].label = 'Project: ' + readProject.shortname.toUpperCase();
-
-        const user = this.store.selectSnapshot(UserSelectors.user) as ReadUser;
-        const userProjectGroups = this.store.selectSnapshot(UserSelectors.userProjectGroups);
-        // is logged-in user projectAdmin?
-        if (user) {
-            this.isProjectAdmin = this.projectService.isProjectAdmin(user, userProjectGroups, readProject.id);
-            this.isProjectMember = this.projectService.isProjectMember(user, userProjectGroups, readProject.id);
-        }
-
-        // set the state of project members and groups
-        if (this.isCurrentProject) {
-            this.store.dispatch(new SetCurrentProjectAction(readProject, this.isProjectAdmin));
-            if (this.isProjectAdmin) {
-                this.store.dispatch(new LoadProjectMembersAction(readProject.id));
-                this.store.dispatch(new LoadProjectGroupsAction(readProject.id));
-            }
-        }
-        
-        this.store.dispatch(new LoadProjectOntologiesAction(readProject.id));
     }
 }

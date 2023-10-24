@@ -19,9 +19,8 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 const defaults = <UserStateModel>{
     isLoading: false,
     user: null,
-    userProjectGroups: [],
+    userProjectAdminGroups: [],
     isMemberOfSystemAdminGroup: false,
-    isProjectAdmin: false,
     allUsers: [],
 };
 
@@ -88,16 +87,18 @@ export class UserState {
 
             for (const key of groupsPerProjectKeys) {
                 if (key === Constants.SystemProjectIRI) {
+                    //is sysAdmin
                     isMemberOfSystemAdminGroup = groupsPerProject[key].indexOf(Constants.SystemAdminGroupIRI) > -1;
                 }
 
                 if (groupsPerProject[key].indexOf(Constants.ProjectAdminGroupIRI) > -1) {
+                    //projectAdmin
                     userProjectGroups.push(key);
                 }
             }
         }
 
-        ctx.setState({ ...ctx.getState(), userProjectGroups, isMemberOfSystemAdminGroup});
+        ctx.setState({ ...ctx.getState(), userProjectAdminGroups: userProjectGroups, isMemberOfSystemAdminGroup});
     }
 
     @Action(LogUserOutAction)
@@ -144,7 +145,6 @@ export class UserState {
         ctx.patchState({ allUsers: defaults.allUsers });
     }
 
-    
     @Action(CreateUserAction)
     createUserAction(
         ctx: StateContext<UserStateModel>,

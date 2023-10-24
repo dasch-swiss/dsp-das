@@ -1,5 +1,5 @@
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {
     ReadProject, ReadUser} from '@dasch-swiss/dsp-js';
@@ -9,6 +9,7 @@ import { map, take } from 'rxjs/operators';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-description',
     templateUrl: './description.component.html',
     styleUrls: ['./description.component.scss'],
@@ -32,14 +33,14 @@ export class DescriptionComponent implements OnInit {
         return combineLatest([
             this.user$,
             this.readProject$,
-            this.store.select(UserSelectors.userProjectGroups)
+            this.store.select(UserSelectors.userProjectAdminGroups)
         ]).pipe(
             map(([user, readProject, userProjectGroups]: [ReadUser, ReadProject, string[]]) => {
                 if (readProject == null || userProjectGroups.length === 0) {
                     return false;
                 }
                 
-                return this.projectService.isProjectAdmin(user, userProjectGroups, readProject.id);
+                return this.projectService.isProjectAdminOrSysAdmin(user, userProjectGroups, readProject.id);
             })
         );
     }
