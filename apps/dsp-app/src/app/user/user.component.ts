@@ -7,6 +7,7 @@ import { Select } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 
 @Component({
     selector: 'app-user',
@@ -27,7 +28,7 @@ export class UserComponent implements OnDestroy {
     navigation: MenuItem[] = AppGlobal.userNav;
     
     @Select(UserSelectors.username) username$: Observable<string>;
-
+    routeConstants = RouteConstants;
     constructor(
         private _route: ActivatedRoute,
         private _titleService: Title,
