@@ -132,12 +132,6 @@ const routes: Routes = [
             },
         ],
     },
-    /*
-    {
-        path: 'user/:name',
-        component: ProfileComponent
-    },
-    */
     {
         path: RouteConstants.profile,
         component: UserComponent,
@@ -153,11 +147,6 @@ const routes: Routes = [
         component: UserComponent,
         canActivate: [AuthGuard],
     },
-    /* {
-        path: 'collections',
-        component: UserComponent,
-        canActivate: [AuthGuard]
-    }, */
     {
         path: RouteConstants.system,
         component: SystemComponent,
