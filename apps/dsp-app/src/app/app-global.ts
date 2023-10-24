@@ -41,24 +41,11 @@ export class AppGlobal {
     // user navigation
     public static userNav: MenuItem[] = [
         {
-            label: 'Dashboard',
-            shortLabel: 'Dashboard',
-            route: RouteConstants.dashboardRelative,
-            icon: 'dashboard',
-        },
-        {
             label: 'My Projects',
             shortLabel: 'Projects',
             route: RouteConstants.projectsRelative,
             icon: 'assignment',
         },
-        // label to reactivate when dsp-app will be used as a research platform again: -->
-        /* {
-            label: 'My Collections',
-            shortLabel: 'Collections',
-            route: '/collections',
-            icon: 'star'
-        }, */
         {
             label: 'My Account',
             shortLabel: 'Account',

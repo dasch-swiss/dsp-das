@@ -5,7 +5,6 @@ export class RouteConstants {
     static readonly logout = 'logout';
     static readonly userAccount = 'account';
     static readonly systemAdmin = 'system';
-    static readonly dashboard = 'dashboard';
     static readonly settings = 'settings';
     static readonly refresh = 'refresh';
     static readonly users = 'users';
@@ -65,7 +64,6 @@ export class RouteConstants {
 
 
     static readonly homeRelative = `/${RouteConstants.home}`;
-    static readonly dashboardRelative = `/${RouteConstants.dashboard}`;
     static readonly userAccountRelative = `/${RouteConstants.userAccount}`;
     static readonly systemAdminRelative = `/${RouteConstants.systemAdmin}`;
 
