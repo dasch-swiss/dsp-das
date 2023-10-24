@@ -74,8 +74,6 @@ import { ResourceClassInfoComponent } from './project/ontology/resource-class-in
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ProjectComponent } from './project/project.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { GroupsListComponent } from './system/groups/groups-list/groups-list.component';
-import { GroupsComponent } from './system/groups/groups.component';
 import { ProjectsListComponent } from './system/projects/projects-list/projects-list.component';
 import { ProjectsComponent } from './system/projects/projects.component';
 import { SystemComponent } from './system/system.component';
@@ -210,8 +208,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         FulltextSearchComponent,
         GeonameValueComponent,
         GridComponent,
-        GroupsComponent,
-        GroupsListComponent,
         HeaderComponent,
         HelpComponent,
         IntermediateComponent,
