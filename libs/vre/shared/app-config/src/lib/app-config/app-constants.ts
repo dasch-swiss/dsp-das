@@ -1,8 +1,6 @@
 export class RouteConstants {
     static readonly home = '';
     static readonly help = 'help';
-    // static readonly login = 'login';
-    // static readonly logout = 'logout';
     static readonly userAccount = 'account';
     static readonly systemAdmin = 'system';
     static readonly settings = 'settings';
@@ -13,7 +11,6 @@ export class RouteConstants {
     static readonly project = 'project';
     static readonly createNew = 'create-new';
     static readonly collaboration = 'collaboration';
-    // static readonly info = 'info';
     static readonly ontologies = 'ontologies';
     static readonly lists = 'lists';
     static readonly edit = 'edit';
@@ -31,7 +28,6 @@ export class RouteConstants {
     static readonly systemUsers = 'users';
 
     static readonly editor = 'editor';
-    // static readonly conf = 'conf';
 
     static readonly list = 'list';
     static readonly addList = 'add-list';
@@ -39,10 +35,7 @@ export class RouteConstants {
     static readonly addClassInstance = 'add';
 
     static readonly cookiePolicy = 'cookie-policy';
-    // static readonly teapot = 'teapot';
-    // static readonly noNetworkError = 'no-network';
     static readonly notFound = '404';
-    // static readonly notImplemented = '501';
     static readonly notFoundWildcard = '**';
 
     static readonly uuidParameter = 'uuid';
@@ -74,7 +67,6 @@ export class RouteConstants {
 
     static readonly OntologyEditorViewRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/${RouteConstants.editor}/:${RouteConstants.viewParameter}`;
     static readonly OntologyClassRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/:${RouteConstants.classParameter}`;
-    // static readonly OntologyClassConfRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/:${RouteConstants.classParameter}/${RouteConstants.conf}`;
     static readonly OntologyClassInstanceRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/:${RouteConstants.classParameter}/:${RouteConstants.instanceParameter}`;
 
     static readonly advancedSearchResultsRelative = `${RouteConstants.advancedSearch}/:${RouteConstants.modeParameter}/:${RouteConstants.qParameter}`;
