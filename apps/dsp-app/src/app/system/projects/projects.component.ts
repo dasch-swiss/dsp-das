@@ -40,7 +40,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
                takeUntil(this.ngUnsubscribe),
                map(([userInactiveProjects, allInactiveProjects]) => this.username ? userInactiveProjects : allInactiveProjects)
            );
-   }
+    }
     
     /**
      * if username is definded: show only projects,

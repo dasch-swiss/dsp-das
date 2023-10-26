@@ -4,7 +4,7 @@
 <div class="content large middle" *ngIf="username$ | async">
 
     <div class="content-sidebar user-data">
-        <app-profile [username]="username$ | async" [loggedInUser]="true"></app-profile>
+        <app-profile [loggedInUser]="true"></app-profile>
     </div>
 
     <div class="content-container">

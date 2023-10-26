@@ -4,7 +4,7 @@
     <div *ngIf="isProjectAdmin" class="content large middle">
         <!-- add user to the project -->
         <app-add-user
-            *ngIf="project?.status && ((isSysAdmin$ | async) === true || isProjectAdmin)"
+            *ngIf="(project$ | async)?.status && ((isSysAdmin$ | async) === true || isProjectAdmin)"
             [projectUuid]="projectUuid"
             (refreshParent)="refresh()"
             #addUserComponent
@@ -15,14 +15,14 @@
         <div class="users-list">
             <!-- list of active users -->
             <app-users-list
-                [list]="active"
+                [list]="activeProjectMembers$ | async"
                 [status]="true"
                 (refreshParent)="refresh()"
             ></app-users-list>
 
             <!-- list of inactive users -->
             <app-users-list
-                [list]="inactive"
+                [list]="inactiveProjectMembers$ | async"
                 [status]="false"
                 (refreshParent)="refresh()"
             ></app-users-list>
