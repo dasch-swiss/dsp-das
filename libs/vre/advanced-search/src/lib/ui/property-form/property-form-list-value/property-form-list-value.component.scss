@@ -1,4 +1,25 @@
-.menu-button {
-    border: 1px solid;
-    padding: 0% 2%;
+.header {
+  font-size: 14px;
+}
+
+.dropdown {
+  width: 44.2%;
+  cursor: pointer;
+  color: #737373;
+
+  .label,
+  .icon {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .label {
+    width: 89%;
+    padding: 4% 0% 4% 3.5%;
+    color: rgba(32, 32, 32, 0.87)
+  }
+
+  .line {
+    border-bottom: 1px solid;
+  }
 }
