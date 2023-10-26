@@ -7,16 +7,22 @@
   cursor: pointer;
   color: #737373;
 
-  .label,
-  .icon {
-    display: inline-block;
-    vertical-align: middle;
-  }
+  .container {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 16px 16px;
 
-  .label {
-    width: 89%;
-    padding: 4% 0% 4% 3.5%;
-    color: rgba(32, 32, 32, 0.87)
+    .label {
+      width: 100%;
+      color: rgba(32, 32, 32, 0.87);
+    }
+
+    .icon {
+      display: inline-flex;
+      width: 17px;
+    }
   }
 
   .line {

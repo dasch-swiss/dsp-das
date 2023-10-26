@@ -2,9 +2,11 @@
     Select a list value
 </div>
 <div class="dropdown" [matMenuTriggerFor]="rootMenu">
-    <div class="label">{{ selectedItem ? selectedItem : 'Select a value' }}</div>
-    <div class="icon">
-        <mat-icon>arrow_drop_down</mat-icon>
+    <div class="container">
+        <div class="label">{{ selectedItem ? selectedItem : 'Select a value' }}</div>
+        <div class="icon">
+            <mat-icon>arrow_drop_down</mat-icon>
+        </div>
     </div>
     <div class="line"></div>
 </div>
