@@ -3,8 +3,8 @@ import { Title } from '@angular/platform-browser';
 import { StoredProject } from '@dasch-swiss/dsp-js';
 import { UserSelectors, ProjectsSelectors, LoadProjectsAction } from '@dasch-swiss/vre/shared/app-state';
 import { Select, Store } from '@ngxs/store';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, Subject, combineLatest } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 
 /**
  * projects component handles the list of projects
@@ -26,15 +26,31 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     
     @Input() username?: string;
 
-    @Select(UserSelectors.username) username$: Observable<string>;
+    get activeProjects$(): Observable<StoredProject[]> {
+         return combineLatest([this.userActiveProjects$, this.allActiveProjects$])
+            .pipe(
+                takeUntil(this.ngUnsubscribe),
+                map(([userActiveProjects, allActiveProjects]) => this.username ? userActiveProjects : allActiveProjects)
+            );
+    }
+
+    get inactiveProjects$(): Observable<StoredProject[]> {
+        return combineLatest([this.userInactiveProjects$, this.allInactiveProjects$])
+           .pipe(
+               takeUntil(this.ngUnsubscribe),
+               map(([userInactiveProjects, allInactiveProjects]) => this.username ? userInactiveProjects : allInactiveProjects)
+           );
+   }
     
     /**
      * if username is definded: show only projects,
      * where this user is member of;
      * otherwise show all projects
      */
-    @Select(ProjectsSelectors.activeProjects) activeProjects$: Observable<StoredProject[]>;
-    @Select(ProjectsSelectors.inactiveProjects) inactiveProjects$: Observable<StoredProject[]>;
+    @Select(UserSelectors.userActiveProjects) userActiveProjects$: Observable<StoredProject[]>;
+    @Select(UserSelectors.userInactiveProjects) userInactiveProjects$: Observable<StoredProject[]>;
+    @Select(ProjectsSelectors.allActiveProjects) allActiveProjects$: Observable<StoredProject[]>;
+    @Select(ProjectsSelectors.allInactiveProjects) allInactiveProjects$: Observable<StoredProject[]>;
     @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
 
     constructor(
@@ -44,10 +60,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.username$.pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe(username => username 
-                ? this._titleService.setTitle('Your projects') 
-                : this._titleService.setTitle('All projects from DSP'));
+        this.username
+            ? this._titleService.setTitle('Your projects') 
+            : this._titleService.setTitle('All projects from DSP');
         
         if (this._store.selectSnapshot(ProjectsSelectors.allProjects).length === 0) {
             this.refresh();

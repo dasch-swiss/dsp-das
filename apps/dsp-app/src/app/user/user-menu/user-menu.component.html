@@ -27,7 +27,7 @@
 
             <!-- system for system admin only -->
 
-            <mat-list-item *ngIf="(user$ | async)?.sysAdmin" class="nav-item">
+            <mat-list-item *ngIf="isSysAdmin$ | async" class="nav-item">
                 <button
                     mat-button
                     [routerLink]="systemLink"

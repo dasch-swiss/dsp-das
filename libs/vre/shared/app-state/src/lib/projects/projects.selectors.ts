@@ -1,4 +1,3 @@
-import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Selector } from '@ngxs/store';
 import { ProjectsState } from './projects.state';
 import { ProjectsStateModel } from './projects.state-model';
@@ -48,15 +47,5 @@ export class ProjectsSelectors {
     @Selector([ProjectsState])
     static allInactiveProjects(state: ProjectsStateModel): ReadProject[] {
         return state.allProjects.filter(project => project.status === false);
-    }
-    
-    @Selector([UserSelectors.isLoggedIn, ProjectsSelectors.allActiveProjects, UserSelectors.userActiveProjects])
-    static activeProjects(isLoggedIn: boolean, activeProjects: ReadProject[], userActiveProjects: StoredProject[]): StoredProject[] {
-        return isLoggedIn === true ? userActiveProjects : activeProjects;
-    }
-
-    @Selector([UserSelectors.isLoggedIn, ProjectsSelectors.allInactiveProjects, UserSelectors.userInActiveProjects])
-    static inactiveProjects(isLoggedIn: boolean, inActiveProjects: ReadProject[], userInactiveProjects: StoredProject[]): StoredProject[] {
-        return isLoggedIn === true ? userInactiveProjects : inActiveProjects;
     }
 }
