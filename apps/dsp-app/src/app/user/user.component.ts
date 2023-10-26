@@ -28,7 +28,9 @@ export class UserComponent implements OnDestroy {
     navigation: MenuItem[] = AppGlobal.userNav;
     
     @Select(UserSelectors.username) username$: Observable<string>;
+    
     routeConstants = RouteConstants;
+
     constructor(
         private _route: ActivatedRoute,
         private _titleService: Title,

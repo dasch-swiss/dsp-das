@@ -61,7 +61,18 @@ export class UserSelectors {
     }
 
     @Selector([UserState])
+    static userProjects(state: UserStateModel): StoredProject[] {
+        return state.user ? (state.user as ReadUser).projects : [];
+    }
+
+    @Selector([UserState])
     static userActiveProjects(state: UserStateModel): StoredProject[] {
-        return state.user ? (state.user as ReadUser).projects.filter((project: StoredProject) => project.status !== false) : [];
+        return state.user ? (state.user as ReadUser).projects.filter((project: StoredProject) => project.status === true) : [];
+    }
+
+    // list of archived (deleted) projects
+    @Selector([UserState])
+    static userInActiveProjects(state: UserStateModel): StoredProject[] {
+        return state.user ? (state.user as ReadUser).projects.filter((project: StoredProject) => !project.status) : [];
     }
 }

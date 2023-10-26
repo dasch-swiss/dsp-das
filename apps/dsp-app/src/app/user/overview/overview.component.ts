@@ -13,7 +13,7 @@ import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/pro
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
-import { LoadAllProjectsAction, LoadUserProjectsAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { LoadProjectsAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 
 // should only be used by this component and child components
 export type TileLinks = 'workspace' | 'settings';
@@ -38,7 +38,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     @Select(UserSelectors.user) user$: Observable<ReadUser>;
     // list of projects a user is a member of
     @Select(UserSelectors.userActiveProjects) userActiveProjects$: Observable<StoredProject>;
-    @Select(ProjectsSelectors.userOtherActiveProjects) userOtherActiveProjects$: Observable<StoredProject>;
+    @Select(ProjectsSelectors.otherProjects) userOtherActiveProjects$: Observable<StoredProject>;
     @Select(ProjectsSelectors.allProjects) allProjects$: Observable<StoredProject>;
     @Select(ProjectsSelectors.allActiveProjects) allActiveProjects$: Observable<StoredProject>;
     @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
@@ -56,7 +56,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this._titleService.setTitle('Projects Overview');
         this.loginSuccessfulSubscription = this._authService.loginSuccessfulEvent.subscribe((user: User) => {
             if (!user.systemAdmin) {
-                this.store.dispatch(new LoadUserProjectsAction());
+                this.store.dispatch(new LoadProjectsAction());
             }
         });
     }
@@ -67,10 +67,10 @@ export class OverviewComponent implements OnInit, OnDestroy {
         // system admin can create new projects and edit projects
         // users not logged in can only view projects
         if (isSysAdmin || !this._authService.isLoggedIn()) {
-            this.store.dispatch(new LoadAllProjectsAction());
+            this.store.dispatch(new LoadProjectsAction());
         } else {
             // logged-in user is NOT a system admin: get all projects the user is a member of. Acts on refresh/init.
-            this.store.dispatch(new LoadUserProjectsAction());
+            this.store.dispatch(new LoadProjectsAction());
         }
     }
 

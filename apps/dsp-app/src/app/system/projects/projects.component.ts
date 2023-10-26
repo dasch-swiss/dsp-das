@@ -1,18 +1,10 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import {
-    ApiResponseData,
-    ApiResponseError,
-    KnoraApiConnection,
-    ProjectsResponse,
-    StoredProject,
-    UserResponse,
-} from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import {
-    Session,
-} from '@dasch-swiss/vre/shared/app-session';
+import { StoredProject } from '@dasch-swiss/dsp-js';
+import { UserSelectors, ProjectsSelectors, LoadProjectsAction } from '@dasch-swiss/vre/shared/app-state';
+import { Select, Store } from '@ngxs/store';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * projects component handles the list of projects
@@ -24,115 +16,53 @@ import {
  *
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-projects',
     templateUrl: './projects.component.html',
     styleUrls: ['./projects.component.scss'],
 })
-export class ProjectsComponent implements OnInit {
+export class ProjectsComponent implements OnInit, OnDestroy {
+    private ngUnsubscribe: Subject<void> = new Subject<void>();
+    
+    @Input() username?: string;
+
+    @Select(UserSelectors.username) username$: Observable<string>;
+    
     /**
      * if username is definded: show only projects,
      * where this user is member of;
      * otherwise show all projects
      */
-    @Input() username?: string;
-
-    // do we still need this? NO!
-    @Input() system?: boolean = true;
-
-    /**
-     * general variables
-     */
-    loading: boolean;
-    error: any;
-
-    /**
-     * who is logged-in? does he have project-admin, system-admin or no rights?
-     * get the information from localstorage
-     */
-    session: Session;
-
-    // list of active projects
-    active: StoredProject[] = [];
-    // list of archived (deleted) projects
-    inactive: StoredProject[] = [];
+    @Select(ProjectsSelectors.activeProjects) activeProjects$: Observable<StoredProject[]>;
+    @Select(ProjectsSelectors.inactiveProjects) inactiveProjects$: Observable<StoredProject[]>;
+    @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
 
     constructor(
-        @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: AppErrorHandler,
-        private _titleService: Title
+        private _titleService: Title,
+        private _store: Store,
     ) {
-        // set the page title
-        if (this.username) {
-            this._titleService.setTitle('Your projects');
-        } else {
-            this._titleService.setTitle('All projects from DSP');
-        }
     }
 
     ngOnInit() {
-        this.initList();
+        this.username$.pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(username => username 
+                ? this._titleService.setTitle('Your projects') 
+                : this._titleService.setTitle('All projects from DSP'));
+        
+        if (this._store.selectSnapshot(ProjectsSelectors.allProjects).length === 0) {
+            this.refresh();
+        }
     }
 
-    initList() {
-        this.loading = true;
-
-        // clean up list of projects
-        this.active = [];
-        this.inactive = [];
-        if (this.username) {
-            // logged-in user view: get all projects, where the user is member of
-            this._dspApiConnection.admin.usersEndpoint
-                .getUserByUsername(this.username)
-                .subscribe(
-                    (response: ApiResponseData<UserResponse>) => {
-                        for (const project of response.body.user.projects) {
-                            if (project.status === true) {
-                                this.active.push(project);
-                            } else {
-                                this.inactive.push(project);
-                            }
-                        }
-
-                        this.loading = false;
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                );
-        } else {
-            // logged-in user is system admin (or guest): show all projects
-            this._dspApiConnection.admin.projectsEndpoint
-                .getProjects()
-                .subscribe(
-                    (response: ApiResponseData<ProjectsResponse>) => {
-                        // reset the lists:
-                        this.active = [];
-                        this.inactive = [];
-
-                        for (const item of response.body.projects) {
-                            if (item.status === true) {
-                                this.active.push(item);
-                            } else {
-                                this.inactive.push(item);
-                            }
-                        }
-
-                        this.loading = false;
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                );
-        }
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     /**
      * refresh list of projects after updating one
      */
     refresh(): void {
-        // refresh the component
-        this.loading = true;
-        this.initList();
+        this._store.dispatch(new LoadProjectsAction());
     }
 }

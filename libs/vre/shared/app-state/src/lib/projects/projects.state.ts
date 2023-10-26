@@ -2,7 +2,7 @@ import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/pro
 import { Inject, Injectable } from '@angular/core';
 import { Action, State, StateContext, Store } from '@ngxs/store';
 import { ProjectsStateModel } from './projects.state-model';
-import { LoadAllProjectsAction, LoadProjectAction, LoadUserProjectsAction, ClearProjectsAction, RemoveUserFromProjectAction, AddUserToProjectMembershipAction, LoadProjectMembersAction, LoadProjectGroupsAction, UpdateProjectAction } from './projects.actions';
+import { LoadProjectsAction, LoadProjectAction, ClearProjectsAction, RemoveUserFromProjectAction, AddUserToProjectMembershipAction, LoadProjectMembersAction, LoadProjectGroupsAction, UpdateProjectAction } from './projects.actions';
 import { UserSelectors } from '../user/user.selectors';
 import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ApiResponseData, ApiResponseError, GroupsResponse, KnoraApiConnection, MembersResponse, ProjectResponse, ProjectsResponse, ReadUser, UserResponse } from '@dasch-swiss/dsp-js';
@@ -16,7 +16,7 @@ import { SetCurrentProjectAction, SetCurrentProjectGroupsAction, SetCurrentProje
 let defaults: ProjectsStateModel = {
     isLoading: false,
     hasLoadingErrors: false,
-    userOtherActiveProjects: [],
+    otherProjects: [],
     allProjects: [],
     readProjects: [],
     projectMembers: {},
@@ -38,59 +38,37 @@ export class ProjectsState {
         private projectService: ProjectService
     ) {}
 
-    @Action(LoadUserProjectsAction, { cancelUncompleted: true })
-    loadUserProjects(
+    @Action(LoadProjectsAction, { cancelUncompleted: true })
+    loadProjects(
         ctx: StateContext<ProjectsStateModel>,
-        { }: LoadUserProjectsAction
+        { }: LoadProjectsAction
     ) {
         ctx.patchState({ isLoading: true });
         const userActiveProjects = this.store.selectSnapshot(UserSelectors.userActiveProjects);
         return this._dspApiConnection.admin.projectsEndpoint
-                .getProjects()
-                .pipe(
-                    map((projectsResponse: ApiResponseData<ProjectsResponse> | ApiResponseError) => {
-                            return projectsResponse as ApiResponseData<ProjectsResponse>;
-                        }),
-                )
-                .subscribe(
-                    (
-                        projectsResponse: ApiResponseData<ProjectsResponse>
-                    ) => {
-                        // get list of all projects the user is NOT a member of
-                        const otherProjects = projectsResponse.body.projects.filter(project => 
-                            userActiveProjects.findIndex((userProj) => userProj.id === project.id) === -1);
+            .getProjects()
+            .pipe(
+                map((projectsResponse: ApiResponseData<ProjectsResponse> | ApiResponseError) => {
+                    return projectsResponse as ApiResponseData<ProjectsResponse>;
+                }),
+            )
+            .subscribe((projectsResponse: ApiResponseData<ProjectsResponse>) => {
+                    // get list of all projects the user is NOT a member of
+                    const otherProjects = projectsResponse.body.projects.filter(project => 
+                        userActiveProjects.findIndex((userProj) => userProj.id === project.id) === -1);
 
-                        ctx.setState({ ...ctx.getState(), isLoading: false, userOtherActiveProjects: otherProjects });
-                    },
-                    (error: ApiResponseError) => {
-                        ctx.patchState({ hasLoadingErrors: true });
-                        this.errorHandler.showMessage(error);
-                    }
-                );
-    }
-
-    @Action(LoadAllProjectsAction, { cancelUncompleted: true })
-    loadAllProjectsAction(
-        ctx: StateContext<ProjectsStateModel>,
-        { }: LoadAllProjectsAction
-    ) {
-        ctx.patchState({ isLoading: true });
-        return this._dspApiConnection.admin.projectsEndpoint
-                .getProjects()
-                .pipe(
-                    map((projectsResponse: ApiResponseData<ProjectsResponse> | ApiResponseError) => {
-                            return projectsResponse as ApiResponseData<ProjectsResponse>;
-                        }),
-                )
-                .subscribe(
-                    (response: ApiResponseData<ProjectsResponse>) => {
-                        ctx.setState({ ...ctx.getState(), isLoading: false, allProjects: response.body.projects });
-                    },
-                    (error: ApiResponseError) => {
-                        ctx.patchState({ hasLoadingErrors: true });
-                        this.errorHandler.showMessage(error);
-                    }
-                );
+                    ctx.setState({ 
+                        ...ctx.getState(), 
+                        isLoading: false, 
+                        allProjects: projectsResponse.body.projects,
+                        otherProjects,
+                    });
+                },
+                (error: ApiResponseError) => {
+                    ctx.patchState({ hasLoadingErrors: true });
+                    this.errorHandler.showMessage(error);
+                }
+            );
     }
 
     @Action(LoadProjectAction, { cancelUncompleted: true })
@@ -276,7 +254,7 @@ export class ProjectsState {
                 }),
                 tap({
                     next: (response: ApiResponseData<ProjectResponse>) => {
-                        ctx.dispatch(new LoadAllProjectsAction());
+                        ctx.dispatch(new LoadProjectsAction());
                         const currentProject = this.store.selectSnapshot(CurrentProjectSelectors.project);
                         if (currentProject?.id === projectUuid) {
                             const user = this.store.selectSnapshot(UserSelectors.user) as ReadUser;

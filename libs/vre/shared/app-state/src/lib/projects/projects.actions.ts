@@ -1,12 +1,7 @@
 import { UpdateProjectRequest } from "@dasch-swiss/dsp-js";
 
-export class LoadUserProjectsAction {
-    static readonly type = '[Projects] Load User Projects';
-    constructor() {}
-}
-
-export class LoadAllProjectsAction {
-    static readonly type = '[Projects] Load All Projects';
+export class LoadProjectsAction {
+    static readonly type = '[Projects] Load Projects';
     constructor() {}
 }
 
