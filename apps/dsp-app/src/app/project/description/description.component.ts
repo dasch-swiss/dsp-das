@@ -82,7 +82,7 @@ export class DescriptionComponent implements OnInit {
     }
 
     // returns the project with the descriptions sorted by language
-    projectWithSortedDescriptions(project: ReadProject): ReadProject  {
+    private projectWithSortedDescriptions(project: ReadProject): ReadProject  {
         if (project.description && project.description.length > 1) {
             // sort the descriptions by language
             project.description = this.sortDescriptionsByLanguage(project.description);
@@ -91,7 +91,7 @@ export class DescriptionComponent implements OnInit {
     }
 
     // returns the descriptions sorted by language
-    sortDescriptionsByLanguage(descriptions: StringLiteral[]): StringLiteral[] {
+    private sortDescriptionsByLanguage(descriptions: StringLiteral[]): StringLiteral[] {
         const languageOrder = ['en', 'de', 'fr', 'it', 'rm'];
 
         return descriptions.sort((a, b) => {
