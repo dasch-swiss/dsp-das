@@ -15,7 +15,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { AppDatePickerModule } from '@dasch-swiss/vre/shared/app-date-picker';
 import { ResourceLabel } from '../../../data-access/advanced-search-service/advanced-search.service';
 import { PropertyFormItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
 @Component({
@@ -29,7 +28,6 @@ import { PropertyFormItem } from '../../../data-access/advanced-search-store/adv
         MatSelectModule,
         FormsModule,
         ReactiveFormsModule,
-        AppDatePickerModule,
     ],
     templateUrl: './property-form-value.component.html',
     styleUrls: ['./property-form-value.component.scss'],
