@@ -72,7 +72,8 @@ CONSTRUCT {
     constructor(
         private _os: OntologyService,
         private _searchParamsService: SearchParamsService,
-        private _fb: UntypedFormBuilder
+        private _fb: UntypedFormBuilder,
+        private _cdr: ChangeDetectorRef
     ) {}
 
     ngOnInit(): void {
@@ -91,6 +92,7 @@ CONSTRUCT {
         if (this.textAreaElement?.nativeElement) {
             // focus the text area
             this.textAreaElement.nativeElement.focus();
+            this._cdr.detectChanges();
         }
     }
 
