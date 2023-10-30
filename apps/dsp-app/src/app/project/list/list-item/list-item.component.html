@@ -3,7 +3,7 @@
 
         <!-- button to expand / close node -->
         <div class="expand-close-container">
-            <button *ngIf="projectAdmin || node.children.length !== 0" type="button" color="primary" mat-icon-button (click)="toggleChildren(node.id)">
+            <button *ngIf="isAdmin || node.children.length !== 0" type="button" color="primary" mat-icon-button (click)="toggleChildren(node.id)">
                 <mat-icon class="mat-icon-rtl-mirror">
                     {{showChildren(node.id) ? 'expand_more' : 'chevron_right'}}
                 </mat-icon>
@@ -23,7 +23,7 @@
         </app-list-item>
 
         <!-- in the case of no children: show form to append new item -->
-        <div class="child-node" *ngIf="node.id === expandedNode && node.children.length === 0 && projectStatus && projectAdmin">
+        <div class="child-node" *ngIf="node.id === expandedNode && node.children.length === 0 && projectStatus && isAdmin">
             <!-- first child should have an empty list? yes -->
             <app-list-item-form class="append-child-node" [parentIri]="node.id" [projectIri]="projectIri"
                                 [projectUuid]="projectUuid" [language]="language" [newNode]="true"
@@ -32,7 +32,7 @@
         </div>
 
         <!-- form to append new item to parent node -->
-        <app-list-item-form class="list-node append-child-node" *ngIf="last && projectStatus && projectAdmin" [parentIri]="parentIri"
+        <app-list-item-form class="list-node append-child-node" *ngIf="last && projectStatus && isAdmin" [parentIri]="parentIri"
                             [projectIri]="projectIri" [projectUuid]="projectUuid" [language]="language"
                             [newNode]="true" (refreshParent)="updateView($event)">
         </app-list-item-form>
@@ -43,8 +43,15 @@
 <!-- new list to create if list is empty -->
 <div class="list" *ngIf="list && list.length === 0 && projectStatus">
     <div class="list-node">
-        <app-list-item-form [parentIri]="parentIri" [projectIri]="projectIri" [projectUuid]="projectUuid"
-                            [language]="language" [newNode]="true" (refreshParent)="updateView($event)">
+        <app-list-item-form 
+            [parentIri]="parentIri" 
+            [projectIri]="projectIri" 
+            [projectUuid]="projectUuid"
+            [isAdmin]="isAdmin"
+            [language]="language" 
+            [newNode]="true" 
+            (refreshParent)="updateView($event)"
+        >
         </app-list-item-form>
     </div>
 </div>

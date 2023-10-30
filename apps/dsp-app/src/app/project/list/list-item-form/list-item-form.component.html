@@ -1,5 +1,5 @@
 <!-- add new node item -->
-<div class="new-list-item medium-field" *ngIf="newNode && projectAdmin">
+<div class="new-list-item medium-field" *ngIf="newNode && isAdmin">
     <dasch-swiss-app-string-literal class="list-item-label" [placeholder]="placeholder" [value]="[]"
         (dataChanged)="handleData($event)" [language]="language" (enter)="createChildNode()">
     </dasch-swiss-app-string-literal>

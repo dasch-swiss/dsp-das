@@ -24,17 +24,11 @@ import {
     ListInfoResponse,
     ListNode,
     ListNodeInfoResponse,
-    ReadProject,
     StringLiteral,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import {
-    Session,
-    SessionService,
-} from '@dasch-swiss/vre/shared/app-session';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 
 export class ListNodeOperation {
     operation: 'create' | 'insert' | 'update' | 'delete' | 'reposition';
@@ -110,10 +104,7 @@ export class ListItemFormComponent implements OnInit {
     @Output() refreshParent: EventEmitter<ListNodeOperation> =
         new EventEmitter<ListNodeOperation>();
 
-    // permissions of logged-in user
-    session: Session;
-    sysAdmin = false;
-    projectAdmin = false;
+    @Input() isAdmin = false;
 
     loading: boolean;
 
@@ -128,34 +119,9 @@ export class ListItemFormComponent implements OnInit {
         private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: AppErrorHandler,
         private _dialog: MatDialog,
-        private _session: SessionService,
-        private _applicationStateService: ApplicationStateService
     ) {}
 
     ngOnInit() {
-        // get information about the logged-in user
-        this.session = this._session.getSession();
-
-        // is the logged-in user system admin?
-        this.sysAdmin = this.session ? this.session.user.sysAdmin : false;
-
-        if (this.session) {
-            // get the project data from application state service
-            this._applicationStateService.get(this.projectUuid).subscribe(
-                (response: ReadProject) => {
-                    // is logged-in user projectAdmin?
-                    this.projectAdmin = this.sysAdmin
-                        ? this.sysAdmin
-                        : this.session.user.projectAdmin.some(
-                              (e) => e === response.id
-                          );
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
-        }
-
         this.initComponent = true;
 
         if (this.labels && this.labels.length > 0) {
@@ -268,7 +234,7 @@ export class ListItemFormComponent implements OnInit {
      * show action bubble with various CRUD buttons when hovered over.
      */
     mouseEnter() {
-        if (this.projectAdmin) {
+        if (this.isAdmin) {
             this.showActionBubble = true;
         }
     }
