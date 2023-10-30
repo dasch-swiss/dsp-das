@@ -1122,7 +1122,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
     private _isOrderByItemDisabled(data: PropertyData | undefined): boolean {
         if (!data) return true;
-        if (data.objectType === Constants.UriValue) return true;
         return !(
             data.objectType === ResourceLabel ||
             data.objectType?.includes(Constants.KnoraApiV2)
