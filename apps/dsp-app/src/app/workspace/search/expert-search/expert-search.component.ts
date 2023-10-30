@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import {
     AbstractControl,
     UntypedFormBuilder,
@@ -79,8 +88,10 @@ CONSTRUCT {
     }
 
     ngAfterViewInit() {
-        // focus the text area
-        this.textAreaElement.nativeElement.focus();
+        if (this.textAreaElement?.nativeElement) {
+            // focus the text area
+            this.textAreaElement.nativeElement.focus();
+        }
     }
 
     /**
