@@ -1,10 +1,10 @@
-<dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
+<dasch-swiss-app-progress-indicator *ngIf="isProjectsLoading$ | async"></dasch-swiss-app-progress-indicator>
 
-<div *ngIf="!loading">
-    <div *ngIf="isProjectAdmin" class="content large middle">
+<div *ngIf="(isProjectsLoading$ | async) === false">
+    <div *ngIf="isProjectAdmin$ | async" class="content large middle">
         <!-- add user to the project -->
         <app-add-user
-            *ngIf="(project$ | async)?.status && ((isSysAdmin$ | async) === true || isProjectAdmin)"
+            *ngIf="(project$ | async)?.status && ((isSysAdmin$ | async) === true || (isProjectAdmin$ | async) === true)"
             [projectUuid]="projectUuid"
             (refreshParent)="refresh()"
             #addUserComponent
@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <div *ngIf="!isProjectAdmin" class="content large middle">
+    <div *ngIf="!(isProjectAdmin$ | async)" class="content large middle">
         <app-status [status]="403"></app-status>
     </div>
 </div>

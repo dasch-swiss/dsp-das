@@ -10,6 +10,11 @@ export class UserSelectors {
     static isLoading(state: UserStateModel): boolean | undefined {
         return state.isLoading;
     }
+    
+    @Selector([UserState])
+    static allUsers(state: UserStateModel): ReadUser[] {
+        return state.allUsers;
+    }
 
     @Selector([UserState])
     static isLoggedIn(state: UserStateModel): boolean {

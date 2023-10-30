@@ -9,7 +9,7 @@ import { CurrentOntologyCanBeDeletedAction, ClearCurrentOntologyAction, ClearOnt
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-interfaces';
 import { of } from 'rxjs';
-import { GetListsInProjectAction } from '../lists/lists.actions';
+import { LoadListsInProjectAction } from '../lists/lists.actions';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 
 const defaults: OntologiesStateModel = <OntologiesStateModel>{
@@ -97,7 +97,7 @@ export class OntologiesState {
                 tap({
                     next: (ontoMeta: OntologiesMetadata) => {
                         if (!ontoMeta.ontologies.length) {
-                            ctx.dispatch(new GetListsInProjectAction(projectIri));
+                            ctx.dispatch(new LoadListsInProjectAction(projectIri));
                             return;
                         }
 
@@ -116,7 +116,7 @@ export class OntologiesState {
                             //last action dispatched
                             () => ctx.dispatch([
                                 new LoadOntologyAction(ontoMeta.ontologies[ontoMeta.ontologies.length - 1].id, projectIri, true),
-                                new GetListsInProjectAction(projectIri),
+                                new LoadListsInProjectAction(projectIri),
                             ])
                         );
                     }, 

@@ -1,16 +1,17 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
     ReadProject,
     ReadUser,
 } from '@dasch-swiss/dsp-js';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { AddUserComponent } from './add-user/add-user.component';
-import { Select, Store } from '@ngxs/store';
+import { Actions, Select, Store } from '@ngxs/store';
 import { CurrentProjectSelectors, LoadProjectMembersAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
+import { ProjectBase } from '../project-base';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,26 +19,21 @@ import { map, takeUntil } from 'rxjs/operators';
     templateUrl: './collaboration.component.html',
     styleUrls: ['./collaboration.component.scss'],
 })
-export class CollaborationComponent implements OnInit, OnDestroy {
+export class CollaborationComponent extends ProjectBase implements OnInit, OnDestroy {
     private ngUnsubscribe: Subject<void> = new Subject<void>();
     
     @ViewChild('addUserComponent') addUser: AddUserComponent;
-
-    // loading for progess indicator
-    loading: boolean;
-
-    isProjectAdmin = false;
-
-    // project uuid; as identifier in project application state service
-    projectUuid: string;
 
     get activeProjectMembers$(): Observable<ReadUser[]> {
         return this.projectMembers$
             .pipe(
                 takeUntil(this.ngUnsubscribe),
                 map((projectMembers) => {
-                    const members = projectMembers[this._projectService.uuidToIri(this.projectUuid)].value;
-                    return members.filter(member => member.status === true);
+                    if (!projectMembers[this.projectIri]) {
+                        return [];
+                    }
+
+                    return projectMembers[this.projectIri].value.filter(member => member.status === true);
                 })
             );
     }
@@ -47,7 +43,11 @@ export class CollaborationComponent implements OnInit, OnDestroy {
             .pipe(
                 takeUntil(this.ngUnsubscribe),
                 map((projectMembers) => {
-                    return projectMembers[this._projectService.uuidToIri(this.projectUuid)].value.filter(member => !member.status);
+                    if (!projectMembers[this.projectIri]) {
+                        return [];
+                    }
+
+                    return projectMembers[this.projectIri].value.filter(member => !member.status);
                 })
             );
     }
@@ -59,11 +59,15 @@ export class CollaborationComponent implements OnInit, OnDestroy {
     @Select(CurrentProjectSelectors.project) project$: Observable<ReadProject>;
     
     constructor(
-        private _route: ActivatedRoute,
-        private _projectService: ProjectService,
-        private _titleService: Title,
-        private _store: Store,
+        protected _route: ActivatedRoute,
+        protected _projectService: ProjectService,
+        protected _titleService: Title,
+        protected _store: Store,
+        protected _cd: ChangeDetectorRef,
+        protected _actions$: Actions,
+        protected _router: Router,
     ) {
+        super(_store, _route, _projectService, _titleService, _router, _cd, _actions$);
         // get the uuid of the current project
         if (this._route.parent.parent.snapshot.url.length) {
             this._route.parent.parent.paramMap.subscribe((params: Params) => {
@@ -73,17 +77,9 @@ export class CollaborationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        const userProjectGroups = this._store.selectSnapshot(UserSelectors.userProjectAdminGroups);
-        const user = this._store.selectSnapshot(UserSelectors.user) as ReadUser;
+        super.ngOnInit();
         const project = this._store.selectSnapshot(CurrentProjectSelectors.project) as ReadProject;
         this._titleService.setTitle(`Project ${project.shortname} | Collaboration`);
-        // is logged-in user projectAdmin?
-        this.isProjectAdmin = this._projectService.isProjectAdminOrSysAdmin(user, userProjectGroups, project.id);
-
-        // get list of project members and groups
-        if (this.isProjectAdmin) {
-            this.refresh();
-        }
     }
 
     ngOnDestroy() {
@@ -95,8 +91,7 @@ export class CollaborationComponent implements OnInit, OnDestroy {
      * refresh list of members after adding a new user to the team
      */
     refresh(): void {
-        const projectIri = this._projectService.uuidToIri(this.projectUuid);
-        this._store.dispatch(new LoadProjectMembersAction(projectIri));
+        this._store.dispatch(new LoadProjectMembersAction(this.projectUuid));
 
         // refresh child component: add user
         if (this.addUser) {

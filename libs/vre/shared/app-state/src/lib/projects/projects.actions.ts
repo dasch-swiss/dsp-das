@@ -7,7 +7,7 @@ export class LoadProjectsAction {
 
 export class LoadProjectAction {
     static readonly type = '[Projects] Load Project';
-    constructor(public projectUuid: string) {}
+    constructor(public projectUuid: string, public isCurrentProject = false) {}
 }
 
 export class ClearProjectsAction {

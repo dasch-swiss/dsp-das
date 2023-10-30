@@ -4,7 +4,7 @@ export class ClearListsAction {
     constructor() {}
 }
 
-export class GetListsInProjectAction {
-    static readonly type = '[Lists] Get Lists In Project';
-    constructor(public projectId: string) {}
+export class LoadListsInProjectAction {
+    static readonly type = '[Lists] Load Lists In Project';
+    constructor(public projectIri: string) {}
 }

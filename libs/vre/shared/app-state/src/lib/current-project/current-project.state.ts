@@ -1,13 +1,16 @@
 import { ClearProjectOntologiesAction } from './../ontologies/ontologies.actions';
 import { Inject, Injectable } from '@angular/core';
-import { Action, State, StateContext } from '@ngxs/store';
+import { Action, State, StateContext, Store } from '@ngxs/store';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { CurrentProjectStateModel } from './current-project.state-model';
-import { ClearCurrentProjectAction as ClearCurrentProjectAction, SetCurrentProjectAction, SetCurrentProjectGroupsAction, SetCurrentProjectMembersAction } from './current-project.actions';
+import { ClearCurrentProjectAction as ClearCurrentProjectAction, SetCurrentProjectAction, SetCurrentProjectByUuidAction, SetCurrentProjectGroupsAction, SetCurrentProjectMembersAction } from './current-project.actions';
+import { ProjectsSelectors } from '../projects/projects.selectors';
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { UserSelectors } from '../user/user.selectors';
 
 let defaults: CurrentProjectStateModel = {
     isLoading: false,
@@ -29,6 +32,8 @@ export class CurrentProjectState {
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: AppErrorHandler,
+        private _store: Store,
+        public _projectService: ProjectService,
     ) {}
 
     @Action(SetCurrentProjectMembersAction)
@@ -58,6 +63,29 @@ export class CurrentProjectState {
          }: SetCurrentProjectAction
     ) {
         return ctx.setState({ ...defaults, project: readProject, isProjectAdmin, isProjectMember });
+    }
+
+    @Action(SetCurrentProjectByUuidAction, { cancelUncompleted: true })
+    setCurrentProjectByUuidAction(
+        ctx: StateContext<CurrentProjectStateModel>,
+        { projectUuid }: SetCurrentProjectByUuidAction
+    ) {
+        const projects = this._store.selectSnapshot(ProjectsSelectors.readProjects);
+        const currentProject = projects.find(project => project.id === this._projectService.uuidToIri(projectUuid));
+        const user = this._store.selectSnapshot(UserSelectors.user) as ReadUser;
+        let isProjectAdmin = false;
+        let isProjectMember = false;
+        if (user) {
+            const userProjectGroups = this._store.selectSnapshot(UserSelectors.userProjectAdminGroups);
+            isProjectAdmin = this._projectService.isProjectAdminOrSysAdmin(user, userProjectGroups, projectUuid);
+            isProjectMember = this._projectService.isProjectMember(user, userProjectGroups, projectUuid);
+        }
+        
+        if (currentProject) {
+            return ctx.setState({ ...defaults, project: currentProject, isProjectAdmin, isProjectMember });
+        }
+        
+        return;
     }
     
     @Action(ClearCurrentProjectAction)

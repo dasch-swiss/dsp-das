@@ -162,6 +162,8 @@ export class ProjectComponent extends ProjectBase implements OnInit {
             this.componentCommsSubscription.unsubscribe();
         }
     }
+    
+    trackByFn = (index: number, item: ReadOntology) => `${index}-${item.id}`;
 
     open(route: AvailableRoute, id = '') {
         const routeCommands = id ? [route, id] : [route];

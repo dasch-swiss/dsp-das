@@ -116,7 +116,6 @@ export class UserState {
         ctx: StateContext<UserStateModel>,
         { }: LoadUsersAction
     ) {
-        ctx.patchState({ isLoading: true });
         return this._dspApiConnection.admin.usersEndpoint.getUsers()
             .pipe(
                 take(1),
@@ -127,7 +126,6 @@ export class UserState {
                     next: (response: ApiResponseData<UsersResponse>) => {
                         ctx.setState({ 
                             ...ctx.getState(), 
-                            isLoading: false, 
                             allUsers: response.body.users
                         });
                     },

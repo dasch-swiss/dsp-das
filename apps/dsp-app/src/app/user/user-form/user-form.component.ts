@@ -1,4 +1,6 @@
 import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     Inject,
@@ -24,7 +26,6 @@ import {
     UpdateUserRequest,
     User,
     UserResponse,
-    UsersResponse,
 } from '@dasch-swiss/dsp-js';
 import { AppGlobal } from '@dsp-app/src/app/app-global';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -33,12 +34,13 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
-import { Observable } from 'rxjs';
-import { Select, Store } from '@ngxs/store';
+import { Observable, combineLatest } from 'rxjs';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { AddUserToProjectMembershipAction, CreateUserAction, LoadProjectMembersAction, LoadUsersAction, ProjectsSelectors, SetUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { take } from 'rxjs/operators';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-user-form',
     templateUrl: './user-form.component.html',
     styleUrls: ['./user-form.component.scss'],
@@ -170,6 +172,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     languagesList: StringLiteral[] = AppGlobal.languagesList;
 
     @Select(UserSelectors.user) user$: Observable<ReadUser>;
+    @Select(UserSelectors.allUsers) allUsers$: Observable<ReadUser[]>;
     @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
     @Select(ProjectsSelectors.hasLoadingErrors) hasLoadingErrors$: Observable<boolean>;
 
@@ -181,7 +184,9 @@ export class UserFormComponent implements OnInit, OnChanges {
         private _notification: NotificationService,
         private _route: ActivatedRoute,
         private _projectService: ProjectService,
-        private _store: Store
+        private _store: Store,
+        private _actions$: Actions,
+        private _cd: ChangeDetectorRef,
     ) {
         // get username from url
         if (
@@ -211,10 +216,11 @@ export class UserFormComponent implements OnInit, OnChanges {
              */
 
             // get existing users to avoid same usernames and email addresses
-            this._store.dispatch(new LoadUsersAction())
+            this._store.dispatch(new LoadUsersAction());
+            combineLatest([this._actions$.pipe(ofActionSuccessful(LoadUsersAction)), this.allUsers$])
                 .pipe(take(1))
-                .subscribe((response: ApiResponseData<UsersResponse>) => {
-                    for (const user of response.body.users) {
+                .subscribe(([loadUsersAction, allUsers]) => {
+                    for (const user of allUsers) {
                         // email address of the user should be unique.
                         // therefore we create a list of existing email addresses to avoid multiple use of user names
                         this.existingEmails.push(
@@ -235,6 +241,7 @@ export class UserFormComponent implements OnInit, OnChanges {
                     }
                     // build the form
                     this.loadingData = !this.buildForm(newUser);
+                    this._cd.markForCheck();
                 });
         }
     }
@@ -407,10 +414,11 @@ export class UserFormComponent implements OnInit, OnChanges {
         userData.status = userForm.status;
         userData.lang = userForm.lang;
 
-        this._store.dispatch(new CreateUserAction(userData))
-            .pipe(take(1))
-            .subscribe((response: ApiResponseData<UserResponse>) => {
-                this.user = response.body.user;
+        this._store.dispatch(new CreateUserAction(userData));
+        combineLatest([this._actions$.pipe(ofActionSuccessful(CreateUserAction)), this.allUsers$])
+                .pipe(take(1))
+                .subscribe(([loadUsersAction, allUsers]) => {
+                this.user = allUsers.find(user => user.username === loadUsersAction.userData.username);
                 this.buildForm(this.user);
 
                 if (this.projectUuid) {

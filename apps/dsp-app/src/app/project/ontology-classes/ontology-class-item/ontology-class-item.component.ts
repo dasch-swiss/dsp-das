@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {
     ClassDefinition,
@@ -18,6 +18,7 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { OntologyService } from '@dsp-app/src/app/project/ontology/ontology.service';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-ontology-class-item',
     templateUrl: './ontology-class-item.component.html',
     styleUrls: ['./ontology-class-item.component.scss'],
@@ -53,7 +54,8 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
         private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: AppErrorHandler,
         private _route: ActivatedRoute,
-        private _componentCommsService: ComponentCommunicationEventService
+        private _componentCommsService: ComponentCommunicationEventService,
+        private _cd: ChangeDetectorRef,
     ) {}
 
     ngOnInit(): void {
@@ -146,6 +148,7 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
             .subscribe(
                 (res: CountQueryResponse) => {
                     this.results = res.numberOfResults;
+                    this._cd.markForCheck();
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);

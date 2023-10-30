@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Directive, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
-import { CurrentProjectSelectors, LoadProjectAction, LoadProjectGroupsAction, LoadProjectMembersAction, LoadProjectOntologiesAction, OntologiesSelectors, SetCurrentProjectAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ReadProject } from '@dasch-swiss/dsp-js';
+import { CurrentProjectSelectors, LoadProjectAction, LoadProjectOntologiesAction } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
-import { filter, map, take } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 import { ProjectService } from '../workspace/resource/services/project.service';
 import { Title } from '@angular/platform-browser';
 
@@ -14,11 +14,13 @@ export class ProjectBase implements OnInit, OnDestroy {
 
     projectUuid: string;
 
-    // permissions of logged-in user
-    isProjectAdmin = false;
-    isProjectMember = false;
+    get projectIri() {
+        return this._projectService.uuidToIri(this.projectUuid);
+    }
     
     @Select(CurrentProjectSelectors.project) project$: Observable<ReadProject>;
+    @Select(CurrentProjectSelectors.isProjectAdmin) isProjectAdmin$: Observable<boolean>;
+    @Select(CurrentProjectSelectors.isProjectMember) isProjectMember$: Observable<boolean>;
 
     constructor(
         protected _store: Store,
@@ -36,18 +38,9 @@ export class ProjectBase implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        const currentProject = this._store.selectSnapshot(CurrentProjectSelectors.project)
-        if (this.projectUuid 
-            && (!currentProject || currentProject.id !== this._projectService.uuidToIri(this.projectUuid))) {
+        const currentProject = this._store.selectSnapshot(CurrentProjectSelectors.project);
+        if (this.projectUuid && (!currentProject || currentProject.id !== this.projectIri)) {
             this.loadProject();
-        } else if (this.projectUuid 
-            && (currentProject && currentProject.id === this._projectService.uuidToIri(this.projectUuid))) {
-                const projectOntologies = this._store.selectSnapshot(OntologiesSelectors.projectOntologies);
-                const projectIri = this._projectService.uuidToIri(this.projectUuid);
-                if (currentProject.ontologies.length > 0 
-                    && (!projectOntologies[projectIri] || projectOntologies[projectIri].readOntologies.length === 0)) {
-                    this._store.dispatch(new LoadProjectOntologiesAction(currentProject.id));
-                }
         }
     }
 
@@ -68,45 +61,20 @@ export class ProjectBase implements OnInit, OnDestroy {
     private loadProject(): void {
         // get current project data, project members and project groups
         // and set the project state here
-        this._store.dispatch(new LoadProjectAction(this.projectUuid))
-            .pipe(
-                take(1),
-                map((state: any) => {
-                    return state.projects.readProjects;
-                })
-            )
-            .subscribe((readProjects: ReadProject[]) => {
-                return this.SetProjectData(this.getCurrentProject(readProjects));
-            });
+        this._store.dispatch(new LoadProjectAction(this.projectUuid, true));
+        this._actions$.pipe(ofActionSuccessful(LoadProjectAction))
+            .pipe(take(1))
+            .subscribe(() => this.setProjectData());
     }
 
-    private SetProjectData(readProject: ReadProject): void {
+    private setProjectData(): void {
+        const readProject = this._store.selectSnapshot(CurrentProjectSelectors.project);
         if (!readProject) {
             return;
         }
 
-        // set the page title
         this._titleService.setTitle(readProject.shortname);
-
-        const user = this._store.selectSnapshot(UserSelectors.user) as ReadUser;
-        const userProjectGroups = this._store.selectSnapshot(UserSelectors.userProjectAdminGroups);
-        // is logged-in user projectAdmin?
-        if (user) {
-            this.isProjectAdmin = this._projectService.isProjectAdminOrSysAdmin(user, userProjectGroups, readProject.id);
-            this.isProjectMember = this._projectService.isProjectMember(user, userProjectGroups, readProject.id);
-        }
-
-        // set the state of project members and groups
-        this._store.dispatch(new SetCurrentProjectAction(readProject, this.isProjectAdmin));
-        if (this.isProjectAdmin) {
-            this._store.dispatch(new LoadProjectMembersAction(readProject.id));
-            this._store.dispatch(new LoadProjectGroupsAction(readProject.id));
-        }
-        
         this._store.dispatch(new LoadProjectOntologiesAction(readProject.id));
-        this._actions$.pipe(ofActionSuccessful(LoadProjectOntologiesAction))
-            .pipe(take(1))
-            .subscribe(() => this._cd.markForCheck());
     }
 
     protected static navigationEndFilter(event: Observable<any>) {

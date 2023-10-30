@@ -44,7 +44,7 @@ import {
 } from './default-data/default-resource-classes';
 import { OntologyService } from './ontology.service';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { ClearCurrentOntologyAction, CurrentOntologyCanBeDeletedAction, DefaultClass, LoadOntologyAction, LoadProjectOntologiesAction, OntologiesSelectors, OntologyProperties, ProjectsSelectors, RemoveProjectOntologyAction, SetCurrentOntologyAction, SetCurrentProjectOntologyPropertiesAction, SetOntologiesLoadingAction, UpdateProjectOntologyAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ClearCurrentOntologyAction, CurrentOntologyCanBeDeletedAction, CurrentProjectSelectors, DefaultClass, LoadOntologyAction, LoadProjectOntologiesAction, OntologiesSelectors, OntologyProperties, ProjectsSelectors, RemoveProjectOntologyAction, SetCurrentOntologyAction, SetCurrentProjectOntologyPropertiesAction, SetOntologiesLoadingAction, UpdateProjectOntologyAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
 import { ProjectBase } from '../project-base';
@@ -190,7 +190,21 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
                 : 'classes';
         }
         
-        this.initOntology();
+        const currentProject = this._store.selectSnapshot(CurrentProjectSelectors.project);
+        if (this.projectUuid 
+            && (currentProject && currentProject.id === this.projectIri)) {
+                const projectOntologies = this._store.selectSnapshot(OntologiesSelectors.projectOntologies);
+                if (currentProject.ontologies.length > 0 
+                    && (!projectOntologies[this.projectIri] || projectOntologies[this.projectIri].readOntologies.length === 0)) {
+                    this._store.dispatch(new LoadProjectOntologiesAction(currentProject.id));
+                    this._actions$.pipe(ofActionSuccessful(LoadProjectOntologiesAction))
+                        .subscribe(() => {
+                            this.initOntology();
+                        });
+                } else {
+                    this.initOntology();
+                }
+        } 
     }
 
     ngOnDestroy() {
@@ -309,6 +323,16 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
         };
     }
 
+    trackByPropertyCategoryFn = (index: number, item: PropertyCategory) => `${index}-${item.group}`;
+
+    trackByClassDefinitionFn = (index: number, item: ClassDefinition) => `${index}-${item.id}`;
+
+    trackByPropertyDefinitionFn = (index: number, item: PropertyDefinition) => `${index}-${item.id}`;
+    
+    trackByDefaultClassFn = (index: number, item: DefaultClass) => `${index}-${item.iri}`;
+
+    trackByElementFn = (index: number) => `${index}`;
+
     /**
      * update view after selecting an ontology from dropdown
      * @param id
@@ -366,10 +390,9 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
         // grab the onto properties information to display
         this.initOntoProperties(ontology, getAllEntityDefinitionsAsArray(ontology.properties));
 
-        const projectIri = this._projectService.uuidToIri(this.projectUuid);
         this._store.dispatch([
             new SetCurrentOntologyAction(ontology),
-            new SetCurrentProjectOntologyPropertiesAction(projectIri),
+            new SetCurrentProjectOntologyPropertiesAction(this.projectIri),
             new CurrentOntologyCanBeDeletedAction()
         ]);
     }

@@ -1,4 +1,6 @@
 import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
     Component,
     EventEmitter,
     Inject,
@@ -29,6 +31,7 @@ import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-users-list',
     templateUrl: './users-list.component.html',
     styleUrls: ['./users-list.component.scss'],
@@ -111,7 +114,7 @@ export class UsersListComponent implements OnInit {
         private _route: ActivatedRoute,
         private _router: Router,
         private _sortingService: SortingService,
-        private store: Store,
+        private _store: Store,
     ) {
         // get the uuid of the current project
         this._route.parent.parent.paramMap.subscribe((params: Params) => {
@@ -138,6 +141,10 @@ export class UsersListComponent implements OnInit {
      * @returns boolean
      */
     userIsProjectAdmin(permissions?: Permissions): boolean {
+        if (!this.project) {
+            return false;
+        }
+
         if (permissions) {
             // check if this user is project admin
             return (
@@ -146,7 +153,7 @@ export class UsersListComponent implements OnInit {
                 ) > -1
             );
         } else {
-            const userProjectGroups = this.store.selectSnapshot(UserSelectors.userProjectAdminGroups);
+            const userProjectGroups = this._store.selectSnapshot(UserSelectors.userProjectAdminGroups);
             // check if the logged-in user is project admin
             return userProjectGroups.some((e) => e === this.project.id);
         }
@@ -251,7 +258,7 @@ export class UsersListComponent implements OnInit {
      * update user's admin-group membership
      */
     updateProjectAdminMembership(id: string, permissions: Permissions): void {
-        const currentUsername = this.store.selectSnapshot(UserSelectors.username);
+        const currentUsername = this._store.selectSnapshot(UserSelectors.username);
         if (this.userIsProjectAdmin(permissions)) {
             // true = user is already project admin --> remove from admin rights
 
@@ -268,7 +275,7 @@ export class UsersListComponent implements OnInit {
                             // open dialog to confirm and
                             // redirect to project page
                             // update the application state of logged-in user and the session
-                            this.store.dispatch(new LoadUserAction(currentUsername))
+                            this._store.dispatch(new LoadUserAction(currentUsername))
                                 .pipe(take(1))
                                 .subscribe((readUser: ReadUser) => {
                                     if (readUser.systemAdmin) {
@@ -302,7 +309,7 @@ export class UsersListComponent implements OnInit {
                         } else {
                             // the logged-in user (system admin) added himself as project admin
                             // update the application state of logged-in user and the session
-                            this.store.dispatch(new LoadUserAction(currentUsername))
+                            this._store.dispatch(new LoadUserAction(currentUsername))
                                 .pipe(take(1))
                                 .subscribe((readUser: ReadUser) => {
                                     this.refreshParent.emit();
@@ -321,7 +328,7 @@ export class UsersListComponent implements OnInit {
             .updateUserSystemAdminMembership(user.id, systemAdmin)
             .subscribe(
                 () => {
-                    if (this.store.selectSnapshot(UserSelectors.username) !== user.username) {
+                    if (this._store.selectSnapshot(UserSelectors.username) !== user.username) {
                         this.refreshParent.emit();
                     }
                 },
@@ -354,7 +361,7 @@ export class UsersListComponent implements OnInit {
             if (response === true) {
                 switch (mode) {
                     case 'removeFromProject':
-                        this.store.dispatch(new RemoveUserFromProjectAction(iri, this.project.id))
+                        this._store.dispatch(new RemoveUserFromProjectAction(iri, this.project.id))
                             .pipe(take(1))
                             .subscribe(() => this.refreshParent.emit());
                         break;
@@ -409,8 +416,8 @@ export class UsersListComponent implements OnInit {
         if (this.project && this.project.status === false) {
             return true;
         } else {
-            return !this.store.selectSnapshot(UserSelectors.isSysAdmin) 
-                && !this.store.selectSnapshot(CurrentProjectSelectors.isProjectAdmin);
+            return !this._store.selectSnapshot(UserSelectors.isSysAdmin) 
+                && !this._store.selectSnapshot(CurrentProjectSelectors.isProjectAdmin);
         }
     }
 

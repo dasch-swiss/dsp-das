@@ -4,7 +4,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, ListsResponse } from '@dasch-swiss/dsp-js';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ListsStateModel } from './lists.state-model';
-import { ClearListsAction, GetListsInProjectAction } from './lists.actions';
+import { ClearListsAction, LoadListsInProjectAction } from './lists.actions';
 import { of } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 
@@ -25,14 +25,14 @@ export class ListsState {
         private _errorHandler: AppErrorHandler,
     ) {}
 
-    @Action(GetListsInProjectAction)
-    getListsInProject(
+    @Action(LoadListsInProjectAction)
+    loadListsInProject(
         ctx: StateContext<ListsStateModel>,
-        { projectId }: GetListsInProjectAction
+        { projectIri }: LoadListsInProjectAction
     ) {
         ctx.patchState({ isLoading: true });
         return this._dspApiConnection.admin.listsEndpoint
-            .getListsInProject(projectId)
+            .getListsInProject(projectIri)
             .pipe(
                 take(1),
                 map((response: ApiResponseData<ListsResponse> | ApiResponseError) => { 

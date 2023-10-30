@@ -1,21 +1,15 @@
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
-import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    ApiResponseData,
-    ApiResponseError,
-    KnoraApiConnection,
     ListNodeInfo,
-    ListsResponse,
     OntologyMetadata,
     ReadUser,
 } from '@dasch-swiss/dsp-js';
 import {AppConfigService, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { OntologyService } from '../ontology/ontology.service';
 import { Select, Store } from '@ngxs/store';
-import { OntologiesSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ListsSelectors, OntologiesSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable, Subject, combineLatest, of } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
@@ -36,8 +30,6 @@ type DataModelRoute =
 export class DataModelsComponent implements OnInit, OnDestroy {
     private ngUnsubscribe: Subject<void> = new Subject<void>();
     
-    projectLists: ListNodeInfo[];
-
     // permissions of logged-in user
     get isAdmin$(): Observable<boolean> {
         return combineLatest([this.user$, this.userProjectAdminGroups$, this._route.parent.params])
@@ -72,11 +64,9 @@ export class DataModelsComponent implements OnInit, OnDestroy {
     @Select(UserSelectors.userProjectAdminGroups) userProjectAdminGroups$: Observable<string[]>;
     @Select(UserSelectors.isLoggedIn) isLoggedIn$: Observable<boolean>;
     @Select(OntologiesSelectors.isLoading) isLoading$: Observable<boolean>;
+    @Select(ListsSelectors.listsInProject) listsInProject$: Observable<ListNodeInfo[]>;
 
     constructor(
-        @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: AppErrorHandler,
         private _route: ActivatedRoute,
         private _router: Router,
         private _appInit: AppConfigService,
@@ -87,25 +77,18 @@ export class DataModelsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         const uuid = this._route.parent.snapshot.params.uuid;
-        const iri = `${this._appInit.dspAppConfig.iriBase}/projects/${uuid}`;
-
-        // get all project lists
-        this._dspApiConnection.admin.listsEndpoint
-            .getListsInProject(iri)
-            .subscribe(
-                (lists: ApiResponseData<ListsResponse>) => {
-                    this.projectLists = lists.body.lists;
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
+        //TODO Soft or Hard loading?
+        //this._store.dispatch(new LoadListsInProjectAction(uuid)); 
     }
 
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
+    
+    trackByFn = (index: number, item: ListNodeInfo) => `${index}-${item.id}`;
+
+    trackByOntologyMetaFn = (index: number, item: OntologyMetadata) => `${index}-${item.id}`;
 
     /**
      * handles routing to the correct path
