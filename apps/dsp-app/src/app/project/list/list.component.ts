@@ -3,9 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    ApiResponseError,
     ListNodeInfo,
-    ReadUser,
     StringLiteral,
 } from '@dasch-swiss/dsp-js';
 import { AppGlobal } from '@dsp-app/src/app/app-global';
@@ -14,10 +12,10 @@ import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { ProjectBase } from '../project-base';
-import { Actions, Select, Store, ofActionErrored, ofActionSuccessful } from '@ngxs/store';
-import { Observable, Subject, combineLatest } from 'rxjs';
-import { map, take, takeUntil } from 'rxjs/operators';
-import { CurrentProjectSelectors, DeleteListNodeAction, ListsSelectors, LoadListsInProjectAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
+import { Observable, Subject } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+import { CurrentProjectSelectors, DeleteListNodeAction, ListsSelectors, LoadListsInProjectAction } from '@dasch-swiss/vre/shared/app-state';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,16 +52,6 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
 
     // disable content on small devices
     disableContent = false;
-    
-    get isAdmin$(): Observable<boolean> {
-        return combineLatest([this.user$, this.userProjectAdminGroups$, this._route.parent.params])
-            .pipe(
-                takeUntil(this.ngUnsubscribe),
-                map(([user, userProjectGroups, params]) => {
-                    return this._projectService.isProjectAdminOrSysAdmin(user, userProjectGroups, params.uuid);
-                })
-            )
-    }
 
     get list$(): Observable<ListNodeInfo> {
         return this.listsInProject$.pipe(
@@ -73,8 +61,6 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
             ));
     }
     
-    @Select(UserSelectors.user) user$: Observable<ReadUser>;
-    @Select(UserSelectors.userProjectAdminGroups) userProjectAdminGroups$: Observable<string[]>;
     @Select(ListsSelectors.isListsLoading) isListsLoading$: Observable<boolean>;
     @Select(ListsSelectors.listsInProject) listsInProject$: Observable<ListNodeInfo[]>;
 

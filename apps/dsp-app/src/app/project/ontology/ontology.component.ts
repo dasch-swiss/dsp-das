@@ -119,16 +119,6 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     // route to classes view
     classesLink = `../${RouteConstants.classes}`;
     propertiesLink = `../${RouteConstants.properties}`;
-
-    get isAdmin$(): Observable<boolean> {
-        return combineLatest([this.user$, this.userProjectAdminGroups$, this._route.parent.params])
-            .pipe(
-                takeUntil(this.ngUnsubscribe),
-                map(([user, userProjectGroups, params]) => {
-                    return this._projectService.isProjectAdminOrSysAdmin(user, userProjectGroups, params.uuid);
-                })
-            )
-    }
     
     get isLoading$(): Observable<boolean> {
         return combineLatest([this.isOntologiesLoading$, this.isProjectsLoading$])

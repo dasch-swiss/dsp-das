@@ -1,17 +1,18 @@
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     ListNodeInfo,
     OntologyMetadata,
-    ReadUser,
 } from '@dasch-swiss/dsp-js';
 import {AppConfigService, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService } from '../ontology/ontology.service';
-import { Select, Store } from '@ngxs/store';
+import { Actions, Select, Store } from '@ngxs/store';
 import { ListsSelectors, OntologiesSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Observable, Subject, combineLatest, of } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ProjectBase } from '../project-base';
+import { Title } from '@angular/platform-browser';
 
 // the routes available for navigation
 type DataModelRoute =
@@ -27,20 +28,7 @@ type DataModelRoute =
     templateUrl: './data-models.component.html',
     styleUrls: ['./data-models.component.scss'],
 })
-export class DataModelsComponent implements OnInit, OnDestroy {
-    private ngUnsubscribe: Subject<void> = new Subject<void>();
-    
-    // permissions of logged-in user
-    get isAdmin$(): Observable<boolean> {
-        return combineLatest([this.user$, this.userProjectAdminGroups$, this._route.parent.params])
-            .pipe(
-                takeUntil(this.ngUnsubscribe),
-                map(([user, userProjectGroups, params]) => {
-                    return this._projectService.isProjectAdminOrSysAdmin(user, userProjectGroups, params.uuid);
-                })
-            )
-    }
-
+export class DataModelsComponent extends ProjectBase implements OnInit {
     get ontologiesMetadata$(): Observable<OntologyMetadata[]> {
         const uuid = this._route.parent.snapshot.params.uuid;
         const iri = `${this._appInit.dspAppConfig.iriBase}/projects/${uuid}`;
@@ -60,19 +48,21 @@ export class DataModelsComponent implements OnInit, OnDestroy {
             )
     }
 
-    @Select(UserSelectors.user) user$: Observable<ReadUser>;
-    @Select(UserSelectors.userProjectAdminGroups) userProjectAdminGroups$: Observable<string[]>;
     @Select(UserSelectors.isLoggedIn) isLoggedIn$: Observable<boolean>;
     @Select(OntologiesSelectors.isLoading) isLoading$: Observable<boolean>;
     @Select(ListsSelectors.listsInProject) listsInProject$: Observable<ListNodeInfo[]>;
 
     constructor(
-        private _route: ActivatedRoute,
-        private _router: Router,
-        private _appInit: AppConfigService,
-        private _store: Store,
-        private _projectService: ProjectService,
+        protected _route: ActivatedRoute,
+        protected _router: Router,
+        protected _appInit: AppConfigService,
+        protected _store: Store,
+        protected _projectService: ProjectService,
+        protected _titleService: Title,
+        protected _cd: ChangeDetectorRef,
+        protected _actions$: Actions,
     ) {
+        super(_store, _route, _projectService, _titleService, _router, _cd, _actions$);
     }
 
     ngOnInit(): void {
@@ -81,11 +71,6 @@ export class DataModelsComponent implements OnInit, OnDestroy {
         //this._store.dispatch(new LoadListsInProjectAction(uuid)); 
     }
 
-    ngOnDestroy() {
-        this.ngUnsubscribe.next();
-        this.ngUnsubscribe.complete();
-    }
-    
     trackByFn = (index: number, item: ListNodeInfo) => `${index}-${item.id}`;
 
     trackByOntologyMetaFn = (index: number, item: OntologyMetadata) => `${index}-${item.id}`;
