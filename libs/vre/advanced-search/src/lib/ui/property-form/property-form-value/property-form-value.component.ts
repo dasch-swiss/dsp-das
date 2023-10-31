@@ -17,10 +17,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ResourceLabel } from '../../../data-access/advanced-search-service/advanced-search.service';
 import { PropertyFormItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
+import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
 @Component({
     selector: 'dasch-swiss-property-form-value',
     standalone: true,
     imports: [
+        AppDatePickerComponent,
         CommonModule,
         MatButtonModule,
         MatInputModule,
