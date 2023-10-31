@@ -8,6 +8,8 @@ import { Select, Store } from '@ngxs/store';
 import { map, take } from 'rxjs/operators';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import {RouteConstants} from "@dasch-swiss/vre/shared/app-config";
+import { StringLiteral } from '@dasch-swiss/dsp-js/src/models/admin/string-literal';
+import { AppGlobal } from '@dsp-app/src/app/app-global';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,17 +65,29 @@ export class DescriptionComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.initProject();
-    }
-
-    /**
-     * initProject: get the project data from the application state service and update
-     * if the user has permission to edit the project if not a sysadmin
-     */
-    initProject() {
-        
     }
     
+    // returns the project with the descriptions sorted by language
+    private projectWithSortedDescriptions(project: ReadProject): ReadProject  {
+        if (project.description && project.description.length > 1) {
+            // sort the descriptions by language
+            project.description = this.sortDescriptionsByLanguage(project.description);
+        }
+        return project;
+    }
+
+    // returns the descriptions sorted by language
+    private sortDescriptionsByLanguage(descriptions: StringLiteral[]): StringLiteral[] {
+        const languageOrder = AppGlobal.languagesList.map((l) => l.language);
+
+        return descriptions.sort((a, b) => {
+            const indexA = languageOrder.indexOf(a.language);
+            const indexB = languageOrder.indexOf(b.language);
+
+            return indexA - indexB;
+        });
+    }
+
     editProject() {
         this._router.navigate([RouteConstants.project, this.projectUuid, RouteConstants.edit]);
     }
@@ -83,6 +97,7 @@ export class DescriptionComponent implements OnInit {
             return null;
         }
 
-        return projects.find(x => x.id.split('/').pop() === this.projectUuid);
+        const project = projects.find(x => x.id.split('/').pop() === this.projectUuid);
+        return this.projectWithSortedDescriptions(project);
     }
 }

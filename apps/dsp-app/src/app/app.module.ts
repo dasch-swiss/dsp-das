@@ -155,7 +155,7 @@ import {
     BuildTagToken,
 } from '@dasch-swiss/vre/shared/app-config';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { AppDatePickerModule } from '@dasch-swiss/vre/shared/app-date-picker';
+import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { apiConnectionTokenProvider } from './providers/api-connection-token.provider';
@@ -296,7 +296,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ],
     imports: [
         AngularSplitModule,
-        AppDatePickerModule,
+        AppDatePickerComponent,
         AppProgressIndicatorComponent,
         AppRoutingModule,
         BrowserAnimationsModule,
