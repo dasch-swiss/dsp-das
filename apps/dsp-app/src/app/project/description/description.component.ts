@@ -12,6 +12,7 @@ import {
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import {RouteConstants} from "@dasch-swiss/vre/shared/app-config";
 import { StringLiteral } from '@dasch-swiss/dsp-js/src/models/admin/string-literal';
+import { AppGlobal } from '@dsp-app/src/app/app-global';
 
 @Component({
     selector: 'app-description',
@@ -92,7 +93,7 @@ export class DescriptionComponent implements OnInit {
 
     // returns the descriptions sorted by language
     private sortDescriptionsByLanguage(descriptions: StringLiteral[]): StringLiteral[] {
-        const languageOrder = ['en', 'de', 'fr', 'it', 'rm'];
+        const languageOrder = AppGlobal.languagesList.map((l) => l.language);
 
         return descriptions.sort((a, b) => {
             const indexA = languageOrder.indexOf(a.language);
