@@ -293,10 +293,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
             // guard; not yet implemented
             return;
         }
-        if (resource.res.id !== this.resourceIri) {
-            // ensure that only the latest requested resource is rendered
-            return; // guard for there is already another resource requested
-        }
         if (resource.isRegion) {
             // render the image onto which the region is pointing; a region
             // itself can not be displayed without an image it is annotating
@@ -576,16 +572,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
                 representations.push(stillImage);
 
                 this.annotationResources = annotations;
-
-                // developer feature: this keeps the annotations tab open, if you add "/annotations" to the end of the URL
-                // e.g. http://0.0.0.0:4200/resource/[project-shortcode]/[resource-iri]/annotations
-                if (
-                    this.valueUuid === 'annotations' ||
-                    this.selectedRegion === this.resourceIri
-                ) {
-                    this.selectedTab = this.incomingResource ? 2 : 1;
-                    this.selectedTabLabel = 'annotations';
-                }
             }
         } else if (resource.res.properties[Constants.HasDocumentFileValue]) {
             const fileValues: ReadDocumentFileValue[] = resource.res.properties[

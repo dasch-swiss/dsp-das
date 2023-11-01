@@ -19,7 +19,18 @@
 
                     <!-- Description Section -->
                     <mat-divider></mat-divider>
-                    <mat-list-item [ngClass]="{ 'active': this.listItemSelected === '/project/' + projectUuid}" class="section-title" (click)="open('/project/' + projectUuid)">
+                    <mat-list-item [ngClass]="{ 'active': listItemSelected === 'advanced-search'}" class="section-title" (click)="open(advancedSearchRoute)">
+                        <span matListItemTitle class="section-label">
+                            <mat-icon class="sidenav-prefix-icon">search</mat-icon>
+                            <p>Advanced Search</p>
+                            <mat-icon class="sidenav-suffix-icon">chevron_right</mat-icon>
+                        </span>
+
+                    </mat-list-item>
+
+                    <!-- Description Section -->
+                    <mat-divider></mat-divider>
+                    <mat-list-item [ngClass]="{ 'active': listItemSelected === '/' + projectRoute + '/' + projectUuid}" class="section-title" (click)="open(projectRoute, projectUuid)">
                         <span matListItemTitle class="section-label">
                             <mat-icon class="sidenav-prefix-icon">description</mat-icon>
                             <p>Project Description</p>
@@ -30,7 +41,7 @@
 
                     <!-- Ontology Section -->
                     <mat-divider></mat-divider>
-                    <mat-list-item [ngClass]="{ 'active': listItemSelected === 'data-models'}" class="section-title" (click)="open('data-models')">
+                    <mat-list-item [ngClass]="{ 'active': listItemSelected === dataModelsRoute}" class="section-title" (click)="open(dataModelsRoute)">
                         <span matListItemTitle class="section-label">
                             <mat-icon class="sidenav-prefix-icon">bubble_chart</mat-icon>
                             <p>Data Model</p>
@@ -65,8 +76,8 @@
 
                     <div class="sidenav-footer"
                         *ngIf="projectAdmin">
-                        <mat-list-item [ngClass]="{ 'active': listItemSelected === 'settings'}" class="section-title footer"
-                            (click)="open('settings')">
+                        <mat-list-item [ngClass]="{ 'active': listItemSelected === settingsRoute}" class="section-title footer"
+                            (click)="open(settingsRoute)">
                             <span matListItemTitle class="section-label">
                                 <mat-icon class="sidenav-prefix-icon">settings</mat-icon>
                                 <div>Project Settings</div>

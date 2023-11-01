@@ -1,13 +1,7 @@
-import {
-    Component,
-    HostListener,
-    Inject,
-    OnInit,
-    ViewChild,
-} from '@angular/core';
-import { MatSidenav } from '@angular/material/sidenav';
-import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import {Component, HostListener, Inject, OnInit, ViewChild,} from '@angular/core';
+import {MatSidenav} from '@angular/material/sidenav';
+import {Title} from '@angular/platform-browser';
+import {ActivatedRoute, Router} from '@angular/router';
 import {
     ApiResponseData,
     ApiResponseError,
@@ -21,9 +15,8 @@ import {
     UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { AppGlobal } from '../app-global';
-import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
+import { AppConfigService, DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { MenuItem } from '../main/declarations/menu-item';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
@@ -32,6 +25,8 @@ import {
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
 import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { Subscription } from 'rxjs';
+
+type AvailableRoute = typeof RouteConstants.project | typeof RouteConstants.settings | typeof RouteConstants.dataModels | typeof RouteConstants.advancedSearch;
 
 @Component({
     selector: 'app-project',
@@ -63,8 +58,6 @@ export class ProjectComponent implements OnInit {
 
     color = 'primary';
 
-    navigation: MenuItem[] = AppGlobal.projectNav;
-
     ontologies: ReadOntology[] = [];
 
     // list of project ontologies
@@ -75,6 +68,12 @@ export class ProjectComponent implements OnInit {
     componentCommsSubscription: Subscription;
 
     sideNavOpened = true;
+
+    // routes for sidenav
+    projectRoute: AvailableRoute = RouteConstants.project;
+    settingsRoute: AvailableRoute = RouteConstants.settings;
+    dataModelsRoute: AvailableRoute = RouteConstants.dataModels;
+    advancedSearchRoute: AvailableRoute = RouteConstants.advancedSearch;
 
     constructor(
         @Inject(DspApiConnectionToken)
@@ -91,7 +90,9 @@ export class ProjectComponent implements OnInit {
         // get the uuid of the current project
         this.projectUuid = this._route.snapshot.params.uuid;
 
-        // create the project iri
+        // create the project iri; do not use the projects route constant from the RouteConstants here
+        // because the project iri is not defined within the domain of the of the app. It is defined by
+        // the api and can not be changed generically.
         this.iri = `${this._acs.dspAppConfig.iriBase}/projects/${this.projectUuid}`;
 
         // get session
@@ -104,23 +105,28 @@ export class ProjectComponent implements OnInit {
      */
     @HostListener('window:keyup', ['$event'])
     keyEvent(event: KeyboardEvent) {
-        if (event.key === '[') {
+        const element = event.target as HTMLElement;
+        if (event.key === '[' && !element.matches('input, textarea')) {
             this.toggleSidenav();
         }
     }
 
     ngOnInit() {
         switch (this._router.url) {
-            case `/project/${this.projectUuid}`: {
+            case `/project/${this.projectUuid}/advanced-search`: {
+                this.listItemSelected = 'advanced-search';
+                break;
+            }
+            case `/${RouteConstants.project}/${this.projectUuid}`: {
                 this.listItemSelected = this._router.url;
                 break;
             }
-            case `/project/${this.projectUuid}/data-models`: {
-                this.listItemSelected = 'data-models';
+            case `/${RouteConstants.project}/${this.projectUuid}/${RouteConstants.dataModels}`: {
+                this.listItemSelected = RouteConstants.dataModels;
                 break;
             }
-            case `/project/${this.projectUuid}/settings/collaboration`: {
-                this.listItemSelected = 'settings';
+            case `/${RouteConstants.project}/${this.projectUuid}/${RouteConstants.settings}/${RouteConstants.collaboration}`: {
+                this.listItemSelected = RouteConstants.settings;
                 break;
             }
         }
@@ -150,11 +156,6 @@ export class ProjectComponent implements OnInit {
                         if (!this.project.status) {
                             this.color = 'warn';
                         }
-
-                        this.navigation[0].label =
-                            'Project: ' +
-                            response.body.project.shortname.toUpperCase();
-
                         // is logged-in user projectAdmin?
                         if (this.session) {
                             this._session.setSession(
@@ -300,9 +301,11 @@ export class ProjectComponent implements OnInit {
         }
     }
 
-    open(route: string) {
-        this.listItemSelected = route;
-        this._router.navigate([route], { relativeTo: this._route });
+    open(route: AvailableRoute, id = '') {
+        const routeCommands = id ? [route, id] : [route];
+        const extras = route === RouteConstants.project ? {} : { relativeTo: this._route }
+        this.listItemSelected = `/${route}/${id}`;
+        this._router.navigate(routeCommands, extras);
     }
 
     /**

@@ -20,7 +20,7 @@ import {
     LoginResponse,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import {DspApiConnectionToken, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { AuthenticationService } from '../../services/authentication.service';
 import {
@@ -204,12 +204,9 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
                             if (this.returnUrl) {
                                 this._router.navigate([this.returnUrl]);
                             } else if (
-                                !this._location.path() ||
-                                (this._route.snapshot.url.length &&
-                                    this._route.snapshot.url[0].path ===
-                                        'login')
+                                !this._location.path()
                             ) {
-                                // if user is on "/" or "/login"
+                                // if user is on "/" route, redirect them after login to the project they are a member of
                                 const username = this.session.user.name;
                                 this._dspApiConnection.admin.usersEndpoint
                                     .getUserByUsername(username)
@@ -229,25 +226,25 @@ export class LoginFormComponent implements OnInit, AfterViewInit {
                                                     .length === 1
                                             ) {
                                                 this._router
-                                                    .navigateByUrl('/refresh', {
+                                                    .navigateByUrl(`/${RouteConstants.refresh}`, {
                                                         skipLocationChange:
                                                             true,
                                                     })
                                                     .then(() =>
                                                         this._router.navigate([
-                                                            '/project/' + uuid,
+                                                            RouteConstants.project, uuid
                                                         ])
                                                     );
                                             } else {
                                                 // if user is a sysAdmin or a member of multiple projects, redirect them to the overview
                                                 this._router
-                                                    .navigateByUrl('/refresh', {
+                                                    .navigateByUrl(`/${RouteConstants.refresh}`, {
                                                         skipLocationChange:
                                                             true,
                                                     })
                                                     .then(() =>
                                                         this._router.navigate([
-                                                            '/',
+                                                            RouteConstants.home,
                                                         ])
                                                     );
                                             }

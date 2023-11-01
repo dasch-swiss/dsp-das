@@ -23,17 +23,17 @@ import {
     FormGroupDirective,
     NgControl,
     NgForm,
-    Validators,
+    Validators, FormsModule, ReactiveFormsModule
 } from '@angular/forms';
 import {
     CanUpdateErrorState,
     ErrorStateMatcher,
     mixinErrorState,
     _AbstractConstructor,
-    _Constructor,
+    _Constructor, MatOptionModule
 } from '@angular/material/core';
-import { MatFormFieldControl } from '@angular/material/form-field';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { KnoraDate } from '@dasch-swiss/dsp-js';
 import { Subject } from 'rxjs';
 import {
@@ -43,6 +43,12 @@ import {
     IslamicCalendarDate,
     JulianCalendarDate,
 } from '@dasch-swiss/jdnconvertiblecalendar';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatSelectModule } from '@angular/material/select';
 
 /** error when invalid control is dirty, touched, or submitted. */
 export class DatePickerErrorStateMatcher implements ErrorStateMatcher {
@@ -85,9 +91,23 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
     mixinErrorState(MatInputBase);
 
 @Component({
+    standalone: true,
     selector: 'dasch-swiss-app-date-picker',
     templateUrl: './app-date-picker.component.html',
     styleUrls: ['./app-date-picker.component.scss'],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatIconModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatOptionModule,
+        MatMenuModule,
+        MatButtonModule,
+        MatButtonToggleModule,
+        MatSelectModule,
+    ]
 })
 export class AppDatePickerComponent
     extends _MatInputMixinBase
@@ -103,6 +123,7 @@ export class AppDatePickerComponent
 
     @ViewChild(MatMenuTrigger) popover!: MatMenuTrigger;
     @Output() closed: EventEmitter<void> = new EventEmitter();
+    @Output() emitDateChanged: EventEmitter<string> = new EventEmitter();
     @Input() override errorStateMatcher!: ErrorStateMatcher;
 
     // disable calendar selector in case of end date in a period date value
@@ -218,7 +239,7 @@ export class AppDatePickerComponent
     }
 
     set value(dateValue: KnoraDate | null) {
-        if (dateValue !== null) {
+        if (dateValue !== null && dateValue instanceof KnoraDate) {
             this.dateForm.setValue({
                 date: this.transform(dateValue, 'dd.MM.YYYY', 'era'),
                 knoraDate: dateValue,
@@ -234,6 +255,9 @@ export class AppDatePickerComponent
             this.day = dateValue.day;
             this.month = dateValue.month ? dateValue.month : 0;
             this.year = dateValue.year;
+            this.emitDateChanged.emit(
+                this.transform(dateValue, 'YYYY-MM-dd', 'gravsearch')
+            );
         } else {
             this.dateForm.setValue({ date: null, knoraDate: null });
         }
@@ -328,7 +352,12 @@ export class AppDatePickerComponent
     transform(
         date: KnoraDate,
         format?: string,
-        displayOptions?: 'era' | 'calendar' | 'calendarOnly' | 'all'
+        displayOptions?:
+            | 'era'
+            | 'calendar'
+            | 'calendarOnly'
+            | 'gravsearch'
+            | 'all'
     ): string {
         if (!(date instanceof KnoraDate)) {
             // console.error('Non-KnoraDate provided. Expected a valid KnoraDate');
@@ -380,6 +409,16 @@ export class AppDatePickerComponent
                 } else {
                     return `${date.year}`;
                 }
+            case 'YYYY-MM-dd':
+                if (date.precision === 2) {
+                    return `${date.year}-${this.leftPadding(
+                        date.month
+                    )}-${this.leftPadding(date.day)}`;
+                } else if (date.precision === 1) {
+                    return `${date.year}-${this.leftPadding(date.month)}`;
+                } else {
+                    return `${date.year}`;
+                }
             default:
                 if (date.precision === 2) {
                     return `${this.leftPadding(date.day)}.${this.leftPadding(
@@ -402,6 +441,8 @@ export class AppDatePickerComponent
     }
 
     addDisplayOptions(date: KnoraDate, value: string, options: string): string {
+        let era: string;
+
         switch (options) {
             case 'era':
                 // displays date with era; era only in case of BCE
@@ -419,6 +460,11 @@ export class AppDatePickerComponent
             case 'calendarOnly':
                 // displays only the selected calendar type without any data
                 return this.titleCase(date.calendar);
+            case 'gravsearch':
+                // GREGORIAN:2023-8-2
+                // CE is default era so no need to add it
+                era = date.era === 'BCE' ? ' BCE' : '';
+                return date.calendar + ':' + value + era;
             case 'all':
                 // displays date with era (only as BCE) and selected calendar type
                 return (
@@ -534,7 +580,12 @@ export class AppDatePickerComponent
         Object.keys(this.formErrors).map((field: string) => {
             this.formErrors[field] = '';
             const control = form.get(field);
-            if (control && control.dirty && !control.valid && control.errors !== null) {
+            if (
+                control &&
+                control.dirty &&
+                !control.valid &&
+                control.errors !== null
+            ) {
                 const messages = this.validationMessages[field];
                 Object.keys(control.errors).map((key: string) => {
                     this.formErrors[field] += messages[key] + ' ';

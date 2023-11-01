@@ -1,5 +1,77 @@
 # Changelog
 
+## [11.0.0](https://github.com/dasch-swiss/dsp-das/compare/v10.24.2...v11.0.0) (2023-10-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** bump js-lib to 9.0.0 ([#1241](https://github.com/dasch-swiss/dsp-das/issues/1241))
+
+### Enhancements
+
+* **advanced-search:** make list menu resemble a dropdown ([#1243](https://github.com/dasch-swiss/dsp-das/issues/1243)) ([96eab7f](https://github.com/dasch-swiss/dsp-das/commit/96eab7fb1021eb7a0c5671773497412332aa1361))
+* restore previous advanced search that user executed ([#1226](https://github.com/dasch-swiss/dsp-das/issues/1226)) ([8c5eec9](https://github.com/dasch-swiss/dsp-das/commit/8c5eec97354365a945c9de5cffb74d68712e9af3))
+
+
+### Bug Fixes
+
+* **advanced search link:** Add route constant ([#1238](https://github.com/dasch-swiss/dsp-das/issues/1238)) ([db3e22a](https://github.com/dasch-swiss/dsp-das/commit/db3e22a4186e0c86f346c84401b3dbc8d501d86d))
+
+
+### Maintenance
+
+* cleanup routes and unused components ([#1239](https://github.com/dasch-swiss/dsp-das/issues/1239)) ([2ce9065](https://github.com/dasch-swiss/dsp-das/commit/2ce9065b568bf023bba030a2b2f080adb298abd4))
+* **deps:** bump js-lib to 9.0.0 ([#1241](https://github.com/dasch-swiss/dsp-das/issues/1241)) ([94b7f26](https://github.com/dasch-swiss/dsp-das/commit/94b7f267b18ce75621e0a790395f5cc8e34b7ce7))
+* **deps:** bump js-lib to 9.0.1 ([#1244](https://github.com/dasch-swiss/dsp-das/issues/1244)) ([4fc6a40](https://github.com/dasch-swiss/dsp-das/commit/4fc6a40f463845bfa95ed6310aa858d49d3a7a05))
+* **routing:** apply route constants ([#1227](https://github.com/dasch-swiss/dsp-das/issues/1227)) ([0b0dff5](https://github.com/dasch-swiss/dsp-das/commit/0b0dff586da77200bdd33ecd865b74e6c40a43fb))
+* **routing:** cleanup unused routes ([#1240](https://github.com/dasch-swiss/dsp-das/issues/1240)) ([caa1819](https://github.com/dasch-swiss/dsp-das/commit/caa181998e2ae5cbae77c11ee10934feda52093d))
+
+## [10.24.2](https://github.com/dasch-swiss/dsp-das/compare/v10.24.1...v10.24.2) (2023-10-20)
+
+
+### Bug Fixes
+
+* **date-picker:** fix YYYY-MM-dd formatting ([#1235](https://github.com/dasch-swiss/dsp-das/issues/1235)) ([f641ccb](https://github.com/dasch-swiss/dsp-das/commit/f641ccb9a71bb03c4adaff34f0f7cbb9f6fe5283))
+* **gravsearch-service:** incorrect gravsearch generated when searching for a linked property ([#1232](https://github.com/dasch-swiss/dsp-das/issues/1232)) ([200bbc0](https://github.com/dasch-swiss/dsp-das/commit/200bbc085c9ac3d67b06c3d2217faaa4bb7a203e))
+* **project:** host listener triggers when user types in an input or textarea ([#1233](https://github.com/dasch-swiss/dsp-das/issues/1233)) ([9f2a790](https://github.com/dasch-swiss/dsp-das/commit/9f2a7905db8967f32b60124bce13604f65e68f27))
+
+
+### Maintenance
+
+* Reconfigure all "zio" endpoints to use the original address ([#1222](https://github.com/dasch-swiss/dsp-das/issues/1222)) ([eaaefc9](https://github.com/dasch-swiss/dsp-das/commit/eaaefc915757800b9156e6d33754e3814735d7ce))
+
+## [10.24.1](https://github.com/dasch-swiss/dsp-das/compare/v10.24.0...v10.24.1) (2023-10-17)
+
+
+### Bug Fixes
+
+* **advanced-search:** generate correct gravsearch for linked resources with property values ([#1229](https://github.com/dasch-swiss/dsp-das/issues/1229)) ([2caa0a2](https://github.com/dasch-swiss/dsp-das/commit/2caa0a2b576eff4206557b65512bf5fc4a162cda))
+
+
+### Maintenance
+
+* **string literal component:** move app string literal component into shared lib ([#1209](https://github.com/dasch-swiss/dsp-das/issues/1209)) ([3f2a562](https://github.com/dasch-swiss/dsp-das/commit/3f2a562b4999bcf625e257b425e2f75e47079bc1))
+
+## [10.24.0](https://github.com/dasch-swiss/dsp-das/compare/v10.23.7...v10.24.0) (2023-10-13)
+
+
+### Enhancements
+
+* **advanced-search:** advanced search library ([#1131](https://github.com/dasch-swiss/dsp-das/issues/1131)) ([7e0a550](https://github.com/dasch-swiss/dsp-das/commit/7e0a5505610cacc5af3deeee4fb4fcc1e0049c0a))
+* dev-2557-update-the-documentation-1 ([#1221](https://github.com/dasch-swiss/dsp-das/issues/1221)) ([e1c741d](https://github.com/dasch-swiss/dsp-das/commit/e1c741dea08a835a21f69e1740bcdd520a672e7d))
+
+
+### Maintenance
+
+* update dsp-js to v8.3.6 ([#1224](https://github.com/dasch-swiss/dsp-das/issues/1224)) ([543c0d8](https://github.com/dasch-swiss/dsp-das/commit/543c0d8d59a828a8f14e1671f320898c9f15dbf0))
+
+## [10.23.7](https://github.com/dasch-swiss/dsp-das/compare/v10.23.6...v10.23.7) (2023-10-04)
+
+
+### Bug Fixes
+
+* **resource:** resources do not load from url ([#1214](https://github.com/dasch-swiss/dsp-das/issues/1214)) ([689acbe](https://github.com/dasch-swiss/dsp-das/commit/689acbe6933e3da508268c8c65dfd76c74afeeb9))
+
 ## [10.23.6](https://github.com/dasch-swiss/dsp-das/compare/v10.23.5...v10.23.6) (2023-10-03)
 
 

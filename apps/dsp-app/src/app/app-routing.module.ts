@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HintComponent } from './main/action/hint/hint.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { HelpComponent } from './main/help/help.component';
@@ -15,7 +14,6 @@ import { ListInfoFormComponent } from './project/list/list-info-form/list-info-f
 import { ListComponent } from './project/list/list.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
-import { PermissionComponent } from './project/permission/permission.component';
 import { ProjectComponent } from './project/project.component';
 import { ProjectsComponent } from './system/projects/projects.component';
 // system
@@ -27,7 +25,8 @@ import { UserComponent } from './user/user.component';
 // search results and resource viewer
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
-import {ProjectFormComponent} from "@dsp-app/src/app/project/project-form/project-form.component";
+import { AdvancedSearchContainerComponent } from './workspace/search/advanced-search/advanced-search-container.component';
+import { ProjectFormComponent } from "@dsp-app/src/app/project/project-form/project-form.component";
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 
 const routes: Routes = [
@@ -62,11 +61,6 @@ const routes: Routes = [
                 canActivate: [AuthGuard],
             },
             {
-                path: RouteConstants.ontology,
-                component: HintComponent,
-                data: { topic: 'ontology' },
-            },
-            {
                 path: RouteConstants.dataModels,
                 component: DataModelsComponent,
             },
@@ -85,16 +79,6 @@ const routes: Routes = [
                 component: OntologyClassInstanceComponent,
             },
             {
-                path: RouteConstants.OntologyClassConfRelative,
-                component: StatusComponent,
-                data: {
-                    status: RouteConstants.notImplemented,
-                    comment:
-                        'Here you will be able to configure the resource class.',
-                },
-                canActivate: [AuthGuard],
-            },
-            {
                 path: RouteConstants.OntologyClassInstanceRelative,
                 component: OntologyClassInstanceComponent,
             },
@@ -102,11 +86,6 @@ const routes: Routes = [
                 path: RouteConstants.addList,
                 component: ListInfoFormComponent,
                 canActivate: [AuthGuard],
-            },
-            {
-                path: RouteConstants.list,
-                component: HintComponent,
-                data: { topic: 'list' },
             },
             {
                 path: `${RouteConstants.list}/:${RouteConstants.listParameter}`,
@@ -126,11 +105,15 @@ const routes: Routes = [
                         path: RouteConstants.collaboration,
                         component: CollaborationComponent,
                     },
-                    {
-                        path: RouteConstants.permissions,
-                        component: PermissionComponent,
-                    },
                 ],
+            },
+            {
+                path: RouteConstants.advancedSearch,
+                component: AdvancedSearchContainerComponent,
+            },
+            {
+                path: RouteConstants.advancedSearchResultsRelative,
+                component: ResultsComponent,
             },
             {
                 path: RouteConstants.notFoundWildcard,
@@ -138,17 +121,6 @@ const routes: Routes = [
                 data: { status: RouteConstants.notFound },
             },
         ],
-    },
-    /*
-    {
-        path: 'user/:name',
-        component: ProfileComponent
-    },
-    */
-    {
-        path: RouteConstants.profile,
-        component: UserComponent,
-        canActivate: [AuthGuard],
     },
     {
         path: RouteConstants.userAccount,
@@ -160,11 +132,6 @@ const routes: Routes = [
         component: UserComponent,
         canActivate: [AuthGuard],
     },
-    /* {
-        path: 'collections',
-        component: UserComponent,
-        canActivate: [AuthGuard]
-    }, */
     {
         path: RouteConstants.system,
         component: SystemComponent,
@@ -215,11 +182,6 @@ const routes: Routes = [
     {
         path: RouteConstants.cookiePolicy,
         component: CookiePolicyComponent,
-    },
-    {
-        path: RouteConstants.teapot,
-        component: StatusComponent,
-        data: { status: 418 },
     },
     {
         path: RouteConstants.notFoundWildcard,

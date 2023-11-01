@@ -22,7 +22,6 @@ import { ConfirmationMessageComponent } from './main/action/confirmation-dialog/
 import { LoginFormComponent } from './main/action/login-form/login-form.component';
 import { SelectedResourcesComponent } from './main/action/selected-resources/selected-resources.component';
 import { SortButtonComponent } from './main/action/sort-button/sort-button.component';
-import { StringLiteralInputComponent } from './main/action/string-literal-input/string-literal-input.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import {
     DspApiConfigToken,
@@ -72,20 +71,15 @@ import { PropertyFormComponent } from './project/ontology/property-form/property
 import { PropertyInfoComponent } from './project/ontology/property-info/property-info.component';
 import { ResourceClassFormComponent } from './project/ontology/resource-class-form/resource-class-form.component';
 import { ResourceClassInfoComponent } from './project/ontology/resource-class-info/resource-class-info.component';
-import { AddGroupComponent } from './project/permission/add-group/add-group.component';
-import { PermissionComponent } from './project/permission/permission.component';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ProjectComponent } from './project/project.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { GroupsListComponent } from './system/groups/groups-list/groups-list.component';
-import { GroupsComponent } from './system/groups/groups.component';
 import { ProjectsListComponent } from './system/projects/projects-list/projects-list.component';
 import { ProjectsComponent } from './system/projects/projects.component';
 import { SystemComponent } from './system/system.component';
 import { UsersListComponent } from './system/users/users-list/users-list.component';
 import { UsersComponent } from './system/users/users.component';
 import { AccountComponent } from './user/account/account.component';
-import { CollectionListComponent } from './user/collection-list/collection-list.component';
 import { MembershipComponent } from './user/membership/membership.component';
 import { ProfileComponent } from './user/profile/profile.component';
 import { PasswordFormComponent } from './user/user-form/password-form/password-form.component';
@@ -142,22 +136,7 @@ import { UriValueComponent } from './workspace/resource/values/uri-value/uri-val
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
 import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
 import { ResultsComponent } from './workspace/results/results.component';
-import { AdvancedSearchComponent } from './workspace/search/advanced-search/advanced-search.component';
-import { ResourceAndPropertySelectionComponent } from './workspace/search/advanced-search/resource-and-property-selection/resource-and-property-selection.component';
-import { SearchSelectPropertyComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/search-select-property.component';
-import { SearchBooleanValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-boolean-value/search-boolean-value.component';
-import { SearchDateValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-date-value/search-date-value.component';
-import { SearchDecimalValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-decimal-value/search-decimal-value.component';
-import { SearchIntValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-int-value/search-int-value.component';
-import { SearchLinkValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-link-value/search-link-value.component';
-import { SearchDisplayListComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-list-value/search-display-list/search-display-list.component';
-import { SearchListValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-list-value/search-list-value.component';
-import { SearchResourceComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-resource/search-resource.component';
-import { SearchTextValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-text-value/search-text-value.component';
-import { SearchUriValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/search-uri-value/search-uri-value.component';
-import { SpecifyPropertyValueComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-property/specify-property-value/specify-property-value.component';
-import { SearchSelectResourceClassComponent } from './workspace/search/advanced-search/resource-and-property-selection/search-select-resource-class/search-select-resource-class.component';
-import { SearchSelectOntologyComponent } from './workspace/search/advanced-search/search-select-ontology/search-select-ontology.component';
+import { AdvancedSearchContainerComponent } from './workspace/search/advanced-search/advanced-search-container.component';
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
@@ -178,8 +157,10 @@ import {
     BuildTagToken,
 } from '@dasch-swiss/vre/shared/app-config';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { AppDatePickerModule } from '@dasch-swiss/vre/shared/app-date-picker';
+import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
+import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
 import { AppProgressIndicatorComponent } from "@dasch-swiss/vre/shared/app-progress-indicator";
+import {AppStringLiteralComponent} from "@dasch-swiss/vre/shared/app-string-literal";
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -189,12 +170,11 @@ export function httpLoaderFactory(httpClient: HttpClient) {
 @NgModule({
     declarations: [
         AccountComponent,
-        AddGroupComponent,
         AddRegionFormComponent,
         AddUserComponent,
         AddValueComponent,
         AdminImageDirective,
-        AdvancedSearchComponent,
+        AdvancedSearchContainerComponent,
         AppComponent,
         ArchiveComponent,
         AudioComponent,
@@ -202,7 +182,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         DescriptionComponent,
         BooleanValueComponent,
         CollaborationComponent,
-        CollectionListComponent,
         ColorPickerComponent,
         ColorValueComponent,
         CommentFormComponent,
@@ -229,8 +208,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         FulltextSearchComponent,
         GeonameValueComponent,
         GridComponent,
-        GroupsComponent,
-        GroupsListComponent,
         HeaderComponent,
         HelpComponent,
         IntermediateComponent,
@@ -253,7 +230,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         OntologyComponent,
         OntologyFormComponent,
         PasswordFormComponent,
-        PermissionComponent,
         PermissionInfoComponent,
         ProfileComponent,
         ProjectComponent,
@@ -264,7 +240,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         PropertyFormComponent,
         PropertyInfoComponent,
         ReplaceFileFormComponent,
-        ResourceAndPropertySelectionComponent,
         ResourceClassFormComponent,
         ResourceClassInfoComponent,
         ResourceClassPropertyInfoComponent,
@@ -273,20 +248,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         ResourceLinkFormComponent,
         ResourceListComponent,
         ResultsComponent,
-        SearchBooleanValueComponent,
-        SearchDateValueComponent,
-        SearchDecimalValueComponent,
-        SearchDisplayListComponent,
-        SearchIntValueComponent,
-        SearchLinkValueComponent,
-        SearchListValueComponent,
         SearchPanelComponent,
-        SearchResourceComponent,
-        SearchSelectOntologyComponent,
-        SearchSelectPropertyComponent,
-        SearchSelectResourceClassComponent,
-        SearchTextValueComponent,
-        SearchUriValueComponent,
         SelectedResourcesComponent,
         SelectGroupComponent,
         SelectLanguageComponent,
@@ -295,12 +257,10 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         SelectPropertiesComponent,
         SelectResourceClassComponent,
         SortButtonComponent,
-        SpecifyPropertyValueComponent,
         SplitPipe,
         StatusComponent,
         StillImageComponent,
         StringifyStringLiteralPipe,
-        StringLiteralInputComponent,
         SublistValueComponent,
         SwitchPropertiesComponent,
         SystemComponent,
@@ -335,7 +295,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ],
     imports: [
         AngularSplitModule,
-        AppDatePickerModule,
+        AppDatePickerComponent,
         AppProgressIndicatorComponent,
         AppRoutingModule,
         BrowserAnimationsModule,
@@ -351,6 +311,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         NgxSkeletonLoaderModule,
         PdfViewerModule,
         ReactiveFormsModule,
+        AdvancedSearchComponent,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -358,6 +319,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
                 deps: [HttpClient],
             },
         }),
+        AppStringLiteralComponent,
     ],
     providers: [
         AppConfigService,
