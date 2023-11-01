@@ -6,6 +6,8 @@ import {
     trigger,
 } from '@angular/animations';
 import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     Inject,
@@ -36,6 +38,7 @@ export class ListNodeOperation {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-list-item-form',
     templateUrl: './list-item-form.component.html',
     styleUrls: ['./list-item-form.component.scss'],
@@ -119,6 +122,7 @@ export class ListItemFormComponent implements OnInit {
         private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: AppErrorHandler,
         private _dialog: MatDialog,
+        private _cd: ChangeDetectorRef,
     ) {}
 
     ngOnInit() {
@@ -149,6 +153,7 @@ export class ListItemFormComponent implements OnInit {
                         }
 
                         this.initComponent = false;
+                        this._cd.markForCheck();
                     },
                     (error: ApiResponseError) => {
                         this._errorHandler.showMessage(error);
