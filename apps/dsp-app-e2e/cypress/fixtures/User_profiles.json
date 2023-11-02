@@ -1,11 +1,11 @@
 {
-  "Admin_username": "DaSCH.Admin",
-  "Admin_password": "DaSCHianer",
-  "Change_Admin_password": "DaSCHianer2",
-  "ProjectMember_username": "DaSCH.Member",
-  "ProjectMember_password": "AMembersPassword",
-  "Change_ProjectMember_password": "AMembersPassword2",
-  "SystemAdmin_username": "DaSCH.System.Admin",
-  "SystemAdmin_password": "IamAllowedTODoEverything",
-  "Change_SystemAdmin_password": "IamAllowedTODoEverything2"
+  "admin_username": "daschAdmin",
+  "admin_password": "DaSCHianer1",
+  "change_admin_password": "DaSCHianer2",
+  "projectMember_username": "daschMember",
+  "projectMember_password": "AMembersPassword1",
+  "change_projectMember_password": "AMembersPassword2",
+  "systemAdmin_username": "daschSystemAdmin",
+  "systemAdmin_password": "IamAllowedTODoEverything1",
+  "change_systemAdmin_password": "IamAllowedTODoEverything2"
 }

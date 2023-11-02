@@ -15,6 +15,7 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+import { UserProfiles } from '../models/user-profiles';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
@@ -31,24 +32,28 @@ import './commands'
 // });
 
 beforeEach(() => {
-    cy.readFile('/dsp-app/apps/dsp-app-e2e/cypress/fixtures/User_profiles.json').then((json) => {
-        
+    let users: UserProfiles;
+    cy.readFile('cypress/fixtures/user_profiles.json').then((json: UserProfiles) => {
         // read JSON data file
-       });
-    cy.log(Cypress.spec.relative);
-    if(Cypress.spec.relative.startsWith('cypress/e2e/System_Admin')) {
-        cy.log('Logging in as admin');
-        cy.login('SystemAdmin_username', 'SystemAdmin_password');
-        // the cookie name will differ depending on the environment
-        cy.getCookie("KnoraAuthenticationGAXDALRQFYYDUMZTGMZQ9999").should('exist');
-    }
+        users = json;
 
-    if(Cypress.spec.relative.startsWith('cypress/e2e/Project_Member')) {
-        cy.log('Logging in as project member');
-        cy.login('ProjectMember_username', 'ProjectMember_password');
-        // the cookie name will differ depending on the environment
-        cy.getCookie("KnoraAuthenticationGAXDALRQFYYDUMZTGMZQ9999").should('exist');
-    }
+        cy.log(Cypress.spec.relative);
+        if(Cypress.spec.relative.startsWith('cypress/e2e/System_Admin')) {
+            cy.log('Logging in as admin');
+            cy.login(users.systemAdmin_username, users.systemAdmin_password);
+            // the cookie name will differ depending on the environment
+            cy.getCookie("KnoraAuthenticationGAXDALRQFYYDUMZTGMZQ9999").should('exist');
+        }
+
+        if(Cypress.spec.relative.startsWith('cypress/e2e/Project_Member')) {
+            cy.log('Logging in as project member');
+            cy.log(users.projectMember_username);
+            cy.login(users.projectMember_username, users.projectMember_password);
+            // the cookie name will differ depending on the environment
+            cy.getCookie("KnoraAuthenticationGAXDALRQFYYDUMZTGMZQ9999").should('exist');
+        }
+    });
+
 });
 
 afterEach(() => {
