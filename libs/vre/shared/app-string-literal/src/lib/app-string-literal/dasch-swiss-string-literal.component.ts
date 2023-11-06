@@ -1,7 +1,6 @@
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
@@ -132,14 +131,13 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
     constructor(
         private _fb: UntypedFormBuilder,
         private _store: Store,
-        private _cd: ChangeDetectorRef,
     ) {
         // set selected language, if it's not defined yet
         if (!this.language) {
             const usersLanguage = this._store.selectSnapshot(UserSelectors.language) as string;
             this.language = usersLanguage
                 ? usersLanguage
-                : this.language = navigator.language.substring(0, 2); // get default language from browser
+                : navigator.language.substring(0, 2); // get default language from browser
         }
 
         // does the defined language exists in our supported languages list?
@@ -311,7 +309,8 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
     /**
      * get the value from array of StringLiterals for the selected language
      */
-    getValueFromStringLiteral(lang: string): string {
+    getValueFromStringLiteral(lang?: string): string {
+        lang = lang === '' ? undefined : lang;
         // get index for this language
         const index = this.value.findIndex((i) => i.language === lang);
 

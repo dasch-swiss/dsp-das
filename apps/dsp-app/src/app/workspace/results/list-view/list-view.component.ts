@@ -226,6 +226,8 @@ export class ListViewComponent implements OnChanges, OnInit {
      */
     private _doSearch(index = 0) {
         this.loading = true;
+        this._cd.markForCheck();
+
 
         if (this.search.mode === 'fulltext') {
             // search mode: fulltext
