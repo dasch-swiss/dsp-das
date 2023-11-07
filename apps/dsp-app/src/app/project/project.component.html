@@ -101,7 +101,7 @@
             </div>
             <div class="main-content">
                 <dasch-swiss-app-progress-indicator *ngIf="isLoading$ | async"></dasch-swiss-app-progress-indicator>
-                <router-outlet *ngIf="(isLoading$ | async) === false"></router-outlet>
+                <router-outlet></router-outlet>
             </div>
         </mat-sidenav-content>
     </mat-sidenav-container>

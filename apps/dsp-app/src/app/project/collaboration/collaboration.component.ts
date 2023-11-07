@@ -79,7 +79,7 @@ export class CollaborationComponent extends ProjectBase implements OnInit, OnDes
     ngOnInit() {
         super.ngOnInit();
         const project = this._store.selectSnapshot(CurrentProjectSelectors.project) as ReadProject;
-        this._titleService.setTitle(`Project ${project.shortname} | Collaboration`);
+        this._titleService.setTitle(`Project ${project?.shortname} | Collaboration`);
     }
 
     ngOnDestroy() {
