@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Directive, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
-import { CurrentProjectSelectors, LoadProjectAction, LoadProjectOntologiesAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
+import { CurrentProjectSelectors, LoadProjectAction, LoadProjectOntologiesAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Actions, Select, Store, ofActionDispatched, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
 import { ProjectService } from '../workspace/resource/services/project.service';
@@ -73,12 +73,15 @@ export class ProjectBase implements OnInit, OnDestroy {
     }
     
     private loadProject(): void {
+        const isProjectsLoading = this._store.selectSnapshot(ProjectsSelectors.isProjectsLoading);
         // get current project data, project members and project groups
         // and set the project state here
-        this._store.dispatch(new LoadProjectAction(this.projectUuid, true));
-        this._actions$.pipe(ofActionSuccessful(LoadProjectAction))
-            .pipe(take(1))
-            .subscribe(() => this.setProjectData());
+        if (!isProjectsLoading) {
+            this._store.dispatch(new LoadProjectAction(this.projectUuid, true));
+            this._actions$.pipe(ofActionSuccessful(LoadProjectAction))
+                .pipe(take(1))
+                .subscribe(() => this.setProjectData());
+        }
     }
 
     private setProjectData(): void {
