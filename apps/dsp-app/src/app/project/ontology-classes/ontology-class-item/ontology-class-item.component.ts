@@ -89,7 +89,7 @@ export class OntologyClassItemComponent implements OnInit, AfterViewInit, OnDest
     }
 
     ngAfterViewInit(): void {
-        this.tooltipDisabled = this.isTextOverflowing(this.resClassLabel.nativeElement);
+        this.tooltipDisabled = !this.isTextOverflowing(this.resClassLabel.nativeElement);
         this._cdr.detectChanges();
     }
 
@@ -105,7 +105,7 @@ export class OntologyClassItemComponent implements OnInit, AfterViewInit, OnDest
 
     isTextOverflowing(element: HTMLElement): boolean {
         if (element) {
-            return !(element.scrollHeight > element.clientHeight);
+            return element.scrollHeight > element.clientHeight;
         }
     }
 
