@@ -16,12 +16,12 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { apiConnectionTokenProvider } from '../../providers/api-connection-token.provider';
 import { LoadUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 
 @Component({
     selector: 'app-account',
@@ -43,18 +43,18 @@ export class AccountComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _applicationStateService: ApplicationStateService,
         private _dialog: MatDialog,
         private _errorHandler: AppErrorHandler,
         private _titleService: Title,
-        private store: Store,
+        private _store: Store,
+        private _authService: AuthService,
     ) {
         // set the page title
         this._titleService.setTitle('Your account');
     }
 
     ngOnInit() {
-        this.store.dispatch(new LoadUserAction(this.username)).pipe(
+        this._store.dispatch(new LoadUserAction(this.username)).pipe(
             tap((user: ReadUser) => {
                 this.userId = user.id;
             })
@@ -95,20 +95,7 @@ export class AccountComponent implements OnInit {
     deleteUser(id: string) {
         this._dspApiConnection.admin.usersEndpoint.deleteUser(id).subscribe(
             () => {
-                // console.log('refresh parent after delete', response);
-                // this action will deactivate own user account. The consequence is a logout
-                this._dspApiConnection.v2.auth.logout().subscribe(
-                    () => {
-                        // destroy application state
-                        this._applicationStateService.destroy();
-
-                        // reload the page
-                        window.location.reload();
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                );
+                this._authService.logout();
             },
             (error: ApiResponseError) => {
                 this._errorHandler.showMessage(error);

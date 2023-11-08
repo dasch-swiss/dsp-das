@@ -1,6 +1,6 @@
 import {
-    AfterViewInit,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     Inject,
@@ -31,7 +31,7 @@ import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
     selector: 'app-users-list',
     templateUrl: './users-list.component.html',
     styleUrls: ['./users-list.component.scss'],
@@ -130,6 +130,8 @@ export class UsersListComponent implements OnInit {
             localStorage.setItem('sortUsersBy', this.sortBy);
         }
     }
+
+    trackByFn = (index: number, item: ReadUser) => `${index}-${item.id}`;
 
     /**
      * returns true, when the user is project admin;
