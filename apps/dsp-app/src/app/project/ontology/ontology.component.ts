@@ -44,9 +44,9 @@ import {
 } from './default-data/default-resource-classes';
 import { OntologyService } from './ontology.service';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { ClearCurrentOntologyAction, CurrentOntologyCanBeDeletedAction, CurrentProjectSelectors, DefaultClass, LoadOntologyAction, LoadProjectOntologiesAction, OntologiesSelectors, OntologyProperties, ProjectsSelectors, RemoveProjectOntologyAction, SetCurrentOntologyAction, SetCurrentProjectOntologyPropertiesAction, SetOntologiesLoadingAction, UpdateProjectOntologyAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ClearCurrentOntologyAction, CurrentOntologyCanBeDeletedAction, CurrentProjectSelectors, DefaultClass, LoadListsInProjectAction, LoadOntologyAction, LoadProjectOntologiesAction, OntologiesSelectors, OntologyProperties, ProjectsSelectors, RemoveProjectOntologyAction, SetCurrentOntologyAction, SetCurrentProjectOntologyPropertiesAction, SetOntologiesLoadingAction, UpdateProjectOntologyAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable, Subject, combineLatest } from 'rxjs';
-import { map, take, takeUntil } from 'rxjs/operators';
+import { debounceTime, map, take, takeUntil } from 'rxjs/operators';
 import { ProjectBase } from '../project-base';
 
 @Component({
@@ -228,18 +228,20 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
      */
     initOntologiesList(): void {
         this._store.dispatch(new LoadProjectOntologiesAction(this.projectUuid));
-        combineLatest([this._actions$.pipe(ofActionSuccessful(LoadProjectOntologiesAction)), this.currentProjectOntologies$, this.ontologyIri$])
+        combineLatest([this._actions$.pipe(ofActionSuccessful(LoadListsInProjectAction)), this.currentProjectOntologies$, this.ontologyIri$])
             .pipe(
                 take(1),
-                map(([loadProjectOntologiesAction, currentProjectOntologies, ontologyIri]) => {
-                    const readOnto = currentProjectOntologies.find((x) => x.id === ontologyIri);
-                    if (readOnto) {
-                        // one ontology is selected:
-                        // get all information to display this ontology
-                        // with all classes, properties and connected lists
-                        this.resetOntologyView(readOnto);
-                    }
-                }));
+                map(([loadListsInProjectAction, currentProjectOntologies, ontologyIri]) => 
+                    currentProjectOntologies.find((x) => x.id === ontologyIri)
+                ))
+            .subscribe((readOnto) => {
+                if (readOnto) {
+                    // one ontology is selected:
+                    // get all information to display this ontology
+                    // with all classes, properties and connected lists
+                    this.resetOntologyView(readOnto);
+                }
+            });
     }
 
     initOntology() {
@@ -465,10 +467,7 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
 
         dialogRef.afterClosed().subscribe(() => {
-            // update the view
             this.initOntologiesList();
-            // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
-            window.location.reload();
         });
     }
 

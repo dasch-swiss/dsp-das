@@ -1,7 +1,7 @@
 import { SortingService } from './../../../../../../../apps/dsp-app/src/app/main/services/sorting.service';
 import { Inject, Injectable } from '@angular/core';
-import { Action, State, StateContext } from '@ngxs/store';
-import { map, take, tap } from 'rxjs/operators';
+import { Action, Actions, State, StateContext, ofActionSuccessful } from '@ngxs/store';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { DspApiConnectionToken, getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-config';
 import { ApiResponseError, Constants, KnoraApiConnection, OntologiesMetadata, ReadOntology, PropertyDefinition, UpdateOntology, UpdateResourceClassCardinality, ResourceClassDefinitionWithAllLanguages, IHasProperty, OntologyMetadata, CanDoResponse } from '@dasch-swiss/dsp-js';
 import { OntologiesStateModel } from './ontologies.state-model';
@@ -33,6 +33,7 @@ export class OntologiesState {
         private _errorHandler: AppErrorHandler,
         private _sortingService: SortingService,
         private _projectService: ProjectService,
+        private _actions$: Actions,
     ) {}
     
     //TODO Remove this action when all actions containing this usage is implemented
@@ -108,16 +109,20 @@ export class OntologiesState {
                         ctx.dispatch(
                             //dispatch all actions except the last one to keep the loading state
                             ontoMeta.ontologies.slice(0, ontoMeta.ontologies.length - 1)
-                                .map((onto) => new LoadOntologyAction(onto.id, projectIri, false)
+                                .map((onto) => new LoadOntologyAction(onto.id, projectIri, false))
+                        )
+                        .pipe(
+                            take(1),
+                            tap(() => 
+                                ctx.dispatch(new LoadOntologyAction(ontoMeta.ontologies[ontoMeta.ontologies.length - 1].id, projectIri, true))
                             )
                         )
-                        .pipe(take(1))
-                        .subscribe(
-                            //last action dispatched
-                            () => ctx.dispatch([
-                                new LoadOntologyAction(ontoMeta.ontologies[ontoMeta.ontologies.length - 1].id, projectIri, true),
-                                new LoadListsInProjectAction(projectIri),
-                            ])
+                        .subscribe(() => this._actions$.pipe(ofActionSuccessful(LoadOntologyAction))
+                            .pipe(take(1))
+                            .subscribe(() => 
+                                //last action dispatched
+                                ctx.dispatch(new LoadListsInProjectAction(projectIri))
+                            )
                         );
                     }, 
                     error: (error: ApiResponseError) => {
