@@ -3,17 +3,17 @@ import {
     Cardinality,
     Constants,
     KnoraApiConfig,
-    ReadOntology,
     ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
 import { Observable, of } from 'rxjs';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { DspApiConfigToken } from '@dasch-swiss/vre/shared/app-config';
 import {
     DefaultProperties,
     DefaultProperty,
     PropertyCategory,
 } from './default-data/default-properties';
+import { Store } from '@ngxs/store';
+import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 
 /**
  * helper methods for the ontology editor
@@ -27,7 +27,7 @@ export class OntologyService {
 
     constructor(
         @Inject(DspApiConfigToken) private _dspApiConfig: KnoraApiConfig,
-        private _applicationStateService: ApplicationStateService
+        private _store: Store,
     ) {}
 
     /**
@@ -137,22 +137,15 @@ export class OntologyService {
 
         // get iri from sub properties
         if (property.subPropertyOf.length) {
+            const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
             for (const subProp of property.subPropertyOf) {
                 const baseOntoIri = subProp.split(Constants.HashDelimiter)[0];
                 // compare with knora base ontology
                 if (baseOntoIri !== Constants.KnoraApiV2) {
                     // the property is not a subproperty of knora base ontology
                     // get property iri from another ontology
-                    this._applicationStateService.get('currentProjectOntologies').subscribe(
-                        (ontologies: ReadOntology[]) => {
-                            const onto = ontologies.find(
-                                (i) => i?.id === baseOntoIri
-                            );
-                            superPropIri =
-                                onto?.properties[subProp].subPropertyOf[0];
-                        },
-                        () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the application state
-                    );
+                    const onto = currentProjectOntologies.find((i) => i?.id === baseOntoIri);
+                    superPropIri = onto?.properties[subProp].subPropertyOf[0];
                 }
 
                 if (superPropIri) {

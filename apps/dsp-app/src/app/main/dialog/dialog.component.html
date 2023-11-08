@@ -413,7 +413,7 @@
             [iri]="data.id"
             [name]="data.title"
             [projectUuid]="data.project"
-            (closeDialog)="dialogRef.close()"
+            (closeDialog)="dialogRef.close($event)"
             (updateParent)="replaceTitle($event)"
         >
         </app-resource-class-form>
@@ -427,7 +427,7 @@
             [name]="data.title"
             [projectUuid]="data.project"
             [edit]="true"
-            (closeDialog)="dialogRef.close()"
+            (closeDialog)="dialogRef.close($event)"
         >
         </app-resource-class-form>
     </div>
@@ -655,7 +655,7 @@
             ></app-replace-file-form>
         </mat-dialog-content>
     </div>
-
+<!-- //TODO remove if not used anywhere
     <div *ngSwitchCase="'linkResources'">
         <app-dialog-header
             [title]="data.title"
@@ -667,9 +667,9 @@
                 (closeDialog)="dialogRef.close($event)"
             ></app-resource-link-form>
         </mat-dialog-content>
-    </div>
+    </div> -->
 
-    <div *ngSwitchCase="'createLinkResource'">
+    <div *ngSwitchCase="'createLinkResource'">[[[[[[]]]]]]
         <app-dialog-header
             [title]="data.title"
             [subtitle]="'Create a new linked resource'"

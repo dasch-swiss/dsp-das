@@ -30,7 +30,7 @@ import {
     UpdateOntology,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants, getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-config';
-import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { DialogComponent, DialogEvent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
@@ -466,8 +466,10 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
 
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
 
-        dialogRef.afterClosed().subscribe(() => {
-            this.initOntologiesList();
+        dialogRef.afterClosed().subscribe((event) => {
+            if (event !== DialogEvent.DialogCanceled) {
+                this.initOntologiesList();
+            }
         });
     }
 

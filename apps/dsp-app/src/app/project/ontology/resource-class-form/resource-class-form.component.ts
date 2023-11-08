@@ -37,6 +37,7 @@ import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-r
 import { OntologyService } from '../ontology.service';
 import { Store } from '@ngxs/store';
 import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { DialogEvent } from '@dsp-app/src/app/main/dialog/dialog.component';
 
 // nested form components; solution from:
 // https://medium.com/@joshblf/dynamic-nested-reactive-forms-in-angular-654c1d4a769a
@@ -184,6 +185,11 @@ export class ResourceClassFormComponent implements OnInit, AfterViewChecked {
         this._cdr.detectChanges();
     }
 
+    onCancel() {
+        // emit DialogCanceled event
+        this.closeDialog.emit(DialogEvent.DialogCanceled);
+    }
+    
     //
     // form handling:
 
