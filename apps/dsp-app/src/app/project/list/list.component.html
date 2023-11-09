@@ -1,13 +1,13 @@
 <div *ngIf="!disableContent">
-    <dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
+    <dasch-swiss-app-progress-indicator *ngIf="isListsLoading$ | async"></dasch-swiss-app-progress-indicator>
 
     <!-- display only when loading is finished and project member has value -->
-    <div *ngIf="!loading">
+    <div *ngIf="(isListsLoading$ | async) === false">
         <div class="content large middle">
 
             <!-- main content: show selected list -->
             <ng-container *ngIf="(list$ | async) as list">
-            <div *ngIf="(isListsLoading$ | async) === false" class="list-editor" #listEditor>
+            <div class="list-editor" #listEditor>
 
                 <mat-toolbar class="more-space-bottom">
                     <mat-toolbar-row>

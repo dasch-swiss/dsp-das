@@ -21,6 +21,7 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ListNodeOperation } from '../list-item-form/list-item-form.component';
+import { take } from 'rxjs/operators';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,6 +65,7 @@ export class ListItemComponent implements OnInit {
         if (!this.childNode) {
             this._dspApiConnection.admin.listsEndpoint
                 .getList(this.parentIri)
+                .pipe(take(1))
                 .subscribe(
                     (result: ApiResponseData<ListResponse>) => {
                         this.list = result.body.list.children;

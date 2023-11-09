@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Directive, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { CurrentProjectSelectors, LoadProjectAction, LoadProjectOntologiesAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Select, Store, ofActionDispatched, ofActionSuccessful } from '@ngxs/store';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
 import { ProjectService } from '../workspace/resource/services/project.service';
@@ -13,7 +13,7 @@ export class ProjectBase implements OnInit, OnDestroy {
     destroyed: Subject<void> = new Subject<void>();
 
     projectUuid: string;
-
+    project: ReadProject;
 
     // permissions of logged-in user
     get isAdmin$(): Observable<boolean> {
@@ -52,8 +52,8 @@ export class ProjectBase implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        const currentProject = this._store.selectSnapshot(CurrentProjectSelectors.project);
-        if (this.projectUuid && (!currentProject || currentProject.id !== this.projectIri)) {
+        this.project = this._store.selectSnapshot(CurrentProjectSelectors.project);
+        if (this.projectUuid && (!this.project || this.project.id !== this.projectIri)) {
             this.loadProject();
         }
     }
@@ -85,13 +85,13 @@ export class ProjectBase implements OnInit, OnDestroy {
     }
 
     private setProjectData(): void {
-        const readProject = this._store.selectSnapshot(CurrentProjectSelectors.project);
-        if (!readProject) {
+        this.project = this._store.selectSnapshot(CurrentProjectSelectors.project);
+        if (!this.project) {
             return;
         }
 
-        this._titleService.setTitle(readProject.shortname);
-        this._store.dispatch(new LoadProjectOntologiesAction(readProject.id));
+        this._titleService.setTitle(this.project.shortname);
+        this._store.dispatch(new LoadProjectOntologiesAction(this.project.id));
     }
 
     protected static navigationEndFilter(event: Observable<any>) {

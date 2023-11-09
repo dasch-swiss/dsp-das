@@ -26,11 +26,6 @@ import { CurrentProjectSelectors, DeleteListNodeAction, ListsSelectors, LoadList
 export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
     private ngUnsubscribe: Subject<void> = new Subject<void>();
     
-    // loading for progress indicator
-    loading: boolean;
-    //loadList: boolean;
-
-    // list of languages
     languagesList: StringLiteral[] = AppGlobal.languagesList;
 
     // current selected language
@@ -97,8 +92,9 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
 
         // get list iri from list name
         this._route.params.subscribe((params) => {
-            this.listIri = `${this._acs.dspAppConfig.iriBase}/lists/${this.projectUuid}/${params['list']}`;
-            //this._store.dispatch(new LoadListsInProjectAction(this.projectIri));
+            if (this.project) {
+                this.listIri = `${this._acs.dspAppConfig.iriBase}/lists/${this.project.shortcode}/${params['list']}`;
+            }
         });
     }
 
@@ -138,15 +134,12 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
                 case 'deleteList': {
                     if (typeof data === 'boolean' && data === true) {
                         this._store.dispatch(new DeleteListNodeAction(this.listIri));
+                        this.listIri = undefined;
                         this._actions$.pipe(ofActionSuccessful(DeleteListNodeAction))
                             .pipe(take(1))
                             .subscribe(() => {
                                 this._store.dispatch(new LoadListsInProjectAction(this.projectIri));
-                                this._router.navigate([RouteConstants.project, this.projectUuid,RouteConstants.dataModels])
-                                    .then(() => {
-                                        // refresh whole page; todo: would be better to use an event emitter to the parent to update the list of resource classes
-                                        window.location.reload();
-                                    });
+                                this._router.navigate([RouteConstants.project, this.projectUuid,RouteConstants.dataModels]);
                             });
                     }
                     break;

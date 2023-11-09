@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     EventEmitter,
     Inject,
@@ -23,6 +24,7 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-edit-list-item',
     templateUrl: './edit-list-item.component.html',
     styleUrls: ['./edit-list-item.component.scss'],
