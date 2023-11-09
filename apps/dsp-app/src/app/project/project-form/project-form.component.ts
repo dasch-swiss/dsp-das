@@ -1,5 +1,7 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     Inject,
     Input,
@@ -35,6 +37,7 @@ import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import { CurrentProjectSelectors, UpdateProjectAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-project-form',
     templateUrl: './project-form.component.html',
     styleUrls: ['./project-form.component.scss'],
@@ -169,6 +172,7 @@ export class ProjectFormComponent implements OnInit {
         private _projectService: ProjectService,
         private _store: Store,
         private _actions$: Actions,
+        private _cd: ChangeDetectorRef,
     ) {
         // get the uuid of the current project
         this._route.parent.paramMap.subscribe((params: Params) => {
@@ -193,6 +197,7 @@ export class ProjectFormComponent implements OnInit {
                         this.buildForm(this.project);
 
                         this.loading = false;
+                        this._cd.markForCheck();
                     },
                     (error: ApiResponseError) => {
                         this._errorHandler.showMessage(error);
@@ -240,6 +245,8 @@ export class ProjectFormComponent implements OnInit {
             this.loading = false;
         }
     }
+
+    trackByFn = (index: number, item: string) => `${index}-${item}`;
 
     /**
      * build form with project data

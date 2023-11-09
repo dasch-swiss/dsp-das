@@ -1,4 +1,5 @@
 import {
+    ChangeDetectorRef,
     Component,
     Inject,
     Input,
@@ -99,7 +100,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
         private _route: ActivatedRoute,
         private _router: Router,
         private _componentCommsService: ComponentCommunicationEventService,
-        private _notification: NotificationService
+        private _notification: NotificationService,
+        private _cd: ChangeDetectorRef,
     ) {}
 
     ngOnInit(): void {
@@ -214,6 +216,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
                             }
                             this.preparing = false;
                             this.loading = false;
+                            this._cd.markForCheck();
                         },
                         (error: ApiResponseError) => {
                             this.preparing = false;
@@ -317,11 +320,10 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
                                 ],
                                 { relativeTo: this._route.parent }
                             )
-                            .then(() =>
-                                this._componentCommsService.emit(
-                                    new EmitEvent(CommsEvents.resourceCreated)
-                                )
-                            );
+                            .then(() => {
+                                this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceCreated));
+                                this._cd.markForCheck();
+                            });
                     },
                     (error: ApiResponseError) => {
                         this.error = true;

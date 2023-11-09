@@ -39,7 +39,7 @@ export class DescriptionComponent implements OnInit {
             this.store.select(UserSelectors.userProjectAdminGroups)
         ]).pipe(
             map(([user, readProject, userProjectGroups]: [ReadUser, ReadProject, string[]]) => {
-                if (readProject == null || userProjectGroups.length === 0) {
+                if (readProject == null) {
                     return false;
                 }
                 
@@ -98,6 +98,6 @@ export class DescriptionComponent implements OnInit {
         }
 
         const project = projects.find(x => x.id.split('/').pop() === this.projectUuid);
-        return this.projectWithSortedDescriptions(project);
+        return project ? this.projectWithSortedDescriptions(project) : null;
     }
 }

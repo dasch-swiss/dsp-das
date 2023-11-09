@@ -72,13 +72,13 @@
                             </mat-expansion-panel-header>
                             <!-- list of ontology classes -->
                             <app-ontology-classes [resClasses]="getAllEntityDefinitionsAsArray(onto.classes)"
-                                [projectMember]="isProjectMember$ | async">
+                                [projectMember]="isAdmin$ | async">
                             </app-ontology-classes>
                         </mat-expansion-panel>
                         <mat-divider></mat-divider>
                     </mat-accordion>
                     <div class="sidenav-footer"
-                        *ngIf="isProjectAdmin$ | async">
+                        *ngIf="isAdmin$ | async">
                         <mat-list-item [ngClass]="{ 'active': listItemSelected === settingsRoute}" class="section-title footer"
                             (click)="open(settingsRoute)">
                             <span matListItemTitle class="section-label">

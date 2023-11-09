@@ -1,4 +1,6 @@
 import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     Inject,
@@ -73,6 +75,7 @@ export interface PropertyInfoValues {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-properties',
     templateUrl: './properties.component.html',
     styleUrls: ['./properties.component.scss']
@@ -181,6 +184,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         private _componentCommsService: ComponentCommunicationEventService,
         private _projectService: ProjectService,
         private _sortingService: SortingService,
+        private _cd: ChangeDetectorRef,
     ) {}
 
     ngOnInit(): void {
@@ -388,6 +392,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                                         if (this.isAnnotation) {
                                             this.regionDeleted.emit();
                                         }
+                                        this._cd.markForCheck();
                                     },
                                     (error: ApiResponseError) => {
                                         this._errorHandler.showMessage(error);
@@ -416,6 +421,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                                         if (this.isAnnotation) {
                                             this.regionDeleted.emit();
                                         }
+                                        this._cd.markForCheck();
                                     },
                                     (error: ApiResponseError) => {
                                         this._errorHandler.showMessage(error);
@@ -451,6 +457,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                                             if (this.isAnnotation) {
                                                 this.regionChanged.emit();
                                             }
+                                            this._cd.markForCheck();
                                         },
                                         (error: ApiResponseError) => {
                                             this._errorHandler.showMessage(
@@ -682,6 +689,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
 
                             this._getDisplayedIncomingLinkRes();
                             this.loading = false;
+                            this._cd.markForCheck();
                         }, () => {
                                 this.loading = false;
                         });
@@ -752,6 +760,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                                 );
                             });
                         });
+                    this._cd.markForCheck();
                 },
                 (err) => {
                     console.error(err);
@@ -763,8 +772,10 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         this._dspApiConnection.v2.res
             .getResource(resId)
             .subscribe(
-                (res: ReadResource) =>
-                    (this.lastModificationDate = res.lastModificationDate)
+                (res: ReadResource) => {
+                    this.lastModificationDate = res.lastModificationDate;
+                    this._cd.markForCheck();
+                }
             );
     }
 }
