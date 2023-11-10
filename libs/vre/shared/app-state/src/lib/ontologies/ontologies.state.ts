@@ -208,14 +208,18 @@ export class OntologiesState {
         ctx: StateContext<OntologiesStateModel>,
         { projectUuid }: ClearProjectOntologiesAction
     ) {
-        const state = ctx.getState();
-        if (!state.projectOntologies[projectUuid]) {
-            return;
-        }
+        const projectIri = this._projectService.uuidToIri(projectUuid);
+        return of(ctx.getState()).pipe(
+            map(currentState => {
+                if (currentState.projectOntologies[projectIri]) {
+                    currentState.projectOntologies[projectIri].ontologiesMetadata = [];
+                    currentState.projectOntologies[projectIri].readOntologies = [];
+                    ctx.patchState(currentState);
+                }
 
-        state.projectOntologies[projectUuid].ontologiesMetadata = [];
-        state.projectOntologies[projectUuid].readOntologies = [];
-        ctx.patchState(state);
+                return currentState;
+            })
+        );
     }
     
     @Action(ClearOntologiesAction)
@@ -243,6 +247,9 @@ export class OntologiesState {
         { projectUuid }: SetCurrentProjectOntologyPropertiesAction
     ) {
         const state = ctx.getState();
+        if (!state.projectOntologies[projectUuid]) {
+            return;
+        }
         // get all project ontologies
         const projectOntologies = state.projectOntologies[projectUuid].readOntologies;
         const ontoProperties = <OntologyProperties[]>projectOntologies.map((onto) => <OntologyProperties> {

@@ -66,6 +66,7 @@ export class DataModelsComponent extends ProjectBase implements OnInit {
     }
 
     ngOnInit(): void {
+        super.ngOnInit();
         const uuid = this._route.parent.snapshot.params.uuid;
         //TODO Soft or Hard loading?
         //this._store.dispatch(new LoadListsInProjectAction(uuid)); 

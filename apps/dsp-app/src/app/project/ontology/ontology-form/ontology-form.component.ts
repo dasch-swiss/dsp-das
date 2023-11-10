@@ -28,10 +28,10 @@ import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
 import { OntologyService } from '../ontology.service';
-import { CurrentProjectSelectors, LoadProjectAction, OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ClearProjectOntologiesAction, CurrentProjectSelectors, OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 
 export interface NewOntology {
     projectIri: string;
@@ -278,14 +278,13 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
 
             this._dspApiConnection.v2.onto
                 .updateOntology(ontologyData)
+                .pipe(take(1))
                 .subscribe(
                     (response: OntologyMetadata) => {
+                        this._store.dispatch(new ClearProjectOntologiesAction(this.projectUuid));
                         this.updateParent.emit(response.id);
                         this.loading = false;
                         this.closeDialog.emit(response.id);
-                        // go to the new ontology page
-                        // refresh whole page; todo: would be better to use an event emitter
-                        window.location.reload();
                     },
                     (error: ApiResponseError) => {
                         // in case of an error
@@ -309,16 +308,17 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
 
             this._dspApiConnection.v2.onto
                 .createOntology(ontologyData)
+                .pipe(take(1))
                 .subscribe(
                     (response: OntologyMetadata) => {
-                        this._store.dispatch(new LoadProjectAction(this.projectUuid, true));
+                        this._store.dispatch(new ClearProjectOntologiesAction(this.projectUuid));
                         this.updateParent.emit(response.id);
                         this.loading = false;
                         // go to the new ontology page
                         const name = OntologyService.getOntologyName(
                             response.id
                         );
-                        this._router.navigate([RouteConstants.ontology, name], {
+                        this._router.navigate([RouteConstants.ontology, name, RouteConstants.editor, RouteConstants.classes], {
                             relativeTo: this._route.parent,
                         });
                     },
