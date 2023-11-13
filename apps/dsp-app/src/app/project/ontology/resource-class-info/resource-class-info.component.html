@@ -107,10 +107,10 @@
             <button mat-menu-item [matMenuTriggerFor]="addExistingProp">Add existing property</button>
         </mat-menu>
         <mat-menu #newFromPropType="matMenu">
-            <ng-container *ngFor="let type of defaultProperties">
+            <ng-container *ngFor="let type of defaultProperties; trackBy: trackByPropCategoryFn">
                 <button mat-menu-item [matMenuTriggerFor]="sub_menu">{{type.group}}</button>
                 <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
-                    <button mat-menu-item *ngFor="let ele of type.elements" [value]="ele" [matTooltip]="ele.description"
+                    <button mat-menu-item *ngFor="let ele of type.elements; trackBy: trackByDefaultPropertyFn" [value]="ele" [matTooltip]="ele.description"
                         matTooltipPosition="after" (click)="addNewProperty(ele, currentOntologyPropertiesToDisplay)">
                         <mat-icon>{{ele.icon}}</mat-icon> {{ele.label}}
                     </button>

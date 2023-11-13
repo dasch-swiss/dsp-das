@@ -151,6 +151,10 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
     
     trackByPropToAddFn = (index: number, item: PropToAdd) => `${index}-${item.ontologyId}`;
 
+    trackByPropCategoryFn = (index: number, item: PropertyCategory) => `${index}-${item.group}`;
+
+    trackByDefaultPropertyFn = (index: number, item: DefaultProperty) => `${index}-${item.label}`;
+
     trackByPropFn = (index: number, item: PropertyInfoObject) => `${index}-${item.propDef?.id}`;
 
     trackByPropToDisplayFn = (index: number, item: PropToDisplay) => `${index}-${item.propertyIndex}`;
@@ -514,10 +518,12 @@ OFFSET 0`;
 
         let existingProperties: PropToAdd[] = [];
         
+        const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
         ontoProperties.forEach((op: OntologyProperties, i: number) => {
+            const onto = currentProjectOntologies.find((i) => i?.id === op.ontology);
             existingProperties.push({
                 ontologyId: op.ontology,
-                ontologyLabel: this.ontology.label,
+                ontologyLabel: onto?.label,
                 properties: [],
             });
 
