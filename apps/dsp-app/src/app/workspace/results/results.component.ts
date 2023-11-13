@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import {
@@ -18,7 +18,7 @@ export interface SplitSize {
     templateUrl: './results.component.html',
     styleUrls: ['./results.component.scss'],
 })
-export class ResultsComponent {
+export class ResultsComponent implements AfterViewChecked {
     searchParams: SearchParams = {
         query: '',
         mode: 'fulltext',
@@ -42,7 +42,7 @@ export class ResultsComponent {
 
     splitSize: SplitSize;
 
-    constructor(private _route: ActivatedRoute, private _titleService: Title) {
+    constructor(private _route: ActivatedRoute, private _titleService: Title, private _cd: ChangeDetectorRef) {
         const parentParams$ = this._route.parent.paramMap;
         const params$ = this._route.paramMap;
 
@@ -66,6 +66,10 @@ export class ResultsComponent {
                 'Search results for ' + this.searchParams.mode + ' search'
             );
         });
+    }
+
+    ngAfterViewChecked() {
+        this._cd.detectChanges();
     }
 
     onSelectionChange(res: FilteredResources) {
