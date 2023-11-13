@@ -44,7 +44,7 @@ import {
 } from './default-data/default-resource-classes';
 import { OntologyService } from './ontology.service';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { ClearCurrentOntologyAction, ClearProjectOntologiesAction, CurrentOntologyCanBeDeletedAction, CurrentProjectSelectors, DefaultClass, LoadListsInProjectAction, LoadOntologyAction, LoadProjectOntologiesAction, OntologiesSelectors, OntologyProperties, ProjectsSelectors, RemoveProjectOntologyAction, SetCurrentOntologyAction, SetCurrentProjectOntologyPropertiesAction, SetOntologiesLoadingAction, UpdateProjectOntologyAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ClearCurrentOntologyAction, ClearProjectOntologiesAction, CurrentOntologyCanBeDeletedAction, CurrentProjectSelectors, DefaultClass, LoadListsInProjectAction, LoadOntologyAction, LoadProjectOntologiesAction, OntologiesSelectors, OntologyProperties, ProjectsSelectors, SetCurrentOntologyAction, SetCurrentProjectOntologyPropertiesAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
 import { ProjectBase } from '../project-base';

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {
     ClassDefinition,
@@ -23,12 +23,12 @@ import { OntologyService } from '@dsp-app/src/app/project/ontology/ontology.serv
     templateUrl: './ontology-class-item.component.html',
     styleUrls: ['./ontology-class-item.component.scss'],
 })
-export class OntologyClassItemComponent implements OnInit, OnDestroy {
+export class OntologyClassItemComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() resClass: ClassDefinition;
 
     @Input() projectMember: boolean;
 
-    readonly MAX_LABEL_CHAR = 25;
+    @ViewChild('resClassLabel') resClassLabel: ElementRef;
 
     gravsearch: string;
 
@@ -39,6 +39,8 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
     icon: string;
 
     componentCommsSubscriptions: Subscription[] = [];
+
+    tooltipDisabled = true;
 
     // i18n setup
     itemPluralMapping = {
@@ -55,7 +57,7 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
         private _errorHandler: AppErrorHandler,
         private _route: ActivatedRoute,
         private _componentCommsService: ComponentCommunicationEventService,
-        private _cd: ChangeDetectorRef,
+        private _cdr: ChangeDetectorRef,
     ) {}
 
     ngOnInit(): void {
@@ -82,6 +84,12 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
                 this._getSearchCount();
             })
         );
+
+    }
+
+    ngAfterViewInit(): void {
+        this.tooltipDisabled = !this.isTextOverflowing(this.resClassLabel.nativeElement);
+        this._cdr.detectChanges();
     }
 
     ngOnDestroy(): void {
@@ -94,10 +102,10 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
         );
     }
 
-    trimLabel(fullString: string) {
-        return fullString.length > this.MAX_LABEL_CHAR
-            ? `${fullString.slice(0, this.MAX_LABEL_CHAR)}...`
-            : fullString;
+    isTextOverflowing(element: HTMLElement): boolean {
+        if (element) {
+            return element.scrollHeight > element.clientHeight;
+        }
     }
 
     private _setGravsearch(iri: string): string {
@@ -148,7 +156,7 @@ export class OntologyClassItemComponent implements OnInit, OnDestroy {
             .subscribe(
                 (res: CountQueryResponse) => {
                     this.results = res.numberOfResults;
-                    this._cd.markForCheck();
+                    this._cdr.markForCheck();
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
