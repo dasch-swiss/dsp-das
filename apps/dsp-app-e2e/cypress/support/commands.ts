@@ -12,7 +12,7 @@
 //
 // -- This is a parent command --
 Cypress.Commands.add('login', (username: string, password: string) => {
-    cy.visit('http://0.0.0.0:4200/');
+    cy.visit('http://localhost:4200/');
     cy.get('app-user-menu .login-button').click();
     cy.get('#mat-input-0').click();
     cy.get('#mat-input-0').type(username);
