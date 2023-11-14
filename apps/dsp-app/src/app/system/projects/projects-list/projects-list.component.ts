@@ -3,8 +3,9 @@ import {
     EventEmitter,
     Inject,
     Input,
+    OnDestroy,
     OnInit,
-    Output,
+    Output
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -29,14 +30,13 @@ import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import {SortProp} from "@dsp-app/src/app/main/action/sort-button/sort-button.component";
 import {Subscription} from "rxjs";
-import {tap} from "rxjs/operators";
 
 @Component({
     selector: 'app-projects-list',
     templateUrl: './projects-list.component.html',
     styleUrls: ['./projects-list.component.scss'],
 })
-export class ProjectsListComponent implements OnInit {
+export class ProjectsListComponent implements OnInit, OnDestroy {
     // list of users: status active or inactive (deleted)
     @Input() status: boolean;
 
@@ -48,6 +48,9 @@ export class ProjectsListComponent implements OnInit {
 
     // in case of modification
     @Output() refreshParent: EventEmitter<void> = new EventEmitter<void>();
+
+    deactivateSubscription: Subscription;
+    activateSubscription: Subscription;
 
     // loading for progess indicator
     loading: boolean;
@@ -168,6 +171,7 @@ export class ProjectsListComponent implements OnInit {
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
 
         dialogRef.afterClosed().subscribe((response) => {
+            console.log('Dialog was closed', response);
             if (response === true) {
                 // get the mode
                 switch (mode) {
@@ -195,18 +199,16 @@ export class ProjectsListComponent implements OnInit {
         const uuid = this._projectService.iriToUuid(id);
         // the deleteProject() method in js-lib sets the project's status to false, it is not actually deleted
 
-        this._dspApiConnection.admin.projectsEndpoint
+        this.deactivateSubscription = this._dspApiConnection.admin.projectsEndpoint
             .deleteProject(id)
-            .pipe(
-                tap((response: ApiResponseData<ProjectResponse>) => {
+            .subscribe((response: ApiResponseData<ProjectResponse>) => {
                     this._applicationStateService.set(uuid, response.body.project);
                     this.refreshParent.emit();
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
                 }
-            )
-        );
+            );
     }
 
     activateProject(id: string) {
@@ -216,10 +218,9 @@ export class ProjectsListComponent implements OnInit {
 
         const uuid = this._projectService.iriToUuid(id);
 
-        this._dspApiConnection.admin.projectsEndpoint
+        this.activateSubscription = this._dspApiConnection.admin.projectsEndpoint
             .updateProject(id, data)
-            .pipe(
-                tap((response: ApiResponseData<ProjectResponse>) => {
+            .subscribe((response: ApiResponseData<ProjectResponse>) => {
                     this._applicationStateService.set(uuid, response.body.project);
                     this.refreshParent.emit();
 
@@ -227,7 +228,15 @@ export class ProjectsListComponent implements OnInit {
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
                 }
-            )
-        );
+            );
+    }
+
+    ngOnDestroy() {
+        if (this.deactivateSubscription) {
+            this.deactivateSubscription.unsubscribe();
+        }
+        if (this.activateSubscription) {
+            this.activateSubscription.unsubscribe();
+        }
     }
 }
