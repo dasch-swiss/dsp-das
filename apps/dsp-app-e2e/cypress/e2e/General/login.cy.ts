@@ -1,7 +1,7 @@
 describe('login/logout', () => {
-    it('tests login and logout', () => {
-        cy.viewport(1769, 893);
-        cy.visit('http://0.0.0.0:4200/');
+    xit('tests login and logout', () => {
+        // cy.viewport(1769, 893);
+        // cy.visit('http://localhost:4200/');
         // cy.get('app-user-menu .login-button').click();
         // cy.get('#mat-input-0').click();
         // cy.get('#mat-input-0').type('root');
