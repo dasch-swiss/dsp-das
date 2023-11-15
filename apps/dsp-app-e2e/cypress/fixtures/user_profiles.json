@@ -7,5 +7,7 @@
   "change_projectMember_password": "AMembersPassword2",
   "systemAdmin_username": "daschSystemAdmin",
   "systemAdmin_password": "IamAllowedTODoEverything1",
+  "systemAdmin_username_root": "root",
+  "systemAdmin_password_root": "test",
   "change_systemAdmin_password": "IamAllowedTODoEverything2"
 }

@@ -14,7 +14,7 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import './commands';
 import { UserProfiles } from '../models/user-profiles';
 
 // Alternatively you can use CommonJS syntax:
@@ -33,33 +33,40 @@ import { UserProfiles } from '../models/user-profiles';
 
 beforeEach(() => {
     let users: UserProfiles;
-    cy.readFile('cypress/fixtures/user_profiles.json').then((json: UserProfiles) => {
-        // read JSON data file
-        users = json;
+    cy.readFile('cypress/fixtures/user_profiles.json').then(
+        (json: UserProfiles) => {
+            // read JSON data file
+            users = json;
 
-        cy.log(Cypress.spec.relative);
-        if(Cypress.spec.relative.startsWith('cypress/e2e/System_Admin')) {
-            cy.log('Logging in as admin');
-            cy.login(users.systemAdmin_username, users.systemAdmin_password);
-            // the cookie name will differ depending on the environment
-            cy.getCookie("KnoraAuthenticationGAXDALRQFYYDUMZTGMZQ9999").should('exist');
+            cy.log(Cypress.spec.relative);
+            if (Cypress.spec.relative.startsWith('cypress/e2e/System_Admin')) {
+                cy.log('Logging in as system admin');
+                cy.login({
+                    username: users.systemAdmin_username_root,
+                    password: users.systemAdmin_password_root,
+                });
+            }
+
+            if (
+                Cypress.spec.relative.startsWith('cypress/e2e/Project_Member')
+            ) {
+                cy.log('Logging in as project member');
+                cy.log(users.projectMember_username);
+                cy.login({
+                    username: users.projectMember_username,
+                    password: users.projectMember_password
+                });
+
+                // the cookie name will differ depending on the environment
+                cy.getCookie(
+                    'KnoraAuthenticationGAXDALRQFYYDUMZTGMZQ9999'
+                ).should('exist');
+            }
         }
-
-        if(Cypress.spec.relative.startsWith('cypress/e2e/Project_Member')) {
-            cy.log('Logging in as project member');
-            cy.log(users.projectMember_username);
-            cy.login(users.projectMember_username, users.projectMember_password);
-            // the cookie name will differ depending on the environment
-            cy.getCookie("KnoraAuthenticationGAXDALRQFYYDUMZTGMZQ9999").should('exist');
-        }
-    });
-
+    );
 });
 
-afterEach(() => {
-    cy.log('after each test');
-    cy.get('app-user-menu .user-menu').click();
-    cy.get('mat-list-item:last span.mdc-button__label > span').click();
-    cy.get('app-user-menu span.mdc-button__label').click();
-    cy.getCookie("KnoraAuthenticationGAXDALRQFYYDUMZTGMZQ9999").should('not.exist');
-});
+// afterEach(() => {
+//     cy.log('after each test');
+//     // cy.logout();
+// });

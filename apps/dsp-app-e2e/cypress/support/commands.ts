@@ -1,4 +1,7 @@
 /// <reference types="cypress" />
+
+import { User } from "../models/user-profiles";
+
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite
@@ -11,15 +14,29 @@
 //
 //
 // -- This is a parent command --
-Cypress.Commands.add('login', (username: string, password: string) => {
-    cy.visit('http://localhost:4200/');
-    cy.get('app-user-menu .login-button').click();
-    cy.get('#mat-input-0').click();
-    cy.get('#mat-input-0').type(username);
-    cy.get('#mat-input-1').type(password);
-    cy.get('div.cdk-overlay-container span.mdc-button__label span').click();
-    cy.contains('Login successful');
- })
+Cypress.Commands.add('login', (user: User) => {
+    cy.session(user, () => {
+        cy.visit('http://localhost:4200/');
+        cy.get('app-user-menu .login-button').click();
+        cy.get('#mat-input-0').click();
+        cy.get('#mat-input-0').type(user.username);
+        cy.get('#mat-input-1').type(user.password);
+        cy.get('div.cdk-overlay-container span.mdc-button__label span').click();
+        cy.contains('Login successful');
+        cy.get('.cookie-banner button').click();
+    },
+    {
+        validate: () => {
+            const session = localStorage.getItem('session');
+            expect(session).to.exist;
+        }
+    });
+});
+
+Cypress.Commands.add('logout', () => {
+    cy.get('app-user-menu .user-menu').click();
+    cy.get('mat-list-item:last span.mdc-button__label > span').click();
+});
 //
 //
 // -- This is a child command --
