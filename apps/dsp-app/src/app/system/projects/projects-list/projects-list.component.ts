@@ -142,7 +142,7 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
             .pipe(
                 takeUntil(this.ngUnsubscribe),
                 map(([user, userProjectGroups]) => {
-                    return this._projectService.isProjectAdmin(userProjectGroups, projectId);
+                    return this._projectService.isInProjectGroup(userProjectGroups, projectId);
                 })
             )
     }

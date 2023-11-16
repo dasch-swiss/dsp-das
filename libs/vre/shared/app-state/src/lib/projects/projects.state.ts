@@ -5,13 +5,15 @@ import { ProjectsStateModel } from './projects.state-model';
 import { LoadProjectsAction, LoadProjectAction, ClearProjectsAction, RemoveUserFromProjectAction, AddUserToProjectMembershipAction, LoadProjectMembersAction, LoadProjectGroupsAction, UpdateProjectAction } from './projects.actions';
 import { UserSelectors } from '../user/user.selectors';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ApiResponseData, ApiResponseError, GroupsResponse, KnoraApiConnection, MembersResponse, ProjectResponse, ProjectsResponse, ReadUser, UserResponse } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, GroupsResponse, KnoraApiConnection, MembersResponse, ProjectResponse, ProjectsResponse, ReadGroup, ReadUser, UserResponse } from '@dasch-swiss/dsp-js';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { concatMap, finalize, map, take, tap } from 'rxjs/operators';
 import { produce } from 'immer';
 import { EMPTY, of } from 'rxjs';
 import { CurrentProjectSelectors } from '../current-project/current-project.selectors';
 import { SetCurrentProjectAction, SetCurrentProjectByUuidAction, SetCurrentProjectGroupsAction, SetCurrentProjectMembersAction } from '../current-project/current-project.actions';
+import { IKeyValuePairs } from '../model-interfaces';
+import { ProjectsSelectors } from './projects.selectors';
 
 let defaults: ProjectsStateModel = {
     isLoading: false,
@@ -78,10 +80,11 @@ export class ProjectsState {
     ) {
         ctx.patchState({ isLoading: true });
     
+        const projectIri = this.projectService.uuidToIri(projectUuid);
         // get current project data, project members and project groups
         // and set the project state here
         return this._dspApiConnection.admin.projectsEndpoint
-            .getProjectByIri(this.projectService.uuidToIri(projectUuid))
+            .getProjectByIri(projectIri)
             .pipe(
                 take(1),
                 map((projectsResponse: ApiResponseData<ProjectResponse> | ApiResponseError) => {
@@ -118,7 +121,11 @@ export class ProjectsState {
                 ])),
                 concatMap(() => { 
                     if (isCurrentProject) {
-                        return ctx.dispatch(new SetCurrentProjectByUuidAction(projectUuid));
+                        const projectGroups = this.store.selectSnapshot(ProjectsSelectors.projectGroups);
+                        return ctx.dispatch([
+                            new SetCurrentProjectByUuidAction(projectUuid), 
+                            new SetCurrentProjectGroupsAction(projectGroups[projectIri]?.value)
+                        ]);
                     }
                     
                     return EMPTY;
@@ -244,15 +251,21 @@ export class ProjectsState {
                 tap({
                     next: (response: ApiResponseData<GroupsResponse>) => {
                         const projectIri = this.projectService.uuidToIri(projectUuid);
+                        let groups: IKeyValuePairs<ReadGroup> = {};
+                        response.body.groups.forEach(group => {
+                            const projectId = group.project?.id as string;
+                            if (!groups[projectId]) {
+                                groups[projectId] = { value: [] };
+                            }
+                            
+                            groups[projectId].value = [...groups[projectId].value, group];
+                        });
+
                         ctx.setState({ 
                             ...ctx.getState(), 
                             isLoading: false, 
-                            projectGroups: { [projectIri] : { value: response.body.groups } }
+                            projectGroups: groups
                         });
-                        const currentProject = this.store.selectSnapshot(CurrentProjectSelectors.project);
-                        if (currentProject?.id === projectIri) {
-                            ctx.dispatch(new SetCurrentProjectGroupsAction(response.body.groups));
-                        }
                     },
                     error: (error) => {
                         this.errorHandler.showMessage(error);

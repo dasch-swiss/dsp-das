@@ -1,11 +1,9 @@
 import { ClearProjectOntologiesAction } from './../ontologies/ontologies.actions';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Action, State, StateContext, Store } from '@ngxs/store';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { ReadUser } from '@dasch-swiss/dsp-js';
 import { map } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { CurrentProjectStateModel } from './current-project.state-model';
 import { ClearCurrentProjectAction as ClearCurrentProjectAction, SetCurrentProjectAction, SetCurrentProjectByUuidAction, SetCurrentProjectGroupsAction, SetCurrentProjectMembersAction } from './current-project.actions';
 import { ProjectsSelectors } from '../projects/projects.selectors';
@@ -29,9 +27,6 @@ let defaults: CurrentProjectStateModel = {
 @Injectable()
 export class CurrentProjectState {
     constructor(
-        @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: AppErrorHandler,
         private _store: Store,
         public _projectService: ProjectService,
     ) {}
@@ -50,6 +45,10 @@ export class CurrentProjectState {
         ctx: StateContext<CurrentProjectStateModel>,
         { groups }: SetCurrentProjectGroupsAction
     ) {
+        if (!groups || groups.length === 0) {
+            return EMPTY;
+        }
+
         return ctx.setState({ ...ctx.getState(), groups });
     }
     

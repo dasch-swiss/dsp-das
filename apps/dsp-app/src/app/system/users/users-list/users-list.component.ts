@@ -26,9 +26,10 @@ import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 import { Select, Store } from '@ngxs/store';
-import { CurrentProjectSelectors, LoadUserAction, RemoveUserFromProjectAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { CurrentProjectSelectors, LoadUserAction, RemoveUserAction, RemoveUserFromProjectAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.Default,
@@ -45,6 +46,9 @@ export class UsersListComponent implements OnInit {
 
     // enable the button to create new user
     @Input() createNew = false;
+
+    // proje0ct data
+    @Input() project: ReadProject;
 
     // in case of modification
     @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
@@ -70,9 +74,6 @@ export class UsersListComponent implements OnInit {
 
     // project uuid; as identifier in project application state service
     projectUuid: string;
-
-    // proje0ct data
-    project: ReadProject;
 
     //
     // sort properties
@@ -115,6 +116,7 @@ export class UsersListComponent implements OnInit {
         private _router: Router,
         private _sortingService: SortingService,
         private _store: Store,
+        private _projectService: ProjectService,
     ) {
         // get the uuid of the current project
         this._route.parent.parent.paramMap.subscribe((params: Params) => {
@@ -147,18 +149,8 @@ export class UsersListComponent implements OnInit {
             return false;
         }
 
-        if (permissions) {
-            // check if this user is project admin
-            return (
-                permissions.groupsPerProject[this.project.id].indexOf(
-                    Constants.ProjectAdminGroupIRI
-                ) > -1
-            );
-        } else {
-            const userProjectGroups = this._store.selectSnapshot(UserSelectors.userProjectAdminGroups);
-            // check if the logged-in user is project admin
-            return userProjectGroups.some((e) => e === this.project.id);
-        }
+        const userProjectGroups = this._store.selectSnapshot(UserSelectors.userProjectAdminGroups);
+        return this._projectService.isProjectAdmin(permissions?.groupsPerProject, userProjectGroups, this.project.id);
     }
 
     /**
@@ -201,51 +193,31 @@ export class UsersListComponent implements OnInit {
                         // add user to group
                         // console.log('add user to group');
                         for (const newGroup of groups) {
-                            this._dspApiConnection.admin.usersEndpoint
-                                .addUserToGroupMembership(id, newGroup)
-                                .subscribe(
-                                    () => {},
-                                    (ngError: ApiResponseError) => {
-                                        this._errorHandler.showMessage(ngError);
-                                    }
-                                );
+                            this.addUserToGroupMembership(id, newGroup);
                         }
                     } else {
                         // which one is deselected?
                         // find id in groups --> if not exists: remove from group
                         for (const oldGroup of currentUserGroups) {
-                            if (groups.indexOf(oldGroup) > -1) {
-                                // already member of this group
-                            } else {
+                            if (groups.indexOf(oldGroup) === -1) {
                                 // console.log('remove from group', oldGroup);
                                 // the old group is not anymore one of the selected groups --> remove user from group
                                 this._dspApiConnection.admin.usersEndpoint
                                     .removeUserFromGroupMembership(id, oldGroup)
-                                    .subscribe(
-                                        () => {},
-                                        (ngError: ApiResponseError) => {
-                                            this._errorHandler.showMessage(
-                                                ngError
-                                            );
-                                        }
-                                    );
+                                    .pipe(
+                                        take(1),
+                                        map((response: ApiResponseData<UserResponse>) => response.body.user))
+                                    .subscribe((user: ReadUser) => {
+                                        this._store.dispatch(new RemoveUserAction(user));
+                                    },
+                                    (ngError: ApiResponseError) => {
+                                        this._errorHandler.showMessage(ngError);
+                                    });
                             }
                         }
                         for (const newGroup of groups) {
-                            if (currentUserGroups.indexOf(newGroup) > -1) {
-                                // already member of this group
-                            } else {
-                                // console.log('add user to group');
-                                this._dspApiConnection.admin.usersEndpoint
-                                    .addUserToGroupMembership(id, newGroup)
-                                    .subscribe(
-                                        () => {},
-                                        (ngError: ApiResponseError) => {
-                                            this._errorHandler.showMessage(
-                                                ngError
-                                            );
-                                        }
-                                    );
+                            if (currentUserGroups.indexOf(newGroup) === -1) {
+                                this.addUserToGroupMembership(id, newGroup);
                             }
                         }
                     }
@@ -424,7 +396,22 @@ export class UsersListComponent implements OnInit {
     }
 
     sortList(key: any) {
-        this.list = this._sortingService.keySortByAlphabetical(this.list, key);
+        this.sortBy = key;
+        this.list = this._sortingService.keySortByAlphabetical(this.list, this.sortBy as any);
         localStorage.setItem('sortUsersBy', key);
+    }
+
+    private addUserToGroupMembership(id: string, newGroup: string): void {
+        this._dspApiConnection.admin.usersEndpoint
+            .addUserToGroupMembership(id, newGroup)
+            .pipe(
+                take(1),
+                map((response: ApiResponseData<UserResponse>) => response.body.user))
+            .subscribe((user: ReadUser) => {
+                this._store.dispatch(new SetUserAction(user));
+            },
+                (ngError: ApiResponseError) => {
+                    this._errorHandler.showMessage(ngError);
+                });
     }
 }

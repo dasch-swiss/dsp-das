@@ -1,5 +1,7 @@
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     Input,
@@ -23,7 +25,7 @@ import { map, takeUntil } from 'rxjs/operators';
     templateUrl: './select-group.component.html',
     styleUrls: ['./select-group.component.scss'],
 })
-export class SelectGroupComponent implements OnInit, OnDestroy {
+export class SelectGroupComponent implements OnInit, OnDestroy, AfterViewInit {
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
     // project short code
@@ -66,10 +68,15 @@ export class SelectGroupComponent implements OnInit, OnDestroy {
 
     @Select(ProjectsSelectors.projectGroups) allProjectGroups$: Observable<IKeyValuePairs<ReadGroup>[]>;
 
-    constructor() {}
+    constructor(private _cd: ChangeDetectorRef) {}
 
     ngOnInit() {
-        this.groupCtrl.setValue(this.permissions);
+    }
+
+    ngAfterViewInit() {
+        setTimeout(() => {
+            this.groupCtrl.setValue(this.permissions);
+        });
     }
 
     ngOnDestroy() {

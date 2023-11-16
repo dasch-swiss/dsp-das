@@ -15,6 +15,7 @@
         <div class="users-list">
             <!-- list of active users -->
             <app-users-list
+            	[project]="project$ | async"
                 [list]="activeProjectMembers$ | async"
                 [status]="true"
                 (refreshParent)="refresh()"
@@ -22,6 +23,7 @@
 
             <!-- list of inactive users -->
             <app-users-list
+				[project]="project$ | async"
                 [list]="inactiveProjectMembers$ | async"
                 [status]="false"
                 (refreshParent)="refresh()"

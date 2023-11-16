@@ -104,24 +104,38 @@ export class ProjectService {
         return uuid;
     }
 
-    isProjectAdmin = (userProjectGroups: string[], projectUuid: string): boolean =>
+    isInProjectGroup = (userProjectGroups: string[], projectUuid: string): boolean =>
         userProjectGroups.some((e) => e === this.uuidToIri(projectUuid));
 
-    isProjectAdminOrSysAdmin(user: ReadUser, userProjectGroups: string[], projectUuid: string): boolean
-    {
-        const isMemberOfSystemAdminGroup = 
-            user
-                && user.permissions.groupsPerProject
-                && user.permissions.groupsPerProject[Constants.SystemProjectIRI] 
-                && (user.permissions.groupsPerProject[Constants.SystemProjectIRI].indexOf(Constants.SystemAdminGroupIRI) > -1);
 
-        return this.isProjectAdmin(userProjectGroups, projectUuid) || isMemberOfSystemAdminGroup;
+    isProjectAdmin(groupsPerProject: {[key: string]: string[]}, userProjectGroups: string[], projectIri: string): boolean
+    {
+        const isMemberOfProjectAdminGroup = 
+                groupsPerProject
+                && groupsPerProject[projectIri] 
+                && (groupsPerProject[projectIri].indexOf(Constants.ProjectAdminGroupIRI) > -1);
+
+        return this.isInProjectGroup(userProjectGroups, projectIri) || isMemberOfProjectAdminGroup;
     }
 
+    isProjectAdminOrSysAdmin(user: ReadUser, userProjectGroups: string[], projectIri: string): boolean
+    {
+        return user && this.isProjectOrSysAdmin(user.permissions.groupsPerProject, userProjectGroups, projectIri);
+    }
+    
+    isProjectOrSysAdmin(groupsPerProject: {[key: string]: string[]}, userProjectGroups: string[], projectIri: string): boolean
+    {
+        const isMemberOfSystemAdminGroup = 
+                groupsPerProject
+                && groupsPerProject[Constants.SystemProjectIRI] 
+                && (groupsPerProject[Constants.SystemProjectIRI].indexOf(Constants.SystemAdminGroupIRI) > -1);
+
+        return this.isProjectAdmin(groupsPerProject, userProjectGroups, projectIri) || isMemberOfSystemAdminGroup;
+    }
 
     isProjectMember(user: ReadUser, userProjectGroups: string[], projectUuid: string): boolean
     {
-        const isProjectAdmin = this.isProjectAdmin(userProjectGroups, projectUuid);
+        const isProjectAdmin = this.isInProjectGroup(userProjectGroups, projectUuid);
         const iri = this.uuidToIri(projectUuid);
         return isProjectAdmin
             // check if the user is member of the current project(id contains the iri)

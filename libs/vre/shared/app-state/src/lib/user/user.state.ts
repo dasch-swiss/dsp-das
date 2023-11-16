@@ -3,17 +3,18 @@ import { Action, State, StateContext } from '@ngxs/store';
 import { of } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 import {
-    SetUserAction,
     LogUserOutAction,
     LoadUserAction,
     SetUserProjectGroupsAction as SetUserProjectGroupsDataAction,
     LoadUsersAction,
     ResetUsersAction as ResetUsersAction,
     CreateUserAction,
+    SetUserAction,
+    RemoveUserAction,
 } from './user.actions';
 import { UserStateModel } from './user.state-model';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, User, UserResponse, UsersResponse } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, ReadUser, User, UserResponse, UsersResponse } from '@dasch-swiss/dsp-js';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 
 const defaults = <UserStateModel>{
@@ -68,8 +69,29 @@ export class UserState {
     setUser(ctx: StateContext<UserStateModel>,
         { user }: SetUserAction
     ) {
-        ctx.setState({ ...ctx.getState(), isLoading: false, user });
+        const state = ctx.getState();
+        state.allUsers.map(u => {
+            if (u.id === user.id) {
+                u = user;
+            }
+        });
+        
+        if ((<ReadUser>state.user).id === user.id) {
+            state.user = user;
+        }
+
+        ctx.setState({ ...state, isLoading: false });
         ctx.dispatch(new SetUserProjectGroupsDataAction(user));
+    }
+    
+    @Action(RemoveUserAction)
+    removeUser(ctx: StateContext<UserStateModel>,
+        { user }: RemoveUserAction
+    ) {
+        const state = ctx.getState();
+        state.allUsers.splice(state.allUsers.findIndex(u => u.id === user.id), 1);
+        
+        ctx.setState({ ...state, isLoading: false });
     }
 
     @Action(SetUserProjectGroupsDataAction)
