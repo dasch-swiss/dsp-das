@@ -19,10 +19,7 @@ export interface SplitSize {
     styleUrls: ['./results.component.scss'],
 })
 export class ResultsComponent implements AfterViewChecked {
-    searchParams: SearchParams = {
-        query: '',
-        mode: 'fulltext',
-    };
+    searchParams: SearchParams;
 
     resIri: string;
 
@@ -41,6 +38,8 @@ export class ResultsComponent implements AfterViewChecked {
     loading = true;
 
     splitSize: SplitSize;
+
+    projectUuid: string;
 
     constructor(private _route: ActivatedRoute, private _titleService: Title, private _cd: ChangeDetectorRef) {
         const parentParams$ = this._route.parent.paramMap;
@@ -87,18 +86,21 @@ export class ResultsComponent implements AfterViewChecked {
     }
 
     private _handleParentParams(parentParams: Params) {
-        const uuid = parentParams.get('uuid');
-        if (uuid) {
-            this.searchParams.projectUuid = uuid;
-        }
+        this.projectUuid = parentParams.get('uuid');
     }
 
     private _handleSearchParams(params: Params) {
         this.searchQuery = decodeURIComponent(params.get('q'));
         this.searchMode = decodeURIComponent(params.get('mode')) === 'fulltext' ? 'fulltext' : 'gravsearch';
 
-        this.searchParams.query = this.searchQuery;
-        this.searchParams.mode = this.searchMode;
+        this.searchParams = {
+            query: this.searchQuery,
+            mode: this.searchMode,
+        };
+
+        if(this.projectUuid) {
+            this.searchParams.projectUuid = this.projectUuid;
+        }
 
         if (params.get('project') && this.searchMode === 'fulltext') {
             this.searchParams.filter = {

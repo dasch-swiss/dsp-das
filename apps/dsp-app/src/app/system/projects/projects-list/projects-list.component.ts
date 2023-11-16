@@ -6,7 +6,7 @@ import {
     Input,
     OnDestroy,
     OnInit,
-    Output,
+    Output
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {Router} from '@angular/router';
@@ -217,9 +217,8 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
-                }
-            )
-        );
+                })
+            );
     }
 
     activateProject(id: string) {
@@ -232,12 +231,10 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
             .pipe(
                 tap((response: ApiResponseData<ProjectResponse>) => {
                     this.refreshParent.emit();
-
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(error);
-                }
-            )
-        );
+                })
+            );
     }
 }
