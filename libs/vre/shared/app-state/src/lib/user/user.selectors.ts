@@ -17,6 +17,16 @@ export class UserSelectors {
     }
 
     @Selector([UserState])
+    static activeUsers(state: UserStateModel): ReadUser[] {
+        return state.allUsers.filter((user: ReadUser) => user.status === true);
+    }
+
+    @Selector([UserState])
+    static inactiveUsers(state: UserStateModel): ReadUser[] {
+        return state.allUsers.filter((user: ReadUser) => user.status !== true);
+    }
+
+    @Selector([UserState])
     static isLoggedIn(state: UserStateModel): boolean {
         return !state.isLoading 
             && !!localStorage.getItem(Auth.AccessToken) 

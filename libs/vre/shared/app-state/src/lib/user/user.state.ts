@@ -11,6 +11,7 @@ import {
     CreateUserAction,
     SetUserAction,
     RemoveUserAction,
+    LoadUserContentByIriAction,
 } from './user.actions';
 import { UserStateModel } from './user.state-model';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -47,9 +48,7 @@ export class UserState {
             .getUserByUsername(username)
             .pipe(
                 take(1),
-                map(
-                    (
-                        response:
+                map((response:
                             | ApiResponseData<UserResponse>
                             | ApiResponseError
                     ) => {
@@ -63,6 +62,38 @@ export class UserState {
                         }
                 })
             )
+    }
+
+    @Action(LoadUserContentByIriAction)
+    loadUserContentByIriAction(
+        ctx: StateContext<UserStateModel>,
+        { iri }: LoadUserContentByIriAction
+    ) {
+        ctx.patchState({ isLoading: true });
+        return this._dspApiConnection.admin.usersEndpoint.getUserByIri(iri)
+            .pipe(
+                take(1),
+                map((response: ApiResponseData<UserResponse> | ApiResponseError) => { 
+                    return response as ApiResponseData<UserResponse>;
+                }),
+                tap({
+                    next: (responseUser: ApiResponseData<UserResponse>) => {
+                        const state = ctx.getState();
+                        let user = state.allUsers.find(u => u.id === responseUser.body.user.id);
+                        if (user) {
+                            user = responseUser.body.user;
+                        }
+
+                        ctx.setState({ 
+                            ...state, 
+                            isLoading: false,
+                        });
+                    },
+                    error: (error: ApiResponseError) => {
+                        this._errorHandler.showMessage(error);
+                    }
+                })
+            );
     }
 
     @Action(SetUserAction)
@@ -136,8 +167,9 @@ export class UserState {
     @Action(LoadUsersAction)
     loadUsersAction(
         ctx: StateContext<UserStateModel>,
-        { }: LoadUsersAction
+        { loadFullUserData }: LoadUsersAction
     ) {
+        ctx.patchState({ isLoading: true });
         return this._dspApiConnection.admin.usersEndpoint.getUsers()
             .pipe(
                 take(1),
@@ -150,6 +182,10 @@ export class UserState {
                             ...ctx.getState(), 
                             allUsers: response.body.users
                         });
+
+                        if (loadFullUserData) {
+                            response.body.users.map(u => ctx.dispatch(new LoadUserContentByIriAction(u.id)));
+                        }
                     },
                     error: (error) => {
                         this._errorHandler.showMessage(error);
