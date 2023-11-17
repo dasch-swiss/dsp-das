@@ -66,6 +66,7 @@ jobs:
       - name: run make command
         run: |
           cd dsp-api
+          make init-db-test
           make stack-without-app
       - name: run e2e tests
         run: |
