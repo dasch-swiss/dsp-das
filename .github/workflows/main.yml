@@ -72,6 +72,7 @@ jobs:
         run: |
           cd ..
           pwd
+          ls
           npm run e2e-ci
 
   dateadapter-tests:
