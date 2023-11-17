@@ -70,7 +70,7 @@ jobs:
           make stack-without-app
       - name: run e2e tests
         run: |
-          cd ..
+          cd ../dsp-das
           pwd
           ls
           npm run e2e-ci
