@@ -44,7 +44,33 @@ jobs:
       - run: npx nx run dsp-app:test:ci
         env:
           TZ: Europe/Zurich
-      - run: npx nx run dsp-app-e2e:e2e:production
+
+  dsp-app-e2e-tests:
+    name: DSP-APP E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # gets additionally all tags which we need
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - uses: browser-actions/setup-chrome@v1
+      - run: npm install
+      - name: Checkout DSP-API repo
+        uses: actions/checkout@v3
+        with:
+          repository: dasch-swiss/dsp-api
+          ref: main
+          path: dsp-api
+      - name: run make command
+        run: |
+          cd dsp-api
+          make stack-without-app
+      - name: run e2e tests
+        run: |
+          cd ..
+          npx nx run dsp-app-e2e:e2e:production
 
   dateadapter-tests:
     name: DateAdapter
