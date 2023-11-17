@@ -72,7 +72,7 @@ jobs:
         run: |
           cd ..
           pwd
-          npx nx run dsp-app-e2e:e2e:production
+          npm run e2e-ci
 
   dateadapter-tests:
     name: DateAdapter
