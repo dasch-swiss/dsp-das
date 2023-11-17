@@ -26,7 +26,7 @@ import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 import { Select, Store } from '@ngxs/store';
-import { CurrentProjectSelectors, LoadUserAction, RemoveUserAction, RemoveUserFromProjectAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { CurrentProjectSelectors, LoadProjectAction, LoadUserAction, RemoveUserAction, RemoveUserFromProjectAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
@@ -208,7 +208,9 @@ export class UsersListComponent implements OnInit {
                                         take(1),
                                         map((response: ApiResponseData<UserResponse>) => response.body.user))
                                     .subscribe((user: ReadUser) => {
-                                        this._store.dispatch(new RemoveUserAction(user));
+                                        if (this.projectUuid) {
+                                            this._store.dispatch(new LoadProjectAction(this.projectUuid));
+                                        }
                                     },
                                     (ngError: ApiResponseError) => {
                                         this._errorHandler.showMessage(ngError);
@@ -408,7 +410,10 @@ export class UsersListComponent implements OnInit {
                 take(1),
                 map((response: ApiResponseData<UserResponse>) => response.body.user))
             .subscribe((user: ReadUser) => {
-                this._store.dispatch(new SetUserAction(user));
+                if (this.projectUuid) {
+                    this._store.dispatch(new LoadProjectAction(this.projectUuid));
+                }
+                //this._store.dispatch(new SetUserAction(user));
             },
                 (ngError: ApiResponseError) => {
                     this._errorHandler.showMessage(ngError);

@@ -18,7 +18,6 @@ import { ProjectsSelectors } from './projects.selectors';
 let defaults: ProjectsStateModel = {
     isLoading: false,
     hasLoadingErrors: false,
-    otherProjects: [],
     allProjects: [],
     readProjects: [],
     projectMembers: {},
@@ -46,7 +45,6 @@ export class ProjectsState {
         { }: LoadProjectsAction
     ) {
         ctx.patchState({ isLoading: true });
-        const userActiveProjects = this.store.selectSnapshot(UserSelectors.userActiveProjects);
         return this._dspApiConnection.admin.projectsEndpoint
             .getProjects()
             .pipe(
@@ -55,15 +53,10 @@ export class ProjectsState {
                 }),
             )
             .subscribe((projectsResponse: ApiResponseData<ProjectsResponse>) => {
-                    // get list of all projects the user is NOT a member of
-                    const otherProjects = projectsResponse.body.projects.filter(project => 
-                        userActiveProjects.findIndex((userProj) => userProj.id === project.id) === -1);
-
                     ctx.setState({ 
                         ...ctx.getState(), 
                         isLoading: false, 
                         allProjects: projectsResponse.body.projects,
-                        otherProjects,
                     });
                 },
                 (error: ApiResponseError) => {

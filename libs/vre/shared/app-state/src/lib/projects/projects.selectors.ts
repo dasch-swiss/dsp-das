@@ -3,10 +3,14 @@ import { ProjectsState } from './projects.state';
 import { ProjectsStateModel } from './projects.state-model';
 import { ReadGroup, ReadProject, ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
 import { IKeyValuePairs } from '../model-interfaces';
+import { UserSelectors } from '../user/user.selectors';
 
 export class ProjectsSelectors {
-    static otherProjects(state: ProjectsStateModel): StoredProject[] {
-        return state.otherProjects;
+    // get list of all projects the user is NOT a member of
+    @Selector([ProjectsState, UserSelectors.userActiveProjects])
+    static otherProjects(state: ProjectsStateModel, userActiveProjects: StoredProject[]): StoredProject[] {
+        return state.allProjects.filter(project => 
+            userActiveProjects.findIndex((userProj) => userProj.id === project.id) === -1);
     }
 
     @Selector([ProjectsState])
