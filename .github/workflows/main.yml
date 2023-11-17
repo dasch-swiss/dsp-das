@@ -71,6 +71,7 @@ jobs:
       - name: run e2e tests
         run: |
           cd ..
+          pwd
           npx nx run dsp-app-e2e:e2e:production
 
   dateadapter-tests:
