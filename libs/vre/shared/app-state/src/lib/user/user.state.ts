@@ -79,9 +79,9 @@ export class UserState {
                 tap({
                     next: (responseUser: ApiResponseData<UserResponse>) => {
                         const state = ctx.getState();
-                        let user = state.allUsers.find(u => u.id === responseUser.body.user.id);
-                        if (user) {
-                            user = responseUser.body.user;
+                        const userIndex = state.allUsers.findIndex(u => u.id === responseUser.body.user.id)
+                        if (userIndex > -1) {
+                            state.allUsers[userIndex] = responseUser.body.user;
                         }
 
                         ctx.setState({ 
@@ -101,11 +101,10 @@ export class UserState {
         { user }: SetUserAction
     ) {
         const state = ctx.getState();
-        state.allUsers.map(u => {
-            if (u.id === user.id) {
-                u = user;
-            }
-        });
+        const userIndex = state.allUsers.findIndex(u => u.id === user.id);
+        if (userIndex > -1) {
+            state.allUsers[userIndex] = user;
+        }
         
         if ((<ReadUser>state.user).id === user.id) {
             state.user = user;
@@ -151,7 +150,13 @@ export class UserState {
             }
         }
 
-        ctx.setState({ ...ctx.getState(), userProjectAdminGroups: userProjectGroups, isMemberOfSystemAdminGroup});
+        const state = ctx.getState();
+        if (state.user?.username === user.username) {
+            state.userProjectAdminGroups = userProjectGroups;
+            state.isMemberOfSystemAdminGroup = isMemberOfSystemAdminGroup;
+        } 
+
+        ctx.setState({ ...state });
     }
 
     @Action(LogUserOutAction)

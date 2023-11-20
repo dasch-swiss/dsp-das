@@ -133,12 +133,12 @@
     <!-- Manage user project membership -->
     <div *ngSwitchCase="'manageProjectMembership'">
         <app-dialog-header
-            [title]="data.name"
+            [title]="data.user.username"
             [subtitle]="'Manage project membership'"
         >
         </app-dialog-header>
         <app-membership
-            [username]="data.name"
+            [user]="data.user"
             (closeDialog)="dialogRef.close()"
         ></app-membership>
         <mat-dialog-actions>

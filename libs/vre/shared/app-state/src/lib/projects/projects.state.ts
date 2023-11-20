@@ -14,6 +14,7 @@ import { CurrentProjectSelectors } from '../current-project/current-project.sele
 import { SetCurrentProjectAction, SetCurrentProjectByUuidAction, SetCurrentProjectGroupsAction, SetCurrentProjectMembersAction } from '../current-project/current-project.actions';
 import { IKeyValuePairs } from '../model-interfaces';
 import { ProjectsSelectors } from './projects.selectors';
+import { SetUserAction } from '../user/user.actions';
 
 let defaults: ProjectsStateModel = {
     isLoading: false,
@@ -155,8 +156,8 @@ export class ProjectsState {
                 }),
                 tap({
                     next: (response: ApiResponseData<UserResponse>) => {
+                        ctx.dispatch(new SetUserAction(response.body.user));
                         ctx.patchState({ isLoading: false });
-                        return response.body.user;
                     },
                     error: (error) => {
                         this.errorHandler.showMessage(error);
@@ -180,8 +181,8 @@ export class ProjectsState {
                 }),
                 tap({
                     next: (response: ApiResponseData<UserResponse>) => {
+                        ctx.dispatch(new SetUserAction(response.body.user));
                         ctx.patchState({ isLoading: false });
-                        return response.body.user;
                     },
                     error: (error) => {
                         ctx.patchState({ hasLoadingErrors: true });

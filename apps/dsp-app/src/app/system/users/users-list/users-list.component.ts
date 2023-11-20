@@ -1,6 +1,5 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     EventEmitter,
     Inject,
@@ -26,7 +25,7 @@ import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 import { Select, Store } from '@ngxs/store';
-import { CurrentProjectSelectors, LoadProjectAction, LoadUserAction, RemoveUserAction, RemoveUserFromProjectAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { CurrentProjectSelectors, LoadProjectAction, LoadUserAction, RemoveUserFromProjectAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
@@ -321,14 +320,14 @@ export class UsersListComponent implements OnInit {
      * delete and reactivate user
      *
      */
-    openDialog(mode: string, name?: string, iri?: string): void {
+    openDialog(mode: string, user?: ReadUser, iri?: string): void {
         const dialogConfig: MatDialogConfig = {
             width: '560px',
             maxHeight: '80vh',
             position: {
                 top: '112px',
             },
-            data: { name: name, mode: mode },
+            data: { user, mode },
         };
 
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);

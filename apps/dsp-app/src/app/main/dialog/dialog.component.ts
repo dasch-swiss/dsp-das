@@ -3,7 +3,7 @@ import {
     MatDialogRef,
     MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
-import { Cardinality, ReadResource } from '@dasch-swiss/dsp-js';
+import { Cardinality, ReadResource, ReadUser } from '@dasch-swiss/dsp-js';
 import { PropertyInfoObject } from '@dsp-app/src/app/project/ontology/default-data/default-properties';
 import { FilteredResources } from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
 import { GuiCardinality } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
@@ -17,6 +17,7 @@ export interface DialogData {
     subtitle?: string;
     comment?: string;
     name?: string;
+    user?: ReadUser;
     existing?: string[];
     propInfo?: PropertyInfoObject;
     currentCardinality?: Cardinality;
