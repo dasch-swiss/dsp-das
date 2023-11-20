@@ -3,19 +3,19 @@
     <!-- property label -->
     <mat-form-field *ngSwitchCase="resourceLabel">
         <mat-label>Property Label</mat-label>
-        <input matInput type="text" [formControl]="inputControl" />
+        <input matInput class="resource-label-input" type="text" [formControl]="inputControl" />
     </mat-form-field>
 
     <!-- text value -->
     <mat-form-field *ngSwitchCase="constants.TextValue">
         <mat-label>Text Value</mat-label>
-        <input matInput type="text" [formControl]="inputControl" />
+        <input matInput class="text-value-input" type="text" [formControl]="inputControl" />
     </mat-form-field>
 
     <!-- boolean value -->
     <mat-form-field *ngSwitchCase="constants.BooleanValue">
         <mat-label>Value</mat-label>
-        <mat-select [formControl]="inputControl">
+        <mat-select class="boolean-value-select" [formControl]="inputControl">
             <mat-option value="true">
                 True
             </mat-option>
@@ -28,7 +28,7 @@
     <!-- uri value -->
     <mat-form-field *ngSwitchCase="constants.UriValue">
         <mat-label>URI Value</mat-label>
-        <input matInput [formControl]="inputControl" [errorStateMatcher]="matcher" />
+        <input matInput class="uri-value-input" [formControl]="inputControl" [errorStateMatcher]="matcher" />
         <mat-error *ngIf="inputControl.hasError('pattern')">
             <span class="custom-error-message">
                 Value must be a URI value.
@@ -39,7 +39,7 @@
     <!-- integer value -->
     <mat-form-field *ngSwitchCase="constants.IntValue">
         <mat-label>Integer Value</mat-label>
-        <input matInput type="number" [formControl]="inputControl" [errorStateMatcher]="matcher" />
+        <input matInput class="int-value-input" type="number" [formControl]="inputControl" [errorStateMatcher]="matcher" />
         <mat-error *ngIf="inputControl.hasError('pattern')">
             <span class="custom-error-message">
                 Value must be an integer value.
@@ -50,7 +50,7 @@
     <!-- decimal value -->
     <mat-form-field *ngSwitchCase="constants.DecimalValue">
         <mat-label>Decimal Value</mat-label>
-        <input matInput type="number" [formControl]="inputControl" [errorStateMatcher]="matcher" />
+        <input matInput class="decimal-value-input" type="number" [formControl]="inputControl" [errorStateMatcher]="matcher" />
         <mat-error *ngIf="inputControl.hasError('pattern')">
             <span class="custom-error-message">
                 Value must be a decimal value.
@@ -59,7 +59,7 @@
     </mat-form-field>
 
     <!-- date value -->
-    <div *ngSwitchCase="constants.DateValue" [formGroup]="dateFormGroup">
+    <div *ngSwitchCase="constants.DateValue" [formGroup]="dateFormGroup" class="date-value">
         <dasch-swiss-app-date-picker [formControlName]="'date'" (emitDateChanged)="onDateSelected($event)"></dasch-swiss-app-date-picker>
     </div>
 
