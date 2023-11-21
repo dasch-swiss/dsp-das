@@ -18,12 +18,12 @@
     <!-- Modify user data -->
     <div *ngSwitchCase="'editUser'">
         <app-dialog-header
-            [title]="data.name"
+            [title]="data.user.username"
             [subtitle]="'appLabels.form.user.title.edit' | translate"
         >
         </app-dialog-header>
         <app-user-form
-            [username]="data.name"
+            [user]="data.user"
             (closeDialog)="dialogRef.close()"
         ></app-user-form>
     </div>
@@ -31,12 +31,12 @@
     <!-- Update password -->
     <div *ngSwitchCase="'editPassword'">
         <app-dialog-header
-            [title]="data.name"
+            [title]="data.user.username"
             [subtitle]="'appLabels.form.user.title.password' | translate"
         >
         </app-dialog-header>
         <app-password-form
-            [username]="data.name"
+            [username]="data.user.username"
             (closeDialog)="dialogRef.close()"
         ></app-password-form>
     </div>

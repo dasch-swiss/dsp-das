@@ -320,7 +320,7 @@ export class UsersListComponent implements OnInit {
      * delete and reactivate user
      *
      */
-    openDialog(mode: string, user?: ReadUser, iri?: string): void {
+    openDialog(mode: string, user?: ReadUser): void {
         const dialogConfig: MatDialogConfig = {
             width: '560px',
             maxHeight: '80vh',
@@ -336,15 +336,15 @@ export class UsersListComponent implements OnInit {
             if (response === true) {
                 switch (mode) {
                     case 'removeFromProject':
-                        this._store.dispatch(new RemoveUserFromProjectAction(iri, this.project.id))
+                        this._store.dispatch(new RemoveUserFromProjectAction(user.id, this.project.id))
                             .pipe(take(1))
                             .subscribe(() => this.refreshParent.emit());
                         break;
                     case 'deleteUser':
-                        this.deleteUser(iri);
+                        this.deleteUser(user.id);
                         break;
                     case 'activateUser':
-                        this.activateUser(iri);
+                        this.activateUser(user.id);
                         break;
                 }
             }

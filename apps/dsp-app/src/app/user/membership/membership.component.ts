@@ -15,7 +15,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { AutocompleteItem } from '../../workspace/search/operator';
-import { Select, Store, Actions } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { AddUserToProjectMembershipAction, ProjectsSelectors, RemoveUserFromProjectAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { map, takeUntil } from 'rxjs/operators';
 import { Observable, Subject, combineLatest } from 'rxjs';
@@ -72,7 +72,6 @@ export class MembershipComponent implements OnInit, OnDestroy {
     @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
     
     constructor(
-        private _actions$: Actions,
         private _store: Store
     ) {}
 

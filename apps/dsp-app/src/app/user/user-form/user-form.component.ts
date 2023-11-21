@@ -55,17 +55,12 @@ export class UserFormComponent implements OnInit, OnChanges {
     // the form needs then some permission checks
 
     /**
-     * user iri, email or username: in case of edit
-     *
-     */
-    @Input() username?: string;
-
-    /**
      * if the form was built to add new user to project,
      * we get a project uuid and a name (e-mail or username)
      * from the "add-user-autocomplete" input
      */
     @Input() projectUuid?: string;
+    @Input() user?: ReadUser;
     @Input() name?: string;
 
     /**
@@ -83,7 +78,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     /**
      * user data
      */
-    user: ReadUser;
+    //user: ReadUser;
 
     title: string;
     subtitle: string;
@@ -171,7 +166,6 @@ export class UserFormComponent implements OnInit, OnChanges {
      */
     languagesList: StringLiteral[] = AppGlobal.languagesList;
 
-    @Select(UserSelectors.user) user$: Observable<ReadUser>;
     @Select(UserSelectors.allUsers) allUsers$: Observable<ReadUser[]>;
     @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
     @Select(ProjectsSelectors.hasLoadingErrors) hasLoadingErrors$: Observable<boolean>;
@@ -193,33 +187,26 @@ export class UserFormComponent implements OnInit, OnChanges {
             this._route.snapshot.params.name &&
             this._route.snapshot.params.name.length > 3
         ) {
-            this.username = this._route.snapshot.params.name;
+            //this.username = this._route.snapshot.params.name;
         }
     }
 
     ngOnInit() {
         this.loadingData = true;
 
-        if (this.username) {
-            this.title = this.username;
+        if (this.user) {
+            this.title = this.user.username;
             this.subtitle = "'appLabels.form.user.title.edit' | translate";
-
-            this.user$
-                .pipe(take(1))
-                .subscribe((user: ReadUser) => {
-                    this.user = user;
-                    this.loadingData = !this.buildForm(this.user);
-                });
+            this.loadingData = !this.buildForm(this.user);
         } else {
             /**
              * create mode: empty form for new user
              */
 
             // get existing users to avoid same usernames and email addresses
-            this._store.dispatch(new LoadUsersAction());
-            combineLatest([this._actions$.pipe(ofActionSuccessful(LoadUsersAction)), this.allUsers$])
+            this.allUsers$
                 .pipe(take(1))
-                .subscribe(([loadUsersAction, allUsers]) => {
+                .subscribe((allUsers) => {
                     for (const user of allUsers) {
                         // email address of the user should be unique.
                         // therefore we create a list of existing email addresses to avoid multiple use of user names
@@ -361,7 +348,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     submitData(): void {
         this.loading = true;
 
-        if (this.username) {
+        if (this.user) {
             // edit mode: update user data
             // username doesn't seem to be optional in @dasch-swiss/dsp-js usersEndpoint type UpdateUserRequest.
             // but a user can't change the username, the field is disabled, so it's not a value in this form.
@@ -381,12 +368,12 @@ export class UserFormComponent implements OnInit, OnChanges {
                         this.buildForm(this.user);
                         const user = this._store.selectSnapshot(UserSelectors.user) as ReadUser;
                         // update application state
-                        if (user.username === this.username) {
+                        if (user.username === this.user.username) {
                             // update logged in user session
-                            user.lang = this.userForm.controls['lang'].value;
-                            this._store.dispatch(new SetUserAction(user));
+                            this.user.lang = this.userForm.controls['lang'].value;
                         }
 
+                        this._store.dispatch(new SetUserAction(this.user));
                         this._notification.openSnackBar(
                             "You have successfully updated the user's profile data."
                         );

@@ -168,14 +168,14 @@
                     <button
                         mat-menu-item
                         *ngIf="(isSysAdmin$ | async) && user.status"
-                        (click)="openDialog('editUser', user.username)"
+                        (click)="openDialog('editUser', user)"
                     >
                         {{ projectUuid ? 'Edit member' : 'Edit user' }}
                     </button>
                     <button
                         mat-menu-item
                         *ngIf="(isSysAdmin$ | async) && user.status"
-                        (click)="openDialog('editPassword', user.username)"
+                        (click)="openDialog('editPassword', user)"
                     >
                         {{
                             projectUuid
@@ -188,11 +188,7 @@
                         mat-menu-item
                         *ngIf="projectUuid"
                         (click)="
-                            openDialog(
-                                'removeFromProject',
-                                user.username,
-                                user.id
-                            )
+                            openDialog('removeFromProject', user)
                         "
                     >
                         Remove member from project
@@ -212,7 +208,7 @@
                         mat-menu-item
                         *ngIf="user.status && (isSysAdmin$ | async) && !projectUuid"
                         (click)="
-                            openDialog('deleteUser', user.username, user.id)
+                            openDialog('deleteUser', user)
                         "
                     >
                         Suspend user
@@ -221,7 +217,7 @@
                         mat-menu-item
                         *ngIf="!user.status && (isSysAdmin$ | async) && !projectUuid"
                         (click)="
-                            openDialog('activateUser', user.username, user.id)
+                            openDialog('activateUser', user)
                         "
                     >
                         Reactivate user
