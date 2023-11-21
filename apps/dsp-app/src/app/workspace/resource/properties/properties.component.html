@@ -169,10 +169,10 @@
                                            [pageSize]="amount_resources" [hidePageSize]="true" [pageIndex]="pageEvent.pageIndex"
                                            (page)="goToPage($event)">
                             </mat-paginator> -->
-                            <div class="pagination" *ngIf="numberOffAllIncomingLinkRes > amount_resources">
+                            <div class="pagination" *ngIf="allIncomingLinkResources.length > amount_resources">
                                 <p>Show more</p>
                                 <button [disabled]="pageEvent.pageIndex < 1" (click)="handleIncomingLinkBackward()"><mat-icon>chevron_left</mat-icon></button>
-                                <button [disabled]="numberOffAllIncomingLinkRes / amount_resources <= pageEvent.pageIndex + 1" (click)="handleIncomingLinkForward()"><mat-icon>chevron_right</mat-icon></button>
+                                <button [disabled]="allIncomingLinkResources.length/ amount_resources <= pageEvent.pageIndex + 1" (click)="handleIncomingLinkForward()"><mat-icon>chevron_right</mat-icon></button>
                             </div>
                         </div>
                     </div>

@@ -326,7 +326,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     handleIncomingLinkForward(){
-        if(this.numberOffAllIncomingLinkRes / this.amount_resources > this.pageEvent.pageIndex + 1){
+        if(this.allIncomingLinkResources.length / this.amount_resources > this.pageEvent.pageIndex + 1){
             const newPage = new PageEvent();
             newPage.pageIndex = this.pageEvent.pageIndex + 1;
             this.goToPage(newPage);
