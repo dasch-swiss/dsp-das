@@ -5,13 +5,13 @@ import { map, take, tap } from 'rxjs/operators';
 import {
     LogUserOutAction,
     LoadUserAction,
-    SetUserProjectGroupsAction as SetUserProjectGroupsDataAction,
     LoadUsersAction,
     ResetUsersAction as ResetUsersAction,
     CreateUserAction,
     SetUserAction,
     RemoveUserAction,
     LoadUserContentByIriAction,
+    SetUserProjectGroupsAction,
 } from './user.actions';
 import { UserStateModel } from './user.state-model';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -54,7 +54,7 @@ export class UserState {
                     ) => {
                         if (response instanceof ApiResponseData) {
                             ctx.setState({ ...ctx.getState(), isLoading: false, user: response.body.user });
-                            ctx.dispatch(new SetUserProjectGroupsDataAction(response.body.user));
+                            ctx.dispatch(new SetUserProjectGroupsAction(response.body.user));
                             return response.body.user;
                         } else {
                             console.error(response);
@@ -111,7 +111,7 @@ export class UserState {
         }
 
         ctx.setState({ ...state, isLoading: false });
-        ctx.dispatch(new SetUserProjectGroupsDataAction(user));
+        ctx.dispatch(new SetUserProjectGroupsAction(user));
     }
     
     @Action(RemoveUserAction)
@@ -124,9 +124,9 @@ export class UserState {
         ctx.setState({ ...state, isLoading: false });
     }
 
-    @Action(SetUserProjectGroupsDataAction)
+    @Action(SetUserProjectGroupsAction)
     setUserProjectGroupsData(ctx: StateContext<UserStateModel>,
-        { user }: SetUserProjectGroupsDataAction
+        { user }: SetUserProjectGroupsAction
     ) {
         let isMemberOfSystemAdminGroup = false;
         const userProjectGroups: string[] = [];

@@ -25,7 +25,7 @@ import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { CurrentProjectSelectors, LoadProjectAction, LoadUserAction, RemoveUserFromProjectAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { CurrentProjectSelectors, LoadProjectAction, LoadProjectMembersAction, LoadUserAction, RemoveUserFromProjectAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
@@ -341,9 +341,13 @@ export class UsersListComponent implements OnInit {
             if (response === true) {
                 switch (mode) {
                     case 'removeFromProject':
-                        this._store.dispatch(new RemoveUserFromProjectAction(user.id, this.project.id))
+                        this._store.dispatch(new RemoveUserFromProjectAction(user.id, this.project.id));
+                        this._actions$.pipe(ofActionSuccessful(SetUserAction))
                             .pipe(take(1))
-                            .subscribe(() => this.refreshParent.emit());
+                            .subscribe(() => {
+                                this._store.dispatch(new LoadProjectMembersAction(this.projectUuid));
+                                this.refreshParent.emit();
+                            });
                         break;
                     case 'deleteUser':
                         this.deleteUser(user.id);
