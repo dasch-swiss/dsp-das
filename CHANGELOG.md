@@ -1,5 +1,52 @@
 # Changelog
 
+## [11.1.3](https://github.com/dasch-swiss/dsp-das/compare/v11.1.2...v11.1.3) (2023-11-16)
+
+
+### Bug Fixes
+
+* **date-picker:** date-picker doesn't show in advanced search ([#1267](https://github.com/dasch-swiss/dsp-das/issues/1267)) ([3d2778f](https://github.com/dasch-swiss/dsp-das/commit/3d2778f32337fc2e07d32cbf474fc802b1edc20a))
+
+## [11.1.2](https://github.com/dasch-swiss/dsp-das/compare/v11.1.1...v11.1.2) (2023-11-15)
+
+
+### Bug Fixes
+
+* **advanced-search:** undefined error leads to blank page ([#1264](https://github.com/dasch-swiss/dsp-das/issues/1264)) ([a176ce0](https://github.com/dasch-swiss/dsp-das/commit/a176ce04c9b039fb05d0358d46b9c15237e02aad))
+* **results:** go back to search form button fix ([#1266](https://github.com/dasch-swiss/dsp-das/issues/1266)) ([b2b18fe](https://github.com/dasch-swiss/dsp-das/commit/b2b18fe3fd8ecdf665fc799107148462c586fe37))
+
+## [11.1.1](https://github.com/dasch-swiss/dsp-das/compare/v11.1.0...v11.1.1) (2023-11-14)
+
+
+### Bug Fixes
+
+* **activate/deactivate project:** subscribe to the observable ([#1261](https://github.com/dasch-swiss/dsp-das/issues/1261)) ([92431d4](https://github.com/dasch-swiss/dsp-das/commit/92431d45bf1ae1b39d5afabf10f358b4dc3e7eb6))
+* **results:** user unable to execute second fulltext search ([#1262](https://github.com/dasch-swiss/dsp-das/issues/1262)) ([baba2f4](https://github.com/dasch-swiss/dsp-das/commit/baba2f471fdc8246fb9047a870bb49a613e87dc0))
+
+## [11.1.0](https://github.com/dasch-swiss/dsp-das/compare/v11.0.0...v11.1.0) (2023-11-10)
+
+
+### Enhancements
+
+* **advanced-search:** allow ordering by URI value ([#1248](https://github.com/dasch-swiss/dsp-das/issues/1248)) ([e5cfebe](https://github.com/dasch-swiss/dsp-das/commit/e5cfebe723ddda057ee7e01dec749f9d27f5f253))
+* **expert search:** implement default gravsearch as placeholder ([#1247](https://github.com/dasch-swiss/dsp-das/issues/1247)) ([5132f4d](https://github.com/dasch-swiss/dsp-das/commit/5132f4d48215cb53a8468dd8431a131f42bcad83))
+* **list-value:** make list menu resemble a dropdrown ([#1256](https://github.com/dasch-swiss/dsp-das/issues/1256)) ([f7a7a8c](https://github.com/dasch-swiss/dsp-das/commit/f7a7a8c802fb55c744c0b7c4fefdefa9d2129301))
+* **project description:** order project descriptions by language ([#1250](https://github.com/dasch-swiss/dsp-das/issues/1250)) ([f2c5dc9](https://github.com/dasch-swiss/dsp-das/commit/f2c5dc92a677929aba2aaa61f342d0da69c3cfac))
+
+
+### Bug Fixes
+
+* **app/help:** fix links to releases ([#1253](https://github.com/dasch-swiss/dsp-das/issues/1253)) ([e2ddcdd](https://github.com/dasch-swiss/dsp-das/commit/e2ddcddfbca0e79ae6cb436deb8769e6fe6bc6f5))
+* **app/resource:** removed developer feature that created annotation bug ([#1254](https://github.com/dasch-swiss/dsp-das/issues/1254)) ([7b908b0](https://github.com/dasch-swiss/dsp-das/commit/7b908b0e646918f091aefa7881472578d92b51d4))
+* **type errors:** fix type errors ([#1255](https://github.com/dasch-swiss/dsp-das/issues/1255)) ([389eccb](https://github.com/dasch-swiss/dsp-das/commit/389eccbbe68caf0c5419e1f017adadabdda34e15))
+
+
+### Maintenance
+
+* **date picker:** implement date picker as standalone component ([#1251](https://github.com/dasch-swiss/dsp-das/issues/1251)) ([e89dba8](https://github.com/dasch-swiss/dsp-das/commit/e89dba8b862eec8eb4c6c8985d3fa9d15a0bdfce))
+* **ontology-class-item:** change how long labels are handled ([#1257](https://github.com/dasch-swiss/dsp-das/issues/1257)) ([f6d42dc](https://github.com/dasch-swiss/dsp-das/commit/f6d42dc50181cd2be6f10124455138597c880405))
+* update dsp-js to v9.0.2 ([#1258](https://github.com/dasch-swiss/dsp-das/issues/1258)) ([cb86ebf](https://github.com/dasch-swiss/dsp-das/commit/cb86ebf695ddbdd0f6dc8de59b79d50fa4b200a1))
+
 ## [11.0.0](https://github.com/dasch-swiss/dsp-das/compare/v10.24.2...v11.0.0) (2023-10-27)
 
 
