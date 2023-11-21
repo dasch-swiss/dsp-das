@@ -24,8 +24,8 @@ import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/a
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
-import { Select, Store } from '@ngxs/store';
-import { CurrentProjectSelectors, LoadProjectAction, LoadUserAction, RemoveUserFromProjectAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
+import { CurrentProjectSelectors, LoadProjectAction, LoadUserAction, RemoveUserFromProjectAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
@@ -116,6 +116,7 @@ export class UsersListComponent implements OnInit {
         private _sortingService: SortingService,
         private _store: Store,
         private _projectService: ProjectService,
+        private _actions$: Actions,
     ) {
         // get the uuid of the current project
         this._route.parent.parent.paramMap.subscribe((params: Params) => {
@@ -243,6 +244,7 @@ export class UsersListComponent implements OnInit {
                     (response: ApiResponseData<UserResponse>) => {
                         // if this user is not the logged-in user
                         if (currentUsername !== response.body.user.username) {
+                            this._store.dispatch(new SetUserAction(response.body.user));
                             this.refreshParent.emit();
                         } else {
                             // the logged-in user removed himself as project admin
@@ -250,7 +252,8 @@ export class UsersListComponent implements OnInit {
                             // open dialog to confirm and
                             // redirect to project page
                             // update the application state of logged-in user and the session
-                            this._store.dispatch(new LoadUserAction(currentUsername))
+                            this._store.dispatch(new LoadUserAction(currentUsername));
+                            this._actions$.pipe(ofActionSuccessful(LoadUserAction))
                                 .pipe(take(1))
                                 .subscribe((readUser: ReadUser) => {
                                     if (readUser.systemAdmin) {
@@ -280,11 +283,13 @@ export class UsersListComponent implements OnInit {
                 .subscribe(
                     (response: ApiResponseData<UserResponse>) => {
                         if (currentUsername !== response.body.user.username) {
+                            this._store.dispatch(new SetUserAction(response.body.user));
                             this.refreshParent.emit();
                         } else {
                             // the logged-in user (system admin) added himself as project admin
                             // update the application state of logged-in user and the session
-                            this._store.dispatch(new LoadUserAction(currentUsername))
+                            this._store.dispatch(new LoadUserAction(currentUsername));
+                            this._actions$.pipe(ofActionSuccessful(LoadUserAction))
                                 .pipe(take(1))
                                 .subscribe((readUser: ReadUser) => {
                                     this.refreshParent.emit();
@@ -301,16 +306,16 @@ export class UsersListComponent implements OnInit {
     updateSystemAdminMembership(user: ReadUser, systemAdmin: boolean): void {
         this._dspApiConnection.admin.usersEndpoint
             .updateUserSystemAdminMembership(user.id, systemAdmin)
-            .subscribe(
-                () => {
-                    if (this._store.selectSnapshot(UserSelectors.username) !== user.username) {
-                        this.refreshParent.emit();
-                    }
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
+            .pipe(take(1))
+            .subscribe((response: ApiResponseData<UserResponse>) => {
+                this._store.dispatch(new SetUserAction(response.body.user));
+                if (this._store.selectSnapshot(UserSelectors.username) !== user.username) {
+                    this.refreshParent.emit();
                 }
-            );
+            },
+            (error: ApiResponseError) => {
+                this._errorHandler.showMessage(error);
+            });
     }
 
     /**
@@ -357,8 +362,10 @@ export class UsersListComponent implements OnInit {
      * @param id user's IRI
      */
     deleteUser(id: string) {
-        this._dspApiConnection.admin.usersEndpoint.deleteUser(id).subscribe(
-            () => {
+        this._dspApiConnection.admin.usersEndpoint.deleteUser(id)
+            .pipe(take(1))
+            .subscribe((response: ApiResponseData<UserResponse>) => {
+                this._store.dispatch(new SetUserAction(response.body.user));
                 this.refreshParent.emit();
             },
             (error: ApiResponseError) => {
@@ -373,10 +380,10 @@ export class UsersListComponent implements OnInit {
      * @param id user's IRI
      */
     activateUser(id: string) {
-        this._dspApiConnection.admin.usersEndpoint
-            .updateUserStatus(id, true)
-            .subscribe(
-                () => {
+        this._dspApiConnection.admin.usersEndpoint.updateUserStatus(id, true)
+            .pipe(take(1))
+            .subscribe((response: ApiResponseData<UserResponse>) => {
+                    this._store.dispatch(new SetUserAction(response.body.user));
                     this.refreshParent.emit();
                 },
                 (error: ApiResponseError) => {

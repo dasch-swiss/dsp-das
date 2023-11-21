@@ -42,7 +42,7 @@
     <button
         mat-button
         [color]="'primary'"
-        (click)="openDialog('editUser', user.username)"
+        (click)="openDialog('editUser', user)"
         style="width: 100%"
     >
         Edit my profile
@@ -82,7 +82,7 @@
             mat-button
             class="user-profile-edit"
             [color]="'primary'"
-            (click)="openDialog('editUser', user.username)"
+            (click)="openDialog('editUser', user)"
         >
             <mat-icon>edit</mat-icon>
         </button>

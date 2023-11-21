@@ -15,7 +15,6 @@ import {
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import {
     ApiResponseData,
     ApiResponseError,
@@ -36,7 +35,7 @@ import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/pro
 import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
 import { Observable, combineLatest } from 'rxjs';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { AddUserToProjectMembershipAction, CreateUserAction, LoadProjectMembersAction, LoadUsersAction, ProjectsSelectors, SetUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { AddUserToProjectMembershipAction, CreateUserAction, LoadProjectMembersAction, ProjectsSelectors, SetUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -74,12 +73,6 @@ export class UserFormComponent implements OnInit, OnChanges {
      */
     loading = false;
     loadingData = true;
-
-    /**
-     * user data
-     */
-    //user: ReadUser;
-
     title: string;
     subtitle: string;
 
@@ -176,19 +169,11 @@ export class UserFormComponent implements OnInit, OnChanges {
         private _errorHandler: AppErrorHandler,
         private _formBuilder: UntypedFormBuilder,
         private _notification: NotificationService,
-        private _route: ActivatedRoute,
         private _projectService: ProjectService,
         private _store: Store,
         private _actions$: Actions,
         private _cd: ChangeDetectorRef,
     ) {
-        // get username from url
-        if (
-            this._route.snapshot.params.name &&
-            this._route.snapshot.params.name.length > 3
-        ) {
-            //this.username = this._route.snapshot.params.name;
-        }
     }
 
     ngOnInit() {
