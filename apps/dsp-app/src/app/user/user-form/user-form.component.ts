@@ -392,14 +392,13 @@ export class UserFormComponent implements OnInit, OnChanges {
                 .subscribe(([loadUsersAction, allUsers]) => {
                 this.user = allUsers.find(user => user.username === loadUsersAction.userData.username);
                 this.buildForm(this.user);
-
                 if (this.projectUuid) {
                     // if a projectUuid exists, add the user to the project
                     const projectIri = this._projectService.uuidToIri(this.projectUuid);
-                    this._store.dispatch([
-                        new AddUserToProjectMembershipAction(this.user.id, projectIri), 
-                        new LoadProjectMembersAction(projectIri)]
-                    );
+                    this._store.dispatch(new AddUserToProjectMembershipAction(this.user.id, projectIri));
+                    this._actions$.pipe(ofActionSuccessful(SetUserAction))
+                        .pipe(take(1))
+                        .subscribe(() => this._store.dispatch(new LoadProjectMembersAction(projectIri)));
                 }
 
                 this.closeDialog.emit(this.user);
