@@ -259,7 +259,7 @@ export class StillImageComponent
                     this._openImages();
                     this._unhighlightAllRegions();
                     },
-            error => {
+            () => {
                     this.failedToLoad = true;
                     // disable mouse navigation incl. zoom
                     this._viewer.setMouseNavEnabled(false);

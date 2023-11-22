@@ -14,10 +14,8 @@ import {
     ReadProject,
     UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { AppGlobal } from '../app-global';
 import { AppConfigService, DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
-import { MenuItem } from '../main/declarations/menu-item';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
     ComponentCommunicationEventService,

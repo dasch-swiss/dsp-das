@@ -16,7 +16,7 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import { Location } from "@angular/common";
 import {
     ApiResponseData,
-    ApiResponseError, Constants,
+    ApiResponseError,
     KnoraApiConnection,
     Project,
     ProjectResponse,

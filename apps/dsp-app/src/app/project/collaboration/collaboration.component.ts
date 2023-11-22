@@ -6,7 +6,6 @@ import {
     ApiResponseError,
     KnoraApiConnection,
     MembersResponse,
-    ProjectResponse,
     ReadProject,
     ReadUser,
 } from '@dasch-swiss/dsp-js';

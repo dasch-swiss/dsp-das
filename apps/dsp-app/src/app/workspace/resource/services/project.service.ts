@@ -7,7 +7,6 @@ import {
     ProjectsResponse,
     ReadUser,
     StoredProject,
-    UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

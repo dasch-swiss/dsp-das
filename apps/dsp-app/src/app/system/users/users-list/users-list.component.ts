@@ -15,7 +15,6 @@ import {
     GroupsResponse,
     KnoraApiConnection,
     Permissions,
-    ProjectResponse,
     ReadProject,
     ReadUser,
     UserResponse,

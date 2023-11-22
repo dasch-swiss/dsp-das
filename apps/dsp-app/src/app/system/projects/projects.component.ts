@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import {
     ApiResponseData,
@@ -15,7 +15,6 @@ import {
     Session,
     SessionService,
 } from '@dasch-swiss/vre/shared/app-session';
-import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/shared/app-progress-indicator';
 
 /**
  * projects component handles the list of projects
