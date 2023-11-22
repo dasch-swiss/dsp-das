@@ -1,18 +1,22 @@
 {
-  "extends": ["../../.eslintrc.json"],
-  "ignorePatterns": ["!**/*"],
+  "extends": "../../.eslintrc.json",
+  "ignorePatterns": [
+    "!**/*"
+  ],
   "overrides": [
     {
-      "files": ["*.ts"],
+      "files": [
+        "*.ts"
+      ],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates"
+      ],
       "rules": {
-        "@nrwl/nx/enforce-module-boundaries": [
-          "error",
-          {
-            "allow": ["@dsp-app/**"]
-          }
-        ],
         "@angular-eslint/directive-selector": [
-          "warn",
+          "error",
           {
             "type": "attribute",
             "prefix": "app",
@@ -20,33 +24,35 @@
           }
         ],
         "@angular-eslint/component-selector": [
-          "warn",
+          "error",
           {
             "type": "element",
             "prefix": "app",
             "style": "kebab-case"
           }
-        ],
-        "@angular-eslint/no-empty-lifecycle-method": "warn",
-        "@angular-eslint/no-output-native": "warn",
+        ]
+      }
+    },
+    { // TODO: remove these .spec.ts eslint rules when refactoring unit tests
+      "files": [
+        "*.spec.ts"
+      ],
+      "rules": {
+        "no-undef": "off",
         "@typescript-eslint/no-empty-function": "off",
-        "@typescript-eslint/adjacent-overload-signatures": "warn",
-        "@typescript-eslint/prefer-as-const": "warn",
-        "@typescript-eslint/no-unused-vars": "warn",
-        "@typescript-eslint/no-explicit-any": "warn",
-        "no-useless-escape": "warn",
-        "no-case-declarations": "warn",
-        "no-prototype-builtins": "warn",
-        "no-constant-condition": "warn"
-      },
-      "extends": [
-        "plugin:@nrwl/nx/angular",
-        "plugin:@angular-eslint/template/process-inline-templates"
-      ]
+        "@nrwl/nx/enforce-module-boundaries": "off",
+        "@angular-eslint/no-empty-lifecycle-method": "off",
+        "@angular-eslint/component-selector": "off"
+      }
     },
     {
-      "files": ["*.html"],
-      "extends": ["plugin:@nrwl/nx/angular-template"],
+      "files": [
+        "*.html"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended",
+        "plugin:@angular-eslint/template/accessibility"
+      ],
       "rules": {}
     }
   ]
