@@ -48,8 +48,6 @@ jobs:
   dsp-app-e2e-tests:
     name: DSP-APP E2E
     runs-on: ubuntu-latest
-    # container:
-    #   image: docker://daschswiss/knora-api:latest
     steps:
       - uses: actions/checkout@v3
         with:
@@ -64,7 +62,7 @@ jobs:
           repository: dasch-swiss/dsp-api
           ref: main
           path: dsp-api
-      - name: run make command
+      - name: start API
         run: |
           cd dsp-api
           make init-db-test
