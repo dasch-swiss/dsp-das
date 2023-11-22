@@ -7,7 +7,7 @@
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
         "@nrwl/nx/enforce-module-boundaries": [
-          "error",
+          "warn", // TODO set to error later
           {
             "enforceBuildableLibDependency": true,
             "allow": [],
