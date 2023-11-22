@@ -18,7 +18,7 @@
         </div>
     </div>
     <!-- password update: form -->
-    <app-password-form [username]="username"></app-password-form>
+    <app-password-form [user]="user$ | async"></app-password-form>
 
     <!-- danger zone: delete account -->
     <div class="app-danger-zone more-space-top">
