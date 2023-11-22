@@ -51,15 +51,12 @@ jobs:
     container:
       image: docker://daschswiss/knora-api:latest
     steps:
-      - run: apt-get update && apt-get install -y unzip
-      - run: apt-get update && apt-get install -y libglib2.0-0 libnss3 libx11-6
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # gets additionally all tags which we need
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - uses: browser-actions/setup-chrome@v1
       - run: npm install
       - name: Checkout DSP-API repo
         uses: actions/checkout@v3
