@@ -51,7 +51,7 @@ jobs:
     container:
       image: docker://daschswiss/knora-api:latest
     steps:
-      - run: RUN apt-get update && apt-get install -y unzip
+      - run: apt-get update && apt-get install -y unzip
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # gets additionally all tags which we need
