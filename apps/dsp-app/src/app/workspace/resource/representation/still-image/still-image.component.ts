@@ -400,7 +400,7 @@ export class StillImageComponent
      */
     removeOverlays() {
         for (const reg in this._regions) {
-            if (this._regions.hasOwnProperty(reg)) {
+            if (reg in this._regions) {
                 for (const pol of this._regions[reg]) {
                     if (pol instanceof HTMLElement) {
                         pol.remove();
@@ -720,7 +720,7 @@ export class StillImageComponent
      */
     private _unhighlightAllRegions() {
         for (const reg in this._regions) {
-            if (this._regions.hasOwnProperty(reg)) {
+            if (reg in this._regions) {
                 for (const pol of this._regions[reg]) {
                     pol.setAttribute('class', 'region');
                 }
