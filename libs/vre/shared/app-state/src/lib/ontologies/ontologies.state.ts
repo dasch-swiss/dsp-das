@@ -99,6 +99,7 @@ export class OntologiesState {
                     next: (ontoMeta: OntologiesMetadata) => {
                         if (!ontoMeta.ontologies.length) {
                             ctx.dispatch(new LoadListsInProjectAction(projectIri));
+                            ctx.patchState({ isLoading: false });
                             return;
                         }
 
@@ -126,7 +127,7 @@ export class OntologiesState {
                         );
                     }, 
                     error: (error: ApiResponseError) => {
-                        ctx.patchState({ hasLoadingErrors: true });
+                        ctx.patchState({ hasLoadingErrors: true, isLoading: false });
                         this._errorHandler.showMessage(error);
                     }
                 })
@@ -171,7 +172,7 @@ export class OntologiesState {
                         });
                     },
                     error: (error: ApiResponseError) => {
-                        ctx.patchState({ hasLoadingErrors: true });
+                        ctx.patchState({ hasLoadingErrors: true, isLoading: false });
                         this._errorHandler.showMessage(error);
                     }
                 })
