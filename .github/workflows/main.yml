@@ -48,6 +48,8 @@ jobs:
   dsp-app-e2e-tests:
     name: DSP-APP E2E
     runs-on: ubuntu-latest
+    container:
+      image: docker://daschswiss/dsp-api:latest
     steps:
       - uses: actions/checkout@v3
         with:
@@ -71,8 +73,6 @@ jobs:
       - name: run e2e tests
         run: |
           cd ../dsp-das
-          pwd
-          ls
           npm run e2e-ci
 
   dateadapter-tests:
