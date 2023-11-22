@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     EventEmitter,
     Inject,
@@ -28,12 +29,13 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { FilteredResources } from '../../results/list-view/list-view.component';
 import { ResourceService } from '../services/resource.service';
-import { Select, Store } from '@ngxs/store';
-import { LoadProjectsAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Select } from '@ngxs/store';
+import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-resource-link-form',
     templateUrl: './resource-link-form.component.html',
     styleUrls: ['./resource-link-form.component.scss'],
@@ -82,18 +84,11 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
         private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: AppErrorHandler,
         private _fb: UntypedFormBuilder,
-        private _store: Store,
         private _resourceService: ResourceService,
         private _router: Router
     ) {}
 
     ngOnInit(): void {
-        //TODO check if loading projects is necessary
-        const isSysAdmin = this._store.selectSnapshot(UserSelectors.isSysAdmin);
-        if (isSysAdmin) {
-            this._store.dispatch(new LoadProjectsAction());
-        }
-
         this.form = this._fb.group({
             label: new UntypedFormControl(
                 {

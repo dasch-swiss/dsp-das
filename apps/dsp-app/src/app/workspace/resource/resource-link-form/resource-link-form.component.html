@@ -68,7 +68,7 @@
                     >
                     </dasch-swiss-app-progress-indicator>
                     <mat-icon *ngIf="(hasLoadingErrors$ | async) && (isLoading$ | async) === false">close</mat-icon>
-                    {{ error ? 'Failed' : 'Create' }}
+                    {{ (hasLoadingErrors$ | async) === true ? 'Failed' : 'Create' }}
                 </button>
             </span>
         </div>
