@@ -1,7 +1,7 @@
 import { Selector } from '@ngxs/store';
 import { ProjectsState } from './projects.state';
 import { ProjectsStateModel } from './projects.state-model';
-import { ReadGroup, ReadProject, ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
+import { Constants, ReadGroup, ReadProject, ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
 import { IKeyValuePairs } from '../model-interfaces';
 import { UserSelectors } from '../user/user.selectors';
 
@@ -51,5 +51,13 @@ export class ProjectsSelectors {
     @Selector([ProjectsState])
     static allInactiveProjects(state: ProjectsStateModel): ReadProject[] {
         return state.allProjects.filter(project => project.status === false);
+    }
+
+    @Selector([ProjectsState])
+    static allNotSystemProjects(state: ProjectsStateModel): StoredProject[] {
+        return state.allProjects.filter(project => 
+            project.status
+            && project.id !== Constants.SystemProjectIRI
+            && project.id !== Constants.DefaultSharedOntologyIRI);
     }
 }
