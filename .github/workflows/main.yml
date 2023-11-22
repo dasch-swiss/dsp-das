@@ -49,7 +49,7 @@ jobs:
     name: DSP-APP E2E
     runs-on: ubuntu-latest
     container:
-      image: docker://daschswiss/dsp-api:latest
+      image: docker://daschswiss/knora-api:latest
     steps:
       - uses: actions/checkout@v3
         with:
