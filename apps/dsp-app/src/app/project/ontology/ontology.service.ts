@@ -150,9 +150,7 @@ export class OntologyService {
                             );
                             superPropIri =
                                 onto?.properties[subProp].subPropertyOf[0];
-                        },
-                        () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the application state
-                    );
+                        });
                 }
 
                 if (superPropIri) {

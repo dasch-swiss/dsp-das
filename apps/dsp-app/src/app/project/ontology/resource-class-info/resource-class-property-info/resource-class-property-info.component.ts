@@ -164,9 +164,7 @@ export class ResourceClassPropertyInfoComponent
                             this.propAttributeComment =
                                 onto.classes[this.propDef.objectType].comment;
                         }
-                    },
-                    () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the application state
-                );
+                    });
             } else {
                 this.propAttribute =
                     this.ontology.classes[this.propDef.objectType].label;

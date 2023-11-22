@@ -149,9 +149,7 @@ export class OntologyFormComponent implements OnInit {
                         );
                         this.existingOntologyNames.push(name);
                     });
-                },
-                () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the application state
-            );
+                });
         }
 
         this._applicationStateService.get(this.projectUuid).subscribe(

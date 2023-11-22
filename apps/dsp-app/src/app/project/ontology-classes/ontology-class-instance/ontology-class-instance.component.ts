@@ -159,9 +159,7 @@ export class OntologyClassInstanceComponent implements OnChanges {
                 this.resClass = <ResourceClassDefinition>(
                     classes[classes.findIndex((res) => res.id === this.classId)]
                 );
-            },
-            () => {} // don't log error to rollbar if 'currentProjectOntologies' does not exist in the application state
-        );
+            });
     }
 
     openSelectedResources(res: FilteredResources) {

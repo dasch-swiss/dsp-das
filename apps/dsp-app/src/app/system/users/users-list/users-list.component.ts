@@ -28,6 +28,7 @@ import {
     SessionService,
 } from '@dasch-swiss/vre/shared/app-session';
 import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
+import { ignoreElements } from 'rxjs/operators';
 
 @Component({
     selector: 'app-users-list',
@@ -223,7 +224,8 @@ export class UsersListComponent implements OnInit {
                             this._dspApiConnection.admin.usersEndpoint
                                 .addUserToGroupMembership(id, newGroup)
                                 .subscribe(
-                                    () => {},
+                                  // eslint-disable-next-line @typescript-eslint/no-empty-function
+                                  () => {},
                                     (ngError: ApiResponseError) => {
                                         this._errorHandler.showMessage(ngError);
                                     }
@@ -241,6 +243,7 @@ export class UsersListComponent implements OnInit {
                                 this._dspApiConnection.admin.usersEndpoint
                                     .removeUserFromGroupMembership(id, oldGroup)
                                     .subscribe(
+                                      // eslint-disable-next-line @typescript-eslint/no-empty-function
                                         () => {},
                                         (ngError: ApiResponseError) => {
                                             this._errorHandler.showMessage(
@@ -258,6 +261,7 @@ export class UsersListComponent implements OnInit {
                                 this._dspApiConnection.admin.usersEndpoint
                                     .addUserToGroupMembership(id, newGroup)
                                     .subscribe(
+                                      // eslint-disable-next-line @typescript-eslint/no-empty-function
                                         () => {},
                                         (ngError: ApiResponseError) => {
                                             this._errorHandler.showMessage(

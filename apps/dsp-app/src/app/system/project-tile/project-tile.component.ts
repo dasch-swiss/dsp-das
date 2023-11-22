@@ -12,8 +12,6 @@ export class ProjectTileComponent {
     @Input() sysAdmin: boolean; // used to show settings button
     @Output() buttonClicked = new EventEmitter<routeParams>();
 
-    constructor() {}
-
     emitButtonClicked(id: string, path: TileLinks) {
         const params: routeParams = { id, path };
         this.buttonClicked.emit(params);
