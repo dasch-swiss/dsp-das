@@ -28,6 +28,7 @@ import { ResultsComponent } from './workspace/results/results.component';
 import { AdvancedSearchContainerComponent } from './workspace/search/advanced-search/advanced-search-container.component';
 import { ProjectFormComponent } from "@dsp-app/src/app/project/project-form/project-form.component";
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { UserFormComponent } from '@dsp-app/src/app/user/user-form/user-form.component';
 
 const routes: Routes = [
     {
@@ -52,7 +53,7 @@ const routes: Routes = [
                 component: ProjectFormComponent
             },
             {
-                path: RouteConstants.home,
+                path: RouteConstants.home, // Todo: Change into RouteConstants.description
                 component: DescriptionComponent,
             },
             {
@@ -79,7 +80,7 @@ const routes: Routes = [
                 component: OntologyClassInstanceComponent,
             },
             {
-                path: RouteConstants.OntologyClassInstanceRelative,
+                path: RouteConstants.OntologyClassInstanceRelative, // Todo: THIS IS PROBABLY NOT USED ANYWHERE AND NOT WORKING AT ALL!! It can logically not work. What should happen with the class? What is the purpose of this route?
                 component: OntologyClassInstanceComponent,
             },
             {
@@ -105,6 +106,11 @@ const routes: Routes = [
                         path: RouteConstants.collaboration,
                         component: CollaborationComponent,
                     },
+                    {
+                        path: RouteConstants.collaborationCreateUserRelative,
+                        component: UserFormComponent,
+                        canActivate: [AuthGuard],
+                    }
                 ],
             },
             {
@@ -144,11 +150,23 @@ const routes: Routes = [
             },
             {
                 path: RouteConstants.systemProjects,
+                pathMatch: 'full',
                 component: ProjectsComponent,
             },
             {
                 path: RouteConstants.systemUsers,
-                component: UsersComponent,
+                pathMatch: 'full',
+                component: UsersComponent
+            },
+            {
+                path: RouteConstants.editUserRelative,
+                component: UserFormComponent,
+                canActivate: [AuthGuard],
+            },
+            {
+                path: RouteConstants.createNewUserRelative,
+                component: UserFormComponent,
+                canActivate: [AuthGuard],
             },
         ],
     },

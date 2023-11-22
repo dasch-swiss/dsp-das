@@ -51,6 +51,7 @@ export class RouteConstants {
     static readonly listParameter = 'list';
     static readonly classes = 'classes';
     static readonly properties = 'properties';
+    static readonly userParameter = 'user';
 
     static readonly homeRelative = `/${RouteConstants.home}`;
     static readonly userAccountRelative = `/${RouteConstants.userAccount}`;
@@ -65,6 +66,11 @@ export class RouteConstants {
     static readonly createNewProjectRelative = `${RouteConstants.project}/${RouteConstants.createNew}`;
     static readonly projectResourceValueRelative = `:${RouteConstants.projectParameter}/:${RouteConstants.resourceParameter}/:${RouteConstants.valueParameter}`;
     static readonly projectResourceRelative = `:${RouteConstants.projectParameter}/:${RouteConstants.resourceParameter}`;
+
+    static readonly editUserRelative = `${RouteConstants.users}/:${RouteConstants.userParameter}/${RouteConstants.edit}`;
+    static readonly createNewUserRelative = `${RouteConstants.users}/${RouteConstants.createNew}`;
+
+    static readonly collaborationCreateUserRelative = `${RouteConstants.collaboration}/${RouteConstants.createNewUserRelative}`;
 
     static readonly OntologyEditorViewRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/${RouteConstants.editor}/:${RouteConstants.viewParameter}`;
     static readonly OntologyClassRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/:${RouteConstants.classParameter}`;
