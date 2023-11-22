@@ -48,10 +48,9 @@ jobs:
   dsp-app-e2e-tests:
     name: DSP-APP E2E
     runs-on: ubuntu-latest
-    container:
-      image: docker://daschswiss/knora-api:latest
+    # container:
+    #   image: docker://daschswiss/knora-api:latest
     steps:
-      - run: apt-get update && apt-get install -y make
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # gets additionally all tags which we need
@@ -67,13 +66,11 @@ jobs:
           path: dsp-api
       - name: run make command
         run: |
-          pwd
-          ls
           cd dsp-api
-          pwd
-          ls
           make init-db-test
-          make stack-without-app
+          docker compose -f docker-compose.yml up -d
+          ./webapi/scripts/wait-for-api.sh
+          docker compose -f docker-compose.yml stop app
       - name: run e2e tests
         run: |
           cd ../dsp-das
