@@ -68,9 +68,8 @@ jobs:
         run: |
           cd dsp-api
           make init-db-test
-          docker compose -f docker-compose.yml up -d
+          docker compose -f docker-compose.yml up -d sipi ingest api
           ./webapi/scripts/wait-for-api.sh
-          docker compose -f docker-compose.yml stop app
       - name: run e2e tests
         run: |
           cd ../dsp-das
