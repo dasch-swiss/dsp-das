@@ -1,12 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    Inject,
-    Input,
-    OnInit,
-    Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
@@ -18,14 +10,20 @@ import {
     Permissions,
     ReadProject,
     ReadUser,
-    UserResponse,
+    UserResponse
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 import { Select, Store } from '@ngxs/store';
-import { CurrentProjectSelectors, LoadProjectAction, LoadUserAction, RemoveUserFromProjectAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import {
+    CurrentProjectSelectors,
+    LoadProjectAction,
+    LoadUserAction,
+    RemoveUserFromProjectAction,
+    UserSelectors
+} from '@dasch-swiss/vre/shared/app-state';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
@@ -105,7 +103,7 @@ export class UsersListComponent implements OnInit {
     @Select(CurrentProjectSelectors.project) project$: Observable<ReadProject>;
     @Select(CurrentProjectSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
     @Select(UserSelectors.isLoading) isUsersLoading$: Observable<boolean>;
-    
+
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
@@ -119,7 +117,7 @@ export class UsersListComponent implements OnInit {
     ) {
         // get the uuid of the current project
         this._route.parent.parent.paramMap.subscribe((params: Params) => {
-            this.projectUuid = params.get('uuid');
+            this.projectUuid = params.get(RouteConstants.uuidParameter);
         });
     }
 
@@ -313,6 +311,27 @@ export class UsersListComponent implements OnInit {
             );
     }
 
+    editUser(user: ReadUser, projectUuid?: string): void {
+        // route to user edit form acc. to context
+        this._router.navigate([
+            encodeURIComponent(user.id),
+            RouteConstants.edit
+            ],
+            {
+                relativeTo: this._route,
+            });
+    }
+
+    createUser(): void {
+        // route to user edit form acc. to context
+        this._router.navigate([
+                RouteConstants.createNew
+            ],
+            {
+                relativeTo: this._route,
+            });
+    }
+
     /**
      * open dialog in every case of modification:
      * edit user profile data, update user's password,
@@ -391,7 +410,7 @@ export class UsersListComponent implements OnInit {
         if (this.project && this.project.status === false) {
             return true;
         } else {
-            return !this._store.selectSnapshot(UserSelectors.isSysAdmin) 
+            return !this._store.selectSnapshot(UserSelectors.isSysAdmin)
                 && !this._store.selectSnapshot(CurrentProjectSelectors.isProjectAdmin);
         }
     }

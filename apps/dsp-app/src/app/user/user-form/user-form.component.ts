@@ -2,12 +2,9 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    EventEmitter,
-    Inject,
-    Input,
+    Inject, Input,
     OnChanges,
-    OnInit,
-    Output,
+    OnInit
 } from '@angular/core';
 import {
     UntypedFormBuilder,
@@ -28,15 +25,22 @@ import {
     UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { AppGlobal } from '@dsp-app/src/app/app-global';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
-import { Observable, combineLatest } from 'rxjs';
-import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { AddUserToProjectMembershipAction, CreateUserAction, LoadProjectMembersAction, LoadUsersAction, ProjectsSelectors, SetUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Observable } from 'rxjs';
+import { Actions, Select, Store } from '@ngxs/store';
+import {
+    AddUserToProjectMembershipAction,
+    CreateUserAction,
+    LoadProjectMembersAction,
+    ProjectsSelectors,
+    SetUserAction,
+    UserSelectors
+} from '@dasch-swiss/vre/shared/app-state';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -46,39 +50,17 @@ import { take } from 'rxjs/operators';
     styleUrls: ['./user-form.component.scss'],
 })
 export class UserFormComponent implements OnInit, OnChanges {
-    // the user form can be used in several cases:
-    // a) guest --> register: create new user
-    // b) system admin or project admin --> add: create new user
-    // c) system admin or project admin --> edit: edit (not own) user
-    // d) logged-in user --> edit: edit own user data
-    // => so, this component has to know who is who and who is doing what;
-    // the form needs then some permission checks
+
+    @Input() user: ReadUser;
+    projectUuid: string; // if creating a new user in the context of a project, the project uuid is used to add the user to the project
+
+    isRouted = true; // if the component is routed directly or used as a child component in a template
 
     /**
-     * if the form was built to add new user to project,
-     * we get a project uuid and a name (e-mail or username)
-     * from the "add-user-autocomplete" input
-     */
-    @Input() projectUuid?: string;
-    @Input() user?: ReadUser;
-    @Input() name?: string;
-
-    /**
-     * send user data to parent component;
-     * in case of dialog box?
-     */
-    @Output() closeDialog: EventEmitter<any> = new EventEmitter<ReadUser>();
-
-    /**
-     * status for the progress indicator 
+     * status for the progress indicator
      */
     loading = false;
     loadingData = true;
-
-    /**
-     * user data
-     */
-    //user: ReadUser;
 
     title: string;
     subtitle: string;
@@ -182,54 +164,29 @@ export class UserFormComponent implements OnInit, OnChanges {
         private _actions$: Actions,
         private _cd: ChangeDetectorRef,
     ) {
-        // get username from url
-        if (
-            this._route.snapshot.params.name &&
-            this._route.snapshot.params.name.length > 3
-        ) {
-            //this.username = this._route.snapshot.params.name;
-        }
     }
 
     ngOnInit() {
         this.loadingData = true;
+        this.projectUuid = this._route.snapshot.parent.parent?.paramMap.get(RouteConstants.uuidParameter);
 
         if (this.user) {
+            // the component is used in a template as a child component and not
+            // as a routed component.
+            this.isRouted = false;
             this.title = this.user.username;
             this.subtitle = "'appLabels.form.user.title.edit' | translate";
             this.loadingData = !this.buildForm(this.user);
-        } else {
-            /**
-             * create mode: empty form for new user
-             */
-
-            // get existing users to avoid same usernames and email addresses
-            this.allUsers$
-                .pipe(take(1))
-                .subscribe((allUsers) => {
-                    for (const user of allUsers) {
-                        // email address of the user should be unique.
-                        // therefore we create a list of existing email addresses to avoid multiple use of user names
-                        this.existingEmails.push(
-                            new RegExp('(?:^|W)' + user.email.toLowerCase() + '(?:$|W)'));
-                        // username should also be unique.
-                        // therefore we create a list of existingUsernames to avoid multiple use of user names
-                        this.existingUsernames.push(
-                            new RegExp('(?:^|W)' + user.username.toLowerCase() + '(?:$|W)')
-                        );
-                    }
-
-                    const newUser: ReadUser = new ReadUser();
-
-                    if (CustomRegex.EMAIL_REGEX.test(this.name)) {
-                        newUser.email = this.name;
-                    } else {
-                        newUser.username = this.name;
-                    }
-                    // build the form
-                    this.loadingData = !this.buildForm(newUser);
-                    this._cd.markForCheck();
-                });
+        }
+        else {
+            // decode the user id from the route
+            const userId =
+                this._route.snapshot.paramMap.get(RouteConstants.userParameter);
+            if (userId) {
+                this.initUserFromId(decodeURIComponent(userId));
+            } else {
+                this.initEmptyForm();
+            }
         }
     }
 
@@ -237,6 +194,50 @@ export class UserFormComponent implements OnInit, OnChanges {
         if (this.user) {
             this.buildForm(this.user);
         }
+    }
+
+    initUserFromId(userId: string) {
+        // get the user data
+        this._dspApiConnection.admin.usersEndpoint
+            .getUser('iri', userId)
+            .subscribe(
+                (response: ApiResponseData<UserResponse>) => {
+                    console.log(response.body.user);
+                    this.user = response.body.user;
+                    this.title = this.user.username;
+                    this.subtitle = "'appLabels.form.user.title.edit' | translate";
+                    this.loadingData = !this.buildForm(this.user);
+                    this._cd.detectChanges();
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
+    }
+
+    initEmptyForm() {
+        // get existing users to avoid same usernames and email addresses
+        this.allUsers$
+            .pipe(take(1))
+            .subscribe((allUsers) => {
+                for (const user of allUsers) {
+                    // email address of the user should be unique.
+                    // therefore we create a list of existing email addresses to avoid multiple use of user names
+                    this.existingEmails.push(
+                        new RegExp('(?:^|W)' + user.email.toLowerCase() + '(?:$|W)'));
+                    // username should also be unique.
+                    // therefore we create a list of existingUsernames to avoid multiple use of user names
+                    this.existingUsernames.push(
+                        new RegExp('(?:^|W)' + user.username.toLowerCase() + '(?:$|W)')
+                    );
+                }
+
+                const newUser: ReadUser = new ReadUser();
+
+                // build the form
+                this.loadingData = !this.buildForm(newUser);
+                this._cd.detectChanges();
+            });
     }
 
     /**
@@ -377,12 +378,12 @@ export class UserFormComponent implements OnInit, OnChanges {
                         this._notification.openSnackBar(
                             "You have successfully updated the user's profile data."
                         );
-                        this.closeDialog.emit();
-                        this.loading = false;
+                        this.onSubmitted();
+
                     },
                     (error: ApiResponseError) => {
                         this._errorHandler.showMessage(error);
-                        this.loading = false;
+                        this.onSubmitted();
                     }
                 );
         } else {
@@ -401,24 +402,41 @@ export class UserFormComponent implements OnInit, OnChanges {
         userData.status = userForm.status;
         userData.lang = userForm.lang;
 
-        this._store.dispatch(new CreateUserAction(userData));
+        this._store.dispatch(new CreateUserAction(userData))
+        /*
         combineLatest([this._actions$.pipe(ofActionSuccessful(CreateUserAction)), this.allUsers$])
                 .pipe(take(1))
                 .subscribe(([loadUsersAction, allUsers]) => {
                 this.user = allUsers.find(user => user.username === loadUsersAction.userData.username);
                 this.buildForm(this.user);
 
-                if (this.projectUuid) {
-                    // if a projectUuid exists, add the user to the project
-                    const projectIri = this._projectService.uuidToIri(this.projectUuid);
-                    this._store.dispatch([
-                        new AddUserToProjectMembershipAction(this.user.id, projectIri), 
-                        new LoadProjectMembersAction(projectIri)]
-                    );
-                }
-
-                this.closeDialog.emit(this.user);
-                this.loading = false;
             });
+        */
+
+        if (this.projectUuid) {
+            // if a projectUuid exists, add the user to the project
+            const projectIri = this._projectService.uuidToIri(this.projectUuid);
+            this._store.dispatch([
+                new AddUserToProjectMembershipAction(this.user.id, projectIri),
+                new LoadProjectMembersAction(projectIri)]
+            );
+        }
+        this.onSubmitted();
+    }
+
+    onSubmitted() {
+        this.loading = false;
+        if (this.isRouted) {
+            window.history.back();
+        }
+    }
+
+    onCancel() {
+        if (this.isRouted) {
+            window.history.back();
+        } else {
+            // simply refresh the component with this.user
+            this.ngOnInit();
+        }
     }
 }

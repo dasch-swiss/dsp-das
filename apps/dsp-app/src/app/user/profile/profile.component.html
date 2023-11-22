@@ -35,18 +35,6 @@
             </li>
         </ul>
     </div>
-
-    <mat-divider></mat-divider>
-    <br />
-    <!-- edit button -->
-    <button
-        mat-button
-        [color]="'primary'"
-        (click)="openDialog('editUser', user.username)"
-        style="width: 100%"
-    >
-        Edit my profile
-    </button>
 </div>
 
 <!-- phone view -->
@@ -70,22 +58,11 @@
     </div>
 
     <div class="user-profile-status">
-        <div class="fill-in-space"></div>
         <div class="status text-only" [class.active]="user.status">
             <mat-icon>info</mat-icon>
             <span *ngIf="user.status"></span>
             <span *ngIf="!user.status"></span>
         </div>
-
-        <!-- edit button -->
-        <button
-            mat-button
-            class="user-profile-edit"
-            [color]="'primary'"
-            (click)="openDialog('editUser', user.username)"
-        >
-            <mat-icon>edit</mat-icon>
-        </button>
     </div>
 </div>
 </ng-container>
