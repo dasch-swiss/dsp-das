@@ -107,14 +107,20 @@ export class ProjectService {
     isInProjectGroup = (userProjectGroups: string[], projectUuid: string): boolean =>
         userProjectGroups.some((e) => e === this.uuidToIri(projectUuid));
 
+    isMemberOfProjectAdminGroup = (groupsPerProject: {[key: string]: string[]}, projectIri: string): boolean =>
+        groupsPerProject
+        && groupsPerProject[projectIri] 
+        && (groupsPerProject[projectIri].indexOf(Constants.ProjectAdminGroupIRI) > -1);
+
+    isMemberOfSystemAdminGroup = (groupsPerProject: {[key: string]: string[]}): boolean =>
+        groupsPerProject
+        && groupsPerProject[Constants.SystemProjectIRI] 
+        && (groupsPerProject[Constants.SystemProjectIRI].indexOf(Constants.SystemAdminGroupIRI) > -1);
+
 
     isProjectAdmin(groupsPerProject: {[key: string]: string[]}, userProjectGroups: string[], projectIri: string): boolean
     {
-        const isMemberOfProjectAdminGroup = 
-                groupsPerProject
-                && groupsPerProject[projectIri] 
-                && (groupsPerProject[projectIri].indexOf(Constants.ProjectAdminGroupIRI) > -1);
-
+        const isMemberOfProjectAdminGroup = this.isMemberOfProjectAdminGroup(groupsPerProject, projectIri);
         return this.isInProjectGroup(userProjectGroups, projectIri) || isMemberOfProjectAdminGroup;
     }
 
@@ -125,11 +131,7 @@ export class ProjectService {
     
     isProjectOrSysAdmin(groupsPerProject: {[key: string]: string[]}, userProjectGroups: string[], projectIri: string): boolean
     {
-        const isMemberOfSystemAdminGroup = 
-                groupsPerProject
-                && groupsPerProject[Constants.SystemProjectIRI] 
-                && (groupsPerProject[Constants.SystemProjectIRI].indexOf(Constants.SystemAdminGroupIRI) > -1);
-
+        const isMemberOfSystemAdminGroup = this.isMemberOfSystemAdminGroup(groupsPerProject);
         return this.isProjectAdmin(groupsPerProject, userProjectGroups, projectIri) || isMemberOfSystemAdminGroup;
     }
 

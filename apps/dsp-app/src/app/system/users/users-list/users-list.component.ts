@@ -149,8 +149,7 @@ export class UsersListComponent implements OnInit {
             return false;
         }
 
-        const userProjectGroups = this._store.selectSnapshot(UserSelectors.userProjectAdminGroups);
-        return this._projectService.isProjectAdmin(permissions?.groupsPerProject, userProjectGroups, this.project.id);
+        return this._projectService.isMemberOfProjectAdminGroup(permissions.groupsPerProject, this.project.id);
     }
 
     /**
@@ -234,7 +233,7 @@ export class UsersListComponent implements OnInit {
      * update user's admin-group membership
      */
     updateProjectAdminMembership(id: string, permissions: Permissions): void {
-        const currentUsername = this._store.selectSnapshot(UserSelectors.username);
+        const currentUser = this._store.selectSnapshot(UserSelectors.user);
         if (this.userIsProjectAdmin(permissions)) {
             // true = user is already project admin --> remove from admin rights
 
@@ -243,7 +242,7 @@ export class UsersListComponent implements OnInit {
                 .subscribe(
                     (response: ApiResponseData<UserResponse>) => {
                         // if this user is not the logged-in user
-                        if (currentUsername !== response.body.user.username) {
+                        if (currentUser.username !== response.body.user.username) {
                             this._store.dispatch(new SetUserAction(response.body.user));
                             this.refreshParent.emit();
                         } else {
@@ -252,11 +251,12 @@ export class UsersListComponent implements OnInit {
                             // open dialog to confirm and
                             // redirect to project page
                             // update the application state of logged-in user and the session
-                            this._store.dispatch(new LoadUserAction(currentUsername));
+                            this._store.dispatch(new LoadUserAction(currentUser.username));
                             this._actions$.pipe(ofActionSuccessful(LoadUserAction))
                                 .pipe(take(1))
-                                .subscribe((readUser: ReadUser) => {
-                                    if (readUser.systemAdmin) {
+                                .subscribe(() => {
+                                    const isSysAdmin = this._projectService.isMemberOfSystemAdminGroup((currentUser as ReadUser).permissions.groupsPerProject)
+                                    if (isSysAdmin) {
                                         this.refreshParent.emit();
                                     } else {
                                         // logged-in user is NOT system admin:
@@ -282,13 +282,13 @@ export class UsersListComponent implements OnInit {
                 .addUserToProjectAdminMembership(id, this.project.id)
                 .subscribe(
                     (response: ApiResponseData<UserResponse>) => {
-                        if (currentUsername !== response.body.user.username) {
+                        if (currentUser.username !== response.body.user.username) {
                             this._store.dispatch(new SetUserAction(response.body.user));
                             this.refreshParent.emit();
                         } else {
                             // the logged-in user (system admin) added himself as project admin
                             // update the application state of logged-in user and the session
-                            this._store.dispatch(new LoadUserAction(currentUsername));
+                            this._store.dispatch(new LoadUserAction(currentUser.username));
                             this._actions$.pipe(ofActionSuccessful(LoadUserAction))
                                 .pipe(take(1))
                                 .subscribe((readUser: ReadUser) => {
