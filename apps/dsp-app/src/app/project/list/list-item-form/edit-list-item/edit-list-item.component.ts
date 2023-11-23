@@ -89,6 +89,7 @@ export class EditListItemComponent implements OnInit {
                 .getListNodeInfo(this.iri)
                 .subscribe(
                     (response: ApiResponseData<ListNodeInfoResponse>) => {
+                        this.loading = false;
                         this.listNode = response.body.nodeinfo;
                         this.buildForm(response.body.nodeinfo);
                     },
