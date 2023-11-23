@@ -496,6 +496,10 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
             this.initOntology();
         });
     }
+    
+    onUpdatePropertyAssignment() {
+        this.initOntologiesList();
+    }
 
     /**
      * delete either ontology, resource class or property
