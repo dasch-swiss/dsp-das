@@ -11,6 +11,7 @@ import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-in
 import { of } from 'rxjs';
 import { LoadListsInProjectAction } from '../lists/lists.actions';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 
 const defaults: OntologiesStateModel = <OntologiesStateModel>{
     isLoading: false,
@@ -34,6 +35,7 @@ export class OntologiesState {
         private _sortingService: SortingService,
         private _projectService: ProjectService,
         private _actions$: Actions,
+        private _notification: NotificationService
     ) {}
     
     //TODO Remove this action when all actions containing this usage is implemented
@@ -290,6 +292,9 @@ export class OntologiesState {
                 (res: ResourceClassDefinitionWithAllLanguages | ApiResponseError) => {
                     //ctx.dispatch(new SetCurrentOntologyPropertiesToDisplayAction(currentOntologyPropertiesToDisplay));
                     ctx.setState({ ...state, isLoading: false });
+                    this._notification.openSnackBar(
+                        `You have successfully removed "${property.label}" from "${resourceClass.label}".`
+                    );
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(<ApiResponseError>error);

@@ -334,10 +334,6 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 //TODO should be the same as ontology lastModificationDate ? if yes remove commented line, otherwise add additional lastModificationDate property to the state
                 //this.lastModificationDate = res.lastModificationDate;
-                // update the ontology
-                this._notification.openSnackBar(
-                    `You have successfully removed "${property.label}" from "${this.resourceClass.label}".`
-                );
             });
     }
 
