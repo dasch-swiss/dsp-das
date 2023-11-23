@@ -7,10 +7,10 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { AddUserComponent } from './add-user/add-user.component';
-import { Actions, Select, Store } from '@ngxs/store';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { CurrentProjectSelectors, LoadProjectMembersAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map, take, takeUntil } from 'rxjs/operators';
 import { ProjectBase } from '../project-base';
 
 @Component({

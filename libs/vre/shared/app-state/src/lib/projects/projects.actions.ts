@@ -1,4 +1,4 @@
-import { UpdateProjectRequest } from "@dasch-swiss/dsp-js";
+import { ReadUser, UpdateProjectRequest } from "@dasch-swiss/dsp-js";
 
 export class LoadProjectsAction {
     static readonly type = '[Projects] Load Projects';
@@ -38,4 +38,9 @@ export class LoadProjectGroupsAction {
 export class UpdateProjectAction {
     static readonly type = '[Projects] Update Project';
     constructor(public projectUuid: string, public projectData: UpdateProjectRequest) {}
+}
+
+export class SetProjectMemberAction {
+    static readonly type = '[Projects] Set Project Member';
+    constructor(public member: ReadUser) {}
 }

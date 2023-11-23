@@ -17,6 +17,7 @@ import { UserStateModel } from './user.state-model';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ApiResponseData, ApiResponseError, Constants, KnoraApiConnection, ReadUser, User, UserResponse, UsersResponse } from '@dasch-swiss/dsp-js';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { SetProjectMemberAction } from '../projects/projects.actions';
 
 const defaults = <UserStateModel>{
     isLoading: false,
@@ -111,7 +112,10 @@ export class UserState {
         }
 
         ctx.setState({ ...state, isLoading: false });
-        ctx.dispatch(new SetUserProjectGroupsAction(user));
+        ctx.dispatch([
+            new SetUserProjectGroupsAction(user),
+            new SetProjectMemberAction(user)
+        ]);
     }
     
     @Action(RemoveUserAction)

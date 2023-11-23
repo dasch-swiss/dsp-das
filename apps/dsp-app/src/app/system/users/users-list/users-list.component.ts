@@ -1,5 +1,6 @@
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     Inject,
@@ -31,7 +32,7 @@ import { map, take } from 'rxjs/operators';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-users-list',
     templateUrl: './users-list.component.html',
     styleUrls: ['./users-list.component.scss'],
@@ -117,6 +118,7 @@ export class UsersListComponent implements OnInit {
         private _store: Store,
         private _projectService: ProjectService,
         private _actions$: Actions,
+        private _cd: ChangeDetectorRef,
     ) {
         // get the uuid of the current project
         this._route.parent.parent.paramMap.subscribe((params: Params) => {
@@ -357,6 +359,7 @@ export class UsersListComponent implements OnInit {
                         break;
                 }
             }
+            this._cd.markForCheck();
         });
     }
 

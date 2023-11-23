@@ -2,7 +2,7 @@ import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/pro
 import { Inject, Injectable } from '@angular/core';
 import { Action, State, StateContext, Store } from '@ngxs/store';
 import { ProjectsStateModel } from './projects.state-model';
-import { LoadProjectsAction, LoadProjectAction, ClearProjectsAction, RemoveUserFromProjectAction, AddUserToProjectMembershipAction, LoadProjectMembersAction, LoadProjectGroupsAction, UpdateProjectAction } from './projects.actions';
+import { LoadProjectsAction, LoadProjectAction, ClearProjectsAction, RemoveUserFromProjectAction, AddUserToProjectMembershipAction, LoadProjectMembersAction, LoadProjectGroupsAction, UpdateProjectAction, SetProjectMemberAction } from './projects.actions';
 import { UserSelectors } from '../user/user.selectors';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ApiResponseData, ApiResponseError, GroupsResponse, KnoraApiConnection, MembersResponse, ProjectResponse, ProjectsResponse, ReadGroup, ReadUser, UserResponse } from '@dasch-swiss/dsp-js';
@@ -11,7 +11,7 @@ import { concatMap, finalize, map, take, tap } from 'rxjs/operators';
 import { produce } from 'immer';
 import { EMPTY, of } from 'rxjs';
 import { CurrentProjectSelectors } from '../current-project/current-project.selectors';
-import { SetCurrentProjectAction, SetCurrentProjectByUuidAction, SetCurrentProjectGroupsAction, SetCurrentProjectMembersAction } from '../current-project/current-project.actions';
+import { SetCurrentProjectAction, SetCurrentProjectByUuidAction, SetCurrentProjectGroupsAction } from '../current-project/current-project.actions';
 import { IKeyValuePairs } from '../model-interfaces';
 import { ProjectsSelectors } from './projects.selectors';
 import { SetUserAction } from '../user/user.actions';
@@ -216,11 +216,6 @@ export class ProjectsState {
                             isLoading: false,
                             projectMembers: { [projectIri] : { value: response.body.members } }
                         });
-
-                        const currentProject = this.store.selectSnapshot(CurrentProjectSelectors.project);
-                        if (currentProject?.id === projectIri) {
-                            ctx.dispatch(new SetCurrentProjectMembersAction(response.body.members));
-                        }
                     },
                     error: (error) => {
                         ctx.patchState({ hasLoadingErrors: true });
@@ -299,5 +294,20 @@ export class ProjectsState {
                     }
                 })
             );
+    }
+
+    @Action(SetProjectMemberAction)
+    setProjectMember(ctx: StateContext<ProjectsStateModel>,
+        { member }: SetProjectMemberAction
+    ) {
+        const state = ctx.getState();
+        Object.keys(state.projectMembers).forEach((projectId) => {
+            const index = state.projectMembers[projectId].value.findIndex(u => u.id === member.id);
+            if (index > -1) {
+                state.projectMembers[projectId].value[index] = member;
+            }    
+        });
+
+        ctx.setState({ ...state });
     }
 }
