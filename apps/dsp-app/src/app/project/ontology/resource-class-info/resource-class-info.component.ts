@@ -327,18 +327,14 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
      * @param property
      */
     removeProperty(property: DefaultClass, currentOntologyPropertiesToDisplay: PropToDisplay[]) {
-        this._store.dispatch([
-            new RemovePropertyAction(property, this.resourceClass, currentOntologyPropertiesToDisplay), 
-            new LoadProjectOntologiesAction(this.projectUuid)
-        ]);
-        this._actions$.pipe(ofActionSuccessful(LoadProjectOntologiesAction))
+        this._store.dispatch(new RemovePropertyAction(property, this.resourceClass, currentOntologyPropertiesToDisplay));
+        this.updatePropertyAssignment.emit(this.ontology.id);
+        this._actions$.pipe(ofActionSuccessful(RemovePropertyAction))
             .pipe(take(1))
             .subscribe(() => {
                 //TODO should be the same as ontology lastModificationDate ? if yes remove commented line, otherwise add additional lastModificationDate property to the state
                 //this.lastModificationDate = res.lastModificationDate;
                 // update the ontology
-                this.updatePropertyAssignment.emit(this.ontology.id);
-                // display success message
                 this._notification.openSnackBar(
                     `You have successfully removed "${property.label}" from "${this.resourceClass.label}".`
                 );
