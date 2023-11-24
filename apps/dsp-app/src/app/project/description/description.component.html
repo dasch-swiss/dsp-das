@@ -42,7 +42,7 @@
         <div>
             <p>{{(readProject$ | async)?.longname}}</p>
         </div>
-        <section class="project description" *ngFor="let desc of (readProject$ | async)?.description">
+        <section class="project description" *ngFor="let desc of (readProject$ | async)?.description; trackBy: trackByStringLiteralFn">
             <div [innerHtml]="desc.value"></div>
         </section>
 
@@ -51,7 +51,7 @@
         <!-- keywords -->
         <section class="project keywords">
             <mat-chip-listbox>
-                <mat-chip *ngFor="let k of (readProject$ | async)?.keywords">{{k}}</mat-chip>
+                <mat-chip *ngFor="let k of (readProject$ | async)?.keywords; trackBy: trackByFn">{{k}}</mat-chip>
             </mat-chip-listbox>
         </section>
     </div>

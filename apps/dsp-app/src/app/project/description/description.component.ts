@@ -67,15 +67,14 @@ export class DescriptionComponent implements OnInit {
     ngOnInit() {
     }
     
-    // returns the project with the descriptions sorted by language
-    private projectWithSortedDescriptions(project: ReadProject): ReadProject  {
-        if (project.description && project.description.length > 1) {
-            // sort the descriptions by language
-            project.description = this.sortDescriptionsByLanguage(project.description);
-        }
-        return project;
+    editProject() {
+        this._router.navigate([RouteConstants.project, this.projectUuid, RouteConstants.edit]);
     }
-
+    
+    trackByFn = (index: number, item: string) => `${index}-${item}`;
+    
+    trackByStringLiteralFn = (index: number, item: StringLiteral) => `${index}-${item.value}`;
+    
     // returns the descriptions sorted by language
     private sortDescriptionsByLanguage(descriptions: StringLiteral[]): StringLiteral[] {
         const languageOrder = AppGlobal.languagesList.map((l) => l.language);
@@ -88,10 +87,6 @@ export class DescriptionComponent implements OnInit {
         });
     }
 
-    editProject() {
-        this._router.navigate([RouteConstants.project, this.projectUuid, RouteConstants.edit]);
-    }
-
     private getCurrentProject(projects: ReadProject[]): ReadProject {
         if (!projects) {
             return null;
@@ -99,5 +94,14 @@ export class DescriptionComponent implements OnInit {
 
         const project = projects.find(x => x.id.split('/').pop() === this.projectUuid);
         return project ? this.projectWithSortedDescriptions(project) : null;
+    }
+
+    // returns the project with the descriptions sorted by language
+    private projectWithSortedDescriptions(project: ReadProject): ReadProject  {
+        if (project.description && project.description.length > 1) {
+            // sort the descriptions by language
+            project.description = this.sortDescriptionsByLanguage(project.description);
+        }
+        return project;
     }
 }

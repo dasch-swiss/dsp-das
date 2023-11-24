@@ -34,7 +34,7 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
-import { CurrentProjectSelectors, UpdateProjectAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { CurrentProjectSelectors, LoadProjectAction, SetCurrentProjectAction, UpdateProjectAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -401,8 +401,7 @@ export class ProjectFormComponent implements OnInit {
         this.form.controls['keywords'].setValue(this.keywords);
 
         if (this.projectIri) {
-            const projectData: UpdateProjectRequest =
-                new UpdateProjectRequest();
+            const projectData = new UpdateProjectRequest();
             projectData.description = [new StringLiteral()];
             projectData.keywords = this.form.value.keywords;
             projectData.longname = this.form.value.longname;
@@ -418,13 +417,14 @@ export class ProjectFormComponent implements OnInit {
 
             // edit / update project data
             this._store.dispatch(new UpdateProjectAction(this.project.id, projectData));
-            this._actions$.pipe(ofActionSuccessful(UpdateProjectAction))
+            this._actions$.pipe(ofActionSuccessful(SetCurrentProjectAction))
                 .subscribe(() => {
+                        this._store.dispatch(new LoadProjectAction(this.project.id, true));
                         this.success = true;
                         const currentProject = this._store.selectSnapshot(CurrentProjectSelectors.project);
                         this.project = currentProject;
                         this._notification.openSnackBar('You have successfully updated the project information.');
-                        this._location.back();
+                        this._router.navigate([`${RouteConstants.projectRelative}/${this.projectUuid}`])
                         this.loading = false;
                     }
                 );
@@ -468,8 +468,7 @@ export class ProjectFormComponent implements OnInit {
                                     const uuid = this._projectService.iriToUuid(projectResponse.body.project.id);
                                     this.loading = false;
                                     // redirect to project page
-                                    this._router
-                                        .navigateByUrl(`${RouteConstants.projectRelative}`, {
+                                    this._router.navigateByUrl(`${RouteConstants.projectRelative}`, {
                                             skipLocationChange:
                                             true,
                                         })
