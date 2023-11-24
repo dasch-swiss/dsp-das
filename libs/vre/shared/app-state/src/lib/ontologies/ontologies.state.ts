@@ -154,18 +154,19 @@ export class OntologiesState {
                 }),
                 tap({
                     next: (ontology: ReadOntology) => {
+                        const projectIri = this._projectService.uuidToIri(projectUuid);
                         let projectOntologiesState = ctx.getState().projectOntologies;
-                        if (!projectOntologiesState[projectUuid]) {
-                            projectOntologiesState = { [projectUuid]: { ontologiesMetadata: [], readOntologies: [] }}
+                        if (!projectOntologiesState[projectIri]) {
+                            projectOntologiesState = { [projectIri]: { ontologiesMetadata: [], readOntologies: [] }}
                         }
     
-                        let projectReadOntologies = projectOntologiesState[projectUuid].readOntologies;
+                        let projectReadOntologies = projectOntologiesState[projectIri].readOntologies;
                         projectReadOntologies.push(ontology);
                         projectReadOntologies = projectReadOntologies.sort((o1, o2) =>
                             this._compareOntologies(o1, o2)
                         );
                         //this._sortingService.keySortByAlphabetical(projectReadOntologies, 'label');
-                        projectOntologiesState[projectUuid].readOntologies = projectReadOntologies;
+                        projectOntologiesState[projectIri].readOntologies = projectReadOntologies;
                         
                         ctx.setState({ 
                             ...ctx.getState(), 
