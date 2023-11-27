@@ -5,9 +5,7 @@ describe('create new project', () => {
         cy.get("#mat-input-0").type("0123");
         cy.get("#mat-input-1").type("test");
         cy.get("#mat-input-2").type("Test Project");
-        cy.get("#mat-input-3").click();
         cy.get("#mat-input-3").type("this is a test project");
-        cy.get("#mat-mdc-chip-list-input-0").click();
         cy.get("#mat-mdc-chip-list-input-0").type("project");
         cy.get("#mat-mdc-chip-list-input-0").type("{enter}");
         cy.get("#mat-mdc-chip-list-input-0").type("test");
