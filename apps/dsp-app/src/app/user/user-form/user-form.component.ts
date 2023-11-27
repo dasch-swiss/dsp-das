@@ -12,7 +12,6 @@ import {
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import {
     ApiResponseData,
     ApiResponseError,
@@ -31,8 +30,7 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
-import { Observable } from 'rxjs';
-import { Actions, Select, Store } from '@ngxs/store';
+
 import {
     AddUserToProjectMembershipAction,
     CreateUserAction,
@@ -41,6 +39,8 @@ import {
     SetUserAction,
     UserSelectors
 } from '@dasch-swiss/vre/shared/app-state';
+import { Observable, combineLatest } from 'rxjs';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -158,7 +158,6 @@ export class UserFormComponent implements OnInit, OnChanges {
         private _errorHandler: AppErrorHandler,
         private _formBuilder: UntypedFormBuilder,
         private _notification: NotificationService,
-        private _route: ActivatedRoute,
         private _projectService: ProjectService,
         private _store: Store,
         private _actions$: Actions,
@@ -410,6 +409,17 @@ export class UserFormComponent implements OnInit, OnChanges {
                 this.user = allUsers.find(user => user.username === loadUsersAction.userData.username);
                 this.buildForm(this.user);
 
+                if (this.projectUuid) {
+                    // if a projectUuid exists, add the user to the project
+                    const projectIri = this._projectService.uuidToIri(this.projectUuid);
+                    this._store.dispatch(new AddUserToProjectMembershipAction(this.user.id, projectIri));
+                    this._actions$.pipe(ofActionSuccessful(SetUserAction))
+                        .pipe(take(1))
+                        .subscribe(() => this._store.dispatch(new LoadProjectMembersAction(projectIri)));
+                }
+
+                this.closeDialog.emit(this.user);
+                this.loading = false;
             });
         */
 

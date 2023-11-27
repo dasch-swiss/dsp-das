@@ -47,7 +47,7 @@ export class IntermediateComponent {
                 top: '112px',
             },
             data: {
-                mode: type + 'Resources',
+                mode: 'linkResources',
                 title: title,
                 selectedResources: data,
             },

@@ -7,6 +7,5 @@ export class CurrentProjectStateModel {
     project: ReadProject | undefined;
     isProjectAdmin: boolean = false;
     isProjectMember: boolean = false;
-    members: ReadUser[] = [];
     groups: ReadGroup[] = [];
 }

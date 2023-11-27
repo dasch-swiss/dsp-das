@@ -54,19 +54,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.complete();
     }
 
-    openDialog(mode: string, name: string): void {
+    openDialog(mode: string, user: ReadUser): void {
         const dialogConfig: MatDialogConfig = {
             width: '560px',
             maxHeight: '80vh',
             position: {
                 top: '112px',
             },
-            data: { name: name, mode: mode },
+            data: { user, mode },
         };
 
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
         dialogRef.afterClosed()
             .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe(() => this._store.dispatch(new LoadUserAction(name)));
+            .subscribe(() => this._store.dispatch(new LoadUserAction(user.username)));
     }
 }

@@ -141,6 +141,7 @@ export class ListItemComponent implements OnInit {
 
                                 // emit the updated list of children to the parent node
                                 this.refreshChildren.emit(this.list);
+                                this._cd.markForCheck();
                             },
                             (error: ApiResponseError) => {
                                 this._errorHandler.showMessage(error);
@@ -185,6 +186,7 @@ export class ListItemComponent implements OnInit {
                                 this.list = res.body.node.children;
 
                                 this.refreshChildren.emit(this.list);
+                                this._cd.markForCheck();
                             }
                         );
                     break;

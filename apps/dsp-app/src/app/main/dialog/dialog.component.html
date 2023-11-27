@@ -10,7 +10,7 @@
         >
         </app-dialog-header>
         <app-password-form
-            [username]="data.user.username"
+            [user]="data.user"
             (closeDialog)="dialogRef.close()"
         ></app-password-form>
     </div>
@@ -629,7 +629,6 @@
             ></app-replace-file-form>
         </mat-dialog-content>
     </div>
-<!-- //TODO remove if not used anywhere
     <div *ngSwitchCase="'linkResources'">
         <app-dialog-header
             [title]="data.title"
@@ -641,9 +640,9 @@
                 (closeDialog)="dialogRef.close($event)"
             ></app-resource-link-form>
         </mat-dialog-content>
-    </div> -->
+    </div>
 
-    <div *ngSwitchCase="'createLinkResource'">[[[[[[]]]]]]
+    <div *ngSwitchCase="'createLinkResource'">
         <app-dialog-header
             [title]="data.title"
             [subtitle]="'Create a new linked resource'"

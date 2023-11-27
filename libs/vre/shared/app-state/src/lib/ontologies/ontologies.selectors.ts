@@ -24,12 +24,16 @@ export class OntologiesSelectors {
 
     @Selector([OntologiesState, CurrentProjectSelectors.project])
     static currentProjectOntologyMetadata(state: OntologiesStateModel, project: ReadProject): OntologyMetadata[] {
-        return state.projectOntologies[project.id].ontologiesMetadata;
+        return state.projectOntologies[project.id] 
+            ? state.projectOntologies[project.id].ontologiesMetadata 
+            : [];
     }
 
     @Selector([OntologiesState, CurrentProjectSelectors.project])
     static currentProjectOntologies(state: OntologiesStateModel, project: ReadProject): ReadOntology[] {
-        return state.projectOntologies[project.id].readOntologies;
+        return state.projectOntologies[project.id] 
+            ? state.projectOntologies[project.id].readOntologies 
+            : [];
     }
 
     // ontology name has to be unique

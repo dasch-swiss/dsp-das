@@ -28,10 +28,11 @@ import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
 import { OntologyService } from '../ontology.service';
-import { ClearProjectOntologiesAction, CurrentProjectSelectors, OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Select, Store } from '@ngxs/store';
+import { ClearProjectOntologiesAction, CurrentOntologyCanBeDeletedAction, CurrentProjectSelectors, LoadListsInProjectAction, LoadOntologyAction, LoadProjectOntologiesAction, OntologiesSelectors, SetCurrentOntologyAction, SetCurrentProjectOntologyPropertiesAction } from '@dasch-swiss/vre/shared/app-state';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
+import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 
 export interface NewOntology {
     projectIri: string;
@@ -138,6 +139,8 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
         private _route: ActivatedRoute,
         private _router: Router,
         private _store: Store,
+        private _actions$: Actions,
+        private _projectService: ProjectService,
     ) {}
 
     ngOnInit() {
@@ -281,9 +284,8 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
                 .pipe(take(1))
                 .subscribe(
                     (response: OntologyMetadata) => {
-                        this._store.dispatch(new ClearProjectOntologiesAction(this.projectUuid));
+                        this.loadOntologies(response.id);
                         this.updateParent.emit(response.id);
-                        this.loading = false;
                         this.closeDialog.emit(response.id);
                     },
                     (error: ApiResponseError) => {
@@ -296,7 +298,6 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
                 );
         } else {
             // create mode
-
             const ontologyData = new CreateOntology();
             ontologyData.label =
                 this.project.shortname +
@@ -311,13 +312,10 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
                 .pipe(take(1))
                 .subscribe(
                     (response: OntologyMetadata) => {
-                        this._store.dispatch(new ClearProjectOntologiesAction(this.projectUuid));
+                        this.loadOntologies(response.id);
                         this.updateParent.emit(response.id);
-                        this.loading = false;
                         // go to the new ontology page
-                        const name = OntologyService.getOntologyName(
-                            response.id
-                        );
+                        const name = OntologyService.getOntologyName(response.id);
                         this._router.navigate([RouteConstants.ontology, name, RouteConstants.editor, RouteConstants.classes], {
                             relativeTo: this._route.parent,
                         });
@@ -337,5 +335,25 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
 
     capitalizeFirstLetter(text: string) {
         return text.charAt(0).toUpperCase() + text.slice(1);
+    }
+
+    private loadOntologies(currentOntologyId: string) {
+        const projectIri = this._projectService.uuidToIri(this.projectUuid);
+        this._store.dispatch([
+            new ClearProjectOntologiesAction(this.projectUuid),
+            new LoadProjectOntologiesAction(projectIri)
+        ]);
+        this._actions$.pipe(ofActionSuccessful(LoadListsInProjectAction))
+            .pipe(take(1))
+            .subscribe(() => {
+                const projectOntologies = this._store.selectSnapshot(OntologiesSelectors.projectOntologies);
+                const currentOntology = projectOntologies[projectIri]?.readOntologies.find(o => o.id === currentOntologyId);
+                this._store.dispatch([
+                    new SetCurrentOntologyAction(currentOntology),
+                    new SetCurrentProjectOntologyPropertiesAction(projectIri),
+                    new CurrentOntologyCanBeDeletedAction()
+                ]);
+                this.loading = false;
+            });
     }
 }

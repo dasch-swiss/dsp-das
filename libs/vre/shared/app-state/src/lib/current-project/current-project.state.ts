@@ -5,7 +5,7 @@ import { ReadUser } from '@dasch-swiss/dsp-js';
 import { map } from 'rxjs/operators';
 import { EMPTY, of } from 'rxjs';
 import { CurrentProjectStateModel } from './current-project.state-model';
-import { ClearCurrentProjectAction as ClearCurrentProjectAction, SetCurrentProjectAction, SetCurrentProjectByUuidAction, SetCurrentProjectGroupsAction, SetCurrentProjectMembersAction } from './current-project.actions';
+import { ClearCurrentProjectAction as ClearCurrentProjectAction, SetCurrentProjectAction, SetCurrentProjectByUuidAction, SetCurrentProjectGroupsAction } from './current-project.actions';
 import { ProjectsSelectors } from '../projects/projects.selectors';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { UserSelectors } from '../user/user.selectors';
@@ -14,7 +14,6 @@ let defaults: CurrentProjectStateModel = {
     isLoading: false,
     hasLoadingErrors: false,
     project: undefined,
-    members: [],
     groups: [],
     isProjectAdmin: false,
     isProjectMember: false,
@@ -30,15 +29,6 @@ export class CurrentProjectState {
         private _store: Store,
         public _projectService: ProjectService,
     ) {}
-
-    @Action(SetCurrentProjectMembersAction)
-    setProjectMembersAction(
-        ctx: StateContext<CurrentProjectStateModel>,
-        { members }: SetCurrentProjectMembersAction
-    ) {
-        return ctx.setState({ ...ctx.getState(), members });
-    }
-
     
     @Action(SetCurrentProjectGroupsAction)
     setProjectGroupsAction(

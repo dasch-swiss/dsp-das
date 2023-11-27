@@ -11,6 +11,7 @@ import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-in
 import { of } from 'rxjs';
 import { LoadListsInProjectAction } from '../lists/lists.actions';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 
 const defaults: OntologiesStateModel = <OntologiesStateModel>{
     isLoading: false,
@@ -34,6 +35,7 @@ export class OntologiesState {
         private _sortingService: SortingService,
         private _projectService: ProjectService,
         private _actions$: Actions,
+        private _notification: NotificationService
     ) {}
     
     //TODO Remove this action when all actions containing this usage is implemented
@@ -99,6 +101,7 @@ export class OntologiesState {
                     next: (ontoMeta: OntologiesMetadata) => {
                         if (!ontoMeta.ontologies.length) {
                             ctx.dispatch(new LoadListsInProjectAction(projectIri));
+                            ctx.patchState({ isLoading: false });
                             return;
                         }
 
@@ -126,7 +129,7 @@ export class OntologiesState {
                         );
                     }, 
                     error: (error: ApiResponseError) => {
-                        ctx.patchState({ hasLoadingErrors: true });
+                        ctx.patchState({ hasLoadingErrors: true, isLoading: false });
                         this._errorHandler.showMessage(error);
                     }
                 })
@@ -151,18 +154,19 @@ export class OntologiesState {
                 }),
                 tap({
                     next: (ontology: ReadOntology) => {
+                        const projectIri = this._projectService.uuidToIri(projectUuid);
                         let projectOntologiesState = ctx.getState().projectOntologies;
-                        if (!projectOntologiesState[projectUuid]) {
-                            projectOntologiesState = { [projectUuid]: { ontologiesMetadata: [], readOntologies: [] }}
+                        if (!projectOntologiesState[projectIri]) {
+                            projectOntologiesState = { [projectIri]: { ontologiesMetadata: [], readOntologies: [] }}
                         }
     
-                        let projectReadOntologies = projectOntologiesState[projectUuid].readOntologies;
+                        let projectReadOntologies = projectOntologiesState[projectIri].readOntologies;
                         projectReadOntologies.push(ontology);
                         projectReadOntologies = projectReadOntologies.sort((o1, o2) =>
                             this._compareOntologies(o1, o2)
                         );
                         //this._sortingService.keySortByAlphabetical(projectReadOntologies, 'label');
-                        projectOntologiesState[projectUuid].readOntologies = projectReadOntologies;
+                        projectOntologiesState[projectIri].readOntologies = projectReadOntologies;
                         
                         ctx.setState({ 
                             ...ctx.getState(), 
@@ -171,7 +175,7 @@ export class OntologiesState {
                         });
                     },
                     error: (error: ApiResponseError) => {
-                        ctx.patchState({ hasLoadingErrors: true });
+                        ctx.patchState({ hasLoadingErrors: true, isLoading: false });
                         this._errorHandler.showMessage(error);
                     }
                 })
@@ -289,6 +293,9 @@ export class OntologiesState {
                 (res: ResourceClassDefinitionWithAllLanguages | ApiResponseError) => {
                     //ctx.dispatch(new SetCurrentOntologyPropertiesToDisplayAction(currentOntologyPropertiesToDisplay));
                     ctx.setState({ ...state, isLoading: false });
+                    this._notification.openSnackBar(
+                        `You have successfully removed "${property.label}" from "${resourceClass.label}".`
+                    );
                 },
                 (error: ApiResponseError) => {
                     this._errorHandler.showMessage(<ApiResponseError>error);

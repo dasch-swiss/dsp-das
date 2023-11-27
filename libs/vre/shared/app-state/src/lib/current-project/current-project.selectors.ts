@@ -25,11 +25,6 @@ export class CurrentProjectSelectors {
     }
 
     @Selector([CurrentProjectState])
-    static projectMembers(state: CurrentProjectStateModel): ReadUser[] {
-        return state.members;
-    }
-
-    @Selector([CurrentProjectState])
     static projectGroups(state: CurrentProjectStateModel): ReadGroup[] {
         return state.groups;
     }

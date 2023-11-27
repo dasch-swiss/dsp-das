@@ -1,5 +1,6 @@
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     Inject,
@@ -77,7 +78,8 @@ export class EditListItemComponent implements OnInit {
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
         private _errorHandler: AppErrorHandler,
-        private _projectService: ProjectService
+        private _projectService: ProjectService,
+        private _cd: ChangeDetectorRef
     ) {}
 
     ngOnInit(): void {
@@ -89,8 +91,10 @@ export class EditListItemComponent implements OnInit {
                 .getListNodeInfo(this.iri)
                 .subscribe(
                     (response: ApiResponseData<ListNodeInfoResponse>) => {
+                        this.loading = false;
                         this.listNode = response.body.nodeinfo;
                         this.buildForm(response.body.nodeinfo);
+                        this._cd.markForCheck();
                     },
                     (error: ApiResponseError) => {
                         this._errorHandler.showMessage(error);
