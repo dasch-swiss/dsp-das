@@ -110,6 +110,11 @@ const routes: Routes = [
                         path: RouteConstants.collaborationCreateUserRelative,
                         component: UserFormComponent,
                         canActivate: [AuthGuard],
+                    },
+                    {
+                        path: RouteConstants.collaborationEditUserRelative,
+                        component: UserFormComponent,
+                        canActivate: [AuthGuard],
                     }
                 ],
             },
@@ -159,12 +164,12 @@ const routes: Routes = [
                 component: UsersComponent
             },
             {
-                path: RouteConstants.editUserRelative,
+                path: RouteConstants.usersEditUserRelative,
                 component: UserFormComponent,
                 canActivate: [AuthGuard],
             },
             {
-                path: RouteConstants.createNewUserRelative,
+                path: RouteConstants.usersCreateNewUserRelative,
                 component: UserFormComponent,
                 canActivate: [AuthGuard],
             },
