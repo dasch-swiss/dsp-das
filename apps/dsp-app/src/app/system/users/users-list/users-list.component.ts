@@ -25,7 +25,6 @@ import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/a
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
-import { Select, Store } from '@ngxs/store';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { CurrentProjectSelectors, LoadProjectAction, LoadProjectMembersAction, LoadUserAction, RemoveUserFromProjectAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable } from 'rxjs';

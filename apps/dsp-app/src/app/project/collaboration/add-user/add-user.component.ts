@@ -362,7 +362,7 @@ export class AddUserComponent implements OnInit {
 
     createUser(): void {
         this._router.navigate([
-                RouteConstants.createNewUserRelative
+                RouteConstants.usersCreateNewUserRelative
             ],
             {
                 relativeTo: this._route,

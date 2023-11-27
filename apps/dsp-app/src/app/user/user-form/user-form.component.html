@@ -75,11 +75,11 @@
             </mat-slide-toggle>
         </div>
 
-        <div class="form-panel form-action" *ngIf='isRouted || !userForm.pristine'>
+        <div class="form-panel form-action">
             <span>
                 <button color="primary" mat-button
                     type="button"
-                    (click)="onCancel()">
+                    (click)="onEditingEnd()">
                     {{ 'appLabels.form.action.cancel' | translate }}
                 </button>
             </span>
@@ -90,7 +90,7 @@
                     type="submit"
                     color="primary"
                     *ngIf="user"
-                    [disabled]="!userForm.valid">
+                    [disabled]="!userForm.valid || userForm.pristine">
                     <dasch-swiss-app-progress-indicator [color]="'white'"
                         [status]="0"
                         *ngIf="loading"
@@ -106,7 +106,7 @@
                     type="submit"
                     color="primary"
                     *ngIf="!user"
-                    [disabled]="!userForm.valid || (userForm.controls['password'].value.length < 8)">
+                    [disabled]="!userForm.valid || userForm.pristine || (userForm.controls['password'].value.length < 8)">
                     <dasch-swiss-app-progress-indicator [color]="'white'"
                         [status]="0"
                         *ngIf="loading"

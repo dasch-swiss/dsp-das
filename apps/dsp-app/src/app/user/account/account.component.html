@@ -1,7 +1,7 @@
 <dasch-swiss-app-progress-indicator *ngIf="isLoading$ | async"></dasch-swiss-app-progress-indicator>
 <div *ngIf="(isLoading$ | async) === false">
     <!-- password update: form -->
-    <app-user-form [user]="user$ | async"></app-user-form>
+    <app-user-form [sessionsUser]="user$ | async"></app-user-form>
     <app-password-form [user]="user$ | async"></app-password-form>
     <!-- danger zone: delete account -->
     <div class="app-danger-zone more-space-top">

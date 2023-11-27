@@ -3,7 +3,6 @@ import {
     ChangeDetectorRef,
     Component,
     Inject, Input,
-    OnChanges,
     OnInit
 } from '@angular/core';
 import {
@@ -42,6 +41,7 @@ import {
 import { Observable, combineLatest } from 'rxjs';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { take } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,12 +49,12 @@ import { take } from 'rxjs/operators';
     templateUrl: './user-form.component.html',
     styleUrls: ['./user-form.component.scss'],
 })
-export class UserFormComponent implements OnInit, OnChanges {
+export class UserFormComponent implements OnInit {
 
-    @Input() user: ReadUser;
+    @Input() sessionsUser?: ReadUser; // if the user edited is the sessions user
+
+    user: ReadUser;
     projectUuid: string; // if creating a new user in the context of a project, the project uuid is used to add the user to the project
-
-    isRouted = true; // if the component is routed directly or used as a child component in a template
 
     /**
      * status for the progress indicator
@@ -131,17 +131,6 @@ export class UserFormComponent implements OnInit, OnChanges {
         },
     };
 
-    /**
-     * success of sending data
-     */
-    success = false;
-    /**
-     * message after successful post
-     */
-    successMessage: any = {
-        status: 200,
-        statusText: "You have successfully updated user's profile data.",
-    };
 
     /**
      * selector to set default language
@@ -162,6 +151,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         private _store: Store,
         private _actions$: Actions,
         private _cd: ChangeDetectorRef,
+        private _route: ActivatedRoute
     ) {
     }
 
@@ -169,29 +159,23 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.loadingData = true;
         this.projectUuid = this._route.snapshot.parent.parent?.paramMap.get(RouteConstants.uuidParameter);
 
-        if (this.user) {
-            // the component is used in a template as a child component and not
-            // as a routed component.
-            this.isRouted = false;
-            this.title = this.user.username;
+        if (this.sessionsUser) {
+            // if the component is used in the account component, the sessions user is passed as input
+            this.user = this.sessionsUser;
+            this.title = this.sessionsUser.username;
             this.subtitle = "'appLabels.form.user.title.edit' | translate";
-            this.loadingData = !this.buildForm(this.user);
+            this.loadingData = !this.buildForm(this.sessionsUser);
         }
         else {
             // decode the user id from the route
             const userId =
                 this._route.snapshot.paramMap.get(RouteConstants.userParameter);
+
             if (userId) {
                 this.initUserFromId(decodeURIComponent(userId));
             } else {
                 this.initEmptyForm();
             }
-        }
-    }
-
-    ngOnChanges() {
-        if (this.user) {
-            this.buildForm(this.user);
         }
     }
 
@@ -201,7 +185,6 @@ export class UserFormComponent implements OnInit, OnChanges {
             .getUser('iri', userId)
             .subscribe(
                 (response: ApiResponseData<UserResponse>) => {
-                    console.log(response.body.user);
                     this.user = response.body.user;
                     this.title = this.user.username;
                     this.subtitle = "'appLabels.form.user.title.edit' | translate";
@@ -349,15 +332,10 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.loading = true;
 
         if (this.user) {
-            // edit mode: update user data
-            // username doesn't seem to be optional in @dasch-swiss/dsp-js usersEndpoint type UpdateUserRequest.
-            // but a user can't change the username, the field is disabled, so it's not a value in this form.
-            // we have to make a small hack here.
+            // if there is a user object defined an existing user is edited
             const userData: UpdateUserRequest = new UpdateUserRequest();
-            // userData.username = this.userForm.value.username;
             userData.familyName = this.userForm.value.familyName;
             userData.givenName = this.userForm.value.givenName;
-            // userData.email = this.userForm.value.email;
             userData.lang = this.userForm.value.lang;
 
             this._dspApiConnection.admin.usersEndpoint
@@ -402,7 +380,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         userData.lang = userForm.lang;
 
         this._store.dispatch(new CreateUserAction(userData))
-        /*
+
         combineLatest([this._actions$.pipe(ofActionSuccessful(CreateUserAction)), this.allUsers$])
                 .pipe(take(1))
                 .subscribe(([loadUsersAction, allUsers]) => {
@@ -418,35 +396,22 @@ export class UserFormComponent implements OnInit, OnChanges {
                         .subscribe(() => this._store.dispatch(new LoadProjectMembersAction(projectIri)));
                 }
 
-                this.closeDialog.emit(this.user);
                 this.loading = false;
+                this.onSubmitted();
             });
-        */
-
-        if (this.projectUuid) {
-            // if a projectUuid exists, add the user to the project
-            const projectIri = this._projectService.uuidToIri(this.projectUuid);
-            this._store.dispatch([
-                new AddUserToProjectMembershipAction(this.user.id, projectIri),
-                new LoadProjectMembersAction(projectIri)]
-            );
-        }
-        this.onSubmitted();
     }
 
     onSubmitted() {
         this.loading = false;
-        if (this.isRouted) {
-            window.history.back();
-        }
+        this.onEditingEnd();
     }
 
-    onCancel() {
-        if (this.isRouted) {
-            window.history.back();
-        } else {
-            // simply refresh the component with this.user
+    onEditingEnd() {
+        if (this._route.parent.snapshot.children[0].routeConfig.path === RouteConstants.userAccount) {
+            // if the component is used within the account component, simply refresh the form via ngOninit
             this.ngOnInit();
+        } else {
+            window.history.back();
         }
     }
 }

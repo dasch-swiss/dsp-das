@@ -32,7 +32,7 @@ import { Store } from '@ngxs/store';
 })
 export class PasswordFormComponent implements OnInit {
     // update password for:
-    @Input() user: ReadUser;
+    @Input() user?: ReadUser;
 
     // output to close dialog
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
@@ -101,7 +101,7 @@ export class PasswordFormComponent implements OnInit {
         const userFromState = this.store.selectSnapshot(UserSelectors.user) as User;
         if (this.user) {
             // edit mode
-            if (usernameFromState === this.user.username) {
+            if (usernameFromState === this.user?.username) {
                 // update own password
                 this.updateOwn = true;
             } else {
@@ -146,12 +146,12 @@ export class PasswordFormComponent implements OnInit {
                 ? ''
                 : this.confirmForm.controls.requesterPassword.value;
 
-        const name = this.user.username ? this.user.username : '';
+        const name = this.user?.username ? this.user.username : '';
 
         this.form = this._fb.group({
             username: new UntypedFormControl({
                 value: name,
-                disabled: !this.user.username,
+                disabled: !this.user?.username,
             }),
             requesterPassword: new UntypedFormControl(
                 {
