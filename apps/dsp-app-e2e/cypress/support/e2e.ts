@@ -29,9 +29,7 @@ beforeEach(() => {
             // read JSON data file
             users = json;
 
-            cy.log(Cypress.spec.relative);
             if (Cypress.spec.relative.startsWith('cypress/e2e/System_Admin')) {
-                cy.log('Logging in as system admin');
                 cy.login({
                     username: users.systemAdmin_username_root,
                     password: users.systemAdmin_password_root,
@@ -41,8 +39,6 @@ beforeEach(() => {
             if (
                 Cypress.spec.relative.startsWith('cypress/e2e/Project_Member')
             ) {
-                cy.log('Logging in as project member');
-                cy.log(users.projectMember_username);
                 cy.login({
                     username: users.projectMember_username,
                     password: users.projectMember_password
