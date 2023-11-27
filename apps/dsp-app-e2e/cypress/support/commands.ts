@@ -7,7 +7,7 @@ Cypress.Commands.add('login', (user: User) => {
 
         cy.request({
             method: 'POST',
-            url: 'http://0.0.0.0:3333/v2/authentication',
+            url: `${Cypress.env("apiUrl")}/v2/authentication`,
             body: {
                 username: user.username,
                 password: user.password
