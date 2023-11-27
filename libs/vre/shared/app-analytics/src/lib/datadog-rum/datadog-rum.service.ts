@@ -68,9 +68,9 @@ export class DatadogRumService {
                                 session.user.name,
                                 uuidv5.URL
                             );
-                            this.setActiveUser(id);
+                            this._setActiveUser(id);
                         } else {
-                            this.removeActiveUser();
+                            this._removeActiveUser();
                         }
                     }
                 });
@@ -78,7 +78,7 @@ export class DatadogRumService {
         });
     }
 
-    setActiveUser(identifier: string): void {
+    private _setActiveUser(identifier: string): void {
         if (datadogRum.getInternalContext()?.application_id) {
             datadogRum.setUser({
                 id: identifier,
@@ -86,7 +86,7 @@ export class DatadogRumService {
         }
     }
 
-    removeActiveUser(): void {
+    private _removeActiveUser(): void {
         if (datadogRum.getInternalContext()?.application_id) {
             datadogRum.removeUser();
         }

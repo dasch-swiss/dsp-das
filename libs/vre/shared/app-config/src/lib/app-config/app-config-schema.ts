@@ -7,7 +7,7 @@ import { z } from 'zod';
  * - site
  * - service
  */
-const dataDogSchema = z.discriminatedUnion('enabled', [
+export const dataDogSchema = z.discriminatedUnion('enabled', [
     z.object({
         enabled: z.literal(true),
         applicationId: z.string().nonempty(),
@@ -29,14 +29,14 @@ export type Datadog = z.infer<typeof dataDogSchema>;
  * If enabled, then the following values are required:
  * - accessToken
  */
-const rollbarSchema = z.discriminatedUnion('enabled', [
+export const rollbarSchema = z.discriminatedUnion('enabled', [
     z.object({
         enabled: z.literal(true),
         accessToken: z.string().nonempty(),
     }),
     z.object({ enabled: z.literal(false), accessToken: z.string().optional() }),
 ]);
-type Rollbar = z.infer<typeof rollbarSchema>;
+export type Rollbar = z.infer<typeof rollbarSchema>;
 
 const instrumentationSchema = z.object({
     environment: z

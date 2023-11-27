@@ -1,9 +1,4 @@
-/*
- * Copyright © 2021 - 2023 Swiss National Data and Service Center for the Humanities and/or DaSCH Service Platform contributors.
- *  SPDX-License-Identifier: Apache-2.0
- */
-
-import { appConfigSchema, Datadog, Rollbar } from './app-config-schema';
+import { appConfigSchema, dataDogSchema, rollbarSchema } from './app-config-schema';
 import { ZodError } from 'zod';
 
 describe('app-config schema tests', () => {
@@ -29,13 +24,13 @@ describe('app-config schema tests', () => {
                     applicationId: 'app_id',
                     clientToken: 'client_token',
                     site: 'site',
-                    service: 'dsp-app',
+                    service: 'dsp-app'
                 },
                 rollbar: {
                     enabled: true,
-                    accessToken: 'rollbar_token',
-                },
-            },
+                    accessToken: 'rollbar_token'
+                }
+            }
         };
 
         expect(() => {
@@ -61,12 +56,12 @@ describe('app-config schema tests', () => {
             instrumentation: {
                 environment: 'production',
                 dataDog: {
-                    enabled: false,
+                    enabled: false
                 },
                 rollbar: {
-                    enabled: false,
-                },
-            },
+                    enabled: false
+                }
+            }
         };
 
         expect(() => {
@@ -77,9 +72,9 @@ describe('app-config schema tests', () => {
     it('should throw error for invalid datadog config', () => {
         expect(() => {
             const data = {
-                enabled: true,
+                enabled: true
             };
-            Datadog.parse(data);
+            dataDogSchema.parse(data);
         }).toThrow(ZodError);
     });
 
@@ -90,27 +85,27 @@ describe('app-config schema tests', () => {
                 applicationId: '1234',
                 clientToken: '1234',
                 site: '1234',
-                service: '1234',
+                service: '1234'
             };
-            Datadog.parse(data);
+            dataDogSchema.parse(data);
         }).toBeTruthy();
     });
 
     it('should not throw error for valid Datadog config (2)', () => {
         expect(() => {
             const data = {
-                enabled: false,
+                enabled: false
             };
-            Datadog.parse(data);
+            dataDogSchema.parse(data);
         }).toBeTruthy();
     });
 
     it('should throw error for invalid Rollbar config (1)', () => {
         expect(() => {
             const data = {
-                enabled: true,
+                enabled: true
             };
-            Datadog.parse(data);
+            dataDogSchema.parse(data);
         }).toThrowError(ZodError);
     });
 
@@ -118,18 +113,18 @@ describe('app-config schema tests', () => {
         expect(() => {
             const data = {
                 enabled: true,
-                accessToken: '',
+                accessToken: ''
             };
-            Rollbar.parse(data);
+            rollbarSchema.parse(data);
         }).toThrowError(ZodError);
     });
 
     it('should not throw error for valid Rollbar config (1)', () => {
         expect(() => {
             const data = {
-                enabled: false,
+                enabled: false
             };
-            Rollbar.parse(data);
+            rollbarSchema.parse(data);
         }).toBeTruthy();
     });
 
@@ -137,9 +132,9 @@ describe('app-config schema tests', () => {
         expect(() => {
             const data = {
                 enabled: false,
-                accessToken: '1234567890',
+                accessToken: '1234567890'
             };
-            Rollbar.parse(data);
+            rollbarSchema.parse(data);
         }).toBeTruthy();
     });
 });
