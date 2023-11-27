@@ -7,7 +7,7 @@ import { z } from 'zod';
  * - site
  * - service
  */
-export const Datadog = z.discriminatedUnion('enabled', [
+const dataDogSchema = z.discriminatedUnion('enabled', [
     z.object({
         enabled: z.literal(true),
         applicationId: z.string().nonempty(),
@@ -23,34 +23,34 @@ export const Datadog = z.discriminatedUnion('enabled', [
         service: z.string().optional(),
     }),
 ]);
-export type Datadog = z.infer<typeof Datadog>;
+export type Datadog = z.infer<typeof dataDogSchema>;
 
 /**
  * If enabled, then the following values are required:
  * - accessToken
  */
-export const Rollbar = z.discriminatedUnion('enabled', [
+const rollbarSchema = z.discriminatedUnion('enabled', [
     z.object({
         enabled: z.literal(true),
         accessToken: z.string().nonempty(),
     }),
     z.object({ enabled: z.literal(false), accessToken: z.string().optional() }),
 ]);
-export type Rollbar = z.infer<typeof Rollbar>;
+type Rollbar = z.infer<typeof rollbarSchema>;
 
-export const Instrumentation = z.object({
+const instrumentationSchema = z.object({
     environment: z
         .string()
         .nonempty("required 'environment' value missing in config"),
-    dataDog: Datadog,
-    rollbar: Rollbar,
+    dataDog: dataDogSchema,
+    rollbar: rollbarSchema,
 });
 
 /**
  * Our codebase requires number | null. The config will contain either a number
  * or an empty string. We need to transform the empty string case into a null.
  */
-export const ApiPort = z
+const apiPort = z
     .number()
     .or(z.string().max(0))
     .transform((val) => {
@@ -65,7 +65,7 @@ export const ApiPort = z
  * Our codebase requires number | null. The config will contain either a number
  * or an empty string. We need to transform the empty string case into a null.
  */
-export const IiifPort = z
+const iiifPort = z
     .number()
     .or(z.string().max(0))
     .transform((val) => {
@@ -79,17 +79,17 @@ export const IiifPort = z
 /**
  * Definition of the AppConfig schema for validation of config.json.
  */
-export const AppConfig = z.object({
+export const appConfigSchema = z.object({
     dspRelease: z.string(),
     apiProtocol: z.enum(['http', 'https']),
     apiHost: z.string().nonempty("required 'apiHost' value missing in config"),
-    apiPort: ApiPort,
+    apiPort: apiPort,
     apiPath: z.string(),
     iiifProtocol: z.enum(['http', 'https']),
     iiifHost: z
         .string()
         .nonempty("required 'iiifHost' value missing in config"),
-    iiifPort: IiifPort,
+    iiifPort: iiifPort,
     iiifPath: z.string(),
     geonameToken: z
         .string()
@@ -97,10 +97,10 @@ export const AppConfig = z.object({
     jsonWebToken: z.string(),
     iriBase: z.literal('http://rdfh.ch'),
     logErrors: z.boolean(),
-    instrumentation: Instrumentation,
+    instrumentation: instrumentationSchema,
 });
 
 /**
  * Definition of the AppConfig type, which can be inferred from the schema.
  */
-export type AppConfig = z.infer<typeof AppConfig>;
+export type AppConfig = z.infer<typeof appConfigSchema>;

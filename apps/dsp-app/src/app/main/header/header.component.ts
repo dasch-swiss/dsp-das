@@ -1,32 +1,31 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import {AppConfigService, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
+import { AppConfigService, DspConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import {
     ComponentCommunicationEventService,
-    Events,
+    Events
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
 import { SearchParams } from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
-import {
-    DspConfig,
-} from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss'],
+    styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
     session = false;
     show = false;
     searchParams: SearchParams;
-    helpLink = RouteConstants.help
+    helpLink = RouteConstants.help;
 
+    headerColor: ThemePalette;
     dsp: DspConfig;
 
     componentCommsSubscription: Subscription;
@@ -40,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         private _domSanitizer: DomSanitizer,
         private _matIconRegistry: MatIconRegistry,
         private _notification: NotificationService,
-        private _router: Router,
+        private _router: Router
     ) {
         // create own logo icon to use them in mat-icons
         this._matIconRegistry.addSvgIcon(
@@ -51,6 +50,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         );
 
         this.dsp = this._appConfigService.dspConfig;
+        this.headerColor = HeaderComponent._getHeaderColor(this.dsp.production, this.dsp.environment);
     }
 
     ngOnInit() {
@@ -100,14 +100,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
         }
     }
 
+    private static _getHeaderColor(prodMode: boolean, env: string) {
+        if (prodMode) return 'primary';
+
+        if (env.includes('staging') || env.includes('dev')) {
+            return 'accent';
+        } else if (env.includes('test')) {
+            return 'warn';
+        }
+
+        return 'primary';
+    }
+
     openDialog(mode: string, name?: string, iri?: string): void {
         const dialogConfig: MatDialogConfig = {
             width: '840px',
             maxHeight: '80vh',
             position: {
-                top: '112px',
+                top: '112px'
             },
-            data: { mode: mode, title: name, id: iri },
+            data: { mode: mode, title: name, id: iri }
         };
 
         this._dialog.open(DialogComponent, dialogConfig);

@@ -6,6 +6,5 @@ export class DspConfig {
         public release: string,
         public environment: string,
         public production: boolean,
-        public color: string
     ) {}
 }

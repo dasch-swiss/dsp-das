@@ -5,7 +5,7 @@
 
 import { TestBed } from '@angular/core/testing';
 import { AppConfigService } from './app-config.service';
-import { AppConfig } from './app-config';
+import { appConfigSchema } from './app-config-schema';
 import { AppConfigToken } from './dsp-api-tokens';
 
 describe('AppConfigService with dev config', () => {
@@ -90,7 +90,7 @@ describe('AppConfigService with dev config', () => {
 describe('AppConfigService with prod config', () => {
     let service: AppConfigService;
 
-    const prodConfig: AppConfig = {
+    const prodConfig: appConfigSchema = {
         dspRelease: '2023.04.02',
         apiProtocol: 'https',
         apiHost: '0.0.0.0',
