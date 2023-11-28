@@ -28,13 +28,12 @@
                     <app-project-tile
                         [project]="proj"
                         [sysAdmin]="true"
-                        (buttonClicked)="navigateTo($event)"
                     ></app-project-tile>
                 </div>
             </div>
         </div>
         <!-- user is logged in and not a system admin -->
-        <div *ngIf="(isSysAdmin$ | async) === false && (isLoggedIn$ | async) === true">
+        <div *ngIf="(isSysAdmin$ | async) === false && !!(user$ | async)">
             <div class="title-bar">
                 <div class="title">
                     <p>My Projects</p>
@@ -48,7 +47,6 @@
                     <app-project-tile
                         [project]="userProj"
                         [sysAdmin]="false"
-                        (buttonClicked)="navigateTo($event)"
                     ></app-project-tile>
                 </div>
             </div>
@@ -65,14 +63,13 @@
                     <app-project-tile
                         [project]="otherProj"
                         [sysAdmin]="false"
-                        (buttonClicked)="navigateTo($event)"
                     ></app-project-tile>
                 </div>
             </div>
         </div>
 
         <!-- user is not logged in -->
-        <div *ngIf="((isProjectsLoading$ | async) === false) && ((isLoggedIn$ | async) === false)">
+        <div *ngIf="((isProjectsLoading$ | async) === false) && !((user$ | async))">
             <!-- list all projects -->
             <div class="title-bar admin">
                 <div class="title">
@@ -87,7 +84,6 @@
                     <app-project-tile
                         [project]="proj"
                         [sysAdmin]="false"
-                        (buttonClicked)="navigateTo($event)"
                     ></app-project-tile>
                 </div>
             </div>
