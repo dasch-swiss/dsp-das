@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import {
@@ -8,19 +8,18 @@ import {
 } from '@dasch-swiss/dsp-js';
 import {RouteConstants} from '@dasch-swiss/vre/shared/app-config';
 import { Select, Store } from '@ngxs/store';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { LoadProjectsAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-overview',
     templateUrl: './overview.component.html',
     styleUrls: ['./overview.component.scss'],
 })
-export class OverviewComponent implements OnInit, OnDestroy {
-    private destroyed$ = new Subject<void>();
+export class OverviewComponent implements OnInit {
 
-    loginSuccessfulSubscription: Subscription;
     isLoggedIn$ = this._authService.isLoggedIn$;
 
     @Select(UserSelectors.user) user$: Observable<ReadUser>;
@@ -40,9 +39,11 @@ export class OverviewComponent implements OnInit, OnDestroy {
     ) {
         this._titleService.setTitle('Projects Overview');
 
-        // reload projects after successful login
-        this.loginSuccessfulSubscription = this._authService.loginSuccessfulEvent.subscribe((user: User) => {
-                this.store.dispatch(new LoadProjectsAction());
+        // listen to successful logins and reload projects after
+        this._authService.loginSuccessfulEvent
+            .pipe(take(1))
+            .subscribe((user: User) => {
+            this.store.dispatch(new LoadProjectsAction());
         });
     }
 
@@ -52,11 +53,5 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
     createNewProject() {
         this._router.navigate([RouteConstants.newProjectRelative]);
-    }
-
-    ngOnDestroy(): void {
-        this.loginSuccessfulSubscription.unsubscribe();
-        this.destroyed$.next();
-        this.destroyed$.complete();
     }
 }
