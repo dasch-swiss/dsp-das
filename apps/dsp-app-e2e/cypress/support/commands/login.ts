@@ -1,6 +1,4 @@
-/// <reference types="cypress" />
-
-import { User } from "../models/user-profiles";
+import { User } from "../../models/user-profiles";
 
 Cypress.Commands.add('login', (user: User) => {
     cy.session(user, () => {
@@ -37,9 +35,4 @@ Cypress.Commands.add('login', (user: User) => {
             expect(session).to.exist;
         }
     });
-});
-
-Cypress.Commands.add('logout', () => {
-    cy.get('app-user-menu .user-menu').click();
-    cy.get('mat-list-item:last span.mdc-button__label > span').click();
 });

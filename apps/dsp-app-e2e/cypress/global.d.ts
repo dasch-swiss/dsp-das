@@ -1,16 +1,13 @@
 declare namespace Cypress {
 
-    // I can't import User from user-profiles without it breaking and idk why
+    // I can't import User from user-profiles without the linter breaking and idk why
     interface User {
         username: string;
         password: string;
     }
 
     interface Chainable<Subject> {
-        /**
-         * Logs-in user by using UI
-         */
+        // logs user in via the API
         login(user: User): void;
-        logout(): void;
     }
 }
