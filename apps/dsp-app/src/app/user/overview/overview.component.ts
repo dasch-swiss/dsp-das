@@ -3,15 +3,12 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import {
     StoredProject,
-    ReadUser,
-    User,
+    ReadUser
 } from '@dasch-swiss/dsp-js';
 import {RouteConstants} from '@dasch-swiss/vre/shared/app-config';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { LoadProjectsAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-overview',
@@ -19,8 +16,6 @@ import { take } from 'rxjs/operators';
     styleUrls: ['./overview.component.scss'],
 })
 export class OverviewComponent implements OnInit {
-
-    isLoggedIn$ = this._authService.isLoggedIn$;
 
     @Select(UserSelectors.user) user$: Observable<ReadUser>;
     // list of projects a user is a member of
@@ -34,17 +29,10 @@ export class OverviewComponent implements OnInit {
     constructor(
         private _titleService: Title,
         private _router: Router,
-        private _authService: AuthService,
         private store: Store,
     ) {
         this._titleService.setTitle('Projects Overview');
 
-        // listen to successful logins and reload projects after
-        this._authService.loginSuccessfulEvent
-            .pipe(take(1))
-            .subscribe((user: User) => {
-            this.store.dispatch(new LoadProjectsAction());
-        });
     }
 
     ngOnInit() {

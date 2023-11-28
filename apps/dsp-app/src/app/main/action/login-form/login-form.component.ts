@@ -25,7 +25,8 @@ import { map, take, takeLast } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { Location } from '@angular/common';
-import { UserStateModel } from '@dasch-swiss/vre/shared/app-state';
+import { LoadProjectsAction, UserStateModel } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
 
 @Component({
     selector: 'app-login-form',
@@ -105,9 +106,9 @@ export class LoginFormComponent implements OnInit {
             required: 'password is required',
         },
     };
-    
+
     returnUrl: string;
-    
+
     constructor(
         private _componentCommsService: ComponentCommunicationEventService,
         private _fb: UntypedFormBuilder,
@@ -161,13 +162,12 @@ export class LoginFormComponent implements OnInit {
                         this._componentCommsService.emit(
                             new EmitEvent(Events.loginSuccess, true)
                         );
-                        
+
                         return this._authService.loadUser(identifier)
                             .pipe(take(1))
                             .pipe(map((result: any) => result.user))
                             .subscribe((user: UserStateModel) => {
                                 this.loading = false;
-                                this._authService.loginSuccessfulEvent.emit(user.user);
                                 this.cd.markForCheck();
                                 this.router.navigate([this.returnUrl]);
                             });
