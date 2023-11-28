@@ -168,6 +168,7 @@ export class LoginFormComponent implements OnInit {
                             .pipe(map((result: any) => result.user))
                             .subscribe((user: UserStateModel) => {
                                 this.loading = false;
+                                this._authService.loginSuccessfulEvent.emit(user.user);
                                 this.cd.markForCheck();
                                 this.router.navigate([this.returnUrl]);
                             });
