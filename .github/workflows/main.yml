@@ -22,7 +22,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_PACKAGES_PAT }}" >> ~/.npmrc
+      - run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_PACKAGES_PAT }}" > ~/.npmrc
+      - run: echo "registry=https://npm.pkg.github.com/dasch-swiss" >> ~/.npmrc
+      - run: cat ~/.npmrc
       - run: npm install
       - run: npx nx run-many --all --target=lint
       - run: npx nx run-many --all --target=test --configuration=ci
