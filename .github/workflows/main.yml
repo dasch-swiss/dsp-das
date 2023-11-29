@@ -22,10 +22,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: "Adding GitHub registry"
+      - name: Authenticate with GitHub Packages
         run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.ORG_GITHUB_PACKAGES_PAT }}" > ~/.npmrc
-          echo "registry=https://npm.pkg.github.com/dasch-swiss" >> ~/.npmrc
+          source .github/commands/authenticate-with-gpr.yml
+          authenticate-with-gpr
       - name: "Run npm install"
         run: |
           npm install

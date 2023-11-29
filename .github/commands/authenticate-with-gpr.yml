@@ -1,0 +1,5 @@
+commands:
+  authenticate-with-gpr:
+    run: |
+      echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+      echo "registry=https://npm.pkg.github.com/dasch-swiss" >> ~/.npmrc
