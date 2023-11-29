@@ -10,7 +10,7 @@ import {
     DspInstrumentationToken,
 } from '@dasch-swiss/vre/shared/app-config';
 import { Observable } from 'rxjs';
-import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
+import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { v5 as uuidv5 } from 'uuid';
 
 @Injectable({
@@ -19,9 +19,7 @@ import { v5 as uuidv5 } from 'uuid';
 export class DatadogRumService {
     private buildTag$: Observable<BuildTag> = inject(BuildTagToken);
     private config: DspInstrumentationConfig = inject(DspInstrumentationToken);
-    private sessionService: SessionService = inject(SessionService);
-
-    session$: Observable<Session | undefined> = this.sessionService.session$;
+    private authService: AuthService = inject(AuthService);
 
     constructor() {
         this.buildTag$.subscribe((tag) => {
@@ -61,13 +59,10 @@ export class DatadogRumService {
                 });
 
                 // depending on the session state, activate or deactivate the user
-                this.session$.subscribe((session: Session | undefined) => {
-                    if (session) {
-                        if (session?.user?.name) {
-                            const id: string = uuidv5(
-                                session.user.name,
-                                uuidv5.URL
-                            );
+                this.authService.isLoggedIn$.subscribe((isLoggedIn: boolean) => {
+                    if (isLoggedIn) {
+                        if (this.authService.tokenUser) {
+                            const id: string = uuidv5(this.authService.tokenUser, uuidv5.URL);
                             this.setActiveUser(id);
                         } else {
                             this.removeActiveUser();

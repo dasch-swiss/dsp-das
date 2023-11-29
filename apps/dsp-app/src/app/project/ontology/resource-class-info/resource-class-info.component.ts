@@ -64,7 +64,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
         return this.currentOntology$.pipe(
             takeUntil(this.ngUnsubscribe),
             map(x => x?.lastModificationDate));
-    };
+    }
 
     @Input() userCanEdit: boolean; // is user a project admin or sys admin?
 
@@ -507,7 +507,7 @@ OFFSET 0`;
             return [];
         }
 
-        let existingProperties: PropToAdd[] = [];
+        const existingProperties: PropToAdd[] = [];
         
         const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
         ontoProperties.forEach((op: OntologyProperties, i: number) => {
