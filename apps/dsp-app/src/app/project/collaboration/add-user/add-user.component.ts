@@ -163,7 +163,7 @@ export class AddUserComponent implements OnInit {
                 if (projectMembers[this.projectIri]) {
                     for (const m of projectMembers[this.projectIri].value) {
                         members.push(m.id);
-    
+
                         // if the user is already member of the project
                         // add the email to the list of existing
                         this.existingEmailInProject.push(
@@ -366,7 +366,6 @@ export class AddUserComponent implements OnInit {
             },
             data: {
                 project: this.projectUuid,
-                name: this.selectUserForm.controls['username'].value,
                 mode: mode,
             },
         };
