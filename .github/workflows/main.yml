@@ -45,7 +45,7 @@ jobs:
         with:
           node-version: 18
       - uses: browser-actions/setup-chrome@v1
-                - name: "Adding GitHub registry"
+      - name: "Adding GitHub registry"
         run: |
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.ORG_GITHUB_PACKAGES_PAT }}" > ~/.npmrc
           echo "registry=https://npm.pkg.github.com/dasch-swiss" >> ~/.npmrc
