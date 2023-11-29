@@ -53,8 +53,11 @@
         </mat-form-field>
 
         <!-- password // hidden in edit mode -->
-        <app-password-form *ngIf="!user"
-            (sendToParent)="getPassword($event)"></app-password-form>
+        <app-password-form
+            *ngIf="user && showPasswordForm"
+            [user]='user'
+            (sendToParent)="getPassword($event)">
+        </app-password-form>
 
         <mat-form-field class="large-field">
 

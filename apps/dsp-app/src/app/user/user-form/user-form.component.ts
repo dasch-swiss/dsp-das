@@ -69,12 +69,14 @@ export class UserFormComponent implements OnInit, OnChanges {
     @Output() closeDialog: EventEmitter<any> = new EventEmitter<ReadUser>();
 
     /**
-     * status for the progress indicator 
+     * status for the progress indicator
      */
     loading = false;
     loadingData = true;
     title: string;
     subtitle: string;
+
+    showPasswordForm = false;
 
     /**
      * define, if the user has system administration permission
@@ -178,43 +180,15 @@ export class UserFormComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.loadingData = true;
-
-        if (this.user) {
-            this.title = this.user.username;
-            this.subtitle = "'appLabels.form.user.title.edit' | translate";
-            this.loadingData = !this.buildForm(this.user);
+        if (this.user && this.user.id) {
+            this.editOwnAccount();
         } else {
-            /**
-             * create mode: empty form for new user
-             */
-
-            // get existing users to avoid same usernames and email addresses
-            this.allUsers$
-                .pipe(take(1))
-                .subscribe((allUsers) => {
-                    for (const user of allUsers) {
-                        // email address of the user should be unique.
-                        // therefore we create a list of existing email addresses to avoid multiple use of user names
-                        this.existingEmails.push(
-                            new RegExp('(?:^|W)' + user.email.toLowerCase() + '(?:$|W)'));
-                        // username should also be unique.
-                        // therefore we create a list of existingUsernames to avoid multiple use of user names
-                        this.existingUsernames.push(
-                            new RegExp('(?:^|W)' + user.username.toLowerCase() + '(?:$|W)')
-                        );
-                    }
-
-                    const newUser: ReadUser = new ReadUser();
-
-                    if (CustomRegex.EMAIL_REGEX.test(this.name)) {
-                        newUser.email = this.name;
-                    } else {
-                        newUser.username = this.name;
-                    }
-                    // build the form
-                    this.loadingData = !this.buildForm(newUser);
-                    this._cd.markForCheck();
-                });
+            if (this.name) {
+                this.editExistingUser();
+            }
+            else {
+                this.defineNewUser()
+            }
         }
     }
 
@@ -222,6 +196,63 @@ export class UserFormComponent implements OnInit, OnChanges {
         if (this.user) {
             this.buildForm(this.user);
         }
+    }
+
+    editOwnAccount() {
+        this.title = this.user.username;
+        this.subtitle = "'appLabels.form.user.title.edit' | translate";
+        this.loadingData = !this.buildForm(this.user);
+    }
+
+    editExistingUser() {
+        this.title = this.name;
+        this.subtitle = "'appLabels.form.user.title.edit' | translate";
+
+        this._dspApiConnection.admin.usersEndpoint
+            .getUserByUsername(this.name)
+            .pipe(take(1))
+            .subscribe(
+                (response: ApiResponseData<UserResponse>) => {
+                    this.user = response.body.user;
+                    this.loadingData = !this.buildForm(this.user);
+                },
+                (error: ApiResponseError) => {
+                    this._errorHandler.showMessage(error);
+                }
+            );
+    }
+
+    defineNewUser() {
+
+        // get existing users to avoid same usernames and email addresses
+        this.allUsers$
+            .pipe(take(1))
+            .subscribe((allUsers) => {
+                for (const user of allUsers) {
+                    // email address of the user should be unique.
+                    // therefore we create a list of existing email addresses to avoid multiple use of user names
+                    this.existingEmails.push(
+                        new RegExp('(?:^|W)' + user.email.toLowerCase() + '(?:$|W)'));
+                    // username should also be unique.
+                    // therefore we create a list of existingUsernames to avoid multiple use of user names
+                    this.existingUsernames.push(
+                        new RegExp('(?:^|W)' + user.username.toLowerCase() + '(?:$|W)')
+                    );
+                }
+
+                const newUser: ReadUser = new ReadUser();
+
+                if (CustomRegex.EMAIL_REGEX.test(this.name)) {
+                    newUser.email = this.name || '';
+                } else {
+                    newUser.username = this.name || '';
+                }
+                // build the form
+                this.showPasswordForm = true;
+                this.user = newUser;
+                this.loadingData = !this.buildForm(newUser);
+                this._cd.markForCheck();
+            });
     }
 
     /**
@@ -232,10 +263,10 @@ export class UserFormComponent implements OnInit, OnChanges {
         // get info about system admin permission
         if (
             user.id &&
-            user.permissions.groupsPerProject[Constants.SystemProjectIRI]
+            user.permissions?.groupsPerProject[Constants.SystemProjectIRI]
         ) {
             // this user is member of the system project. does he has admin rights?
-            this.sysAdminPermission = user.permissions.groupsPerProject[
+            this.sysAdminPermission = user.permissions?.groupsPerProject[
                 Constants.SystemProjectIRI
             ].includes(Constants.SystemAdminGroupIRI);
         }
