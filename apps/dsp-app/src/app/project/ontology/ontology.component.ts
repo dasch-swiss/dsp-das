@@ -98,6 +98,8 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     @ViewChild('ontologyEditor', { read: ViewContainerRef })
     ontologyEditor: ViewContainerRef;
 
+    updatePropertyAssignment$: Subject<any> = new Subject();
+
     // id of current ontology
     get ontologyIri(): string {
         const iriBase = this._ontologyService.getIriBaseUrl();
@@ -189,6 +191,13 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
                     this.initOntology();
                 }
         } 
+
+        //TODO temporary solution to replace eventemitter with subject because emitter loses subscriber after child component
+        //subscription responsible for emitting event is triggered
+        this.updatePropertyAssignment$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
+            this.onUpdatePropertyAssignment();
+        });
+
         this._cd.markForCheck();
     }
 

@@ -287,19 +287,25 @@ export class OntologiesState {
         );
         onto.entity = delCard;
 
-        this._dspApiConnection.v2.onto
-            .deleteCardinalityFromResourceClass(onto)
-            .subscribe(
-                (res: ResourceClassDefinitionWithAllLanguages | ApiResponseError) => {
-                    //ctx.dispatch(new SetCurrentOntologyPropertiesToDisplayAction(currentOntologyPropertiesToDisplay));
-                    ctx.setState({ ...state, isLoading: false });
-                    this._notification.openSnackBar(
-                        `You have successfully removed "${property.label}" from "${resourceClass.label}".`
-                    );
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(<ApiResponseError>error);
-                }
+        return this._dspApiConnection.v2.onto.deleteCardinalityFromResourceClass(onto)
+            .pipe(
+                take(1),
+                map((response: ResourceClassDefinitionWithAllLanguages | ApiResponseError) => 
+                    response as ResourceClassDefinitionWithAllLanguages
+                ),
+                tap({
+                    next: (res: ResourceClassDefinitionWithAllLanguages) => {
+                        //ctx.dispatch(new SetCurrentOntologyPropertiesToDisplayAction(currentOntologyPropertiesToDisplay));
+                        ctx.setState({ ...state, isLoading: false });
+                        this._notification.openSnackBar(
+                            `You have successfully removed "${property.label}" from "${resourceClass.label}".`
+                        );
+                    },
+                    error: (error: ApiResponseError) => {
+                        ctx.patchState({ hasLoadingErrors: true, isLoading: false });
+                        this._errorHandler.showMessage(error);
+                    }
+                })
             );
     }
 
@@ -329,16 +335,23 @@ export class OntologiesState {
 
         onto.entity = addCard;
 
-        this._dspApiConnection.v2.onto
-            .replaceGuiOrderOfCardinalities(onto)
-            .pipe(take(1))
-            .subscribe((responseGuiOrder: ResourceClassDefinitionWithAllLanguages | ApiResponseError) => {
-                    //TODO lastModificationDate should be updated in state if reload action is not executed after this
-                    //this.lastModificationDate = responseGuiOrder.lastModificationDate; 
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
+        
+        return this._dspApiConnection.v2.onto.replaceGuiOrderOfCardinalities(onto)
+            .pipe(
+                take(1),
+                map((response: ResourceClassDefinitionWithAllLanguages | ApiResponseError) => 
+                    response as ResourceClassDefinitionWithAllLanguages
+                ),
+                tap({
+                    next: (res: ResourceClassDefinitionWithAllLanguages) => {
+                        //TODO lastModificationDate should be updated in state if reload action is not executed after this
+                        //this.lastModificationDate = responseGuiOrder.lastModificationDate;
+                    },
+                    error: (error: ApiResponseError) => {
+                        ctx.patchState({ hasLoadingErrors: true, isLoading: false });
+                        this._errorHandler.showMessage(error);
+                    }
+                })
             );
     }
 
