@@ -143,7 +143,6 @@ jobs:
     needs: [
       test,
       dsp-app-tests,
-      dateadapter-tests,
       jdnconvertiblecalendar-tests,
       jdnconvertiblecalendardateadapter-tests,
       vre-shared-app-config-tests
