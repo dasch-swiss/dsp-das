@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: npm install
+      - run: npm install --force
       - run: npx nx run-many --all --target=lint
       # - run: npx nx run-many --all --target=test --configuration=ci
         env:
