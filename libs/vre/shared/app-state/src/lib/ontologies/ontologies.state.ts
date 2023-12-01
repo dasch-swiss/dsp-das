@@ -1,7 +1,6 @@
-import { SortingService } from './../../../../../../../apps/dsp-app/src/app/main/services/sorting.service';
 import { Inject, Injectable } from '@angular/core';
 import { Action, Actions, State, StateContext, ofActionSuccessful } from '@ngxs/store';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import { DspApiConnectionToken, getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-config';
 import { ApiResponseError, Constants, KnoraApiConnection, OntologiesMetadata, ReadOntology, PropertyDefinition, UpdateOntology, UpdateResourceClassCardinality, ResourceClassDefinitionWithAllLanguages, IHasProperty, OntologyMetadata, CanDoResponse } from '@dasch-swiss/dsp-js';
 import { OntologiesStateModel } from './ontologies.state-model';
@@ -10,7 +9,7 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-interfaces';
 import { of } from 'rxjs';
 import { LoadListsInProjectAction } from '../lists/lists.actions';
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 
 const defaults: OntologiesStateModel = <OntologiesStateModel>{
@@ -358,9 +357,7 @@ export class OntologiesState {
     
     @Action(CurrentOntologyCanBeDeletedAction)
     currentOntologyCanBeDeletedAction(
-        ctx: StateContext<OntologiesStateModel>,
-        { }: CurrentOntologyCanBeDeletedAction
-    ) {
+        ctx: StateContext<OntologiesStateModel>) {
         ctx.patchState({ isLoading: true });
         const state = ctx.getState();
         if (!state.currentOntology) {

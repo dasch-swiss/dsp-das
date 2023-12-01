@@ -4,8 +4,7 @@ import {
     ResourceClassDefinition,
 } from '@dasch-swiss/dsp-js';
 import {AppConfigService, RouteConstants, getAllEntityDefinitionsAsArray} from '@dasch-swiss/vre/shared/app-config';
-import { OntologyService } from '@dsp-app/src/app/project/ontology/ontology.service';
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
     FilteredResources,
     SearchParams,

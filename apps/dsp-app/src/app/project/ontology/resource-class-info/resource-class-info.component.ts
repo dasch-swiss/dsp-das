@@ -24,22 +24,19 @@ import {DspApiConnectionToken, RouteConstants} from '@dasch-swiss/vre/shared/app
 import { DialogComponent, DialogEvent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
+import { DefaultClass, DefaultResourceClasses, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
     DefaultProperties,
     DefaultProperty,
     PropertyCategory,
     PropertyInfoObject,
-} from '../default-data/default-properties';
-import {
-    DefaultResourceClasses,
-} from '../default-data/default-resource-classes';
+} from '@dasch-swiss/vre/shared/app-helper-services';
 import { GuiCardinality } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
-import { DefaultClass, OntologiesSelectors, OntologyProperties, PropToAdd, PropToDisplay, PropertyAssignment, RemovePropertyAction, ReplacePropertyAction } from '@dasch-swiss/vre/shared/app-state';
+import { OntologiesSelectors, OntologyProperties, PropToAdd, PropToDisplay, PropertyAssignment, RemovePropertyAction, ReplacePropertyAction } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
-import { OntologyService } from '../ontology.service';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -508,7 +505,6 @@ OFFSET 0`;
         }
 
         const existingProperties: PropToAdd[] = [];
-        
         const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
         ontoProperties.forEach((op: OntologyProperties, i: number) => {
             const onto = currentProjectOntologies.find((i) => i?.id === op.ontology);
@@ -520,7 +516,7 @@ OFFSET 0`;
 
             op.properties.forEach(
                 (availableProp: ResourcePropertyDefinitionWithAllLanguages) => {
-                    const superProp = this._ontoService.getSuperProperty(availableProp);
+                    const superProp = this._ontoService.getSuperProperty(availableProp, currentProjectOntologies);
                     if (superProp && availableProp.subPropertyOf.indexOf(superProp) === -1) {
                         availableProp.subPropertyOf.push(superProp);
                     }

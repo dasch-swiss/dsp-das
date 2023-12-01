@@ -22,7 +22,6 @@ export class RemoveUserAction {
 
 export class LogUserOutAction {
     static readonly type = '[User] Log user out';
-    constructor() {}
 }
 
 export class SetUserProjectGroupsAction {
@@ -37,7 +36,6 @@ export class LoadUsersAction {
 
 export class ResetUsersAction {
     static readonly type = '[User] Reset All Users';
-    constructor() {}
 }
 
 export class CreateUserAction {

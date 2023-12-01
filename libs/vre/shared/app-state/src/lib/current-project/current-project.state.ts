@@ -7,10 +7,10 @@ import { EMPTY, of } from 'rxjs';
 import { CurrentProjectStateModel } from './current-project.state-model';
 import { ClearCurrentProjectAction as ClearCurrentProjectAction, SetCurrentProjectAction, SetCurrentProjectByUuidAction, SetCurrentProjectGroupsAction } from './current-project.actions';
 import { ProjectsSelectors } from '../projects/projects.selectors';
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { UserSelectors } from '../user/user.selectors';
 
-let defaults: CurrentProjectStateModel = {
+const defaults: CurrentProjectStateModel = {
     isLoading: false,
     hasLoadingErrors: false,
     project: undefined,

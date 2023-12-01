@@ -1,10 +1,10 @@
-import { OntologyService } from '@dsp-app/src/app/project/ontology/ontology.service';
 import { Selector } from '@ngxs/store';
 import { OntologiesStateModel } from './ontologies.state-model';
 import { OntologiesState } from './ontologies.state';
 import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-interfaces';
 import { OntologyMetadata, ReadOntology, ReadProject } from '@dasch-swiss/dsp-js';
 import { CurrentProjectSelectors } from '../current-project/current-project.selectors';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 export class OntologiesSelectors {
     @Selector([OntologiesState])

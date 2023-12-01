@@ -1,7 +1,7 @@
 import {MatSidenav} from '@angular/material/sidenav';
 import {Title} from '@angular/platform-browser';
 import {ActivatedRoute, Router} from '@angular/router';
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,

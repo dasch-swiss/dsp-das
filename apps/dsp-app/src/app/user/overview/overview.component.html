@@ -69,7 +69,7 @@
         </div>
 
         <!-- user is not logged in -->
-        <div *ngIf="((isProjectsLoading$ | async) === false) && !((user$ | async))">
+        <div *ngIf="((isProjectsLoading$ | async) === false) && !!((user$ | async))">
             <!-- list all projects -->
             <div class="title-bar admin">
                 <div class="title">

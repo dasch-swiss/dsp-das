@@ -5,7 +5,6 @@ export class SetCurrentPageAction {
 
 export class ReloadCurrentPageAction {
     static readonly type = '[CurrentPage] Reload current page';
-    constructor() {}
 }
 
 export class AppInitAction {

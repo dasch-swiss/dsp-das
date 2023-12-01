@@ -24,8 +24,8 @@ import {
 import {DspApiConnectionToken, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {SortProp} from "@dsp-app/src/app/main/action/sort-button/sort-button.component";
 import {Observable, Subject, combineLatest} from "rxjs";
 import {map, takeUntil, tap} from "rxjs/operators";

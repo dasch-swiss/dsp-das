@@ -3,17 +3,13 @@ import {
     Cardinality,
     Constants,
     KnoraApiConfig,
+    ReadOntology,
     ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
 import { Observable, of } from 'rxjs';
 import { DspApiConfigToken } from '@dasch-swiss/vre/shared/app-config';
-import {
-    DefaultProperties,
-    DefaultProperty,
-    PropertyCategory,
-} from './default-data/default-properties';
 import { Store } from '@ngxs/store';
-import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { DefaultProperties, DefaultProperty, PropertyCategory } from './default-data/default-properties';
 
 /**
  * helper methods for the ontology editor
@@ -131,13 +127,13 @@ export class OntologyService {
     }
 
     getSuperProperty(
-        property: ResourcePropertyDefinitionWithAllLanguages
-    ): string {
-        let superPropIri: string;
+        property: ResourcePropertyDefinitionWithAllLanguages,
+        currentProjectOntologies: ReadOntology[]
+    ): string | undefined {
+        let superPropIri: string | undefined;
 
         // get iri from sub properties
         if (property.subPropertyOf.length) {
-            const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
             for (const subProp of property.subPropertyOf) {
                 const baseOntoIri = subProp.split(Constants.HashDelimiter)[0];
                 // compare with knora base ontology
@@ -161,7 +157,7 @@ export class OntologyService {
      * get default property information for a certain ontology property
      */
     getDefaultPropertyType(property: ResourcePropertyDefinitionWithAllLanguages): DefaultProperty {
-        let propType: DefaultProperty;
+        let propType: DefaultProperty | undefined;
 
         for (const group of this.defaultProperties) {
             if (property.subPropertyOf.length) {
@@ -172,8 +168,7 @@ export class OntologyService {
                         subProp === Constants.HasLinkTo ||
                         subProp === Constants.IsPartOf
                     ) {
-                        propType = group.elements.find(
-                            (i) =>
+                        propType = group.elements.find((i: DefaultProperty) =>
                                 i.guiEle === property.guiElement &&
                                 i.subPropOf === subProp
                         );
@@ -184,8 +179,7 @@ export class OntologyService {
                         ) {
                             // if the property is of type number, but sub property of SeqNum,
                             // select the correct default prop params
-                            propType = group.elements.find(
-                                (i) =>
+                            propType = group.elements.find((i: DefaultProperty) =>
                                     i.objectType === property.objectType &&
                                     i.subPropOf === Constants.SeqNum
                             );
@@ -194,16 +188,14 @@ export class OntologyService {
                         ) {
                             // if the property is of type text value, we have to check the gui element
                             // to get the correct default prop params
-                            propType = group.elements.find(
-                                (i) =>
+                            propType = group.elements.find((i: DefaultProperty) =>
                                     i.guiEle === property.guiElement &&
                                     i.objectType === property.objectType
                             );
                         } else {
                             // in all other cases the gui-element resp. the subProp is not relevant
                             // because the object type is unique
-                            propType = group.elements.find(
-                                (i) => i.objectType === property.objectType
+                            propType = group.elements.find((i: DefaultProperty) => i.objectType === property.objectType
                             );
                         }
                     }

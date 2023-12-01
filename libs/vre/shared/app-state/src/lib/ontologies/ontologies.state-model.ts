@@ -6,6 +6,6 @@ export class OntologiesStateModel {
     hasLoadingErrors: boolean | undefined;
     projectOntologies: IProjectOntologiesKeyValuePairs = {};
     currentOntology: ReadOntology | null = null;
-    currentOntologyCanBeDeleted: boolean = false;
+    currentOntologyCanBeDeleted = false;
     currentProjectOntologyProperties: OntologyProperties[] = [];
 }

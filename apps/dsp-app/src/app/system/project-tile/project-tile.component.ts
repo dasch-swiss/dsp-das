@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { StoredProject } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { Router } from '@angular/router';
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
     selector: 'app-project-tile',

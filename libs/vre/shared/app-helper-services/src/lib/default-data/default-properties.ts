@@ -3,6 +3,12 @@ import {
     ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
 
+export interface DefaultClass {
+    iri: string;
+    label: string;
+    icons?: string[]; // icons can be used to be selected in the resource class form
+}
+
 /**
  * property object with all information to create or edit a property
  */

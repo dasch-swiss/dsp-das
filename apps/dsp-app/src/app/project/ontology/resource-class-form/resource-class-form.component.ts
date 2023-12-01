@@ -34,7 +34,7 @@ import { DspApiConnectionToken, getAllEntityDefinitionsAsArray } from '@dasch-sw
 import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
-import { OntologyService } from '../ontology.service';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { DialogEvent } from '@dsp-app/src/app/main/dialog/dialog.component';
