@@ -30,7 +30,7 @@ export class UserApiService extends BaseApi {
     }
 
     create(project: Project) {
-        return this._http.post(this.baseUri, project);
+        return this._http.post<UserResponse>(this.baseUri, project);
     }
 
     getGroupMembershipsForUser(iri: string) {

@@ -27,7 +27,7 @@ export class ProjectApiService extends BaseApi {
     }
 
     create(project: Project) {
-        return this._http.post(this.baseUri, project);
+        return this._http.post<ProjectResponse>(this.baseUri, project);
     }
 
     update(iri: string, updatedProject: UpdateProjectRequest) {
