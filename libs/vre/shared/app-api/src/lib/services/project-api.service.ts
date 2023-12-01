@@ -9,7 +9,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { BaseApi } from './base-api';
 
-export type ProjectId = 'iri' | 'shortname' | 'shortcode';
+export type ProjectIdentifier = 'iri' | 'shortname' | 'shortcode';
 @Injectable({
     providedIn: 'root'
 })
@@ -22,16 +22,16 @@ export class ProjectApiService extends BaseApi {
         return this._http.get<ProjectsResponse>(this.baseUri);
     }
 
-    get(id: string, idProperty: ProjectId = 'iri') {
-        return this._http.get<ProjectResponse>(this._projectRoute(id, idProperty));
+    get(id: string, idType: ProjectIdentifier = 'iri') {
+        return this._http.get<ProjectResponse>(this._projectRoute(id, idType));
     }
 
     create(project: Project) {
         return this._http.post(this.baseUri, project);
     }
 
-    update(iri: string, projectInfo: UpdateProjectRequest) {
-        return this._http.put<ProjectResponse>(this._projectRoute(iri), projectInfo);
+    update(iri: string, updatedProject: UpdateProjectRequest) {
+        return this._http.put<ProjectResponse>(this._projectRoute(iri), updatedProject);
     }
 
     delete(iri: string) {
@@ -42,20 +42,20 @@ export class ProjectApiService extends BaseApi {
         return this._http.get<KeywordsResponse>(`${this._projectRoute(iri)}/Keywords`);
     }
 
-    getMembersForProject(id: string, idProperty: ProjectId = 'iri') {
-        return this._http.get(`${this._projectRoute(id, idProperty)}/members`);
+    getMembersForProject(id: string, idType: ProjectIdentifier = 'iri') {
+        return this._http.get(`${this._projectRoute(id, idType)}/members`);
     }
 
-    getAdminMembersForProject(id: string, idProperty: ProjectId = 'iri') {
-        return this._http.get(`${this._projectRoute(id, idProperty)}/admin-members`);
+    getAdminMembersForProject(id: string, idType: ProjectIdentifier = 'iri') {
+        return this._http.get(`${this._projectRoute(id, idType)}/admin-members`);
     }
 
-    getRestrictedViewSettingsForProject(id: string, idProperty: ProjectId = 'iri') {
-        return this._http.get(`${this._projectRoute(id, idProperty)}/RestrictedViewSettings`);
+    getRestrictedViewSettingsForProject(id: string, idType: ProjectIdentifier = 'iri') {
+        return this._http.get(`${this._projectRoute(id, idType)}/RestrictedViewSettings`);
     }
 
-    private _projectRoute(id: string, idProperty: ProjectId = 'iri') {
-        return `${this.baseUri}/${idProperty}/${encodeURIComponent(id)}`;
+    private _projectRoute(id: string, idType: ProjectIdentifier = 'iri') {
+        return `${this.baseUri}/${idType}/${encodeURIComponent(id)}`;
     }
 }
 
