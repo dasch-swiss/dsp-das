@@ -164,7 +164,7 @@ export class ListValueComponent
                 7,
                 rootNodeIri.length - 1
             );
-          this._listV2Api
+           this._listV2Api
           // this._dspApiConnection.v2.list
                 .getList(trimmedRootNodeIRI)
                 .subscribe(
