@@ -21,6 +21,9 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import {
+    ListV2ApiService
+} from '../../../../../../../../libs/vre/shared/app-api/src/lib/services/v2/list-v2-api.service';
 @Component({
     selector: 'app-list-value',
     templateUrl: './list-value.component.html',
@@ -46,6 +49,7 @@ export class ListValueComponent
         @Inject(FormBuilder) protected _fb: FormBuilder,
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
+        private readonly _listV2Api: ListV2ApiService,
         private _errorHandler: AppErrorHandler
     ) {
         super();
@@ -160,10 +164,12 @@ export class ListValueComponent
                 7,
                 rootNodeIri.length - 1
             );
-            this._dspApiConnection.v2.list
+          this._listV2Api
+          // this._dspApiConnection.v2.list
                 .getList(trimmedRootNodeIRI)
                 .subscribe(
                     (response: ListNodeV2) => {
+                        console.log('yyyeeees', response);
                         if (!response.children.length) {
                             // this shouldn't happen since users cannot select the root node
                             this.selectedNodeHierarchy.push(response.label);
