@@ -2,15 +2,13 @@ import { Router } from '@angular/router';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
 import { EventEmitter, Injectable, Output, inject } from '@angular/core';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { catchError, mapTo, tap, switchMap, map, takeLast, take } from 'rxjs/operators';
-import { IntervalWrapperService } from '../../../../../../apps/dsp-app/src/app/main/services/interval-wrapper.service';
-import { Auth, RouteConstants } from '../../../app-config/src/lib/app-config/app-constants';
-import { ApiResponseData, ApiResponseError, CredentialsResponse, LoginResponse, ReadUser, User, UserResponse } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { catchError, tap, switchMap, map, takeLast, take } from 'rxjs/operators';
+import { ApiResponseData, ApiResponseError, CredentialsResponse, LoginResponse, User } from '@dasch-swiss/dsp-js';
+import { Auth, RouteConstants, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoginError, ServerError } from './error';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { Store } from '@ngxs/store';
-import { LoadUserAction, ClearProjectsAction, LogUserOutAction, UserStateModel, ClearCurrentProjectAction, ClearListsAction, ClearProjectOntologiesAction, ClearOntologiesAction } from '@dasch-swiss/vre/shared/app-state';
+import { LoadUserAction, ClearProjectsAction, LogUserOutAction, UserStateModel, ClearCurrentProjectAction, ClearListsAction, ClearOntologiesAction } from '@dasch-swiss/vre/shared/app-state';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -311,7 +309,7 @@ export class AuthService {
             return '';
         }
 
-        let decoded = jwt_decode<JwtPayload>(token);
+        const decoded = jwt_decode<JwtPayload>(token);
         if (decoded.sub === undefined) {
             return '';
         }

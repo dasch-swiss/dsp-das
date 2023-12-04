@@ -32,19 +32,16 @@ import {
 import { DspApiConnectionToken, RouteConstants, getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent, DialogEvent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { DefaultClass, DefaultResourceClasses, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
     DefaultProperties,
     PropertyCategory,
     PropertyInfoObject,
-} from './default-data/default-properties';
-import {
-    DefaultResourceClasses,
-} from './default-data/default-resource-classes';
-import { OntologyService } from './ontology.service';
+} from '@dasch-swiss/vre/shared/app-helper-services';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { ClearCurrentOntologyAction, ClearProjectOntologiesAction, CurrentOntologyCanBeDeletedAction, CurrentProjectSelectors, DefaultClass, LoadListsInProjectAction, LoadOntologyAction, LoadProjectOntologiesAction, OntologiesSelectors, OntologyProperties, ProjectsSelectors, SetCurrentOntologyAction, SetCurrentProjectOntologyPropertiesAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ClearCurrentOntologyAction, ClearProjectOntologiesAction, CurrentOntologyCanBeDeletedAction, CurrentProjectSelectors, LoadListsInProjectAction, LoadOntologyAction, LoadProjectOntologiesAction, OntologiesSelectors, OntologyProperties, ProjectsSelectors, SetCurrentOntologyAction, SetCurrentProjectOntologyPropertiesAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
 import { ProjectBase } from '../project-base';
@@ -97,6 +94,8 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     
     @ViewChild('ontologyEditor', { read: ViewContainerRef })
     ontologyEditor: ViewContainerRef;
+
+    updatePropertyAssignment$: Subject<any> = new Subject();
 
     // id of current ontology
     get ontologyIri(): string {
@@ -189,6 +188,13 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
                     this.initOntology();
                 }
         } 
+
+        //TODO temporary solution to replace eventemitter with subject because emitter loses subscriber after child component
+        //subscription responsible for emitting event is triggered
+        this.updatePropertyAssignment$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
+            this.onUpdatePropertyAssignment();
+        });
+
         this._cd.markForCheck();
     }
 

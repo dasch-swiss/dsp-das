@@ -24,12 +24,12 @@ import {
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
+import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { CurrentProjectSelectors, LoadProjectAction, LoadProjectMembersAction, LoadUserAction, RemoveUserFromProjectAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

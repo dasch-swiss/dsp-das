@@ -1,5 +1,5 @@
 <dasch-swiss-app-progress-indicator *ngIf="isProjectsLoading$ | async"></dasch-swiss-app-progress-indicator>
-<div *ngIf="!(isProjectsLoading$ | async) && (readProject$ | async)"
+<div *ngIf="(isProjectsLoading$ | async) === false && (readProject$ | async)"
     class="content large middle">
     <div>
         <p>Project Description</p>
@@ -40,7 +40,7 @@
     <!-- description -->
     <div class="description-rm">
         <div>
-            <p>{{(readProject$ | async)?.longname}}</p>
+            <p class="project-longname">{{(readProject$ | async)?.longname}}</p>
         </div>
         <section class="project description" *ngFor="let desc of (readProject$ | async)?.description; trackBy: trackByStringLiteralFn">
             <div [innerHtml]="desc.value"></div>

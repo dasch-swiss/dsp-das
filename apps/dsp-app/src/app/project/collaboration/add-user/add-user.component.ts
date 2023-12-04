@@ -29,7 +29,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AutocompleteItem } from '@dsp-app/src/app/workspace/search/operator';
 import { Store } from '@ngxs/store';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';

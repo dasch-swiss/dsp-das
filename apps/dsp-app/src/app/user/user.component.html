@@ -1,4 +1,4 @@
-<dasch-swiss-app-progress-indicator *ngIf="(username$ | async) == null"></dasch-swiss-app-progress-indicator>
+<dasch-swiss-app-progress-indicator *ngIf="(username$ | async) === null"></dasch-swiss-app-progress-indicator>
 <app-status *ngIf="error"></app-status>
 
 <div class="content large middle" *ngIf="username$ | async">

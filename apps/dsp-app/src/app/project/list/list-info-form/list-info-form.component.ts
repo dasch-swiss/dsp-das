@@ -25,7 +25,7 @@ import {
 import {DspApiConnectionToken, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { LoadListsInProjectAction } from '@dasch-swiss/vre/shared/app-state';
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 
 @Component({

@@ -204,9 +204,7 @@ export class UserState {
     }
 
     @Action(ResetUsersAction)
-    resetUsers(ctx: StateContext<UserStateModel>,
-        { }: ResetUsersAction
-    ) {
+    resetUsers(ctx: StateContext<UserStateModel>) {
         ctx.patchState({ allUsers: defaults.allUsers });
     }
 

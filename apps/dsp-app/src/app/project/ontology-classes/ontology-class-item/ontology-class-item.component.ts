@@ -15,7 +15,7 @@ import {
     Events,
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { OntologyService } from '@dsp-app/src/app/project/ontology/ontology.service';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

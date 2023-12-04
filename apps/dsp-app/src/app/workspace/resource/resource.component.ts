@@ -57,9 +57,9 @@ import {
     UpdatedFileEventValue,
     ValueOperationEventService,
 } from './services/value-operation-event.service';
-import { Select, Store } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { ProjectService } from './services/project.service';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

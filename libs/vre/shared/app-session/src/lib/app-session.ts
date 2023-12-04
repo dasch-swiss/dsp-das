@@ -7,12 +7,10 @@ import {
     UserResponse,
 } from '@dasch-swiss/dsp-js';
 
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { LoginError, ServerError } from './error';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, map, switchMap, takeLast } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map, takeLast } from 'rxjs/operators';
 import { Session } from './session';
 import { toObservable } from '@angular/core/rxjs-interop';
 
@@ -22,7 +20,6 @@ import { toObservable } from '@angular/core/rxjs-interop';
 export class SessionService {
     private _applicationStateService = inject(ApplicationStateService);
     private _dspApiConnection = inject(DspApiConnectionToken);
-    private _errorHandler = inject(AppErrorHandler);
 
     session = signal<Session | undefined>(undefined);
     session$ = toObservable(this.session);

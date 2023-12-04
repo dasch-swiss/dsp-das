@@ -16,7 +16,6 @@ export class SetCurrentProjectAction {
 
 export class ClearCurrentProjectAction {
     static readonly type = '[CurrentProject] Clear Current Project';
-    constructor() {}
 }
 
 export class SetCurrentProjectByUuidAction {

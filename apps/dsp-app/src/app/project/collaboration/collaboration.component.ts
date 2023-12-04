@@ -5,7 +5,8 @@ import {
     ReadProject,
     ReadUser,
 } from '@dasch-swiss/dsp-js';
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AddUserComponent } from './add-user/add-user.component';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { CurrentProjectSelectors, LoadProjectMembersAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
@@ -21,7 +22,7 @@ import { ProjectBase } from '../project-base';
 })
 export class CollaborationComponent extends ProjectBase implements OnInit, OnDestroy {
     private ngUnsubscribe: Subject<void> = new Subject<void>();
-    
+
     @ViewChild('addUserComponent') addUser: AddUserComponent;
 
     get activeProjectMembers$(): Observable<ReadUser[]> {
@@ -51,13 +52,13 @@ export class CollaborationComponent extends ProjectBase implements OnInit, OnDes
                 })
             );
     }
-    
+
     @Select(ProjectsSelectors.projectMembers) projectMembers$: Observable<ReadUser[]>;
     @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
     @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
     @Select(UserSelectors.user) user$: Observable<ReadUser>;
     @Select(CurrentProjectSelectors.project) project$: Observable<ReadProject>;
-    
+
     constructor(
         protected _route: ActivatedRoute,
         protected _projectService: ProjectService,
