@@ -8,7 +8,7 @@ import {
     UserResponse,
     UsersResponse
 } from '@dasch-swiss/dsp-js';
-import { BaseApi } from './base-api';
+import { BaseApi } from '../base-api';
 
 export type UserIdentifier = 'iri' | 'email' | 'username';
 

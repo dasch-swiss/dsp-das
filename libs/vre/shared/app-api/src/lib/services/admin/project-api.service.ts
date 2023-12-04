@@ -7,7 +7,7 @@ import {
     ProjectsResponse,
     UpdateProjectRequest
 } from '@dasch-swiss/dsp-js';
-import { BaseApi } from './base-api';
+import { BaseApi } from '../base-api';
 
 export type ProjectIdentifier = 'iri' | 'shortname' | 'shortcode';
 @Injectable({

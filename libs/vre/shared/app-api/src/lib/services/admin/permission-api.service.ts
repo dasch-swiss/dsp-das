@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BaseApi } from './base-api';
+import { BaseApi } from '../base-api';
 import { HttpClient } from '@angular/common/http';
 import {
     AdministrativePermissionResponse,

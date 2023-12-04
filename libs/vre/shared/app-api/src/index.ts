@@ -1,1 +1,1 @@
-export * from './lib/services/project-api.service';
+export * from './lib/services/admin/project-api.service';
