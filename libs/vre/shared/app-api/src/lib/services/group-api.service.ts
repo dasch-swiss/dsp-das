@@ -8,7 +8,7 @@ import { CreateGroupRequest, GroupsResponse, UpdateGroupRequest } from '@dasch-s
 })
 export class GroupApiService extends BaseApi {
     constructor(private _http: HttpClient) {
-        super('groups');
+        super('admin/groups');
     }
 
     list() {

@@ -26,7 +26,7 @@ import { map } from 'rxjs/operators';
 })
 export class ListApiService extends BaseApi {
     constructor(private _http: HttpClient) {
-        super('lists');
+        super('admin/lists');
     }
 
     list() {
