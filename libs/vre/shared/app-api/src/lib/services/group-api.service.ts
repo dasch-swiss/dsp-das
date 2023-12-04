@@ -27,6 +27,10 @@ export class GroupApiService extends BaseApi {
         return this._http.put<GroupsResponse>(this._groupRoute(iri), updatedGroup);
     }
 
+    updateStatus(iri: string, status: boolean) {
+        return this._http.put<GroupsResponse>(`${this._groupRoute(iri)}/status`, { status });
+    }
+
     delete(iri: string) {
         return this._http.delete<GroupsResponse>(this._groupRoute(iri));
     }
