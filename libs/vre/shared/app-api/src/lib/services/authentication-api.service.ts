@@ -13,7 +13,7 @@ export class AuthenticationApiService extends BaseApi {
     }
 
     checkCredentials() {
-        return this._http.get<CredentialsResponse>('');
+        return this._http.get<CredentialsResponse>(this.baseUri);
     }
 
     login(property: 'iri' | 'email' | 'username', id: string, password: string) {
@@ -22,10 +22,10 @@ export class AuthenticationApiService extends BaseApi {
         };
         credentials[property] = id;
 
-        return this._http.post<LoginResponse>('', credentials);
+        return this._http.post<LoginResponse>(this.baseUri, credentials);
     }
 
     logout() {
-        return this._http.delete('');
+        return this._http.delete(this.baseUri);
     }
 }
