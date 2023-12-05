@@ -69,6 +69,8 @@ export class RouteConstants {
 
     static readonly editUserRelative = `:${RouteConstants.userParameter}/${RouteConstants.edit}`;
 
+    static readonly accountEditUserRelative = `${RouteConstants.userAccount}/${RouteConstants.editUserRelative}`;
+
     static readonly usersCreateNewUserRelative = `${RouteConstants.users}/${RouteConstants.createNew}`;
     static readonly usersEditUserRelative = `${RouteConstants.users}/${RouteConstants.editUserRelative}`;
 

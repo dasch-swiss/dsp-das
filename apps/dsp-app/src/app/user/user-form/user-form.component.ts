@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    Inject, Input,
+    Inject,
     OnInit
 } from '@angular/core';
 import {
@@ -40,7 +40,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { Observable, combineLatest } from 'rxjs';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -51,10 +51,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class UserFormComponent implements OnInit {
 
-    @Input() sessionsUser?: ReadUser; // if the user edited is the sessions user
-
     user: ReadUser;
     projectUuid: string; // if creating a new user in the context of a project, the project uuid is used to add the user to the project
+
+    userToEdit$: Observable<ReadUser> | undefined;
 
     /**
      * status for the progress indicator
@@ -137,6 +137,8 @@ export class UserFormComponent implements OnInit {
      */
     languagesList: StringLiteral[] = AppGlobal.languagesList;
 
+    // The user selected in the state: Can be the logged in user or the user to edit!?!
+    @Select(UserSelectors.user) user$: Observable<ReadUser>;
     @Select(UserSelectors.allUsers) allUsers$: Observable<ReadUser[]>;
     @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
     @Select(ProjectsSelectors.hasLoadingErrors) hasLoadingErrors$: Observable<boolean>;
@@ -158,43 +160,28 @@ export class UserFormComponent implements OnInit {
     ngOnInit() {
         this.loadingData = true;
         this.projectUuid = this._route.snapshot.parent.parent?.paramMap.get(RouteConstants.uuidParameter);
+        // decode the user id from the route
+        const userId =
+            this._route.snapshot.paramMap.get(RouteConstants.userParameter);
 
-        if (this.sessionsUser) {
-            // if the component is used in the account component, the sessions user is passed as input
-            this.user = this.sessionsUser;
-            this.title = this.sessionsUser.username;
-            this.subtitle = "'appLabels.form.user.title.edit' | translate";
-            this.loadingData = !this.buildForm(this.sessionsUser);
-        }
-        else {
-            // decode the user id from the route
-            const userId =
-                this._route.snapshot.paramMap.get(RouteConstants.userParameter);
+        // get the user from allUsers$ state
+        this.userToEdit$ = this.allUsers$.pipe(
+            take(1), map((users: ReadUser[]) => {
+                return users.find((user: ReadUser) => user.id === decodeURIComponent(userId));
+            })
+        );
 
-            if (userId) {
-                this.initUserFromId(decodeURIComponent(userId));
+        this.userToEdit$.subscribe((user: ReadUser) => {
+            if (user) {
+                this.user = user;
+                this.title = this.user.username;
+                this.subtitle = "'appLabels.form.user.title.edit' | translate";
+                this.loadingData = !this.buildForm(this.user);
+                this._cd.detectChanges();
             } else {
                 this.initEmptyForm();
             }
-        }
-    }
-
-    initUserFromId(userId: string) {
-        // get the user data
-        this._dspApiConnection.admin.usersEndpoint
-            .getUser('iri', userId)
-            .subscribe(
-                (response: ApiResponseData<UserResponse>) => {
-                    this.user = response.body.user;
-                    this.title = this.user.username;
-                    this.subtitle = "'appLabels.form.user.title.edit' | translate";
-                    this.loadingData = !this.buildForm(this.user);
-                    this._cd.detectChanges();
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
+        });
     }
 
     initEmptyForm() {

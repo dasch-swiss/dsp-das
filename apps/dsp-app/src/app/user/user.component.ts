@@ -1,13 +1,13 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { AppGlobal } from '../app-global';
 import { MenuItem } from '../main/declarations/menu-item';
 import { Select } from '@ngxs/store';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { take, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-user',
@@ -15,20 +15,14 @@ import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
     styleUrls: ['./user.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserComponent implements OnDestroy {
-    isDestroyed = new Subject<void>();
-    
-    error: boolean;
+export class UserComponent {
 
     route: string;
 
-    // for the sidenav
-    open = true;
-
     navigation: MenuItem[] = AppGlobal.userNav;
-    
+
     @Select(UserSelectors.username) username$: Observable<string>;
-    
+
     routeConstants = RouteConstants;
 
     constructor(
@@ -38,13 +32,12 @@ export class UserComponent implements OnDestroy {
         // get the activated route; we need it for the viewer switch
         this.route = this._route.pathFromRoot[1].snapshot.url[0].path;
 
-        // set the page title
-        this.username$.pipe(takeUntil(this.isDestroyed))
-            .subscribe((username: string) => this._titleService.setTitle(username));
+        this.username$.pipe(
+            take(1),
+            tap((username: string) => {
+                this._titleService.setTitle(username)
+            }
+        )).subscribe();
     }
 
-    ngOnDestroy() {
-        this.isDestroyed.next();
-        this.isDestroyed.complete();
-    }
 }

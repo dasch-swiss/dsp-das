@@ -136,6 +136,12 @@ const routes: Routes = [
     {
         path: RouteConstants.userAccount,
         component: UserComponent,
+        pathMatch: 'full',
+        canActivate: [AuthGuard],
+    },
+    {
+        path: RouteConstants.accountEditUserRelative,
+        component: UserFormComponent,
         canActivate: [AuthGuard],
     },
     {

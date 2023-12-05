@@ -2,7 +2,6 @@ import {
     Component,
     EventEmitter,
     Inject,
-    Input,
     OnInit,
     Output,
 } from '@angular/core';
@@ -13,15 +12,16 @@ import {
     KnoraApiConnection,
     ReadUser,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { apiConnectionTokenProvider } from '../../providers/api-connection-token.provider';
-import { LoadUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-account',
@@ -33,12 +33,11 @@ export class AccountComponent implements OnInit {
     // in case of modification
     @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
 
-    @Input() username: string;
-
     @Select(UserSelectors.user) user$: Observable<ReadUser>;
     @Select(UserSelectors.isLoading) isLoading$: Observable<boolean>;
 
-    userId = null;
+    userId: string;
+    username: string;
 
     constructor(
         @Inject(DspApiConnectionToken)
@@ -48,17 +47,21 @@ export class AccountComponent implements OnInit {
         private _titleService: Title,
         private _store: Store,
         private _authService: AuthService,
+        private _route: ActivatedRoute,
+        private _router: Router,
     ) {
         // set the page title
         this._titleService.setTitle('Your account');
     }
 
     ngOnInit() {
-        this._store.dispatch(new LoadUserAction(this.username)).pipe(
+        this.user$.pipe(
+            take(1),
             tap((user: ReadUser) => {
-                this.userId = user.id;
+                this.userId = user?.id;
+                this.username = user?.username;
             })
-        );
+        ).subscribe();
     }
 
     openDialog(mode: string, name: string, id?: string): void {
@@ -90,6 +93,16 @@ export class AccountComponent implements OnInit {
                 this.refreshParent.emit();
             }
         });
+    }
+
+    editUser() {
+        this._router.navigate([
+                encodeURIComponent(this.userId),
+                RouteConstants.edit
+            ],
+            {
+                relativeTo: this._route,
+            });
     }
 
     deleteUser(id: string) {
