@@ -1,7 +1,6 @@
-import { SortingService } from './../../../../../../../apps/dsp-app/src/app/main/services/sorting.service';
 import { Inject, Injectable } from '@angular/core';
 import { Action, Actions, State, StateContext, ofActionSuccessful } from '@ngxs/store';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import { DspApiConnectionToken, getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-config';
 import { ApiResponseError, Constants, KnoraApiConnection, OntologiesMetadata, ReadOntology, PropertyDefinition, UpdateOntology, UpdateResourceClassCardinality, ResourceClassDefinitionWithAllLanguages, IHasProperty, OntologyMetadata, CanDoResponse } from '@dasch-swiss/dsp-js';
 import { OntologiesStateModel } from './ontologies.state-model';
@@ -10,7 +9,7 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-interfaces';
 import { of } from 'rxjs';
 import { LoadListsInProjectAction } from '../lists/lists.actions';
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 
 const defaults: OntologiesStateModel = <OntologiesStateModel>{
@@ -287,19 +286,25 @@ export class OntologiesState {
         );
         onto.entity = delCard;
 
-        this._dspApiConnection.v2.onto
-            .deleteCardinalityFromResourceClass(onto)
-            .subscribe(
-                (res: ResourceClassDefinitionWithAllLanguages | ApiResponseError) => {
-                    //ctx.dispatch(new SetCurrentOntologyPropertiesToDisplayAction(currentOntologyPropertiesToDisplay));
-                    ctx.setState({ ...state, isLoading: false });
-                    this._notification.openSnackBar(
-                        `You have successfully removed "${property.label}" from "${resourceClass.label}".`
-                    );
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(<ApiResponseError>error);
-                }
+        return this._dspApiConnection.v2.onto.deleteCardinalityFromResourceClass(onto)
+            .pipe(
+                take(1),
+                map((response: ResourceClassDefinitionWithAllLanguages | ApiResponseError) => 
+                    response as ResourceClassDefinitionWithAllLanguages
+                ),
+                tap({
+                    next: (res: ResourceClassDefinitionWithAllLanguages) => {
+                        //ctx.dispatch(new SetCurrentOntologyPropertiesToDisplayAction(currentOntologyPropertiesToDisplay));
+                        ctx.setState({ ...state, isLoading: false });
+                        this._notification.openSnackBar(
+                            `You have successfully removed "${property.label}" from "${resourceClass.label}".`
+                        );
+                    },
+                    error: (error: ApiResponseError) => {
+                        ctx.patchState({ hasLoadingErrors: true, isLoading: false });
+                        this._errorHandler.showMessage(error);
+                    }
+                })
             );
     }
 
@@ -329,25 +334,30 @@ export class OntologiesState {
 
         onto.entity = addCard;
 
-        this._dspApiConnection.v2.onto
-            .replaceGuiOrderOfCardinalities(onto)
-            .pipe(take(1))
-            .subscribe((responseGuiOrder: ResourceClassDefinitionWithAllLanguages | ApiResponseError) => {
-                    //TODO lastModificationDate should be updated in state if reload action is not executed after this
-                    //this.lastModificationDate = responseGuiOrder.lastModificationDate; 
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
+        
+        return this._dspApiConnection.v2.onto.replaceGuiOrderOfCardinalities(onto)
+            .pipe(
+                take(1),
+                map((response: ResourceClassDefinitionWithAllLanguages | ApiResponseError) => 
+                    response as ResourceClassDefinitionWithAllLanguages
+                ),
+                tap({
+                    next: (res: ResourceClassDefinitionWithAllLanguages) => {
+                        //TODO lastModificationDate should be updated in state if reload action is not executed after this
+                        //this.lastModificationDate = responseGuiOrder.lastModificationDate;
+                    },
+                    error: (error: ApiResponseError) => {
+                        ctx.patchState({ hasLoadingErrors: true, isLoading: false });
+                        this._errorHandler.showMessage(error);
+                    }
+                })
             );
     }
 
     
     @Action(CurrentOntologyCanBeDeletedAction)
     currentOntologyCanBeDeletedAction(
-        ctx: StateContext<OntologiesStateModel>,
-        { }: CurrentOntologyCanBeDeletedAction
-    ) {
+        ctx: StateContext<OntologiesStateModel>) {
         ctx.patchState({ isLoading: true });
         const state = ctx.getState();
         if (!state.currentOntology) {

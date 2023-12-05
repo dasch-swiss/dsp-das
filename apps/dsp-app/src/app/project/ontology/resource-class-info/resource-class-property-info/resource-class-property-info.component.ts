@@ -19,9 +19,8 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { DefaultProperty } from '../../default-data/default-properties';
-import { OntologyService } from '../../ontology.service';
-import { DefaultClass, ListsSelectors, OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { DefaultClass, DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ListsSelectors, OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 
 // property data structure
@@ -115,9 +114,11 @@ export class ResourceClassPropertyInfoComponent
         );
         this.propInfo.multiple = cards.multiple;
         this.propInfo.required = cards.required;
+        const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
+
         // get info about subproperties, if they are not a subproperty of knora base ontology
         // in this case add it to the list of subproperty iris
-        const superProp = this._ontoService.getSuperProperty(this.propDef);
+        const superProp = this._ontoService.getSuperProperty(this.propDef, currentProjectOntologies);
         if (superProp) {
             if (this.propDef.subPropertyOf.indexOf(superProp) === -1) {
                 this.propDef.subPropertyOf.push(superProp);

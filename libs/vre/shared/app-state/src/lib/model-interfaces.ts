@@ -1,6 +1,6 @@
-import { ClassDefinition, IHasProperty, OntologyMetadata, ReadOntology, PropertyDefinition, ResourcePropertyDefinitionWithAllLanguages, ResourcePropertyDefinition } from "@dasch-swiss/dsp-js";
-import { EntityDefinition } from "@dasch-swiss/dsp-js/src/models/v2/ontologies/EntityDefinition";
-import { PropertyInfoObject } from "@dsp-app/src/app/project/ontology/default-data/default-properties";
+import { ClassDefinition, IHasProperty, OntologyMetadata, ReadOntology, PropertyDefinition } from "@dasch-swiss/dsp-js";
+import { PropertyInfoObject } from "@dasch-swiss/vre/shared/app-helper-services";
+
 
 export interface IKeyValuePairs<T> {
     [key: string]: { value: T[]; };
@@ -34,10 +34,4 @@ export interface PropToAdd {
     ontologyId: string;
     ontologyLabel: string;
     properties: PropertyInfoObject[];
-}
-
-export interface DefaultClass {
-    iri: string;
-    label: string;
-    icons?: string[]; // icons can be used to be selected in the resource class form
 }

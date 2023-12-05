@@ -23,25 +23,25 @@ import { map, takeUntil } from 'rxjs/operators';
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
     private ngUnsubscribe: Subject<void> = new Subject<void>();
-
-    @Input() username$?: Observable<string>;
+    
+    @Input() username?: string;
 
     get activeProjects$(): Observable<StoredProject[]> {
-         return combineLatest([this.userActiveProjects$, this.allActiveProjects$, this.username$])
+         return combineLatest([this.userActiveProjects$, this.allActiveProjects$])
             .pipe(
                 takeUntil(this.ngUnsubscribe),
-                map(([userActiveProjects, allActiveProjects, username]) => username ? userActiveProjects : allActiveProjects)
+                map(([userActiveProjects, allActiveProjects]) => this.username ? userActiveProjects : allActiveProjects)
             );
     }
 
     get inactiveProjects$(): Observable<StoredProject[]> {
-        return combineLatest([this.userInactiveProjects$, this.allInactiveProjects$, this.username$])
+        return combineLatest([this.userInactiveProjects$, this.allInactiveProjects$])
            .pipe(
                takeUntil(this.ngUnsubscribe),
-               map(([userInactiveProjects, allInactiveProjects, username]) => username ? userInactiveProjects : allInactiveProjects)
+               map(([userInactiveProjects, allInactiveProjects]) => this.username ? userInactiveProjects : allInactiveProjects)
            );
     }
-
+    
     /**
      * if username is definded: show only projects,
      * where this user is member of;
@@ -60,14 +60,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.username$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((username: string) => {
-            console.log('username', username);
-            username ? this._titleService.setTitle('Your projects')
-                : this._titleService.setTitle('All projects from DSP');
-
-        });
-
-
+        this.username
+            ? this._titleService.setTitle('Your projects') 
+            : this._titleService.setTitle('All projects from DSP');
+        
         if (this._store.selectSnapshot(ProjectsSelectors.allProjects).length === 0) {
             this.refresh();
         }

@@ -25,13 +25,14 @@ import {
 import { DspApiConnectionToken, getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
+    DefaultClass,
     DefaultProperties,
     DefaultProperty,
     PropertyCategory,
     PropertyInfoObject,
-} from '../default-data/default-properties';
-import { OntologyService } from '../ontology.service';
-import { DefaultClass, ListsSelectors, OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
+} from '@dasch-swiss/vre/shared/app-helper-services';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ListsSelectors, OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 
 // property data structure
@@ -147,9 +148,10 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
     }
 
     ngOnChanges(): void {
+        const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
         // get info about subproperties, if they are not a subproperty of knora base ontology
         // in this case add it to the list of subproperty iris
-        const superProp = this._ontoService.getSuperProperty(this.propDef);
+        const superProp = this._ontoService.getSuperProperty(this.propDef, currentProjectOntologies);
         if (superProp) {
             if (this.propDef.subPropertyOf.indexOf(superProp) === -1) {
                 this.propDef.subPropertyOf.push(superProp);

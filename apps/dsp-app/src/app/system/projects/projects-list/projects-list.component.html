@@ -79,7 +79,7 @@
                 <button
                     mat-icon-button
                     [matMenuTriggerFor]="projectMenu"
-                    [disabled]="!(userHasPermission$(project.id) | async) || doNotDelete.includes(project.id)"
+                    [disabled]="(userHasPermission$(project.id) | async) === false || doNotDelete.includes(project.id)"
                 >
                     <mat-icon>more_horiz</mat-icon>
                 </button>

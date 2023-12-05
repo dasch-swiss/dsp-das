@@ -32,7 +32,7 @@ import {DspApiConnectionToken, RouteConstants} from '@dasch-swiss/vre/shared/app
 import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import { CurrentProjectSelectors, LoadProjectAction, SetCurrentProjectAction, UpdateProjectAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 

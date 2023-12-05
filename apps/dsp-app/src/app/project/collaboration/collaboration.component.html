@@ -30,8 +30,7 @@
             ></app-users-list>
         </div>
     </div>
-
-    <div *ngIf="!(isProjectAdmin$ | async)" class="content large middle">
+    <div *ngIf="(isProjectAdmin$ | async) === false" class="content large middle">
         <app-status [status]="403"></app-status>
     </div>
 </div>

@@ -5,7 +5,7 @@ import { CurrentProjectSelectors, LoadProjectAction, LoadProjectOntologiesAction
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
-import { ProjectService } from '../workspace/resource/services/project.service';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Title } from '@angular/platform-browser';
 
 @Directive()

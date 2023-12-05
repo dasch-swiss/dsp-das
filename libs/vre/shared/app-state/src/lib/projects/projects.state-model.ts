@@ -2,8 +2,8 @@ import { ReadGroup, ReadProject, ReadUser, StoredProject } from "@dasch-swiss/ds
 import { IKeyValuePairs } from "../model-interfaces";
 
 export class ProjectsStateModel {
-    isLoading: boolean = false;
-    hasLoadingErrors: boolean = false;
+    isLoading = false;
+    hasLoadingErrors = false;
     allProjects: ReadProject[] = [];
     readProjects: ReadProject[] = [];
     projectMembers: IKeyValuePairs<ReadUser> = {};

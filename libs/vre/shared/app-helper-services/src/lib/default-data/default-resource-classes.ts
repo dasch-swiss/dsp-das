@@ -1,5 +1,5 @@
 import { Constants } from '@dasch-swiss/dsp-js';
-import { DefaultClass } from '@dasch-swiss/vre/shared/app-state';
+import { DefaultClass } from './default-properties';
 
 export class DefaultResourceClasses {
     public static data: DefaultClass[] = [

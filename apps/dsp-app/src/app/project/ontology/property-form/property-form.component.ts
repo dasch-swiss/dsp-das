@@ -38,15 +38,14 @@ import {
 import { DspApiConnectionToken, getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-config';
 import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
+import { OntologyService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
 import {
     DefaultProperties,
     DefaultProperty,
     PropertyCategory,
     PropertyInfoObject,
-} from '../default-data/default-properties';
-import { OntologyService } from '../ontology.service';
+} from '@dasch-swiss/vre/shared/app-helper-services';
 import { GuiCardinality } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { AutocompleteItem } from '@dsp-app/src/app/workspace/search/operator';

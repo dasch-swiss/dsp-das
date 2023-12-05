@@ -5,10 +5,14 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 
-//TODO make it static
 @Injectable({
     providedIn: 'root',
 })
+/**
+ * Project Service is helper service to provide project related methods
+ * @export
+ * @class ProjectService
+ */
 export class ProjectService {
     constructor(
         private _acs: AppConfigService,
@@ -53,7 +57,8 @@ export class ProjectService {
 
     isProjectAdminOrSysAdmin(user: ReadUser, userProjectGroups: string[], projectIri: string): boolean
     {
-        return user && this.isProjectOrSysAdmin(user.permissions.groupsPerProject, userProjectGroups, projectIri);
+        const groupsPerProject = user.permissions.groupsPerProject ? user.permissions.groupsPerProject : {};
+        return user && this.isProjectOrSysAdmin(groupsPerProject, userProjectGroups, projectIri);
     }
     
     isProjectOrSysAdmin(groupsPerProject: {[key: string]: string[]}, userProjectGroups: string[], projectIri: string): boolean

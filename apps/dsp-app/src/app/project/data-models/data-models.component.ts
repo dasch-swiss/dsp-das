@@ -1,4 +1,4 @@
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -6,7 +6,6 @@ import {
     OntologyMetadata,
 } from '@dasch-swiss/dsp-js';
 import {AppConfigService, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
-import { OntologyService } from '../ontology/ontology.service';
 import { Actions, Select, Store } from '@ngxs/store';
 import { ListsSelectors, OntologiesSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable, of } from 'rxjs';

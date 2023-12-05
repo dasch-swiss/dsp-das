@@ -24,22 +24,19 @@ import {DspApiConnectionToken, RouteConstants} from '@dasch-swiss/vre/shared/app
 import { DialogComponent, DialogEvent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
+import { DefaultClass, DefaultResourceClasses, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
     DefaultProperties,
     DefaultProperty,
     PropertyCategory,
     PropertyInfoObject,
-} from '../default-data/default-properties';
-import {
-    DefaultResourceClasses,
-} from '../default-data/default-resource-classes';
+} from '@dasch-swiss/vre/shared/app-helper-services';
 import { GuiCardinality } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
-import { DefaultClass, LoadProjectOntologiesAction, OntologiesSelectors, OntologyProperties, PropToAdd, PropToDisplay, PropertyAssignment, RemovePropertyAction, ReplacePropertyAction } from '@dasch-swiss/vre/shared/app-state';
+import { OntologiesSelectors, OntologyProperties, PropToAdd, PropToDisplay, PropertyAssignment, RemovePropertyAction, ReplacePropertyAction } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
-import { OntologyService } from '../ontology.service';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,7 +61,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
         return this.currentOntology$.pipe(
             takeUntil(this.ngUnsubscribe),
             map(x => x?.lastModificationDate));
-    };
+    }
 
     @Input() userCanEdit: boolean; // is user a project admin or sys admin?
 
@@ -82,8 +79,9 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
 
     // to update the assignment of a property to a class we need the information about property (incl. propType)
     // and resource class
-    @Output() updatePropertyAssignment: EventEmitter<string> =
-        new EventEmitter<string>();
+    @Output() updatePropertyAssignment: EventEmitter<string> = new EventEmitter<string>();
+
+    @Input() updatePropertyAssignment$: Subject<any>;
 
     ontology: ReadOntology;
 
@@ -327,13 +325,16 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
      * @param property
      */
     removeProperty(property: DefaultClass, currentOntologyPropertiesToDisplay: PropToDisplay[]) {
+        //TODO temporary solution to replace eventemitter with subject because emitter loses subscriber after following subscription is triggered
+        this.updatePropertyAssignment.pipe(take(1)).subscribe(() => this.updatePropertyAssignment$.next());
+
         this._store.dispatch(new RemovePropertyAction(property, this.resourceClass, currentOntologyPropertiesToDisplay));
-        this.updatePropertyAssignment.emit(this.ontology.id);
         this._actions$.pipe(ofActionSuccessful(RemovePropertyAction))
             .pipe(take(1))
-            .subscribe(() => {
+            .subscribe((res) => {
                 //TODO should be the same as ontology lastModificationDate ? if yes remove commented line, otherwise add additional lastModificationDate property to the state
                 //this.lastModificationDate = res.lastModificationDate;
+                this.updatePropertyAssignment.emit(this.ontology.id);
             });
     }
 
@@ -432,11 +433,9 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
 
         dialogRef.afterClosed().subscribe((event: DialogEvent) => {
             if (event !== DialogEvent.DialogCanceled) {
-                this._store.dispatch(new LoadProjectOntologiesAction(this.projectUuid));
+                // update the view: list of properties in resource class
+                this.updatePropertyAssignment.emit(this.ontology.id);
             }
-
-            // update the view: list of properties in resource class
-            this.updatePropertyAssignment.emit(this.ontology.id);
         });
     }
 
@@ -452,15 +451,12 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
         );
 
         if (event.previousIndex !== event.currentIndex) {
+            this.updatePropertyAssignment.pipe(take(1)).subscribe(() => this.updatePropertyAssignment$.next());
             // the dropped property item has a new index (= gui order)
             // send the new gui-order to the api by
             // preparing the UpdateOntology object first
-            this._store.dispatch([
-                new ReplacePropertyAction(this.resourceClass, currentOntologyPropertiesToDisplay),
-                new LoadProjectOntologiesAction(this.projectUuid)
-            ]);
-
-            this._actions$.pipe(ofActionSuccessful(LoadProjectOntologiesAction))
+            this._store.dispatch(new ReplacePropertyAction(this.resourceClass, currentOntologyPropertiesToDisplay));
+            this._actions$.pipe(ofActionSuccessful(ReplacePropertyAction))
                 .pipe(take(1))
                 .subscribe(() => {
                     // successful request: update the view
@@ -508,8 +504,7 @@ OFFSET 0`;
             return [];
         }
 
-        let existingProperties: PropToAdd[] = [];
-        
+        const existingProperties: PropToAdd[] = [];
         const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
         ontoProperties.forEach((op: OntologyProperties, i: number) => {
             const onto = currentProjectOntologies.find((i) => i?.id === op.ontology);
@@ -521,7 +516,7 @@ OFFSET 0`;
 
             op.properties.forEach(
                 (availableProp: ResourcePropertyDefinitionWithAllLanguages) => {
-                    const superProp = this._ontoService.getSuperProperty(availableProp);
+                    const superProp = this._ontoService.getSuperProperty(availableProp, currentProjectOntologies);
                     if (superProp && availableProp.subPropertyOf.indexOf(superProp) === -1) {
                         availableProp.subPropertyOf.push(superProp);
                     }

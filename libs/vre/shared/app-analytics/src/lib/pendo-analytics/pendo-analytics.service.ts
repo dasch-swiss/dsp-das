@@ -1,11 +1,9 @@
-import { inject, Injectable, WritableSignal } from '@angular/core';
-import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
-import { v5 as uuidv5 } from 'uuid';
+import { inject, Injectable } from '@angular/core';
+import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 import {
     DspInstrumentationConfig,
     DspInstrumentationToken,
 } from '@dasch-swiss/vre/shared/app-config';
-import { Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
@@ -13,18 +11,15 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class PendoAnalyticsService {
     private config: DspInstrumentationConfig = inject(DspInstrumentationToken);
-    private sessionService: SessionService = inject(SessionService);
+    private authService: AuthService = inject(AuthService);
     private environment: string = this.config.environment;
 
-    session: WritableSignal<Session | undefined> = this.sessionService.session;
-    session$: Observable<Session | undefined> = this.sessionService.session$;
-
     constructor() {
-        this.session$
+        this.authService.isLoggedIn$
             .pipe(takeUntilDestroyed())
-            .subscribe((session: Session | undefined) => {
-                if (session !== undefined) {
-                    this.setActiveUser(session.user.name);
+            .subscribe((isLoggedIn: boolean) => {
+                if (isLoggedIn) {
+                    this.setActiveUser(this.authService.tokenUser);
                 } else {
                     this.removeActiveUser();
                 }

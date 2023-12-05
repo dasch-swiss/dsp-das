@@ -5,7 +5,7 @@ import {
     ReadProject,
     ReadUser,
 } from '@dasch-swiss/dsp-js';
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AddUserComponent } from './add-user/add-user.component';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { CurrentProjectSelectors, LoadProjectMembersAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';

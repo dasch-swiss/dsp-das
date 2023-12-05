@@ -1,4 +1,3 @@
-import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { Inject, Injectable } from '@angular/core';
 import { Action, State, StateContext } from '@ngxs/store';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -10,7 +9,7 @@ import { of } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
-let defaults: ListsStateModel = {
+const defaults: ListsStateModel = {
     isLoading: false,
     listsInProject: [],
 };
@@ -100,7 +99,8 @@ export class ListsState {
                     },
                 };
 
-            this._dialog.open(DialogComponent, errorDialogConfig);
+            //TODO decouple error handling 
+            //this._dialog.open(DialogComponent, errorDialogConfig);
         } else {
             // use default error behavior
             this._errorHandler.showMessage(error);

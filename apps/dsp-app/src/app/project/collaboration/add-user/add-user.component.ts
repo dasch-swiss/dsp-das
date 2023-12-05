@@ -25,15 +25,14 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AutocompleteItem } from '@dsp-app/src/app/workspace/search/operator';
 import { Store } from '@ngxs/store';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -139,8 +138,6 @@ export class AddUserComponent implements OnInit {
         private _errorHandler: AppErrorHandler,
         private _formBuilder: UntypedFormBuilder,
         private _projectService: ProjectService,
-        private _route: ActivatedRoute,
-        private _router: Router,
         private _store: Store,
         private _cd: ChangeDetectorRef,
     ) {}
@@ -166,7 +163,7 @@ export class AddUserComponent implements OnInit {
                 if (projectMembers[this.projectIri]) {
                     for (const m of projectMembers[this.projectIri].value) {
                         members.push(m.id);
-
+    
                         // if the user is already member of the project
                         // add the email to the list of existing
                         this.existingEmailInProject.push(
@@ -358,15 +355,6 @@ export class AddUserComponent implements OnInit {
                     }
                 }
             );
-    }
-
-    createUser(): void {
-        this._router.navigate([
-                RouteConstants.usersCreateNewUserRelative
-            ],
-            {
-                relativeTo: this._route,
-            });
     }
 
     openDialog(mode: string): void {

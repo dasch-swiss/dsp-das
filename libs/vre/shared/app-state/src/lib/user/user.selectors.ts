@@ -10,7 +10,7 @@ export class UserSelectors {
     static isLoading(state: UserStateModel): boolean | undefined {
         return state.isLoading;
     }
-
+    
     @Selector([UserState])
     static allUsers(state: UserStateModel): ReadUser[] {
         return state.allUsers;
@@ -28,21 +28,15 @@ export class UserSelectors {
 
     @Selector([UserState])
     static isLoggedIn(state: UserStateModel): boolean {
-        return !state.isLoading
-            && !!localStorage.getItem(Auth.AccessToken)
-            && state.user !== null
+        return !state.isLoading 
+            && !!localStorage.getItem(Auth.AccessToken) 
+            && state.user !== null 
             && state.user?.username !== '';
     }
-
+    
     @Selector([UserState])
     static user(state: UserStateModel): User | ReadUser | null | undefined {
         return state.user;
-    }
-
-    // Selector for getting one specific user by username. Not the user currently logged in!
-    @Selector([UserState])
-    static userByUsername(state: UserStateModel): (username: string) => ReadUser | undefined {
-        return (username: string) => state.allUsers.find((user: ReadUser) => user.username === username);
     }
 
     @Selector([UserState])
@@ -69,11 +63,11 @@ export class UserSelectors {
     static isSysAdmin(state: UserStateModel): boolean {
         return state.isMemberOfSystemAdminGroup === true
             ? true
-            : state.user && state.user.systemAdmin
-                ? state.user.systemAdmin
+            : state.user && state.user.systemAdmin 
+                ? state.user.systemAdmin 
                 : false;
     }
-
+    
     @Selector([UserState])
     static displayName(state: UserStateModel): string | null {
         return state.user?.familyName && state.user?.givenName

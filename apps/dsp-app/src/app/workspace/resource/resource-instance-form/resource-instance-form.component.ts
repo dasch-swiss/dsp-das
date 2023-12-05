@@ -31,12 +31,9 @@ import {
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import {
-    DefaultResourceClasses,
-} from '@dsp-app/src/app/project/ontology/default-data/default-resource-classes';
 import { ResourceService } from '../services/resource.service';
 import { SelectPropertiesComponent } from './select-properties/select-properties.component';
-import { DefaultClass } from '@dasch-swiss/vre/shared/app-state';
+import { DefaultClass, DefaultResourceClasses } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
     selector: 'app-resource-instance-form',

@@ -24,12 +24,12 @@ import {
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
+import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { CurrentProjectSelectors, LoadProjectAction, LoadProjectMembersAction, LoadUserAction, RemoveUserFromProjectAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -339,49 +339,6 @@ export class UsersListComponent implements OnInit {
             {
                 relativeTo: this._route,
             });
-    }
-
-    /**
-     * open dialog in every case of modification:
-     * edit user profile data, update user's password,
-     * remove user from project or toggle project admin membership,
-     * delete and reactivate user
-     *
-     */
-    openDialog(mode: string, user?: ReadUser): void {
-        const dialogConfig: MatDialogConfig = {
-            width: '560px',
-            maxHeight: '80vh',
-            position: {
-                top: '112px',
-            },
-            data: { user, mode },
-        };
-
-        const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-
-        dialogRef.afterClosed().subscribe((response) => {
-            if (response === true) {
-                switch (mode) {
-                    case 'removeFromProject':
-                        this._store.dispatch(new RemoveUserFromProjectAction(user.id, this.project.id));
-                        this._actions$.pipe(ofActionSuccessful(SetUserAction))
-                            .pipe(take(1))
-                            .subscribe(() => {
-                                this._store.dispatch(new LoadProjectMembersAction(this.projectUuid));
-                                this.refreshParent.emit();
-                            });
-                        break;
-                    case 'deleteUser':
-                        this.deleteUser(user.id);
-                        break;
-                    case 'activateUser':
-                        this.activateUser(user.id);
-                        break;
-                }
-            }
-            this._cd.markForCheck();
-        });
     }
 
     /**

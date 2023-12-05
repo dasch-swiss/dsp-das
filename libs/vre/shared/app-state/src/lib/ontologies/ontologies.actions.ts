@@ -1,5 +1,6 @@
 import { ClassDefinition, ReadOntology, UpdateOntologyMetadata } from "@dasch-swiss/dsp-js";
-import { DefaultClass, PropToDisplay } from "../model-interfaces";
+import { PropToDisplay } from "../model-interfaces";
+import { DefaultClass } from "@dasch-swiss/vre/shared/app-helper-services";
 
 export class LoadProjectOntologiesAction {
     static readonly type = '[Ontologies] Load Project Ontologies';
@@ -35,12 +36,10 @@ export class ClearProjectOntologiesAction {
 
 export class ClearCurrentOntologyAction {
     static readonly type = '[Ontologies] Clear Current Ontology Action';
-    constructor() {}
 }
 
 export class ClearOntologiesAction {
     static readonly type = '[Ontologies] Clear Ontologies';
-    constructor() {}
 }
 
 export class SetCurrentOntologyAction {
@@ -75,5 +74,4 @@ export class ReplacePropertyAction {
 
 export class CurrentOntologyCanBeDeletedAction {
     static readonly type = '[Ontologies] Current Ontology Can Be Deleted';
-    constructor() {}
 }

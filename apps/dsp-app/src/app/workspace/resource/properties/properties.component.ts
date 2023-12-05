@@ -54,7 +54,7 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { DspResource } from '../dsp-resource';
 import { RepresentationConstants } from '../representation/file-representation';
 import { IncomingService } from '../services/incoming.service';
-import { ProjectService } from '../services/project.service';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ResourceService } from '../services/resource.service';
 import { UserService } from '../services/user.service';
 import {
@@ -65,7 +65,7 @@ import {
     ValueOperationEventService,
 } from '../services/value-operation-event.service';
 import { ValueService } from '../services/value.service';
-import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
+import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 // object of property information from ontology class, properties and property values
 export interface PropertyInfoValues {

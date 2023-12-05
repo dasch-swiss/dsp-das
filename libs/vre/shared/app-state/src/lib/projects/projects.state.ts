@@ -1,4 +1,3 @@
-import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { Inject, Injectable } from '@angular/core';
 import { Action, State, StateContext, Store } from '@ngxs/store';
 import { ProjectsStateModel } from './projects.state-model';
@@ -15,8 +14,9 @@ import { SetCurrentProjectAction, SetCurrentProjectByUuidAction, SetCurrentProje
 import { IKeyValuePairs } from '../model-interfaces';
 import { ProjectsSelectors } from './projects.selectors';
 import { SetUserAction } from '../user/user.actions';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
-let defaults: ProjectsStateModel = {
+const defaults: ProjectsStateModel = {
     isLoading: false,
     hasLoadingErrors: false,
     allProjects: [],
@@ -42,9 +42,7 @@ export class ProjectsState {
 
     @Action(LoadProjectsAction, { cancelUncompleted: true })
     loadProjects(
-        ctx: StateContext<ProjectsStateModel>,
-        { }: LoadProjectsAction
-    ) {
+        ctx: StateContext<ProjectsStateModel>) {
         ctx.patchState({ isLoading: true });
         return this._dspApiConnection.admin.projectsEndpoint
             .getProjects()
@@ -226,10 +224,7 @@ export class ProjectsState {
     }
 
     @Action(LoadProjectGroupsAction)
-    loadProjectGroupsAction(
-        ctx: StateContext<ProjectsStateModel>,
-        { projectUuid }: LoadProjectGroupsAction
-    ) {
+    loadProjectGroupsAction(ctx: StateContext<ProjectsStateModel>) {
         ctx.patchState({ isLoading: true });
         return this._dspApiConnection.admin.groupsEndpoint.getGroups()
             .pipe(
@@ -239,8 +234,7 @@ export class ProjectsState {
                 }),
                 tap({
                     next: (response: ApiResponseData<GroupsResponse>) => {
-                        const projectIri = this.projectService.uuidToIri(projectUuid);
-                        let groups: IKeyValuePairs<ReadGroup> = {};
+                        const groups: IKeyValuePairs<ReadGroup> = {};
                         response.body.groups.forEach(group => {
                             const projectId = group.project?.id as string;
                             if (!groups[projectId]) {
