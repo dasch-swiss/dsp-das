@@ -224,6 +224,6 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
             .pipe(take(1))
             .subscribe(response => {
                 this.refreshParent.emit(); //TODO Soft or Hard refresh ?
-            });;
+            });
     }
 }
