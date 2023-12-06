@@ -29,6 +29,7 @@ import { AdvancedSearchContainerComponent } from './workspace/search/advanced-se
 import { ProjectFormComponent } from "@dsp-app/src/app/project/project-form/project-form.component";
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { UserFormComponent } from '@dsp-app/src/app/user/user-form/user-form.component';
+import { AccountComponent } from '@dsp-app/src/app/user/account/account.component';
 
 const routes: Routes = [
     {
@@ -135,20 +136,34 @@ const routes: Routes = [
     },
     {
         path: RouteConstants.userAccount,
-        component: UserComponent,
-        pathMatch: 'full',
         canActivate: [AuthGuard],
+        component: UserComponent,
+        children: [
+            {
+                path: RouteConstants.home,
+                pathMatch: 'full',
+                redirectTo: RouteConstants.myAccountRelative,
+            },
+            {
+                path: RouteConstants.myAccount,
+                component: AccountComponent,
+                canActivate: [AuthGuard],
+            },
+            {
+                path: RouteConstants.myProjects,
+                component: ProjectsComponent,
+                canActivate: [AuthGuard],
+            }
+        ]
     },
+
+
     {
         path: RouteConstants.accountEditUserRelative,
         component: UserFormComponent,
         canActivate: [AuthGuard],
     },
-    {
-        path: RouteConstants.projects,
-        component: UserComponent,
-        canActivate: [AuthGuard],
-    },
+
     {
         path: RouteConstants.system,
         component: SystemComponent,

@@ -1,7 +1,7 @@
 export class RouteConstants {
     static readonly home = '';
     static readonly help = 'help';
-    static readonly userAccount = 'account';
+    static readonly userAccount = 'profile';
     static readonly systemAdmin = 'system';
     static readonly settings = 'settings';
     static readonly refresh = 'refresh';
@@ -26,6 +26,9 @@ export class RouteConstants {
     static readonly system = 'system';
     static readonly systemProjects = 'projects';
     static readonly systemUsers = 'users';
+
+    static readonly myAccount = 'my-account';
+    static readonly myProjects = 'my-projects';
 
     static readonly editor = 'editor';
 
@@ -54,7 +57,6 @@ export class RouteConstants {
     static readonly userParameter = 'user';
 
     static readonly homeRelative = `/${RouteConstants.home}`;
-    static readonly userAccountRelative = `/${RouteConstants.userAccount}`;
     static readonly systemAdminRelative = `/${RouteConstants.systemAdmin}`;
     static readonly refreshRelative = `/${RouteConstants.refresh}`;
 
@@ -66,6 +68,9 @@ export class RouteConstants {
     static readonly createNewProjectRelative = `${RouteConstants.project}/${RouteConstants.createNew}`;
     static readonly projectResourceValueRelative = `:${RouteConstants.projectParameter}/:${RouteConstants.resourceParameter}/:${RouteConstants.valueParameter}`;
     static readonly projectResourceRelative = `:${RouteConstants.projectParameter}/:${RouteConstants.resourceParameter}`;
+
+    static readonly myAccountRelative = `/${RouteConstants.userAccount}/${RouteConstants.myAccount}`;
+    static readonly myProjectsRelative = `/${RouteConstants.userAccount}/${RouteConstants.myProjects}`;
 
     static readonly editUserRelative = `:${RouteConstants.userParameter}/${RouteConstants.edit}`;
 

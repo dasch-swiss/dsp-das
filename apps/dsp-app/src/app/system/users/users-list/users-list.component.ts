@@ -377,6 +377,49 @@ export class UsersListComponent implements OnInit {
             );
     }
 
+    /**
+     * open dialog in every case of modification:
+     * edit user profile data, update user's password,
+     * remove user from project or toggle project admin membership,
+     * delete and reactivate user
+     *
+     */
+    openDialog(mode: string, user?: ReadUser): void {
+        const dialogConfig: MatDialogConfig = {
+            width: '560px',
+            maxHeight: '80vh',
+            position: {
+                top: '112px',
+            },
+            data: { user, mode },
+        };
+
+        const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
+
+        dialogRef.afterClosed().subscribe((response) => {
+            if (response === true) {
+                switch (mode) {
+                    case 'removeFromProject':
+                        this._store.dispatch(new RemoveUserFromProjectAction(user.id, this.project.id));
+                        this._actions$.pipe(ofActionSuccessful(SetUserAction))
+                            .pipe(take(1))
+                            .subscribe(() => {
+                                this._store.dispatch(new LoadProjectMembersAction(this.projectUuid));
+                                this.refreshParent.emit();
+                            });
+                        break;
+                    case 'deleteUser':
+                        this.deleteUser(user.id);
+                        break;
+                    case 'activateUser':
+                        this.activateUser(user.id);
+                        break;
+                }
+            }
+            this._cd.markForCheck();
+        });
+    }
+
     disableMenu(): boolean {
         // disable menu in case of:
         // project.status = false

@@ -146,12 +146,12 @@ export class PasswordFormComponent implements OnInit {
                 ? ''
                 : this.confirmForm.controls.requesterPassword.value;
 
-        const name = this.user.username ? this.user.username : '';
+        const name = this.user?.username ? this.user?.username : '';
 
         this.form = this._fb.group({
             username: new UntypedFormControl({
                 value: name,
-                disabled: !this.user.username,
+                disabled: this.user?.username,
             }),
             requesterPassword: new UntypedFormControl(
                 {

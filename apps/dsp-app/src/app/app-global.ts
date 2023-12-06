@@ -10,13 +10,13 @@ export class AppGlobal {
         {
             label: 'My Projects',
             shortLabel: 'Projects',
-            route: RouteConstants.projectsRelative,
+            route: RouteConstants.myProjectsRelative,
             icon: 'assignment',
         },
         {
             label: 'My Account',
             shortLabel: 'Account',
-            route: RouteConstants.userAccountRelative,
+            route: RouteConstants.myAccountRelative,
             icon: 'settings',
         },
     ];
@@ -26,7 +26,7 @@ export class AppGlobal {
         {
             label: 'All projects',
             shortLabel: 'Projects',
-            route: RouteConstants.projects,
+            route: RouteConstants.systemProjects,
             icon: 'assignment',
         },
         {

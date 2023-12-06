@@ -18,12 +18,12 @@ import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 })
 export class UserMenuComponent implements OnInit, OnDestroy {
     @ViewChild(MatMenuTrigger) menuTrigger: MatMenuTrigger;
-    
+
     routeConstants = RouteConstants;
     navigation: MenuItem[];
 
     private ngUnsubscribe: Subject<void> = new Subject<void>();
-    
+
     isLoggedIn$: Observable<boolean> = this._authService.isLoggedIn$;
     @Select(UserSelectors.user) user$: Observable<User>;
     @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<User>;
@@ -45,7 +45,7 @@ export class UserMenuComponent implements OnInit, OnDestroy {
             {
                 label: 'My Account',
                 shortLabel: 'Account',
-                route: this.routeConstants.userAccountRelative,
+                route: this.routeConstants.userAccount,
                 icon: '',
             },
         ];

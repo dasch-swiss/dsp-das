@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AppGlobal } from '../app-global';
 import { MenuItem } from '../main/declarations/menu-item';
 import { Select } from '@ngxs/store';
@@ -17,8 +17,6 @@ import { take, tap } from 'rxjs/operators';
 })
 export class UserComponent {
 
-    route: string;
-
     navigation: MenuItem[] = AppGlobal.userNav;
 
     @Select(UserSelectors.username) username$: Observable<string>;
@@ -26,11 +24,8 @@ export class UserComponent {
     routeConstants = RouteConstants;
 
     constructor(
-        private _route: ActivatedRoute,
         private _titleService: Title,
     ) {
-        // get the activated route; we need it for the viewer switch
-        this.route = this._route.pathFromRoot[1].snapshot.url[0].path;
 
         this.username$.pipe(
             take(1),

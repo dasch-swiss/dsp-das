@@ -1,7 +1,7 @@
 
 <dasch-swiss-app-progress-indicator *ngIf="(isLoading$ | async) === true && (user$ | async | isFalsy)"></dasch-swiss-app-progress-indicator>
 
-<ng-container *ngIf="(isLoading$ | async) === false && loggedInUser">
+<ng-container *ngIf="(isLoading$ | async) === false && (user$ | async) !== null">
 
 <ng-container *ngIf="(user$ | async) as user">
 <!-- own user profile (logged-in user) -->
@@ -37,17 +37,6 @@
             </li>
         </ul>
     </div>
-    <mat-divider></mat-divider>
-    <br />
-    <!-- edit button -->
-    <button
-        mat-button
-        [color]="'primary'"
-        (click)="openDialog('editUser', user)"
-        style="width: 100%"
-    >
-        Edit my profile
-    </button>
 </div>
 
 <!-- phone view -->
