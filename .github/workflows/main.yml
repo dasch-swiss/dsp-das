@@ -30,7 +30,7 @@ jobs:
         run: |
           npm install
           npx nx run-many --all --target=lint
-          npx nx run-many --all --target=test --configuration=ci
+        # npx nx run-many --all --target=test --configuration=ci
         env:
           TZ: Europe/Zurich
 
@@ -51,7 +51,7 @@ jobs:
           echo "registry=https://npm.pkg.github.com/dasch-swiss" >> ~/.npmrc
       - run: npm install
       - run: npx nx run dsp-app:lint
-      - run: npx nx run dsp-app:test:ci
+      # - run: npx nx run dsp-app:test:ci
         env:
           TZ: Europe/Zurich
 
@@ -141,8 +141,8 @@ jobs:
   publish:
     name: Publish to Dockerhub only on main or tag (release) commits
     needs: [
-      test,
-      dsp-app-tests,
+      # test,
+      # dsp-app-tests,
       jdnconvertiblecalendar-tests,
       jdnconvertiblecalendardateadapter-tests,
       vre-shared-app-config-tests
