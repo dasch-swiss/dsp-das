@@ -164,12 +164,10 @@ export class ListValueComponent
                 7,
                 rootNodeIri.length - 1
             );
-           this._listV2Api
-          // this._dspApiConnection.v2.list
+          this._dspApiConnection.v2.list
                 .getList(trimmedRootNodeIRI)
                 .subscribe(
                     (response: ListNodeV2) => {
-                        console.log('yyyeeees', response);
                         if (!response.children.length) {
                             // this shouldn't happen since users cannot select the root node
                             this.selectedNodeHierarchy.push(response.label);
