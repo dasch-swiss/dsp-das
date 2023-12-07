@@ -27,10 +27,10 @@ import {
     Constants,
     KnoraApiConnection,
     ProjectResponse,
-    ProjectsResponse,
     ReadProject,
+    StoredProject,
 } from '@dasch-swiss/dsp-js';
-import { Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import {
     ComponentCommunicationEventService,
@@ -40,6 +40,9 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { SearchParams } from '../../results/list-view/list-view.component';
 import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Select } from '@ngxs/store';
+import { map, takeUntil } from 'rxjs/operators';
 
 export interface PrevSearchItem {
     projectIri?: string;
@@ -55,6 +58,14 @@ const resolvedPromise = Promise.resolve(null);
     styleUrls: ['./fulltext-search.component.scss'],
 })
 export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
+    private ngUnsubscribe: Subject<void> = new Subject<void>();
+    
+    // do not show the following projects: default system projects from knora
+    private static HiddenProjects: string[] = [
+        Constants.SystemProjectIRI,
+        Constants.DefaultSharedOntologyIRI,
+    ];
+    
     /**
      *
      * @param [projectfilter] If true it shows the selection
@@ -101,9 +112,6 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
     // previous search = full-text search history
     prevSearch: PrevSearchItem[];
 
-    // list of projects, in case of filterproject is true
-    projects: ReadProject[];
-
     // selected project, in case of limitToProject and/or projectfilter is true
     project: ReadProject;
 
@@ -124,14 +132,22 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
     // overlay reference
     overlayRef: OverlayRef;
 
-    // do not show the following projects: default system projects from knora
-    hiddenProjects: string[] = [
-        Constants.SystemProjectIRI,
-        Constants.DefaultSharedOntologyIRI,
-    ];
-
     // toggle phone panel
     displayPhonePanel = false;
+
+    get projects$(): Observable<StoredProject[]> {
+        return this.allActiveProjects$.pipe(
+            takeUntil(this.ngUnsubscribe),
+            map((projects: StoredProject[]) => 
+                this._sortingService.keySortByAlphabetical(
+                    projects.filter((p) => !FulltextSearchComponent.HiddenProjects.includes(p.id)), 
+                    'shortname'
+                )
+            )
+        );
+    }
+
+    @Select(ProjectsSelectors.allActiveProjects) allActiveProjects$: Observable<StoredProject[]>;
 
     constructor(
         @Inject(DspApiConnectionToken)
@@ -166,7 +182,7 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (this.projectfilter) {
-            this.getAllProjects();
+            this.getCurrentProject();
         }
 
         // in the event of a grav search (advanced or expert search), clear the input field
@@ -178,7 +194,7 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
 
         this.componentCommsSubscriptions.push(
             this._componentCommsService.on(Events.projectCreated, () => {
-                this.getAllProjects();
+                this.getCurrentProject();
             })
         );
     }
@@ -202,35 +218,19 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
                 sub.unsubscribe()
             );
         }
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
+    
+    trackByFn = (index: number, item: StoredProject) => `${index}-${item.id}`;
 
-    /**
-     * get all public projects from DSP-API
-     */
-    getAllProjects(): void {
-        this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
-            (response: ApiResponseData<ProjectsResponse>) => {
-                // filter out deactivated projects and system projects
-                this.projects = response.body.projects.filter(
-                    (p) =>
-                        p.status === true && !this.hiddenProjects.includes(p.id)
-                );
+    trackBySearchFn = (index: number, item: PrevSearchItem) => `${index}-${item.query}`;
 
-                if (localStorage.getItem('currentProject') !== null) {
-                    this.project = JSON.parse(
-                        localStorage.getItem('currentProject')
-                    );
-                }
-                this.projects = this._sortingService.keySortByAlphabetical(
-                    this.projects,
-                    'shortname'
-                );
-            },
-            (error: ApiResponseError) => {
-                this.error = error;
-                this._errorHandler.showMessage(error);
-            }
-        );
+    getCurrentProject(): void {
+        if (localStorage.getItem('currentProject') !== null) {
+            this.project = JSON.parse(localStorage.getItem('currentProject'));
+        }
     }
 
     /**

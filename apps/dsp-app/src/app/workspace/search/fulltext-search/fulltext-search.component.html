@@ -29,7 +29,7 @@
                     {{ defaultProjectLabel }}
                 </button>
                 <mat-divider></mat-divider>
-                <span *ngFor="let project of projects">
+                <span *ngFor="let project of projects$ | async; trackBy: trackByFn">
                     <button
                         mat-menu-item
                         class="project-item"
@@ -75,7 +75,7 @@
     <div class="app-search-menu" [class.with-project-filter]="projectfilter">
         <div class="app-menu-content">
             <mat-list class="app-previous-search-list">
-                <div *ngFor="let item of prevSearch; let i = index">
+                <div *ngFor="let item of prevSearch; let i = index; trackBy: trackBySearchFn">
                     <mat-list-item *ngIf="i < 10">
                         <span (click)="doPrevSearch(item)" class="app-previous-search-item" matListItemTitle>
                             <div
@@ -84,7 +84,7 @@
                                 *ngIf="
                                     projectfilter &&
                                     !error &&
-                                    projects?.length > 0
+                                    (projects$ | async)?.length > 0
                                 "
                             >
                                 <span *ngIf="item.projectIri">[{{
@@ -165,7 +165,7 @@
                         {{ defaultProjectLabel }}
                     </button>
                     <mat-divider></mat-divider>
-                    <span *ngFor="let project of projects">
+                    <span *ngFor="let project of projects$ | async; trackBy: trackByFn">
                         <button
                             mat-menu-item
                             (click)="setProject(project); changeFocus()"
@@ -213,7 +213,7 @@
         >
             <div class="app-menu-content">
                 <mat-list class="app-previous-search-list">
-                    <div *ngFor="let item of prevSearch; let i = index">
+                    <div *ngFor="let item of prevSearch; let i = index; trackBy: trackBySearchFn">
                         <mat-list-item *ngIf="i < 10">
                             <h4
                                 mat-line
@@ -226,7 +226,7 @@
                                     *ngIf="
                                         projectfilter &&
                                         !error &&
-                                        projects?.length > 0
+                                        (projects$ | async)?.length > 0
                                     "
                                 >
                                     <span *ngIf="item.projectIri">{{
