@@ -1,4 +1,4 @@
-export interface CanDeleteResponse {
+export interface CanDoResponse {
     canDo: boolean;
     cannotDoReason?: string;
 }

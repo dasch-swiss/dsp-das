@@ -23,7 +23,7 @@ import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.d
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
     ListV2ApiService
-} from '../../../../../../../../libs/vre/shared/app-api/src/lib/services/v2/list-v2-api.service';
+} from '../../../../../../../../libs/vre/shared/app-api/src/lib/services/v2/list/list-v2-api.service';
 @Component({
     selector: 'app-list-value',
     templateUrl: './list-value.component.html',
