@@ -6,33 +6,21 @@ import {
     Inject,
     Input,
     OnInit,
-    Output,
+    Output
 } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import {
-    ApiResponseData,
-    ApiResponseError,
-    CreateListRequest,
-    KnoraApiConnection,
-    List,
-    ListInfoResponse,
-    ListNodeInfo,
-    ListResponse,
-    ProjectResponse,
-    StringLiteral,
-    UpdateListInfoRequest,
-} from '@dasch-swiss/dsp-js';
-import {DspApiConnectionToken, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { CreateListRequest, List, ListNodeInfo, StringLiteral, UpdateListInfoRequest } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { LoadListsInProjectAction } from '@dasch-swiss/vre/shared/app-state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
+import { ListApiService, ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-list-info-form',
     templateUrl: './list-info-form.component.html',
-    styleUrls: ['./list-info-form.component.scss'],
+    styleUrls: ['./list-info-form.component.scss']
 })
 export class ListInfoFormComponent implements OnInit {
     @Input() iri?: string;
@@ -57,11 +45,11 @@ export class ListInfoFormComponent implements OnInit {
     // possible errors for the label
     labelErrors = {
         label: {
-            required: 'A label is required.',
+            required: 'A label is required.'
         },
         comment: {
-            required: 'A description is required.',
-        },
+            required: 'A description is required.'
+        }
     };
 
     saveButtonDisabled = true;
@@ -73,14 +61,13 @@ export class ListInfoFormComponent implements OnInit {
     isCommentTouched = false;
 
     constructor(
-        @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: AppErrorHandler,
+        private _projectApiService: ProjectApiService,
+        private _listApiService: ListApiService,
         private _route: ActivatedRoute,
         private _router: Router,
         private _projectService: ProjectService,
         private _cd: ChangeDetectorRef,
-        private _store: Store,
+        private _store: Store
     ) {
         // in case of creating new
         if (this._route.parent) {
@@ -89,18 +76,13 @@ export class ListInfoFormComponent implements OnInit {
             this._route.parent.paramMap.subscribe((params: Params) => {
                 this.projectUuid = params.get('uuid');
 
-                this._dspApiConnection.admin.projectsEndpoint
-                    .getProjectByIri(
-                        this._projectService.uuidToIri(this.projectUuid)
-                    )
+                this._projectApiService.get(
+                    this._projectService.uuidToIri(this.projectUuid)
+                )
                     .subscribe(
-                        (response: ApiResponseData<ProjectResponse>) => {
-                            this.projectIri = response.body.project.id;
-                        },
-                        (error: ApiResponseError) => {
-                            this._errorHandler.showMessage(error);
-                        }
-                    );
+                        (response) => {
+                            this.projectIri = response.project.id;
+                        });
             });
         }
         // in case of edit
@@ -110,18 +92,13 @@ export class ListInfoFormComponent implements OnInit {
             this._route.firstChild.paramMap.subscribe((params: Params) => {
                 this.projectUuid = params.get('uuid');
 
-                this._dspApiConnection.admin.projectsEndpoint
-                    .getProjectByIri(
-                        this._projectService.uuidToIri(this.projectUuid)
-                    )
+                this._projectApiService.get(
+                    this._projectService.uuidToIri(this.projectUuid)
+                )
                     .subscribe(
-                        (response: ApiResponseData<ProjectResponse>) => {
-                            this.projectIri = response.body.project.id;
-                        },
-                        (error: ApiResponseError) => {
-                            this._errorHandler.showMessage(error);
-                        }
-                    );
+                        (response) => {
+                            this.projectIri = response.project.id;
+                        });
             });
         }
     }
@@ -131,18 +108,13 @@ export class ListInfoFormComponent implements OnInit {
         // get list info in case of edit mode
         if (this.mode === 'update') {
             // edit mode, get list
-            this._dspApiConnection.admin.listsEndpoint
-                .getListInfo(this.iri)
+            this._listApiService.getInfo(this.iri)
                 .subscribe(
-                    (response: ApiResponseData<ListInfoResponse>) => {
-                        this.list = response.body.listinfo;
-                        this.buildLists(response.body.listinfo);
+                    (response) => {
+                        this.list = response.listinfo;
+                        this.buildLists(response.listinfo);
                         this._cd.markForCheck();
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                );
+                    });
         } else {
             // build the form
             this.buildLists();
@@ -174,19 +146,13 @@ export class ListInfoFormComponent implements OnInit {
             listInfoUpdateData.labels = this.labels;
             listInfoUpdateData.comments = this.comments;
 
-            this._dspApiConnection.admin.listsEndpoint
-                .updateListInfo(listInfoUpdateData)
+            this._listApiService.updateInfo(listInfoUpdateData.listIri, listInfoUpdateData)
                 .subscribe(
-                    (response: ApiResponseData<ListInfoResponse>) => {
+                    (response) => {
                         this._store.dispatch(new LoadListsInProjectAction(this.projectIri));
                         this.loading = false;
-                        this.closeDialog.emit(response.body.listinfo);
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                        this.loading = false;
-                    }
-                );
+                        this.closeDialog.emit(response.listinfo);
+                    });
         } else {
             // new: create list
             const listInfoData: CreateListRequest = new CreateListRequest();
@@ -194,25 +160,19 @@ export class ListInfoFormComponent implements OnInit {
             listInfoData.labels = this.labels;
             listInfoData.comments = this.comments;
 
-            this._dspApiConnection.admin.listsEndpoint
-                .createList(listInfoData)
+            this._listApiService.create(listInfoData)
                 .subscribe(
-                    (response: ApiResponseData<ListResponse>) => {
+                    (response) => {
                         this._store.dispatch(new LoadListsInProjectAction(this.projectIri));
                         this.loading = false;
                         // go to the new list page
-                        const array = response.body.list.listinfo.id.split('/');
+                        const array = response.list.listinfo.id.split('/');
                         const name = array[array.length - 1];
                         this._router.navigate([RouteConstants.list, name], {
-                            relativeTo: this._route.parent,
+                            relativeTo: this._route.parent
                         });
                         this._cd.markForCheck();
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                        this.loading = false;
-                    }
-                );
+                    });
         }
     }
 
