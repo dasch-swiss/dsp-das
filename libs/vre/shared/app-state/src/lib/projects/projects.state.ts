@@ -38,7 +38,7 @@ import { IKeyValuePairs } from '../model-interfaces';
 import { ProjectsSelectors } from './projects.selectors';
 import { SetUserAction } from '../user/user.actions';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ProjectApiService, UserApiService } from '@dasch-swiss/vre/shared/app-api';
+import { GroupApiService, ProjectApiService, UserApiService } from '@dasch-swiss/vre/shared/app-api';
 
 const defaults: ProjectsStateModel = {
     isLoading: false,
@@ -60,6 +60,7 @@ export class ProjectsState {
         private _dspApiConnection: KnoraApiConnection,
         private _projectsApiService: ProjectApiService,
         private _userApiService: UserApiService,
+        private _groupApiService: GroupApiService,
         private store: Store,
         private errorHandler: AppErrorHandler,
         private projectService: ProjectService,
@@ -226,16 +227,13 @@ export class ProjectsState {
     @Action(LoadProjectGroupsAction)
     loadProjectGroupsAction(ctx: StateContext<ProjectsStateModel>) {
         ctx.patchState({ isLoading: true });
-        return this._dspApiConnection.admin.groupsEndpoint.getGroups()
+          return this._groupApiService.list()
             .pipe(
                 take(1),
-                map((groupsResponse: ApiResponseData<GroupsResponse> | ApiResponseError) => {
-                    return groupsResponse as ApiResponseData<GroupsResponse>;
-                }),
                 tap({
-                    next: (response: ApiResponseData<GroupsResponse>) => {
+                    next: response => {
                         const groups: IKeyValuePairs<ReadGroup> = {};
-                        response.body.groups.forEach(group => {
+                        response.groups.forEach(group => {
                             const projectId = group.project?.id as string;
                             if (!groups[projectId]) {
                                 groups[projectId] = { value: [] };

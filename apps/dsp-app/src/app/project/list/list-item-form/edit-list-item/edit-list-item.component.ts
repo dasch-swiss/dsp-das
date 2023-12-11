@@ -23,6 +23,7 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -77,6 +78,7 @@ export class EditListItemComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
+        private _listApiService: ListApiService,
         private _errorHandler: AppErrorHandler,
         private _projectService: ProjectService,
         private _cd: ChangeDetectorRef
@@ -87,19 +89,15 @@ export class EditListItemComponent implements OnInit {
 
         // if updating a node, get the existing node info
         if (this.mode === 'update') {
-            this._dspApiConnection.admin.listsEndpoint
-                .getListNodeInfo(this.iri)
+              this._listApiService
+                .getNodeInfo(this.iri)
                 .subscribe(
-                    (response: ApiResponseData<ListNodeInfoResponse>) => {
+                    response => {
                         this.loading = false;
-                        this.listNode = response.body.nodeinfo;
-                        this.buildForm(response.body.nodeinfo);
+                        this.listNode = response.nodeinfo;
+                        this.buildForm(response.nodeinfo);
                         this._cd.markForCheck();
-                    },
-                    (error: ApiResponseError) => {
-                        this._errorHandler.showMessage(error);
-                    }
-                );
+                    });
         } else {
             this.labels = [];
             this.comments = [];
@@ -167,25 +165,21 @@ export class EditListItemComponent implements OnInit {
         childNodeUpdateData.comments =
             this.comments.length > 0 ? this.comments : undefined;
 
-        this._dspApiConnection.admin.listsEndpoint
-            .updateChildNode(childNodeUpdateData)
+        this._listApiService
+            .updateChildNode(childNodeUpdateData.listIri, childNodeUpdateData)
             .subscribe(
-                (response: ApiResponseData<ChildNodeInfoResponse>) => {
+                response=> {
                     // if initialCommentsLength is not equal to 0 and the comment is now empty, send request to delete comment
                     if (
                         this.initialCommentsLength !== 0 &&
                         !childNodeUpdateData.comments
                     ) {
-                        this._dspApiConnection.admin.listsEndpoint
+                          this._listApiService
                             .deleteChildComments(childNodeUpdateData.listIri)
-                            .subscribe(
-                                () => {},
-                                (error: ApiResponseError) =>
-                                    this._errorHandler.showMessage(error)
-                            );
+                            .subscribe();
                     }
                     this.loading = false;
-                    this.closeDialog.emit(response.body.nodeinfo);
+                    this.closeDialog.emit(response.nodeinfo);
                 },
                 (error: ApiResponseError) => {
                     this.errorMessage = error;
@@ -213,12 +207,12 @@ export class EditListItemComponent implements OnInit {
         createChildNodeRequest.projectIri = this.projectIri;
         createChildNodeRequest.position = this.position;
 
-        this._dspApiConnection.admin.listsEndpoint
-            .createChildNode(createChildNodeRequest)
+          this._listApiService
+            .createChildNode(createChildNodeRequest.parentNodeIri, createChildNodeRequest)
             .subscribe(
-                (response: ApiResponseData<ListNodeInfoResponse>) => {
+                response => {
                     this.loading = false;
-                    this.closeDialog.emit(response.body.nodeinfo);
+                    this.closeDialog.emit(response.nodeinfo);
                 },
                 (error: ApiResponseError) => {
                     this.errorMessage = error;

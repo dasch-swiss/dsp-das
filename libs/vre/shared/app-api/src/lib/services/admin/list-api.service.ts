@@ -8,7 +8,7 @@ import {
     CreateListRequest,
     DeleteChildNodeCommentsResponse,
     DeleteListNodeResponse,
-    DeleteListResponse,
+    DeleteListResponse, ListChildNodeResponse,
     ListInfoResponse,
     ListNodeInfoResponse,
     ListResponse,
@@ -20,6 +20,7 @@ import {
     UpdateListInfoRequest
 } from '@dasch-swiss/dsp-js';
 import { map } from 'rxjs/operators';
+import { ListNodeResponse } from '@dasch-swiss/dsp-js/src/models/admin/list-node-response';
 
 @Injectable({
     providedIn: 'root'
@@ -34,7 +35,7 @@ export class ListApiService extends BaseApi {
     }
 
     get(listIri: string) {
-        return this._http.get<ListsResponse>(`${this.baseUri}/${listIri}`);
+        return this._http.get<ListResponse | ListChildNodeResponse>(`${this.baseUri}/${listIri}`);
     }
 
     create(list: CreateListRequest) {
@@ -45,15 +46,8 @@ export class ListApiService extends BaseApi {
         return this._http.put<ListsResponse>(this._listRoute(iri), updatedGroup);
     }
 
-    delete(iri: string) { // TODO seems like bad pattern
-        return this._http.delete<DeleteListResponse | DeleteListNodeResponse>(this._listRoute(iri))
-            .pipe(map((response) => {
-                if(response.hasOwnProperty('node')) {
-                    return response as DeleteListNodeResponse;
-                } else {
-                    return response as DeleteListResponse;
-                }
-            }));
+    delete(iri: string) {
+        return this._http.delete<DeleteListResponse | DeleteListNodeResponse>(this._listRoute(iri));
     }
 
 
@@ -63,6 +57,10 @@ export class ListApiService extends BaseApi {
 
     getInfo(iri: string) {
         return this._http.get<ListInfoResponse>(`${this.baseUri}/infos/${encodeURIComponent(iri)}`); // TODO pattern does not match the rest of the api
+    }
+
+    getNodeInfo(iri: string) {
+        return this._http.get<ListNodeInfoResponse>(`${this._listRoute(iri)}/info}`);
     }
 
     updateInfo(iri: string, updatedList: UpdateListInfoRequest) {
@@ -101,6 +99,14 @@ export class ListApiService extends BaseApi {
         }
         return this._http.put<ChildNodeInfoResponse>(this._listRoute(iri), updatedNode);
     }
+
+    repositionChildNode(iri: string, repositionRequest: RepositionChildNodeRequest){
+        return this._http.put<RepositionChildNodeResponse>(`${this._listRoute(iri)}/position`, repositionRequest);
+    }
+
+    deleteListNode(iri: string) {
+        return this._http.delete<DeleteListNodeResponse>(this._listRoute(iri));
+}
 
 
     private _listRoute(iri: string) {

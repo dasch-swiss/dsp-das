@@ -8,6 +8,7 @@ import { ClearListsAction, DeleteListNodeAction, LoadListsInProjectAction } from
 import { of } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 
 const defaults: ListsStateModel = {
     isLoading: false,
@@ -22,9 +23,8 @@ const defaults: ListsStateModel = {
 export class ListsState {
     constructor(
         @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
+        private _listApiService: ListApiService,
         private _errorHandler: AppErrorHandler,
-        private _dialog: MatDialog,
     ) {}
 
     @Action(LoadListsInProjectAction)
@@ -33,16 +33,13 @@ export class ListsState {
         { projectIri }: LoadListsInProjectAction
     ) {
         ctx.patchState({ isLoading: true });
-        return this._dspApiConnection.admin.listsEndpoint
-            .getListsInProject(projectIri)
+        return this._listApiService
+            .listInProject(projectIri)
             .pipe(
                 take(1),
-                map((response: ApiResponseData<ListsResponse> | ApiResponseError) => { 
-                    return response as ApiResponseData<ListsResponse>;
-                }),
                 tap({
-                    next: (response: ApiResponseData<ListsResponse>) => {
-                        ctx.setState({ ...ctx.getState(), isLoading: false, listsInProject: response.body.lists });
+                    next:response => {
+                        ctx.setState({ ...ctx.getState(), isLoading: false, listsInProject: response.lists });
                     },
                     error: (error: ApiResponseError) => {
                         this._errorHandler.showMessage(error);
@@ -57,15 +54,11 @@ export class ListsState {
         { listIri }: DeleteListNodeAction
     ) {
         ctx.patchState({ isLoading: true });
-        return this._dspApiConnection.admin.listsEndpoint
-            .deleteListNode(listIri)
+            return this._listApiService.deleteListNode(listIri)
             .pipe(
                 take(1),
-                map((response: ApiResponseData<DeleteListNodeResponse | DeleteListResponse> | ApiResponseError) => { 
-                    return response as ApiResponseData<DeleteListNodeResponse>;
-                }),
                 tap({
-                    next: (response: ApiResponseData<DeleteListNodeResponse>) => {
+                    next: () => {
                         ctx.patchState({ isLoading: false });
                     },
                     error: (error: ApiResponseError) => {
@@ -99,7 +92,7 @@ export class ListsState {
                     },
                 };
 
-            //TODO decouple error handling 
+            //TODO decouple error handling
             //this._dialog.open(DialogComponent, errorDialogConfig);
         } else {
             // use default error behavior
