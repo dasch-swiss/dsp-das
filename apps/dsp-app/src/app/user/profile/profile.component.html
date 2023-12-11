@@ -1,4 +1,4 @@
-<dasch-swiss-app-progress-indicator *ngIf="(isLoading$ | async) === true && !!(user$ | async)"></dasch-swiss-app-progress-indicator>
+<dasch-swiss-app-progress-indicator *ngIf="(isLoading$ | async) === true && (user$ | async | isFalsy)"></dasch-swiss-app-progress-indicator>
 
 <ng-container *ngIf="(isLoading$ | async) === false && loggedInUser">
 <ng-container *ngIf="(user$ | async) as user">
@@ -8,6 +8,7 @@
         appAdminImage
         [image]="user.email"
         [type]="'user'"
+        alt="user profile"
         class="user-profile-image"
     />
     <div class="user-profile-headline">
@@ -55,6 +56,7 @@
         appAdminImage
         [image]="user.email"
         [type]="'user'"
+        alt="user profile"
         class="user-profile-image"
     />
 

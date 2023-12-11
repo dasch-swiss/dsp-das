@@ -16,7 +16,7 @@ import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { SortProp } from '@dsp-app/src/app/main/action/sort-button/sort-button.component';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { map, takeUntil, tap } from 'rxjs/operators';
+import { map, take, takeUntil, tap } from 'rxjs/operators';
 import { Select } from '@ngxs/store';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';

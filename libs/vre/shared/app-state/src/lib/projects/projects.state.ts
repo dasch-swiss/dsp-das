@@ -103,7 +103,6 @@ export class ProjectsState {
                 tap({
                     next: (response) => {
                         const project = response.project;
-
                         let state = ctx.getState();
                         if (!state.readProjects) {
                             state.readProjects = [];
@@ -160,16 +159,19 @@ export class ProjectsState {
     @Action(RemoveUserFromProjectAction)
     removeUserFromProject(
         ctx: StateContext<ProjectsStateModel>,
-        { userId, projectId }: RemoveUserFromProjectAction
+        { userId, projectIri }: RemoveUserFromProjectAction
     ) {
         ctx.patchState({ isLoading: true });
         return this._userApiService
-            .removeFromProjectMembership(userId, projectId)
+            .removeFromProjectMembership(userId, projectIri)
             .pipe(
                 take(1),
                 tap({
                     next: response => {
-                        ctx.dispatch(new SetUserAction(response.user));
+                        ctx.dispatch([
+                            new SetUserAction(response.user),
+                            new LoadProjectMembersAction(projectIri)
+                        ]);
                         ctx.patchState({ isLoading: false });
                     }}));
     }
@@ -185,7 +187,10 @@ export class ProjectsState {
                 take(1),
                 tap({
                     next: response => {
-                        ctx.dispatch(new SetUserAction(response.user));
+                        ctx.dispatch([
+                            new SetUserAction(response.user),
+                            new LoadProjectMembersAction(projectIri)
+                        ]);
                         ctx.patchState({ isLoading: false });
                     },
                     error: (error) => {
@@ -201,7 +206,7 @@ export class ProjectsState {
         ctx: StateContext<ProjectsStateModel>,
         { projectUuid }: LoadProjectMembersAction
     ) {
-        if (!this._store.selectSnapshot(UserSelectors.isLoggedIn)) {
+        if (!this.store.selectSnapshot(UserSelectors.isLoggedIn)) {
             return;
         }
 
