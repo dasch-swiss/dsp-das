@@ -4,7 +4,7 @@ import {
     GroupsResponse,
     Project,
     ProjectsResponse,
-    UpdateUserRequest,
+    UpdateUserRequest, User,
     UserResponse,
     UsersResponse
 } from '@dasch-swiss/dsp-js';
@@ -26,11 +26,15 @@ export class UserApiService extends BaseApi {
     }
 
     get(id: string, idType: UserIdentifier = 'iri') {
-        return this._http.get<UsersResponse>(this._userRoute(id, idType));
+        return this._http.get<UserResponse>(this._userRoute(id, idType));
     }
 
-    create(project: Project) {
-        return this._http.post<UserResponse>(this.baseUri, project);
+    create(user: User) {
+        return this._http.post<UserResponse>(this.baseUri, user);
+    }
+
+    delete(id: string) {
+        return this._http.delete<UserResponse>(this._userRoute(id));
     }
 
     getGroupMembershipsForUser(iri: string) {
@@ -61,19 +65,19 @@ export class UserApiService extends BaseApi {
     }
 
 
-    addToGroupMembership(userIri: string, groupIri: boolean) {
+    addToGroupMembership(userIri: string, groupIri: string) {
         return this._http.post<UserResponse>(`${this._userRoute(userIri)}/group-memberships/${encodeURIComponent(groupIri)}`, {});
     }
 
-    removeFromGroupMembership(userIri: string, groupIri: boolean) {
+    removeFromGroupMembership(userIri: string, groupIri: string) {
         return this._http.post<UserResponse>(`${this._userRoute(userIri)}/group-memberships/${encodeURIComponent(groupIri)}`, {});
     }
 
-    addToProjectMembership(userIri: string, projectIri: boolean, adminProject = false) {
+    addToProjectMembership(userIri: string, projectIri: string, adminProject = false) {
         return this._http.post<UserResponse>(`${this._userRoute(userIri)}/project-${adminProject ? 'admin-' : ''}memberships/${encodeURIComponent(projectIri)}`, {});
     }
 
-    removeFromProjectMembership(userIri: string, projectIri: boolean, adminProject = false) {
+    removeFromProjectMembership(userIri: string, projectIri: string, adminProject = false) {
         return this._http.post<UserResponse>(`${this._userRoute(userIri)}/project-${adminProject ? 'admin-' : ''}memberships/${encodeURIComponent(projectIri)}`, {});
     }
 

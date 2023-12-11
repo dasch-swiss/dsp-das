@@ -28,7 +28,7 @@ import {
     UpdateProjectAction,
     UserSelectors
 } from '@dasch-swiss/vre/shared/app-state';
-import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
+import { ProjectApiService, UserApiService } from '@dasch-swiss/vre/shared/app-api';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -157,7 +157,8 @@ export class ProjectFormComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
-        private _projectsApiService: ProjectApiService,
+        private _projectApiService: ProjectApiService,
+        private _userApiService: UserApiService,
         private _errorHandler: AppErrorHandler,
         private _notification: NotificationService,
         private _fb: UntypedFormBuilder,
@@ -182,7 +183,7 @@ export class ProjectFormComponent implements OnInit {
             this.projectIri = this._projectService.uuidToIri(this.projectUuid);
             // edit existing project
             // get origin project data first
-            this._projectsApiService.get(this.projectIri)
+            this._projectApiService.get(this.projectIri)
                 .subscribe(
                     (response) => {
                         // save the origin project data in case of reset
@@ -202,7 +203,7 @@ export class ProjectFormComponent implements OnInit {
 
             // to avoid duplicate shortcodes or shortnames
             // we have to create a list of already exisiting short codes and names
-            this._projectsApiService.list()
+            this._projectApiService.list()
                 .subscribe(
                     response => {
                         for (const project of response.projects) {
@@ -441,7 +442,7 @@ export class ProjectFormComponent implements OnInit {
                 i++;
             }
 
-            this._projectsApiService.create(projectData).subscribe(
+            this._projectApiService.create(projectData).subscribe(
                     projectResponse => {
                         this.project = projectResponse.project;
                         this.buildForm(this.project);
@@ -449,8 +450,8 @@ export class ProjectFormComponent implements OnInit {
                         // add logged-in user to the project
                         // who am I?
                         const user = this._store.selectSnapshot(UserSelectors.user) as ReadUser;
-                        this._dspApiConnection.admin.usersEndpoint
-                            .addUserToProjectMembership(
+                          this._userApiService
+                            .addToProjectMembership(
                                 user.id,
                                 projectResponse.project.id
                             )
@@ -466,13 +467,7 @@ export class ProjectFormComponent implements OnInit {
                                         .then(() =>
                                             this._router.navigate([`${RouteConstants.projectRelative}/${uuid}`])
                                         );
-                                },
-                                (error: ApiResponseError) => {
-                                    this._errorHandler.showMessage(
-                                        error
-                                    );
-                                }
-                            );
+                                });
                     },
                     (error: ApiResponseError) => {
                         this._errorHandler.showMessage(error);

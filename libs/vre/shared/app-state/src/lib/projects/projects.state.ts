@@ -38,7 +38,7 @@ import { IKeyValuePairs } from '../model-interfaces';
 import { ProjectsSelectors } from './projects.selectors';
 import { SetUserAction } from '../user/user.actions';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
+import { ProjectApiService, UserApiService } from '@dasch-swiss/vre/shared/app-api';
 
 const defaults: ProjectsStateModel = {
     isLoading: false,
@@ -59,6 +59,7 @@ export class ProjectsState {
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
         private _projectsApiService: ProjectApiService,
+        private _userApiService: UserApiService,
         private store: Store,
         private errorHandler: AppErrorHandler,
         private projectService: ProjectService,
@@ -161,23 +162,15 @@ export class ProjectsState {
         { userId, projectId }: RemoveUserFromProjectAction
     ) {
         ctx.patchState({ isLoading: true });
-        return this._dspApiConnection.admin.usersEndpoint
-            .removeUserFromProjectMembership(userId, projectId)
+        return this._userApiService
+            .removeFromProjectMembership(userId, projectId)
             .pipe(
                 take(1),
-                map((response: ApiResponseData<UserResponse> | ApiResponseError) => {
-                    return response as ApiResponseData<UserResponse>;
-                }),
                 tap({
-                    next: (response: ApiResponseData<UserResponse>) => {
-                        ctx.dispatch(new SetUserAction(response.body.user));
+                    next: response => {
+                        ctx.dispatch(new SetUserAction(response.user));
                         ctx.patchState({ isLoading: false });
-                    },
-                    error: (error) => {
-                        this.errorHandler.showMessage(error);
-                    }
-                })
-            );
+                    }}));
     }
 
     @Action(AddUserToProjectMembershipAction)
@@ -186,16 +179,12 @@ export class ProjectsState {
         { userId, projectIri }: AddUserToProjectMembershipAction
     ) {
         ctx.patchState({ isLoading: true, hasLoadingErrors: false });
-        return this._dspApiConnection.admin.usersEndpoint
-            .addUserToProjectMembership(userId, projectIri)
+          return this._userApiService.addToProjectMembership(userId, projectIri)
             .pipe(
                 take(1),
-                map((response: ApiResponseData<UserResponse> | ApiResponseError) => {
-                    return response as ApiResponseData<UserResponse>;
-                }),
                 tap({
-                    next: (response: ApiResponseData<UserResponse>) => {
-                        ctx.dispatch(new SetUserAction(response.body.user));
+                    next: response => {
+                        ctx.dispatch(new SetUserAction(response.user));
                         ctx.patchState({ isLoading: false });
                     },
                     error: (error) => {

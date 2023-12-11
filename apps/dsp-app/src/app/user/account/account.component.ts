@@ -22,6 +22,7 @@ import { tap } from 'rxjs/operators';
 import { apiConnectionTokenProvider } from '../../providers/api-connection-token.provider';
 import { LoadUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
+import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
 
 @Component({
     selector: 'app-account',
@@ -43,6 +44,7 @@ export class AccountComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
+        private _userApiService: UserApiService,
         private _dialog: MatDialog,
         private _errorHandler: AppErrorHandler,
         private _titleService: Title,
@@ -93,27 +95,17 @@ export class AccountComponent implements OnInit {
     }
 
     deleteUser(id: string) {
-        this._dspApiConnection.admin.usersEndpoint.deleteUser(id).subscribe(
+          this._userApiService.delete(id).subscribe(
             () => {
                 this._authService.logout();
-            },
-            (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-            }
-        );
+            });
     }
 
     activateUser(id: string) {
-        this._dspApiConnection.admin.usersEndpoint
-            .updateUserStatus(id, true)
+          this._userApiService.updateStatus(id, true)
             .subscribe(
                 () => {
-                    // console.log('refresh parent after activate', response);
                     this.refreshParent.emit();
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
+                });
     }
 }
