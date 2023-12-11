@@ -15,15 +15,7 @@ import {
 } from './user.actions';
 import { UserStateModel } from './user.state-model';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import {
-  ApiResponseData,
-  ApiResponseError,
-  Constants,
-  KnoraApiConnection,
-  ReadUser,
-  UserResponse,
-  UsersResponse
-} from '@dasch-swiss/dsp-js';
+import { ApiResponseError, Constants, KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { SetProjectMemberAction } from '../projects/projects.actions';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
@@ -182,7 +174,7 @@ export class UserState {
       .pipe(
         take(1),
         tap({
-          next: response=> {
+          next: response => {
             ctx.setState({
               ...ctx.getState(),
               allUsers: response.users
@@ -214,7 +206,7 @@ export class UserState {
       .pipe(
         take(1),
         tap({
-          next: response=> {
+          next: response => {
             const state = ctx.getState();
             state.allUsers.push(response.user);
             state.isLoading = false;

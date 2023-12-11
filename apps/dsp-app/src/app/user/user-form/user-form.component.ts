@@ -23,7 +23,6 @@ import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import {
   AddUserToProjectMembershipAction,
   CreateUserAction,
-  LoadProjectMembersAction,
   ProjectsSelectors,
   SetUserAction,
   UserSelectors

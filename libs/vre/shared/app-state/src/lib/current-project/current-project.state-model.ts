@@ -1,11 +1,10 @@
-import { ReadGroup, ReadProject, ReadUser } from "@dasch-swiss/dsp-js";
-import { IKeyValuePairs } from "../model-interfaces";
- 
+import { ReadGroup, ReadProject } from '@dasch-swiss/dsp-js';
+
 export class CurrentProjectStateModel {
-    isLoading = false;
-    hasLoadingErrors = false;
-    project: ReadProject | undefined;
-    isProjectAdmin = false;
-    isProjectMember = false;
-    groups: ReadGroup[] = [];
+  isLoading = false;
+  hasLoadingErrors = false;
+  project: ReadProject | undefined;
+  isProjectAdmin = false;
+  isProjectMember = false;
+  groups: ReadGroup[] = [];
 }

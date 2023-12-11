@@ -8,14 +8,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {
-  ApiResponseData,
-  KnoraApiConnection,
-  ListNode,
-  ListResponse,
-  RepositionChildNodeRequest,
-  RepositionChildNodeResponse
-} from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ListNode, ListResponse, RepositionChildNodeRequest } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ListNodeOperation } from '../list-item-form/list-item-form.component';

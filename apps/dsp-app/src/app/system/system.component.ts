@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 import { AppGlobal } from '../app-global';
@@ -8,22 +8,22 @@ import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable } from 'rxjs';
 
 @Component({
-    selector: 'app-system',
-    templateUrl: './system.component.html',
-    styleUrls: ['./system.component.scss'],
+  selector: 'app-system',
+  templateUrl: './system.component.html',
+  styleUrls: ['./system.component.scss']
 })
 export class SystemComponent {
-    loading = true;
+  loading = true;
 
-    navigation: MenuItem[] = AppGlobal.systemNav;
+  navigation: MenuItem[] = AppGlobal.systemNav;
 
-    @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
+  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
 
-    constructor(
-        private _titleService: Title,
-    ) {
-        // set the page title
-        this._titleService.setTitle('System administration');
-    }
+  constructor(
+    private _titleService: Title
+  ) {
+    // set the page title
+    this._titleService.setTitle('System administration');
+  }
 
 }

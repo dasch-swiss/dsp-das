@@ -134,7 +134,7 @@ export class SessionService {
                             );
                         }
                     ),
-                    catchError(error => {
+                    catchError(() => {
                         // if there is any error checking the credentials (mostly a 401 for after
                         // switching the server where this session/the credentials are unknown), we destroy the session
                         // so a new login is required

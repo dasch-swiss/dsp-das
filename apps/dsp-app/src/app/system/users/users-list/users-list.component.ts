@@ -11,14 +11,12 @@ import {
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
-  ApiResponseData,
   ApiResponseError,
   Constants,
   KnoraApiConnection,
   Permissions,
   ReadProject,
-  ReadUser,
-  UserResponse
+  ReadUser
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
@@ -37,7 +35,6 @@ import {
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
-import { ignoreElements } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -288,7 +285,7 @@ export class UsersListComponent implements OnInit {
         );
     } else {
       // false: user isn't project admin yet --> add admin rights
-        this._userApiService
+      this._userApiService
         .addToProjectMembership(id, this.project.id)
         .subscribe(
           response => {

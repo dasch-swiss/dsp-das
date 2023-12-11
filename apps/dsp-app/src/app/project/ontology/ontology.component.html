@@ -113,7 +113,7 @@
                     <!-- list of resource classes -->
                     <app-resource-class-info *ngFor="let resClass of ontoClasses; trackBy: trackByClassDefinitionFn"
                                              [resourceClass]="resClass"
-                                             [projectUuid]="projectUuid" 
+                                             [projectUuid]="projectUuid"
                                              [projectStatus]="(project$ | async).status"
                                              [expanded]="expandClasses"
                                              [userCanEdit]="isAdmin$ | async"
@@ -131,11 +131,11 @@
                             <!-- display only properties with guiOrder and if they exist in list of properties;
                                  if objectType is a linkValue hide it (otherwise we have the property twice) -->
                             <app-property-info
-                                [propDef]="(currentOntology$ | async)?.properties[prop.id]" 
+                                [propDef]="(currentOntology$ | async)?.properties[prop.id]"
                                 [projectUuid]="projectUuid"
-                                [projectStatus]="(project$ | async).status" 
+                                [projectStatus]="(project$ | async).status"
                                 [lastModificationDate]="lastModificationDate$ | async"
-                                (lastModificationDate)="onLastModificationDateChange($event)"
+                                (lastModificationDate)="onLastModificationDateChange()"
                                 [userCanEdit]="isAdmin$ | async"
                                 (editResourceProperty)="openPropertyForm('editProperty', $event)"
                                 (deleteResourceProperty)="delete('Property', $event)">

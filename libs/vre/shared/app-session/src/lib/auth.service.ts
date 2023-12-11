@@ -22,7 +22,7 @@ export class AuthService {
     get tokenUser() {
         return this.getTokenUser();
     }
-    
+
     @Output() loginSuccessfulEvent = new EventEmitter<User>();
 
     constructor(
@@ -36,7 +36,7 @@ export class AuthService {
             .subscribe((valid) => {
                 if (!valid) {
                     this.doLogoutUser();
-                } 
+                }
             });
 
         // if (this.isLoggedIn()) {
@@ -69,7 +69,7 @@ export class AuthService {
                             return this._updateSessionId(credentials);
                         }
                     ),
-                    catchError(error => {
+                    catchError(() => {
                         // if there is any error checking the credentials (mostly a 401 for after
                         // switching the server where this session/the credentials are unknown), we destroy the session
                         // so a new login is required
@@ -88,7 +88,7 @@ export class AuthService {
             return of(false);
         }
     }
-    
+
     /**
      * updates the id of the current session in the local storage
      * @param credentials response from getCredentials method call
@@ -202,7 +202,7 @@ export class AuthService {
         this._isLoggedIn$.next(false);
         this.removeTokens();
         this.store.dispatch([
-            new LogUserOutAction(), 
+            new LogUserOutAction(),
             new ClearProjectsAction(),
             new ClearCurrentProjectAction(),
             new ClearListsAction(),
@@ -290,17 +290,10 @@ export class AuthService {
         const exp = this.getTokenExp(token);
         const date = new Date(0);
         date.setUTCSeconds(exp);
-        const interval = (date as any) - (new Date() as any);
 
         if (this.tokenRefreshIntervalId) {
             clearInterval(this.tokenRefreshIntervalId);
         }
-        
-        //TODO upgrade RxJS to V7 for lastValueFrom support
-        // this.tokenRefreshIntervalId = 
-        // this.intervalWrapper.setInterval(() => {
-        //     void lastValueFrom(this.refreshToken$());
-        // }, interval - 50000);
     }
 
     private getTokenUser(): string {

@@ -13,20 +13,24 @@ import { AngularSplitModule } from 'angular-split';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
+import {
+  AppConfigService,
+  buildTagFactory,
+  BuildTagToken,
+  DspApiConfigToken,
+  DspAppConfigToken,
+  DspInstrumentationToken
+} from '@dasch-swiss/vre/shared/app-config';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmationDialogComponent } from './main/action/confirmation-dialog/confirmation-dialog.component';
-import { ConfirmationMessageComponent } from './main/action/confirmation-dialog/confirmation-message/confirmation-message.component';
+import {
+  ConfirmationMessageComponent
+} from './main/action/confirmation-dialog/confirmation-message/confirmation-message.component';
 import { LoginFormComponent } from './main/action/login-form/login-form.component';
 import { SelectedResourcesComponent } from './main/action/selected-resources/selected-resources.component';
 import { SortButtonComponent } from './main/action/sort-button/sort-button.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
-import {
-    DspApiConfigToken,
-    DspAppConfigToken,
-    DspInstrumentationToken,
-} from '@dasch-swiss/vre/shared/app-config';
 import { DialogHeaderComponent } from './main/dialog/dialog-header/dialog-header.component';
 import { DialogComponent } from './main/dialog/dialog.component';
 import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
@@ -48,10 +52,7 @@ import { TitleFromCamelCasePipe } from './main/pipes/string-transformation/title
 import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './main/pipes/time.pipe';
 import { SelectLanguageComponent } from './main/select-language/select-language.component';
-import {
-    DatadogRumService,
-    PendoAnalyticsService,
-} from '@dasch-swiss/vre/shared/app-analytics';
+import { DatadogRumService, PendoAnalyticsService } from '@dasch-swiss/vre/shared/app-analytics';
 import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
 import { DescriptionComponent } from './project/description/description.component';
@@ -89,7 +90,9 @@ import { IntermediateComponent } from './workspace/intermediate/intermediate.com
 import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
 import { AddValueComponent } from './workspace/resource/operations/add-value/add-value.component';
-import { CreateLinkResourceComponent } from './workspace/resource/operations/create-link-resource/create-link-resource.component';
+import {
+  CreateLinkResourceComponent
+} from './workspace/resource/operations/create-link-resource/create-link-resource.component';
 import { DisplayEditComponent } from './workspace/resource/operations/display-edit/display-edit.component';
 import { PermissionInfoComponent } from './workspace/resource/permission-info/permission-info.component';
 import { PropertiesComponent } from './workspace/resource/properties/properties.component';
@@ -98,269 +101,300 @@ import { ArchiveComponent } from './workspace/resource/representation/archive/ar
 import { AudioComponent } from './workspace/resource/representation/audio/audio.component';
 import { AvTimelineComponent } from './workspace/resource/representation/av-timeline/av-timeline.component';
 import { DocumentComponent } from './workspace/resource/representation/document/document.component';
-import { ReplaceFileFormComponent } from './workspace/resource/representation/replace-file-form/replace-file-form.component';
+import {
+  ReplaceFileFormComponent
+} from './workspace/resource/representation/replace-file-form/replace-file-form.component';
 import { StillImageComponent } from './workspace/resource/representation/still-image/still-image.component';
 import { UploadComponent } from './workspace/resource/representation/upload/upload.component';
 import { VideoPreviewComponent } from './workspace/resource/representation/video/video-preview/video-preview.component';
 import { VideoComponent } from './workspace/resource/representation/video/video.component';
-import { ResourceInstanceFormComponent } from './workspace/resource/resource-instance-form/resource-instance-form.component';
-import { SelectOntologyComponent } from './workspace/resource/resource-instance-form/select-ontology/select-ontology.component';
-import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
-import { SelectPropertiesComponent } from './workspace/resource/resource-instance-form/select-properties/select-properties.component';
-import { SwitchPropertiesComponent } from './workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties.component';
-import { SelectResourceClassComponent } from './workspace/resource/resource-instance-form/select-resource-class/select-resource-class.component';
+import {
+  ResourceInstanceFormComponent
+} from './workspace/resource/resource-instance-form/resource-instance-form.component';
+import {
+  SelectOntologyComponent
+} from './workspace/resource/resource-instance-form/select-ontology/select-ontology.component';
+import {
+  SelectProjectComponent
+} from './workspace/resource/resource-instance-form/select-project/select-project.component';
+import {
+  SelectPropertiesComponent
+} from './workspace/resource/resource-instance-form/select-properties/select-properties.component';
+import {
+  SwitchPropertiesComponent
+} from './workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties.component';
+import {
+  SelectResourceClassComponent
+} from './workspace/resource/resource-instance-form/select-resource-class/select-resource-class.component';
 import { ResourceLinkFormComponent } from './workspace/resource/resource-link-form/resource-link-form.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { BooleanValueComponent } from './workspace/resource/values/boolean-value/boolean-value.component';
 import { ColorPickerComponent } from './workspace/resource/values/color-value/color-picker/color-picker.component';
 import { ColorValueComponent } from './workspace/resource/values/color-value/color-value.component';
-import { DateValueHandlerComponent } from './workspace/resource/values/date-value/date-value-handler/date-value-handler.component';
+import {
+  DateValueHandlerComponent
+} from './workspace/resource/values/date-value/date-value-handler/date-value-handler.component';
 import { DateValueComponent } from './workspace/resource/values/date-value/date-value.component';
 import { DecimalValueComponent } from './workspace/resource/values/decimal-value/decimal-value.component';
 import { GeonameValueComponent } from './workspace/resource/values/geoname-value/geoname-value.component';
 import { IntValueComponent } from './workspace/resource/values/int-value/int-value.component';
-import { IntervalInputComponent } from './workspace/resource/values/interval-value/interval-input/interval-input.component';
+import {
+  IntervalInputComponent
+} from './workspace/resource/values/interval-value/interval-input/interval-input.component';
 import { IntervalValueComponent } from './workspace/resource/values/interval-value/interval-value.component';
 import { JDNDatepickerDirective } from './workspace/resource/values/jdn-datepicker-directive/jdndatepicker.directive';
 import { LinkValueComponent } from './workspace/resource/values/link-value/link-value.component';
 import { ListValueComponent } from './workspace/resource/values/list-value/list-value.component';
 import { SublistValueComponent } from './workspace/resource/values/list-value/subList-value/sublist-value.component';
-import { TextValueAsHtmlComponent } from './workspace/resource/values/text-value/text-value-as-html/text-value-as-html.component';
-import { TextValueAsStringComponent } from './workspace/resource/values/text-value/text-value-as-string/text-value-as-string.component';
-import { TextValueAsXMLComponent } from './workspace/resource/values/text-value/text-value-as-xml/text-value-as-xml.component';
+import {
+  TextValueAsHtmlComponent
+} from './workspace/resource/values/text-value/text-value-as-html/text-value-as-html.component';
+import {
+  TextValueAsStringComponent
+} from './workspace/resource/values/text-value/text-value-as-string/text-value-as-string.component';
+import {
+  TextValueAsXMLComponent
+} from './workspace/resource/values/text-value/text-value-as-xml/text-value-as-xml.component';
 import { TimeInputComponent } from './workspace/resource/values/time-value/time-input/time-input.component';
 import { TimeValueComponent } from './workspace/resource/values/time-value/time-value.component';
 import { UriValueComponent } from './workspace/resource/values/uri-value/uri-value.component';
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
 import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
 import { ResultsComponent } from './workspace/results/results.component';
-import { AdvancedSearchContainerComponent } from './workspace/search/advanced-search/advanced-search-container.component';
+import {
+  AdvancedSearchContainerComponent
+} from './workspace/search/advanced-search/advanced-search-container.component';
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
 import { HintComponent } from './main/action/hint/hint.component';
 import { TextComponent } from './workspace/resource/representation/text/text.component';
 import { OntologyClassesComponent } from './project/ontology-classes/ontology-classes.component';
-import { OntologyClassItemComponent } from './project/ontology-classes/ontology-class-item/ontology-class-item.component';
-import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
+import {
+  OntologyClassItemComponent
+} from './project/ontology-classes/ontology-class-item/ontology-class-item.component';
+import {
+  OntologyClassInstanceComponent
+} from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
 import { SettingsComponent } from './project/settings/settings.component';
 import { OverviewComponent } from './user/overview/overview.component';
 import { ProjectTileComponent } from './system/project-tile/project-tile.component';
 import { CommentFormComponent } from './workspace/resource/values/comment-form/comment-form.component';
 import { DataModelsComponent } from './project/data-models/data-models.component';
-import { ResourceClassPropertyInfoComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import {
-    buildTagFactory,
-    BuildTagToken,
-} from '@dasch-swiss/vre/shared/app-config';
+  ResourceClassPropertyInfoComponent
+} from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { apiConnectionTokenProvider } from './providers/api-connection-token.provider';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
-import { AppProgressIndicatorComponent } from "@dasch-swiss/vre/shared/app-progress-indicator";
-import {AppStringLiteralComponent} from "@dasch-swiss/vre/shared/app-string-literal";
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/shared/app-progress-indicator';
+import { AppStringLiteralComponent } from '@dasch-swiss/vre/shared/app-string-literal';
 import { IsFalsyPipe } from './main/pipes/isFalsy.piipe';
+import { AuthGuardComponent } from '@dsp-app/src/app/main/guard/auth-guard.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
-    return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json');
+  return new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json');
 }
 
 @NgModule({
-    declarations: [
-        AccountComponent,
-        AddRegionFormComponent,
-        AddUserComponent,
-        AddValueComponent,
-        AdminImageDirective,
-        AdvancedSearchContainerComponent,
-        AppComponent,
-        ArchiveComponent,
-        AudioComponent,
-        AvTimelineComponent,
-        DescriptionComponent,
-        BooleanValueComponent,
-        CollaborationComponent,
-        ColorPickerComponent,
-        ColorValueComponent,
-        CommentFormComponent,
-        ComparisonComponent,
-        ConfirmationDialogComponent,
-        ConfirmationMessageComponent,
-        CookiePolicyComponent,
-        CreateLinkResourceComponent,
-        DateValueComponent,
-        DateValueHandlerComponent,
-        DecimalValueComponent,
-        DialogComponent,
-        DialogHeaderComponent,
-        DisableContextMenuDirective,
-        DisplayEditComponent,
-        DocumentComponent,
-        DragDropDirective,
-        EditListItemComponent,
-        ExistingNameDirective,
-        ExpertSearchComponent,
-        ExternalLinksDirective,
-        FooterComponent,
-        FormattedBooleanPipe,
-        FulltextSearchComponent,
-        GeonameValueComponent,
-        GridComponent,
-        HeaderComponent,
-        HelpComponent,
-        IntermediateComponent,
-        IntervalInputComponent,
-        IntervalValueComponent,
-        IntValueComponent,
-        InvalidControlScrollDirective,
-        JDNDatepickerDirective,
-        KnoraDatePipe,
-        LinkifyPipe,
-        LinkValueComponent,
-        ListComponent,
-        ListInfoFormComponent,
-        ListItemComponent,
-        ListItemFormComponent,
-        ListValueComponent,
-        ListViewComponent,
-        LoginFormComponent,
-        MembershipComponent,
-        OntologyComponent,
-        OntologyFormComponent,
-        PasswordFormComponent,
-        PermissionInfoComponent,
-        ProfileComponent,
-        ProjectComponent,
-        ProjectFormComponent,
-        ProjectsComponent,
-        ProjectsListComponent,
-        PropertiesComponent,
-        PropertyFormComponent,
-        PropertyInfoComponent,
-        ReplaceFileFormComponent,
-        ResourceClassFormComponent,
-        ResourceClassInfoComponent,
-        ResourceClassPropertyInfoComponent,
-        ResourceComponent,
-        ResourceInstanceFormComponent,
-        ResourceLinkFormComponent,
-        ResourceListComponent,
-        ResultsComponent,
-        SearchPanelComponent,
-        SelectedResourcesComponent,
-        SelectGroupComponent,
-        SelectLanguageComponent,
-        SelectOntologyComponent,
-        SelectProjectComponent,
-        SelectPropertiesComponent,
-        SelectResourceClassComponent,
-        SortButtonComponent,
-        SplitPipe,
-        StatusComponent,
-        StillImageComponent,
-        StringifyStringLiteralPipe,
-        SublistValueComponent,
-        SwitchPropertiesComponent,
-        SystemComponent,
-        TextValueAsHtmlComponent,
-        TextValueAsStringComponent,
-        TextValueAsXMLComponent,
-        TextValueHtmlLinkDirective,
-        TimeInputComponent,
-        TimePipe,
-        TimeValueComponent,
-        TitleFromCamelCasePipe,
-        TruncatePipe,
-        UploadComponent,
-        UriValueComponent,
-        UserComponent,
-        UserFormComponent,
-        UserMenuComponent,
-        UsersComponent,
-        UsersListComponent,
-        VideoComponent,
-        VideoPreviewComponent,
-        HintComponent,
-        TextComponent,
-        OntologyClassesComponent,
-        OntologyClassItemComponent,
-        OntologyClassInstanceComponent,
-        SettingsComponent,
-        OverviewComponent,
-        ProjectTileComponent,
-        CommentFormComponent,
-        DataModelsComponent,
-        IsFalsyPipe,
-    ],
-    imports: [
-        AngularSplitModule,
-        AppDatePickerComponent,
-        AppProgressIndicatorComponent,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        BrowserModule,
-        CKEditorModule,
-        ClipboardModule,
-        ColorPickerModule,
-        CommonModule,
-        FormsModule,
-        HttpClientModule,
-        MaterialModule,
-        MatJDNConvertibleCalendarDateAdapterModule,
-        NgxSkeletonLoaderModule,
-        PdfViewerModule,
-        ReactiveFormsModule,
-        AdvancedSearchComponent,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: httpLoaderFactory,
-                deps: [HttpClient],
-            },
-        }),
-        AppStringLiteralComponent,
-        NgxsStoreModule,
-        NgxsStoragePluginModule.forRoot(),
-    ],
-    providers: [
-        AppConfigService,
-        DatadogRumService,
-        AppLoggingService,
-        PendoAnalyticsService,
-        {
-            provide: DspApiConfigToken,
-            useFactory: (appConfigService: AppConfigService) =>
-                appConfigService.dspApiConfig,
-            deps: [AppConfigService],
-        },
-        apiConnectionTokenProvider,
-        {
-            provide: DspAppConfigToken,
-            useFactory: (appConfigService: AppConfigService) =>
-                appConfigService.dspAppConfig,
-            deps: [AppConfigService],
-        },
-        {
-            provide: DspInstrumentationToken,
-            useFactory: (appConfigService: AppConfigService) =>
-                appConfigService.dspInstrumentationConfig,
-            deps: [AppConfigService],
-        },
-        {
-            provide: BuildTagToken,
-            useFactory: buildTagFactory,
-            deps: [HttpClient],
-        },
-        {
-            provide: ErrorHandler,
-            useClass: AppErrorHandler,
-            deps: [AppLoggingService],
-        },
-    ],
-    bootstrap: [AppComponent],
+  declarations: [
+    AccountComponent,
+    AddRegionFormComponent,
+    AddUserComponent,
+    AddValueComponent,
+    AdminImageDirective,
+    AdvancedSearchContainerComponent,
+    AppComponent,
+    ArchiveComponent,
+    AudioComponent,
+    AuthGuardComponent,
+    AvTimelineComponent,
+    DescriptionComponent,
+    BooleanValueComponent,
+    CollaborationComponent,
+    ColorPickerComponent,
+    ColorValueComponent,
+    CommentFormComponent,
+    ComparisonComponent,
+    ConfirmationDialogComponent,
+    ConfirmationMessageComponent,
+    CookiePolicyComponent,
+    CreateLinkResourceComponent,
+    DateValueComponent,
+    DateValueHandlerComponent,
+    DecimalValueComponent,
+    DialogComponent,
+    DialogHeaderComponent,
+    DisableContextMenuDirective,
+    DisplayEditComponent,
+    DocumentComponent,
+    DragDropDirective,
+    EditListItemComponent,
+    ExistingNameDirective,
+    ExpertSearchComponent,
+    ExternalLinksDirective,
+    FooterComponent,
+    FormattedBooleanPipe,
+    FulltextSearchComponent,
+    GeonameValueComponent,
+    GridComponent,
+    HeaderComponent,
+    HelpComponent,
+    IntermediateComponent,
+    IntervalInputComponent,
+    IntervalValueComponent,
+    IntValueComponent,
+    InvalidControlScrollDirective,
+    JDNDatepickerDirective,
+    KnoraDatePipe,
+    LinkifyPipe,
+    LinkValueComponent,
+    ListComponent,
+    ListInfoFormComponent,
+    ListItemComponent,
+    ListItemFormComponent,
+    ListValueComponent,
+    ListViewComponent,
+    LoginFormComponent,
+    MembershipComponent,
+    OntologyComponent,
+    OntologyFormComponent,
+    PasswordFormComponent,
+    PermissionInfoComponent,
+    ProfileComponent,
+    ProjectComponent,
+    ProjectFormComponent,
+    ProjectsComponent,
+    ProjectsListComponent,
+    PropertiesComponent,
+    PropertyFormComponent,
+    PropertyInfoComponent,
+    ReplaceFileFormComponent,
+    ResourceClassFormComponent,
+    ResourceClassInfoComponent,
+    ResourceClassPropertyInfoComponent,
+    ResourceComponent,
+    ResourceInstanceFormComponent,
+    ResourceLinkFormComponent,
+    ResourceListComponent,
+    ResultsComponent,
+    SearchPanelComponent,
+    SelectedResourcesComponent,
+    SelectGroupComponent,
+    SelectLanguageComponent,
+    SelectOntologyComponent,
+    SelectProjectComponent,
+    SelectPropertiesComponent,
+    SelectResourceClassComponent,
+    SortButtonComponent,
+    SplitPipe,
+    StatusComponent,
+    StillImageComponent,
+    StringifyStringLiteralPipe,
+    SublistValueComponent,
+    SwitchPropertiesComponent,
+    SystemComponent,
+    TextValueAsHtmlComponent,
+    TextValueAsStringComponent,
+    TextValueAsXMLComponent,
+    TextValueHtmlLinkDirective,
+    TimeInputComponent,
+    TimePipe,
+    TimeValueComponent,
+    TitleFromCamelCasePipe,
+    TruncatePipe,
+    UploadComponent,
+    UriValueComponent,
+    UserComponent,
+    UserFormComponent,
+    UserMenuComponent,
+    UsersComponent,
+    UsersListComponent,
+    VideoComponent,
+    VideoPreviewComponent,
+    HintComponent,
+    TextComponent,
+    OntologyClassesComponent,
+    OntologyClassItemComponent,
+    OntologyClassInstanceComponent,
+    SettingsComponent,
+    OverviewComponent,
+    ProjectTileComponent,
+    CommentFormComponent,
+    DataModelsComponent,
+    IsFalsyPipe
+  ],
+  imports: [
+    AngularSplitModule,
+    AppDatePickerComponent,
+    AppProgressIndicatorComponent,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    BrowserModule,
+    CKEditorModule,
+    ClipboardModule,
+    ColorPickerModule,
+    CommonModule,
+    FormsModule,
+    HttpClientModule,
+    MaterialModule,
+    MatJDNConvertibleCalendarDateAdapterModule,
+    NgxSkeletonLoaderModule,
+    PdfViewerModule,
+    ReactiveFormsModule,
+    AdvancedSearchComponent,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: httpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
+    AppStringLiteralComponent,
+    NgxsStoreModule,
+    NgxsStoragePluginModule.forRoot()
+  ],
+  providers: [
+    AppConfigService,
+    DatadogRumService,
+    AppLoggingService,
+    PendoAnalyticsService,
+    {
+      provide: DspApiConfigToken,
+      useFactory: (appConfigService: AppConfigService) =>
+        appConfigService.dspApiConfig,
+      deps: [AppConfigService]
+    },
+    apiConnectionTokenProvider,
+    {
+      provide: DspAppConfigToken,
+      useFactory: (appConfigService: AppConfigService) =>
+        appConfigService.dspAppConfig,
+      deps: [AppConfigService]
+    },
+    {
+      provide: DspInstrumentationToken,
+      useFactory: (appConfigService: AppConfigService) =>
+        appConfigService.dspInstrumentationConfig,
+      deps: [AppConfigService]
+    },
+    {
+      provide: BuildTagToken,
+      useFactory: buildTagFactory,
+      deps: [HttpClient]
+    },
+    {
+      provide: ErrorHandler,
+      useClass: AppErrorHandler,
+      deps: [AppLoggingService]
+    }
+  ],
+  bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+}
