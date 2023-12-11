@@ -15,7 +15,7 @@ import {
 } from './user.actions';
 import { UserStateModel } from './user.state-model';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ApiResponseError, Constants, KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, Constants, ReadUser } from '@dasch-swiss/dsp-js';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { SetProjectMemberAction } from '../projects/projects.actions';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
@@ -35,8 +35,6 @@ const defaults = <UserStateModel>{
 @Injectable()
 export class UserState {
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _userApiService: UserApiService,
     private _errorHandler: AppErrorHandler
   ) {

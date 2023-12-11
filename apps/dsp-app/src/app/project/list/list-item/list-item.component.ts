@@ -3,14 +3,11 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnInit,
   Output
 } from '@angular/core';
-import { KnoraApiConnection, ListNode, ListResponse, RepositionChildNodeRequest } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { ListNode, ListResponse, RepositionChildNodeRequest } from '@dasch-swiss/dsp-js';
 import { ListNodeOperation } from '../list-item-form/list-item-form.component';
 import { take } from 'rxjs/operators';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
@@ -46,10 +43,7 @@ export class ListItemComponent implements OnInit {
   expandedNode: string;
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _listApiService: ListApiService,
-    private _errorHandler: AppErrorHandler,
     private _cd: ChangeDetectorRef
   ) {
   }

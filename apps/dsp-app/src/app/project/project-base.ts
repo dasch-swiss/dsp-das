@@ -17,7 +17,7 @@ export class ProjectBase implements OnInit, OnDestroy {
 
     // permissions of logged-in user
     get isAdmin$(): Observable<boolean> {
-        return combineLatest([this.user$, this.userProjectAdminGroups$, this._route.parent.params])
+        return combineLatest([this.user$.pipe(filter(user => user !== null)), this.userProjectAdminGroups$, this._route.parent.params])
             .pipe(
                 takeUntil(this.destroyed),
                 map(([user, userProjectGroups, params]) => {
@@ -29,7 +29,7 @@ export class ProjectBase implements OnInit, OnDestroy {
     get projectIri() {
         return this._projectService.uuidToIri(this.projectUuid);
     }
-    
+
     @Select(UserSelectors.user) user$: Observable<ReadUser>;
     @Select(UserSelectors.userProjectAdminGroups) userProjectAdminGroups$: Observable<string[]>;
     @Select(CurrentProjectSelectors.project) project$: Observable<ReadProject>;
@@ -46,7 +46,7 @@ export class ProjectBase implements OnInit, OnDestroy {
         protected _actions$: Actions,
     ) {
         // get the uuid of the current project
-        this.projectUuid = this._route.snapshot.params.uuid 
+        this.projectUuid = this._route.snapshot.params.uuid
             ? this._route.snapshot.params.uuid
             : this._route.parent.snapshot.params.uuid;
     }
@@ -73,7 +73,7 @@ export class ProjectBase implements OnInit, OnDestroy {
 
         return projects.find(x => x.id.split('/').pop() === this.projectUuid);
     }
-    
+
     private loadProject(): void {
         this._store.dispatch(new LoadProjectAction(this.projectUuid, true));
         this._actions$.pipe(ofActionSuccessful(LoadProjectAction))
