@@ -101,7 +101,7 @@
 </div>
 
 <!-- list of properties -->
-<div class="properties-container">
+<div class="properties-container" *ngIf="!loading">
     <div class="properties" *ngIf="resource.resProps.length > 0; else noProperties">
         <!-- list of properties -->
         <div *ngFor="let prop of resource.resProps; let last = last">
@@ -160,15 +160,19 @@
 
                     <!-- in case of incoming links we have to display them here -->
                     <div *ngIf="prop.propDef.id === hasIncomingLinkIri">
-                        <dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
-                        <div *ngIf="!loading">
+                        <div>
                             <!-- the value(s) of the incoming links -->
                             <a class="link link-value" *ngFor="let inRes of displayedIncomingLinkResources"
                                 (click)="openResource(inRes.id)">{{inRes.resourceClassLabel}}: <strong>{{inRes.label}}</strong></a>
-                            <mat-paginator *ngIf="numberOffAllIncomingLinkRes > amount_resources" [length]=numberOffAllIncomingLinkRes
+                            <!-- <mat-paginator *ngIf="numberOffAllIncomingLinkRes > amount_resources" [length]=numberOffAllIncomingLinkRes
                                            [pageSize]="amount_resources" [hidePageSize]="true" [pageIndex]="pageEvent.pageIndex"
                                            (page)="goToPage($event)">
-                            </mat-paginator>
+                            </mat-paginator> -->
+                            <div class="pagination" *ngIf="allIncomingLinkResources.length > amount_resources">
+                                <p>Show more</p>
+                                <button [disabled]="pageEvent.pageIndex < 1" (click)="handleIncomingLinkBackward()"><mat-icon>chevron_left</mat-icon></button>
+                                <button [disabled]="allIncomingLinkResources.length/ amount_resources <= pageEvent.pageIndex + 1" (click)="handleIncomingLinkForward()"><mat-icon>chevron_right</mat-icon></button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -218,3 +222,4 @@
         </div>
     </ng-template>
 </div>
+<dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
