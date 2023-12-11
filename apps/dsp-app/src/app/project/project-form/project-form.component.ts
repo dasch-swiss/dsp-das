@@ -1,46 +1,40 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    Inject,
-    Input,
-    OnInit
-} from '@angular/core';
-import {
-    UntypedFormBuilder,
-    UntypedFormControl,
-    UntypedFormGroup,
-    Validators,
-} from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-import { Location } from "@angular/common";
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import {
     ApiResponseData,
-    ApiResponseError, 
+    ApiResponseError,
     KnoraApiConnection,
     Project,
     ProjectResponse,
-    ProjectsResponse,
     ReadProject,
     ReadUser,
     StringLiteral,
-    UpdateProjectRequest,
+    UpdateProjectRequest
 } from '@dasch-swiss/dsp-js';
-import {DspApiConnectionToken, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
-import { CurrentProjectSelectors, LoadProjectAction, SetCurrentProjectAction, UpdateProjectAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
+import {
+    CurrentProjectSelectors,
+    LoadProjectAction,
+    SetCurrentProjectAction,
+    UpdateProjectAction,
+    UserSelectors
+} from '@dasch-swiss/vre/shared/app-state';
+import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-project-form',
     templateUrl: './project-form.component.html',
-    styleUrls: ['./project-form.component.scss'],
+    styleUrls: ['./project-form.component.scss']
 })
 export class ProjectFormComponent implements OnInit {
     /**
@@ -60,12 +54,12 @@ export class ProjectFormComponent implements OnInit {
      * shortcode and shortname must be unique
      */
     existingShortNames: [RegExp] = [
-        new RegExp('anEmptyRegularExpressionWasntPossible'),
+        new RegExp('anEmptyRegularExpressionWasntPossible')
     ];
     shortnameRegex = /^[a-zA-Z]+\S*$/;
 
     existingShortcodes: [RegExp] = [
-        new RegExp('anEmptyRegularExpressionWasntPossible'),
+        new RegExp('anEmptyRegularExpressionWasntPossible')
     ];
     shortcodeRegex = /^[0-9A-Fa-f]+$/;
 
@@ -99,7 +93,7 @@ export class ProjectFormComponent implements OnInit {
      */
     successMessage: any = {
         status: 200,
-        statusText: 'You have successfully updated the project data.',
+        statusText: 'You have successfully updated the project data.'
     };
 
     /**
@@ -112,7 +106,7 @@ export class ProjectFormComponent implements OnInit {
         longname: '',
         shortcode: '',
         description: '',
-        keywords: '',
+        keywords: ''
         // 'institution': ''
     };
 
@@ -128,11 +122,11 @@ export class ProjectFormComponent implements OnInit {
                 this.shortnameMaxLength +
                 ' characters long.',
             pattern:
-                "Short name shouldn't start with a number; Spaces are not allowed.",
-            existingName: 'This short name is already taken.',
+                'Short name shouldn\'t start with a number; Spaces are not allowed.',
+            existingName: 'This short name is already taken.'
         },
         longname: {
-            required: 'Project (long) name is required.',
+            required: 'Project (long) name is required.'
         },
         shortcode: {
             required: 'Shortcode is required',
@@ -145,24 +139,25 @@ export class ProjectFormComponent implements OnInit {
                 this.shortcodeMinLength +
                 ' characters long.',
             pattern: 'This is not a hexadecimal value!',
-            existingName: 'This shortcode is already taken.',
+            existingName: 'This shortcode is already taken.'
         },
         description: {
             required: 'A description is required.',
             maxlength:
                 'Description cannot be more than ' +
                 this.descriptionMaxLength +
-                ' characters long.',
+                ' characters long.'
         },
         keywords: {
-            required: 'At least one keyword is required.',
-        },
+            required: 'At least one keyword is required.'
+        }
         // 'institution': {}
     };
 
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
+        private _projectsApiService: ProjectApiService,
         private _errorHandler: AppErrorHandler,
         private _notification: NotificationService,
         private _fb: UntypedFormBuilder,
@@ -172,7 +167,7 @@ export class ProjectFormComponent implements OnInit {
         private _projectService: ProjectService,
         private _store: Store,
         private _actions$: Actions,
-        private _cd: ChangeDetectorRef,
+        private _cd: ChangeDetectorRef
     ) {
         // get the uuid of the current project
         this._route.parent.paramMap.subscribe((params: Params) => {
@@ -184,15 +179,14 @@ export class ProjectFormComponent implements OnInit {
         // if a projectUuid exists, we are in edit mode
         // otherwise create new project
         if (this.projectUuid) {
-            this.projectIri = this._projectService.uuidToIri(this.projectUuid)
+            this.projectIri = this._projectService.uuidToIri(this.projectUuid);
             // edit existing project
             // get origin project data first
-            this._dspApiConnection.admin.projectsEndpoint
-                .getProjectByIri(this.projectIri)
+            this._projectsApiService.get(this.projectIri)
                 .subscribe(
-                    (response: ApiResponseData<ProjectResponse>) => {
+                    (response) => {
                         // save the origin project data in case of reset
-                        this.project = response.body.project;
+                        this.project = response.project;
 
                         this.buildForm(this.project);
 
@@ -208,16 +202,15 @@ export class ProjectFormComponent implements OnInit {
 
             // to avoid duplicate shortcodes or shortnames
             // we have to create a list of already exisiting short codes and names
-            this._dspApiConnection.admin.projectsEndpoint
-                .getProjects()
+            this._projectsApiService.list()
                 .subscribe(
-                    (response: ApiResponseData<ProjectsResponse>) => {
-                        for (const project of response.body.projects) {
+                    response => {
+                        for (const project of response.projects) {
                             this.existingShortNames.push(
                                 new RegExp(
                                     '(?:^|W)' +
-                                        project.shortname.toLowerCase() +
-                                        '(?:$|W)'
+                                    project.shortname.toLowerCase() +
+                                    '(?:$|W)'
                                 )
                             );
 
@@ -225,8 +218,8 @@ export class ProjectFormComponent implements OnInit {
                                 this.existingShortcodes.push(
                                     new RegExp(
                                         '(?:^|W)' +
-                                            project.shortcode.toLowerCase() +
-                                            '(?:$|W)'
+                                        project.shortcode.toLowerCase() +
+                                        '(?:$|W)'
                                     )
                                 );
                             }
@@ -276,47 +269,47 @@ export class ProjectFormComponent implements OnInit {
             shortname: new UntypedFormControl(
                 {
                     value: project.shortname,
-                    disabled: this.projectIri,
+                    disabled: this.projectIri
                 },
                 [
                     Validators.required,
                     Validators.minLength(this.shortnameMinLength),
                     Validators.maxLength(this.shortnameMaxLength),
                     existingNamesValidator(this.existingShortNames),
-                    Validators.pattern(this.shortnameRegex),
+                    Validators.pattern(this.shortnameRegex)
                 ]
             ),
             longname: new UntypedFormControl(
                 {
                     value: project.longname,
-                    disabled: disabled,
+                    disabled: disabled
                 },
                 [Validators.required]
             ),
             shortcode: new UntypedFormControl(
                 {
                     value: project.shortcode,
-                    disabled: this.projectIri && project.shortcode !== null,
+                    disabled: this.projectIri && project.shortcode !== null
                 },
                 [
                     Validators.required,
                     Validators.minLength(this.shortcodeMinLength),
                     Validators.maxLength(this.shortcodeMaxLength),
                     existingNamesValidator(this.existingShortcodes),
-                    Validators.pattern(this.shortcodeRegex),
+                    Validators.pattern(this.shortcodeRegex)
                 ]
             ),
             logo: new UntypedFormControl({
                 value: project.logo,
-                disabled: disabled,
+                disabled: disabled
             }),
             status: [true],
             selfjoin: [false],
             keywords: new UntypedFormControl({
                 // must be empty (even in edit mode), because of the mat-chip-list
                 value: [],
-                disabled: disabled,
-            }),
+                disabled: disabled
+            })
         });
 
         if (!this.projectIri) {
@@ -424,7 +417,7 @@ export class ProjectFormComponent implements OnInit {
                         const currentProject = this._store.selectSnapshot(CurrentProjectSelectors.project);
                         this.project = currentProject;
                         this._notification.openSnackBar('You have successfully updated the project information.');
-                        this._router.navigate([`${RouteConstants.projectRelative}/${this.projectUuid}`])
+                        this._router.navigate([`${RouteConstants.projectRelative}/${this.projectUuid}`]);
                         this.loading = false;
                     }
                 );
@@ -448,11 +441,9 @@ export class ProjectFormComponent implements OnInit {
                 i++;
             }
 
-            this._dspApiConnection.admin.projectsEndpoint
-                .createProject(projectData)
-                .subscribe(
-                    (projectResponse: ApiResponseData<ProjectResponse>) => {
-                        this.project = projectResponse.body.project;
+            this._projectsApiService.create(projectData).subscribe(
+                    projectResponse => {
+                        this.project = projectResponse.project;
                         this.buildForm(this.project);
 
                         // add logged-in user to the project
@@ -461,17 +452,17 @@ export class ProjectFormComponent implements OnInit {
                         this._dspApiConnection.admin.usersEndpoint
                             .addUserToProjectMembership(
                                 user.id,
-                                projectResponse.body.project.id
+                                projectResponse.project.id
                             )
                             .subscribe(
                                 () => {
-                                    const uuid = this._projectService.iriToUuid(projectResponse.body.project.id);
+                                    const uuid = this._projectService.iriToUuid(projectResponse.project.id);
                                     this.loading = false;
                                     // redirect to project page
                                     this._router.navigateByUrl(`${RouteConstants.projectRelative}`, {
-                                            skipLocationChange:
-                                            true,
-                                        })
+                                        skipLocationChange:
+                                            true
+                                    })
                                         .then(() =>
                                             this._router.navigate([`${RouteConstants.projectRelative}/${uuid}`])
                                         );

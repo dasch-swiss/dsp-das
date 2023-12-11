@@ -66,6 +66,7 @@ import {
 } from '../services/value-operation-event.service';
 import { ValueService } from '../services/value.service';
 import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 
 // object of property information from ontology class, properties and property values
 export interface PropertyInfoValues {
@@ -173,6 +174,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
+        private _projectApiService: ProjectApiService,
         private _dialog: MatDialog,
         private _errorHandler: AppErrorHandler,
         private _incomingService: IncomingService,
@@ -276,17 +278,11 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnChanges(): void {
-        // get project information
-        this._dspApiConnection.admin.projectsEndpoint
-            .getProjectByIri(this.resource.res.attachedToProject)
+            this._projectApiService.get(this.resource.res.attachedToProject)
             .subscribe(
-                (response: ApiResponseData<ProjectResponse>) => {
-                    this.project = response.body.project;
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
+                response => {
+                    this.project = response.project;
+                });
 
         // get user information
         this._userService
@@ -343,7 +339,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
             newPage.pageIndex = this.pageEvent.pageIndex - 1;
             this.goToPage(newPage);
         }
-        
+
     }
 
     /**

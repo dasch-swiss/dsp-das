@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
-    KeywordsResponse,
+    KeywordsResponse, MembersResponse,
     Project,
-    ProjectResponse,
+    ProjectResponse, ProjectRestrictedViewSettingsResponse,
     ProjectsResponse,
     UpdateProjectRequest
 } from '@dasch-swiss/dsp-js';
@@ -43,15 +43,15 @@ export class ProjectApiService extends BaseApi {
     }
 
     getMembersForProject(id: string, idType: ProjectIdentifier = 'iri') {
-        return this._http.get(`${this._projectRoute(id, idType)}/members`);
+        return this._http.get<MembersResponse>(`${this._projectRoute(id, idType)}/members`);
     }
 
     getAdminMembersForProject(id: string, idType: ProjectIdentifier = 'iri') {
-        return this._http.get(`${this._projectRoute(id, idType)}/admin-members`);
+        return this._http.get<MembersResponse>(`${this._projectRoute(id, idType)}/admin-members`);
     }
 
     getRestrictedViewSettingsForProject(id: string, idType: ProjectIdentifier = 'iri') {
-        return this._http.get(`${this._projectRoute(id, idType)}/RestrictedViewSettings`);
+        return this._http.get<ProjectRestrictedViewSettingsResponse>(`${this._projectRoute(id, idType)}/RestrictedViewSettings`);
     }
 
     private _projectRoute(id: string, idType: ProjectIdentifier = 'iri') {

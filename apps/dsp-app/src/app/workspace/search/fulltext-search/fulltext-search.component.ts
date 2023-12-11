@@ -40,6 +40,7 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { SearchParams } from '../../results/list-view/list-view.component';
 import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 
 export interface PrevSearchItem {
     projectIri?: string;
@@ -136,6 +137,7 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
+        private _projectsApiService: ProjectApiService,
         private _componentCommsService: ComponentCommunicationEventService,
         private _errorHandler: AppErrorHandler,
         private _overlay: Overlay,
@@ -208,10 +210,10 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
      * get all public projects from DSP-API
      */
     getAllProjects(): void {
-        this._dspApiConnection.admin.projectsEndpoint.getProjects().subscribe(
-            (response: ApiResponseData<ProjectsResponse>) => {
+            this._projectsApiService.list().subscribe(
+            (response) => {
                 // filter out deactivated projects and system projects
-                this.projects = response.body.projects.filter(
+                this.projects = response.projects.filter(
                     (p) =>
                         p.status === true && !this.hiddenProjects.includes(p.id)
                 );
@@ -238,16 +240,11 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
      * @param id Project Id
      */
     getProject(id: string): void {
-        this._dspApiConnection.admin.projectsEndpoint
-            .getProjectByIri(id)
+        this._projectsApiService.get(id)
             .subscribe(
-                (project: ApiResponseData<ProjectResponse>) => {
-                    this.setProject(project.body.project);
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                }
-            );
+                response => {
+                    this.setProject(response.project);
+                });
     }
 
     /**

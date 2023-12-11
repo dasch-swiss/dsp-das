@@ -26,6 +26,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogEvent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { SelectPropertiesComponent } from '../../resource-instance-form/select-properties/select-properties.component';
+import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 
 @Component({
     selector: 'app-create-link-resource',
@@ -63,6 +64,7 @@ export class CreateLinkResourceComponent implements OnInit {
     constructor(
         @Inject(DspApiConnectionToken)
         private _dspApiConnection: KnoraApiConnection,
+        private _projectApiService: ProjectApiService,
         private _fb: UntypedFormBuilder,
         private _errorHandler: AppErrorHandler
     ) {}
@@ -109,9 +111,8 @@ export class CreateLinkResourceComponent implements OnInit {
 
     onSubmit() {
         if (this.propertiesForm.valid) {
-            this._dspApiConnection.admin.projectsEndpoint
-                .getProjectByShortcode(this.resourceClassDef.split('/')[4])
-                .subscribe((project: ApiResponseData<ProjectResponse>) => {
+            this._projectApiService.get(this.resourceClassDef.split('/')[4], 'shortcode')
+                .subscribe(response => {
                     const createResource = new CreateResource();
 
                     const resLabelVal = <CreateTextValueAsString>(
@@ -122,7 +123,7 @@ export class CreateLinkResourceComponent implements OnInit {
 
                     createResource.type = this.resourceClassDef;
 
-                    createResource.attachedToProject = project.body.project.id;
+                    createResource.attachedToProject = response.project.id;
 
                     this.selectPropertiesComponent.switchPropertiesComponent.forEach(
                         (child) => {

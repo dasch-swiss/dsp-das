@@ -9,34 +9,23 @@ import {
     Output
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import {Router} from '@angular/router';
-import {
-    ApiResponseData,
-    ApiResponseError,
-    Constants,
-    KnoraApiConnection,
-    ProjectResponse,
-    ReadProject,
-    ReadUser,
-    StoredProject,
-    UpdateProjectRequest,
-} from '@dasch-swiss/dsp-js';
-import {DspApiConnectionToken, RouteConstants} from '@dasch-swiss/vre/shared/app-config';
+import { Router } from '@angular/router';
+import { Constants, ReadProject, ReadUser, StoredProject, UpdateProjectRequest } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import {SortProp} from "@dsp-app/src/app/main/action/sort-button/sort-button.component";
-import {Observable, Subject, combineLatest} from "rxjs";
-import {map, takeUntil, tap} from "rxjs/operators";
+import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { SortProp } from '@dsp-app/src/app/main/action/sort-button/sort-button.component';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { map, takeUntil, tap } from 'rxjs/operators';
 import { Select } from '@ngxs/store';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-projects-list',
     templateUrl: './projects-list.component.html',
-    styleUrls: ['./projects-list.component.scss'],
+    styleUrls: ['./projects-list.component.scss']
 })
 export class ProjectsListComponent implements OnInit, OnDestroy {
     private ngUnsubscribe: Subject<void> = new Subject<void>();
@@ -59,7 +48,7 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
     // list of default, dsp-specific projects, which are not able to be deleted or to be editied
     doNotDelete: string[] = [
         Constants.SystemProjectIRI,
-        Constants.DefaultSharedOntologyIRI,
+        Constants.DefaultSharedOntologyIRI
     ];
 
     // i18n plural mapping
@@ -67,24 +56,24 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
         project: {
             // eslint-disable-next-line @typescript-eslint/naming-convention
             '=1': '1 Project',
-            other: '# Projects',
-        },
+            other: '# Projects'
+        }
     };
 
     // sort properties
     sortProps: SortProp[] = [
         {
             key: 'shortcode',
-            label: 'Short code',
+            label: 'Short code'
         },
         {
             key: 'shortname',
-            label: 'Short name',
+            label: 'Short name'
         },
         {
             key: 'longname',
-            label: 'Project name',
-        },
+            label: 'Project name'
+        }
     ];
 
     sortBy = 'longname'; // default sort by
@@ -97,13 +86,13 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
 
     constructor(
         @Inject(DspApiConnectionToken)
-        private _dspApiConnection: KnoraApiConnection,
-        private _errorHandler: AppErrorHandler,
+        private _projectApiService: ProjectApiService,
         private _dialog: MatDialog,
         private _router: Router,
         private _sortingService: SortingService,
         private _projectService: ProjectService
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
         // sort list by defined key
@@ -129,9 +118,9 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
                 map(([user, userProjectGroups]) => {
                     return this._projectService.isProjectAdminOrSysAdmin(user, userProjectGroups, projectId);
                 })
-            )
+            );
     }
-    
+
     /**
      * return true, when the user is project admin of the given project.
      *
@@ -144,7 +133,7 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
                 map(([user, userProjectGroups]) => {
                     return this._projectService.isInProjectGroup(userProjectGroups, projectId);
                 })
-            )
+            );
     }
 
     /**
@@ -174,9 +163,9 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
             width: '560px',
             maxHeight: '80vh',
             position: {
-                top: '112px',
+                top: '112px'
             },
-            data: { name: name, mode: mode, project: id },
+            data: { name: name, mode: mode, project: id }
         };
 
         const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
@@ -206,19 +195,10 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
     }
 
     deactivateProject(id: string) {
-        const uuid = this._projectService.iriToUuid(id);
-        // the deleteProject() method in js-lib sets the project's status to false, it is not actually deleted
-
-        this._dspApiConnection.admin.projectsEndpoint
-            .deleteProject(id)
-            .pipe(
-                tap((response: ApiResponseData<ProjectResponse>) => {
-                    this.refreshParent.emit(); //TODO Soft or Hard refresh ?
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                })
-            );
+        this._projectApiService.delete(id)
+            .pipe(tap(() => {
+                this.refreshParent.emit(); //TODO Soft or Hard refresh ?
+            }));
     }
 
     activateProject(id: string) {
@@ -226,15 +206,10 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
         const data: UpdateProjectRequest = new UpdateProjectRequest();
         data.status = true;
 
-        this._dspApiConnection.admin.projectsEndpoint
-            .updateProject(id, data)
+        this._projectApiService.update(id, data)
             .pipe(
-                tap((response: ApiResponseData<ProjectResponse>) => {
+                tap(() => {
                     this.refreshParent.emit();
-                },
-                (error: ApiResponseError) => {
-                    this._errorHandler.showMessage(error);
-                })
-            );
+                }));
     }
 }
