@@ -31,7 +31,7 @@ From the side panel of the project workspace, as a project admin (or a system ad
 
 > Project members and logged-in users from other projects can also view the project description, the data model, and the list of resource classes.
 
-![Project management available functionalities](../assets/images/project-workspace.png)*<https://app.dasch.swiss/project/3ABR_2i8QYGSIDvmP9mlEw> - Project management functionalities; e.g. Incunabula project. The side panel can be opened or close by clicking on the chevron icon at the top.*
+![Project management available functionalities](../assets/images/project-workspace.png)*<https://app.dasch.swiss/project/3ABR_2i8QYGSIDvmP9mlEw> - Project management functionalities; e.g. Incunabula project. The side panel can be opened or closed by clicking on the chevron icon at the top.*
 
 ---
 
