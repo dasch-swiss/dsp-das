@@ -2,20 +2,43 @@ import { Router } from '@angular/router';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
 import { EventEmitter, Injectable, Output, inject } from '@angular/core';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { catchError, tap, switchMap, map, takeLast, take } from 'rxjs/operators';
-import { ApiResponseData, ApiResponseError, CredentialsResponse, LoginResponse, User } from '@dasch-swiss/dsp-js';
-import { Auth, RouteConstants, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import {
+    catchError,
+    tap,
+    switchMap,
+    map,
+    takeLast,
+    take,
+} from 'rxjs/operators';
+import {
+    ApiResponseData,
+    ApiResponseError,
+    CredentialsResponse,
+    LoginResponse,
+    User,
+} from '@dasch-swiss/dsp-js';
+import {
+    Auth,
+    RouteConstants,
+    DspApiConnectionToken,
+} from '@dasch-swiss/vre/shared/app-config';
 import { LoginError, ServerError } from './error';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { Store } from '@ngxs/store';
-import { LoadUserAction, ClearProjectsAction, LogUserOutAction, UserStateModel, ClearCurrentProjectAction, ClearListsAction, ClearOntologiesAction } from '@dasch-swiss/vre/shared/app-state';
+import {
+    LoadUserAction,
+    ClearProjectsAction,
+    LogUserOutAction,
+    UserStateModel,
+    ClearCurrentProjectAction,
+    ClearListsAction,
+    ClearOntologiesAction,
+} from '@dasch-swiss/vre/shared/app-state';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private tokenRefreshIntervalId: any;
     private _isLoggedIn$ = new BehaviorSubject<boolean>(this.isLoggedIn());
     private _dspApiConnection = inject(DspApiConnectionToken);
-    private _errorHandler = inject(AppErrorHandler);
 
     isLoggedIn$ = this._isLoggedIn$.asObservable();
 
@@ -27,8 +50,7 @@ export class AuthService {
 
     constructor(
         private store: Store,
-        private router: Router,
-        // private intervalWrapper: IntervalWrapperService
+        private router: Router // private intervalWrapper: IntervalWrapperService
     ) {
         // check if the (possibly) existing session is still valid and if not, destroy it
         this.isSessionValid()
@@ -95,7 +117,9 @@ export class AuthService {
      * @param session the current session
      * @param timestamp timestamp in form of a number
      */
-    private _updateSessionId(credentials: ApiResponseData<CredentialsResponse> | ApiResponseError): boolean {
+    private _updateSessionId(
+        credentials: ApiResponseData<CredentialsResponse> | ApiResponseError
+    ): boolean {
         if (credentials instanceof ApiResponseData) {
             // the dsp api credentials are still valid
             this.storeToken(credentials.body.message);
@@ -108,12 +132,11 @@ export class AuthService {
     }
 
     loadUser(username: string): Observable<UserStateModel> {
-        return this.store.dispatch(new LoadUserAction(username))
-            .pipe(
-                tap(() => {
-                    this._isLoggedIn$.next(true);
-                })
-            );
+        return this.store.dispatch(new LoadUserAction(username)).pipe(
+            tap(() => {
+                this._isLoggedIn$.next(true);
+            })
+        );
     }
 
     /**
@@ -123,42 +146,54 @@ export class AuthService {
      * @returns an Either with the session or an error message
      */
     apiLogin$(identifier: string, password: string): Observable<boolean> {
-        const identifierType: 'iri' | 'email' | 'username' = identifier.indexOf('@') > -1 ? 'email' : 'username';
+        const identifierType: 'iri' | 'email' | 'username' =
+            identifier.indexOf('@') > -1 ? 'email' : 'username';
         return this._dspApiConnection.v2.auth
             .login(identifierType, identifier, password)
             .pipe(
                 takeLast(1),
-                tap((response: ApiResponseData<LoginResponse> | ApiResponseError) => {
-                    if (response instanceof ApiResponseData) {
-                        this.storeToken(response.body.token);
-                    }
-                }),
-                switchMap((response: ApiResponseData<LoginResponse> | ApiResponseError) => {
-                    if (response instanceof ApiResponseData) {
-                        return of(true);
-                    } else {
-                        // error handling
-                        if (
-                            response.status === 401 ||
-                            response.status === 403
-                        ) {
-                            // wrong credentials
-                            return throwError(<LoginError>{
-                                type: 'login',
-                                status: response.status,
-                                msg: 'Wrong credentials',
-                            });
-                        } else {
-                            // server error
-                            this._errorHandler.showMessage(response);
-                            return throwError(<ServerError>{
-                                type: 'server',
-                                status: response.status,
-                                msg: 'Server error',
-                            });
+                tap(
+                    (
+                        response:
+                            | ApiResponseData<LoginResponse>
+                            | ApiResponseError
+                    ) => {
+                        if (response instanceof ApiResponseData) {
+                            this.storeToken(response.body.token);
                         }
                     }
-                })
+                ),
+                switchMap(
+                    (
+                        response:
+                            | ApiResponseData<LoginResponse>
+                            | ApiResponseError
+                    ) => {
+                        if (response instanceof ApiResponseData) {
+                            return of(true);
+                        } else {
+                            // error handling
+                            if (
+                                response.status === 401 ||
+                                response.status === 403
+                            ) {
+                                // wrong credentials
+                                return throwError(<LoginError>{
+                                    type: 'login',
+                                    status: response.status,
+                                    msg: 'Wrong credentials',
+                                });
+                            } else {
+                                // server error
+                                return throwError(<ServerError>{
+                                    type: 'server',
+                                    status: response.status,
+                                    msg: 'Server error',
+                                });
+                            }
+                        }
+                    }
+                )
             );
     }
 
@@ -174,28 +209,28 @@ export class AuthService {
 
     logout() {
         //TODO ? logout by access token missing ?
-        this._dspApiConnection.v2.auth.logout().pipe(
-            take(1),
-            catchError((error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-                return of(error?.status === 200);
-            }),
-        ).subscribe((response: any) => {
-            if (!(response instanceof ApiResponseData)) {
-                throwError(<ServerError>{
-                    type: 'server',
-                    status: response.status,
-                    msg: 'Logout was not successful',
-                });
-                return;
-            }
+        this._dspApiConnection.v2.auth
+            .logout()
+            .pipe(
+                take(1),
+                catchError((error: ApiResponseError) => {
+                    return of(error?.status === 200);
+                })
+            )
+            .subscribe((response: any) => {
+                if (!(response instanceof ApiResponseData)) {
+                    throwError(<ServerError>{
+                        type: 'server',
+                        status: response.status,
+                        msg: 'Logout was not successful',
+                    });
+                    return;
+                }
 
-            if (response.body.status === 0) {
-                this.doLogoutUser();
-            } else {
-                this._errorHandler.showMessage(response.body.message);
-            }
-        });
+                if (response.body.status === 0) {
+                    this.doLogoutUser();
+                }
+            });
     }
 
     doLogoutUser() {
@@ -216,7 +251,7 @@ export class AuthService {
         return !!this.getAccessToken();
     }
 
-    getAccessToken(): string | null {
+    getAccessToken() {
         return localStorage.getItem(Auth.AccessToken);
     }
 
@@ -225,9 +260,9 @@ export class AuthService {
     }
 
     private storeToken(token: string) {
-            localStorage.setItem(Auth.AccessToken, token);
-            //localStorage.setItem(this.REFRESH_TOKEN, token);
-            this.startTokenRefresh();
+        localStorage.setItem(Auth.AccessToken, token);
+        //localStorage.setItem(this.REFRESH_TOKEN, token);
+        this.startTokenRefresh();
     }
 
     private refreshAccessToken(access_token: string) {
@@ -254,7 +289,10 @@ export class AuthService {
             return false;
         }
 
-        return date.setSeconds(date.getSeconds() - 30).valueOf() <= new Date().valueOf();
+        return (
+            date.setSeconds(date.getSeconds() - 30).valueOf() <=
+            new Date().valueOf()
+        );
     }
 
     getTokenExpirationDate(token: string): Date | null {
