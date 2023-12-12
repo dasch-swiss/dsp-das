@@ -331,7 +331,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
         this._store.dispatch(new RemovePropertyAction(property, this.resourceClass, currentOntologyPropertiesToDisplay));
         this._actions$.pipe(ofActionSuccessful(RemovePropertyAction))
             .pipe(take(1))
-            .subscribe(() => {
+            .subscribe((res) => {
                 //TODO should be the same as ontology lastModificationDate ? if yes remove commented line, otherwise add additional lastModificationDate property to the state
                 //this.lastModificationDate = res.lastModificationDate;
                 this.updatePropertyAssignment.emit(this.ontology.id);
