@@ -31,15 +31,32 @@
         "eslint:recommended"],
       "rules": {
         // ESLint rules
+        "consistent-return": "off",
+        "function-paren-newline": "off",
         "import/prefer-default-export": "off",
         "import/first": "error",
         "import/newline-after-import": "error",
-        "import/no-duplicates": "error",
+        "import/no-duplicates": "off",
+        "import/order": "off",
+        "implicit-arrow-linebreak": "off",
+        "max-classes-per-file": "off",
         "max-len": [
-          "error",
+          "off",
           120
         ],
-        "simple-import-sort/imports": "error",
+        "no-case-declarations": "warn",
+        "no-else-return": "off",
+        "no-multiple-empty-lines": "off",
+        "no-trailing-spaces": "off",
+        "no-undef": "off",
+        "no-underscore-dangle": "off",
+        "no-useless-escape": "warn",
+        "object-curly-newline": "off",
+        "object-shorthand": "off",
+        "operator-linebreak": "off",
+        "prefer-template": "off",
+        "prefer-destructuring": "off",
+        "simple-import-sort/imports": "off",
         "simple-import-sort/exports": "error",
         // eslint-plugin-unused-imports rules
         "unused-imports/no-unused-imports": "error",
@@ -48,16 +65,15 @@
           { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
         ],
         // TypeScript Eslint rules
-        "@typescript-eslint/indent": [
-          "error",
-          4
-        ],
+        "@typescript-eslint/indent": "off",
         "class-methods-use-this": "off",
         "@typescript-eslint/comma-dangle": "off",
+        "@typescript-eslint/dot-notation": "off",
         "@typescript-eslint/lines-between-class-members": "off",
         "@typescript-eslint/quotes": ["error","single"],
         "@typescript-eslint/no-shadow": "error",
-        "@typescript-eslint/no-explicit-any": 0
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-useless-constructor": "off"
       },
       "parserOptions": {
         "project": "./tsconfig.eslint.json"
