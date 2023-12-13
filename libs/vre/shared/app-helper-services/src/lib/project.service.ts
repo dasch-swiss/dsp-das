@@ -30,7 +30,7 @@ export class ProjectService {
     uuidToIri(uuid: string): string {
         if (uuid && !uuid.startsWith(this._acs.dspAppConfig.iriBase)) {
             return `${this._acs.dspAppConfig.iriBase}/projects/${uuid}`;
-        } 
+        }
 
         return uuid;
     }
@@ -40,12 +40,12 @@ export class ProjectService {
 
     isMemberOfProjectAdminGroup = (groupsPerProject: {[key: string]: string[]}, projectIri: string): boolean =>
         groupsPerProject
-        && groupsPerProject[projectIri] 
+        && groupsPerProject[projectIri]
         && (groupsPerProject[projectIri].indexOf(Constants.ProjectAdminGroupIRI) > -1);
 
     isMemberOfSystemAdminGroup = (groupsPerProject: {[key: string]: string[]}): boolean =>
         groupsPerProject
-        && groupsPerProject[Constants.SystemProjectIRI] 
+        && groupsPerProject[Constants.SystemProjectIRI]
         && (groupsPerProject[Constants.SystemProjectIRI].indexOf(Constants.SystemAdminGroupIRI) > -1);
 
 
@@ -57,10 +57,17 @@ export class ProjectService {
 
     isProjectAdminOrSysAdmin(user: ReadUser, userProjectGroups: string[], projectIri: string): boolean
     {
-        const groupsPerProject = user.permissions.groupsPerProject ? user.permissions.groupsPerProject : {};
-        return user && this.isProjectOrSysAdmin(groupsPerProject, userProjectGroups, projectIri);
+        return (
+            user !== null &&
+            user.permissions.groupsPerProject !== undefined &&
+            this.isProjectOrSysAdmin(
+                user.permissions.groupsPerProject,
+                userProjectGroups,
+                projectIri
+            )
+        );
     }
-    
+
     isProjectOrSysAdmin(groupsPerProject: {[key: string]: string[]}, userProjectGroups: string[], projectIri: string): boolean
     {
         const isMemberOfSystemAdminGroup = this.isMemberOfSystemAdminGroup(groupsPerProject);
