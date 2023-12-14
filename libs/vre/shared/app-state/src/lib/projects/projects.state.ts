@@ -34,7 +34,6 @@ export class ProjectsState {
         private store: Store,
         private errorHandler: AppErrorHandler,
         private projectService: ProjectService,
-        private _store: Store,
     ) {}
 
     @Action(LoadProjectsAction, { cancelUncompleted: true })
@@ -49,9 +48,9 @@ export class ProjectsState {
                 }),
             )
             .subscribe((projectsResponse: ApiResponseData<ProjectsResponse>) => {
-                    ctx.setState({ 
-                        ...ctx.getState(), 
-                        isLoading: false, 
+                    ctx.setState({
+                        ...ctx.getState(),
+                        isLoading: false,
                         allProjects: projectsResponse.body.projects,
                     });
                 },
@@ -68,7 +67,7 @@ export class ProjectsState {
         { projectUuid, isCurrentProject }: LoadProjectAction
     ) {
         ctx.patchState({ isLoading: true });
-    
+
         const projectIri = this.projectService.uuidToIri(projectUuid);
         // get current project data, project members and project groups
         // and set the project state here
@@ -82,20 +81,20 @@ export class ProjectsState {
                 tap({
                     next:(response: ApiResponseData<ProjectResponse>) => {
                         const project = response.body.project;
-        
+
                         let state = ctx.getState();
                         if (!state.readProjects) {
                             state.readProjects = [];
                         }
-                        
+
                         state = produce(state, draft => {
                             const index = draft.readProjects.findIndex(p => p.id === project.id);
-                            index > -1 
+                            index > -1
                                 ? draft.readProjects[index] = project
                                 : draft.readProjects.push(project);
                             draft.isLoading = false;
                         });
-                            
+
                         ctx.patchState(state);
                         return project;
                     },
@@ -105,7 +104,7 @@ export class ProjectsState {
                     }
                 }),
                 concatMap(() => ctx.dispatch([
-                    new LoadProjectMembersAction(projectUuid), 
+                    new LoadProjectMembersAction(projectUuid),
                     new LoadProjectGroupsAction(projectUuid)
                 ])),
                 finalize(() => {
@@ -113,7 +112,7 @@ export class ProjectsState {
                 })
             );
     }
-    
+
     @Action(ClearProjectsAction)
     clearProjects(ctx: StateContext<ProjectsStateModel>) {
         return of(ctx.getState()).pipe(
@@ -141,7 +140,7 @@ export class ProjectsState {
                 tap({
                     next: (response: ApiResponseData<UserResponse>) => {
                         ctx.dispatch([
-                            new SetUserAction(response.body.user), 
+                            new SetUserAction(response.body.user),
                             new LoadProjectMembersAction(projectIri)
                         ]);
                         ctx.patchState({ isLoading: false });
@@ -169,7 +168,7 @@ export class ProjectsState {
                 tap({
                     next: (response: ApiResponseData<UserResponse>) => {
                         ctx.dispatch([
-                            new SetUserAction(response.body.user), 
+                            new SetUserAction(response.body.user),
                             new LoadProjectMembersAction(projectIri)
                         ]);
                         ctx.patchState({ isLoading: false });
@@ -181,13 +180,13 @@ export class ProjectsState {
                 })
             )
     }
-    
+
     @Action(LoadProjectMembersAction)
     loadProjectMembersAction(
         ctx: StateContext<ProjectsStateModel>,
         { projectUuid }: LoadProjectMembersAction
     ) {
-        if (!this._store.selectSnapshot(UserSelectors.isLoggedIn)) {
+        if (!this.store.selectSnapshot(UserSelectors.isLoggedIn)) {
             return;
         }
 
@@ -201,8 +200,8 @@ export class ProjectsState {
                 }),
                 tap({
                     next: (response: ApiResponseData<MembersResponse>) => {
-                        ctx.setState({ 
-                            ...ctx.getState(), 
+                        ctx.setState({
+                            ...ctx.getState(),
                             isLoading: false,
                             projectMembers: { [projectIri] : { value: response.body.members } }
                         });
@@ -232,13 +231,13 @@ export class ProjectsState {
                             if (!groups[projectId]) {
                                 groups[projectId] = { value: [] };
                             }
-                            
+
                             groups[projectId].value = [...groups[projectId].value, group];
                         });
 
-                        ctx.setState({ 
-                            ...ctx.getState(), 
-                            isLoading: false, 
+                        ctx.setState({
+                            ...ctx.getState(),
+                            isLoading: false,
                             projectGroups: groups
                         });
                     },
@@ -282,7 +281,7 @@ export class ProjectsState {
             const index = state.projectMembers[projectId].value.findIndex(u => u.id === member.id);
             if (index > -1) {
                 state.projectMembers[projectId].value[index] = member;
-            }    
+            }
         });
 
         ctx.setState({ ...state });

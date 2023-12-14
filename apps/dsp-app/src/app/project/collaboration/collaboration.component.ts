@@ -7,10 +7,10 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AddUserComponent } from './add-user/add-user.component';
-import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
+import { Actions, Select, Store } from '@ngxs/store';
 import { LoadProjectMembersAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable, Subject } from 'rxjs';
-import { map, take, takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { ProjectBase } from '../project-base';
 
 @Component({
@@ -21,7 +21,7 @@ import { ProjectBase } from '../project-base';
 })
 export class CollaborationComponent extends ProjectBase implements OnInit, OnDestroy {
     private ngUnsubscribe: Subject<void> = new Subject<void>();
-    
+
     @ViewChild('addUserComponent') addUser: AddUserComponent;
 
     get activeProjectMembers$(): Observable<ReadUser[]> {
@@ -51,13 +51,13 @@ export class CollaborationComponent extends ProjectBase implements OnInit, OnDes
                 })
             );
     }
-    
+
     @Select(ProjectsSelectors.projectMembers) projectMembers$: Observable<ReadUser[]>;
     @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
     @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
     @Select(UserSelectors.user) user$: Observable<ReadUser>;
     @Select(ProjectsSelectors.currentProject) project$: Observable<ReadProject>;
-    
+
     constructor(
         protected _route: ActivatedRoute,
         protected _projectService: ProjectService,

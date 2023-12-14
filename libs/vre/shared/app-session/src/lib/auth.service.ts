@@ -22,7 +22,7 @@ export class AuthService {
     get tokenUser() {
         return this.getTokenUser();
     }
-    
+
     @Output() loginSuccessfulEvent = new EventEmitter<User>();
 
     constructor(
@@ -36,7 +36,7 @@ export class AuthService {
             .subscribe((valid) => {
                 if (!valid) {
                     this.doLogoutUser();
-                } 
+                }
             });
 
         // if (this.isLoggedIn()) {
@@ -88,7 +88,7 @@ export class AuthService {
             return of(false);
         }
     }
-    
+
     /**
      * updates the id of the current session in the local storage
      * @param credentials response from getCredentials method call
@@ -202,14 +202,13 @@ export class AuthService {
         this._isLoggedIn$.next(false);
         this.removeTokens();
         this.store.dispatch([
-            new LogUserOutAction(), 
+            new LogUserOutAction(),
             new ClearProjectsAction(),
             new ClearCurrentProjectAction(),
             new ClearListsAction(),
             new ClearOntologiesAction(),
         ]);
         clearTimeout(this.tokenRefreshIntervalId);
-        this.router.navigate([RouteConstants.home], { replaceUrl: true });
     }
 
     isLoggedIn() {
@@ -295,9 +294,9 @@ export class AuthService {
         if (this.tokenRefreshIntervalId) {
             clearInterval(this.tokenRefreshIntervalId);
         }
-        
+
         //TODO upgrade RxJS to V7 for lastValueFrom support
-        // this.tokenRefreshIntervalId = 
+        // this.tokenRefreshIntervalId =
         // this.intervalWrapper.setInterval(() => {
         //     void lastValueFrom(this.refreshToken$());
         // }, interval - 50000);

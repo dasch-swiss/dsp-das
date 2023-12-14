@@ -39,7 +39,7 @@ export class ProjectService {
     uuidToIri(uuid: string): string {
         if (uuid && !uuid.startsWith(this._acs.dspAppConfig.iriBase)) {
             return `${this._acs.dspAppConfig.iriBase}/projects/${uuid}`;
-        } 
+        }
 
         return uuid;
     }
@@ -54,13 +54,13 @@ export class ProjectService {
         ProjectService.IsMemberOfProjectAdminGroup(groupsPerProject, projectIri);
     static IsMemberOfProjectAdminGroup = (groupsPerProject: {[key: string]: string[]}, projectIri: string): boolean =>
         groupsPerProject
-        && groupsPerProject[projectIri] 
+        && groupsPerProject[projectIri]
         && (groupsPerProject[projectIri].indexOf(Constants.ProjectAdminGroupIRI) > -1);
 
     isMemberOfSystemAdminGroup = (groupsPerProject: {[key: string]: string[]}): boolean => ProjectService.IsMemberOfSystemAdminGroup(groupsPerProject);
     static IsMemberOfSystemAdminGroup = (groupsPerProject: {[key: string]: string[]}): boolean =>
         groupsPerProject
-        && groupsPerProject[Constants.SystemProjectIRI] 
+        && groupsPerProject[Constants.SystemProjectIRI]
         && (groupsPerProject[Constants.SystemProjectIRI].indexOf(Constants.SystemAdminGroupIRI) > -1);
 
 

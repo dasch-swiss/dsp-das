@@ -1,6 +1,6 @@
-import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject, Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { concatMap, map, switchMap } from 'rxjs/operators';
@@ -11,10 +11,10 @@ import { CurrentPageSelectors, SetUserAction, UserSelectors } from '@dasch-swiss
 
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-    
+
     isLoggedIn$: Observable<boolean> = this._authService.isLoggedIn$;
 
     @Select(UserSelectors.user) user$: Observable<ReadUser>;
@@ -24,7 +24,8 @@ export class AuthGuard implements CanActivate {
         private _authService: AuthService,
         private actions$: Actions,
         @Inject(DOCUMENT) private document: Document
-    ) {}
+    ) {
+    }
 
     canActivate(): Observable<boolean> {
         return this.user$.pipe(
@@ -65,7 +66,7 @@ export class AuthGuard implements CanActivate {
 // empty component used as a redirect when the user logs in
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    template: '',
+    template: ''
 })
 export class AuthGuardComponent {
     constructor(private router: Router) {
