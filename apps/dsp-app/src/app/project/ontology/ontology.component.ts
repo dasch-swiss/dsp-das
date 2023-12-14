@@ -265,7 +265,7 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
         if (!currentOntology) {
             const projectOntologies = this._store.selectSnapshot(OntologiesSelectors.projectOntologies);
             const projectIri = this._projectService.uuidToIri(this.projectUuid);
-            let currentProject = this._store.selectSnapshot(ProjectsSelectors.currentProject);
+            const currentProject = this._store.selectSnapshot(ProjectsSelectors.currentProject);
             const ontologyIri = this.getOntologyIri(currentProject.shortcode);
             currentOntology = projectOntologies[projectIri]?.readOntologies.find(o => o.id === ontologyIri);
             if (currentOntology) {
