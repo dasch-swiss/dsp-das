@@ -4,7 +4,7 @@ import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { LoadProjectAction, LoadProjectOntologiesAction, OntologiesSelectors, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
-import { filter, map, take, takeUntil } from 'rxjs/operators';
+import { filter, map, take, takeUntil, takeWhile } from 'rxjs/operators';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Title } from '@angular/platform-browser';
 
@@ -35,6 +35,7 @@ export class ProjectBase implements OnInit, OnDestroy {
     @Select(ProjectsSelectors.isCurrentProjectAdmin) isProjectAdmin$: Observable<boolean>;
     @Select(ProjectsSelectors.isCurrentProjectMember) isProjectMember$: Observable<boolean>;
     @Select(ProjectsSelectors.currentProject) project$: Observable<ReadProject>;
+    @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
     
     constructor(
         protected _store: Store,
@@ -59,7 +60,11 @@ export class ProjectBase implements OnInit, OnDestroy {
             this.loadProject();
         } else {
             if (!this.isOntologiesAvailable()) {
-                this._store.dispatch(new LoadProjectOntologiesAction(this.projectUuid));
+                this.isProjectsLoading$
+                    .pipe(takeWhile((isLoading) => isLoading === false))
+                    .subscribe((isLoading: boolean) => {
+                        this._store.dispatch(new LoadProjectOntologiesAction(this.projectUuid));
+                    });
             }
         }
     }

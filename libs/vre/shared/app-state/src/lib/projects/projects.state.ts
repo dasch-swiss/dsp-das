@@ -43,21 +43,26 @@ export class ProjectsState {
         return this._dspApiConnection.admin.projectsEndpoint
             .getProjects()
             .pipe(
+                take(1),
                 map((projectsResponse: ApiResponseData<ProjectsResponse> | ApiResponseError) => {
                     return projectsResponse as ApiResponseData<ProjectsResponse>;
                 }),
-            )
-            .subscribe((projectsResponse: ApiResponseData<ProjectsResponse>) => {
-                    ctx.setState({
-                        ...ctx.getState(),
-                        isLoading: false,
-                        allProjects: projectsResponse.body.projects,
-                    });
-                },
-                (error: ApiResponseError) => {
-                    ctx.patchState({ hasLoadingErrors: true });
-                    this.errorHandler.showMessage(error);
-                }
+                tap({
+                    next:(projectsResponse: ApiResponseData<ProjectsResponse>) => {
+                        ctx.setState({
+                            ...ctx.getState(),
+                            isLoading: false,
+                            allProjects: projectsResponse.body.projects,
+                        });
+                    },
+                    error: (error: ApiResponseError) => {
+                        ctx.patchState({ hasLoadingErrors: true });
+                        this.errorHandler.showMessage(error);
+                    }
+                }),
+                finalize(() => {
+                    ctx.patchState({ isLoading: false });
+                })
             );
     }
 
