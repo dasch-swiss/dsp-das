@@ -4,15 +4,12 @@ import { ProjectsStateModel } from './projects.state-model';
 import { LoadProjectsAction, LoadProjectAction, ClearProjectsAction, RemoveUserFromProjectAction, AddUserToProjectMembershipAction, LoadProjectMembersAction, LoadProjectGroupsAction, UpdateProjectAction, SetProjectMemberAction } from './projects.actions';
 import { UserSelectors } from '../user/user.selectors';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ApiResponseData, ApiResponseError, GroupsResponse, KnoraApiConnection, MembersResponse, ProjectResponse, ProjectsResponse, ReadGroup, ReadUser, UserResponse } from '@dasch-swiss/dsp-js';
+import { ApiResponseData, ApiResponseError, GroupsResponse, KnoraApiConnection, MembersResponse, ProjectResponse, ProjectsResponse, ReadGroup, UserResponse } from '@dasch-swiss/dsp-js';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { concatMap, finalize, map, take, tap } from 'rxjs/operators';
 import { produce } from 'immer';
 import { EMPTY, of } from 'rxjs';
-import { CurrentProjectSelectors } from '../current-project/current-project.selectors';
-import { SetCurrentProjectAction, SetCurrentProjectByUuidAction, SetCurrentProjectGroupsAction } from '../current-project/current-project.actions';
 import { IKeyValuePairs } from '../model-interfaces';
-import { ProjectsSelectors } from './projects.selectors';
 import { SetUserAction } from '../user/user.actions';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
@@ -111,17 +108,6 @@ export class ProjectsState {
                     new LoadProjectMembersAction(projectUuid), 
                     new LoadProjectGroupsAction(projectUuid)
                 ])),
-                concatMap(() => { 
-                    if (isCurrentProject) {
-                        const projectGroups = this.store.selectSnapshot(ProjectsSelectors.projectGroups);
-                        return ctx.dispatch([
-                            new SetCurrentProjectByUuidAction(projectUuid), 
-                            new SetCurrentProjectGroupsAction(projectGroups[projectIri]?.value)
-                        ]);
-                    }
-                    
-                    return EMPTY;
-                }),
                 finalize(() => {
                     ctx.patchState({ isLoading: false });
                 })
@@ -278,15 +264,6 @@ export class ProjectsState {
                 tap({
                     next: (response: ApiResponseData<ProjectResponse>) => {
                         ctx.dispatch(new LoadProjectsAction());
-                        const currentProject = this.store.selectSnapshot(CurrentProjectSelectors.project);
-                        if (currentProject?.id === projectUuid) {
-                            const user = this.store.selectSnapshot(UserSelectors.user) as ReadUser;
-                            const userProjectGroups = this.store.selectSnapshot(UserSelectors.userProjectAdminGroups);
-                            const isProjectAdmin = this.projectService.isProjectAdminOrSysAdmin(user, userProjectGroups, response.body.project.id);
-                            const isProjectMember = this.projectService.isProjectMember(user, userProjectGroups, response.body.project.id);
-                            ctx.dispatch(new SetCurrentProjectAction(response.body.project, isProjectAdmin, isProjectMember));
-                        }
-                        
                         return response.body.project;
                     },
                     error: (error) => {

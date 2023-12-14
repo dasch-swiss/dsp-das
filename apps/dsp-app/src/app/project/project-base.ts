@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Directive, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
-import { CurrentProjectSelectors, LoadProjectAction, LoadProjectOntologiesAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { LoadProjectAction, LoadProjectOntologiesAction, OntologiesSelectors, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
@@ -13,7 +13,7 @@ export class ProjectBase implements OnInit, OnDestroy {
     destroyed: Subject<void> = new Subject<void>();
 
     projectUuid: string;
-    project: ReadProject;
+    project: ReadProject; //TODO use project$ instead
 
     // permissions of logged-in user
     get isAdmin$(): Observable<boolean> {
@@ -32,10 +32,10 @@ export class ProjectBase implements OnInit, OnDestroy {
     
     @Select(UserSelectors.user) user$: Observable<ReadUser>;
     @Select(UserSelectors.userProjectAdminGroups) userProjectAdminGroups$: Observable<string[]>;
-    @Select(CurrentProjectSelectors.project) project$: Observable<ReadProject>;
-    @Select(CurrentProjectSelectors.isProjectAdmin) isProjectAdmin$: Observable<boolean>;
-    @Select(CurrentProjectSelectors.isProjectMember) isProjectMember$: Observable<boolean>;
-
+    @Select(ProjectsSelectors.isCurrentProjectAdmin) isProjectAdmin$: Observable<boolean>;
+    @Select(ProjectsSelectors.isCurrentProjectMember) isProjectMember$: Observable<boolean>;
+    @Select(ProjectsSelectors.currentProject) project$: Observable<ReadProject>;
+    
     constructor(
         protected _store: Store,
         protected _route: ActivatedRoute,
@@ -52,11 +52,15 @@ export class ProjectBase implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.project = this._store.selectSnapshot(CurrentProjectSelectors.project);
+        this.project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
         if (this.projectUuid && (!this.project || this.project.id !== this.projectIri)) {
             // get current project data, project members and project groups
             // and set the project state here
             this.loadProject();
+        } else {
+            if (!this.isOntologiesAvailable()) {
+                this._store.dispatch(new LoadProjectOntologiesAction(this.projectUuid));
+            }
         }
     }
 
@@ -82,7 +86,7 @@ export class ProjectBase implements OnInit, OnDestroy {
     }
 
     private setProjectData(): void {
-        this.project = this._store.selectSnapshot(CurrentProjectSelectors.project);
+        this.project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
         if (!this.project) {
             return;
         }
@@ -96,5 +100,21 @@ export class ProjectBase implements OnInit, OnDestroy {
             filter((e) => e instanceof NavigationEnd),
             filter((e) => !(e as NavigationEnd).url.startsWith('api'))
         );
+    }
+
+    private isOntologiesAvailable(): boolean {
+        const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
+        let result = true;
+
+        this.project.ontologies.forEach((ontoIri) => {
+            if (!currentProjectOntologies 
+                || currentProjectOntologies.length === 0 
+                || !currentProjectOntologies.find((o) => o.id === ontoIri)
+            ) {
+                result = false;
+            }
+        });
+        
+        return result;
     }
 }
