@@ -61,7 +61,6 @@ export class OntologyClassInstanceComponent extends ProjectBase implements OnIni
             filter(project => project !== undefined),
         ).subscribe((project) => {
             this.project = project;
-            console.log(project);
             this.initProject(this._route.snapshot.params);
         });
     }
