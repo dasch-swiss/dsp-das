@@ -71,11 +71,8 @@ export class ProjectService {
         );
     }
 
-    isProjectAdminOrSysAdmin(
-        user: ReadUser | null,
-        userProjectGroups: string[],
-        projectIri: string
-    ): boolean {
+    isProjectAdminOrSysAdmin(user: ReadUser, userProjectGroups: string[], projectIri: string): boolean
+    {
         return (
             user !== null &&
             user.permissions.groupsPerProject !== undefined &&
