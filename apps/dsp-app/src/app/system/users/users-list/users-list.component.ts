@@ -30,7 +30,6 @@ import { LoadProjectAction, LoadProjectMembersAction, LoadUserAction, ProjectsSe
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ignoreElements } from 'rxjs/operators';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -152,7 +151,7 @@ export class UsersListComponent implements OnInit {
             return false;
         }
 
-        return this._projectService.isMemberOfProjectAdminGroup(permissions.groupsPerProject, this.project.id);
+        return ProjectService.IsMemberOfProjectAdminGroup(permissions.groupsPerProject, this.project.id);
     }
 
     /**
@@ -258,7 +257,7 @@ export class UsersListComponent implements OnInit {
                             this._actions$.pipe(ofActionSuccessful(LoadUserAction))
                                 .pipe(take(1))
                                 .subscribe(() => {
-                                    const isSysAdmin = this._projectService.isMemberOfSystemAdminGroup((currentUser as ReadUser).permissions.groupsPerProject)
+                                    const isSysAdmin = ProjectService.IsMemberOfSystemAdminGroup((currentUser as ReadUser).permissions.groupsPerProject)
                                     if (isSysAdmin) {
                                         this.refreshParent.emit();
                                     } else {

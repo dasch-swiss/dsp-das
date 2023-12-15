@@ -44,36 +44,25 @@ export class ProjectService {
         return uuid;
     }
 
-    //TODO remove non static methods
-    isInProjectGroup = (userProjectGroups: string[], projectUuid: string): boolean => 
-        ProjectService.IsInProjectGroup(userProjectGroups, projectUuid);
-    static IsInProjectGroup = (userProjectGroups: string[], projectUuid: string): boolean =>
-        userProjectGroups.some((e) => ProjectService.IriToUuid(e) === projectUuid);
+    static IsInProjectGroup = (userProjectGroups: string[], projectIri: string): boolean =>
+        userProjectGroups.some((e) => e === projectIri);
 
-    isMemberOfProjectAdminGroup = (groupsPerProject: {[key: string]: string[]}, projectIri: string): boolean => 
-        ProjectService.IsMemberOfProjectAdminGroup(groupsPerProject, projectIri);
     static IsMemberOfProjectAdminGroup = (groupsPerProject: {[key: string]: string[]}, projectIri: string): boolean =>
         groupsPerProject
         && groupsPerProject[projectIri]
         && (groupsPerProject[projectIri].indexOf(Constants.ProjectAdminGroupIRI) > -1);
 
-    isMemberOfSystemAdminGroup = (groupsPerProject: {[key: string]: string[]}): boolean => ProjectService.IsMemberOfSystemAdminGroup(groupsPerProject);
     static IsMemberOfSystemAdminGroup = (groupsPerProject: {[key: string]: string[]}): boolean =>
         groupsPerProject
         && groupsPerProject[Constants.SystemProjectIRI]
         && (groupsPerProject[Constants.SystemProjectIRI].indexOf(Constants.SystemAdminGroupIRI) > -1);
 
-
-    isProjectAdmin = (groupsPerProject: {[key: string]: string[]}, userProjectGroups: string[], projectIri: string): boolean => 
-        ProjectService.IsProjectAdmin(groupsPerProject, userProjectGroups, projectIri);
     static IsProjectAdmin(groupsPerProject: {[key: string]: string[]}, userProjectGroups: string[], projectIri: string): boolean
     {
         const isMemberOfProjectAdminGroup = ProjectService.IsMemberOfProjectAdminGroup(groupsPerProject, projectIri);
         return ProjectService.IsInProjectGroup(userProjectGroups, projectIri) || isMemberOfProjectAdminGroup;
     }
 
-    isProjectAdminOrSysAdmin = (user: ReadUser, userProjectGroups: string[], projectIri: string): boolean => 
-        ProjectService.IsProjectAdminOrSysAdmin(user, userProjectGroups, projectIri);
     static IsProjectAdminOrSysAdmin(user: ReadUser, userProjectGroups: string[], projectIri: string): boolean
     {
         if (!user || !projectIri) {
@@ -84,16 +73,12 @@ export class ProjectService {
         return ProjectService.IsProjectOrSysAdmin(groupsPerProject, userProjectGroups, projectIri);
     }
     
-    isProjectOrSysAdmin = (groupsPerProject: {[key: string]: string[]}, userProjectGroups: string[], projectIri: string): boolean => 
-        ProjectService.IsProjectOrSysAdmin(groupsPerProject, userProjectGroups, projectIri);
     static IsProjectOrSysAdmin(groupsPerProject: {[key: string]: string[]}, userProjectGroups: string[], projectIri: string): boolean
     {
         const isMemberOfSystemAdminGroup = ProjectService.IsMemberOfSystemAdminGroup(groupsPerProject);
         return ProjectService.IsProjectAdmin(groupsPerProject, userProjectGroups, projectIri) || isMemberOfSystemAdminGroup;
     }
 
-    isProjectMember = (user: ReadUser, userProjectGroups: string[], projectUuid: string): boolean => 
-        ProjectService.IsProjectMember(user, userProjectGroups, projectUuid);
     static IsProjectMember(user: ReadUser, userProjectGroups: string[], projectUuid: string): boolean
     {
         const isProjectAdmin = ProjectService.IsInProjectGroup(userProjectGroups, projectUuid);
