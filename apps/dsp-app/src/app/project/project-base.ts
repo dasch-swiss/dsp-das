@@ -17,7 +17,7 @@ export class ProjectBase implements OnInit, OnDestroy {
 
     // permissions of logged-in user
     get isAdmin$(): Observable<boolean> {
-        return combineLatest([this.user$, this.userProjectAdminGroups$, this._route.parent.params])
+        return combineLatest([this.user$, this.userProjectAdminGroups$, this._route.params])
             .pipe(
                 takeUntil(this.destroyed),
                 map(([user, userProjectGroups, params]) => {
