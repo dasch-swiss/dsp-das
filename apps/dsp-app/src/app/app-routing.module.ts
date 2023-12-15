@@ -4,7 +4,9 @@ import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.compon
 import { AuthGuard } from './main/guard/auth.guard';
 import { HelpComponent } from './main/help/help.component';
 import { StatusComponent } from './main/status/status.component';
-import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
+import {
+    OntologyClassInstanceComponent,
+} from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
 import { SettingsComponent } from './project/settings/settings.component';
 // project
 import { DescriptionComponent } from './project/description/description.component';
@@ -25,9 +27,14 @@ import { UserComponent } from './user/user.component';
 // search results and resource viewer
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
-import { AdvancedSearchContainerComponent } from './workspace/search/advanced-search/advanced-search-container.component';
-import { ProjectFormComponent } from "@dsp-app/src/app/project/project-form/project-form.component";
+import {
+    AdvancedSearchContainerComponent,
+} from './workspace/search/advanced-search/advanced-search-container.component';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { CreateProjectFormPageComponent } from './project/create-project-form-page/create-project-form-page.component';
+import {
+    EditProjectFormPageComponent
+} from './project/edit-project-form-page/edit-project-form-page.component';
 
 const routes: Routes = [
     {
@@ -41,15 +48,16 @@ const routes: Routes = [
     {
         path: RouteConstants.createNewProjectRelative,
         canActivate: [AuthGuard],
-        component: ProjectFormComponent
+        component: CreateProjectFormPageComponent,
     },
     {
         path: RouteConstants.projectUuidRelative,
         component: ProjectComponent,
         children: [
-            {   path: RouteConstants.edit,
+            {
+                path: RouteConstants.edit,
                 canActivate: [AuthGuard],
-                component: ProjectFormComponent
+                component: EditProjectFormPageComponent,
             },
             {
                 path: RouteConstants.home,
@@ -89,7 +97,7 @@ const routes: Routes = [
             },
             {
                 path: `${RouteConstants.list}/:${RouteConstants.listParameter}`,
-                component: ListComponent
+                component: ListComponent,
             },
             {
                 path: RouteConstants.settings,
@@ -199,4 +207,5 @@ const routes: Routes = [
     ],
     exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}

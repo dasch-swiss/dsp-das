@@ -163,6 +163,18 @@ import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import { AppProgressIndicatorComponent } from "@dasch-swiss/vre/shared/app-progress-indicator";
 import {AppStringLiteralComponent} from "@dasch-swiss/vre/shared/app-string-literal";
 import { IsFalsyPipe } from './main/pipes/isFalsy.piipe';
+import {
+    EditProjectFormPageComponent
+} from '@dsp-app/src/app/project/edit-project-form-page/edit-project-form-page.component';
+import {
+    ReusableProjectFormComponent
+} from '@dsp-app/src/app/project/reusable-project-form/reusable-project-form.component';
+import {
+    CreateProjectFormPageComponent
+} from '@dsp-app/src/app/project/create-project-form-page/create-project-form-page.component';
+import { CommonInputComponent } from '@dsp-app/src/app/project/common-input/common-input.component';
+import { ChipListInputComponent } from '@dsp-app/src/app/project/chip-list-input/chip-list-input.component';
+import { HumanReadableErrorPipe } from '@dsp-app/src/app/project/human-readable-error/human-readable-error.pipe';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -183,10 +195,12 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         AvTimelineComponent,
         DescriptionComponent,
         BooleanValueComponent,
+        ChipListInputComponent,
         CollaborationComponent,
         ColorPickerComponent,
         ColorValueComponent,
         CommentFormComponent,
+        CommonInputComponent,
         ComparisonComponent,
         ConfirmationDialogComponent,
         ConfirmationMessageComponent,
@@ -212,6 +226,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         GridComponent,
         HeaderComponent,
         HelpComponent,
+        HumanReadableErrorPipe,
         IntermediateComponent,
         IntervalInputComponent,
         IntervalValueComponent,
@@ -235,7 +250,10 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         PermissionInfoComponent,
         ProfileComponent,
         ProjectComponent,
+        CreateProjectFormPageComponent,
         ProjectFormComponent,
+        ReusableProjectFormComponent,
+        EditProjectFormPageComponent,
         ProjectsComponent,
         ProjectsListComponent,
         PropertiesComponent,
