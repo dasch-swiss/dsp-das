@@ -50,7 +50,8 @@
         "*.tsx"
       ],
       "excludedFiles": [
-        "*.spec.ts"
+        "*.spec.ts",
+        "**/test-setup.ts"
       ],
       "extends": [
         "airbnb-base",
@@ -76,7 +77,6 @@
         "import/first": "off",
         "import/newline-after-import": "off",
         "import/no-cycle": "off",
-        "import/no-extraneous-dependencies": "off",
         "import/order": ["error", { "alphabetize": { "order": "asc" } }],
         "implicit-arrow-linebreak": "off",
         "key-spacing": "off",
