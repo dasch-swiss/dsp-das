@@ -15,8 +15,7 @@
     "prettier"
   ],
   "rules": {
-    "prettier/prettier": "error",
-    "import/order": ["error", { "alphabetize": { "order": "asc" } }]
+    "prettier/prettier": "error"
   },
   "overrides": [
     {
@@ -80,6 +79,7 @@
         "import/no-duplicates": "off",
         "import/no-extraneous-dependencies": "off",
         "import/no-useless-path-segments": "off",
+        "import/order": ["error", { "alphabetize": { "order": "asc" } }],
         "implicit-arrow-linebreak": "off",
         "key-spacing": "off",
         "linebreak-style": "off",
@@ -200,6 +200,7 @@
         "jasmine": true
       },
       "rules": {
+        "import/order": ["error", { "alphabetize": { "order": "asc" } }],
         "ban/ban": [
           2,
           {
