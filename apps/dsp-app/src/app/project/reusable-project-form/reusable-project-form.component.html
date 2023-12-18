@@ -19,10 +19,10 @@
                 'appLabels.form.project.general.description' | translate) + '*'"
             [textarea]='true'
             [value]='form.controls.description.value'
-            (dataChanged)='form.patchValue({description: $event})'
+            (dataChanged)='onDescriptionChange($event)'
         >
         </dasch-swiss-app-string-literal>
-        <mat-error *ngIf='form.controls.description.errors as errors'>
+        <mat-error *ngIf='form.controls.description.touched && form.controls.description.errors as errors'>
             {{ errors | humanReadableError }}
         </mat-error>
 
