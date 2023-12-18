@@ -13,10 +13,11 @@ import { Router } from '@angular/router';
 import { Constants, ReadProject, ReadUser, StoredProject, UpdateProjectRequest } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
-import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { SortProp } from '@dsp-app/src/app/main/action/sort-button/sort-button.component';
-import { combineLatest, Observable, Subject } from 'rxjs';
-import { map, takeUntil, tap } from 'rxjs/operators';
+import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import {SortProp} from "@dsp-app/src/app/main/action/sort-button/sort-button.component";
+import {Observable, Subject, combineLatest} from "rxjs";
+import { map, take, takeUntil, tap } from 'rxjs/operators';
 import { Select } from '@ngxs/store';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
@@ -85,12 +86,10 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
   @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
 
   constructor(
-    @Inject(DspApiConnectionToken)
     private _projectApiService: ProjectApiService,
     private _dialog: MatDialog,
     private _router: Router,
     private _sortingService: SortingService,
-    private _projectService: ProjectService
   ) {
   }
 
@@ -111,12 +110,12 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
    *
    * @param  projectId the iri of the project to be checked
    */
-  userHasPermission$(projectId: string): Observable<boolean> {
+  userHasPermission$(projectIri: string): Observable<boolean> {
     return combineLatest([this.user$, this.userProjectAdminGroups$])
       .pipe(
         takeUntil(this.ngUnsubscribe),
         map(([user, userProjectGroups]) => {
-          return this._projectService.isProjectAdminOrSysAdmin(user, userProjectGroups, projectId);
+          return ProjectService.IsProjectAdminOrSysAdmin(user, userProjectGroups, projectIri);
         })
       );
   }
@@ -124,15 +123,15 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
   /**
    * return true, when the user is project admin of the given project.
    *
-   * @param  projectId the iri of the project to be checked
+   * @param  projectIri the iri of the project to be checked
    */
-  userIsProjectAdmin$(projectId: string): Observable<boolean> {
+  userIsProjectAdmin$(projectIri: string): Observable<boolean> {
     return combineLatest([this.user$, this.userProjectAdminGroups$])
       .pipe(
         takeUntil(this.ngUnsubscribe),
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         map(([user, userProjectGroups]) => {
-          return this._projectService.isInProjectGroup(userProjectGroups, projectId);
+          return ProjectService.IsInProjectGroup(userProjectGroups, projectIri);
         })
       );
   }
@@ -143,7 +142,7 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
    * @param iri
    */
   openProjectPage(iri: string) {
-    const uuid = this._projectService.iriToUuid(iri);
+    const uuid = ProjectService.IriToUuid(iri);
 
     this._router
       .navigateByUrl(`/${RouteConstants.refresh}`, { skipLocationChange: true })
@@ -155,7 +154,7 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
   }
 
   editProject(iri: string) {
-    const uuid = this._projectService.iriToUuid(iri);
+    const uuid = ProjectService.IriToUuid(iri);
     this._router.navigate([RouteConstants.project, uuid, RouteConstants.edit]);
   }
 

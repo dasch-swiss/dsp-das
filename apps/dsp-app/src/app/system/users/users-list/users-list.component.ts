@@ -24,17 +24,17 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import {
-  CurrentProjectSelectors,
+
   LoadProjectAction,
   LoadProjectMembersAction,
   LoadUserAction,
-  RemoveUserFromProjectAction,
+ ProjectsSelectors, RemoveUserFromProjectAction,
   SetUserAction,
   UserSelectors
 } from '@dasch-swiss/vre/shared/app-state';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
+import { map, take } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -107,9 +107,9 @@ export class UsersListComponent implements OnInit {
   @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
   @Select(UserSelectors.user) user$: Observable<ReadUser>;
   @Select(UserSelectors.username) username$: Observable<string>;
-  @Select(CurrentProjectSelectors.isProjectAdmin) isProjectAdmin$: Observable<boolean>;
-  @Select(CurrentProjectSelectors.project) project$: Observable<ReadProject>;
-  @Select(CurrentProjectSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
+  @Select(ProjectsSelectors.isCurrentProjectAdmin) isProjectAdmin$: Observable<boolean>;
+  @Select(ProjectsSelectors.currentProject) project$: Observable<ReadProject>;
+  @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
   @Select(UserSelectors.isLoading) isUsersLoading$: Observable<boolean>;
 
   constructor(
@@ -157,7 +157,7 @@ export class UsersListComponent implements OnInit {
       return false;
     }
 
-    return this._projectService.isMemberOfProjectAdminGroup(permissions.groupsPerProject, this.project.id);
+    return ProjectService.IsMemberOfProjectAdminGroup(permissions.groupsPerProject, this.project.id);
   }
 
   /**
@@ -262,7 +262,7 @@ export class UsersListComponent implements OnInit {
               this._actions$.pipe(ofActionSuccessful(LoadUserAction))
                 .pipe(take(1))
                 .subscribe(() => {
-                  const isSysAdmin = this._projectService.isMemberOfSystemAdminGroup((currentUser as ReadUser).permissions.groupsPerProject);
+                  const isSysAdmin = ProjectService.IsMemberOfSystemAdminGroup((currentUser as ReadUser).permissions.groupsPerProject);
                   if (isSysAdmin) {
                     this.refreshParent.emit();
                   } else {
@@ -411,7 +411,7 @@ export class UsersListComponent implements OnInit {
       return true;
     } else {
       return !this._store.selectSnapshot(UserSelectors.isSysAdmin)
-        && !this._store.selectSnapshot(CurrentProjectSelectors.isProjectAdmin);
+        && !this._store.selectSnapshot(ProjectsSelectors.isCurrentProjectAdmin);
     }
   }
 

@@ -22,10 +22,9 @@ import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import {
-    CurrentProjectSelectors,
     DeleteListNodeAction,
     ListsSelectors,
-    LoadListsInProjectAction,
+    LoadListsInProjectAction, ProjectsSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 
 @Component({
@@ -180,7 +179,7 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
 
     private _setPageTitle() {
         const project = this._store.selectSnapshot(
-            CurrentProjectSelectors.project
+            ProjectsSelectors.currentProject
         );
         this._titleService.setTitle(
             `Project ${project?.shortname} | List${this.listIri ? '' : 's'}`
