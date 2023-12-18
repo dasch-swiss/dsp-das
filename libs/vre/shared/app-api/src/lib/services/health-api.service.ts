@@ -4,14 +4,14 @@ import { BaseApi } from './base-api';
 import { HealthResponse } from '@dasch-swiss/dsp-js';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class HealthApiService extends BaseApi {
-    constructor(private _http: HttpClient) {
-        super('health');
-    }
+  constructor(private _http: HttpClient) {
+    super('health');
+  }
 
-    get() {
-        return this._http.get<HealthResponse>(this.baseUri);
-    }
+  get() {
+    return this._http.get<HealthResponse>(this.baseUri);
+  }
 }

@@ -48,7 +48,10 @@ describe('JDNConvertibleCalendarDateAdapter', () => {
           .withContext(`Expected ${d} to be a date instance`)
           .not.toBeNull();
         expect(adapter.isValid(d!))
-          .withContext(`Expected ${d} to be ${valid ? 'valid' : 'invalid'},` + ` but was ${valid ? 'invalid' : 'valid'}`)
+          .withContext(
+            `Expected ${d} to be ${valid ? 'valid' : 'invalid'},` +
+              ` but was ${valid ? 'invalid' : 'valid'}`
+          )
           .toBe(valid);
       };
     }

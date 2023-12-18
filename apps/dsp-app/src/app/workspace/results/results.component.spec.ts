@@ -5,8 +5,8 @@ import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { AngularSplitModule } from 'angular-split';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import {
-    DspApiConfigToken,
-    DspApiConnectionToken,
+  DspApiConfigToken,
+  DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
 import { TestConfig } from '@dsp-app/src/test.config';
 import { ResourceComponent } from '../resource/resource.component';
@@ -20,71 +20,71 @@ import { of } from 'rxjs';
  */
 @Component({ selector: 'app-list-view', template: '' })
 class MockListViewComponent {
-    @Input() search: SearchParams;
-    @Input() withMultipleSelection?: boolean = false;
-    constructor() {}
+  @Input() search: SearchParams;
+  @Input() withMultipleSelection?: boolean = false;
+  constructor() {}
 }
 
 describe('ResultsComponent', () => {
-    let component: ResultsComponent;
-    let fixture: ComponentFixture<ResultsComponent>;
+  let component: ResultsComponent;
+  let fixture: ComponentFixture<ResultsComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            declarations: [
-                ResultsComponent,
-                ResourceComponent,
-                MockListViewComponent,
-            ],
-            imports: [AngularSplitModule, RouterTestingModule],
-            providers: [
-                AppConfigService,
-                {
-                    provide: DspApiConfigToken,
-                    useValue: TestConfig.ApiConfig,
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        ResultsComponent,
+        ResourceComponent,
+        MockListViewComponent,
+      ],
+      imports: [AngularSplitModule, RouterTestingModule],
+      providers: [
+        AppConfigService,
+        {
+          provide: DspApiConfigToken,
+          useValue: TestConfig.ApiConfig,
+        },
+        {
+          provide: DspApiConnectionToken,
+          useValue: new KnoraApiConnection(TestConfig.ApiConfig),
+        },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            parent: {
+              paramMap: of({
+                get: (param: string) => {
+                  if (param === 'uuid') {
+                    return TestConfig.ProjectUuid;
+                  }
                 },
-                {
-                    provide: DspApiConnectionToken,
-                    useValue: new KnoraApiConnection(TestConfig.ApiConfig),
-                },
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        parent: {
-                            paramMap: of({
-                                get: (param: string) => {
-                                    if (param === 'uuid') {
-                                        return TestConfig.ProjectUuid;
-                                    }
-                                },
-                            }),
-                            snapshot: {
-                                url: [{ path: 'project' }],
-                            },
-                        },
-                        paramMap: of({
-                            get: (param: string) => {
-                                if (param === 'mode') {
-                                    return 'gravsearch';
-                                }
-                                if (param === 'q') {
-                                    return 'query';
-                                }
-                            },
-                        }),
-                    },
-                },
-            ],
-        }).compileComponents();
-    }));
+              }),
+              snapshot: {
+                url: [{ path: 'project' }],
+              },
+            },
+            paramMap: of({
+              get: (param: string) => {
+                if (param === 'mode') {
+                  return 'gravsearch';
+                }
+                if (param === 'q') {
+                  return 'query';
+                }
+              },
+            }),
+          },
+        },
+      ],
+    }).compileComponents();
+  }));
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(ResultsComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ResultsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

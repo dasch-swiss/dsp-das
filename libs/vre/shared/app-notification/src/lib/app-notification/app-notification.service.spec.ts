@@ -4,16 +4,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MockProvider } from 'ng-mocks';
 
 describe('NotificationService', () => {
-    let service: NotificationService;
+  let service: NotificationService;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [MockProvider(MatSnackBar)],
-        });
-        service = TestBed.inject(NotificationService);
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [MockProvider(MatSnackBar)],
     });
+    service = TestBed.inject(NotificationService);
+  });
 
-    it('should be created', () => {
-        expect(service).toBeTruthy();
-    });
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
 });

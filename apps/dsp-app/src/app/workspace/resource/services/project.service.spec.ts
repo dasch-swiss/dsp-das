@@ -9,43 +9,39 @@ import { MockProvider } from 'ng-mocks';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 describe('ProjectService', () => {
-    let service: ProjectService;
+  let service: ProjectService;
 
-    const appInitSpy = {
-        dspAppConfig: {
-            iriBase: 'http://rdfh.ch',
-        },
+  const appInitSpy = {
+    dspAppConfig: {
+      iriBase: 'http://rdfh.ch',
+    },
+  };
+
+  beforeEach(() => {
+    const apiEndpointSpyObj = {
+      v2: {
+        auth: jasmine.createSpyObj('auth', ['logout']),
+      },
     };
 
-    beforeEach(() => {
-        const apiEndpointSpyObj = {
-            v2: {
-                auth: jasmine.createSpyObj('auth', ['logout']),
-            },
-        };
-
-        TestBed.configureTestingModule({
-            imports: [
-                BrowserAnimationsModule,
-                MatDialogModule,
-                MatSnackBarModule,
-            ],
-            providers: [
-                {
-                    provide: AppConfigService,
-                    useValue: appInitSpy,
-                },
-                MockProvider(AppLoggingService),
-                {
-                    provide: DspApiConnectionToken,
-                    useValue: apiEndpointSpyObj,
-                },
-            ],
-        });
-        service = TestBed.inject(ProjectService);
+    TestBed.configureTestingModule({
+      imports: [BrowserAnimationsModule, MatDialogModule, MatSnackBarModule],
+      providers: [
+        {
+          provide: AppConfigService,
+          useValue: appInitSpy,
+        },
+        MockProvider(AppLoggingService),
+        {
+          provide: DspApiConnectionToken,
+          useValue: apiEndpointSpyObj,
+        },
+      ],
     });
+    service = TestBed.inject(ProjectService);
+  });
 
-    it('should be created', () => {
-        expect(service).toBeTruthy();
-    });
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
 });

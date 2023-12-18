@@ -10,41 +10,42 @@ import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 
 @Component({
-    selector: 'app-user',
-    templateUrl: './user.component.html',
-    styleUrls: ['./user.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styleUrls: ['./user.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserComponent implements OnDestroy {
-    isDestroyed = new Subject<void>();
-    
-    error: boolean;
+  isDestroyed = new Subject<void>();
 
-    route: string;
+  error: boolean;
 
-    // for the sidenav
-    open = true;
+  route: string;
 
-    navigation: MenuItem[] = AppGlobal.userNav;
-    
-    @Select(UserSelectors.username) username$: Observable<string>;
-    
-    routeConstants = RouteConstants;
+  // for the sidenav
+  open = true;
 
-    constructor(
-        private _route: ActivatedRoute,
-        private _titleService: Title,
-    ) {
-        // get the activated route; we need it for the viewer switch
-        this.route = this._route.pathFromRoot[1].snapshot.url[0].path;
+  navigation: MenuItem[] = AppGlobal.userNav;
 
-        // set the page title
-        this.username$.pipe(takeUntil(this.isDestroyed))
-            .subscribe((username: string) => this._titleService.setTitle(username));
-    }
+  @Select(UserSelectors.username) username$: Observable<string>;
 
-    ngOnDestroy() {
-        this.isDestroyed.next();
-        this.isDestroyed.complete();
-    }
+  routeConstants = RouteConstants;
+
+  constructor(
+    private _route: ActivatedRoute,
+    private _titleService: Title
+  ) {
+    // get the activated route; we need it for the viewer switch
+    this.route = this._route.pathFromRoot[1].snapshot.url[0].path;
+
+    // set the page title
+    this.username$
+      .pipe(takeUntil(this.isDestroyed))
+      .subscribe((username: string) => this._titleService.setTitle(username));
+  }
+
+  ngOnDestroy() {
+    this.isDestroyed.next();
+    this.isDestroyed.complete();
+  }
 }

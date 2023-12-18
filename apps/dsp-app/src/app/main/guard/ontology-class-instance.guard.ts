@@ -9,41 +9,48 @@ import { Select } from '@ngxs/store';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { StoredProject } from '@dasch-swiss/dsp-js';
 
-
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class OntologyClassInstanceGuard implements CanActivate {
-    isLoggedIn$: Observable<boolean> = this.authService.isLoggedIn$;
+  isLoggedIn$: Observable<boolean> = this.authService.isLoggedIn$;
 
-    @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
-    @Select(UserSelectors.userProjects) userProjects$: Observable<StoredProject[]>;
+  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
+  @Select(UserSelectors.userProjects) userProjects$: Observable<
+    StoredProject[]
+  >;
 
-    constructor(
-        private authService: AuthService,
-        private projectService: ProjectService,
-        private router: Router,
-    ) {
-    }
+  constructor(
+    private authService: AuthService,
+    private projectService: ProjectService,
+    private router: Router
+  ) {}
 
-    canActivate(activatedRoute: ActivatedRouteSnapshot): Observable<boolean> {
-        const instanceId = activatedRoute.params[RouteConstants.instanceParameter];
-        return combineLatest([this.isLoggedIn$, this.isSysAdmin$, this.userProjects$])
-            .pipe(
-                map(([isLoggedIn, isSysAdmin, userProjects]) => {
-                    const projectUuid = activatedRoute.parent.params[RouteConstants.uuidParameter];
-                    if (!isLoggedIn && instanceId === RouteConstants.addClassInstance) {
-                        this.router.navigateByUrl(`/${RouteConstants.project}/${projectUuid}`);
-                        return false;
-                    }
+  canActivate(activatedRoute: ActivatedRouteSnapshot): Observable<boolean> {
+    const instanceId = activatedRoute.params[RouteConstants.instanceParameter];
+    return combineLatest([
+      this.isLoggedIn$,
+      this.isSysAdmin$,
+      this.userProjects$,
+    ]).pipe(
+      map(([isLoggedIn, isSysAdmin, userProjects]) => {
+        const projectUuid =
+          activatedRoute.parent.params[RouteConstants.uuidParameter];
+        if (!isLoggedIn && instanceId === RouteConstants.addClassInstance) {
+          this.router.navigateByUrl(
+            `/${RouteConstants.project}/${projectUuid}`
+          );
+          return false;
+        }
 
-                    return (instanceId === RouteConstants.addClassInstance 
-                        && (userProjects?.some((p) => p.id === this.projectService.uuidToIri(projectUuid)) // project member
-                                || isSysAdmin // system admin
-                            )
-                    );
-                })
-            )
-    }
+        return (
+          instanceId === RouteConstants.addClassInstance &&
+          (userProjects?.some(
+            p => p.id === this.projectService.uuidToIri(projectUuid)
+          ) || // project member
+            isSysAdmin) // system admin
+        );
+      })
+    );
+  }
 }
-

@@ -5,9 +5,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import {
-    MatDialogModule,
-    MatDialogRef,
-    MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,59 +35,59 @@ import { DialogHeaderComponent } from './dialog-header/dialog-header.component';
 import { DialogComponent } from './dialog.component';
 
 describe('DialogComponent', () => {
-    let component: DialogComponent;
-    let fixture: ComponentFixture<DialogComponent>;
+  let component: DialogComponent;
+  let fixture: ComponentFixture<DialogComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            declarations: [
-                DialogComponent,
-                DialogHeaderComponent,
-                StatusComponent,
-                UserFormComponent,
-                MembershipComponent,
-                PasswordFormComponent,
-                ProjectFormComponent,
-                ListItemComponent,
-                ListItemFormComponent,
-                ListInfoFormComponent,
-                OntologyFormComponent,
-                ResourceClassFormComponent,
-                PropertyFormComponent,
-            ],
-            imports: [
-                CommonModule,
-                MatAutocompleteModule,
-                MatButtonModule,
-                MatChipsModule,
-                MatDialogModule,
-                MatDividerModule,
-                MatFormFieldModule,
-                MatIconModule,
-                MatInputModule,
-                MatListModule,
-                MatSelectModule,
-                MatSlideToggleModule,
-                MatTooltipModule,
-                MatTreeModule,
-                ReactiveFormsModule,
-                RouterTestingModule,
-                TranslateModule.forRoot(),
-            ],
-            providers: [
-                { provide: MatDialogRef, useValue: {} },
-                { provide: MAT_DIALOG_DATA, useValue: [] },
-            ],
-        }).compileComponents();
-    }));
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        DialogComponent,
+        DialogHeaderComponent,
+        StatusComponent,
+        UserFormComponent,
+        MembershipComponent,
+        PasswordFormComponent,
+        ProjectFormComponent,
+        ListItemComponent,
+        ListItemFormComponent,
+        ListInfoFormComponent,
+        OntologyFormComponent,
+        ResourceClassFormComponent,
+        PropertyFormComponent,
+      ],
+      imports: [
+        CommonModule,
+        MatAutocompleteModule,
+        MatButtonModule,
+        MatChipsModule,
+        MatDialogModule,
+        MatDividerModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatListModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatTooltipModule,
+        MatTreeModule,
+        ReactiveFormsModule,
+        RouterTestingModule,
+        TranslateModule.forRoot(),
+      ],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: [] },
+      ],
+    }).compileComponents();
+  }));
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(DialogComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+  beforeEach(() => {
+    fixture = TestBed.createComponent(DialogComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

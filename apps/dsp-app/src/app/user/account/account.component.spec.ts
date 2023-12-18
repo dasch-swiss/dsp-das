@@ -12,8 +12,8 @@ import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import {
-    DspApiConfigToken,
-    DspApiConnectionToken,
+  DspApiConfigToken,
+  DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
@@ -23,60 +23,59 @@ import { AccountComponent } from './account.component';
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'dasch-swiss-app-progress-indicator',
-    template: '',
+  selector: 'dasch-swiss-app-progress-indicator',
+  template: '',
 })
 class MockProgressIndicatorComponent {}
 
-
 describe('AccountComponent', () => {
-    let component: AccountComponent;
-    let fixture: ComponentFixture<AccountComponent>;
+  let component: AccountComponent;
+  let fixture: ComponentFixture<AccountComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            declarations: [
-                AccountComponent,
-                PasswordFormComponent,
-                DialogComponent,
-                StatusComponent,
-                MockProgressIndicatorComponent
-            ],
-            imports: [
-                BrowserAnimationsModule,
-                MatButtonModule,
-                MatDialogModule,
-                MatFormFieldModule,
-                MatIconModule,
-                MatInputModule,
-                MatSnackBarModule,
-                ReactiveFormsModule,
-                RouterTestingModule,
-                TranslateModule.forRoot(),
-            ],
-            providers: [
-                AppConfigService,
-                {
-                    provide: DspApiConfigToken,
-                    useValue: TestConfig.ApiConfig,
-                },
-                {
-                    provide: DspApiConnectionToken,
-                    useValue: new KnoraApiConnection(TestConfig.ApiConfig),
-                },
-            ],
-        }).compileComponents();
-    }));
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        AccountComponent,
+        PasswordFormComponent,
+        DialogComponent,
+        StatusComponent,
+        MockProgressIndicatorComponent,
+      ],
+      imports: [
+        BrowserAnimationsModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatSnackBarModule,
+        ReactiveFormsModule,
+        RouterTestingModule,
+        TranslateModule.forRoot(),
+      ],
+      providers: [
+        AppConfigService,
+        {
+          provide: DspApiConfigToken,
+          useValue: TestConfig.ApiConfig,
+        },
+        {
+          provide: DspApiConnectionToken,
+          useValue: new KnoraApiConnection(TestConfig.ApiConfig),
+        },
+      ],
+    }).compileComponents();
+  }));
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(AccountComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AccountComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-    xit('should create', () => {
-        expect(component).toBeTruthy();
-    });
+  xit('should create', () => {
+    expect(component).toBeTruthy();
+  });
 
-    // todo: should reset a password, should deactivate user account
+  // todo: should reset a password, should deactivate user account
 });

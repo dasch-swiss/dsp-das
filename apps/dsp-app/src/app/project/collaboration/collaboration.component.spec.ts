@@ -17,8 +17,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import {
-    DspApiConfigToken,
-    DspApiConnectionToken,
+  DspApiConfigToken,
+  DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
@@ -36,114 +36,111 @@ import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
  * test component to simulate child component, here progress-indicator from action module.
  */
 @Component({
-    selector: 'app-progress-indicator',
-    template: '',
+  selector: 'app-progress-indicator',
+  template: '',
 })
 class TestProgressIndicatorComponent {}
 
 describe('CollaborationComponent', () => {
-    let component: CollaborationComponent;
-    let fixture: ComponentFixture<CollaborationComponent>;
+  let component: CollaborationComponent;
+  let fixture: ComponentFixture<CollaborationComponent>;
 
-    const appInitSpy = {
-        dspAppConfig: {
-            iriBase: 'http://rdfh.ch',
+  const appInitSpy = {
+    dspAppConfig: {
+      iriBase: 'http://rdfh.ch',
+    },
+  };
+
+  beforeEach(waitForAsync(() => {
+    const projectServiceSpy = jasmine.createSpyObj('ProjectService', [
+      'uuidToIri',
+    ]);
+
+    TestBed.configureTestingModule({
+      declarations: [
+        CollaborationComponent,
+        AddUserComponent,
+        UsersListComponent,
+        SelectGroupComponent,
+        DialogComponent,
+        StatusComponent,
+        TestProgressIndicatorComponent,
+      ],
+      imports: [
+        BrowserAnimationsModule,
+        MatAutocompleteModule,
+        MatButtonModule,
+        MatChipsModule,
+        MatDialogModule,
+        MatIconModule,
+        MatInputModule,
+        MatMenuModule,
+        MatSelectModule,
+        MatSnackBarModule,
+        ReactiveFormsModule,
+        RouterTestingModule,
+        TranslateModule.forRoot(),
+      ],
+      providers: [
+        MockProvider(AppLoggingService),
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            parent: {
+              parent: {
+                paramMap: of({
+                  get: (param: string) => {
+                    if (param === 'uuid') {
+                      return TestConfig.ProjectUuid;
+                    }
+                  },
+                }),
+                snapshot: {
+                  url: [],
+                },
+              },
+            },
+          },
         },
-    };
+        {
+          provide: AppConfigService,
+          useValue: appInitSpy,
+        },
+        {
+          provide: ProjectService,
+          useValue: projectServiceSpy,
+        },
+        {
+          provide: DspApiConfigToken,
+          useValue: TestConfig.ApiConfig,
+        },
+        {
+          provide: DspApiConnectionToken,
+          useValue: new KnoraApiConnection(TestConfig.ApiConfig),
+        },
+      ],
+    }).compileComponents();
+  }));
 
-    beforeEach(waitForAsync(() => {
-        const projectServiceSpy = jasmine.createSpyObj('ProjectService', [
-            'uuidToIri',
-        ]);
+  beforeEach(() => {
+    localStorage.setItem('session', JSON.stringify(TestConfig.CurrentSession));
 
-        TestBed.configureTestingModule({
-            declarations: [
-                CollaborationComponent,
-                AddUserComponent,
-                UsersListComponent,
-                SelectGroupComponent,
-                DialogComponent,
-                StatusComponent,
-                TestProgressIndicatorComponent,
-            ],
-            imports: [
-                BrowserAnimationsModule,
-                MatAutocompleteModule,
-                MatButtonModule,
-                MatChipsModule,
-                MatDialogModule,
-                MatIconModule,
-                MatInputModule,
-                MatMenuModule,
-                MatSelectModule,
-                MatSnackBarModule,
-                ReactiveFormsModule,
-                RouterTestingModule,
-                TranslateModule.forRoot(),
-            ],
-            providers: [
-                MockProvider(AppLoggingService),
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        parent: {
-                            parent: {
-                                paramMap: of({
-                                    get: (param: string) => {
-                                        if (param === 'uuid') {
-                                            return TestConfig.ProjectUuid;
-                                        }
-                                    },
-                                }),
-                                snapshot: {
-                                    url: [],
-                                },
-                            },
-                        },
-                    },
-                },
-                {
-                    provide: AppConfigService,
-                    useValue: appInitSpy,
-                },
-                {
-                    provide: ProjectService,
-                    useValue: projectServiceSpy,
-                },
-                {
-                    provide: DspApiConfigToken,
-                    useValue: TestConfig.ApiConfig,
-                },
-                {
-                    provide: DspApiConnectionToken,
-                    useValue: new KnoraApiConnection(TestConfig.ApiConfig),
-                },
-            ],
-        }).compileComponents();
-    }));
+    fixture = TestBed.createComponent(CollaborationComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-    beforeEach(() => {
-        localStorage.setItem(
-            'session',
-            JSON.stringify(TestConfig.CurrentSession)
-        );
+  afterEach(() => {
+    fixture.destroy();
+  });
 
-        fixture = TestBed.createComponent(CollaborationComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+  it('should create', () => {
+    expect<any>(localStorage.getItem('session')).toBe(
+      JSON.stringify(TestConfig.CurrentSession)
+    );
+    expect(component).toBeTruthy();
+  });
 
-    afterEach(() => {
-        fixture.destroy();
-    });
-
-    it('should create', () => {
-        expect<any>(localStorage.getItem('session')).toBe(
-            JSON.stringify(TestConfig.CurrentSession)
-        );
-        expect(component).toBeTruthy();
-    });
-
-    // todo: check if the list is initialized, check the filter
-    // check if the user is added and removed from the list, check if it is not possible to add a user that already exists in the list -> may be implemented in the add-user component
+  // todo: check if the list is initialized, check the filter
+  // check if the user is added and removed from the list, check if it is not possible to add a user that already exists in the list -> may be implemented in the add-user component
 });
