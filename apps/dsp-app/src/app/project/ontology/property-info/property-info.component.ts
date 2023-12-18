@@ -33,8 +33,8 @@ import {
   DefaultProperty,
   PropertyCategory,
   PropertyInfoObject,
+  OntologyService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   ListsSelectors,
   OntologiesSelectors,

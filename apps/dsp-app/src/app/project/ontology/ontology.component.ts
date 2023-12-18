@@ -40,14 +40,12 @@ import {
   DefaultClass,
   DefaultResourceClasses,
   SortingService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import {
+  ProjectService,
   DefaultProperties,
   PropertyCategory,
   PropertyInfoObject,
+  OntologyService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   ClearCurrentOntologyAction,
   ClearProjectOntologiesAction,

@@ -6,8 +6,8 @@ import { Router } from '@angular/router';
 import {
   AppConfigService,
   RouteConstants,
+  DspConfig,
 } from '@dasch-swiss/vre/shared/app-config';
-import { DspConfig } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import {

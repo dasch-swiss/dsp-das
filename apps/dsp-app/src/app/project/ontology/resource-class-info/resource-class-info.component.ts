@@ -29,14 +29,12 @@ import {
   DefaultClass,
   DefaultResourceClasses,
   SortingService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
-import {
   DefaultProperties,
   DefaultProperty,
   PropertyCategory,
   PropertyInfoObject,
+  OntologyService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   OntologiesSelectors,

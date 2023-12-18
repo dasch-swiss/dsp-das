@@ -29,8 +29,7 @@ import {
 import { SplitSize } from '@dsp-app/src/app/workspace/results/results.component';
 import { Actions, Select, Store } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
-import { map, takeWhile } from 'rxjs/operators';
-import { takeUntil } from 'rxjs/operators';
+import { map, takeWhile, takeUntil } from 'rxjs/operators';
 import { ProjectBase } from '../../project-base';
 
 @Component({

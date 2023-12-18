@@ -22,8 +22,10 @@ import {
   DspApiConnectionToken,
   RouteConstants,
 } from '@dasch-swiss/vre/shared/app-config';
-import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import {
+  SortingService,
+  ProjectService,
+} from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   ProjectsSelectors,
   UserSelectors,

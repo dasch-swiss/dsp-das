@@ -12,8 +12,8 @@ import {
   JDNConvertibleCalendar,
   JulianCalendarDate,
   IslamicCalendarDate,
+  JDNConvertibleCalendarNames,
 } from '@dasch-swiss/jdnconvertiblecalendar';
-import { JDNConvertibleCalendarNames } from '@dasch-swiss/jdnconvertiblecalendar';
 import { ACTIVE_CALENDAR } from './active_calendar_token';
 
 /**

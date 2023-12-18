@@ -15,8 +15,8 @@ import {
   UntypedFormBuilder,
   UntypedFormControl,
   UntypedFormGroup,
+  ReactiveFormsModule,
 } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';

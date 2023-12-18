@@ -27,8 +27,8 @@ import {
   ParentChildPropertyPair,
   PropertyFormItem,
   SearchItem,
+  Operators,
 } from '../../data-access/advanced-search-store/advanced-search-store.service';
-import { Operators } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { PropertyFormLinkMatchPropertyComponent } from './property-form-link-match-property/property-form-link-match-property.component';
 import { PropertyFormLinkValueComponent } from './property-form-link-value/property-form-link-value.component';
 import { PropertyFormListValueComponent } from './property-form-list-value/property-form-list-value.component';

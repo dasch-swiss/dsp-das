@@ -6,8 +6,8 @@ import {
   KnoraApiConnection,
   VersionResponse,
 } from '@dasch-swiss/dsp-js';
-import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import {
+  AppConfigService,
   DspApiConnectionToken,
   DspConfig,
 } from '@dasch-swiss/vre/shared/app-config';

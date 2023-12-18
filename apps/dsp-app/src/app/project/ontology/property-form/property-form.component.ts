@@ -43,8 +43,6 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
   OntologyService,
   SortingService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
-import {
   DefaultProperties,
   DefaultProperty,
   PropertyCategory,
