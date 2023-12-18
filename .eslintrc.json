@@ -82,10 +82,6 @@
         "key-spacing": "off",
         "linebreak-style": "off",
         "max-classes-per-file": "off",
-        "max-len": [
-          "off",
-          120
-        ],
         "new-parens": "off",
         "no-confusing-arrow": "off",
         "no-case-declarations": "warn",
@@ -110,7 +106,6 @@
         "no-undef-init": "off",
         "no-underscore-dangle": "off",
         "no-unneeded-ternary": "off",
-        "no-unreachable": "off",
         "no-unsafe-optional-chaining": "off",
         "no-unused-vars": "off",
         "no-useless-rename": "off",
