@@ -18,18 +18,18 @@ import {
   ApiResponseError,
   Constants,
 } from '@dasch-swiss/dsp-js';
-import { Subscription } from 'rxjs';
 import {
   DspApiConnectionToken,
   RouteConstants,
 } from '@dasch-swiss/vre/shared/app-config';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   ComponentCommunicationEventService,
   EmitEvent,
   Events,
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { Subscription } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

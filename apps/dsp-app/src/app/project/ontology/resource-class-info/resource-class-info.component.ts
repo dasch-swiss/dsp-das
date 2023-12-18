@@ -24,12 +24,7 @@ import {
   DspApiConnectionToken,
   RouteConstants,
 } from '@dasch-swiss/vre/shared/app-config';
-import {
-  DialogComponent,
-  DialogEvent,
-} from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   DefaultClass,
   DefaultResourceClasses,
@@ -41,7 +36,8 @@ import {
   PropertyCategory,
   PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { GuiCardinality } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   OntologiesSelectors,
   OntologyProperties,
@@ -51,10 +47,14 @@ import {
   RemovePropertyAction,
   ReplacePropertyAction,
 } from '@dasch-swiss/vre/shared/app-state';
+import {
+  DialogComponent,
+  DialogEvent,
+} from '@dsp-app/src/app/main/dialog/dialog.component';
+import { GuiCardinality } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
-import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

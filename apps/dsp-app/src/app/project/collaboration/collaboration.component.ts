@@ -10,16 +10,16 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Actions, Select, Store } from '@ngxs/store';
 import {
   LoadProjectMembersAction,
   ProjectsSelectors,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { Actions, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-import { AddUserComponent } from './add-user/add-user.component';
 import { ProjectBase } from '../project-base';
+import { AddUserComponent } from './add-user/add-user.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

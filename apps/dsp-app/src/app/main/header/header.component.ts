@@ -3,19 +3,19 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import {
   AppConfigService,
   RouteConstants,
 } from '@dasch-swiss/vre/shared/app-config';
+import { DspConfig } from '@dasch-swiss/vre/shared/app-config';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import {
   ComponentCommunicationEventService,
   Events,
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
 import { SearchParams } from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
-import { DspConfig } from '@dasch-swiss/vre/shared/app-config';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',

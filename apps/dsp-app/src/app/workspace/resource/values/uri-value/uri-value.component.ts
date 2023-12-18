@@ -6,12 +6,12 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import {
   CreateUriValue,
   ReadUriValue,
   UpdateUriValue,
 } from '@dasch-swiss/dsp-js';
-import { FormBuilder, Validators } from '@angular/forms';
 import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 import { CustomRegex } from '../custom-regex';
 import { ValueErrorStateMatcher } from '../value-error-state-matcher';

@@ -5,8 +5,8 @@ import {
   KnoraApiConnection,
   ReadResourceSequence,
 } from '@dasch-swiss/dsp-js';
-import { Observable } from 'rxjs';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

@@ -25,9 +25,9 @@ import {
   ListNode,
   StringLiteral,
 } from '@dasch-swiss/dsp-js';
+import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
 
 export class ListNodeOperation {

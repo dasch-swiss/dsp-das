@@ -10,6 +10,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   ApiResponseError,
   CountQueryResponse,
@@ -22,15 +23,14 @@ import {
   RouteConstants,
 } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   ComponentCommunicationEventService,
   EmitEvent,
   Events,
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { of, Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-import { ActivatedRoute, Router } from '@angular/router';
 
 /**
  * query: search query. It can be gravserch query or fulltext string query.

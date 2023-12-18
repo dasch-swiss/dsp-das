@@ -32,14 +32,14 @@ import {
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
-import { mergeMap } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { BaseValueDirective } from '../../../../main/directive/base-value.directive';
+import { mergeMap } from 'rxjs/operators';
 import {
   ConfirmationDialogComponent,
   ConfirmationDialogData,
   ConfirmationDialogValueDeletionPayload,
 } from '../../../../main/action/confirmation-dialog/confirmation-dialog.component';
+import { BaseValueDirective } from '../../../../main/directive/base-value.directive';
 import { PropertyInfoValues } from '../../properties/properties.component';
 import { UserService } from '../../services/user.service';
 import {

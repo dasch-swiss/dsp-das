@@ -10,11 +10,11 @@ import {
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ReadUser } from '@dasch-swiss/dsp-js';
-import { Select, Store } from '@ngxs/store';
 import {
   LoadUserAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DialogComponent } from '../../main/dialog/dialog.component';

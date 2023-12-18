@@ -1,17 +1,17 @@
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
-import { Observable, combineLatest, of } from 'rxjs';
-import { Select, Store } from '@ngxs/store';
-import { map, take } from 'rxjs/operators';
+import { StringLiteral } from '@dasch-swiss/dsp-js/src/models/admin/string-literal';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   ProjectsSelectors,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { StringLiteral } from '@dasch-swiss/dsp-js/src/models/admin/string-literal';
 import { AppGlobal } from '@dsp-app/src/app/app-global';
+import { Select, Store } from '@ngxs/store';
+import { Observable, combineLatest, of } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

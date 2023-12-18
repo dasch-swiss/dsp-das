@@ -27,9 +27,11 @@ import {
   DspApiConnectionToken,
   RouteConstants,
 } from '@dasch-swiss/vre/shared/app-config';
-import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
+import {
+  OntologyService,
+  ProjectService,
+} from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   ClearProjectOntologiesAction,
   CurrentOntologyCanBeDeletedAction,
@@ -40,13 +42,11 @@ import {
   SetCurrentOntologyAction,
   SetCurrentProjectOntologyPropertiesAction,
 } from '@dasch-swiss/vre/shared/app-state';
+import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
+import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
-import {
-  OntologyService,
-  ProjectService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
 
 export interface NewOntology {
   projectIri: string;

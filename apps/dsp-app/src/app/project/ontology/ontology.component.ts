@@ -35,10 +35,6 @@ import {
   RouteConstants,
   getAllEntityDefinitionsAsArray,
 } from '@dasch-swiss/vre/shared/app-config';
-import {
-  DialogComponent,
-  DialogEvent,
-} from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
   DefaultClass,
@@ -52,7 +48,6 @@ import {
   PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import {
   ClearCurrentOntologyAction,
   ClearProjectOntologiesAction,
@@ -67,6 +62,11 @@ import {
   SetCurrentProjectOntologyPropertiesAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import {
+  DialogComponent,
+  DialogEvent,
+} from '@dsp-app/src/app/main/dialog/dialog.component';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, combineLatest, forkJoin } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
 import { ProjectBase } from '../project-base';

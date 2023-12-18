@@ -5,6 +5,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResourceClassDefinition, StoredProject } from '@dasch-swiss/dsp-js';
 import {
@@ -17,20 +18,19 @@ import {
   ProjectService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
+  IProjectOntologiesKeyValuePairs,
+  OntologiesSelectors,
+  UserSelectors,
+} from '@dasch-swiss/vre/shared/app-state';
+import {
   FilteredResources,
   SearchParams,
 } from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
 import { SplitSize } from '@dsp-app/src/app/workspace/results/results.component';
 import { Actions, Select, Store } from '@ngxs/store';
-import { Title } from '@angular/platform-browser';
-import {
-  IProjectOntologiesKeyValuePairs,
-  OntologiesSelectors,
-  UserSelectors,
-} from '@dasch-swiss/vre/shared/app-state';
+import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
-import { Observable, Subject, combineLatest } from 'rxjs';
 import { ProjectBase } from '../../project-base';
 
 @Component({

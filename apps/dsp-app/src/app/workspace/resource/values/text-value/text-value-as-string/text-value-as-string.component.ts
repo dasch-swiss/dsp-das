@@ -12,8 +12,8 @@ import {
   ReadTextValueAsString,
   UpdateTextValueAsString,
 } from '@dasch-swiss/dsp-js';
-import * as Editor from 'ckeditor5-custom-build';
 import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
+import * as Editor from 'ckeditor5-custom-build';
 import { ValueErrorStateMatcher } from '../../value-error-state-matcher';
 import { ckEditor } from '../ck-editor';
 

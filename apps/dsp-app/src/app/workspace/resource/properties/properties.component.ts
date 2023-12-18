@@ -36,8 +36,14 @@ import {
   UpdateResourceMetadataResponse,
   UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { forkJoin, Observable, Subscription } from 'rxjs';
+import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import {
+  ProjectService,
+  SortingService,
+} from '@dasch-swiss/vre/shared/app-helper-services';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   ConfirmationWithComment,
   DialogComponent,
@@ -47,13 +53,7 @@ import {
   EmitEvent,
   Events as CommsEvents,
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import {
-  ProjectService,
-  SortingService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
-import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
+import { forkJoin, Observable, Subscription } from 'rxjs';
 import { DspResource } from '../dsp-resource';
 import { RepresentationConstants } from '../representation/file-representation';
 import { IncomingService } from '../services/incoming.service';

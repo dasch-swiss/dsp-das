@@ -11,11 +11,11 @@ import {
 } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { ReadGroup } from '@dasch-swiss/dsp-js';
-import { AutocompleteItem } from '@dsp-app/src/app/workspace/search/operator';
 import {
   IKeyValuePairs,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { AutocompleteItem } from '@dsp-app/src/app/workspace/search/operator';
 import { Select } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';

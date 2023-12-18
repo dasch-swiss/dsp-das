@@ -21,10 +21,10 @@ import {
   ResourceClassDefinition,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { DialogEvent } from '@dsp-app/src/app/main/dialog/dialog.component';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { DialogEvent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { SelectPropertiesComponent } from '../../resource-instance-form/select-properties/select-properties.component';
 
 @Component({

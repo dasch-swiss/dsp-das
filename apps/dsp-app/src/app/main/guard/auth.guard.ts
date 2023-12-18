@@ -1,9 +1,6 @@
+import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
-import { DOCUMENT } from '@angular/common';
-import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
-import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 import {
@@ -11,6 +8,9 @@ import {
   SetUserAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',

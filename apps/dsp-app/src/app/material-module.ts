@@ -1,5 +1,6 @@
 // cdk modules
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { OverlayModule } from '@angular/cdk/overlay';
 import { NgModule } from '@angular/core';
 // material modules
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -30,7 +31,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
-import { OverlayModule } from '@angular/cdk/overlay';
 
 const matModules = [
   DragDropModule,

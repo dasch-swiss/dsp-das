@@ -1,4 +1,5 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { Location } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -15,7 +16,6 @@ import {
 } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Location } from '@angular/common';
 import {
   ApiResponseError,
   KnoraApiConnection,
@@ -26,24 +26,24 @@ import {
   UpdateProjectRequest,
 } from '@dasch-swiss/dsp-js';
 import {
+  ProjectApiService,
+  UserApiService,
+} from '@dasch-swiss/vre/shared/app-api';
+import {
   DspApiConnectionToken,
   RouteConstants,
 } from '@dasch-swiss/vre/shared/app-config';
-import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   LoadProjectsAction,
   ProjectsSelectors,
   UpdateProjectAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import {
-  ProjectApiService,
-  UserApiService,
-} from '@dasch-swiss/vre/shared/app-api';
+import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
+import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

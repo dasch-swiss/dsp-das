@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { StoredProject } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { Router } from '@angular/router';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({

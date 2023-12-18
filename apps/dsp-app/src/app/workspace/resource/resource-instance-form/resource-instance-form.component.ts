@@ -24,17 +24,17 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import {
+  DefaultClass,
+  DefaultResourceClasses,
+} from '@dasch-swiss/vre/shared/app-helper-services';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   ComponentCommunicationEventService,
   EmitEvent,
   Events as CommsEvents,
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import {
-  DefaultClass,
-  DefaultResourceClasses,
-} from '@dasch-swiss/vre/shared/app-helper-services';
 import { ResourceService } from '../services/resource.service';
 import { SelectPropertiesComponent } from './select-properties/select-properties.component';
 

@@ -29,18 +29,18 @@ import {
   UpdateResourceClassLabel,
 } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/dsp-js/src/models/v2/string-literal-v2';
-import { AppGlobal } from '@dsp-app/src/app/app-global';
 import {
   DspApiConnectionToken,
   getAllEntityDefinitionsAsArray,
 } from '@dasch-swiss/vre/shared/app-config';
-import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
 import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { AppGlobal } from '@dsp-app/src/app/app-global';
 import { DialogEvent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
+import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
+import { Store } from '@ngxs/store';
 
 // nested form components; solution from:
 // https://medium.com/@joshblf/dynamic-nested-reactive-forms-in-angular-654c1d4a769a

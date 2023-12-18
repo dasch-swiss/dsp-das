@@ -39,32 +39,32 @@ import {
   DspApiConnectionToken,
   getAllEntityDefinitionsAsArray,
 } from '@dasch-swiss/vre/shared/app-config';
-import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
   OntologyService,
   SortingService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
 import {
   DefaultProperties,
   DefaultProperty,
   PropertyCategory,
   PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { GuiCardinality } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { AutocompleteItem } from '@dsp-app/src/app/workspace/search/operator';
 import {
   ListsSelectors,
   OntologiesSelectors,
   PropToDisplay,
   SetCurrentOntologyAction,
 } from '@dasch-swiss/vre/shared/app-state';
-import { Observable, Subject } from 'rxjs';
-import { Select, Store } from '@ngxs/store';
-import { takeUntil } from 'rxjs/operators';
 import { DialogEvent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
+import { GuiCardinality } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
+import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
+import { AutocompleteItem } from '@dsp-app/src/app/workspace/search/operator';
+import { Select, Store } from '@ngxs/store';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 export type EditMode =
   | 'createProperty'

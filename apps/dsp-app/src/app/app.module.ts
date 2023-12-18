@@ -11,12 +11,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { AngularSplitModule } from 'angular-split';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
-import { ColorPickerModule } from 'ngx-color-picker';
+import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
+import {
+  DatadogRumService,
+  PendoAnalyticsService,
+} from '@dasch-swiss/vre/shared/app-analytics';
 import {
   AppConfigService,
   buildTagFactory,
@@ -25,25 +25,26 @@ import {
   DspAppConfigToken,
   DspInstrumentationToken,
 } from '@dasch-swiss/vre/shared/app-config';
-import {
-  DatadogRumService,
-  PendoAnalyticsService,
-} from '@dasch-swiss/vre/shared/app-analytics';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { ResourceClassPropertyInfoComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
-import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
-import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
-import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/shared/app-progress-indicator';
+import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import { AppStringLiteralComponent } from '@dasch-swiss/vre/shared/app-string-literal';
 import { AuthGuardComponent } from '@dsp-app/src/app/main/guard/auth-guard.component';
+import { ResourceClassPropertyInfoComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
+import { AngularSplitModule } from 'angular-split';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmationDialogComponent } from './main/action/confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationMessageComponent } from './main/action/confirmation-dialog/confirmation-message/confirmation-message.component';
+import { HintComponent } from './main/action/hint/hint.component';
 import { LoginFormComponent } from './main/action/login-form/login-form.component';
 import { SelectedResourcesComponent } from './main/action/selected-resources/selected-resources.component';
 import { SortButtonComponent } from './main/action/sort-button/sort-button.component';
@@ -60,8 +61,10 @@ import { FooterComponent } from './main/footer/footer.component';
 import { GridComponent } from './main/grid/grid.component';
 import { HeaderComponent } from './main/header/header.component';
 import { HelpComponent } from './main/help/help.component';
+import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
 import { FormattedBooleanPipe } from './main/pipes/formatting/formatted-boolean.pipe';
 import { KnoraDatePipe } from './main/pipes/formatting/knoradate.pipe';
+import { IsFalsyPipe } from './main/pipes/isFalsy.piipe';
 import { SplitPipe } from './main/pipes/split.pipe';
 import { LinkifyPipe } from './main/pipes/string-transformation/linkify.pipe';
 import { StringifyStringLiteralPipe } from './main/pipes/string-transformation/stringify-string-literal.pipe';
@@ -71,14 +74,15 @@ import { TimePipe } from './main/pipes/time.pipe';
 import { SelectLanguageComponent } from './main/select-language/select-language.component';
 import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
-import { DescriptionComponent } from './project/description/description.component';
 import { AddUserComponent } from './project/collaboration/add-user/add-user.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
 import { SelectGroupComponent } from './project/collaboration/select-group/select-group.component';
+import { DataModelsComponent } from './project/data-models/data-models.component';
+import { DescriptionComponent } from './project/description/description.component';
 import { ListInfoFormComponent } from './project/list/list-info-form/list-info-form.component';
+import { ListItemComponent } from './project/list/list-item/list-item.component';
 import { EditListItemComponent } from './project/list/list-item-form/edit-list-item/edit-list-item.component';
 import { ListItemFormComponent } from './project/list/list-item-form/list-item-form.component';
-import { ListItemComponent } from './project/list/list-item/list-item.component';
 import { ListComponent } from './project/list/list.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
@@ -86,8 +90,14 @@ import { PropertyFormComponent } from './project/ontology/property-form/property
 import { PropertyInfoComponent } from './project/ontology/property-info/property-info.component';
 import { ResourceClassFormComponent } from './project/ontology/resource-class-form/resource-class-form.component';
 import { ResourceClassInfoComponent } from './project/ontology/resource-class-info/resource-class-info.component';
+import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
+import { OntologyClassItemComponent } from './project/ontology-classes/ontology-class-item/ontology-class-item.component';
+import { OntologyClassesComponent } from './project/ontology-classes/ontology-classes.component';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ProjectComponent } from './project/project.component';
+import { SettingsComponent } from './project/settings/settings.component';
+import { apiConnectionTokenProvider } from './providers/api-connection-token.provider';
+import { ProjectTileComponent } from './system/project-tile/project-tile.component';
 import { ProjectsListComponent } from './system/projects/projects-list/projects-list.component';
 import { ProjectsComponent } from './system/projects/projects.component';
 import { SystemComponent } from './system/system.component';
@@ -95,6 +105,7 @@ import { UsersListComponent } from './system/users/users-list/users-list.compone
 import { UsersComponent } from './system/users/users.component';
 import { AccountComponent } from './user/account/account.component';
 import { MembershipComponent } from './user/membership/membership.component';
+import { OverviewComponent } from './user/overview/overview.component';
 import { ProfileComponent } from './user/profile/profile.component';
 import { PasswordFormComponent } from './user/user-form/password-form/password-form.component';
 import { UserFormComponent } from './user/user-form/user-form.component';
@@ -116,6 +127,7 @@ import { AvTimelineComponent } from './workspace/resource/representation/av-time
 import { DocumentComponent } from './workspace/resource/representation/document/document.component';
 import { ReplaceFileFormComponent } from './workspace/resource/representation/replace-file-form/replace-file-form.component';
 import { StillImageComponent } from './workspace/resource/representation/still-image/still-image.component';
+import { TextComponent } from './workspace/resource/representation/text/text.component';
 import { UploadComponent } from './workspace/resource/representation/upload/upload.component';
 import { VideoPreviewComponent } from './workspace/resource/representation/video/video-preview/video-preview.component';
 import { VideoComponent } from './workspace/resource/representation/video/video.component';
@@ -130,6 +142,7 @@ import { ResourceComponent } from './workspace/resource/resource.component';
 import { BooleanValueComponent } from './workspace/resource/values/boolean-value/boolean-value.component';
 import { ColorPickerComponent } from './workspace/resource/values/color-value/color-picker/color-picker.component';
 import { ColorValueComponent } from './workspace/resource/values/color-value/color-value.component';
+import { CommentFormComponent } from './workspace/resource/values/comment-form/comment-form.component';
 import { DateValueHandlerComponent } from './workspace/resource/values/date-value/date-value-handler/date-value-handler.component';
 import { DateValueComponent } from './workspace/resource/values/date-value/date-value.component';
 import { DecimalValueComponent } from './workspace/resource/values/decimal-value/decimal-value.component';
@@ -154,19 +167,6 @@ import { AdvancedSearchContainerComponent } from './workspace/search/advanced-se
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
-import { HintComponent } from './main/action/hint/hint.component';
-import { TextComponent } from './workspace/resource/representation/text/text.component';
-import { OntologyClassesComponent } from './project/ontology-classes/ontology-classes.component';
-import { OntologyClassItemComponent } from './project/ontology-classes/ontology-class-item/ontology-class-item.component';
-import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
-import { SettingsComponent } from './project/settings/settings.component';
-import { OverviewComponent } from './user/overview/overview.component';
-import { ProjectTileComponent } from './system/project-tile/project-tile.component';
-import { CommentFormComponent } from './workspace/resource/values/comment-form/comment-form.component';
-import { DataModelsComponent } from './project/data-models/data-models.component';
-import { apiConnectionTokenProvider } from './providers/api-connection-token.provider';
-import { IsFalsyPipe } from './main/pipes/isFalsy.piipe';
-import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {

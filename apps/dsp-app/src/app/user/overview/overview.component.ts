@@ -3,13 +3,13 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { StoredProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
 import {
   LoadProjectsAction,
   ProjectsSelectors,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

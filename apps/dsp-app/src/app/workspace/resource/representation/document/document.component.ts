@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -20,12 +21,11 @@ import {
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { PdfViewerComponent } from 'ng2-pdf-viewer';
 import { mergeMap } from 'rxjs/operators';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { DOCUMENT } from '@angular/common';
 import {
   EmitEvent,
   Events,

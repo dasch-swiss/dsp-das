@@ -17,22 +17,22 @@ import {
   StoredProject,
   UpdateProjectRequest,
 } from '@dasch-swiss/dsp-js';
+import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import {
   DspApiConnectionToken,
   RouteConstants,
 } from '@dasch-swiss/vre/shared/app-config';
-import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { SortProp } from '@dsp-app/src/app/main/action/sort-button/sort-button.component';
-import { Observable, Subject, combineLatest } from 'rxjs';
-import { map, take, takeUntil, tap } from 'rxjs/operators';
-import { Select } from '@ngxs/store';
 import {
   ProjectsSelectors,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
+import { SortProp } from '@dsp-app/src/app/main/action/sort-button/sort-button.component';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { Select } from '@ngxs/store';
+import { Observable, Subject, combineLatest } from 'rxjs';
+import { map, take, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

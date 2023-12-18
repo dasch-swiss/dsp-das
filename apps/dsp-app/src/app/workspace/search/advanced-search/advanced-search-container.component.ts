@@ -1,12 +1,12 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
 import {
   QueryObject,
   PropertyFormItem,
 } from '@dasch-swiss/vre/advanced-search';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 @Component({
   selector: 'app-advanced-search-container',

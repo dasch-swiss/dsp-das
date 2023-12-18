@@ -19,10 +19,10 @@ import {
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
-import { mergeMap } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { mergeMap } from 'rxjs/operators';
 import {
   EmitEvent,
   Events,

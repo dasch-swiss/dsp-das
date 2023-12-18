@@ -1,6 +1,6 @@
+import { Injectable } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',

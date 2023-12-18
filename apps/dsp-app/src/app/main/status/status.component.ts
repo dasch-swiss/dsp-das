@@ -6,11 +6,11 @@ import {
   HealthResponse,
   KnoraApiConnection,
 } from '@dasch-swiss/dsp-js';
-import { HttpStatusMsg } from '@dasch-swiss/vre/shared/assets/status-msg';
 import {
   DspApiConnectionToken,
   RouteConstants,
 } from '@dasch-swiss/vre/shared/app-config';
+import { HttpStatusMsg } from '@dasch-swiss/vre/shared/assets/status-msg';
 
 export interface StatusMsg {
   status: number;

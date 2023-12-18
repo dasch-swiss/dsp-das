@@ -23,15 +23,11 @@ import {
   UpdateUserRequest,
   User,
 } from '@dasch-swiss/dsp-js';
-import { AppGlobal } from '@dsp-app/src/app/app-global';
+import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
-import { combineLatest, Observable } from 'rxjs';
-import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   AddUserToProjectMembershipAction,
   CreateUserAction,
@@ -39,8 +35,12 @@ import {
   SetUserAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { AppGlobal } from '@dsp-app/src/app/app-global';
+import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
+import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
+import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { combineLatest, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

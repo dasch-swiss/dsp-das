@@ -7,12 +7,12 @@ import {
 } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { User } from '@dasch-swiss/dsp-js';
-import { AuthService } from '@dasch-swiss/vre/shared/app-session';
-import { MenuItem } from '@dsp-app/src/app/main/declarations/menu-item';
-import { Observable, Subject } from 'rxjs';
-import { Select } from '@ngxs/store';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { MenuItem } from '@dsp-app/src/app/main/declarations/menu-item';
+import { Select } from '@ngxs/store';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-user-menu',

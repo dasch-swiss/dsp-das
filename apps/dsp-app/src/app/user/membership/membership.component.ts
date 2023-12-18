@@ -10,15 +10,15 @@ import {
 import { UntypedFormControl } from '@angular/forms';
 import { Constants, ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
-import { Select, Store } from '@ngxs/store';
 import {
   AddUserToProjectMembershipAction,
   ProjectsSelectors,
   RemoveUserFromProjectAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { map, takeUntil } from 'rxjs/operators';
+import { Select, Store } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { AutocompleteItem } from '../../workspace/search/operator';
 
 // --> TODO replace it by IPermissions from dsp-js

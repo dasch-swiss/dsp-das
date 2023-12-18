@@ -4,8 +4,8 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
+import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

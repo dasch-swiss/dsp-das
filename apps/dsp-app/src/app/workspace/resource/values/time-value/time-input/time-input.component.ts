@@ -40,8 +40,8 @@ import {
   GregorianCalendarDate,
 } from '@dasch-swiss/jdnconvertiblecalendar';
 import { Subject } from 'rxjs';
-import { ValueErrorStateMatcher } from '../../value-error-state-matcher';
 import { CustomRegex } from '../../custom-regex';
+import { ValueErrorStateMatcher } from '../../value-error-state-matcher';
 
 /** a valid time value must have both a date and a time, or both inputs must be null */
 export function dateTimeValidator(

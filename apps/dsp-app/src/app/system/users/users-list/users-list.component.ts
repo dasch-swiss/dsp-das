@@ -18,17 +18,16 @@ import {
   ReadProject,
   ReadUser,
 } from '@dasch-swiss/dsp-js';
+import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
 import {
   DspApiConnectionToken,
   RouteConstants,
 } from '@dasch-swiss/vre/shared/app-config';
-import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
   ProjectService,
   SortingService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import {
   LoadProjectAction,
   LoadProjectMembersAction,
@@ -38,8 +37,9 @@ import {
   SetUserAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
 import { map, take } from 'rxjs/operators';
 
 @Component({

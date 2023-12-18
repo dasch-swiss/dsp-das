@@ -19,8 +19,8 @@ import {
   UpdateListValue,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 
 @Component({
   selector: 'app-list-value',

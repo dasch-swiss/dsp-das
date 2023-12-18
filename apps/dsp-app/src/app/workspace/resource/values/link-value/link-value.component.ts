@@ -25,14 +25,14 @@ import {
   ResourcePropertyDefinition,
   UpdateLinkValue,
 } from '@dasch-swiss/dsp-js';
-import { Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import {
   DialogComponent,
   DialogEvent,
 } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
+import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 export function resourceValidator(control: AbstractControl) {
   const invalid = !(

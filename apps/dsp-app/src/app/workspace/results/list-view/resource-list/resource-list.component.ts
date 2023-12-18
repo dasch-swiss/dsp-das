@@ -13,9 +13,9 @@ import {
   ReadResource,
   ReadResourceSequence,
 } from '@dasch-swiss/dsp-js';
+import { ResourceService } from '../../../resource/services/resource.service';
 import { CheckboxUpdate, FilteredResources } from '../list-view.component';
 import { ListViewService } from '../list-view.service';
-import { ResourceService } from '../../../resource/services/resource.service';
 
 @Component({
   selector: 'app-resource-list',

@@ -1,13 +1,13 @@
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { StoredProject } from '@dasch-swiss/dsp-js';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { AuthService } from '@dasch-swiss/vre/shared/app-session';
+import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Select } from '@ngxs/store';
 import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AuthService } from '@dasch-swiss/vre/shared/app-session';
-import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { Select } from '@ngxs/store';
-import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { StoredProject } from '@dasch-swiss/dsp-js';
 
 @Injectable({
   providedIn: 'root',

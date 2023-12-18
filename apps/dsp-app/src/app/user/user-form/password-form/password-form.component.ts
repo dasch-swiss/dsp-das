@@ -18,13 +18,13 @@ import {
   ReadUser,
   User,
 } from '@dasch-swiss/dsp-js';
+import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
 import { Store } from '@ngxs/store';
-import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
 
 @Component({
   selector: 'app-password-form',

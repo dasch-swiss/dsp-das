@@ -17,10 +17,10 @@ import {
   StringLiteral,
   UpdateChildNodeRequest,
 } from '@dasch-swiss/dsp-js';
+import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

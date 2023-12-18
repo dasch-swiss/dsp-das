@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import {
   AfterViewInit,
   Component,
@@ -12,7 +13,6 @@ import {
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { HttpClient } from '@angular/common/http';
 import {
   ApiResponseError,
   Constants,
@@ -24,13 +24,13 @@ import {
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
-import { mergeMap } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { SplitSize } from '@dsp-app/src/app/workspace/results/results.component';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { MovingImageSidecar } from '@dsp-app/src/app/workspace/resource/representation/video/video-preview/video-preview.component';
+import { SplitSize } from '@dsp-app/src/app/workspace/results/results.component';
+import { mergeMap } from 'rxjs/operators';
 import {
   EmitEvent,
   Events,

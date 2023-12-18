@@ -15,14 +15,14 @@ import {
   StringLiteral,
   UpdateListInfoRequest,
 } from '@dasch-swiss/dsp-js';
-import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { LoadListsInProjectAction } from '@dasch-swiss/vre/shared/app-state';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
 import {
   ListApiService,
   ProjectApiService,
 } from '@dasch-swiss/vre/shared/app-api';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { LoadListsInProjectAction } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

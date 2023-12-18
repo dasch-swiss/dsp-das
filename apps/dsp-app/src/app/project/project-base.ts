@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Directive, OnDestroy, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   LoadProjectAction,
   LoadProjectOntologiesAction,
@@ -11,8 +13,6 @@ import {
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { filter, map, take, takeUntil, takeWhile } from 'rxjs/operators';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Title } from '@angular/platform-browser';
 
 @Directive()
 export class ProjectBase implements OnInit, OnDestroy {

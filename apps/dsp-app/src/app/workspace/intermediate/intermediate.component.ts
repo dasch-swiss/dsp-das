@@ -6,8 +6,8 @@ import {
   Output,
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { FilteredResources } from '../results/list-view/list-view.component';
 
 @Component({

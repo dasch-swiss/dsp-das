@@ -10,22 +10,22 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo, StringLiteral } from '@dasch-swiss/dsp-js';
-import { AppGlobal } from '@dsp-app/src/app/app-global';
 import {
   AppConfigService,
   RouteConstants,
 } from '@dasch-swiss/vre/shared/app-config';
-import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
-import { Observable, Subject } from 'rxjs';
-import { map, take } from 'rxjs/operators';
 import {
   DeleteListNodeAction,
   ListsSelectors,
   LoadListsInProjectAction,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { AppGlobal } from '@dsp-app/src/app/app-global';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { Observable, Subject } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 import { ProjectBase } from '../project-base';
 
 @Component({

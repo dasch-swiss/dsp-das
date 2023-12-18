@@ -23,16 +23,16 @@ import {
   UserResponse,
   UsersResponse,
 } from '@dasch-swiss/dsp-js';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
-import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { AutocompleteItem } from '@dsp-app/src/app/workspace/search/operator';
 import { Store } from '@ngxs/store';
-import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

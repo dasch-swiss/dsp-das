@@ -12,8 +12,8 @@ import {
   ListResponse,
   RepositionChildNodeRequest,
 } from '@dasch-swiss/dsp-js';
-import { take } from 'rxjs/operators';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
+import { take } from 'rxjs/operators';
 import { ListNodeOperation } from '../list-item-form/list-item-form.component';
 
 @Component({

@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, shareReplay } from 'rxjs/operators';
-import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 
 export interface GIS {
   longitude: number;

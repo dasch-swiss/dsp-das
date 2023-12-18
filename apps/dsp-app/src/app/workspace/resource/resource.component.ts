@@ -30,14 +30,14 @@ import {
   ReadUser,
   SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { Observable, Subject, Subscription, combineLatest } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { Select } from '@ngxs/store';
-import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Select } from '@ngxs/store';
+import { Observable, Subject, Subscription, combineLatest } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { SplitSize } from '../results/results.component';
 import { DspCompoundPosition, DspResource } from './dsp-resource';
 import { PropertyInfoValues } from './properties/properties.component';

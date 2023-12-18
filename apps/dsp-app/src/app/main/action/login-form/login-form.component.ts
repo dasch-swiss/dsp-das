@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -12,12 +13,11 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { AuthError, AuthService } from '@dasch-swiss/vre/shared/app-session';
-import { map, take, takeLast } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { Location } from '@angular/common';
+import { AuthError, AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { UserStateModel } from '@dasch-swiss/vre/shared/app-state';
+import { Subject } from 'rxjs';
+import { map, take, takeLast } from 'rxjs/operators';
 import {
   ComponentCommunicationEventService,
   EmitEvent,

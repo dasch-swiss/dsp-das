@@ -27,16 +27,16 @@ import {
   KnoraApiConnection,
   ReadProject,
 } from '@dasch-swiss/dsp-js';
-import { Subscription } from 'rxjs';
+import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   ComponentCommunicationEventService,
   Events,
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
+import { Subscription } from 'rxjs';
 import { SearchParams } from '../../results/list-view/list-view.component';
 
 export interface PrevSearchItem {

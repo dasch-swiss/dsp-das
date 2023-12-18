@@ -1,28 +1,28 @@
 import {
-  OntologyService,
-  ProjectService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
-import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit,
 } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo, OntologyMetadata } from '@dasch-swiss/dsp-js';
 import {
   AppConfigService,
   RouteConstants,
 } from '@dasch-swiss/vre/shared/app-config';
-import { Actions, Select, Store } from '@ngxs/store';
+import {
+  OntologyService,
+  ProjectService,
+} from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   ListsSelectors,
   OntologiesSelectors,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { Actions, Select, Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Title } from '@angular/platform-browser';
 import { ProjectBase } from '../project-base';
 
 // the routes available for navigation

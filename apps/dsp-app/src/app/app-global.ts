@@ -1,5 +1,5 @@
-import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 
 import { MenuItem } from './main/declarations/menu-item';
 
