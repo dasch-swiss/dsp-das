@@ -1,6 +1,4 @@
 import { Inject, Injectable } from '@angular/core';
-import { Action, State, StateContext, Store } from '@ngxs/store';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import {
   ApiResponseData,
   ApiResponseError,
@@ -12,11 +10,13 @@ import {
   ReadGroup,
   UserResponse,
 } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { concatMap, finalize, map, take, tap } from 'rxjs/operators';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { Action, State, StateContext, Store } from '@ngxs/store';
 import { produce } from 'immer';
 import { EMPTY, of } from 'rxjs';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { concatMap, finalize, map, take, tap } from 'rxjs/operators';
 import { IKeyValuePairs } from '../model-interfaces';
 import { SetUserAction } from '../user/user.actions';
 import { UserSelectors } from '../user/user.selectors';

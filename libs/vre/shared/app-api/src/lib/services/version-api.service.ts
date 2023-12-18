@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { VersionResponse } from '@dasch-swiss/dsp-js';
 import { BaseApi } from './base-api';
 

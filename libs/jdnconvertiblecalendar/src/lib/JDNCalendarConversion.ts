@@ -3,8 +3,8 @@
  *  SPDX-License-Identifier: Apache-2.0
  */
 
-import { TypeDefinitionsModule } from './TypeDefinitions';
 import { CalendarDate } from './CalendarDate';
+import { TypeDefinitionsModule } from './TypeDefinitions';
 
 export namespace JDNConvertibleConversionModule {
   /**

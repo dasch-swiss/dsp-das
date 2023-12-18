@@ -1,17 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
 import {
-  Action,
-  Actions,
-  ofActionSuccessful,
-  State,
-  StateContext,
-} from '@ngxs/store';
-import { map, take, tap } from 'rxjs/operators';
-import {
-  DspApiConnectionToken,
-  getAllEntityDefinitionsAsArray,
-} from '@dasch-swiss/vre/shared/app-config';
-import {
   ApiResponseError,
   CanDoResponse,
   Constants,
@@ -25,14 +13,30 @@ import {
   UpdateOntology,
   UpdateResourceClassCardinality,
 } from '@dasch-swiss/dsp-js';
+import {
+  DspApiConnectionToken,
+  getAllEntityDefinitionsAsArray,
+} from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { of } from 'rxjs';
 import {
   ProjectService,
   SortingService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { OntologiesStateModel } from './ontologies.state-model';
+import {
+  Action,
+  Actions,
+  ofActionSuccessful,
+  State,
+  StateContext,
+} from '@ngxs/store';
+import { of } from 'rxjs';
+import { map, take, tap } from 'rxjs/operators';
+import { LoadListsInProjectAction } from '../lists/lists.actions';
+import {
+  IProjectOntologiesKeyValuePairs,
+  OntologyProperties,
+} from '../model-interfaces';
 import {
   ClearCurrentOntologyAction,
   ClearOntologiesAction,
@@ -49,11 +53,7 @@ import {
   UpdateOntologyAction,
   UpdateProjectOntologyAction,
 } from './ontologies.actions';
-import {
-  IProjectOntologiesKeyValuePairs,
-  OntologyProperties,
-} from '../model-interfaces';
-import { LoadListsInProjectAction } from '../lists/lists.actions';
+import { OntologiesStateModel } from './ontologies.state-model';
 
 const defaults: OntologiesStateModel = <OntologiesStateModel>{
   isLoading: false,

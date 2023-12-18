@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Action, State, StateContext } from '@ngxs/store';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
+import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { Action, State, StateContext } from '@ngxs/store';
 import { of } from 'rxjs';
 import { finalize, map, take, tap } from 'rxjs/operators';
-import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import {
   ClearListsAction,
   DeleteListNodeAction,

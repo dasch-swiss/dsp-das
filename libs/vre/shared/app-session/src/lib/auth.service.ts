@@ -1,15 +1,5 @@
-import { Router } from '@angular/router';
-import jwt_decode, { JwtPayload } from 'jwt-decode';
 import { EventEmitter, Injectable, Output, inject } from '@angular/core';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import {
-  catchError,
-  tap,
-  switchMap,
-  map,
-  takeLast,
-  take,
-} from 'rxjs/operators';
+import { Router } from '@angular/router';
 import {
   ApiResponseData,
   ApiResponseError,
@@ -22,7 +12,6 @@ import {
   DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { Store } from '@ngxs/store';
 import {
   LoadUserAction,
   ClearProjectsAction,
@@ -31,6 +20,17 @@ import {
   ClearListsAction,
   ClearOntologiesAction,
 } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
+import jwt_decode, { JwtPayload } from 'jwt-decode';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import {
+  catchError,
+  tap,
+  switchMap,
+  map,
+  takeLast,
+  take,
+} from 'rxjs/operators';
 import { LoginError, ServerError } from './error';
 
 @Injectable({ providedIn: 'root' })

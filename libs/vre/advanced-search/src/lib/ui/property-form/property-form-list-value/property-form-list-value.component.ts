@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -5,13 +6,12 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ListNodeV2, Constants } from '@dasch-swiss/dsp-js';
 import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
-import { ListItemComponent } from './list-item/list-item.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { ListNodeV2, Constants } from '@dasch-swiss/dsp-js';
 import { PropertyFormItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
+import { ListItemComponent } from './list-item/list-item.component';
 
 @Component({
   selector: 'dasch-swiss-property-form-list-value',

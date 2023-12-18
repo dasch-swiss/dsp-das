@@ -13,10 +13,10 @@ import {
   ResourceClassDefinition,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
+import { OntologyV2ApiService } from '@dasch-swiss/vre/shared/app-api';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, map, switchMap, takeUntil } from 'rxjs/operators';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { OntologyV2ApiService } from '@dasch-swiss/vre/shared/app-api';
 
 export interface ApiData {
   iri: string;

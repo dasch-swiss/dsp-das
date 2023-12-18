@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -9,29 +10,28 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import {
   MatSelect,
   MatSelectChange,
   MatSelectModule,
 } from '@angular/material/select';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { MatIconModule } from '@angular/material/icon';
-import {
-  Operators,
-  PropertyFormItem,
-  SearchItem,
-} from '../../../data-access/advanced-search-store/advanced-search-store.service';
 import {
   ApiData,
   PropertyData,
   ResourceLabelObject,
 } from '../../../data-access/advanced-search-service/advanced-search.service';
-import { PropertyFormValueComponent } from '../property-form-value/property-form-value.component';
-import { PropertyFormListValueComponent } from '../property-form-list-value/property-form-list-value.component';
+import {
+  Operators,
+  PropertyFormItem,
+  SearchItem,
+} from '../../../data-access/advanced-search-store/advanced-search-store.service';
 import { PropertyFormLinkValueComponent } from '../property-form-link-value/property-form-link-value.component';
+import { PropertyFormListValueComponent } from '../property-form-list-value/property-form-list-value.component';
+import { PropertyFormValueComponent } from '../property-form-value/property-form-value.component';
 
 @Component({
   selector: 'dasch-swiss-property-form-link-match-property',

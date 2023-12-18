@@ -1,4 +1,4 @@
-import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,7 +10,6 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   FormsModule,
   UntypedFormBuilder,
@@ -19,15 +18,16 @@ import {
 } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
-import { MatIconModule } from '@angular/material/icon';
 import {
   NgxsStoreModule,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { Store } from '@ngxs/store';
 
 @Component({

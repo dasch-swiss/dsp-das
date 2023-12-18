@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -5,7 +6,6 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
 import { ListNodeV2 } from '@dasch-swiss/dsp-js';
 

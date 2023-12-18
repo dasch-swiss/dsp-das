@@ -1,5 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { CommonModule } from '@angular/common';
 import {
   Component,
   DoCheck,
@@ -27,6 +28,8 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {
   CanUpdateErrorState,
   ErrorStateMatcher,
@@ -39,9 +42,11 @@ import {
   MatFormFieldControl,
   MatFormFieldModule,
 } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
 import { KnoraDate } from '@dasch-swiss/dsp-js';
-import { Subject } from 'rxjs';
 import {
   CalendarDate,
   CalendarPeriod,
@@ -49,12 +54,7 @@ import {
   IslamicCalendarDate,
   JulianCalendarDate,
 } from '@dasch-swiss/jdnconvertiblecalendar';
-import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatSelectModule } from '@angular/material/select';
+import { Subject } from 'rxjs';
 
 /** error when invalid control is dirty, touched, or submitted. */
 export class DatePickerErrorStateMatcher implements ErrorStateMatcher {

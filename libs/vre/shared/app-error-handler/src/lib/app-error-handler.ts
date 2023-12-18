@@ -3,18 +3,18 @@
  *  SPDX-License-Identifier: Apache-2.0
  */
 
-import { ErrorHandler, inject, Injectable } from '@angular/core';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ErrorHandler, inject, Injectable } from '@angular/core';
 import {
   ApiResponseData,
   ApiResponseError,
   HealthResponse,
 } from '@dasch-swiss/dsp-js';
-import { HttpStatusMsg } from '@dasch-swiss/vre/shared/assets/status-msg';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { AjaxError } from 'rxjs/ajax';
+import { HttpStatusMsg } from '@dasch-swiss/vre/shared/assets/status-msg';
 import { Observable } from 'rxjs';
+import { AjaxError } from 'rxjs/ajax';
 import { take } from 'rxjs/operators';
 import { DataAccessService } from './data-access.service';
 

@@ -1,18 +1,4 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  MatListModule,
-  MatSelectionList,
-  MatSelectionListChange,
-} from '@angular/material/list';
-import {
   CdkDragDrop,
   CdkDrag,
   CdkDragHandle,
@@ -20,8 +6,22 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import {
+  MatListModule,
+  MatSelectionList,
+  MatSelectionListChange,
+} from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OrderByItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
 

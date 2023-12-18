@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { ComponentStore } from '@ngrx/component-store';
 import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap, tap, catchError, take } from 'rxjs/operators';
-import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { v4 as uuidv4 } from 'uuid';
 import {
   AdvancedSearchService,

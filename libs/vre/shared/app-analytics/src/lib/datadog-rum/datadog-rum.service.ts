@@ -1,16 +1,16 @@
 import { inject, Injectable } from '@angular/core';
 import {
-  datadogRum,
-  RumFetchResourceEventDomainContext,
-} from '@datadog/browser-rum';
-import {
   BuildTag,
   BuildTagToken,
   DspInstrumentationConfig,
   DspInstrumentationToken,
 } from '@dasch-swiss/vre/shared/app-config';
-import { Observable } from 'rxjs';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
+import {
+  datadogRum,
+  RumFetchResourceEventDomainContext,
+} from '@datadog/browser-rum';
+import { Observable } from 'rxjs';
 import { v5 as uuidv5 } from 'uuid';
 
 @Injectable({

@@ -1,4 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import {
   ApiResponseData,
   ApiResponseError,
@@ -7,12 +8,11 @@ import {
   UserResponse,
 } from '@dasch-swiss/dsp-js';
 
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
+import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { Observable, of } from 'rxjs';
 import { catchError, map, takeLast } from 'rxjs/operators';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
 import { Session } from './session';
 
 @Injectable({

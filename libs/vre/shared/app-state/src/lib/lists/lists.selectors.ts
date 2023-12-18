@@ -1,7 +1,7 @@
-import { Selector } from '@ngxs/store';
 import { ListNodeInfo } from '@dasch-swiss/dsp-js';
-import { ListsStateModel } from './lists.state-model';
+import { Selector } from '@ngxs/store';
 import { ListsState } from './lists.state';
+import { ListsStateModel } from './lists.state-model';
 
 export class ListsSelectors {
   @Selector([ListsState])

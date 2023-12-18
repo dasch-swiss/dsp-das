@@ -1,11 +1,11 @@
 import { inject, Injectable } from '@angular/core';
-import { datadogLogs, Logger } from '@datadog/browser-logs';
 import {
   BuildTag,
   BuildTagToken,
   DspInstrumentationConfig,
   DspInstrumentationToken,
 } from '@dasch-swiss/vre/shared/app-config';
+import { datadogLogs, Logger } from '@datadog/browser-logs';
 import { Observable } from 'rxjs';
 
 import { first } from 'rxjs/operators';

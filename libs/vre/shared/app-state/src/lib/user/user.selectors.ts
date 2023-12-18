@@ -1,9 +1,9 @@
-import { Selector } from '@ngxs/store';
 import { ReadUser, User } from '@dasch-swiss/dsp-js';
 import { StoredProject } from '@dasch-swiss/dsp-js/src/models/admin/stored-project';
 import { Auth } from '@dasch-swiss/vre/shared/app-config';
-import { UserStateModel } from './user.state-model';
+import { Selector } from '@ngxs/store';
 import { UserState } from './user.state';
+import { UserStateModel } from './user.state-model';
 
 export class UserSelectors {
   @Selector([UserState])

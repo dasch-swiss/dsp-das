@@ -1,20 +1,20 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BaseApi } from '../../base-api';
-import { OntologyMetadata } from './ontology-metadata.interface';
+import { Injectable } from '@angular/core';
 import { Graph } from '../../../interfaces/graph.interface';
-import { ReadOntology } from './read-ontology.interface';
+import { BaseApi } from '../../base-api';
+import { CanDoResponse } from './can-do-response.interface';
 import { CreateOntology } from './create-ontology.interface';
 import { CreateResourceClassPayload } from './create-resource-class-payload.interface';
-import { ResourceClassDefinitionWithAllLanguages } from './resource-class-definition-with-all-languages.interface';
-import { UpdateResourceClass } from './update-resource-class.interface';
-import { UpdateResourceProperty } from './update-resource-property.interface';
-import { UpdateResourcePropertyResponse } from './update-resource-property-response.interface';
 import { CreateResourceProperty } from './create-resource-property.interface';
-import { ResourcePropertyDefinitionWithAllLanguages } from './resource-property-definition-with-all-languages.interface';
-import { UpdateResourcePropertyGuiElement } from './update-resource-property-gui-element.interface';
-import { CanDoResponse } from './can-do-response.interface';
 import { Cardinality, IHasProperty } from './i-has-property.interface';
+import { OntologyMetadata } from './ontology-metadata.interface';
+import { ReadOntology } from './read-ontology.interface';
+import { ResourceClassDefinitionWithAllLanguages } from './resource-class-definition-with-all-languages.interface';
+import { ResourcePropertyDefinitionWithAllLanguages } from './resource-property-definition-with-all-languages.interface';
+import { UpdateResourceClass } from './update-resource-class.interface';
+import { UpdateResourcePropertyGuiElement } from './update-resource-property-gui-element.interface';
+import { UpdateResourcePropertyResponse } from './update-resource-property-response.interface';
+import { UpdateResourceProperty } from './update-resource-property.interface';
 
 @Injectable({
   providedIn: 'root',

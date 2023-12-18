@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,15 +8,14 @@ import {
   Output,
   inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Constants } from '@dasch-swiss/dsp-js';
-import { ActivatedRoute } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
-import { v4 as uuidv4 } from 'uuid';
-import { take } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button';
-import { OntologyResourceFormComponent } from '../../ui/ontology-resource-form/ontology-resource-form.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { ActivatedRoute } from '@angular/router';
+import { Constants } from '@dasch-swiss/dsp-js';
+import { take } from 'rxjs/operators';
+import { v4 as uuidv4 } from 'uuid';
+import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
 import {
   AdvancedSearchStoreService,
   ParentChildPropertyPair,
@@ -25,11 +25,11 @@ import {
   SearchItem,
   AdvancedSearchStateSnapshot,
 } from '../../data-access/advanced-search-store/advanced-search-store.service';
-import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
-import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
-import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
-import { OrderByComponent } from '../../ui/order-by/order-by.component';
 import { ConfirmationDialogComponent } from '../../ui/dialog/confirmation-dialog/confirmation-dialog.component';
+import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
+import { OntologyResourceFormComponent } from '../../ui/ontology-resource-form/ontology-resource-form.component';
+import { OrderByComponent } from '../../ui/order-by/order-by.component';
+import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
 
 export interface QueryObject {
   query: string;

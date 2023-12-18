@@ -1,10 +1,10 @@
+import { NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   Input,
   OnInit,
 } from '@angular/core';
-import { NgIf } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
