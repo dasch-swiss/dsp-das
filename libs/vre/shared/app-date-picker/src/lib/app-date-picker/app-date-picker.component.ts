@@ -331,7 +331,7 @@ export class AppDatePickerComponent
   ngOnChanges(changes: SimpleChanges) {
     // in case the calendar has changed (from parent e.g. in a period)
     // update the calendar form control
-    if (changes['calendar'] && this.disableCalendarSelector) {
+    if (changes.calendar && this.disableCalendarSelector) {
       this._updateForm();
     }
   }
@@ -542,18 +542,18 @@ export class AppDatePickerComponent
       return;
     }
 
-    this.calendar = this.form.controls['calendar'].value;
+    this.calendar = this.form.controls.calendar.value;
 
     this.era =
       this.calendar === 'ISLAMIC'
         ? 'noEra'
-        : this.form.controls['era'].value
-          ? this.form.controls['era'].value
+        : this.form.controls.era.value
+          ? this.form.controls.era.value
           : 'CE';
     // islamic calendar doesn't have a "before common era"
     // in case of switching calendar from islamic to gregorian or julian set default era value to CE
     if (this.calendar !== 'ISLAMIC' && this.era === 'noEra') {
-      this.form.controls['era'].setValue('CE');
+      this.form.controls.era.setValue('CE');
     }
 
     if (data.year > 0) {
@@ -596,14 +596,14 @@ export class AppDatePickerComponent
 
   setDate(day?: number) {
     // set date on year, on year and month or on year, month and day precision
-    if (this.form.controls['year'].value > 0 && this.form.valid) {
+    if (this.form.controls.year.value > 0 && this.form.valid) {
       this.day = day;
       this.date = new KnoraDate(
         this.calendar.toUpperCase(),
         this.era,
-        this.form.controls['year'].value,
-        this.form.controls['month'].value
-          ? this.form.controls['month'].value
+        this.form.controls.year.value,
+        this.form.controls.month.value
+          ? this.form.controls.month.value
           : undefined,
         day ? day : undefined
       );
@@ -689,9 +689,9 @@ export class AppDatePickerComponent
       month: this.month,
     });
     if (this.disableCalendarSelector) {
-      this.form.controls['calendar'].disable();
+      this.form.controls.calendar.disable();
     } else {
-      this.form.controls['calendar'].enable();
+      this.form.controls.calendar.enable();
     }
     this._setDays(this.calendar, this.era, this.year, this.month);
   }

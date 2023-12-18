@@ -29,7 +29,7 @@ export class RepresentationService {
     // if there is no token, we won't add any auth header, so sipi returns
     // a json if the resource is not restricted
     if (token) {
-      headersConfig['Authorization'] = `Bearer ${token}`;
+      headersConfig.Authorization = `Bearer ${token}`;
     }
 
     const requestOptions = {
@@ -71,7 +71,7 @@ export class RepresentationService {
         .toPromise();
 
       await this.getFileInfo(url, imageFilename).subscribe(response => {
-        originalFilename = response['originalFilename'];
+        originalFilename = response.originalFilename;
 
         const objUrl = window.URL.createObjectURL(res);
         const e = document.createElement('a');

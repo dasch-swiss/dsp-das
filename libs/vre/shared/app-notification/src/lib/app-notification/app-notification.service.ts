@@ -36,10 +36,10 @@ export class NotificationService {
       if (
         notification.error &&
         notification.error instanceof AjaxError &&
-        !notification.error['message'].startsWith('ajax error')
+        !notification.error.message.startsWith('ajax error')
       ) {
         // the Api response error contains a complex error message from dsp-js-lib
-        message = notification.error['message'];
+        message = notification.error.message;
       } else {
         const defaultStatusMsg = this._statusMsg.default;
         message = `${defaultStatusMsg[notification.status].message} (${

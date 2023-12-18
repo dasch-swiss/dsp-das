@@ -122,7 +122,7 @@ CONSTRUCT {
    * generate the whole gravsearch query matching the query given by the form.
    */
   private _generateGravsearch(offset = 0): string {
-    const query = this.expertSearchForm.controls['gravsearchquery'].value;
+    const query = this.expertSearchForm.controls.gravsearchquery.value;
 
     // offset component of the Gravsearch query
     const offsetTemplate = `

@@ -179,14 +179,12 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.ngUnsubscribe))
         .subscribe((response: ReadOntology) => {
           // add values to the ontology form
-          this.ontologyForm.controls['name'].disable();
+          this.ontologyForm.controls.name.disable();
           const name = OntologyService.getOntologyName(this.iri);
-          this.ontologyForm.controls['name'].setValue(name);
-          this.ontologyForm.controls['label'].setValue(response.label);
-          this.ontologyForm.controls['label'].setValidators([
-            Validators.required,
-          ]);
-          this.ontologyForm.controls['comment'].setValue(response.comment);
+          this.ontologyForm.controls.name.setValue(name);
+          this.ontologyForm.controls.label.setValue(response.label);
+          this.ontologyForm.controls.label.setValidators([Validators.required]);
+          this.ontologyForm.controls.comment.setValue(response.comment);
           // disable name input
 
           this.lastModificationDate = response.lastModificationDate;
@@ -279,8 +277,8 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
       const ontologyData = new UpdateOntologyMetadata();
       ontologyData.id = this.iri;
       ontologyData.lastModificationDate = this.lastModificationDate;
-      ontologyData.label = this.ontologyForm.controls['label'].value;
-      ontologyData.comment = this.ontologyForm.controls['comment'].value;
+      ontologyData.label = this.ontologyForm.controls.label.value;
+      ontologyData.comment = this.ontologyForm.controls.comment.value;
 
       this._dspApiConnection.v2.onto
         .updateOntology(ontologyData)
@@ -303,11 +301,9 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
       // create mode
       const ontologyData = new CreateOntology();
       ontologyData.label =
-        this.project.shortname +
-        ': ' +
-        this.ontologyForm.controls['label'].value;
-      ontologyData.name = this.ontologyForm.controls['name'].value;
-      ontologyData.comment = this.ontologyForm.controls['comment'].value;
+        this.project.shortname + ': ' + this.ontologyForm.controls.label.value;
+      ontologyData.name = this.ontologyForm.controls.name.value;
+      ontologyData.comment = this.ontologyForm.controls.comment.value;
       ontologyData.attachedToProject = this.project.id;
 
       this._dspApiConnection.v2.onto
@@ -333,8 +329,8 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
           },
           (error: ApiResponseError) => {
             // in case of an error... e.g. because the ontolog iri is not unique, rebuild the form including the error message
-            this.formErrors['name'] +=
-              this.validationMessages['name']['existingName'] + ' ';
+            this.formErrors.name +=
+              this.validationMessages.name.existingName + ' ';
             this.loading = false;
 
             this._errorHandler.showMessage(error);

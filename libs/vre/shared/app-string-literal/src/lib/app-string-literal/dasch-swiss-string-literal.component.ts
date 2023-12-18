@@ -189,7 +189,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
     const control = form.get('text');
     this.touched.emit(control?.dirty || control?.touched);
 
-    this.updateStringLiterals(this.language, this.form.controls['text'].value);
+    this.updateStringLiterals(this.language, this.form.controls.text.value);
 
     this.dataChanged.emit(this.value);
   }
@@ -203,10 +203,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
   setLanguage(lang: string) {
     if (this.language !== lang) {
       // clean stringLIteral value for previous language, if text field is empty
-      this.updateStringLiterals(
-        this.language,
-        this.form.controls['text'].value
-      );
+      this.updateStringLiterals(this.language, this.form.controls.text.value);
 
       this.language = lang;
       // update form field value / reset in case of no value
@@ -230,7 +227,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
     }
 
     if (!this.disabled) {
-      this.form.controls['text'].enable();
+      this.form.controls.text.enable();
       this.textInput.nativeElement.focus();
     }
   }
@@ -240,7 +237,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
    */
   menuClosed() {
     if (!this.disabled) {
-      this.form.controls['text'].enable();
+      this.form.controls.text.enable();
       this.textInput.nativeElement.focus();
     }
   }
@@ -255,7 +252,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
     if (!this.form) {
       return;
     }
-    this.form.controls['text'].setValue(value);
+    this.form.controls.text.setValue(value);
   }
 
   /**

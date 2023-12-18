@@ -245,12 +245,11 @@ export class AddUserComponent implements OnInit {
       ),
     });
 
-    this.filteredUsers = this.selectUserForm.controls[
-      'username'
-    ].valueChanges.pipe(
-      startWith(''),
-      map(user => (user.length >= 2 ? this.filter(this.users, user) : []))
-    );
+    this.filteredUsers =
+      this.selectUserForm.controls.username.valueChanges.pipe(
+        startWith(''),
+        map(user => (user.length >= 2 ? this.filter(this.users, user) : []))
+      );
 
     this.selectUserForm.valueChanges.subscribe(() => this.onValueChanged());
 
@@ -358,7 +357,7 @@ export class AddUserComponent implements OnInit {
       },
       data: {
         project: this.projectUuid,
-        name: this.selectUserForm.controls['username'].value,
+        name: this.selectUserForm.controls.username.value,
         mode: mode,
       },
     };
@@ -372,6 +371,6 @@ export class AddUserComponent implements OnInit {
 
   resetInput(ev: Event) {
     ev.preventDefault();
-    this.selectUserForm.controls['username'].reset('');
+    this.selectUserForm.controls.username.reset('');
   }
 }

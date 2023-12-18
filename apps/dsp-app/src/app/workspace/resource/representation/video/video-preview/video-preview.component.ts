@@ -192,8 +192,8 @@ export class VideoPreviewComponent implements OnChanges {
           'url(' + this.matrix + ')';
         this.frame.nativeElement.style['background-size'] =
           Math.round(this.matrixWidth / this.proportion) + 'px auto';
-        this.frame.nativeElement.style['width'] = this.frameWidth + 'px';
-        this.frame.nativeElement.style['height'] = this.frameHeight + 'px';
+        this.frame.nativeElement.style.width = this.frameWidth + 'px';
+        this.frame.nativeElement.style.height = this.frameHeight + 'px';
         this.loaded.emit(true);
       },
       () => {
@@ -201,8 +201,8 @@ export class VideoPreviewComponent implements OnChanges {
         this.frame.nativeElement.style['background-image'] =
           'url(assets/images/preview-not-available.png)';
         this.frame.nativeElement.style['background-size'] = 'cover';
-        this.frame.nativeElement.style['width'] = '100%';
-        this.frame.nativeElement.style['height'] = '100%';
+        this.frame.nativeElement.style.width = '100%';
+        this.frame.nativeElement.style.height = '100%';
         this.loaded.emit(true);
       }
     );

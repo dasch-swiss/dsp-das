@@ -194,15 +194,15 @@ export class PasswordFormComponent implements OnInit {
           this.form.controls.password.value ===
           this.form.controls.confirmPassword.value;
 
-        this.formErrors['confirmPassword'] += this.matchingPasswords
+        this.formErrors.confirmPassword += this.matchingPasswords
           ? ''
-          : this.validationMessages['confirmPassword'].match;
+          : this.validationMessages.confirmPassword.match;
       }
 
       if (
         this.matchingPasswords &&
-        !this.formErrors['password'] &&
-        !this.formErrors['confirmPassword']
+        !this.formErrors.password &&
+        !this.formErrors.confirmPassword
       ) {
         this.sendToParent.emit(this.form.controls.password.value);
       } else {

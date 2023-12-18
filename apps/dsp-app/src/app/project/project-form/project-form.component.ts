@@ -269,7 +269,7 @@ export class ProjectFormComponent implements OnInit {
     // separate description
     if (!this.projectIri) {
       this.description = [new StringLiteral()];
-      this.formErrors['description'] = '';
+      this.formErrors.description = '';
     }
 
     // separate list of keywords
@@ -325,7 +325,7 @@ export class ProjectFormComponent implements OnInit {
     if (!this.projectIri) {
       // if projectIri does not exist, we are in create mode;
       // in this case, the keywords are required in the API request
-      this.form.controls['keywords'].setValidators(Validators.required);
+      this.form.controls.keywords.setValidators(Validators.required);
     }
 
     this.form.valueChanges.subscribe(() => this.onValueChanged());
@@ -360,10 +360,10 @@ export class ProjectFormComponent implements OnInit {
   getStringLiteral(data: StringLiteral[]) {
     this.description = data;
     if (!this.description.length) {
-      this.formErrors['description'] =
-        this.validationMessages['description'].required;
+      this.formErrors.description =
+        this.validationMessages.description.required;
     } else {
-      this.formErrors['description'] = '';
+      this.formErrors.description = '';
     }
   }
 
@@ -401,7 +401,7 @@ export class ProjectFormComponent implements OnInit {
     if (!this.keywords) {
       this.keywords = [];
     }
-    this.form.controls['keywords'].setValue(this.keywords);
+    this.form.controls.keywords.setValue(this.keywords);
 
     if (this.projectIri) {
       const projectData = new UpdateProjectRequest();

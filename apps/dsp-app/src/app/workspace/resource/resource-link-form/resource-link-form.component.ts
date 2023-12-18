@@ -149,7 +149,7 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
     // build link resource as type CreateResource
     const linkObj = new CreateResource();
 
-    linkObj.label = this.form.controls['label'].value;
+    linkObj.label = this.form.controls.label.value;
 
     linkObj.type = Constants.LinkObj;
 
@@ -164,7 +164,7 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
       hasLinkToValue.push(linkVal);
     });
 
-    const comment = this.form.controls['comment'].value;
+    const comment = this.form.controls.comment.value;
     if (comment) {
       const commentVal = new CreateTextValueAsString();
       commentVal.type = Constants.TextValue;

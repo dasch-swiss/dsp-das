@@ -407,7 +407,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
         this.formErrors[type] = '';
 
         if (this.labelsTouched && !this.labels.length) {
-          this.formErrors[type] = messages['required'];
+          this.formErrors[type] = messages.required;
         }
         break;
 
@@ -446,13 +446,13 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
 
   updateAttributeField(type: DefaultProperty) {
     // reset value of guiAttr
-    this.propertyForm.controls['guiAttr'].setValue(undefined);
+    this.propertyForm.controls.guiAttr.setValue(undefined);
 
     // set gui attribute value depending on gui element and existing property (edit mode)
     if (this.propertyInfo.propDef) {
       // the gui attribute can't be changed (at the moment?);
       // disable the input and set the validator as not required
-      this.propertyForm.controls['guiAttr'].disable();
+      this.propertyForm.controls.guiAttr.disable();
 
       if (type.objectType) {
         switch (type.objectType) {
@@ -468,13 +468,13 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
             const re = /\<([^)]+)\>/;
             const listIri = this.guiAttributes[i].match(re)[1];
 
-            this.propertyForm.controls['guiAttr'].setValue(listIri);
+            this.propertyForm.controls.guiAttr.setValue(listIri);
             break;
 
           // prop type is resource pointer: link to or part of
           case Constants.LinkValue:
             this.showGuiAttr = true;
-            this.propertyForm.controls['guiAttr'].setValue(
+            this.propertyForm.controls.guiAttr.setValue(
               this.propertyInfo.propDef.objectType
             );
             break;
@@ -493,7 +493,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
         case Constants.ListValue:
         case Constants.LinkValue:
           this.showGuiAttr = true;
-          this.propertyForm.controls['guiAttr'].setValidators([
+          this.propertyForm.controls.guiAttr.setValidators([
             Validators.required,
           ]);
           // this.propertyForm.controls['guiAttr'].updateValueAndValidity();
@@ -518,7 +518,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
         (response: CanDoResponse) => {
           if (response.canDo) {
             // enable the form
-            this.propertyForm.controls['required'].enable();
+            this.propertyForm.controls.required.enable();
           }
         },
         (error: ApiResponseError) => {
@@ -641,7 +641,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
                   this.propertyInfo.propDef.objectType ===
                     Constants.TextValue &&
                   this.propertyInfo.propDef.guiElement !==
-                    this.propertyForm.controls['propType'].value.guiEle
+                    this.propertyForm.controls.propType.value.guiEle
                 ) {
                   this.replaceGuiElement();
                 } else {
@@ -677,7 +677,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
                   this.propertyInfo.propDef.objectType ===
                     Constants.TextValue &&
                   this.propertyInfo.propDef.guiElement !==
-                    this.propertyForm.controls['propType'].value.guiEle
+                    this.propertyForm.controls.propType.value.guiEle
                 ) {
                   this.replaceGuiElement();
                 } else {
@@ -766,11 +766,11 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
 
     // prepare payload for property
     const newResProp = new CreateResourceProperty();
-    newResProp.name = this.propertyForm.controls['name'].value;
+    newResProp.name = this.propertyForm.controls.name.value;
     newResProp.label = this.labels;
     newResProp.comment = this.comments;
 
-    const guiAttr = this.propertyForm.controls['guiAttr'].value;
+    const guiAttr = this.propertyForm.controls.guiAttr.value;
     if (guiAttr) {
       newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
     }
@@ -840,10 +840,9 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
 
     const updateGuiEle = new UpdateResourcePropertyGuiElement();
     updateGuiEle.id = this.propertyInfo.propDef.id;
-    updateGuiEle.guiElement =
-      this.propertyForm.controls['propType'].value.guiEle;
+    updateGuiEle.guiElement = this.propertyForm.controls.propType.value.guiEle;
 
-    const guiAttr = this.propertyForm.controls['guiAttr'].value;
+    const guiAttr = this.propertyForm.controls.guiAttr.value;
     if (guiAttr) {
       updateGuiEle.guiAttributes = this.setGuiAttribute(guiAttr);
     }
