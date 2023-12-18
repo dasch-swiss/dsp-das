@@ -101,7 +101,6 @@
         "no-restricted-properties": "off",
         "no-restricted-syntax": "off",
         "no-return-assign": "off",
-        "no-trailing-spaces": "off",
         "no-undef": "off",
         "no-undef-init": "off",
         "no-underscore-dangle": "off",
@@ -109,7 +108,6 @@
         "no-unsafe-optional-chaining": "off",
         "no-unused-vars": "off",
         "no-useless-rename": "off",
-        "no-useless-return": "off",
         "no-useless-escape": "warn",
         "nonblock-statement-body-position": "off",
         "object-curly-newline": "off",
@@ -123,7 +121,6 @@
         "prefer-template": "off",
         "prefer-destructuring": "off",
         "radix": "off",
-        "space-in-parens": "off",
         "simple-import-sort/exports": "off",
         "space-unary-ops": "off",
         // eslint-plugin-unused-imports rules
