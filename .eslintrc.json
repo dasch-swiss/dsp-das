@@ -7,8 +7,15 @@
     "@nrwl/nx",
     "ban",
     "unused-imports",
-    "simple-import-sort"
+    "simple-import-sort",
+    "prettier"
   ],
+  "extends": [
+    "prettier"
+  ],
+  "rules": {
+    "prettier/prettier": "error"
+  },
   "overrides": [
     {
       "files": [
