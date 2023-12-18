@@ -26,9 +26,9 @@ import { UserComponent } from './user/user.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
 import { AdvancedSearchContainerComponent } from './workspace/search/advanced-search/advanced-search-container.component';
-import { ProjectFormComponent } from "@dsp-app/src/app/project/project-form/project-form.component";
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { AddOntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
+import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
+import { ProjectFormComponent } from './project/project-form/project-form.component';
 
 const routes: Routes = [
     {
@@ -76,12 +76,12 @@ const routes: Routes = [
                 canActivate: [AuthGuard],
             },
             {
-                canActivate: [AddOntologyClassInstanceGuard],
+                canActivate: [OntologyClassInstanceGuard],
                 path: RouteConstants.OntologyClassRelative,
                 component: OntologyClassInstanceComponent,
             },
             {
-                canActivate: [AddOntologyClassInstanceGuard],
+                canActivate: [OntologyClassInstanceGuard],
                 path: RouteConstants.OntologyClassInstanceRelative,
                 component: OntologyClassInstanceComponent,
             },

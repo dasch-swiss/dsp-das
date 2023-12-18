@@ -13,7 +13,7 @@ import { StoredProject } from '@dasch-swiss/dsp-js';
 @Injectable({
     providedIn: 'root'
 })
-export class AddOntologyClassInstanceGuard implements CanActivate {
+export class OntologyClassInstanceGuard implements CanActivate {
     isLoggedIn$: Observable<boolean> = this.authService.isLoggedIn$;
 
     @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
