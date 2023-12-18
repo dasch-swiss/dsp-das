@@ -8,13 +8,15 @@
     "ban",
     "unused-imports",
     "simple-import-sort",
+    "import",
     "prettier"
   ],
   "extends": [
     "prettier"
   ],
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "import/order": ["error", { "alphabetize": { "order": "asc" } }]
   },
   "overrides": [
     {
@@ -78,7 +80,6 @@
         "import/no-duplicates": "off",
         "import/no-extraneous-dependencies": "off",
         "import/no-useless-path-segments": "off",
-        "import/order": "off",
         "implicit-arrow-linebreak": "off",
         "key-spacing": "off",
         "linebreak-style": "off",
@@ -132,7 +133,6 @@
         "space-in-parens": "off",
         "spaced-comment": "off",
         "semi-spacing": "off",
-        "simple-import-sort/imports": "off",
         "simple-import-sort/exports": "off",
         "space-unary-ops": "off",
         // eslint-plugin-unused-imports rules
