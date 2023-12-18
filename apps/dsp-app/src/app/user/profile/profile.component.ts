@@ -10,7 +10,6 @@ import {
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ReadUser } from '@dasch-swiss/dsp-js';
-import { DialogComponent } from '../../main/dialog/dialog.component';
 import { Select, Store } from '@ngxs/store';
 import {
   LoadUserAction,
@@ -18,6 +17,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { DialogComponent } from '../../main/dialog/dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

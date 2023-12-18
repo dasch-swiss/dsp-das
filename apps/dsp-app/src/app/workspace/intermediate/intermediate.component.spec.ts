@@ -12,11 +12,11 @@ import {
   DspApiConfigToken,
   DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { TestConfig } from '@dsp-app/src/test.config';
+import { MockProvider } from 'ng-mocks';
 import { FilteredResources } from '../results/list-view/list-view.component';
 import { IntermediateComponent } from './intermediate.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test host component to simulate parent component

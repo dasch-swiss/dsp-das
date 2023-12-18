@@ -9,10 +9,10 @@ import {
   DspApiConfigToken,
   DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
-import { TestConfig } from '@dsp-app/src/test.config';
-import { ResourceComponent } from './resource.component';
-import { MockProvider } from 'ng-mocks';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { TestConfig } from '@dsp-app/src/test.config';
+import { MockProvider } from 'ng-mocks';
+import { ResourceComponent } from './resource.component';
 
 describe('ResourceComponent', () => {
   let component: ResourceComponent;

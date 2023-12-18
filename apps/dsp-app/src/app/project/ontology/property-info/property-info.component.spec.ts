@@ -8,6 +8,7 @@ import {
 import { MatDialogHarness } from '@angular/material/dialog/testing';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,23 +19,22 @@ import {
   ReadOntology,
   ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
-import { of } from 'rxjs';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import {
   DspApiConfigToken,
   DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { DialogHeaderComponent } from '@dsp-app/src/app/main/dialog/dialog-header/dialog-header.component';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { SplitPipe } from '@dsp-app/src/app/main/pipes/split.pipe';
+import { StringifyStringLiteralPipe } from '@dsp-app/src/app/main/pipes/string-transformation/stringify-string-literal.pipe';
 import { TestConfig } from '@dsp-app/src/test.config';
+import { MockProvider } from 'ng-mocks';
+import { of } from 'rxjs';
 import { PropertyFormComponent } from '../property-form/property-form.component';
 import { PropertyInfoComponent } from './property-info.component';
-import { MatMenuModule } from '@angular/material/menu';
-import { StringifyStringLiteralPipe } from '@dsp-app/src/app/main/pipes/string-transformation/stringify-string-literal.pipe';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 // mock property definition
 const mockPropertyDefinition: ResourcePropertyDefinitionWithAllLanguages = {

@@ -29,6 +29,8 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { SplitSize } from '@dsp-app/src/app/workspace/results/results.component';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { MovingImageSidecar } from '@dsp-app/src/app/workspace/resource/representation/video/video-preview/video-preview.component';
 import {
   EmitEvent,
   Events,
@@ -38,8 +40,6 @@ import {
 import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { MovingImageSidecar } from '@dsp-app/src/app/workspace/resource/representation/video/video-preview/video-preview.component';
 
 @Component({
   selector: 'app-video',

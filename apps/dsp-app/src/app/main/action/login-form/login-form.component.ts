@@ -12,17 +12,17 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import {
-  ComponentCommunicationEventService,
-  EmitEvent,
-  Events,
-} from '../../services/component-communication-event.service';
 import { AuthError, AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { map, take, takeLast } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { Location } from '@angular/common';
 import { UserStateModel } from '@dasch-swiss/vre/shared/app-state';
+import {
+  ComponentCommunicationEventService,
+  EmitEvent,
+  Events,
+} from '../../services/component-communication-event.service';
 
 @Component({
   selector: 'app-login-form',

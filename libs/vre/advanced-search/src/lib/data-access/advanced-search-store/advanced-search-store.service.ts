@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
 import { EMPTY, Observable, of } from 'rxjs';
+import { switchMap, tap, catchError, take } from 'rxjs/operators';
+import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
+import { v4 as uuidv4 } from 'uuid';
 import {
   AdvancedSearchService,
   ApiData,
   PropertyData,
   ResourceLabel,
 } from '../advanced-search-service/advanced-search.service';
-import { switchMap, tap, catchError, take } from 'rxjs/operators';
-import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
-import { v4 as uuidv4 } from 'uuid';
 import { GravsearchService } from '../gravsearch-service/gravsearch.service';
 
 export interface AdvancedSearchState {

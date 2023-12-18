@@ -1,5 +1,14 @@
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-
+import { Constants, KnoraApiConnection, ListNodeV2 } from '@dasch-swiss/dsp-js';
+import { Observable, of } from 'rxjs';
+import { take } from 'rxjs/operators';
+import {
+  AdvancedSearchService,
+  ApiData,
+  PropertyData,
+} from '../advanced-search-service/advanced-search.service';
+import { GravsearchService } from '../gravsearch-service/gravsearch.service';
 import {
   AdvancedSearchStoreService,
   ParentChildPropertyPair,
@@ -7,16 +16,6 @@ import {
   PropertyFormItem,
   PropertyFormListOperations,
 } from './advanced-search-store.service';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { Constants, KnoraApiConnection, ListNodeV2 } from '@dasch-swiss/dsp-js';
-import {
-  AdvancedSearchService,
-  ApiData,
-  PropertyData,
-} from '../advanced-search-service/advanced-search.service';
-import { GravsearchService } from '../gravsearch-service/gravsearch.service';
-import { take } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
 
 export const DspApiConnectionToken = new InjectionToken<KnoraApiConnection>(
   'DspApiConnectionToken'

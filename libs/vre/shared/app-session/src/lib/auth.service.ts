@@ -21,7 +21,6 @@ import {
   Auth,
   DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
-import { LoginError, ServerError } from './error';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { Store } from '@ngxs/store';
 import {
@@ -32,6 +31,7 @@ import {
   ClearListsAction,
   ClearOntologiesAction,
 } from '@dasch-swiss/vre/shared/app-state';
+import { LoginError, ServerError } from './error';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

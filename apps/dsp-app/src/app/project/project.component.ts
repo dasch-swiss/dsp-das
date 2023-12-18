@@ -27,8 +27,8 @@ import {
   ProjectsSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { map, take } from 'rxjs/operators';
-import { ProjectBase } from './project-base';
 import { ClassAndPropertyDefinitions } from '@dasch-swiss/dsp-js/src/models/v2/ontologies/ClassAndPropertyDefinitions';
+import { ProjectBase } from './project-base';
 
 type AvailableRoute =
   | typeof RouteConstants.project

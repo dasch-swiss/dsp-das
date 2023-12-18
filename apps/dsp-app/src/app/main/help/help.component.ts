@@ -12,8 +12,8 @@ import {
   DspConfig,
 } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { GridItem } from '../grid/grid.component';
 import { environment } from '@dsp-app/src/environments/environment';
+import { GridItem } from '../grid/grid.component';
 
 @Component({
   selector: 'app-help',

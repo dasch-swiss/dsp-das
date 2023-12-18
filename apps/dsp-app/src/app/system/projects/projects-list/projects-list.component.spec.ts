@@ -13,13 +13,13 @@ import {
   DspApiConfigToken,
   DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
 import { TestConfig } from '@dsp-app/src/test.config';
-import { ProjectsListComponent } from './projects-list.component';
 import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { ProjectsListComponent } from './projects-list.component';
 
 describe('ProjectsListComponent', () => {
   let component: ProjectsListComponent;

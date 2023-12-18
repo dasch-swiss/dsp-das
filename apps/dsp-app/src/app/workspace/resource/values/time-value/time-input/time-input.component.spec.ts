@@ -1,18 +1,16 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { TimeInputComponent, DateTime } from './time-input.component';
 import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   UntypedFormGroup,
   UntypedFormBuilder,
   ReactiveFormsModule,
   UntypedFormControl,
 } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   GregorianCalendarDate,
   CalendarPeriod,
@@ -20,6 +18,7 @@ import {
 } from '@dasch-swiss/jdnconvertiblecalendar';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
 import { JDNDatepickerDirective } from '../../jdn-datepicker-directive/jdndatepicker.directive';
+import { TimeInputComponent, DateTime } from './time-input.component';
 
 /**
  * test host component to simulate parent component.

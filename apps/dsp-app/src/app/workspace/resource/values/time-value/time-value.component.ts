@@ -7,15 +7,15 @@ import {
   Input,
   Inject,
 } from '@angular/core';
-import { TimeInputComponent } from './time-input/time-input.component';
 import {
   ReadTimeValue,
   CreateTimeValue,
   UpdateTimeValue,
 } from '@dasch-swiss/dsp-js';
 import { FormBuilder } from '@angular/forms';
-import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
+import { ValueErrorStateMatcher } from '../value-error-state-matcher';
+import { TimeInputComponent } from './time-input/time-input.component';
 
 @Component({
   selector: 'app-time-value',

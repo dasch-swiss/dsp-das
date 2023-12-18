@@ -39,9 +39,10 @@ import {
 import * as OpenSeadragon from 'openseadragon';
 import { mergeMap } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { DialogComponent } from '../../../../main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { Subscription } from 'rxjs';
+import { DialogComponent } from '../../../../main/dialog/dialog.component';
 import { DspCompoundPosition } from '../../dsp-resource';
 import {
   EmitEvent,
@@ -51,7 +52,6 @@ import {
 } from '../../services/value-operation-event.service';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
-import { Subscription } from 'rxjs';
 
 /**
  * represents a region resource.

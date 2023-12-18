@@ -1,19 +1,19 @@
 import { Component, Input } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { AngularSplitModule } from 'angular-split';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import {
   DspApiConfigToken,
   DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
 import { TestConfig } from '@dsp-app/src/test.config';
+import { AngularSplitModule } from 'angular-split';
+import { of } from 'rxjs';
 import { ResourceComponent } from '../resource/resource.component';
 import { SearchParams } from './list-view/list-view.component';
 import { ResultsComponent } from './results.component';
-import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs';
 
 /**
  * test component that mocks ListViewComponent

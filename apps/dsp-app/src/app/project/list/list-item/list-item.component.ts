@@ -12,9 +12,9 @@ import {
   ListResponse,
   RepositionChildNodeRequest,
 } from '@dasch-swiss/dsp-js';
-import { ListNodeOperation } from '../list-item-form/list-item-form.component';
 import { take } from 'rxjs/operators';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
+import { ListNodeOperation } from '../list-item-form/list-item-form.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

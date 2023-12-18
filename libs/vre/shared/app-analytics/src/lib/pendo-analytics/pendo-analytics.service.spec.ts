@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PendoAnalyticsService } from './pendo-analytics.service';
-import { MockProvider } from 'ng-mocks';
 import { DspInstrumentationToken } from '@dasch-swiss/vre/shared/app-config';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
+import { MockProvider } from 'ng-mocks';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { PendoAnalyticsService } from './pendo-analytics.service';
 
 describe('PendoAnalyticsService', () => {
   let service: PendoAnalyticsService;

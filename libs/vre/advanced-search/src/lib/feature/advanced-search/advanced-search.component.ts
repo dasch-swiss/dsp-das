@@ -8,6 +8,13 @@ import {
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Constants } from '@dasch-swiss/dsp-js';
+import { ActivatedRoute } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
+import { v4 as uuidv4 } from 'uuid';
+import { take } from 'rxjs/operators';
+import { MatButtonModule } from '@angular/material/button';
 import { OntologyResourceFormComponent } from '../../ui/ontology-resource-form/ontology-resource-form.component';
 import {
   AdvancedSearchStoreService,
@@ -21,15 +28,8 @@ import {
 import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
-import { Constants } from '@dasch-swiss/dsp-js';
-import { ActivatedRoute } from '@angular/router';
 import { OrderByComponent } from '../../ui/order-by/order-by.component';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../ui/dialog/confirmation-dialog/confirmation-dialog.component';
-import { v4 as uuidv4 } from 'uuid';
-import { take } from 'rxjs/operators';
-import { MatButtonModule } from '@angular/material/button';
 
 export interface QueryObject {
   query: string;

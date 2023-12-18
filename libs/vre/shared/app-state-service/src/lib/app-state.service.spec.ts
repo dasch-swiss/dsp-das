@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { ApplicationStateService } from './app-state.service';
 import { ReadUser } from '@dasch-swiss/dsp-js';
+import { ApplicationStateService } from './app-state.service';
 
 describe('ApplicationStateService', () => {
   let service: ApplicationStateService;

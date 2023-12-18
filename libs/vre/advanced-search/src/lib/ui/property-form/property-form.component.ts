@@ -11,17 +11,18 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import {
-  ParentChildPropertyPair,
-  PropertyFormItem,
-  SearchItem,
-} from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatSelect,
   MatSelectChange,
   MatSelectModule,
 } from '@angular/material/select';
+import { Constants } from '@dasch-swiss/dsp-js';
+import {
+  ParentChildPropertyPair,
+  PropertyFormItem,
+  SearchItem,
+} from '../../data-access/advanced-search-store/advanced-search-store.service';
 import {
   PropertyData,
   ApiData,
@@ -30,7 +31,6 @@ import {
 import { Operators } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import { PropertyFormValueComponent } from './property-form-value/property-form-value.component';
 import { PropertyFormLinkValueComponent } from './property-form-link-value/property-form-link-value.component';
-import { Constants } from '@dasch-swiss/dsp-js';
 import { PropertyFormListValueComponent } from './property-form-list-value/property-form-list-value.component';
 import { PropertyFormLinkMatchPropertyComponent } from './property-form-link-match-property/property-form-link-match-property.component';
 

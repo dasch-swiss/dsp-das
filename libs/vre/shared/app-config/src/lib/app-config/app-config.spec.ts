@@ -3,8 +3,8 @@
  *  SPDX-License-Identifier: Apache-2.0
  */
 
-import { AppConfig, Datadog, Rollbar } from './app-config';
 import { ZodError } from 'zod';
+import { AppConfig, Datadog, Rollbar } from './app-config';
 
 describe('app-config schema tests', () => {
   it('should parse valid config', () => {

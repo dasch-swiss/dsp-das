@@ -1,4 +1,3 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   Component,
   DebugElement,
@@ -10,6 +9,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
@@ -25,8 +25,8 @@ import {
   ReadTextValueAsXml,
   UpdateTextValueAsXml,
 } from '@dasch-swiss/dsp-js';
-import { TextValueAsXMLComponent } from './text-value-as-xml.component';
 import { CommentFormComponent } from '../../comment-form/comment-form.component';
+import { TextValueAsXMLComponent } from './text-value-as-xml.component';
 
 /**
  * test host component to simulate parent component.

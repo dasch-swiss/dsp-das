@@ -35,6 +35,9 @@ import { map, takeUntil } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { Select } from '@ngxs/store';
+import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { SplitSize } from '../results/results.component';
 import { DspCompoundPosition, DspResource } from './dsp-resource';
 import { PropertyInfoValues } from './properties/properties.component';
@@ -53,9 +56,6 @@ import {
   UpdatedFileEventValue,
   ValueOperationEventService,
 } from './services/value-operation-event.service';
-import { Select } from '@ngxs/store';
-import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

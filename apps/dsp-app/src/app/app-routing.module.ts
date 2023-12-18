@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { HelpComponent } from './main/help/help.component';
@@ -26,7 +27,6 @@ import { UserComponent } from './user/user.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
 import { AdvancedSearchContainerComponent } from './workspace/search/advanced-search/advanced-search-container.component';
-import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 

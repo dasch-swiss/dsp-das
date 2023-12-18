@@ -1,18 +1,18 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AdvancedSearchComponent } from './advanced-search.component';
-import {
-  AdvancedSearchStoreService,
-  PropertyFormItem,
-} from '../../data-access/advanced-search-store/advanced-search-store.service';
-import { ActivatedRoute } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivatedRoute } from '@angular/router';
+import { Observable, of } from 'rxjs';
 import {
   ApiData,
   PropertyData,
 } from '../../data-access/advanced-search-service/advanced-search.service';
-import { MatDialogModule } from '@angular/material/dialog';
+import {
+  AdvancedSearchStoreService,
+  PropertyFormItem,
+} from '../../data-access/advanced-search-store/advanced-search-store.service';
+import { AdvancedSearchComponent } from './advanced-search.component';
 
 @Injectable()
 export class MockAdvancedSearchStoreService {

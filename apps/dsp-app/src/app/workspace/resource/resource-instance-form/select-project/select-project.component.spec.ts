@@ -10,10 +10,10 @@ import {
 } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSelectHarness } from '@angular/material/select/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MockProjects, StoredProject } from '@dasch-swiss/dsp-js';
 import { SelectProjectComponent } from './select-project.component';
-import { MatSelectHarness } from '@angular/material/select/testing';
 
 /**
  * test host component to simulate parent component.

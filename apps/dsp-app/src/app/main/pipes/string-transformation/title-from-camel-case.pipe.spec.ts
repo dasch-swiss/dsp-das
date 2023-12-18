@@ -1,5 +1,5 @@
-import { TitleFromCamelCasePipe } from './title-from-camel-case.pipe';
 import { waitForAsync, TestBed } from '@angular/core/testing';
+import { TitleFromCamelCasePipe } from './title-from-camel-case.pipe';
 
 describe('TitleFromCamelCasePipe', () => {
   let pipe: TitleFromCamelCasePipe;

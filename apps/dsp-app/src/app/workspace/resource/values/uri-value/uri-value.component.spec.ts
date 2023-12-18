@@ -1,18 +1,17 @@
+import { OnInit, Component, ViewChild, DebugElement } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { UriValueComponent } from './uri-value.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   ReadUriValue,
   MockResource,
   UpdateUriValue,
   CreateUriValue,
 } from '@dasch-swiss/dsp-js';
-import { OnInit, Component, ViewChild, DebugElement } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { By } from '@angular/platform-browser';
 import { CommentFormComponent } from '../comment-form/comment-form.component';
+import { UriValueComponent } from './uri-value.component';
 
 /**
  * test host component to simulate parent component.

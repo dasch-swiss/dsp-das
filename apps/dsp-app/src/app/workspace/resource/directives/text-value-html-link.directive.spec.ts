@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { TextValueHtmlLinkDirective } from './text-value-html-link.directive';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TextValueHtmlLinkDirective } from './text-value-html-link.directive';
 
 /**
  * test host component to simulate parent component.

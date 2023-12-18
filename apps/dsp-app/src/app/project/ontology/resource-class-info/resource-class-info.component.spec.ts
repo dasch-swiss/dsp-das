@@ -22,20 +22,20 @@ import {
   OntologiesEndpointV2,
   ReadOntology,
 } from '@dasch-swiss/dsp-js';
-import { of } from 'rxjs';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import {
   DspApiConfigToken,
   DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { SplitPipe } from '@dsp-app/src/app/main/pipes/split.pipe';
 import { TruncatePipe } from '@dsp-app/src/app/main/pipes/string-transformation/truncate.pipe';
 import { SortingService } from '@dsp-app/src/app/main/services/sorting.service';
 import { TestConfig } from '@dsp-app/src/test.config';
-import { ResourceClassInfoComponent } from './resource-class-info.component';
 import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { of } from 'rxjs';
+import { ResourceClassInfoComponent } from './resource-class-info.component';
 
 /**
  * test host component to simulate parent component

@@ -19,15 +19,15 @@ import {
   ReadResource,
   ReadValue,
 } from '@dasch-swiss/dsp-js';
-import { of } from 'rxjs';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { MockProvider } from 'ng-mocks';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { Region, StillImageComponent } from './still-image.component';
-import { map } from 'rxjs/operators';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 // --> TODO: get test data from dsp-js
 // --> TODO: get this from dsp-js: https://dasch.myjetbrains.com/youtrack/issue/DSP-506

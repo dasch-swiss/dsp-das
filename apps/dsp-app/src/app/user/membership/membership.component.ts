@@ -10,7 +10,6 @@ import {
 import { UntypedFormControl } from '@angular/forms';
 import { Constants, ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
-import { AutocompleteItem } from '../../workspace/search/operator';
 import { Select, Store } from '@ngxs/store';
 import {
   AddUserToProjectMembershipAction,
@@ -20,6 +19,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { map, takeUntil } from 'rxjs/operators';
 import { Observable, Subject, combineLatest } from 'rxjs';
+import { AutocompleteItem } from '../../workspace/search/operator';
 
 // --> TODO replace it by IPermissions from dsp-js
 export interface IPermissions {

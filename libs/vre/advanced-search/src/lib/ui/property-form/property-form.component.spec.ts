@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PropertyFormComponent } from './property-form.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PropertyFormComponent } from './property-form.component';
 
 describe('PropertyFormComponent', () => {
   let component: PropertyFormComponent;

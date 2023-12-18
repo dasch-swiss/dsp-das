@@ -1,5 +1,3 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { IntervalValueComponent } from './interval-value.component';
 import {
   Component,
   DebugElement,
@@ -8,26 +6,28 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import {
-  CreateIntervalValue,
-  MockResource,
-  ReadIntervalValue,
-  UpdateIntervalValue,
-} from '@dasch-swiss/dsp-js';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
   NgControl,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatInputModule } from '@angular/material/input';
-import { Interval } from './interval-input/interval-input.component';
-import { MatFormFieldControl } from '@angular/material/form-field';
-import { Subject } from 'rxjs';
-import { By } from '@angular/platform-browser';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  CreateIntervalValue,
+  MockResource,
+  ReadIntervalValue,
+  UpdateIntervalValue,
+} from '@dasch-swiss/dsp-js';
+import { Subject } from 'rxjs';
 import { CommentFormComponent } from '../comment-form/comment-form.component';
+import { Interval } from './interval-input/interval-input.component';
+import { IntervalValueComponent } from './interval-value.component';
 
 @Component({
   selector: 'app-interval-input',

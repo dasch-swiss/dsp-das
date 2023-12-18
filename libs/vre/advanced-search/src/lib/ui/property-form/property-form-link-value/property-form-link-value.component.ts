@@ -10,12 +10,12 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { ApiData } from '../../../data-access/advanced-search-service/advanced-search.service';
 import { MatInputModule } from '@angular/material/input';
 import {
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
+import { ApiData } from '../../../data-access/advanced-search-service/advanced-search.service';
 import { MatAutocompleteOptionsScrollDirective } from '../../directives/mat-autocomplete-options-scroll.directive';
 import { PropertyFormItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
 @Component({

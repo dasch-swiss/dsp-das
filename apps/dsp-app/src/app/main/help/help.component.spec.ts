@@ -8,18 +8,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { TestConfig } from '@dsp-app/src/test.config';
 import {
   DspApiConfigToken,
   DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { TestConfig } from '@dsp-app/src/test.config';
+import { MockProvider } from 'ng-mocks';
 import { DialogComponent } from '../dialog/dialog.component';
-import { StatusComponent } from '../status/status.component';
 import { FooterComponent } from '../footer/footer.component';
 import { GridComponent } from '../grid/grid.component';
+import { StatusComponent } from '../status/status.component';
 import { HelpComponent } from './help.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 describe('HelpComponent', () => {
   let component: HelpComponent;

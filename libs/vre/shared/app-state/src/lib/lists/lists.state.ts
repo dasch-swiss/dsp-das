@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { Action, State, StateContext } from '@ngxs/store';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { ListsStateModel } from './lists.state-model';
+import { of } from 'rxjs';
+import { finalize, map, take, tap } from 'rxjs/operators';
+import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import {
   ClearListsAction,
   DeleteListNodeAction,
   LoadListsInProjectAction,
 } from './lists.actions';
-import { of } from 'rxjs';
-import { finalize, map, take, tap } from 'rxjs/operators';
-import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
+import { ListsStateModel } from './lists.state-model';
 
 const defaults: ListsStateModel = {
   isLoading: false,

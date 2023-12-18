@@ -1,19 +1,19 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { MockProvider } from 'ng-mocks';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 
-import { ArchiveComponent } from './archive.component';
 import { RepresentationService } from '../representation.service';
-import { of } from 'rxjs';
-import { MatIconModule } from '@angular/material/icon';
-import { map } from 'rxjs/operators';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { ArchiveComponent } from './archive.component';
 
 const archiveFileValue = {
   arkUrl:

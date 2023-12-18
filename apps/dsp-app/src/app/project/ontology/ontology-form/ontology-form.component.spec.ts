@@ -5,19 +5,19 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection, MockProjects } from '@dasch-swiss/dsp-js';
-import { TranslateModule } from '@ngx-translate/core';
-import { of } from 'rxjs';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import {
   DspApiConfigToken,
   DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { MaterialModule } from '@dsp-app/src/app/material-module';
 import { TestConfig } from '@dsp-app/src/test.config';
-import { OntologyFormComponent } from './ontology-form.component';
+import { TranslateModule } from '@ngx-translate/core';
 import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { of } from 'rxjs';
+import { OntologyFormComponent } from './ontology-form.component';
 
 describe('OntologyFormComponent', () => {
   let ontologyFormComponent: OntologyFormComponent;

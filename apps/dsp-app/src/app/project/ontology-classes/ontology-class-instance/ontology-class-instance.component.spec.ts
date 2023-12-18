@@ -10,16 +10,16 @@ import {
   ProjectResponse,
   ProjectsEndpointAdmin,
 } from '@dasch-swiss/dsp-js';
-import { SplitAreaDirective, SplitComponent } from 'angular-split';
-import { of } from 'rxjs';
-import { AjaxResponse } from 'rxjs/ajax';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { OntologyService } from '@dsp-app/src/app/project/ontology/ontology.service';
 import { SearchParams } from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
-import { OntologyClassInstanceComponent } from './ontology-class-instance.component';
+import { SplitAreaDirective, SplitComponent } from 'angular-split';
 import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { of } from 'rxjs';
+import { AjaxResponse } from 'rxjs/ajax';
+import { OntologyClassInstanceComponent } from './ontology-class-instance.component';
 
 /**
  * test component that mocks ListViewComponent

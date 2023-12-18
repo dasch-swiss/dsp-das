@@ -11,9 +11,9 @@ import { MatLineModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MockResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
-import { ResourceListComponent } from './resource-list.component';
-import { FilteredResources } from '../list-view.component';
 import { ResourceService } from '../../../resource/services/resource.service';
+import { FilteredResources } from '../list-view.component';
+import { ResourceListComponent } from './resource-list.component';
 
 /**
  * mocked truncate pipe from action module.

@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AppLoggingService } from './app-logging.service';
 import {
   BuildTag,
   BuildTagToken,
   DspInstrumentationConfig,
   DspInstrumentationToken,
 } from '@dasch-swiss/vre/shared/app-config';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { AppLoggingService } from './app-logging.service';
 
 describe('AppLoggingService', () => {
   let service: AppLoggingService;

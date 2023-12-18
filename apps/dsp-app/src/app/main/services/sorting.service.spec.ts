@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SortingService } from './sorting.service';
 import { ReadProject } from '@dasch-swiss/dsp-js';
+import { SortingService } from './sorting.service';
 
 describe('SortingService', () => {
   let service: SortingService;

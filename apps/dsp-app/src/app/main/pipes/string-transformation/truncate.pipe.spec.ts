@@ -1,6 +1,6 @@
-import { TruncatePipe } from './truncate.pipe';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { TruncatePipe } from './truncate.pipe';
 
 describe('TruncatePipe', () => {
   let pipe: TruncatePipe;

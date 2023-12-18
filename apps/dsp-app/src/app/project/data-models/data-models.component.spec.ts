@@ -15,17 +15,17 @@ import {
   ListsEndpointAdmin,
   ListsResponse,
 } from '@dasch-swiss/dsp-js';
-import { of } from 'rxjs';
-import { AjaxResponse } from 'rxjs/ajax';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { StringifyStringLiteralPipe } from '@dsp-app/src/app/main/pipes/string-transformation/stringify-string-literal.pipe';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
+import { StringifyStringLiteralPipe } from '@dsp-app/src/app/main/pipes/string-transformation/stringify-string-literal.pipe';
+import { MockProvider } from 'ng-mocks';
+import { of } from 'rxjs';
+import { AjaxResponse } from 'rxjs/ajax';
 import { OntologyService } from '../ontology/ontology.service';
 
 import { DataModelsComponent } from './data-models.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 @Component({
   template: '<app-data-models #dataModels></app-data-models>',

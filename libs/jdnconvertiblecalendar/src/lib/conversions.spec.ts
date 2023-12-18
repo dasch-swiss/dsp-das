@@ -3,7 +3,9 @@
  *  SPDX-License-Identifier: Apache-2.0
  */
 
+import assert from 'assert';
 import { CalendarDate } from './CalendarDate';
+import { CalendarPeriod } from './CalendarPeriod';
 import { JDNConvertibleConversionModule } from './JDNCalendarConversion';
 import {
   GregorianCalendarDate,
@@ -12,8 +14,6 @@ import {
   JDNConvertibleCalendar,
 } from './JDNConvertibleCalendar';
 import { JDNPeriod } from './JDNPeriod';
-import { CalendarPeriod } from './CalendarPeriod';
-import assert from 'assert';
 
 /**
  * Checks if the received calendar date corresponds to the expected calendar date.

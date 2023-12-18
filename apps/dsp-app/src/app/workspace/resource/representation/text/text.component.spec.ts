@@ -2,19 +2,19 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { FileRepresentation } from '../file-representation';
-
-import { TextComponent } from './text.component';
-import { MatMenuModule } from '@angular/material/menu';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { FileRepresentation } from '../file-representation';
+
 import { RepresentationService } from '../representation.service';
-import { MatIconModule } from '@angular/material/icon';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { TextComponent } from './text.component';
 
 const textFileValue = {
   arkUrl:

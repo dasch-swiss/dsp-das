@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import {
   DspApiConfigToken,
   DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
+import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 //import { TestConfig } from '@dsp-app/src/test.config';
 import { OntologyService } from './ontology.service';
 

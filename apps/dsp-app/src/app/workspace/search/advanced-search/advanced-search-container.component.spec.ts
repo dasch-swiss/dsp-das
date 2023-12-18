@@ -1,11 +1,11 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AdvancedSearchContainerComponent } from './advanced-search-container.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { ActivatedRoute } from '@angular/router';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { MockProvider } from 'ng-mocks';
+import { AdvancedSearchContainerComponent } from './advanced-search-container.component';
 
 /**
  * test component to simulate select ontology component.

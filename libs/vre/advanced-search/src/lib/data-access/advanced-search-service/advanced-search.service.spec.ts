@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AdvancedSearchService } from './advanced-search.service';
 import {
   Constants,
   KnoraApiConfig,
@@ -16,6 +15,7 @@ import {
   DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
 import { of } from 'rxjs';
+import { AdvancedSearchService } from './advanced-search.service';
 
 describe('AdvancedSearchService', () => {
   let service: AdvancedSearchService;

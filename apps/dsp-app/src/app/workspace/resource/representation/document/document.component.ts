@@ -25,6 +25,7 @@ import { mergeMap } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { DOCUMENT } from '@angular/common';
 import {
   EmitEvent,
   Events,
@@ -33,7 +34,6 @@ import {
 } from '../../services/value-operation-event.service';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
-import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-document',

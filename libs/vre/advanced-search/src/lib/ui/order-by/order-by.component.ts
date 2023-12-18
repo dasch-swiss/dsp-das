@@ -7,7 +7,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OrderByItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
 import {
   MatListModule,
   MatSelectionList,
@@ -24,6 +23,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { OrderByItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
 
 @Component({
   selector: 'dasch-swiss-order-by',

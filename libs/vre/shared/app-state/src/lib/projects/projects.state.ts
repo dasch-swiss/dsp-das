@@ -1,18 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, State, StateContext, Store } from '@ngxs/store';
-import { ProjectsStateModel } from './projects.state-model';
-import {
-  LoadProjectsAction,
-  LoadProjectAction,
-  ClearProjectsAction,
-  RemoveUserFromProjectAction,
-  AddUserToProjectMembershipAction,
-  LoadProjectMembersAction,
-  LoadProjectGroupsAction,
-  UpdateProjectAction,
-  SetProjectMemberAction,
-} from './projects.actions';
-import { UserSelectors } from '../user/user.selectors';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import {
   ApiResponseData,
@@ -29,9 +16,22 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { concatMap, finalize, map, take, tap } from 'rxjs/operators';
 import { produce } from 'immer';
 import { EMPTY, of } from 'rxjs';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { IKeyValuePairs } from '../model-interfaces';
 import { SetUserAction } from '../user/user.actions';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { UserSelectors } from '../user/user.selectors';
+import {
+  LoadProjectsAction,
+  LoadProjectAction,
+  ClearProjectsAction,
+  RemoveUserFromProjectAction,
+  AddUserToProjectMembershipAction,
+  LoadProjectMembersAction,
+  LoadProjectGroupsAction,
+  UpdateProjectAction,
+  SetProjectMemberAction,
+} from './projects.actions';
+import { ProjectsStateModel } from './projects.state-model';
 
 const defaults: ProjectsStateModel = {
   isLoading: false,

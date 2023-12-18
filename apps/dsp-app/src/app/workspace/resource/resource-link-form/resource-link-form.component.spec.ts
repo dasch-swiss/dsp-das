@@ -40,17 +40,17 @@ import {
   UserResponse,
   UsersEndpointAdmin,
 } from '@dasch-swiss/dsp-js';
+import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
+import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { TranslateModule } from '@ngx-translate/core';
+import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { FilteredResources } from '../../results/list-view/list-view.component';
 import { ResourceLinkFormComponent } from './resource-link-form.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 const resolvedPromise = Promise.resolve(null);
 

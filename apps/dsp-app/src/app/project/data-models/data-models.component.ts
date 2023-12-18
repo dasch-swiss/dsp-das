@@ -22,8 +22,8 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ProjectBase } from '../project-base';
 import { Title } from '@angular/platform-browser';
+import { ProjectBase } from '../project-base';
 
 // the routes available for navigation
 type DataModelRoute =

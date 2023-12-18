@@ -1,9 +1,9 @@
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
+import { AppConfigToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
-import { AppConfigToken } from '@dasch-swiss/vre/shared/app-config';
 
 function configListener() {
   try {

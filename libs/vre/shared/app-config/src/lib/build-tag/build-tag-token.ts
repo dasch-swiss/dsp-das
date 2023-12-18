@@ -4,8 +4,8 @@
  */
 
 import { InjectionToken } from '@angular/core';
-import { BuildTag } from './build-tag';
 import { Observable } from 'rxjs';
+import { BuildTag } from './build-tag';
 
 /**
  * The BuildTagToken is used to encapsulate build_tag

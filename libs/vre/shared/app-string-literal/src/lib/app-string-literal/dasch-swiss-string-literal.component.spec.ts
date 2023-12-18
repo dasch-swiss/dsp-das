@@ -1,11 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AppStringLiteralComponent } from './dasch-swiss-string-literal.component';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { SessionService } from '@dasch-swiss/vre/shared/app-session';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { By } from '@angular/platform-browser';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { SessionService } from '@dasch-swiss/vre/shared/app-session';
+import { AppStringLiteralComponent } from './dasch-swiss-string-literal.component';
 
 class MockSessionService {
   getSession() {

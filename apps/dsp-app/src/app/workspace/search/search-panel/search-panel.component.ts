@@ -16,8 +16,8 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { SearchParams } from '../../results/list-view/list-view.component';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { SearchParams } from '../../results/list-view/list-view.component';
 
 @Component({
   selector: 'app-search-panel',

@@ -14,19 +14,19 @@ import {
   MockUsers,
   UsersEndpointAdmin,
 } from '@dasch-swiss/dsp-js';
-import { of } from 'rxjs';
-import { AjaxResponse } from 'rxjs/ajax';
+import { DatadogRumService } from '@dasch-swiss/vre/shared/app-analytics';
 import {
   AppConfigService,
   DspApiConfigToken,
   DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
-import { TestConfig } from '@dsp-app/src/test.config';
-import { DatadogRumService } from '@dasch-swiss/vre/shared/app-analytics';
-import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
-import { LoginFormComponent } from './login-form.component';
-import { MockProvider } from 'ng-mocks';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
+import { TestConfig } from '@dsp-app/src/test.config';
+import { MockProvider } from 'ng-mocks';
+import { of } from 'rxjs';
+import { AjaxResponse } from 'rxjs/ajax';
+import { LoginFormComponent } from './login-form.component';
 
 /**
  * test host component to simulate login-form component.

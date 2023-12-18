@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DatadogRumService } from './datadog-rum.service';
-import { MockProvider } from 'ng-mocks';
 import {
   BuildTag,
   BuildTagToken,
   DspInstrumentationToken,
 } from '@dasch-swiss/vre/shared/app-config';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
+import { MockProvider } from 'ng-mocks';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { DatadogRumService } from './datadog-rum.service';
 
 describe('DatadogRumService', () => {
   let service: DatadogRumService;

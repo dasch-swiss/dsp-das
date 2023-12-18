@@ -1,6 +1,10 @@
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatAutocompleteHarness } from '@angular/material/autocomplete/testing';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { By } from '@angular/platform-browser';
@@ -11,15 +15,11 @@ import {
   ReadGeonameValue,
   UpdateGeonameValue,
 } from '@dasch-swiss/dsp-js';
-import { GeonameValueComponent } from './geoname-value.component';
-import { DisplayPlace, GeonameService } from '../../services/geoname.service';
-import { of } from 'rxjs';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { HarnessLoader } from '@angular/cdk/testing';
-import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
+import { of } from 'rxjs';
+import { DisplayPlace, GeonameService } from '../../services/geoname.service';
 import { CommentFormComponent } from '../comment-form/comment-form.component';
-import { MatAutocompleteHarness } from '@angular/material/autocomplete/testing';
+import { GeonameValueComponent } from './geoname-value.component';
 
 /**
  * test host component to simulate parent component.

@@ -4,8 +4,8 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { AppConfigService } from './app-config.service';
 import { AppConfig } from './app-config';
+import { AppConfigService } from './app-config.service';
 import { AppConfigToken } from './dsp-api-tokens';
 
 describe('AppConfigService with dev config', () => {

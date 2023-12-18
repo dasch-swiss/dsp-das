@@ -1,6 +1,4 @@
 import { Selector } from '@ngxs/store';
-import { ProjectsState } from './projects.state';
-import { ProjectsStateModel } from './projects.state-model';
 import {
   Constants,
   ReadGroup,
@@ -8,12 +6,14 @@ import {
   ReadUser,
   StoredProject,
 } from '@dasch-swiss/dsp-js';
-import { IKeyValuePairs } from '../model-interfaces';
-import { UserSelectors } from '../user/user.selectors';
-import { RouterSelectors } from '../router/router.selector';
 import { Params } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectsState } from './projects.state';
+import { ProjectsStateModel } from './projects.state-model';
+import { IKeyValuePairs } from '../model-interfaces';
+import { UserSelectors } from '../user/user.selectors';
+import { RouterSelectors } from '../router/router.selector';
 
 export class ProjectsSelectors {
   // get list of all projects the user is NOT a member of

@@ -15,15 +15,15 @@ import {
   ProjectsEndpointAdmin,
   UsersEndpointAdmin,
 } from '@dasch-swiss/dsp-js';
-import { of } from 'rxjs';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
 import { ProjectService } from '@dsp-app/src/app/workspace/resource/services/project.service';
-import { MembershipComponent } from './membership.component';
 import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { of } from 'rxjs';
+import { MembershipComponent } from './membership.component';
 
 describe('MembershipComponent', () => {
   let component: MembershipComponent;

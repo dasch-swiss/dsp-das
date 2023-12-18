@@ -11,9 +11,9 @@ import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-servi
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { Observable, of } from 'rxjs';
 import { catchError, map, takeLast } from 'rxjs/operators';
-import { Session } from './session';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
+import { Session } from './session';
 
 @Injectable({
   providedIn: 'root',

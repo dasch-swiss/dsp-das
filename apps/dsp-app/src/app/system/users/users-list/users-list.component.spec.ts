@@ -1,3 +1,4 @@
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,20 +18,19 @@ import {
   ProjectsEndpointAdmin,
   ReadProject,
 } from '@dasch-swiss/dsp-js';
-import { of } from 'rxjs';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
+import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
 import { SelectGroupComponent } from '@dsp-app/src/app/project/collaboration/select-group/select-group.component';
 import { TestConfig } from '@dsp-app/src/test.config';
-import { UsersListComponent } from './users-list.component';
-import { Component } from '@angular/core';
-import { AjaxResponse } from 'rxjs/ajax';
-import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
-import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { of } from 'rxjs';
+import { AjaxResponse } from 'rxjs/ajax';
+import { UsersListComponent } from './users-list.component';
 
 @Component({
   template: '<app-users-list></app-users-list>',

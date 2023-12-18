@@ -17,7 +17,6 @@ import {
 } from '@dasch-swiss/vre/shared/app-config';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ProjectBase } from '../project-base';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
@@ -27,6 +26,7 @@ import {
   LoadListsInProjectAction,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { ProjectBase } from '../project-base';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

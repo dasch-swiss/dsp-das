@@ -49,13 +49,14 @@ import {
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { DspResource } from '../dsp-resource';
-import { RepresentationConstants } from '../representation/file-representation';
-import { IncomingService } from '../services/incoming.service';
 import {
   ProjectService,
   SortingService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
+import { DspResource } from '../dsp-resource';
+import { RepresentationConstants } from '../representation/file-representation';
+import { IncomingService } from '../services/incoming.service';
 import { ResourceService } from '../services/resource.service';
 import { UserService } from '../services/user.service';
 import {
@@ -66,7 +67,6 @@ import {
   ValueOperationEventService,
 } from '../services/value-operation-event.service';
 import { ValueService } from '../services/value.service';
-import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 
 // object of property information from ontology class, properties and property values
 export interface PropertyInfoValues {

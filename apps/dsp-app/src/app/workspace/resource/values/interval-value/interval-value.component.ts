@@ -7,18 +7,18 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 import {
   CreateIntervalValue,
   ReadIntervalValue,
   UpdateIntervalValue,
 } from '@dasch-swiss/dsp-js';
 import { FormBuilder } from '@angular/forms';
+import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 import {
   Interval,
   IntervalInputComponent,
 } from './interval-input/interval-input.component';
-import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
+import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 
 @Component({
   selector: 'app-interval-value',

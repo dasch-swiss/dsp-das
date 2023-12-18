@@ -25,6 +25,21 @@ import {
   DspAppConfigToken,
   DspInstrumentationToken,
 } from '@dasch-swiss/vre/shared/app-config';
+import {
+  DatadogRumService,
+  PendoAnalyticsService,
+} from '@dasch-swiss/vre/shared/app-analytics';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { ResourceClassPropertyInfoComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
+import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
+import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/shared/app-progress-indicator';
+import { AppStringLiteralComponent } from '@dasch-swiss/vre/shared/app-string-literal';
+import { AuthGuardComponent } from '@dsp-app/src/app/main/guard/auth-guard.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmationDialogComponent } from './main/action/confirmation-dialog/confirmation-dialog.component';
@@ -54,10 +69,6 @@ import { TitleFromCamelCasePipe } from './main/pipes/string-transformation/title
 import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './main/pipes/time.pipe';
 import { SelectLanguageComponent } from './main/select-language/select-language.component';
-import {
-  DatadogRumService,
-  PendoAnalyticsService,
-} from '@dasch-swiss/vre/shared/app-analytics';
 import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
 import { DescriptionComponent } from './project/description/description.component';
@@ -77,7 +88,6 @@ import { ResourceClassFormComponent } from './project/ontology/resource-class-fo
 import { ResourceClassInfoComponent } from './project/ontology/resource-class-info/resource-class-info.component';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ProjectComponent } from './project/project.component';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectsListComponent } from './system/projects/projects-list/projects-list.component';
 import { ProjectsComponent } from './system/projects/projects.component';
 import { SystemComponent } from './system/system.component';
@@ -154,18 +164,8 @@ import { OverviewComponent } from './user/overview/overview.component';
 import { ProjectTileComponent } from './system/project-tile/project-tile.component';
 import { CommentFormComponent } from './workspace/resource/values/comment-form/comment-form.component';
 import { DataModelsComponent } from './project/data-models/data-models.component';
-import { ResourceClassPropertyInfoComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
-import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
-import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { apiConnectionTokenProvider } from './providers/api-connection-token.provider';
-import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
-import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/shared/app-progress-indicator';
-import { AppStringLiteralComponent } from '@dasch-swiss/vre/shared/app-string-literal';
 import { IsFalsyPipe } from './main/pipes/isFalsy.piipe';
-import { AuthGuardComponent } from '@dsp-app/src/app/main/guard/auth-guard.component';
 import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
 
 // translate: AoT requires an exported function for factories

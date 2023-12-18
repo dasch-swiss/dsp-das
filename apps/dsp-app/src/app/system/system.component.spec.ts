@@ -3,10 +3,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { TestConfig } from '@dsp-app/src/test.config';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { StatusComponent } from '../main/status/status.component';
 import { SessionService } from '@dasch-swiss/vre/shared/app-session';
+import { TestConfig } from '@dsp-app/src/test.config';
+import { StatusComponent } from '../main/status/status.component';
 import { SystemComponent } from './system.component';
 
 describe('SystemComponent', () => {

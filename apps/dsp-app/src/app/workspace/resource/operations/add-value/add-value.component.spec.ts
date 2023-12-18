@@ -21,9 +21,9 @@ import {
   ValuesEndpointV2,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { of, throwError } from 'rxjs';
 import { AjaxError } from 'rxjs/ajax';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import {
   AddedEventValue,
   EmitEvent,

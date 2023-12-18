@@ -17,16 +17,16 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
 import { TestConfig } from '@dsp-app/src/test.config';
-import { ProjectsListComponent } from './projects-list/projects-list.component';
-import { ProjectsComponent } from './projects.component';
+import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 import { SortButtonComponent } from '../../main/action/sort-button/sort-button.component';
-import { SessionService } from '@dasch-swiss/vre/shared/app-session';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { ProjectsListComponent } from './projects-list/projects-list.component';
+import { ProjectsComponent } from './projects.component';
 
 /**
  * test component to simulate child component, here progress-indicator from action module.

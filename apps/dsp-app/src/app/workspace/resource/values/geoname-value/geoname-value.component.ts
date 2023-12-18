@@ -13,13 +13,13 @@ import {
   UpdateGeonameValue,
 } from '@dasch-swiss/dsp-js';
 import { Observable, Subscription } from 'rxjs';
+import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 import {
   DisplayPlace,
   GeonameService,
   SearchPlace,
 } from '../../services/geoname.service';
-import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 const resolvedPromise = Promise.resolve(null);

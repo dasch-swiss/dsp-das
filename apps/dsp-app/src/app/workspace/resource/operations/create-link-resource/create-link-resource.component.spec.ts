@@ -40,19 +40,19 @@ import {
   ResourcesEndpointV2,
 } from '@dasch-swiss/dsp-js';
 import { OntologyCache } from '@dasch-swiss/dsp-js/src/cache/ontology-cache/OntologyCache';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 import { TranslateModule } from '@ngx-translate/core';
+import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 import { SwitchPropertiesComponent } from '../../resource-instance-form/select-properties/switch-properties/switch-properties.component';
 import { ValueService } from '../../services/value.service';
 import { IntValueComponent } from '../../values/int-value/int-value.component';
 import { TextValueAsStringComponent } from '../../values/text-value/text-value-as-string/text-value-as-string.component';
 
 import { CreateLinkResourceComponent } from './create-link-resource.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test host component to simulate parent component.

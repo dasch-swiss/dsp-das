@@ -32,9 +32,11 @@ import {
   ResourcePropertyDefinition,
   SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { of, Subscription } from 'rxjs';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { MockProvider } from 'ng-mocks';
+import { of, Subscription } from 'rxjs';
 import { DspResource } from '../dsp-resource';
 import { IncomingService } from '../services/incoming.service';
 import { UserService } from '../services/user.service';
@@ -47,8 +49,6 @@ import {
   PropertiesComponent,
   PropertyInfoValues,
 } from './properties.component';
-import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 
 /**
  * test host component to simulate parent component.

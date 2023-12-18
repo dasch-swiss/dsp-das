@@ -8,8 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AppDatePickerComponent } from './app-date-picker.component';
 import { Subject } from 'rxjs';
+import { AppDatePickerComponent } from './app-date-picker.component';
 
 describe('DatePickerComponent', () => {
   let component: AppDatePickerComponent;

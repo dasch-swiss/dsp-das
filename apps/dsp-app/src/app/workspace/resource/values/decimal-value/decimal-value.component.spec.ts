@@ -1,18 +1,17 @@
+import { OnInit, Component, ViewChild, DebugElement } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { DecimalValueComponent } from './decimal-value.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   ReadDecimalValue,
   MockResource,
   UpdateDecimalValue,
   CreateDecimalValue,
 } from '@dasch-swiss/dsp-js';
-import { OnInit, Component, ViewChild, DebugElement } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { By } from '@angular/platform-browser';
 import { CommentFormComponent } from '../comment-form/comment-form.component';
+import { DecimalValueComponent } from './decimal-value.component';
 
 /**
  * test host component to simulate parent component.

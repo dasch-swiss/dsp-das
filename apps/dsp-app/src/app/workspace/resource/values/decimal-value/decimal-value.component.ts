@@ -6,15 +6,15 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 import {
   CreateDecimalValue,
   ReadDecimalValue,
   UpdateDecimalValue,
 } from '@dasch-swiss/dsp-js';
 import { FormBuilder, Validators } from '@angular/forms';
-import { CustomRegex } from '../custom-regex';
 import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
+import { CustomRegex } from '../custom-regex';
+import { ValueErrorStateMatcher } from '../value-error-state-matcher';
 
 @Component({
   selector: 'app-decimal-value',

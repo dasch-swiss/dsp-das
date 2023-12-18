@@ -1,3 +1,4 @@
+import { Component } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,7 +10,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { TranslateModule } from '@ngx-translate/core';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import {
   DspApiConfigToken,
@@ -18,9 +18,9 @@ import {
 import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
 import { TestConfig } from '@dsp-app/src/test.config';
+import { TranslateModule } from '@ngx-translate/core';
 import { PasswordFormComponent } from '../user-form/password-form/password-form.component';
 import { AccountComponent } from './account.component';
-import { Component } from '@angular/core';
 
 @Component({
   selector: 'dasch-swiss-app-progress-indicator',

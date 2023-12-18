@@ -1,16 +1,16 @@
+import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CommentFormComponent } from './comment-form.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
+import { MatInputModule } from '@angular/material/input';
 import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommentFormComponent } from './comment-form.component';
 
 /**
  * test host component to simulate parent component.

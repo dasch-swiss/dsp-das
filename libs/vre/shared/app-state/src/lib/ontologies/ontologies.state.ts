@@ -25,6 +25,13 @@ import {
   UpdateOntology,
   UpdateResourceClassCardinality,
 } from '@dasch-swiss/dsp-js';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { of } from 'rxjs';
+import {
+  ProjectService,
+  SortingService,
+} from '@dasch-swiss/vre/shared/app-helper-services';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { OntologiesStateModel } from './ontologies.state-model';
 import {
   ClearCurrentOntologyAction,
@@ -42,18 +49,11 @@ import {
   UpdateOntologyAction,
   UpdateProjectOntologyAction,
 } from './ontologies.actions';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
   IProjectOntologiesKeyValuePairs,
   OntologyProperties,
 } from '../model-interfaces';
-import { of } from 'rxjs';
 import { LoadListsInProjectAction } from '../lists/lists.actions';
-import {
-  ProjectService,
-  SortingService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 
 const defaults: OntologiesStateModel = <OntologiesStateModel>{
   isLoading: false,

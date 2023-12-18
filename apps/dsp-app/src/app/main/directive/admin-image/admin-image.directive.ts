@@ -5,8 +5,8 @@ import {
   Renderer2,
   ElementRef,
 } from '@angular/core';
-import { AdminImageConfig } from './admin-image.config';
 import { Md5 } from 'ts-md5';
+import { AdminImageConfig } from './admin-image.config';
 
 @Directive({
   selector: '[appAdminImage]',

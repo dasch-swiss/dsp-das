@@ -1,9 +1,3 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatOptionModule } from '@angular/material/core';
-import { BooleanValueComponent } from './boolean-value.component';
 import {
   Component,
   OnInit,
@@ -11,21 +5,27 @@ import {
   DebugElement,
   Input,
 } from '@angular/core';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatOptionModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import {
+  MatSlideToggleChange,
+  MatSlideToggleModule,
+} from '@angular/material/slide-toggle';
+import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   ReadBooleanValue,
   MockResource,
   UpdateBooleanValue,
   CreateBooleanValue,
 } from '@dasch-swiss/dsp-js';
-import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormattedBooleanPipe } from '@dsp-app/src/app/main/pipes/formatting/formatted-boolean.pipe';
 import { CommentFormComponent } from '../comment-form/comment-form.component';
-import { MatIconModule } from '@angular/material/icon';
-import {
-  MatSlideToggleChange,
-  MatSlideToggleModule,
-} from '@angular/material/slide-toggle';
+import { BooleanValueComponent } from './boolean-value.component';
 
 /**
  * test host component to simulate parent component.

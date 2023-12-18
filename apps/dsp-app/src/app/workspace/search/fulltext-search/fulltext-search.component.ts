@@ -35,9 +35,9 @@ import {
 } from '@dsp-app/src/app/main/services/component-communication-event.service';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { SearchParams } from '../../results/list-view/list-view.component';
 import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
+import { SearchParams } from '../../results/list-view/list-view.component';
 
 export interface PrevSearchItem {
   projectIri?: string;

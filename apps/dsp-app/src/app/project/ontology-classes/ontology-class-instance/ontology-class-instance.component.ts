@@ -21,7 +21,6 @@ import {
   SearchParams,
 } from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
 import { SplitSize } from '@dsp-app/src/app/workspace/results/results.component';
-import { ProjectBase } from '../../project-base';
 import { Actions, Select, Store } from '@ngxs/store';
 import { Title } from '@angular/platform-browser';
 import {
@@ -32,6 +31,7 @@ import {
 import { map, takeWhile } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
 import { Observable, Subject, combineLatest } from 'rxjs';
+import { ProjectBase } from '../../project-base';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

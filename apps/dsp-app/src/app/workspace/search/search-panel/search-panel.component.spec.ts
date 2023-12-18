@@ -9,8 +9,8 @@ import {
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { SearchPanelComponent } from './search-panel.component';
 import { ActivatedRoute } from '@angular/router';
+import { SearchPanelComponent } from './search-panel.component';
 
 /**
  * test host component to simulate child component, here fulltext-search.

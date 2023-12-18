@@ -3,7 +3,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { DatePipe } from '@angular/common';
-import { ValueErrorStateMatcher } from '../../value-error-state-matcher';
 import {
   Component,
   DoCheck,
@@ -41,6 +40,7 @@ import {
   GregorianCalendarDate,
 } from '@dasch-swiss/jdnconvertiblecalendar';
 import { Subject } from 'rxjs';
+import { ValueErrorStateMatcher } from '../../value-error-state-matcher';
 import { CustomRegex } from '../../custom-regex';
 
 /** a valid time value must have both a date and a time, or both inputs must be null */

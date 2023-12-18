@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { AppGlobal } from '../app-global';
-import { MenuItem } from '../main/declarations/menu-item';
 import { Select } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { MenuItem } from '../main/declarations/menu-item';
+import { AppGlobal } from '../app-global';
 
 @Component({
   selector: 'app-user',

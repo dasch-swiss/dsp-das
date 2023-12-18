@@ -9,20 +9,20 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import {
+  DatadogRumService,
+  PendoAnalyticsService,
+} from '@dasch-swiss/vre/shared/app-analytics';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import {
   DspApiConfigToken,
   DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
-import {
-  DatadogRumService,
-  PendoAnalyticsService,
-} from '@dasch-swiss/vre/shared/app-analytics';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { TestConfig } from '@dsp-app/src/test.config';
-import { UserMenuComponent } from './user-menu.component';
 import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { UserMenuComponent } from './user-menu.component';
 
 /**
  * test component to simulate login form component.

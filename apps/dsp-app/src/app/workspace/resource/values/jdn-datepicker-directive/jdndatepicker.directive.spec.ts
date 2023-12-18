@@ -1,9 +1,9 @@
-import { JDNDatepickerDirective } from './jdndatepicker.directive';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { DateAdapter } from '@angular/material/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ACTIVE_CALENDAR } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
-import { DateAdapter } from '@angular/material/core';
+import { JDNDatepickerDirective } from './jdndatepicker.directive';
 
 /**
  * test host component to simulate parent component.

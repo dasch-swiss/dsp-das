@@ -13,10 +13,10 @@ import {
   ReadColorValue,
   UpdateColorValue,
 } from '@dasch-swiss/dsp-js';
+import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { CustomRegex } from '../custom-regex';
 import { ValueErrorStateMatcher } from '../value-error-state-matcher';
-import { BaseValueDirective } from '@dsp-app/src/app/main/directive/base-value.directive';
 
 @Component({
   selector: 'app-color-value',

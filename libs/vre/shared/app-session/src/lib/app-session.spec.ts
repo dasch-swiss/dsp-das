@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
-import { SessionService } from './app-session';
-import { of } from 'rxjs';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import {
   ApiResponseData,
   CredentialsResponse,
   ReadUser,
   UserResponse,
 } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
+import { SessionService } from './app-session';
 
 describe('SessionService', () => {
   let service: SessionService;

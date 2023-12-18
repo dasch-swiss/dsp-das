@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
-import { AppGlobal } from '../app-global';
-import { MenuItem } from '../main/declarations/menu-item';
 import { Select } from '@ngxs/store';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Observable } from 'rxjs';
+import { MenuItem } from '../main/declarations/menu-item';
+import { AppGlobal } from '../app-global';
 
 @Component({
   selector: 'app-system',

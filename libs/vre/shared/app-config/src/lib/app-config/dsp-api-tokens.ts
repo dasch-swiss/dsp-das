@@ -1,8 +1,8 @@
 import { InjectionToken } from '@angular/core';
 import { KnoraApiConfig, KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { EntityDefinition } from '@dasch-swiss/dsp-js/src/models/v2/ontologies/EntityDefinition';
 import { DspAppConfig } from './dsp-app-config';
 import { DspInstrumentationConfig } from './dsp-instrumentation-config';
-import { EntityDefinition } from '@dasch-swiss/dsp-js/src/models/v2/ontologies/EntityDefinition';
 
 /**
  * The AppConfigToken is used to encapsulate the application configuration

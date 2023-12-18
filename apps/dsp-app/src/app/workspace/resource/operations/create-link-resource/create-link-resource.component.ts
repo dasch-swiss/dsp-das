@@ -24,8 +24,8 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DialogEvent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { SelectPropertiesComponent } from '../../resource-instance-form/select-properties/select-properties.component';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
+import { SelectPropertiesComponent } from '../../resource-instance-form/select-properties/select-properties.component';
 
 @Component({
   selector: 'app-create-link-resource',

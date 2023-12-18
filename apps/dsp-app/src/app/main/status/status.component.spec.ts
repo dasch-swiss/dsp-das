@@ -12,9 +12,9 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HealthEndpointSystem, MockHealth } from '@dasch-swiss/dsp-js';
-import { of } from 'rxjs';
-import { HttpStatusMsg } from '@dasch-swiss/vre/shared/assets/status-msg';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { HttpStatusMsg } from '@dasch-swiss/vre/shared/assets/status-msg';
+import { of } from 'rxjs';
 import { StatusComponent } from './status.component';
 
 /**

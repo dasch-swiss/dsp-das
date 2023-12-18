@@ -2,6 +2,12 @@ import { Inject, Injectable } from '@angular/core';
 import { Action, State, StateContext } from '@ngxs/store';
 import { of } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { ApiResponseError, Constants, ReadUser } from '@dasch-swiss/dsp-js';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
+import { SetProjectMemberAction } from '../projects/projects.actions';
+import { UserStateModel } from './user.state-model';
 import {
   CreateUserAction,
   LoadUserAction,
@@ -13,12 +19,6 @@ import {
   SetUserAction,
   SetUserProjectGroupsAction,
 } from './user.actions';
-import { UserStateModel } from './user.state-model';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ApiResponseError, Constants, ReadUser } from '@dasch-swiss/dsp-js';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { SetProjectMemberAction } from '../projects/projects.actions';
-import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
 
 const defaults = <UserStateModel>{
   isLoading: false,

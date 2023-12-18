@@ -20,18 +20,18 @@ import {
   ReadProject,
   RepositionChildNodeResponse,
 } from '@dasch-swiss/dsp-js';
-import { of } from 'rxjs';
-import { AjaxResponse } from 'rxjs/ajax';
 import {
   AppConfigService,
   DspApiConnectionToken,
 } from '@dasch-swiss/vre/shared/app-config';
-import { ListNodeOperation } from '../list-item-form/list-item-form.component';
-import { ListItemComponent } from './list-item.component';
+import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { Session, SessionService } from '@dasch-swiss/vre/shared/app-session';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { MockProvider } from 'ng-mocks';
-import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { of } from 'rxjs';
+import { AjaxResponse } from 'rxjs/ajax';
+import { ListNodeOperation } from '../list-item-form/list-item-form.component';
+import { ListItemComponent } from './list-item.component';
 
 /**
  * test host component to simulate parent component.

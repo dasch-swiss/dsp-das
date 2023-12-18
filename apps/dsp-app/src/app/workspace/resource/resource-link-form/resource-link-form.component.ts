@@ -27,8 +27,6 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { FilteredResources } from '../../results/list-view/list-view.component';
-import { ResourceService } from '../services/resource.service';
 import { Select } from '@ngxs/store';
 import {
   ProjectsSelectors,
@@ -36,6 +34,8 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
+import { ResourceService } from '../services/resource.service';
+import { FilteredResources } from '../../results/list-view/list-view.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

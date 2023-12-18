@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
-import { AdminImageDirective } from './admin-image.directive';
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { AdminImageDirective } from './admin-image.directive';
 
 @Component({
   template: ` <img appAdminImage [image]="img" [type]="type" alt="text" />`,

@@ -13,11 +13,11 @@ import {
   ReadResourceSequence,
   SearchEndpointV2,
 } from '@dasch-swiss/dsp-js';
-import { of } from 'rxjs';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ListViewComponent, SearchParams } from './list-view.component';
-import { MockProvider } from 'ng-mocks';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { MockProvider } from 'ng-mocks';
+import { of } from 'rxjs';
+import { ListViewComponent, SearchParams } from './list-view.component';
 
 /**
  * test component to simulate child component, here resource-list.

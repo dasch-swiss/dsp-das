@@ -1,13 +1,12 @@
+import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SortButtonComponent } from './sort-button.component';
-
-import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingService } from '../../services/sorting.service';
+import { SortButtonComponent } from './sort-button.component';
 
 /**
  * test host component to simulate parent component with a progress bar.

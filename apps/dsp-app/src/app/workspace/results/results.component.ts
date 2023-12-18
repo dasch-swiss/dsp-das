@@ -1,12 +1,12 @@
 import { AfterViewChecked, ChangeDetectorRef, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   FilteredResources,
   SearchParams,
 } from './list-view/list-view.component';
-import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 export interface SplitSize {
   gutterNum: number;

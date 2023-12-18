@@ -9,9 +9,9 @@ import { CommonModule } from '@angular/common';
 import { ListNodeV2, Constants } from '@dasch-swiss/dsp-js';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
 import { ListItemComponent } from './list-item/list-item.component';
 import { PropertyFormItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'dasch-swiss-property-form-list-value',

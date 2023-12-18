@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
-import { GravsearchService } from './gravsearch.service';
-import { Operators } from '../advanced-search-store/advanced-search-store.service';
-import { ResourceLabel } from '../advanced-search-service/advanced-search.service';
 import { Constants } from '@dasch-swiss/dsp-js';
+import { ResourceLabel } from '../advanced-search-service/advanced-search.service';
+import { Operators } from '../advanced-search-store/advanced-search-store.service';
+import { GravsearchService } from './gravsearch.service';
 
 describe('GravsearchService', () => {
   let service: GravsearchService;

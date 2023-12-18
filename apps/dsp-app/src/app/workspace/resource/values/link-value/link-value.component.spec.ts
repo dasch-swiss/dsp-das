@@ -12,7 +12,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule } from '@ngx-translate/core';
 import {
   CreateLinkValue,
   MockOntology,
@@ -25,8 +24,9 @@ import {
   UpdateLinkValue,
 } from '@dasch-swiss/dsp-js';
 import { OntologyCache } from '@dasch-swiss/dsp-js/src/cache/ontology-cache/OntologyCache';
-import { of } from 'rxjs';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { TranslateModule } from '@ngx-translate/core';
+import { of } from 'rxjs';
 import { CommentFormComponent } from '../comment-form/comment-form.component';
 import { LinkValueComponent } from './link-value.component';
 

@@ -5,12 +5,12 @@ import {
   UntypedFormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { ColorPickerComponent } from './color-picker.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { By } from '@angular/platform-browser';
+import { ColorPickerComponent } from './color-picker.component';
 
 /**
  * test host component to simulate parent component.

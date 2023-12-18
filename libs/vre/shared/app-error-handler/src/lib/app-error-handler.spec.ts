@@ -13,14 +13,14 @@ import {
   ApiResponseError,
   HealthResponse,
 } from '@dasch-swiss/dsp-js';
-import { of } from 'rxjs';
-import { AppErrorHandler } from './app-error-handler';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { HttpStatusMsg } from '@dasch-swiss/vre/shared/assets/status-msg';
-import { DataAccessService } from './data-access.service';
-import { AjaxResponse } from 'rxjs/ajax';
 import { MockProvider, MockService } from 'ng-mocks';
+import { of } from 'rxjs';
+import { AjaxResponse } from 'rxjs/ajax';
+import { AppErrorHandler } from './app-error-handler';
+import { DataAccessService } from './data-access.service';
 
 describe('AppErrorHandler', () => {
   let httpTestingController: HttpTestingController;

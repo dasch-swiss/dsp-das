@@ -1,5 +1,3 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TimeValueComponent } from './time-value.component';
 import {
   Component,
   DebugElement,
@@ -8,25 +6,27 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import {
-  CreateTimeValue,
-  MockResource,
-  ReadTimeValue,
-  UpdateTimeValue,
-} from '@dasch-swiss/dsp-js';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
   NgControl,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldControl } from '@angular/material/form-field';
-import { Subject } from 'rxjs';
-import { By } from '@angular/platform-browser';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  CreateTimeValue,
+  MockResource,
+  ReadTimeValue,
+  UpdateTimeValue,
+} from '@dasch-swiss/dsp-js';
+import { Subject } from 'rxjs';
 import { CommentFormComponent } from '../comment-form/comment-form.component';
+import { TimeValueComponent } from './time-value.component';
 
 @Component({
   selector: 'app-time-input',

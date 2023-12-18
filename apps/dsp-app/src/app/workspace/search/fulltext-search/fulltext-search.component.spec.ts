@@ -13,11 +13,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MockProjects, ProjectsEndpointAdmin } from '@dasch-swiss/dsp-js';
-import { of } from 'rxjs/internal/observable/of';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { FulltextSearchComponent } from './fulltext-search.component';
-import { MockProvider } from 'ng-mocks';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { MockProvider } from 'ng-mocks';
+import { of } from 'rxjs/internal/observable/of';
+import { FulltextSearchComponent } from './fulltext-search.component';
 
 /**
  * test host component to simulate parent component.

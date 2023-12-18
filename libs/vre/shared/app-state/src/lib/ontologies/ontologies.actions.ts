@@ -3,8 +3,8 @@ import {
   ReadOntology,
   UpdateOntologyMetadata,
 } from '@dasch-swiss/dsp-js';
-import { PropToDisplay } from '../model-interfaces';
 import { DefaultClass } from '@dasch-swiss/vre/shared/app-helper-services';
+import { PropToDisplay } from '../model-interfaces';
 
 export class LoadProjectOntologiesAction {
   static readonly type = '[Ontologies] Load Project Ontologies';

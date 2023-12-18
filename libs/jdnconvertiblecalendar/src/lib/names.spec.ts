@@ -3,8 +3,8 @@
  *  SPDX-License-Identifier: Apache-2.0
  */
 
-import { JDNConvertibleCalendarNames } from './JDNCalendarNames';
 import assert from 'assert';
+import { JDNConvertibleCalendarNames } from './JDNCalendarNames';
 
 describe('get weekday names', () => {
   it("get weekdays for the Gregorian calendar using the locale 'en' in long format", () => {

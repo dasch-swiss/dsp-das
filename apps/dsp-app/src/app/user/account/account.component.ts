@@ -6,13 +6,13 @@ import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { apiConnectionTokenProvider } from '../../providers/api-connection-token.provider';
 import {
   LoadUserAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
+import { apiConnectionTokenProvider } from '../../providers/api-connection-token.provider';
 
 @Component({
   selector: 'app-account',

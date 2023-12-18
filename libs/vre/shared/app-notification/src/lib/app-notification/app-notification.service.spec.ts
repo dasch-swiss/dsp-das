@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { NotificationService } from './app-notification.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MockProvider } from 'ng-mocks';
+import { NotificationService } from './app-notification.service';
 
 describe('NotificationService', () => {
   let service: NotificationService;
