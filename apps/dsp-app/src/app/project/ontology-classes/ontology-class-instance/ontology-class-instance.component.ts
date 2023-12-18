@@ -69,7 +69,7 @@ export class OntologyClassInstanceComponent extends ProjectBase implements OnIni
                 map(([projectOntologies, classId, ontoId, instanceId, userProjects, isSysAdmin]) => {
                     if (
                         (instanceId !== RouteConstants.addClassInstance 
-                            || instanceId === RouteConstants.addClassInstance && !(userProjects?.some((p) => p.id === this.projectIri) || isSysAdmin))
+                            || (instanceId === RouteConstants.addClassInstance && !(userProjects?.some((p) => p.id === this.projectIri) || isSysAdmin)))
                             || !projectOntologies[this.projectIri]
                         ) {
                         return;
