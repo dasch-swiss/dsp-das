@@ -52,10 +52,10 @@ export class PermissionApiService extends BaseApi {
             A default object access permission can only reference either a group, a resource class, a property,
             or a combination of resource class and property.
          */
-        if ((defaultObject.forGroup && !defaultObject.forResourceClass && !defaultObject.forProperty
-                || !defaultObject.forGroup && defaultObject.forResourceClass && !defaultObject.forProperty
-                || !defaultObject.forGroup && !defaultObject.forResourceClass && defaultObject.forProperty)
-            || !defaultObject.forGroup && defaultObject.forResourceClass && defaultObject.forProperty
+        if (((defaultObject.forGroup && !defaultObject.forResourceClass && (!defaultObject.forProperty
+                || !defaultObject.forGroup) && defaultObject.forResourceClass && (!defaultObject.forProperty
+                || !defaultObject.forGroup) && !defaultObject.forResourceClass && defaultObject.forProperty)
+            || !defaultObject.forGroup )&& defaultObject.forResourceClass && defaultObject.forProperty
         ) {
             return this._http.post<DefaultObjectAccessPermissionResponse>(`${this.baseUri}/doap`, defaultObject);
         } else {
