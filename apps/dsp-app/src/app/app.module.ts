@@ -175,6 +175,7 @@ import {
 import { CommonInputComponent } from '@dsp-app/src/app/project/common-input/common-input.component';
 import { ChipListInputComponent } from '@dsp-app/src/app/project/chip-list-input/chip-list-input.component';
 import { HumanReadableErrorPipe } from '@dsp-app/src/app/project/human-readable-error/human-readable-error.pipe';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {

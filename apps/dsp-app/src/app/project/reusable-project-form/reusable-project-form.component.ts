@@ -1,12 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import PROJECT_FORM_CONSTANTS from '@dsp-app/src/app/project/reusable-project-form/reusable-project-form.constants';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
 import {
-    arrayLengthGreaterThanZeroValidator
+    arrayLengthGreaterThanZeroValidator,
 } from '@dsp-app/src/app/project/reusable-project-form/array-length-greater-than-zero-validator';
 
 @Component({
@@ -21,7 +19,7 @@ export class ReusableProjectFormComponent implements OnInit {
     @Output() formValueChange = new EventEmitter<FormGroup>();
     form: FormGroup;
 
-
+    shortcodePatternError = { errorKey: 'pattern', message: 'This field must contains letters from 0 to 9 and A to F' };
 
     constructor(
         private _fb: FormBuilder) {

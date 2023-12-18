@@ -4,14 +4,11 @@
         [formGroup]='form'
         (ngSubmit)='formValueChange.emit(form)'
     >
-        <div style='display: flex; justify-content: space-between'>
-
             <app-common-input [placeholder]="('appLabels.form.project.general.shortcode' | translate)"
-                              controlName='shortcode' [formGroup]='form'></app-common-input>
+                              controlName='shortcode' [formGroup]='form' [validatorErrors]='[shortcodePatternError]'></app-common-input>
 
             <app-common-input [placeholder]="('appLabels.form.project.general.shortname' | translate)"
                               controlName='shortname' [formGroup]='form'></app-common-input>
-        </div>
 
         <app-common-input [placeholder]="('appLabels.form.project.general.longname' | translate)"
                           controlName='longname' [formGroup]='form'></app-common-input>
@@ -26,14 +23,14 @@
         >
         </dasch-swiss-app-string-literal>
         <mat-error *ngIf='form.controls.description.errors as errors'>
-            {{ form.controls.description | humanReadableError }}
+            {{ errors | humanReadableError }}
         </mat-error>
 
         <!-- keywords chip list -->
         <app-chip-list-input [keywords]='form.controls.keywords.value' editable='true'
                              (updatedKeywords)='form.patchValue({keywords: $event})'></app-chip-list-input>
-        <mat-error *ngIf="form.controls.keywords.errors">
-            {{form.controls.keywords | humanReadableError }}
+        <mat-error *ngIf='form.controls.keywords.errors as errors'>
+            {{errors | humanReadableError }}
         </mat-error>
     </form>
 </div>
