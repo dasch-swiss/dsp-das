@@ -149,14 +149,8 @@
         "@typescript-eslint/comma-dangle": "off",
         "@typescript-eslint/comma-spacing": "off",
         "@typescript-eslint/dot-notation": "off",
-        "@typescript-eslint/indent": "off",
         "@typescript-eslint/brace-style": "off",
-        "@typescript-eslint/keyword-spacing": "off",
         "@typescript-eslint/lines-between-class-members": "off",
-        "@typescript-eslint/quotes": [
-          "off",
-          "single"
-        ],
         "@typescript-eslint/naming-convention": "off",
         "@typescript-eslint/no-shadow": "off",
         "@typescript-eslint/no-explicit-any": "off",
@@ -166,7 +160,6 @@
         "@typescript-eslint/no-unused-vars": "off",
         "@typescript-eslint/no-unused-expressions": "off",
         "@typescript-eslint/no-use-before-define": "off",
-        "@typescript-eslint/no-useless-constructor": "off",
         "@typescript-eslint/object-curly-spacing": "off",
         "@typescript-eslint/semi": "off",
         "@typescript-eslint/space-before-blocks": "off",
