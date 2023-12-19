@@ -60,6 +60,10 @@
         "eslint:recommended"
       ],
       "rules": {
+        // rules that need to be off for other configuration to work
+        "arrow-parens": "off",
+        "max-len": "off",
+        // rules to work on later on
         "default-case": "off",
         "eqeqeq": "off",
         "consistent-return": "off",
@@ -67,7 +71,6 @@
         "import/no-cycle": "off",
         "import/order": ["error", { "alphabetize": { "order": "asc" } }],
         "max-classes-per-file": "off",
-        "max-len": "off",
         "no-console": "off",
         "no-else-return": "off",
         "no-nested-ternary": "off",
@@ -80,6 +83,7 @@
         "no-underscore-dangle": "off",
         "no-unsafe-optional-chaining": "off",
         "no-unused-vars": "off",
+        "no-useless-escape": "off",
         "prefer-regex-literals": "off",
         "prefer-destructuring": "off",
         "radix": "off",
