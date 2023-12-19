@@ -84,8 +84,7 @@
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-unused-vars": "off",
         "@nrwl/nx/enforce-module-boundaries": [
-          "off",
-          // TODO set to error later
+          "error",
           {
             "enforceBuildableLibDependency": true,
             "allow": [],
