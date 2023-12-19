@@ -63,12 +63,13 @@
         // rules that need to be off for other configuration to work
         "arrow-body-style": "off",
         "arrow-parens": "off",
-        "max-len": "off",
-        "operator-linebreak": "off",
-        "@typescript-eslint/indent": "off",
         "implicit-arrow-linebreak": "off",
+        "operator-linebreak": "off",
+        "max-len": "off",
+        "@typescript-eslint/indent": "off",
         "@typescript-eslint/lines-between-class-members": "off",
         // rules to work on later on
+        "class-methods-use-this": "off",
         "default-case": "off",
         "eqeqeq": "off",
         "consistent-return": "off",
@@ -103,8 +104,6 @@
             "argsIgnorePattern": "^_"
           }
         ],
-        // TypeScript Eslint rules
-        "class-methods-use-this": "off",
         "@typescript-eslint/dot-notation": "off",
         "@typescript-eslint/naming-convention": "off",
         "@typescript-eslint/no-explicit-any": "off",
