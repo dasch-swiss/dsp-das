@@ -160,24 +160,22 @@ export class OntologyService {
             propType = group.elements.find(
               (i: DefaultProperty) => i.guiEle === property.guiElement && i.subPropOf === subProp
             );
+          } else if (property.objectType === Constants.IntValue && subProp === Constants.SeqNum) {
+            // if the property is of type number, but sub property of SeqNum,
+            // select the correct default prop params
+            propType = group.elements.find(
+              (i: DefaultProperty) => i.objectType === property.objectType && i.subPropOf === Constants.SeqNum
+            );
+          } else if (property.objectType === Constants.TextValue) {
+            // if the property is of type text value, we have to check the gui element
+            // to get the correct default prop params
+            propType = group.elements.find(
+              (i: DefaultProperty) => i.guiEle === property.guiElement && i.objectType === property.objectType
+            );
           } else {
-            if (property.objectType === Constants.IntValue && subProp === Constants.SeqNum) {
-              // if the property is of type number, but sub property of SeqNum,
-              // select the correct default prop params
-              propType = group.elements.find(
-                (i: DefaultProperty) => i.objectType === property.objectType && i.subPropOf === Constants.SeqNum
-              );
-            } else if (property.objectType === Constants.TextValue) {
-              // if the property is of type text value, we have to check the gui element
-              // to get the correct default prop params
-              propType = group.elements.find(
-                (i: DefaultProperty) => i.guiEle === property.guiElement && i.objectType === property.objectType
-              );
-            } else {
-              // in all other cases the gui-element resp. the subProp is not relevant
-              // because the object type is unique
-              propType = group.elements.find((i: DefaultProperty) => i.objectType === property.objectType);
-            }
+            // in all other cases the gui-element resp. the subProp is not relevant
+            // because the object type is unique
+            propType = group.elements.find((i: DefaultProperty) => i.objectType === property.objectType);
           }
           if (propType) {
             break;

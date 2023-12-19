@@ -132,23 +132,20 @@ export class AuthService {
       switchMap((response: ApiResponseData<LoginResponse> | ApiResponseError) => {
         if (response instanceof ApiResponseData) {
           return of(true);
+        } else if (response.status === 401 || response.status === 403) {
+          // wrong credentials
+          return throwError(<LoginError>{
+            type: 'login',
+            status: response.status,
+            msg: 'Wrong credentials',
+          });
         } else {
-          // error handling
-          if (response.status === 401 || response.status === 403) {
-            // wrong credentials
-            return throwError(<LoginError>{
-              type: 'login',
-              status: response.status,
-              msg: 'Wrong credentials',
-            });
-          } else {
-            // server error
-            return throwError(<ServerError>{
-              type: 'server',
-              status: response.status,
-              msg: 'Server error',
-            });
-          }
+          // server error
+          return throwError(<ServerError>{
+            type: 'server',
+            status: response.status,
+            msg: 'Server error',
+          });
         }
       })
     );

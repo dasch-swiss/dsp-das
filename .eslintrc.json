@@ -71,7 +71,6 @@
         "max-len": "off",
         "no-console": "off",
         "no-else-return": "off",
-        "no-lonely-if": "off",
         "no-multiple-empty-lines": "off",
         "no-nested-ternary": "off",
         "no-new": "off",
