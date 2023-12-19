@@ -1,2 +1,4 @@
-<app-reusable-project-form *ngIf='project'
-                           [formData]='{shortname: project.shortname, longname: project.longname, shortcode: project.shortcode}' (submitData)='onSubmit($event)'></app-reusable-project-form>
+<app-reusable-project-form
+  *ngIf="project"
+  [formData]="{shortname: project.shortname, longname: project.longname, shortcode: project.shortcode}"
+  (submitData)="onSubmit($event)"></app-reusable-project-form>
