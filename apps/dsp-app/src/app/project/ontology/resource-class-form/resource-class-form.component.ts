@@ -276,7 +276,7 @@ export class ResourceClassFormComponent implements OnInit, AfterViewChecked {
     switch (type) {
       case 'label':
         this.resourceClassLabels = data;
-        this.resourceClassForm.controls.label.setValue(data);
+        this.resourceClassForm.controls['label'].setValue(data);
         this.handleError(this.resourceClassLabelsTouched, type);
         break;
 
@@ -299,7 +299,7 @@ export class ResourceClassFormComponent implements OnInit, AfterViewChecked {
 
     this.formErrors[type] = '';
     if (touched && !checkValue.length) {
-      this.formErrors[type] = messages.required;
+      this.formErrors[type] = messages['required'];
     }
   }
 
@@ -397,7 +397,7 @@ export class ResourceClassFormComponent implements OnInit, AfterViewChecked {
 
       const newResClass = new CreateResourceClass();
 
-      newResClass.name = this.resourceClassForm.controls.name.value;
+      newResClass.name = this.resourceClassForm.controls['name'].value;
       newResClass.label = this.resourceClassLabels;
       newResClass.comment = this.resourceClassComments;
       newResClass.subClassOf = [this.iri];

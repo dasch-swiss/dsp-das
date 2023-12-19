@@ -359,7 +359,7 @@ export class UserFormComponent implements OnInit, OnChanges {
             // update application state
             if (user.username === this.user.username) {
               // update logged in user session
-              this.user.lang = this.userForm.controls.lang.value;
+              this.user.lang = this.userForm.controls['lang'].value;
             }
 
             this._store.dispatch(new SetUserAction(this.user));

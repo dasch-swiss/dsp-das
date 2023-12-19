@@ -14,7 +14,7 @@ export class ExistingNameDirective implements Validators, OnChanges {
    * @param changes
    */
   ngOnChanges(changes: SimpleChanges): void {
-    const change = changes.existingName;
+    const change = changes['existingName'];
     if (change) {
       const val: string | RegExp = change.currentValue;
       const re = val instanceof RegExp ? val : new RegExp(val);

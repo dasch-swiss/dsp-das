@@ -51,7 +51,7 @@ export class AppErrorHandler implements ErrorHandler {
     // in case of (internal) server error
     const apiServerError =
       error.error &&
-      !(error.error instanceof AjaxError && error.error.response);
+      !(error.error instanceof AjaxError && error.error['response']);
 
     if (
       ((error.status > 499 && error.status < 600) || apiServerError) &&
@@ -110,7 +110,7 @@ export class AppErrorHandler implements ErrorHandler {
             this.appLoggingService.error(
               `Logout ajax error`,
               {},
-              new Error(logoutError.error.message)
+              new Error(logoutError.error['message'])
             );
           } else {
             this.appLoggingService.error(
@@ -129,13 +129,13 @@ export class AppErrorHandler implements ErrorHandler {
         if (
           error.error &&
           error.error instanceof AjaxError &&
-          !error.error.message.startsWith('ajax error')
+          !error.error['message'].startsWith('ajax error')
         ) {
           // the Api response error contains a complex error message from dsp-js-lib
           this.appLoggingService.error(
             `Api response error`,
             {},
-            new Error(error.error.message)
+            new Error(error.error['message'])
           );
         } else {
           const defaultStatusMsg = this.httpStatusMsg.default;

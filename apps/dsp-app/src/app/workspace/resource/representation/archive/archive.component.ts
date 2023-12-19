@@ -59,7 +59,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(
-      res => (this.originalFilename = res.originalFilename),
+      res => (this.originalFilename = res['originalFilename']),
       () => (this.failedToLoad = true)
     );
   }
@@ -136,7 +136,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
           ).strval;
 
           this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(res => {
-            this.originalFilename = res.originalFilename;
+            this.originalFilename = res['originalFilename'];
 
             this._valueOperationEventService.emit(
               new EmitEvent(

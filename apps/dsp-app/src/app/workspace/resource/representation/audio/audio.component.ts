@@ -62,7 +62,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(
-      res => (this.originalFilename = res.originalFilename),
+      res => (this.originalFilename = res['originalFilename']),
       () => (this.failedToLoad = true)
     );
     this.audio = this._sanitizer.bypassSecurityTrustUrl(
@@ -213,7 +213,9 @@ export class AudioComponent implements OnInit, AfterViewInit {
 
           this._rs
             .getFileInfo(this.src.fileValue.fileUrl)
-            .subscribe(res => (this.originalFilename = res.originalFilename));
+            .subscribe(
+              res => (this.originalFilename = res['originalFilename'])
+            );
 
           this._valueOperationEventService.emit(
             new EmitEvent(

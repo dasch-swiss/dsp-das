@@ -112,7 +112,7 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
     // get list iri from list name
     this._route.params.subscribe(params => {
       if (this.project) {
-        this.listIri = `${this._acs.dspAppConfig.iriBase}/lists/${this.project.shortcode}/${params.list}`;
+        this.listIri = `${this._acs.dspAppConfig.iriBase}/lists/${this.project.shortcode}/${params['list']}`;
       }
     });
   }
