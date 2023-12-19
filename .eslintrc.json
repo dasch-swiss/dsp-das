@@ -113,7 +113,6 @@
         "object-curly-newline": "off",
         "operator-assignment": "off",
         "operator-linebreak": "off",
-        "padded-blocks": "off",
         "prefer-arrow-callback": "off",
         "prefer-exponentiation-operator": "off",
         "prefer-regex-literals": "off",
