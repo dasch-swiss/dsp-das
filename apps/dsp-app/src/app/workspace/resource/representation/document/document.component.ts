@@ -200,9 +200,9 @@ export class DocumentComponent implements OnInit, AfterViewInit {
             this.elem = document.getElementsByClassName('pdf-viewer')[0];
           }
 
-          this._rs
-            .getFileInfo(this.src.fileValue.fileUrl)
-            .subscribe(res => (this.originalFilename = res['originalFilename']));
+          this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(res => {
+            this.originalFilename = res['originalFilename'];
+          });
 
           this.zoomFactor = 1.0;
           this.pdfQuery = '';
