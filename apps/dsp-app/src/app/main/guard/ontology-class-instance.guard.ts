@@ -34,11 +34,11 @@ export class OntologyClassInstanceGuard implements CanActivate {
           return false;
         }
 
-        return (
-          instanceId === RouteConstants.addClassInstance &&
-          (userProjects?.some(p => p.id === this.projectService.uuidToIri(projectUuid)) || // project member
-            isSysAdmin) // system admin
-        );
+        return instanceId !== RouteConstants.addClassInstance
+          ? true
+          : userProjects?.some(
+              p => p.id === this.projectService.uuidToIri(projectUuid) // project member
+            ) || isSysAdmin; // system admin
       })
     );
   }
