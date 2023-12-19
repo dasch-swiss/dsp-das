@@ -3,6 +3,7 @@
  *  SPDX-License-Identifier: Apache-2.0
  */
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Utils {
   /**
    * Checks if a given number is an integer.

@@ -6,6 +6,7 @@
 import { CalendarDate } from './CalendarDate';
 import { TypeDefinitionsModule } from './TypeDefinitions';
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace JDNConvertibleConversionModule {
   /**
    * Removes the fraction from a given number (<https://stackoverflow.com/questions/4912788/truncate-not-round-off-decimal-numbers-in-javascript/9232092#9232092>).

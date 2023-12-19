@@ -76,6 +76,7 @@ export class AdvancedSearchService {
     this._dspApiConnection.v2.onto.getOntologiesByProjectIri(projectIri).pipe(
       map((response: OntologiesMetadata | ApiResponseError) => {
         if (response instanceof ApiResponseError) {
+          // eslint-disable-next-line @typescript-eslint/no-throw-literal
           throw response; // caught by catchError operator
         }
         return response.ontologies.map((onto: { id: string; label: string }) => ({ iri: onto.id, label: onto.label }));
@@ -91,6 +92,7 @@ export class AdvancedSearchService {
     this._dspApiConnection.v2.onto.getOntology(ontologyIri).pipe(
       map((response: ApiResponseError | ReadOntology) => {
         if (response instanceof ApiResponseError) {
+          // eslint-disable-next-line @typescript-eslint/no-throw-literal
           throw response; // caught by catchError operator
         }
 
@@ -257,6 +259,7 @@ export class AdvancedSearchService {
         takeUntil(this.cancelPreviousCountRequest$), // Cancel previous request
         switchMap((response: CountQueryResponse | ApiResponseError) => {
           if (response instanceof ApiResponseError) {
+            // eslint-disable-next-line @typescript-eslint/no-throw-literal
             throw response; // caught by catchError operator
           }
           return of(response.numberOfResults);
@@ -282,6 +285,7 @@ export class AdvancedSearchService {
         takeUntil(this.cancelPreviousSearchRequest$), // Cancel previous request
         switchMap((response: ReadResourceSequence | ApiResponseError) => {
           if (response instanceof ApiResponseError) {
+            // eslint-disable-next-line @typescript-eslint/no-throw-literal
             throw response; // caught by catchError operator
           }
           return of(
@@ -302,6 +306,7 @@ export class AdvancedSearchService {
     return this._dspApiConnection.v2.list.getList(rootNodeIri).pipe(
       map((response: ListNodeV2 | ApiResponseError) => {
         if (response instanceof ApiResponseError) {
+          // eslint-disable-next-line @typescript-eslint/no-throw-literal
           throw response; // caught by catchError operator
         }
         return response;

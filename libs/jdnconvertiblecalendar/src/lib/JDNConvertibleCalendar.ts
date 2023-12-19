@@ -263,12 +263,15 @@ export abstract class JDNConvertibleCalendar {
     // call constructor of subclass representing the target calendar
     switch (toCalendarType) {
       case JDNConvertibleCalendar.gregorian:
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         return new GregorianCalendarDate(jdnPeriod);
 
       case JDNConvertibleCalendar.julian:
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         return new JulianCalendarDate(jdnPeriod);
 
       case JDNConvertibleCalendar.islamic:
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         return new IslamicCalendarDate(jdnPeriod);
     }
   }

@@ -108,7 +108,11 @@ export class ProjectsState {
 
           state = produce(state, draft => {
             const index = draft.readProjects.findIndex(p => p.id === project.id);
-            index > -1 ? (draft.readProjects[index] = project) : draft.readProjects.push(project);
+            if (index > -1) {
+              draft.readProjects[index] = project;
+            } else {
+              draft.readProjects.push(project);
+            }
             draft.isLoading = false;
           });
 
