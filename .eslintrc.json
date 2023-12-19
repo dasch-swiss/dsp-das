@@ -91,7 +91,6 @@
         "no-floating-decimal": "off",
         "no-lonely-if": "off",
         "no-multiple-empty-lines": "off",
-        "no-multi-spaces": "off",
         "no-nested-ternary": "off",
         "no-new": "off",
         "no-param-reassign": "off",
