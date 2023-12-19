@@ -162,7 +162,7 @@ export class OntologiesState {
   @Action(LoadOntologyAction)
   loadOntologyAction(
     ctx: StateContext<OntologiesStateModel>,
-    { ontologyIri: ontologyIri, projectUuid, stopLoadingWhenCompleted }: LoadOntologyAction
+    { ontologyIri, projectUuid, stopLoadingWhenCompleted }: LoadOntologyAction
   ) {
     ctx.patchState({ isLoading: true });
     return this._dspApiConnection.v2.onto.getOntology(ontologyIri, true).pipe(
