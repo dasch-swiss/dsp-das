@@ -62,7 +62,6 @@
       ],
       "rules": {
         // ESLint rules
-        "arrow-parens": "off",
         "curly": "off",
         "default-case": "off",
         "eqeqeq": "off",
