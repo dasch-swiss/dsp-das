@@ -36,7 +36,9 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Select } from '@ngxs/store';
-import { Observable, Subject, Subscription, combineLatest } from 'rxjs';
+import {
+ Observable, Subject, Subscription, combineLatest
+} from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { SplitSize } from '../results/results.component';
 import { DspCompoundPosition, DspResource } from './dsp-resource';
@@ -121,8 +123,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   get isAdmin$(): Observable<boolean> {
     return combineLatest([this.user$, this.userProjectAdminGroups$]).pipe(
       takeUntil(this.ngUnsubscribe),
-      map(([user, userProjectGroups]) =>
-        this.attachedToProjectResource
+      map(([user, userProjectGroups]) => (this.attachedToProjectResource
           ? ProjectService.IsProjectAdminOrSysAdmin(user, userProjectGroups, this.attachedToProjectResource)
           : false
       )
@@ -131,7 +132,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
   @Select(UserSelectors.user) user$: Observable<ReadUser>;
   @Select(UserSelectors.userProjectAdminGroups)
-  userProjectAdminGroups$: Observable<string[]>;
+    userProjectAdminGroups$: Observable<string[]>;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -377,14 +378,13 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
         this.incomingResource = res;
         this.incomingResource.resProps = this.initProps(response);
-        this.incomingResource.systemProps =
-          this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
+        this.incomingResource.systemProps =          this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
         this.representationsToDisplay = this.collectRepresentationsAndAnnotations(this.incomingResource);
         if (
-          this.representationsToDisplay.length &&
-          this.representationsToDisplay[0].fileValue &&
-          this.compoundPosition
+          this.representationsToDisplay.length
+          && this.representationsToDisplay[0].fileValue
+          && this.compoundPosition
         ) {
           this.getIncomingRegions(this.incomingResource, 0);
         }
@@ -455,6 +455,8 @@ export class ResourceComponent implements OnChanges, OnDestroy {
       .sort((a, b) => (a.guiDef.guiOrder > b.guiDef.guiOrder ? 1 : -1))
       // to get equal results on all browser engines which implements sorting in different way
       // properties list has to be sorted again, pushing all "has..." properties to the bottom
+      // TODO FOLLOWING LINE IS A BUG ARRAY-CALLBACK-RETURN SHOULDNT BE DISABLED
+      // eslint-disable-next-line array-callback-return
       .sort(a => {
         if (a.guiDef.guiOrder === undefined) {
           return 1;

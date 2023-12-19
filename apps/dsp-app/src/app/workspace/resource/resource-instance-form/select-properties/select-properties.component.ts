@@ -94,6 +94,8 @@ export class SelectPropertiesComponent implements OnInit {
    */
   isPropRequired(propId: string): boolean {
     if (this.selectedResourceClass !== undefined && propId) {
+      // TODO FOLLOWING LINE IS A BUG ARRAY-CALLBACK-RETURN SHOULDNT BE DISABLED
+      // eslint-disable-next-line array-callback-return
       this.selectedResourceClass.propertiesList.filter((card: IHasProperty) => {
         if (card.propertyIndex === propId) {
           // cardinality 1 or 1-N

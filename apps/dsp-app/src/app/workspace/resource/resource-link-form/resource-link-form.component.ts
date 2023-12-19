@@ -116,12 +116,12 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
 
     const form = this.form;
 
-    Object.keys(this.formErrors).map(field => {
+    Object.keys(this.formErrors).forEach(field => {
       this.formErrors[field] = '';
       const control = form.get(field);
       if (control && control.dirty && !control.valid) {
         const messages = this.validationMessages[field];
-        Object.keys(control.errors).map(key => {
+        Object.keys(control.errors).forEach(key => {
           this.formErrors[field] += `${messages[key]} `;
         });
       }

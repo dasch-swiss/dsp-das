@@ -245,13 +245,13 @@ export class AddUserComponent implements OnInit {
     this.selectedUser = undefined;
 
     // check if the form is valid
-    Object.keys(this.selectUserErrors).map(field => {
+    Object.keys(this.selectUserErrors).forEach(field => {
       this.selectUserErrors[field] = '';
       const control = this.selectUserForm.get(field);
       if (control.value.length >= 2) {
         if (control && control.dirty && !control.valid) {
           const messages = this.validationMessages[field];
-          Object.keys(control.errors).map(key => {
+          Object.keys(control.errors).forEach(key => {
             this.selectUserErrors[field] += `${messages[key]} `;
           });
         }

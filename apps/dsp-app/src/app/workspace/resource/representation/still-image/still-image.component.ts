@@ -320,11 +320,11 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
 
       // collect all geometries belonging to this page
       const geometries: GeometryForRegion[] = [];
-      image.annotations.map(reg => {
+      image.annotations.forEach(reg => {
         this._regions[reg.regionResource.id] = [];
         const geoms = reg.getGeometries();
 
-        geoms.map(geom => {
+        geoms.forEach(geom => {
           const geomForReg = new GeometryForRegion(geom.geometry, reg.regionResource);
 
           geometries.push(geomForReg);
