@@ -1,9 +1,5 @@
-import {
- Directive, Input, OnDestroy, OnInit
-} from '@angular/core';
-import {
- AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators
-} from '@angular/forms';
+import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { CreateValue, ReadValue, UpdateValue } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 
@@ -120,16 +116,16 @@ export abstract class BaseValueDirective implements OnInit, OnDestroy {
    * @param initComment Initially given comment.
    * @param commentFormControl FormControl of the current comment.
    */
+
   standardValidatorFunc: (val: any, comment: string, commentCtrl: FormControl) => ValidatorFn =
     (initValue: any, initComment: string, commentFormControl: FormControl): ValidatorFn =>
     (control: AbstractControl): { [key: string]: any } | null => {
-        const invalid = this.standardValueComparisonFunc(
-        initValue,
-        control.value
-    (initComment === commentFormControl.value || (initComment === null && commentFormControl.value === ''));
+      const invalid =
+        this.standardValueComparisonFunc(initValue, control.value) &&
+        (initComment === commentFormControl.value || (initComment === null && commentFormControl.value === ''));
 
       return invalid ? { valueNotChanged: { value: control.value } } : null;
-  };
+    };
 
   /**
    * returns the initially given value comment set via displayValue.

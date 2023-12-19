@@ -65,6 +65,8 @@
         "arrow-parens": "off",
         "max-len": "off",
         "operator-linebreak": "off",
+        "@typescript-eslint/indent": "off",
+        "implicit-arrow-linebreak": "off",
         // rules to work on later on
         "default-case": "off",
         "eqeqeq": "off",
