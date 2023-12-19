@@ -93,7 +93,11 @@ export class PasswordFormComponent implements OnInit {
         this.updateOwn = false;
       }
       this.showPasswordForm = this.updateOwn;
-      this.updateOwn ? this.buildForm() : this.buildConfirmForm();
+      if (this.updateOwn) {
+        this.buildForm();
+      } else {
+        this.buildConfirmForm();
+      }
     } else {
       // create new password
       this.updateOwn = false;
