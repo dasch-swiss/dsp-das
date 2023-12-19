@@ -82,7 +82,6 @@
         "no-unsafe-optional-chaining": "off",
         "no-unused-vars": "off",
         "prefer-regex-literals": "off",
-        "prefer-template": "off",
         "prefer-destructuring": "off",
         "radix": "off",
         "simple-import-sort/exports": "off",

@@ -72,7 +72,7 @@ export class GravsearchService {
       property.selectedProperty?.objectType.includes(Constants.KnoraApiV2) &&
       property.selectedProperty?.objectType !== ResourceLabel
     ) {
-      constructString = '?mainRes <' + property.selectedProperty?.iri + '> ?prop' + index + ' .';
+      constructString = `?mainRes <${property.selectedProperty?.iri}> ?prop${index} .`;
       whereString = constructString;
     }
 
@@ -82,7 +82,7 @@ export class GravsearchService {
       property.selectedProperty?.objectType !== ResourceLabel
     ) {
       if (property.selectedOperator !== Operators.NotEquals) {
-        constructString = '?mainRes <' + property.selectedProperty?.iri + '> ?prop' + index + ' .';
+        constructString = `?mainRes <${property.selectedProperty?.iri}> ?prop${index} .`;
         whereString = constructString;
       }
       // if search value is an array that means that it's a linked resource with child properties
@@ -124,9 +124,9 @@ export class GravsearchService {
     }
 
     if (!(property.selectedOperator === Operators.Exists || property.selectedOperator === Operators.NotExists)) {
-      whereString += '\n' + this._valueStringHelper(property, index, '?prop', '?mainRes');
+      whereString += `\n${this._valueStringHelper(property, index, '?prop', '?mainRes')}`;
     } else if (property.selectedOperator === Operators.NotExists) {
-      whereString = 'FILTER NOT EXISTS { \n' + whereString + '\n}\n';
+      whereString = `FILTER NOT EXISTS { \n${whereString}\n}\n`;
     }
 
     return {
@@ -169,7 +169,7 @@ export class GravsearchService {
           if (Array.isArray(property.searchValue)) {
             property.searchValue.forEach((value, i) => {
               if (value.selectedOperator !== Operators.Exists && value.selectedOperator !== Operators.NotExists) {
-                valueString += this._valueStringHelper(value, i, '?linkProp' + index, '?prop' + index);
+                valueString += this._valueStringHelper(value, i, `?linkProp${index}`, `?prop${index}`);
               }
             });
           }

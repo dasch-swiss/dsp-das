@@ -253,7 +253,7 @@ export abstract class JDNConvertibleCalendar {
    */
   public convertCalendar(toCalendarType: 'Gregorian' | 'Julian' | 'Islamic'): JDNConvertibleCalendar {
     if (JDNConvertibleCalendar.supportedCalendars.indexOf(toCalendarType) == -1) {
-      throw new JDNConvertibleCalendarError('Target calendar not supported: ' + toCalendarType);
+      throw new JDNConvertibleCalendarError(`Target calendar not supported: ${toCalendarType}`);
     }
 
     if (this.calendarName == toCalendarType) return this; // no conversion needed

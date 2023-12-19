@@ -30,12 +30,12 @@ export class ApplicationStateService {
       // content should never be undefined but we'll check anyway
       // if it is undefined, it means the app is in an invalid state
       if (content === undefined) {
-        return throwError('Requested key "' + key + '" has value of undefined in the application state');
+        return throwError(`Requested key "${key}" has value of undefined in the application state`);
       } else {
         return of(content.value);
       }
     } else {
-      return throwError('Requested key "' + key + '" is not available in the application state');
+      return throwError(`Requested key "${key}" is not available in the application state`);
     }
   }
 

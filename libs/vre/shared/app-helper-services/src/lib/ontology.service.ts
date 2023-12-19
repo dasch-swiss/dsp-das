@@ -33,18 +33,14 @@ export class OntologyService {
     if (label && type) {
       // build name from label
       // normalize and replace spaces and special chars
-      return (
-        type +
-        '-' +
-        label
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/[\u00a0-\u024f]/g, '')
-          .replace(/[\])}[{(]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/\//g, '-')
-          .toLowerCase()
-      );
+      return `${type}-${label
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[\u00a0-\u024f]/g, '')
+        .replace(/[\])}[{(]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/\//g, '-')
+        .toLowerCase()}`;
     } else {
       // build randomized name
       // the name starts with the three first character of ontology iri to avoid a start with a number followed by randomized string
@@ -208,11 +204,8 @@ export class OntologyService {
    * TODO: move to DSP-JS-Lib similar to `get ApiUrl`
    */
   getIriBaseUrl(): string {
-    return (
-      'http://' +
-      this._dspApiConfig.apiHost +
-      (this._dspApiConfig.apiPort !== null ? ':' + this._dspApiConfig.apiPort : '') +
-      this._dspApiConfig.apiPath
-    );
+    return `http://${this._dspApiConfig.apiHost}${
+      this._dspApiConfig.apiPort !== null ? `:${this._dspApiConfig.apiPort}` : ''
+    }${this._dspApiConfig.apiPath}`;
   }
 }
