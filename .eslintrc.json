@@ -72,7 +72,6 @@
         "no-console": "off",
         "no-else-return": "off",
         "no-nested-ternary": "off",
-        "no-new": "off",
         "no-param-reassign": "off",
         "no-plusplus": "off",
         "no-prototype-builtins": "off",
