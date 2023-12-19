@@ -81,7 +81,6 @@
         "no-underscore-dangle": "off",
         "no-unsafe-optional-chaining": "off",
         "no-unused-vars": "off",
-        "operator-assignment": "off",
         "operator-linebreak": "off",
         "prefer-arrow-callback": "off",
         "prefer-exponentiation-operator": "off",

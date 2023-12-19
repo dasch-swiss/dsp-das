@@ -36,7 +36,7 @@ export namespace JDNConvertibleConversionModule {
     let day = calendarDate.day;
 
     if (calendarDate.daytime !== undefined) {
-      day = day + calendarDate.daytime;
+      day += calendarDate.daytime;
     }
 
     if (calendarDate.month > 2) {
@@ -93,7 +93,7 @@ export namespace JDNConvertibleConversionModule {
    * @returns the Gregorian calendar date created from the given JDC.
    */
   export const JDCToGregorian = (jdc: TypeDefinitionsModule.JDC): CalendarDate => {
-    jdc = jdc + 0.5;
+    jdc += 0.5;
     const z = truncateDecimals(jdc);
     const f = jdc - z;
 
@@ -151,7 +151,7 @@ export namespace JDNConvertibleConversionModule {
     let day = calendarDate.day;
 
     if (calendarDate.daytime !== undefined) {
-      day = day + calendarDate.daytime;
+      day += calendarDate.daytime;
     }
 
     if (calendarDate.month > 2) {
@@ -205,7 +205,7 @@ export namespace JDNConvertibleConversionModule {
    * @returns Julian calendar date created from given JDC.
    */
   export const JDCToJulian = (jdc: TypeDefinitionsModule.JDC): CalendarDate => {
-    jdc = jdc + 0.5;
+    jdc += 0.5;
     const z = truncateDecimals(jdc);
     const f = jdc - z;
     const a = z; // it's a julian calendar
@@ -282,21 +282,21 @@ export namespace JDNConvertibleConversionModule {
     let d = calendarDate.day;
 
     if (calendarDate.daytime !== undefined) {
-      d = d + calendarDate.daytime;
+      d += calendarDate.daytime;
     }
 
     const n = d + Math.floor(29.5001 * (m - 1) + 0.99);
     const q = Math.floor(h / 30);
     let r = h % 30;
     if (r < 0) {
-      r = r + 30;
+      r += 30;
     }
     const a = Math.floor((11 * r + 3) / 30);
     const w = 404 * q + 354 * r + 208 + a;
     const q1 = Math.floor(w / 1461);
     let q2 = w % 1461;
     if (q2 < 0) {
-      q2 = q2 + 1461;
+      q2 += 1461;
     }
     const g = 621 + 4 * Math.floor(7 * q + q1);
     const k = Math.floor(q2 / 365.2422);
@@ -305,11 +305,11 @@ export namespace JDNConvertibleConversionModule {
     let x = g + k;
 
     if (j > 366 && x % 4 == 0) {
-      j = j - 366;
-      x = x + 1;
+      j -= 366;
+      x += 1;
     } else if (j > 365 && x % 4 > 0) {
-      j = j - 365;
-      x = x + 1;
+      j -= 365;
+      x += 1;
     }
 
     const jdc = truncateDecimals(365.25 * (x - 1)) + 1721423 + j - 0.5;
@@ -376,19 +376,19 @@ export namespace JDNConvertibleConversionModule {
     let c2 = Math.floor(c1);
 
     if (c1 - c2 > 0.5) {
-      c2 = c2 + 1;
+      c2 += 1;
     }
 
     const d_ = 1461 * b + 170 + c2;
     const q = Math.floor(d_ / 10631);
     let r = d_ % 10631;
     if (r < 0) {
-      r = r + 10631;
+      r += 10631;
     }
     const j = Math.floor(r / 354);
     let k = r % 354;
     if (k < 0) {
-      k = k + 354;
+      k += 354;
     }
     const o = Math.floor((11 * j + 14) / 30);
     let h = 30 * q + j + 1;
@@ -397,25 +397,25 @@ export namespace JDNConvertibleConversionModule {
     if (jj > 354) {
       let cl = h % 30;
       if (cl < 0) {
-        cl = cl + 30;
+        cl += 30;
       }
       let dl = (11 * cl + 3) % 30;
       if (dl < 0) {
-        dl = dl + 30;
+        dl += 30;
       }
 
       if (dl < 19) {
-        jj = jj - 354;
-        h = h + 1;
+        jj -= 354;
+        h += 1;
       }
       if (dl > 18) {
-        jj = jj - 355;
-        h = h + 1;
+        jj -= 355;
+        h += 1;
       }
 
       if (jj == 0) {
         jj = 355;
-        h = h - 1;
+        h -= 1;
       }
     }
 
