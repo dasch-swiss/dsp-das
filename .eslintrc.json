@@ -72,6 +72,7 @@
         "import/no-cycle": "off",
         "import/order": ["error", { "alphabetize": { "order": "asc" } }],
         "max-classes-per-file": "off",
+        "no-case-declarations": "off",
         "no-console": "off",
         "no-else-return": "off",
         "no-nested-ternary": "off",
