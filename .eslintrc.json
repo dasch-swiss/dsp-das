@@ -69,7 +69,6 @@
         "import/order": ["error", { "alphabetize": { "order": "asc" } }],
         "max-classes-per-file": "off",
         "max-len": "off",
-        "no-case-declarations": "warn",
         "no-console": "off",
         "no-else-return": "off",
         "no-floating-decimal": "off",
