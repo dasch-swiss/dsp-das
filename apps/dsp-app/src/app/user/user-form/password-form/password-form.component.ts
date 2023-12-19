@@ -88,11 +88,9 @@ export class PasswordFormComponent implements OnInit {
       if (usernameFromState === this.user.username) {
         // update own password
         this.updateOwn = true;
-      } else {
+      } else if (userFromState.systemAdmin) {
         // update not own password, if logged-in user is system admin
-        if (userFromState.systemAdmin) {
-          this.updateOwn = false;
-        }
+        this.updateOwn = false;
       }
       this.showPasswordForm = this.updateOwn;
       this.updateOwn ? this.buildForm() : this.buildConfirmForm();

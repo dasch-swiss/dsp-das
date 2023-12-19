@@ -64,10 +64,12 @@
         "arrow-body-style": "off",
         "arrow-parens": "off",
         "max-len": "off",
+        "operator-linebreak": "off",
         // rules to work on later on
         "default-case": "off",
         "eqeqeq": "off",
         "consistent-return": "off",
+        "grouped-accessor-pairs": "off",
         "import/prefer-default-export": "off",
         "import/no-cycle": "off",
         "import/order": ["error", { "alphabetize": { "order": "asc" } }],

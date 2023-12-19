@@ -89,7 +89,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
   }
 
   parseTime(time) {
-    if (isNaN(time)) {
+    if (Number.isNaN(time)) {
       return '00:00';
     }
     const minutes = Math.floor(time / 60);
@@ -187,9 +187,9 @@ export class AudioComponent implements OnInit, AfterViewInit {
 
           this.audio = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
 
-          this._rs
-            .getFileInfo(this.src.fileValue.fileUrl)
-            .subscribe(res => (this.originalFilename = res['originalFilename']));
+          this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(res => {
+            this.originalFilename = res['originalFilename'];
+          });
 
           this._valueOperationEventService.emit(
             new EmitEvent(

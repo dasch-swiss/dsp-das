@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Directive, OnChanges, Input, Renderer2, ElementRef } from '@angular/core';
 import { Md5 } from 'ts-md5';
 import { AdminImageConfig } from './admin-image.config';
@@ -36,7 +37,8 @@ export class AdminImageDirective implements OnChanges {
 
   constructor(
     private _renderer: Renderer2,
-    private _ele: ElementRef
+    private _ele: ElementRef,
+    private _location: Location
   ) {}
 
   ngOnChanges() {
@@ -49,7 +51,7 @@ export class AdminImageDirective implements OnChanges {
         if (this.image === null || this.image === undefined) {
           this.source = AdminImageConfig.defaultUser;
         } else {
-          this.source = `${location.protocol}//www.gravatar.com/avatar/${Md5.hashStr(this.image)}?d=mp&s=256`;
+          this.source = `${this._location.protocol}//www.gravatar.com/avatar/${Md5.hashStr(this.image)}?d=mp&s=256`;
         }
 
         break;

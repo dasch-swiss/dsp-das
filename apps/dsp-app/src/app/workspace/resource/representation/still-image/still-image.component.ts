@@ -550,6 +550,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
    * set up function for the region drawer
    */
   private _addRegionDrawer() {
+    // eslint-disable-next-line no-new
     new OpenSeadragon.MouseTracker({
       element: this._viewer.canvas,
       pressHandler: event => {

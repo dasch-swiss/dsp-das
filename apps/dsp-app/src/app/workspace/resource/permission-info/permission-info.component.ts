@@ -196,11 +196,9 @@ export class PermissionInfoComponent implements OnInit {
     // add to list of Permissions if it does not exist yet
     if (index === -1) {
       this.listOfPermissions.push(permission);
-    } else {
+    } else if (this.listOfPermissions[index].restriction.length < restriction.length) {
       // if it exists, compare the permission level and replace if it's higher
-      if (this.listOfPermissions[index].restriction.length < restriction.length) {
-        this.listOfPermissions[index] = permission;
-      }
+      this.listOfPermissions[index] = permission;
     }
   }
 }

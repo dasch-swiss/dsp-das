@@ -66,10 +66,13 @@ export class DocumentComponent implements OnInit, AfterViewInit {
     this.fileType = this._getFileType(this.src.fileValue.filename);
 
     this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(
-      res => (this.originalFilename = res['originalFilename']),
-      () =>
+      res => {
+        this.originalFilename = res['originalFilename'];
+      },
+      () => {
         // error already handled by getFileInfo
-        (this.failedToLoad = true)
+        this.failedToLoad = true;
+      }
     );
   }
 

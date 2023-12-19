@@ -1,5 +1,9 @@
-import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import {
+ Directive, Input, OnDestroy, OnInit
+} from '@angular/core';
+import {
+ AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators
+} from '@angular/forms';
 import { CreateValue, ReadValue, UpdateValue } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 
@@ -119,12 +123,13 @@ export abstract class BaseValueDirective implements OnInit, OnDestroy {
   standardValidatorFunc: (val: any, comment: string, commentCtrl: FormControl) => ValidatorFn =
     (initValue: any, initComment: string, commentFormControl: FormControl): ValidatorFn =>
     (control: AbstractControl): { [key: string]: any } | null => {
-      const invalid =
-        this.standardValueComparisonFunc(initValue, control.value) &&
-        (initComment === commentFormControl.value || (initComment === null && commentFormControl.value === ''));
+        const invalid = this.standardValueComparisonFunc(
+        initValue,
+        control.value
+    (initComment === commentFormControl.value || (initComment === null && commentFormControl.value === ''));
 
       return invalid ? { valueNotChanged: { value: control.value } } : null;
-    };
+  };
 
   /**
    * returns the initially given value comment set via displayValue.
@@ -162,13 +167,10 @@ export abstract class BaseValueDirective implements OnInit, OnDestroy {
             this.standardValidatorFunc(initialValue, initialComment, this.commentFormControl),
           ].concat(this.customValidators)
         );
+      } else if (this.valueRequiredValidator) {
+        this.valueFormControl.setValidators([Validators.required].concat(this.customValidators));
       } else {
-        // console.log('reset read/create validators');
-        if (this.valueRequiredValidator) {
-          this.valueFormControl.setValidators([Validators.required].concat(this.customValidators));
-        } else {
-          this.valueFormControl.setValidators(this.customValidators);
-        }
+        this.valueFormControl.setValidators(this.customValidators);
       }
 
       this.valueFormControl.updateValueAndValidity();
