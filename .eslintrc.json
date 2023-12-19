@@ -63,9 +63,7 @@
       "rules": {
         "default-case": "off",
         "eqeqeq": "off",
-        // ESLint rules
         "consistent-return": "off",
-        "function-paren-newline": "off",
         "grouped-accessor-pairs": "off",
         "import/prefer-default-export": "off",
         "import/first": "off",
