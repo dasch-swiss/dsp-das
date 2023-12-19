@@ -1,29 +1,26 @@
 import { Inject, Injectable } from '@angular/core';
 import {
-    Cardinality,
-    Constants,
-    KnoraApiConfig,
-    ReadOntology,
-    ResourcePropertyDefinitionWithAllLanguages
+  Cardinality,
+  Constants,
+  KnoraApiConfig,
+  ReadOntology,
+  ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
-import { Observable, of } from 'rxjs';
 import { DspApiConfigToken } from '@dasch-swiss/vre/shared/app-config';
+import { Observable, of } from 'rxjs';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from './default-data/default-properties';
 
 /**
  * helper methods for the ontology editor
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OntologyService {
   // list of default property types
   defaultProperties: PropertyCategory[] = DefaultProperties.data;
 
-  constructor(
-    @Inject(DspApiConfigToken) private _dspApiConfig: KnoraApiConfig
-  ) {
-  }
+  constructor(@Inject(DspApiConfigToken) private _dspApiConfig: KnoraApiConfig) {}
 
   /**
    * create a unique name (id) for resource classes or properties;
@@ -32,26 +29,18 @@ export class OntologyService {
    * @param [label]
    * @returns unique name
    */
-  setUniqueName(
-    ontologyIri: string,
-    label?: string,
-    type?: 'class' | 'prop'
-  ): string {
+  setUniqueName(ontologyIri: string, label?: string, type?: 'class' | 'prop'): string {
     if (label && type) {
       // build name from label
       // normalize and replace spaces and special chars
-      return (
-        type +
-        '-' +
-        label
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/[\u00a0-\u024f]/g, '')
-          .replace(/[\])}[{(]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/\//g, '-')
-          .toLowerCase()
-      );
+      return `${type}-${label
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[\u00a0-\u024f]/g, '')
+        .replace(/[\])}[{(]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/\//g, '-')
+        .toLowerCase()}`;
     } else {
       // build randomized name
       // the name starts with the three first character of ontology iri to avoid a start with a number followed by randomized string
@@ -121,7 +110,7 @@ export class OntologyService {
   } {
     return {
       multiple: card === Cardinality._0_n || card === Cardinality._1_n,
-      required: card === Cardinality._1 || card === Cardinality._1_n
+      required: card === Cardinality._1 || card === Cardinality._1_n,
     };
   }
 
@@ -139,7 +128,7 @@ export class OntologyService {
         if (baseOntoIri !== Constants.KnoraApiV2) {
           // the property is not a subproperty of knora base ontology
           // get property iri from another ontology
-          const onto = currentProjectOntologies.find((i) => i?.id === baseOntoIri);
+          const onto = currentProjectOntologies.find(i => i?.id === baseOntoIri);
           superPropIri = onto?.properties[subProp].subPropertyOf[0];
         }
 
@@ -149,7 +138,7 @@ export class OntologyService {
       }
     }
 
-    return superPropIri ? superPropIri : undefined;
+    return superPropIri || undefined;
   }
 
   /**
@@ -163,40 +152,26 @@ export class OntologyService {
         for (const subProp of property.subPropertyOf) {
           // if subProp is of type "link to" or "part of" we have to check the subproperty;
           // otherwise we get the necessary property info from the objectType
-          if (
-            subProp === Constants.HasLinkTo ||
-            subProp === Constants.IsPartOf
-          ) {
-            propType = group.elements.find((i: DefaultProperty) =>
-              i.guiEle === property.guiElement &&
-              i.subPropOf === subProp
+          if (subProp === Constants.HasLinkTo || subProp === Constants.IsPartOf) {
+            propType = group.elements.find(
+              (i: DefaultProperty) => i.guiEle === property.guiElement && i.subPropOf === subProp
+            );
+          } else if (property.objectType === Constants.IntValue && subProp === Constants.SeqNum) {
+            // if the property is of type number, but sub property of SeqNum,
+            // select the correct default prop params
+            propType = group.elements.find(
+              (i: DefaultProperty) => i.objectType === property.objectType && i.subPropOf === Constants.SeqNum
+            );
+          } else if (property.objectType === Constants.TextValue) {
+            // if the property is of type text value, we have to check the gui element
+            // to get the correct default prop params
+            propType = group.elements.find(
+              (i: DefaultProperty) => i.guiEle === property.guiElement && i.objectType === property.objectType
             );
           } else {
-            if (
-              property.objectType === Constants.IntValue &&
-              subProp === Constants.SeqNum
-            ) {
-              // if the property is of type number, but sub property of SeqNum,
-              // select the correct default prop params
-              propType = group.elements.find((i: DefaultProperty) =>
-                i.objectType === property.objectType &&
-                i.subPropOf === Constants.SeqNum
-              );
-            } else if (
-              property.objectType === Constants.TextValue
-            ) {
-              // if the property is of type text value, we have to check the gui element
-              // to get the correct default prop params
-              propType = group.elements.find((i: DefaultProperty) =>
-                i.guiEle === property.guiElement &&
-                i.objectType === property.objectType
-              );
-            } else {
-              // in all other cases the gui-element resp. the subProp is not relevant
-              // because the object type is unique
-              propType = group.elements.find((i: DefaultProperty) => i.objectType === property.objectType
-              );
-            }
+            // in all other cases the gui-element resp. the subProp is not relevant
+            // because the object type is unique
+            propType = group.elements.find((i: DefaultProperty) => i.objectType === property.objectType);
           }
           if (propType) {
             break;
@@ -229,13 +204,8 @@ export class OntologyService {
    * TODO: move to DSP-JS-Lib similar to `get ApiUrl`
    */
   getIriBaseUrl(): string {
-    return (
-      'http://' +
-      this._dspApiConfig.apiHost +
-      (this._dspApiConfig.apiPort !== null
-        ? ':' + this._dspApiConfig.apiPort
-        : '') +
-      this._dspApiConfig.apiPath
-    );
+    return `http://${this._dspApiConfig.apiHost}${
+      this._dspApiConfig.apiPort !== null ? `:${this._dspApiConfig.apiPort}` : ''
+    }${this._dspApiConfig.apiPath}`;
   }
 }
