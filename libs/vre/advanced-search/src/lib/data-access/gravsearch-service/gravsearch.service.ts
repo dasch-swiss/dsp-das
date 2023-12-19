@@ -46,17 +46,17 @@ export class GravsearchService {
     orderByString = orderByProps.length ? `ORDER BY ${orderByProps.join(' ')}` : '';
 
     const gravSearch =
-      `PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>\n` +
-      `CONSTRUCT {\n` +
-      `?mainRes knora-api:isMainResource true .\n` +
+      'PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>\n' +
+      'CONSTRUCT {\n' +
+      '?mainRes knora-api:isMainResource true .\n' +
       `${propertyStrings.map(prop => prop.constructString).join('\n')}\n` +
-      `} WHERE {\n` +
-      `?mainRes a knora-api:Resource .\n` +
+      '} WHERE {\n' +
+      '?mainRes a knora-api:Resource .\n' +
       `${restrictToResourceClass}\n` +
       `${propertyStrings.map(prop => prop.whereString).join('\n')}\n` +
-      `}\n` +
+      '}\n' +
       `${orderByString}\n` +
-      `OFFSET 0`;
+      'OFFSET 0';
     // console.log('gravSearch: ', gravSearch);
 
     return gravSearch;
@@ -91,9 +91,9 @@ export class GravsearchService {
             if (value.selectedOperator === Operators.NotExists) {
               constructString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
               whereString +=
-                `\nFILTER NOT EXISTS { \n` +
+                '\nFILTER NOT EXISTS { \n' +
                 `?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .\n` +
-                `}\n`;
+                '}\n';
             } else if (
               // searching for a resource class
               value.selectedOperator === Operators.Equals &&
@@ -109,9 +109,9 @@ export class GravsearchService {
             ) {
               constructString += `\n?prop${index} <${value.selectedProperty?.iri}> <${value.searchValue}> .`;
               whereString +=
-                `\nFILTER NOT EXISTS { \n` +
+                '\nFILTER NOT EXISTS { \n' +
                 `\n?prop${index} <${value.selectedProperty?.iri}> <${value.searchValue}> .\n` +
-                `}\n`;
+                '}\n';
               whereString += `\n?prop${index} a <${property.selectedMatchPropertyResourceClass?.iri}> .\n`;
             } else {
               constructString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
@@ -123,9 +123,9 @@ export class GravsearchService {
     }
 
     if (!(property.selectedOperator === Operators.Exists || property.selectedOperator === Operators.NotExists)) {
-      whereString += `\n` + this._valueStringHelper(property, index, '?prop', '?mainRes');
+      whereString += '\n' + this._valueStringHelper(property, index, '?prop', '?mainRes');
     } else if (property.selectedOperator === Operators.NotExists) {
-      whereString = `FILTER NOT EXISTS { \n` + whereString + `\n}\n`;
+      whereString = 'FILTER NOT EXISTS { \n' + whereString + '\n}\n';
     }
 
     return {
@@ -163,9 +163,7 @@ export class GravsearchService {
           return `?mainRes <${property.selectedProperty?.iri}> <${property.searchValue}> .`;
         case Operators.NotEquals:
           // this looks wrong but it is correct
-          return (
-            `FILTER NOT EXISTS { \n` + `?mainRes <${property.selectedProperty?.iri}> <${property.searchValue}> . }`
-          );
+          return `FILTER NOT EXISTS { \n?mainRes <${property.selectedProperty?.iri}> <${property.searchValue}> . }`;
         case Operators.Matches:
           if (Array.isArray(property.searchValue)) {
             property.searchValue.forEach((value, i) => {
