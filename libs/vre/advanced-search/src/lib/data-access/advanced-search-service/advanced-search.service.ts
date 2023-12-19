@@ -60,39 +60,35 @@ export class AdvancedSearchService {
   ) {}
 
   // API call to get the list of ontologies
-  allOntologiesList = (): Observable<ApiData[]> => {
-    return this._ontologyV2Api.getMetadata().pipe(
-      map(response =>
-        response['@graph']
-          .filter(onto => onto['knora-api:attachedToProject'] !== Constants.SystemProjectIRI)
-          .map(onto => {
-            return { iri: onto['@id'], label: onto['rdfs:label'] };
-          })
-      )
-    );
-  };
+  allOntologiesList = (): Observable<ApiData[]> =>
+    this._ontologyV2Api
+      .getMetadata()
+      .pipe(
+        map(response =>
+          response['@graph']
+            .filter(onto => onto['knora-api:attachedToProject'] !== Constants.SystemProjectIRI)
+            .map(onto => ({ iri: onto['@id'], label: onto['rdfs:label'] }))
+        )
+      );
 
   // API call to get the list of ontologies within the specified project iri
-  ontologiesInProjectList = (projectIri: string): Observable<ApiData[]> => {
-    return this._dspApiConnection.v2.onto.getOntologiesByProjectIri(projectIri).pipe(
+  ontologiesInProjectList = (projectIri: string): Observable<ApiData[]> =>
+    this._dspApiConnection.v2.onto.getOntologiesByProjectIri(projectIri).pipe(
       map((response: OntologiesMetadata | ApiResponseError) => {
         if (response instanceof ApiResponseError) {
           throw response; // caught by catchError operator
         }
-        return response.ontologies.map((onto: { id: string; label: string }) => {
-          return { iri: onto.id, label: onto.label };
-        });
+        return response.ontologies.map((onto: { id: string; label: string }) => ({ iri: onto.id, label: onto.label }));
       }),
       catchError(err => {
         this._handleError(err);
         return []; // return an empty array on error
       })
     );
-  };
 
   // API call to get the list of resource classes
-  resourceClassesList = (ontologyIri: string, restrictToClass?: string): Observable<ApiData[]> => {
-    return this._dspApiConnection.v2.onto.getOntology(ontologyIri).pipe(
+  resourceClassesList = (ontologyIri: string, restrictToClass?: string): Observable<ApiData[]> =>
+    this._dspApiConnection.v2.onto.getOntology(ontologyIri).pipe(
       map((response: ApiResponseError | ReadOntology) => {
         if (response instanceof ApiResponseError) {
           throw response; // caught by catchError operator
@@ -133,11 +129,10 @@ export class AdvancedSearchService {
         return []; // return an empty array on error
       })
     );
-  };
 
   // API call to get the list of properties
-  propertiesList = (ontologyIri: string): Observable<PropertyData[]> => {
-    return this._dspApiConnection.v2.ontologyCache.getOntology(ontologyIri).pipe(
+  propertiesList = (ontologyIri: string): Observable<PropertyData[]> =>
+    this._dspApiConnection.v2.ontologyCache.getOntology(ontologyIri).pipe(
       map((onto: Map<string, ReadOntology>) => {
         const ontology = onto.get(ontologyIri);
 
@@ -192,11 +187,10 @@ export class AdvancedSearchService {
         return []; // return an empty array on error
       })
     );
-  };
 
   // API call to get the list of properties filtered by resource class
-  filteredPropertiesList = (resourceClassIri: string): Observable<PropertyData[]> => {
-    return this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).pipe(
+  filteredPropertiesList = (resourceClassIri: string): Observable<PropertyData[]> =>
+    this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).pipe(
       map((onto: ResourceClassAndPropertyDefinitions) => {
         // filter out properties that shouldn't be able to be selected
         // this is a bit different than how the propertiesList method does it
@@ -248,7 +242,6 @@ export class AdvancedSearchService {
         return []; // return an empty array on error
       })
     );
-  };
 
   getResourcesListCount(searchValue: string, resourceClassIri: string): Observable<number> {
     // Cancel the previous count request

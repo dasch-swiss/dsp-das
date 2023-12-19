@@ -61,9 +61,10 @@ export class ProjectsState {
     ctx.patchState({ isLoading: true });
     return this._dspApiConnection.admin.projectsEndpoint.getProjects().pipe(
       take(1),
-      map((projectsResponse: ApiResponseData<ProjectsResponse> | ApiResponseError) => {
-        return projectsResponse as ApiResponseData<ProjectsResponse>;
-      }),
+      map(
+        (projectsResponse: ApiResponseData<ProjectsResponse> | ApiResponseError) =>
+          projectsResponse as ApiResponseData<ProjectsResponse>
+      ),
       tap({
         next: (projectsResponse: ApiResponseData<ProjectsResponse>) => {
           ctx.setState({
@@ -92,9 +93,10 @@ export class ProjectsState {
     // and set the project state here
     return this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(projectIri).pipe(
       take(1),
-      map((projectsResponse: ApiResponseData<ProjectResponse> | ApiResponseError) => {
-        return projectsResponse as ApiResponseData<ProjectResponse>;
-      }),
+      map(
+        (projectsResponse: ApiResponseData<ProjectResponse> | ApiResponseError) =>
+          projectsResponse as ApiResponseData<ProjectResponse>
+      ),
       tap({
         next: (response: ApiResponseData<ProjectResponse>) => {
           const project = response.body.project;
@@ -143,9 +145,7 @@ export class ProjectsState {
     ctx.patchState({ isLoading: true });
     return this._dspApiConnection.admin.usersEndpoint.removeUserFromProjectMembership(userId, projectIri).pipe(
       take(1),
-      map((response: ApiResponseData<UserResponse> | ApiResponseError) => {
-        return response as ApiResponseData<UserResponse>;
-      }),
+      map((response: ApiResponseData<UserResponse> | ApiResponseError) => response as ApiResponseData<UserResponse>),
       tap({
         next: (response: ApiResponseData<UserResponse>) => {
           ctx.dispatch([new SetUserAction(response.body.user), new LoadProjectMembersAction(projectIri)]);
@@ -166,9 +166,7 @@ export class ProjectsState {
     ctx.patchState({ isLoading: true, hasLoadingErrors: false });
     return this._dspApiConnection.admin.usersEndpoint.addUserToProjectMembership(userId, projectIri).pipe(
       take(1),
-      map((response: ApiResponseData<UserResponse> | ApiResponseError) => {
-        return response as ApiResponseData<UserResponse>;
-      }),
+      map((response: ApiResponseData<UserResponse> | ApiResponseError) => response as ApiResponseData<UserResponse>),
       tap({
         next: (response: ApiResponseData<UserResponse>) => {
           ctx.dispatch([new SetUserAction(response.body.user), new LoadProjectMembersAction(projectIri)]);
@@ -192,9 +190,10 @@ export class ProjectsState {
     const projectIri = this.projectService.uuidToIri(projectUuid);
     return this._dspApiConnection.admin.projectsEndpoint.getProjectMembersByIri(projectIri).pipe(
       take(1),
-      map((membersResponse: ApiResponseData<MembersResponse> | ApiResponseError) => {
-        return membersResponse as ApiResponseData<MembersResponse>;
-      }),
+      map(
+        (membersResponse: ApiResponseData<MembersResponse> | ApiResponseError) =>
+          membersResponse as ApiResponseData<MembersResponse>
+      ),
       tap({
         next: (response: ApiResponseData<MembersResponse>) => {
           ctx.setState({
@@ -218,9 +217,10 @@ export class ProjectsState {
     ctx.patchState({ isLoading: true });
     return this._dspApiConnection.admin.groupsEndpoint.getGroups().pipe(
       take(1),
-      map((groupsResponse: ApiResponseData<GroupsResponse> | ApiResponseError) => {
-        return groupsResponse as ApiResponseData<GroupsResponse>;
-      }),
+      map(
+        (groupsResponse: ApiResponseData<GroupsResponse> | ApiResponseError) =>
+          groupsResponse as ApiResponseData<GroupsResponse>
+      ),
       tap({
         next: (response: ApiResponseData<GroupsResponse>) => {
           const groups: IKeyValuePairs<ReadGroup> = {};
@@ -251,9 +251,9 @@ export class ProjectsState {
     ctx.patchState({ isLoading: true });
     return this._dspApiConnection.admin.projectsEndpoint.updateProject(projectUuid, projectData).pipe(
       take(1),
-      map((response: ApiResponseData<ProjectResponse> | ApiResponseError) => {
-        return response as ApiResponseData<ProjectResponse>;
-      }),
+      map(
+        (response: ApiResponseData<ProjectResponse> | ApiResponseError) => response as ApiResponseData<ProjectResponse>
+      ),
       tap({
         next: (response: ApiResponseData<ProjectResponse>) => {
           ctx.dispatch(new LoadProjectsAction());

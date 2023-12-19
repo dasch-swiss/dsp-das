@@ -17,9 +17,7 @@ export namespace JDNConvertibleConversionModule {
    * @param num the number whose fraction is to be removed.
    * @returns given number without fractions.
    */
-  const truncateDecimals = (num: number): number => {
-    return Math[num < 0 ? 'ceil' : 'floor'](num);
-  };
+  const truncateDecimals = (num: number): number => Math[num < 0 ? 'ceil' : 'floor'](num);
 
   /**
    * Converts a Gregorian calendar date to a JDC.
@@ -132,9 +130,7 @@ export namespace JDNConvertibleConversionModule {
    * @param jdn the given JDN.
    * @returns the Gregorian calendar date created from the given JDN.
    */
-  export const JDNToGregorian = (jdn: TypeDefinitionsModule.JDN): CalendarDate => {
-    return JDCToGregorian(jdn);
-  };
+  export const JDNToGregorian = (jdn: TypeDefinitionsModule.JDN): CalendarDate => JDCToGregorian(jdn);
 
   /**
    * Converts a Julian calendar date to a JDC.
@@ -243,9 +239,7 @@ export namespace JDNConvertibleConversionModule {
    * @param jdn JDN to be converted to a Julian calendar date.
    * @returns Julian calendar date created from given JDN.
    */
-  export const JDNToJulian = (jdn: TypeDefinitionsModule.JDN): CalendarDate => {
-    return JDCToJulian(jdn);
-  };
+  export const JDNToJulian = (jdn: TypeDefinitionsModule.JDN): CalendarDate => JDCToJulian(jdn);
 
   /**
    * Determine the day of week from the given JDN. Works only for calendars which use
@@ -257,9 +251,7 @@ export namespace JDNConvertibleConversionModule {
    * @param jdc given JDC.
    * @returns the number of the day of the week for the given JDC (0 Sunday, 1 Monday, 2 Tuesday, 3 Wednesday, 4 Thursday, 5 Friday, 6 Saturday).
    */
-  export const dayOfWeekFromJDC = (jdc: TypeDefinitionsModule.JDC) => {
-    return truncateDecimals(jdc + 1.5) % 7;
-  };
+  export const dayOfWeekFromJDC = (jdc: TypeDefinitionsModule.JDC) => truncateDecimals(jdc + 1.5) % 7;
 
   /**
    * Converts an Islamic calendar date to a JDC.
@@ -447,7 +439,5 @@ export namespace JDNConvertibleConversionModule {
    * @param jdn JDN to be converted to an Islamic calendar date.
    * @returns @returns Islamic calendar date created from given JDN.
    */
-  export const JDNToIslamic = (jdn: TypeDefinitionsModule.JDN): CalendarDate => {
-    return JDCToIslamic(jdn);
-  };
+  export const JDNToIslamic = (jdn: TypeDefinitionsModule.JDN): CalendarDate => JDCToIslamic(jdn);
 }

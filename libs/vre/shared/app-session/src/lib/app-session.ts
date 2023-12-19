@@ -98,9 +98,9 @@ export class SessionService {
         // check if the api credentials are still valid
 
         return this._dspApiConnection.v2.auth.checkCredentials().pipe(
-          map((credentials: ApiResponseData<CredentialsResponse> | ApiResponseError) => {
-            return this._updateSessionId(credentials, session, tsNow);
-          }),
+          map((credentials: ApiResponseData<CredentialsResponse> | ApiResponseError) =>
+            this._updateSessionId(credentials, session, tsNow)
+          ),
           catchError(() => {
             // if there is any error checking the credentials (mostly a 401 for after
             // switching the server where this session/the credentials are unknown), we destroy the session
