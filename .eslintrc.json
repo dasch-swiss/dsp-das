@@ -61,10 +61,9 @@
         "eslint:recommended"
       ],
       "rules": {
-        // ESLint rules
         "default-case": "off",
         "eqeqeq": "off",
-        "eol-last": "off",
+        // ESLint rules
         "consistent-return": "off",
         "function-paren-newline": "off",
         "grouped-accessor-pairs": "off",
