@@ -62,7 +62,6 @@
       ],
       "rules": {
         // ESLint rules
-        "curly": "off",
         "default-case": "off",
         "eqeqeq": "off",
         "eol-last": "off",
