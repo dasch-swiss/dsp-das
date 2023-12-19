@@ -76,7 +76,6 @@
         "no-plusplus": "off",
         "no-prototype-builtins": "off",
         "no-redeclare": "off",
-        "no-restricted-properties": "off",
         "no-restricted-syntax": "off",
         "no-return-assign": "off",
         "no-undef": "off",
