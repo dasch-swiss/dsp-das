@@ -133,7 +133,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
     // set selected language, if it's not defined yet
     if (!this.language) {
       const usersLanguage = this._store.selectSnapshot(UserSelectors.language) as string;
-      this.language = usersLanguage ? usersLanguage : navigator.language.substring(0, 2); // get default language from browser
+      this.language = usersLanguage || navigator.language.substring(0, 2); // get default language from browser
     }
 
     // does the defined language exists in our supported languages list?

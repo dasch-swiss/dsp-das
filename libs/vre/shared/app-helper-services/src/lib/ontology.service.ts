@@ -142,7 +142,7 @@ export class OntologyService {
       }
     }
 
-    return superPropIri ? superPropIri : undefined;
+    return superPropIri || undefined;
   }
 
   /**

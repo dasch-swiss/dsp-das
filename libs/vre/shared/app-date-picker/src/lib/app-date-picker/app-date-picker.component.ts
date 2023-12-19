@@ -539,7 +539,7 @@ export class AppDatePickerComponent
         this.era,
         this.form.controls['year'].value,
         this.form.controls['month'].value ? this.form.controls['month'].value : undefined,
-        day ? day : undefined
+        day || undefined
       );
 
       this.value = this.date;

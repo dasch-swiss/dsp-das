@@ -74,7 +74,7 @@ export class PropertyFormValueComponent implements OnInit, AfterViewInit {
     const [datePart, eraPart] = dateAndEra.split(' ');
     const [year, month, day] = datePart.split('-').map(part => parseInt(part));
 
-    era = eraPart ? eraPart : 'CE';
+    era = eraPart || 'CE';
 
     if (day) {
       return new KnoraDate(calendar, era, year, month, day);

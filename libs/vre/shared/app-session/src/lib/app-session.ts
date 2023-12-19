@@ -66,7 +66,7 @@ export class SessionService {
    * @param type 'email' or 'username'
    */
   setSession(jwt: string, identifier: string, type: 'email' | 'username'): Observable<boolean> {
-    this._dspApiConnection.v2.jsonWebToken = jwt ? jwt : '';
+    this._dspApiConnection.v2.jsonWebToken = jwt || '';
 
     // get user information
     return this._userApiService.get(identifier, type).pipe(
