@@ -11,12 +11,10 @@ import {
   LoadListsInProjectAction,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { AppGlobal } from '@dsp-app/src/app/app-global';
-import {
- Actions, ofActionSuccessful, Select, Store
-} from '@ngxs/store';
+import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import { AppGlobal } from '../../app-global';
 import { DialogComponent } from '../../main/dialog/dialog.component';
 import { ProjectBase } from '../project-base';
 

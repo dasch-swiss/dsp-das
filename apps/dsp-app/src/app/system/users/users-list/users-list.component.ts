@@ -31,9 +31,7 @@ import {
   SetUserAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import {
- Actions, ofActionSuccessful, Select, Store
-} from '@ngxs/store';
+import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
