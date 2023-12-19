@@ -106,7 +106,6 @@
         "class-methods-use-this": "off",
         "@typescript-eslint/comma-dangle": "off",
         "@typescript-eslint/dot-notation": "off",
-        "@typescript-eslint/brace-style": "off",
         "@typescript-eslint/lines-between-class-members": "off",
         "@typescript-eslint/naming-convention": "off",
         "@typescript-eslint/no-shadow": "off",
