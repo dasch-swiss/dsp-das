@@ -77,7 +77,6 @@
         "no-prototype-builtins": "off",
         "no-redeclare": "off",
         "no-restricted-syntax": "off",
-        "no-return-assign": "off",
         "no-undef": "off",
         "no-undef-init": "off",
         "no-underscore-dangle": "off",
