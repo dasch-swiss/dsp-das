@@ -67,7 +67,6 @@
         "import/prefer-default-export": "off",
         "import/no-cycle": "off",
         "import/order": ["error", { "alphabetize": { "order": "asc" } }],
-        "key-spacing": "off",
         "linebreak-style": "off",
         "max-classes-per-file": "off",
         "max-len": "off",
