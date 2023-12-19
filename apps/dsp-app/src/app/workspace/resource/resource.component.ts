@@ -36,9 +36,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Select } from '@ngxs/store';
-import {
- Observable, Subject, Subscription, combineLatest
-} from 'rxjs';
+import { Observable, Subject, Subscription, combineLatest } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { SplitSize } from '../results/results.component';
 import { DspCompoundPosition, DspResource } from './dsp-resource';
@@ -123,16 +121,17 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   get isAdmin$(): Observable<boolean> {
     return combineLatest([this.user$, this.userProjectAdminGroups$]).pipe(
       takeUntil(this.ngUnsubscribe),
-      map(([user, userProjectGroups]) => (this.attachedToProjectResource
+      map(([user, userProjectGroups]) => {
+        return this.attachedToProjectResource
           ? ProjectService.IsProjectAdminOrSysAdmin(user, userProjectGroups, this.attachedToProjectResource)
-          : false
-      )
+          : false;
+      })
     );
   }
 
   @Select(UserSelectors.user) user$: Observable<ReadUser>;
   @Select(UserSelectors.userProjectAdminGroups)
-    userProjectAdminGroups$: Observable<string[]>;
+  userProjectAdminGroups$: Observable<string[]>;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -378,13 +377,14 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
         this.incomingResource = res;
         this.incomingResource.resProps = this.initProps(response);
-        this.incomingResource.systemProps =          this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
+        this.incomingResource.systemProps =
+          this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
         this.representationsToDisplay = this.collectRepresentationsAndAnnotations(this.incomingResource);
         if (
-          this.representationsToDisplay.length
-          && this.representationsToDisplay[0].fileValue
-          && this.compoundPosition
+          this.representationsToDisplay.length &&
+          this.representationsToDisplay[0].fileValue &&
+          this.compoundPosition
         ) {
           this.getIncomingRegions(this.incomingResource, 0);
         }

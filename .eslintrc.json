@@ -61,6 +61,7 @@
       ],
       "rules": {
         // rules that need to be off for other configuration to work
+        "arrow-body-style": "off",
         "arrow-parens": "off",
         "max-len": "off",
         // rules to work on later on
