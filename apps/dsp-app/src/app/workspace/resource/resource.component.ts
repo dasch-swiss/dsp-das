@@ -121,11 +121,11 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   get isAdmin$(): Observable<boolean> {
     return combineLatest([this.user$, this.userProjectAdminGroups$]).pipe(
       takeUntil(this.ngUnsubscribe),
-      map(([user, userProjectGroups]) => {
-        return this.attachedToProjectResource
+      map(([user, userProjectGroups]) =>
+        this.attachedToProjectResource
           ? ProjectService.IsProjectAdminOrSysAdmin(user, userProjectGroups, this.attachedToProjectResource)
-          : false;
-      })
+          : false
+      )
     );
   }
 
@@ -262,11 +262,9 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   }
 
   getResource(iri: string): Observable<DspResource> {
-    return this._dspApiConnection.v2.res.getResource(iri).pipe(
-      map((response: ReadResource) => {
-        return new DspResource(response);
-      })
-    );
+    return this._dspApiConnection.v2.res
+      .getResource(iri)
+      .pipe(map((response: ReadResource) => new DspResource(response)));
   }
 
   renderResource(resource: DspResource) {

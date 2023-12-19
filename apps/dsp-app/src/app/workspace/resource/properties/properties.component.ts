@@ -266,7 +266,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
    */
   openProject(project: ReadProject) {
     const uuid = this._projectService.iriToUuid(project.id);
-    window.open('/project/' + uuid, '_blank');
+    window.open(`/project/${uuid}`, '_blank');
   }
 
   previewProject() {
@@ -305,7 +305,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   openResource(linkValue: ReadLinkValue | string) {
     const iri = typeof linkValue == 'string' ? linkValue : linkValue.linkedResourceIri;
     const path = this._resourceService.getResourcePath(iri);
-    window.open('/resource' + path, '_blank');
+    window.open(`/resource${path}`, '_blank');
   }
 
   previewResource() {
@@ -319,7 +319,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
       position: {
         top: '112px',
       },
-      data: { mode: type + 'Resource', title: this.resource.res.label },
+      data: { mode: `${type}Resource`, title: this.resource.res.label },
     };
 
     const dialogRef = this._dialog.open(DialogComponent, dialogConfig);

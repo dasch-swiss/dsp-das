@@ -92,13 +92,13 @@ export class AudioComponent implements OnInit, AfterViewInit {
     const seconds = Math.floor(time - minutes * 60);
     let minutesString = minutes.toString();
     if (minutes < 10) {
-      minutesString = '0' + minutesString;
+      minutesString = `0${minutesString}`;
     }
     let secondsString = seconds.toString();
     if (seconds < 10) {
-      secondsString = '0' + secondsString;
+      secondsString = `0${secondsString}`;
     }
-    return minutesString + ':' + secondsString;
+    return `${minutesString}:${secondsString}`;
   }
 
   openReplaceFileDialog() {

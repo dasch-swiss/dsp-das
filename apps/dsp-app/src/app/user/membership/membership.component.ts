@@ -114,7 +114,7 @@ export class MembershipComponent implements OnDestroy {
           };
         }
       })
-      .sort(function (u1: AutocompleteItem, u2: AutocompleteItem) {
+      .sort((u1: AutocompleteItem, u2: AutocompleteItem) => {
         if (u1.name < u2.name) {
           return -1;
         } else if (u1.name > u2.name) {

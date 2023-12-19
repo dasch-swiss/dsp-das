@@ -83,9 +83,7 @@ export class ProjectComponent extends ProjectBase implements OnInit {
 
   get isLoading$(): Observable<boolean> {
     return combineLatest([this.isOntologiesLoading$, this.isProjectsLoading$]).pipe(
-      map(([isOntologiesLoading, isProjectsLoading]) => {
-        return isOntologiesLoading === true || isProjectsLoading === true;
-      })
+      map(([isOntologiesLoading, isProjectsLoading]) => isOntologiesLoading === true || isProjectsLoading === true)
     );
   }
 

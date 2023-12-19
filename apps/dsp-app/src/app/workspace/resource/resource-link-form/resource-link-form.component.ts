@@ -122,7 +122,7 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
       if (control && control.dirty && !control.valid) {
         const messages = this.validationMessages[field];
         Object.keys(control.errors).map(key => {
-          this.formErrors[field] += messages[key] + ' ';
+          this.formErrors[field] += `${messages[key]} `;
         });
       }
     });
@@ -168,7 +168,7 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
     this._dspApiConnection.v2.res.createResource(linkObj).subscribe(
       (res: ReadResource) => {
         const path = this._resourceService.getResourcePath(res.id);
-        const goto = '/resource' + path;
+        const goto = `/resource${path}`;
         this._router.navigate([]).then(() => window.open(goto, '_blank'));
         this.closeDialog.emit();
       },

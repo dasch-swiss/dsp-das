@@ -59,12 +59,12 @@ export class SelectPropertiesComponent implements OnInit {
 
           // each property will also have a filtered array to be used when deleting a value.
           // see the deleteValue method below for more info
-          this.propertyValuesKeyValuePair[prop.id + '-filtered'] = [0];
+          this.propertyValuesKeyValuePair[`${prop.id}-filtered`] = [0];
 
           // each property will also have a cardinality array to be used when marking a field as required
           // see the isPropRequired method below for more info
           this.isPropRequired(prop.id);
-          this.propertyValuesKeyValuePair[prop.id + '-cardinality'] = [this.isRequiredProp ? 1 : 0];
+          this.propertyValuesKeyValuePair[`${prop.id}-cardinality`] = [this.isRequiredProp ? 1 : 0];
         }
       }
     }
@@ -124,7 +124,7 @@ export class SelectPropertiesComponent implements OnInit {
 
     // add a new element to the corresponding filtered property values array as well.
     // if this array contains more than one element, the delete button with be shown
-    this.propertyValuesKeyValuePair[prop.id + '-filtered'].push(length);
+    this.propertyValuesKeyValuePair[`${prop.id}-filtered`].push(length);
   }
 
   deleteValue(prop: ResourcePropertyDefinition, index: number, ev: Event) {
@@ -137,7 +137,7 @@ export class SelectPropertiesComponent implements OnInit {
     // update the filtered version of the corresponding property values array.
     // used in the template to calculate if the delete button should be shown.
     // i.e. don't show the delete button if there is only one value
-    this.propertyValuesKeyValuePair[prop.id + '-filtered'] = this._filterValueArray(
+    this.propertyValuesKeyValuePair[`${prop.id}-filtered`] = this._filterValueArray(
       this.propertyValuesKeyValuePair[prop.id]
     );
   }

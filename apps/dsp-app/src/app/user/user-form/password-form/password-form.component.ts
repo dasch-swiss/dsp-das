@@ -191,7 +191,7 @@ export class PasswordFormComponent implements OnInit {
       if (control && control.dirty && !control.valid) {
         const messages = this.validationMessages[field];
         Object.keys(control.errors).map(key => {
-          this.formErrors[field] += messages[key] + ' ';
+          this.formErrors[field] += `${messages[key]} `;
         });
       }
     });
@@ -235,7 +235,7 @@ export class PasswordFormComponent implements OnInit {
 
     this._userApiService.updatePassword(this.user.id, requesterPassword, this.form.controls.password.value).subscribe(
       () => {
-        const successResponse = 'You have successfully updated ' + (this.updateOwn ? 'your' : "user's") + ' password.';
+        const successResponse = `You have successfully updated ${this.updateOwn ? 'your' : "user's"} password.`;
         this._notification.openSnackBar(successResponse);
         this.closeDialog.emit();
         this.form.reset();

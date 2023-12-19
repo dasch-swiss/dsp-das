@@ -136,12 +136,12 @@ export class AvTimelineComponent implements OnChanges {
 
     if (!this.dragging) {
       // update thumb position if not dragging
-      this.thumbEle.nativeElement.style.transform = 'translateX(' + pos + 'px) scale(.7)';
+      this.thumbEle.nativeElement.style.transform = `translateX(${pos}px) scale(.7)`;
     }
     // adjust progress width / fill already played time
-    this.progressEle.nativeElement.children[0].style.transform = 'translateX(0px) scale3d(' + bgPos + ', 1, 1)';
+    this.progressEle.nativeElement.children[0].style.transform = `translateX(0px) scale3d(${bgPos}, 1, 1)`;
     // adjust progress width / progress background
-    this.progressEle.nativeElement.children[2].style.transform = 'translateX(0px) scale3d(' + fillPos + ', 1, 1)';
+    this.progressEle.nativeElement.children[2].style.transform = `translateX(0px) scale3d(${fillPos}, 1, 1)`;
   }
 
   /**

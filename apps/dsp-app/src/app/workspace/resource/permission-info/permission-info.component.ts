@@ -189,8 +189,8 @@ export class PermissionInfoComponent implements OnInit {
 
     const index = this.listOfPermissions.findIndex((object: PermissionGroup) => object.group === group);
     const permission: PermissionGroup = {
-      group: group,
-      restriction: restriction,
+      group,
+      restriction,
     };
 
     // add to list of Permissions if it does not exist yet
