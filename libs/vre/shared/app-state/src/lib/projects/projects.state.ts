@@ -85,7 +85,7 @@ export class ProjectsState {
   }
 
   @Action(LoadProjectAction, { cancelUncompleted: true })
-  loadProjectAction(ctx: StateContext<ProjectsStateModel>, { projectUuid, isCurrentProject }: LoadProjectAction) {
+  loadProjectAction(ctx: StateContext<ProjectsStateModel>, { projectUuid }: LoadProjectAction) {
     ctx.patchState({ isLoading: true });
 
     const projectIri = this.projectService.uuidToIri(projectUuid);

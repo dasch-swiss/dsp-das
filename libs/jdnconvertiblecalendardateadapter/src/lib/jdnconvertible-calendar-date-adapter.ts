@@ -403,7 +403,7 @@ export class JDNConvertibleCalendarDateAdapter extends DateAdapter<JDNConvertibl
     return obj instanceof JDNConvertibleCalendar;
   }
 
-  isValid(date: JDNConvertibleCalendar): boolean {
+  isValid(): boolean {
     // TODO: implement this properly
 
     return true;
