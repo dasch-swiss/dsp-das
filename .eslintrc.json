@@ -64,7 +64,6 @@
         "default-case": "off",
         "eqeqeq": "off",
         "consistent-return": "off",
-        "grouped-accessor-pairs": "off",
         "import/prefer-default-export": "off",
         "import/first": "off",
         "import/newline-after-import": "off",
