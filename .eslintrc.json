@@ -66,6 +66,7 @@
         "implicit-arrow-linebreak": "off",
         "operator-linebreak": "off",
         "max-len": "off",
+        "@typescript-eslint/comma-dangle": "off",
         "@typescript-eslint/indent": "off",
         "@typescript-eslint/lines-between-class-members": "off",
         // rules to work on later on

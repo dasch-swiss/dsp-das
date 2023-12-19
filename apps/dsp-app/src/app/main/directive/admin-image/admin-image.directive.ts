@@ -37,8 +37,7 @@ export class AdminImageDirective implements OnChanges {
 
   constructor(
     private _renderer: Renderer2,
-    private _ele: ElementRef,
-    private _location: Location
+    private _ele: ElementRef
   ) {}
 
   ngOnChanges() {
@@ -51,7 +50,9 @@ export class AdminImageDirective implements OnChanges {
         if (this.image === null || this.image === undefined) {
           this.source = AdminImageConfig.defaultUser;
         } else {
-          this.source = `${this._location.protocol}//www.gravatar.com/avatar/${Md5.hashStr(this.image)}?d=mp&s=256`;
+          // TODO
+          // eslint-disable-next-line no-restricted-globals
+          this.source = `${location.protocol}//www.gravatar.com/avatar/${Md5.hashStr(this.image)}?d=mp&s=256`;
         }
 
         break;
