@@ -261,7 +261,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
     if (index < 0 && value) {
       // value doesn't exist in stringLiterals: add one
       const newValue: StringLiteral = {
-        value: value,
+        value,
         language: lang,
       };
       this.value.push(newValue);

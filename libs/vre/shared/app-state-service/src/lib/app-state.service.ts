@@ -48,7 +48,7 @@ export class ApplicationStateService {
     key: string,
     value: ReadUser | ReadUser[] | ReadProject | ReadOntology | ReadOntology[] | ReadGroup[] | ListNodeInfo[]
   ): void {
-    this._applicationState.set(key, { value: value });
+    this._applicationState.set(key, { value });
   }
 
   /**

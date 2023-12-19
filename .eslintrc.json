@@ -111,7 +111,6 @@
         "no-useless-escape": "warn",
         "nonblock-statement-body-position": "off",
         "object-curly-newline": "off",
-        "object-shorthand": "off",
         "operator-assignment": "off",
         "operator-linebreak": "off",
         "padded-blocks": "off",

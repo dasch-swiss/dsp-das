@@ -129,8 +129,8 @@ export class GravsearchService {
     }
 
     return {
-      constructString: constructString,
-      whereString: whereString,
+      constructString,
+      whereString,
     };
   }
 

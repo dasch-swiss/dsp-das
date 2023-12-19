@@ -125,7 +125,7 @@ export class AdvancedSearchService {
           .map((resClassDef: ResourceClassDefinition) => {
             // label can be undefined
             const label = resClassDef.label || '';
-            return { iri: resClassDef.id, label: label };
+            return { iri: resClassDef.id, label };
           });
       }),
       catchError(err => {
@@ -169,8 +169,8 @@ export class AdvancedSearchService {
                 const listNodeIri = guiAttr[0].substring(7, guiAttr[0].length - 1);
                 return {
                   iri: propDef.id,
-                  label: label,
-                  objectType: objectType,
+                  label,
+                  objectType,
                   isLinkedResourceProperty: linkProperty,
                   listIri: listNodeIri,
                 };
@@ -181,8 +181,8 @@ export class AdvancedSearchService {
 
             return {
               iri: propDef.id,
-              label: label,
-              objectType: objectType,
+              label,
+              objectType,
               isLinkedResourceProperty: linkProperty,
             };
           });
@@ -225,8 +225,8 @@ export class AdvancedSearchService {
                 const listNodeIri = guiAttr[0].substring(7, guiAttr[0].length - 1);
                 return {
                   iri: propDef.id,
-                  label: label,
-                  objectType: objectType,
+                  label,
+                  objectType,
                   isLinkedResourceProperty: linkProperty,
                   listIri: listNodeIri,
                 };
@@ -237,8 +237,8 @@ export class AdvancedSearchService {
 
             return {
               iri: propDef.id,
-              label: label,
-              objectType: objectType,
+              label,
+              objectType,
               isLinkedResourceProperty: linkProperty,
             };
           });

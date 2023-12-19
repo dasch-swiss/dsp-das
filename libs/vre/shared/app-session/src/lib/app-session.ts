@@ -169,10 +169,10 @@ export class SessionService {
       id: this._setTimestamp(),
       user: {
         name: response.user.username,
-        jwt: jwt,
+        jwt,
         lang: response.user.lang,
-        sysAdmin: sysAdmin,
-        projectAdmin: projectAdmin,
+        sysAdmin,
+        projectAdmin,
       },
     };
 
