@@ -489,7 +489,7 @@ OFFSET 0`;
     const existingProperties: PropToAdd[] = [];
     const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
     ontoProperties.forEach((op: OntologyProperties, i: number) => {
-      const onto = currentProjectOntologies.find(i => i?.id === op.ontology);
+      const onto = currentProjectOntologies.find(j => j?.id === op.ontology);
       existingProperties.push({
         ontologyId: op.ontology,
         ontologyLabel: onto?.label,
