@@ -62,7 +62,6 @@
       ],
       "rules": {
         // ESLint rules
-        "array-bracket-spacing": "off",
         "array-callback-return": "off",
         "arrow-body-style": "off",
         "arrow-parens": "off",
