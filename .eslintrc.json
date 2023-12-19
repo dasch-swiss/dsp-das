@@ -62,7 +62,6 @@
       ],
       "rules": {
         // ESLint rules
-        "array-callback-return": "off",
         "arrow-body-style": "off",
         "arrow-parens": "off",
         "curly": "off",

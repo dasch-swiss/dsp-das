@@ -516,12 +516,12 @@ export class AppDatePickerComponent
 
     const form = this.form;
 
-    Object.keys(this.formErrors).map((field: string) => {
+    Object.keys(this.formErrors).forEach((field: string) => {
       this.formErrors[field] = '';
       const control = form.get(field);
       if (control && control.dirty && !control.valid && control.errors !== null) {
         const messages = this.validationMessages[field];
-        Object.keys(control.errors).map((key: string) => {
+        Object.keys(control.errors).forEach((key: string) => {
           this.formErrors[field] += messages[key] + ' ';
         });
       }
