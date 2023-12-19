@@ -11,6 +11,7 @@ import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker'
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ResourceLabel } from '../../../data-access/advanced-search-service/advanced-search.service';
 import { PropertyFormItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
+
 @Component({
   selector: 'dasch-swiss-property-form-value',
   standalone: true,

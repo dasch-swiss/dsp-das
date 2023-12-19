@@ -65,7 +65,6 @@
         "eqeqeq": "off",
         "consistent-return": "off",
         "import/prefer-default-export": "off",
-        "import/newline-after-import": "off",
         "import/no-cycle": "off",
         "import/order": ["error", { "alphabetize": { "order": "asc" } }],
         "implicit-arrow-linebreak": "off",
