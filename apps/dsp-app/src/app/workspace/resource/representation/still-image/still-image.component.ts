@@ -255,7 +255,7 @@ export class StillImageComponent
         this.images[0].fileValue.filename
       )
       .subscribe(
-        res => {
+        (res: { originalFilename: string }) => {
           this.originalFilename = res.originalFilename;
           this._openImages();
           this._unhighlightAllRegions();
@@ -493,7 +493,7 @@ export class StillImageComponent
               this.images[0].fileValue.fileUrl,
               this.images[0].fileValue.filename
             )
-            .subscribe(res => {
+            .subscribe((res: { originalFilename: string }) => {
               this.originalFilename = res.originalFilename;
             });
         },
