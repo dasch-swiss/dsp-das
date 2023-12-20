@@ -10,22 +10,22 @@ import { finalize } from 'rxjs/operators';
   template: `
     <div style="width: 600px">
       <app-reusable-project-form
-        [formData]="{ shortname: '', longname: '', shortcode: '', description: [] }"
+        [formData]="{ shortname: '', longname: '', shortcode: '', description: [], keywords: [] }"
         (formValueChange)="onFormChange($event)"></app-reusable-project-form>
 
       <div style="display: flex; justify-content: space-between">
-        <button class="cancel-button" color="primary" mat-button type="reset" (click)="goBack()">
+        <button color="primary" mat-button type="reset" [routerLink]="['..']">
           {{ 'appLabels.form.action.cancel' | translate }}
         </button>
         <button
           mat-raised-button
           type="submit"
-          (onClick)="submitForm()"
+          color="primary"
           [disabled]="!form || !form.valid"
-          color="primary">
-          <dasch-swiss-app-progress-indicator [color]="'white'" [status]="0" *ngIf="loading">
-          </dasch-swiss-app-progress-indicator>
-          <span>{{ 'appLabels.form.action.submit' | translate }}</span>
+          (click)="submitForm()"
+          appLoadingButton
+          [isLoading]="loading">
+          {{ 'appLabels.form.action.submit' | translate }}
         </button>
       </div>
     </div>
@@ -38,8 +38,7 @@ export class CreateProjectFormPageComponent {
 
   constructor(
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _location: Location
+    private _dspApiConnection: KnoraApiConnection
   ) {}
 
   onFormChange(form: FormGroup) {
@@ -65,9 +64,5 @@ export class CreateProjectFormPageComponent {
         })
       )
       .subscribe();
-  }
-
-  goBack() {
-    this._location.back();
   }
 }

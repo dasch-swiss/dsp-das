@@ -11,22 +11,37 @@ import { Subscription } from 'rxjs';
   templateUrl: './reusable-project-form.component.html',
 })
 export class ReusableProjectFormComponent implements OnInit, OnDestroy {
-  @Input() formData: { shortname: string; longname: string; shortcode: string; description: StringLiteral[] };
+  @Input() formData: {
+    shortcode: string;
+    shortname: string;
+    longname: string;
+    description: StringLiteral[];
+    keywords: string[];
+  };
   @Input() editable: boolean;
   @Input() chipsRequired: boolean;
   @Output() formValueChange = new EventEmitter<FormGroup>();
+
   form: FormGroup;
-
   shortcodePatternError = { errorKey: 'pattern', message: 'This field must contains letters from 0 to 9 and A to F' };
-
-  formSubscription: Subscription;
+  subscription: Subscription;
 
   constructor(private _fb: FormBuilder) {}
 
   ngOnInit() {
     this.form = this._fb.group({
+      shortcode: [
+        { value: this.formData.shortcode, disabled: this.formData.shortcode !== '' },
+        [
+          Validators.required,
+          Validators.minLength(PROJECT_FORM_CONSTANTS.shortcodeMinLength),
+          Validators.maxLength(PROJECT_FORM_CONSTANTS.shortcodeMaxLength),
+          existingNamesValidator(PROJECT_FORM_CONSTANTS.existingShortcodes),
+          Validators.pattern(PROJECT_FORM_CONSTANTS.shortcodeRegex),
+        ],
+      ],
       shortname: [
-        this.formData.shortname,
+        { value: this.formData.shortname, disabled: this.formData.shortname !== '' },
         [
           Validators.required,
           Validators.minLength(PROJECT_FORM_CONSTANTS.shortnameMinLength),
@@ -36,40 +51,24 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
         ],
       ],
       longname: [this.formData.longname, [Validators.required]],
-      shortcode: [
-        this.formData.shortcode,
-        [
-          Validators.required,
-          Validators.minLength(PROJECT_FORM_CONSTANTS.shortcodeMinLength),
-          Validators.maxLength(PROJECT_FORM_CONSTANTS.shortcodeMaxLength),
-          existingNamesValidator(PROJECT_FORM_CONSTANTS.existingShortcodes),
-          Validators.pattern(PROJECT_FORM_CONSTANTS.shortcodeRegex),
-        ],
-      ],
       description: [[], arrayLengthGreaterThanZeroValidator()],
-      logo: [''],
-      keywords: new UntypedFormControl({
-        // must be empty (even in edit mode), because of the mat-chip-list
-        value: [],
-        disabled: false,
-      }),
+      keywords: [[], arrayLengthGreaterThanZeroValidator()],
     });
 
-    this.formSubscription = this.form.valueChanges.subscribe(() => {
-      console.log(this.form);
+    this.subscription = this.form.valueChanges.subscribe(z => {
       this.formValueChange.emit(this.form);
     });
   }
 
-  onDescriptionChange(value) {
+  onDescriptionChange(value: StringLiteral[]) {
     this.form.patchValue({ description: value });
-    console.log(value, this.form.controls.description.untouched);
-    if (this.form.controls.description.untouched) {
+
+    if (this.form.controls.description.untouched && value.length > 0) {
       this.form.controls.description.markAsTouched();
     }
   }
 
   ngOnDestroy() {
-    this.formSubscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 }

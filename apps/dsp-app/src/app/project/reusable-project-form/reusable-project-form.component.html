@@ -1,15 +1,15 @@
 <div>
   <form *ngIf="form" [formGroup]="form" (ngSubmit)="formValueChange.emit(form)">
     <app-common-input
-      [placeholder]="('appLabels.form.project.general.shortcode' | translate)"
-      controlName="shortcode"
       [formGroup]="form"
+      controlName="shortcode"
+      [placeholder]="('appLabels.form.project.general.shortcode' | translate)"
       [validatorErrors]="[shortcodePatternError]"></app-common-input>
 
     <app-common-input
-      [placeholder]="('appLabels.form.project.general.shortname' | translate)"
+      [formGroup]="form"
       controlName="shortname"
-      [formGroup]="form"></app-common-input>
+      [placeholder]="('appLabels.form.project.general.shortname' | translate)"></app-common-input>
 
     <app-common-input
       [placeholder]="('appLabels.form.project.general.longname' | translate)"
@@ -17,22 +17,25 @@
       [formGroup]="form"></app-common-input>
 
     <!-- description -->
-    <dasch-swiss-app-string-literal
-      [placeholder]="(
+    <div>
+      <dasch-swiss-app-string-literal
+        [placeholder]="(
                 'appLabels.form.project.general.description' | translate) + '*'"
-      [textarea]="true"
-      [value]="form.controls.description.value"
-      (dataChanged)="onDescriptionChange($event)">
-    </dasch-swiss-app-string-literal>
-    <mat-error *ngIf="form.controls.description.touched && form.controls.description.errors as errors">
-      {{ errors | humanReadableError }}
-    </mat-error>
+        [textarea]="true"
+        [value]="form.controls.description.value"
+        (dataChanged)="onDescriptionChange($event)">
+      </dasch-swiss-app-string-literal>
+      <mat-error *ngIf="form.controls.description.touched && form.controls.description.errors as errors">
+        {{ errors | humanReadableError }}
+      </mat-error>
+    </div>
 
     <!-- keywords chip list -->
     <app-chip-list-input
       [keywords]="form.controls.keywords.value"
+      [formGroup]="form"
+      controlName="keywords"
       editable="true"
       (updatedKeywords)="form.patchValue({keywords: $event})"></app-chip-list-input>
-    <mat-error *ngIf="form.controls.keywords.errors as errors"> {{errors | humanReadableError }} </mat-error>
   </form>
 </div>

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { CreateProjectFormPageComponent } from '@dsp-app/src/app/project/create-project-form-page/create-project-form-page.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
@@ -9,6 +10,7 @@ import { StatusComponent } from './main/status/status.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
 import { DataModelsComponent } from './project/data-models/data-models.component';
 import { DescriptionComponent } from './project/description/description.component';
+import { EditProjectFormPageComponent } from './project/edit-project-form-page/edit-project-form-page.component';
 import { ListInfoFormComponent } from './project/list/list-info-form/list-info-form.component';
 import { ListComponent } from './project/list/list.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
@@ -38,7 +40,7 @@ const routes: Routes = [
   {
     path: RouteConstants.createNewProjectRelative,
     canActivate: [AuthGuard],
-    component: ProjectFormComponent,
+    component: CreateProjectFormPageComponent,
   },
   {
     path: RouteConstants.projectUuidRelative,
@@ -47,7 +49,7 @@ const routes: Routes = [
       {
         path: RouteConstants.edit,
         canActivate: [AuthGuard],
-        component: ProjectFormComponent,
+        component: EditProjectFormPageComponent,
       },
       {
         path: RouteConstants.home,

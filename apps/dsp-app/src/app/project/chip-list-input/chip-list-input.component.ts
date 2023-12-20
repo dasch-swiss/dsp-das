@@ -1,5 +1,6 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
@@ -8,8 +9,9 @@ import { MatChipInputEvent } from '@angular/material/chips';
     <mat-chip-grid #chipList>
       <mat-chip-row *ngFor="let tag of keywords; trackBy: trackByFn" (removed)="removeKeyword(tag)">
         {{ tag }}
-        <mat-icon matChipRemove *ngIf="editable">cancel </mat-icon>
+        <mat-icon matChipRemove *ngIf="editable">cancel</mat-icon>
       </mat-chip-row>
+
       <input
         [placeholder]="('appLabels.form.project.general.keywords' | translate) + (chipsRequired ? '' : '*')"
         [matChipInputFor]="chipList"
@@ -17,18 +19,28 @@ import { MatChipInputEvent } from '@angular/material/chips';
         [matChipInputAddOnBlur]
         (matChipInputTokenEnd)="addKeyword($event)" />
     </mat-chip-grid>
+
+    <mat-error *ngIf="formControl.errors as errors">
+      {{ errors | humanReadableError }}
+    </mat-error>
   </mat-form-field>`,
 })
 export class ChipListInputComponent {
+  @Input() formGroup: FormGroup;
+  @Input() controlName: string;
   @Input() keywords: string[];
-  @Input() editable: boolean;
-  @Input() chipsRequired: boolean;
-  @Output() updatedKeywords = new EventEmitter<string[]>();
+  @Input() editable = true;
+  @Input() chipsRequired = true;
 
   separatorKeyCodes = [ENTER, COMMA];
 
+  get formControl() {
+    return this.formGroup.controls[this.controlName] as FormControl;
+  }
+
   update() {
-    this.updatedKeywords.emit(this.keywords);
+    this.formControl.setValue(this.keywords);
+    this.formControl.markAsTouched();
   }
 
   addKeyword(event: MatChipInputEvent): void {

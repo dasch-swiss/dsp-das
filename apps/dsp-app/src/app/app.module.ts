@@ -30,6 +30,7 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { LoadingButtonDirective } from '../../../../libs/vre/shared/app-progress-indicator/src/lib/loading-button/loading-button.directive';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmationDialogComponent } from './main/action/confirmation-dialog/confirmation-dialog.component';
@@ -46,7 +47,6 @@ import { DisableContextMenuDirective } from './main/directive/disable-context-me
 import { ExistingNameDirective } from './main/directive/existing-name/existing-name.directive';
 import { ExternalLinksDirective } from './main/directive/external-links.directive';
 import { InvalidControlScrollDirective } from './main/directive/invalid-control-scroll.directive';
-
 import { FooterComponent } from './main/footer/footer.component';
 import { GridComponent } from './main/grid/grid.component';
 import { AuthGuardComponent } from './main/guard/auth-guard.component';
@@ -225,6 +225,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     InvalidControlScrollDirective,
     JDNDatepickerDirective,
     KnoraDatePipe,
+    LoadingButtonDirective,
     LinkifyPipe,
     LinkValueComponent,
     ListComponent,
