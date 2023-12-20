@@ -20,24 +20,20 @@
     [formGroup]="form"></app-common-input>
 
   <!-- description -->
-  <div>
-    <dasch-swiss-app-string-literal
-      [placeholder]="(
+  <dasch-swiss-app-string-literal
+    [placeholder]="(
                 'appLabels.form.project.general.description' | translate) + '*'"
-      [textarea]="true"
-      [value]="form.controls.description.value"
-      (dataChanged)="onDescriptionChange($event)">
-    </dasch-swiss-app-string-literal>
-    <mat-error *ngIf="form.controls.description.touched && form.controls.description.errors as errors">
-      {{ errors | humanReadableError }}
-    </mat-error>
-  </div>
+    [textarea]="true"
+    [value]="form.controls.description.value"
+    (dataChanged)="onDescriptionChange($event)">
+  </dasch-swiss-app-string-literal>
+  <mat-error *ngIf="form.controls.description.touched && form.controls.description.errors as errors">
+    {{ errors | humanReadableError }}
+  </mat-error>
 
-  <!-- keywords chip list -->
   <app-chip-list-input
     [keywords]="form.controls.keywords.value"
     [formGroup]="form"
     controlName="keywords"
-    editable="true"
-    (updatedKeywords)="form.patchValue({keywords: $event})"></app-chip-list-input>
+    editable="true"></app-chip-list-input>
 </form>

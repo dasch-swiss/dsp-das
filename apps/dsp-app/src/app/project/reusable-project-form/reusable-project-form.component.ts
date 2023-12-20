@@ -51,8 +51,8 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
         ],
       ],
       longname: [this.formData.longname, [Validators.required]],
-      description: [[], arrayLengthGreaterThanZeroValidator()],
-      keywords: [[], arrayLengthGreaterThanZeroValidator()],
+      description: [this.formData.description, arrayLengthGreaterThanZeroValidator()],
+      keywords: [this.formData.keywords, arrayLengthGreaterThanZeroValidator()],
     });
 
     this.subscription = this.form.valueChanges.subscribe(z => {

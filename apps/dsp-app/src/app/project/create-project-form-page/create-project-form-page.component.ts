@@ -27,7 +27,6 @@ import { finalize } from 'rxjs/operators';
           {{ 'appLabels.form.action.submit' | translate }}
         </button>
       </div>
-      <app-project-form></app-project-form>
     </dasch-swiss-centered-layout>
   `,
 })

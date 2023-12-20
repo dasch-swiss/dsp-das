@@ -16,7 +16,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
         [placeholder]="('appLabels.form.project.general.keywords' | translate) + (chipsRequired ? '' : '*')"
         [matChipInputFor]="chipList"
         [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
-        [matChipInputAddOnBlur]
+        [matChipInputAddOnBlur]="true"
         (matChipInputTokenEnd)="addKeyword($event)" />
     </mat-chip-grid>
 

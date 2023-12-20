@@ -8,11 +8,39 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { UpdateProjectAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-edit-project-form-page',
-  templateUrl: './edit-project-form-page.component.html',
+  template: `<dasch-swiss-centered-layout>
+    <app-reusable-project-form
+      *ngIf="project$ | async as project"
+      [formData]="{
+        shortcode: project.shortcode,
+        shortname: project.shortname,
+        longname: project.longname,
+        description: project.description,
+        keywords: project.keywords
+      }"
+      (formValueChange)="form = $event"></app-reusable-project-form>
+
+    <div style="display: flex; justify-content: space-between">
+      <button color="primary" mat-button type="reset" [routerLink]="['..']">
+        {{ 'appLabels.form.action.cancel' | translate }}
+      </button>
+
+      <button
+        mat-raised-button
+        type="submit"
+        color="primary"
+        (click)="onSubmit()"
+        [disabled]="!form || !form.valid"
+        appLoadingButton
+        [isLoading]="loading">
+        {{ 'appLabels.form.action.submit' | translate }}
+      </button>
+    </div>
+  </dasch-swiss-centered-layout>`,
 })
 export class EditProjectFormPageComponent {
   form: FormGroup;
@@ -21,7 +49,8 @@ export class EditProjectFormPageComponent {
     map(params => params.get(RouteConstants.uuidParameter)),
     map(uuid => this._projectService.uuidToIri(uuid)),
     switchMap(iri => this._projectApiService.get(iri)),
-    map(project => project.project)
+    map(project => project.project),
+    tap(v => console.log(v))
   );
 
   constructor(
@@ -37,11 +66,9 @@ export class EditProjectFormPageComponent {
     const projectUuid = this.route.snapshot.paramMap.get(RouteConstants.uuidParameter);
 
     const projectData: UpdateProjectRequest = {
-      description: [new StringLiteral()],
-      keywords: this.form.value.keywords,
       longname: this.form.value.longname,
-      shortname: this.form.value.shortname,
-      status: true,
+      description: [this.form.value.description],
+      keywords: this.form.value.keywords,
     };
 
     this._store.dispatch(new UpdateProjectAction(projectUuid, projectData)).subscribe(v => {
