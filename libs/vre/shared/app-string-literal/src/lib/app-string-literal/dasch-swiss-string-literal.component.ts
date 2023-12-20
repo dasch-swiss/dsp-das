@@ -130,22 +130,11 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
     private _fb: UntypedFormBuilder,
     private _store: Store
   ) {
-    // set selected language, if it's not defined yet
-    if (!this.language) {
-      const usersLanguage = this._store.selectSnapshot(UserSelectors.language) as string;
-      this.language = usersLanguage || navigator.language.substring(0, 2); // get default language from browser
-    }
-
-    // does the defined language exists in our supported languages list?
-    if (this.languages.indexOf(this.language) === -1) {
-      // if not, select the first language from our list of supported languages
-      this.language = this.languages[0];
-    }
+    this._setupUserLanguage();
   }
 
   ngOnInit() {
-    // reset stringLiterals if they have empty values
-    this.resetValues();
+    this._solveBackendInconsistensies();
 
     // build the form
     this.form = this._fb.group({
@@ -154,7 +143,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
         disabled: this.disabled, // https://stackoverflow.com/a/47521965
       }),
     });
-    // update values on form change
+
     this.form.valueChanges.subscribe(() => this.onValueChanged());
 
     // get value from stringLiterals
@@ -172,10 +161,6 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
    * emit data to parent on any change on the input field
    */
   onValueChanged() {
-    if (!this.form) {
-      return;
-    }
-
     const form = this.form;
     const control = form.get('text');
     this.touched.emit(control?.dirty || control?.touched);
@@ -269,31 +254,6 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
   }
 
   /**
-   * in case of strange array of StringLiterals, this method will reset to a API-conform array. This means an array without empty values.
-   */
-  resetValues() {
-    const length: number = this.value.length;
-
-    if (length > 0) {
-      let index = length - 1;
-      while (index >= 0) {
-        // remove items with empty value
-        if (!this.value[index].value.length) {
-          this.value.splice(index, 1);
-        }
-        index--;
-      }
-
-      // does an item for selected lanuage exists
-      if (this.value.findIndex(i => i.language === this.language) === -1) {
-        this.language = this.value[0].language || '';
-      }
-    } else {
-      this.value = [];
-    }
-  }
-
-  /**
    * get the value from array of StringLiterals for the selected language
    */
   getValueFromStringLiteral(lang?: string): string {
@@ -305,6 +265,31 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
       return this.value[index].value;
     } else {
       return '';
+    }
+  }
+
+  /** Backend sometimes send {values: ''} (to remove)
+   * or also send {values: ''} without language property (add 'de')
+   */
+  private _solveBackendInconsistensies() {
+    this.value = this.value.filter(item => item.value.trim() !== '');
+
+    if (this.value.length > 0 && this.value[0].language === undefined) {
+      this.value[0].language = 'de';
+    }
+  }
+
+  private _setupUserLanguage() {
+    // set selected language, if it's not defined yet
+    if (!this.language) {
+      const usersLanguage = this._store.selectSnapshot(UserSelectors.language) as string;
+      this.language = usersLanguage || navigator.language.substring(0, 2); // get default language from browser
+    }
+
+    // does the defined language exists in our supported languages list?
+    if (this.languages.indexOf(this.language) === -1) {
+      // if not, select the first language from our list of supported languages
+      this.language = this.languages[0];
     }
   }
 }
