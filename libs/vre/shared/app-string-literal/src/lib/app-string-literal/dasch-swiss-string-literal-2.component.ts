@@ -18,6 +18,7 @@ import {
   ReactiveFormsModule,
   FormControl,
   FormGroup,
+  FormArray,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -54,7 +55,12 @@ import { Store } from '@ngxs/store';
       </mat-button-toggle>
     </mat-button-toggle-group>
     <mat-form-field>
-      <textarea matInput [placeholder]="placeholder" [formControl]="formControl" #textInput [readonly]="editable">
+      <textarea
+        matInput
+        [placeholder]="placeholder"
+        #textInput
+        [readonly]="editable"
+        [formControl]="selectedFormControl">
       </textarea>
     </mat-form-field>
   `,
@@ -70,12 +76,20 @@ export class AppStringLiteral2Component {
   selectedLanguage: string;
   availableLanguages: string[] = ['de', 'fr', 'it', 'en', 'rm'];
 
-  get formControl() {
-    return this.formGroup.controls[this.controlName] as FormControl;
+  get formArray() {
+    return this.formGroup.controls[this.controlName] as FormArray;
+  }
+
+  get selectedFormControl() {
+    return this.formArray.at(0).get('value') as FormControl;
   }
 
   constructor(private _store: Store) {
     this._setupUserLanguage();
+  }
+
+  ngOnInit() {
+    console.log(this.selectedFormControl);
   }
 
   trackByFn = (index: number, item: string) => `${index}-${item}`;
