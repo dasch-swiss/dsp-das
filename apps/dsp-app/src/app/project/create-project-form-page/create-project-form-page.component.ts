@@ -1,4 +1,3 @@
-import { Location } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
@@ -8,9 +7,9 @@ import { finalize } from 'rxjs/operators';
 @Component({
   selector: 'app-create-project-form-page',
   template: `
-    <div style="width: 600px">
+    <dasch-swiss-centered-layout>
       <app-reusable-project-form
-        [formData]="{ shortname: '', longname: '', shortcode: '', description: [], keywords: [] }"
+        [formData]="{ shortcode: '', shortname: '', longname: '', description: [], keywords: [] }"
         (formValueChange)="onFormChange($event)"></app-reusable-project-form>
 
       <div style="display: flex; justify-content: space-between">
@@ -28,8 +27,8 @@ import { finalize } from 'rxjs/operators';
           {{ 'appLabels.form.action.submit' | translate }}
         </button>
       </div>
-    </div>
-    <app-project-form></app-project-form>
+      <app-project-form></app-project-form>
+    </dasch-swiss-centered-layout>
   `,
 })
 export class CreateProjectFormPageComponent {

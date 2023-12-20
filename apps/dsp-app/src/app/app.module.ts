@@ -30,6 +30,7 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { CenteredLayoutComponent } from '../../../../libs/vre/shared/app-progress-indicator/src/lib/centered-layout/centered-layout.component';
 import { LoadingButtonDirective } from '../../../../libs/vre/shared/app-progress-indicator/src/lib/loading-button/loading-button.directive';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -186,6 +187,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     AvTimelineComponent,
     DescriptionComponent,
     BooleanValueComponent,
+    CenteredLayoutComponent,
     ChipListInputComponent,
     CollaborationComponent,
     ColorPickerComponent,

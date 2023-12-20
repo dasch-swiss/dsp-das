@@ -23,7 +23,7 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
   @Output() formValueChange = new EventEmitter<FormGroup>();
 
   form: FormGroup;
-  shortcodePatternError = { errorKey: 'pattern', message: 'This field must contains letters from 0 to 9 and A to F' };
+  shortcodePatternError = { errorKey: 'pattern', message: 'This field must contains letters from A to F and 0 to 9' };
   subscription: Subscription;
 
   constructor(private _fb: FormBuilder) {}

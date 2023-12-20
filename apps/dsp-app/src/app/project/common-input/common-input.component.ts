@@ -11,6 +11,7 @@ import { FormControl, FormGroup } from '@angular/forms';
       </mat-error>
     </mat-form-field>
   `,
+  styles: [':host { display: block;}'],
 })
 export class CommonInputComponent {
   @Input() formGroup: FormGroup;
