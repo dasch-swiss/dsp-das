@@ -49,25 +49,30 @@ import { Store } from '@ngxs/store';
       <mat-button-toggle
         *ngFor="let lang of availableLanguages; trackBy: trackByFn"
         (click)="selectedLanguage = lang"
-        [checked]="lang === selectedLanguage"
-        class="lang-toggle-button">
+        [checked]="lang === selectedLanguage">
         <span>{{ lang }}</span>
       </mat-button-toggle>
     </mat-button-toggle-group>
     <mat-form-field>
-      <textarea matInput [placeholder]="'placeholder'" [formControl]="formControl" #textInput [readonly]="editable">
+      <textarea matInput [placeholder]="placeholder" [formControl]="formControl" #textInput [readonly]="editable">
       </textarea>
     </mat-form-field>
   `,
 })
-export class AppStringLiteralComponent implements OnInit, OnChanges {
-  @Input() formControl: FormControl;
+export class AppStringLiteral2Component {
+  @Input() formGroup: FormGroup;
+  @Input() controlName: string;
   @Input() editable = false;
+  @Input() placeholder: string;
 
   @ViewChild('textInput', { static: false }) textInput!: ElementRef;
 
   selectedLanguage: string;
   availableLanguages: string[] = ['de', 'fr', 'it', 'en', 'rm'];
+
+  get formControl() {
+    return this.formGroup.controls[this.controlName] as FormControl;
+  }
 
   constructor(private _store: Store) {
     this._setupUserLanguage();

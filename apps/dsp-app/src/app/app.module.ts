@@ -32,6 +32,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CenteredLayoutComponent } from '../../../../libs/vre/shared/app-progress-indicator/src/lib/centered-layout/centered-layout.component';
 import { LoadingButtonDirective } from '../../../../libs/vre/shared/app-progress-indicator/src/lib/loading-button/loading-button.directive';
+import { AppStringLiteral2Component } from '../../../../libs/vre/shared/app-string-literal/src/lib/app-string-literal/dasch-swiss-string-literal-2.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmationDialogComponent } from './main/action/confirmation-dialog/confirmation-dialog.component';
@@ -335,6 +336,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
       },
     }),
     AppStringLiteralComponent,
+    AppStringLiteral2Component,
     NgxsStoreModule,
     NgxsStoragePluginModule.forRoot(),
   ],

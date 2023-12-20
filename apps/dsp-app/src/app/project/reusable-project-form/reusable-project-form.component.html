@@ -20,13 +20,12 @@
     [formGroup]="form"></app-common-input>
 
   <!-- description -->
-  <dasch-swiss-app-string-literal
+  <dasch-swiss-app-string-literal-2
     [placeholder]="(
                 'appLabels.form.project.general.description' | translate) + '*'"
-    [textarea]="true"
-    [value]="form.controls.description.value"
-    (dataChanged)="onDescriptionChange($event)">
-  </dasch-swiss-app-string-literal>
+    [formGroup]="form"
+    controlName="description">
+  </dasch-swiss-app-string-literal-2>
   <mat-error *ngIf="form.controls.description.touched && form.controls.description.errors as errors">
     {{ errors | humanReadableError }}
   </mat-error>
