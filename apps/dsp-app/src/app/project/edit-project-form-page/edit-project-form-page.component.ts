@@ -70,7 +70,7 @@ export class EditProjectFormPageComponent {
       keywords: this.form.value.keywords,
     };
 
-    this._store.dispatch(new UpdateProjectAction(projectUuid, projectData)).subscribe(v => {
+    this._store.dispatch(new UpdateProjectAction(projectUuid, projectData)).subscribe(() => {
       this._notification.openSnackBar('You have successfully updated the project information.');
       this._router.navigate([`${RouteConstants.projectRelative}/${projectUuid}`]);
     });
