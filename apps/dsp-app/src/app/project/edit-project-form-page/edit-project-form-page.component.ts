@@ -62,7 +62,7 @@ export class EditProjectFormPageComponent {
   ) {}
 
   onSubmit() {
-    const projectUuid = this.route.snapshot.paramMap.get(RouteConstants.uuidParameter);
+    const projectUuid = this.route.parent.snapshot.paramMap.get(RouteConstants.uuidParameter);
 
     const projectData: UpdateProjectRequest = {
       longname: this.form.value.longname,

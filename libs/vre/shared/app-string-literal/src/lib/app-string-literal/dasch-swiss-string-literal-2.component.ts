@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
-import { StringLiteral } from '@dasch-swiss/dsp-js';
 import { NgxsStoreModule, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { HumanReadableErrorPipe } from '@dsp-app/src/app/project/human-readable-error/human-readable-error.pipe';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
@@ -31,13 +30,14 @@ import { Store } from '@ngxs/store';
   template: `
     <mat-button-toggle-group matPrefix #group="matButtonToggleGroup" vertical>
       <mat-button-toggle
-        *ngFor="let lang of availableLanguages; let index = index; trackBy: trackByFn"
-        (click)="change(index)"
-        [checked]="index === selectedLanguageIndex">
+        *ngFor="let lang of availableLanguages; let index = index"
+        (click)="changeLanguage(index)"
+        [checked]="index === selectedLanguageIndex"
+        [class.bold]="getFormControlWithLanguage(lang) !== undefined">
         <span>{{ lang }}</span>
       </mat-button-toggle>
     </mat-button-toggle-group>
-    <mat-form-field style="flex: 1">
+    <mat-form-field style="flex: 1" subscriptSizing="dynamic">
       <textarea
         matInput
         [placeholder]="placeholder"
@@ -45,20 +45,25 @@ import { Store } from '@ngxs/store';
         [readonly]="editable"
         [formControl]="selectedFormControl">
       </textarea>
-      <mat-error *ngIf="selectedFormControl.errors as errors">
-        {{ errors | humanReadableError }}
-      </mat-error>
     </mat-form-field>
+    <mat-error *ngIf="formArray.errors as errors">
+      {{ errors | humanReadableError }}
+    </mat-error>
   `,
   styles: [
     `
       :host {
         display: flex;
+        padding-bottom: 22px; // material
+      }
+
+      .bold {
+        font-weight: bold;
       }
     `,
   ],
 })
-export class AppStringLiteral2Component {
+export class AppStringLiteral2Component implements OnInit {
   @Input() formGroup: FormGroup;
   @Input() controlName: string;
   @Input() editable = false;
@@ -90,26 +95,20 @@ export class AppStringLiteral2Component {
     this.selectedLanguageIndex = this._setupLanguageIndex();
   }
 
-  trackByFn = (index: number, item: string) => `${index}-${item}`;
+  getFormControlWithLanguage(lang: string) {
+    return this.formArray.controls.find(control => control.value.language === lang && control.value.value !== '');
+  }
 
-  change(languageIndex: number) {
+  changeLanguage(languageIndex: number) {
     const language = this.availableLanguages[languageIndex];
     const languageFoundIndex = this.formArray.value.findIndex(array => array.language === language);
+
     if (languageFoundIndex === -1) {
       this.formArray.push(this._fb.group({ language, value: '' }));
-      this.change(languageIndex);
+      this.changeLanguage(languageIndex);
     } else {
       this.selectedLanguageIndex = languageIndex;
-    }
-  }
-  /** Backend sometimes send {values: ''} (to remove)
-   * or also send {values: ''} without language property (add 'de')
-   */
-  private _solveBackendInconsistensies(value: StringLiteral[]) {
-    value = value.filter(item => item.value.trim() !== '');
-
-    if (value.length === 1 && !value[0].language) {
-      value[0].language = this.availableLanguages[0];
+      this.textInput.nativeElement.focus();
     }
   }
 
