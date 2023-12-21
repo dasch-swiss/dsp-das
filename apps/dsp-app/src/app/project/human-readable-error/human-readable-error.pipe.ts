@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'humanReadableError',
+  standalone: true,
 })
 export class HumanReadableErrorPipe implements PipeTransform {
   transform(error: object, params: { errorKey: string; message: string }[] = null): string {

@@ -54,8 +54,8 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
       description: this._fb.array(
         this.formData.description.map(({ language, value }) =>
           this._fb.group({
-            language: [language],
-            value: [value],
+            language,
+            value,
           }))
       ),
       keywords: [this.formData.keywords, arrayLengthGreaterThanZeroValidator()],

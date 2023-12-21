@@ -26,9 +26,6 @@
     [formGroup]="form"
     controlName="description">
   </dasch-swiss-app-string-literal-2>
-  <mat-error *ngIf="form.controls.description.touched && form.controls.description.errors as errors">
-    {{ errors | humanReadableError }}
-  </mat-error>
 
   <app-chip-list-input
     [keywords]="form.controls.keywords.value"

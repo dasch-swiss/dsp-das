@@ -49,8 +49,7 @@ export class EditProjectFormPageComponent {
     map(params => params.get(RouteConstants.uuidParameter)),
     map(uuid => this._projectService.uuidToIri(uuid)),
     switchMap(iri => this._projectApiService.get(iri)),
-    map(project => project.project),
-    tap(v => console.log(v))
+    map(project => project.project)
   );
 
   constructor(
@@ -67,7 +66,7 @@ export class EditProjectFormPageComponent {
 
     const projectData: UpdateProjectRequest = {
       longname: this.form.value.longname,
-      description: [this.form.value.description],
+      description: this.form.value.description,
       keywords: this.form.value.keywords,
     };
 
