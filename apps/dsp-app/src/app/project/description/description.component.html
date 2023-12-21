@@ -1,5 +1,5 @@
-<dasch-swiss-app-progress-indicator *ngIf="isProjectsLoading$ | async"></dasch-swiss-app-progress-indicator>
-<div *ngIf="(isProjectsLoading$ | async) === false && (readProject$ | async) as project" class="content large middle">
+<dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
+<div *ngIf="(readProject$ | async) as project" class="content large middle">
   <div>
     <p>Project Description</p>
   </div>
@@ -23,7 +23,7 @@
           mat-button
           *ngIf="(userHasPermission$ | async) && project.status"
           class="right"
-          (click)="editProject()"
+          [routerLink]="RouteConstants.edit"
           color="primary">
           <mat-icon>edit_square</mat-icon>
           Edit project description
@@ -36,7 +36,7 @@
     <div>
       <p class="project-longname">{{project.longname}}</p>
     </div>
-    <section class="project description" *ngFor="let desc of project.description; trackBy: trackByStringLiteralFn">
+    <section class="project description" *ngFor="let desc of sortedDescriptions$ | async">
       <div [innerHtml]="desc.value"></div>
     </section>
 
@@ -45,7 +45,7 @@
     <!-- keywords -->
     <section class="project keywords">
       <mat-chip-listbox>
-        <mat-chip *ngFor="let k of project.keywords; trackBy: trackByFn">{{k}}</mat-chip>
+        <mat-chip *ngFor="let k of project.keywords">{{k}}</mat-chip>
       </mat-chip-listbox>
     </section>
   </div>
