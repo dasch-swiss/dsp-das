@@ -5,25 +5,24 @@ import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
   selector: 'app-chip-list-input',
-  template: ` <mat-form-field style="width: 100%">
-    <mat-chip-grid #chipList>
-      <mat-chip-row *ngFor="let tag of keywords; trackBy: trackByFn" (removed)="removeKeyword(tag)">
-        {{ tag }}
-        <mat-icon matChipRemove *ngIf="editable">cancel</mat-icon>
-      </mat-chip-row>
+  template: `
+    <mat-form-field style="width: 100%">
+      <mat-chip-grid #chipList>
+        <mat-chip-row *ngFor="let tag of keywords; trackBy: trackByFn" (removed)="removeKeyword(tag)">
+          {{ tag }}
+          <mat-icon matChipRemove *ngIf="editable">cancel</mat-icon>
+        </mat-chip-row>
 
-      <input
-        [placeholder]="('appLabels.form.project.general.keywords' | translate) + (chipsRequired ? '' : '*')"
-        [matChipInputFor]="chipList"
-        [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
-        [matChipInputAddOnBlur]="true"
-        (matChipInputTokenEnd)="addKeyword($event)" />
-    </mat-chip-grid>
-
-    <mat-error *ngIf="formControl.errors as errors">
-      {{ errors | humanReadableError }}
-    </mat-error>
-  </mat-form-field>`,
+        <input
+          [placeholder]="('appLabels.form.project.general.keywords' | translate) + (chipsRequired ? '' : '*')"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
+          [matChipInputAddOnBlur]="true"
+          (matChipInputTokenEnd)="addKeyword($event)" />
+      </mat-chip-grid>
+    </mat-form-field>
+    <mat-error *ngIf="formControl.errors as errors">{{ errors | humanReadableError }}</mat-error>
+  `,
 })
 export class ChipListInputComponent {
   @Input() formGroup: FormGroup;
