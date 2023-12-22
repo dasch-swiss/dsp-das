@@ -1,14 +1,48 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
-import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
-import { arrayLengthGreaterThanZeroValidator } from '@dsp-app/src/app/project/reusable-project-form/array-length-greater-than-zero-validator';
-import PROJECT_FORM_CONSTANTS from '@dsp-app/src/app/project/reusable-project-form/reusable-project-form.constants';
 import { Subscription } from 'rxjs';
+import { existingNamesValidator } from '../../main/directive/existing-name/existing-name.directive';
+import { arrayLengthGreaterThanZeroValidator } from './array-length-greater-than-zero-validator';
+import PROJECT_FORM_CONSTANTS from './reusable-project-form.constants';
 
 @Component({
   selector: 'app-reusable-project-form',
-  templateUrl: './reusable-project-form.component.html',
+  template: `
+    <form *ngIf="form" [formGroup]="form">
+      <div style="display: flex">
+        <app-common-input
+          [formGroup]="form"
+          controlName="shortcode"
+          [placeholder]="'appLabels.form.project.general.shortcode' | translate"
+          [validatorErrors]="[shortcodePatternError]"
+          style="flex: 1; margin-right: 16px"></app-common-input>
+
+        <app-common-input
+          [formGroup]="form"
+          controlName="shortname"
+          [placeholder]="'appLabels.form.project.general.shortname' | translate"
+          style="flex: 1"></app-common-input>
+      </div>
+
+      <app-common-input
+        [placeholder]="'appLabels.form.project.general.longname' | translate"
+        controlName="longname"
+        [formGroup]="form"></app-common-input>
+
+      <dasch-swiss-app-string-literal-2
+        [placeholder]="('appLabels.form.project.general.description' | translate) + '*'"
+        [formGroup]="form"
+        controlName="description">
+      </dasch-swiss-app-string-literal-2>
+
+      <app-chip-list-input
+        [keywords]="form.controls.keywords.value"
+        [formGroup]="form"
+        controlName="keywords"
+        editable="true"></app-chip-list-input>
+    </form>
+  `,
 })
 export class ReusableProjectFormComponent implements OnInit, OnDestroy {
   @Input() formData: {
@@ -18,17 +52,22 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
     description: StringLiteral[];
     keywords: string[];
   };
-  @Input() editable: boolean;
-  @Input() chipsRequired: boolean;
   @Output() formValueChange = new EventEmitter<FormGroup>();
-
   form: FormGroup;
   shortcodePatternError = { errorKey: 'pattern', message: 'This field must contains letters from A to F and 0 to 9' };
   subscription: Subscription;
-
   constructor(private _fb: FormBuilder) {}
 
   ngOnInit() {
+    this._buildForm();
+
+    this.subscription = this.form.valueChanges.subscribe(z => {
+      this.formValueChange.emit(this.form);
+    });
+    this.formValueChange.emit(this.form);
+  }
+
+  private _buildForm() {
     this.form = this._fb.group({
       shortcode: [
         { value: this.formData.shortcode, disabled: this.formData.shortcode !== '' },
@@ -55,23 +94,12 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
         this.formData.description.map(({ language, value }) =>
           this._fb.group({
             language,
-            value,
-          }))
+            value: [value, [Validators.maxLength(2000)]],
+          })
+        )
       ),
       keywords: [this.formData.keywords, arrayLengthGreaterThanZeroValidator()],
     });
-
-    this.subscription = this.form.valueChanges.subscribe(z => {
-      this.formValueChange.emit(this.form);
-    });
-  }
-
-  onDescriptionChange(value: StringLiteral[]) {
-    this.form.patchValue({ description: value });
-
-    if (this.form.controls.description.untouched && value.length > 0) {
-      this.form.controls.description.markAsTouched();
-    }
   }
 
   ngOnDestroy() {

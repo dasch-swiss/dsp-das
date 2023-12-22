@@ -1,6 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
@@ -28,32 +37,34 @@ import { Store } from '@ngxs/store';
     HumanReadableErrorPipe,
   ],
   template: `
-    <mat-button-toggle-group matPrefix #group="matButtonToggleGroup" vertical>
-      <mat-button-toggle
-        *ngFor="let lang of availableLanguages; let index = index"
-        (click)="changeLanguage(index)"
-        [checked]="index === selectedLanguageIndex"
-        [class.bold]="getFormControlWithLanguage(lang) !== undefined">
-        <span>{{ lang }}</span>
-      </mat-button-toggle>
-    </mat-button-toggle-group>
-    <mat-form-field style="flex: 1" subscriptSizing="dynamic">
-      <textarea
-        matInput
-        [placeholder]="placeholder"
-        #textInput
-        [readonly]="editable"
-        [formControl]="selectedFormControl">
-      </textarea>
-    </mat-form-field>
-    <mat-error *ngIf="formArray.errors as errors">
-      {{ errors | humanReadableError }}
+    <div style="display: flex">
+      <mat-button-toggle-group matPrefix #group="matButtonToggleGroup" vertical>
+        <mat-button-toggle
+          *ngFor="let lang of availableLanguages; let index = index"
+          (click)="changeLanguage(index)"
+          [checked]="index === selectedLanguageIndex"
+          [class.bold]="getFormControlWithLanguage(lang) !== undefined">
+          <span>{{ lang }}</span>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <mat-form-field style="flex: 1" subscriptSizing="dynamic">
+        <textarea
+          matInput
+          [placeholder]="placeholder"
+          #textInput
+          [readonly]="editable"
+          [formControl]="selectedFormControl">
+        </textarea>
+      </mat-form-field>
+    </div>
+    <mat-error *ngIf="formArray.invalid && invalidErrors">
+      Language {{ invalidErrors.language }}: {{ invalidErrors.error | humanReadableError }}
     </mat-error>
   `,
   styles: [
     `
       :host {
-        display: flex;
+        display: block;
         padding-bottom: 22px; // material
       }
 
@@ -86,6 +97,15 @@ export class AppStringLiteral2Component implements OnInit {
     ).get('value') as FormControl;
   }
 
+  get invalidErrors() {
+    for (const control of this.formArray.controls) {
+      if (control.get('value')?.errors) {
+        return { language: control.value.language, error: control.get('value')?.errors };
+      }
+    }
+    return undefined;
+  }
+
   constructor(
     private _store: Store,
     private _fb: FormBuilder
@@ -104,7 +124,12 @@ export class AppStringLiteral2Component implements OnInit {
     const languageFoundIndex = this.formArray.value.findIndex(array => array.language === language);
 
     if (languageFoundIndex === -1) {
-      this.formArray.push(this._fb.group({ language, value: '' }));
+      this.formArray.push(
+        this._fb.group({
+          language,
+          value: ['', (this.formArray.controls[0].get('value') as FormControl).validator],
+        })
+      );
       this.changeLanguage(languageIndex);
     } else {
       this.selectedLanguageIndex = languageIndex;

@@ -1,7 +1,6 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -9,8 +8,14 @@ import { finalize } from 'rxjs/operators';
   template: `
     <dasch-swiss-centered-layout>
       <app-reusable-project-form
-        [formData]="{ shortcode: '', shortname: '', longname: '', description: [], keywords: [] }"
-        (formValueChange)="onFormChange($event)"></app-reusable-project-form>
+        [formData]="{
+          shortcode: '',
+          shortname: '',
+          longname: '',
+          description: [],
+          keywords: []
+        }"
+        (formValueChange)="form = $event"></app-reusable-project-form>
 
       <div style="display: flex; justify-content: space-between">
         <button color="primary" mat-button type="reset" [routerLink]="['..']">
@@ -34,27 +39,20 @@ export class CreateProjectFormPageComponent {
   form: FormGroup;
   loading = false;
 
-  constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection
-  ) {}
-
-  onFormChange(form: FormGroup) {
-    this.form = form;
-  }
+  constructor(private _projectApiService: ProjectApiService) {}
 
   submitForm() {
     this.loading = true;
-    this._dspApiConnection.admin.projectsEndpoint
-      .createProject({
-        keywords: this.form.get('keywords').value,
-        logo: this.form.get('logo').value,
-        longname: this.form.get('longname').value,
-        description: this.form.get('description').value,
-        selfjoin: this.form.get('selfjoin').value,
+    this._projectApiService
+      .create({
         shortcode: this.form.get('shortcode').value,
         shortname: this.form.get('shortname').value,
-        status: this.form.get('status').value,
+        longname: this.form.get('longname').value,
+        description: this.form.get('description').value,
+        keywords: this.form.get('keywords').value,
+        logo: '',
+        selfjoin: true,
+        status: true,
       })
       .pipe(
         finalize(() => {
