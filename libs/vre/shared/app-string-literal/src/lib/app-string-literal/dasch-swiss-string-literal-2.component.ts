@@ -47,9 +47,10 @@ import { Store } from '@ngxs/store';
           <span>{{ lang }}</span>
         </mat-button-toggle>
       </mat-button-toggle-group>
-      <mat-form-field style="flex: 1" subscriptSizing="dynamic">
+      <mat-form-field style="flex: 1" subscriptSizing="dynamic" class="formfield">
         <textarea
           matInput
+          rows="9"
           [placeholder]="placeholder"
           #textInput
           [readonly]="editable"
