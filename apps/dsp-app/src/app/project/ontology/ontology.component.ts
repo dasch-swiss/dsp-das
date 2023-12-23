@@ -483,12 +483,15 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
   }
 
   createResourceClass(resClassInfo: DefaultClass): void {
+    const currentOntology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+
     this._dialog
       .open(CreateResourceClassDialogComponent, {
         data: {
           id: resClassInfo.iri,
           title: resClassInfo.label,
-          ontologyId: this.ontologyIri,
+          ontologyId: currentOntology.id,
+          lastModificationDate: currentOntology.lastModificationDate,
         },
       })
       .afterClosed()

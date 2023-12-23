@@ -6,7 +6,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { finalize } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-create-resource-class-dialog',
+  selector: 'app-edit-resource-class-dialog',
   template: `
     <app-dialog-header [title]="data.title" subtitle="Customize resource class"></app-dialog-header>
     <div mat-dialog-content>
@@ -23,12 +23,12 @@ import { finalize } from 'rxjs/operators';
         [isLoading]="loading"
         [disabled]="form.invalid"
         (click)="onSubmit()">
-        Create
+        Update
       </button>
     </div>
   `,
 })
-export class CreateResourceClassDialogComponent {
+export class EditResourceClassDialogComponent {
   loading = false;
   form: FormGroup;
 
@@ -43,7 +43,7 @@ export class CreateResourceClassDialogComponent {
     this.loading = true;
 
     this._dspApiConnection.v2.onto
-      .createResourceClass(this._createOntology())
+      .updateResourceClass(this._updateOntology())
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -52,20 +52,5 @@ export class CreateResourceClassDialogComponent {
       .subscribe();
   }
 
-  private _createOntology() {
-    const onto = new UpdateOntology<CreateResourceClass>();
-
-    onto.id = this.data.ontologyId;
-    onto.lastModificationDate = this.data.lastModificationDate;
-
-    const newResClass = new CreateResourceClass();
-
-    newResClass.name = this.form.value.name;
-    newResClass.label = this.form.value.label;
-    newResClass.comment = this.form.value.description;
-    newResClass.subClassOf = [this.data.id];
-
-    onto.entity = newResClass;
-    return onto;
-  }
+  private _updateOntology() {}
 }

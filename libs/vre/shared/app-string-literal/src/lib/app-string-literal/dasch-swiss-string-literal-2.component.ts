@@ -58,8 +58,11 @@ import { Store } from '@ngxs/store';
         </textarea>
       </mat-form-field>
     </div>
-    <mat-error *ngIf="formArray.invalid && invalidErrors">
-      Language {{ invalidErrors.language }}: {{ invalidErrors.error | humanReadableError }}
+    <mat-error *ngIf="formArray.invalid && formArray.touched">
+      <ng-container *ngIf="invalidErrors?.language"
+        >Language {{ invalidErrors.language }}: {{ invalidErrors.error | humanReadableError }}</ng-container
+      >
+      <ng-container *ngIf="!invalidErrors?.language">{{ invalidErrors.error | humanReadableError }}</ng-container>
     </mat-error>
   `,
   styles: [
@@ -103,6 +106,9 @@ export class AppStringLiteral2Component implements OnInit {
       if (control.get('value')?.errors) {
         return { language: control.value.language, error: control.get('value')?.errors };
       }
+    }
+    if (this.formArray.errors) {
+      return { error: this.formArray.errors };
     }
     return undefined;
   }

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
+import { atLeastOneStringRequired } from '@dsp-app/src/app/project/reusable-project-form/at-least-one-string-required.validator';
 import { Subscription } from 'rxjs';
 import { existingNamesValidator } from '../../main/directive/existing-name/existing-name.directive';
 import { arrayLengthGreaterThanZeroValidator } from './array-length-greater-than-zero-validator';
@@ -96,7 +97,8 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
             language,
             value: [value, [Validators.maxLength(2000)]],
           })
-        )
+        ),
+        atLeastOneStringRequired('value')
       ),
       keywords: [this.formData.keywords, arrayLengthGreaterThanZeroValidator()],
     });

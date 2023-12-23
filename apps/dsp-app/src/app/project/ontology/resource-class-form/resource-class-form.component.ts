@@ -4,6 +4,7 @@ import { ClassDefinition, PropertyDefinition } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { atLeastOneStringRequired } from '@dsp-app/src/app/project/reusable-project-form/at-least-one-string-required.validator';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
 import { existingNamesValidator } from '../../../main/directive/existing-name/existing-name.directive';
@@ -73,7 +74,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy {
             language,
             value: [value, [Validators.maxLength(2000)]],
           })
-        )
+        ),
+        atLeastOneStringRequired('value')
       ),
       description: this._fb.array(
         this.formData.description.map(({ language, value }) =>
@@ -81,7 +83,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy {
             language,
             value: [value, [Validators.maxLength(2000)]],
           })
-        )
+        ),
+        atLeastOneStringRequired('value')
       ),
     });
   }
