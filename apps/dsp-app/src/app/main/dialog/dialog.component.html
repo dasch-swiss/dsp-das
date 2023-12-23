@@ -232,24 +232,24 @@
   <!-- Ontology editor: customize and add resource class -->
   <div *ngSwitchCase="'createResourceClass'">
     <app-dialog-header [title]="data.title" [subtitle]="data.subtitle"></app-dialog-header>
-    <app-resource-class-form
+    <!--<app-resource-class-form
       [iri]="data.id"
       [name]="data.title"
       [projectUuid]="data.project"
       (closeDialog)="dialogRef.close($event)"
       (updateParent)="replaceTitle($event)">
-    </app-resource-class-form>
+    </app-resource-class-form>-->
   </div>
 
   <div *ngSwitchCase="'editResourceClass'">
     <app-dialog-header [title]="data.title" [subtitle]="data.subtitle"> </app-dialog-header>
-    <app-resource-class-form
+    <!--<app-resource-class-form
       [iri]="data.id"
       [name]="data.title"
       [projectUuid]="data.project"
       [edit]="true"
       (closeDialog)="dialogRef.close($event)">
-    </app-resource-class-form>
+    </app-resource-class-form>-->
   </div>
 
   <div *ngSwitchCase="'deleteResourceClass'">

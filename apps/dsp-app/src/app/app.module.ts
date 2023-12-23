@@ -23,6 +23,7 @@ import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/shared/app-progress-indicator';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import { AppStringLiteralComponent } from '@dasch-swiss/vre/shared/app-string-literal';
+import { CreateResourceClassDialogComponent } from '@dsp-app/src/app/project/ontology/create-resource-class-dialog/create-resource-class-dialog.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
@@ -200,6 +201,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ConfirmationMessageComponent,
     CookiePolicyComponent,
     CreateLinkResourceComponent,
+    CreateResourceClassDialogComponent,
     DateValueComponent,
     DateValueHandlerComponent,
     DecimalValueComponent,
