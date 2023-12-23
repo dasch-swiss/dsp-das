@@ -7,19 +7,31 @@ import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { atLeastOneStringRequired } from '@dsp-app/src/app/project/reusable-project-form/at-least-one-string-required.validator';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
-import { existingNamesValidator } from '../../../main/directive/existing-name/existing-name.directive';
 import { CustomRegex } from '../../../workspace/resource/values/custom-regex';
 
 @Component({
   selector: 'app-resource-class-form',
-  templateUrl: './resource-class-form.component.html',
-  styleUrls: ['./resource-class-form.component.scss'],
+  template: `
+    <form [formGroup]="form">
+      <app-common-input [formGroup]="form" controlName="name" placeholder="Class name"></app-common-input>
+
+      <dasch-swiss-app-string-literal-2 placeholder="Label *" [formGroup]="form" controlName="labels">
+      </dasch-swiss-app-string-literal-2>
+
+      <dasch-swiss-app-string-literal-2
+        placeholder="Comment *"
+        [formGroup]="form"
+        controlName="comments"
+        [editable]="true">
+      </dasch-swiss-app-string-literal-2>
+    </form>
+  `,
 })
 export class ResourceClassFormComponent implements OnInit, OnDestroy {
   @Input() formData: {
     name: string;
-    label: { language: string; value: string }[];
-    description: { language: string; value: string }[];
+    labels: { language: string; value: string }[];
+    comments: { language: string; value: string }[];
   };
   @Output() formValueChange = new EventEmitter<FormGroup>();
 
@@ -27,6 +39,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy {
   existingNames: [RegExp] = [new RegExp('anEmptyRegularExpressionWasntPossible')];
   ontology;
   subscription: Subscription;
+
   constructor(
     private _fb: FormBuilder,
     private _os: OntologyService,
@@ -51,6 +64,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy {
     });
 
     this.buildForm();
+    console.log(this);
 
     this.subscription = this.form.valueChanges.subscribe(z => {
       this.formValueChange.emit(this.form);
@@ -60,16 +74,9 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy {
 
   buildForm() {
     this.form = this._fb.group({
-      name: [
-        this.formData.name,
-        [
-          Validators.required,
-          existingNamesValidator(this.existingNames),
-          Validators.pattern(CustomRegex.ID_NAME_REGEX),
-        ],
-      ],
-      label: this._fb.array(
-        this.formData.description.map(({ language, value }) =>
+      name: [this.formData.name, [Validators.required, Validators.pattern(CustomRegex.ID_NAME_REGEX)]],
+      labels: this._fb.array(
+        this.formData.labels.map(({ language, value }) =>
           this._fb.group({
             language,
             value: [value, [Validators.maxLength(2000)]],
@@ -77,8 +84,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy {
         ),
         atLeastOneStringRequired('value')
       ),
-      description: this._fb.array(
-        this.formData.description.map(({ language, value }) =>
+      comments: this._fb.array(
+        this.formData.comments.map(({ language, value }) =>
           this._fb.group({
             language,
             value: [value, [Validators.maxLength(2000)]],

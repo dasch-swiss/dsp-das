@@ -57,6 +57,7 @@ import {
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { CreateResourceClassDialogComponent } from '@dsp-app/src/app/project/ontology/create-resource-class-dialog/create-resource-class-dialog.component';
+import { EditResourceClassDialogComponent } from '@dsp-app/src/app/project/ontology/edit-resource-class-dialog/edit-resource-class-dialog.component';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
@@ -453,40 +454,31 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     });
   }
 
-  /**
-   * opens resource class form to create or edit resource class info
-   * @param mode
-   * @param resClassInfo (could be subClassOf (create mode) or resource class itself (edit mode))
-   */
-  openResourceClassForm(mode: 'createResourceClass' | 'editResourceClass', resClassInfo: DefaultClass): void {
-    const dialogConfig: MatDialogConfig = {
-      width: '640px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: {
-        id: resClassInfo.iri,
-        title: resClassInfo.label,
-        subtitle: 'Customize resource class',
-        mode,
-      },
-    };
-
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(event => {
-      if (event !== DialogEvent.DialogCanceled) {
-        this.initOntologiesList();
-      }
-    });
-  }
-
   createResourceClass(resClassInfo: DefaultClass): void {
     const currentOntology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
 
     this._dialog
       .open(CreateResourceClassDialogComponent, {
+        data: {
+          id: resClassInfo.iri,
+          title: resClassInfo.label,
+          ontologyId: currentOntology.id,
+          lastModificationDate: currentOntology.lastModificationDate,
+        },
+      })
+      .afterClosed()
+      .subscribe(event => {
+        if (event !== DialogEvent.DialogCanceled) {
+          this.initOntologiesList();
+        }
+      });
+  }
+
+  updateResourceClass(resClassInfo: DefaultClass): void {
+    const currentOntology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+
+    this._dialog
+      .open(EditResourceClassDialogComponent, {
         data: {
           id: resClassInfo.iri,
           title: resClassInfo.label,

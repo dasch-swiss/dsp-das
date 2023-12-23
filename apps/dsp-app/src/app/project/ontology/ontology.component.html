@@ -144,7 +144,7 @@
             [projectStatus]="(project$ | async)?.status"
             [expanded]="expandClasses"
             [userCanEdit]="isAdmin$ | async"
-            (editResourceClass)="openResourceClassForm('editResourceClass', $event)"
+            (editResourceClass)="updateResourceClass($event)"
             (deleteResourceClass)="delete('ResourceClass', $event)"
             (updatePropertyAssignment)="onUpdatePropertyAssignment()"
             [updatePropertyAssignment$]="updatePropertyAssignment$">
