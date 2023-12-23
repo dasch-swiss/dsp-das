@@ -56,6 +56,7 @@ import {
   SetCurrentProjectOntologyPropertiesAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { CreateResourceClassDialogComponent } from '@dsp-app/src/app/project/ontology/create-resource-class-dialog/create-resource-class-dialog.component';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
@@ -479,6 +480,23 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
         this.initOntologiesList();
       }
     });
+  }
+
+  createResourceClass(resClassInfo: DefaultClass): void {
+    this._dialog
+      .open(CreateResourceClassDialogComponent, {
+        data: {
+          id: resClassInfo.iri,
+          title: resClassInfo.label,
+          ontologyId: this.ontologyIri,
+        },
+      })
+      .afterClosed()
+      .subscribe(event => {
+        if (event !== DialogEvent.DialogCanceled) {
+          this.initOntologiesList();
+        }
+      });
   }
 
   /**

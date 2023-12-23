@@ -91,7 +91,7 @@
                 <button
                   mat-menu-item
                   *ngFor="let type of defaultClasses; trackBy: trackByDefaultClassFn"
-                  (click)="openResourceClassForm('createResourceClass', type)">
+                  (click)="createResourceClass(type)">
                   <mat-icon>{{type.icons[0]}}</mat-icon> {{ type.label }}
                 </button>
               </mat-menu>

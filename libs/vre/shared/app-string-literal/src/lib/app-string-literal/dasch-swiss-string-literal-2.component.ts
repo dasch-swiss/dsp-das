@@ -53,7 +53,7 @@ import { Store } from '@ngxs/store';
           rows="9"
           [placeholder]="placeholder"
           #textInput
-          [readonly]="editable"
+          [readonly]="!editable"
           [formControl]="selectedFormControl">
         </textarea>
       </mat-form-field>
@@ -78,7 +78,7 @@ import { Store } from '@ngxs/store';
 export class AppStringLiteral2Component implements OnInit {
   @Input() formGroup: FormGroup;
   @Input() controlName: string;
-  @Input() editable = false;
+  @Input() editable = true;
   @Input() placeholder: string;
 
   @ViewChild('textInput', { static: false }) textInput!: ElementRef;

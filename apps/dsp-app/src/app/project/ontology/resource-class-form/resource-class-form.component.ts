@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClassDefinition, PropertyDefinition } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
+import { Subscription } from 'rxjs';
 import { existingNamesValidator } from '../../../main/directive/existing-name/existing-name.directive';
 import { CustomRegex } from '../../../workspace/resource/values/custom-regex';
 
@@ -13,16 +14,18 @@ import { CustomRegex } from '../../../workspace/resource/values/custom-regex';
   templateUrl: './resource-class-form.component.html',
   styleUrls: ['./resource-class-form.component.scss'],
 })
-export class ResourceClassFormComponent implements OnInit {
+export class ResourceClassFormComponent implements OnInit, OnDestroy {
   @Input() formData: {
     name: string;
     label: { language: string; value: string }[];
     description: { language: string; value: string }[];
   };
-  resourceClassForm: FormGroup;
+  @Output() formValueChange = new EventEmitter<FormGroup>();
+
+  form: FormGroup;
   existingNames: [RegExp] = [new RegExp('anEmptyRegularExpressionWasntPossible')];
   ontology;
-
+  subscription: Subscription;
   constructor(
     private _fb: FormBuilder,
     private _os: OntologyService,
@@ -47,15 +50,22 @@ export class ResourceClassFormComponent implements OnInit {
     });
 
     this.buildForm();
+
+    this.subscription = this.form.valueChanges.subscribe(z => {
+      this.formValueChange.emit(this.form);
+    });
+    this.formValueChange.emit(this.form);
   }
 
   buildForm() {
-    this.resourceClassForm = this._fb.group({
+    this.form = this._fb.group({
       name: [
         this.formData.name,
-        Validators.required,
-        existingNamesValidator(this.existingNames),
-        Validators.pattern(CustomRegex.ID_NAME_REGEX),
+        [
+          Validators.required,
+          existingNamesValidator(this.existingNames),
+          Validators.pattern(CustomRegex.ID_NAME_REGEX),
+        ],
       ],
       label: this._fb.array(
         this.formData.description.map(({ language, value }) =>
@@ -74,5 +84,9 @@ export class ResourceClassFormComponent implements OnInit {
         )
       ),
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

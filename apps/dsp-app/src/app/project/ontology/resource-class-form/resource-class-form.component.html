@@ -1,12 +1,12 @@
-<form [formGroup]="resourceClassForm">
-  <app-common-input [formGroup]="resourceClassForm" controlName="name" placeholder="Class name"></app-common-input>
+<form [formGroup]="form">
+  <app-common-input [formGroup]="form" controlName="name" placeholder="Class name"></app-common-input>
 
-  <dasch-swiss-app-string-literal-2 [placeholder]="'Label *'" [formGroup]="resourceClassForm" controlName="label">
+  <dasch-swiss-app-string-literal-2 [placeholder]="'Label *'" [formGroup]="form" controlName="label">
   </dasch-swiss-app-string-literal-2>
 
   <dasch-swiss-app-string-literal-2
     placeholder="Comment"
-    [formGroup]="resourceClassForm"
+    [formGroup]="form"
     controlName="description"
     [editable]="true">
   </dasch-swiss-app-string-literal-2>
