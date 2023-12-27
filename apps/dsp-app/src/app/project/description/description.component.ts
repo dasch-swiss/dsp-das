@@ -5,7 +5,7 @@ import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { of } from 'rxjs';
-import { finalize, map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { AppGlobal } from '../../app-global';
 
 @Component({
@@ -21,7 +21,7 @@ export class DescriptionComponent {
       this._projectApiService.get(this._projectService.uuidToIri(params.get(RouteConstants.uuidParameter)))
     ),
     map(response => response.project),
-    finalize(() => {
+    tap(() => {
       this.loading = false;
     })
   );

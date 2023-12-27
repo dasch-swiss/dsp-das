@@ -89,7 +89,7 @@ export class EditResourceClassDialogComponent implements OnInit {
             return this._deleteResourceComment$();
           }
         }),
-        finalize(() => {
+        tap(() => {
           this.loading = false;
         })
       )

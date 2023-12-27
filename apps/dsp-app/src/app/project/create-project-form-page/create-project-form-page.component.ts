@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
-import { finalize } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-project-form-page',
@@ -55,7 +55,7 @@ export class CreateProjectFormPageComponent {
         status: true,
       })
       .pipe(
-        finalize(() => {
+        tap(() => {
           this.loading = false;
         })
       )

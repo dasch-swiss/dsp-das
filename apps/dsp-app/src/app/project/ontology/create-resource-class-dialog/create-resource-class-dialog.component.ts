@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateResourceClass, KnoraApiConnection, UpdateOntology } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { finalize } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-resource-class-dialog',
@@ -50,7 +50,7 @@ export class CreateResourceClassDialogComponent implements OnInit {
     this._dspApiConnection.v2.onto
       .createResourceClass(this._createOntology())
       .pipe(
-        finalize(() => {
+        tap(() => {
           this.loading = false;
         })
       )
