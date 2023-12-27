@@ -1,4 +1,5 @@
-import { Directive, ElementRef, Input, Renderer2, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, Renderer2, ViewContainerRef } from '@angular/core';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Directive({
   selector: '[appLoadingButton]',
@@ -7,14 +8,14 @@ export class LoadingButtonDirective {
   @Input() isLoading: boolean = false;
 
   private spinnerElement: HTMLElement;
+  spinnerComponentRef;
 
   constructor(
     private el: ElementRef,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private viewContainerRef: ViewContainerRef
   ) {
-    // Create a spinner element and append it to the button
-    this.spinnerElement = this.createSpinnerElement();
-    this.renderer.appendChild(this.el.nativeElement, this.spinnerElement);
+    this.attachSpinnerElement();
   }
 
   // Listen for click events on the button
@@ -38,10 +39,13 @@ export class LoadingButtonDirective {
     }
   }
 
-  private createSpinnerElement(): HTMLElement {
-    const spinner = this.renderer.createElement('div');
-    this.renderer.addClass(spinner, 'spinner');
-    return spinner;
+  private attachSpinnerElement(): void {
+    this.spinnerComponentRef = this.viewContainerRef.createComponent(MatProgressSpinner);
+    this.spinnerComponentRef.instance.mode = 'indeterminate';
+    this.spinnerComponentRef.instance.diameter = 20;
+    this.spinnerElement = this.spinnerComponentRef.location.nativeElement;
+    this.renderer.setStyle(this.spinnerElement, 'margin-right', '8px');
+    this.renderer.appendChild(this.el.nativeElement, this.spinnerElement);
   }
 
   private disableButton(): void {
