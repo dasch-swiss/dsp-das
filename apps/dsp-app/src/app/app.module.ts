@@ -24,6 +24,7 @@ import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/shared/app-progr
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import { AppStringLiteralComponent } from '@dasch-swiss/vre/shared/app-string-literal';
 import { CreateListInfoPageComponent } from '@dsp-app/src/app/project/list/reusable-list-info-form/create-list-info-page.component';
+import { EditListInfoDialogComponent } from '@dsp-app/src/app/project/list/reusable-list-info-form/edit-list-info-dialog.component';
 import { ReusableListInfoFormComponent } from '@dsp-app/src/app/project/list/reusable-list-info-form/reusable-list-info-form.component';
 import { CreateResourceClassDialogComponent } from '@dsp-app/src/app/project/ontology/create-resource-class-dialog/create-resource-class-dialog.component';
 import { EditResourceClassDialogComponent } from '@dsp-app/src/app/project/ontology/edit-resource-class-dialog/edit-resource-class-dialog.component';
@@ -238,6 +239,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     LinkValueComponent,
     ListComponent,
     ListInfoFormComponent,
+    EditListInfoDialogComponent,
     CreateListInfoPageComponent,
     ReusableListInfoFormComponent,
     ListItemComponent,

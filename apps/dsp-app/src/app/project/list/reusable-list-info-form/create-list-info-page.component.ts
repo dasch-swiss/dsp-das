@@ -8,7 +8,7 @@ import { LoadListsInProjectAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 
 @Component({
-  selector: 'app-create-project-form-page',
+  selector: 'app-create-info-form-page',
   template: `
     <dasch-swiss-centered-layout>
       <app-reusable-list-info-form

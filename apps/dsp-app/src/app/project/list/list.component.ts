@@ -11,6 +11,7 @@ import {
   LoadListsInProjectAction,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { EditListInfoDialogComponent } from '@dsp-app/src/app/project/list/reusable-list-info-form/edit-list-info-dialog.component';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
@@ -103,45 +104,43 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
    * edit list data, remove list from project etc.
    *
    */
-  openDialog(mode: string, name: string, iri?: string): void {
-    const dialogConfig: MatDialogConfig = {
-      width: '640px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
+  editList(list: ListNodeInfo) {
+    this._dialog.open(EditListInfoDialogComponent, {
       data: {
-        mode,
-        title: name,
-        id: iri,
-        project: this.projectUuid,
+        projectIri: this._projectService.uuidToIri(this.projectUuid),
+        list,
       },
-    };
-
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(data => {
-      switch (mode) {
-        case 'editListInfo': {
-          window.location.reload();
-          break;
-        }
-        case 'deleteList': {
-          if (typeof data === 'boolean' && data === true) {
-            this._store.dispatch(new DeleteListNodeAction(this.listIri));
-            this.listIri = undefined;
-            this._actions$
-              .pipe(ofActionSuccessful(DeleteListNodeAction))
-              .pipe(take(1))
-              .subscribe(() => {
-                this._store.dispatch(new LoadListsInProjectAction(this.projectIri));
-                this._router.navigate([RouteConstants.project, this.projectUuid, RouteConstants.dataModels]);
-              });
-          }
-          break;
-        }
-      }
     });
+  }
+  openDialog(list: ListNodeInfo): void {
+    this._dialog
+      .open(DialogComponent, {
+        width: '640px',
+        maxHeight: '80vh',
+        position: {
+          top: '112px',
+        },
+        data: {
+          mode: 'deleteList',
+          title: 'delete',
+          id: list.id,
+          project: this.projectUuid,
+        },
+      })
+      .afterClosed()
+      .subscribe(data => {
+        if (typeof data === 'boolean' && data === true) {
+          this._store.dispatch(new DeleteListNodeAction(this.listIri));
+          this.listIri = undefined;
+          this._actions$
+            .pipe(ofActionSuccessful(DeleteListNodeAction))
+            .pipe(take(1))
+            .subscribe(() => {
+              this._store.dispatch(new LoadListsInProjectAction(this.projectIri));
+              this._router.navigate([RouteConstants.project, this.projectUuid, RouteConstants.dataModels]);
+            });
+        }
+      });
   }
 
   private _setPageTitle() {
