@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { CreateProjectFormPageComponent } from '@dsp-app/src/app/project/create-project-form-page/create-project-form-page.component';
+import { CreateListInfoPageComponent } from '@dsp-app/src/app/project/list/reusable-list-info-form/create-list-info-page.component';
 import { CreateResourceClassDialogComponent } from '@dsp-app/src/app/project/ontology/create-resource-class-dialog/create-resource-class-dialog.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
@@ -87,7 +88,7 @@ const routes: Routes = [
       },
       {
         path: RouteConstants.addList,
-        component: ListInfoFormComponent,
+        component: CreateListInfoPageComponent,
         canActivate: [AuthGuard],
       },
       {

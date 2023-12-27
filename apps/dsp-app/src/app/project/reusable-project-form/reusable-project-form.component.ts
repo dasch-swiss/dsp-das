@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
 import { atLeastOneStringRequired } from '@dsp-app/src/app/project/reusable-project-form/at-least-one-string-required.validator';
 import { Subscription } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 import { existingNamesValidator } from '../../main/directive/existing-name/existing-name.directive';
 import { arrayLengthGreaterThanZeroValidator } from './array-length-greater-than-zero-validator';
 import PROJECT_FORM_CONSTANTS from './reusable-project-form.constants';
@@ -57,15 +58,15 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
   form: FormGroup;
   shortcodePatternError = { errorKey: 'pattern', message: 'This field must contains letters from A to F and 0 to 9' };
   subscription: Subscription;
+
   constructor(private _fb: FormBuilder) {}
 
   ngOnInit() {
     this._buildForm();
 
-    this.subscription = this.form.valueChanges.subscribe(z => {
+    this.subscription = this.form.valueChanges.pipe(startWith(null)).subscribe(z => {
       this.formValueChange.emit(this.form);
     });
-    this.formValueChange.emit(this.form);
   }
 
   private _buildForm() {
