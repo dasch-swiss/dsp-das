@@ -13,12 +13,10 @@ import { CollaborationComponent } from './project/collaboration/collaboration.co
 import { DataModelsComponent } from './project/data-models/data-models.component';
 import { DescriptionComponent } from './project/description/description.component';
 import { EditProjectFormPageComponent } from './project/edit-project-form-page/edit-project-form-page.component';
-import { ListInfoFormComponent } from './project/list/list-info-form/list-info-form.component';
 import { ListComponent } from './project/list/list.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
 import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
-import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ProjectComponent } from './project/project.component';
 import { SettingsComponent } from './project/settings/settings.component';
 import { ProjectsComponent } from './system/projects/projects.component';

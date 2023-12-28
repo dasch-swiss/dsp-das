@@ -96,7 +96,6 @@ import { ResourceClassPropertyInfoComponent } from './project/ontology/resource-
 import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
 import { OntologyClassItemComponent } from './project/ontology-classes/ontology-class-item/ontology-class-item.component';
 import { OntologyClassesComponent } from './project/ontology-classes/ontology-classes.component';
-import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ProjectComponent } from './project/project.component';
 import { ReusableProjectFormComponent } from './project/reusable-project-form/reusable-project-form.component';
 import { SettingsComponent } from './project/settings/settings.component';
@@ -253,7 +252,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ProfileComponent,
     ProjectComponent,
     CreateProjectFormPageComponent,
-    ProjectFormComponent,
     ReusableProjectFormComponent,
     EditProjectFormPageComponent,
     ProjectsComponent,
