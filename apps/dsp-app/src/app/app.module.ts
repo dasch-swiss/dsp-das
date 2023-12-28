@@ -23,6 +23,7 @@ import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/shared/app-progress-indicator';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import { AppStringLiteralComponent } from '@dasch-swiss/vre/shared/app-string-literal';
+import { ConfirmDialogComponent } from '@dsp-app/src/app/main/action/confirm-dialog/confirm-dialog.component';
 import { CreateListInfoPageComponent } from '@dsp-app/src/app/project/list/reusable-list-info-form/create-list-info-page.component';
 import { EditListInfoDialogComponent } from '@dsp-app/src/app/project/list/reusable-list-info-form/edit-list-info-dialog.component';
 import { ReusableListInfoFormComponent } from '@dsp-app/src/app/project/list/reusable-list-info-form/reusable-list-info-form.component';
@@ -200,6 +201,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CommonInputComponent,
     ComparisonComponent,
     ConfirmationDialogComponent,
+    ConfirmDialogComponent,
     ConfirmationMessageComponent,
     CookiePolicyComponent,
     CreateLinkResourceComponent,
