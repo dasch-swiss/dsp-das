@@ -82,7 +82,6 @@ import { DataModelsComponent } from './project/data-models/data-models.component
 import { DescriptionComponent } from './project/description/description.component';
 import { EditProjectFormPageComponent } from './project/edit-project-form-page/edit-project-form-page.component';
 import { HumanReadableErrorPipe } from './project/human-readable-error/human-readable-error.pipe';
-import { ListInfoFormComponent } from './project/list/list-info-form/list-info-form.component';
 import { ListItemComponent } from './project/list/list-item/list-item.component';
 import { EditListItemComponent } from './project/list/list-item-form/edit-list-item/edit-list-item.component';
 import { ListItemFormComponent } from './project/list/list-item-form/list-item-form.component';
@@ -238,7 +237,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     LinkifyPipe,
     LinkValueComponent,
     ListComponent,
-    ListInfoFormComponent,
     EditListInfoDialogComponent,
     CreateListInfoPageComponent,
     ReusableListInfoFormComponent,

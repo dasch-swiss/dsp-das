@@ -116,17 +116,6 @@
 
   <!-- all about LISTS -->
 
-  <!-- Create new list -->
-  <div *ngSwitchCase="'createList'">
-    <app-dialog-header [title]="'Create new list'" [subtitle]=""></app-dialog-header>
-    <app-list-info-form
-      [projectUuid]="data.project"
-      [mode]="'create'"
-      [projectIri]="data.id"
-      (closeDialog)="dialogRef.close($event)">
-    </app-list-info-form>
-  </div>
-
   <!-- Insert list child node -->
   <div *ngSwitchCase="'insertListNode'">
     <app-dialog-header [title]="'Insert new child node'" [subtitle]=""> </app-dialog-header>
@@ -138,13 +127,6 @@
       [position]="data.position"
       (closeDialog)="dialogRef.close($event)">
     </app-edit-list-item>
-  </div>
-
-  <!-- Update list info -->
-  <div *ngSwitchCase="'editListInfo'">
-    <app-dialog-header [title]="data.title" [subtitle]="'Edit controlled vocabulary info'"> </app-dialog-header>
-    <app-list-info-form [iri]="data.id" [mode]="'update'" [projectIri]="data.project" (closeDialog)="dialogRef.close()">
-    </app-list-info-form>
   </div>
 
   <!-- Update list child node -->
