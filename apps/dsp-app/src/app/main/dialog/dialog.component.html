@@ -23,53 +23,6 @@
     <app-password-form [user]="data.user" (closeDialog)="dialogRef.close()"></app-password-form>
   </div>
 
-  <!-- Delete user -->
-  <div *ngSwitchCase="'deleteUser'">
-    <app-dialog-header [title]="data.name" [subtitle]="'Suspend user'"></app-dialog-header>
-    Do you want to suspend this user?
-
-    <!-- TODO: create a mat dialog actions component with the following buttons: Cancel to reset and OK to confirm action -->
-    <mat-dialog-actions>
-      <button mat-button color="primary" mat-dialog-close class="cancel-button center" [mat-dialog-close]="false">
-        No, keep it
-      </button>
-      <span class="fill-remaining-space"></span>
-      <button mat-button mat-raised-button [color]="'warn'" class="confirm-button center" [mat-dialog-close]="true">
-        Yes, suspend
-      </button>
-    </mat-dialog-actions>
-  </div>
-
-  <!-- Reactivate user -->
-  <div *ngSwitchCase="'activateUser'">
-    <app-dialog-header [title]="data.name" [subtitle]="'Activate user'"></app-dialog-header>
-    Do you want to reactivate this user?
-    <mat-dialog-actions>
-      <button mat-button color="primary" mat-dialog-close class="cancel-button center" [mat-dialog-close]="false">
-        Cancel
-      </button>
-      <span class="fill-remaining-space"></span>
-      <button mat-button mat-raised-button [color]="'primary'" class="confirm-button center" [mat-dialog-close]="true">
-        Reactivate
-      </button>
-    </mat-dialog-actions>
-  </div>
-
-  <!-- Remove user from project -->
-  <div *ngSwitchCase="'removeFromProject'">
-    <app-dialog-header [title]="data.name" [subtitle]="'Remove user from Project'"></app-dialog-header>
-    Do you want to remove this user from the project?
-    <mat-dialog-actions>
-      <button mat-button color="primary" mat-dialog-close class="cancel-button center" [mat-dialog-close]="false">
-        Cancel
-      </button>
-      <span class="fill-remaining-space"></span>
-      <button mat-button mat-raised-button [color]="'primary'" class="confirm-button center" [mat-dialog-close]="true">
-        Remove
-      </button>
-    </mat-dialog-actions>
-  </div>
-
   <!-- Manage user project membership -->
   <div *ngSwitchCase="'manageProjectMembership'">
     <app-dialog-header [title]="data.user.username" [subtitle]="'Manage project membership'"> </app-dialog-header>
@@ -81,38 +34,6 @@
   </div>
 
   <!-- all about PROJECT -->
-
-  <!-- Deactivate project -->
-  <div *ngSwitchCase="'deactivateProject'">
-    <app-dialog-header [title]="data.name" [subtitle]="'appLabels.form.project.title.deactivate' | translate">
-    </app-dialog-header>
-    Do you want to deactivate this project?
-    <mat-dialog-actions>
-      <button mat-button color="primary" mat-dialog-close class="cancel-button center" [mat-dialog-close]="false">
-        Cancel
-      </button>
-      <span class="fill-remaining-space"></span>
-      <button mat-button mat-raised-button [color]="'warn'" class="confirm-button center" [mat-dialog-close]="true">
-        Deactivate
-      </button>
-    </mat-dialog-actions>
-  </div>
-
-  <!-- Reactivate project -->
-  <div *ngSwitchCase="'activateProject'">
-    <app-dialog-header [title]="data.name" [subtitle]="'appLabels.form.project.title.activate' | translate">
-    </app-dialog-header>
-    Do you want to reactivate this project?
-    <mat-dialog-actions>
-      <button mat-button color="primary" mat-dialog-close class="cancel-button center" [mat-dialog-close]="false">
-        Cancel
-      </button>
-      <span class="fill-remaining-space"></span>
-      <button mat-button mat-raised-button [color]="'primary'" class="confirm-button center" [mat-dialog-close]="true">
-        Reactivate
-      </button>
-    </mat-dialog-actions>
-  </div>
 
   <!-- all about LISTS -->
 

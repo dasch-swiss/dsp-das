@@ -15,6 +15,7 @@ import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { SortingService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ConfirmDialogComponent } from '@dsp-app/src/app/main/action/confirm-dialog/confirm-dialog.component';
 import { Select } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, take, takeUntil, tap } from 'rxjs/operators';
@@ -149,32 +150,22 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
     this._router.navigate([RouteConstants.project, uuid, RouteConstants.edit]);
   }
 
-  openDialog(mode: string, name?: string, id?: string): void {
-    const dialogConfig: MatDialogConfig = {
-      width: '560px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: { name, mode, project: id },
-    };
+  askToDeactivateProject(name: string, id: string) {
+    this._dialog
+      .open(ConfirmDialogComponent, { data: { message: `Do you want to deactivate project ${name}?` } })
+      .afterClosed()
+      .subscribe(response => {
+        if (response === true) this.deactivateProject(id);
+      });
+  }
 
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(response => {
-      if (response === true) {
-        // get the mode
-        switch (mode) {
-          case 'deactivateProject':
-            this.deactivateProject(id);
-            break;
-
-          case 'activateProject':
-            this.activateProject(id);
-            break;
-        }
-      }
-    });
+  askToActivateProject(name: string, id: string) {
+    this._dialog
+      .open(ConfirmDialogComponent, { data: { message: `Do you want to reactivate project ${name}?` } })
+      .afterClosed()
+      .subscribe(response => {
+        if (response === true) this.activateProject(id);
+      });
   }
 
   sortList(key: any) {
