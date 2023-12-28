@@ -11,6 +11,7 @@ import {
   LoadListsInProjectAction,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { ConfirmDialogComponent } from '@dsp-app/src/app/main/action/confirm-dialog/confirm-dialog.component';
 import { EditListInfoDialogComponent } from '@dsp-app/src/app/project/list/reusable-list-info-form/edit-list-info-dialog.component';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
@@ -112,34 +113,26 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
       },
     });
   }
+
   openDialog(list: ListNodeInfo): void {
     this._dialog
-      .open(DialogComponent, {
-        width: '640px',
-        maxHeight: '80vh',
-        position: {
-          top: '112px',
-        },
+      .open(ConfirmDialogComponent, {
         data: {
-          mode: 'deleteList',
-          title: 'delete',
-          id: list.id,
-          project: this.projectUuid,
+          message: 'Do you want to delete this controlled vocabulary?',
         },
       })
       .afterClosed()
-      .subscribe(data => {
-        if (typeof data === 'boolean' && data === true) {
-          this._store.dispatch(new DeleteListNodeAction(this.listIri));
-          this.listIri = undefined;
-          this._actions$
-            .pipe(ofActionSuccessful(DeleteListNodeAction))
-            .pipe(take(1))
-            .subscribe(() => {
-              this._store.dispatch(new LoadListsInProjectAction(this.projectIri));
-              this._router.navigate([RouteConstants.project, this.projectUuid, RouteConstants.dataModels]);
-            });
-        }
+      .subscribe(response => {
+        if (!response) return;
+        this._store.dispatch(new DeleteListNodeAction(this.listIri));
+        this.listIri = undefined;
+        this._actions$
+          .pipe(ofActionSuccessful(DeleteListNodeAction))
+          .pipe(take(1))
+          .subscribe(() => {
+            this._store.dispatch(new LoadListsInProjectAction(this.projectIri));
+            this._router.navigate([RouteConstants.project, this.projectUuid, RouteConstants.dataModels]);
+          });
       });
   }
 
