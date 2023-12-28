@@ -60,33 +60,6 @@
       (closeDialog)="dialogRef.close($event)"></app-edit-list-item>
   </div>
 
-  <!-- Delete list node-->
-  <div *ngSwitchCase="'deleteListNode'">
-    <app-dialog-header [title]="data.title" [subtitle]="'appLabels.form.lists.title.deleteListNode' | translate">
-    </app-dialog-header>
-    Do you want to delete this node?
-    <mat-dialog-actions>
-      <button mat-button color="primary" mat-dialog-close class="cancel-button center" [mat-dialog-close]="false">
-        No, keep it
-      </button>
-      <span class="fill-remaining-space"></span>
-      <button mat-button mat-raised-button [color]="'warn'" class="confirm-button center" [mat-dialog-close]="true">
-        Yes, delete
-      </button>
-    </mat-dialog-actions>
-  </div>
-
-  <!-- Delete list node error-->
-  <div *ngSwitchCase="'deleteListNodeError'">
-    Unable to delete this controlled vocabulary node as it is in use.
-    <mat-dialog-actions>
-      <span class="fill-remaining-space"></span>
-      <button mat-button mat-raised-button [color]="'warn'" class="confirm-button center" [mat-dialog-close]="true">
-        Okay
-      </button>
-    </mat-dialog-actions>
-  </div>
-
   <!-- Delete list -->
   <div *ngSwitchCase="'deleteList'">
     <app-dialog-header [title]="data.title" [subtitle]="'appLabels.form.lists.title.deleteList' | translate">
