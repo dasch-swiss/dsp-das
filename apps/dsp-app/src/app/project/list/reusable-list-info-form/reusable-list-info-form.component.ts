@@ -8,11 +8,11 @@ import { startWith } from 'rxjs/operators';
 @Component({
   selector: 'app-reusable-list-info-form',
   template: `
-    <dasch-swiss-app-string-literal-2
+    <dasch-swiss-app-string-literal-2-input
       placeholder="Controlled vocabulary label *"
       [formGroup]="form"
       controlName="labels">
-    </dasch-swiss-app-string-literal-2>
+    </dasch-swiss-app-string-literal-2-input>
 
     <dasch-swiss-app-string-literal-2
       placeholder="Controlled vocabulary description *"

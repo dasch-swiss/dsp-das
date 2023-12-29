@@ -1,17 +1,14 @@
-import { ElementRef, Injectable, Input, ViewChild } from '@angular/core';
+import { ElementRef, Injectable } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 
 @Injectable()
 export class AppStringLiteral2Service {
-  @Input() formGroup: FormGroup;
-  @Input() controlName: string;
-  @Input() editable = true;
-  @Input() placeholder: string;
-
   selectedLanguageIndex: number;
   availableLanguages: string[] = ['de', 'fr', 'it', 'en', 'rm'];
+  formGroup: FormGroup;
+  controlName: string;
 
   get formArray() {
     return this.formGroup.controls[this.controlName] as FormArray;
@@ -42,7 +39,9 @@ export class AppStringLiteral2Service {
     private _fb: FormBuilder
   ) {}
 
-  ngOnInit() {
+  onInit(formGroup: FormGroup, controlName: string) {
+    this.formGroup = formGroup;
+    this.controlName = controlName;
     this.selectedLanguageIndex = this._setupLanguageIndex();
   }
 
@@ -64,7 +63,6 @@ export class AppStringLiteral2Service {
       this.changeLanguage(languageIndex);
     } else {
       this.selectedLanguageIndex = languageIndex;
-      this.textInput.nativeElement.focus();
     }
   }
 
