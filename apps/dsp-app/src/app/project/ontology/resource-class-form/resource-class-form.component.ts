@@ -15,8 +15,8 @@ import { CustomRegex } from '../../../workspace/resource/values/custom-regex';
     <form [formGroup]="form">
       <app-common-input [formGroup]="form" controlName="name" placeholder="Class name"></app-common-input>
 
-      <dasch-swiss-app-string-literal-2 placeholder="Label *" [formGroup]="form" controlName="labels">
-      </dasch-swiss-app-string-literal-2>
+      <dasch-swiss-app-string-literal-2-input placeholder="Label *" [formGroup]="form" controlName="labels">
+      </dasch-swiss-app-string-literal-2-input>
 
       <dasch-swiss-app-string-literal-2
         placeholder="Comment *"

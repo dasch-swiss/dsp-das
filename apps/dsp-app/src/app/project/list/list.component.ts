@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo, StringLiteral } from '@dasch-swiss/dsp-js';
@@ -15,9 +15,8 @@ import { ConfirmDialogComponent } from '@dsp-app/src/app/main/action/confirm-dia
 import { EditListInfoDialogComponent } from '@dsp-app/src/app/project/list/reusable-list-info-form/edit-list-info-dialog.component';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import { AppGlobal } from '../../app-global';
-import { DialogComponent } from '../../main/dialog/dialog.component';
 import { ProjectBase } from '../project-base';
 
 @Component({
@@ -52,7 +51,11 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
   disableContent = false;
 
   get list$(): Observable<ListNodeInfo> {
-    return this.listsInProject$.pipe(map(lists => (this.listIri ? lists.find(i => i.id === this.listIri) : null)));
+    return this.listsInProject$.pipe(
+      tap(v => console.log(v, this.listIri)),
+      map(lists => (this.listIri ? lists.find(i => i.id === this.listIri) : null)),
+      tap(v => console.log(v))
+    );
   }
 
   @Select(ListsSelectors.isListsLoading) isListsLoading$: Observable<boolean>;
