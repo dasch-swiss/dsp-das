@@ -7,6 +7,7 @@ import {
   MembersResponse,
   ProjectResponse,
   ReadGroup,
+  ReadUser,
   UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
@@ -120,9 +121,14 @@ export class ProjectsState {
           this.errorHandler.showMessage(error);
         },
       }),
-      concatMap(() =>
-        ctx.dispatch([new LoadProjectMembersAction(projectUuid), new LoadProjectGroupsAction(projectUuid)])
-      ),
+      concatMap(() => {
+        const user = this.store.selectSnapshot(UserSelectors.user) as ReadUser;
+        const userProjectAdminGroups = this.store.selectSnapshot(UserSelectors.userProjectAdminGroups);
+        const isProjectAdmin = ProjectService.IsProjectAdminOrSysAdmin(user, userProjectAdminGroups, projectIri);
+        return isProjectAdmin
+          ? ctx.dispatch([new LoadProjectMembersAction(projectUuid), new LoadProjectGroupsAction(projectUuid)])
+          : EMPTY;
+      }),
       finalize(() => {
         ctx.patchState({ isLoading: false });
       })
