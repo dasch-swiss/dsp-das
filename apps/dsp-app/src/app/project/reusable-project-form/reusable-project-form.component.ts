@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
-import { atLeastOneStringRequired } from '@dsp-app/src/app/project/reusable-project-form/at-least-one-string-required.validator';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { existingNamesValidator } from '../../main/directive/existing-name/existing-name.directive';
 import { arrayLengthGreaterThanZeroValidator } from './array-length-greater-than-zero-validator';
+import { atLeastOneStringRequired } from './at-least-one-string-required.validator';
 import PROJECT_FORM_CONSTANTS from './reusable-project-form.constants';
 
 @Component({

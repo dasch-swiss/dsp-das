@@ -11,13 +11,13 @@ import {
   LoadListsInProjectAction,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { ConfirmDialogComponent } from '@dsp-app/src/app/main/action/confirm-dialog/confirm-dialog.component';
-import { EditListInfoDialogComponent } from '@dsp-app/src/app/project/list/reusable-list-info-form/edit-list-info-dialog.component';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 import { AppGlobal } from '../../app-global';
+import { ConfirmDialogComponent } from '../../main/action/confirm-dialog/confirm-dialog.component';
 import { ProjectBase } from '../project-base';
+import { EditListInfoDialogComponent } from './reusable-list-info-form/edit-list-info-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

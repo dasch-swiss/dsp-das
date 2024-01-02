@@ -4,10 +4,10 @@ import { ClassDefinition, PropertyDefinition } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { atLeastOneStringRequired } from '@dsp-app/src/app/project/reusable-project-form/at-least-one-string-required.validator';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
 import { CustomRegex } from '../../../workspace/resource/values/custom-regex';
+import { atLeastOneStringRequired } from '../../reusable-project-form/at-least-one-string-required.validator';
 
 @Component({
   selector: 'app-resource-class-form',

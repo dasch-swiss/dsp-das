@@ -56,13 +56,13 @@ import {
   SetCurrentProjectOntologyPropertiesAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { CreateResourceClassDialogComponent } from '@dsp-app/src/app/project/ontology/create-resource-class-dialog/create-resource-class-dialog.component';
-import { EditResourceClassDialogComponent } from '@dsp-app/src/app/project/ontology/edit-resource-class-dialog/edit-resource-class-dialog.component';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
 import { DialogComponent, DialogEvent } from '../../main/dialog/dialog.component';
 import { ProjectBase } from '../project-base';
+import { CreateResourceClassDialogComponent } from './create-resource-class-dialog/create-resource-class-dialog.component';
+import { EditResourceClassDialogComponent } from './edit-resource-class-dialog/edit-resource-class-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

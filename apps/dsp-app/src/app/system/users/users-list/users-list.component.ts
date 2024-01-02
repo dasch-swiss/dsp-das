@@ -31,10 +31,10 @@ import {
   SetUserAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { ConfirmDialogComponent } from '@dsp-app/src/app/main/action/confirm-dialog/confirm-dialog.component';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
+import { ConfirmDialogComponent } from '../../../main/action/confirm-dialog/confirm-dialog.component';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
 
 @Component({
@@ -354,6 +354,7 @@ export class UsersListComponent implements OnInit {
       )
       .subscribe();
   }
+
   /**
    * open dialog in every case of modification:
    * edit user profile data, update user's password,
