@@ -172,10 +172,6 @@ const routes: Routes = [
     path: RouteConstants.resource,
     children: [
       {
-        path: 'testjulien',
-        component: CreateResourceClassDialogComponent,
-      },
-      {
         path: RouteConstants.projectResourceValueRelative,
         component: ResourceComponent,
       },
