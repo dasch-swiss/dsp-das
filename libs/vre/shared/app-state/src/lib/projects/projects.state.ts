@@ -6,7 +6,6 @@ import {
   KnoraApiConnection,
   MembersResponse,
   ProjectResponse,
-  ProjectsResponse,
   ReadGroup,
   UserResponse,
 } from '@dasch-swiss/dsp-js';
@@ -14,27 +13,23 @@ import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import {
- Action, State, StateContext, Store
-} from '@ngxs/store';
+import { Action, State, StateContext, Store } from '@ngxs/store';
 import { produce } from 'immer';
-import { EMPTY, of } from 'rxjs';
-import {
- concatMap, finalize, map, take, tap
-} from 'rxjs/operators';
+import { of } from 'rxjs';
+import { concatMap, finalize, map, take, tap } from 'rxjs/operators';
 import { IKeyValuePairs } from '../model-interfaces';
 import { SetUserAction } from '../user/user.actions';
 import { UserSelectors } from '../user/user.selectors';
 import {
-  LoadProjectsAction,
-  LoadProjectAction,
-  ClearProjectsAction,
-  RemoveUserFromProjectAction,
   AddUserToProjectMembershipAction,
-  LoadProjectMembersAction,
+  ClearProjectsAction,
+  LoadProjectAction,
   LoadProjectGroupsAction,
-  UpdateProjectAction,
+  LoadProjectMembersAction,
+  LoadProjectsAction,
+  RemoveUserFromProjectAction,
   SetProjectMemberAction,
+  UpdateProjectAction,
 } from './projects.actions';
 import { ProjectsStateModel } from './projects.state-model';
 

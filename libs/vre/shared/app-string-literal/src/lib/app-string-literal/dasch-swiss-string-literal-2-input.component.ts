@@ -7,8 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
-import { HumanReadableErrorPipe } from '@dsp-app/src/app/project/human-readable-error/human-readable-error.pipe';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
+import { HumanReadableErrorPipe } from '../human-readable-error/human-readable-error.pipe';
 import { AppStringLiteral2Service } from './dasch-swiss-string-literal-2.service';
 
 @Component({

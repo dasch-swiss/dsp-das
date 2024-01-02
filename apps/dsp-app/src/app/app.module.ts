@@ -20,15 +20,18 @@ import {
 import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
-import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/shared/app-progress-indicator';
+import {
+  AppProgressIndicatorComponent,
+  CenteredLayoutComponent,
+  LoadingButtonDirective,
+} from '@dasch-swiss/vre/shared/app-progress-indicator';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
-import { AppStringLiteralComponent } from '@dasch-swiss/vre/shared/app-string-literal';
-import { ConfirmDialogComponent } from '@dsp-app/src/app/main/action/confirm-dialog/confirm-dialog.component';
-import { CreateListInfoPageComponent } from '@dsp-app/src/app/project/list/reusable-list-info-form/create-list-info-page.component';
-import { EditListInfoDialogComponent } from '@dsp-app/src/app/project/list/reusable-list-info-form/edit-list-info-dialog.component';
-import { ReusableListInfoFormComponent } from '@dsp-app/src/app/project/list/reusable-list-info-form/reusable-list-info-form.component';
-import { CreateResourceClassDialogComponent } from '@dsp-app/src/app/project/ontology/create-resource-class-dialog/create-resource-class-dialog.component';
-import { EditResourceClassDialogComponent } from '@dsp-app/src/app/project/ontology/edit-resource-class-dialog/edit-resource-class-dialog.component';
+import {
+  AppStringLiteralComponent,
+  AppStringLiteral2Component,
+  AppStringLiteral2InputComponent,
+  HumanReadableErrorPipe,
+} from '@dasch-swiss/vre/shared/app-string-literal';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
@@ -36,12 +39,9 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { CenteredLayoutComponent } from '../../../../libs/vre/shared/app-progress-indicator/src/lib/centered-layout/centered-layout.component';
-import { LoadingButtonDirective } from '../../../../libs/vre/shared/app-progress-indicator/src/lib/loading-button/loading-button.directive';
-import { AppStringLiteral2InputComponent } from '../../../../libs/vre/shared/app-string-literal/src/lib/app-string-literal/dasch-swiss-string-literal-2-input.component';
-import { AppStringLiteral2Component } from '../../../../libs/vre/shared/app-string-literal/src/lib/app-string-literal/dasch-swiss-string-literal-2.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ConfirmDialogComponent } from './main/action/confirm-dialog/confirm-dialog.component';
 import { ConfirmationDialogComponent } from './main/action/confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationMessageComponent } from './main/action/confirmation-dialog/confirmation-message/confirmation-message.component';
 import { HintComponent } from './main/action/hint/hint.component';
@@ -83,11 +83,15 @@ import { CreateProjectFormPageComponent } from './project/create-project-form-pa
 import { DataModelsComponent } from './project/data-models/data-models.component';
 import { DescriptionComponent } from './project/description/description.component';
 import { EditProjectFormPageComponent } from './project/edit-project-form-page/edit-project-form-page.component';
-import { HumanReadableErrorPipe } from './project/human-readable-error/human-readable-error.pipe';
 import { ListItemComponent } from './project/list/list-item/list-item.component';
 import { EditListItemComponent } from './project/list/list-item-form/edit-list-item/edit-list-item.component';
 import { ListItemFormComponent } from './project/list/list-item-form/list-item-form.component';
 import { ListComponent } from './project/list/list.component';
+import { CreateListInfoPageComponent } from './project/list/reusable-list-info-form/create-list-info-page.component';
+import { EditListInfoDialogComponent } from './project/list/reusable-list-info-form/edit-list-info-dialog.component';
+import { ReusableListInfoFormComponent } from './project/list/reusable-list-info-form/reusable-list-info-form.component';
+import { CreateResourceClassDialogComponent } from './project/ontology/create-resource-class-dialog/create-resource-class-dialog.component';
+import { EditResourceClassDialogComponent } from './project/ontology/edit-resource-class-dialog/edit-resource-class-dialog.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
 import { PropertyFormComponent } from './project/ontology/property-form/property-form.component';
