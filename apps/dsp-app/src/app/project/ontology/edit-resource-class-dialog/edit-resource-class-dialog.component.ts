@@ -55,7 +55,6 @@ export class EditResourceClassDialogComponent implements OnInit {
 
   onSubmit() {
     this.loading = true;
-    console.log(this.form, this);
 
     // label
     const onto4Label = new UpdateOntology<UpdateResourceClassLabel>();

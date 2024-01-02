@@ -62,7 +62,6 @@ export class EditProjectFormPageComponent {
   ) {}
 
   onSubmit() {
-    console.log(this.form);
     const projectUuid = this.route.parent.snapshot.paramMap.get(RouteConstants.uuidParameter);
 
     const projectData: UpdateProjectRequest = {
