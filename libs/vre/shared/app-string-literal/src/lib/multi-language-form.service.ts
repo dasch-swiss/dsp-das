@@ -4,7 +4,7 @@ import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 
 @Injectable()
-export class AppStringLiteral2Service {
+export class MultiLanguageFormService {
   selectedLanguageIndex: number;
   availableLanguages: string[] = ['de', 'fr', 'it', 'en', 'rm'];
   formGroup: FormGroup;

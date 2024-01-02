@@ -8,17 +8,17 @@ import { atLeastOneStringRequired } from '../../reusable-project-form/at-least-o
 @Component({
   selector: 'app-reusable-list-info-form',
   template: `
-    <dasch-swiss-app-string-literal-2-input
+    <dasch-swiss-multi-language-input
       placeholder="Controlled vocabulary label *"
       [formGroup]="form"
       controlName="labels">
-    </dasch-swiss-app-string-literal-2-input>
+    </dasch-swiss-multi-language-input>
 
-    <dasch-swiss-app-string-literal-2
+    <dasch-swiss-multi-language-textarea
       placeholder="Controlled vocabulary description *"
       [formGroup]="form"
       controlName="comments">
-    </dasch-swiss-app-string-literal-2>
+    </dasch-swiss-multi-language-textarea>
   `,
 })
 export class ReusableListInfoFormComponent implements OnInit, OnDestroy {

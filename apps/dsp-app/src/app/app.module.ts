@@ -29,7 +29,7 @@ import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import {
   AppStringLiteralComponent,
   AppStringLiteral2Component,
-  AppStringLiteral2InputComponent,
+  MutiLanguageInputComponent,
   HumanReadableErrorPipe,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -350,7 +350,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     }),
     AppStringLiteralComponent,
     AppStringLiteral2Component,
-    AppStringLiteral2InputComponent,
+    MutiLanguageInputComponent,
     NgxsStoreModule,
     NgxsStoragePluginModule.forRoot(),
   ],

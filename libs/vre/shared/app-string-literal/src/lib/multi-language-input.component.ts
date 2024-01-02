@@ -8,13 +8,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
-import { HumanReadableErrorPipe } from '../human-readable-error/human-readable-error.pipe';
-import { AppStringLiteral2Service } from './dasch-swiss-string-literal-2.service';
+import { HumanReadableErrorPipe } from './human-readable-error.pipe';
+import { MultiLanguageFormService } from './multi-language-form.service';
 
 @Component({
-  selector: 'dasch-swiss-app-string-literal-2-input',
+  selector: 'dasch-swiss-multi-language-input',
   standalone: true,
-  providers: [AppStringLiteral2Service],
+  providers: [MultiLanguageFormService],
   imports: [
     CommonModule,
     MatButtonModule,
@@ -85,13 +85,13 @@ import { AppStringLiteral2Service } from './dasch-swiss-string-literal-2.service
     `,
   ],
 })
-export class AppStringLiteral2InputComponent implements OnInit {
+export class MutiLanguageInputComponent implements OnInit {
   @Input() formGroup: FormGroup;
   @Input() controlName: string;
   @Input() editable = true;
   @Input() placeholder: string;
 
-  constructor(public _myService: AppStringLiteral2Service) {}
+  constructor(public _myService: MultiLanguageFormService) {}
 
   ngOnInit() {
     this._myService.onInit(this.formGroup, this.controlName);

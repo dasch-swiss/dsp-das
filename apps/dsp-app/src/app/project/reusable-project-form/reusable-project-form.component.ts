@@ -32,11 +32,11 @@ import PROJECT_FORM_CONSTANTS from './reusable-project-form.constants';
         controlName="longname"
         [formGroup]="form"></app-common-input>
 
-      <dasch-swiss-app-string-literal-2
+      <dasch-swiss-multi-language-textarea
         [placeholder]="('appLabels.form.project.general.description' | translate) + '*'"
         [formGroup]="form"
         controlName="description">
-      </dasch-swiss-app-string-literal-2>
+      </dasch-swiss-multi-language-textarea>
 
       <app-chip-list-input
         [keywords]="form.controls.keywords.value"

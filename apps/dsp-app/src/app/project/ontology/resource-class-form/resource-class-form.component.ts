@@ -15,15 +15,15 @@ import { atLeastOneStringRequired } from '../../reusable-project-form/at-least-o
     <form [formGroup]="form">
       <app-common-input [formGroup]="form" controlName="name" placeholder="Class name"></app-common-input>
 
-      <dasch-swiss-app-string-literal-2-input placeholder="Label *" [formGroup]="form" controlName="labels">
-      </dasch-swiss-app-string-literal-2-input>
+      <dasch-swiss-multi-language-input placeholder="Label *" [formGroup]="form" controlName="labels">
+      </dasch-swiss-multi-language-input>
 
-      <dasch-swiss-app-string-literal-2
+      <dasch-swiss-multi-language-textarea
         placeholder="Comment *"
         [formGroup]="form"
         controlName="comments"
         [editable]="true">
-      </dasch-swiss-app-string-literal-2>
+      </dasch-swiss-multi-language-textarea>
     </form>
   `,
 })
