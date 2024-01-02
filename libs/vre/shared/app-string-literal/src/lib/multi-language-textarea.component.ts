@@ -73,7 +73,7 @@ import { MultiLanguageFormService } from './multi-language-form.service';
     `,
   ],
 })
-export class AppStringLiteral2Component implements OnInit {
+export class MultiLanguageTextareaComponent implements OnInit {
   @Input() formGroup: FormGroup;
   @Input() controlName: string;
   @Input() editable = true;
