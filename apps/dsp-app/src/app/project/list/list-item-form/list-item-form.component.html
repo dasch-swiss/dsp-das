@@ -1,27 +1,21 @@
 <!-- add new node item -->
-<div class="new-list-item medium-field" *ngIf="newNode && isAdmin">
-  <dasch-swiss-app-string-literal
-    class="list-item-label"
+<div *ngIf="newNode && isAdmin" style="display: flex">
+  <dasch-swiss-multi-language-input
+    style="flex: 1"
+    [formGroup]="addForm"
+    controlName="labels"
     [placeholder]="placeholder"
-    [value]="[]"
-    (dataChanged)="handleData($event)"
-    [language]="language"
     (enter)="createChildNode()">
-  </dasch-swiss-app-string-literal>
+  </dasch-swiss-multi-language-input>
   <button
     *ngIf="!loading"
     color="primary"
     mat-icon-button
     matSuffix
     [disabled]="!labels?.length"
-    class="add-node-btn"
     (click)="createChildNode()">
     <mat-icon> add </mat-icon>
   </button>
-  <dasch-swiss-app-progress-indicator
-    [status]="0"
-    *ngIf="loading"
-    class="progress-indicator"></dasch-swiss-app-progress-indicator>
 </div>
 
 <!-- node item -->

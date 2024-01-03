@@ -9,6 +9,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {
   ApiResponseError,
@@ -24,6 +25,7 @@ import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { CreateListItemDialogComponent } from '@dsp-app/src/app/project/list/list-item-form/edit-list-item/create-list-item-dialog.component';
+import { atLeastOneStringRequired } from '@dsp-app/src/app/project/reusable-project-form/at-least-one-string-required.validator';
 import { filter, switchMap } from 'rxjs/operators';
 import { ConfirmDialogComponent } from '../../../main/action/confirm-dialog/confirm-dialog.component';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
@@ -112,14 +114,27 @@ export class ListItemFormComponent implements OnInit {
 
   showActionBubble = false;
 
+  addForm: FormGroup;
   constructor(
     private _listApiService: ListApiService,
-    private _errorHandler: AppErrorHandler,
+    private _fb: FormBuilder,
     private _dialog: MatDialog,
     private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
+    this.addForm = this._fb.group({
+      labels: this._fb.array(
+        [{ language: 'de', value: '' }].map(({ language, value }) =>
+          this._fb.group({
+            language,
+            value: [value, [Validators.maxLength(2000)]],
+          })
+        ),
+        atLeastOneStringRequired('value')
+      ),
+    });
+    // REST
     this.initComponent = true;
 
     if (this.labels && this.labels.length > 0) {
@@ -129,7 +144,6 @@ export class ListItemFormComponent implements OnInit {
     // it can be used in the input placeholder
     if (this.newNode) {
       this._listApiService.getNodeInfo(this.parentIri).subscribe(response => {
-        console.log(response);
         if (response['listinfo']) {
           // root node
           this.placeholder += (response as ListInfoResponse).listinfo.labels[0].value;
