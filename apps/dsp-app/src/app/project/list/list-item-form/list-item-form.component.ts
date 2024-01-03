@@ -115,6 +115,7 @@ export class ListItemFormComponent implements OnInit {
   showActionBubble = false;
 
   addForm: FormGroup;
+  form: FormGroup;
   constructor(
     private _listApiService: ListApiService,
     private _fb: FormBuilder,
@@ -126,6 +127,18 @@ export class ListItemFormComponent implements OnInit {
     this.addForm = this._fb.group({
       labels: this._fb.array(
         [{ language: 'de', value: '' }].map(({ language, value }) =>
+          this._fb.group({
+            language,
+            value: [value, [Validators.maxLength(2000)]],
+          })
+        ),
+        atLeastOneStringRequired('value')
+      ),
+    });
+
+    this.form = this._fb.group({
+      labels: this._fb.array(
+        this.labels.map(({ language, value }) =>
           this._fb.group({
             language,
             value: [value, [Validators.maxLength(2000)]],

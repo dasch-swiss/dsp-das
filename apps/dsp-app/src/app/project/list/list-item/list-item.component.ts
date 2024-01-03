@@ -16,7 +16,13 @@ import { ListNodeOperation } from '../list-item-form/list-item-form.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-list-item',
   templateUrl: './list-item.component.html',
-  styleUrls: ['./list-item.component.scss'],
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
 })
 export class ListItemComponent implements OnInit {
   @Input() list: ListNode[];

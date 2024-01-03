@@ -1,33 +1,25 @@
 <!-- add new node item -->
-<div *ngIf="newNode && isAdmin" style="display: flex">
+<form [formGroup]="addForm" (ngSubmit)="createChildNode()" *ngIf="newNode && isAdmin" style="display: flex">
   <dasch-swiss-multi-language-input
     style="flex: 1"
     [formGroup]="addForm"
     controlName="labels"
-    [placeholder]="placeholder"
-    (enter)="createChildNode()">
+    [placeholder]="placeholder">
   </dasch-swiss-multi-language-input>
-  <button
-    *ngIf="!loading"
-    color="primary"
-    mat-icon-button
-    matSuffix
-    [disabled]="!labels?.length"
-    (click)="createChildNode()">
+  <button color="primary" mat-icon-button matSuffix [disabled]="addForm.invalid" type="submit">
     <mat-icon> add </mat-icon>
   </button>
-</div>
+</form>
 
 <!-- node item -->
-<div class="list-item medium-field" *ngIf="!newNode" (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
-  <dasch-swiss-app-string-literal
-    class="list-item-label"
+<div *ngIf="!newNode" (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
+  <dasch-swiss-multi-language-input
+    class="node-item"
     [placeholder]="labels | appStringifyStringLiteral:'all' | appTruncate: 128"
-    [value]="labels"
-    [readonly]="true"
-    (dataChanged)="handleData($event)"
-    [language]="language">
-  </dasch-swiss-app-string-literal>
+    [editable]="false"
+    [formGroup]="form"
+    controlName="labels">
+  </dasch-swiss-multi-language-input>
   <div class="action-bubble" *ngIf="showActionBubble && projectStatus" [@simpleFadeAnimation]="'in'">
     <div class="button-container">
       <button
