@@ -5,7 +5,7 @@ import { StringLiteral } from '@dasch-swiss/dsp-js/src/models/admin/string-liter
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { LoadProjectAction, ProjectsSelectors, ProjectsState, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { combineLatest, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -20,10 +20,10 @@ import { AppGlobal } from '../../app-global';
 export class DescriptionComponent {
   loading = true;
   readProject$ = this._route.paramMap.pipe(
-    switchMap(params =>
-      this._projectApiService.get(this._projectService.uuidToIri(params.get(RouteConstants.uuidParameter)))
-    ),
-    map(response => response.project),
+    switchMap(params => {
+      this._store.dispatch(new LoadProjectAction(params.get(RouteConstants.uuidParameter), true));
+      return this._store.select(ProjectsSelectors.currentProject);
+    }),
     tap(() => {
       this.loading = false;
     })
