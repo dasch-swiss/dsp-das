@@ -111,8 +111,6 @@ export class ListItemFormComponent implements OnInit {
   showActionBubble = false;
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _listApiService: ListApiService,
     private _errorHandler: AppErrorHandler,
     private _dialog: MatDialog,

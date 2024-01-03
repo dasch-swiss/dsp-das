@@ -8,7 +8,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
     <div mat-dialog-content>
       <p>{{ data.message }}</p>
     </div>
-    <div mat-dialog-actions>
+    <div mat-dialog-actions align="end">
       <button mat-button (click)="onNoClick()">No</button>
       <button mat-button (click)="onYesClick()">Yes</button>
     </div>

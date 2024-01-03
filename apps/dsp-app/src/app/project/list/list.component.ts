@@ -106,6 +106,8 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
    */
   editList(list: ListNodeInfo) {
     this._dialog.open(EditListInfoDialogComponent, {
+      width: '100%',
+      minWidth: 500,
       data: {
         projectIri: this._projectService.uuidToIri(this.projectUuid),
         list,
