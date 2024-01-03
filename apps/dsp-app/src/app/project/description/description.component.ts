@@ -4,7 +4,7 @@ import { ReadUser } from '@dasch-swiss/dsp-js';
 import { StringLiteral } from '@dasch-swiss/dsp-js/src/models/admin/string-literal';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { ProjectService, ProjectService as ProjectService2 } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { combineLatest, of } from 'rxjs';
@@ -39,7 +39,7 @@ export class DescriptionComponent {
         return false;
       }
 
-      return ProjectService2.IsProjectAdminOrSysAdmin(user as ReadUser, userProjectGroups, readProject.id);
+      return ProjectService.IsProjectAdminOrSysAdmin(user as ReadUser, userProjectGroups, readProject.id);
     })
   );
 
