@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { StringLiteral } from '@dasch-swiss/dsp-js/src/models/admin/string-literal';
-import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { ProjectService, ProjectService as ProjectService2 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { LoadProjectAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { combineLatest, of } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AppGlobal } from '../../app-global';
 
@@ -20,10 +19,10 @@ import { AppGlobal } from '../../app-global';
 export class DescriptionComponent {
   loading = true;
   readProject$ = this._route.paramMap.pipe(
-    switchMap(params =>
-      this._projectApiService.get(this._projectService.uuidToIri(params.get(RouteConstants.uuidParameter)))
-    ),
-    map(response => response.project),
+    switchMap(params => {
+      this._store.dispatch(new LoadProjectAction(params.get(RouteConstants.uuidParameter), true));
+      return this._store.select(ProjectsSelectors.currentProject);
+    }),
     tap(() => {
       this.loading = false;
     })
@@ -39,7 +38,7 @@ export class DescriptionComponent {
         return false;
       }
 
-      return ProjectService2.IsProjectAdminOrSysAdmin(user as ReadUser, userProjectGroups, readProject.id);
+      return ProjectService.IsProjectAdminOrSysAdmin(user as ReadUser, userProjectGroups, readProject.id);
     })
   );
 
@@ -47,8 +46,6 @@ export class DescriptionComponent {
 
   constructor(
     private _route: ActivatedRoute,
-    private _projectService: ProjectService,
-    private _projectApiService: ProjectApiService,
     private _store: Store
   ) {}
 

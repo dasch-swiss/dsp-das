@@ -38,10 +38,11 @@ import { MultiLanguageFormService } from './multi-language-form.service';
         #btnToSelectLanguage="matMenuTrigger">
         <span
           [class.bold]="
-            _myService.getFormControlWithLanguage(_myService.availableLanguages[_myService.selectedLanguageIndex]) !==
-            undefined
+            formService.getFormControlWithLanguage(
+              formService.availableLanguages[formService.selectedLanguageIndex]
+            ) !== undefined
           "
-          >{{ _myService.availableLanguages[_myService.selectedLanguageIndex] }}</span
+          >{{ formService.availableLanguages[formService.selectedLanguageIndex] }}</span
         >
         <mat-icon class="icon" matSuffix>keyboard_arrow_down</mat-icon>
       </button>
@@ -49,17 +50,17 @@ import { MultiLanguageFormService } from './multi-language-form.service';
       <input
         matInput
         [placeholder]="placeholder"
-        [formControl]="_myService.selectedFormControl"
+        [formControl]="formService.selectedFormControl"
         #textInput
         [readonly]="!editable" />
     </mat-form-field>
-    <mat-error *ngIf="_myService.formArray.invalid && _myService.formArray.touched">
-      <ng-container *ngIf="_myService.invalidErrors?.language"
-        >Language {{ _myService.invalidErrors.language }}:
-        {{ _myService.invalidErrors.error | humanReadableError }}</ng-container
+    <mat-error *ngIf="formService.formArray.invalid && formService.formArray.touched">
+      <ng-container *ngIf="formService.invalidErrors?.language"
+        >Language {{ formService.invalidErrors.language }}:
+        {{ formService.invalidErrors.error | humanReadableError }}</ng-container
       >
-      <ng-container *ngIf="!_myService.invalidErrors?.language">{{
-        _myService.invalidErrors.error | humanReadableError
+      <ng-container *ngIf="!formService.invalidErrors?.language">{{
+        formService.invalidErrors.error | humanReadableError
       }}</ng-container>
     </mat-error>
 
@@ -67,9 +68,9 @@ import { MultiLanguageFormService } from './multi-language-form.service';
       <button
         mat-menu-item
         type="button"
-        *ngFor="let lang of _myService.availableLanguages; let index = index"
-        (click)="_myService.changeLanguage(index); textInput.focus()">
-        <span [class.bold]="_myService.getFormControlWithLanguage(lang) !== undefined">{{ lang }}</span>
+        *ngFor="let lang of formService.availableLanguages; let index = index"
+        (click)="formService.changeLanguage(index); textInput.focus()">
+        <span [class.bold]="formService.getFormControlWithLanguage(lang) !== undefined">{{ lang }}</span>
       </button>
     </mat-menu>
   `,
@@ -91,9 +92,9 @@ export class MutiLanguageInputComponent implements OnInit {
   @Input() editable = true;
   @Input() placeholder: string;
 
-  constructor(public _myService: MultiLanguageFormService) {}
+  constructor(public formService: MultiLanguageFormService) {}
 
   ngOnInit() {
-    this._myService.onInit(this.formGroup, this.controlName);
+    this.formService.onInit(this.formGroup, this.controlName);
   }
 }
