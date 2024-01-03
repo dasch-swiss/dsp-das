@@ -32,10 +32,10 @@ import { MultiLanguageFormService } from './multi-language-form.service';
     <div style="display: flex">
       <mat-button-toggle-group matPrefix #group="matButtonToggleGroup" vertical>
         <mat-button-toggle
-          *ngFor="let lang of _myService.availableLanguages; let index = index"
-          (click)="_myService.changeLanguage(index); textInput.focus()"
-          [checked]="index === _myService.selectedLanguageIndex"
-          [class.bold]="_myService.getFormControlWithLanguage(lang) !== undefined">
+          *ngFor="let lang of formService.availableLanguages; let index = index"
+          (click)="formService.changeLanguage(index); textInput.focus()"
+          [checked]="index === formService.selectedLanguageIndex"
+          [class.bold]="formService.getFormControlWithLanguage(lang) !== undefined">
           <span>{{ lang }}</span>
         </mat-button-toggle>
       </mat-button-toggle-group>
@@ -46,17 +46,17 @@ import { MultiLanguageFormService } from './multi-language-form.service';
           [placeholder]="placeholder"
           #textInput
           [readonly]="!editable"
-          [formControl]="_myService.selectedFormControl">
+          [formControl]="formService.selectedFormControl">
         </textarea>
       </mat-form-field>
     </div>
-    <mat-error *ngIf="_myService.formArray.invalid && _myService.formArray.touched">
-      <ng-container *ngIf="_myService.invalidErrors?.language"
-        >Language {{ _myService.invalidErrors.language }}:
-        {{ _myService.invalidErrors.error | humanReadableError }}</ng-container
+    <mat-error *ngIf="formService.formArray.invalid && formService.formArray.touched">
+      <ng-container *ngIf="formService.invalidErrors?.language"
+        >Language {{ formService.invalidErrors.language }}:
+        {{ formService.invalidErrors.error | humanReadableError }}</ng-container
       >
-      <ng-container *ngIf="!_myService.invalidErrors?.language">{{
-        _myService.invalidErrors.error | humanReadableError
+      <ng-container *ngIf="!formService.invalidErrors?.language">{{
+        formService.invalidErrors.error | humanReadableError
       }}</ng-container>
     </mat-error>
   `,
@@ -79,9 +79,9 @@ export class MultiLanguageTextareaComponent implements OnInit {
   @Input() editable = true;
   @Input() placeholder: string;
 
-  constructor(public _myService: MultiLanguageFormService) {}
+  constructor(public formService: MultiLanguageFormService) {}
 
   ngOnInit() {
-    this._myService.onInit(this.formGroup, this.controlName);
+    this.formService.onInit(this.formGroup, this.controlName);
   }
 }
