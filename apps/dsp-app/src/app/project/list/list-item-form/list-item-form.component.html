@@ -55,15 +55,11 @@
       <button
         mat-button
         title="insert new child node above"
-        (click)="$event.stopPropagation(); openDialog('insertListNode', labels[0].value, iri)"
+        (click)="$event.stopPropagation(); askToInsertNode(iri)"
         class="insert">
         <mat-icon>vertical_align_top</mat-icon>
       </button>
-      <button
-        mat-button
-        class="edit"
-        title="edit"
-        (click)="$event.stopPropagation(); openDialog('editListNode', labels[0].value, iri)">
+      <button mat-button class="edit" title="edit" (click)="$event.stopPropagation(); askToEditNode(iri)">
         <mat-icon>edit</mat-icon>
       </button>
       <button

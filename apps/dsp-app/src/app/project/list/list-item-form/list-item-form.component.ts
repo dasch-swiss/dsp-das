@@ -17,11 +17,13 @@ import {
   KnoraApiConnection,
   ListInfoResponse,
   ListNode,
+  ListNodeInfoResponse,
   StringLiteral,
 } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { CreateListItemDialogComponent } from '@dsp-app/src/app/project/list/list-item-form/edit-list-item/create-list-item-dialog.component';
 import { filter, switchMap } from 'rxjs/operators';
 import { ConfirmDialogComponent } from '../../../main/action/confirm-dialog/confirm-dialog.component';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
@@ -126,23 +128,19 @@ export class ListItemFormComponent implements OnInit {
 
     // it can be used in the input placeholder
     if (this.newNode) {
-      this._listApiService.getNodeInfo(this.parentIri).subscribe(
-        response => {
-          if (response instanceof ListInfoResponse) {
-            // root node
-            this.placeholder += response.listinfo.labels[0].value;
-          } else {
-            // child node
-            this.placeholder += response.nodeinfo.labels[0].value;
-          }
-
-          this.initComponent = false;
-          this._cd.markForCheck();
-        },
-        (error: ApiResponseError) => {
-          this._errorHandler.showMessage(error);
+      this._listApiService.getNodeInfo(this.parentIri).subscribe(response => {
+        console.log(response);
+        if (response['listinfo']) {
+          // root node
+          this.placeholder += (response as ListInfoResponse).listinfo.labels[0].value;
+        } else {
+          // child node
+          this.placeholder += (response as ListNodeInfoResponse).nodeinfo.labels[0].value;
         }
-      );
+
+        this.initComponent = false;
+        this._cd.markForCheck();
+      });
     }
   }
 
@@ -253,47 +251,52 @@ export class ListItemFormComponent implements OnInit {
    * @param name label of the node; for now this is always the first label in the array.
    * @param iri iri of the node.
    */
-  openDialog(mode: string, name: string, iri?: string): void {
-    const dialogConfig: MatDialogConfig = {
-      width: '640px',
-      position: {
-        top: '112px',
-      },
-      data: {
-        mode,
-        title: mode === 'editListNode' || mode === 'deleteListNode' ? name : '',
-        id: iri,
-        project: this.projectIri,
-        projectUuid: this.projectUuid,
-        parentIri: this.parentIri,
-        position: this.position,
-      },
-    };
 
-    // open the dialog box
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe((data: ChildNodeInfo | boolean) => {
-      // init data to emit to parent
-      const listNodeOperation = new ListNodeOperation();
-
-      if (mode === 'insertListNode' && data) {
-        // the call to DSP-API to insert the new node is done in the child component
-        listNodeOperation.listNode = data as ListNode;
+  askToInsertNode(iri: string) {
+    this._dialog
+      .open(CreateListItemDialogComponent, {
+        width: '100%',
+        minWidth: 500,
+        data: {
+          id: iri,
+          project: this.projectIri,
+          parentIri: this.parentIri,
+          position: this.position,
+        },
+      })
+      .afterClosed()
+      .pipe(filter(response => !!response))
+      .subscribe(response => {
+        const listNodeOperation = new ListNodeOperation();
+        listNodeOperation.listNode = response as ListNode;
         listNodeOperation.operation = 'insert';
-
         this.refreshParent.emit(listNodeOperation);
-      } else if (mode === 'editListNode' && data) {
-        // update
-        // the call to DSP-API to update the node is done in the child component
-        listNodeOperation.listNode = data as ListNode;
+      });
+  }
+
+  askToEditNode(iri: string) {
+    this._dialog
+      .open(CreateListItemDialogComponent, {
+        width: '100%',
+        minWidth: 500,
+        data: {
+          id: iri,
+          project: this.projectIri,
+          parentIri: this.parentIri,
+          position: this.position,
+        },
+      })
+      .afterClosed()
+      .pipe(filter(response => !!response))
+      .subscribe(response => {
+        const listNodeOperation = new ListNodeOperation();
+        listNodeOperation.listNode = response as ListNode;
         listNodeOperation.operation = 'update';
 
         // emit data to parent to update the view
         this.refreshParent.emit(listNodeOperation);
-        this.labels = (data as ChildNodeInfo).labels;
-      }
-    });
+        this.labels = (response as ChildNodeInfo).labels;
+      });
   }
 
   /**

@@ -32,6 +32,7 @@ import {
   MutiLanguageInputComponent,
   HumanReadableErrorPipe,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { CreateListItemDialogComponent } from '@dsp-app/src/app/project/list/list-item-form/edit-list-item/create-list-item-dialog.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
@@ -320,6 +321,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CommentFormComponent,
     DataModelsComponent,
     IsFalsyPipe,
+    CreateListItemDialogComponent,
   ],
   imports: [
     AngularSplitModule,

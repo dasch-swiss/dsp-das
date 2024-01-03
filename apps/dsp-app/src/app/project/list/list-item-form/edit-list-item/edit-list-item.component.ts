@@ -14,6 +14,7 @@ import {
   KnoraApiConnection,
   List,
   ListNodeInfo,
+  ListNodeInfoResponse,
   StringLiteral,
   UpdateChildNodeRequest,
 } from '@dasch-swiss/dsp-js';
@@ -85,7 +86,7 @@ export class EditListItemComponent implements OnInit {
 
     // if updating a node, get the existing node info
     if (this.mode === 'update') {
-      this._listApiService.getNodeInfo(this.iri).subscribe(response => {
+      this._listApiService.getNodeInfo(this.iri).subscribe((response: ListNodeInfoResponse) => {
         this.loading = false;
         this.listNode = response.nodeinfo;
         this.buildForm(response.nodeinfo);
