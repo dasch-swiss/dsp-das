@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { StringLiteral } from '@dasch-swiss/dsp-js/src/models/admin/string-literal';
-import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { LoadProjectAction, ProjectsSelectors, ProjectsState, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { LoadProjectAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { combineLatest, of } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AppGlobal } from '../../app-global';
 
@@ -47,8 +46,6 @@ export class DescriptionComponent {
 
   constructor(
     private _route: ActivatedRoute,
-    private _projectService: ProjectService,
-    private _projectApiService: ProjectApiService,
     private _store: Store
   ) {}
 
