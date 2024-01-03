@@ -26,7 +26,6 @@ export class DescriptionComponent {
         .pipe(map(projects => projects.find(x => x.id.split('/').pop() === params.get(RouteConstants.uuidParameter))));
     }),
     tap(() => {
-      console.log('dooone');
       this.loading = false;
     })
   );
