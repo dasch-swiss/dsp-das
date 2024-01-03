@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ReadUser } from '@dasch-swiss/dsp-js';
 import { StringLiteral } from '@dasch-swiss/dsp-js/src/models/admin/string-literal';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { of } from 'rxjs';
+import { ProjectService, ProjectService as ProjectService2 } from '@dasch-swiss/vre/shared/app-helper-services';
+import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
+import { combineLatest, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AppGlobal } from '../../app-global';
 
@@ -26,13 +29,27 @@ export class DescriptionComponent {
     })
   );
   sortedDescriptions$ = this.readProject$.pipe(map(({ description }) => this._sortDescriptionsByLanguage(description)));
-  userHasPermission$ = of(true);
+  userHasPermission$ = combineLatest([
+    this._store.select(UserSelectors.user),
+    this.readProject$,
+    this._store.select(UserSelectors.userProjectAdminGroups),
+  ]).pipe(
+    map(([user, readProject, userProjectGroups]) => {
+      if (readProject == null) {
+        return false;
+      }
+
+      return ProjectService2.IsProjectAdminOrSysAdmin(user as ReadUser, userProjectGroups, readProject.id);
+    })
+  );
+
   RouteConstants = RouteConstants;
 
   constructor(
     private _route: ActivatedRoute,
     private _projectService: ProjectService,
-    private _projectApiService: ProjectApiService
+    private _projectApiService: ProjectApiService,
+    private _store: Store
   ) {}
 
   private _sortDescriptionsByLanguage(descriptions: StringLiteral[]): StringLiteral[] {
