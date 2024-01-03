@@ -17,14 +17,16 @@ import { AppGlobal } from '../../app-global';
   styleUrls: ['./description.component.scss'],
 })
 export class DescriptionComponent {
-  loading = true;
+  loading = false;
   readProject$ = this._route.paramMap.pipe(
     switchMap(params => {
+      this.loading = true;
       return this._store
         .select(ProjectsSelectors.readProjects)
         .pipe(map(projects => projects.find(x => x.id.split('/').pop() === params.get(RouteConstants.uuidParameter))));
     }),
     tap(() => {
+      console.log('dooone');
       this.loading = false;
     })
   );
