@@ -16,7 +16,7 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Action, State, StateContext, Store } from '@ngxs/store';
 import { produce } from 'immer';
-import { of } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { concatMap, finalize, map, take, tap } from 'rxjs/operators';
 import { IKeyValuePairs } from '../model-interfaces';
 import { SetUserAction } from '../user/user.actions';
