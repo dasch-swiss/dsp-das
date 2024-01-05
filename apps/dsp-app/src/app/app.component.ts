@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 
 @Component({
   selector: 'app-root',
@@ -14,10 +15,16 @@ export class AppComponent implements OnInit {
 
   constructor(
     private _router: Router,
-    private _titleService: Title
+    private _titleService: Title,
+    private _authService: AuthService
   ) {
-    // set the page title
     this._titleService.setTitle('DaSCH Service Platform');
+    _router.events.subscribe(event => {
+      // if page refreshed manually
+      if (event instanceof NavigationStart && !_router.navigated) {
+        this._authService.reloadState();
+      }
+    });
   }
 
   ngOnInit() {

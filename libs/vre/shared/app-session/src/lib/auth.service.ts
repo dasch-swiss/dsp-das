@@ -1,20 +1,20 @@
 import { EventEmitter, Injectable, Output, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, CredentialsResponse, LoginResponse, User } from '@dasch-swiss/dsp-js';
-import { Auth, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { Auth, DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import {
-  LoadUserAction,
-  ClearProjectsAction,
-  LogUserOutAction,
-  UserStateModel,
   ClearListsAction,
   ClearOntologiesAction,
+  ClearProjectsAction,
+  ClearUsersAction,
+  LoadUserAction,
+  UserSelectors,
+  UserStateModel,
 } from '@dasch-swiss/vre/shared/app-state';
-import { Store } from '@ngxs/store';
+import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { catchError, tap, switchMap, map, takeLast, take } from 'rxjs/operators';
+import { catchError, map, switchMap, take, takeLast, tap } from 'rxjs/operators';
 import { LoginError, ServerError } from './error';
 
 @Injectable({ providedIn: 'root' })
@@ -32,6 +32,7 @@ export class AuthService {
   @Output() loginSuccessfulEvent = new EventEmitter<User>();
 
   constructor(
+    private actions$: Actions,
     private store: Store,
     private router: Router // private intervalWrapper: IntervalWrapperService
   ) {
@@ -188,13 +189,32 @@ export class AuthService {
   doLogoutUser() {
     this._isLoggedIn$.next(false);
     this.removeTokens();
+    this.clearState();
+    clearTimeout(this.tokenRefreshIntervalId);
+    this.router.navigate([RouteConstants.home], { replaceUrl: true });
+  }
+
+  clearState() {
     this.store.dispatch([
-      new LogUserOutAction(),
+      new ClearUsersAction(),
       new ClearProjectsAction(),
       new ClearListsAction(),
       new ClearOntologiesAction(),
     ]);
-    clearTimeout(this.tokenRefreshIntervalId);
+  }
+
+  reloadState() {
+    const user = this.store.selectSnapshot(UserSelectors.user);
+    if (user) {
+      this.actions$
+        .pipe(ofActionSuccessful(ClearUsersAction))
+        .pipe(take(1))
+        .subscribe(() => {
+          this.store.dispatch(new LoadUserAction(user.username));
+        });
+    }
+
+    this.clearState();
   }
 
   isLoggedIn() {

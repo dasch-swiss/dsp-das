@@ -1,18 +1,17 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ApiResponseError, Constants, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { Action, State, StateContext } from '@ngxs/store';
 import { of } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 import { SetProjectMemberAction } from '../projects/projects.actions';
 import {
+  ClearUsersAction,
   CreateUserAction,
   LoadUserAction,
   LoadUserContentByIriAction,
   LoadUsersAction,
-  LogUserOutAction,
   RemoveUserAction,
   ResetUsersAction,
   SetUserAction,
@@ -141,8 +140,8 @@ export class UserState {
     ctx.setState({ ...state });
   }
 
-  @Action(LogUserOutAction)
-  logUserOut(ctx: StateContext<UserStateModel>) {
+  @Action(ClearUsersAction)
+  clearUsersAction(ctx: StateContext<UserStateModel>) {
     return of(ctx.getState()).pipe(
       map(currentState => {
         ctx.setState(defaults);
