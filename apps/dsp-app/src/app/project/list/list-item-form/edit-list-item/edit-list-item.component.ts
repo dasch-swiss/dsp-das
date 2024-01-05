@@ -67,7 +67,10 @@ export class EditListItemComponent implements OnInit {
 
   formInvalidMessage: string;
 
-  constructor(private _listApiService: ListApiService, private _cd: ChangeDetectorRef) {}
+  constructor(
+    private _listApiService: ListApiService,
+    private _cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loading = true;

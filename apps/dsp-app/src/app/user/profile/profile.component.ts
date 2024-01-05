@@ -25,7 +25,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   @Select(UserSelectors.user) user$: Observable<ReadUser>;
   @Select(UserSelectors.isLoading) isLoading$: Observable<boolean>;
 
-  constructor(private _dialog: MatDialog, private _titleService: Title, private _store: Store) {}
+  constructor(
+    private _dialog: MatDialog,
+    private _titleService: Title,
+    private _store: Store
+  ) {}
 
   ngOnInit() {
     this.user$
