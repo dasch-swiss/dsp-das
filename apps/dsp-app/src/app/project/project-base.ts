@@ -4,6 +4,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
+  IKeyValuePairs,
   LoadProjectAction,
   LoadProjectOntologiesAction,
   OntologiesSelectors,
@@ -42,15 +43,12 @@ export class ProjectBase implements OnInit, OnDestroy {
   }
 
   @Select(UserSelectors.user) user$: Observable<ReadUser>;
-  @Select(UserSelectors.userProjectAdminGroups)
-  userProjectAdminGroups$: Observable<string[]>;
-  @Select(ProjectsSelectors.isCurrentProjectAdmin)
-  isProjectAdmin$: Observable<boolean>;
-  @Select(ProjectsSelectors.isCurrentProjectMember)
-  isProjectMember$: Observable<boolean>;
+  @Select(UserSelectors.userProjectAdminGroups) userProjectAdminGroups$: Observable<string[]>;
+  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isCurrentProjectAdminOrSysAdmin: Observable<boolean>;
+  @Select(ProjectsSelectors.isCurrentProjectMember) isProjectMember$: Observable<boolean>;
   @Select(ProjectsSelectors.currentProject) project$: Observable<ReadProject>;
-  @Select(ProjectsSelectors.isProjectsLoading)
-  isProjectsLoading$: Observable<boolean>;
+  @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
+  @Select(ProjectsSelectors.projectMembers) projectMembers$: Observable<IKeyValuePairs<ReadUser>>;
 
   constructor(
     protected _store: Store,
@@ -68,16 +66,7 @@ export class ProjectBase implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
-    if (this.projectUuid && (!this.project || this.project.id !== this.projectIri)) {
-      // get current project data, project members and project groups
-      // and set the project state here
-      this.loadProject();
-    } else if (!this.isOntologiesAvailable()) {
-      this.isProjectsLoading$.pipe(takeWhile(isLoading => isLoading === false)).subscribe((isLoading: boolean) => {
-        this._store.dispatch(new LoadProjectOntologiesAction(this.projectUuid));
-      });
-    }
+    this.loadProject();
   }
 
   ngOnDestroy(): void {
@@ -95,11 +84,28 @@ export class ProjectBase implements OnInit, OnDestroy {
   }
 
   private loadProject(): void {
-    this._store.dispatch(new LoadProjectAction(this.projectUuid, true));
-    this._actions$
-      .pipe(ofActionSuccessful(LoadProjectAction))
-      .pipe(take(1))
-      .subscribe(() => this.setProjectData());
+    this.isProjectsLoading$
+      .pipe(
+        takeWhile(isLoading => isLoading === false),
+        take(1)
+      )
+      .subscribe(() => {
+        const projectMembers = this._store.selectSnapshot(ProjectsSelectors.projectMembers)[this.projectIri];
+        this.project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
+        if ((this.projectUuid && (!this.project || this.project.id !== this.projectIri)) || !projectMembers) {
+          // get current project data, project members and project groups
+          // and set the project state here
+          this._store.dispatch(new LoadProjectAction(this.projectUuid, true));
+          this._actions$
+            .pipe(ofActionSuccessful(LoadProjectAction))
+            .pipe(take(1))
+            .subscribe(() => this.setProjectData());
+        } else if (!this.isOntologiesAvailable()) {
+          this.isProjectsLoading$.pipe(takeWhile(isLoading => isLoading === false)).subscribe((isLoading: boolean) => {
+            this._store.dispatch(new LoadProjectOntologiesAction(this.projectUuid));
+          });
+        }
+      });
   }
 
   private setProjectData(): void {
