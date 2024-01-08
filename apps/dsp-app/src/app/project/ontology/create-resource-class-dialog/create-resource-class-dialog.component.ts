@@ -23,7 +23,7 @@ import { finalize, tap } from 'rxjs/operators';
         [isLoading]="loading"
         [disabled]="form.invalid"
         (click)="onSubmit()">
-        Create
+        Submit
       </button>
     </div>
   `,
