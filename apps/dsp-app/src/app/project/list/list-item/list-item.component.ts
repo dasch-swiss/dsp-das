@@ -7,7 +7,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { ListNode, ListResponse, RepositionChildNodeRequest } from '@dasch-swiss/dsp-js';
+import { ListChildNodeResponse, ListNode, ListResponse, RepositionChildNodeRequest } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { take } from 'rxjs/operators';
 import { ListNodeOperation } from '../list-item-form/list-item-form.component';
@@ -46,6 +46,8 @@ export class ListItemComponent implements OnInit {
 
   expandedNode: string;
 
+  children: ListNode[] = [];
+
   constructor(
     private _listApiService: ListApiService,
     private _cd: ChangeDetectorRef
@@ -53,18 +55,20 @@ export class ListItemComponent implements OnInit {
 
   ngOnInit() {
     // in case of parent node: run the following request to get the entire list
-    if (!this.childNode) {
-      this._listApiService
-        .get(this.parentIri)
-        .pipe(take(1))
-        .subscribe((result: ListResponse) => {
-          console.log(result);
-
-          this.list = result.list.children;
-          this.language = result.list.listinfo.labels[0].language;
-          this._cd.markForCheck();
-        });
-    }
+    console.log('init list item', this);
+    this._listApiService
+      .get(this.parentIri)
+      .pipe(take(1))
+      .subscribe(result => {
+        console.log('result', result);
+        if (result['node']) {
+          this.children = (result as ListChildNodeResponse).node.children;
+        } else {
+          this.language = (result as ListResponse).list.listinfo.labels[0].language;
+          this.children = (result as ListResponse).list.children;
+        }
+        this._cd.markForCheck();
+      });
   }
 
   /**
