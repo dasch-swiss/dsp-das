@@ -8,6 +8,7 @@ import {
   StringLiteral,
 } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
+import { ListItemService } from '@dsp-app/src/app/project/list/list-item/list-item.service';
 import { atLeastOneStringRequired } from '@dsp-app/src/app/project/reusable-project-form/at-least-one-string-required.validator';
 
 export class ListNodeOperation {
@@ -44,7 +45,8 @@ export class ListItemFormComponent implements OnInit {
   constructor(
     private _listApiService: ListApiService,
     private _fb: FormBuilder,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _listItemService: ListItemService
   ) {}
 
   ngOnInit() {
@@ -77,12 +79,7 @@ export class ListItemFormComponent implements OnInit {
     });
   }
 
-  /**
-   * called from the template when the plus button is clicked.
-   * Sends the info to make a new child node to DSP-API and refreshes the UI to show the newly added node at the end of the list.
-   */
   createChildNode() {
-    console.log('submit', this);
     this.loading = true;
 
     // generate the data payload
@@ -101,26 +98,14 @@ export class ListItemFormComponent implements OnInit {
       childNode.labels[i].value = l.value;
       i++;
     }
-    // childNode.comments = []; // --> TODO comments are not yet implemented in the template
-
-    // init data to emit to parent
-    const listNodeOperation: ListNodeOperation = new ListNodeOperation();
-
-    // send payload to dsp-api's api
     this._listApiService.createChildNode(childNode.parentNodeIri, childNode).subscribe(response => {
-      // this needs to return a ListNode as opposed to a ListNodeInfo, so we make one
-      listNodeOperation.listNode = new ListNode();
-      listNodeOperation.listNode.hasRootNode = response.nodeinfo.hasRootNode;
-      listNodeOperation.listNode.id = response.nodeinfo.id;
-      listNodeOperation.listNode.labels = response.nodeinfo.labels;
-      listNodeOperation.listNode.name = response.nodeinfo.name;
-      listNodeOperation.listNode.position = response.nodeinfo.position;
-      listNodeOperation.operation = 'create';
       this.loading = false;
+      this._listItemService.onUpdate$.next();
     });
   }
 
-  /**
-   * show action bubble with various CRUD buttons when hovered over.
-   */
+  resetForm() {
+    this.form.reset();
+    this._buildForms();
+  }
 }

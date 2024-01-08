@@ -19,11 +19,15 @@ import { ListNode } from '@dasch-swiss/dsp-js';
             controlName="labels">
           </dasch-swiss-multi-language-input>
 
-          <app-action-bubble [position]="position" [length]="length"></app-action-bubble>
+          <app-action-bubble
+            [position]="position"
+            [length]="length"
+            [labels]="node.labels"
+            [iri]="node.id"></app-action-bubble>
         </div>
 
         <app-list-item
-          *ngIf="showChildren && node.children.length > 0"
+          *ngIf="showChildren"
           [language]="language"
           [childNode]="true"
           [list]="node.children"

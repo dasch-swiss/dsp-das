@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ChildNodeInfo, ListNode, StringLiteral } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { ConfirmDialogComponent } from '@dsp-app/src/app/main/action/confirm-dialog/confirm-dialog.component';
+import { ListItemService } from '@dsp-app/src/app/project/list/list-item/list-item.service';
 import { CreateListItemDialogComponent } from '@dsp-app/src/app/project/list/list-item-form/edit-list-item/create-list-item-dialog.component';
 import { ListNodeOperation } from '@dsp-app/src/app/project/list/list-item-form/list-item-form.component';
 import { filter, switchMap } from 'rxjs/operators';
@@ -82,6 +83,7 @@ export class ActionBubbleComponent {
 
   constructor(
     private _dialog: MatDialog,
+    private _listItemService: ListItemService,
     private _listApiService: ListApiService
   ) {}
 
@@ -98,11 +100,8 @@ export class ActionBubbleComponent {
         filter(response => typeof response === 'boolean' && response === true),
         switchMap(() => this._listApiService.deleteListNode(iri))
       )
-      .subscribe(response => {
-        const listNodeOperation = new ListNodeOperation();
-
-        listNodeOperation.listNode = response.node;
-        listNodeOperation.operation = 'delete';
+      .subscribe(() => {
+        this._listItemService.onUpdate$.next();
       });
   }
 

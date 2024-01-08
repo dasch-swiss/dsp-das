@@ -7,7 +7,8 @@ import {
   StringLiteral,
 } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
-import { take } from 'rxjs/operators';
+import { ListItemService } from '@dsp-app/src/app/project/list/list-item/list-item.service';
+import { startWith, switchMap, take, tap } from 'rxjs/operators';
 import { ListNodeOperation } from '../list-item-form/list-item-form.component';
 
 @Component({
@@ -39,6 +40,7 @@ import { ListNodeOperation } from '../list-item-form/list-item-form.component';
       }
     `,
   ],
+  providers: [ListItemService],
 })
 export class ListItemComponent implements OnInit {
   @Input() list: ListNode[];
@@ -66,14 +68,18 @@ export class ListItemComponent implements OnInit {
 
   constructor(
     private _listApiService: ListApiService,
+    public listItemService: ListItemService,
     private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     // in case of parent node: run the following request to get the entire list
-    this._listApiService
-      .get(this.parentIri)
-      .pipe(take(1))
+    this.listItemService.onUpdate$
+      .pipe(
+        startWith(true),
+        tap(v => console.log('fired')),
+        switchMap(() => this._listApiService.get(this.parentIri))
+      )
       .subscribe(result => {
         if (result['node']) {
           this.children = (result as ListChildNodeResponse).node.children;
