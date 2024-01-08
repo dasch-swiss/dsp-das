@@ -83,7 +83,7 @@ export class ProjectService {
     return isProjectAdmin
       ? // check if the user is member of the current project(id contains the iri)
         true
-      : user.projects.length === 0
+      : !user || user.projects.length === 0
         ? false
         : user.projects.some(p => ProjectService.IriToUuid(p.id) === projectUuid);
   }

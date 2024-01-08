@@ -23,20 +23,18 @@ export class ProjectBase implements OnInit, OnDestroy {
   project: ReadProject; // TODO use project$ instead
 
   // permissions of logged-in user
-  get isAdmin$(): Observable<boolean> {
-    return combineLatest([
-      this.user$.pipe(filter(user => user !== null)),
-      this.userProjectAdminGroups$,
-      this._route.params,
-      this._route.parent.params,
-    ]).pipe(
-      takeUntil(this.destroyed),
-      map(([user, userProjectGroups, params, parentParams]) => {
-        const projectIri = this._projectService.uuidToIri(params.uuid ? params.uuid : parentParams.uuid);
-        return ProjectService.IsProjectAdminOrSysAdmin(user, userProjectGroups, projectIri);
-      })
-    );
-  }
+  isAdmin$: Observable<boolean> = combineLatest([
+    this._store.select(UserSelectors.user).pipe(filter(user => user !== null)) as Observable<ReadUser>,
+    this._store.select(UserSelectors.userProjectAdminGroups),
+    this._route.params,
+    this._route.parent.params,
+  ]).pipe(
+    takeUntil(this.destroyed),
+    map(([user, userProjectGroups, params, parentParams]) => {
+      const projectIri = this._projectService.uuidToIri(params.uuid ? params.uuid : parentParams.uuid);
+      return ProjectService.IsProjectAdminOrSysAdmin(user, userProjectGroups, projectIri);
+    })
+  );
 
   get projectIri() {
     return this._projectService.uuidToIri(this.projectUuid);
@@ -86,25 +84,27 @@ export class ProjectBase implements OnInit, OnDestroy {
   private loadProject(): void {
     this.isProjectsLoading$
       .pipe(
-        takeWhile(isLoading => isLoading === false),
+        takeWhile(isLoading => isLoading === false && this.projectUuid !== undefined),
         take(1)
       )
-      .subscribe(() => {
-        const projectMembers = this._store.selectSnapshot(ProjectsSelectors.projectMembers)[this.projectIri];
-        this.project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
-        if ((this.projectUuid && (!this.project || this.project.id !== this.projectIri)) || !projectMembers) {
-          // get current project data, project members and project groups
-          // and set the project state here
-          this._store.dispatch(new LoadProjectAction(this.projectUuid, true));
+      .subscribe({
+        next: () => {
+          const projectMembers = this._store.selectSnapshot(ProjectsSelectors.projectMembers)[this.projectIri];
+          this.project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
+          if (!this.project || this.project.id !== this.projectIri || !projectMembers) {
+            // get current project data, project members and project groups
+            // and set the project state here
+            this._store.dispatch(new LoadProjectAction(this.projectUuid, true));
+          } else if (!this.isOntologiesAvailable()) {
+            this._store.dispatch(new LoadProjectOntologiesAction(this.projectUuid));
+          }
+        },
+        complete: () => {
           this._actions$
             .pipe(ofActionSuccessful(LoadProjectAction))
             .pipe(take(1))
             .subscribe(() => this.setProjectData());
-        } else if (!this.isOntologiesAvailable()) {
-          this.isProjectsLoading$.pipe(takeWhile(isLoading => isLoading === false)).subscribe((isLoading: boolean) => {
-            this._store.dispatch(new LoadProjectOntologiesAction(this.projectUuid));
-          });
-        }
+        },
       });
   }
 

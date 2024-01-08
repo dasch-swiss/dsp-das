@@ -97,18 +97,19 @@ export class UsersListComponent implements OnInit {
   // ... and sort by 'username'
   sortBy = 'username';
 
-  get disableMenu$(): Observable<boolean> {
-    return combineLatest([this.isCurrentProjectAdminOrSysAdmin$, this.isSysAdmin$]).pipe(
-      map(([isCurrentProjectAdminOrSysAdmin, isSysAdmin]) => {
-        if (this.project && this.project.status === false) {
-          return true;
-        } else {
-          const isProjectAdmin = this.projectUuid ? isCurrentProjectAdminOrSysAdmin : false;
-          return !isProjectAdmin && !isSysAdmin;
-        }
-      })
-    );
-  }
+  disableMenu$: Observable<boolean> = combineLatest([
+    this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin),
+    this._store.select(UserSelectors.isSysAdmin),
+  ]).pipe(
+    map(([isCurrentProjectAdminOrSysAdmin, isSysAdmin]) => {
+      if (this.project && this.project.status === false) {
+        return true;
+      } else {
+        const isProjectAdmin = this.projectUuid ? isCurrentProjectAdminOrSysAdmin : false;
+        return !isProjectAdmin && !isSysAdmin;
+      }
+    })
+  );
 
   @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
   @Select(UserSelectors.user) user$: Observable<ReadUser>;
