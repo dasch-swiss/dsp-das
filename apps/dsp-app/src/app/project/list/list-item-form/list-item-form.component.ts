@@ -4,31 +4,25 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnInit,
   Output,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import {
-  ApiResponseError,
   ChildNodeInfo,
   CreateChildNodeRequest,
-  KnoraApiConnection,
   ListInfoResponse,
   ListNode,
   ListNodeInfoResponse,
   StringLiteral,
 } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { CreateListItemDialogComponent } from '@dsp-app/src/app/project/list/list-item-form/edit-list-item/create-list-item-dialog.component';
 import { atLeastOneStringRequired } from '@dsp-app/src/app/project/reusable-project-form/at-least-one-string-required.validator';
 import { filter, switchMap } from 'rxjs/operators';
 import { ConfirmDialogComponent } from '../../../main/action/confirm-dialog/confirm-dialog.component';
-import { DialogComponent } from '../../../main/dialog/dialog.component';
 
 export class ListNodeOperation {
   operation: 'create' | 'insert' | 'update' | 'delete' | 'reposition';
@@ -108,14 +102,13 @@ export class ListItemFormComponent implements OnInit {
 
   loading: boolean;
 
-  initComponent: boolean;
-
   placeholder = 'Append item to ';
 
   showActionBubble = false;
 
   addForm: FormGroup;
   form: FormGroup;
+
   constructor(
     private _listApiService: ListApiService,
     private _fb: FormBuilder,
@@ -124,6 +117,28 @@ export class ListItemFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this._buildForms();
+
+    if (this.labels && this.labels.length > 0) {
+      this.placeholder = 'Edit item ';
+    }
+
+    if (this.newNode) {
+      this._listApiService.getNodeInfo(this.parentIri).subscribe(response => {
+        if (response['listinfo']) {
+          // root node
+          this.placeholder += (response as ListInfoResponse).listinfo.labels[0].value;
+        } else {
+          // child node
+          this.placeholder += (response as ListNodeInfoResponse).nodeinfo.labels[0].value;
+        }
+
+        this._cd.markForCheck();
+      });
+    }
+  }
+
+  private _buildForms() {
     this.addForm = this._fb.group({
       labels: this._fb.array(
         [{ language: 'de', value: '' }].map(({ language, value }) =>
@@ -147,30 +162,7 @@ export class ListItemFormComponent implements OnInit {
         atLeastOneStringRequired('value')
       ),
     });
-    // REST
-    this.initComponent = true;
-
-    if (this.labels && this.labels.length > 0) {
-      this.placeholder = 'Edit item ';
-    }
-
-    // it can be used in the input placeholder
-    if (this.newNode) {
-      this._listApiService.getNodeInfo(this.parentIri).subscribe(response => {
-        if (response['listinfo']) {
-          // root node
-          this.placeholder += (response as ListInfoResponse).listinfo.labels[0].value;
-        } else {
-          // child node
-          this.placeholder += (response as ListNodeInfoResponse).nodeinfo.labels[0].value;
-        }
-
-        this.initComponent = false;
-        this._cd.markForCheck();
-      });
-    }
   }
-
   /**
    * called from the template when the plus button is clicked.
    * Sends the info to make a new child node to DSP-API and refreshes the UI to show the newly added node at the end of the list.
@@ -216,19 +208,6 @@ export class ListItemFormComponent implements OnInit {
       this.refreshParent.emit(listNodeOperation);
       this.loading = false;
     });
-  }
-
-  /**
-   * called from the template any time the label changes.
-   * Currently only implemented for labels because entering comments is not yet supported.
-   *
-   * @param data the data that was changed.
-   */
-  handleData(data: StringLiteral[]) {
-    // this shouldn't run on the init...
-    if (!this.initComponent) {
-      this.labels = data;
-    }
   }
 
   /**
