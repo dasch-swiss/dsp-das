@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
@@ -14,7 +14,7 @@ import { FormControl, FormGroup } from '@angular/forms';
   `,
   styles: [':host { display: block;}'],
 })
-export class CommonInputComponent implements OnInit {
+export class CommonInputComponent {
   @Input() formGroup: FormGroup;
   @Input() controlName: string;
   @Input() placeholder: string;
@@ -26,8 +26,4 @@ export class CommonInputComponent implements OnInit {
   }
 
   protected readonly FormGroup = FormGroup;
-
-  ngOnInit() {
-    console.log('asdfsz', this.prefixIcon);
-  }
 }
