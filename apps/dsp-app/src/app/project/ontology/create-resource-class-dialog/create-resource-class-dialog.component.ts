@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CreateResourceClass, KnoraApiConnection, UpdateOntology } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, CreateResourceClass, KnoraApiConnection, UpdateOntology } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { finalize, tap } from 'rxjs/operators';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-resource-class-dialog',
@@ -37,11 +38,12 @@ export class CreateResourceClassDialogComponent implements OnInit {
     private _dspApiConnection: KnoraApiConnection,
     @Inject(MAT_DIALOG_DATA)
     public data: { id: string; title: string; ontologyId: string; lastModificationDate: string },
-    public dialogRef: MatDialogRef<CreateResourceClassDialogComponent>
+    public dialogRef: MatDialogRef<CreateResourceClassDialogComponent>,
+    private notification: NotificationService
   ) {}
 
   ngOnInit() {
-    this.dialogRef.updateSize('800px', ''); // Set your desired width
+    this.dialogRef.updateSize('800px', '');
   }
 
   onSubmit() {
@@ -50,9 +52,18 @@ export class CreateResourceClassDialogComponent implements OnInit {
     this._dspApiConnection.v2.onto
       .createResourceClass(this._createOntology())
       .pipe(
-        tap(() => {
-          this.loading = false;
-        })
+        tap(
+          () => {
+            this.loading = false;
+            this.dialogRef.close();
+          },
+          (error: ApiResponseError) => {
+            this.loading = false;
+            if (error.error['response']['knora-api:error'].includes('already exists')) {
+              this.notification.openSnackBar(`A class with name "${this.form.value.name}" already exists`);
+            }
+          }
+        )
       )
       .subscribe();
   }
