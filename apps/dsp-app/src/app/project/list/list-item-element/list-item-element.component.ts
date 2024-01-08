@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ListNode } from '@dasch-swiss/dsp-js';
 
 @Component({
@@ -9,21 +10,17 @@ import { ListNode } from '@dasch-swiss/dsp-js';
         <mat-icon>{{ showChildren ? 'expand_more' : 'chevron_right' }} </mat-icon>
       </button>
 
-      <div>
-        <!-- existing node: show label in form; value is e.g. {{node.labels[0].value}} -->
-        <app-list-item-form
-          [iri]="node.id"
-          [language]="language"
-          (refreshParent)="updateView.emit($event)"
-          [projectIri]="projectIri"
-          [projectUuid]="projectUuid"
-          [projectStatus]="projectStatus"
-          [labels]="node.labels"
-          [position]="node.position"
-          [isAdmin]="isAdmin"
-          [lastPosition]="last"
-          [parentIri]="parentIri">
-        </app-list-item-form>
+      <div style="flex: 1">
+        <div (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()" style="position: relative">
+          <dasch-swiss-multi-language-input
+            [placeholder]="node.labels | appStringifyStringLiteral: 'all' | appTruncate: 128"
+            [editable]="false"
+            [formGroup]="readOnlyForm"
+            controlName="labels">
+          </dasch-swiss-multi-language-input>
+
+          <app-action-bubble [position]="position" [length]="length"></app-action-bubble>
+        </div>
 
         <app-list-item
           *ngIf="showChildren && node.children.length > 0"
@@ -39,10 +36,9 @@ import { ListNode } from '@dasch-swiss/dsp-js';
       </div>
     </div>
   `,
+  styles: [':host ::ng-deep dasch-swiss-multi-language-input .mat-mdc-form-field-bottom-align { display: none;}'],
 })
-export class ListItemElementComponent {
-  @Input() list: ListNode[];
-
+export class ListItemElementComponent implements OnInit {
   @Input() parentIri?: string;
 
   @Input() projectUuid: string;
@@ -56,17 +52,40 @@ export class ListItemElementComponent {
   @Input() language?: string;
 
   @Input() node: ListNode;
-
+  @Input() position: number;
+  @Input() length: number;
   @Input() last: boolean;
 
   @Output() refreshChildren = new EventEmitter<ListNode[]>();
   @Output() updateView = new EventEmitter<unknown>();
 
-  // permissions of logged-in user
   @Input() isAdmin = false;
   showChildren = false;
+  showActionBubble = false;
+
+  readOnlyForm: FormGroup;
+
+  constructor(private _fb: FormBuilder) {}
 
   ngOnInit() {
-    console.log(this);
+    this.readOnlyForm = this._fb.group({
+      labels: this._fb.array(
+        this.node.labels.map(({ language, value }) =>
+          this._fb.group({
+            language,
+            value,
+          })
+        )
+      ),
+    });
+  }
+
+  mouseEnter() {
+    if (this.isAdmin) {
+      this.showActionBubble = true;
+    }
+  }
+  mouseLeave() {
+    this.showActionBubble = false;
   }
 }

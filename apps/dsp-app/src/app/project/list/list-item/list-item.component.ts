@@ -1,21 +1,37 @@
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
-import { ListChildNodeResponse, ListNode, ListResponse, RepositionChildNodeRequest } from '@dasch-swiss/dsp-js';
+  ListChildNodeResponse,
+  ListNode,
+  ListResponse,
+  RepositionChildNodeRequest,
+  StringLiteral,
+} from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { take } from 'rxjs/operators';
 import { ListNodeOperation } from '../list-item-form/list-item-form.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-list-item',
-  templateUrl: './list-item.component.html',
+  template: `
+    <app-list-item-element
+      *ngFor="let child of children; let index = index; let first = first; let last = last"
+      [position]="index"
+      [length]="children.length"
+      [node]="child"
+      [language]="language"
+      [childNode]="true"
+      [parentIri]="child.id"
+      [isAdmin]="isAdmin"
+      [projectIri]="projectIri"
+      [projectUuid]="projectUuid"
+      [projectStatus]="projectStatus"></app-list-item-element>
+    <!-- new list to create if list is empty -->
+    <app-list-item-form
+      style="display: block; margin-left: 46px"
+      [parentIri]="parentIri"
+      [projectIri]="projectIri"
+      [projectUuid]="projectUuid"></app-list-item-form>
+  `,
   styles: [
     `
       :host {
@@ -30,7 +46,6 @@ export class ListItemComponent implements OnInit {
   @Input() parentIri?: string;
 
   @Input() projectUuid: string;
-
   @Input() projectStatus: boolean;
 
   @Input() projectIri: string;
@@ -47,6 +62,7 @@ export class ListItemComponent implements OnInit {
   expandedNode: string;
 
   children: ListNode[] = [];
+  labels: StringLiteral[] = [];
 
   constructor(
     private _listApiService: ListApiService,
@@ -55,41 +71,20 @@ export class ListItemComponent implements OnInit {
 
   ngOnInit() {
     // in case of parent node: run the following request to get the entire list
-    console.log('init list item', this);
     this._listApiService
       .get(this.parentIri)
       .pipe(take(1))
       .subscribe(result => {
-        console.log('result', result);
         if (result['node']) {
           this.children = (result as ListChildNodeResponse).node.children;
+          this.labels = (result as ListChildNodeResponse).node.nodeinfo.labels;
         } else {
           this.language = (result as ListResponse).list.listinfo.labels[0].language;
           this.children = (result as ListResponse).list.children;
+          this.labels = (result as ListResponse).list.listinfo.labels;
         }
         this._cd.markForCheck();
       });
-  }
-
-  /**
-   * checks if parent node should show its children.
-   * @param id id of parent node.
-   */
-  showChildren(id: string): boolean {
-    return id === this.expandedNode;
-  }
-
-  /**
-   * called from template when the 'expand' button is clicked.
-   *
-   * @param id id of parent node for which the 'expand' button was clicked.
-   */
-  toggleChildren(id: string) {
-    if (this.showChildren(id)) {
-      this.expandedNode = undefined;
-    } else {
-      this.expandedNode = id;
-    }
   }
 
   /**
@@ -123,7 +118,6 @@ export class ListItemComponent implements OnInit {
 
             // emit the updated list of children to the parent node
             this.refreshChildren.emit(this.list);
-            this._cd.markForCheck();
           });
           break;
         }
@@ -152,7 +146,6 @@ export class ListItemComponent implements OnInit {
           this._listApiService.repositionChildNode(data.listNode.id, repositionRequest).subscribe(response => {
             this.list = response.node.children;
             this.refreshChildren.emit(this.list);
-            this._cd.markForCheck();
           });
           break;
         }

@@ -51,7 +51,7 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
   // disable content on small devices
   disableContent = false;
 
-  list$ = this._listApiService.listInProject('http://rdfh.ch/projects/yTerZGyxjZVqFMNNKXCDPF').pipe(
+  list$ = this._listApiService.listInProject('http://rdfh.ch/projects/00FF').pipe(
     tap(v => console.log('data received list.component', v)),
     map(lists => (this.listIri ? lists.lists.find(i => i.id === this.listIri) : null)),
     tap(v => console.log('list.component', v))
