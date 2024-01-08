@@ -1,7 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ChildNodeInfo, ListNode, StringLiteral } from '@dasch-swiss/dsp-js';
+import { ChildNodeInfo, ListNode, RepositionChildNodeRequest, StringLiteral } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { ConfirmDialogComponent } from '@dsp-app/src/app/main/action/confirm-dialog/confirm-dialog.component';
 import { ListItemService } from '@dsp-app/src/app/project/list/list-item/list-item.service';
@@ -49,26 +49,11 @@ import { filter, switchMap } from 'rxjs/operators';
     </div>
   </div>`,
   animations: [
-    // the fade-in/fade-out animation.
     // https://www.kdechant.com/blog/angular-animations-fade-in-and-fade-out
     trigger('simpleFadeAnimation', [
-      // the "in" style determines the "resting" state of the element when it is visible.
       state('in', style({ opacity: 1 })),
-
-      // fade in when created.
-      transition(':enter', [
-        // the styles start from this point when the element appears
-        style({ opacity: 0 }),
-        // and animate toward the "in" state above
-        animate(150),
-      ]),
-
-      // fade out when destroyed.
-      transition(
-        ':leave',
-        // fading out uses a different syntax, with the "style" being passed into animate()
-        animate(150, style({ opacity: 0 }))
-      ),
+      transition(':enter', [style({ opacity: 0 }), animate(150)]),
+      transition(':leave', animate(150, style({ opacity: 0 }))),
     ]),
   ],
   styleUrls: ['./action-bubble.component.scss'],
@@ -104,14 +89,6 @@ export class ActionBubbleComponent {
         this._listItemService.onUpdate$.next();
       });
   }
-
-  /**
-   * called when the 'edit' or 'delete' button is clicked.
-   *
-   * @param mode mode to tell DialogComponent which part of the template to show.
-   * @param name label of the node; for now this is always the first label in the array.
-   * @param iri iri of the node.
-   */
 
   askToInsertNode(iri: string) {
     this._dialog
@@ -157,23 +134,14 @@ export class ActionBubbleComponent {
       });
   }
 
-  /**
-   * called from the template when either of the two reposition buttons is clicked
-   * @param direction in which direction the node should move
-   */
   repositionNode(direction: 'up' | 'down') {
-    const listNodeOperation = new ListNodeOperation();
-
-    listNodeOperation.operation = 'reposition';
-    listNodeOperation.listNode = new ListNode();
-
-    // set desired node position
-    if (direction === 'up') {
-      listNodeOperation.listNode.position = this.position - 1;
-    } else {
-      listNodeOperation.listNode.position = this.position + 1;
-    }
-
-    listNodeOperation.listNode.id = this.iri;
+    this._listApiService
+      .repositionChildNode(this.iri, {
+        parentNodeIri: this.parentIri,
+        position: direction === 'up' ? this.position - 1 : this.position + 1,
+      })
+      .subscribe(() => {
+        this._listItemService.onUpdate$.next();
+      });
   }
 }

@@ -23,6 +23,7 @@ import { ListNode } from '@dasch-swiss/dsp-js';
             [position]="position"
             [length]="length"
             [labels]="node.labels"
+            [parentIri]="parentIri"
             [iri]="node.id"></app-action-bubble>
         </div>
 
