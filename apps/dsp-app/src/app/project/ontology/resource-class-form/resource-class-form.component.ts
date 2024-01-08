@@ -4,6 +4,7 @@ import { ClassDefinition, PropertyDefinition } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { existingNamesValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-name.directive';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
 import { CustomRegex } from '../../../workspace/resource/values/custom-regex';
@@ -17,7 +18,7 @@ import { atLeastOneStringRequired } from '../../reusable-project-form/at-least-o
         class="name-input"
         [formGroup]="form"
         controlName="name"
-        placeholder="Class name"
+        placeholder="Class name *"
         prefixIcon="fingerprint"></app-common-input>
 
       <dasch-swiss-multi-language-input placeholder="Label *" [formGroup]="form" controlName="labels">
@@ -79,7 +80,14 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy {
 
   buildForm() {
     this.form = this._fb.group({
-      name: [this.formData.name, [Validators.required, Validators.pattern(CustomRegex.ID_NAME_REGEX)]],
+      name: [
+        this.formData.name,
+        [
+          Validators.required,
+          existingNamesValidator(this.existingNames),
+          Validators.pattern(CustomRegex.ID_NAME_REGEX),
+        ],
+      ],
       labels: this._fb.array(
         this.formData.labels.map(({ language, value }) =>
           this._fb.group({

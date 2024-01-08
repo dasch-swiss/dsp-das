@@ -38,8 +38,7 @@ export class CreateResourceClassDialogComponent implements OnInit {
     private _dspApiConnection: KnoraApiConnection,
     @Inject(MAT_DIALOG_DATA)
     public data: { id: string; title: string; ontologyId: string; lastModificationDate: string },
-    public dialogRef: MatDialogRef<CreateResourceClassDialogComponent>,
-    private notification: NotificationService
+    public dialogRef: MatDialogRef<CreateResourceClassDialogComponent>
   ) {}
 
   ngOnInit() {
@@ -57,11 +56,8 @@ export class CreateResourceClassDialogComponent implements OnInit {
             this.loading = false;
             this.dialogRef.close();
           },
-          (error: ApiResponseError) => {
+          () => {
             this.loading = false;
-            if (error.error['response']['knora-api:error'].includes('already exists')) {
-              this.notification.openSnackBar(`A class with name "${this.form.value.name}" already exists`);
-            }
           }
         )
       )
