@@ -13,7 +13,12 @@ import { atLeastOneStringRequired } from '../../reusable-project-form/at-least-o
   selector: 'app-resource-class-form',
   template: `
     <form [formGroup]="form">
-      <app-common-input [formGroup]="form" controlName="name" placeholder="Class name"></app-common-input>
+      <app-common-input
+        class="name-input"
+        [formGroup]="form"
+        controlName="name"
+        placeholder="Class name"
+        prefixIcon="fingerprint"></app-common-input>
 
       <dasch-swiss-multi-language-input placeholder="Label *" [formGroup]="form" controlName="labels">
       </dasch-swiss-multi-language-input>
@@ -26,6 +31,7 @@ import { atLeastOneStringRequired } from '../../reusable-project-form/at-least-o
       </dasch-swiss-multi-language-textarea>
     </form>
   `,
+  styles: [':host ::ng-deep .name-input .mat-icon { padding-right: 24px; }'],
 })
 export class ResourceClassFormComponent implements OnInit, OnDestroy {
   @Input() formData: {
@@ -64,7 +70,6 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy {
     });
 
     this.buildForm();
-    console.log(this);
 
     this.subscription = this.form.valueChanges.subscribe(z => {
       this.formValueChange.emit(this.form);
