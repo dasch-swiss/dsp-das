@@ -6,6 +6,7 @@ import {
   EventEmitter,
   Inject,
   Input,
+  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
@@ -28,7 +29,7 @@ import {
   styleUrls: ['./login-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginFormComponent implements OnInit {
+export class LoginFormComponent implements OnInit, OnDestroy {
   get isLoggedIn$(): Observable<boolean> {
     return this._authService.isSessionValid();
   }
