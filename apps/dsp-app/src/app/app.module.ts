@@ -32,11 +32,6 @@ import {
   MutiLanguageInputComponent,
   HumanReadableErrorPipe,
 } from '@dasch-swiss/vre/shared/app-string-literal';
-import { ActionBubbleComponent } from '@dsp-app/src/app/project/list/action-bubble/action-bubble.component';
-import { ListItemElementComponent } from '@dsp-app/src/app/project/list/list-item-element/list-item-element.component';
-import { CreateListItemDialogComponent } from '@dsp-app/src/app/project/list/list-item-form/edit-list-item/create-list-item-dialog.component';
-import { EditListItemDialogComponent } from '@dsp-app/src/app/project/list/list-item-form/edit-list-item/edit-list-item-dialog.component';
-import { FullListItemFormComponent } from '@dsp-app/src/app/project/list/list-item-form/full-list-item-form.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
@@ -88,7 +83,12 @@ import { CreateProjectFormPageComponent } from './project/create-project-form-pa
 import { DataModelsComponent } from './project/data-models/data-models.component';
 import { DescriptionComponent } from './project/description/description.component';
 import { EditProjectFormPageComponent } from './project/edit-project-form-page/edit-project-form-page.component';
+import { ActionBubbleComponent } from './project/list/action-bubble/action-bubble.component';
 import { ListItemComponent } from './project/list/list-item/list-item.component';
+import { ListItemElementComponent } from './project/list/list-item-element/list-item-element.component';
+import { CreateListItemDialogComponent } from './project/list/list-item-form/edit-list-item/create-list-item-dialog.component';
+import { EditListItemDialogComponent } from './project/list/list-item-form/edit-list-item/edit-list-item-dialog.component';
+import { FullListItemFormComponent } from './project/list/list-item-form/full-list-item-form.component';
 import { ListItemFormComponent } from './project/list/list-item-form/list-item-form.component';
 import { ListComponent } from './project/list/list.component';
 import { CreateListInfoPageComponent } from './project/list/reusable-list-info-form/create-list-info-page.component';

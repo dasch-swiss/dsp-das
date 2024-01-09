@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ListNode } from '@dasch-swiss/dsp-js';
-import { ListItemService } from '@dsp-app/src/app/project/list/list-item/list-item.service';
+import { ListItemService } from '../list-item/list-item.service';
 
 @Component({
   selector: 'app-list-item-element',
