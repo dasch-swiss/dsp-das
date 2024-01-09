@@ -89,7 +89,6 @@ import { DataModelsComponent } from './project/data-models/data-models.component
 import { DescriptionComponent } from './project/description/description.component';
 import { EditProjectFormPageComponent } from './project/edit-project-form-page/edit-project-form-page.component';
 import { ListItemComponent } from './project/list/list-item/list-item.component';
-import { EditListItemComponent } from './project/list/list-item-form/edit-list-item/edit-list-item.component';
 import { ListItemFormComponent } from './project/list/list-item-form/list-item-form.component';
 import { ListComponent } from './project/list/list.component';
 import { CreateListInfoPageComponent } from './project/list/reusable-list-info-form/create-list-info-page.component';
@@ -226,7 +225,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     DisplayEditComponent,
     DocumentComponent,
     DragDropDirective,
-    EditListItemComponent,
     EditResourceClassDialogComponent,
     ExistingNameDirective,
     ExpertSearchComponent,
