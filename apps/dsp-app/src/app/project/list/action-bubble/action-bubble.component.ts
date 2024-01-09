@@ -8,7 +8,10 @@ import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { filter, switchMap } from 'rxjs/operators';
 import { DialogService } from '../../../main/services/dialog.service';
 import { ListItemService } from '../list-item/list-item.service';
-import { CreateListItemDialogComponent } from '../list-item-form/edit-list-item/create-list-item-dialog.component';
+import {
+  CreateListItemDialogComponent,
+  CreateListItemDialogProps,
+} from '../list-item-form/edit-list-item/create-list-item-dialog.component';
 import {
   EditListItemDialogComponent,
   EditListItemDialogProps,
@@ -82,12 +85,12 @@ export class ActionBubbleComponent {
 
   askToInsertNode() {
     this._matDialog
-      .open(CreateListItemDialogComponent, {
+      .open<CreateListItemDialogComponent, CreateListItemDialogProps, boolean>(CreateListItemDialogComponent, {
         width: '100%',
         minWidth: 500,
         data: {
-          id: this.node.id,
-          project: this._listItemService.projectInfos.projectIri,
+          nodeIri: this.node.id,
+          projectIri: this._listItemService.projectInfos.projectIri,
           parentIri: this._listItemService.projectInfos.rootNodeIri,
           position: this.position,
         },

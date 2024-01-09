@@ -2,7 +2,14 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
+export interface CreateListItemDialogProps {
+  nodeIri: string;
+  parentIri: string;
+  projectIri: string;
+  position: number;
+}
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-create-list-item-dialog',
@@ -34,11 +41,7 @@ export class CreateListItemDialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: {
-      parentIri: string;
-      projectUuid: string;
-      projectIri: string;
-    },
+    public data: CreateListItemDialogProps,
     public dialogRef: MatDialogRef<CreateListItemDialogComponent, boolean>,
     private _listApiService: ListApiService
   ) {}
@@ -46,17 +49,18 @@ export class CreateListItemDialogComponent {
   createChildNode() {
     this.loading = true;
 
-    const data = {
+    const payload = {
       parentNodeIri: this.data.parentIri,
       projectIri: this.data.projectIri,
       labels: this.form.value.labels,
       comments: this.form.value.descriptions,
-      name: `${this.data.projectUuid}-${Math.random().toString(36).substring(2)}${Math.random()
+      position: this.data.position,
+      name: `${ProjectService.IriToUuid(this.data.projectIri)}-${Math.random().toString(36).substring(2)}${Math.random()
         .toString(36)
         .substring(2)}`,
     };
 
-    this._listApiService.createChildNode(data.parentNodeIri, data).subscribe(() => {
+    this._listApiService.createChildNode(payload.parentNodeIri, payload).subscribe(() => {
       this.loading = false;
       this.dialogRef.close(true);
     });
