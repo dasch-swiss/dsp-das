@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ListInfoResponse, ListNode, ListNodeInfoResponse } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
-import { ListItemService } from '@dsp-app/src/app/project/list/list-item/list-item.service';
-import { atLeastOneStringRequired } from '@dsp-app/src/app/project/reusable-project-form/at-least-one-string-required.validator';
+import { atLeastOneStringRequired } from '../../reusable-project-form/at-least-one-string-required.validator';
+import { ListItemService } from '../list-item/list-item.service';
 
 export class ListNodeOperation {
   operation: 'create' | 'insert' | 'update' | 'delete' | 'reposition';
@@ -33,7 +33,7 @@ export class ListItemFormComponent implements OnInit {
   @Input() parentIri: string;
 
   loading = false;
-  placeholder = 'Append item to ';
+  placeholder: string;
   form: FormGroup;
 
   readonly FORM_DEFAULT_VALUE = [{ language: 'de', value: '' }];
@@ -49,11 +49,12 @@ export class ListItemFormComponent implements OnInit {
     this._buildForm();
 
     this._listApiService.getNodeInfo(this.parentIri).subscribe(response => {
-      // listinfo exists ? root node : child node
       if (response['listinfo']) {
-        this.placeholder += (response as ListInfoResponse).listinfo.labels[0].value;
+        // root node
+        this.placeholder = `Append item to ${(response as ListInfoResponse).listinfo.labels[0].value}`;
       } else {
-        this.placeholder += (response as ListNodeInfoResponse).nodeinfo.labels[0].value;
+        // child node
+        this.placeholder = `Append item to ${(response as ListNodeInfoResponse).nodeinfo.labels[0].value}`;
       }
 
       this._cd.markForCheck();
@@ -70,7 +71,7 @@ export class ListItemFormComponent implements OnInit {
       name: `${this.projectUuid}-${Math.random().toString(36).substring(2)}${Math.random().toString(36).substring(2)}`,
     };
 
-    this._listApiService.createChildNode(data.parentNodeIri, data).subscribe(response => {
+    this._listApiService.createChildNode(data.parentNodeIri, data).subscribe(() => {
       this.loading = false;
       this._resetForm();
       this._listItemService.onUpdate$.next();

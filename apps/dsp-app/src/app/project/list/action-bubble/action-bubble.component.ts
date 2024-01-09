@@ -1,9 +1,9 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ChildNodeInfo, ListNode, RepositionChildNodeRequest, StringLiteral } from '@dasch-swiss/dsp-js';
+import { ChildNodeInfo, ListNode, StringLiteral } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
-import { ConfirmDialogComponent } from '@dsp-app/src/app/main/action/confirm-dialog/confirm-dialog.component';
+import { DialogService } from '@dsp-app/src/app/main/services/dialog.service';
 import { ListItemService } from '@dsp-app/src/app/project/list/list-item/list-item.service';
 import { CreateListItemDialogComponent } from '@dsp-app/src/app/project/list/list-item-form/edit-list-item/create-list-item-dialog.component';
 import { ListNodeOperation } from '@dsp-app/src/app/project/list/list-item-form/list-item-form.component';
@@ -39,11 +39,7 @@ import { filter, switchMap } from 'rxjs/operators';
       <button mat-button class="edit" title="edit" (click)="$event.stopPropagation(); askToEditNode(iri)">
         <mat-icon>edit</mat-icon>
       </button>
-      <button
-        mat-button
-        class="delete"
-        title="delete"
-        (click)="$event.stopPropagation(); askToDeleteListNode(labels[0].value, iri)">
+      <button mat-button class="delete" title="delete" (click)="$event.stopPropagation(); askToDeleteListNode()">
         <mat-icon>delete</mat-icon>
       </button>
     </div>
@@ -67,31 +63,23 @@ export class ActionBubbleComponent {
   @Input() labels: StringLiteral[];
 
   constructor(
-    private _dialog: MatDialog,
+    private _dialog: DialogService,
+    private _matDialog: MatDialog,
     private _listItemService: ListItemService,
     private _listApiService: ListApiService
   ) {}
 
-  askToDeleteListNode(name: string, iri: string) {
+  askToDeleteListNode() {
     this._dialog
-      .open(ConfirmDialogComponent, {
-        data: {
-          title: name,
-          message: 'Do you want to delete this node?',
-        },
-      })
-      .afterClosed()
-      .pipe(
-        filter(response => typeof response === 'boolean' && response === true),
-        switchMap(() => this._listApiService.deleteListNode(iri))
-      )
+      .afterConfirmation('Do you want to delete this node?', this.labels[0].value)
+      .pipe(switchMap(() => this._listApiService.deleteListNode(this.iri)))
       .subscribe(() => {
         this._listItemService.onUpdate$.next();
       });
   }
 
   askToInsertNode(iri: string) {
-    this._dialog
+    this._matDialog
       .open(CreateListItemDialogComponent, {
         width: '100%',
         minWidth: 500,
@@ -112,7 +100,7 @@ export class ActionBubbleComponent {
   }
 
   askToEditNode(iri: string) {
-    this._dialog
+    this._matDialog
       .open(CreateListItemDialogComponent, {
         width: '100%',
         minWidth: 500,
