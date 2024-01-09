@@ -15,13 +15,16 @@ export interface CreateListItemDialogProps {
   selector: 'app-create-list-item-dialog',
   template: `
     <app-dialog-header title="Insert new child node"></app-dialog-header>
+
     <div mat-dialog-content>
       <app-full-list-item-form
         [formData]="initialFormValue"
         (formValueChange)="form = $event"></app-full-list-item-form>
     </div>
+
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
+
       <button
         mat-raised-button
         color="primary"

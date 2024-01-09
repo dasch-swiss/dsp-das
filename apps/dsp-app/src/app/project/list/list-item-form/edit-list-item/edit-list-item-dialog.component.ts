@@ -56,7 +56,6 @@ export class EditListItemDialogComponent {
       labels: this.form.value.labels,
       comments: this.form.value.descriptions,
     };
-    console.log(this, data, 'edit');
 
     this._listApiService
       .updateChildNode(data.listIri, data)

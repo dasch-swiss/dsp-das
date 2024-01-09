@@ -33,7 +33,6 @@ export class ListItemComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('list item', this);
     this.listItemService.setProjectInfos(this.projectUuid, this.rootNodeIri);
 
     this.listItemService.onUpdate$
@@ -42,7 +41,6 @@ export class ListItemComponent implements OnInit {
         switchMap(() => this._listApiService.get(this.rootNodeIri))
       )
       .subscribe(result => {
-        console.log('data received', result);
         if (result['node']) {
           this.children = (result as ListChildNodeResponse).node.children;
           this.labels = (result as ListChildNodeResponse).node.nodeinfo.labels;

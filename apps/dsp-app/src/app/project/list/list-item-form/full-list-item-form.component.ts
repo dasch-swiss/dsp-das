@@ -38,7 +38,6 @@ export class FullListItemFormComponent implements OnInit {
 
   ngOnInit() {
     this._buildForm();
-    console.log('fulllistitemform', this);
     this.formValueChange.emit(this.form);
   }
 

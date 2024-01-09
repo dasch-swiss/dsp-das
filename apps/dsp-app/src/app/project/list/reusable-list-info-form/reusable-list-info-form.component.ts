@@ -35,9 +35,7 @@ export class ReusableListInfoFormComponent implements OnInit, OnDestroy {
   constructor(private _fb: FormBuilder) {}
 
   ngOnInit() {
-    console.log('before', this);
     this._buildForm();
-    console.log(this);
 
     this.subscription = this.form.valueChanges.pipe(startWith(null)).subscribe(z => {
       this.formValueChange.emit(this.form);
