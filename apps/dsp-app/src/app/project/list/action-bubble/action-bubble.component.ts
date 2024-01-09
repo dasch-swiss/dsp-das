@@ -1,13 +1,18 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ChildNodeInfo, ListNode, StringLiteral } from '@dasch-swiss/dsp-js';
+import { ListNode } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
-import { DialogService } from '@dsp-app/src/app/main/services/dialog.service';
-import { ListItemService } from '@dsp-app/src/app/project/list/list-item/list-item.service';
-import { CreateListItemDialogComponent } from '@dsp-app/src/app/project/list/list-item-form/edit-list-item/create-list-item-dialog.component';
-import { ListNodeOperation } from '@dsp-app/src/app/project/list/list-item-form/list-item-form.component';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { filter, switchMap } from 'rxjs/operators';
+import { DialogService } from '../../../main/services/dialog.service';
+import { ListItemService } from '../list-item/list-item.service';
+import { CreateListItemDialogComponent } from '../list-item-form/edit-list-item/create-list-item-dialog.component';
+import {
+  EditListItemDialogComponent,
+  EditListItemDialogProps,
+} from '../list-item-form/edit-list-item/edit-list-item-dialog.component';
 
 @Component({
   selector: 'app-action-bubble',
@@ -32,11 +37,11 @@ import { filter, switchMap } from 'rxjs/operators';
       <button
         mat-button
         title="insert new child node above"
-        (click)="$event.stopPropagation(); askToInsertNode(iri)"
+        (click)="$event.stopPropagation(); askToInsertNode()"
         class="insert">
         <mat-icon>vertical_align_top</mat-icon>
       </button>
-      <button mat-button class="edit" title="edit" (click)="$event.stopPropagation(); askToEditNode(iri)">
+      <button mat-button class="edit" title="edit" (click)="$event.stopPropagation(); askToEditNode()">
         <mat-icon>edit</mat-icon>
       </button>
       <button mat-button class="delete" title="delete" (click)="$event.stopPropagation(); askToDeleteListNode()">
@@ -57,10 +62,8 @@ import { filter, switchMap } from 'rxjs/operators';
 export class ActionBubbleComponent {
   @Input() position: number;
   @Input() length: number;
-  @Input() iri: string;
-  @Input() projectIri: string;
   @Input() parentIri: string;
-  @Input() labels: StringLiteral[];
+  @Input() node: ListNode;
 
   constructor(
     private _dialog: DialogService,
@@ -71,60 +74,55 @@ export class ActionBubbleComponent {
 
   askToDeleteListNode() {
     this._dialog
-      .afterConfirmation('Do you want to delete this node?', this.labels[0].value)
-      .pipe(switchMap(() => this._listApiService.deleteListNode(this.iri)))
+      .afterConfirmation('Do you want to delete this node?', this.node.labels[0].value)
+      .pipe(switchMap(() => this._listApiService.deleteListNode(this.node.id)))
       .subscribe(() => {
         this._listItemService.onUpdate$.next();
       });
   }
 
-  askToInsertNode(iri: string) {
+  askToInsertNode() {
     this._matDialog
       .open(CreateListItemDialogComponent, {
         width: '100%',
         minWidth: 500,
         data: {
-          id: iri,
-          project: this.projectIri,
+          id: this.node.id,
+          project: this._listItemService.projectInfos.projectIri,
           parentIri: this.parentIri,
           position: this.position,
         },
       })
       .afterClosed()
-      .pipe(filter(response => !!response))
-      .subscribe(response => {
-        const listNodeOperation = new ListNodeOperation();
-        listNodeOperation.listNode = response as ListNode;
-        listNodeOperation.operation = 'insert';
+      .pipe(filter(response => response === true))
+      .subscribe(() => {
+        this._listItemService.onUpdate$.next();
       });
   }
 
-  askToEditNode(iri: string) {
+  askToEditNode() {
     this._matDialog
-      .open(CreateListItemDialogComponent, {
+      .open<EditListItemDialogComponent, EditListItemDialogProps, boolean>(EditListItemDialogComponent, {
         width: '100%',
         minWidth: 500,
         data: {
-          id: iri,
-          project: this.projectIri,
           parentIri: this.parentIri,
-          position: this.position,
+          projectUuid: ProjectService.IriToUuid(this._listItemService.projectInfos.projectIri),
+          projectIri: this._listItemService.projectInfos.projectIri,
+          listIri: 'listIri',
+          formData: { labels: this.node.labels as MultiLanguages, descriptions: this.node.comments as MultiLanguages },
         },
       })
       .afterClosed()
-      .pipe(filter(response => !!response))
+      .pipe(filter(response => response === true))
       .subscribe(response => {
-        const listNodeOperation = new ListNodeOperation();
-        listNodeOperation.listNode = response as ListNode;
-        listNodeOperation.operation = 'update';
-
-        this.labels = (response as ChildNodeInfo).labels;
+        this._listItemService.onUpdate$.next();
       });
   }
 
   repositionNode(direction: 'up' | 'down') {
     this._listApiService
-      .repositionChildNode(this.iri, {
+      .repositionChildNode(this.node.id, {
         parentNodeIri: this.parentIri,
         position: direction === 'up' ? this.position - 1 : this.position + 1,
       })

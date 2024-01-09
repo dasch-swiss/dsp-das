@@ -22,21 +22,11 @@ import { ListNode } from '@dasch-swiss/dsp-js';
           <app-action-bubble
             [position]="position"
             [length]="length"
-            [labels]="node.labels"
-            [parentIri]="parentIri"
-            [iri]="node.id"></app-action-bubble>
+            [node]="node"
+            [parentIri]="parentIri"></app-action-bubble>
         </div>
 
-        <app-list-item
-          *ngIf="showChildren"
-          [language]="language"
-          [childNode]="true"
-          [list]="node.children"
-          [parentIri]="node.id"
-          [isAdmin]="isAdmin"
-          [projectIri]="projectIri"
-          [projectUuid]="projectUuid"
-          [projectStatus]="projectStatus">
+        <app-list-item *ngIf="showChildren" [list]="node.children" [parentIri]="node.id" [isAdmin]="isAdmin">
         </app-list-item>
       </div>
     </div>
@@ -44,22 +34,11 @@ import { ListNode } from '@dasch-swiss/dsp-js';
   styles: [':host ::ng-deep dasch-swiss-multi-language-input .mat-mdc-form-field-bottom-align { display: none;}'],
 })
 export class ListItemElementComponent implements OnInit {
-  @Input() parentIri?: string;
-
-  @Input() projectUuid: string;
-
-  @Input() projectStatus: boolean;
-
-  @Input() projectIri: string;
-
+  @Input() parentIri: string;
   @Input() childNode: boolean;
-
-  @Input() language?: string;
-
   @Input() node: ListNode;
   @Input() position: number;
   @Input() length: number;
-  @Input() last: boolean;
 
   @Output() refreshChildren = new EventEmitter<ListNode[]>();
   @Output() updateView = new EventEmitter<unknown>();

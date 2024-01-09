@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ListInfoResponse, ListNode, ListNodeInfoResponse } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { atLeastOneStringRequired } from '../../reusable-project-form/at-least-one-string-required.validator';
 import { ListItemService } from '../list-item/list-item.service';
 
@@ -28,8 +29,6 @@ export class ListNodeOperation {
   `,
 })
 export class ListItemFormComponent implements OnInit {
-  @Input() projectUuid?: string;
-  @Input() projectIri?: string;
   @Input() parentIri: string;
 
   loading = false;
@@ -66,9 +65,11 @@ export class ListItemFormComponent implements OnInit {
 
     const data = {
       parentNodeIri: this.parentIri,
-      projectIri: this.projectIri,
+      projectIri: this._listItemService.projectInfos.projectIri,
       labels: this.form.value.labels,
-      name: `${this.projectUuid}-${Math.random().toString(36).substring(2)}${Math.random().toString(36).substring(2)}`,
+      name: `${ProjectService.IriToUuid(this._listItemService.projectInfos.projectIri)}-${Math.random()
+        .toString(36)
+        .substring(2)}${Math.random().toString(36).substring(2)}`,
     };
 
     this._listApiService.createChildNode(data.parentNodeIri, data).subscribe(() => {

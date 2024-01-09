@@ -35,6 +35,8 @@ import {
 import { ActionBubbleComponent } from '@dsp-app/src/app/project/list/action-bubble/action-bubble.component';
 import { ListItemElementComponent } from '@dsp-app/src/app/project/list/list-item-element/list-item-element.component';
 import { CreateListItemDialogComponent } from '@dsp-app/src/app/project/list/list-item-form/edit-list-item/create-list-item-dialog.component';
+import { EditListItemDialogComponent } from '@dsp-app/src/app/project/list/list-item-form/edit-list-item/edit-list-item-dialog.component';
+import { FullListItemFormComponent } from '@dsp-app/src/app/project/list/list-item-form/full-list-item-form.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
@@ -232,6 +234,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     FooterComponent,
     FormattedBooleanPipe,
     FulltextSearchComponent,
+    FullListItemFormComponent,
     GeonameValueComponent,
     GridComponent,
     HeaderComponent,
@@ -248,6 +251,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     LinkValueComponent,
     ListComponent,
     EditListInfoDialogComponent,
+    EditListItemDialogComponent,
     CreateListInfoPageComponent,
     ReusableListInfoFormComponent,
     ListItemComponent,
