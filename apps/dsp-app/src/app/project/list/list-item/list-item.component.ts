@@ -21,7 +21,7 @@ import { ListNodeOperation } from '../list-item-form/list-item-form.component';
       [node]="child"
       [language]="language"
       [childNode]="true"
-      [parentIri]="child.id"
+      [parentIri]="parentIri"
       [isAdmin]="isAdmin"
       [projectIri]="projectIri"
       [projectUuid]="projectUuid"

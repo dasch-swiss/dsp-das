@@ -1,12 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  CreateChildNodeRequest,
-  ListInfoResponse,
-  ListNode,
-  ListNodeInfoResponse,
-  StringLiteral,
-} from '@dasch-swiss/dsp-js';
+import { ListInfoResponse, ListNode, ListNodeInfoResponse } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { ListItemService } from '@dsp-app/src/app/project/list/list-item/list-item.service';
 import { atLeastOneStringRequired } from '@dsp-app/src/app/project/reusable-project-form/at-least-one-string-required.validator';
@@ -42,6 +36,8 @@ export class ListItemFormComponent implements OnInit {
   placeholder = 'Append item to ';
   form: FormGroup;
 
+  readonly FORM_DEFAULT_VALUE = [{ language: 'de', value: '' }];
+
   constructor(
     private _listApiService: ListApiService,
     private _fb: FormBuilder,
@@ -50,14 +46,13 @@ export class ListItemFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this._buildForms();
+    this._buildForm();
 
     this._listApiService.getNodeInfo(this.parentIri).subscribe(response => {
+      // listinfo exists ? root node : child node
       if (response['listinfo']) {
-        // root node
         this.placeholder += (response as ListInfoResponse).listinfo.labels[0].value;
       } else {
-        // child node
         this.placeholder += (response as ListNodeInfoResponse).nodeinfo.labels[0].value;
       }
 
@@ -65,10 +60,27 @@ export class ListItemFormComponent implements OnInit {
     });
   }
 
-  private _buildForms() {
+  createChildNode() {
+    this.loading = true;
+
+    const data = {
+      parentNodeIri: this.parentIri,
+      projectIri: this.projectIri,
+      labels: this.form.value.labels,
+      name: `${this.projectUuid}-${Math.random().toString(36).substring(2)}${Math.random().toString(36).substring(2)}`,
+    };
+
+    this._listApiService.createChildNode(data.parentNodeIri, data).subscribe(response => {
+      this.loading = false;
+      this._resetForm();
+      this._listItemService.onUpdate$.next();
+    });
+  }
+
+  private _buildForm() {
     this.form = this._fb.group({
       labels: this._fb.array(
-        [{ language: 'de', value: '' }].map(({ language, value }) =>
+        this.FORM_DEFAULT_VALUE.map(({ language, value }) =>
           this._fb.group({
             language,
             value: [value, [Validators.maxLength(2000)]],
@@ -79,33 +91,7 @@ export class ListItemFormComponent implements OnInit {
     });
   }
 
-  createChildNode() {
-    this.loading = true;
-
-    // generate the data payload
-    const childNode: CreateChildNodeRequest = new CreateChildNodeRequest();
-    childNode.parentNodeIri = this.parentIri;
-    childNode.projectIri = this.projectIri;
-    childNode.name = `${this.projectUuid}-${Math.random().toString(36).substring(2)}${Math.random()
-      .toString(36)
-      .substring(2)}`;
-
-    // initialize labels
-    let i = 0;
-    for (const l of this.form.value.labels) {
-      childNode.labels[i] = new StringLiteral();
-      childNode.labels[i].language = l.language;
-      childNode.labels[i].value = l.value;
-      i++;
-    }
-    this._listApiService.createChildNode(childNode.parentNodeIri, childNode).subscribe(response => {
-      this.loading = false;
-      this._listItemService.onUpdate$.next();
-    });
-  }
-
-  resetForm() {
-    this.form.reset();
-    this._buildForms();
+  private _resetForm() {
+    this.form.reset({ labels: this.FORM_DEFAULT_VALUE });
   }
 }
