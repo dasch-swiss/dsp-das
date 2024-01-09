@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo, StringLiteral } from '@dasch-swiss/dsp-js';
-import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
@@ -14,7 +13,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { AppGlobal } from '../../app-global';
 import { DialogService } from '../../main/services/dialog.service';
 import { ProjectBase } from '../project-base';
@@ -51,17 +50,12 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
   // disable content on small devices
   disableContent = false;
 
-  list$ = this._listApiService.listInProject('http://rdfh.ch/projects/00FF').pipe(
-    tap(v => console.log('data received list.component', v)),
-    map(lists => (this.listIri ? lists.lists.find(i => i.id === this.listIri) : null)),
-    tap(v => console.log('list.component', v))
-  );
-  z$ = this.list$.pipe(
-    switchMap(v => this._listApiService.get(v.id)),
-    tap(v => console.log('list / get', v))
-  );
+  get list$(): Observable<ListNodeInfo> {
+    return this.listsInProject$.pipe(map(lists => (this.listIri ? lists.find(i => i.id === this.listIri) : null)));
+  }
 
   @Select(ListsSelectors.isListsLoading) isListsLoading$: Observable<boolean>;
+  @Select(ListsSelectors.listsInProject) listsInProject$: Observable<ListNodeInfo[]>;
 
   constructor(
     private _acs: AppConfigService,
@@ -73,8 +67,7 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
     protected _projectService: ProjectService,
     protected _store: Store,
     protected _cd: ChangeDetectorRef,
-    protected _actions$: Actions,
-    private _listApiService: ListApiService
+    protected _actions$: Actions
   ) {
     super(_store, _route, _projectService, _titleService, _router, _cd, _actions$);
   }
@@ -100,7 +93,6 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
         this.listIri = `${this._acs.dspAppConfig.iriBase}/lists/${this.project.shortcode}/${params['list']}`;
       }
     });
-    this.z$.subscribe();
   }
 
   ngOnDestroy() {
