@@ -1,9 +1,10 @@
-import { Location } from '@angular/common';
+import { DOCUMENT, Location } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  Inject,
   Input,
   OnInit,
   Output,
@@ -11,9 +12,10 @@ import {
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthError, AuthService } from '@dasch-swiss/vre/shared/app-session';
-import { UserStateModel } from '@dasch-swiss/vre/shared/app-state';
-import { Subject } from 'rxjs';
-import { map, take, takeLast } from 'rxjs/operators';
+import { LoadUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
+import { Observable, Subject, combineLatest } from 'rxjs';
+import { take, takeLast } from 'rxjs/operators';
 import {
   ComponentCommunicationEventService,
   EmitEvent,
@@ -27,6 +29,9 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginFormComponent implements OnInit {
+  get isLoggedIn$(): Observable<boolean> {
+    return this._authService.isSessionValid();
+  }
   /**
    * set whether or not you want icons to display in the input fields
    *
@@ -98,7 +103,10 @@ export class LoginFormComponent implements OnInit {
     private _authService: AuthService,
     private route: ActivatedRoute,
     private location: Location,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private _actions$: Actions,
+    private _store: Store,
+    @Inject(DOCUMENT) private document: Document
   ) {}
 
   /**
@@ -108,7 +116,7 @@ export class LoginFormComponent implements OnInit {
    */
   ngOnInit() {
     this.buildLoginForm();
-    this.returnUrl = this.getReturnUrl() || '/';
+    this.returnUrl = this.getReturnUrl();
   }
 
   ngOnDestroy(): void {
@@ -141,16 +149,19 @@ export class LoginFormComponent implements OnInit {
         next: loginResult => {
           if (loginResult) {
             this._componentCommsService.emit(new EmitEvent(Events.loginSuccess, true));
-
-            return this._authService
-              .loadUser(identifier)
+            this._store.dispatch(new LoadUserAction(identifier));
+            return combineLatest([
+              this._actions$.pipe(ofActionSuccessful(LoadUserAction)),
+              this._store.select(UserSelectors.user),
+            ])
               .pipe(take(1))
-              .pipe(map((result: any) => result.user))
-              .subscribe((user: UserStateModel) => {
+              .subscribe(([action, user]) => {
                 this.loading = false;
-                this._authService.loginSuccessfulEvent.emit(user.user);
+                this._authService.loginSuccessfulEvent.emit(user);
                 this.cd.markForCheck();
-                this.router.navigate([this.returnUrl]);
+                if (this.returnUrl) {
+                  this.router.navigate([this.returnUrl]);
+                }
               });
           }
         },

@@ -58,7 +58,6 @@ import { ExternalLinksDirective } from './main/directive/external-links.directiv
 import { InvalidControlScrollDirective } from './main/directive/invalid-control-scroll.directive';
 import { FooterComponent } from './main/footer/footer.component';
 import { GridComponent } from './main/grid/grid.component';
-import { AuthGuardComponent } from './main/guard/auth-guard.component';
 import { HeaderComponent } from './main/header/header.component';
 import { HelpComponent } from './main/help/help.component';
 import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
@@ -193,7 +192,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     AppComponent,
     ArchiveComponent,
     AudioComponent,
-    AuthGuardComponent,
     AvTimelineComponent,
     DescriptionComponent,
     BooleanValueComponent,
