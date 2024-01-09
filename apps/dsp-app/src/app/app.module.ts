@@ -88,7 +88,6 @@ import { ListItemComponent } from './project/list/list-item/list-item.component'
 import { ListItemElementComponent } from './project/list/list-item-element/list-item-element.component';
 import { CreateListItemDialogComponent } from './project/list/list-item-form/edit-list-item/create-list-item-dialog.component';
 import { EditListItemDialogComponent } from './project/list/list-item-form/edit-list-item/edit-list-item-dialog.component';
-import { FullListItemFormComponent } from './project/list/list-item-form/full-list-item-form.component';
 import { ListItemFormComponent } from './project/list/list-item-form/list-item-form.component';
 import { ListComponent } from './project/list/list.component';
 import { CreateListInfoPageComponent } from './project/list/reusable-list-info-form/create-list-info-page.component';
@@ -232,7 +231,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     FooterComponent,
     FormattedBooleanPipe,
     FulltextSearchComponent,
-    FullListItemFormComponent,
     GeonameValueComponent,
     GridComponent,
     HeaderComponent,
