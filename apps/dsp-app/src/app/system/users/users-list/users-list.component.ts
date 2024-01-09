@@ -3,23 +3,15 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnInit,
   Output,
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import {
-  ApiResponseError,
-  Constants,
-  KnoraApiConnection,
-  Permissions,
-  ReadProject,
-  ReadUser,
-} from '@dasch-swiss/dsp-js';
+import { ApiResponseError, Constants, Permissions, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
@@ -34,8 +26,8 @@ import {
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
-import { ConfirmDialogComponent } from '../../../main/action/confirm-dialog/confirm-dialog.component';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
+import { DialogService } from '../../../main/services/dialog.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -116,16 +108,14 @@ export class UsersListComponent implements OnInit {
   @Select(UserSelectors.isLoading) isUsersLoading$: Observable<boolean>;
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _userApiService: UserApiService,
-    private _dialog: MatDialog,
+    private _matDialog: MatDialog,
+    private _dialog: DialogService,
     private _errorHandler: AppErrorHandler,
     private _route: ActivatedRoute,
     private _router: Router,
     private _sortingService: SortingService,
     private _store: Store,
-    private _projectService: ProjectService,
     private _actions$: Actions,
     private _cd: ChangeDetectorRef
   ) {
@@ -323,31 +313,22 @@ export class UsersListComponent implements OnInit {
   }
 
   askToActivateUser(username: string, id: string) {
-    this._dialog
-      .open(ConfirmDialogComponent, { data: { message: `Do you want to reactivate user ${username}?` } })
-      .afterClosed()
-      .subscribe(response => {
-        if (response === true) this.activateUser(id);
-      });
+    this._dialog.afterConfirmation(`Do you want to reactivate user ${username}?`).subscribe(() => {
+      this.activateUser(id);
+    });
   }
 
   askToDeleteUser(username: string, id: string) {
-    this._dialog
-      .open(ConfirmDialogComponent, { data: { message: `Do you want to suspend user ${username}?` } })
-      .afterClosed()
-      .subscribe(response => {
-        if (response === true) this.deleteUser(id);
-      });
+    this._dialog.afterConfirmation(`Do you want to suspend user ${username}?`).subscribe(() => {
+      this.deleteUser(id);
+    });
   }
 
   askToRemoveFromProject(user: ReadUser) {
     this._dialog
-      .open(ConfirmDialogComponent, { data: { message: 'Do you want to remove this user from the project?' } })
-      .afterClosed()
+      .afterConfirmation('Do you want to remove this user from the project?')
       .pipe(
-        switchMap(response => {
-          if (!response) return;
-
+        switchMap(() => {
           this._store.dispatch(new RemoveUserFromProjectAction(user.id, this.project.id));
           return this._actions$.pipe(ofActionSuccessful(LoadProjectMembersAction));
         })
@@ -372,7 +353,7 @@ export class UsersListComponent implements OnInit {
       data: { user, mode },
     };
 
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
+    const dialogRef = this._matDialog.open(DialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(response => {
       if (response === true) {
