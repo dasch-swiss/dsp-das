@@ -3,7 +3,6 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnInit,
   Output,
@@ -11,7 +10,6 @@ import {
 import {
   ApiResponseError,
   CreateChildNodeRequest,
-  KnoraApiConnection,
   List,
   ListNodeInfo,
   ListNodeInfoResponse,
@@ -19,8 +17,6 @@ import {
   UpdateChildNodeRequest,
 } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
@@ -73,11 +69,7 @@ export class EditListItemComponent implements OnInit {
   formInvalidMessage: string;
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _listApiService: ListApiService,
-    private _errorHandler: AppErrorHandler,
-    private _projectService: ProjectService,
     private _cd: ChangeDetectorRef
   ) {}
 
@@ -179,7 +171,7 @@ export class EditListItemComponent implements OnInit {
    */
   insertChildNode() {
     const createChildNodeRequest: CreateChildNodeRequest = new CreateChildNodeRequest();
-    createChildNodeRequest.name = `${this._projectService.iriToUuid(this.projectIri)}-${Math.random()
+    createChildNodeRequest.name = `${ProjectService.IriToUuid(this.projectIri)}-${Math.random()
       .toString(36)
       .substring(2)}${Math.random().toString(36).substring(2)}`;
     createChildNodeRequest.parentNodeIri = this.parentIri;

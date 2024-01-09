@@ -3,23 +3,15 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnInit,
   Output,
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import {
-  ApiResponseError,
-  Constants,
-  KnoraApiConnection,
-  Permissions,
-  ReadProject,
-  ReadUser,
-} from '@dasch-swiss/dsp-js';
+import { ApiResponseError, Constants, Permissions, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
@@ -31,11 +23,12 @@ import {
   SetUserAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
+import { Observable, combineLatest } from 'rxjs';
+import { map, switchMap, take } from 'rxjs/operators';
 import { ConfirmDialogComponent } from '../../../main/action/confirm-dialog/confirm-dialog.component';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
+import { DialogService } from '../../../main/services/dialog.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -105,27 +98,38 @@ export class UsersListComponent implements OnInit {
   // ... and sort by 'username'
   sortBy = 'username';
 
+  disableMenu$: Observable<boolean> = combineLatest([
+    this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin),
+    this._store.select(UserSelectors.isSysAdmin),
+  ]).pipe(
+    map(([isCurrentProjectAdminOrSysAdmin, isSysAdmin]) => {
+      if (this.project && this.project.status === false) {
+        return true;
+      } else {
+        const isProjectAdmin = this.projectUuid ? isCurrentProjectAdminOrSysAdmin : false;
+        return !isProjectAdmin && !isSysAdmin;
+      }
+    })
+  );
+
   @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
   @Select(UserSelectors.user) user$: Observable<ReadUser>;
   @Select(UserSelectors.username) username$: Observable<string>;
-  @Select(ProjectsSelectors.isCurrentProjectAdmin)
-  isProjectAdmin$: Observable<boolean>;
+  @Select(UserSelectors.userProjectAdminGroups) userProjectAdminGroups$: Observable<string[]>;
+  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isCurrentProjectAdminOrSysAdmin$: Observable<boolean>;
   @Select(ProjectsSelectors.currentProject) project$: Observable<ReadProject>;
-  @Select(ProjectsSelectors.isProjectsLoading)
-  isProjectsLoading$: Observable<boolean>;
+  @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
   @Select(UserSelectors.isLoading) isUsersLoading$: Observable<boolean>;
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _userApiService: UserApiService,
-    private _dialog: MatDialog,
+    private _matDialog: MatDialog,
+    private _dialog: DialogService,
     private _errorHandler: AppErrorHandler,
     private _route: ActivatedRoute,
     private _router: Router,
     private _sortingService: SortingService,
     private _store: Store,
-    private _projectService: ProjectService,
     private _actions$: Actions,
     private _cd: ChangeDetectorRef
   ) {
@@ -238,9 +242,9 @@ export class UsersListComponent implements OnInit {
    */
   updateProjectAdminMembership(id: string, permissions: Permissions): void {
     const currentUser = this._store.selectSnapshot(UserSelectors.user);
-    if (this.userIsProjectAdmin(permissions)) {
+    const userIsProjectAdmin = this.userIsProjectAdmin(permissions);
+    if (userIsProjectAdmin) {
       // true = user is already project admin --> remove from admin rights
-
       this._userApiService.removeFromProjectMembership(id, this.project.id, true).subscribe(
         response => {
           // if this user is not the logged-in user
@@ -281,7 +285,7 @@ export class UsersListComponent implements OnInit {
       );
     } else {
       // false: user isn't project admin yet --> add admin rights
-      this._userApiService.addToProjectMembership(id, this.project.id).subscribe(
+      this._userApiService.addToProjectMembership(id, this.project.id, true).subscribe(
         response => {
           if (currentUser.username !== response.user.username) {
             this._store.dispatch(new SetUserAction(response.user));
@@ -323,31 +327,22 @@ export class UsersListComponent implements OnInit {
   }
 
   askToActivateUser(username: string, id: string) {
-    this._dialog
-      .open(ConfirmDialogComponent, { data: { message: `Do you want to reactivate user ${username}?` } })
-      .afterClosed()
-      .subscribe(response => {
-        if (response === true) this.activateUser(id);
-      });
+    this._dialog.afterConfirmation(`Do you want to reactivate user ${username}?`).subscribe(() => {
+      this.activateUser(id);
+    });
   }
 
   askToDeleteUser(username: string, id: string) {
-    this._dialog
-      .open(ConfirmDialogComponent, { data: { message: `Do you want to suspend user ${username}?` } })
-      .afterClosed()
-      .subscribe(response => {
-        if (response === true) this.deleteUser(id);
-      });
+    this._dialog.afterConfirmation(`Do you want to suspend user ${username}?`).subscribe(() => {
+      this.deleteUser(id);
+    });
   }
 
   askToRemoveFromProject(user: ReadUser) {
     this._dialog
-      .open(ConfirmDialogComponent, { data: { message: 'Do you want to remove this user from the project?' } })
-      .afterClosed()
+      .afterConfirmation('Do you want to remove this user from the project?')
       .pipe(
-        switchMap(response => {
-          if (!response) return;
-
+        switchMap(() => {
           this._store.dispatch(new RemoveUserFromProjectAction(user.id, this.project.id));
           return this._actions$.pipe(ofActionSuccessful(LoadProjectMembersAction));
         })
@@ -372,7 +367,7 @@ export class UsersListComponent implements OnInit {
       data: { user, mode },
     };
 
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
+    const dialogRef = this._matDialog.open(DialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(response => {
       if (response === true) {
@@ -436,19 +431,6 @@ export class UsersListComponent implements OnInit {
           this._errorHandler.showMessage(error);
         }
       );
-  }
-
-  disableMenu(): boolean {
-    // disable menu in case of:
-    // project.status = false
-    if (this.project && this.project.status === false) {
-      return true;
-    } else {
-      return (
-        !this._store.selectSnapshot(UserSelectors.isSysAdmin) &&
-        !this._store.selectSnapshot(ProjectsSelectors.isCurrentProjectAdmin)
-      );
-    }
   }
 
   sortList(key: any) {
