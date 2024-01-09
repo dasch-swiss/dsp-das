@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ListInfoResponse, ListNode, ListNodeInfoResponse } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
@@ -29,8 +29,6 @@ export class ListNodeOperation {
   `,
 })
 export class ListItemFormComponent implements OnInit {
-  @Input() parentIri: string;
-
   loading = false;
   placeholder: string;
   form: FormGroup;
@@ -47,7 +45,7 @@ export class ListItemFormComponent implements OnInit {
   ngOnInit() {
     this._buildForm();
 
-    this._listApiService.getNodeInfo(this.parentIri).subscribe(response => {
+    this._listApiService.getNodeInfo(this._listItemService.projectInfos.rootNodeIri).subscribe(response => {
       if (response['listinfo']) {
         // root node
         this.placeholder = `Append item to ${(response as ListInfoResponse).listinfo.labels[0].value}`;
@@ -64,7 +62,7 @@ export class ListItemFormComponent implements OnInit {
     this.loading = true;
 
     const data = {
-      parentNodeIri: this.parentIri,
+      parentNodeIri: this._listItemService.projectInfos.rootNodeIri,
       projectIri: this._listItemService.projectInfos.projectIri,
       labels: this.form.value.labels,
       name: `${ProjectService.IriToUuid(this._listItemService.projectInfos.projectIri)}-${Math.random()

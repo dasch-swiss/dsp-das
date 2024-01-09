@@ -28,9 +28,8 @@ import { ListItemService } from '../list-item/list-item.service';
   `,
 })
 export class FullListItemFormComponent implements OnInit {
-  @Input() projectIri?: string;
+  @Input() projectIri: string;
   @Input() parentIri: string;
-  @Input() projectUuid: string;
   @Input() formData: { labels: MultiLanguages; descriptions: MultiLanguages };
   @Output() formValueChange = new EventEmitter<FormGroup>();
   loading = false;

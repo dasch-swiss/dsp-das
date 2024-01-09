@@ -19,14 +19,10 @@ import { ListNode } from '@dasch-swiss/dsp-js';
             controlName="labels">
           </dasch-swiss-multi-language-input>
 
-          <app-action-bubble
-            [position]="position"
-            [length]="length"
-            [node]="node"
-            [parentIri]="parentIri"></app-action-bubble>
+          <app-action-bubble [position]="position" [length]="length" [node]="node"></app-action-bubble>
         </div>
 
-        <app-list-item *ngIf="showChildren" [list]="node.children" [parentIri]="node.id" [isAdmin]="isAdmin">
+        <app-list-item *ngIf="showChildren" [list]="node.children" [rootNodeIri]="node.id" [isAdmin]="isAdmin">
         </app-list-item>
       </div>
     </div>
@@ -34,8 +30,6 @@ import { ListNode } from '@dasch-swiss/dsp-js';
   styles: [':host ::ng-deep dasch-swiss-multi-language-input .mat-mdc-form-field-bottom-align { display: none;}'],
 })
 export class ListItemElementComponent implements OnInit {
-  @Input() parentIri: string;
-  @Input() childNode: boolean;
   @Input() node: ListNode;
   @Input() position: number;
   @Input() length: number;

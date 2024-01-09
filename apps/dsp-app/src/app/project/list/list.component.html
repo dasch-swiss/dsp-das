@@ -46,7 +46,7 @@
 
           <app-list-item
             [list]="list"
-            [parentIri]="list.id"
+            [rootNodeIri]="list.id"
             [projectIri]="(project$ | async)?.id"
             [isAdmin]="isAdmin$ | async">
           </app-list-item>

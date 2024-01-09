@@ -62,7 +62,6 @@ import {
 export class ActionBubbleComponent {
   @Input() position: number;
   @Input() length: number;
-  @Input() parentIri: string;
   @Input() node: ListNode;
 
   constructor(
@@ -89,7 +88,7 @@ export class ActionBubbleComponent {
         data: {
           id: this.node.id,
           project: this._listItemService.projectInfos.projectIri,
-          parentIri: this.parentIri,
+          parentIri: this._listItemService.projectInfos.rootNodeIri,
           position: this.position,
         },
       })
@@ -106,10 +105,10 @@ export class ActionBubbleComponent {
         width: '100%',
         minWidth: 500,
         data: {
-          parentIri: this.parentIri,
+          parentIri: this._listItemService.projectInfos.rootNodeIri,
           projectUuid: ProjectService.IriToUuid(this._listItemService.projectInfos.projectIri),
           projectIri: this._listItemService.projectInfos.projectIri,
-          listIri: 'listIri',
+          listIri: this._listItemService.projectInfos.rootNodeIri,
           formData: { labels: this.node.labels as MultiLanguages, descriptions: this.node.comments as MultiLanguages },
         },
       })

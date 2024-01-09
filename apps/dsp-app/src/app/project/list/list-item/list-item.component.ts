@@ -12,17 +12,15 @@ import { ListItemService } from './list-item.service';
       [position]="index"
       [length]="children.length"
       [node]="child"
-      [childNode]="true"
-      [parentIri]="parentIri"
       [isAdmin]="isAdmin"></app-list-item-element>
-    <app-list-item-form style="display: block; margin-left: 46px" [parentIri]="parentIri"> </app-list-item-form>
+    <app-list-item-form style="display: block; margin-left: 46px"></app-list-item-form>
   `,
   styles: [':host { display: block; }'],
   providers: [ListItemService],
 })
 export class ListItemComponent implements OnInit {
   @Input() list: ListNode[];
-  @Input() parentIri: string;
+  @Input() rootNodeIri: string;
   @Input() projectIri: string;
   @Input() isAdmin = false;
 
@@ -36,12 +34,12 @@ export class ListItemComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.listItemService.setProjectInfos(this.projectIri);
+    this.listItemService.setProjectInfos(this.projectIri, this.rootNodeIri);
 
     this.listItemService.onUpdate$
       .pipe(
         startWith(true),
-        switchMap(() => this._listApiService.get(this.parentIri))
+        switchMap(() => this._listApiService.get(this.rootNodeIri))
       )
       .subscribe(result => {
         if (result['node']) {
