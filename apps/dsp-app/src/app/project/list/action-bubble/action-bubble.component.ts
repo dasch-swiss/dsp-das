@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ListNode } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
@@ -100,21 +100,20 @@ export class ActionBubbleComponent {
   }
 
   askToEditNode() {
+    console.log('action bubble', this);
     this._matDialog
       .open<EditListItemDialogComponent, EditListItemDialogProps, boolean>(EditListItemDialogComponent, {
         width: '100%',
         minWidth: 500,
         data: {
-          parentIri: this._listItemService.projectInfos.rootNodeIri,
-          projectUuid: ProjectService.IriToUuid(this._listItemService.projectInfos.projectIri),
+          nodeIri: this.node.id,
           projectIri: this._listItemService.projectInfos.projectIri,
-          listIri: this._listItemService.projectInfos.rootNodeIri,
           formData: { labels: this.node.labels as MultiLanguages, descriptions: this.node.comments as MultiLanguages },
         },
       })
       .afterClosed()
       .pipe(filter(response => response === true))
-      .subscribe(response => {
+      .subscribe(() => {
         this._listItemService.onUpdate$.next();
       });
   }
@@ -122,7 +121,7 @@ export class ActionBubbleComponent {
   repositionNode(direction: 'up' | 'down') {
     this._listApiService
       .repositionChildNode(this.node.id, {
-        parentNodeIri: this.parentIri,
+        parentNodeIri: this._listItemService.projectInfos.rootNodeIri,
         position: direction === 'up' ? this.position - 1 : this.position + 1,
       })
       .subscribe(() => {

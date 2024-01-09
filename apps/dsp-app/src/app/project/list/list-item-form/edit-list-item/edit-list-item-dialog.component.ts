@@ -7,23 +7,18 @@ import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 export interface EditListItemDialogProps {
-  parentIri: string;
-  projectUuid: string;
+  nodeIri: string;
   projectIri: string;
-  listIri: string;
   formData: { labels: MultiLanguages; descriptions: MultiLanguages };
 }
+
 @Component({
   selector: 'app-edit-list-item-dialog',
   template: `
     <app-dialog-header title="Edit child node"></app-dialog-header>
 
     <div mat-dialog-content>
-      <app-full-list-item-form
-        [formData]="data.formData"
-        [parentIri]="data.parentIri"
-        [projectUuid]="data.projectUuid"
-        (formValueChange)="form = $event"></app-full-list-item-form>
+      <app-full-list-item-form [formData]="data.formData" (formValueChange)="form = $event"></app-full-list-item-form>
     </div>
 
     <div mat-dialog-actions align="end">
@@ -57,10 +52,11 @@ export class EditListItemDialogComponent {
 
     const data = {
       projectIri: this.data.projectIri,
-      listIri: this.data.listIri,
+      listIri: this.data.nodeIri,
       labels: this.form.value.labels,
       comments: this.form.value.descriptions,
     };
+    console.log(this, data, 'edit');
 
     this._listApiService
       .updateChildNode(data.listIri, data)

@@ -45,9 +45,9 @@
           </mat-toolbar>
 
           <app-list-item
-            [list]="list"
+            *ngIf="(project$ | async) as project"
             [rootNodeIri]="list.id"
-            [projectIri]="(project$ | async)?.id"
+            [projectUuid]="project.id"
             [isAdmin]="isAdmin$ | async">
           </app-list-item>
         </div>

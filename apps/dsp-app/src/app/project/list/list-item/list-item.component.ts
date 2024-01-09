@@ -19,9 +19,8 @@ import { ListItemService } from './list-item.service';
   providers: [ListItemService],
 })
 export class ListItemComponent implements OnInit {
-  @Input() list: ListNode[];
   @Input() rootNodeIri: string;
-  @Input() projectIri: string;
+  @Input() projectUuid: string;
   @Input() isAdmin = false;
 
   children: ListNode[] = [];
@@ -34,7 +33,8 @@ export class ListItemComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.listItemService.setProjectInfos(this.projectIri, this.rootNodeIri);
+    console.log('list item', this);
+    this.listItemService.setProjectInfos(this.projectUuid, this.rootNodeIri);
 
     this.listItemService.onUpdate$
       .pipe(
@@ -42,6 +42,7 @@ export class ListItemComponent implements OnInit {
         switchMap(() => this._listApiService.get(this.rootNodeIri))
       )
       .subscribe(result => {
+        console.log('data received', result);
         if (result['node']) {
           this.children = (result as ListChildNodeResponse).node.children;
           this.labels = (result as ListChildNodeResponse).node.nodeinfo.labels;

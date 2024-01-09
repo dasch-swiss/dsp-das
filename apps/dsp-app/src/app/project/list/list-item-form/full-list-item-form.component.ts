@@ -28,17 +28,17 @@ import { ListItemService } from '../list-item/list-item.service';
   `,
 })
 export class FullListItemFormComponent implements OnInit {
-  @Input() projectIri: string;
-  @Input() parentIri: string;
   @Input() formData: { labels: MultiLanguages; descriptions: MultiLanguages };
   @Output() formValueChange = new EventEmitter<FormGroup>();
-  loading = false;
 
+  loading = false;
   form: FormGroup;
+
   constructor(private _fb: FormBuilder) {}
 
   ngOnInit() {
     this._buildForm();
+    console.log('fulllistitemform', this);
     this.formValueChange.emit(this.form);
   }
 

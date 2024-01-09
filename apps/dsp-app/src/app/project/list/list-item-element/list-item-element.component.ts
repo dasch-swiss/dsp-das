@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ListNode } from '@dasch-swiss/dsp-js';
+import { ListItemService } from '@dsp-app/src/app/project/list/list-item/list-item.service';
 
 @Component({
   selector: 'app-list-item-element',
@@ -22,7 +23,11 @@ import { ListNode } from '@dasch-swiss/dsp-js';
           <app-action-bubble [position]="position" [length]="length" [node]="node"></app-action-bubble>
         </div>
 
-        <app-list-item *ngIf="showChildren" [list]="node.children" [rootNodeIri]="node.id" [isAdmin]="isAdmin">
+        <app-list-item
+          *ngIf="showChildren"
+          [projectUuid]="listItemService.projectInfos.projectIri"
+          [rootNodeIri]="node.id"
+          [isAdmin]="isAdmin">
         </app-list-item>
       </div>
     </div>
@@ -43,7 +48,10 @@ export class ListItemElementComponent implements OnInit {
 
   readOnlyForm: FormGroup;
 
-  constructor(private _fb: FormBuilder) {}
+  constructor(
+    private _fb: FormBuilder,
+    public listItemService: ListItemService
+  ) {}
 
   ngOnInit() {
     this.readOnlyForm = this._fb.group({

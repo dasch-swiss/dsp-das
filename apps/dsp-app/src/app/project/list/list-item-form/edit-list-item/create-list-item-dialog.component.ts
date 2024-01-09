@@ -11,8 +11,6 @@ import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
     <div mat-dialog-content>
       <app-full-list-item-form
         [formData]="initialFormValue"
-        [parentIri]="data.parentIri"
-        [projectUuid]="data.projectUuid"
         (formValueChange)="form = $event"></app-full-list-item-form>
     </div>
     <div mat-dialog-actions align="end">
