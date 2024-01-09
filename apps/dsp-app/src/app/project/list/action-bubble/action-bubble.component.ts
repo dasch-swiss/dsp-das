@@ -111,7 +111,7 @@ export class ActionBubbleComponent {
         data: {
           nodeIri: this.node.id,
           projectIri: this._listItemService.projectInfos.projectIri,
-          formData: { labels: this.node.labels as MultiLanguages, descriptions: this.node.comments as MultiLanguages },
+          formData: { labels: this.node.labels as MultiLanguages, comments: this.node.comments as MultiLanguages },
         },
       })
       .afterClosed()

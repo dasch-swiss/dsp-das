@@ -9,7 +9,7 @@ import { switchMap } from 'rxjs/operators';
 export interface EditListItemDialogProps {
   nodeIri: string;
   projectIri: string;
-  formData: { labels: MultiLanguages; descriptions: MultiLanguages };
+  formData: { labels: MultiLanguages; comments: MultiLanguages };
 }
 
 @Component({
@@ -18,7 +18,9 @@ export interface EditListItemDialogProps {
     <app-dialog-header title="Edit child node"></app-dialog-header>
 
     <div mat-dialog-content>
-      <app-full-list-item-form [formData]="data.formData" (formValueChange)="form = $event"></app-full-list-item-form>
+      <app-reusable-list-info-form
+        [formData]="data.formData"
+        (formValueChange)="form = $event"></app-reusable-list-info-form>
     </div>
 
     <div mat-dialog-actions align="end">
@@ -62,7 +64,7 @@ export class EditListItemDialogComponent {
       .pipe(
         switchMap(() => {
           // if initial comments Length is not equal to 0 and the comment is now empty, send request to delete comment
-          if (this.data.formData.descriptions.length !== 0 && this.form.value.descriptions.length === 0) {
+          if (this.data.formData.comments.length > 0 && this.form.value.comments.length === 0) {
             return this._listApiService.deleteChildComments(data.listIri);
           }
           return of(true);

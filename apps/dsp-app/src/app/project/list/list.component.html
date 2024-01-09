@@ -26,7 +26,7 @@
                 <button
                   color="primary"
                   mat-button
-                  (click)="$event.stopPropagation(); editList( list)"
+                  (click)="$event.stopPropagation(); askToEditList( list)"
                   matTooltip="Edit controlled vocabulary info">
                   <mat-icon>edit</mat-icon>
                   Edit
@@ -35,7 +35,7 @@
                   color="warn"
                   mat-button
                   class="delete"
-                  (click)="$event.stopPropagation(); openDialog(list)"
+                  (click)="$event.stopPropagation(); askToDeleteList()"
                   matTooltip="Delete controlled vocabulary">
                   <mat-icon>delete</mat-icon>
                   Delete

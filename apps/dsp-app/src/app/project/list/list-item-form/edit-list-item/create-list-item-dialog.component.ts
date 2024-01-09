@@ -3,6 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 
 export interface CreateListItemDialogProps {
   nodeIri: string;
@@ -17,9 +18,9 @@ export interface CreateListItemDialogProps {
     <app-dialog-header title="Insert new child node"></app-dialog-header>
 
     <div mat-dialog-content>
-      <app-full-list-item-form
+      <app-reusable-list-info-form
         [formData]="initialFormValue"
-        (formValueChange)="form = $event"></app-full-list-item-form>
+        (formValueChange)="form = $event"></app-reusable-list-info-form>
     </div>
 
     <div mat-dialog-actions align="end">
@@ -40,7 +41,7 @@ export interface CreateListItemDialogProps {
 export class CreateListItemDialogComponent {
   form: FormGroup;
   loading = false;
-  initialFormValue = { labels: [], descriptions: [] };
+  initialFormValue = { labels: [] as MultiLanguages, comments: [] as MultiLanguages };
 
   constructor(
     @Inject(MAT_DIALOG_DATA)

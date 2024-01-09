@@ -17,7 +17,10 @@ import { map, take } from 'rxjs/operators';
 import { AppGlobal } from '../../app-global';
 import { DialogService } from '../../main/services/dialog.service';
 import { ProjectBase } from '../project-base';
-import { EditListInfoDialogComponent } from './reusable-list-info-form/edit-list-info-dialog.component';
+import {
+  EditListInfoDialogComponent,
+  EditListInfoDialogProps,
+} from './reusable-list-info-form/edit-list-info-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -105,8 +108,8 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
    * edit list data, remove list from project etc.
    *
    */
-  editList(list: ListNodeInfo) {
-    this._matDialog.open(EditListInfoDialogComponent, {
+  askToEditList(list: ListNodeInfo) {
+    this._matDialog.open<EditListInfoDialogComponent, EditListInfoDialogProps, boolean>(EditListInfoDialogComponent, {
       width: '100%',
       minWidth: 500,
       data: {
@@ -116,7 +119,7 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
     });
   }
 
-  openDialog(list: ListNodeInfo): void {
+  askToDeleteList(): void {
     this._dialog.afterConfirmation('Do you want to delete this controlled vocabulary?').subscribe(() => {
       this._store.dispatch(new DeleteListNodeAction(this.listIri));
       this.listIri = undefined;

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
+import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { atLeastOneStringRequired } from '../../reusable-project-form/at-least-one-string-required.validator';
@@ -23,8 +24,8 @@ import { atLeastOneStringRequired } from '../../reusable-project-form/at-least-o
 })
 export class ReusableListInfoFormComponent implements OnInit, OnDestroy {
   @Input() formData: {
-    labels: StringLiteral[];
-    comments: StringLiteral[];
+    labels: MultiLanguages;
+    comments: MultiLanguages;
   };
 
   @Output() formValueChange = new EventEmitter<FormGroup>();
