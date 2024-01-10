@@ -1,7 +1,12 @@
 import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
-import { finalize, tap } from 'rxjs/operators';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { LoadProjectsAction } from '@dasch-swiss/vre/shared/app-state';
+import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-project-form-page',
@@ -39,7 +44,12 @@ export class CreateProjectFormPageComponent {
   form: FormGroup;
   loading = false;
 
-  constructor(private _projectApiService: ProjectApiService) {}
+  constructor(
+    private _projectApiService: ProjectApiService,
+    private _store: Store,
+    private _router: Router,
+    private _actions: Actions
+  ) {}
 
   submitForm() {
     this.loading = true;
@@ -50,15 +60,19 @@ export class CreateProjectFormPageComponent {
         longname: this.form.get('longname').value,
         description: this.form.get('description').value,
         keywords: this.form.get('keywords').value,
-        logo: '',
         selfjoin: true,
         status: true,
       })
-      .pipe(
-        tap(() => {
+      .pipe(take(1))
+      .subscribe(projectResponse => {
+        const uuid = ProjectService.IriToUuid(projectResponse.project.id);
+        this._store.dispatch(new LoadProjectsAction());
+        this._actions.pipe(ofActionSuccessful(LoadProjectsAction), take(1)).subscribe(() => {
           this.loading = false;
-        })
-      )
-      .subscribe();
+          this._router
+            .navigateByUrl(`${RouteConstants.projectRelative}`, { skipLocationChange: true })
+            .then(() => this._router.navigate([`${RouteConstants.projectRelative}/${uuid}`]));
+        });
+      });
   }
 }
