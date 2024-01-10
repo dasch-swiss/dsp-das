@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
-import { existingNamesValidator } from '../../main/directive/existing-name/existing-name.directive';
+import { existingNamesValidator } from '../../main/directive/existing-name/existing-names.validator';
 import { arrayLengthGreaterThanZeroValidator } from './array-length-greater-than-zero-validator';
 import { atLeastOneStringRequired } from './at-least-one-string-required.validator';
 import PROJECT_FORM_CONSTANTS from './reusable-project-form.constants';

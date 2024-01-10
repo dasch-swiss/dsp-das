@@ -53,7 +53,7 @@ import { DialogHeaderComponent } from './main/dialog/dialog-header/dialog-header
 import { DialogComponent } from './main/dialog/dialog.component';
 import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
 import { DisableContextMenuDirective } from './main/directive/disable-context-menu.directive';
-import { ExistingNameDirective } from './main/directive/existing-name/existing-name.directive';
+import { ExistingNameDirective } from './main/directive/existing-name/existing-names.validator';
 import { ExternalLinksDirective } from './main/directive/external-links.directive';
 import { InvalidControlScrollDirective } from './main/directive/invalid-control-scroll.directive';
 import { FooterComponent } from './main/footer/footer.component';
