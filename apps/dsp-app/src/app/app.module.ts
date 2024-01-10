@@ -53,7 +53,6 @@ import { DialogHeaderComponent } from './main/dialog/dialog-header/dialog-header
 import { DialogComponent } from './main/dialog/dialog.component';
 import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
 import { DisableContextMenuDirective } from './main/directive/disable-context-menu.directive';
-import { ExternalLinksDirective } from './main/directive/external-links.directive';
 import { InvalidControlScrollDirective } from './main/directive/invalid-control-scroll.directive';
 import { FooterComponent } from './main/footer/footer.component';
 import { GridComponent } from './main/grid/grid.component';
@@ -222,7 +221,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     EditListItemComponent,
     EditResourceClassDialogComponent,
     ExpertSearchComponent,
-    ExternalLinksDirective,
     FooterComponent,
     FormattedBooleanPipe,
     FulltextSearchComponent,
