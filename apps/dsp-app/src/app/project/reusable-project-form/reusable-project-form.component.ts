@@ -3,10 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
-import { existingNamesValidator } from '../../main/directive/existing-name/existing-names.validator';
 import { arrayLengthGreaterThanZeroValidator } from './array-length-greater-than-zero-validator';
 import { atLeastOneStringRequired } from './at-least-one-string-required.validator';
-import PROJECT_FORM_CONSTANTS from './reusable-project-form.constants';
 
 @Component({
   selector: 'app-reusable-project-form',
@@ -74,23 +72,11 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
     this.form = this._fb.group({
       shortcode: [
         { value: this.formData.shortcode, disabled: this.formData.shortcode !== '' },
-        [
-          Validators.required,
-          Validators.minLength(4),
-          Validators.maxLength(4),
-          existingNamesValidator(PROJECT_FORM_CONSTANTS.existingShortcodes),
-          Validators.pattern(/^[0-9A-Fa-f]+$/),
-        ],
+        [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern(/^[0-9A-Fa-f]+$/)],
       ],
       shortname: [
         { value: this.formData.shortname, disabled: this.formData.shortname !== '' },
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(20),
-          existingNamesValidator(PROJECT_FORM_CONSTANTS.existingShortNames),
-          Validators.pattern(/^[a-zA-Z]+\S*$/),
-        ],
+        [Validators.required, Validators.minLength(3), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z]+\S*$/)],
       ],
       longname: [this.formData.longname, [Validators.required]],
       description: this._fb.array(
