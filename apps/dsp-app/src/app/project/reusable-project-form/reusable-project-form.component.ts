@@ -55,6 +55,7 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
     keywords: string[];
   };
   @Output() formValueChange = new EventEmitter<FormGroup>();
+
   form: FormGroup;
   shortcodePatternError = { errorKey: 'pattern', message: 'This field must contains letters from A to F and 0 to 9' };
   subscription: Subscription;
@@ -64,7 +65,7 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._buildForm();
 
-    this.subscription = this.form.valueChanges.pipe(startWith(null)).subscribe(z => {
+    this.subscription = this.form.valueChanges.pipe(startWith(<FormGroup>null)).subscribe(() => {
       this.formValueChange.emit(this.form);
     });
   }
@@ -75,20 +76,20 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
         { value: this.formData.shortcode, disabled: this.formData.shortcode !== '' },
         [
           Validators.required,
-          Validators.minLength(PROJECT_FORM_CONSTANTS.shortcodeMinLength),
-          Validators.maxLength(PROJECT_FORM_CONSTANTS.shortcodeMaxLength),
+          Validators.minLength(4),
+          Validators.maxLength(4),
           existingNamesValidator(PROJECT_FORM_CONSTANTS.existingShortcodes),
-          Validators.pattern(PROJECT_FORM_CONSTANTS.shortcodeRegex),
+          Validators.pattern(/^[0-9A-Fa-f]+$/),
         ],
       ],
       shortname: [
         { value: this.formData.shortname, disabled: this.formData.shortname !== '' },
         [
           Validators.required,
-          Validators.minLength(PROJECT_FORM_CONSTANTS.shortnameMinLength),
-          Validators.maxLength(PROJECT_FORM_CONSTANTS.shortnameMaxLength),
+          Validators.minLength(3),
+          Validators.maxLength(20),
           existingNamesValidator(PROJECT_FORM_CONSTANTS.existingShortNames),
-          Validators.pattern(PROJECT_FORM_CONSTANTS.shortnameRegex),
+          Validators.pattern(/^[a-zA-Z]+\S*$/),
         ],
       ],
       longname: [this.formData.longname, [Validators.required]],
