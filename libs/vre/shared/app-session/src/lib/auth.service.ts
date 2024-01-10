@@ -30,7 +30,7 @@ export class AuthService {
     private router: Router // private intervalWrapper: IntervalWrapperService
   ) {
     // check if the (possibly) existing session is still valid and if not, destroy it
-    this.isSessionValid()
+    this.isSessionValid$()
       .pipe(takeLast(1))
       .subscribe(valid => {
         if (!valid) {
@@ -48,7 +48,7 @@ export class AuthService {
    * If a json web token exists, it doesn't mean that the knora api credentials are still valid.
    *
    */
-  isSessionValid(forceLogout: boolean = false): Observable<boolean> {
+  isSessionValid$(forceLogout: boolean = false): Observable<boolean> {
     // mix of checks with session.validation and this.authenticate
     const accessToken = this.getAccessToken();
     if (accessToken) {

@@ -24,7 +24,7 @@ export class OntologyClassInstanceGuard implements CanActivate {
 
   canActivate(activatedRoute: ActivatedRouteSnapshot): Observable<boolean> {
     const instanceId = activatedRoute.params[RouteConstants.instanceParameter];
-    return combineLatest([this.authService.isSessionValid(), this.isSysAdmin$, this.userProjects$]).pipe(
+    return combineLatest([this.authService.isSessionValid$(), this.isSysAdmin$, this.userProjects$]).pipe(
       map(([isSessionValid, isSysAdmin, userProjects]) => {
         const projectUuid = activatedRoute.parent.params[RouteConstants.uuidParameter];
         const isAddInstance = instanceId === RouteConstants.addClassInstance;

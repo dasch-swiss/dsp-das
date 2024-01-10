@@ -13,7 +13,7 @@ export class PendoAnalyticsService {
 
   constructor() {
     this.authService
-      .isSessionValid()
+      .isSessionValid$()
       .pipe(takeUntilDestroyed())
       .subscribe((isSessionValid: boolean) => {
         if (isSessionValid) {

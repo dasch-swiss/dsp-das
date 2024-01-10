@@ -49,7 +49,7 @@ export class DatadogRumService {
 
         // depending on the session state, activate or deactivate the user
         this.authService
-          .isSessionValid()
+          .isSessionValid$()
           .pipe(takeUntilDestroyed())
           .subscribe((isSessionValid: boolean) => {
             if (isSessionValid) {
