@@ -32,6 +32,7 @@ import {
   MutiLanguageInputComponent,
   HumanReadableErrorPipe,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { ReusableListItemFormComponent } from '@dsp-app/src/app/project/list/list-item-form/reusable-list-item-form.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
@@ -248,6 +249,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     EditListItemDialogComponent,
     CreateListInfoPageComponent,
     ReusableListInfoFormComponent,
+    ReusableListItemFormComponent,
     ListItemComponent,
     ListItemElementComponent,
     ListItemFormComponent,

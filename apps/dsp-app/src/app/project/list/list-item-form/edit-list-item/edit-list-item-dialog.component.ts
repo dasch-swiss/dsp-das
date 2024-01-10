@@ -18,9 +18,9 @@ export interface EditListItemDialogProps {
     <app-dialog-header title="Edit child node"></app-dialog-header>
 
     <div mat-dialog-content>
-      <app-reusable-list-info-form
+      <app-reusable-list-item-form
         [formData]="data.formData"
-        (formValueChange)="form = $event"></app-reusable-list-info-form>
+        (formValueChange)="form = $event"></app-reusable-list-item-form>
     </div>
 
     <div mat-dialog-actions align="end">
