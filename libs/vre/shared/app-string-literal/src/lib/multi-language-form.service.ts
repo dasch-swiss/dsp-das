@@ -3,6 +3,10 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 
+/** Component Provider used in combination with
+ * MultiLanguageInputComponent and MultiLanguageTextareaComponent.
+ * Those two components have the same business logic (here), but differ in their html.
+ */
 @Injectable()
 export class MultiLanguageFormService {
   selectedLanguageIndex: number;
