@@ -15,7 +15,7 @@ export interface EditListItemDialogProps {
 @Component({
   selector: 'app-edit-list-item-dialog',
   template: `
-    <app-dialog-header title="Edit child node"></app-dialog-header>
+    <app-dialog-header [title]="data.formData.labels[0].value" subtitle="Edit child node"></app-dialog-header>
 
     <div mat-dialog-content>
       <app-reusable-list-item-form

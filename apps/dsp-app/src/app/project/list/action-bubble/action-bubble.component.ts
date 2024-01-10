@@ -5,6 +5,7 @@ import { ListNode } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
+import { DIALOG_LARGE } from '@dsp-app/src/app/main/services/dialog-sizes.constant';
 import { filter, switchMap } from 'rxjs/operators';
 import { DialogService } from '../../../main/services/dialog.service';
 import { ListItemService } from '../list-item/list-item.service';
@@ -86,8 +87,7 @@ export class ActionBubbleComponent {
   askToInsertNode() {
     this._matDialog
       .open<CreateListItemDialogComponent, CreateListItemDialogProps, boolean>(CreateListItemDialogComponent, {
-        width: '100%',
-        minWidth: 500,
+        ...DIALOG_LARGE,
         data: {
           nodeIri: this.node.id,
           projectIri: this._listItemService.projectInfos.projectIri,
@@ -103,11 +103,9 @@ export class ActionBubbleComponent {
   }
 
   askToEditNode() {
-    console.log('action bubble', this);
     this._matDialog
       .open<EditListItemDialogComponent, EditListItemDialogProps, boolean>(EditListItemDialogComponent, {
-        width: '100%',
-        minWidth: 500,
+        ...DIALOG_LARGE,
         data: {
           nodeIri: this.node.id,
           projectIri: this._listItemService.projectInfos.projectIri,

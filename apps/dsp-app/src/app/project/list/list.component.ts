@@ -11,6 +11,7 @@ import {
   LoadListsInProjectAction,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { DIALOG_LARGE } from '@dsp-app/src/app/main/services/dialog-sizes.constant';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
@@ -110,8 +111,7 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
    */
   askToEditList(list: ListNodeInfo) {
     this._matDialog.open<EditListInfoDialogComponent, EditListInfoDialogProps, boolean>(EditListInfoDialogComponent, {
-      width: '100%',
-      minWidth: 500,
+      ...DIALOG_LARGE,
       data: {
         projectIri: this._projectService.uuidToIri(this.projectUuid),
         list,
@@ -119,18 +119,20 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
     });
   }
 
-  askToDeleteList(): void {
-    this._dialog.afterConfirmation('Do you want to delete this controlled vocabulary?').subscribe(() => {
-      this._store.dispatch(new DeleteListNodeAction(this.listIri));
-      this.listIri = undefined;
-      this._actions$
-        .pipe(ofActionSuccessful(DeleteListNodeAction))
-        .pipe(take(1))
-        .subscribe(() => {
-          this._store.dispatch(new LoadListsInProjectAction(this.projectIri));
-          this._router.navigate([RouteConstants.project, this.projectUuid, RouteConstants.dataModels]);
-        });
-    });
+  askToDeleteList(list: ListNodeInfo): void {
+    this._dialog
+      .afterConfirmation('Do you want to delete this controlled vocabulary?', list.labels[0].value)
+      .subscribe(() => {
+        this._store.dispatch(new DeleteListNodeAction(this.listIri));
+        this.listIri = undefined;
+        this._actions$
+          .pipe(ofActionSuccessful(DeleteListNodeAction))
+          .pipe(take(1))
+          .subscribe(() => {
+            this._store.dispatch(new LoadListsInProjectAction(this.projectIri));
+            this._router.navigate([RouteConstants.project, this.projectUuid, RouteConstants.dataModels]);
+          });
+      });
   }
 
   private _setPageTitle() {
