@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable, Output, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, CredentialsResponse, LoginResponse, User } from '@dasch-swiss/dsp-js';
-import { Auth, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { Auth, DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import {
   ClearListsAction,
   ClearOntologiesAction,
@@ -183,6 +183,7 @@ export class AuthService {
       new ClearOntologiesAction(),
     ]);
     clearTimeout(this.tokenRefreshIntervalId);
+    this.router.navigate([RouteConstants.home], { replaceUrl: true });
   }
 
   isLoggedIn() {

@@ -65,7 +65,6 @@ export class UserMenuComponent implements OnInit, OnDestroy {
    */
   logout() {
     this._authService.logout();
-    this._router.navigate([RouteConstants.home], { replaceUrl: true });
   }
 
   /**
