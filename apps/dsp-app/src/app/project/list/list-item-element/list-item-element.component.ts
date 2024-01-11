@@ -20,7 +20,11 @@ import { ListItemService } from '../list-item/list-item.service';
             controlName="labels">
           </dasch-swiss-multi-language-input>
 
-          <app-action-bubble [position]="position" [length]="length" [node]="node"></app-action-bubble>
+          <app-action-bubble
+            *ngIf="showActionBubble"
+            [position]="position"
+            [length]="length"
+            [node]="node"></app-action-bubble>
         </div>
 
         <app-list-item
