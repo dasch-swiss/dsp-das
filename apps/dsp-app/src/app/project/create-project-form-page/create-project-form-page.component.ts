@@ -5,7 +5,7 @@ import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { LoadProjectsAction } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
+import { Actions, Store } from '@ngxs/store';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -26,6 +26,7 @@ import { take } from 'rxjs/operators';
         <button color="primary" mat-button type="reset" [routerLink]="['..']">
           {{ 'appLabels.form.action.cancel' | translate }}
         </button>
+
         <button
           mat-raised-button
           type="submit"
@@ -67,12 +68,10 @@ export class CreateProjectFormPageComponent {
       .subscribe(projectResponse => {
         const uuid = ProjectService.IriToUuid(projectResponse.project.id);
         this._store.dispatch(new LoadProjectsAction());
-        this._actions.pipe(ofActionSuccessful(LoadProjectsAction), take(1)).subscribe(() => {
-          this.loading = false;
-          this._router
-            .navigateByUrl(`${RouteConstants.projectRelative}`, { skipLocationChange: true })
-            .then(() => this._router.navigate([`${RouteConstants.projectRelative}/${uuid}`]));
-        });
+        this.loading = false;
+        this._router
+          .navigateByUrl(`${RouteConstants.projectRelative}`, { skipLocationChange: true })
+          .then(() => this._router.navigate([`${RouteConstants.projectRelative}/${uuid}`]));
       });
   }
 }
