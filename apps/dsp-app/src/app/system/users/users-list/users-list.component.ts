@@ -15,8 +15,8 @@ import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
-  LoadProjectAction,
   LoadProjectMembersAction,
+  LoadProjectMembershipAction,
   LoadUserAction,
   ProjectsSelectors,
   RemoveUserFromProjectAction,
@@ -214,7 +214,7 @@ export class UsersListComponent implements OnInit {
                 .subscribe(
                   () => {
                     if (this.projectUuid) {
-                      this._store.dispatch(new LoadProjectAction(this.projectUuid));
+                      this._store.dispatch(new LoadProjectMembershipAction(this.projectUuid));
                     }
                   },
                   (ngError: ApiResponseError) => {
@@ -444,7 +444,7 @@ export class UsersListComponent implements OnInit {
       .pipe(take(1))
       .subscribe(() => {
         if (this.projectUuid) {
-          this._store.dispatch(new LoadProjectAction(this.projectUuid));
+          this._store.dispatch(new LoadProjectMembershipAction(this.projectUuid));
         }
       });
   }
