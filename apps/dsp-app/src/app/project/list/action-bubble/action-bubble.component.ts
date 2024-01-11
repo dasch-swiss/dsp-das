@@ -20,7 +20,7 @@ import {
 @Component({
   selector: 'app-action-bubble',
   template: ` <div class="action-bubble" [@simpleFadeAnimation]="'in'">
-    <div class="button-container" style="display: flex">
+    <div class="button-container d-flex">
       <button
         mat-button
         *ngIf="position > 0"
