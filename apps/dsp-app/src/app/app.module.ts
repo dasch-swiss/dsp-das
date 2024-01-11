@@ -32,7 +32,6 @@ import {
   MutiLanguageInputComponent,
   HumanReadableErrorPipe,
 } from '@dasch-swiss/vre/shared/app-string-literal';
-import { ReusableListItemFormComponent } from '@dsp-app/src/app/project/list/list-item-form/reusable-list-item-form.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
@@ -88,6 +87,7 @@ import { ListItemElementComponent } from './project/list/list-item-element/list-
 import { CreateListItemDialogComponent } from './project/list/list-item-form/edit-list-item/create-list-item-dialog.component';
 import { EditListItemDialogComponent } from './project/list/list-item-form/edit-list-item/edit-list-item-dialog.component';
 import { ListItemFormComponent } from './project/list/list-item-form/list-item-form.component';
+import { ReusableListItemFormComponent } from './project/list/list-item-form/reusable-list-item-form.component';
 import { ListComponent } from './project/list/list.component';
 import { CreateListInfoPageComponent } from './project/list/reusable-list-info-form/create-list-info-page.component';
 import { EditListInfoDialogComponent } from './project/list/reusable-list-info-form/edit-list-info-dialog.component';

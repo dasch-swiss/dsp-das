@@ -1,12 +1,11 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Input, ViewContainerRef } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ListNode } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
-import { DIALOG_LARGE } from '@dsp-app/src/app/main/services/dialog-sizes.constant';
 import { filter, switchMap } from 'rxjs/operators';
+import { DIALOG_LARGE } from '../../../main/services/dialog-sizes.constant';
 import { DialogService } from '../../../main/services/dialog.service';
 import { ListItemService } from '../list-item/list-item.service';
 import {
@@ -109,7 +108,10 @@ export class ActionBubbleComponent {
         data: {
           nodeIri: this.node.id,
           projectIri: this._listItemService.projectInfos.projectIri,
-          formData: { labels: this.node.labels as MultiLanguages, comments: this.node.comments as MultiLanguages },
+          formData: {
+            labels: this.node.labels as MultiLanguages,
+            comments: this.node.comments as MultiLanguages,
+          },
         },
       })
       .afterClosed()

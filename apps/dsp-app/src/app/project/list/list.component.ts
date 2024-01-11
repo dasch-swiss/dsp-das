@@ -11,11 +11,11 @@ import {
   LoadListsInProjectAction,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { DIALOG_LARGE } from '@dsp-app/src/app/main/services/dialog-sizes.constant';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { AppGlobal } from '../../app-global';
+import { DIALOG_LARGE } from '../../main/services/dialog-sizes.constant';
 import { DialogService } from '../../main/services/dialog.service';
 import { ProjectBase } from '../project-base';
 import {
