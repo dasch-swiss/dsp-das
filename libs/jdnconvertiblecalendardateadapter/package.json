@@ -12,10 +12,10 @@
   "license": "Apache-2.0",
   "homepage": "https://github.com/dasch-swiss/dsp-app#readme",
   "peerDependencies": {
-    "@angular/common": "^15.2.2",
-    "@angular/core": "^15.2.2",
-    "@angular/animations": "^15.2.2",
-    "@angular/cdk": "^15.2.3",
-    "@angular/material": "^15.2.3"
+    "@angular/common": ">=15.2.2",
+    "@angular/core": ">=15.2.2",
+    "@angular/animations": ">=15.2.2",
+    "@angular/cdk": ">=15.2.3",
+    "@angular/material": ">=15.2.3"
   }
 }
