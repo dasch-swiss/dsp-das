@@ -221,6 +221,26 @@
           "browsers": "ChromeHeadless"
         }
       }
+    },
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/dsp-app/cypress.config.ts"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "dsp-app:serve:production",
+          "env": {
+            "API_URL": "http://0.0.0.0:3333/api"
+          }
+        },
+        "development": {
+          "devServerTarget": "dsp-app:serve:development",
+          "env": {
+            "API_URL": "http://0.0.0.0:3333/api"
+          }
+        }
+      }
     }
   }
 }
