@@ -6,7 +6,6 @@ import {
   ClearListsAction,
   ClearOntologiesAction,
   ClearProjectsAction,
-  LoadProjectsAction,
   LogUserOutAction,
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
@@ -182,8 +181,7 @@ export class AuthService {
       .pipe(ofActionSuccessful(ClearProjectsAction))
       .pipe(take(1))
       .subscribe(() => {
-        this.store.dispatch(new LoadProjectsAction());
-        this.router.navigate([RouteConstants.home], { replaceUrl: true });
+        this.router.navigate([RouteConstants.home], { onSameUrlNavigation: 'reload' });
       });
     this.store.dispatch([
       new LogUserOutAction(),
