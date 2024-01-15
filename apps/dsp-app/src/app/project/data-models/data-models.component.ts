@@ -10,14 +10,6 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ProjectBase } from '../project-base';
 
-// the routes available for navigation
-type DataModelRoute =
-  | typeof RouteConstants.ontology
-  | typeof RouteConstants.addOntology
-  | typeof RouteConstants.list
-  | typeof RouteConstants.addList
-  | 'docs';
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-data-models',
@@ -67,16 +59,6 @@ export class DataModelsComponent extends ProjectBase implements OnInit {
   trackByFn = (index: number, item: ListNodeInfo) => `${index}-${item.id}`;
 
   trackByOntologyMetaFn = (index: number, item: OntologyMetadata) => `${index}-${item.id}`;
-
-  open(route: DataModelRoute) {
-    if (route === 'docs') {
-      // route to the external docs
-      window.open('https://docs.dasch.swiss/latest/DSP-APP/user-guide/project/#data-model', '_blank');
-    } else {
-      // default routing
-      this._router.navigate([route], { relativeTo: this._route.parent });
-    }
-  }
 
   navigateToList(id: string) {
     if (!this._store.selectSnapshot(UserSelectors.isLoggedIn)) {

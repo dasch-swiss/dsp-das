@@ -10,14 +10,19 @@
     </mat-icon>
   </div>
   <div *ngIf="isAdmin$ | async" class="action-buttons">
-    <button color="primary" mat-raised-button class="create" (click)="open('add-ontology')">
+    <a color="primary" mat-raised-button class="create" [routerLink]="['..', 'add-ontology']">
       <mat-icon class="v-align-middle">add_circle</mat-icon>
       <span class="v-align-middle">Create New</span>
-    </button>
-    <button color="primary" mat-stroked-button class="docs" (click)="open('docs')">
+    </a>
+    <a
+      color="primary"
+      mat-stroked-button
+      class="docs"
+      href="https://docs.dasch.swiss/latest/DSP-APP/user-guide/project/#data-model"
+      target="_blank">
       Read Documentation About How To Create Data Models
       <mat-icon>chevron_right</mat-icon>
-    </button>
+    </a>
   </div>
   <div *ngIf="ontologiesMetadata$ | async" class="projectOntos">
     <div class="list" [class.top-padding]="isAdmin$ | async">
@@ -49,10 +54,10 @@
     </mat-icon>
   </div>
   <div *ngIf="isAdmin$ | async" class="action-buttons">
-    <button color="primary" mat-raised-button class="create" (click)="open('add-list')">
+    <a color="primary" mat-raised-button class="create" [routerLink]="['..','add-list']">
       <mat-icon class="v-align-middle">add_circle</mat-icon>
       <span class="v-align-middle">Create New</span>
-    </button>
+    </a>
   </div>
   <div *ngIf="(listsInProject$ | async)?.length > 0" class="projectLists">
     <div class="list" [class.top-padding]="isAdmin$ | async">
