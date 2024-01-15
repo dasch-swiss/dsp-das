@@ -180,9 +180,11 @@ export class AuthService {
     this._actions
       .pipe(ofActionSuccessful(ClearProjectsAction))
       .pipe(take(1))
-      .subscribe(() => {
-        this.router.navigate([RouteConstants.home], { onSameUrlNavigation: 'reload' });
-      });
+      .subscribe(() =>
+        this.router
+          .navigate([RouteConstants.logout], { skipLocationChange: true })
+          .then(() => this.router.navigate([RouteConstants.home]))
+      );
     this.store.dispatch([
       new LogUserOutAction(),
       new ClearProjectsAction(),
