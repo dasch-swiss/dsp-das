@@ -68,32 +68,38 @@ export class DataModelsComponent extends ProjectBase implements OnInit {
 
   trackByOntologyMetaFn = (index: number, item: OntologyMetadata) => `${index}-${item.id}`;
 
-  /**
-   * handles routing to the correct path
-   * @param route path to route to
-   * @param id optional ontology id or list id
-   */
-  open(route: DataModelRoute, id?: string) {
-    if (route === RouteConstants.ontology && id) {
-      // get name of ontology
-      const ontoName = OntologyService.getOntologyName(id);
-      this._router.navigate([route, encodeURIComponent(ontoName), RouteConstants.editor, RouteConstants.classes], {
-        relativeTo: this._route.parent,
-      });
-      return;
-    }
-    if (route === RouteConstants.list && id) {
-      const listName = id.split('/').pop();
-      // route to the list editor
-      this._router.navigate([route, encodeURIComponent(listName)], {
-        relativeTo: this._route.parent,
-      });
-    } else if (route === 'docs') {
+  open(route: DataModelRoute) {
+    if (route === 'docs') {
       // route to the external docs
       window.open('https://docs.dasch.swiss/latest/DSP-APP/user-guide/project/#data-model', '_blank');
     } else {
       // default routing
       this._router.navigate([route], { relativeTo: this._route.parent });
     }
+  }
+
+  navigateToList(id: string) {
+    if (!this._store.selectSnapshot(UserSelectors.isLoggedIn)) {
+      return;
+    }
+
+    const listName = id.split('/').pop();
+    this._router.navigate([RouteConstants.list, encodeURIComponent(listName)], {
+      relativeTo: this._route.parent,
+    });
+  }
+
+  navigateToOntology(id: string) {
+    if (!this._store.selectSnapshot(UserSelectors.isLoggedIn)) {
+      return;
+    }
+
+    const ontoName = OntologyService.getOntologyName(id);
+    this._router.navigate(
+      [RouteConstants.ontology, encodeURIComponent(ontoName), RouteConstants.editor, RouteConstants.classes],
+      {
+        relativeTo: this._route.parent,
+      }
+    );
   }
 }
