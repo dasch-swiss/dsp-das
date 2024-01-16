@@ -190,8 +190,9 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/dsp-app/**/*.ts", "apps/dsp-app/**/*.html"]
-      }
+        "lintFilePatterns": ["apps/dsp-app/**/*.{ts,html}",
+          "!apps/dsp-app/cypress/**/*.{ts,html}"]
+          }
     },
     "test": {
       "executor": "@angular-devkit/build-angular:karma",
