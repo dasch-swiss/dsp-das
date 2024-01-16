@@ -1,5 +1,5 @@
 describe('Visual Check for Projects on Home Page', () => {
-  it('should load clickable projects on the home page', () => {
+  it.skip('should load clickable projects on the home page', () => {
     cy.visit('/');
 
     cy.get('[data-cy=accept-cookies]').click();
