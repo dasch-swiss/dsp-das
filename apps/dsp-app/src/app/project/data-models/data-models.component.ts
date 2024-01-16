@@ -17,6 +17,7 @@ import { ProjectBase } from '../project-base';
   styleUrls: ['./data-models.component.scss'],
 })
 export class DataModelsComponent extends ProjectBase implements OnInit {
+  RouteConstants = RouteConstants;
   get ontologiesMetadata$(): Observable<OntologyMetadata[]> {
     const uuid = this._route.parent.snapshot.params.uuid;
     const iri = `${this._appInit.dspAppConfig.iriBase}/projects/${uuid}`;
@@ -84,4 +85,6 @@ export class DataModelsComponent extends ProjectBase implements OnInit {
       }
     );
   }
+
+  protected readonly RouteConstants = RouteConstants;
 }
