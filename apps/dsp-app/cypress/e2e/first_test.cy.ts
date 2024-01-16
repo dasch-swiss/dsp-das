@@ -1,16 +1,15 @@
 describe('Visual Check for Projects on Home Page', () => {
-  it('should load projects on the home page', () => {
-    // Visit the home page
+  it('should load clickable projects on the home page', () => {
     cy.visit('/');
 
-    // Assuming your projects are displayed within tiles with a specific class
-    // You need to adjust the selector based on your actual HTML structure
-    const projectTileSelector = 'app-project-tile';
+    cy.get('[data-cy=accept-cookies]').click();
 
-    // Wait for the project tiles to be visible
-    cy.get(projectTileSelector).should('be.visible');
+    const projectTileSelector = '[data-cy=tile]';
 
-    // Check that at least one project tile is present
-    cy.get(projectTileSelector).should('have.length.greaterThan', 0);
+    cy.get(projectTileSelector).should('be.visible').should('have.length.greaterThan', 0);
+
+    cy.get(projectTileSelector).first().find('[data-cy=navigate-to-project-button]').click();
+
+    cy.url().should('include', '/project'); // Update with the expected URL
   });
 });
