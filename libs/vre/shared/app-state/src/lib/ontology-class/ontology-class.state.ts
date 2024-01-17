@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { ApiResponseError, CountQueryResponse, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { Action, Actions, State, StateContext } from '@ngxs/store';
+import { Action, State, StateContext } from '@ngxs/store';
 import { finalize, map, take, tap } from 'rxjs/operators';
 import { LoadClassItemsCountAction } from './ontology-class.actions';
 import { OntologyClassStateModel } from './ontology-class.state-model';
@@ -19,8 +19,7 @@ const defaults: OntologyClassStateModel = <OntologyClassStateModel>{
 export class OntologyClassState {
   constructor(
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _actions$: Actions
+    private _dspApiConnection: KnoraApiConnection
   ) {}
 
   @Action(LoadClassItemsCountAction)
@@ -44,16 +43,15 @@ export class OntologyClassState {
             classItems[resClassId].classItemsCount = countQueryResponse.numberOfResults;
           }
 
-          ctx.patchState({
+          ctx.setState({
             ...ctx.getState(),
             classItems,
           });
         },
-        error: (error: ApiResponseError) => {
-          ctx.patchState({ isLoading: false });
-        },
       }),
-      finalize(() => ctx.patchState({ isLoading: false }))
+      finalize(() => {
+        ctx.patchState({ isLoading: false });
+      })
     );
   }
 

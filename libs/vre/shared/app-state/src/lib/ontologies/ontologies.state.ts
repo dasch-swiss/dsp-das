@@ -23,6 +23,7 @@ import { of } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 import { LoadListsInProjectAction } from '../lists/lists.actions';
 import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-interfaces';
+import { LoadClassItemsCountAction } from '../ontology-class/ontology-class.actions';
 import {
   ClearCurrentOntologyAction,
   ClearOntologiesAction,
@@ -146,10 +147,22 @@ export class OntologiesState {
               this._actions$
                 .pipe(ofActionSuccessful(LoadOntologyAction))
                 .pipe(take(1))
-                .subscribe(() =>
+                .subscribe(() => {
                   // last action dispatched
-                  ctx.dispatch(new LoadListsInProjectAction(projectIri))
-                )
+                  ctx.dispatch(new LoadListsInProjectAction(projectIri));
+                  ontoMeta.ontologies.forEach(onto => {
+                    const readOntology = ctx
+                      .getState()
+                      .projectOntologies[projectIri].readOntologies.find(o => o.id === onto.id);
+                    if (readOntology) {
+                      ctx.dispatch(
+                        getAllEntityDefinitionsAsArray(readOntology.classes).map(
+                          resClass => new LoadClassItemsCountAction(onto.id, resClass.id)
+                        )
+                      );
+                    }
+                  });
+                })
             );
         },
         error: (error: ApiResponseError) => {
