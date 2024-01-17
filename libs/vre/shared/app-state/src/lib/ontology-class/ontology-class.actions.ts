@@ -5,3 +5,7 @@ export class LoadClassItemsCountAction {
     public resClassId: string
   ) {}
 }
+
+export class ClearOntologyClassAction {
+  static readonly type = '[OntologyClass] Clear Ontology Class';
+}

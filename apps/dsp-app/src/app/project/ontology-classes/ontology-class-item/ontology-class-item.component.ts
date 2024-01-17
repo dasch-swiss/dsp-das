@@ -20,7 +20,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, Subscription, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import {
   ComponentCommunicationEventService,
   EmitEvent,
@@ -76,7 +76,7 @@ export class OntologyClassItemComponent implements OnInit, AfterViewInit, OnDest
     private _actions$: Actions,
     private _cd: ChangeDetectorRef
   ) {
-    this._actions$.pipe(ofActionSuccessful(LoadClassItemsCountAction)).subscribe(() => {
+    this._actions$.pipe(takeUntil(this.destroyed), ofActionSuccessful(LoadClassItemsCountAction)).subscribe(() => {
       this._cd.markForCheck();
     });
   }

@@ -3,7 +3,7 @@ import { ApiResponseError, CountQueryResponse, KnoraApiConnection } from '@dasch
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { Action, State, StateContext } from '@ngxs/store';
 import { finalize, map, take, tap } from 'rxjs/operators';
-import { LoadClassItemsCountAction } from './ontology-class.actions';
+import { ClearOntologyClassAction, LoadClassItemsCountAction } from './ontology-class.actions';
 import { OntologyClassStateModel } from './ontology-class.state-model';
 
 const defaults: OntologyClassStateModel = <OntologyClassStateModel>{
@@ -53,6 +53,11 @@ export class OntologyClassState {
         ctx.patchState({ isLoading: false });
       })
     );
+  }
+
+  @Action(ClearOntologyClassAction)
+  clearOntologyClass(ctx: StateContext<OntologyClassStateModel>) {
+    ctx.setState({ ...defaults });
   }
 
   private _getGravsearch(iri: string): string {

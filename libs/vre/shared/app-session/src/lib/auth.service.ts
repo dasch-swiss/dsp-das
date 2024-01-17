@@ -5,6 +5,7 @@ import { Auth, DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/sh
 import {
   ClearListsAction,
   ClearOntologiesAction,
+  ClearOntologyClassAction,
   ClearProjectsAction,
   LogUserOutAction,
 } from '@dasch-swiss/vre/shared/app-state';
@@ -190,6 +191,7 @@ export class AuthService {
       new ClearProjectsAction(),
       new ClearListsAction(),
       new ClearOntologiesAction(),
+      new ClearOntologyClassAction(),
     ]);
     clearTimeout(this.tokenRefreshIntervalId);
   }

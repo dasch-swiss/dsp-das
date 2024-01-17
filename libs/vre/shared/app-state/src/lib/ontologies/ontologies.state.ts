@@ -193,7 +193,13 @@ export class OntologiesState {
           }
 
           let projectReadOntologies = projectOntologiesState[projectIri].readOntologies;
-          projectReadOntologies.push(ontology);
+          const projectReadOntologiesIndex = projectReadOntologies.findIndex(o => o.id === ontology.id);
+          if (projectReadOntologiesIndex > 0) {
+            projectReadOntologies[projectReadOntologiesIndex] = ontology;
+          } else {
+            projectReadOntologies.push(ontology);
+          }
+
           projectReadOntologies = projectReadOntologies.sort((o1, o2) => this._compareOntologies(o1, o2));
           // this._sortingService.keySortByAlphabetical(projectReadOntologies, 'label');
           projectOntologiesState[projectIri].readOntologies = projectReadOntologies;
