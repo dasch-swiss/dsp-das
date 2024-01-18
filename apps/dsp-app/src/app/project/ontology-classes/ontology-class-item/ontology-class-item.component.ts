@@ -20,7 +20,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, Subscription, combineLatest } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map, takeUntil, tap } from 'rxjs/operators';
 import {
   ComponentCommunicationEventService,
   EmitEvent,
@@ -42,12 +42,13 @@ export class OntologyClassItemComponent implements OnInit, AfterViewInit, OnDest
 
   @ViewChild('resClassLabel') resClassLabel: ElementRef;
 
-  get results$(): Observable<number> {
-    return combineLatest([
-      this._store.select(OntologyClassSelectors.classItems),
-      this._store.select(OntologyClassSelectors.isLoading),
-    ]).pipe(map(([classItems]) => classItems[this.resClass.id]?.classItemsCount));
-  }
+  results$ = combineLatest([
+    this._store.select(OntologyClassSelectors.classItems),
+    this._store.select(OntologyClassSelectors.isLoading),
+  ]).pipe(
+    map(([classItems]) => classItems[this.resClass.id]?.classItemsCount),
+    tap(v => console.log('ontology class item', v))
+  );
 
   classLink: string;
 
