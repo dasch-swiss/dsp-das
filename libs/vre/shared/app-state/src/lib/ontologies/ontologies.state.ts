@@ -20,7 +20,7 @@ import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-help
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { Action, Actions, State, StateContext, ofActionSuccessful } from '@ngxs/store';
 import { of } from 'rxjs';
-import { map, take, tap } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { LoadListsInProjectAction } from '../lists/lists.actions';
 import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-interfaces';
 import { LoadClassItemsCountAction } from '../ontology-class/ontology-class.actions';
@@ -143,27 +143,22 @@ export class OntologiesState {
                 )
               )
             )
-            .subscribe(() =>
-              this._actions$
-                .pipe(ofActionSuccessful(LoadOntologyAction))
-                .pipe(take(1))
-                .subscribe(() => {
-                  // last action dispatched
-                  ctx.dispatch(new LoadListsInProjectAction(projectIri));
-                  ontoMeta.ontologies.forEach(onto => {
-                    const readOntology = ctx
-                      .getState()
-                      .projectOntologies[projectIri].readOntologies.find(o => o.id === onto.id);
-                    if (readOntology) {
-                      ctx.dispatch(
-                        getAllEntityDefinitionsAsArray(readOntology.classes).map(
-                          resClass => new LoadClassItemsCountAction(onto.id, resClass.id)
-                        )
-                      );
-                    }
-                  });
-                })
-            );
+            .pipe(switchMap(() => this._actions$.pipe(ofActionSuccessful(LoadOntologyAction), take(1)))) // last action dispatched
+            .subscribe(() => {
+              ctx.dispatch(new LoadListsInProjectAction(projectIri));
+              ontoMeta.ontologies.forEach(onto => {
+                const readOntology = ctx
+                  .getState()
+                  .projectOntologies[projectIri].readOntologies.find(o => o.id === onto.id);
+                if (readOntology) {
+                  ctx.dispatch(
+                    getAllEntityDefinitionsAsArray(readOntology.classes).map(
+                      resClass => new LoadClassItemsCountAction(onto.id, resClass.id)
+                    )
+                  );
+                }
+              });
+            });
         },
         error: (error: ApiResponseError) => {
           ctx.patchState({ hasLoadingErrors: true, isLoading: false });
