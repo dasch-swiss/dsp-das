@@ -16,7 +16,7 @@ import {
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { OntologyClassService, ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { Action, Actions, State, StateContext, ofActionSuccessful } from '@ngxs/store';
 import { of } from 'rxjs';
@@ -152,7 +152,7 @@ export class OntologiesState {
                   .projectOntologies[projectIri].readOntologies.find(o => o.id === onto.id);
                 if (readOntology) {
                   ctx.dispatch(
-                    getAllEntityDefinitionsAsArray(readOntology.classes).map(
+                    OntologyClassService.GetReadOntologyClassesToDisplay(readOntology.classes).map(
                       resClass => new LoadClassItemsCountAction(onto.id, resClass.id)
                     )
                   );
