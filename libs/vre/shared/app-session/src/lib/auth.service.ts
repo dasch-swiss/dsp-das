@@ -8,6 +8,7 @@ import {
   ClearOntologyClassAction,
   ClearProjectsAction,
   LogUserOutAction,
+  UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
@@ -32,13 +33,7 @@ export class AuthService {
     private router: Router // private intervalWrapper: IntervalWrapperService
   ) {
     // check if the (possibly) existing session is still valid and if not, destroy it
-    this.isSessionValid$()
-      .pipe(takeLast(1))
-      .subscribe(valid => {
-        if (!valid) {
-          this.doLogoutUser();
-        }
-      });
+    this.isSessionValid$();
 
     // if (this.isLoggedIn()) {
     //     this.startTokenRefresh();
@@ -79,6 +74,12 @@ export class AuthService {
     } else {
       // no session found; update knora api connection with empty jwt
       this._dspApiConnection.v2.jsonWebToken = '';
+
+      const username = this.store.selectSnapshot(UserSelectors.username);
+      if (username) {
+        this.clearState();
+      }
+
       if (forceLogout) {
         this.doLogoutUser();
       }
@@ -186,6 +187,11 @@ export class AuthService {
           .navigate([RouteConstants.logout], { skipLocationChange: true })
           .then(() => this.router.navigate([RouteConstants.home]))
       );
+    this.clearState();
+    clearTimeout(this.tokenRefreshIntervalId);
+  }
+
+  clearState() {
     this.store.dispatch([
       new LogUserOutAction(),
       new ClearProjectsAction(),
@@ -193,7 +199,6 @@ export class AuthService {
       new ClearOntologiesAction(),
       new ClearOntologyClassAction(),
     ]);
-    clearTimeout(this.tokenRefreshIntervalId);
   }
 
   isLoggedIn() {
