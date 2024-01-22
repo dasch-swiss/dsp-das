@@ -164,7 +164,6 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
     this._projectApiService
       .delete(id)
       .pipe(
-        take(1),
         tap(() => {
           this.refreshParent.emit(); // TODO Soft or Hard refresh ?
         })
@@ -180,7 +179,6 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
     this._projectApiService
       .update(id, data)
       .pipe(
-        take(1),
         tap(() => {
           this.refreshParent.emit();
         })
