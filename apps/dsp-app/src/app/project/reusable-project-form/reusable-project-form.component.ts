@@ -1,10 +1,42 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  AsyncValidatorFn,
+  FormBuilder,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
+import { ReadProject } from '@dasch-swiss/dsp-js';
+import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
-import { Subscription } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { Select } from '@ngxs/store';
+import { Observable, of, Subscription } from 'rxjs';
+import { catchError, map, startWith, take } from 'rxjs/operators';
 import { arrayLengthGreaterThanZeroValidator } from './array-length-greater-than-zero-validator';
 import { atLeastOneStringRequired } from './at-least-one-string-required.validator';
+
+/**
+ * shortcodeValidator: Validate the forms shortcode value against
+ * already existing shortcodes.
+ * @param shortcodes$ - Observable of existing shortcodes
+ */
+function shortcodeExistsValidator(shortcodes$: Observable<string[]>): AsyncValidatorFn {
+  return (control: AbstractControl): Observable<ValidationErrors | null> => {
+    if (!control.value) {
+      return of(null); // if no value, return valid
+    }
+
+    return shortcodes$.pipe(
+      take(1),
+      map(shortcodes => {
+        // Check if the shortcode exists
+        const isExisting = shortcodes.includes(control.value);
+        return isExisting ? { shortcodeExists: true } : null;
+      })
+    );
+  };
+}
 
 @Component({
   selector: 'app-reusable-project-form',
@@ -15,7 +47,7 @@ import { atLeastOneStringRequired } from './at-least-one-string-required.validat
           [formGroup]="form"
           controlName="shortcode"
           [placeholder]="'appLabels.form.project.general.shortcode' | translate"
-          [validatorErrors]="[shortcodePatternError]"
+          [validatorErrors]="[shortcodePatternError, shortCodeExistsError]"
           style="flex: 1; margin-right: 16px"></app-common-input>
 
         <app-common-input
@@ -55,8 +87,12 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
   @Output() formValueChange = new EventEmitter<FormGroup>();
 
   form: FormGroup;
+
   shortcodePatternError = { errorKey: 'pattern', message: 'This field must contains letters from A to F and 0 to 9' };
+  shortCodeExistsError = { errorKey: 'shortcodeExists', message: 'This shortcode already exists' };
   subscription: Subscription;
+
+  @Select(ProjectsSelectors.allProjectShortcodes) shortcodes$: Observable<string[]>;
 
   constructor(private _fb: FormBuilder) {}
 
@@ -73,6 +109,7 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
       shortcode: [
         { value: this.formData.shortcode, disabled: this.formData.shortcode !== '' },
         [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern(/^[0-9A-Fa-f]+$/)],
+        [shortcodeExistsValidator(this.shortcodes$)],
       ],
       shortname: [
         { value: this.formData.shortname, disabled: this.formData.shortname !== '' },
