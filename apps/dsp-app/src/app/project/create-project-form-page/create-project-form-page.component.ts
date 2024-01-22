@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ApiResponseError } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { LoadProjectsAction } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -67,18 +66,13 @@ export class CreateProjectFormPageComponent {
         status: true,
       })
       .pipe(take(1))
-      .subscribe(
-        projectResponse => {
-          const uuid = ProjectService.IriToUuid(projectResponse.project.id);
-          this._store.dispatch(new LoadProjectsAction());
-          this.loading = false;
-          this._router
-            .navigateByUrl(`${RouteConstants.projectRelative}`, { skipLocationChange: true })
-            .then(() => this._router.navigate([`${RouteConstants.projectRelative}/${uuid}`]));
-        },
-        (error: ApiResponseError) => {
-          this._errorHandler.showMessage(error);
-        }
-      );
+      .subscribe(projectResponse => {
+        const uuid = ProjectService.IriToUuid(projectResponse.project.id);
+        this._store.dispatch(new LoadProjectsAction());
+        this.loading = false;
+        this._router
+          .navigateByUrl(`${RouteConstants.projectRelative}`, { skipLocationChange: true })
+          .then(() => this._router.navigate([`${RouteConstants.projectRelative}/${uuid}`]));
+      });
   }
 }
