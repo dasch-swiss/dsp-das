@@ -34,6 +34,7 @@ import { take } from 'rxjs/operators';
           [disabled]="!form || !form.valid"
           (click)="submitForm()"
           appLoadingButton
+          data-cy="submit-button"
           [isLoading]="loading">
           {{ 'appLabels.form.action.submit' | translate }}
         </button>

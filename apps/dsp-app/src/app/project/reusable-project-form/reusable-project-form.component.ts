@@ -16,23 +16,27 @@ import { atLeastOneStringRequired } from './at-least-one-string-required.validat
           controlName="shortcode"
           [placeholder]="'appLabels.form.project.general.shortcode' | translate"
           [validatorErrors]="[shortcodePatternError]"
+          data-cy="shortcode-input"
           style="flex: 1; margin-right: 16px"></app-common-input>
 
         <app-common-input
           [formGroup]="form"
           controlName="shortname"
           [placeholder]="'appLabels.form.project.general.shortname' | translate"
+          data-cy="shortname-input"
           style="flex: 1"></app-common-input>
       </div>
 
       <app-common-input
         [placeholder]="'appLabels.form.project.general.longname' | translate"
         controlName="longname"
+        data-cy="longname-input"
         [formGroup]="form"></app-common-input>
 
       <dasch-swiss-multi-language-textarea
         [placeholder]="('appLabels.form.project.general.description' | translate) + '*'"
         [formGroup]="form"
+        data-cy="description-input"
         controlName="description">
       </dasch-swiss-multi-language-textarea>
 
@@ -40,6 +44,7 @@ import { atLeastOneStringRequired } from './at-least-one-string-required.validat
         [keywords]="form.controls.keywords.value"
         [formGroup]="form"
         controlName="keywords"
+        data-cy="keywords-input"
         editable="true"></app-chip-list-input>
     </form>
   `,

@@ -87,6 +87,7 @@
     "@angular/compiler-cli": "^16.2.12",
     "@angular/language-service": "^16.2.12",
     "@datadog/datadog-ci": "^2.14.0",
+    "@faker-js/faker": "^8.3.1",
     "@hirez_io/observer-spy": "^2.2.0",
     "@nrwl/eslint-plugin-nx": "16.5.3",
     "@nx/cypress": "^17.0.2",
