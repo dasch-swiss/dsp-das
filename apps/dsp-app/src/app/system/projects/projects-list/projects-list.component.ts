@@ -161,12 +161,15 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
   }
 
   deactivateProject(id: string) {
-    this._projectApiService.delete(id).pipe(
-      take(1),
-      tap(() => {
-        this.refreshParent.emit(); // TODO Soft or Hard refresh ?
-      })
-    ).subscribe();
+    this._projectApiService
+      .delete(id)
+      .pipe(
+        take(1),
+        tap(() => {
+          this.refreshParent.emit(); // TODO Soft or Hard refresh ?
+        })
+      )
+      .subscribe();
   }
 
   activateProject(id: string) {
@@ -174,11 +177,14 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
     const data: UpdateProjectRequest = new UpdateProjectRequest();
     data.status = true;
 
-    this._projectApiService.update(id, data).pipe(
-      take(1),
-      tap(() => {
-        this.refreshParent.emit();
-      })
-    ).subscribe();
+    this._projectApiService
+      .update(id, data)
+      .pipe(
+        take(1),
+        tap(() => {
+          this.refreshParent.emit();
+        })
+      )
+      .subscribe();
   }
 }
