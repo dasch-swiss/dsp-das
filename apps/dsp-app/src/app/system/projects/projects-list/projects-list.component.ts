@@ -7,7 +7,7 @@ import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-help
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Select } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
-import { map, takeUntil, tap } from 'rxjs/operators';
+import { map, take, takeUntil, tap } from 'rxjs/operators';
 import { SortProp } from '../../../main/action/sort-button/sort-button.component';
 import { DialogService } from '../../../main/services/dialog.service';
 
@@ -162,10 +162,11 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
 
   deactivateProject(id: string) {
     this._projectApiService.delete(id).pipe(
+      take(1),
       tap(() => {
         this.refreshParent.emit(); // TODO Soft or Hard refresh ?
       })
-    );
+    ).subscribe();
   }
 
   activateProject(id: string) {
@@ -174,9 +175,10 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
     data.status = true;
 
     this._projectApiService.update(id, data).pipe(
+      take(1),
       tap(() => {
         this.refreshParent.emit();
       })
-    );
+    ).subscribe();
   }
 }
