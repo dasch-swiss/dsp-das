@@ -48,7 +48,7 @@ export class CreateProjectFormPageComponent {
   constructor(
     private _projectApiService: ProjectApiService,
     private _store: Store,
-    private _router: Router,
+    private _router: Router
   ) {}
 
   submitForm() {
