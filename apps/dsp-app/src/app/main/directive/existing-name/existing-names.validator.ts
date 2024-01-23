@@ -15,7 +15,7 @@ export function existingNamesValidator(valArrayRegexp: [RegExp], isCaseSensitive
       name = isCaseSensitive ? control.value : control.value.toLowerCase();
     }
 
-    let no;
+    let no: boolean;
     for (const existing of valArrayRegexp) {
       no = existing.test(name);
       if (no) {
