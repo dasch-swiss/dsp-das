@@ -12,13 +12,15 @@ import { atLeastOneStringRequired } from '../../reusable-project-form/at-least-o
     <dasch-swiss-multi-language-input
       placeholder="Controlled vocabulary label *"
       [formGroup]="form"
-      controlName="labels">
+      controlName="labels"
+      data-cy="labels-input">
     </dasch-swiss-multi-language-input>
 
     <dasch-swiss-multi-language-textarea
       placeholder="Controlled vocabulary description *"
       [formGroup]="form"
-      controlName="comments">
+      controlName="comments"
+      data-cy="comments-input">
     </dasch-swiss-multi-language-textarea>
   `,
 })
