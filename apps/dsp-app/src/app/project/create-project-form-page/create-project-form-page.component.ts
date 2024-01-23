@@ -3,7 +3,6 @@ import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { LoadProjectsAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
@@ -50,7 +49,6 @@ export class CreateProjectFormPageComponent {
     private _projectApiService: ProjectApiService,
     private _store: Store,
     private _router: Router,
-    private _errorHandler: AppErrorHandler
   ) {}
 
   submitForm() {
