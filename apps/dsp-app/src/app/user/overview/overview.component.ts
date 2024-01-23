@@ -27,12 +27,7 @@ export class OverviewComponent implements OnInit {
   @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
 
   projects$ = this._httpRefresher.get('PROJECT').pipe(
-    tap(v => console.log('passed the refresher', v)),
     switchMap(() => this._projectApiService.list()),
-    tap(
-      v => console.log('data received from ApiService', v),
-      e => console.log('g', e)
-    ),
     map(v => v.projects)
   );
   constructor(
@@ -45,7 +40,7 @@ export class OverviewComponent implements OnInit {
     this._titleService.setTitle('Projects Overview');
   }
 
-  refresh() {
+  postNewRequest() {
     this._projectApiService
       .create({
         shortname: `aa${this.generateRandomString()}`,

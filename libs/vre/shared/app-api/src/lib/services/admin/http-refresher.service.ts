@@ -12,14 +12,8 @@ export class HttpRefresher {
 
   get(type: RefresherType) {
     return this._behaviorSubject.pipe(
-      tap(data => {
-        console.log('behavior', data);
-      }),
       startWith(type),
-      filter(value => value === type),
-      tap(data => {
-        console.log('pass filer', data);
-      })
+      filter(value => value === type)
     );
   }
 

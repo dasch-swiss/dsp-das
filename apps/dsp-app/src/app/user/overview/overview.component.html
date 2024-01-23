@@ -2,10 +2,9 @@
   <dasch-swiss-app-progress-indicator *ngIf="isProjectsLoading$ | async"></dasch-swiss-app-progress-indicator>
 
   <div class="overview">
-    AAAAAA
-    <div *ngFor="let project of (projects$ | async)">PROJECT {{project.shortname}}</div>
-    <button (click)="refresh()">REFRESH</button>
-    BBBBB
+    <h1>Projects</h1>
+    <div *ngFor="let project of projects$ | async">{{project.longname}}</div>
+    <button (click)="postNewRequest()">ADD NEW PROJECT</button>
     <!-- user is a system admin -->
     <div *ngIf="(isSysAdmin$ | async) && (isProjectsLoading$ | async) === false">
       <!-- list all projects -->

@@ -10,15 +10,12 @@ export class CacheInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     // continue if not cacheable.
-    console.log('interceptor', req.url);
     if (!this.isCacheable(req)) {
       return next.handle(req);
     }
-    console.log('check isCacheable', req);
 
     const cachedResponse = this.cache.get(req.url);
-    console.log('cached response', this.cache, cachedResponse);
-    return cachedResponse ? of(cachedResponse).pipe(tap(v => console.log('debug', v))) : this.sendRequest(req, next);
+    return cachedResponse ? of(cachedResponse) : this.sendRequest(req, next);
   }
 
   isCacheable(req: HttpRequest<any>) {
@@ -30,8 +27,7 @@ export class CacheInterceptor implements HttpInterceptor {
       tap(event => {
         // There may be other events besides the response.
         if (event instanceof HttpResponse) {
-          console.log('received', event);
-          this.cache.put(req.url, event.body); // Update the cache.
+          this.cache.put(req.url, event); // Update the cache.
         }
       })
     );
