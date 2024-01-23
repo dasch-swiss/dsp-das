@@ -2,12 +2,12 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
-import { Select, Store } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { Observable, Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { arrayLengthGreaterThanZeroValidator } from './array-length-greater-than-zero-validator';
 import { atLeastOneStringRequired } from './at-least-one-string-required.validator';
-import { shortcodeExistsValidator } from './shortcode-exists.validator';
+import { ShortCodeExistsValidator } from './shortcode-exists.validator';
 
 @Component({
   selector: 'app-reusable-project-form',
@@ -63,10 +63,9 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
   shortCodeExistsError = { errorKey: 'shortcodeExists', message: 'This shortcode already exists' };
   subscription: Subscription;
 
-  constructor(
-    private _fb: FormBuilder,
-    private _store: Store
-  ) {}
+  @Select(ProjectsSelectors.allProjectShortcodes) shortcodes$: Observable<string[]>;
+
+  constructor(private _fb: FormBuilder) {}
 
   ngOnInit() {
     this._buildForm();
@@ -77,18 +76,11 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
   }
 
   private _buildForm() {
-    const existingShortcodes = this._store.selectSnapshot(ProjectsSelectors.allProjectShortcodes);
-
     this.form = this._fb.group({
       shortcode: [
         { value: this.formData.shortcode, disabled: this.formData.shortcode !== '' },
-        [
-          Validators.required,
-          Validators.minLength(4),
-          Validators.maxLength(4),
-          Validators.pattern(/^[0-9A-Fa-f]+$/),
-          shortcodeExistsValidator(existingShortcodes),
-        ],
+        [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern(/^[0-9A-Fa-f]+$/)],
+        [ShortCodeExistsValidator.createValidator(this.shortcodes$)],
       ],
       shortname: [
         { value: this.formData.shortname, disabled: this.formData.shortname !== '' },
@@ -105,7 +97,8 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
         atLeastOneStringRequired('value')
       ),
       keywords: [this.formData.keywords, arrayLengthGreaterThanZeroValidator()],
-    });
+    },
+        );
   }
 
   ngOnDestroy() {
