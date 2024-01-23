@@ -1,21 +1,12 @@
-import { AbstractControl, AsyncValidatorFn, ValidationErrors, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 
 /**
- * ShortCodeExistsValidator: Validate the forms shortcode value against
+ * shortcodeValidator: Validate the shortcode value against
  * already existing shortcodes.
+ * @param shortcodes - existing shortcodes
  */
-export class ShortCodeExistsValidator extends Validators {
-  static createValidator(shortcodes$: Observable<string[]>): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      return shortcodes$.pipe(
-        take(1),
-        map(shortcodes => {
-          // Check if the shortcode exists in the list of shortcodes
-          return shortcodes.includes(control.value) ? { shortcodeExists: true } : null;
-        })
-      );
-    };
-  }
+export function shortcodeExistsValidator(shortcodes: string[]): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    return shortcodes.includes(control.value) ? { shortcodeExists: true } : null;
+  };
 }
