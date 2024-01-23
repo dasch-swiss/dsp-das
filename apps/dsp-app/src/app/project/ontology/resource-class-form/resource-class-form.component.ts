@@ -47,7 +47,11 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy {
   ontology;
   subscription: Subscription;
 
-  constructor(private _fb: FormBuilder, private _os: OntologyService, private _store: Store) {}
+  constructor(
+    private _fb: FormBuilder,
+    private _os: OntologyService,
+    private _store: Store
+  ) {}
 
   ngOnInit() {
     this.ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
