@@ -9,7 +9,7 @@ import { AbstractControl, ValidatorFn } from '@angular/forms';
  */
 export function existingNamesValidator(valArrayRegexp: [RegExp], isCaseSensitive = false): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } => {
-    let name;
+    let name: string;
 
     if (control.value) {
       name = isCaseSensitive ? control.value : control.value.toLowerCase();
