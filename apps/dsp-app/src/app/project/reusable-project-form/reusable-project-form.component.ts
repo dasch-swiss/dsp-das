@@ -37,10 +37,9 @@ import { atLeastOneStringRequired } from './at-least-one-string-required.validat
       </dasch-swiss-multi-language-textarea>
 
       <app-chip-list-input
-        [keywords]="form.controls.keywords.value"
         [formGroup]="form"
         controlName="keywords"
-        editable="true"></app-chip-list-input>
+        [validators]="keywordsValidators"></app-chip-list-input>
     </form>
   `,
 })
@@ -55,7 +54,11 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
   @Output() formValueChange = new EventEmitter<FormGroup>();
 
   form: FormGroup;
-  shortcodePatternError = { errorKey: 'pattern', message: 'This field must contains letters from A to F and 0 to 9' };
+  readonly shortcodePatternError = {
+    errorKey: 'pattern',
+    message: 'This field must contains letters from A to F and 0 to 9',
+  };
+  readonly keywordsValidators = [Validators.minLength(3), Validators.maxLength(64)];
   subscription: Subscription;
 
   constructor(private _fb: FormBuilder) {}
@@ -88,7 +91,12 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
         ),
         atLeastOneStringRequired('value')
       ),
-      keywords: [this.formData.keywords, arrayLengthGreaterThanZeroValidator()],
+      keywords: this._fb.array(
+        this.formData.keywords.map(keyword => {
+          return [keyword, this.keywordsValidators];
+        }),
+        arrayLengthGreaterThanZeroValidator()
+      ),
     });
   }
 
