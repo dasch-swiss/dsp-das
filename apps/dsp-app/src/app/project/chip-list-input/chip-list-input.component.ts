@@ -23,7 +23,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
           (matChipInputTokenEnd)="addKeyword($event)" />
       </mat-chip-grid>
     </mat-form-field>
-    <mat-error *ngIf="formArray.touched && formArray.errors as errors">{{ errors | humanReadableError }}</mat-error>
+    <mat-error *ngIf="formArray.errors as errors">{{ errors | humanReadableError }}</mat-error>
     <mat-error *ngIf="addChipFormError">New value: {{ addChipFormError | humanReadableError }}</mat-error>
   `,
 })
