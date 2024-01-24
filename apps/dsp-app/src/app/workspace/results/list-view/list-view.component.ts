@@ -21,8 +21,10 @@ import {
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { combineLatest, of, Subject, Subscription } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { OntologyClassSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
+import { Subject, Subscription, combineLatest, of } from 'rxjs';
+import { map, take, takeUntil } from 'rxjs/operators';
 import {
   ComponentCommunicationEventService,
   EmitEvent,
@@ -45,6 +47,7 @@ export interface SearchParams {
   mode: 'fulltext' | 'gravsearch';
   filter?: IFulltextSearchParams;
   projectUuid?: string;
+  classId?: string;
 }
 
 export interface ShortResInfo {
@@ -133,7 +136,8 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
     private _notification: NotificationService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _store: Store
   ) {}
 
   ngOnInit(): void {
@@ -312,10 +316,10 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
     const numberOfAllResults$ =
       index !== 0
         ? of(this.numberOfAllResults)
-        : this._dspApiConnection.v2.search.doExtendedSearchCountQuery(this.search.query).pipe(
-            takeUntil(this.ngUnsubscribe),
-            map((count: CountQueryResponse) => {
-              this.numberOfAllResults = count.numberOfResults;
+        : this._store.select(OntologyClassSelectors.classItems).pipe(
+            take(1),
+            map(classItems => {
+              this.numberOfAllResults = classItems[this.search.classId].classItemsCount;
               this.currentRangeEnd = this.numberOfAllResults > 25 ? 25 : this.numberOfAllResults;
               if (this.numberOfAllResults === 0) {
                 this._notification.openSnackBar('No resources to display.');
@@ -325,7 +329,7 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
                 this._cd.markForCheck();
               }
 
-              return count.numberOfResults;
+              return this.numberOfAllResults;
             })
           );
 
