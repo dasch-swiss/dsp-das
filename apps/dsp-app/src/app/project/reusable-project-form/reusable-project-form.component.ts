@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
-import { arrayLengthGreaterThanZeroValidator } from './array-length-greater-than-zero-validator';
-import { atLeastOneStringRequired } from './at-least-one-string-required.validator';
+import { arrayLengthGreaterThanZeroValidator } from '../../main/form-validators/array-length-greater-than-zero-validator';
+import { atLeastOneStringRequired } from '../../main/form-validators/at-least-one-string-required.validator';
 
 @Component({
   selector: 'app-reusable-project-form',
