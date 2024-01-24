@@ -8,26 +8,26 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  Output
-} from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+  Output,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   ApiResponseError,
   CountQueryResponse,
   IFulltextSearchParams,
   KnoraApiConnection,
-  ReadResourceSequence
-} from "@dasch-swiss/dsp-js";
-import { DspApiConnectionToken, RouteConstants } from "@dasch-swiss/vre/shared/app-config";
-import { AppErrorHandler } from "@dasch-swiss/vre/shared/app-error-handler";
-import { NotificationService } from "@dasch-swiss/vre/shared/app-notification";
-import { combineLatest, of, Subject, Subscription } from "rxjs";
-import { map, takeUntil } from "rxjs/operators";
+  ReadResourceSequence,
+} from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { combineLatest, of, Subject, Subscription } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import {
   ComponentCommunicationEventService,
   EmitEvent,
-  Events
-} from "../../../main/services/component-communication-event.service";
+  Events,
+} from '../../../main/services/component-communication-event.service';
 
 /**
  * query: search query. It can be gravserch query or fulltext string query.
