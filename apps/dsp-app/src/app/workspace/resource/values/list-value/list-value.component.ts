@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, Inject, Input, OnChanges, OnDestroy, OnIn
 import { FormBuilder } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import {
-  ApiResponseError,
   CreateListValue,
   KnoraApiConnection,
   ListNodeV2,
@@ -11,7 +10,6 @@ import {
   UpdateListValue,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { BaseValueDirective } from '../../../../main/directive/base-value.directive';
 
 @Component({
@@ -36,7 +34,6 @@ export class ListValueComponent extends BaseValueDirective implements OnInit, On
     @Inject(FormBuilder) protected _fb: FormBuilder,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _errorHandler: AppErrorHandler,
     private _cd: ChangeDetectorRef
   ) {
     super();

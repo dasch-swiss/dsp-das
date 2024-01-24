@@ -11,7 +11,6 @@ import {
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-  ApiResponseError,
   Constants,
   CreateLinkValue,
   CreateResource,
@@ -21,10 +20,9 @@ import {
   StoredProject,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Select, Store } from '@ngxs/store';
-import { Observable, Subject, combineLatest } from 'rxjs';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { FilteredResources, ShortResInfo } from '../../results/list-view/list-view.component';
 import { ResourceService } from '../services/resource.service';
@@ -78,7 +76,6 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _errorHandler: AppErrorHandler,
     private _fb: UntypedFormBuilder,
     private _resourceService: ResourceService,
     private _router: Router,

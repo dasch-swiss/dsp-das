@@ -1,17 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RepresentationService {
-  constructor(
-    private _errorHandler: AppErrorHandler,
-    private readonly _http: HttpClient
-  ) {}
+  constructor(private readonly _http: HttpClient) {}
 
   /**
    * returns info about a file

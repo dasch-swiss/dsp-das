@@ -19,7 +19,6 @@ import {
   UsersResponse,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
@@ -121,7 +120,6 @@ export class AddUserComponent implements OnInit {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
-    private _errorHandler: AppErrorHandler,
     private _formBuilder: UntypedFormBuilder,
     private _projectService: ProjectService,
     private _store: Store,

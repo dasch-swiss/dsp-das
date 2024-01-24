@@ -9,10 +9,9 @@ import {
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ApiResponseError, Constants, Permissions, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
+import { Constants, Permissions, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   LoadProjectMembersAction,
@@ -124,7 +123,6 @@ export class UsersListComponent implements OnInit {
     private _userApiService: UserApiService,
     private _matDialog: MatDialog,
     private _dialog: DialogService,
-    private _errorHandler: AppErrorHandler,
     private _route: ActivatedRoute,
     private _router: Router,
     private _sortingService: SortingService,

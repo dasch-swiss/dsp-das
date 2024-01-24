@@ -14,7 +14,6 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
-  ApiResponseError,
   ClassDefinition,
   Constants,
   DeleteResourceClass,
@@ -28,7 +27,6 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
   DefaultClass,
   DefaultProperties,
@@ -53,8 +51,8 @@ import {
   SetCurrentProjectOntologyPropertiesAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { Observable, Subject, combineLatest } from 'rxjs';
+import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
 import { DialogComponent, DialogEvent } from '../../main/dialog/dialog.component';
 import { ProjectBase } from '../project-base';
@@ -147,7 +145,6 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
-    private _errorHandler: AppErrorHandler,
     private _fb: UntypedFormBuilder,
     private _ontologyService: OntologyService,
     private _sortingService: SortingService,

@@ -3,7 +3,6 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnChanges,
   OnInit,
@@ -12,8 +11,6 @@ import {
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ApiResponseError, Constants, ReadUser, StringLiteral, UpdateUserRequest, User } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
@@ -148,7 +145,6 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   constructor(
     private _userApiService: UserApiService,
-    private _errorHandler: AppErrorHandler,
     private _formBuilder: UntypedFormBuilder,
     private _notification: NotificationService,
     private _projectService: ProjectService,

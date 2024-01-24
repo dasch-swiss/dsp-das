@@ -24,7 +24,6 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
   DefaultProperties,
   DefaultProperty,
@@ -180,7 +179,6 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _errorHandler: AppErrorHandler,
     private _fb: UntypedFormBuilder,
     private _os: OntologyService,
     private _sortingService: SortingService,

@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {
-  ApiResponseError,
   Constants,
   KnoraApiConnection,
   ReadArchiveFileValue,
@@ -12,7 +11,6 @@ import {
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { mergeMap } from 'rxjs/operators';
 import { DialogComponent } from '../../../../main/dialog/dialog.component';
 import {
@@ -44,7 +42,6 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
-    private _errorHandler: AppErrorHandler,
     private _rs: RepresentationService,
     private _valueOperationEventService: ValueOperationEventService
   ) {}

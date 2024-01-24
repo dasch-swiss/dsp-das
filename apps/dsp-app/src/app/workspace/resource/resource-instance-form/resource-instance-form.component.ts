@@ -24,15 +24,14 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { DefaultClass, DefaultResourceClasses } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import {
-  Events as CommsEvents,
   ComponentCommunicationEventService,
   EmitEvent,
+  Events as CommsEvents,
 } from '../../../main/services/component-communication-event.service';
 import { ResourceService } from '../services/resource.service';
 import { SelectPropertiesComponent } from './select-properties/select-properties.component';
@@ -87,7 +86,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _errorHandler: AppErrorHandler,
     private _fb: UntypedFormBuilder,
     private _resourceService: ResourceService,
     private _route: ActivatedRoute,
@@ -193,7 +191,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
     if (this.propertiesParentForm.valid) {
       const createResource = new CreateResource();
 
-      const resLabelVal = <CreateTextValueAsString> this.selectPropertiesComponent.createValueComponent.getNewValue();
+      const resLabelVal = <CreateTextValueAsString>this.selectPropertiesComponent.createValueComponent.getNewValue();
 
       createResource.label = resLabelVal.text;
 

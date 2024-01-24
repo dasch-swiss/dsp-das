@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiResponseError } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { Action, State, StateContext } from '@ngxs/store';
 import { of } from 'rxjs';
 import { finalize, map, take, tap } from 'rxjs/operators';
@@ -19,10 +17,7 @@ const defaults: ListsStateModel = {
 })
 @Injectable()
 export class ListsState {
-  constructor(
-    private _listApiService: ListApiService,
-    private _errorHandler: AppErrorHandler
-  ) {}
+  constructor(private _listApiService: ListApiService) {}
 
   @Action(LoadListsInProjectAction)
   loadListsInProject(ctx: StateContext<ListsStateModel>, { projectIri }: LoadListsInProjectAction) {

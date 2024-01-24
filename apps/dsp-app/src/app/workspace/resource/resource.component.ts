@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationError, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   ApiResponseError,
   Constants,
@@ -31,12 +31,11 @@ import {
   SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Select } from '@ngxs/store';
-import { Observable, Subject, Subscription, combineLatest } from 'rxjs';
+import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { SplitSize } from '../results/results.component';
 import { DspCompoundPosition, DspResource } from './dsp-resource';
@@ -136,7 +135,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _errorHandler: AppErrorHandler,
     private _incomingService: IncomingService,
     private _notification: NotificationService,
     private _resourceService: ResourceService,

@@ -11,7 +11,6 @@ import {
   UpdateOntologyMetadata,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   ClearProjectOntologiesAction,
@@ -23,7 +22,7 @@ import {
   SetCurrentOntologyAction,
   SetCurrentProjectOntologyPropertiesAction,
 } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
+import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { existingNamesValidator } from '../../../main/directive/existing-name/existing-names.validator';
@@ -115,7 +114,6 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _errorHandler: AppErrorHandler,
     private _fb: UntypedFormBuilder,
     private _route: ActivatedRoute,
     private _router: Router,

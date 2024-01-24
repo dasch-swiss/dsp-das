@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import {
   AfterViewInit,
   Component,
@@ -16,7 +15,6 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
-  ApiResponseError,
   Constants,
   CreateColorValue,
   CreateGeomValue,
@@ -37,7 +35,6 @@ import {
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import * as OpenSeadragon from 'openseadragon';
 import { Subscription } from 'rxjs';
@@ -148,11 +145,9 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private readonly _http: HttpClient,
     private _dialog: MatDialog,
     private _domSanitizer: DomSanitizer,
     private _elementRef: ElementRef,
-    private _errorHandler: AppErrorHandler,
     private _matIconRegistry: MatIconRegistry,
     private _notification: NotificationService,
     private _renderer: Renderer2,
@@ -170,6 +165,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
       this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/draw-region-icon.svg')
     );
   }
+
   /**
    * calculates the surface of a rectangular region.
    *
@@ -487,6 +483,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
       }
     });
   }
+
   /**
    * uploads the region after being prepared by the dialog
    * @param startPoint the start point of the drawing

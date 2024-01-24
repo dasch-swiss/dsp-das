@@ -19,9 +19,8 @@ import {
   ReadResourceSequence,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { Subject, Subscription, of } from 'rxjs';
+import { of, Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import {
   ComponentCommunicationEventService,
@@ -129,7 +128,6 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _componentCommsService: ComponentCommunicationEventService,
-    private _errorHandler: AppErrorHandler,
     private _notification: NotificationService,
     private _route: ActivatedRoute,
     private _router: Router,

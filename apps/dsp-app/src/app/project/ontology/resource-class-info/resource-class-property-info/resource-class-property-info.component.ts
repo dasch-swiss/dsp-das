@@ -1,6 +1,5 @@
 import { AfterContentInit, Component, EventEmitter, Inject, Input, OnChanges, Output } from '@angular/core';
 import {
-  ApiResponseError,
   CanDoResponse,
   Constants,
   IHasProperty,
@@ -10,7 +9,6 @@ import {
   UpdateResourceClassCardinality,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { DefaultClass, DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ListsSelectors, OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
@@ -83,7 +81,6 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _errorHandler: AppErrorHandler,
     private _ontoService: OntologyService,
     private _store: Store
   ) {}

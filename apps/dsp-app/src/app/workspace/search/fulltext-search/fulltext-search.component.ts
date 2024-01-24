@@ -4,7 +4,6 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -15,10 +14,8 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { ApiResponseError, Constants, KnoraApiConnection, ReadProject } from '@dasch-swiss/dsp-js';
+import { Constants, ReadProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { Subscription } from 'rxjs';
@@ -118,11 +115,8 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
   displayPhonePanel = false;
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _projectsApiService: ProjectApiService,
     private _componentCommsService: ComponentCommunicationEventService,
-    private _errorHandler: AppErrorHandler,
     private _overlay: Overlay,
     private _sortingService: SortingService,
     private _viewContainerRef: ViewContainerRef,

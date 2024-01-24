@@ -14,7 +14,6 @@ import {
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
-  ApiResponseError,
   Constants,
   KnoraApiConnection,
   ReadMovingImageFileValue,
@@ -25,7 +24,6 @@ import {
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { mergeMap } from 'rxjs/operators';
 import { DialogComponent } from '../../../../main/dialog/dialog.component';
@@ -122,7 +120,6 @@ export class VideoComponent implements OnChanges, AfterViewInit {
     private _dialog: MatDialog,
     private _sanitizer: DomSanitizer,
     private _rs: RepresentationService,
-    private _errorHandler: AppErrorHandler,
     private _notification: NotificationService,
     private _valueOperationEventService: ValueOperationEventService
   ) {}
@@ -249,6 +246,7 @@ export class VideoComponent implements OnChanges, AfterViewInit {
   updateTimeFromSlider(time: number) {
     this._navigate(time);
   }
+
   /**
    * video navigation from scroll event
    *
