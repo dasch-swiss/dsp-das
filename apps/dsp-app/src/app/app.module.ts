@@ -20,6 +20,7 @@ import {
 import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   AppProgressIndicatorComponent,
   CenteredLayoutComponent,
@@ -39,6 +40,7 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { NewAppErrorHandler } from '../../../../libs/vre/shared/app-error-handler/src/lib/new-app-error-handler';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmDialogComponent } from './main/action/confirm-dialog/confirm-dialog.component';
@@ -384,8 +386,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     },
     {
       provide: ErrorHandler,
-      useClass: AppErrorHandler,
-      deps: [AppLoggingService],
+      useClass: NewAppErrorHandler,
+      deps: [NotificationService],
     },
     {
       provide: HTTP_INTERCEPTORS,

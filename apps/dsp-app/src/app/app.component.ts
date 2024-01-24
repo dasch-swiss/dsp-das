@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { GrafanaFaroService } from '@dasch-swiss/vre/shared/app-analytics';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 
 @Component({
@@ -14,10 +15,12 @@ export class AppComponent implements OnInit {
 
   constructor(
     private _router: Router,
-    private _titleService: Title
+    private _titleService: Title,
+    private _grafanaFaroService: GrafanaFaroService
   ) {
     // set the page title
     this._titleService.setTitle('DaSCH Service Platform');
+    this._grafanaFaroService.initializeFaro();
   }
 
   ngOnInit() {
