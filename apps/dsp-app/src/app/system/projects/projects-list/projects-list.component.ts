@@ -7,7 +7,7 @@ import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-help
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Select } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
-import { map, take, takeUntil, tap } from 'rxjs/operators';
+import { map, takeUntil, tap } from 'rxjs/operators';
 import { SortProp } from '../../../main/action/sort-button/sort-button.component';
 import { DialogService } from '../../../main/services/dialog.service';
 
