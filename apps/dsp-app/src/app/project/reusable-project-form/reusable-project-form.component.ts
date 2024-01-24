@@ -1,10 +1,13 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
-import { Subscription } from 'rxjs';
+import { Select, Store } from '@ngxs/store';
+import { Observable, Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { arrayLengthGreaterThanZeroValidator } from './array-length-greater-than-zero-validator';
 import { atLeastOneStringRequired } from './at-least-one-string-required.validator';
+import { shortcodeExistsValidator } from './shortcode-exists.validator';
 
 @Component({
   selector: 'app-reusable-project-form',
@@ -15,7 +18,7 @@ import { atLeastOneStringRequired } from './at-least-one-string-required.validat
           [formGroup]="form"
           controlName="shortcode"
           [placeholder]="'appLabels.form.project.general.shortcode' | translate"
-          [validatorErrors]="[shortcodePatternError]"
+          [validatorErrors]="[shortcodePatternError, shortCodeExistsError]"
           style="flex: 1; margin-right: 16px"></app-common-input>
 
         <app-common-input
@@ -54,14 +57,15 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
   @Output() formValueChange = new EventEmitter<FormGroup>();
 
   form: FormGroup;
-  readonly shortcodePatternError = {
-    errorKey: 'pattern',
-    message: 'This field must contains letters from A to F and 0 to 9',
-  };
+  shortcodePatternError = { errorKey: 'pattern', message: 'This field must contains letters from A to F and 0 to 9' };
+  shortCodeExistsError = { errorKey: 'shortcodeExists', message: 'This shortcode already exists' };
   readonly keywordsValidators = [Validators.minLength(3), Validators.maxLength(64)];
   subscription: Subscription;
 
-  constructor(private _fb: FormBuilder) {}
+  constructor(
+    private _fb: FormBuilder,
+    private _store: Store
+  ) {}
 
   ngOnInit() {
     this._buildForm();
@@ -72,10 +76,18 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
   }
 
   private _buildForm() {
+    const existingShortcodes = this._store.selectSnapshot(ProjectsSelectors.allProjectShortcodes);
+
     this.form = this._fb.group({
       shortcode: [
         { value: this.formData.shortcode, disabled: this.formData.shortcode !== '' },
-        [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern(/^[0-9A-Fa-f]+$/)],
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(4),
+          Validators.pattern(/^[0-9A-Fa-f]+$/),
+          shortcodeExistsValidator(existingShortcodes),
+        ],
       ],
       shortname: [
         { value: this.formData.shortname, disabled: this.formData.shortname !== '' },
