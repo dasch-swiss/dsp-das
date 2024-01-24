@@ -40,7 +40,6 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { NewAppErrorHandler } from '../../../../libs/vre/shared/app-error-handler/src/lib/new-app-error-handler';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmDialogComponent } from './main/action/confirm-dialog/confirm-dialog.component';
@@ -386,7 +385,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     },
     {
       provide: ErrorHandler,
-      useClass: NewAppErrorHandler,
+      useClass: AppErrorHandler,
       deps: [NotificationService],
     },
     {
