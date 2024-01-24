@@ -8,26 +8,26 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  Output,
-} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+  Output
+} from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
 import {
   ApiResponseError,
   CountQueryResponse,
   IFulltextSearchParams,
   KnoraApiConnection,
-  ReadResourceSequence,
-} from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { combineLatest, of, Subject, Subscription } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+  ReadResourceSequence
+} from "@dasch-swiss/dsp-js";
+import { DspApiConnectionToken, RouteConstants } from "@dasch-swiss/vre/shared/app-config";
+import { AppErrorHandler } from "@dasch-swiss/vre/shared/app-error-handler";
+import { NotificationService } from "@dasch-swiss/vre/shared/app-notification";
+import { combineLatest, of, Subject, Subscription } from "rxjs";
+import { map, takeUntil } from "rxjs/operators";
 import {
   ComponentCommunicationEventService,
   EmitEvent,
-  Events,
-} from '../../../main/services/component-communication-event.service';
+  Events
+} from "../../../main/services/component-communication-event.service";
 
 /**
  * query: search query. It can be gravserch query or fulltext string query.
@@ -107,14 +107,11 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
 
   resetCheckBoxes = false;
 
-  // number of all results
+  // number of all results including the ones not included as resources in the response bc. the user does not have the permissions to see them
   numberOfAllResults: number;
 
   // progress status
   loading = true;
-
-  // flag to set permission to see resources
-  hasPermission = false;
 
   currentIndex = 0;
 
@@ -351,7 +348,7 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
         }
 
         this.resources = response;
-        this.hasPermission = !(numberOfAllResults > 0 && this.resources.resources.length === 0);
+
         this.loading = false;
         this._cd.markForCheck();
       },
