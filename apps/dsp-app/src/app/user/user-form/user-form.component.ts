@@ -331,7 +331,6 @@ export class UserFormComponent implements OnInit, OnChanges {
           this.loading = false;
         },
         (error: ApiResponseError) => {
-          this._errorHandler.showMessage(error);
           this.loading = false;
         }
       );

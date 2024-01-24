@@ -314,12 +314,8 @@ export class VideoComponent implements OnChanges, AfterViewInit {
   }
 
   async downloadVideo(url: string) {
-    try {
-      const res = await this._http.get(url, { responseType: 'blob', withCredentials: true }).toPromise();
-      this.downloadFile(res);
-    } catch (e) {
-      this._errorHandler.showMessage(e);
-    }
+    const res = await this._http.get(url, { responseType: 'blob', withCredentials: true }).toPromise();
+    this.downloadFile(res);
   }
 
   downloadFile(data) {
@@ -413,33 +409,28 @@ export class VideoComponent implements OnChanges, AfterViewInit {
           this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid)
         )
       )
-      .subscribe(
-        (res2: ReadResource) => {
-          this.src.fileValue.fileUrl = (
-            res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue
-          ).fileUrl;
-          this.src.fileValue.filename = (
-            res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue
-          ).filename;
-          this.src.fileValue.strval = (
-            res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue
-          ).strval;
+      .subscribe((res2: ReadResource) => {
+        this.src.fileValue.fileUrl = (
+          res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue
+        ).fileUrl;
+        this.src.fileValue.filename = (
+          res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue
+        ).filename;
+        this.src.fileValue.strval = (
+          res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue
+        ).strval;
 
-          this.ngOnChanges();
+        this.ngOnChanges();
 
-          this.loadedMetadata();
+        this.loadedMetadata();
 
-          this._valueOperationEventService.emit(
-            new EmitEvent(
-              Events.FileValueUpdated,
-              new UpdatedFileEventValue(res2.properties[Constants.HasMovingImageFileValue][0])
-            )
-          );
-        },
-        (error: ApiResponseError) => {
-          this._errorHandler.showMessage(error);
-        }
-      );
+        this._valueOperationEventService.emit(
+          new EmitEvent(
+            Events.FileValueUpdated,
+            new UpdatedFileEventValue(res2.properties[Constants.HasMovingImageFileValue][0])
+          )
+        );
+      });
   }
 
   /**

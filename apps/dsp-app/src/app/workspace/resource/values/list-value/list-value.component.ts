@@ -65,14 +65,9 @@ export class ListValueComponent extends BaseValueDirective implements OnInit, On
         const rootNodeIris = this.propertyDef.guiAttributes;
         for (const rootNodeIri of rootNodeIris) {
           const trimmedRootNodeIRI = rootNodeIri.substring(7, rootNodeIri.length - 1);
-          this._dspApiConnection.v2.list.getList(trimmedRootNodeIRI).subscribe(
-            (response: ListNodeV2) => {
-              this.listRootNode = response;
-            },
-            (error: ApiResponseError) => {
-              this._errorHandler.showMessage(error);
-            }
-          );
+          this._dspApiConnection.v2.list.getList(trimmedRootNodeIRI).subscribe((response: ListNodeV2) => {
+            this.listRootNode = response;
+          });
         }
       } else {
         this.valueFormControl.setValue(this.displayValue.listNodeLabel);
@@ -138,20 +133,15 @@ export class ListValueComponent extends BaseValueDirective implements OnInit, On
     const rootNodeIris = this.propertyDef.guiAttributes;
     for (const rootNodeIri of rootNodeIris) {
       const trimmedRootNodeIRI = rootNodeIri.substring(7, rootNodeIri.length - 1);
-      this._dspApiConnection.v2.list.getList(trimmedRootNodeIRI).subscribe(
-        (response: ListNodeV2) => {
-          if (!response.children.length) {
-            // this shouldn't happen since users cannot select the root node
-            this.selectedNodeHierarchy.push(response.label);
-          } else {
-            this.selectedNodeHierarchy = this._getHierarchy(nodeIri, response.children);
-          }
-          this._cd.markForCheck();
-        },
-        (error: ApiResponseError) => {
-          this._errorHandler.showMessage(error);
+      this._dspApiConnection.v2.list.getList(trimmedRootNodeIRI).subscribe((response: ListNodeV2) => {
+        if (!response.children.length) {
+          // this shouldn't happen since users cannot select the root node
+          this.selectedNodeHierarchy.push(response.label);
+        } else {
+          this.selectedNodeHierarchy = this._getHierarchy(nodeIri, response.children);
         }
-      );
+        this._cd.markForCheck();
+      });
     }
   }
 

@@ -162,7 +162,6 @@ export class OntologiesState {
         },
         error: (error: ApiResponseError) => {
           ctx.patchState({ hasLoadingErrors: true, isLoading: false });
-          this._errorHandler.showMessage(error);
         },
       })
     );
@@ -207,7 +206,6 @@ export class OntologiesState {
         },
         error: (error: ApiResponseError) => {
           ctx.patchState({ hasLoadingErrors: true, isLoading: false });
-          this._errorHandler.showMessage(error);
         },
       })
     );
@@ -229,7 +227,6 @@ export class OntologiesState {
         },
         error: (error: ApiResponseError) => {
           ctx.patchState({ hasLoadingErrors: true });
-          this._errorHandler.showMessage(error);
         },
       })
     );
@@ -332,7 +329,6 @@ export class OntologiesState {
         },
         error: (error: ApiResponseError) => {
           ctx.patchState({ hasLoadingErrors: true, isLoading: false });
-          this._errorHandler.showMessage(error);
         },
       })
     );
@@ -375,7 +371,6 @@ export class OntologiesState {
         next: () => {},
         error: (error: ApiResponseError) => {
           ctx.patchState({ hasLoadingErrors: true, isLoading: false });
-          this._errorHandler.showMessage(error);
         },
       })
     );
@@ -402,7 +397,6 @@ export class OntologiesState {
         },
         error: (error: ApiResponseError) => {
           ctx.patchState({ hasLoadingErrors: true });
-          this._errorHandler.showMessage(error);
         },
       })
     );

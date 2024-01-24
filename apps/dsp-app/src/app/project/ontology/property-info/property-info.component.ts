@@ -204,14 +204,9 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
    */
   canBeDeleted(): void {
     // check if the property can be deleted
-    this._dspApiConnection.v2.onto.canDeleteResourceProperty(this.propDef.id).subscribe(
-      (canDoRes: CanDoResponse) => {
-        this.propCanBeDeleted = canDoRes.canDo;
-      },
-      (error: ApiResponseError) => {
-        this._errorHandler.showMessage(error);
-      }
-    );
+    this._dspApiConnection.v2.onto.canDeleteResourceProperty(this.propDef.id).subscribe((canDoRes: CanDoResponse) => {
+      this.propCanBeDeleted = canDoRes.canDo;
+    });
   }
 
   /**

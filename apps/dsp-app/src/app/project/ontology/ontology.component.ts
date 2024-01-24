@@ -551,26 +551,21 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
             this._dspApiConnection.v2.onto
               .deleteOntology(updateOntology)
               .pipe(take(1))
-              .subscribe(
-                () => {
-                  this._store.dispatch(new ClearProjectOntologiesAction(this.projectUuid));
-                  // reset current ontology
-                  // this._store.dispatch([
-                  //     new SetCurrentOntologyAction(null),
-                  //     new RemoveProjectOntologyAction(updateOntology.id, this.projectUuid)
-                  // ]);
-                  // get the ontologies for this project
-                  this.initOntologiesList();
-                  // go to project ontology page
-                  const goto = `/project/${this.projectUuid}`;
-                  this._router.navigateByUrl(goto, {
-                    skipLocationChange: false,
-                  });
-                },
-                (error: ApiResponseError) => {
-                  this._errorHandler.showMessage(error);
-                }
-              );
+              .subscribe(() => {
+                this._store.dispatch(new ClearProjectOntologiesAction(this.projectUuid));
+                // reset current ontology
+                // this._store.dispatch([
+                //     new SetCurrentOntologyAction(null),
+                //     new RemoveProjectOntologyAction(updateOntology.id, this.projectUuid)
+                // ]);
+                // get the ontologies for this project
+                this.initOntologiesList();
+                // go to project ontology page
+                const goto = `/project/${this.projectUuid}`;
+                this._router.navigateByUrl(goto, {
+                  skipLocationChange: false,
+                });
+              });
             break;
 
           case 'ResourceClass':
@@ -581,15 +576,10 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
             this._dspApiConnection.v2.onto
               .deleteResourceClass(resClass)
               .pipe(take(1))
-              .subscribe(
-                () => {
-                  this.ontoClasses = [];
-                  this.initOntologiesList();
-                },
-                (error: ApiResponseError) => {
-                  this._errorHandler.showMessage(error);
-                }
-              );
+              .subscribe(() => {
+                this.ontoClasses = [];
+                this.initOntologiesList();
+              });
             break;
           case 'Property':
             // delete resource property and refresh the view
@@ -599,18 +589,13 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
             this._dspApiConnection.v2.onto
               .deleteResourceProperty(resProp)
               .pipe(take(1))
-              .subscribe(
-                () => {
-                  this._store.dispatch(new ClearCurrentOntologyAction());
-                  // get the ontologies for this project
-                  this.initOntologiesList();
-                  // update the view of resource class or list of properties
-                  this.initOntology();
-                },
-                (error: ApiResponseError) => {
-                  this._errorHandler.showMessage(error);
-                }
-              );
+              .subscribe(() => {
+                this._store.dispatch(new ClearCurrentOntologyAction());
+                // get the ontologies for this project
+                this.initOntologiesList();
+                // update the view of resource class or list of properties
+                this.initOntology();
+              });
             break;
         }
       }

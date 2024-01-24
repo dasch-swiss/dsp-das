@@ -106,8 +106,9 @@ export class HelpComponent implements OnInit {
 
     this.releaseNotesUrl = `https://github.com/dasch-swiss/dsp-das/releases/tag/v${this.appVersion}`;
 
-    this._dspApiConnection.system.versionEndpoint.getVersion().subscribe(
-      (response: ApiResponseData<VersionResponse>) => {
+    this._dspApiConnection.system.versionEndpoint
+      .getVersion()
+      .subscribe((response: ApiResponseData<VersionResponse>) => {
         this.apiVersion = response.body;
 
         // set dsp-app version
@@ -121,10 +122,6 @@ export class HelpComponent implements OnInit {
         // set dsp-sipi version
         this.tools[2].title += this.apiVersion.sipi;
         this.tools[2].url += this.apiVersion.sipi;
-      },
-      (error: ApiResponseError) => {
-        this._errorHandler.showMessage(error);
-      }
-    );
+      });
   }
 }

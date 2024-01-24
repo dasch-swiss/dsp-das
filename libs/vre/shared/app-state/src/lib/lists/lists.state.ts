@@ -43,9 +43,6 @@ export class ListsState {
         next: () => {
           ctx.patchState({ isLoading: false });
         },
-        error: (error: ApiResponseError) => {
-          this.handleDeleteError(error);
-        },
       })
     );
   }
@@ -58,12 +55,5 @@ export class ListsState {
         return currentState;
       })
     );
-  }
-
-  private handleDeleteError(error: ApiResponseError): void {
-    // if DSP-API returns a 400, it is likely that the list node is in use so we inform the user of this
-    if (error.status !== 400) {
-      this._errorHandler.showMessage(error);
-    }
   }
 }

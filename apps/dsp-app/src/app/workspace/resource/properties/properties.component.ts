@@ -342,26 +342,16 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
           switch (type) {
             case 'delete':
               // delete the resource and refresh the view
-              this._dspApiConnection.v2.res.deleteResource(payload).subscribe(
-                (response: DeleteResourceResponse) => {
-                  this._onResourceDeleted(response);
-                },
-                (error: ApiResponseError) => {
-                  this._errorHandler.showMessage(error);
-                }
-              );
+              this._dspApiConnection.v2.res.deleteResource(payload).subscribe((response: DeleteResourceResponse) => {
+                this._onResourceDeleted(response);
+              });
               break;
 
             case 'erase':
               // erase the resource and refresh the view
-              this._dspApiConnection.v2.res.eraseResource(payload).subscribe(
-                (response: DeleteResourceResponse) => {
-                  this._onResourceDeleted(response);
-                },
-                (error: ApiResponseError) => {
-                  this._errorHandler.showMessage(error);
-                }
-              );
+              this._dspApiConnection.v2.res.eraseResource(payload).subscribe((response: DeleteResourceResponse) => {
+                this._onResourceDeleted(response);
+              });
               break;
           }
         } else if (this.resource.res.label !== answer.comment) {
@@ -374,8 +364,9 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
             payload.lastModificationDate = res.lastModificationDate;
             payload.label = answer.comment;
 
-            this._dspApiConnection.v2.res.updateResourceMetadata(payload).subscribe(
-              (response: UpdateResourceMetadataResponse) => {
+            this._dspApiConnection.v2.res
+              .updateResourceMetadata(payload)
+              .subscribe((response: UpdateResourceMetadataResponse) => {
                 this.resource.res.label = payload.label;
                 this.lastModificationDate = response.lastModificationDate;
                 // if annotations tab is active; a label of a region has been changed --> update regions
@@ -384,11 +375,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
                   this.regionChanged.emit();
                 }
                 this._cd.markForCheck();
-              },
-              (error: ApiResponseError) => {
-                this._errorHandler.showMessage(error);
-              }
-            );
+              });
           });
         }
       }

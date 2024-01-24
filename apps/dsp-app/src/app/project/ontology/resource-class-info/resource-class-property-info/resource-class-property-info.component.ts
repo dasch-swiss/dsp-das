@@ -183,11 +183,8 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
     this._dspApiConnection.v2.onto.canDeleteCardinalityFromResourceClass(onto).subscribe(
       (canDoRes: CanDoResponse) => {
         this.propCanBeRemovedFromClass = canDoRes.canDo;
-      },
-      // open snackbar displaying the error
-      (error: ApiResponseError) => {
-        this._errorHandler.showMessage(error);
       }
+      // open snackbar displaying the error
     );
   }
 }

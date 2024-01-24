@@ -258,8 +258,6 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
             // in case of an error
             this.loading = false;
             this.error = true;
-
-            this._errorHandler.showMessage(error);
           }
         );
     } else {
@@ -287,8 +285,6 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
             // in case of an error... e.g. because the ontolog iri is not unique, rebuild the form including the error message
             this.formErrors['name'] += `${this.validationMessages['name']['existingName']} `;
             this.loading = false;
-
-            this._errorHandler.showMessage(error);
           }
         );
     }

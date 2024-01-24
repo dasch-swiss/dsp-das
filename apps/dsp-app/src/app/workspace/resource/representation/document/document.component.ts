@@ -183,43 +183,38 @@ export class DocumentComponent implements OnInit, AfterViewInit {
           this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid)
         )
       )
-      .subscribe(
-        (res2: ReadResource) => {
-          this.src.fileValue.fileUrl = (
-            res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue
-          ).fileUrl;
-          this.src.fileValue.filename = (
-            res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue
-          ).filename;
-          this.src.fileValue.strval = (
-            res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue
-          ).strval;
-          this.src.fileValue.valueCreationDate = (
-            res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue
-          ).valueCreationDate;
+      .subscribe((res2: ReadResource) => {
+        this.src.fileValue.fileUrl = (
+          res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue
+        ).fileUrl;
+        this.src.fileValue.filename = (
+          res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue
+        ).filename;
+        this.src.fileValue.strval = (
+          res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue
+        ).strval;
+        this.src.fileValue.valueCreationDate = (
+          res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue
+        ).valueCreationDate;
 
-          this.fileType = this._getFileType(this.src.fileValue.filename);
-          if (this.fileType === 'pdf') {
-            this.elem = document.getElementsByClassName('pdf-viewer')[0];
-          }
-
-          this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(res => {
-            this.originalFilename = res['originalFilename'];
-          });
-
-          this.zoomFactor = 1.0;
-          this.pdfQuery = '';
-
-          this._valueOperationEventService.emit(
-            new EmitEvent(
-              Events.FileValueUpdated,
-              new UpdatedFileEventValue(res2.properties[Constants.HasDocumentFileValue][0])
-            )
-          );
-        },
-        (error: ApiResponseError) => {
-          this._errorHandler.showMessage(error);
+        this.fileType = this._getFileType(this.src.fileValue.filename);
+        if (this.fileType === 'pdf') {
+          this.elem = document.getElementsByClassName('pdf-viewer')[0];
         }
-      );
+
+        this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(res => {
+          this.originalFilename = res['originalFilename'];
+        });
+
+        this.zoomFactor = 1.0;
+        this.pdfQuery = '';
+
+        this._valueOperationEventService.emit(
+          new EmitEvent(
+            Events.FileValueUpdated,
+            new UpdatedFileEventValue(res2.properties[Constants.HasDocumentFileValue][0])
+          )
+        );
+      });
   }
 }

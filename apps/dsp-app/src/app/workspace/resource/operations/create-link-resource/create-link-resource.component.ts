@@ -144,14 +144,9 @@ export class CreateLinkResourceComponent implements OnInit {
 
         createResource.properties = this.propertiesObj;
 
-        this._dspApiConnection.v2.res.createResource(createResource).subscribe(
-          (res: ReadResource) => {
-            this.closeDialog.emit(res);
-          },
-          (error: ApiResponseError) => {
-            this._errorHandler.showMessage(error);
-          }
-        );
+        this._dspApiConnection.v2.res.createResource(createResource).subscribe((res: ReadResource) => {
+          this.closeDialog.emit(res);
+        });
       });
     } else {
       this.propertiesForm.markAllAsTouched();

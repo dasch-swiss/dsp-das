@@ -249,8 +249,6 @@ export class PasswordFormComponent implements OnInit {
           this.form.controls.requesterPassword.setErrors({
             incorrectPassword: true,
           });
-        } else {
-          this._errorHandler.showMessage(error);
         }
         this.loading = false;
         this.error = true;

@@ -73,9 +73,6 @@ export class UserState {
             isLoading: false,
           });
         },
-        error: (error: ApiResponseError) => {
-          this._errorHandler.showMessage(error);
-        },
       })
     );
   }
@@ -168,9 +165,6 @@ export class UserState {
             response.users.map(u => ctx.dispatch(new LoadUserContentByIriAction(u.id)));
           }
         },
-        error: error => {
-          this._errorHandler.showMessage(error);
-        },
       })
     );
   }
@@ -191,9 +185,6 @@ export class UserState {
           state.allUsers.push(response.user);
           state.isLoading = false;
           ctx.patchState(state);
-        },
-        error: error => {
-          this._errorHandler.showMessage(error);
         },
       })
     );

@@ -265,7 +265,6 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
               }
               this.loading = false;
               this._cd.markForCheck();
-              this._errorHandler.showMessage(countError);
             }
           );
       }
@@ -288,7 +287,6 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
           (error: ApiResponseError) => {
             this.loading = false;
             this.resources = undefined;
-            this._errorHandler.showMessage(error);
           }
         );
     } else if (this.search.mode === 'gravsearch') {
@@ -345,7 +343,6 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
                 (error: ApiResponseError) => {
                   this.loading = false;
                   this.resources = undefined;
-                  this._errorHandler.showMessage(error);
                 }
               );
           } else {
@@ -358,7 +355,6 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
         (countError: ApiResponseError) => {
           // if error is a timeout, keep the loading animation
           this.loading = countError.status === 504;
-          this._errorHandler.showMessage(countError);
           this._cd.markForCheck();
         }
       );

@@ -438,25 +438,20 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
           this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid)
         )
       )
-      .subscribe(
-        (res2: ReadResource) => {
-          this._valueOperationEventService.emit(
-            new EmitEvent(
-              Events.FileValueUpdated,
-              new UpdatedFileEventValue(res2.properties[Constants.HasStillImageFileValue][0])
-            )
-          );
+      .subscribe((res2: ReadResource) => {
+        this._valueOperationEventService.emit(
+          new EmitEvent(
+            Events.FileValueUpdated,
+            new UpdatedFileEventValue(res2.properties[Constants.HasStillImageFileValue][0])
+          )
+        );
 
-          this._rs
-            .getFileInfo(this.images[0].fileValue.fileUrl, this.images[0].fileValue.filename)
-            .subscribe((res: { originalFilename: string }) => {
-              this.originalFilename = res.originalFilename;
-            });
-        },
-        (error: ApiResponseError) => {
-          this._errorHandler.showMessage(error);
-        }
-      );
+        this._rs
+          .getFileInfo(this.images[0].fileValue.fileUrl, this.images[0].fileValue.filename)
+          .subscribe((res: { originalFilename: string }) => {
+            this.originalFilename = res.originalFilename;
+          });
+      });
   }
 
   /**
@@ -537,14 +532,9 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
       [Constants.IsRegionOfValue]: [linkVal],
       [Constants.HasGeometry]: [geomVal],
     };
-    this._dspApiConnection.v2.res.createResource(createResource).subscribe(
-      (res: ReadResource) => {
-        this.regionAdded.emit(res.id);
-      },
-      error => {
-        this._errorHandler.showMessage(error);
-      }
-    );
+    this._dspApiConnection.v2.res.createResource(createResource).subscribe((res: ReadResource) => {
+      this.regionAdded.emit(res.id);
+    });
   }
 
   /**

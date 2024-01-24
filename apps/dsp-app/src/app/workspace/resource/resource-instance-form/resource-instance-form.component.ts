@@ -178,7 +178,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
         (error: ApiResponseError) => {
           this.preparing = false;
           this.loading = false;
-          this._errorHandler.showMessage(error);
         }
       );
     });
@@ -194,7 +193,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
     if (this.propertiesParentForm.valid) {
       const createResource = new CreateResource();
 
-      const resLabelVal = <CreateTextValueAsString>this.selectPropertiesComponent.createValueComponent.getNewValue();
+      const resLabelVal = <CreateTextValueAsString> this.selectPropertiesComponent.createValueComponent.getNewValue();
 
       createResource.label = resLabelVal.text;
 
@@ -266,8 +265,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
               'Bad request(400): There was an issue with your request. Often this is due to duplicate values in one of your properties.',
               'error'
             );
-          } else {
-            this._errorHandler.showMessage(error);
           }
         }
       );

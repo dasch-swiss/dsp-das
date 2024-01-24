@@ -452,17 +452,14 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
    * canEnableRequiredToggle: evaluate if the required toggle can be set for a newly assigned property of a class
    */
   canEnableRequiredToggle() {
-    this._dspApiConnection.v2.onto.canReplaceCardinalityOfResourceClass(this.resClassIri).subscribe(
-      (response: CanDoResponse) => {
+    this._dspApiConnection.v2.onto
+      .canReplaceCardinalityOfResourceClass(this.resClassIri)
+      .subscribe((response: CanDoResponse) => {
         if (response.canDo) {
           // enable the form
           this.propertyForm.controls['required'].enable();
         }
-      },
-      (error: ApiResponseError) => {
-        this._errorHandler.showMessage(error);
-      }
-    );
+      });
   }
 
   /**
@@ -484,19 +481,14 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     const targetCardinality: Cardinality = this.getTargetCardinality(targetGuiCardinality);
     this._dspApiConnection.v2.onto
       .canReplaceCardinalityOfResourceClassWith(this.resClassIri, this.propertyInfo.propDef.id, targetCardinality)
-      .subscribe(
-        (response: CanDoResponse) => {
-          this.canSetCardinality = response.canDo;
-          if (!this.canSetCardinality) {
-            this.canNotSetCardinalityReason = response.cannotDoReason;
-            this.canNotSetCardinalityUiReason = this.getCanNotSetCardinalityUserReason();
-          }
-          this.canChangeCardinalityChecked = true;
-        },
-        (error: ApiResponseError) => {
-          this._errorHandler.showMessage(error);
+      .subscribe((response: CanDoResponse) => {
+        this.canSetCardinality = response.canDo;
+        if (!this.canSetCardinality) {
+          this.canNotSetCardinalityReason = response.cannotDoReason;
+          this.canNotSetCardinalityUiReason = this.getCanNotSetCardinalityUserReason();
         }
-      );
+        this.canChangeCardinalityChecked = true;
+      });
   }
 
   /**
@@ -607,7 +599,6 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
       (error: ApiResponseError) => {
         this.error = true;
         this.loading = false;
-        this._errorHandler.showMessage(error);
       }
     );
   }
@@ -623,7 +614,6 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
       (error: ApiResponseError) => {
         this.error = true;
         this.loading = false;
-        this._errorHandler.showMessage(error);
       }
     );
   }
@@ -911,7 +901,6 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   onError(err) {
     this.error = true;
     this.loading = false;
-    this._errorHandler.showMessage(err);
   }
 
   /**

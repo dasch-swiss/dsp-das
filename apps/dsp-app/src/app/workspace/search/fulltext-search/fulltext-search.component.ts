@@ -189,21 +189,15 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
    * get all public projects from DSP-API
    */
   getAllProjects(): void {
-    this._projectsApiService.list().subscribe(
-      response => {
-        // filter out deactivated projects and system projects
-        this.projects = response.projects.filter(p => p.status === true && !this.hiddenProjects.includes(p.id));
+    this._projectsApiService.list().subscribe(response => {
+      // filter out deactivated projects and system projects
+      this.projects = response.projects.filter(p => p.status === true && !this.hiddenProjects.includes(p.id));
 
-        if (localStorage.getItem('currentProject') !== null) {
-          this.project = JSON.parse(localStorage.getItem('currentProject'));
-        }
-        this.projects = this._sortingService.keySortByAlphabetical(this.projects, 'shortname');
-      },
-      (error: ApiResponseError) => {
-        this.error = error;
-        this._errorHandler.showMessage(error);
+      if (localStorage.getItem('currentProject') !== null) {
+        this.project = JSON.parse(localStorage.getItem('currentProject'));
       }
-    );
+      this.projects = this._sortingService.keySortByAlphabetical(this.projects, 'shortname');
+    });
   }
 
   /**

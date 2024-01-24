@@ -282,14 +282,11 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
 
   canBeDeleted() {
     // check if the class can be deleted
-    this._dspApiConnection.v2.onto.canDeleteResourceClass(this.resourceClass.id).subscribe(
-      (response: CanDoResponse) => {
+    this._dspApiConnection.v2.onto
+      .canDeleteResourceClass(this.resourceClass.id)
+      .subscribe((response: CanDoResponse) => {
         this.classCanBeDeleted = response.canDo;
-      },
-      (error: ApiResponseError) => {
-        this._errorHandler.showMessage(error);
-      }
-    );
+      });
   }
 
   addNewProperty(propType: DefaultProperty, currentOntologyPropertiesToDisplay: PropToDisplay[]) {
