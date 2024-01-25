@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { ApiResponseError, CountQueryResponse, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { Action, State, StateContext } from '@ngxs/store';
+import { Action, NgxsOnInit, State, StateContext } from '@ngxs/store';
 import { finalize, map, take, tap } from 'rxjs/operators';
 import { ClearOntologyClassAction, LoadClassItemsCountAction } from './ontology-class.actions';
 import { OntologyClassStateModel } from './ontology-class.state-model';
@@ -16,11 +16,15 @@ const defaults: OntologyClassStateModel = <OntologyClassStateModel>{
   name: 'ontologyClass',
 })
 @Injectable()
-export class OntologyClassState {
+export class OntologyClassState implements NgxsOnInit {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection
   ) {}
+
+  ngxsOnInit(ctx: StateContext<OntologyClassStateModel>) {
+    ctx.dispatch(new ClearOntologyClassAction());
+  }
 
   @Action(LoadClassItemsCountAction)
   loadClassItemsCountAction(

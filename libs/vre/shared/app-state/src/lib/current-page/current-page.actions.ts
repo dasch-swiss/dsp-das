@@ -15,3 +15,6 @@ export class SetLoginReturnLinkAction {
   static readonly type = '[CurrentPage] Set login return link';
   constructor(public loginReturnLink: string) {}
 }
+export class ClearPageStateAction {
+  static readonly type = '[CurrentPage] Clear Page State';
+}

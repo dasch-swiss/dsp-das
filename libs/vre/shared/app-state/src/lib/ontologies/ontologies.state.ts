@@ -18,7 +18,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { OntologyClassService, ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { Action, Actions, State, StateContext, ofActionSuccessful } from '@ngxs/store';
+import { Action, Actions, NgxsOnInit, State, StateContext, ofActionSuccessful } from '@ngxs/store';
 import { of } from 'rxjs';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { LoadListsInProjectAction } from '../lists/lists.actions';
@@ -56,7 +56,7 @@ const defaults: OntologiesStateModel = <OntologiesStateModel>{
   name: 'ontologies',
 })
 @Injectable()
-export class OntologiesState {
+export class OntologiesState implements NgxsOnInit {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
@@ -66,6 +66,10 @@ export class OntologiesState {
     private _actions$: Actions,
     private _notification: NotificationService
   ) {}
+
+  ngxsOnInit(ctx: StateContext<OntologiesStateModel>) {
+    ctx.dispatch(new ClearOntologiesAction());
+  }
 
   // TODO Remove this action when all actions containing this usage is implemented
   @Action(SetOntologiesLoadingAction)

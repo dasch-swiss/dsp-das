@@ -7,13 +7,14 @@ import {
   ClearOntologiesAction,
   ClearOntologyClassAction,
   ClearProjectsAction,
-  LogUserOutAction,
+  ClearUsersAction,
+  LoadUserAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, map, switchMap, take, takeLast, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, take, takeLast, takeWhile, tap } from 'rxjs/operators';
 import { LoginError, ServerError } from './error';
 
 @Injectable({ providedIn: 'root' })
@@ -48,6 +49,7 @@ export class AuthService {
   isSessionValid$(forceLogout: boolean = false): Observable<boolean> {
     // mix of checks with session.validation and this.authenticate
     const accessToken = this.getAccessToken();
+    const username = this.store.selectSnapshot(UserSelectors.username);
     if (accessToken) {
       this._dspApiConnection.v2.jsonWebToken = accessToken;
 
@@ -69,13 +71,26 @@ export class AuthService {
         );
       } else {
         // the internal session is still valid
+        if (!username) {
+          const jwtData = jwt_decode<JwtPayload>(accessToken);
+          const jwtUsername = jwtData.sub?.split('/').pop();
+          if (!jwtUsername) {
+            return of(false);
+          }
+
+          this.store
+            .select(UserSelectors.isLoading)
+            .pipe(takeWhile(isLoading => isLoading === false))
+            .pipe(take(1))
+            .subscribe(() => this.store.dispatch(new LoadUserAction(jwtUsername)));
+        }
+
         return of(true);
       }
     } else {
       // no session found; update knora api connection with empty jwt
       this._dspApiConnection.v2.jsonWebToken = '';
 
-      const username = this.store.selectSnapshot(UserSelectors.username);
       if (username) {
         this.clearState();
       }
@@ -193,7 +208,7 @@ export class AuthService {
 
   clearState() {
     this.store.dispatch([
-      new LogUserOutAction(),
+      new ClearUsersAction(),
       new ClearProjectsAction(),
       new ClearListsAction(),
       new ClearOntologiesAction(),

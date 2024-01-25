@@ -20,8 +20,8 @@ export class RemoveUserAction {
   constructor(public user: ReadUser) {}
 }
 
-export class LogUserOutAction {
-  static readonly type = '[User] Log user out';
+export class ClearUsersAction {
+  static readonly type = '[User] Clear Users';
 }
 
 export class SetUserProjectGroupsAction {

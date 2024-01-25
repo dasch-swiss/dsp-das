@@ -2,18 +2,17 @@ import { Injectable } from '@angular/core';
 import { ApiResponseError, Constants, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { Action, State, StateContext } from '@ngxs/store';
+import { Action, NgxsOnInit, State, StateContext } from '@ngxs/store';
 import { of } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 import { SetProjectMemberAction } from '../projects/projects.actions';
 import {
+  ClearUsersAction,
   CreateUserAction,
   LoadUserAction,
   LoadUserContentByIriAction,
   LoadUsersAction,
-  LogUserOutAction,
   RemoveUserAction,
-  ResetUsersAction,
   SetUserAction,
   SetUserProjectGroupsAction,
 } from './user.actions';
@@ -32,11 +31,12 @@ const defaults = <UserStateModel>{
   name: 'user',
 })
 @Injectable()
-export class UserState {
-  constructor(
-    private _userApiService: UserApiService,
-    private _errorHandler: AppErrorHandler
-  ) {}
+export class UserState implements NgxsOnInit {
+  constructor(private _userApiService: UserApiService, private _errorHandler: AppErrorHandler) {}
+
+  ngxsOnInit(ctx: StateContext<UserStateModel>) {
+    ctx.dispatch(new ClearUsersAction());
+  }
 
   @Action(LoadUserAction)
   loadUser(ctx: StateContext<UserStateModel>, { username }: LoadUserAction) {
@@ -142,11 +142,11 @@ export class UserState {
     ctx.setState({ ...state });
   }
 
-  @Action(LogUserOutAction)
-  logUserOut(ctx: StateContext<UserStateModel>) {
+  @Action(ClearUsersAction)
+  clearUsers(ctx: StateContext<UserStateModel>) {
     return of(ctx.getState()).pipe(
       map(currentState => {
-        ctx.setState(defaults);
+        ctx.setState({ ...defaults });
         return currentState;
       })
     );
@@ -173,11 +173,6 @@ export class UserState {
         },
       })
     );
-  }
-
-  @Action(ResetUsersAction)
-  resetUsers(ctx: StateContext<UserStateModel>) {
-    ctx.patchState({ allUsers: defaults.allUsers });
   }
 
   @Action(CreateUserAction)

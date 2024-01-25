@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Action, State, StateContext, Store, Select } from '@ngxs/store';
+import { Action, NgxsOnInit, State, StateContext, Store } from '@ngxs/store';
 import {
   AppInitAction,
+  ClearPageStateAction,
   ReloadCurrentPageAction,
   SetCurrentPageAction,
   SetLoginReturnLinkAction,
@@ -19,8 +20,12 @@ const defaults: CurrentPageStateModel = {
   name: 'currentPage',
 })
 @Injectable()
-export class CurrentPageState {
+export class CurrentPageState implements NgxsOnInit {
   constructor(private store: Store) {}
+
+  ngxsOnInit(ctx: StateContext<CurrentPageStateModel>) {
+    ctx.dispatch(new ClearPageStateAction());
+  }
 
   @Action(SetCurrentPageAction)
   setCurrentPage(ctx: StateContext<CurrentPageStateModel>, { page }: SetCurrentPageAction) {
@@ -43,5 +48,10 @@ export class CurrentPageState {
     ctx.patchState({
       loginReturnLink: loginReturnLink.replace(new RegExp('^/[a-z]{2}-[A-Z]{2}'), ''),
     });
+  }
+
+  @Action(ClearPageStateAction)
+  clearProjects(ctx: StateContext<CurrentPageStateModel>) {
+    ctx.setState({ ...defaults });
   }
 }

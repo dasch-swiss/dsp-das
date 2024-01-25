@@ -8,7 +8,7 @@ import { UserStateModel } from './user.state-model';
 export class UserSelectors {
   @Selector([UserState])
   static isLoading(state: UserStateModel): boolean | undefined {
-    return state.isLoading;
+    return state?.isLoading;
   }
 
   @Selector([UserState])
