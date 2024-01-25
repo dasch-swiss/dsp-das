@@ -1,1 +1,1 @@
-export * from './lib/app-error-handler.service';
+export * from './lib/app-error-handler';

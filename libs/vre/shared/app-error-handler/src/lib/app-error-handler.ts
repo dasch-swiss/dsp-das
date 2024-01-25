@@ -22,7 +22,9 @@ export class AppErrorHandler implements ErrorHandler {
   private handleHttpError(error: HttpErrorResponse | AjaxError, url: string | null): void {
     let message: string;
 
-    if (error.message.includes('knora.json: 0 Unknown Error')) {
+    if (error.status === 0) {
+      message = 'It seems that you are not connected to internet.';
+    } else if (error.message.includes('knora.json: 0 Unknown Error')) {
       message = 'IIIF server error: The image could not be loaded. Please try again later.';
     } else if (error.status === 404) {
       message = 'The requested resource was not found.';
