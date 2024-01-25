@@ -22,7 +22,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { AppGlobal } from '../../app-global';
 import { existingNamesValidator } from '../../main/directive/existing-name/existing-names.validator';
 import { CustomRegex } from '../../workspace/resource/values/custom-regex';
@@ -310,8 +310,16 @@ export class UserFormComponent implements OnInit, OnChanges {
       // userData.email = this.userForm.value.email;
       userData.lang = this.userForm.value.lang;
 
-      this._userApiService.updateBasicInformation(this.user.id, userData).subscribe(
-        response => {
+      this._userApiService
+        .updateBasicInformation(this.user.id, userData)
+        .pipe(
+          tap({
+            error: () => {
+              this.loading = false;
+            },
+          })
+        )
+        .subscribe(response => {
           this.user = response.user;
           this.buildForm(this.user);
           const user = this._store.selectSnapshot(UserSelectors.user) as ReadUser;
@@ -325,11 +333,7 @@ export class UserFormComponent implements OnInit, OnChanges {
           this._notification.openSnackBar("You have successfully updated the user's profile data.");
           this.closeDialog.emit();
           this.loading = false;
-        },
-        (error: ApiResponseError) => {
-          this.loading = false;
-        }
-      );
+        });
     } else {
       this.createNewUser(this.userForm.value);
     }

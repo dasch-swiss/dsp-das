@@ -24,7 +24,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { take, takeUntil, tap } from 'rxjs/operators';
 import { existingNamesValidator } from '../../../main/directive/existing-name/existing-names.validator';
 import { CustomRegex } from '../../../workspace/resource/values/custom-regex';
 
@@ -245,19 +245,20 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
 
       this._dspApiConnection.v2.onto
         .updateOntology(ontologyData)
-        .pipe(take(1))
-        .subscribe(
-          (response: OntologyMetadata) => {
-            this.loadOntologies(response.id);
-            this.updateParent.emit(response.id);
-            this.closeDialog.emit(response.id);
-          },
-          (error: ApiResponseError) => {
-            // in case of an error
-            this.loading = false;
-            this.error = true;
-          }
-        );
+        .pipe(
+          take(1),
+          tap({
+            error: () => {
+              this.loading = false;
+              this.error = true;
+            },
+          })
+        )
+        .subscribe((response: OntologyMetadata) => {
+          this.loadOntologies(response.id);
+          this.updateParent.emit(response.id);
+          this.closeDialog.emit(response.id);
+        });
     } else {
       // create mode
       const ontologyData = new CreateOntology();

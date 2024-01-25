@@ -41,7 +41,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 import { DialogEvent } from '../../../main/dialog/dialog.component';
 import { existingNamesValidator } from '../../../main/directive/existing-name/existing-names.validator';
 import { CustomRegex } from '../../../workspace/resource/values/custom-regex';
@@ -604,16 +604,20 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   createNewPropertyAndAssignToClass() {
     const onto = this.getOntologyForNewProperty();
     // create new property and assign it to the class
-    this._dspApiConnection.v2.onto.createResourceProperty(onto).subscribe(
-      (response: ResourcePropertyDefinitionWithAllLanguages) => {
+    this._dspApiConnection.v2.onto
+      .createResourceProperty(onto)
+      .pipe(
+        tap({
+          error: () => {
+            this.error = true;
+            this.loading = false;
+          },
+        })
+      )
+      .subscribe((response: ResourcePropertyDefinitionWithAllLanguages) => {
         this.lastModificationDate = response.lastModificationDate;
         this.assignProperty(response);
-      },
-      (error: ApiResponseError) => {
-        this.error = true;
-        this.loading = false;
-      }
-    );
+      });
   }
 
   /**

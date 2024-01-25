@@ -14,11 +14,12 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { Constants, ReadProject } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, Constants, ReadProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import {
   ComponentCommunicationEventService,
   Events,
@@ -183,15 +184,24 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
    * get all public projects from DSP-API
    */
   getAllProjects(): void {
-    this._projectsApiService.list().subscribe(response => {
-      // filter out deactivated projects and system projects
-      this.projects = response.projects.filter(p => p.status === true && !this.hiddenProjects.includes(p.id));
+    this._projectsApiService
+      .list()
+      .pipe(
+        tap({
+          error: (error: ApiResponseError) => {
+            this.error = error;
+          },
+        })
+      )
+      .subscribe(response => {
+        // filter out deactivated projects and system projects
+        this.projects = response.projects.filter(p => p.status === true && !this.hiddenProjects.includes(p.id));
 
-      if (localStorage.getItem('currentProject') !== null) {
-        this.project = JSON.parse(localStorage.getItem('currentProject'));
-      }
-      this.projects = this._sortingService.keySortByAlphabetical(this.projects, 'shortname');
-    });
+        if (localStorage.getItem('currentProject') !== null) {
+          this.project = JSON.parse(localStorage.getItem('currentProject'));
+        }
+        this.projects = this._sortingService.keySortByAlphabetical(this.projects, 'shortname');
+      });
   }
 
   /**

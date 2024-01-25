@@ -36,7 +36,7 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Select } from '@ngxs/store';
 import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map, takeUntil, tap } from 'rxjs/operators';
 import { SplitSize } from '../results/results.component';
 import { DspCompoundPosition, DspResource } from './dsp-resource';
 import { PropertyInfoValues } from './properties/properties.component';
@@ -289,22 +289,24 @@ export class ResourceComponent implements OnChanges, OnDestroy {
       }
       this.stillImageRepresentationsForCompoundResourceSub = this._incomingService
         .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
-        .subscribe(
-          (countQuery: CountQueryResponse) => {
-            if (countQuery.numberOfResults > 0) {
-              // this is a compound object
-              this.compoundPosition = new DspCompoundPosition(countQuery.numberOfResults);
-              this.compoundNavigation(1);
-            } else {
+        .pipe(
+          tap({
+            error: () => {
               this.loading = false;
-            }
-            this._cdr.markForCheck();
-          },
-          (error: ApiResponseError) => {
+              this._cdr.markForCheck();
+            },
+          })
+        )
+        .subscribe((countQuery: CountQueryResponse) => {
+          if (countQuery.numberOfResults > 0) {
+            // this is a compound object
+            this.compoundPosition = new DspCompoundPosition(countQuery.numberOfResults);
+            this.compoundNavigation(1);
+          } else {
             this.loading = false;
-            this._cdr.markForCheck();
           }
-        );
+          this._cdr.markForCheck();
+        });
     } else {
       this.requestIncomingResources(resource);
     }

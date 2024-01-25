@@ -177,11 +177,8 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
     delCard.cardinalities = [this.propCard];
     onto.entity = delCard;
 
-    this._dspApiConnection.v2.onto.canDeleteCardinalityFromResourceClass(onto).subscribe(
-      (canDoRes: CanDoResponse) => {
-        this.propCanBeRemovedFromClass = canDoRes.canDo;
-      }
-      // open snackbar displaying the error
-    );
+    this._dspApiConnection.v2.onto.canDeleteCardinalityFromResourceClass(onto).subscribe((canDoRes: CanDoResponse) => {
+      this.propCanBeRemovedFromClass = canDoRes.canDo;
+    });
   }
 }
