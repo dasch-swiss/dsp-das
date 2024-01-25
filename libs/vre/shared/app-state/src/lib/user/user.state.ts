@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiResponseError, Constants, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { Action, NgxsOnInit, State, StateContext } from '@ngxs/store';
+import { Action, State, StateContext } from '@ngxs/store';
 import { of } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 import { SetProjectMemberAction } from '../projects/projects.actions';
@@ -31,12 +31,8 @@ const defaults = <UserStateModel>{
   name: 'user',
 })
 @Injectable()
-export class UserState implements NgxsOnInit {
+export class UserState {
   constructor(private _userApiService: UserApiService, private _errorHandler: AppErrorHandler) {}
-
-  ngxsOnInit(ctx: StateContext<UserStateModel>) {
-    ctx.dispatch(new ClearUsersAction());
-  }
 
   @Action(LoadUserAction)
   loadUser(ctx: StateContext<UserStateModel>, { username }: LoadUserAction) {

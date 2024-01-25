@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, NgxsOnInit, State, StateContext, Store } from '@ngxs/store';
+import { Action, State, StateContext, Store } from '@ngxs/store';
 import {
   AppInitAction,
   ClearPageStateAction,
@@ -20,12 +20,8 @@ const defaults: CurrentPageStateModel = {
   name: 'currentPage',
 })
 @Injectable()
-export class CurrentPageState implements NgxsOnInit {
+export class CurrentPageState {
   constructor(private store: Store) {}
-
-  ngxsOnInit(ctx: StateContext<CurrentPageStateModel>) {
-    ctx.dispatch(new ClearPageStateAction());
-  }
 
   @Action(SetCurrentPageAction)
   setCurrentPage(ctx: StateContext<CurrentPageStateModel>, { page }: SetCurrentPageAction) {

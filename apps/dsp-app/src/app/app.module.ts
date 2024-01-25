@@ -28,13 +28,12 @@ import {
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import {
   AppStringLiteralComponent,
+  HumanReadableErrorPipe,
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
-  HumanReadableErrorPipe,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
@@ -354,7 +353,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     MultiLanguageTextareaComponent,
     MutiLanguageInputComponent,
     NgxsStoreModule,
-    NgxsStoragePluginModule.forRoot(),
   ],
   providers: [
     AppConfigService,

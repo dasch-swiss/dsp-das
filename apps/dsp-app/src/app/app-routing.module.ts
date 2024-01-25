@@ -13,10 +13,9 @@ import { DescriptionComponent } from './project/description/description.componen
 import { EditProjectFormPageComponent } from './project/edit-project-form-page/edit-project-form-page.component';
 import { ListComponent } from './project/list/list.component';
 import { CreateListInfoPageComponent } from './project/list/reusable-list-info-form/create-list-info-page.component';
-import { CreateResourceClassDialogComponent } from './project/ontology/create-resource-class-dialog/create-resource-class-dialog.component';
+import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
-import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
 import { ProjectComponent } from './project/project.component';
 import { SettingsComponent } from './project/settings/settings.component';
 import { ProjectsComponent } from './system/projects/projects.component';

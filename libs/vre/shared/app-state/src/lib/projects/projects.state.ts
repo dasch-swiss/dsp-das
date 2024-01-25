@@ -14,7 +14,7 @@ import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Action, Actions, NgxsOnInit, State, StateContext, Store, ofActionSuccessful } from '@ngxs/store';
+import { Action, Actions, State, StateContext, Store, ofActionSuccessful } from '@ngxs/store';
 import { produce } from 'immer';
 import { EMPTY, of } from 'rxjs';
 import { concatMap, finalize, map, take, tap } from 'rxjs/operators';
@@ -50,7 +50,7 @@ const defaults: ProjectsStateModel = {
   name: 'projects',
 })
 @Injectable()
-export class ProjectsState implements NgxsOnInit {
+export class ProjectsState {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
@@ -60,10 +60,6 @@ export class ProjectsState implements NgxsOnInit {
     private projectApiService: ProjectApiService,
     private actions: Actions
   ) {}
-
-  ngxsOnInit(ctx: StateContext<ProjectsStateModel>) {
-    ctx.dispatch(new ClearProjectsAction());
-  }
 
   @Action(LoadProjectsAction, { cancelUncompleted: true })
   loadProjects(ctx: StateContext<ProjectsStateModel>) {

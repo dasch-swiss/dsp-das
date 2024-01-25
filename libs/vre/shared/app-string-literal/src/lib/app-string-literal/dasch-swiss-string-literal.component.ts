@@ -12,10 +12,10 @@ import {
 } from '@angular/core';
 import {
   FormsModule,
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormControl,
   UntypedFormGroup,
-  ReactiveFormsModule,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -24,7 +24,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
 import { NgxsStoreModule, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { Store } from '@ngxs/store';
 
 @Component({
@@ -40,7 +39,6 @@ import { Store } from '@ngxs/store';
     FormsModule,
     ReactiveFormsModule,
     NgxsStoreModule,
-    NgxsStoragePluginModule,
   ],
   templateUrl: './dasch-swiss-string-literal.component.html',
   styleUrls: ['./dasch-swiss-string-literal.component.scss'],
@@ -126,10 +124,7 @@ export class AppStringLiteralComponent implements OnInit, OnChanges {
   form!: UntypedFormGroup;
   languages: string[] = ['de', 'fr', 'it', 'en', 'rm'];
 
-  constructor(
-    private _fb: UntypedFormBuilder,
-    private _store: Store
-  ) {
+  constructor(private _fb: UntypedFormBuilder, private _store: Store) {
     // set selected language, if it's not defined yet
     if (!this.language) {
       const usersLanguage = this._store.selectSnapshot(UserSelectors.language) as string;
