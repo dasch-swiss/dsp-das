@@ -18,7 +18,6 @@ import { LoginError, ServerError } from './error';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private tokenRefreshIntervalId: any;
   private _dspApiConnection = inject(DspApiConnectionToken);
 
   get tokenUser() {
@@ -179,7 +178,6 @@ export class AuthService {
           .then(() => this.router.navigate([RouteConstants.home]))
       );
     this.clearState();
-    clearTimeout(this.tokenRefreshIntervalId);
   }
 
   clearState() {
@@ -261,10 +259,6 @@ export class AuthService {
     const exp = this.getTokenExp(token);
     const date = new Date(0);
     date.setUTCSeconds(exp);
-
-    if (this.tokenRefreshIntervalId) {
-      clearInterval(this.tokenRefreshIntervalId);
-    }
   }
 
   private getTokenUser(): string {
