@@ -1,6 +1,6 @@
 <div class="app">
   <div class="app-header">
-    <app-header></app-header>
+    <app-header [isLoggedIn]="isLoggedIn$ | async"></app-header>
   </div>
 
   <div class="app-content">

@@ -34,7 +34,7 @@
     <app-select-language />
 
     <!-- user menu or login form -->
-    <app-user-menu />
+    <app-user-menu [isLoggedIn]="isLoggedIn" />
   </span>
 </mat-toolbar>
 <mat-progress-bar *ngIf="!dsp.production" [color]="dsp.color" mode="determinate" value="100"> </mat-progress-bar>

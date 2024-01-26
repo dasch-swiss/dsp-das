@@ -1,9 +1,9 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { AppConfigService, RouteConstants, DspConfig } from '@dasch-swiss/vre/shared/app-config';
+import { AppConfigService, DspConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { Subscription } from 'rxjs';
 import { SearchParams } from '../../workspace/results/list-view/list-view.component';
@@ -14,6 +14,7 @@ import { ComponentCommunicationEventService, Events } from '../services/componen
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   session = false;
@@ -26,6 +27,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   componentCommsSubscription: Subscription;
 
   homeLink = RouteConstants.home;
+
+  @Input() isLoggedIn: boolean;
 
   constructor(
     private _appConfigService: AppConfigService,

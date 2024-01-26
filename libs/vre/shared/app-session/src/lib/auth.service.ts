@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable, Output, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { ApiResponseData, ApiResponseError, CredentialsResponse, LoginResponse, User } from '@dasch-swiss/dsp-js';
 import { Auth, DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
@@ -13,7 +14,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, fromEvent, of, throwError } from 'rxjs';
 import { catchError, map, switchMap, take, takeLast, takeWhile, tap } from 'rxjs/operators';
 import { LoginError, ServerError } from './error';
 
@@ -35,6 +36,7 @@ export class AuthService {
   ) {
     // check if the (possibly) existing session is still valid and if not, destroy it
     this.isSessionValid$();
+    fromEvent(window, 'storage').pipe(takeUntilDestroyed()).subscribe(); // detect if auth token has been changed by other browser window
 
     // if (this.isLoggedIn()) {
     //     this.startTokenRefresh();
@@ -91,11 +93,7 @@ export class AuthService {
       // no session found; update knora api connection with empty jwt
       this._dspApiConnection.v2.jsonWebToken = '';
 
-      if (username) {
-        this.clearState();
-      }
-
-      if (forceLogout) {
+      if (username || forceLogout) {
         this.doLogoutUser();
       }
 

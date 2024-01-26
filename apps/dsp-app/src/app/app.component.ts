@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { AuthService } from '@dasch-swiss/vre/shared/app-session';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -12,10 +14,11 @@ export class AppComponent implements OnInit {
   showCookieBanner = true;
   session = false;
 
-  constructor(
-    private _router: Router,
-    private _titleService: Title
-  ) {
+  get isLoggedIn$(): Observable<boolean> {
+    return this._authService.isSessionValid$();
+  }
+
+  constructor(private _router: Router, private _titleService: Title, private _authService: AuthService) {
     // set the page title
     this._titleService.setTitle('DaSCH Service Platform');
   }

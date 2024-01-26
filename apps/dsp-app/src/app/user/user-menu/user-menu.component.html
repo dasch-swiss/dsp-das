@@ -1,5 +1,5 @@
 <!-- if user is looged-in: display user's avatar and user menu -->
-<ng-container *ngIf="isLoggedIn$ | async; else loginFormTemplate">
+<ng-container *ngIf="isLoggedIn; else loginFormTemplate">
   <button mat-button [matMenuTriggerFor]="userMenu" class="main-toolbar-button user-menu">
     <img appAdminImage [image]="(user$ | async)?.email" [type]="'user'" class="avatar" alt="avatar" />
   </button>
