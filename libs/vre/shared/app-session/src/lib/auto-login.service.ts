@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadUserAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { throwError } from 'rxjs';
+import { fromEvent, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AccessTokenService } from './access-token.service';
 import { AuthService } from './auth.service';
@@ -16,7 +17,14 @@ export class AutoLoginService {
     private _dspApiConnection: KnoraApiConnection,
     private _store: Store,
     private _authService: AuthService
-  ) {}
+  ) {
+    // detect if auth token has been changed by other browser window
+    fromEvent(window, 'storage')
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        this._authService.logout();
+      });
+  }
 
   setup() {
     this._dspApiConnection.v2.jsonWebToken = ''; // This is mandatory for the v2 api to works
