@@ -7,6 +7,7 @@ import {
   ClearOntologiesAction,
   ClearOntologyClassAction,
   ClearProjectsAction,
+  LoadUserAction,
   LogUserOutAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
@@ -101,37 +102,25 @@ export class AuthService {
    * Login user
    * @param identifier can be the email or the username
    * @param password the password of the user
-   * @returns an Either with the session or an error message
    */
-  apiLogin$(identifier: string, password: string): Observable<boolean> {
-    const identifierType: 'iri' | 'email' | 'username' = identifier.indexOf('@') > -1 ? 'email' : 'username';
+  login$(identifier: string, password: string) {
+    const identifierType = identifier.indexOf('@') > -1 ? 'email' : 'username';
     return this._dspApiConnection.v2.auth.login(identifierType, identifier, password).pipe(
-      takeLast(1),
-      tap((response: ApiResponseData<LoginResponse> | ApiResponseError) => {
-        if (response instanceof ApiResponseData) {
-          this._accessTokenService.storeToken(response.body.token);
-        }
-      }),
-      switchMap((response: ApiResponseData<LoginResponse> | ApiResponseError) => {
-        if (response instanceof ApiResponseData) {
-          return of(true);
-        }
-
+      tap(response => {
         // wrong credentials
         if (response.status === 401 || response.status === 403) {
-          return throwError(<LoginError>{
+          throwError(<LoginError>{
             type: 'login',
             status: response.status,
             msg: 'Wrong credentials',
           });
         }
 
-        return throwError(<ServerError>{
-          type: 'server',
-          status: response.status,
-          msg: 'Server error',
-        });
-      })
+        if (response instanceof ApiResponseData) {
+          this._accessTokenService.storeToken(response.body.token);
+        }
+      }),
+      switchMap(() => this.store.dispatch(new LoadUserAction(identifier)))
     );
   }
 

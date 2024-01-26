@@ -144,25 +144,16 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     const password: string = this.form.get('password').value;
 
     this._authService
-      .apiLogin$(identifier, password)
+      .login$(identifier, password)
       .pipe(takeLast(1))
       .subscribe({
         next: loginResult => {
-          if (loginResult) {
-            this._componentCommsService.emit(new EmitEvent(Events.loginSuccess, true));
-            this._store.dispatch(new LoadUserAction(identifier));
-            return combineLatest([
-              this._actions$.pipe(ofActionSuccessful(LoadUserAction)),
-              this._store.select(UserSelectors.user),
-            ])
-              .pipe(take(1))
-              .subscribe(([action, user]) => {
-                this.loading = false;
-                this.cd.markForCheck();
-                if (this.returnUrl) {
-                  this.router.navigate([this.returnUrl]);
-                }
-              });
+          this._componentCommsService.emit(new EmitEvent(Events.loginSuccess, true));
+          this.loading = false;
+          this.cd.markForCheck();
+
+          if (this.returnUrl) {
+            this.router.navigate([this.returnUrl]);
           }
         },
         error: (error: AuthError) => {
