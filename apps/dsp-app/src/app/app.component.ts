@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { AutoLoginService } from '../../../../libs/vre/shared/app-session/src/lib/auto-login.service';
+import { AutoLoginService } from '@dasch-swiss/vre/shared/app-session';
 
 @Component({
   selector: 'app-root',

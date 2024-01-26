@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
-import { ApiResponseError, KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadUserAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { throwError } from 'rxjs';
-import { switchMap, take, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { AccessTokenService } from './access-token.service';
 import { AuthService } from './auth.service';
 
