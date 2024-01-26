@@ -70,7 +70,7 @@ export class AuthService {
     );
   }
 
-  doLogoutUser() {
+  logout() {
     this._dspApiConnection.v2.auth
       .logout()
       .pipe(switchMap(() => this.clearState()))

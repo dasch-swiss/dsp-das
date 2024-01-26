@@ -62,7 +62,7 @@ export class UserMenuComponent implements OnInit, OnDestroy {
    *
    */
   logout() {
-    this._authService.doLogoutUser();
+    this._authService.logout();
   }
 
   /**
