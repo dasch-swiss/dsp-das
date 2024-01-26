@@ -22,7 +22,6 @@ export class AuthService {
   constructor(
     private store: Store,
     private _accessTokenService: AccessTokenService,
-    private _location: Location,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection
   ) {}
