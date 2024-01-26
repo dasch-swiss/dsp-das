@@ -19,6 +19,8 @@ export class AutoLoginService {
   ) {}
 
   setup() {
+    this._dspApiConnection.v2.jsonWebToken = ''; // This is mandatory for the v2 api to works
+
     const encodedJWT = this._accessTokenService.getTokenUser();
     if (!encodedJWT) {
       return;
