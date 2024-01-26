@@ -161,19 +161,13 @@ export class AuthService {
 
   private doLogoutUser() {
     this._accessTokenService.removeTokens();
-    this._actions
-      .pipe(ofActionSuccessful(ClearProjectsAction))
-      .pipe(take(1))
-      .subscribe(() =>
-        this.router
-          .navigate([RouteConstants.logout], { skipLocationChange: true })
-          .then(() => this.router.navigate([RouteConstants.home]))
-      );
-    this.clearState();
+    this.clearState().subscribe(() => {
+      this.router.navigate(['/']);
+    });
   }
 
   private clearState() {
-    this.store.dispatch([
+    return this.store.dispatch([
       new LogUserOutAction(),
       new ClearProjectsAction(),
       new ClearListsAction(),
