@@ -135,35 +135,15 @@ export class AuthService {
     );
   }
 
-  logout() {
-    // TODO ? logout by access token missing ?
+  doLogoutUser() {
+    this._accessTokenService.removeTokens();
+
     this._dspApiConnection.v2.auth
       .logout()
-      .pipe(
-        take(1),
-        catchError((error: ApiResponseError) => of(error?.status === 200))
-      )
-      .subscribe((response: any) => {
-        if (!(response instanceof ApiResponseData)) {
-          throwError(<ServerError>{
-            type: 'server',
-            status: response.status,
-            msg: 'Logout was not successful',
-          });
-          return;
-        }
-
-        if (response.body.status === 0) {
-          this.doLogoutUser();
-        }
+      .pipe(switchMap(() => this.clearState()))
+      .subscribe(() => {
+        this.router.navigate(['/']);
       });
-  }
-
-  private doLogoutUser() {
-    this._accessTokenService.removeTokens();
-    this.clearState().subscribe(() => {
-      this.router.navigate(['/']);
-    });
   }
 
   private clearState() {

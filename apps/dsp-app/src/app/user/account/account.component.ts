@@ -59,7 +59,7 @@ export class AccountComponent implements OnInit {
 
   deleteUser(id: string) {
     this._userApiService.delete(id).subscribe(() => {
-      this._authService.logout();
+      this._authService.doLogoutUser();
     });
   }
 
