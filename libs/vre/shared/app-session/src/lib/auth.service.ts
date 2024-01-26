@@ -1,4 +1,3 @@
-import { Location } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, LoginResponse } from '@dasch-swiss/dsp-js';
