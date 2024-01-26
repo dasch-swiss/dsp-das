@@ -1,20 +1,6 @@
-import { EventEmitter, Injectable, Output, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, CredentialsResponse, LoginResponse, User } from '@dasch-swiss/dsp-js';
-import { Auth, DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import {
-  ClearListsAction,
-  ClearOntologiesAction,
-  ClearOntologyClassAction,
-  ClearProjectsAction,
-  LogUserOutAction,
-  UserSelectors,
-} from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
+import { Injectable } from '@angular/core';
+import { Auth } from '@dasch-swiss/vre/shared/app-config';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, map, switchMap, take, takeLast, tap } from 'rxjs/operators';
-import { LoginError, ServerError } from './error';
 
 @Injectable({ providedIn: 'root' })
 export class AccessTokenService {
@@ -32,15 +18,7 @@ export class AccessTokenService {
     localStorage.removeItem(Auth.Refresh_token);
   }
 
-  isTokenExpired(token?: string | null): boolean {
-    if (!token) {
-      token = this.getAccessToken();
-    }
-
-    if (!token) {
-      return true;
-    }
-
+  private isTokenExpired(token: JwtPayload): boolean {
     const date = this.getTokenExpirationDate(token);
     if (date == null) {
       return false;
@@ -49,9 +27,7 @@ export class AccessTokenService {
     return date.setSeconds(date.getSeconds() - 30).valueOf() <= new Date().valueOf();
   }
 
-  private getTokenExpirationDate(token: string): Date | null {
-    const decoded = jwt_decode<JwtPayload>(token);
-
+  private getTokenExpirationDate(decoded: JwtPayload): Date | null {
     if (decoded.exp === undefined) {
       return null;
     }
@@ -84,17 +60,22 @@ export class AccessTokenService {
     date.setUTCSeconds(exp);
   }
 
-  getTokenUser(): string {
-    const token = this.getAccessToken();
-    if (!token) {
-      return '';
-    }
+  getTokenUser(): string | null {
+    return this.getAccessToken();
+  }
 
-    const decoded = jwt_decode<JwtPayload>(token);
-    if (decoded.sub === undefined) {
-      return '';
+  decodedAccessToken(token: string) {
+    try {
+      return jwt_decode<JwtPayload>(token);
+    } catch (e) {
+      return null;
     }
+  }
 
-    return decoded.sub;
+  isValidToken(decoded: JwtPayload): boolean {
+    if (decoded === null) {
+      return false;
+    }
+    return this.isTokenExpired(decoded) && decoded.sub !== undefined;
   }
 }

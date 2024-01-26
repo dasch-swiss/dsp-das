@@ -44,7 +44,8 @@ export class AuthService {
       this._dspApiConnection.v2.jsonWebToken = accessToken;
 
       // check if the session is still valid:
-      if (this._accessTokenService.isTokenExpired(accessToken)) {
+      if (false) {
+        // TODO if (this._accessTokenService.isTokenExpired(accessToken)) {
         // the internal session has expired
         // check if the api credentials are still valid
         return this._dspApiConnection.v2.auth.checkCredentials().pipe(

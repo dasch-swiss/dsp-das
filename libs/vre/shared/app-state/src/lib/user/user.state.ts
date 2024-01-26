@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
-import { ApiResponseError, Constants, ReadUser } from '@dasch-swiss/dsp-js';
+import { Inject, inject, Injectable } from '@angular/core';
+import { ApiResponseError, Constants, KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { Action, State, StateContext } from '@ngxs/store';
+import { AccessTokenService } from '@dasch-swiss/vre/shared/app-session';
+import { Action, NgxsOnInit, State, StateContext } from '@ngxs/store';
 import { of } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 import { SetProjectMemberAction } from '../projects/projects.actions';
