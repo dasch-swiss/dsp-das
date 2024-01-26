@@ -3,7 +3,6 @@ import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadUserAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { JwtPayload } from 'jwt-decode';
 import { throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AccessTokenService } from './access-token.service';
