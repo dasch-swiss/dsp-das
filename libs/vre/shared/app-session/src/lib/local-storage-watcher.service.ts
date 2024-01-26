@@ -15,7 +15,7 @@ export class LocalStorageWatcherService {
           return event.key === 'ACCESS_TOKEN' && event.oldValue !== event.newValue;
         })
       )
-      .subscribe(event => {
+      .subscribe(() => {
         window.location.reload();
       });
   }

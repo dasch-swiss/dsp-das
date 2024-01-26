@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { AutoLoginService } from '@dasch-swiss/vre/shared/app-session';
-import { LocalStorageWatcherService } from '../../../../libs/vre/shared/app-session/src/lib/local-storage-watcher.service';
+import { AutoLoginService, LocalStorageWatcherService } from '@dasch-swiss/vre/shared/app-session';
 
 @Component({
   selector: 'app-root',
