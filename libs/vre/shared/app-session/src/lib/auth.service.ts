@@ -33,10 +33,6 @@ export class AuthService {
   ) {
     // check if the (possibly) existing session is still valid and if not, destroy it
     this.isSessionValid$();
-
-    // if (this.isLoggedIn()) {
-    //     this.startTokenRefresh();
-    // }
   }
 
   /**
@@ -188,10 +184,6 @@ export class AuthService {
       new ClearOntologiesAction(),
       new ClearOntologyClassAction(),
     ]);
-  }
-
-  isLoggedIn() {
-    return !!this.getAccessToken();
   }
 
   getAccessToken() {
