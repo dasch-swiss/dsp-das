@@ -30,9 +30,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginFormComponent implements OnInit, OnDestroy {
-  get isLoggedIn$(): Observable<boolean> {
-    return this._authService.isSessionValid$();
-  }
   /**
    * set whether or not you want icons to display in the input fields
    *
