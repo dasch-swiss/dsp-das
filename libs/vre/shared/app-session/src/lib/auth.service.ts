@@ -144,16 +144,6 @@ export class AuthService {
     );
   }
 
-  // TODO refresh access token using API
-  refreshToken$(): Observable<any> {
-    const refreshToken = this.getRefreshToken();
-    if (!refreshToken) {
-      return of(false);
-    }
-
-    return of(false);
-  }
-
   logout() {
     // TODO ? logout by access token missing ?
     this._dspApiConnection.v2.auth
@@ -210,18 +200,9 @@ export class AuthService {
     return localStorage.getItem(Auth.AccessToken);
   }
 
-  getRefreshToken() {
-    return localStorage.getItem(Auth.Refresh_token);
-  }
-
   private storeToken(token: string) {
     localStorage.setItem(Auth.AccessToken, token);
     // localStorage.setItem(this.REFRESH_TOKEN, token);
-    this.startTokenRefresh();
-  }
-
-  private refreshAccessToken(access_token: string) {
-    localStorage.setItem(Auth.AccessToken, access_token);
     this.startTokenRefresh();
   }
 
