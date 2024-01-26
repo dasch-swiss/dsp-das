@@ -1,6 +1,7 @@
+import { Location } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { ApiResponseData, ApiResponseError, KnoraApiConnection } from '@dasch-swiss/dsp-js';
+
+import { ApiResponseData, ApiResponseError, KnoraApiConnection, LoginResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import {
   ClearListsAction,
@@ -21,7 +22,7 @@ export class AuthService {
   constructor(
     private store: Store,
     private _accessTokenService: AccessTokenService,
-    private router: Router,
+    private _location: Location,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection
   ) {}
@@ -59,23 +60,26 @@ export class AuthService {
           });
         }
 
-        if (response instanceof ApiResponseData) {
-          this._accessTokenService.storeToken(response.body.token);
+        if (response instanceof ApiResponseError) {
+          throwError(response);
         }
+
+        const encodedJWT = (response as ApiResponseData<LoginResponse>).body.token;
+        this._accessTokenService.storeToken(encodedJWT);
+        this._dspApiConnection.v2.jsonWebToken = encodedJWT;
       }),
       switchMap(() => this.store.dispatch(new LoadUserAction(identifier)))
     );
   }
 
   doLogoutUser() {
-    this._accessTokenService.removeTokens();
-
     this._dspApiConnection.v2.auth
       .logout()
       .pipe(switchMap(() => this.clearState()))
       .subscribe(() => {
+        this._accessTokenService.removeTokens();
         this._dspApiConnection.v2.jsonWebToken = '';
-        this.router.navigate(['/']);
+        window.location.reload();
       });
   }
 

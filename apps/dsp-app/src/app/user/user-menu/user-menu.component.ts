@@ -23,9 +23,7 @@ export class UserMenuComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  get isLoggedIn$(): Observable<boolean> {
-    return this._authService.isCredentialsValid$();
-  }
+  isLoggedIn$ = this._authService.isCredentialsValid$();
 
   @Select(UserSelectors.user) user$: Observable<User>;
   @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<User>;

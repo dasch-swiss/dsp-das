@@ -1,10 +1,9 @@
-import { DOCUMENT, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnDestroy,
   OnInit,
@@ -13,15 +12,8 @@ import {
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthError, AuthService } from '@dasch-swiss/vre/shared/app-session';
-import { LoadUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
-import { Observable, Subject, combineLatest } from 'rxjs';
-import { take, takeLast } from 'rxjs/operators';
-import {
-  ComponentCommunicationEventService,
-  EmitEvent,
-  Events,
-} from '../../services/component-communication-event.service';
+import { Subject } from 'rxjs';
+import { takeLast } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login-form',
@@ -95,16 +87,12 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
 
   constructor(
-    private _componentCommsService: ComponentCommunicationEventService,
     private _fb: UntypedFormBuilder,
     private router: Router,
     private _authService: AuthService,
     private route: ActivatedRoute,
     private location: Location,
-    private cd: ChangeDetectorRef,
-    private _actions$: Actions,
-    private _store: Store,
-    @Inject(DOCUMENT) private document: Document
+    private cd: ChangeDetectorRef
   ) {}
 
   /**
@@ -145,7 +133,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       .pipe(takeLast(1))
       .subscribe({
         next: loginResult => {
-          this._componentCommsService.emit(new EmitEvent(Events.loginSuccess, true));
+          this.loginSuccess.emit(true);
           this.loading = false;
           this.cd.markForCheck();
 
@@ -155,8 +143,6 @@ export class LoginFormComponent implements OnInit, OnDestroy {
         },
         error: (error: AuthError) => {
           this.loginSuccess.emit(false);
-
-          this._componentCommsService.emit(new EmitEvent(Events.loginSuccess, false));
 
           this.loading = false;
           this.isError = true;

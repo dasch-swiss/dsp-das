@@ -30,7 +30,6 @@ export class AutoLoginService {
       return;
     }
 
-    this._dspApiConnection.v2.jsonWebToken = encodedJWT;
     this._authService
       .isCredentialsValid$()
       .pipe(
@@ -45,6 +44,8 @@ export class AutoLoginService {
           if (!match || !match[1]) {
             throwError('Decoded user in JWT token is not valid.');
           }
+
+          this._dspApiConnection.v2.jsonWebToken = encodedJWT;
 
           const username = (match as RegExpMatchArray)[1];
           return this._store.dispatch(new LoadUserAction(username));
