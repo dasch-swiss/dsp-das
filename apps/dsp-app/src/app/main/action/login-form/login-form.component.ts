@@ -158,7 +158,6 @@ export class LoginFormComponent implements OnInit, OnDestroy {
               .pipe(take(1))
               .subscribe(([action, user]) => {
                 this.loading = false;
-                this._authService.loginSuccessfulEvent.emit(user);
                 this.cd.markForCheck();
                 if (this.returnUrl) {
                   this.router.navigate([this.returnUrl]);

@@ -21,8 +21,6 @@ import { LoginError, ServerError } from './error';
 export class AuthService {
   private _dspApiConnection = inject(DspApiConnectionToken);
 
-  @Output() loginSuccessfulEvent = new EventEmitter<User>();
-
   constructor(
     private store: Store,
     private _actions: Actions,
