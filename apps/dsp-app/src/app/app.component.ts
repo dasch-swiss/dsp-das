@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { OnLoadService } from '../../../../libs/vre/shared/app-session/src/lib/on-load.service';
+import { AutoLoginService } from '../../../../libs/vre/shared/app-session/src/lib/auto-login.service';
 
 @Component({
   selector: 'app-root',
@@ -16,10 +16,9 @@ export class AppComponent implements OnInit {
   constructor(
     private _router: Router,
     private _titleService: Title,
-    private _onLoadService: OnLoadService
+    private _autoLoginService: AutoLoginService
   ) {
-    this._onLoadService.onLoad();
-    // set the page title
+    this._autoLoginService.setup();
     this._titleService.setTitle('DaSCH Service Platform');
   }
 
