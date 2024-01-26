@@ -14,14 +14,17 @@ export class PendoAnalyticsService {
 
   constructor() {
     this.authService
-      .isSessionValid$()
+      .isCredentialsValid$()
       .pipe(takeUntilDestroyed())
       .subscribe((isSessionValid: boolean) => {
-        if (isSessionValid) {
-          this.setActiveUser(this._accessTokenService.getTokenUser());
-        } else {
+        if (!isSessionValid) {
           this.removeActiveUser();
+          return;
         }
+        const token = this._accessTokenService.getTokenUser();
+        if (!token) return;
+
+        this.setActiveUser(token);
       });
   }
 

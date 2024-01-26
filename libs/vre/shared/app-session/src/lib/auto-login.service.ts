@@ -6,6 +6,7 @@ import { Store } from '@ngxs/store';
 import { throwError } from 'rxjs';
 import { switchMap, take, tap } from 'rxjs/operators';
 import { AccessTokenService } from './access-token.service';
+import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class AutoLoginService {
@@ -13,7 +14,8 @@ export class AutoLoginService {
     private _accessTokenService: AccessTokenService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _store: Store
+    private _store: Store,
+    private _authService: AuthService
   ) {}
 
   setup() {
@@ -29,16 +31,14 @@ export class AutoLoginService {
     }
 
     this._dspApiConnection.v2.jsonWebToken = encodedJWT;
-    this._dspApiConnection.v2.auth
-      .checkCredentials()
+    this._authService
+      .isCredentialsValid$()
       .pipe(
-        take(1),
-        tap(response => {
-          if (response instanceof ApiResponseError) {
-            throwError(response);
+        switchMap(isValid => {
+          if (!isValid) {
+            throwError('Credentials not valid');
           }
-        }),
-        switchMap(() => {
+
           const usernameRegex = /\/users\/(\w+)$/;
           const match = decodedToken.sub.match(usernameRegex);
 
