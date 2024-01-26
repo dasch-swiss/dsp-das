@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { AutoLoginService } from '@dasch-swiss/vre/shared/app-session';
+import { LocalStorageWatcherService } from '../../../../libs/vre/shared/app-session/src/lib/local-storage-watcher.service';
 
 @Component({
   selector: 'app-root',
@@ -16,9 +17,11 @@ export class AppComponent implements OnInit {
   constructor(
     private _router: Router,
     private _titleService: Title,
-    private _autoLoginService: AutoLoginService
+    private _autoLoginService: AutoLoginService,
+    private _localStorageWatcher: LocalStorageWatcherService
   ) {
     this._autoLoginService.setup();
+    this._localStorageWatcher.watchAccessToken();
     this._titleService.setTitle('DaSCH Service Platform');
   }
 
