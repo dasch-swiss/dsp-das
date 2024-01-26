@@ -14,21 +14,19 @@ import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap, take, takeLast, tap } from 'rxjs/operators';
+import { AccessTokenService } from './access-token.service';
 import { LoginError, ServerError } from './error';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private _dspApiConnection = inject(DspApiConnectionToken);
 
-  get tokenUser() {
-    return this.getTokenUser();
-  }
-
   @Output() loginSuccessfulEvent = new EventEmitter<User>();
 
   constructor(
     private store: Store,
     private _actions: Actions,
+    private _accessTokenService: AccessTokenService,
     private router: Router // private intervalWrapper: IntervalWrapperService
   ) {
     // check if the (possibly) existing session is still valid and if not, destroy it
@@ -42,12 +40,12 @@ export class AuthService {
    */
   isSessionValid$(forceLogout: boolean = false): Observable<boolean> {
     // mix of checks with session.validation and this.authenticate
-    const accessToken = this.getAccessToken();
+    const accessToken = this._accessTokenService.getAccessToken();
     if (accessToken) {
       this._dspApiConnection.v2.jsonWebToken = accessToken;
 
       // check if the session is still valid:
-      if (this.isTokenExpired(accessToken)) {
+      if (this._accessTokenService.isTokenExpired(accessToken)) {
         // the internal session has expired
         // check if the api credentials are still valid
         return this._dspApiConnection.v2.auth.checkCredentials().pipe(
@@ -92,7 +90,7 @@ export class AuthService {
   private _updateSessionId(credentials: ApiResponseData<CredentialsResponse> | ApiResponseError): boolean {
     if (credentials instanceof ApiResponseData) {
       // the dsp api credentials are still valid
-      this.storeToken(credentials.body.message);
+      this._accessTokenService.storeToken(credentials.body.message);
       return true;
     } else {
       // a user is not authenticated anymore!
@@ -113,7 +111,7 @@ export class AuthService {
       takeLast(1),
       tap((response: ApiResponseData<LoginResponse> | ApiResponseError) => {
         if (response instanceof ApiResponseData) {
-          this.storeToken(response.body.token);
+          this._accessTokenService.storeToken(response.body.token);
         }
       }),
       switchMap((response: ApiResponseData<LoginResponse> | ApiResponseError) => {
@@ -163,8 +161,8 @@ export class AuthService {
       });
   }
 
-  doLogoutUser() {
-    this.removeTokens();
+  private doLogoutUser() {
+    this._accessTokenService.removeTokens();
     this._actions
       .pipe(ofActionSuccessful(ClearProjectsAction))
       .pipe(take(1))
@@ -176,7 +174,7 @@ export class AuthService {
     this.clearState();
   }
 
-  clearState() {
+  private clearState() {
     this.store.dispatch([
       new LogUserOutAction(),
       new ClearProjectsAction(),
@@ -184,86 +182,5 @@ export class AuthService {
       new ClearOntologiesAction(),
       new ClearOntologyClassAction(),
     ]);
-  }
-
-  getAccessToken() {
-    return localStorage.getItem(Auth.AccessToken);
-  }
-
-  private storeToken(token: string) {
-    localStorage.setItem(Auth.AccessToken, token);
-    // localStorage.setItem(this.REFRESH_TOKEN, token);
-    this.startTokenRefresh();
-  }
-
-  private removeTokens() {
-    localStorage.removeItem(Auth.AccessToken);
-    localStorage.removeItem(Auth.Refresh_token);
-  }
-
-  isTokenExpired(token?: string | null): boolean {
-    if (!token) {
-      token = this.getAccessToken();
-    }
-
-    if (!token) {
-      return true;
-    }
-
-    const date = this.getTokenExpirationDate(token);
-    if (date == null) {
-      return false;
-    }
-
-    return date.setSeconds(date.getSeconds() - 30).valueOf() <= new Date().valueOf();
-  }
-
-  getTokenExpirationDate(token: string): Date | null {
-    const decoded = jwt_decode<JwtPayload>(token);
-
-    if (decoded.exp === undefined) {
-      return null;
-    }
-
-    const date = new Date(0);
-    date.setUTCSeconds(decoded.exp);
-
-    return date;
-  }
-
-  getTokenExp(token: string): number {
-    const decoded = jwt_decode<JwtPayload>(token);
-
-    if (decoded.exp === undefined) {
-      return 0;
-    }
-
-    return decoded.exp;
-  }
-
-  startTokenRefresh() {
-    const token = this.getAccessToken();
-
-    if (!token) {
-      return;
-    }
-
-    const exp = this.getTokenExp(token);
-    const date = new Date(0);
-    date.setUTCSeconds(exp);
-  }
-
-  private getTokenUser(): string {
-    const token = this.getAccessToken();
-    if (!token) {
-      return '';
-    }
-
-    const decoded = jwt_decode<JwtPayload>(token);
-    if (decoded.sub === undefined) {
-      return '';
-    }
-
-    return decoded.sub;
   }
 }

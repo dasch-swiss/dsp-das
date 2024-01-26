@@ -6,7 +6,7 @@ import {
   DspInstrumentationConfig,
   DspInstrumentationToken,
 } from '@dasch-swiss/vre/shared/app-config';
-import { AuthService } from '@dasch-swiss/vre/shared/app-session';
+import { AccessTokenService, AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { datadogRum, RumFetchResourceEventDomainContext } from '@datadog/browser-rum';
 import { Observable } from 'rxjs';
 import { v5 as uuidv5 } from 'uuid';
@@ -18,6 +18,7 @@ export class DatadogRumService {
   private buildTag$: Observable<BuildTag> = inject(BuildTagToken);
   private config: DspInstrumentationConfig = inject(DspInstrumentationToken);
   private authService: AuthService = inject(AuthService);
+  private _accessTokenService: AccessTokenService = inject(AccessTokenService);
 
   constructor() {
     this.buildTag$.subscribe(tag => {
@@ -53,8 +54,8 @@ export class DatadogRumService {
           .pipe(takeUntilDestroyed())
           .subscribe((isSessionValid: boolean) => {
             if (isSessionValid) {
-              if (this.authService.tokenUser) {
-                const id: string = uuidv5(this.authService.tokenUser, uuidv5.URL);
+              if (this._accessTokenService.getTokenUser()) {
+                const id: string = uuidv5(this._accessTokenService.getTokenUser(), uuidv5.URL);
                 this.setActiveUser(id);
               } else {
                 this.removeActiveUser();
