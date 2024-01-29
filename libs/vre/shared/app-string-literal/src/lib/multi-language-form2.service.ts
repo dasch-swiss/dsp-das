@@ -1,5 +1,5 @@
 import { ElementRef, Injectable } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 
@@ -13,6 +13,7 @@ export class MultiLanguageForm2Service {
   selectedLanguageIndex: number;
   formGroup: FormGroup;
   controlName: string;
+  validators: ValidatorFn[];
 
   inputValue: string | null = null;
 
@@ -45,10 +46,11 @@ export class MultiLanguageForm2Service {
     private _fb: FormBuilder
   ) {}
 
-  onInit(formGroup: FormGroup, controlName: string) {
+  onInit(formGroup: FormGroup, controlName: string, validators: ValidatorFn[]) {
     this.formGroup = formGroup;
     this.controlName = controlName;
     this.selectedLanguageIndex = this._setupLanguageIndex();
+    this.validators = validators;
   }
 
   onInputChange(newText: any) {
@@ -64,7 +66,7 @@ export class MultiLanguageForm2Service {
       this.formArray.push(
         this._fb.group({
           language: this.availableLanguages[this.selectedLanguageIndex],
-          value: [newText], // TODO ADD VALIDATOR!
+          value: [newText, this.validators],
         })
       );
     }
