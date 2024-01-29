@@ -54,7 +54,6 @@ export class MultiLanguageFormService {
     this.validators = validators;
 
     this.formArray.valueChanges.subscribe(array => {
-      console.log('array change', array);
       if (array.length === 0) {
         this.inputValue = null;
         this._cd.detectChanges(); // TODO remove later
