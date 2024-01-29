@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ApiResponseError, Constants, ReadUser } from '@dasch-swiss/dsp-js';
+import { Constants, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { Action, State, StateContext } from '@ngxs/store';
 import { of } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
@@ -33,15 +32,12 @@ const defaults = <UserStateModel>{
 })
 @Injectable()
 export class UserState {
-  constructor(
-    private _userApiService: UserApiService,
-    private _errorHandler: AppErrorHandler
-  ) {}
+  constructor(private _userApiService: UserApiService) {}
 
   @Action(LoadUserAction)
-  loadUser(ctx: StateContext<UserStateModel>, { username }: LoadUserAction) {
+  loadUser(ctx: StateContext<UserStateModel>, { identifier, idType }: LoadUserAction) {
     ctx.patchState({ isLoading: true });
-    return this._userApiService.get(username, 'username').pipe(
+    return this._userApiService.get(identifier, idType).pipe(
       take(1),
       map(response => {
         ctx.setState({
@@ -72,9 +68,6 @@ export class UserState {
             ...state,
             isLoading: false,
           });
-        },
-        error: (error: ApiResponseError) => {
-          this._errorHandler.showMessage(error);
         },
       })
     );
@@ -144,12 +137,7 @@ export class UserState {
 
   @Action(LogUserOutAction)
   logUserOut(ctx: StateContext<UserStateModel>) {
-    return of(ctx.getState()).pipe(
-      map(currentState => {
-        ctx.setState(defaults);
-        return currentState;
-      })
-    );
+    ctx.setState(defaults);
   }
 
   @Action(LoadUsersAction)
@@ -167,9 +155,6 @@ export class UserState {
           if (loadFullUserData) {
             response.users.map(u => ctx.dispatch(new LoadUserContentByIriAction(u.id)));
           }
-        },
-        error: error => {
-          this._errorHandler.showMessage(error);
         },
       })
     );
@@ -191,9 +176,6 @@ export class UserState {
           state.allUsers.push(response.user);
           state.isLoading = false;
           ctx.patchState(state);
-        },
-        error: error => {
-          this._errorHandler.showMessage(error);
         },
       })
     );

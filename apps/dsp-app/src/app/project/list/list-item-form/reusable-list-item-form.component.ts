@@ -40,7 +40,7 @@ export class ReusableListItemFormComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  _buildForm() {
+  private _buildForm() {
     this.form = this._fb.group({
       labels: this._fb.array(
         this.formData.labels.map(({ language, value }) =>
