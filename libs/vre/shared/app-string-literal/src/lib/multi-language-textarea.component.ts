@@ -8,12 +8,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import { HumanReadableErrorPipe } from './human-readable-error.pipe';
-import { MultiLanguageForm2Service } from './multi-language-form2.service';
+import { MultiLanguageFormService } from './multi-language-form.service';
 
 @Component({
   selector: 'dasch-swiss-multi-language-textarea',
   standalone: true,
-  providers: [MultiLanguageForm2Service],
+  providers: [MultiLanguageFormService],
   imports: [
     CommonModule,
     MatButtonModule,
@@ -78,7 +78,7 @@ export class MultiLanguageTextareaComponent implements OnInit {
   @Input() placeholder: string;
   @Input() validators: ValidatorFn[];
 
-  constructor(public formService: MultiLanguageForm2Service) {}
+  constructor(public formService: MultiLanguageFormService) {}
 
   ngOnInit() {
     this.formService.onInit(this.formGroup, this.controlName, this.validators);

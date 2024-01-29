@@ -48,8 +48,9 @@ import { MultiLanguageFormService } from './multi-language-form.service';
       <input
         matInput
         [placeholder]="placeholder"
-        [formControl]="formService.selectedFormControl"
         #textInput
+        [ngModel]="formService.inputValue"
+        (ngModelChange)="formService.onInputChange($event)"
         [readonly]="!editable" />
     </mat-form-field>
     <mat-error *ngIf="formService.formArray.invalid && formService.formArray.touched">
