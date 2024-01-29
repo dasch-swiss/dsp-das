@@ -54,8 +54,8 @@ export class MultiLanguageFormService {
     this.validators = validators;
 
     this.formArray.valueChanges.subscribe(array => {
-      if (array.length === 1 && array[0].language === null && array[0].value === null) {
-        this.formArray.removeAt(0);
+      console.log('array change', array);
+      if (array.length === 0) {
         this.inputValue = null;
         this._cd.detectChanges(); // TODO remove later
       }

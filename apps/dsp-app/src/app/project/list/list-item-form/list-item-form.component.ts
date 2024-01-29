@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ListInfoResponse, ListNode, ListNodeInfoResponse } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -84,6 +84,6 @@ export class ListItemFormComponent implements OnInit {
   }
 
   private _resetForm() {
-    this.form.reset({ labels: [] }, { emitEvent: true });
+    (this.form.get('labels') as FormArray).clear();
   }
 }
