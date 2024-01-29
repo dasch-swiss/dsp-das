@@ -17,6 +17,8 @@ export class AppErrorHandler implements ErrorHandler {
     } else if (error instanceof HttpErrorResponse) {
       // ApiServices
       this.handleHttpError(error, error.url);
+    } else {
+      console.error(error);
     }
   }
 
