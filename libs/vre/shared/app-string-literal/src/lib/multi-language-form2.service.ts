@@ -9,12 +9,12 @@ import { Store } from '@ngxs/store';
  */
 @Injectable()
 export class MultiLanguageForm2Service {
-  readonly availableLanguages: string[] = ['de', 'fr', 'it', 'en', 'rm'];
+  readonly availableLanguages = ['de', 'fr', 'it', 'en', 'rm'];
   selectedLanguageIndex: number;
   formGroup: FormGroup;
   controlName: string;
 
-  textAreaValue = '';
+  inputValue = '';
 
   get formArray() {
     return this.formGroup.controls[this.controlName] as FormArray;
@@ -51,16 +51,16 @@ export class MultiLanguageForm2Service {
     this.selectedLanguageIndex = this._setupLanguageIndex();
   }
 
-  onTextAreaChange(newText: any) {
+  onInputChange(newText: any) {
     if (newText === '') {
-      if (this.textAreaValue.length > 0) {
+      if (this.inputValue.length > 0) {
         this.formArray.removeAt(this.formArray.controls.indexOf(this.selectedFormControl));
-        this.textAreaValue = '';
+        this.inputValue = '';
       }
       return;
     }
 
-    if (this.textAreaValue === '') {
+    if (this.inputValue === '') {
       this.formArray.push(
         this._fb.group({
           language: this.availableLanguages[this.selectedLanguageIndex],
@@ -70,7 +70,7 @@ export class MultiLanguageForm2Service {
     }
 
     this.selectedFormControl.setValue(newText);
-    this.textAreaValue = newText;
+    this.inputValue = newText;
   }
 
   getFormControlWithLanguage(lang: string) {
