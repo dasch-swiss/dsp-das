@@ -8,12 +8,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import { HumanReadableErrorPipe } from './human-readable-error.pipe';
-import { MultiLanguageFormService } from './multi-language-form.service';
+import { MultiLanguageForm2Service } from './multi-language-form2.service';
 
 @Component({
   selector: 'dasch-swiss-multi-language-textarea',
   standalone: true,
-  providers: [MultiLanguageFormService],
+  providers: [MultiLanguageForm2Service],
   imports: [
     CommonModule,
     MatButtonModule,
@@ -44,8 +44,8 @@ import { MultiLanguageFormService } from './multi-language-form.service';
           [placeholder]="placeholder"
           #textInput
           [readonly]="!editable"
-          [formControl]="formService.selectedFormControl">
-        </textarea>
+          [(ngModel)]="textAreaValue"
+          (ngModelChange)="onTextAreaChange($event)"></textarea>
       </mat-form-field>
     </div>
     <mat-error *ngIf="formService.formArray.invalid && formService.formArray.touched">
@@ -77,7 +77,12 @@ export class MultiLanguageTextareaComponent implements OnInit {
   @Input() editable = true;
   @Input() placeholder: string;
 
-  constructor(public formService: MultiLanguageFormService) {}
+  textAreaValue = '';
+  onTextAreaChange(event: any) {
+    console.log(event);
+  }
+
+  constructor(public formService: MultiLanguageForm2Service) {}
 
   ngOnInit() {
     this.formService.onInit(this.formGroup, this.controlName);
