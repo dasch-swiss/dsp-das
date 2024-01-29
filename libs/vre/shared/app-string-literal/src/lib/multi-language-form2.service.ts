@@ -14,13 +14,13 @@ export class MultiLanguageForm2Service {
   formGroup: FormGroup;
   controlName: string;
 
-  inputValue = '';
+  inputValue: string | null = null;
 
   get formArray() {
     return this.formGroup.controls[this.controlName] as FormArray;
   }
 
-  get selectedFormControl() {
+  get selectedFormControl(): FormControl {
     return (
       this.formArray.controls.find(
         control => control.value.language === this.availableLanguages[this.selectedLanguageIndex]
@@ -53,14 +53,14 @@ export class MultiLanguageForm2Service {
 
   onInputChange(newText: any) {
     if (newText === '') {
-      if (this.inputValue.length > 0) {
+      if (this.inputValue && this.inputValue.length > 0) {
         this.formArray.removeAt(this.formArray.controls.indexOf(this.selectedFormControl));
-        this.inputValue = '';
+        this.inputValue = null;
       }
       return;
     }
 
-    if (this.inputValue === '') {
+    if (this.inputValue === null) {
       this.formArray.push(
         this._fb.group({
           language: this.availableLanguages[this.selectedLanguageIndex],
@@ -79,6 +79,12 @@ export class MultiLanguageForm2Service {
 
   changeLanguage(languageIndex: number) {
     this.selectedLanguageIndex = languageIndex;
+
+    const newFormControl = this.formArray.controls.find(
+      control => control.value.language === this.availableLanguages[this.selectedLanguageIndex]
+    );
+
+    this.inputValue = newFormControl ? this.selectedFormControl.value : null;
   }
 
   private _setupLanguageIndex(): number {
