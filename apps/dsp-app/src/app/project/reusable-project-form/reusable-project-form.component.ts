@@ -7,7 +7,6 @@ import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { arrayLengthGreaterThanZeroValidator } from '../../main/form-validators/array-length-greater-than-zero-validator';
 import { atLeastOneStringRequired } from '../../main/form-validators/at-least-one-string-required.validator';
-import { duplicateArrayItemValidator } from '../../main/form-validators/duplicate-array-item.validator';
 import { shortcodeExistsValidator } from './shortcode-exists.validator';
 
 @Component({
@@ -63,10 +62,7 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
   readonly keywordsValidators = [Validators.minLength(3), Validators.maxLength(64)];
   subscription: Subscription;
 
-  constructor(
-    private _fb: FormBuilder,
-    private _store: Store
-  ) {}
+  constructor(private _fb: FormBuilder, private _store: Store) {}
 
   ngOnInit() {
     this._buildForm();
@@ -108,7 +104,7 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
         this.formData.keywords.map(keyword => {
           return [keyword, this.keywordsValidators];
         }),
-        [arrayLengthGreaterThanZeroValidator(), duplicateArrayItemValidator()]
+        arrayLengthGreaterThanZeroValidator()
       ),
     });
   }

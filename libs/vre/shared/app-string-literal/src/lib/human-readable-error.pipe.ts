@@ -36,10 +36,6 @@ export class HumanReadableErrorPipe implements PipeTransform {
       return 'This is already taken by another entity';
     }
 
-    if (error.hasOwnProperty('duplicateExists')) {
-      return 'Duplicate exists';
-    }
-
     throw Error(`Form control error "${Object.keys(error)[0]}" is not handled`);
   }
 }
