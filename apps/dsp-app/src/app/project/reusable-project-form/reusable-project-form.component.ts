@@ -62,7 +62,10 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
   readonly keywordsValidators = [Validators.minLength(3), Validators.maxLength(64)];
   subscription: Subscription;
 
-  constructor(private _fb: FormBuilder, private _store: Store) {}
+  constructor(
+    private _fb: FormBuilder, 
+    private _store: Store
+  ) {}
 
   ngOnInit() {
     this._buildForm();
