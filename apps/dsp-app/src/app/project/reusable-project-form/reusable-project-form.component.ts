@@ -63,7 +63,7 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
   subscription: Subscription;
 
   constructor(
-    private _fb: FormBuilder, 
+    private _fb: FormBuilder,
     private _store: Store
   ) {}
 
