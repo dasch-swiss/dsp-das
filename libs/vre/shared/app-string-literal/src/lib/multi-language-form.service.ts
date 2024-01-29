@@ -54,7 +54,8 @@ export class MultiLanguageFormService {
   }
 
   changeLanguage(languageIndex: number, deleteCurrentIfEmpty = true) {
-    console.log(this.selectedFormControl.value);
+    const currentValidators = (this.formArray.controls[0].get('value') as FormControl).validator;
+
     if (deleteCurrentIfEmpty && this.selectedFormControl.value.length === 0) {
       this.formArray.removeAt(this.formArray.controls.indexOf(this.selectedFormControl));
     }
@@ -66,7 +67,7 @@ export class MultiLanguageFormService {
       this.formArray.push(
         this._fb.group({
           language,
-          value: ['', (this.formArray.controls[0].get('value') as FormControl).validator],
+          value: ['', currentValidators],
         })
       );
       this.changeLanguage(languageIndex, false);
