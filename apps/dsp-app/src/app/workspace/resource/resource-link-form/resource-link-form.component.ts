@@ -11,7 +11,6 @@ import {
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-  ApiResponseError,
   Constants,
   CreateLinkValue,
   CreateResource,
@@ -21,12 +20,11 @@ import {
   StoredProject,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Select } from '@ngxs/store';
-import { Observable, Subject, combineLatest } from 'rxjs';
+import { Select, Store } from '@ngxs/store';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-import { FilteredResources } from '../../results/list-view/list-view.component';
+import { FilteredResources, ShortResInfo } from '../../results/list-view/list-view.component';
 import { ResourceService } from '../services/resource.service';
 
 @Component({
@@ -59,30 +57,29 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
 
   selectedProject: string;
 
-  get usersProjects$(): Observable<StoredProject[]> {
-    return combineLatest([this.currentUserProjects$, this.isSysAdmin$, this.allNotSystemProjects$]).pipe(
-      takeUntil(this.ngUnsubscribe),
-      map(([currentUserProjects, isSysAdmin, allNotSystemProjects]) =>
-        isSysAdmin ? currentUserProjects : allNotSystemProjects
-      )
-    );
-  }
+  usersProjects$: Observable<StoredProject[]> = combineLatest([
+    this._store.select(UserSelectors.userProjects),
+    this._store.select(UserSelectors.isSysAdmin),
+    this._store.select(ProjectsSelectors.allNotSystemProjects),
+  ]).pipe(
+    takeUntil(this.ngUnsubscribe),
+    map(([currentUserProjects, isSysAdmin, allNotSystemProjects]) =>
+      isSysAdmin ? currentUserProjects : allNotSystemProjects
+    )
+  );
 
-  @Select(ProjectsSelectors.allNotSystemProjects)
-  allNotSystemProjects$: Observable<StoredProject[]>;
-  @Select(UserSelectors.userProjects) currentUserProjects$: Observable<StoredProject[]>;
-  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean[]>;
+  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
+  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isCurrentProjectAdminOrSysAdmin$: Observable<boolean>;
   @Select(ProjectsSelectors.isProjectsLoading) isLoading$: Observable<boolean>;
-  @Select(ProjectsSelectors.hasLoadingErrors)
-  hasLoadingErrors$: Observable<boolean>;
+  @Select(ProjectsSelectors.hasLoadingErrors) hasLoadingErrors$: Observable<boolean>;
 
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _errorHandler: AppErrorHandler,
     private _fb: UntypedFormBuilder,
     private _resourceService: ResourceService,
-    private _router: Router
+    private _router: Router,
+    private _store: Store
   ) {}
 
   ngOnInit(): void {
@@ -128,6 +125,8 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  trackByFn = (index: number, item: ShortResInfo) => `${index}-${item.id}`;
+
   /**
    * submits the data
    */
@@ -165,16 +164,11 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
       };
     }
 
-    this._dspApiConnection.v2.res.createResource(linkObj).subscribe(
-      (res: ReadResource) => {
-        const path = this._resourceService.getResourcePath(res.id);
-        const goto = `/resource${path}`;
-        this._router.navigate([]).then(() => window.open(goto, '_blank'));
-        this.closeDialog.emit();
-      },
-      (error: ApiResponseError) => {
-        this._errorHandler.showMessage(error);
-      }
-    );
+    this._dspApiConnection.v2.res.createResource(linkObj).subscribe((res: ReadResource) => {
+      const path = this._resourceService.getResourcePath(res.id);
+      const goto = `/resource${path}`;
+      this._router.navigate([]).then(() => window.open(goto, '_blank'));
+      this.closeDialog.emit();
+    });
   }
 }

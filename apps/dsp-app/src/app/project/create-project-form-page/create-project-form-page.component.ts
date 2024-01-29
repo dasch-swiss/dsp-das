@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -5,8 +6,7 @@ import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { LoadProjectsAction } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Store } from '@ngxs/store';
-import { take } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-create-project-form-page',
@@ -23,7 +23,7 @@ import { take } from 'rxjs/operators';
         (formValueChange)="form = $event"></app-reusable-project-form>
 
       <div style="display: flex; justify-content: space-between">
-        <button color="primary" mat-button type="reset" [routerLink]="['..']">
+        <button color="primary" mat-button type="reset" (click)="goBack()">
           {{ 'appLabels.form.action.cancel' | translate }}
         </button>
 
@@ -50,7 +50,7 @@ export class CreateProjectFormPageComponent {
     private _projectApiService: ProjectApiService,
     private _store: Store,
     private _router: Router,
-    private _actions: Actions
+    private _location: Location
   ) {}
 
   submitForm() {
@@ -65,14 +65,15 @@ export class CreateProjectFormPageComponent {
         selfjoin: true,
         status: true,
       })
-      .pipe(take(1))
       .subscribe(projectResponse => {
         const uuid = ProjectService.IriToUuid(projectResponse.project.id);
         this._store.dispatch(new LoadProjectsAction());
         this.loading = false;
-        this._router
-          .navigateByUrl(`${RouteConstants.projectRelative}`, { skipLocationChange: true })
-          .then(() => this._router.navigate([`${RouteConstants.projectRelative}/${uuid}`]));
+        this._router.navigate([RouteConstants.projectRelative, uuid]);
       });
+  }
+
+  goBack() {
+    this._location.back();
   }
 }

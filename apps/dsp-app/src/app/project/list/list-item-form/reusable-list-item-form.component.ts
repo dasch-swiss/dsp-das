@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { StringLiteral } from '@dasch-swiss/dsp-js';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
@@ -41,13 +40,13 @@ export class ReusableListItemFormComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  _buildForm() {
+  private _buildForm() {
     this.form = this._fb.group({
       labels: this._fb.array(
         this.formData.labels.map(({ language, value }) =>
           this._fb.group({
             language,
-            value: [value, [Validators.maxLength(2000)]],
+            value: [value, [Validators.required, Validators.maxLength(2000)]],
           })
         ),
         atLeastOneStringRequired('value')
@@ -56,7 +55,7 @@ export class ReusableListItemFormComponent implements OnInit, OnDestroy {
         this.formData.comments.map(({ language, value }) =>
           this._fb.group({
             language,
-            value: [value, [Validators.maxLength(2000)]],
+            value: [value, [Validators.required, Validators.maxLength(2000)]],
           })
         )
       ),
