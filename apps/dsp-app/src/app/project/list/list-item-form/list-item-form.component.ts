@@ -84,6 +84,6 @@ export class ListItemFormComponent implements OnInit {
   }
 
   private _resetForm() {
-    this.form.reset({ labels: [] });
+    this.form.reset({ labels: [] }, { emitEvent: true });
   }
 }

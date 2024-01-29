@@ -1,4 +1,4 @@
-import { ElementRef, Injectable } from '@angular/core';
+import { ChangeDetectorRef, ElementRef, Injectable } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
@@ -43,7 +43,8 @@ export class MultiLanguageFormService {
 
   constructor(
     private _store: Store,
-    private _fb: FormBuilder
+    private _fb: FormBuilder,
+    private _cd: ChangeDetectorRef
   ) {}
 
   onInit(formGroup: FormGroup, controlName: string, validators: ValidatorFn[]) {
@@ -51,6 +52,14 @@ export class MultiLanguageFormService {
     this.controlName = controlName;
     this.selectedLanguageIndex = this._setupLanguageIndex();
     this.validators = validators;
+
+    this.formArray.valueChanges.subscribe(array => {
+      if (array.length === 1 && array[0].language === null && array[0].value === null) {
+        this.formArray.removeAt(0);
+        this.inputValue = null;
+        this._cd.detectChanges(); // TODO remove later
+      }
+    });
   }
 
   onInputChange(newText: any) {
