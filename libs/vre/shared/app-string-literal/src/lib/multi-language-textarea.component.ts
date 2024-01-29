@@ -44,8 +44,8 @@ import { MultiLanguageForm2Service } from './multi-language-form2.service';
           [placeholder]="placeholder"
           #textInput
           [readonly]="!editable"
-          [(ngModel)]="textAreaValue"
-          (ngModelChange)="onTextAreaChange($event)"></textarea>
+          [ngModel]="formService.textAreaValue"
+          (ngModelChange)="formService.onTextAreaChange($event)"></textarea>
       </mat-form-field>
     </div>
     <mat-error *ngIf="formService.formArray.invalid && formService.formArray.touched">
@@ -76,11 +76,6 @@ export class MultiLanguageTextareaComponent implements OnInit {
   @Input() controlName: string;
   @Input() editable = true;
   @Input() placeholder: string;
-
-  textAreaValue = '';
-  onTextAreaChange(event: any) {
-    console.log(event);
-  }
 
   constructor(public formService: MultiLanguageForm2Service) {}
 
