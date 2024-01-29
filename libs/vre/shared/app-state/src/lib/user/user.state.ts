@@ -137,12 +137,7 @@ export class UserState {
 
   @Action(LogUserOutAction)
   logUserOut(ctx: StateContext<UserStateModel>) {
-    return of(ctx.getState()).pipe(
-      map(currentState => {
-        ctx.setState(defaults);
-        return currentState;
-      })
-    );
+    ctx.setState(defaults);
   }
 
   @Action(LoadUsersAction)

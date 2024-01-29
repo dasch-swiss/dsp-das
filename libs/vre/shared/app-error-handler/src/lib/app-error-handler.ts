@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable, ErrorHandler } from '@angular/core';
+import { ErrorHandler, Injectable } from '@angular/core';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { AjaxError } from 'rxjs/ajax';
@@ -9,6 +9,7 @@ import { AjaxError } from 'rxjs/ajax';
 })
 export class AppErrorHandler implements ErrorHandler {
   constructor(private _notification: NotificationService) {}
+
   handleError(error: any): void {
     if (error instanceof ApiResponseError && error.error instanceof AjaxError) {
       // JS-LIB
