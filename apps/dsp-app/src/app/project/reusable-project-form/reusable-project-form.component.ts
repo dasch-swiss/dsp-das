@@ -2,11 +2,11 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
-import { Select, Store } from '@ngxs/store';
-import { Observable, Subscription } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
-import { arrayLengthGreaterThanZeroValidator } from './array-length-greater-than-zero-validator';
-import { atLeastOneStringRequired } from './at-least-one-string-required.validator';
+import { arrayLengthGreaterThanZeroValidator } from '../../main/form-validators/array-length-greater-than-zero-validator';
+import { atLeastOneStringRequired } from '../../main/form-validators/at-least-one-string-required.validator';
 import { shortcodeExistsValidator } from './shortcode-exists.validator';
 
 @Component({
@@ -40,7 +40,8 @@ import { shortcodeExistsValidator } from './shortcode-exists.validator';
         [placeholder]="('appLabels.form.project.general.description' | translate) + '*'"
         [formGroup]="form"
         data-cy="description-input"
-        controlName="description">
+        controlName="description"
+        [validators]="descriptionValidators">
       </dasch-swiss-multi-language-textarea>
 
       <app-chip-list-input
@@ -66,6 +67,7 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
   shortcodePatternError = { errorKey: 'pattern', message: 'This field must contains letters from A to F and 0 to 9' };
   shortCodeExistsError = { errorKey: 'shortcodeExists', message: 'This shortcode already exists' };
   readonly keywordsValidators = [Validators.minLength(3), Validators.maxLength(64)];
+  readonly descriptionValidators = [Validators.maxLength(2000)];
   subscription: Subscription;
 
   constructor(
@@ -104,7 +106,7 @@ export class ReusableProjectFormComponent implements OnInit, OnDestroy {
         this.formData.description.map(({ language, value }) =>
           this._fb.group({
             language,
-            value: [value, [Validators.maxLength(2000)]],
+            value: [value, this.descriptionValidators],
           })
         ),
         atLeastOneStringRequired('value')

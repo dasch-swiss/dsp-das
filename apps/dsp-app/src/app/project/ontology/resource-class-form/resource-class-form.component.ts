@@ -7,8 +7,8 @@ import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
 import { existingNamesValidator } from '../../../main/directive/existing-name/existing-names.validator';
+import { atLeastOneStringRequired } from '../../../main/form-validators/at-least-one-string-required.validator';
 import { CustomRegex } from '../../../workspace/resource/values/custom-regex';
-import { atLeastOneStringRequired } from '../../reusable-project-form/at-least-one-string-required.validator';
 
 @Component({
   selector: 'app-resource-class-form',
@@ -21,14 +21,19 @@ import { atLeastOneStringRequired } from '../../reusable-project-form/at-least-o
         placeholder="Class name *"
         prefixIcon="fingerprint"></app-common-input>
 
-      <dasch-swiss-multi-language-input placeholder="Label *" [formGroup]="form" controlName="labels">
+      <dasch-swiss-multi-language-input
+        placeholder="Label *"
+        [formGroup]="form"
+        controlName="labels"
+        [validators]="labelsValidators">
       </dasch-swiss-multi-language-input>
 
       <dasch-swiss-multi-language-textarea
         placeholder="Comment *"
         [formGroup]="form"
         controlName="comments"
-        [editable]="true">
+        [editable]="true"
+        [validators]="commentsValidators">
       </dasch-swiss-multi-language-textarea>
     </form>
   `,
@@ -46,6 +51,8 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy {
   existingNames: [RegExp] = [new RegExp('anEmptyRegularExpressionWasntPossible')];
   ontology;
   subscription: Subscription;
+  readonly labelsValidators = [Validators.maxLength(2000)];
+  readonly commentsValidators = [Validators.maxLength(2000)];
 
   constructor(
     private _fb: FormBuilder,
@@ -92,7 +99,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy {
         this.formData.labels.map(({ language, value }) =>
           this._fb.group({
             language,
-            value: [value, [Validators.maxLength(2000)]],
+            value: [value, this.labelsValidators],
           })
         ),
         atLeastOneStringRequired('value')
@@ -101,7 +108,7 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy {
         this.formData.comments.map(({ language, value }) =>
           this._fb.group({
             language,
-            value: [value, [Validators.maxLength(2000)]],
+            value: [value, this.commentsValidators],
           })
         ),
         atLeastOneStringRequired('value')

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ListInfoResponse, ListNode, ListNodeInfoResponse } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { atLeastOneStringRequired } from '../../reusable-project-form/at-least-one-string-required.validator';
+import { atLeastOneStringRequired } from '../../../main/form-validators/at-least-one-string-required.validator';
 import { ListItemService } from '../list-item/list-item.service';
 
 export class ListNodeOperation {
@@ -20,7 +20,8 @@ export class ListNodeOperation {
         style="flex: 1"
         [formGroup]="form"
         controlName="labels"
-        [placeholder]="placeholder">
+        [placeholder]="placeholder"
+        [validators]="labelsValidators">
       </dasch-swiss-multi-language-input>
       <button color="primary" mat-icon-button matSuffix [disabled]="form.invalid" type="submit">
         <mat-icon> add</mat-icon>
@@ -33,8 +34,7 @@ export class ListItemFormComponent implements OnInit {
   placeholder: string;
   form: FormGroup;
 
-  readonly FORM_DEFAULT_VALUE = [{ language: 'de', value: '' }];
-
+  readonly labelsValidators = [Validators.maxLength(2000)];
   constructor(
     private _listApiService: ListApiService,
     private _fb: FormBuilder,
@@ -79,19 +79,11 @@ export class ListItemFormComponent implements OnInit {
 
   private _buildForm() {
     this.form = this._fb.group({
-      labels: this._fb.array(
-        this.FORM_DEFAULT_VALUE.map(({ language, value }) =>
-          this._fb.group({
-            language,
-            value: [value, [Validators.maxLength(2000)]],
-          })
-        ),
-        atLeastOneStringRequired('value')
-      ),
+      labels: this._fb.array([], atLeastOneStringRequired('value')),
     });
   }
 
   private _resetForm() {
-    this.form.reset({ labels: this.FORM_DEFAULT_VALUE });
+    (this.form.get('labels') as FormArray).clear();
   }
 }
