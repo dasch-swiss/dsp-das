@@ -34,11 +34,10 @@ export class AppErrorHandler implements ErrorHandler {
         if (badRequestRegexMatch) {
           this.displayNotification(badRequestRegexMatch[1]);
         }
+
+        this.testInvalidRequest(error.error.error);
       } else if (typeof error.error === 'string') {
-        const invalidRequestRegexMatch = error.error.match(/\((.*)\)$/);
-        if (invalidRequestRegexMatch) {
-          this.displayNotification(invalidRequestRegexMatch[1]);
-        }
+        this.testInvalidRequest(error.error);
       } else if (error.error.message) {
         this.displayNotification(error.error.message);
       }
@@ -70,5 +69,13 @@ export class AppErrorHandler implements ErrorHandler {
 
   private displayNotification(message: string) {
     this._notification.openSnackBar(message, 'error');
+  }
+
+  // TODO ask the backend to uniformize their response, so that this method is only called once.
+  private testInvalidRequest(error: string) {
+    const invalidRequestRegexMatch = error.match(/\((.*)\)$/);
+    if (invalidRequestRegexMatch) {
+      this.displayNotification(invalidRequestRegexMatch[1]);
+    }
   }
 }
