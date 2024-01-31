@@ -28,12 +28,20 @@ export class AppErrorHandler implements ErrorHandler {
 
   private handleHttpErrorResponse(error: HttpErrorResponse) {
     if (error.status === 400) {
-      const readableErrorMatch = error.error.error.match(/dsp\.errors\.BadRequestException:(.*)$/);
-      this.displayNotification(readableErrorMatch[1]);
-      return;
-    } else if (error.status >= 400 && error.status < 500) {
-      const readableErrorMatch = error.error.error.match(/\((.*)\)$/);
-      this.displayNotification(readableErrorMatch[1]);
+      if (error.error?.error) {
+        const badRequestRegexMatch = error.error.error.match(/dsp\.errors\.BadRequestException:(.*)$/);
+
+        if (badRequestRegexMatch) {
+          this.displayNotification(badRequestRegexMatch[1]);
+        }
+      } else if (typeof error.error === 'string') {
+        const invalidRequestRegexMatch = error.error.match(/\((.*)\)$/);
+        if (invalidRequestRegexMatch) {
+          this.displayNotification(invalidRequestRegexMatch[1]);
+        }
+      } else if (error.error.message) {
+        this.displayNotification(error.error.message);
+      }
       return;
     }
 
