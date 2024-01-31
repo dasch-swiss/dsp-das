@@ -56,7 +56,7 @@ export class EditListItemDialogComponent {
       projectIri: this.data.projectIri,
       listIri: this.data.nodeIri,
       labels: this.form.value.labels,
-      comments: this.form.value.comments,
+      comments: this.form.value.comments.length > 0 ? this.form.value.comments : null, // TODO: improve form to avoir this ?
     };
 
     this._listApiService
