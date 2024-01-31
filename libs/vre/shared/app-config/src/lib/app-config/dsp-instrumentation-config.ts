@@ -3,15 +3,7 @@
  *  SPDX-License-Identifier: Apache-2.0
  */
 
-export class DspDataDogConfig {
-  constructor(
-    public enabled: boolean,
-    public applicationId: string | undefined,
-    public clientToken: string | undefined,
-    public site: string | undefined,
-    public service: string | undefined
-  ) {}
-}
+import { InstrumentationType } from './app-config';
 
 export class DspRollbarConfig {
   constructor(
@@ -22,8 +14,7 @@ export class DspRollbarConfig {
 
 export class DspInstrumentationConfig {
   constructor(
-    public environment: string,
-    public dataDog: DspDataDogConfig,
+    public environment: InstrumentationType['environment'],
     public rollbar: DspRollbarConfig
   ) {}
 }
