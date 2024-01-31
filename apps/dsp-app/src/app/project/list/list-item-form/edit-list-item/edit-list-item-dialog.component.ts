@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { finalize, switchMap } from 'rxjs/operators';
 
 export interface EditListItemDialogProps {
   nodeIri: string;
@@ -68,10 +68,12 @@ export class EditListItemDialogComponent {
             return this._listApiService.deleteChildComments(data.listIri);
           }
           return of(true);
+        }),
+        finalize(() => {
+          this.loading = false;
         })
       )
       .subscribe(() => {
-        this.loading = false;
         this.dialogRef.close(true);
       });
   }
