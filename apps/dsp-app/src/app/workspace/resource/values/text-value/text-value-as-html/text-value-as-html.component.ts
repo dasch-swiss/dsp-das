@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ReadTextValueAsHtml } from '@dasch-swiss/dsp-js';
 import { BaseValueDirective } from '../../../../../main/directive/base-value.directive';
 
