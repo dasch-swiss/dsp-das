@@ -32,6 +32,7 @@ export class UserMenuComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.isLoggedIn$.subscribe(isLoggedIn => {
       if (isLoggedIn && this.menuTrigger.menuOpen) {
+        console.log('close menu');
         this.menuTrigger.closeMenu();
       }
     });
