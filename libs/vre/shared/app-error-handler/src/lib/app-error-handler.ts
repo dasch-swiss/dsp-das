@@ -4,6 +4,7 @@ import { ApiResponseError } from '@dasch-swiss/dsp-js';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { AjaxError } from 'rxjs/ajax';
+import { AppError } from './app-error';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,8 @@ export class AppErrorHandler implements ErrorHandler {
     } else if (error instanceof HttpErrorResponse) {
       // ApiServices
       this.handleHttpErrorResponse(error);
+    } else if (error instanceof AppError) {
+      this.displayNotification(error.message);
     } else if (this._appConfig.dspInstrumentationConfig.environment !== 'prod') {
       console.error(error);
     }

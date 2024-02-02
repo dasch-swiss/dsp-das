@@ -1,164 +1,93 @@
 import { Location } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthError, AuthService } from '@dasch-swiss/vre/shared/app-session';
-import { Subject } from 'rxjs';
-import { takeLast } from 'rxjs/operators';
+import { AuthService } from '@dasch-swiss/vre/shared/app-session';
+import { Subscription } from 'rxjs';
+import { finalize, takeLast, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login-form',
-  templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <form [formGroup]="form" (ngSubmit)="login()" style="display: flex; flex-direction: column; padding: 16px;">
+      <app-common-input [formGroup]="form" controlName="username" placeholder="username"></app-common-input>
+
+      <mat-form-field>
+        <input
+          placeholder="Password"
+          autocomplete="current-password"
+          formControlName="password"
+          matInput
+          type="password" />
+      </mat-form-field>
+
+      <button
+        [class.mat-primary]="!isLoginError"
+        [class.mat-warn]="isLoginError"
+        mat-raised-button
+        appLoadingButton
+        [isLoading]="loading"
+        type="submit">
+        {{ isLoginError ? 'Retry' : 'Login' }}
+      </button>
+    </form>
+  `,
 })
 export class LoginFormComponent implements OnInit, OnDestroy {
-  /**
-   * set whether or not you want icons to display in the input fields
-   *
-   * @param icons
-   */
-  @Input() icons?: boolean;
-  /**
-   * emits true when the login process was successful and false in case of error
-   *
-   * @param loginSuccess
-   *
-   */
-  @Output() loginSuccess: EventEmitter<boolean> = new EventEmitter<boolean>();
-  /**
-   * emits true when the logout process was successful and false in case of error
-   *
-   * @param logoutSuccess
-   *
-   */
-  @Output() logoutSuccess: EventEmitter<boolean> = new EventEmitter<boolean>();
-  // form
-  form: UntypedFormGroup;
-  // show progress indicator
   loading = false;
-  // in case of an error
-  isError: boolean;
-  // specific error messages
-  loginFailed = false;
-  loginErrorServer = false;
-  // todo: should be handled by translation service (i18n)
-  formLabel = {
-    title: 'Login here',
-    name: 'Username',
-    pw: 'Password',
-    submit: 'Login',
-    retry: 'Retry',
-    logout: 'LOGOUT',
-    remember: 'Remember me',
-    forgotPassword: 'Forgot password?',
-    error: {
-      failed: 'Password or username is wrong',
-      server: 'An error has occurred when connecting to the server. Try again later or contact the DaSCH support.',
-    },
-  };
-  // error definitions for the following form fields
-  formErrors = {
-    username: '',
-    password: '',
-  };
-
-  // labels for the login form
-  // error messages for the form fields defined in formErrors
-  validationMessages = {
-    username: {
-      required: 'user name is required.',
-    },
-    password: {
-      required: 'password is required',
-    },
-  };
+  form = this._fb.group({
+    username: ['', Validators.required],
+    password: ['', Validators.required],
+  });
+  isLoginError: boolean;
   returnUrl: string;
-  private readonly returnUrlParameterName = 'returnUrl';
-  private destroyed$ = new Subject<void>();
+
+  private subscription: Subscription;
 
   constructor(
     private _fb: UntypedFormBuilder,
     private router: Router,
     private _authService: AuthService,
     private route: ActivatedRoute,
-    private location: Location,
-    private cd: ChangeDetectorRef
+    private location: Location
   ) {}
 
-  /**
-   * The login form is currently only shown from the user-menu.component.ts.
-   * The use case of showing the login form when the user is redirected
-   * to /login?returnUrl=... was removed.
-   */
   ngOnInit() {
-    this.buildLoginForm();
     this.returnUrl = this.getReturnUrl();
   }
 
   ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
+    this.subscription.unsubscribe();
   }
 
-  buildLoginForm(): void {
-    this.form = this._fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-    });
-  }
-
-  /**
-   * login
-   */
   login() {
     this.loading = true;
-    this.isError = false;
+    this.isLoginError = false;
 
-    // grab values from form
-    const identifier: string = this.form.get('username').value;
-    const password: string = this.form.get('password').value;
-
-    this._authService
-      .login$(identifier, password)
-      .pipe(takeLast(1))
-      .subscribe({
-        next: loginResult => {
-          this.loginSuccess.emit(true);
+    this.subscription = this._authService
+      .login$(this.form.get('username').value, this.form.get('password').value)
+      .pipe(
+        takeLast(1),
+        tap({
+          error: () => {
+            this.isLoginError = true;
+          },
+        }),
+        finalize(() => {
           this.loading = false;
-          this.cd.markForCheck();
-
-          if (this.returnUrl) {
-            this.router.navigate([this.returnUrl]);
-          }
-        },
-        error: (error: AuthError) => {
-          this.loginSuccess.emit(false);
-
-          this.loading = false;
-          this.isError = true;
-
-          if (error.status === 401) {
-            this.loginFailed = true;
-          } else {
-            this.loginErrorServer = true;
-          }
-        },
+        })
+      )
+      .subscribe(() => {
+        if (this.returnUrl) {
+          this.router.navigate([this.returnUrl]);
+        }
       });
   }
 
   private getReturnUrl(): string {
-    const returnUrl = this.route.snapshot.queryParams[this.returnUrlParameterName];
-    this.location.go(this.removeParameterFromUrl(this.location.path(), this.returnUrlParameterName, returnUrl));
+    const returnUrlParameterName = 'returnUrl';
+    const returnUrl = this.route.snapshot.queryParams[returnUrlParameterName];
+    this.location.go(this.removeParameterFromUrl(this.location.path(), returnUrlParameterName, returnUrl));
     return returnUrl;
   }
 
