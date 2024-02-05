@@ -1,3 +1,6 @@
 {
-  "extends": ["../../../.eslintrc-angular.json"]
+  "extends": ["../../../.eslintrc-angular.json"],
+  "exclude": [
+    "src/generated/**/*"
+  ]
 }
