@@ -4,21 +4,5 @@
   "sourceRoot": "libs/vre/open-api/src",
   "prefix": "dasch-swiss",
   "tags": [],
-  "projectType": "library",
-  "targets": {
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-      "options": {
-        "jestConfig": "libs/vre/open-api/jest.config.ts",
-        "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
-        }
-      }
-    }
-  }
+  "projectType": "library"
 }
