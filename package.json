@@ -14,6 +14,7 @@
     "start-with-ls-test-server": "nx run dsp-app:serve:ls-test-server",
     "start-with-0845-test-server": "nx run dsp-app:serve:0845-test-server",
     "start-with-staging-server": "nx run dsp-app:serve:staging-server",
+    "generate-openapi-module": "cd libs/vre/open-api && rm -rf src/lib/generated && npx openapi-generator-cli generate",
     "e2e-local": "cd apps/dsp-app && npx cypress open",
     "e2e-ci-dev": "nx run dsp-app:e2e:development",
     "e2e-ci": "nx run dsp-app:e2e:production",

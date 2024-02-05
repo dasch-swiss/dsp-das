@@ -1,15 +1,15 @@
 {
-  "$schema": "../../../../../node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "$schema": "../../../node_modules/@openapitools/openapi-generator-cli/config.schema.json",
   "spaces": 2,
   "generator-cli": {
     "version": "7.2.0",
     "generators":{
-      "v2.0": {
+      "api": {
         "generatorName": "typescript-angular",
         "inputSpec": "https://api.dev.dasch.swiss/api/docs/docs.yaml",
-        "output": "./lib/generated",
+        "output": "./src/generated",
         "additionalProperties": {
-          "apiModulePrefix": "za"
+          "fileNaming": "kebab-case"
         }
       }
     }
