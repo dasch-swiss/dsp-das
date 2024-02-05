@@ -19,13 +19,6 @@
           "codeCoverage": true
         }
       }
-    },
-    "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["libs/vre/open-api/**/*.ts", "libs/vre/open-api/**/*.html"]
-      }
     }
   }
 }
