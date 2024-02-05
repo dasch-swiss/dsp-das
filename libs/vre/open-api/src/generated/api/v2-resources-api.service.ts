@@ -19,13 +19,9 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { BadCredentialsException } from '../model/bad-credentials-exception';
-// @ts-ignore
-import { ForbiddenException } from '../model/forbidden-exception';
-// @ts-ignore
 import { GravsearchException } from '../model/gravsearch-exception';
 // @ts-ignore
-import { Json } from '../model/json';
+import { ListResponseDto } from '../model/list-response-dto';
 // @ts-ignore
 import { NotFoundException } from '../model/not-found-exception';
 
@@ -38,7 +34,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class AdminMaintenanceService {
+export class V2ResourcesApiService {
 
     protected basePath = 'https://api.dev.dasch.swiss:443';
     public defaultHeaders = new HttpHeaders();
@@ -100,33 +96,41 @@ export class AdminMaintenanceService {
     }
 
     /**
-     * @param actionName The name of the maintenance action to be executed. Maintenance actions are executed asynchronously in the background. 
-     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
-     * @param json The optional parameters as json for the maintenance action. May be required by certain actions. 
+     * @param xKnoraAcceptProject 
+     * @param resourceClass 
+     * @param order 
+     * @param orderBy 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public postAdminMaintenanceActionName(actionName: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, json?: Json, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any>;
-    public postAdminMaintenanceActionName(actionName: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, json?: Json, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public postAdminMaintenanceActionName(actionName: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, json?: Json, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public postAdminMaintenanceActionName(actionName: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, json?: Json, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-        if (actionName === null || actionName === undefined) {
-            throw new Error('Required parameter actionName was null or undefined when calling postAdminMaintenanceActionName.');
+    public getV2ResourcesInfo(xKnoraAcceptProject: string, resourceClass: string, order?: string, orderBy?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ListResponseDto>;
+    public getV2ResourcesInfo(xKnoraAcceptProject: string, resourceClass: string, order?: string, orderBy?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ListResponseDto>>;
+    public getV2ResourcesInfo(xKnoraAcceptProject: string, resourceClass: string, order?: string, orderBy?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ListResponseDto>>;
+    public getV2ResourcesInfo(xKnoraAcceptProject: string, resourceClass: string, order?: string, orderBy?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (xKnoraAcceptProject === null || xKnoraAcceptProject === undefined) {
+            throw new Error('Required parameter xKnoraAcceptProject was null or undefined when calling getV2ResourcesInfo.');
+        }
+        if (resourceClass === null || resourceClass === undefined) {
+            throw new Error('Required parameter resourceClass was null or undefined when calling getV2ResourcesInfo.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (resourceClass !== undefined && resourceClass !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>resourceClass, 'resourceClass');
+        }
+        if (order !== undefined && order !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>order, 'order');
+        }
+        if (orderBy !== undefined && orderBy !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>orderBy, 'orderBy');
         }
 
         let localVarHeaders = this.defaultHeaders;
-
-        let localVarCredential: string | undefined;
-        // authentication (httpAuth1) required
-        localVarCredential = this.configuration.lookupCredential('httpAuth1');
-        if (localVarCredential) {
-            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
-        }
-
-        // authentication (httpAuth) required
-        localVarCredential = this.configuration.lookupCredential('httpAuth');
-        if (localVarCredential) {
-            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        if (xKnoraAcceptProject !== undefined && xKnoraAcceptProject !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-project', String(xKnoraAcceptProject));
         }
 
         let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
@@ -147,15 +151,6 @@ export class AdminMaintenanceService {
         }
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
-        }
-
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -167,11 +162,11 @@ export class AdminMaintenanceService {
             }
         }
 
-        let localVarPath = `/admin/maintenance/${this.configuration.encodeParam({name: "actionName", value: actionName, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<any>('post', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/v2/resources/info`;
+        return this.httpClient.request<ListResponseDto>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: json,
+                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

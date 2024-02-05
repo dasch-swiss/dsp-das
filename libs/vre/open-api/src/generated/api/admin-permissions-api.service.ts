@@ -19,41 +19,41 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
+import { AdministrativePermissionCreateResponseADM } from '../model/administrative-permission-create-response-adm';
+// @ts-ignore
+import { AdministrativePermissionGetResponseADM } from '../model/administrative-permission-get-response-adm';
+// @ts-ignore
+import { AdministrativePermissionsForProjectGetResponseADM } from '../model/administrative-permissions-for-project-get-response-adm';
+// @ts-ignore
 import { BadCredentialsException } from '../model/bad-credentials-exception';
 // @ts-ignore
-import { CanDeleteListResponseADM } from '../model/can-delete-list-response-adm';
+import { ChangePermissionGroupApiRequestADM } from '../model/change-permission-group-api-request-adm';
+// @ts-ignore
+import { ChangePermissionHasPermissionsApiRequestADM } from '../model/change-permission-has-permissions-api-request-adm';
+// @ts-ignore
+import { ChangePermissionPropertyApiRequestADM } from '../model/change-permission-property-api-request-adm';
+// @ts-ignore
+import { ChangePermissionResourceClassApiRequestADM } from '../model/change-permission-resource-class-api-request-adm';
+// @ts-ignore
+import { CreateAdministrativePermissionAPIRequestADM } from '../model/create-administrative-permission-api-request-adm';
+// @ts-ignore
+import { CreateDefaultObjectAccessPermissionAPIRequestADM } from '../model/create-default-object-access-permission-api-request-adm';
+// @ts-ignore
+import { DefaultObjectAccessPermissionCreateResponseADM } from '../model/default-object-access-permission-create-response-adm';
+// @ts-ignore
+import { DefaultObjectAccessPermissionsForProjectGetResponseADM } from '../model/default-object-access-permissions-for-project-get-response-adm';
 // @ts-ignore
 import { ForbiddenException } from '../model/forbidden-exception';
 // @ts-ignore
 import { GravsearchException } from '../model/gravsearch-exception';
 // @ts-ignore
-import { ListChangeCommentsRequest } from '../model/list-change-comments-request';
-// @ts-ignore
-import { ListChangeLabelsRequest } from '../model/list-change-labels-request';
-// @ts-ignore
-import { ListChangeNameRequest } from '../model/list-change-name-request';
-// @ts-ignore
-import { ListChangePositionRequest } from '../model/list-change-position-request';
-// @ts-ignore
-import { ListChangeRequest } from '../model/list-change-request';
-// @ts-ignore
-import { ListCreateRootNodeRequest } from '../model/list-create-root-node-request';
-// @ts-ignore
-import { ListGetResponseADM } from '../model/list-get-response-adm';
-// @ts-ignore
-import { ListItemDeleteResponseADM } from '../model/list-item-delete-response-adm';
-// @ts-ignore
-import { ListItemGetResponseADM } from '../model/list-item-get-response-adm';
-// @ts-ignore
-import { ListNodeCommentsDeleteResponseADM } from '../model/list-node-comments-delete-response-adm';
-// @ts-ignore
-import { ListsGetResponseADM } from '../model/lists-get-response-adm';
-// @ts-ignore
-import { NodeInfoGetResponseADM } from '../model/node-info-get-response-adm';
-// @ts-ignore
-import { NodePositionChangeResponseADM } from '../model/node-position-change-response-adm';
-// @ts-ignore
 import { NotFoundException } from '../model/not-found-exception';
+// @ts-ignore
+import { PermissionDeleteResponseADM } from '../model/permission-delete-response-adm';
+// @ts-ignore
+import { PermissionGetResponseADM } from '../model/permission-get-response-adm';
+// @ts-ignore
+import { PermissionsForProjectGetResponseADM } from '../model/permissions-for-project-get-response-adm';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -64,7 +64,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class AdminListsService {
+export class AdminPermissionsApiService {
 
     protected basePath = 'https://api.dev.dasch.swiss:443';
     public defaultHeaders = new HttpHeaders();
@@ -126,17 +126,18 @@ export class AdminListsService {
     }
 
     /**
-     * @param p1 The IRI of the list.
+     * Delete an permission.
+     * @param permissionIri The IRI of a permission. Must be URL-encoded.
      * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteAdminListsCommentsP1(p1: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ListNodeCommentsDeleteResponseADM>;
-    public deleteAdminListsCommentsP1(p1: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ListNodeCommentsDeleteResponseADM>>;
-    public deleteAdminListsCommentsP1(p1: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ListNodeCommentsDeleteResponseADM>>;
-    public deleteAdminListsCommentsP1(p1: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-        if (p1 === null || p1 === undefined) {
-            throw new Error('Required parameter p1 was null or undefined when calling deleteAdminListsCommentsP1.');
+    public deleteAdminPermissionsPermissioniri(permissionIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PermissionDeleteResponseADM>;
+    public deleteAdminPermissionsPermissioniri(permissionIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PermissionDeleteResponseADM>>;
+    public deleteAdminPermissionsPermissioniri(permissionIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PermissionDeleteResponseADM>>;
+    public deleteAdminPermissionsPermissioniri(permissionIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (permissionIri === null || permissionIri === undefined) {
+            throw new Error('Required parameter permissionIri was null or undefined when calling deleteAdminPermissionsPermissioniri.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -183,8 +184,8 @@ export class AdminListsService {
             }
         }
 
-        let localVarPath = `/admin/lists/comments/${this.configuration.encodeParam({name: "p1", value: p1, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<ListNodeCommentsDeleteResponseADM>('delete', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/admin/permissions/${this.configuration.encodeParam({name: "permissionIri", value: permissionIri, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<PermissionDeleteResponseADM>('delete', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -197,17 +198,18 @@ export class AdminListsService {
     }
 
     /**
-     * @param p1 The IRI of the list.
+     * Get all administrative permissions for a project.
+     * @param projectIri The IRI of a project. Must be URL-encoded.
      * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteAdminListsP1(p1: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ListItemDeleteResponseADM>;
-    public deleteAdminListsP1(p1: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ListItemDeleteResponseADM>>;
-    public deleteAdminListsP1(p1: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ListItemDeleteResponseADM>>;
-    public deleteAdminListsP1(p1: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-        if (p1 === null || p1 === undefined) {
-            throw new Error('Required parameter p1 was null or undefined when calling deleteAdminListsP1.');
+    public getAdminPermissionsApProjectiri(projectIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<AdministrativePermissionsForProjectGetResponseADM>;
+    public getAdminPermissionsApProjectiri(projectIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<AdministrativePermissionsForProjectGetResponseADM>>;
+    public getAdminPermissionsApProjectiri(projectIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<AdministrativePermissionsForProjectGetResponseADM>>;
+    public getAdminPermissionsApProjectiri(projectIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (projectIri === null || projectIri === undefined) {
+            throw new Error('Required parameter projectIri was null or undefined when calling getAdminPermissionsApProjectiri.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -254,8 +256,8 @@ export class AdminListsService {
             }
         }
 
-        let localVarPath = `/admin/lists/${this.configuration.encodeParam({name: "p1", value: p1, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<ListItemDeleteResponseADM>('delete', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/admin/permissions/ap/${this.configuration.encodeParam({name: "projectIri", value: projectIri, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<AdministrativePermissionsForProjectGetResponseADM>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -268,253 +270,22 @@ export class AdminListsService {
     }
 
     /**
-     * Get all lists or all lists belonging to a project.
-     * @param projectIri The (optional) IRI of the project.
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getAdminLists(projectIri?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ListsGetResponseADM>;
-    public getAdminLists(projectIri?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ListsGetResponseADM>>;
-    public getAdminLists(projectIri?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ListsGetResponseADM>>;
-    public getAdminLists(projectIri?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-
-        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (projectIri !== undefined && projectIri !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>projectIri, 'projectIri');
-        }
-
-        let localVarHeaders = this.defaultHeaders;
-
-        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (localVarHttpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (localVarHttpHeaderAcceptSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
-        }
-
-        let localVarHttpContext: HttpContext | undefined = options && options.context;
-        if (localVarHttpContext === undefined) {
-            localVarHttpContext = new HttpContext();
-        }
-
-
-        let responseType_: 'text' | 'json' | 'blob' = 'json';
-        if (localVarHttpHeaderAcceptSelected) {
-            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
-                responseType_ = 'text';
-            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
-                responseType_ = 'json';
-            } else {
-                responseType_ = 'blob';
-            }
-        }
-
-        let localVarPath = `/admin/lists`;
-        return this.httpClient.request<ListsGetResponseADM>('get', `${this.configuration.basePath}${localVarPath}`,
-            {
-                context: localVarHttpContext,
-                params: localVarQueryParameters,
-                responseType: <any>responseType_,
-                withCredentials: this.configuration.withCredentials,
-                headers: localVarHeaders,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Checks if a list can be deleted (none of its nodes is used in data).
-     * @param p1 The IRI of the list.
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getAdminListsCandeleteP1(p1: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CanDeleteListResponseADM>;
-    public getAdminListsCandeleteP1(p1: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CanDeleteListResponseADM>>;
-    public getAdminListsCandeleteP1(p1: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CanDeleteListResponseADM>>;
-    public getAdminListsCandeleteP1(p1: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-        if (p1 === null || p1 === undefined) {
-            throw new Error('Required parameter p1 was null or undefined when calling getAdminListsCandeleteP1.');
-        }
-
-        let localVarHeaders = this.defaultHeaders;
-
-        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (localVarHttpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (localVarHttpHeaderAcceptSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
-        }
-
-        let localVarHttpContext: HttpContext | undefined = options && options.context;
-        if (localVarHttpContext === undefined) {
-            localVarHttpContext = new HttpContext();
-        }
-
-
-        let responseType_: 'text' | 'json' | 'blob' = 'json';
-        if (localVarHttpHeaderAcceptSelected) {
-            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
-                responseType_ = 'text';
-            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
-                responseType_ = 'json';
-            } else {
-                responseType_ = 'blob';
-            }
-        }
-
-        let localVarPath = `/admin/lists/candelete/${this.configuration.encodeParam({name: "p1", value: p1, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<CanDeleteListResponseADM>('get', `${this.configuration.basePath}${localVarPath}`,
-            {
-                context: localVarHttpContext,
-                responseType: <any>responseType_,
-                withCredentials: this.configuration.withCredentials,
-                headers: localVarHeaders,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Returns a list node, root or child, with children (if exist).
-     * @param p1 The IRI of the list.
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getAdminListsP1(p1: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ListItemGetResponseADM>;
-    public getAdminListsP1(p1: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ListItemGetResponseADM>>;
-    public getAdminListsP1(p1: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ListItemGetResponseADM>>;
-    public getAdminListsP1(p1: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-        if (p1 === null || p1 === undefined) {
-            throw new Error('Required parameter p1 was null or undefined when calling getAdminListsP1.');
-        }
-
-        let localVarHeaders = this.defaultHeaders;
-
-        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (localVarHttpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (localVarHttpHeaderAcceptSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
-        }
-
-        let localVarHttpContext: HttpContext | undefined = options && options.context;
-        if (localVarHttpContext === undefined) {
-            localVarHttpContext = new HttpContext();
-        }
-
-
-        let responseType_: 'text' | 'json' | 'blob' = 'json';
-        if (localVarHttpHeaderAcceptSelected) {
-            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
-                responseType_ = 'text';
-            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
-                responseType_ = 'json';
-            } else {
-                responseType_ = 'blob';
-            }
-        }
-
-        let localVarPath = `/admin/lists/${this.configuration.encodeParam({name: "p1", value: p1, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<ListItemGetResponseADM>('get', `${this.configuration.basePath}${localVarPath}`,
-            {
-                context: localVarHttpContext,
-                responseType: <any>responseType_,
-                withCredentials: this.configuration.withCredentials,
-                headers: localVarHeaders,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Returns basic information about a list node, root or child, w/o children (if exist).
-     * @param p1 The IRI of the list.
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getAdminListsP1Info(p1: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<NodeInfoGetResponseADM>;
-    public getAdminListsP1Info(p1: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<NodeInfoGetResponseADM>>;
-    public getAdminListsP1Info(p1: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<NodeInfoGetResponseADM>>;
-    public getAdminListsP1Info(p1: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-        if (p1 === null || p1 === undefined) {
-            throw new Error('Required parameter p1 was null or undefined when calling getAdminListsP1Info.');
-        }
-
-        let localVarHeaders = this.defaultHeaders;
-
-        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (localVarHttpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (localVarHttpHeaderAcceptSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
-        }
-
-        let localVarHttpContext: HttpContext | undefined = options && options.context;
-        if (localVarHttpContext === undefined) {
-            localVarHttpContext = new HttpContext();
-        }
-
-
-        let responseType_: 'text' | 'json' | 'blob' = 'json';
-        if (localVarHttpHeaderAcceptSelected) {
-            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
-                responseType_ = 'text';
-            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
-                responseType_ = 'json';
-            } else {
-                responseType_ = 'blob';
-            }
-        }
-
-        let localVarPath = `/admin/lists/${this.configuration.encodeParam({name: "p1", value: p1, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/info`;
-        return this.httpClient.request<NodeInfoGetResponseADM>('get', `${this.configuration.basePath}${localVarPath}`,
-            {
-                context: localVarHttpContext,
-                responseType: <any>responseType_,
-                withCredentials: this.configuration.withCredentials,
-                headers: localVarHeaders,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param listCreateRootNodeRequest 
+     * Get all administrative permissions for a project and a group.
+     * @param projectIri The IRI of a project. Must be URL-encoded.
+     * @param groupIri The IRI of a group. Must be URL-encoded.
      * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public postAdminLists(listCreateRootNodeRequest: ListCreateRootNodeRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ListGetResponseADM>;
-    public postAdminLists(listCreateRootNodeRequest: ListCreateRootNodeRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ListGetResponseADM>>;
-    public postAdminLists(listCreateRootNodeRequest: ListCreateRootNodeRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ListGetResponseADM>>;
-    public postAdminLists(listCreateRootNodeRequest: ListCreateRootNodeRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-        if (listCreateRootNodeRequest === null || listCreateRootNodeRequest === undefined) {
-            throw new Error('Required parameter listCreateRootNodeRequest was null or undefined when calling postAdminLists.');
+    public getAdminPermissionsApProjectiriGroupiri(projectIri: string, groupIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<AdministrativePermissionGetResponseADM>;
+    public getAdminPermissionsApProjectiriGroupiri(projectIri: string, groupIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<AdministrativePermissionGetResponseADM>>;
+    public getAdminPermissionsApProjectiriGroupiri(projectIri: string, groupIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<AdministrativePermissionGetResponseADM>>;
+    public getAdminPermissionsApProjectiriGroupiri(projectIri: string, groupIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (projectIri === null || projectIri === undefined) {
+            throw new Error('Required parameter projectIri was null or undefined when calling getAdminPermissionsApProjectiriGroupiri.');
+        }
+        if (groupIri === null || groupIri === undefined) {
+            throw new Error('Required parameter groupIri was null or undefined when calling getAdminPermissionsApProjectiriGroupiri.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -550,14 +321,77 @@ export class AdminListsService {
         }
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
         }
+
+        let localVarPath = `/admin/permissions/ap/${this.configuration.encodeParam({name: "projectIri", value: projectIri, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/${this.configuration.encodeParam({name: "groupIri", value: groupIri, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<AdministrativePermissionGetResponseADM>('get', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get all default object access permissions for a project.
+     * @param projectIri The IRI of a project. Must be URL-encoded.
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAdminPermissionsDoapProjectiri(projectIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<DefaultObjectAccessPermissionsForProjectGetResponseADM>;
+    public getAdminPermissionsDoapProjectiri(projectIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<DefaultObjectAccessPermissionsForProjectGetResponseADM>>;
+    public getAdminPermissionsDoapProjectiri(projectIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<DefaultObjectAccessPermissionsForProjectGetResponseADM>>;
+    public getAdminPermissionsDoapProjectiri(projectIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (projectIri === null || projectIri === undefined) {
+            throw new Error('Required parameter projectIri was null or undefined when calling getAdminPermissionsDoapProjectiri.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
 
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
@@ -570,11 +404,10 @@ export class AdminListsService {
             }
         }
 
-        let localVarPath = `/admin/lists`;
-        return this.httpClient.request<ListGetResponseADM>('post', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/admin/permissions/doap/${this.configuration.encodeParam({name: "projectIri", value: projectIri, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<DefaultObjectAccessPermissionsForProjectGetResponseADM>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: listCreateRootNodeRequest,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -585,21 +418,90 @@ export class AdminListsService {
     }
 
     /**
-     * @param p1 The IRI of the list.
-     * @param listChangeRequest 
+     * Get all permissions for a project.
+     * @param projectIri The IRI of a project. Must be URL-encoded.
      * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public putAdminListsP1(p1: string, listChangeRequest: ListChangeRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<NodeInfoGetResponseADM>;
-    public putAdminListsP1(p1: string, listChangeRequest: ListChangeRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<NodeInfoGetResponseADM>>;
-    public putAdminListsP1(p1: string, listChangeRequest: ListChangeRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<NodeInfoGetResponseADM>>;
-    public putAdminListsP1(p1: string, listChangeRequest: ListChangeRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-        if (p1 === null || p1 === undefined) {
-            throw new Error('Required parameter p1 was null or undefined when calling putAdminListsP1.');
+    public getAdminPermissionsProjectiri(projectIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PermissionsForProjectGetResponseADM>;
+    public getAdminPermissionsProjectiri(projectIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PermissionsForProjectGetResponseADM>>;
+    public getAdminPermissionsProjectiri(projectIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PermissionsForProjectGetResponseADM>>;
+    public getAdminPermissionsProjectiri(projectIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (projectIri === null || projectIri === undefined) {
+            throw new Error('Required parameter projectIri was null or undefined when calling getAdminPermissionsProjectiri.');
         }
-        if (listChangeRequest === null || listChangeRequest === undefined) {
-            throw new Error('Required parameter listChangeRequest was null or undefined when calling putAdminListsP1.');
+
+        let localVarHeaders = this.defaultHeaders;
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/admin/permissions/${this.configuration.encodeParam({name: "projectIri", value: projectIri, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<PermissionsForProjectGetResponseADM>('get', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Create a new administrative permission
+     * @param createAdministrativePermissionAPIRequestADM 
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public postAdminPermissionsAp(createAdministrativePermissionAPIRequestADM: CreateAdministrativePermissionAPIRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<AdministrativePermissionCreateResponseADM>;
+    public postAdminPermissionsAp(createAdministrativePermissionAPIRequestADM: CreateAdministrativePermissionAPIRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<AdministrativePermissionCreateResponseADM>>;
+    public postAdminPermissionsAp(createAdministrativePermissionAPIRequestADM: CreateAdministrativePermissionAPIRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<AdministrativePermissionCreateResponseADM>>;
+    public postAdminPermissionsAp(createAdministrativePermissionAPIRequestADM: CreateAdministrativePermissionAPIRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (createAdministrativePermissionAPIRequestADM === null || createAdministrativePermissionAPIRequestADM === undefined) {
+            throw new Error('Required parameter createAdministrativePermissionAPIRequestADM was null or undefined when calling postAdminPermissionsAp.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -655,11 +557,11 @@ export class AdminListsService {
             }
         }
 
-        let localVarPath = `/admin/lists/${this.configuration.encodeParam({name: "p1", value: p1, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<NodeInfoGetResponseADM>('put', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/admin/permissions/ap`;
+        return this.httpClient.request<AdministrativePermissionCreateResponseADM>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: listChangeRequest,
+                body: createAdministrativePermissionAPIRequestADM,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -670,21 +572,18 @@ export class AdminListsService {
     }
 
     /**
-     * @param p1 The IRI of the list.
-     * @param listChangeCommentsRequest 
+     * Create a new default object access permission
+     * @param createDefaultObjectAccessPermissionAPIRequestADM 
      * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public putAdminListsP1Comments(p1: string, listChangeCommentsRequest: ListChangeCommentsRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<NodeInfoGetResponseADM>;
-    public putAdminListsP1Comments(p1: string, listChangeCommentsRequest: ListChangeCommentsRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<NodeInfoGetResponseADM>>;
-    public putAdminListsP1Comments(p1: string, listChangeCommentsRequest: ListChangeCommentsRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<NodeInfoGetResponseADM>>;
-    public putAdminListsP1Comments(p1: string, listChangeCommentsRequest: ListChangeCommentsRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-        if (p1 === null || p1 === undefined) {
-            throw new Error('Required parameter p1 was null or undefined when calling putAdminListsP1Comments.');
-        }
-        if (listChangeCommentsRequest === null || listChangeCommentsRequest === undefined) {
-            throw new Error('Required parameter listChangeCommentsRequest was null or undefined when calling putAdminListsP1Comments.');
+    public postAdminPermissionsDoap(createDefaultObjectAccessPermissionAPIRequestADM: CreateDefaultObjectAccessPermissionAPIRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<DefaultObjectAccessPermissionCreateResponseADM>;
+    public postAdminPermissionsDoap(createDefaultObjectAccessPermissionAPIRequestADM: CreateDefaultObjectAccessPermissionAPIRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<DefaultObjectAccessPermissionCreateResponseADM>>;
+    public postAdminPermissionsDoap(createDefaultObjectAccessPermissionAPIRequestADM: CreateDefaultObjectAccessPermissionAPIRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<DefaultObjectAccessPermissionCreateResponseADM>>;
+    public postAdminPermissionsDoap(createDefaultObjectAccessPermissionAPIRequestADM: CreateDefaultObjectAccessPermissionAPIRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (createDefaultObjectAccessPermissionAPIRequestADM === null || createDefaultObjectAccessPermissionAPIRequestADM === undefined) {
+            throw new Error('Required parameter createDefaultObjectAccessPermissionAPIRequestADM was null or undefined when calling postAdminPermissionsDoap.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -740,11 +639,11 @@ export class AdminListsService {
             }
         }
 
-        let localVarPath = `/admin/lists/${this.configuration.encodeParam({name: "p1", value: p1, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/comments`;
-        return this.httpClient.request<NodeInfoGetResponseADM>('put', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/admin/permissions/doap`;
+        return this.httpClient.request<DefaultObjectAccessPermissionCreateResponseADM>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: listChangeCommentsRequest,
+                body: createDefaultObjectAccessPermissionAPIRequestADM,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -755,21 +654,22 @@ export class AdminListsService {
     }
 
     /**
-     * @param p1 The IRI of the list.
-     * @param listChangeLabelsRequest 
+     * Update a permission\&#39;s group
+     * @param permissionIri The IRI of a permission. Must be URL-encoded.
+     * @param changePermissionGroupApiRequestADM 
      * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public putAdminListsP1Labels(p1: string, listChangeLabelsRequest: ListChangeLabelsRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<NodeInfoGetResponseADM>;
-    public putAdminListsP1Labels(p1: string, listChangeLabelsRequest: ListChangeLabelsRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<NodeInfoGetResponseADM>>;
-    public putAdminListsP1Labels(p1: string, listChangeLabelsRequest: ListChangeLabelsRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<NodeInfoGetResponseADM>>;
-    public putAdminListsP1Labels(p1: string, listChangeLabelsRequest: ListChangeLabelsRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-        if (p1 === null || p1 === undefined) {
-            throw new Error('Required parameter p1 was null or undefined when calling putAdminListsP1Labels.');
+    public putAdminPermissionsPermissioniriGroup(permissionIri: string, changePermissionGroupApiRequestADM: ChangePermissionGroupApiRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PermissionGetResponseADM>;
+    public putAdminPermissionsPermissioniriGroup(permissionIri: string, changePermissionGroupApiRequestADM: ChangePermissionGroupApiRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PermissionGetResponseADM>>;
+    public putAdminPermissionsPermissioniriGroup(permissionIri: string, changePermissionGroupApiRequestADM: ChangePermissionGroupApiRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PermissionGetResponseADM>>;
+    public putAdminPermissionsPermissioniriGroup(permissionIri: string, changePermissionGroupApiRequestADM: ChangePermissionGroupApiRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (permissionIri === null || permissionIri === undefined) {
+            throw new Error('Required parameter permissionIri was null or undefined when calling putAdminPermissionsPermissioniriGroup.');
         }
-        if (listChangeLabelsRequest === null || listChangeLabelsRequest === undefined) {
-            throw new Error('Required parameter listChangeLabelsRequest was null or undefined when calling putAdminListsP1Labels.');
+        if (changePermissionGroupApiRequestADM === null || changePermissionGroupApiRequestADM === undefined) {
+            throw new Error('Required parameter changePermissionGroupApiRequestADM was null or undefined when calling putAdminPermissionsPermissioniriGroup.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -825,11 +725,11 @@ export class AdminListsService {
             }
         }
 
-        let localVarPath = `/admin/lists/${this.configuration.encodeParam({name: "p1", value: p1, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/labels`;
-        return this.httpClient.request<NodeInfoGetResponseADM>('put', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/admin/permissions/${this.configuration.encodeParam({name: "permissionIri", value: permissionIri, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/group`;
+        return this.httpClient.request<PermissionGetResponseADM>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: listChangeLabelsRequest,
+                body: changePermissionGroupApiRequestADM,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -840,21 +740,22 @@ export class AdminListsService {
     }
 
     /**
-     * @param p1 The IRI of the list.
-     * @param listChangeNameRequest 
+     * Update a permission\&#39;s set of hasPermissions
+     * @param permissionIri The IRI of a permission. Must be URL-encoded.
+     * @param changePermissionHasPermissionsApiRequestADM 
      * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public putAdminListsP1Name(p1: string, listChangeNameRequest: ListChangeNameRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<NodeInfoGetResponseADM>;
-    public putAdminListsP1Name(p1: string, listChangeNameRequest: ListChangeNameRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<NodeInfoGetResponseADM>>;
-    public putAdminListsP1Name(p1: string, listChangeNameRequest: ListChangeNameRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<NodeInfoGetResponseADM>>;
-    public putAdminListsP1Name(p1: string, listChangeNameRequest: ListChangeNameRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-        if (p1 === null || p1 === undefined) {
-            throw new Error('Required parameter p1 was null or undefined when calling putAdminListsP1Name.');
+    public putAdminPermissionsPermissioniriHaspermissions(permissionIri: string, changePermissionHasPermissionsApiRequestADM: ChangePermissionHasPermissionsApiRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PermissionGetResponseADM>;
+    public putAdminPermissionsPermissioniriHaspermissions(permissionIri: string, changePermissionHasPermissionsApiRequestADM: ChangePermissionHasPermissionsApiRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PermissionGetResponseADM>>;
+    public putAdminPermissionsPermissioniriHaspermissions(permissionIri: string, changePermissionHasPermissionsApiRequestADM: ChangePermissionHasPermissionsApiRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PermissionGetResponseADM>>;
+    public putAdminPermissionsPermissioniriHaspermissions(permissionIri: string, changePermissionHasPermissionsApiRequestADM: ChangePermissionHasPermissionsApiRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (permissionIri === null || permissionIri === undefined) {
+            throw new Error('Required parameter permissionIri was null or undefined when calling putAdminPermissionsPermissioniriHaspermissions.');
         }
-        if (listChangeNameRequest === null || listChangeNameRequest === undefined) {
-            throw new Error('Required parameter listChangeNameRequest was null or undefined when calling putAdminListsP1Name.');
+        if (changePermissionHasPermissionsApiRequestADM === null || changePermissionHasPermissionsApiRequestADM === undefined) {
+            throw new Error('Required parameter changePermissionHasPermissionsApiRequestADM was null or undefined when calling putAdminPermissionsPermissioniriHaspermissions.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -910,11 +811,11 @@ export class AdminListsService {
             }
         }
 
-        let localVarPath = `/admin/lists/${this.configuration.encodeParam({name: "p1", value: p1, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/name`;
-        return this.httpClient.request<NodeInfoGetResponseADM>('put', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/admin/permissions/${this.configuration.encodeParam({name: "permissionIri", value: permissionIri, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/hasPermissions`;
+        return this.httpClient.request<PermissionGetResponseADM>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: listChangeNameRequest,
+                body: changePermissionHasPermissionsApiRequestADM,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -925,21 +826,22 @@ export class AdminListsService {
     }
 
     /**
-     * @param p1 The IRI of the list.
-     * @param listChangePositionRequest 
+     * Update a permission\&#39;s property
+     * @param permissionIri The IRI of a permission. Must be URL-encoded.
+     * @param changePermissionPropertyApiRequestADM 
      * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public putAdminListsP1Position(p1: string, listChangePositionRequest: ListChangePositionRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<NodePositionChangeResponseADM>;
-    public putAdminListsP1Position(p1: string, listChangePositionRequest: ListChangePositionRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<NodePositionChangeResponseADM>>;
-    public putAdminListsP1Position(p1: string, listChangePositionRequest: ListChangePositionRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<NodePositionChangeResponseADM>>;
-    public putAdminListsP1Position(p1: string, listChangePositionRequest: ListChangePositionRequest, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-        if (p1 === null || p1 === undefined) {
-            throw new Error('Required parameter p1 was null or undefined when calling putAdminListsP1Position.');
+    public putAdminPermissionsPermissioniriProperty(permissionIri: string, changePermissionPropertyApiRequestADM: ChangePermissionPropertyApiRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PermissionGetResponseADM>;
+    public putAdminPermissionsPermissioniriProperty(permissionIri: string, changePermissionPropertyApiRequestADM: ChangePermissionPropertyApiRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PermissionGetResponseADM>>;
+    public putAdminPermissionsPermissioniriProperty(permissionIri: string, changePermissionPropertyApiRequestADM: ChangePermissionPropertyApiRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PermissionGetResponseADM>>;
+    public putAdminPermissionsPermissioniriProperty(permissionIri: string, changePermissionPropertyApiRequestADM: ChangePermissionPropertyApiRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (permissionIri === null || permissionIri === undefined) {
+            throw new Error('Required parameter permissionIri was null or undefined when calling putAdminPermissionsPermissioniriProperty.');
         }
-        if (listChangePositionRequest === null || listChangePositionRequest === undefined) {
-            throw new Error('Required parameter listChangePositionRequest was null or undefined when calling putAdminListsP1Position.');
+        if (changePermissionPropertyApiRequestADM === null || changePermissionPropertyApiRequestADM === undefined) {
+            throw new Error('Required parameter changePermissionPropertyApiRequestADM was null or undefined when calling putAdminPermissionsPermissioniriProperty.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -995,11 +897,97 @@ export class AdminListsService {
             }
         }
 
-        let localVarPath = `/admin/lists/${this.configuration.encodeParam({name: "p1", value: p1, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/position`;
-        return this.httpClient.request<NodePositionChangeResponseADM>('put', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/admin/permissions/${this.configuration.encodeParam({name: "permissionIri", value: permissionIri, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/property`;
+        return this.httpClient.request<PermissionGetResponseADM>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: listChangePositionRequest,
+                body: changePermissionPropertyApiRequestADM,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Update a permission\&#39;s resource class
+     * @param permissionIri The IRI of a permission. Must be URL-encoded.
+     * @param changePermissionResourceClassApiRequestADM 
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public putAdminPermissionsPermissioniriResourceclass(permissionIri: string, changePermissionResourceClassApiRequestADM: ChangePermissionResourceClassApiRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PermissionGetResponseADM>;
+    public putAdminPermissionsPermissioniriResourceclass(permissionIri: string, changePermissionResourceClassApiRequestADM: ChangePermissionResourceClassApiRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PermissionGetResponseADM>>;
+    public putAdminPermissionsPermissioniriResourceclass(permissionIri: string, changePermissionResourceClassApiRequestADM: ChangePermissionResourceClassApiRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PermissionGetResponseADM>>;
+    public putAdminPermissionsPermissioniriResourceclass(permissionIri: string, changePermissionResourceClassApiRequestADM: ChangePermissionResourceClassApiRequestADM, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (permissionIri === null || permissionIri === undefined) {
+            throw new Error('Required parameter permissionIri was null or undefined when calling putAdminPermissionsPermissioniriResourceclass.');
+        }
+        if (changePermissionResourceClassApiRequestADM === null || changePermissionResourceClassApiRequestADM === undefined) {
+            throw new Error('Required parameter changePermissionResourceClassApiRequestADM was null or undefined when calling putAdminPermissionsPermissioniriResourceclass.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/admin/permissions/${this.configuration.encodeParam({name: "permissionIri", value: permissionIri, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/resourceClass`;
+        return this.httpClient.request<PermissionGetResponseADM>('put', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                body: changePermissionResourceClassApiRequestADM,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

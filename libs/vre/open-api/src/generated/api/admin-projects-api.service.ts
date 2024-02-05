@@ -64,7 +64,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class AdminProjectsService {
+export class AdminProjectsApiService {
 
     protected basePath = 'https://api.dev.dasch.swiss:443';
     public defaultHeaders = new HttpHeaders();

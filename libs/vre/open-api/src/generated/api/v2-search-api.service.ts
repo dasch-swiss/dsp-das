@@ -36,7 +36,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class V2SearchService {
+export class V2SearchApiService {
 
     protected basePath = 'https://api.dev.dasch.swiss:443';
     public defaultHeaders = new HttpHeaders();

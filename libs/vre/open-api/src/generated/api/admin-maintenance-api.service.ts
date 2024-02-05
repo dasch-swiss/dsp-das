@@ -19,13 +19,15 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
+import { BadCredentialsException } from '../model/bad-credentials-exception';
+// @ts-ignore
+import { ForbiddenException } from '../model/forbidden-exception';
+// @ts-ignore
 import { GravsearchException } from '../model/gravsearch-exception';
 // @ts-ignore
-import { MessageResponse } from '../model/message-response';
+import { Json } from '../model/json';
 // @ts-ignore
 import { NotFoundException } from '../model/not-found-exception';
-// @ts-ignore
-import { RdfDataObject } from '../model/rdf-data-object';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -36,7 +38,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class AdminStoreService {
+export class AdminMaintenanceApiService {
 
     protected basePath = 'https://api.dev.dasch.swiss:443';
     public defaultHeaders = new HttpHeaders();
@@ -98,24 +100,34 @@ export class AdminStoreService {
     }
 
     /**
-     * Resets the content of the triplestore, only available if configuration &#x60;allowReloadOverHttp&#x60; is set to &#x60;true&#x60;.
-     * @param prependDefaults Prepend defaults to the data objects.
-     * @param rdfDataObject RDF data objects to load into the triplestore, uses defaults if not present.
+     * @param actionName The name of the maintenance action to be executed. Maintenance actions are executed asynchronously in the background. 
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param json The optional parameters as json for the maintenance action. May be required by certain actions. 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAdminStoreResettriplestorecontent(prependDefaults?: boolean, rdfDataObject?: Array<RdfDataObject>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<MessageResponse>;
-    public getAdminStoreResettriplestorecontent(prependDefaults?: boolean, rdfDataObject?: Array<RdfDataObject>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<MessageResponse>>;
-    public getAdminStoreResettriplestorecontent(prependDefaults?: boolean, rdfDataObject?: Array<RdfDataObject>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<MessageResponse>>;
-    public getAdminStoreResettriplestorecontent(prependDefaults?: boolean, rdfDataObject?: Array<RdfDataObject>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-
-        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (prependDefaults !== undefined && prependDefaults !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>prependDefaults, 'prependDefaults');
+    public postAdminMaintenanceActionName(actionName: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, json?: Json, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any>;
+    public postAdminMaintenanceActionName(actionName: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, json?: Json, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public postAdminMaintenanceActionName(actionName: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, json?: Json, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public postAdminMaintenanceActionName(actionName: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, json?: Json, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (actionName === null || actionName === undefined) {
+            throw new Error('Required parameter actionName was null or undefined when calling postAdminMaintenanceActionName.');
         }
 
         let localVarHeaders = this.defaultHeaders;
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
 
         let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
         if (localVarHttpHeaderAcceptSelected === undefined) {
@@ -155,12 +167,11 @@ export class AdminStoreService {
             }
         }
 
-        let localVarPath = `/admin/store/ResetTriplestoreContent`;
-        return this.httpClient.request<MessageResponse>('get', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/admin/maintenance/${this.configuration.encodeParam({name: "actionName", value: actionName, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<any>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: rdfDataObject,
-                params: localVarQueryParameters,
+                body: json,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

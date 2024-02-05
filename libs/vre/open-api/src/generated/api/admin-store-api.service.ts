@@ -21,9 +21,11 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { GravsearchException } from '../model/gravsearch-exception';
 // @ts-ignore
-import { ListResponseDto } from '../model/list-response-dto';
+import { MessageResponse } from '../model/message-response';
 // @ts-ignore
 import { NotFoundException } from '../model/not-found-exception';
+// @ts-ignore
+import { RdfDataObject } from '../model/rdf-data-object';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -34,7 +36,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class V2ResourcesService {
+export class AdminStoreApiService {
 
     protected basePath = 'https://api.dev.dasch.swiss:443';
     public defaultHeaders = new HttpHeaders();
@@ -96,42 +98,24 @@ export class V2ResourcesService {
     }
 
     /**
-     * @param xKnoraAcceptProject 
-     * @param resourceClass 
-     * @param order 
-     * @param orderBy 
+     * Resets the content of the triplestore, only available if configuration &#x60;allowReloadOverHttp&#x60; is set to &#x60;true&#x60;.
+     * @param prependDefaults Prepend defaults to the data objects.
+     * @param rdfDataObject RDF data objects to load into the triplestore, uses defaults if not present.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getV2ResourcesInfo(xKnoraAcceptProject: string, resourceClass: string, order?: string, orderBy?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ListResponseDto>;
-    public getV2ResourcesInfo(xKnoraAcceptProject: string, resourceClass: string, order?: string, orderBy?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ListResponseDto>>;
-    public getV2ResourcesInfo(xKnoraAcceptProject: string, resourceClass: string, order?: string, orderBy?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ListResponseDto>>;
-    public getV2ResourcesInfo(xKnoraAcceptProject: string, resourceClass: string, order?: string, orderBy?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-        if (xKnoraAcceptProject === null || xKnoraAcceptProject === undefined) {
-            throw new Error('Required parameter xKnoraAcceptProject was null or undefined when calling getV2ResourcesInfo.');
-        }
-        if (resourceClass === null || resourceClass === undefined) {
-            throw new Error('Required parameter resourceClass was null or undefined when calling getV2ResourcesInfo.');
-        }
+    public getAdminStoreResettriplestorecontent(prependDefaults?: boolean, rdfDataObject?: Array<RdfDataObject>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<MessageResponse>;
+    public getAdminStoreResettriplestorecontent(prependDefaults?: boolean, rdfDataObject?: Array<RdfDataObject>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<MessageResponse>>;
+    public getAdminStoreResettriplestorecontent(prependDefaults?: boolean, rdfDataObject?: Array<RdfDataObject>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<MessageResponse>>;
+    public getAdminStoreResettriplestorecontent(prependDefaults?: boolean, rdfDataObject?: Array<RdfDataObject>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (resourceClass !== undefined && resourceClass !== null) {
+        if (prependDefaults !== undefined && prependDefaults !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>resourceClass, 'resourceClass');
-        }
-        if (order !== undefined && order !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>order, 'order');
-        }
-        if (orderBy !== undefined && orderBy !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>orderBy, 'orderBy');
+            <any>prependDefaults, 'prependDefaults');
         }
 
         let localVarHeaders = this.defaultHeaders;
-        if (xKnoraAcceptProject !== undefined && xKnoraAcceptProject !== null) {
-            localVarHeaders = localVarHeaders.set('x-knora-accept-project', String(xKnoraAcceptProject));
-        }
 
         let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
         if (localVarHttpHeaderAcceptSelected === undefined) {
@@ -151,6 +135,15 @@ export class V2ResourcesService {
         }
 
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -162,10 +155,11 @@ export class V2ResourcesService {
             }
         }
 
-        let localVarPath = `/v2/resources/info`;
-        return this.httpClient.request<ListResponseDto>('get', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/admin/store/ResetTriplestoreContent`;
+        return this.httpClient.request<MessageResponse>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
+                body: rdfDataObject,
                 params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
