@@ -9,7 +9,9 @@
         "inputSpec": "https://api.dev.dasch.swiss/api/docs/docs.yaml",
         "output": "./src/generated",
         "additionalProperties": {
-          "fileNaming": "kebab-case"
+          "fileNaming": "kebab-case",
+          "serviceFileSuffix": "-api.service",
+          "serviceSuffix": "ApiService"
         }
       }
     }
