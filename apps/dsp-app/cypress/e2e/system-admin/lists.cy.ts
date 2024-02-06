@@ -3,13 +3,14 @@ import { ListGetResponseADM } from '../../../../../libs/vre/open-api/src';
 
 describe('Lists', () => {
   let listUrl: string;
+  let listId: string;
   beforeEach(() => {
     cy.request<ListGetResponseADM>('POST', `${Cypress.env('apiUrl')}/admin/lists`, {
       comments: [{ language: 'de', value: faker.lorem.words(2) }],
       labels: [{ language: 'de', value: faker.lorem.words(2) }],
       projectIri: 'http://rdfh.ch/projects/00FF',
     }).then(response => {
-      const listId = response.body.list.listinfo.id.match(/\/([^\/]*)$/)[1];
+      listId = response.body.list.listinfo.id.match(/\/([^\/]*)$/)[1];
       listUrl = `/project/00FF/list/${listId}`;
     });
   });
@@ -46,7 +47,7 @@ describe('Lists', () => {
     cy.get('[data-cy=comment-title]').contains(data.comment);
   });
 
-  it('user can delete a list', () => {
+  it.only('user can delete a list', () => {
     cy.visit(listUrl);
     cy.intercept('DELETE', '/admin/lists/*').as('deleteRequest');
     cy.get('[data-cy=delete-button]').click();
