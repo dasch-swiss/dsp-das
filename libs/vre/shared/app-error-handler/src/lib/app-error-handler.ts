@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ErrorHandler, Injectable } from '@angular/core';
+import { ErrorHandler, Injectable, NgZone } from '@angular/core';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -12,7 +12,8 @@ import { AppError } from './app-error';
 export class AppErrorHandler implements ErrorHandler {
   constructor(
     private _notification: NotificationService,
-    private readonly _appConfig: AppConfigService
+    private readonly _appConfig: AppConfigService,
+    private _ngZone: NgZone
   ) {}
 
   handleError(error: any): void {
@@ -71,7 +72,10 @@ export class AppErrorHandler implements ErrorHandler {
   }
 
   private displayNotification(message: string) {
-    this._notification.openSnackBar(message, 'error');
+    // ngZone is needed, as ErrorHandler does not invoke change detection cycle.
+    this._ngZone.run(() => {
+      this._notification.openSnackBar(message, 'error');
+    });
   }
 
   // TODO ask the backend to uniformize their response, so that this method is only called once.
