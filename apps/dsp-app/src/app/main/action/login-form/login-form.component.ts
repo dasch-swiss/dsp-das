@@ -10,8 +10,8 @@ import { finalize, takeLast, tap } from 'rxjs/operators';
 @Component({
   selector: 'app-login-form',
   template: `
-    <form [formGroup]="form" (ngSubmit)="login()" style="display: flex; flex-direction: column; padding: 16px;">
-      <app-common-input [formGroup]="form" controlName="username" placeholder="username"></app-common-input>
+    <form [formGroup]="form" (ngSubmit)="login()" class="login-form">
+      <app-common-input [formGroup]="form" controlName="username" placeholder="Username"></app-common-input>
 
       <mat-form-field>
         <input
@@ -32,10 +32,19 @@ import { finalize, takeLast, tap } from 'rxjs/operators';
         appLoadingButton
         [isLoading]="loading"
         type="submit">
-        {{ isLoginError ? 'Retry' : 'Login' }}
+        {{ isLoginError ? ('appLabels.form.action.retry' | translate) : ('appLabels.form.action.login' | translate) }}
       </button>
     </form>
   `,
+  styles: [
+    `
+      .login-form {
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+      }
+    `,
+  ],
 })
 export class LoginFormComponent implements OnInit, OnDestroy {
   loading = false;
