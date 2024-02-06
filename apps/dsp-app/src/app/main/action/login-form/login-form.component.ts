@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { Subscription } from 'rxjs';
 import { finalize, takeLast, tap } from 'rxjs/operators';
@@ -19,6 +20,9 @@ import { finalize, takeLast, tap } from 'rxjs/operators';
           formControlName="password"
           matInput
           type="password" />
+        <mat-error *ngIf="form.get('password').errors as errors">
+          {{ errors | humanReadableError }}
+        </mat-error>
       </mat-form-field>
 
       <button
@@ -49,7 +53,8 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     private router: Router,
     private _authService: AuthService,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private _notification: NotificationService
   ) {}
 
   ngOnInit() {
@@ -61,6 +66,10 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   }
 
   login() {
+    if (this.form.invalid) {
+      return;
+    }
+
     this.loading = true;
     this.isLoginError = false;
 

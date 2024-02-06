@@ -16,11 +16,24 @@ import { MenuItem } from '../../main/declarations/menu-item';
 export class UserMenuComponent implements OnInit, OnDestroy {
   @ViewChild(MatMenuTrigger) menuTrigger: MatMenuTrigger;
 
-  navigation: MenuItem[];
   subscription: Subscription;
-  systemLink = RouteConstants.system;
   isLoggedIn$ = this._store.select(UserSelectors.isLoggedIn);
 
+  readonly systemLink = RouteConstants.system;
+  readonly navigation: MenuItem[] = [
+    {
+      label: 'DSP-App Home Page',
+      shortLabel: 'home',
+      route: RouteConstants.homeRelative,
+      icon: '',
+    },
+    {
+      label: 'My Account',
+      shortLabel: 'Account',
+      route: RouteConstants.userAccountRelative,
+      icon: '',
+    },
+  ];
   @Select(UserSelectors.user) user$: Observable<User>;
   @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<User>;
 
@@ -32,25 +45,9 @@ export class UserMenuComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.isLoggedIn$.subscribe(isLoggedIn => {
       if (isLoggedIn && this.menuTrigger.menuOpen) {
-        console.log('close menu');
         this.menuTrigger.closeMenu();
       }
     });
-
-    this.navigation = [
-      {
-        label: 'DSP-App Home Page',
-        shortLabel: 'home',
-        route: RouteConstants.homeRelative,
-        icon: '',
-      },
-      {
-        label: 'My Account',
-        shortLabel: 'Account',
-        route: RouteConstants.userAccountRelative,
-        icon: '',
-      },
-    ];
   }
 
   ngOnDestroy() {
