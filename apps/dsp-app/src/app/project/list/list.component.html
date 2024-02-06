@@ -12,12 +12,17 @@
               <h3
                 class="mat-headline-6"
                 [matTooltip]="list.labels |appStringifyStringLiteral:'all'"
-                matTooltipPosition="above">
-                {{list.labels | appStringifyStringLiteral}}
+                matTooltipPosition="above"
+                data-cy="label-title">
+                {{ list.labels | appStringifyStringLiteral }}
               </h3>
               <span class="fill-remaining-space"></span>
-              <p class="mat-body" [matTooltip]="list.comments | appStringifyStringLiteral" matTooltipPosition="above">
-                {{list.comments | appStringifyStringLiteral | appTruncate:64}}
+              <p
+                class="mat-body"
+                [matTooltip]="list.comments | appStringifyStringLiteral"
+                matTooltipPosition="above"
+                data-cy="comment-title">
+                {{ list.comments | appStringifyStringLiteral | appTruncate:64 }}
               </p>
               <span class="fill-remaining-space"></span>
 
