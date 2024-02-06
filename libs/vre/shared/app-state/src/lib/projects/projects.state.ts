@@ -29,6 +29,7 @@ import {
   LoadProjectGroupsAction,
   LoadProjectMembersAction,
   LoadProjectMembershipAction,
+  LoadProjectRestrictedViewSettingsAction,
   LoadProjectsAction,
   RemoveUserFromProjectAction,
   SetProjectMemberAction,
@@ -43,6 +44,7 @@ const defaults: ProjectsStateModel = {
   allProjects: [],
   projectMembers: {},
   projectGroups: {},
+  projectRestrictedViewSettings: {},
 };
 
 @State<ProjectsStateModel>({
@@ -290,5 +292,28 @@ export class ProjectsState {
     });
 
     ctx.setState({ ...state });
+  }
+
+  @Action(LoadProjectRestrictedViewSettingsAction, { cancelUncompleted: true })
+  projectRestrictedViewSettings(
+    ctx: StateContext<ProjectsStateModel>,
+    { projectIri }: LoadProjectRestrictedViewSettingsAction
+  ) {
+    ctx.patchState({ isLoading: true });
+    return this.projectApiService.getRestrictedViewSettingsForProject(projectIri).pipe(
+      tap({
+        next: response => {
+          ctx.setState({
+            ...ctx.getState(),
+            projectRestrictedViewSettings: {
+              [ProjectService.IriToUuid(projectIri)]: { value: response.settings },
+            },
+          });
+        },
+      }),
+      finalize(() => {
+        ctx.patchState({ isLoading: false });
+      })
+    );
   }
 }

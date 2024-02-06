@@ -1,0 +1,76 @@
+<dasch-swiss-centered-layout>
+  <div class="content large middle">
+    <div class="content-container">
+      <form *ngIf="form" class="form-content" [formGroup]="form">
+        <div class="large-field aspect">
+          <mat-slide-toggle formControlName="aspect">
+            {{ 'appLabels.form.project.imageSettings.aspect' | translate }}
+          </mat-slide-toggle>
+        </div>
+        <div *ngIf="form.controls.aspect.value" [@replaceAnimation]>
+          <div class="large-field">
+            <mat-label>
+              {{ 'appLabels.form.project.imageSettings.percentage-value' | translate }}: {{ percentageSlider.value}}%
+            </mat-label>
+          </div>
+          <mat-slider
+            min="1"
+            max="100"
+            step="1"
+            showTickMarks
+            discrete
+            [displayWith]="formatPercentageLabel"
+            ngDefaultControl
+            formControlName="percentage">
+            <input #percentageSlider matSliderThumb [value]="form.controls.percentage.value" />
+          </mat-slider>
+        </div>
+        <div *ngIf="!form.controls.aspect.value" [@replaceAnimation]>
+          <div class="large-field">
+            <mat-label>
+              {{ 'appLabels.form.project.imageSettings.absolute-width' | translate }}: {{ formData.absoluteWidth }} px
+            </mat-label>
+          </div>
+          <mat-slider
+            [min]="0"
+            [max]="4"
+            [step]="1"
+            showTickMarks
+            [displayWith]="formatAbsoluteLabel"
+            discrete
+            ngDefaultControl
+            formControlName="absoluteWidthIndex">
+            <input
+              (valueChange)="absoluteSliderChange($event)"
+              [value]="absoluteWidthIndex(formData.absoluteWidth)"
+              matSliderThumb />
+          </mat-slider>
+        </div>
+      </form>
+      <div style="display: flex; justify-content: space-between">
+        <button
+          mat-raised-button
+          type="submit"
+          color="primary"
+          [disabled]="form?.invalid"
+          (click)="onSubmit()"
+          appLoadingButton
+          [isLoading]="isProjectsLoading$ | async">
+          {{ 'appLabels.form.action.submit' | translate }}
+        </button>
+      </div>
+    </div>
+    <div class="content-sidebar">
+      <img
+        [@replaceAnimation]
+        *ngIf="!form.controls.aspect.value"
+        src="assets/images/image-setting-absolute.png"
+        [title]="'appLabels.form.project.imageSettings.absolute' | translate" />
+      <img
+        [@replaceAnimation]
+        *ngIf="form.controls.aspect.value"
+        src="assets/images/image-setting-percentage.png"
+        [title]="'appLabels.form.project.imageSettings.percentage' | translate" />
+    </div>
+  </div>
+</dasch-swiss-centered-layout>
