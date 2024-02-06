@@ -8,6 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
+import { BASE_PATH } from '@dasch-swiss/vre/open-api';
 import { PendoAnalyticsService } from '@dasch-swiss/vre/shared/app-analytics';
 import {
   AppConfigService,
@@ -58,6 +59,7 @@ import { GridComponent } from './main/grid/grid.component';
 import { HeaderComponent } from './main/header/header.component';
 import { HelpComponent } from './main/help/help.component';
 import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
+import { IiifWithCredentialsInterceptor } from './main/http-interceptors/iiif-with-credentials.interceptor';
 import { FormattedBooleanPipe } from './main/pipes/formatting/formatted-boolean.pipe';
 import { KnoraDatePipe } from './main/pipes/formatting/knoradate.pipe';
 import { IsFalsyPipe } from './main/pipes/isFalsy.piipe';
@@ -379,6 +381,11 @@ export function httpLoaderFactory(httpClient: HttpClient) {
       deps: [HttpClient],
     },
     {
+      provide: BASE_PATH,
+      useFactory: (configService: AppConfigService) => configService.dspApiConfig.apiUrl,
+      deps: [AppConfigService],
+    },
+    {
       provide: ErrorHandler,
       useClass: AppErrorHandler,
       deps: [NotificationService, AppConfigService],
@@ -386,6 +393,11 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: IiifWithCredentialsInterceptor,
       multi: true,
     },
   ],
