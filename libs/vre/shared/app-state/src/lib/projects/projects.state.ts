@@ -11,11 +11,11 @@ import {
   UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Action, Actions, State, StateContext, Store, ofActionSuccessful } from '@ngxs/store';
 import { produce } from 'immer';
+import { AdminProjectsApiService } from 'libs/vre/open-api/src/generated/api/admin-projects-api.service';
 import { EMPTY, of } from 'rxjs';
 import { concatMap, finalize, map, take, tap } from 'rxjs/operators';
 import { IKeyValuePairs } from '../model-interfaces';
@@ -58,10 +58,11 @@ export class ProjectsState {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private store: Store,
-    private errorHandler: AppErrorHandler,
+    private appConfig: AppConfigService,
     private projectService: ProjectService,
     private projectApiService: ProjectApiService,
-    private actions: Actions
+    private actions: Actions,
+    private adminProjectsApiService: AdminProjectsApiService
   ) {}
 
   @Action(LoadProjectsAction, { cancelUncompleted: true })
@@ -324,18 +325,16 @@ export class ProjectsState {
     { projectUuid, setRestrictedViewRequest }: UpdateProjectRestrictedViewSettingsAction
   ) {
     ctx.patchState({ isLoading: true });
-    return this.projectApiService
+    return this.adminProjectsApiService
       .postAdminProjectsIriProjectiriRestrictedviewsettings(
         this.projectService.uuidToIri(projectUuid),
+        this.appConfig.dspApiConfig.jsonWebToken,
         setRestrictedViewRequest
       )
       .pipe(
         tap({
           next: response => {
             ctx.dispatch(new LoadProjectRestrictedViewSettingsAction(this.projectService.uuidToIri(projectUuid)));
-          },
-          error: () => {
-            ctx.patchState({ hasLoadingErrors: true });
           },
         }),
         finalize(() => {

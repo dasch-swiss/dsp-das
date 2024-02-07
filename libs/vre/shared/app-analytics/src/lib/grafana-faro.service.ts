@@ -9,10 +9,7 @@ export class GrafanaFaroService {
   constructor(private readonly _appConfig: AppConfigService) {}
 
   setup() {
-    if (
-      this._appConfig.dspInstrumentationConfig.environment === 'local-dev' ||
-      this._appConfig.dspInstrumentationConfig.environment === 'dev-server'
-    ) {
+    if (['local-dev', 'dev-server'].includes(this._appConfig.dspInstrumentationConfig.environment)) {
       return;
     }
 

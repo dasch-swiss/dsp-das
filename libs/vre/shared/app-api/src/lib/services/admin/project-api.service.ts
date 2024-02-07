@@ -10,8 +10,6 @@ import {
   UpdateProjectRequest,
 } from '@dasch-swiss/dsp-js';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { SetRestrictedViewRequest } from 'libs/vre/open-api/src/generated/model/set-restricted-view-request';
-import { AdminProjectsApiService } from '../../../../../../open-api/src/generated/api/admin-projects-api.service';
 import { BaseApi } from '../base-api';
 
 export type ProjectIdentifier = 'iri' | 'shortname' | 'shortcode';
@@ -21,8 +19,7 @@ export type ProjectIdentifier = 'iri' | 'shortname' | 'shortcode';
 export class ProjectApiService extends BaseApi {
   constructor(
     private _http: HttpClient,
-    private _appConfig: AppConfigService,
-    private adminProjectsApiService: AdminProjectsApiService
+    private _appConfig: AppConfigService
   ) {
     super('admin/projects', _appConfig.dspApiConfig);
   }
@@ -62,18 +59,6 @@ export class ProjectApiService extends BaseApi {
   getRestrictedViewSettingsForProject(id: string, idType: ProjectIdentifier = 'iri') {
     return this._http.get<ProjectRestrictedViewSettingsResponse>(
       `${this._projectRoute(id, idType)}/RestrictedViewSettings`
-    );
-  }
-
-  //TODO should be used directly from open-api
-  postAdminProjectsIriProjectiriRestrictedviewsettings(
-    projectIri: string,
-    setRestrictedViewRequest: SetRestrictedViewRequest
-  ) {
-    return this.adminProjectsApiService.postAdminProjectsIriProjectiriRestrictedviewsettings(
-      projectIri,
-      this._appConfig.dspApiConfig.jsonWebToken,
-      setRestrictedViewRequest
     );
   }
 
