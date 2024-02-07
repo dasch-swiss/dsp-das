@@ -10,12 +10,12 @@ import {
   ReadUser,
   UserResponse,
 } from '@dasch-swiss/dsp-js';
+import { AdminProjectsApiService } from '@dasch-swiss/vre/open-api';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Action, Actions, State, StateContext, Store, ofActionSuccessful } from '@ngxs/store';
 import { produce } from 'immer';
-import { AdminProjectsApiService } from 'libs/vre/open-api/src/generated/api/admin-projects-api.service';
 import { EMPTY, of } from 'rxjs';
 import { concatMap, finalize, map, take, tap } from 'rxjs/operators';
 import { IKeyValuePairs } from '../model-interfaces';

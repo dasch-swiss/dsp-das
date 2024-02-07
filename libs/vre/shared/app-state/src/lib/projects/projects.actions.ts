@@ -1,5 +1,5 @@
 import { ReadUser, UpdateProjectRequest } from '@dasch-swiss/dsp-js';
-import { SetRestrictedViewRequest } from './../../../../../open-api/src/generated/model/set-restricted-view-request';
+import { SetRestrictedViewRequest } from '@dasch-swiss/vre/open-api';
 
 export class LoadProjectsAction {
   static readonly type = '[Projects] Load Projects';
