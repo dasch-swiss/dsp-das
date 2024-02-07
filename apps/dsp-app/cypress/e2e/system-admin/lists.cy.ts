@@ -47,7 +47,8 @@ describe('Lists', () => {
     cy.get('[data-cy=comment-title]').contains(data.comment);
   });
 
-  it.only('user can delete a list', () => {
+  // skipped because of issue DEV-3267
+  it.skip('user can delete a list', () => {
     cy.visit(listUrl);
     cy.intercept('DELETE', '/admin/lists/*').as('deleteRequest');
     cy.get('[data-cy=delete-button]').click();
