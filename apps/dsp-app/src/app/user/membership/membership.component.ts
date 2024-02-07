@@ -18,7 +18,7 @@ import { AutocompleteItem } from '../../workspace/search/operator';
     <dasch-swiss-app-progress-indicator *ngIf="isMembershipLoading$ | async"></dasch-swiss-app-progress-indicator>
 
     <div *ngIf="(isMembershipLoading$ | async) === false">
-      <div class="mb-2">
+      <div class="mat-headline-6 mb-2">
         This user is member of {{ (user$ | async)?.projects.length | i18nPlural: itemPluralMapping['project'] }}
       </div>
 
