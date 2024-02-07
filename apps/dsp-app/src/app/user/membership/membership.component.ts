@@ -45,7 +45,7 @@ import { AutocompleteItem } from '../../workspace/search/operator';
       <mat-divider class="my-2"></mat-divider>
 
       <div class="d-flex">
-        <mat-form-field class="d-flex mr-2">
+        <mat-form-field class="flex-1 mr-2">
           <mat-select placeholder="Add user to project" [(value)]="selectedValue">
             <mat-option *ngFor="let project of projects$ | async; trackBy: trackByFn" [value]="project?.iri">
               {{ project?.name }}
