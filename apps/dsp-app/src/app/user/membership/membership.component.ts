@@ -18,16 +18,13 @@ import { AutocompleteItem } from '../../workspace/search/operator';
     <dasch-swiss-app-progress-indicator *ngIf="isMembershipLoading$ | async"></dasch-swiss-app-progress-indicator>
 
     <div *ngIf="(isMembershipLoading$ | async) === false">
-      <div style="margin-bottom: 16px">
+      <div class="mb-2">
         This user is member of {{ (user$ | async)?.projects.length | i18nPlural: itemPluralMapping['project'] }}
-        :
       </div>
 
       <!-- list of projects where the user is member of -->
-      <div
-        *ngFor="let project of (user$ | async)?.projects; trackBy: trackByFn"
-        style="display: flex; align-items: center">
-        <div style="flex: 1">
+      <div *ngFor="let project of (user$ | async)?.projects; trackBy: trackByFn" class="align-center">
+        <div class="flex-1">
           <div>{{ project.longname }} ({{ project.shortname }})</div>
           <div *ngIf="userIsProjectAdmin((user$ | async)?.permissions, project.id)">
             User is <strong>Project admin</strong>
@@ -45,10 +42,10 @@ import { AutocompleteItem } from '../../workspace/search/operator';
         </button>
       </div>
 
-      <mat-divider style="margin: 16px 0"></mat-divider>
+      <mat-divider class="my-2"></mat-divider>
 
-      <div style="display: flex; gap: 16px">
-        <mat-form-field style="flex: 1">
+      <div class="d-flex">
+        <mat-form-field class="d-flex mr-2">
           <mat-select placeholder="Add user to project" [(value)]="selectedValue">
             <mat-option *ngFor="let project of projects$ | async; trackBy: trackByFn" [value]="project?.iri">
               {{ project?.name }}
