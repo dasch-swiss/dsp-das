@@ -34,6 +34,7 @@ import {
   RemoveUserFromProjectAction,
   SetProjectMemberAction,
   UpdateProjectAction,
+  UpdateProjectRestrictedViewSettingsAction,
 } from './projects.actions';
 import { ProjectsStateModel } from './projects.state-model';
 
@@ -315,5 +316,31 @@ export class ProjectsState {
         ctx.patchState({ isLoading: false });
       })
     );
+  }
+
+  @Action(UpdateProjectRestrictedViewSettingsAction)
+  updateProjectRestrictedViewSettingsAction(
+    ctx: StateContext<ProjectsStateModel>,
+    { projectUuid, setRestrictedViewRequest }: UpdateProjectRestrictedViewSettingsAction
+  ) {
+    ctx.patchState({ isLoading: true });
+    return this.projectApiService
+      .postAdminProjectsIriProjectiriRestrictedviewsettings(
+        this.projectService.uuidToIri(projectUuid),
+        setRestrictedViewRequest
+      )
+      .pipe(
+        tap({
+          next: response => {
+            ctx.dispatch(new LoadProjectRestrictedViewSettingsAction(this.projectService.uuidToIri(projectUuid)));
+          },
+          error: () => {
+            ctx.patchState({ hasLoadingErrors: true });
+          },
+        }),
+        finalize(() => {
+          ctx.patchState({ isLoading: false });
+        })
+      );
   }
 }

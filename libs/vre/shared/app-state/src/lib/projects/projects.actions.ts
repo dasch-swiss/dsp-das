@@ -1,4 +1,5 @@
-import { ProjectRestrictedViewSettings, ReadUser, UpdateProjectRequest } from '@dasch-swiss/dsp-js';
+import { ReadUser, UpdateProjectRequest } from '@dasch-swiss/dsp-js';
+import { SetRestrictedViewRequest } from './../../../../../open-api/src/generated/model/set-restricted-view-request';
 
 export class LoadProjectsAction {
   static readonly type = '[Projects] Load Projects';
@@ -72,7 +73,6 @@ export class UpdateProjectRestrictedViewSettingsAction {
   static readonly type = '[Projects] Update Project Restricted View Settings';
   constructor(
     public projectUuid: string,
-    public isWatermark: boolean,
-    public projectRestrictedViewSettings: ProjectRestrictedViewSettings
+    public setRestrictedViewRequest: SetRestrictedViewRequest
   ) {}
 }

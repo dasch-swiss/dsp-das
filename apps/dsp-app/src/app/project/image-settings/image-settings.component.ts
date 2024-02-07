@@ -1,20 +1,20 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ProjectRestrictedViewSettings, UpdateProjectRequest } from '@dasch-swiss/dsp-js';
+import { ProjectRestrictedViewSettings } from '@dasch-swiss/dsp-js';
+import { SetRestrictedViewRequest } from '@dasch-swiss/vre/open-api';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   LoadProjectRestrictedViewSettingsAction,
-  LoadProjectsAction,
   ProjectsSelectors,
-  UpdateProjectAction,
+  UpdateProjectRestrictedViewSettingsAction,
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { Observable, Subscription } from 'rxjs';
-import { map, startWith, switchMap, take, takeWhile } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { map, switchMap, take, takeWhile } from 'rxjs/operators';
 import { ReplaceAnimation } from '../../main/animations/replace-animation';
 import { ProjectImageSettings } from './project-image-settings';
 
@@ -28,7 +28,7 @@ import { ProjectImageSettings } from './project-image-settings';
 export class ImageSettingsComponent implements OnInit {
   readonly absoluteWidthSteps: number[] = [64, 128, 256, 512, 1024];
 
-  formData = new ProjectImageSettings();
+  projectImageSettings = new ProjectImageSettings();
   form: FormGroup;
   projectUuid: string;
   project$ = this.route.parent.parent.paramMap.pipe(
@@ -37,7 +37,6 @@ export class ImageSettingsComponent implements OnInit {
     switchMap(iri => this._projectApiService.get(iri)),
     map(project => project.project)
   );
-  subscription: Subscription;
 
   @Output() formValueChange = new EventEmitter<FormGroup>();
 
@@ -58,10 +57,6 @@ export class ImageSettingsComponent implements OnInit {
   ngOnInit() {
     this._buildForm();
     this.setFormData();
-
-    this.subscription = this.form.valueChanges.pipe(startWith(<FormGroup>null)).subscribe(() => {
-      this.formValueChange.emit(this.form);
-    });
   }
 
   formatPercentageLabel = (value: number): string => `${value}%`;
@@ -71,35 +66,42 @@ export class ImageSettingsComponent implements OnInit {
   setFormData() {
     this.projectUuid = this.route.parent.parent.snapshot.paramMap.get(RouteConstants.uuidParameter);
     this._store.dispatch(new LoadProjectRestrictedViewSettingsAction(this._projectService.uuidToIri(this.projectUuid)));
-    this.projectRestrictedViewSettings$
+    combineLatest([
+      this._actions.pipe(ofActionSuccessful(LoadProjectRestrictedViewSettingsAction), take(1)),
+      this.projectRestrictedViewSettings$.pipe(takeWhile(settings => settings?.watermark === true)),
+    ])
       .pipe(
-        takeWhile(settings => settings?.watermark === true),
-        take(1)
+        take(1),
+        map(([action, settings]) => {
+          this.projectImageSettings = ProjectImageSettings.GetProjectImageSettings(settings.size);
+          this.form.patchValue({
+            aspect: this.projectImageSettings.aspect,
+            percentage: this.projectImageSettings.percentage,
+            absoluteWidthIndex: this.absoluteWidthSteps[this.projectImageSettings.absoluteWidth],
+          });
+        })
       )
-      .subscribe(settings => {
-        const projectImageSettings = ProjectImageSettings.getProjectImageSettings(settings.size);
-        const modifiedData = { ...this.formData } as ProjectImageSettings;
-        this.form.patchValue({
-          aspect: projectImageSettings.aspect,
-          percentage: this.formData.percentage,
-          absoluteWidthIndex: this.absoluteWidthSteps[this.formData.absoluteWidth],
-        });
-      });
+      .subscribe();
   }
 
-  absoluteWidthIndex = (value: number): number => this.absoluteWidthSteps.findIndex(step => step === value);
+  absoluteWidthIndex = (value: number): number => this.absoluteWidthSteps.findIndex(step => step == value);
 
-  absoluteSliderChange = (value: number) => (this.formData.absoluteWidth = this.absoluteWidthSteps[value]);
+  absoluteSliderChange(value: number) {
+    this.projectImageSettings.absoluteWidth = this.absoluteWidthSteps[value];
+  }
 
   onSubmit() {
-    const projectData: UpdateProjectRequest = {
-      longname: this.form.value.longname,
-      description: this.form.value.description,
-      keywords: this.form.value.keywords,
+    const request: SetRestrictedViewRequest = {
+      size: ProjectImageSettings.FormatToIiifSize(
+        this.form.value.aspect,
+        this.form.value.percentage,
+        this.absoluteWidthSteps[this.form.value.absoluteWidthIndex]
+      ),
+      watermark: true,
     };
 
-    this._store.dispatch(new UpdateProjectAction(this.projectUuid, projectData));
-    this._actions.pipe(ofActionSuccessful(LoadProjectsAction), take(1)).subscribe(() => {
+    this._store.dispatch(new UpdateProjectRestrictedViewSettingsAction(this.projectUuid, request));
+    this._actions.pipe(ofActionSuccessful(UpdateProjectRestrictedViewSettingsAction), take(1)).subscribe(() => {
       this._notification.openSnackBar('You have successfully updated the project image settings.');
     });
   }
