@@ -36,7 +36,8 @@ import { map, switchMap, take } from 'rxjs/operators';
         [disabled]="form?.invalid"
         (click)="onSubmit()"
         appLoadingButton
-        [isLoading]="loading">
+        [isLoading]="loading"
+        data-cy="submit-button">
         {{ 'appLabels.form.action.submit' | translate }}
       </button>
     </div>
