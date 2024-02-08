@@ -18,4 +18,9 @@
   .mat-mdc-slider {
     width: 100%;
   }
+
+  .action-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
 }
