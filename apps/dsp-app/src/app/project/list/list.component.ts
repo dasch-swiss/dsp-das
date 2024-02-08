@@ -11,9 +11,9 @@ import {
   LoadListsInProjectAction,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
-import { combineLatest, Observable, Subject } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
+import { Observable, Subject, combineLatest } from 'rxjs';
+import { map, take, takeUntil } from 'rxjs/operators';
 import { AppGlobal } from '../../app-global';
 import { DIALOG_LARGE } from '../../main/services/dialog-sizes.constant';
 import { DialogService } from '../../main/services/dialog.service';
@@ -37,9 +37,6 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
   // current selected language
   language: string;
 
-  // selected list iri
-  listIri: string = undefined;
-
   openPanel: number;
 
   // i18n plural mapping
@@ -58,6 +55,10 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
 
   list$ = combineLatest([this._store.select(ListsSelectors.listsInProject), this.routeListIri$]).pipe(
     map(([lists, listIri]) => lists.find(i => i.id.includes(listIri)))
+  );
+
+  listIri$: Observable<string> = combineLatest([this._route.params, this.project$]).pipe(
+    map(([params, project]) => `${this._acs.dspAppConfig.iriBase}/lists/${project.shortcode}/${params['list']}`)
   );
 
   @Select(ListsSelectors.isListsLoading) isListsLoading$: Observable<boolean>;
@@ -89,16 +90,7 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
   ngOnInit() {
     super.ngOnInit();
     this.disableContent = window.innerWidth <= 768;
-
-    // set the page title
     this._setPageTitle();
-
-    // get list iri from list name
-    this._route.params.subscribe(params => {
-      if (this.project) {
-        this.listIri = `${this._acs.dspAppConfig.iriBase}/lists/${this.project.shortcode}/${params['list']}`;
-      }
-    });
   }
 
   ngOnDestroy() {
@@ -122,23 +114,28 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
   }
 
   askToDeleteList(list: ListNodeInfo): void {
-    this._dialog
-      .afterConfirmation('Do you want to delete this controlled vocabulary?', list.labels[0].value)
-      .subscribe(() => {
-        this._store.dispatch(new DeleteListNodeAction(this.listIri));
-        this.listIri = undefined;
-        this._actions$
-          .pipe(ofActionSuccessful(DeleteListNodeAction))
-          .pipe(take(1))
-          .subscribe(() => {
-            this._store.dispatch(new LoadListsInProjectAction(this.projectIri));
-            this._router.navigate([RouteConstants.project, this.projectUuid, RouteConstants.dataModels]);
-          });
-      });
+    combineLatest([
+      this._dialog.afterConfirmation('Do you want to delete this controlled vocabulary?', list.labels[0].value),
+      this.listIri$,
+    ])
+      .pipe(
+        takeUntil(this.ngUnsubscribe),
+        map(([dialog, listIri]) => {
+          this._store.dispatch(new DeleteListNodeAction(listIri));
+          this._actions$
+            .pipe(ofActionSuccessful(DeleteListNodeAction))
+            .pipe(take(1))
+            .subscribe(() => {
+              this._store.dispatch(new LoadListsInProjectAction(this.projectIri));
+              this._router.navigate([RouteConstants.project, this.projectUuid, RouteConstants.dataModels]);
+            });
+        })
+      )
+      .subscribe();
   }
 
   private _setPageTitle() {
     const project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
-    this._titleService.setTitle(`Project ${project?.shortname} | List${this.listIri ? '' : 's'}`);
+    this._titleService.setTitle(`Vocabularie(s) in project ${project?.shortname}`);
   }
 }
