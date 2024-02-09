@@ -13,7 +13,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
-import { map, take, takeUntil } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { AppGlobal } from '../../app-global';
 import { DIALOG_LARGE } from '../../main/services/dialog-sizes.constant';
 import { DialogService } from '../../main/services/dialog.service';
@@ -114,24 +114,17 @@ export class ListComponent extends ProjectBase implements OnInit, OnDestroy {
   }
 
   askToDeleteList(list: ListNodeInfo): void {
-    combineLatest([
-      this._dialog.afterConfirmation('Do you want to delete this controlled vocabulary?', list.labels[0].value),
-      this.listIri$,
-    ])
+    this._dialog
+      .afterConfirmation('Do yu want to delete this controlled vocabulary?', list.labels[0].value)
       .pipe(
-        takeUntil(this.ngUnsubscribe),
-        map(([dialog, listIri]) => {
-          this._store.dispatch(new DeleteListNodeAction(listIri));
-          this._actions$
-            .pipe(ofActionSuccessful(DeleteListNodeAction))
-            .pipe(take(1))
-            .subscribe(() => {
-              this._store.dispatch(new LoadListsInProjectAction(this.projectIri));
-              this._router.navigate([RouteConstants.project, this.projectUuid, RouteConstants.dataModels]);
-            });
-        })
+        take(1),
+        switchMap(() => this.listIri$.pipe(map(listIri => this._store.dispatch(new DeleteListNodeAction(listIri)))))
       )
-      .subscribe();
+      .pipe(switchMap(() => this._actions$.pipe(ofActionSuccessful(DeleteListNodeAction), take(1))))
+      .subscribe(() => {
+        this._store.dispatch(new LoadListsInProjectAction(this.projectIri));
+        this._router.navigate([RouteConstants.project, this.projectUuid, RouteConstants.dataModels]);
+      });
   }
 
   private _setPageTitle() {
