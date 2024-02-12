@@ -56,20 +56,8 @@
           </div>
         </ng-container>
       </form>
-      <div class="action-buttons">
-        <button
-          mat-raised-button
-          type="submit"
-          color="primary"
-          [disabled]="form?.invalid"
-          (click)="onSubmit()"
-          appLoadingButton
-          [isLoading]="isProjectsLoading$ | async">
-          {{ 'appLabels.form.action.submit' | translate }}
-        </button>
-      </div>
     </div>
-    <div class="content-sidebar">
+    <div class="content-sidebar" *ngIf="form.controls.isWatermark.value">
       <img
         [@replaceAnimation]
         *ngIf="!form.controls.aspect.value"
@@ -80,6 +68,18 @@
         *ngIf="form.controls.aspect.value"
         src="assets/images/image-setting-percentage.png"
         [alt]="'appLabels.form.project.imageSettings.percentage' | translate" />
+    </div>
+    <div class="action-buttons">
+      <button
+        mat-raised-button
+        type="submit"
+        color="primary"
+        [disabled]="form?.invalid"
+        (click)="onSubmit()"
+        appLoadingButton
+        [isLoading]="isProjectsLoading$ | async">
+        {{ 'appLabels.form.action.submit' | translate }}
+      </button>
     </div>
   </div>
 </dasch-swiss-centered-layout>

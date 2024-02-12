@@ -73,7 +73,7 @@ export class ImageSettingsComponent implements OnInit {
       .pipe(
         take(1),
         map(([action, settings]) => {
-          if (!settings.size) {
+          if (!settings?.size) {
             return;
           }
 
