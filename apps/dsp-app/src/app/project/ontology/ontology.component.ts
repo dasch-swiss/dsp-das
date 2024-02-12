@@ -6,8 +6,6 @@ import {
   Inject,
   OnDestroy,
   OnInit,
-  ViewChild,
-  ViewContainerRef,
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -72,7 +70,16 @@ import {
   styleUrls: ['./ontology.component.scss'],
 })
 export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  @Select(UserSelectors.user) user$: Observable<ReadUser>;
+  @Select(UserSelectors.userProjectAdminGroups) userProjectAdminGroups$: Observable<string[]>;
+  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
+  @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
+  @Select(OntologiesSelectors.currentProjectOntologies) currentProjectOntologies$: Observable<ReadOntology[]>;
+  @Select(OntologiesSelectors.currentOntologyCanBeDeleted) currentOntologyCanBeDeleted$: Observable<boolean>;
+  isOntologiesLoading$ = this._store.select(OntologiesSelectors.isLoading);
+  currentOntology$ = this._store.select(OntologiesSelectors.currentOntology);
+
+  private ngUnsubscribe = new Subject<void>();
 
   // all resource classes in the current ontology
   ontoClasses: ClassDefinition[];
@@ -111,35 +118,19 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
   readonly classesLink = `../${RouteConstants.classes}`;
   readonly propertiesLink = `../${RouteConstants.properties}`;
 
-  @ViewChild('ontologyEditor', { read: ViewContainerRef })
-  ontologyEditor: ViewContainerRef;
-
-  updatePropertyAssignment$: Subject<any> = new Subject();
+  updatePropertyAssignment$ = new Subject<void>();
 
   // the lastModificationDate is the most important key
   // when updating something inside the ontology
-  get lastModificationDate$(): Observable<string> {
-    return this.currentOntology$.pipe(
-      takeUntil(this.ngUnsubscribe),
-      map(x => x?.lastModificationDate)
-    );
-  }
+  lastModificationDate$ = this.currentOntology$.pipe(
+    takeUntil(this.ngUnsubscribe),
+    map(x => x?.lastModificationDate)
+  );
 
-  get isLoading$(): Observable<boolean> {
-    return combineLatest([this.isOntologiesLoading$, this.isProjectsLoading$]).pipe(
-      takeUntil(this.ngUnsubscribe),
-      map(([isOntologiesLoading, isProjectsLoading]) => isOntologiesLoading === true || isProjectsLoading === true)
-    );
-  }
-
-  @Select(UserSelectors.user) user$: Observable<ReadUser>;
-  @Select(UserSelectors.userProjectAdminGroups) userProjectAdminGroups$: Observable<string[]>;
-  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
-  @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
-  @Select(OntologiesSelectors.isLoading) isOntologiesLoading$: Observable<boolean>;
-  @Select(OntologiesSelectors.currentProjectOntologies) currentProjectOntologies$: Observable<ReadOntology[]>;
-  @Select(OntologiesSelectors.currentOntology) currentOntology$: Observable<ReadOntology>;
-  @Select(OntologiesSelectors.currentOntologyCanBeDeleted) currentOntologyCanBeDeleted$: Observable<boolean>;
+  isLoading$ = combineLatest([this.isOntologiesLoading$, this.isProjectsLoading$]).pipe(
+    takeUntil(this.ngUnsubscribe),
+    map(([isOntologiesLoading, isProjectsLoading]) => isOntologiesLoading === true || isProjectsLoading === true)
+  );
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -220,7 +211,7 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     this._store.dispatch(new ClearCurrentOntologyAction());
   }
 
-  initView(ontology: ReadOntology): void {
+  private initView(ontology: ReadOntology): void {
     this.disableContent = window.innerWidth <= 768;
 
     // set the page title
