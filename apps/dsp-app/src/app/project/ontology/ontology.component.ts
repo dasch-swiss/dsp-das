@@ -281,7 +281,7 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     }
   }
 
-  initOntoClasses(allOntoClasses: ClassDefinition[]) {
+  private initOntoClasses(allOntoClasses: ClassDefinition[]) {
     // reset the ontology classes
     this.ontoClasses = [];
 
@@ -340,7 +340,7 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     this.resetOntology(id);
   }
 
-  onLastModificationDateChange(lastModificationDate): void {
+  onLastModificationDateChange(): void {
     const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
     // TODO reload or just update lastModificationDate in the state?
     this._store.dispatch(new LoadOntologyAction(ontology.id, this.projectUuid, true));
@@ -351,7 +351,7 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
    * @param id ontology id/iri
    * @param view 'classes' | 'properties' | ' graph'
    */
-  openOntologyRoute(id: string, view: 'classes' | 'properties' | 'graph' = 'classes') {
+  private openOntologyRoute(id: string, view: 'classes' | 'properties' | 'graph' = 'classes') {
     this.view = view;
 
     this._router.navigate(
@@ -364,7 +364,7 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
    * resets the current view and the selected ontology
    * @param id
    */
-  resetOntology(id: string) {
+  private resetOntology(id: string) {
     this._store.dispatch([new SetCurrentOntologyAction(null), new CurrentOntologyCanBeDeletedAction()]);
     this.ontoClasses = [];
     this.openOntologyRoute(id, this.view);
