@@ -224,7 +224,13 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
       }),
     });
 
-    this.ontologyForm.valueChanges.subscribe(val => this.onValueChanged(val.ontology));
+    this.ontologyForm.valueChanges.subscribe(val => {
+      if (!this.ontologyForm) {
+        return;
+      }
+      // reset and open selected ontology
+      this.resetOntology(val.ontology);
+    });
   }
 
   /**
@@ -328,18 +334,6 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
   trackByDefaultClassFn = (index: number, item: DefaultClass) => `${index}-${item.iri}`;
 
   trackByElementFn = (index: number) => `${index}`;
-
-  /**
-   * update view after selecting an ontology from dropdown
-   * @param id
-   */
-  onValueChanged(id: string) {
-    if (!this.ontologyForm) {
-      return;
-    }
-    // reset and open selected ontology
-    this.resetOntology(id);
-  }
 
   onLastModificationDateChange(): void {
     const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
