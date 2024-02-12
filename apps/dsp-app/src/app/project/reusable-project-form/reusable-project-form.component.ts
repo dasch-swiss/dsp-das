@@ -44,12 +44,9 @@ import { shortcodeExistsValidator } from './shortcode-exists.validator';
         [validators]="descriptionValidators">
       </dasch-swiss-multi-language-textarea>
 
-      <app-chip-list-input
-        [formGroup]="form"
-        controlName="keywords"
-        data-cy="keywords-input"
-        editable="true">
-        [validators]="keywordsValidators"></app-chip-list-input>
+      <app-chip-list-input [formGroup]="form" controlName="keywords" data-cy="keywords-input" editable="true">
+        [validators]="keywordsValidators">
+      </app-chip-list-input>
     </form>
   `,
 })
