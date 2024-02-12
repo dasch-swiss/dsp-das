@@ -417,7 +417,7 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
 
     const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
 
-    dialogRef.afterClosed().subscribe((ontologyId: string) => {
+    dialogRef.afterClosed().subscribe(() => {
       this.initOntologiesList();
     });
   }
