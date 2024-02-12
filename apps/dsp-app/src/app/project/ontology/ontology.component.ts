@@ -387,14 +387,6 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
   }
 
   /**
-   * filters owl class
-   * @param owlClass
-   */
-  filterOwlClass(owlClass: any) {
-    return owlClass['@type'] === 'owl:class';
-  }
-
-  /**
    * opens ontology form to create or edit ontology info
    * @param mode
    * @param [iri] only in edit mode
