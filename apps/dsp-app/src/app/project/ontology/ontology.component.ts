@@ -179,7 +179,7 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     // TODO temporary solution to replace eventemitter with subject because emitter loses subscriber after child component
     // subscription responsible for emitting event is triggered
     this.updatePropertyAssignment$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
-      this.onUpdatePropertyAssignment();
+      this.initOntologiesList();
     });
 
     this._cd.markForCheck();
@@ -496,10 +496,6 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
       // update the view of resource class or list of properties
       this.initOntology();
     });
-  }
-
-  onUpdatePropertyAssignment() {
-    this.initOntologiesList();
   }
 
   deleteOntology() {
