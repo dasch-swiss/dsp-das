@@ -519,69 +519,70 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
       data: { mode: `delete${mode}`, title: info.label },
     };
 
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(answer => {
-      if (answer === true) {
-        const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-        // delete and refresh the view
-        switch (mode) {
-          case 'Ontology':
-            const updateOntology = new UpdateOntology();
-            updateOntology.id = ontology.id;
-            updateOntology.lastModificationDate = ontology.lastModificationDate;
-            this._dspApiConnection.v2.onto
-              .deleteOntology(updateOntology)
-              .pipe(take(1))
-              .subscribe(() => {
-                this._store.dispatch(new ClearProjectOntologiesAction(this.projectUuid));
-                // reset current ontology
-                // this._store.dispatch([
-                //     new SetCurrentOntologyAction(null),
-                //     new RemoveProjectOntologyAction(updateOntology.id, this.projectUuid)
-                // ]);
-                // get the ontologies for this project
-                this.initOntologiesList();
-                // go to project ontology page
-                const goto = `/project/${this.projectUuid}`;
-                this._router.navigateByUrl(goto, {
-                  skipLocationChange: false,
+    this._dialog
+      .open(DialogComponent, dialogConfig)
+      .afterClosed()
+      .subscribe(answer => {
+        if (answer === true) {
+          const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+          // delete and refresh the view
+          switch (mode) {
+            case 'Ontology':
+              const updateOntology = new UpdateOntology();
+              updateOntology.id = ontology.id;
+              updateOntology.lastModificationDate = ontology.lastModificationDate;
+              this._dspApiConnection.v2.onto
+                .deleteOntology(updateOntology)
+                .pipe(take(1))
+                .subscribe(() => {
+                  this._store.dispatch(new ClearProjectOntologiesAction(this.projectUuid));
+                  // reset current ontology
+                  // this._store.dispatch([
+                  //     new SetCurrentOntologyAction(null),
+                  //     new RemoveProjectOntologyAction(updateOntology.id, this.projectUuid)
+                  // ]);
+                  // get the ontologies for this project
+                  this.initOntologiesList();
+                  // go to project ontology page
+                  const goto = `/project/${this.projectUuid}`;
+                  this._router.navigateByUrl(goto, {
+                    skipLocationChange: false,
+                  });
                 });
-              });
-            break;
+              break;
 
-          case 'ResourceClass':
-            // delete resource class and refresh the view
-            const resClass: DeleteResourceClass = new DeleteResourceClass();
-            resClass.id = info.iri;
-            resClass.lastModificationDate = ontology.lastModificationDate;
-            this._dspApiConnection.v2.onto
-              .deleteResourceClass(resClass)
-              .pipe(take(1))
-              .subscribe(() => {
-                this.ontoClasses = [];
-                this.initOntologiesList();
-              });
-            break;
-          case 'Property':
-            // delete resource property and refresh the view
-            const resProp: DeleteResourceProperty = new DeleteResourceProperty();
-            resProp.id = info.iri;
-            resProp.lastModificationDate = ontology.lastModificationDate;
-            this._dspApiConnection.v2.onto
-              .deleteResourceProperty(resProp)
-              .pipe(take(1))
-              .subscribe(() => {
-                this._store.dispatch(new ClearCurrentOntologyAction());
-                // get the ontologies for this project
-                this.initOntologiesList();
-                // update the view of resource class or list of properties
-                this.initOntology();
-              });
-            break;
+            case 'ResourceClass':
+              // delete resource class and refresh the view
+              const resClass: DeleteResourceClass = new DeleteResourceClass();
+              resClass.id = info.iri;
+              resClass.lastModificationDate = ontology.lastModificationDate;
+              this._dspApiConnection.v2.onto
+                .deleteResourceClass(resClass)
+                .pipe(take(1))
+                .subscribe(() => {
+                  this.ontoClasses = [];
+                  this.initOntologiesList();
+                });
+              break;
+            case 'Property':
+              // delete resource property and refresh the view
+              const resProp: DeleteResourceProperty = new DeleteResourceProperty();
+              resProp.id = info.iri;
+              resProp.lastModificationDate = ontology.lastModificationDate;
+              this._dspApiConnection.v2.onto
+                .deleteResourceProperty(resProp)
+                .pipe(take(1))
+                .subscribe(() => {
+                  this._store.dispatch(new ClearCurrentOntologyAction());
+                  // get the ontologies for this project
+                  this.initOntologiesList();
+                  // update the view of resource class or list of properties
+                  this.initOntology();
+                });
+              break;
+          }
         }
-      }
-    });
+      });
   }
 
   private setTitle() {
