@@ -261,22 +261,6 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
     });
   }
 
-  initOntoProperties(allOntoProperties: PropertyDefinition[]): PropertyDefinition[] {
-    // reset the ontology properties
-    const listOfProperties = [];
-
-    // display only the properties which are not a subjectType of Standoff
-    allOntoProperties.forEach(resProp => {
-      const standoff = resProp.subjectType ? resProp.subjectType.includes('Standoff') : false;
-      if (resProp.objectType !== Constants.LinkValue && !standoff) {
-        listOfProperties.push(resProp);
-      }
-    });
-    // sort properties by label
-    // --> TODO: add sort functionallity to the gui
-    return this._sortingService.keySortByAlphabetical(listOfProperties, 'label');
-  }
-
   canBeDeleted() {
     // check if the class can be deleted
     this._dspApiConnection.v2.onto
