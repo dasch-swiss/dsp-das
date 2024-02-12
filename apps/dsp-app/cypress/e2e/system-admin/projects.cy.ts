@@ -5,10 +5,9 @@ import { customShortcode } from '../../support/helpers/custom-shortcode';
 describe('Projects', () => {
   let projectIri: string;
 
-  const shortcode = 'A0A0';
   const payload = {
     shortname: 'shortname',
-    shortcode,
+    shortcode: 'A0A0',
     longname: 'Longname',
     description: [{ language: 'de', value: 'description' }],
     keywords: ['keyword'],
@@ -58,9 +57,9 @@ describe('Projects', () => {
       description: faker.lorem.sentence(),
       keywords: faker.lorem.words(3).split(' '),
     };
-    cy.intercept('PUT', '/admin/projects').as('submitRequest');
+    cy.intercept('PUT', '/admin/projects/iri/*').as('submitRequest');
 
-    cy.visit(`/project/${projectIri.match(/\/([^\/]+)$/)[1]}/edit`);
+    cy.visit(`/project/${projectIri.match(/\/([^\/]+)$/)[1]}/settings/edit`);
     cy.get('[data-cy=shortcode-input] input').should('have.value', payload.shortcode);
     cy.get('[data-cy=shortname-input] input').should('have.value', payload.shortname);
     cy.get('[data-cy=longname-input] input').should('have.value', payload.longname).clear().type(data.longname);
@@ -84,7 +83,7 @@ describe('Projects', () => {
 
     cy.visit('/system/projects');
     cy.get('[data-cy=active-projects-section]')
-      .contains('[data-cy=project-row]', shortcode)
+      .contains('[data-cy=project-row]', payload.shortcode)
       .find('[data-cy=more-button]')
       .scrollIntoView()
       .should('be.visible')
@@ -93,7 +92,7 @@ describe('Projects', () => {
     cy.get('[data-cy=confirmation-button]').click();
     cy.wait('@deactivateRequest');
 
-    cy.get('[data-cy=inactive-projects-section]').contains('[data-cy=project-row]', shortcode).should('exist');
+    cy.get('[data-cy=inactive-projects-section]').contains('[data-cy=project-row]', payload.shortcode).should('exist');
   });
 
   it('admin can reactivate a project', () => {
@@ -102,7 +101,7 @@ describe('Projects', () => {
     cy.request('DELETE', `${Cypress.env('apiUrl')}/admin/projects/iri/${encodeURIComponent(projectIri)}`).then(() => {
       cy.visit('/system/projects');
       cy.get('[data-cy=inactive-projects-section]')
-        .contains('[data-cy=project-row]', shortcode)
+        .contains('[data-cy=project-row]', payload.shortcode)
         .find('[data-cy=more-button]')
         .scrollIntoView()
         .should('be.visible')
@@ -111,7 +110,7 @@ describe('Projects', () => {
       cy.get('[data-cy=confirmation-button]').click();
       cy.wait('@updateRequest');
 
-      cy.get('[data-cy=active-projects-section]').contains('[data-cy=project-row]', shortcode).should('exist');
+      cy.get('[data-cy=active-projects-section]').contains('[data-cy=project-row]', payload.shortcode).should('exist');
     });
   });
 });
