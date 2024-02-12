@@ -14,7 +14,6 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
   ClassDefinition,
   Constants,
-  DeleteResourceProperty,
   KnoraApiConnection,
   PropertyDefinition,
   ReadOntology,
@@ -543,48 +542,24 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
       });
   }
 
-  /**
-   * delete either ontology, resource class or property
-   *
-   * @param mode Can be 'Ontology' or 'ResourceClass'
-   * @param info
-   */
-  delete(mode: 'Ontology' | 'ResourceClass' | 'Property', info: DefaultClass) {
-    const dialogConfig: MatDialogConfig = {
-      width: '560px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: { mode: `delete${mode}`, title: info.label },
-    };
-
-    this._dialog
-      .open(DialogComponent, dialogConfig)
-      .afterClosed()
-      .subscribe(answer => {
-        if (answer === true) {
-          const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-          // delete and refresh the view
-          switch (mode) {
-            case 'Property':
-              // delete resource property and refresh the view
-              const resProp: DeleteResourceProperty = new DeleteResourceProperty();
-              resProp.id = info.iri;
-              resProp.lastModificationDate = ontology.lastModificationDate;
-              this._dspApiConnection.v2.onto
-                .deleteResourceProperty(resProp)
-                .pipe(take(1))
-                .subscribe(() => {
-                  this._store.dispatch(new ClearCurrentOntologyAction());
-                  // get the ontologies for this project
-                  this.initOntologiesList();
-                  // update the view of resource class or list of properties
-                  this.initOntology();
-                });
-              break;
-          }
-        }
+  deleteProperty(iri: string) {
+    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+    this._dialogService
+      .afterConfirmation('Do you want to delete this property?')
+      .pipe(
+        switchMap(() =>
+          this._dspApiConnection.v2.onto.deleteResourceProperty({
+            id: iri,
+            lastModificationDate: ontology.lastModificationDate,
+          })
+        )
+      )
+      .subscribe(() => {
+        this._store.dispatch(new ClearCurrentOntologyAction());
+        // get the ontologies for this project
+        this.initOntologiesList();
+        // update the view of resource class or list of properties
+        this.initOntology();
       });
   }
 
