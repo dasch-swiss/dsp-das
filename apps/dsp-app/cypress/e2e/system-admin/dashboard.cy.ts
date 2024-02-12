@@ -1,7 +1,4 @@
-const MY_TOKEN = '';
-localStorage.setItem('ACCESS_TOKEN', MY_TOKEN);
-
-describe('ADMIN TEST', () => {
+describe('Dashboard', () => {
   it('should load clickable projects on the home page', () => {
     cy.visit('/');
     const projectTileSelector = '[data-cy=tile]';

@@ -22,7 +22,7 @@ describe('Authentication', () => {
     });
   });
 
-  it.only('Logged out user receives a notification if wrong credentials', () => {
+  it('Logged out user receives a notification if wrong credentials', () => {
     cy.visit('/');
 
     cy.get(po.loginButton).click();

@@ -9,7 +9,7 @@ beforeEach(() => {
   // clear database
   cy.request({
     method: 'POST',
-    url: 'http://0.0.0.0:3333/admin/store/ResetTriplestoreContent',
+    url: `${Cypress.env('apiUrl')}/admin/store/ResetTriplestoreContent`,
   });
 
   cy.readFile('cypress/fixtures/user_profiles.json').then((json: UserProfiles) => {

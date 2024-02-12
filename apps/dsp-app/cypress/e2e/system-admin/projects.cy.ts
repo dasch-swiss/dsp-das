@@ -1,6 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { ProjectOperationResponseADM } from '../../../../../libs/vre/open-api/src';
 import { customShortcode } from '../../support/helpers/custom-shortcode';
+import { generateKeyword } from '../../support/helpers/custom-word';
+import { randomNumber } from '../../support/helpers/random-number';
 
 describe('Projects', () => {
   let projectIri: string;
@@ -29,7 +31,7 @@ describe('Projects', () => {
       shortname: faker.internet.userName(),
       longname: faker.company.name(),
       description: faker.lorem.sentence(),
-      keywords: faker.lorem.words(3, { min: 4 }).split(' '),
+      keywords: Array.from({ length: randomNumber(3, 6) }, () => generateKeyword(4)),
     };
 
     cy.intercept('POST', '/admin/projects').as('submitRequest');
@@ -49,7 +51,7 @@ describe('Projects', () => {
     data.keywords.forEach(keyword => cy.contains(keyword).should('be.visible'));
   });
 
-  it.only('admin can edit a project', () => {
+  it('admin can edit a project', () => {
     const data = {
       longname: faker.company.name(),
       description: faker.lorem.sentence(),
@@ -58,7 +60,6 @@ describe('Projects', () => {
     cy.intercept('PUT', '/admin/projects/iri/*').as('submitRequest');
 
     cy.visit(`/project/${projectIri.match(/\/([^\/]+)$/)[1]}/settings/edit`);
-    console.log(payload.shortcode, 'julien');
     cy.get('[data-cy=shortcode-input] input').should('have.value', payload.shortcode);
     cy.get('[data-cy=shortname-input] input').should('have.value', payload.shortname);
     cy.get('[data-cy=longname-input] input').should('have.value', payload.longname).clear().type(data.longname);
@@ -71,13 +72,13 @@ describe('Projects', () => {
       .type(`${data.keywords.join('{enter}')}{enter}`);
     cy.get('[data-cy=submit-button]').click();
 
-    cy.wait('@submitRequest').then(v => console.log('interception', v));
+    cy.wait('@submitRequest');
     cy.url().should('match', /\/project\/(.+)/);
-    console.log('julien 2', data);
     cy.contains(payload.shortcode).should('be.visible');
     cy.contains(data.description).should('be.visible');
     data.keywords.forEach(keyword => cy.contains(keyword).should('be.visible'));
   });
+
   it('admin can deactivate a project', () => {
     cy.intercept('DELETE', `/admin/projects/iri/${encodeURIComponent(projectIri)}`).as('deactivateRequest');
 
@@ -95,7 +96,7 @@ describe('Projects', () => {
     cy.get('[data-cy=inactive-projects-section]').contains('[data-cy=project-row]', payload.shortcode).should('exist');
   });
 
-  it('admin can reactivate a project', () => {
+  it.only('admin can reactivate a project', () => {
     cy.intercept('PUT', `/admin/projects/iri/${encodeURIComponent(projectIri)}`).as('updateRequest');
 
     cy.request('DELETE', `${Cypress.env('apiUrl')}/admin/projects/iri/${encodeURIComponent(projectIri)}`).then(() => {
@@ -106,7 +107,7 @@ describe('Projects', () => {
         .scrollIntoView()
         .should('be.visible')
         .click();
-      cy.get('[data-cy=reactivate-button]').click();
+      cy.get('[data-cy=reactivate-button]').scrollIntoView().click({ force: true });
       cy.get('[data-cy=confirmation-button]').click();
       cy.wait('@updateRequest');
 
