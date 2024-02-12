@@ -29,7 +29,7 @@ describe('Projects', () => {
       shortname: faker.internet.userName(),
       longname: faker.company.name(),
       description: faker.lorem.sentence(),
-      keywords: faker.lorem.words(3).split(' '),
+      keywords: faker.lorem.words(3, { min: 4 }).split(' '),
     };
 
     cy.intercept('POST', '/admin/projects').as('submitRequest');
@@ -51,8 +51,6 @@ describe('Projects', () => {
 
   it.only('admin can edit a project', () => {
     const data = {
-      shortcode: customShortcode(),
-      shortname: faker.internet.userName(),
       longname: faker.company.name(),
       description: faker.lorem.sentence(),
       keywords: faker.lorem.words(3).split(' '),
@@ -60,6 +58,7 @@ describe('Projects', () => {
     cy.intercept('PUT', '/admin/projects/iri/*').as('submitRequest');
 
     cy.visit(`/project/${projectIri.match(/\/([^\/]+)$/)[1]}/settings/edit`);
+    console.log(payload.shortcode, 'julien');
     cy.get('[data-cy=shortcode-input] input').should('have.value', payload.shortcode);
     cy.get('[data-cy=shortname-input] input').should('have.value', payload.shortname);
     cy.get('[data-cy=longname-input] input').should('have.value', payload.longname).clear().type(data.longname);
@@ -72,9 +71,10 @@ describe('Projects', () => {
       .type(`${data.keywords.join('{enter}')}{enter}`);
     cy.get('[data-cy=submit-button]').click();
 
-    cy.wait('@submitRequest');
+    cy.wait('@submitRequest').then(v => console.log('interception', v));
     cy.url().should('match', /\/project\/(.+)/);
-    cy.contains(data.shortcode).should('be.visible');
+    console.log('julien 2', data);
+    cy.contains(payload.shortcode).should('be.visible');
     cy.contains(data.description).should('be.visible');
     data.keywords.forEach(keyword => cy.contains(keyword).should('be.visible'));
   });
