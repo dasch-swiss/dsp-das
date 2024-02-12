@@ -101,15 +101,15 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
   /**
    * list of all default resource classes (subclass of)
    */
-  defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
-  defaultProperties: PropertyCategory[] = DefaultProperties.data;
+  readonly defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
+  readonly defaultProperties: PropertyCategory[] = DefaultProperties.data;
 
   // disable content on small devices
   disableContent = false;
 
   // route to classes view
-  classesLink = `../${RouteConstants.classes}`;
-  propertiesLink = `../${RouteConstants.properties}`;
+  readonly classesLink = `../${RouteConstants.classes}`;
+  readonly propertiesLink = `../${RouteConstants.properties}`;
 
   @ViewChild('ontologyEditor', { read: ViewContainerRef })
   ontologyEditor: ViewContainerRef;

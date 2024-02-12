@@ -315,7 +315,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
    * property and add it to the class
    * @param propertyAssignment information about the link of a property to a class
    * */
-  assignProperty(propertyAssignment: PropertyAssignment, currentOntologyPropertiesToDisplay: PropToDisplay[]) {
+  private assignProperty(propertyAssignment: PropertyAssignment, currentOntologyPropertiesToDisplay: PropToDisplay[]) {
     if (!propertyAssignment) {
       return;
     }
