@@ -107,7 +107,7 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
   constructor(private _store: Store) {}
 
   ngAfterViewInit() {
-    setTimeout(() => this._store.dispatch(new LoadProjectsAction()));
+    this._store.dispatch(new LoadProjectsAction());
   }
 
   ngOnDestroy() {
