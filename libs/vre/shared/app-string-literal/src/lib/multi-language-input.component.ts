@@ -53,7 +53,7 @@ import { MultiLanguageFormService } from './multi-language-form.service';
         (ngModelChange)="formService.onInputChange($event)"
         [readonly]="!editable" />
     </mat-form-field>
-    <mat-error *ngIf="formService.formArray.invalid">
+    <mat-error *ngIf="formService.formArray.invalid && formService.formArray.touched">
       <ng-container *ngIf="formService.invalidErrors?.language"
         >Language {{ formService.invalidErrors.language }}:
         {{ formService.invalidErrors.error | humanReadableError }}
