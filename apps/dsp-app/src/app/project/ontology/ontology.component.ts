@@ -21,7 +21,6 @@ import {
   ReadOntology,
   ReadProject,
   ReadUser,
-  UpdateOntology,
 } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
@@ -49,6 +48,7 @@ import {
   SetCurrentProjectOntologyPropertiesAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { DialogService } from '@dsp-app/src/app/main/services/dialog.service';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, switchMap, take, takeUntil } from 'rxjs/operators';
@@ -145,7 +145,8 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     protected _store: Store,
     protected _titleService: Title,
     protected _projectService: ProjectService,
-    protected _cd: ChangeDetectorRef
+    protected _cd: ChangeDetectorRef,
+    private _dialogService: DialogService
   ) {
     super(_store, _route, _projectService, _titleService, _router, _cd, _actions$);
   }
@@ -503,6 +504,28 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     this.initOntologiesList();
   }
 
+  deleteOntology() {
+    this._dialogService
+      .afterConfirmation('Do you want to delete this data model ?')
+      .pipe(
+        switchMap(() => {
+          const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+
+          return this._dspApiConnection.v2.onto.deleteOntology({
+            id: ontology.id,
+            lastModificationDate: ontology.lastModificationDate,
+          });
+        })
+      )
+      .subscribe(() => {
+        this._store.dispatch(new ClearProjectOntologiesAction(this.projectUuid));
+        this.initOntologiesList();
+        this._router.navigateByUrl(`/project/${this.projectUuid}`, {
+          skipLocationChange: false,
+        });
+      });
+  }
+
   /**
    * delete either ontology, resource class or property
    *
@@ -527,30 +550,6 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
           const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
           // delete and refresh the view
           switch (mode) {
-            case 'Ontology':
-              const updateOntology = new UpdateOntology();
-              updateOntology.id = ontology.id;
-              updateOntology.lastModificationDate = ontology.lastModificationDate;
-              this._dspApiConnection.v2.onto
-                .deleteOntology(updateOntology)
-                .pipe(take(1))
-                .subscribe(() => {
-                  this._store.dispatch(new ClearProjectOntologiesAction(this.projectUuid));
-                  // reset current ontology
-                  // this._store.dispatch([
-                  //     new SetCurrentOntologyAction(null),
-                  //     new RemoveProjectOntologyAction(updateOntology.id, this.projectUuid)
-                  // ]);
-                  // get the ontologies for this project
-                  this.initOntologiesList();
-                  // go to project ontology page
-                  const goto = `/project/${this.projectUuid}`;
-                  this._router.navigateByUrl(goto, {
-                    skipLocationChange: false,
-                  });
-                });
-              break;
-
             case 'ResourceClass':
               // delete resource class and refresh the view
               const resClass: DeleteResourceClass = new DeleteResourceClass();

@@ -51,7 +51,7 @@
               mat-button
               *ngIf="(currentOntology$ | async) as currentOntology"
               [disabled]="((lastModificationDate$ | async | isFalsy) || (currentOntologyCanBeDeleted$ | async) === false) || ((isAdmin$ | async) === false)"
-              (click)="$event.stopPropagation(); delete('Ontology', {iri: currentOntology.id, label: currentOntology.label})">
+              (click)="$event.stopPropagation(); deleteOntology()">
               <mat-icon>delete</mat-icon>
               Delete
             </button>
@@ -159,7 +159,7 @@
               *ngFor="let prop of ontoProperties?.properties; trackBy: trackByPropertyDefinitionFn; let odd = odd"
               [class.odd]="odd">
               <!-- display only properties with guiOrder and if they exist in list of properties;
-                                                             if objectType is a linkValue hide it (otherwise we have the property twice) -->
+                                                                           if objectType is a linkValue hide it (otherwise we have the property twice) -->
               <app-property-info
                 [propDef]="(currentOntology$ | async)?.properties[prop.id]"
                 [projectUuid]="projectUuid"
