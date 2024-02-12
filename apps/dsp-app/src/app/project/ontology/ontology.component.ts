@@ -14,7 +14,6 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
   ClassDefinition,
   Constants,
-  DeleteResourceClass,
   DeleteResourceProperty,
   KnoraApiConnection,
   PropertyDefinition,
@@ -505,17 +504,17 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
   }
 
   deleteOntology() {
+    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+
     this._dialogService
       .afterConfirmation('Do you want to delete this data model ?')
       .pipe(
-        switchMap(() => {
-          const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-
-          return this._dspApiConnection.v2.onto.deleteOntology({
+        switchMap(() =>
+          this._dspApiConnection.v2.onto.deleteOntology({
             id: ontology.id,
             lastModificationDate: ontology.lastModificationDate,
-          });
-        })
+          })
+        )
       )
       .subscribe(() => {
         this._store.dispatch(new ClearProjectOntologiesAction(this.projectUuid));
@@ -523,6 +522,24 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
         this._router.navigateByUrl(`/project/${this.projectUuid}`, {
           skipLocationChange: false,
         });
+      });
+  }
+
+  deleteResourceClass(resClassIri: string) {
+    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+    this._dialogService
+      .afterConfirmation('Do you want to delete this resource class?')
+      .pipe(
+        switchMap(() =>
+          this._dspApiConnection.v2.onto.deleteResourceClass({
+            id: resClassIri,
+            lastModificationDate: ontology.lastModificationDate,
+          })
+        )
+      )
+      .subscribe(() => {
+        this.ontoClasses = [];
+        this.initOntologiesList();
       });
   }
 
@@ -550,19 +567,6 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
           const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
           // delete and refresh the view
           switch (mode) {
-            case 'ResourceClass':
-              // delete resource class and refresh the view
-              const resClass: DeleteResourceClass = new DeleteResourceClass();
-              resClass.id = info.iri;
-              resClass.lastModificationDate = ontology.lastModificationDate;
-              this._dspApiConnection.v2.onto
-                .deleteResourceClass(resClass)
-                .pipe(take(1))
-                .subscribe(() => {
-                  this.ontoClasses = [];
-                  this.initOntologiesList();
-                });
-              break;
             case 'Property':
               // delete resource property and refresh the view
               const resProp: DeleteResourceProperty = new DeleteResourceProperty();

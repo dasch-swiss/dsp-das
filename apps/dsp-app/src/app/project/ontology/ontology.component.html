@@ -146,7 +146,7 @@
             [expanded]="expandClasses"
             [userCanEdit]="isAdmin$ | async"
             (editResourceClass)="updateResourceClass($event)"
-            (deleteResourceClass)="delete('ResourceClass', $event)"
+            (deleteResourceClass)="deleteResourceClass($event.iri)"
             (updatePropertyAssignment)="onUpdatePropertyAssignment()"
             [updatePropertyAssignment$]="updatePropertyAssignment$">
           </app-resource-class-info>
@@ -159,7 +159,7 @@
               *ngFor="let prop of ontoProperties?.properties; trackBy: trackByPropertyDefinitionFn; let odd = odd"
               [class.odd]="odd">
               <!-- display only properties with guiOrder and if they exist in list of properties;
-                                                                           if objectType is a linkValue hide it (otherwise we have the property twice) -->
+                                                                                         if objectType is a linkValue hide it (otherwise we have the property twice) -->
               <app-property-info
                 [propDef]="(currentOntology$ | async)?.properties[prop.id]"
                 [projectUuid]="projectUuid"
