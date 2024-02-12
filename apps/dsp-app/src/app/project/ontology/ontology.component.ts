@@ -51,7 +51,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { map, take, takeUntil } from 'rxjs/operators';
+import { map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { DialogComponent, DialogEvent } from '../../main/dialog/dialog.component';
 import { ProjectBase } from '../project-base';
 import {
@@ -234,10 +234,12 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
    */
   initOntologiesList(): void {
     this._store.dispatch(new LoadProjectOntologiesAction(this.projectUuid));
-    combineLatest([this._actions$.pipe(ofActionSuccessful(LoadListsInProjectAction)), this.currentProjectOntologies$])
+    this._actions$
       .pipe(
+        ofActionSuccessful(LoadListsInProjectAction),
+        switchMap(() => this._store.select(OntologiesSelectors.currentProjectOntologies)),
         take(1),
-        map(([loadListsInProjectAction, currentProjectOntologies]) =>
+        map(currentProjectOntologies =>
           currentProjectOntologies.find(
             x => x.id === this._ontologyService.getOntologyIriFromRoute(this.project?.shortcode)
           )
