@@ -1,5 +1,27 @@
 # Changelog
 
+## [11.5.1](https://github.com/dasch-swiss/dsp-das/compare/v11.5.0...v11.5.1) (2024-02-09)
+
+
+### Maintenance
+
+* update dsp-js to v9.1.11 ([#1447](https://github.com/dasch-swiss/dsp-das/issues/1447)) ([eb4dfa5](https://github.com/dasch-swiss/dsp-das/commit/eb4dfa5d3ba60ab6761e362dbb13e684d1939b2f))
+
+## [11.5.0](https://github.com/dasch-swiss/dsp-das/compare/v11.4.1...v11.5.0) (2024-02-09)
+
+
+### Enhancements
+
+* **dsp-das:** image settings (DEV-2995) ([#1440](https://github.com/dasch-swiss/dsp-das/issues/1440)) ([3609b52](https://github.com/dasch-swiss/dsp-das/commit/3609b52c1c31a83f980862d72e7206f58802df4d))
+* **dsp-das:** project menu items highlighting (DEV-3103) ([#1444](https://github.com/dasch-swiss/dsp-das/issues/1444)) ([c78ddf7](https://github.com/dasch-swiss/dsp-das/commit/c78ddf7fdffca9c547902bc4d2ed618e1bd2ae87))
+
+
+### Bug Fixes
+
+* list item delete (DEV-3267) ([#1446](https://github.com/dasch-swiss/dsp-das/issues/1446)) ([affd20f](https://github.com/dasch-swiss/dsp-das/commit/affd20f61e11437c4ddd4062df6287d22117c01e))
+* styling issue in project membership ([#1443](https://github.com/dasch-swiss/dsp-das/issues/1443)) ([7825d3d](https://github.com/dasch-swiss/dsp-das/commit/7825d3d772701c18dbe7ea117d5ac9ae11d53721))
+* user can create a project if no active project exists ([#1441](https://github.com/dasch-swiss/dsp-das/issues/1441)) ([3cc36d9](https://github.com/dasch-swiss/dsp-das/commit/3cc36d947770741e0650be2c28c77fc194cca163))
+
 ## [11.4.1](https://github.com/dasch-swiss/dsp-das/compare/v11.4.0...v11.4.1) (2024-02-07)
 
 
