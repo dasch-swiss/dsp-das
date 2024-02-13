@@ -1,5 +1,5 @@
 export interface ProjectImageSettings {
-  restrictImageSize: number;
+  restrictImageSize: boolean;
   isWatermark: boolean;
   aspect: boolean;
   absoluteWidth: number;

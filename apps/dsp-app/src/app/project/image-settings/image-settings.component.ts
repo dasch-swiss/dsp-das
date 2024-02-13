@@ -30,17 +30,28 @@ export class ImageSettingsComponent implements OnInit {
 
   static GetProjectImageSettings(size: string): ProjectImageSettings {
     /*
-              !d,d The returned image is scaled so that the width and height of the returned image are not greater than d, while maintaining the aspect ratio.
-              pct:n The width and height of the returned image is scaled to n percent of the width and height of the extracted region. 1<= n <= 100.
-            */
+                                              !d,d The returned image is scaled so that the width and height of the returned image are not greater than d, while maintaining the aspect ratio.
+                                              pct:n The width and height of the returned image is scaled to n percent of the width and height of the extracted region. 1<= n <= 100.
+                                            */
     const isPercentage = size.startsWith('pct');
-    return {
-      restrictImageSize: !(isPercentage && size.split('pct:').pop() === '100'),
-      isWatermark: true,
-      aspect: isPercentage,
-      absoluteWidth: !isPercentage ? size.substring(1).split(',').pop() : ImageSettingsComponent.AbsoluteWidthSteps[0],
-      percentage: isPercentage ? size.split('pct:').pop() : 1,
-    };
+    console.log('size', size);
+    if (isPercentage) {
+      return {
+        restrictImageSize: false,
+        isWatermark: true,
+        aspect: true,
+        absoluteWidth: parseInt(size.substring(1).split(',').pop(), 0),
+        percentage: parseInt(size.split('pct:').pop()),
+      };
+    } else {
+      return {
+        restrictImageSize: size.split('pct:').pop() === '100',
+        isWatermark: true,
+        aspect: false,
+        absoluteWidth: ImageSettingsComponent.AbsoluteWidthSteps[0],
+        percentage: 1,
+      };
+    }
   }
 
   static FormatToIiifSize(restrictImageSize: boolean, aspect: boolean, percentage: number, width: number): string {
