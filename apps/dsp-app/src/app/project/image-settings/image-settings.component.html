@@ -25,7 +25,7 @@
         </div>
 
         <div *ngIf="isPercentageSize" [@replaceAnimation] class="flex-with-gap">
-          <section>
+          <section class="child">
             <div class="large-field">
               <mat-label>
                 {{ 'appLabels.form.project.imageSettings.percentageValue' | translate }} : {{ percentageSlider.value }}%
@@ -43,7 +43,10 @@
               <input #percentageSlider matSliderThumb [(value)]="percentage" />
             </mat-slider>
           </section>
-          <app-image-display-ratio *ngIf="isPercentageSize" [ratio]="percentage/100"></app-image-display-ratio>
+          <app-image-display-ratio
+            *ngIf="isPercentageSize"
+            [ratio]="percentage/100"
+            class="child"></app-image-display-ratio>
         </div>
 
         <div *ngIf="!isPercentageSize" [@replaceAnimation] class="flex-with-gap">
@@ -71,7 +74,7 @@
         </div>
       </div>
     </div>
-    <div class="action-buttons">
+    <div class="action-buttons mt-2">
       <button
         mat-raised-button
         type="submit"
