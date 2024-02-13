@@ -34,6 +34,7 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { ImageDisplayAbsoluteComponent } from '@dsp-app/src/app/project/image-settings/image-display-absolute.component';
+import { ImageDisplayRatioComponent } from '@dsp-app/src/app/project/image-settings/image-display-ratio.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularSplitModule } from 'angular-split';
@@ -234,6 +235,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     HeaderComponent,
     HelpComponent,
     ImageDisplayAbsoluteComponent,
+    ImageDisplayRatioComponent,
     IntermediateComponent,
     IntervalInputComponent,
     IntervalValueComponent,

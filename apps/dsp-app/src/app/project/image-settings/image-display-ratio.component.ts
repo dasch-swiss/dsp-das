@@ -1,18 +1,12 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-image-display-absolute',
+  selector: 'app-image-display-ratio',
   template: ` <div class="frame">
-    <div class="text">Example image with width: {{ bigWidth }}px</div>
-    <div
-      [ngStyle]="{ width: (widthPx / bigWidth) * 300 + 'px', height: (widthPx / bigWidth) * 200 + 'px' }"
-      class="back-rectangle">
+    <div [ngStyle]="{ width: ratio * 300 + 'px', height: ratio * 200 + 'px' }" class="back-rectangle">
       <div class="arrow left-arrow"></div>
       <div class="arrow right-arrow"></div>
-      <div class="helper">
-        {{ widthPx }}
-        px
-      </div>
+      <div class="helper">Ratio: {{ Math.ceil(ratio * 100) }}%</div>
     </div>
   </div>`,
   styles: [
@@ -24,13 +18,6 @@ import { Component, Input } from '@angular/core';
         position: relative;
       }
 
-      .text {
-        width: 100%;
-        text-align: center;
-        position: absolute;
-        top: 20px;
-      }
-
       .back-rectangle {
         background: darkgray;
         bottom: 0;
@@ -40,7 +27,7 @@ import { Component, Input } from '@angular/core';
 
       .helper {
         position: absolute;
-        bottom: -40px;
+        bottom: -30px;
         right: 0;
         text-align: center;
         width: 100%;
@@ -51,8 +38,10 @@ import { Component, Input } from '@angular/core';
         height: 1px; /* Adjust the height of the stick */
         background-color: red; /* Adjust the color of the stick */
         right: 0;
-        bottom: -20px;
-        width: 100%;
+        bottom: 0px;
+        width: 119%;
+        transform: rotate(33deg);
+        transform-origin: bottom right;
       }
 
       .left-arrow::before,
@@ -78,7 +67,7 @@ import { Component, Input } from '@angular/core';
     `,
   ],
 })
-export class ImageDisplayAbsoluteComponent {
-  @Input() widthPx: number;
-  readonly bigWidth = 2048;
+export class ImageDisplayRatioComponent {
+  @Input() ratio: number;
+  protected readonly Math = Math;
 }
