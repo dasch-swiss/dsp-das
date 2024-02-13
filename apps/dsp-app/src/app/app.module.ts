@@ -33,6 +33,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { ImageDisplayAbsoluteComponent } from '@dsp-app/src/app/project/image-settings/image-display-absolute.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularSplitModule } from 'angular-split';
@@ -232,6 +233,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     GridComponent,
     HeaderComponent,
     HelpComponent,
+    ImageDisplayAbsoluteComponent,
     IntermediateComponent,
     IntervalInputComponent,
     IntervalValueComponent,
