@@ -26,6 +26,7 @@ import { Component, Input } from '@angular/core';
       }
 
       .helper {
+        min-width: 100px;
         position: absolute;
         bottom: -30px;
         right: 0;

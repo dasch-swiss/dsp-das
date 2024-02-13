@@ -44,6 +44,7 @@ import { Component, Input } from '@angular/core';
         right: 0;
         text-align: center;
         width: 100%;
+        min-width: 100px;
       }
 
       .arrow {
