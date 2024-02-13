@@ -24,15 +24,17 @@
                   {{ 'appLabels.form.project.imageSettings.fixed' | translate }}
                 </mat-radio-button>
               </mat-radio-group>
-          </div>
-          <div *ngIf="form.controls.aspect.value" [@replaceAnimation]>
-            <div class="large-field">
-              <mat-label>
-                {{ 'appLabels.form.project.imageSettings.percentageValue' | translate }} : {{ percentageSlider.value }}%
-              </mat-label>
             </div>
-            <mat-slider
-              min="10"
+            <div *ngIf="form.controls.aspect.value" [@replaceAnimation]>
+              <div class="large-field">
+                <mat-label>
+                  {{ 'appLabels.form.project.imageSettings.percentageValue' | translate }} : {{ percentageSlider.value
+                  }}%
+                </mat-label>
+              </div>
+
+              <mat-slider
+                min="10"
                 max="100"
                 step="10"
                 showTickMarks
@@ -70,7 +72,7 @@
             <app-image-display-ratio
               *ngIf="form.controls.aspect.value"
               [ratio]="form.get('percentage').value/100"></app-image-display-ratio>
-      <app-image-display-absolute
+            <app-image-display-absolute
               *ngIf="!form.controls.aspect.value"
               [widthPx]="projectImageSettings.absoluteWidth"></app-image-display-absolute>
           </div>

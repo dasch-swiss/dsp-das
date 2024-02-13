@@ -33,8 +33,6 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
-import { ImageDisplayAbsoluteComponent } from '@dsp-app/src/app/project/image-settings/image-display-absolute.component';
-import { ImageDisplayRatioComponent } from '@dsp-app/src/app/project/image-settings/image-display-ratio.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularSplitModule } from 'angular-split';
@@ -83,6 +81,8 @@ import { CreateProjectFormPageComponent } from './project/create-project-form-pa
 import { DataModelsComponent } from './project/data-models/data-models.component';
 import { DescriptionComponent } from './project/description/description.component';
 import { EditProjectFormPageComponent } from './project/edit-project-form-page/edit-project-form-page.component';
+import { ImageDisplayAbsoluteComponent } from './project/image-settings/image-display-absolute.component';
+import { ImageDisplayRatioComponent } from './project/image-settings/image-display-ratio.component';
 import { ImageSettingsComponent } from './project/image-settings/image-settings.component';
 import { ActionBubbleComponent } from './project/list/action-bubble/action-bubble.component';
 import { ListItemComponent } from './project/list/list-item/list-item.component';
