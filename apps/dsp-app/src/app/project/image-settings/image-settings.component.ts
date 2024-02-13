@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectRestrictedViewSettings } from '@dasch-swiss/dsp-js';
 import { SetRestrictedViewRequest } from '@dasch-swiss/vre/open-api';
-import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -30,9 +29,9 @@ export class ImageSettingsComponent implements OnInit {
 
   static GetProjectImageSettings(size: string): ProjectImageSettings {
     /*
-                                              !d,d The returned image is scaled so that the width and height of the returned image are not greater than d, while maintaining the aspect ratio.
-                                              pct:n The width and height of the returned image is scaled to n percent of the width and height of the extracted region. 1<= n <= 100.
-                                            */
+                                                                                              !d,d The returned image is scaled so that the width and height of the returned image are not greater than d, while maintaining the aspect ratio.
+                                                                                              pct:n The width and height of the returned image is scaled to n percent of the width and height of the extracted region. 1<= n <= 100.
+                                                                                            */
     const isPercentage = size.startsWith('pct');
     console.log('size', size);
     if (isPercentage) {
@@ -63,15 +62,29 @@ export class ImageSettingsComponent implements OnInit {
   }
 
   projectImageSettings: ProjectImageSettings | undefined;
-  form: FormGroup;
+  form = this._fb.group({ isWatermark: false, size: 'pct:100' });
   projectUuid = this.route.parent.parent.snapshot.paramMap.get(RouteConstants.uuidParameter);
 
   @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
   @Select(ProjectsSelectors.projectRestrictedViewSettings)
   projectRestrictedViewSettings$: Observable<ProjectRestrictedViewSettings>;
 
+  get restricted() {
+    return this.form.value.size !== 'pct:100';
+  }
+
+  get isPercentage() {
+    return true;
+  }
+
+  get percentage() {
+    return 5; // this.form.value.size
+  }
+
+  settingsPercentage = true;
+  restrict = true;
+
   constructor(
-    private _projectApiService: ProjectApiService,
     private _projectService: ProjectService,
     private route: ActivatedRoute,
     private _store: Store,
@@ -89,13 +102,9 @@ export class ImageSettingsComponent implements OnInit {
       .subscribe(settings => {
         this.projectImageSettings = ImageSettingsComponent.GetProjectImageSettings(settings.size);
         this.form = this._fb.group({
-          restrictImageSize: this.projectImageSettings.restrictImageSize,
-          isWatermark: settings.watermark,
-          aspect: this.projectImageSettings.aspect,
-          percentage: this.projectImageSettings.percentage,
-          absoluteWidthIndex: this.absoluteWidthIndex(this.projectImageSettings.absoluteWidth),
+          isWatermark: settings.watermark as boolean,
+          size: settings.size,
         });
-        console.log('GOT FORM!', this.form);
       });
   }
 
@@ -112,12 +121,7 @@ export class ImageSettingsComponent implements OnInit {
 
   onSubmit() {
     const request: SetRestrictedViewRequest = {
-      size: ImageSettingsComponent.FormatToIiifSize(
-        this.form.value.restrictImageSize,
-        this.form.value.aspect,
-        this.form.value.percentage,
-        ImageSettingsComponent.AbsoluteWidthSteps[this.form.value.absoluteWidthIndex]
-      ),
+      size: 'pct:20',
       watermark: this.form.value.isWatermark,
     };
 

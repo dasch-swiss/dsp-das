@@ -8,76 +8,67 @@
             {{ 'appLabels.form.project.imageSettings.isWatermark' | translate }}
           </mat-slide-toggle>
         </div>
-        <div class="large-field">
-          <mat-slide-toggle formControlName="restrictImageSize">
-            {{ 'appLabels.form.project.imageSettings.restrictImageSize' | translate }}
-          </mat-slide-toggle>
-        </div>
-        <ng-container *ngIf="form.controls.restrictImageSize.value">
-          <div class="content-container">
-            <div class="large-field aspect">
-              <mat-radio-group formControlName="aspect">
-                <mat-radio-button [value]="true">
-                  {{ 'appLabels.form.project.imageSettings.ratio' | translate }}
-                </mat-radio-button>
-                <mat-radio-button [value]="false">
-                  {{ 'appLabels.form.project.imageSettings.fixed' | translate }}
-                </mat-radio-button>
-              </mat-radio-group>
-            </div>
-            <div *ngIf="form.controls.aspect.value" [@replaceAnimation]>
-              <div class="large-field">
-                <mat-label>
-                  {{ 'appLabels.form.project.imageSettings.percentageValue' | translate }} : {{ percentageSlider.value
-                  }}%
-                </mat-label>
-              </div>
-
-              <mat-slider
-                min="10"
-                max="90"
-                step="10"
-                showTickMarks
-                discrete
-                [displayWith]="formatPercentageLabel"
-                ngDefaultControl
-                formControlName="percentage">
-                <input #percentageSlider matSliderThumb [value]="form.controls.percentage.value" />
-              </mat-slider>
-            </div>
-            <div *ngIf="!form.controls.aspect.value" [@replaceAnimation]>
-              <div class="large-field">
-                <mat-label>
-                  {{ 'appLabels.form.project.imageSettings.absoluteWidth' | translate }}: {{
-                  projectImageSettings.absoluteWidth }} px
-                </mat-label>
-              </div>
-              <mat-slider
-                [min]="0"
-                [max]="4"
-                [step]="1"
-                showTickMarks
-                [displayWith]="formatAbsoluteLabel"
-                discrete
-                ngDefaultControl
-                formControlName="absoluteWidthIndex">
-                <input
-                  (valueChange)="absoluteSliderChange($event)"
-                  [value]="absoluteWidthIndex(projectImageSettings.absoluteWidth)"
-                  matSliderThumb />
-              </mat-slider>
-            </div>
-          </div>
-          <div class="content-sidebar">
-            <app-image-display-ratio
-              *ngIf="form.controls.aspect.value"
-              [ratio]="form.get('percentage').value/100"></app-image-display-ratio>
-            <app-image-display-absolute
-              *ngIf="!form.controls.aspect.value"
-              [widthPx]="projectImageSettings.absoluteWidth"></app-image-display-absolute>
-          </div>
-        </ng-container>
       </form>
+      <div class="large-field">
+        <mat-slide-toggle [(ngModel)]="restrict">
+          {{ 'appLabels.form.project.imageSettings.restrictImageSize' | translate }}
+        </mat-slide-toggle>
+      </div>
+      <div class="content-container" *ngIf="restrict">
+        <div class="large-field aspect">
+          <mat-radio-group [(ngModel)]="settingsPercentage" [ngModelOptions]="{standalone: true}">
+            <mat-radio-button [value]="true">
+              {{ 'appLabels.form.project.imageSettings.ratio' | translate }}
+            </mat-radio-button>
+            <mat-radio-button [value]="false">
+              {{ 'appLabels.form.project.imageSettings.fixed' | translate }}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div *ngIf="settingsPercentage" [@replaceAnimation]>
+          <div class="large-field">
+            <mat-label>
+              {{ 'appLabels.form.project.imageSettings.percentageValue' | translate }} : {{ percentageSlider.value }}%
+            </mat-label>
+          </div>
+
+          <mat-slider
+            min="10"
+            max="90"
+            step="10"
+            showTickMarks
+            discrete
+            [displayWith]="formatPercentageLabel"
+            ngDefaultControl>
+            <input #percentageSlider matSliderThumb [value]="percentage" />
+          </mat-slider>
+        </div>
+        <div *ngIf="!settingsPercentage" [@replaceAnimation]>
+          <div class="large-field">
+            <mat-label>
+              {{ 'appLabels.form.project.imageSettings.absoluteWidth' | translate }}: {{
+              projectImageSettings.absoluteWidth }} px
+            </mat-label>
+          </div>
+          <mat-slider
+            [min]="0"
+            [max]="4"
+            [step]="1"
+            showTickMarks
+            [displayWith]="formatAbsoluteLabel"
+            discrete
+            ngDefaultControl>
+            <input
+              (valueChange)="absoluteSliderChange($event)"
+              [value]="absoluteWidthIndex(projectImageSettings.absoluteWidth)"
+              matSliderThumb />
+          </mat-slider>
+        </div>
+      </div>
+      <div class="content-sidebar">
+        <app-image-display-ratio *ngIf="settingsPercentage" [ratio]="0.2"></app-image-display-ratio>
+        <app-image-display-absolute *ngIf="!settingsPercentage" [widthPx]="500"></app-image-display-absolute>
+      </div>
     </div>
     <div class="action-buttons">
       <button
