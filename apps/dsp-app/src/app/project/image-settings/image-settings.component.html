@@ -2,18 +2,18 @@
   <dasch-swiss-app-progress-indicator *ngIf="isProjectsLoading$ | async"></dasch-swiss-app-progress-indicator>
   <div class="content large middle" *ngIf="(isProjectsLoading$ | async) === false">
     <div>
-      <div class="large-field section">
+      <div class="mb-2">
         <mat-slide-toggle [(ngModel)]="isWatermark">
           {{ 'appLabels.form.project.imageSettings.isWatermark' | translate }}
         </mat-slide-toggle>
       </div>
-      <div class="large-field">
+      <div class="mb-2">
         <mat-slide-toggle [(ngModel)]="allowRestriction">
           {{ 'appLabels.form.project.imageSettings.restrictImageSize' | translate }}
         </mat-slide-toggle>
       </div>
-      <div class="content-container" *ngIf="allowRestriction">
-        <div class="large-field aspect">
+      <div *ngIf="allowRestriction">
+        <div style="margin-bottom: 16px">
           <mat-radio-group [(ngModel)]="isPercentageSize" [ngModelOptions]="{standalone: true}">
             <mat-radio-button [value]="true">
               {{ 'appLabels.form.project.imageSettings.ratio' | translate }}
@@ -24,7 +24,7 @@
           </mat-radio-group>
         </div>
 
-        <div *ngIf="isPercentageSize" [@replaceAnimation] style="display: flex; gap: 16px">
+        <div *ngIf="isPercentageSize" [@replaceAnimation] class="flex-with-gap">
           <section>
             <div class="large-field">
               <mat-label>
@@ -46,7 +46,7 @@
           <app-image-display-ratio *ngIf="isPercentageSize" [ratio]="percentage/100"></app-image-display-ratio>
         </div>
 
-        <div *ngIf="!isPercentageSize" [@replaceAnimation] style="display: flex; gap: 16px">
+        <div *ngIf="!isPercentageSize" [@replaceAnimation] class="flex-with-gap">
           <section>
             <div class="large-field">
               <mat-label>

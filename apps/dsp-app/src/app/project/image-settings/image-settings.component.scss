@@ -1,34 +1,17 @@
-@use '../../../styles/responsive' as *;
+.mat-mdc-slider {
+  width: 100%;
+}
 
-@use '../../../styles/responsive' as *;
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+}
 
-.content {
-  .form-content {
-    width: 100%;
-  }
+.flex-with-gap {
+  display: flex;
+  gap: 16px
+}
 
-  .content-sidebar {
-    display: inline-block;
-    width: 50%;
-  }
-
-  .content-container {
-    display: inline-block;
-    padding-right: 32px;
-    vertical-align: top;
-    max-width: 298px;
-  }
-
-  .section {
-    padding-bottom: 32px;
-  }
-
-  .mat-mdc-slider {
-    width: 100%;
-  }
-
-  .action-buttons {
-    display: flex;
-    justify-content: space-between;
-  }
+.mb-2 {
+  margin-bottom: 16px;
 }
