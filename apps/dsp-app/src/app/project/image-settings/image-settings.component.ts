@@ -52,7 +52,7 @@ export class ImageSettingsComponent implements OnInit {
         switchMap(() => this.projectRestrictedViewSettings$.pipe(takeWhile(settings => settings?.watermark !== null)))
       )
       .subscribe(settings => {
-        this.isWatermark = settings.watermark as boolean; // TODO
+        this.isWatermark = settings.watermark as boolean;
 
         if (settings.size === 'pct:100') {
           this.allowRestriction = false;
