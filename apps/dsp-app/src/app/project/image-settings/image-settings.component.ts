@@ -26,7 +26,32 @@ import { ProjectImageSettings } from './project-image-settings';
   animations: [ReplaceAnimation.animation],
 })
 export class ImageSettingsComponent implements OnInit {
-  projectImageSettings = new ProjectImageSettings();
+  static AbsoluteWidthSteps: number[] = [64, 128, 256, 512, 1024];
+
+  static GetProjectImageSettings(size: string): ProjectImageSettings {
+    /*
+              !d,d The returned image is scaled so that the width and height of the returned image are not greater than d, while maintaining the aspect ratio.
+              pct:n The width and height of the returned image is scaled to n percent of the width and height of the extracted region. 1<= n <= 100.
+            */
+    const isPercentage = size.startsWith('pct');
+    return {
+      restrictImageSize: !(isPercentage && size.split('pct:').pop() === '100'),
+      isWatermark: true,
+      aspect: isPercentage,
+      absoluteWidth: !isPercentage ? size.substring(1).split(',').pop() : ImageSettingsComponent.AbsoluteWidthSteps[0],
+      percentage: isPercentage ? size.split('pct:').pop() : 1,
+    };
+  }
+
+  static FormatToIiifSize(restrictImageSize: boolean, aspect: boolean, percentage: number, width: number): string {
+    if (!restrictImageSize) {
+      return 'pct:100';
+    }
+
+    return aspect ? `pct:${percentage}` : `!${width},${width}`;
+  }
+
+  projectImageSettings: ProjectImageSettings | undefined;
   form: FormGroup;
   projectUuid = this.route.parent.parent.snapshot.paramMap.get(RouteConstants.uuidParameter);
 
@@ -51,7 +76,7 @@ export class ImageSettingsComponent implements OnInit {
         switchMap(() => this.projectRestrictedViewSettings$.pipe(takeWhile(settings => settings?.watermark !== null)))
       )
       .subscribe(settings => {
-        this.projectImageSettings = ProjectImageSettings.GetProjectImageSettings(settings.size);
+        this.projectImageSettings = ImageSettingsComponent.GetProjectImageSettings(settings.size);
         this.form = this._fb.group({
           restrictImageSize: this.projectImageSettings.restrictImageSize,
           isWatermark: settings.watermark,
@@ -65,22 +90,22 @@ export class ImageSettingsComponent implements OnInit {
 
   formatPercentageLabel = (value: number): string => `${value}%`;
 
-  formatAbsoluteLabel = (value: number): string => `${ProjectImageSettings.AbsoluteWidthSteps[value]}px`;
+  formatAbsoluteLabel = (value: number): string => `${ImageSettingsComponent.AbsoluteWidthSteps[value]}px`;
 
   absoluteWidthIndex = (value: number): number =>
-    ProjectImageSettings.AbsoluteWidthSteps.findIndex(step => step == value);
+    ImageSettingsComponent.AbsoluteWidthSteps.findIndex(step => step == value);
 
   absoluteSliderChange(value: number) {
-    this.projectImageSettings.absoluteWidth = ProjectImageSettings.AbsoluteWidthSteps[value];
+    this.projectImageSettings.absoluteWidth = ImageSettingsComponent.AbsoluteWidthSteps[value];
   }
 
   onSubmit() {
     const request: SetRestrictedViewRequest = {
-      size: ProjectImageSettings.FormatToIiifSize(
+      size: ImageSettingsComponent.FormatToIiifSize(
         this.form.value.restrictImageSize,
         this.form.value.aspect,
         this.form.value.percentage,
-        ProjectImageSettings.AbsoluteWidthSteps[this.form.value.absoluteWidthIndex]
+        ImageSettingsComponent.AbsoluteWidthSteps[this.form.value.absoluteWidthIndex]
       ),
       watermark: this.form.value.isWatermark,
     };
