@@ -8,12 +8,12 @@
             {{ 'appLabels.form.project.imageSettings.isWatermark' | translate }}
           </mat-slide-toggle>
         </div>
-        <div class="large-field" *ngIf="form.controls.isWatermark.value">
+        <div class="large-field">
           <mat-slide-toggle formControlName="restrictImageSize">
             {{ 'appLabels.form.project.imageSettings.restrictImageSize' | translate }}
           </mat-slide-toggle>
         </div>
-        <ng-container *ngIf="form.controls.restrictImageSize.value && form.controls.isWatermark.value">
+        <ng-container *ngIf="form.controls.restrictImageSize.value">
           <div class="content-container">
             <div class="large-field aspect">
               <mat-radio-group formControlName="aspect">
@@ -35,7 +35,7 @@
 
               <mat-slider
                 min="10"
-                max="100"
+                max="90"
                 step="10"
                 showTickMarks
                 discrete
@@ -68,7 +68,7 @@
               </mat-slider>
             </div>
           </div>
-          <div class="content-sidebar" *ngIf="form.controls.restrictImageSize.value && form.controls.isWatermark.value">
+          <div class="content-sidebar">
             <app-image-display-ratio
               *ngIf="form.controls.aspect.value"
               [ratio]="form.get('percentage').value/100"></app-image-display-ratio>
