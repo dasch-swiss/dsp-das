@@ -1,5 +1,43 @@
 # Changelog
 
+## [11.6.2](https://github.com/dasch-swiss/dsp-das/compare/v11.6.1...v11.6.2) (2024-02-14)
+
+
+### Bug Fixes
+
+* link to edit a project ([#1465](https://github.com/dasch-swiss/dsp-das/issues/1465)) ([0acda9e](https://github.com/dasch-swiss/dsp-das/commit/0acda9efd04d5670ee6f1b0ae5790a2702efbfea))
+* slider is accessible ([#1467](https://github.com/dasch-swiss/dsp-das/issues/1467)) ([0cd8f3d](https://github.com/dasch-swiss/dsp-das/commit/0cd8f3d789671bba88ba02d7d2140c9d900a7d72))
+
+## [11.6.1](https://github.com/dasch-swiss/dsp-das/compare/v11.6.0...v11.6.1) (2024-02-13)
+
+
+### Bug Fixes
+
+* improve multi language input touched behavior, add validators ([#1463](https://github.com/dasch-swiss/dsp-das/issues/1463)) ([c70e1cf](https://github.com/dasch-swiss/dsp-das/commit/c70e1cf39ec31780183ebc08cc82193c185a7f01))
+* search result list item style (DEV-3280) ([#1464](https://github.com/dasch-swiss/dsp-das/issues/1464)) ([a36fee0](https://github.com/dasch-swiss/dsp-das/commit/a36fee02800d6740d459bd8d1d9b901a7124c514))
+* temporary remove image settings tab ([#1461](https://github.com/dasch-swiss/dsp-das/issues/1461)) ([6cbec6b](https://github.com/dasch-swiss/dsp-das/commit/6cbec6bd7317c115310eeff0d21fc3a323ea2c62))
+
+## [11.6.0](https://github.com/dasch-swiss/dsp-das/compare/v11.5.1...v11.6.0) (2024-02-13)
+
+
+### Enhancements
+
+* **dsp-app:** image settings updates and fixes (DEV-2995) ([#1451](https://github.com/dasch-swiss/dsp-das/issues/1451)) ([f67d528](https://github.com/dasch-swiss/dsp-das/commit/f67d5283cb773da40378a12e848c4a6a9ce3160b))
+
+
+### Bug Fixes
+
+* add instrumentation to faro sdk ([#1455](https://github.com/dasch-swiss/dsp-das/issues/1455)) ([758ad8e](https://github.com/dasch-swiss/dsp-das/commit/758ad8eab84dcb71c6a45160ec5e77bf8b4587e1))
+* **dsp-das:** image viewer padding, arrows style. Resource list name css adjustments (DEV-3276) ([#1456](https://github.com/dasch-swiss/dsp-das/issues/1456)) ([332f8d5](https://github.com/dasch-swiss/dsp-das/commit/332f8d53314933b2075941f78bc8e85ab3481964))
+* image settings updates (DEV-2995) ([#1458](https://github.com/dasch-swiss/dsp-das/issues/1458)) ([6cc1ada](https://github.com/dasch-swiss/dsp-das/commit/6cc1ada11b36ea2b162d4b4afed5c40239550d4d))
+* loads all projects when membership dialog is opened (DEV-3268) ([#1450](https://github.com/dasch-swiss/dsp-das/issues/1450)) ([3abb8fd](https://github.com/dasch-swiss/dsp-das/commit/3abb8fd7ac98247b23935cd8a763a16eee8eb506))
+* remove old "edit project" page url ([#1452](https://github.com/dasch-swiss/dsp-das/issues/1452)) ([3500c22](https://github.com/dasch-swiss/dsp-das/commit/3500c2272f2cfde6ad033c6796a89f03fa2dcc3c))
+
+
+### Maintenance
+
+* image settings ([#1460](https://github.com/dasch-swiss/dsp-das/issues/1460)) ([238b979](https://github.com/dasch-swiss/dsp-das/commit/238b97949f7ee8ea2f1f69aa7bb69b3d412a51e3))
+
 ## [11.5.1](https://github.com/dasch-swiss/dsp-das/compare/v11.5.0...v11.5.1) (2024-02-09)
 
 
