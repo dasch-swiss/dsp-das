@@ -7,6 +7,7 @@
       <mat-toolbar-row>
         <span class="ontology-info">
           <h3
+            data-cy="ontology-label"
             class="mat-headline-6"
             [matTooltip]="(currentOntology$ | async).label + ((currentOntology$ | async).comment ? ' &mdash; ' + (currentOntology$ | async).comment : '')"
             matTooltipPosition="above">
@@ -37,6 +38,7 @@
             <button
               *ngIf="(currentOntology$ | async) as currentOntology"
               color="primary"
+              data-cy="edit-ontology-button"
               mat-button
               [disabled]="(lastModificationDate$ | async | isFalsy) || (isAdmin$ | async) === false"
               (click)="$event.stopPropagation(); openOntologyForm('editOntology', currentOntology.id)">
