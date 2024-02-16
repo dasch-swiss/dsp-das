@@ -84,6 +84,7 @@
               [matTooltipDisabled]="lastModificationDate$ | async">
               <button
                 mat-button
+                data-cy="create-class-button"
                 [matMenuTriggerFor]="addResClassMenu"
                 [disabled]="lastModificationDate$ | async | isFalsy">
                 <mat-icon>add</mat-icon>
@@ -91,6 +92,7 @@
               </button>
               <mat-menu #addResClassMenu="matMenu" xPosition="before">
                 <button
+                  [attr.data-cy]="type.iri.split('#').pop()"
                   mat-menu-item
                   *ngFor="let type of defaultClasses; trackBy: trackByDefaultClassFn"
                   (click)="createResourceClass(type)">
@@ -110,6 +112,7 @@
             [matTooltipDisabled]="lastModificationDate$ | async">
             <button
               mat-button
+              data-cy="create-property-button"
               *ngIf="view === 'properties'"
               [matMenuTriggerFor]="addPropertyMenu"
               [disabled]="lastModificationDate$ | async | isFalsy">
@@ -123,6 +126,7 @@
                   <button
                     mat-menu-item
                     *ngFor="let ele of type.elements; trackBy: trackByElementFn"
+                    [attr.data-cy]="ele.guiEle"
                     [value]="ele"
                     [matTooltip]="ele.description"
                     matTooltipPosition="before"

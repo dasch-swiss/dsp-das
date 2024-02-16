@@ -1,4 +1,5 @@
 import { UserProfiles } from '../models/user-profiles';
+import './commands/data-model-class-command';
 import './commands/login';
 import './commands/ontology-command';
 

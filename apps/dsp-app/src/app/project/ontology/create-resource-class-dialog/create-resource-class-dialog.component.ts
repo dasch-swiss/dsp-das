@@ -24,6 +24,7 @@ export interface CreateResourceClassDialogProps {
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
       <button
+        data-cy="submit-button"
         mat-raised-button
         color="primary"
         appLoadingButton

@@ -35,7 +35,7 @@ describe('Data Model', () => {
     cy.get('[data-cy=ontology-label]').contains(data.label).should('be.visible');
   });
 
-  it.only('should update data model', () => {
+  it('should update data model', () => {
     const data = <Ontology>{
       name: faker.string.alpha({ length: { min: 3, max: 16 } }),
       label: faker.lorem.text(),
