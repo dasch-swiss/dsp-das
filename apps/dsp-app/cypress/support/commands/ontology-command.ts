@@ -1,12 +1,25 @@
-Cypress.Commands.add('createOntology', (input: Ontology, projectUuid: string) => {
-  cy.intercept('POST', '/v2/ontologies').as('submitRequest');
-  cy.visit(`/project/${projectUuid}/data-models`);
-  cy.get('[data-cy=data-models-container]').find('[data-cy=create-button]').scrollIntoView().click();
+import { faker } from '@faker-js/faker';
 
-  cy.get('[data-cy=name-input]').type(input.name);
-  cy.get('[data-cy=label-input]').clear().type(input.label);
-  cy.get('[data-cy=comment-textarea]').type(input.comment);
-  cy.get('[data-cy=submit-button]').click();
+Cypress.Commands.add(
+  'createOntology',
+  (
+    projectUuid: string,
+    input: Ontology = <Ontology>{
+      name: faker.string.alpha({ length: { min: 3, max: 16 } }),
+      label: faker.lorem.text(),
+      comment: faker.lorem.sentence(),
+    }
+  ) => {
+    cy.intercept('POST', '/v2/ontologies').as('submitRequest');
+    cy.visit(`/project/${projectUuid}/data-models`);
+    cy.get('[data-cy=data-models-container]').find('[data-cy=create-button]').scrollIntoView().click();
 
-  cy.wait('@submitRequest');
-});
+    cy.get('[data-cy=name-input]').type(input.name);
+    cy.get('[data-cy=label-input]').clear().type(input.label);
+    cy.get('[data-cy=comment-textarea]').type(input.comment);
+    cy.get('[data-cy=submit-button]').click();
+
+    cy.wait('@submitRequest');
+    return cy.wrap(input).as('ontology');
+  }
+);

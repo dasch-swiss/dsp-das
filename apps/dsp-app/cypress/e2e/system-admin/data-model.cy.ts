@@ -44,15 +44,18 @@ describe('Data Model', () => {
 
     cy.intercept('PUT', '/v2/ontologies/metadata').as('updateRequest');
 
-    cy.createOntology(data, projectPage.projectUuid);
+    cy.createOntology(projectPage.projectUuid).then(ontology => {
+      cy.get('[data-cy=edit-ontology-button]').scrollIntoView().should('be.visible').click();
+      cy.get('[data-cy=label-input]').clear().type(data.label);
+      cy.get('[data-cy=comment-textarea]').type(data.comment);
+      cy.get('[data-cy=submit-button]').click();
 
-    cy.get('[data-cy=edit-ontology-button]').scrollIntoView().should('be.visible').click();
-    cy.get('[data-cy=label-input]').clear().type(data.label);
-    cy.get('[data-cy=comment-textarea]').type(data.comment);
-    cy.get('[data-cy=submit-button]').click();
-
-    cy.wait('@updateRequest');
-    cy.url().should('match', new RegExp(`project/${projectPage.projectUuid}/ontology/${data.name}/editor/classes`));
-    cy.get('[data-cy=ontology-label]').contains(data.label).should('be.visible');
+      cy.wait('@updateRequest');
+      cy.url().should(
+        'match',
+        new RegExp(`project/${projectPage.projectUuid}/ontology/${ontology.name}/editor/classes`)
+      );
+      cy.get('[data-cy=ontology-label]').contains(data.label).should('be.visible');
+    });
   });
 });

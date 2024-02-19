@@ -102,7 +102,12 @@
             </span>
           </span>
           <mat-divider></mat-divider>
-          <a mat-list-item routerLinkActive="active" [routerLink]="propertiesLink" (click)="view = 'properties'"
+          <a
+            mat-list-item
+            routerLinkActive="active"
+            data-cy="properties-button"
+            [routerLink]="propertiesLink"
+            (click)="view = 'properties'"
             >Properties</a
           >
           <span
