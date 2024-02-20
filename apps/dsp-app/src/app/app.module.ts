@@ -33,6 +33,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { RouterOutletDrawerComponent } from '@dsp-app/src/app/router-outlet-drawer/router-outlet-drawer.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularSplitModule } from 'angular-split';
@@ -283,6 +284,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ResourceLinkFormComponent,
     ResourceListComponent,
     ResultsComponent,
+    RouterOutletDrawerComponent,
     SearchPanelComponent,
     SelectedResourcesComponent,
     SelectGroupComponent,

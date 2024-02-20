@@ -1,0 +1,19 @@
+<mat-drawer-container
+  [class.drawer-container-active-drawer]="drawerOpenState.getValue() === true"
+  (backdropClick)="closeDrawer()">
+  <mat-drawer
+    class="edit-drawer"
+    [opened]="drawerOpenState.getValue()"
+    mode="over"
+    position="end"
+    backdrop="true"
+    autofocus="true"
+    (keydown.escape)="closeDrawer()">
+    <!-- the content of the drawer: routed child route -->
+    <router-outlet></router-outlet>
+  </mat-drawer>
+  <mat-drawer-content>
+    <!-- the content of the main view -->
+    <ng-content></ng-content>
+  </mat-drawer-content>
+</mat-drawer-container>
