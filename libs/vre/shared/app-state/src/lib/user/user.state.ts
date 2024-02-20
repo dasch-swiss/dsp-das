@@ -15,6 +15,7 @@ import {
   ResetUsersAction,
   SetUserAction,
   SetUserProjectGroupsAction,
+  UpdateUserAction,
 } from './user.actions';
 import { UserStateModel } from './user.state-model';
 
@@ -174,6 +175,29 @@ export class UserState {
         next: response => {
           const state = ctx.getState();
           state.allUsers.push(response.user);
+          state.isLoading = false;
+          ctx.patchState(state);
+        },
+      })
+    );
+  }
+
+  @Action(UpdateUserAction)
+  updateUserAction(ctx: StateContext<UserStateModel>, userId: string, { userData }: UpdateUserAction) {
+    ctx.patchState({ isLoading: true });
+    return this._userApiService.updateBasicInformation(userId, userData).pipe(
+      take(1),
+      tap({
+        next: response => {
+          const state = ctx.getState();
+          const userIndex = state.allUsers.findIndex(u => u.id === response.user.id);
+          if (userIndex > -1) {
+            state.allUsers[userIndex] = response.user;
+          }
+          if ((<ReadUser>state.user).id === response.user.id) {
+            state.user = response.user;
+          }
+
           state.isLoading = false;
           ctx.patchState(state);
         },

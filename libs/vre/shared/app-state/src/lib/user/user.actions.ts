@@ -52,3 +52,9 @@ export class CreateUserAction {
 
   constructor(public userData: User) {}
 }
+
+export class UpdateUserAction {
+  static readonly type = '[User] Update User';
+
+  constructor(public userData: User) {}
+}
