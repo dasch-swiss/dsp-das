@@ -12,7 +12,8 @@
         class="label"
         [matTooltip]="propDef.comment"
         matTooltipPosition="above"
-        matTooltipClass="multi-line-tooltip">
+        matTooltipClass="multi-line-tooltip"
+        data-cy="property-label">
         {{!propDef.labels.length ? propDef?.label : propDef.labels | appStringifyStringLiteral:'all'}}
       </span>
       <!-- property is linked to a class or to a list: display connected class or list -->

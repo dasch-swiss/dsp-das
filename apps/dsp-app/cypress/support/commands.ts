@@ -20,14 +20,8 @@ interface DataModelClass {
 }
 
 interface DataModelClassProperty {
-  type: PropertyType;
+  type: string;
   name: string;
   label: string;
   comment: string;
-}
-
-enum PropertyType {
-  SimpleText = 'SimpleText',
-  Textarea = 'Textarea',
-  Richtext = 'Richtext',
 }

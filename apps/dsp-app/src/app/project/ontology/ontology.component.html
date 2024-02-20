@@ -126,12 +126,12 @@
             </button>
             <mat-menu #addPropertyMenu="matMenu" xPosition="before" class="switch-nested-menu">
               <ng-container *ngFor="let type of defaultProperties; trackBy: trackByPropertyCategoryFn">
-                <button mat-menu-item [matMenuTriggerFor]="sub_menu">{{type.group}}</button>
+                <button mat-menu-item [matMenuTriggerFor]="sub_menu" [attr.data-cy]="type.group">{{type.group}}</button>
                 <mat-menu #sub_menu="matMenu" class="switch-nested-sub-menu">
                   <button
                     mat-menu-item
                     *ngFor="let ele of type.elements; trackBy: trackByElementFn"
-                    [attr.data-cy]="ele.guiEle"
+                    [attr.data-cy]="ele.label"
                     [value]="ele"
                     [matTooltip]="ele.description"
                     matTooltipPosition="before"
