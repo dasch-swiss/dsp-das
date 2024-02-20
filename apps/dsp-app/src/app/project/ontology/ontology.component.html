@@ -114,6 +114,7 @@
               <mat-icon>add</mat-icon>
               Create new property
             </button>
+            <button mat-button (click)="createNewProperty2()">Create new property 2</button>
             <mat-menu #addPropertyMenu="matMenu" xPosition="before" class="switch-nested-menu">
               <ng-container *ngFor="let type of defaultProperties; trackBy: trackByPropertyCategoryFn">
                 <button mat-menu-item [matMenuTriggerFor]="sub_menu">{{type.group}}</button>
