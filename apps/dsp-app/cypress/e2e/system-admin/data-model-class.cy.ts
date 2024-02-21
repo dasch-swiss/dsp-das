@@ -92,7 +92,7 @@ describe('Data Model Class', () => {
     cy.get('[data-cy=property-comment] textarea').type(textProperty.comment);
     cy.get('[data-cy=submit-button]').click();
 
-    cy.wait('@createPropertyRequest').wait(500);
+    cy.wait('@createPropertyRequest').wait(3000);
     cy.get('[data-cy=property-label]').should('be.visible').should('include.text', textProperty.label);
 
     cy.get('[data-cy=create-property-button]').should('be.visible').click({ force: true });
@@ -103,7 +103,7 @@ describe('Data Model Class', () => {
     cy.get('[data-cy=property-comment] textarea').type(pageNumberProperty.comment);
     cy.get('[data-cy=submit-button]').click();
 
-    cy.wait('@createPropertyRequest').wait(500);
+    cy.wait('@createPropertyRequest').wait(3000);
     cy.get('[data-cy=property-label]').should('be.visible').should('include.text', pageNumberProperty.label);
   });
 

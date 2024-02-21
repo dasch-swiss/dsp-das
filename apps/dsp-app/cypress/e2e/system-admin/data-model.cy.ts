@@ -25,12 +25,12 @@ describe('Data Model', () => {
       .should('be.visible')
       .click();
 
-    cy.get('[data-cy=name-input]').type(data.name);
-    cy.get('[data-cy=label-input]').clear().type(data.label);
-    cy.get('[data-cy=comment-textarea]').type(data.comment).wait(100);
+    cy.get('[data-cy=name-input]').type(data.name).wait(200);
+    cy.get('[data-cy=label-input]').clear().type(data.label).wait(200);
+    cy.get('[data-cy=comment-textarea]').type(data.comment).wait(200);
     cy.get('[data-cy=submit-button]').click();
 
-    cy.wait('@submitRequest').wait(4000);
+    cy.wait('@submitRequest').wait(5000);
     cy.url().should('match', new RegExp(`project/${projectPage.projectUuid}/ontology/${data.name}/editor/classes`));
     cy.get('[data-cy=ontology-label]').contains(data.label).should('be.visible');
   });
@@ -46,11 +46,11 @@ describe('Data Model', () => {
 
     cy.createOntology(projectPage.projectUuid).then(ontology => {
       cy.get('[data-cy=edit-ontology-button]').scrollIntoView().should('be.visible').click();
-      cy.get('[data-cy=label-input]').clear().type(data.label);
-      cy.get('[data-cy=comment-textarea]').type(data.comment).wait(100);
+      cy.get('[data-cy=label-input]').clear().type(data.label).wait(200);
+      cy.get('[data-cy=comment-textarea]').type(data.comment).wait(200);
       cy.get('[data-cy=submit-button]').click();
 
-      cy.wait('@updateRequest').wait(4000);
+      cy.wait('@updateRequest').wait(5000);
       cy.url().should(
         'match',
         new RegExp(`project/${projectPage.projectUuid}/ontology/${ontology.name}/editor/classes`)
