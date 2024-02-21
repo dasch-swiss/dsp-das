@@ -1,30 +1,25 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { ApiResponseError, Constants, ReadUser, StringLiteral, UpdateUserRequest, User } from '@dasch-swiss/dsp-js';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { Constants, ReadUser, StringLiteral, UpdateUserRequest, User } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   AddUserToProjectMembershipAction,
   CreateUserAction,
+  LoadUsersAction,
   ProjectsSelectors,
   SetUserAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { UserEditService } from '@dsp-app/src/app/user/user-form/user-edit.service';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
-import { combineLatest, Observable } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { take, takeUntil, tap } from 'rxjs/operators';
 import { AppGlobal } from '../../app-global';
-import { existingNamesValidator } from '../../main/directive/existing-name/existing-names.validator';
+import { existingNamesAsyncValidator } from '../../main/directive/existing-name/existing-names.validator';
 import { CustomRegex } from '../../workspace/resource/values/custom-regex';
 
 @Component({
@@ -32,59 +27,29 @@ import { CustomRegex } from '../../workspace/resource/values/custom-regex';
   selector: 'app-user-form',
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.scss'],
+  providers: [UserEditService], // Provide the service here
 })
-export class UserFormComponent implements OnInit, OnChanges {
-  // the user form can be used in several cases:
-  // a) guest --> register: create new user
-  // b) system admin or project admin --> add: create new user
-  // c) system admin or project admin --> edit: edit (not own) user
-  // d) logged-in user --> edit: edit own user data
-  // => so, this component has to know who is who and who is doing what;
-  // the form needs then some permission checks
+export class UserFormComponent implements OnInit {
+  user!: ReadUser;
 
+  userForm: UntypedFormGroup;
   /**
    * if the form was built to add new user to project,
    * we get a project uuid and a name (e-mail or username)
    * from the "add-user-autocomplete" input
    */
-  @Input() projectUuid?: string;
-  @Input() user?: ReadUser;
-  @Input() name?: string;
+  // Todo: Remove inputs and set as query parmas
+  projectUuid!: string;
+  name?: string;
 
-  /**
-   * send user data to parent component;
-   * in case of dialog box?
-   */
-  @Output() closeDialog: EventEmitter<any> = new EventEmitter<ReadUser>();
-
-  /**
-   * status for the progress indicator
-   */
-  loading = false;
-  loadingData = true;
+  submitting = false; // whether the form is currently submitting
   title: string;
   subtitle: string;
 
-  /**
-   * define, if the user has system administration permission
-   */
+  // whether the user which is edited/created has system admin permission
   sysAdminPermission = false;
 
-  /**
-   * username should be unique
-   */
-  existingUsernames: [RegExp] = [new RegExp('anEmptyRegularExpressionWasntPossible')];
   usernameMinLength = 4;
-
-  /**
-   * email should be unique
-   */
-  existingEmails: [RegExp] = [new RegExp('anEmptyRegularExpressionWasntPossible')];
-
-  /**
-   * form group for the form controller
-   */
-  userForm: UntypedFormGroup;
 
   /**
    * error checking on the following fields
@@ -121,97 +86,51 @@ export class UserFormComponent implements OnInit, OnChanges {
     },
   };
 
-  /**
-   * success of sending data
-   */
-  success = false;
-  /**
-   * message after successful post
-   */
-  successMessage: any = {
-    status: 200,
-    statusText: "You have successfully updated user's profile data.",
-  };
-
-  /**
-   * selector to set default language
-   */
   languagesList: StringLiteral[] = AppGlobal.languagesList;
 
-  @Select(UserSelectors.allUsers) allUsers$: Observable<ReadUser[]>;
+  // whether the user who is editing is a system admin or not - used to show/hide the system admin checkbox
   @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
-  @Select(ProjectsSelectors.hasLoadingErrors)
-  hasLoadingErrors$: Observable<boolean>;
+
+  editExisting = false; // whether the user is being edited or created
+
+  private _destroy$ = new Subject<void>();
 
   constructor(
     private _userApiService: UserApiService,
     private _formBuilder: UntypedFormBuilder,
-    private _notification: NotificationService,
     private _projectService: ProjectService,
+    private _route: ActivatedRoute,
+    private _router: Router,
     private _store: Store,
     private _actions$: Actions,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _userEditService: UserEditService
   ) {}
 
   ngOnInit() {
-    this.loadingData = true;
-
-    if (this.user) {
-      this.title = this.user.username;
+    this._userEditService.user$.pipe(takeUntil(this._destroy$)).subscribe((user: ReadUser) => {
+      this.user = user;
+      // if a user id is set, we're editing an existing user, otherwise we're creating a new one
+      this.editExisting = !!user.id;
+      this.title = this.user.username || '';
       this.subtitle = "'appLabels.form.user.title.edit' | translate";
-      this.loadingData = !this.buildForm(this.user);
-    } else {
-      /**
-       * create mode: empty form for new user
-       */
-
-      // get existing users to avoid same usernames and email addresses
-      this.allUsers$.pipe(take(1)).subscribe(allUsers => {
-        for (const user of allUsers) {
-          // email address of the user should be unique.
-          // therefore we create a list of existing email addresses to avoid multiple use of user names
-          this.existingEmails.push(new RegExp(`(?:^|W)${user.email.toLowerCase()}(?:$|W)`));
-          // username should also be unique.
-          // therefore we create a list of existingUsernames to avoid multiple use of user names
-          this.existingUsernames.push(new RegExp(`(?:^|W)${user.username.toLowerCase()}(?:$|W)`));
-        }
-
-        const newUser: ReadUser = new ReadUser();
-
-        if (CustomRegex.EMAIL_REGEX.test(this.name)) {
-          newUser.email = this.name;
-        } else {
-          newUser.username = this.name;
-        }
-        // build the form
-        this.loadingData = !this.buildForm(newUser);
-        this._cd.markForCheck();
-      });
-    }
-  }
-
-  ngOnChanges() {
-    if (this.user) {
-      this.buildForm(this.user);
-    }
+      this._buildForm(this.user);
+      this._cd.markForCheck();
+    });
   }
 
   /**
    * build the whole form
    *
    */
-  buildForm(user: ReadUser): boolean {
+  private _buildForm(user: ReadUser) {
     // get info about system admin permission
-    if (user.id && user.permissions.groupsPerProject[Constants.SystemProjectIRI]) {
+    if (this.editExisting && user.permissions.groupsPerProject[Constants.SystemProjectIRI]) {
       // this user is member of the system project. does he has admin rights?
       this.sysAdminPermission = user.permissions.groupsPerProject[Constants.SystemProjectIRI].includes(
         Constants.SystemAdminGroupIRI
       );
     }
-
-    // if user is defined, we're in the edit mode
-    // otherwise "create new user" mode is active
-    const editMode = !!user.id;
 
     this.userForm = this._formBuilder.group({
       givenName: new UntypedFormControl(
@@ -231,25 +150,30 @@ export class UserFormComponent implements OnInit, OnChanges {
       email: new UntypedFormControl(
         {
           value: user.email,
-          disabled: editMode,
+          disabled: this.editExisting,
         },
-        [Validators.required, Validators.pattern(CustomRegex.EMAIL_REGEX), existingNamesValidator(this.existingEmails)]
+        {
+          validators: [Validators.required, Validators.pattern(CustomRegex.EMAIL_REGEX)],
+          asyncValidators: [existingNamesAsyncValidator(this._userEditService.existingUserEmails$)],
+        }
       ),
       username: new UntypedFormControl(
         {
           value: user.username,
-          disabled: editMode,
+          disabled: this.editExisting,
         },
-        [
-          Validators.required,
-          Validators.minLength(4),
-          Validators.pattern(CustomRegex.USERNAME_REGEX),
-          existingNamesValidator(this.existingUsernames),
-        ]
+        {
+          validators: [
+            Validators.required,
+            Validators.minLength(this.usernameMinLength),
+            Validators.pattern(CustomRegex.USERNAME_REGEX),
+          ],
+          asyncValidators: [existingNamesAsyncValidator(this._userEditService.existingUserNames$)],
+        }
       ),
       password: new UntypedFormControl({
         value: '',
-        disabled: editMode,
+        disabled: this.editExisting,
       }),
       lang: new UntypedFormControl({
         value: user.lang ? user.lang : 'en',
@@ -257,30 +181,22 @@ export class UserFormComponent implements OnInit, OnChanges {
       }),
       status: new UntypedFormControl({
         value: user.status ? user.status : true,
-        disabled: editMode,
+        disabled: this.editExisting,
       }),
       systemAdmin: new UntypedFormControl({
         value: this.sysAdminPermission,
-        disabled: editMode,
+        disabled: this.editExisting,
       }),
-      // 'systemAdmin': this.sysAdminPermission,
-      // 'group': null
     });
 
-    this.userForm.valueChanges.subscribe(() => this.onValueChanged());
-    return true;
+    this.userForm.valueChanges.subscribe(() => this._validateForm());
   }
 
-  onValueChanged() {
-    if (!this.userForm) {
-      return;
-    }
-
-    const form = this.userForm;
-
+  private _validateForm() {
+    // check if the form is valid
     Object.keys(this.formErrors).forEach(field => {
       this.formErrors[field] = '';
-      const control = form.get(field);
+      const control = this.userForm.get(field);
       if (control && control.dirty && !control.valid) {
         const messages = this.validationMessages[field];
         Object.keys(control.errors).forEach(key => {
@@ -296,74 +212,43 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
 
   submitData(): void {
-    this.loading = true;
+    this.submitting = true;
 
-    if (this.user) {
-      // edit mode: update user data
-      // username doesn't seem to be optional in @dasch-swiss/dsp-js usersEndpoint type UpdateUserRequest.
-      // but a user can't change the username, the field is disabled, so it's not a value in this form.
-      // we have to make a small hack here.
-      const userData: UpdateUserRequest = new UpdateUserRequest();
-      // userData.username = this.userForm.value.username;
-      userData.familyName = this.userForm.value.familyName;
-      userData.givenName = this.userForm.value.givenName;
-      // userData.email = this.userForm.value.email;
-      userData.lang = this.userForm.value.lang;
-
-      this._userApiService
-        .updateBasicInformation(this.user.id, userData)
-        .pipe(
-          tap({
-            error: () => {
-              this.loading = false;
-            },
-          })
-        )
-        .subscribe(response => {
-          this.user = response.user;
-          this.buildForm(this.user);
-          const user = this._store.selectSnapshot(UserSelectors.user) as ReadUser;
-          // update application state
-          if (user.username === this.user.username) {
-            // update logged in user session
-            this.user.lang = this.userForm.controls['lang'].value;
-          }
-
-          this._store.dispatch(new SetUserAction(this.user));
-          this._notification.openSnackBar("You have successfully updated the user's profile data.");
-          this.closeDialog.emit();
-          this.loading = false;
-        });
+    if (this.editExisting) {
+      this._editExistingUser();
     } else {
-      this.createNewUser(this.userForm.value);
+      this._createNewUser();
     }
   }
 
-  private createNewUser(userForm: any): void {
-    const userData: User = new User();
-    userData.username = userForm.username;
-    userData.familyName = userForm.familyName;
-    userData.givenName = userForm.givenName;
-    userData.email = userForm.email;
-    userData.password = userForm.password;
-    userData.systemAdmin = userForm.systemAdmin;
-    userData.status = userForm.status;
-    userData.lang = userForm.lang;
+  private _editExistingUser(): void {
+    // update an existing users data
+    const user: ReadUser = new ReadUser();
+    user.familyName = this.userForm.value.familyName;
+    user.givenName = this.userForm.value.givenName;
+    user.lang = this.userForm.value.lang;
+    this._userEditService.updateUser(user);
+  }
 
-    this._store.dispatch(new CreateUserAction(userData));
-    combineLatest([this._actions$.pipe(ofActionSuccessful(CreateUserAction)), this.allUsers$])
-      .pipe(take(1))
-      .subscribe(([loadUsersAction, allUsers]) => {
-        this.user = allUsers.find(user => user.username === loadUsersAction.userData.username);
-        this.buildForm(this.user);
-        if (this.projectUuid) {
-          // if a projectUuid exists, add the user to the project
-          const projectIri = this._projectService.uuidToIri(this.projectUuid);
-          this._store.dispatch(new AddUserToProjectMembershipAction(this.user.id, projectIri));
-        }
+  private _createNewUser(): void {
+    const user: User = new User();
+    user.username = this.userForm.value.username;
+    user.familyName = this.userForm.value.familyName;
+    user.givenName = this.userForm.value.givenName;
+    user.email = this.userForm.value.email;
+    user.password = this.userForm.value.password;
+    user.systemAdmin = this.userForm.value.systemAdmin;
+    user.status = this.userForm.value.status;
+    user.lang = this.userForm.value.lang;
 
-        this.closeDialog.emit(this.user);
-        this.loading = false;
-      });
+    this._userEditService.createUser(user);
+  }
+  onCancel() {
+    this._router.navigate(['../../'], { relativeTo: this._route });
+  }
+
+  ngOnDestroy() {
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 }

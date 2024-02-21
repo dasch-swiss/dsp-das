@@ -51,6 +51,7 @@ export class RouteConstants {
   static readonly classParameter = 'class';
   static readonly instanceParameter = 'instance';
   static readonly listParameter = 'list';
+  static readonly userParameter = 'user';
   static readonly classes = 'classes';
   static readonly properties = 'properties';
 
