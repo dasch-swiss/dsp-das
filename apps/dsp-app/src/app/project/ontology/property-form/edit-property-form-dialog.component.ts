@@ -13,14 +13,14 @@ export interface EditPropertyFormDialogProps {
 }
 
 @Component({
-  selector: 'app-create-property-form-dialog',
+  selector: 'app-edit-property-form-dialog',
   template: ` <app-dialog-header
       title="Create a new property"
       [subtitle]="data.propertyInfo.propType.group + ': ' + data.propertyInfo.propType.label"></app-dialog-header>
     <app-property-form-2
       mat-dialog-content
       (formValueChange)="form = $event"
-      [formData]="{ properties: [] }"></app-property-form-2>
+      [formData]="{ property: data.propertyInfo }"></app-property-form-2>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
       <button
@@ -48,4 +48,6 @@ export class EditPropertyFormDialogComponent implements OnInit {
   ngOnInit() {
     this.dialogRef.updateSize('800px', '');
   }
+
+  onSubmit() {}
 }

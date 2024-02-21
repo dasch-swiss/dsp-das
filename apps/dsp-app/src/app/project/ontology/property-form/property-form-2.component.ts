@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
-import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Subscription } from 'rxjs';
 
 type MULTIFORM_LANGUAGES = 'de' | 'fr' | 'it' | 'en' | 'rm';
@@ -20,6 +20,7 @@ export const DEFAULT_MULTILANGUAGE_FORM = (validators?: ValidatorFn[]) => {
 };
 
 export type PropertyForm = FormGroup<{
+  propType: FormControl<string>;
   name: FormControl<string>;
   labels: MultiLanguageForm;
   comments: MultiLanguageForm;
@@ -28,6 +29,29 @@ export type PropertyForm = FormGroup<{
 @Component({
   selector: 'app-property-form-2',
   template: ` <form [formGroup]="form">
+    <mat-form-field style="width: 100%">
+      <span matPrefix>
+        <mat-icon>{{ selectedProperty.icon }}</mat-icon>
+      </span>
+      <mat-label>Property type</mat-label>
+      <!-- in case of edit property, the user can change the property type within the same group -->
+      <mat-select [formControl]="form.controls.propType">
+        <mat-select-trigger>
+          {{ selectedProperty.group }}
+          :&nbsp; {{ selectedProperty.label }}
+        </mat-select-trigger>
+
+        <mat-optgroup *ngFor="let type of filteredProperties" [label]="type.group">
+          <mat-option *ngFor="let ele of type.elements" [value]="ele.guiEle">
+            <mat-icon>{{ ele.icon }}</mat-icon>
+            {{ ele.label }}
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
+      <!--TODO <mat-hint *ngIf="unsupportedPropertyType" class="ontology-warning-with-prefix">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                          {{ propertyForm.controls['propType'].value.description }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </mat-hint>-->
+    </mat-form-field>
     <app-common-input
       placeholder="Property name *"
       prefixIcon="fingerprint"
@@ -44,24 +68,40 @@ export type PropertyForm = FormGroup<{
   </form>`,
 })
 export class PropertyForm2Component implements OnInit, OnDestroy {
-  @Input() formData: { properties: PropertyInfoObject[] };
+  @Input() creationMode: boolean;
+  @Input() formData: { property: PropertyInfoObject };
   @Output() formValueChange = new EventEmitter<PropertyForm>();
 
+  readonly defaultProperties = DefaultProperties.data;
   subscription: Subscription;
-  form: PropertyForm = this._fb.group({
-    name: null as string,
-    labels: DEFAULT_MULTILANGUAGE_FORM(),
-    comments: DEFAULT_MULTILANGUAGE_FORM(),
-  });
+  form: PropertyForm;
+
+  get selectedProperty() {
+    return this.defaultProperties.flatMap(el => el.elements).find(e => e.guiEle === this.form.controls.propType.value);
+  }
+
+  get filteredProperties() {
+    return this.defaultProperties.filter(property => property.group === this.formData.property.propType.group);
+  }
+
+  constructor(private _fb: FormBuilder) {}
 
   ngOnInit() {
+    this.form = this._fb.group({
+      propType: this._fb.control({
+        value: this.formData.property.propType.guiEle,
+        disabled: this.creationMode || this.filteredProperties[0].elements.length === 1,
+      }),
+      name: this._fb.control<string>({ value: null, disabled: !this.creationMode }),
+      labels: DEFAULT_MULTILANGUAGE_FORM(),
+      comments: DEFAULT_MULTILANGUAGE_FORM(),
+    });
+
     this.subscription = this.form.valueChanges.subscribe(() => {
       this.formValueChange.emit(this.form);
     });
     this.formValueChange.emit(this.form);
   }
-
-  constructor(private _fb: FormBuilder) {}
 
   ngOnDestroy() {
     this.subscription.unsubscribe();

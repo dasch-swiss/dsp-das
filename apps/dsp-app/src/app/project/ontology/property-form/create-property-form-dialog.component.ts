@@ -21,7 +21,8 @@ export interface CreatePropertyFormDialogProps {
     <app-property-form-2
       mat-dialog-content
       (formValueChange)="form = $event"
-      [formData]="{ properties: [] }"></app-property-form-2>
+      [formData]="{ property: data.propertyInfo }"
+      [creationMode]="true"></app-property-form-2>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
       <button
@@ -79,18 +80,15 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     newResProp.comment = this.form.getRawValue().comments;
 
     /* TODO Julien removed
-                                                    const guiAttr = this.propertyForm.controls['guiAttr'].value;
-                                                    if (guiAttr) {
-                                                      newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
-                                                    }
-                                                     */
+                                                                            const guiAttr = this.propertyForm.controls['guiAttr'].value;
+                                                                            if (guiAttr) {
+                                                                              newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
+                                                                            }
+                                                                             */
     newResProp.guiElement = this.data.propertyInfo.propType.guiEle;
     newResProp.subPropertyOf = [this.data.propertyInfo.propType.subPropOf];
 
-    if (
-      this.data.propertyInfo.propType.subPropOf === Constants.HasLinkTo ||
-      this.data.propertyInfo.propType.subPropOf === Constants.IsPartOf
-    ) {
+    if ([Constants.HasLinkTo, Constants.IsPartOf].includes(this.data.propertyInfo.propType.subPropOf)) {
       // TODO Julien removed: newResProp.objectType = guiAttr;
       newResProp.subjectType = this.data.resClassIri;
     } else {
