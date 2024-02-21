@@ -34,6 +34,7 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { CreatePropertyFormDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/create-property-form-dialog.component';
+import { EditPropertyFormDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/edit-property-form-dialog.component';
 import { PropertyForm2Component } from '@dsp-app/src/app/project/ontology/property-form/property-form-2.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -277,6 +278,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     PropertyFormComponent,
     PropertyForm2Component,
     CreatePropertyFormDialogComponent,
+    EditPropertyFormDialogComponent,
     PropertyInfoComponent,
     ReplaceFileFormComponent,
     ResourceClassFormComponent,

@@ -172,20 +172,6 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     }
   }
 
-  createNewProperty2(mode: string, data: { propType: DefaultProperty }) {
-    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-    this._dialog.open<CreatePropertyFormDialogComponent, CreatePropertyFormDialogProps>(
-      CreatePropertyFormDialogComponent,
-      {
-        data: {
-          ontologyId: ontology.id,
-          lastModificationDate: ontology.lastModificationDate,
-          propertyInfo: data,
-        },
-      }
-    );
-  }
-
   ngOnInit() {
     super.ngOnInit();
     // get the uuid of the current project
@@ -531,6 +517,44 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
       // update the view of resource class or list of properties
       this.initOntology();
     });
+  }
+
+  createProperty(mode: string, data: { propType: DefaultProperty }) {
+    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+    this._dialog
+      .open<CreatePropertyFormDialogComponent, CreatePropertyFormDialogProps>(CreatePropertyFormDialogComponent, {
+        data: {
+          ontologyId: ontology.id,
+          lastModificationDate: ontology.lastModificationDate,
+          propertyInfo: data,
+        },
+      })
+      .afterClosed()
+      .subscribe(() => {
+        // get the ontologies for this project
+        this.initOntologiesList();
+        // update the view of resource class or list of properties
+        this.initOntology();
+      });
+  }
+
+  editProperty(mode: string, data: { propType: DefaultProperty }) {
+    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+    this._dialog
+      .open<CreatePropertyFormDialogComponent, CreatePropertyFormDialogProps>(CreatePropertyFormDialogComponent, {
+        data: {
+          ontologyId: ontology.id,
+          lastModificationDate: ontology.lastModificationDate,
+          propertyInfo: data,
+        },
+      })
+      .afterClosed()
+      .subscribe(() => {
+        // get the ontologies for this project
+        this.initOntologiesList();
+        // update the view of resource class or list of properties
+        this.initOntology();
+      });
   }
 
   onUpdatePropertyAssignment() {
