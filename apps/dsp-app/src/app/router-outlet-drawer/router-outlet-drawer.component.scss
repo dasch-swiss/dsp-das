@@ -1,5 +1,13 @@
 .edit-drawer {
   min-width: 50%;
-  width: 50%;
+  max-width: 50%;
   height: 100%;
+}
+
+.drawer-container-active-drawer {
+  height: 100%;
+  width: 100vw;
+  background-color: transparent;
+  position: absolute;
+  z-index: 3 !important;
 }
