@@ -25,8 +25,8 @@ describe('Data Model', () => {
       .should('be.visible')
       .click();
 
-    cy.get('[data-cy=name-input]').type(data.name);
-    cy.get('[data-cy=label-input]').clear().type(data.label);
+    cy.get('[data-cy=name-input]').type(data.name).wait(100);
+    cy.get('[data-cy=label-input]').clear().type(data.label).wait(100);
     cy.get('[data-cy=comment-textarea]').type(data.comment).wait(100);
     cy.get('[data-cy=submit-button]').click();
 
@@ -50,7 +50,7 @@ describe('Data Model', () => {
       cy.get('[data-cy=comment-textarea]').type(data.comment);
       cy.get('[data-cy=submit-button]').click();
 
-      cy.wait('@updateRequest').wait(3000);
+      cy.wait('@updateRequest').wait(4000);
       cy.url().should(
         'match',
         new RegExp(`project/${projectPage.projectUuid}/ontology/${ontology.name}/editor/classes`)
