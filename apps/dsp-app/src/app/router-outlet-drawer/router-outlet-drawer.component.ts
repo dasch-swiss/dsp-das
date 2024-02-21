@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, filter, map, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, takeUntil, tap } from 'rxjs/operators';
 
 /**
  * Wrapper for angular router-outlet. Does the very same as router-outlet except
@@ -24,7 +24,7 @@ export class RouterOutletDrawerComponent implements OnDestroy {
     private _route: ActivatedRoute,
     private _router: Router
   ) {
-    // open the drawer if the current route has children
+    // open the drawer if the current route has children at the time of component creation
     if (this._route.snapshot.children.length > 0) {
       this.drawerOpenState.next(true);
     }
@@ -42,9 +42,20 @@ export class RouterOutletDrawerComponent implements OnDestroy {
     // When a child route is active, the drawer opens and displays that
     // route's component. If there are no children to display acc.
     // to the routes, the drawer closes.
-    this._hasActiveChildRoute$.subscribe(isActive => {
-      this.drawerOpenState.next(isActive);
-    });
+
+    this._hasActiveChildRoute$
+      .pipe(
+        distinctUntilChanged(),
+        takeUntil(this._destroy$),
+        tap(isActive => {
+          if (!isActive) {
+            this.closeDrawer();
+          } else {
+            this.drawerOpenState.next(isActive);
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
