@@ -16,9 +16,9 @@ describe('Data Model', () => {
     };
 
     cy.intercept('POST', '/v2/ontologies').as('submitRequest');
-
     cy.visit(`/project/${projectPage.projectUuid}/data-models`);
     cy.url().should('match', new RegExp(`project\/${projectPage.projectUuid}\/data-models`));
+
     cy.get('[data-cy=data-models-container]')
       .find('[data-cy=create-button]')
       .scrollIntoView()
@@ -27,10 +27,10 @@ describe('Data Model', () => {
 
     cy.get('[data-cy=name-input]').type(data.name);
     cy.get('[data-cy=label-input]').clear().type(data.label);
-    cy.get('[data-cy=comment-textarea]').type(data.comment);
+    cy.get('[data-cy=comment-textarea]').type(data.comment).wait(100);
     cy.get('[data-cy=submit-button]').click();
 
-    cy.wait('@submitRequest');
+    cy.wait('@submitRequest').wait(3000);
     cy.url().should('match', new RegExp(`project/${projectPage.projectUuid}/ontology/${data.name}/editor/classes`));
     cy.get('[data-cy=ontology-label]').contains(data.label).should('be.visible');
   });
@@ -50,7 +50,7 @@ describe('Data Model', () => {
       cy.get('[data-cy=comment-textarea]').type(data.comment);
       cy.get('[data-cy=submit-button]').click();
 
-      cy.wait('@updateRequest');
+      cy.wait('@updateRequest').wait(3000);
       cy.url().should(
         'match',
         new RegExp(`project/${projectPage.projectUuid}/ontology/${ontology.name}/editor/classes`)

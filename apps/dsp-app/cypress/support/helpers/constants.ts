@@ -1,3 +1,13 @@
+export enum ClassType {
+  Resource = 'Resource',
+  StillImageRepresentation = 'StillImageRepresentation',
+  MovingImageRepresentation = 'MovingImageRepresentation',
+  AudioRepresentation = 'AudioRepresentation',
+  TextRepresentation = 'TextRepresentation',
+  DocumentRepresentation = 'DocumentRepresentation',
+  ArchiveRepresentation = 'ArchiveRepresentation',
+}
+
 export enum PropertyType {
   Text = 'Text',
   List = 'List',
