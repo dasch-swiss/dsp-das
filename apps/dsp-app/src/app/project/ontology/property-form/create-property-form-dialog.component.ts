@@ -1,18 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {
-  Constants,
-  CreateResourceProperty,
-  KnoraApiConnection,
-  ResourcePropertyDefinitionWithAllLanguages,
-  UpdateOntology,
-} from '@dasch-swiss/dsp-js';
+import { Constants, CreateResourceProperty, KnoraApiConnection, UpdateOntology } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/property-form-2.component';
 
 export interface CreatePropertyFormDialogProps {
   ontologyId: string;
   lastModificationDate: string;
+  propertyInfo: PropertyInfoObject;
+  resClassIri?: string;
 }
 
 @Component({
@@ -48,13 +45,10 @@ export class CreatePropertyFormDialogComponent implements OnInit {
   onSubmit() {
     const onto = this.getOntologyForNewProperty();
 
-    this._dspApiConnection.v2.onto
-      .createResourceProperty(onto)
-      .subscribe((response: ResourcePropertyDefinitionWithAllLanguages) => {
-        this.lastModificationDate = response.lastModificationDate;
-        this.loading = false;
-        this.dialogRef.close();
-      });
+    this._dspApiConnection.v2.onto.createResourceProperty(onto).subscribe(() => {
+      this.loading = false;
+      this.dialogRef.close();
+    });
   }
 
   ngOnInit() {
@@ -70,15 +64,15 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     // prepare payload for property
     const newResProp = new CreateResourceProperty();
     newResProp.name = this.form.controls.name.value;
-    newResProp.label = this.form.controls.labels.value;
-    newResProp.comment = this.form.controls.comments.value;
+    newResProp.label = this.form.getRawValue().labels;
+    newResProp.comment = this.form.getRawValue().comments;
 
     /* TODO Julien removed
-            const guiAttr = this.propertyForm.controls['guiAttr'].value;
-            if (guiAttr) {
-              newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
-            }
-             */
+                    const guiAttr = this.propertyForm.controls['guiAttr'].value;
+                    if (guiAttr) {
+                      newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
+                    }
+                     */
     newResProp.guiElement = this.data.propertyInfo.propType.guiEle;
     newResProp.subPropertyOf = [this.data.propertyInfo.propType.subPropOf];
 
@@ -86,8 +80,8 @@ export class CreatePropertyFormDialogComponent implements OnInit {
       this.data.propertyInfo.propType.subPropOf === Constants.HasLinkTo ||
       this.data.propertyInfo.propType.subPropOf === Constants.IsPartOf
     ) {
-      newResProp.objectType = guiAttr;
-      newResProp.subjectType = this.resClassIri;
+      // TODO Julien removed: newResProp.objectType = guiAttr;
+      newResProp.subjectType = this.data.resClassIri;
     } else {
       newResProp.objectType = this.data.propertyInfo.propType.objectType;
     }

@@ -30,6 +30,7 @@ import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/a
 import {
   DefaultClass,
   DefaultProperties,
+  DefaultProperty,
   DefaultResourceClasses,
   OntologyService,
   ProjectService,
@@ -51,7 +52,10 @@ import {
   SetCurrentProjectOntologyPropertiesAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { CreatePropertyFormDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/create-property-form-dialog.component';
+import {
+  CreatePropertyFormDialogComponent,
+  CreatePropertyFormDialogProps,
+} from '@dsp-app/src/app/project/ontology/property-form/create-property-form-dialog.component';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
@@ -168,8 +172,18 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     }
   }
 
-  createNewProperty2() {
-    this._dialog.open(CreatePropertyFormDialogComponent);
+  createNewProperty2(mode: string, data: { propType: DefaultProperty }) {
+    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+    this._dialog.open<CreatePropertyFormDialogComponent, CreatePropertyFormDialogProps>(
+      CreatePropertyFormDialogComponent,
+      {
+        data: {
+          ontologyId: ontology.id,
+          lastModificationDate: ontology.lastModificationDate,
+          propertyInfo: data,
+        },
+      }
+    );
   }
 
   ngOnInit() {

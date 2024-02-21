@@ -48,17 +48,9 @@ export type PropertyForm = FormGroup<{
 })
 export class PropertyForm2Component implements OnInit, OnDestroy {
   @Input() formData;
-  @Output() formValueChange = new EventEmitter<FormGroup>();
+  @Output() formValueChange = new EventEmitter<PropertyForm>();
 
   subscription: Subscription;
-
-  ngOnInit() {
-    this.subscription = this.form.valueChanges.subscribe(z => {
-      this.formValueChange.emit(this.form);
-    });
-    this.formValueChange.emit(this.form);
-  }
-
   form: PropertyForm = this._fb.group({
     type: null as string,
     name: null as string,
@@ -75,6 +67,13 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
       }),
     ]),
   });
+
+  ngOnInit() {
+    this.subscription = this.form.valueChanges.subscribe(() => {
+      this.formValueChange.emit(this.form);
+    });
+    this.formValueChange.emit(this.form);
+  }
 
   constructor(private _fb: FormBuilder) {}
 
