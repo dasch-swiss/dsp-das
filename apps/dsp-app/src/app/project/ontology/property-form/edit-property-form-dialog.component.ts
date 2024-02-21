@@ -12,7 +12,7 @@ import {
   UpdateResourcePropertyLabel,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { SetCurrentOntologyAction } from '@dasch-swiss/vre/shared/app-state';
 import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/property-form-2.component';
@@ -34,6 +34,7 @@ export interface EditPropertyFormDialogProps {
       mat-dialog-content
       (formValueChange)="form = $event"
       [formData]="{ property: data.propertyInfo }"></app-property-form-2>
+    <app-gui-attr *ngIf="showGuiAttr"></app-gui-attr>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
       <button
@@ -54,6 +55,11 @@ export class EditPropertyFormDialogComponent implements OnInit {
   ontology = this.data.ontology;
   lastModificationDate = this.data.lastModificationDate;
   propertyInfo = this.data.propertyInfo;
+
+  unsupportedPropertyType = false; // TODO verify, I have set it to true
+  get selectedProperty() {
+    return DefaultProperties.data.flatMap(el => el.elements).find(e => e.guiEle === this.form.controls.propType.value);
+  }
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -87,18 +93,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
             .subscribe((propertyCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
               this.lastModificationDate = propertyCommentResponse.lastModificationDate;
 
-              // if property type is supported and is of type TextValue and the guiElement is different from its initial value, call replaceGuiElement() to update the guiElement
-              // this only works for the TextValue object type currently
-              // https://docs.dasch.swiss/latest/DSP-API/03-apis/api-v2/ontology-information/#changing-the-gui-element-and-gui-attributes-of-a-property
-              if (
-                !this.unsupportedPropertyType &&
-                this.propertyInfo.propDef.objectType === Constants.TextValue &&
-                this.propertyInfo.propDef.guiElement !== this.propertyForm.controls['propType'].value.guiEle
-              ) {
-                this.replaceGuiElement();
-              } else {
-                this.onSuccess();
-              }
+              this.final();
             });
         } else {
           // if the comments array is empty, send a request to remove the comments
@@ -110,19 +105,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
             .deleteResourcePropertyComment(deleteResourcePropertyComment)
             .subscribe((deleteCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
               this.lastModificationDate = deleteCommentResponse.lastModificationDate;
-
-              // if property type is supported and is of type TextValue and the guiElement is different from its initial value, call replaceGuiElement() to update the guiElement
-              // this only works for the TextValue object type currently
-              // https://docs.dasch.swiss/latest/DSP-API/03-apis/api-v2/ontology-information/#changing-the-gui-element-and-gui-attributes-of-a-property
-              if (
-                !this.unsupportedPropertyType &&
-                this.propertyInfo.propDef.objectType === Constants.TextValue &&
-                this.propertyInfo.propDef.guiElement !== this.propertyForm.controls['propType'].value.guiEle
-              ) {
-                this.replaceGuiElement();
-              } else {
-                this.onSuccess();
-              }
+              this.final();
             });
         }
 
@@ -169,7 +152,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
 
     const updateGuiEle = new UpdateResourcePropertyGuiElement();
     updateGuiEle.id = this.propertyInfo.propDef.id;
-    updateGuiEle.guiElement = this.propertyForm.controls['propType'].value.guiEle;
+    updateGuiEle.guiElement = this.selectedProperty.guiEle;
 
     const guiAttr = this.propertyForm.controls['guiAttr'].value;
     if (guiAttr) {
@@ -215,5 +198,20 @@ export class EditPropertyFormDialogComponent implements OnInit {
     }
 
     return guiAttributes;
+  }
+
+  final() {
+    // if property type is supported and is of type TextValue and the guiElement is different from its initial value, call replaceGuiElement() to update the guiElement
+    // this only works for the TextValue object type currently
+    // https://docs.dasch.swiss/latest/DSP-API/03-apis/api-v2/ontology-information/#changing-the-gui-element-and-gui-attributes-of-a-property
+    if (
+      !this.unsupportedPropertyType &&
+      this.propertyInfo.propDef.objectType === Constants.TextValue &&
+      this.propertyInfo.propDef.guiElement !== this.selectedProperty.guiEle
+    ) {
+      this.replaceGuiElement();
+    } else {
+      this.onSuccess();
+    }
   }
 }

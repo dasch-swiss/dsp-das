@@ -40,10 +40,6 @@ export class CreatePropertyFormDialogComponent implements OnInit {
   loading = false;
   form: PropertyForm;
 
-  get selectedProperty() {
-    return DefaultProperties.data.flatMap(el => el.elements).find(e => e.guiEle === this.form.controls.propType.value);
-  }
-
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
@@ -84,11 +80,11 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     newResProp.comment = this.form.getRawValue().comments;
 
     /* TODO Julien removed
-            const guiAttr = this.propertyForm.controls['guiAttr'].value;
-            if (guiAttr) {
-            newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
-            }
-            */
+                const guiAttr = this.propertyForm.controls['guiAttr'].value;
+                if (guiAttr) {
+                newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
+                }
+                */
     const selectedProperty = DefaultProperties.data
       .flatMap(el => el.elements)
       .find(e => e.guiEle === this.form.controls.propType.value);
