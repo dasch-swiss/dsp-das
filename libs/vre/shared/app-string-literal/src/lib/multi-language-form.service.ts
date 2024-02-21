@@ -49,6 +49,9 @@ export class MultiLanguageFormService {
   ) {}
 
   onInit(formGroup: FormGroup, controlName: string, validators: ValidatorFn[]) {
+    if (!formGroup.get(controlName)) {
+      throw new Error(`There is no control called ${controlName} in the formGroup`);
+    }
     this.formGroup = formGroup;
     this.controlName = controlName;
     this.selectedLanguageIndex = this._setupLanguageIndex();
