@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Constants, CreateResourceProperty, KnoraApiConnection, UpdateOntology } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/property-form-2.component';
 import { finalize } from 'rxjs/operators';
 
@@ -39,6 +39,10 @@ export interface CreatePropertyFormDialogProps {
 export class CreatePropertyFormDialogComponent implements OnInit {
   loading = false;
   form: PropertyForm;
+
+  get selectedProperty() {
+    return DefaultProperties.data.flatMap(el => el.elements).find(e => e.guiEle === this.form.controls.propType.value);
+  }
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -80,19 +84,23 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     newResProp.comment = this.form.getRawValue().comments;
 
     /* TODO Julien removed
-                                                                            const guiAttr = this.propertyForm.controls['guiAttr'].value;
-                                                                            if (guiAttr) {
-                                                                              newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
-                                                                            }
-                                                                             */
-    newResProp.guiElement = this.data.propertyInfo.propType.guiEle;
-    newResProp.subPropertyOf = [this.data.propertyInfo.propType.subPropOf];
+            const guiAttr = this.propertyForm.controls['guiAttr'].value;
+            if (guiAttr) {
+            newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
+            }
+            */
+    const selectedProperty = DefaultProperties.data
+      .flatMap(el => el.elements)
+      .find(e => e.guiEle === this.form.controls.propType.value);
 
-    if ([Constants.HasLinkTo, Constants.IsPartOf].includes(this.data.propertyInfo.propType.subPropOf)) {
+    newResProp.guiElement = selectedProperty.guiEle;
+    newResProp.subPropertyOf = [selectedProperty.subPropOf];
+
+    if ([Constants.HasLinkTo, Constants.IsPartOf].includes(selectedProperty.subPropOf)) {
       // TODO Julien removed: newResProp.objectType = guiAttr;
       newResProp.subjectType = this.data.resClassIri;
     } else {
-      newResProp.objectType = this.data.propertyInfo.propType.objectType;
+      newResProp.objectType = selectedProperty.objectType;
     }
 
     onto.entity = newResProp;

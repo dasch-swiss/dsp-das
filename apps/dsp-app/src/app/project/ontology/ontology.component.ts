@@ -56,6 +56,10 @@ import {
   CreatePropertyFormDialogComponent,
   CreatePropertyFormDialogProps,
 } from '@dsp-app/src/app/project/ontology/property-form/create-property-form-dialog.component';
+import {
+  EditPropertyFormDialogComponent,
+  EditPropertyFormDialogProps,
+} from '@dsp-app/src/app/project/ontology/property-form/edit-property-form-dialog.component';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
@@ -544,7 +548,7 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
   editProperty(mode: string, data: { propType: DefaultProperty }) {
     const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
     this._dialog
-      .open<CreatePropertyFormDialogComponent, CreatePropertyFormDialogProps>(CreatePropertyFormDialogComponent, {
+      .open<EditPropertyFormDialogComponent, EditPropertyFormDialogProps>(EditPropertyFormDialogComponent, {
         data: {
           ontologyId: ontology.id,
           lastModificationDate: ontology.lastModificationDate,

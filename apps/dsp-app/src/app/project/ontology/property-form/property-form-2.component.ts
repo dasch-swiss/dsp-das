@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Subscription } from 'rxjs';
 
@@ -49,8 +49,8 @@ export type PropertyForm = FormGroup<{
         </mat-optgroup>
       </mat-select>
       <!--TODO <mat-hint *ngIf="unsupportedPropertyType" class="ontology-warning-with-prefix">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                          {{ propertyForm.controls['propType'].value.description }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </mat-hint>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    {{ propertyForm.controls['propType'].value.description }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </mat-hint>-->
     </mat-form-field>
     <app-common-input
       placeholder="Property name *"
@@ -92,7 +92,7 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
         value: this.formData.property.propType.guiEle,
         disabled: this.creationMode || this.filteredProperties[0].elements.length === 1,
       }),
-      name: this._fb.control<string>({ value: null, disabled: !this.creationMode }),
+      name: this._fb.control<string>({ value: null, disabled: !this.creationMode }, [Validators.required]),
       labels: DEFAULT_MULTILANGUAGE_FORM(),
       comments: DEFAULT_MULTILANGUAGE_FORM(),
     });
