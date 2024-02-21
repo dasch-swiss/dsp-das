@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   Constants,
   CreateResourceProperty,
@@ -9,6 +8,12 @@ import {
   UpdateOntology,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/property-form-2.component';
+
+export interface CreatePropertyFormDialogProps {
+  ontologyId: string;
+  lastModificationDate: string;
+}
 
 @Component({
   selector: 'app-create-property-form-dialog',
@@ -31,12 +36,13 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 })
 export class CreatePropertyFormDialogComponent implements OnInit {
   loading = false;
-  form: FormGroup;
+  form: PropertyForm;
 
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private dialogRef: MatDialogRef<CreatePropertyFormDialogComponent, boolean>
+    private dialogRef: MatDialogRef<CreatePropertyFormDialogComponent, boolean>,
+    @Inject(MAT_DIALOG_DATA) private data: CreatePropertyFormDialogProps
   ) {}
 
   onSubmit() {
@@ -47,7 +53,7 @@ export class CreatePropertyFormDialogComponent implements OnInit {
       .subscribe((response: ResourcePropertyDefinitionWithAllLanguages) => {
         this.lastModificationDate = response.lastModificationDate;
         this.loading = false;
-        this.closeDialog.emit();
+        this.dialogRef.close();
       });
   }
 
@@ -58,30 +64,32 @@ export class CreatePropertyFormDialogComponent implements OnInit {
   private getOntologyForNewProperty(): UpdateOntology<CreateResourceProperty> {
     const onto = new UpdateOntology<CreateResourceProperty>();
 
-    onto.id = this.ontology.id;
-    onto.lastModificationDate = this.lastModificationDate;
+    onto.id = this.data.ontologyId;
+    onto.lastModificationDate = this.data.lastModificationDate;
 
     // prepare payload for property
     const newResProp = new CreateResourceProperty();
-    newResProp.name = this.propertyForm.controls['name'].value;
-    newResProp.label = this.labels;
-    newResProp.comment = this.comments;
+    newResProp.name = this.form.controls.name.value;
+    newResProp.label = this.form.controls.labels.value;
+    newResProp.comment = this.form.controls.comments.value;
 
-    const guiAttr = this.propertyForm.controls['guiAttr'].value;
-    if (guiAttr) {
-      newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
-    }
-    newResProp.guiElement = this.propertyInfo.propType.guiEle;
-    newResProp.subPropertyOf = [this.propertyInfo.propType.subPropOf];
+    /* TODO Julien removed
+            const guiAttr = this.propertyForm.controls['guiAttr'].value;
+            if (guiAttr) {
+              newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
+            }
+             */
+    newResProp.guiElement = this.data.propertyInfo.propType.guiEle;
+    newResProp.subPropertyOf = [this.data.propertyInfo.propType.subPropOf];
 
     if (
-      this.propertyInfo.propType.subPropOf === Constants.HasLinkTo ||
-      this.propertyInfo.propType.subPropOf === Constants.IsPartOf
+      this.data.propertyInfo.propType.subPropOf === Constants.HasLinkTo ||
+      this.data.propertyInfo.propType.subPropOf === Constants.IsPartOf
     ) {
       newResProp.objectType = guiAttr;
       newResProp.subjectType = this.resClassIri;
     } else {
-      newResProp.objectType = this.propertyInfo.propType.objectType;
+      newResProp.objectType = this.data.propertyInfo.propType.objectType;
     }
 
     onto.entity = newResProp;
