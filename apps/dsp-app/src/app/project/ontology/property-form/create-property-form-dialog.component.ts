@@ -4,6 +4,7 @@ import { Constants, CreateResourceProperty, KnoraApiConnection, UpdateOntology }
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/property-form-2.component';
+import { finalize } from 'rxjs/operators';
 
 export interface CreatePropertyFormDialogProps {
   ontologyId: string;
@@ -14,10 +15,13 @@ export interface CreatePropertyFormDialogProps {
 
 @Component({
   selector: 'app-create-property-form-dialog',
-  template: ` <app-dialog-header title="Create a new property"></app-dialog-header>
-    <mat-dialog-content>
-      <app-property-form-2 (formValueChange)="form = $event"></app-property-form-2>
-    </mat-dialog-content>
+  template: ` <app-dialog-header
+      title="Create a new property"
+      [subtitle]="data.propertyInfo.propType.group + ': ' + data.propertyInfo.propType.label"></app-dialog-header>
+    <app-property-form-2
+      mat-dialog-content
+      (formValueChange)="form = $event"
+      [formData]="{ properties: [] }"></app-property-form-2>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
       <button
@@ -39,20 +43,27 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private dialogRef: MatDialogRef<CreatePropertyFormDialogComponent, boolean>,
-    @Inject(MAT_DIALOG_DATA) private data: CreatePropertyFormDialogProps
+    @Inject(MAT_DIALOG_DATA) public data: CreatePropertyFormDialogProps
   ) {}
-
-  onSubmit() {
-    const onto = this.getOntologyForNewProperty();
-
-    this._dspApiConnection.v2.onto.createResourceProperty(onto).subscribe(() => {
-      this.loading = false;
-      this.dialogRef.close();
-    });
-  }
 
   ngOnInit() {
     this.dialogRef.updateSize('800px', '');
+  }
+
+  onSubmit() {
+    this.loading = true;
+    const onto = this.getOntologyForNewProperty();
+
+    this._dspApiConnection.v2.onto
+      .createResourceProperty(onto)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe(() => {
+        this.dialogRef.close();
+      });
   }
 
   private getOntologyForNewProperty(): UpdateOntology<CreateResourceProperty> {
@@ -68,11 +79,11 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     newResProp.comment = this.form.getRawValue().comments;
 
     /* TODO Julien removed
-                    const guiAttr = this.propertyForm.controls['guiAttr'].value;
-                    if (guiAttr) {
-                      newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
-                    }
-                     */
+                                                    const guiAttr = this.propertyForm.controls['guiAttr'].value;
+                                                    if (guiAttr) {
+                                                      newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
+                                                    }
+                                                     */
     newResProp.guiElement = this.data.propertyInfo.propType.guiEle;
     newResProp.subPropertyOf = [this.data.propertyInfo.propType.subPropOf];
 

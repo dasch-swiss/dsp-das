@@ -1,11 +1,25 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Subscription } from 'rxjs';
 
-export type MultiLanguageForm = FormArray<FormGroup<{ language: FormControl<string>; value: FormControl<string> }>>;
+type MULTIFORM_LANGUAGES = 'de' | 'fr' | 'it' | 'en' | 'rm';
+export type MultiLanguageForm = FormArray<
+  FormGroup<{
+    language: FormControl<MULTIFORM_LANGUAGES>;
+    value: FormControl<string>;
+  }>
+>;
+export const DEFAULT_MULTILANGUAGE_FORM = (validators?: ValidatorFn[]) => {
+  return new FormArray([
+    new FormGroup({
+      language: new FormControl<MULTIFORM_LANGUAGES>('de'),
+      value: new FormControl('', { validators }),
+    }),
+  ]);
+};
 
 export type PropertyForm = FormGroup<{
-  type: FormControl<string>;
   name: FormControl<string>;
   labels: MultiLanguageForm;
   comments: MultiLanguageForm;
@@ -14,23 +28,6 @@ export type PropertyForm = FormGroup<{
 @Component({
   selector: 'app-property-form-2',
   template: ` <form [formGroup]="form">
-    <mat-form-field>
-      <span matPrefix class="ontology-prefix-icon">
-        <mat-icon>ICON</mat-icon>
-      </span>
-      <mat-label>Property type</mat-label>
-      <mat-select formControlName="type">
-        <mat-select-trigger> TEST</mat-select-trigger>
-
-        <mat-optgroup *ngFor="let type of [['A'], ['B']]" label="label">
-          <mat-option *ngFor="let ele of type" [value]="ele">
-            <mat-icon>ICON</mat-icon>
-            {{ ele }}
-          </mat-option>
-        </mat-optgroup>
-      </mat-select>
-    </mat-form-field>
-
     <app-common-input
       placeholder="Property name *"
       prefixIcon="fingerprint"
@@ -38,34 +35,23 @@ export type PropertyForm = FormGroup<{
       controlName="name"></app-common-input>
     <dasch-swiss-multi-language-input
       [formGroup]="form"
-      controlName="label"
+      controlName="labels"
       placeholder="Property label*"></dasch-swiss-multi-language-input>
     <dasch-swiss-multi-language-textarea
       [formGroup]="form"
-      controlName="comment"
+      controlName="comments"
       placeholder="Comment"></dasch-swiss-multi-language-textarea>
   </form>`,
 })
 export class PropertyForm2Component implements OnInit, OnDestroy {
-  @Input() formData;
+  @Input() formData: { properties: PropertyInfoObject[] };
   @Output() formValueChange = new EventEmitter<PropertyForm>();
 
   subscription: Subscription;
   form: PropertyForm = this._fb.group({
-    type: null as string,
     name: null as string,
-    labels: this._fb.array([
-      this._fb.group({
-        language: '',
-        value: '',
-      }),
-    ]),
-    comments: this._fb.array([
-      this._fb.group({
-        language: '',
-        value: '',
-      }),
-    ]),
+    labels: DEFAULT_MULTILANGUAGE_FORM(),
+    comments: DEFAULT_MULTILANGUAGE_FORM(),
   });
 
   ngOnInit() {
