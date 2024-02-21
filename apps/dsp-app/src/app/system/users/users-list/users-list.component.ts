@@ -325,6 +325,12 @@ export class UsersListComponent implements OnInit {
       .subscribe();
   }
 
+  editUser(userId) {
+    const uId = userId.split('/').pop();
+    this._router.navigate([RouteConstants.edit, uId], { relativeTo: this._route });
+    // this.openDialog('editUser', user);
+  }
+
   /**
    * open dialog in every case of modification:
    * edit user profile data, update user's password,
@@ -413,5 +419,9 @@ export class UsersListComponent implements OnInit {
           this._store.dispatch(new LoadProjectMembershipAction(this.projectUuid));
         }
       });
+  }
+
+  createNewUser() {
+    this._router.navigate([RouteConstants.createNew], { relativeTo: this._route });
   }
 }

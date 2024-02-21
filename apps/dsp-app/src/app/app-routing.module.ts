@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { UserFormComponent } from '@dsp-app/src/app/user/user-form/user-form.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
@@ -155,6 +156,16 @@ const routes: Routes = [
       {
         path: RouteConstants.systemUsers,
         component: UsersComponent,
+        children: [
+          {
+            path: RouteConstants.createNew,
+            component: UserFormComponent,
+          },
+          {
+            path: `${RouteConstants.edit}/:${RouteConstants.userParameter}`,
+            component: UserFormComponent,
+          },
+        ],
       },
     ],
   },

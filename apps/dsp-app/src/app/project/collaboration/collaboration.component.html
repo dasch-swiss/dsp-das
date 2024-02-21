@@ -10,22 +10,23 @@
       #addUserComponent></app-add-user>
 
     <!-- main content: list of project members -->
+    <router-outlet-drawer>
+      <div class="users-list">
+        <!-- list of active users -->
+        <app-users-list
+          [project]="project$ | async"
+          [list]="activeProjectMembers$ | async"
+          [status]="true"
+          (refreshParent)="refresh()"></app-users-list>
 
-    <div class="users-list">
-      <!-- list of active users -->
-      <app-users-list
-        [project]="project$ | async"
-        [list]="activeProjectMembers$ | async"
-        [status]="true"
-        (refreshParent)="refresh()"></app-users-list>
-
-      <!-- list of inactive users -->
-      <app-users-list
-        [project]="project$ | async"
-        [list]="inactiveProjectMembers$ | async"
-        [status]="false"
-        (refreshParent)="refresh()"></app-users-list>
-    </div>
+        <!-- list of inactive users -->
+        <app-users-list
+          [project]="project$ | async"
+          [list]="inactiveProjectMembers$ | async"
+          [status]="false"
+          (refreshParent)="refresh()"></app-users-list>
+      </div>
+    </router-outlet-drawer>
   </div>
 
   <div *ngIf="(isCurrentProjectAdminOrSysAdmin$ | async) === false" class="content large middle">
