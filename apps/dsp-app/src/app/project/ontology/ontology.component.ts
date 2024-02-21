@@ -51,7 +51,7 @@ import {
   SetCurrentProjectOntologyPropertiesAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { PropertyFormDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/property-form-dialog.component';
+import { CreatePropertyFormDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/create-property-form-dialog.component';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
@@ -169,7 +169,7 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
   }
 
   createNewProperty2() {
-    this._dialog.open(PropertyFormDialogComponent);
+    this._dialog.open(CreatePropertyFormDialogComponent);
   }
 
   ngOnInit() {
