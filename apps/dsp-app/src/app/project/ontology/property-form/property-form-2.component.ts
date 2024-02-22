@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { Constants } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/vre/open-api';
 import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Subscription } from 'rxjs';
@@ -31,6 +32,7 @@ export type PropertyForm = FormGroup<{
   name: FormControl<string>;
   labels: MultiLanguageForm;
   comments: MultiLanguageForm;
+  guiAttr: FormControl<string[]>;
 }>;
 
 @Component({
@@ -72,6 +74,11 @@ export type PropertyForm = FormGroup<{
       [formGroup]="form"
       controlName="comments"
       placeholder="Comment"></dasch-swiss-multi-language-textarea>
+
+    <app-gui-attr
+      *ngIf="showGuiAttr"
+      [propertyInfo]="formData.property"
+      [formControl]="form.controls.guiAttr"></app-gui-attr>
   </form>`,
 })
 export class PropertyForm2Component implements OnInit, OnDestroy {
@@ -88,6 +95,8 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
   subscription: Subscription;
   form: PropertyForm;
 
+  showGuiAttr: boolean;
+
   get selectedProperty() {
     return this.defaultProperties.flatMap(el => el.elements).find(e => e.guiEle === this.form.controls.propType.value);
   }
@@ -99,6 +108,8 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
   constructor(private _fb: FormBuilder) {}
 
   ngOnInit() {
+    this.showGuiAttr = [Constants.LinkValue, Constants.ListValue].includes(this.formData.property.propType.objectType);
+
     this.form = this._fb.group({
       propType: this._fb.control({
         value: this.formData.property.propType.guiEle,
@@ -109,6 +120,7 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
       ]),
       labels: DEFAULT_MULTILANGUAGE_FORM(this.formData.labels, [Validators.required]),
       comments: DEFAULT_MULTILANGUAGE_FORM(this.formData.comments, [Validators.required]),
+      guiAttr: this._fb.control<string[]>([]),
     });
 
     this.subscription = this.form.valueChanges.subscribe(() => {

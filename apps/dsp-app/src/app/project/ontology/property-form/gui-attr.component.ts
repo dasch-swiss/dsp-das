@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Constants, ReadOntology } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
 import { PropertyInfoObject, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -17,7 +18,7 @@ import { map } from 'rxjs/operators';
         >&nbsp;
       </span>
       <mat-label>Select list</mat-label>
-      <mat-select formControlName="guiAttr">
+      <mat-select [formControl]="formControl">
         <mat-option *ngFor="let item of lists$ | async" [value]="item.id"> {{ item.labels[0].value }} </mat-option>
       </mat-select>
       <mat-hint *ngIf="formErrors.guiAttr"> {{ formErrors.guiAttr }}</mat-hint>
@@ -30,7 +31,7 @@ import { map } from 'rxjs/operators';
         >&nbsp;
       </span>
       <mat-label>Select resource class</mat-label>
-      <mat-select formControlName="guiAttr">
+      <mat-select [formControl]="formControl">
         <mat-optgroup *ngFor="let onto of ontologyClasses$ | async" [label]="onto.ontologyLabel">
           <mat-option *ngFor="let oClass of onto.classes" [value]="oClass.id"> {{ oClass.label }} </mat-option>
         </mat-optgroup>
@@ -64,6 +65,7 @@ import { map } from 'rxjs/operators';
 })
 export class GuiAttrComponent {
   @Input() propertyInfo: PropertyInfoObject;
+  @Input() formControl: FormControl;
   lists$ = this._store.select(ListsSelectors.listsInProject);
   readonly guiAttrIcon = 'tune';
   ontologyClasses$ = this._store.select(OntologiesSelectors.currentProjectOntologies).pipe(
