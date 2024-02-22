@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { StringLiteralV2 } from '@dasch-swiss/vre/open-api';
 import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Subscription } from 'rxjs';
 
@@ -10,13 +11,19 @@ export type MultiLanguageForm = FormArray<
     value: FormControl<string>;
   }>
 >;
-export const DEFAULT_MULTILANGUAGE_FORM = (validators?: ValidatorFn[]) => {
-  return new FormArray([
-    new FormGroup({
-      language: new FormControl<MULTIFORM_LANGUAGES>('de'),
-      value: new FormControl('', { validators }),
-    }),
-  ]);
+export const DEFAULT_MULTILANGUAGE_FORM = (
+  data: StringLiteralV2[] = [{ language: 'de', value: '' }],
+  validators?: ValidatorFn[]
+) => {
+  return new FormArray(
+    data.map(
+      item =>
+        new FormGroup({
+          language: new FormControl<MULTIFORM_LANGUAGES>(item.language as MULTIFORM_LANGUAGES),
+          value: new FormControl(item.value, { validators }),
+        })
+    )
+  );
 };
 
 export type PropertyForm = FormGroup<{
@@ -92,9 +99,11 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
         value: this.formData.property.propType.guiEle,
         disabled: this.creationMode || this.filteredProperties[0].elements.length === 1,
       }),
-      name: this._fb.control<string>({ value: null, disabled: !this.creationMode }, [Validators.required]),
-      labels: DEFAULT_MULTILANGUAGE_FORM(),
-      comments: DEFAULT_MULTILANGUAGE_FORM(),
+      name: this._fb.control<string>({ value: this.formData.property.propDef.label, disabled: !this.creationMode }, [
+        Validators.required,
+      ]),
+      labels: DEFAULT_MULTILANGUAGE_FORM(this.formData.property.propDef.labels),
+      comments: DEFAULT_MULTILANGUAGE_FORM(this.formData.property.propDef.comments),
     });
 
     this.subscription = this.form.valueChanges.subscribe(() => {

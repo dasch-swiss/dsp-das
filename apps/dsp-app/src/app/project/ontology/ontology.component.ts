@@ -542,7 +542,7 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
       });
   }
 
-  editProperty(mode: string, data: { propType: DefaultProperty }) {
+  editProperty(mode: string, data: PropertyInfoObject) {
     const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
     this._dialog
       .open<EditPropertyFormDialogComponent, EditPropertyFormDialogProps>(EditPropertyFormDialogComponent, {
