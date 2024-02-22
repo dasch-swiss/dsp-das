@@ -1,16 +1,6 @@
 import { ProjectADM, ProjectOperationResponseADM } from '../../../../../libs/vre/open-api/src';
 
 class ProjectPage {
-  private payload = {
-    shortname: 'shortname',
-    shortcode: 'A0A0',
-    longname: 'Longname',
-    description: [{ language: 'de', value: 'description' }],
-    keywords: ['keyword'],
-    status: true,
-    selfjoin: true,
-  };
-
   projectIri: string;
   projectUuid: string;
   project: ProjectADM;
@@ -20,7 +10,17 @@ class ProjectPage {
   }
 
   requestProject() {
-    cy.request<ProjectOperationResponseADM>('POST', `${Cypress.env('apiUrl')}/admin/projects`, this.payload).then(
+    const payload = {
+      shortname: 'shortname',
+      shortcode: 'A0A0',
+      longname: 'Longname',
+      description: [{ language: 'de', value: 'description' }],
+      keywords: ['keyword'],
+      status: true,
+      selfjoin: true,
+    };
+
+    cy.request<ProjectOperationResponseADM>('POST', `${Cypress.env('apiUrl')}/admin/projects`, payload).then(
       response => {
         this.projectIri = response.body.project.id;
         this.projectUuid = this.projectIri.match(/\/([^\/]+)$/)[1];
