@@ -11,6 +11,7 @@ import {
   UpdateResourcePropertyGuiElement,
   UpdateResourcePropertyLabel,
 } from '@dasch-swiss/dsp-js';
+import { StringLiteralV2 } from '@dasch-swiss/vre/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -56,6 +57,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
   lastModificationDate = this.data.lastModificationDate;
   propertyInfo = this.data.propertyInfo;
 
+  showGuiAttr = false; // TODO
   unsupportedPropertyType = false; // TODO verify, I have set it to true
   get selectedProperty() {
     return DefaultProperties.data.flatMap(el => el.elements).find(e => e.guiEle === this.form.controls.propType.value);
@@ -121,7 +123,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
 
     const updateLabel = new UpdateResourcePropertyLabel();
     updateLabel.id = this.propertyInfo.propDef.id;
-    updateLabel.labels = this.form.controls.labels.value;
+    updateLabel.labels = this.form.controls.labels.value as StringLiteralV2[]; // TODO
     onto4Label.entity = updateLabel;
     return onto4Label;
   }
@@ -132,7 +134,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
 
     const updateComment = new UpdateResourcePropertyComment();
     updateComment.id = this.propertyInfo.propDef.id;
-    updateComment.comments = this.form.controls.comments.value;
+    updateComment.comments = this.form.controls.comments.value as StringLiteralV2[];
     onto4Comment.entity = updateComment;
 
     return onto4Comment;
@@ -153,8 +155,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
     const updateGuiEle = new UpdateResourcePropertyGuiElement();
     updateGuiEle.id = this.propertyInfo.propDef.id;
     updateGuiEle.guiElement = this.selectedProperty.guiEle;
-
-    const guiAttr = this.propertyForm.controls['guiAttr'].value;
+    const guiAttr = false; // TODO it was this.propertyForm.controls['guiAttr'].value;
     if (guiAttr) {
       updateGuiEle.guiAttributes = this.setGuiAttribute(guiAttr);
     }

@@ -550,7 +550,7 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     this._dialog
       .open<EditPropertyFormDialogComponent, EditPropertyFormDialogProps>(EditPropertyFormDialogComponent, {
         data: {
-          ontologyId: ontology.id,
+          ontology,
           lastModificationDate: ontology.lastModificationDate,
           propertyInfo: data,
         },
