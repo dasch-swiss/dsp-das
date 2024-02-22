@@ -21,7 +21,7 @@ Cypress.Commands.add(
     cy.get('[data-cy=label-input]').clear().type(input.label);
     cy.get('[data-cy=submit-button]').should('be.visible').click();
 
-    cy.wait('@createClassRequest').wait(3000);
+    cy.wait('@createClassRequest');
     cy.log('Data model class created!');
 
     return cy.wrap(input).as('dataModelClass');

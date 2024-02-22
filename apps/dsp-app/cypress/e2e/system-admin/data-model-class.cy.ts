@@ -33,7 +33,7 @@ describe('Data Model Class', () => {
     cy.get('[data-cy=comment-textarea]').type(textClass.comment);
     cy.get('[data-cy=submit-button]').click();
 
-    cy.wait('@createRequest').wait(3000);
+    cy.wait('@createRequest');
     cy.get('[data-cy=class-card]').should('be.visible').get('mat-card-title').contains(textClass.label.split(' ')[0]);
 
     cy.get('[data-cy=create-class-button]').scrollIntoView().should('be.visible').click();
@@ -43,7 +43,7 @@ describe('Data Model Class', () => {
     cy.get('[data-cy=comment-textarea]').type(resourceClass.comment);
     cy.get('[data-cy=submit-button]').click();
 
-    cy.wait('@createRequest').wait(3000);
+    cy.wait('@createRequest');
     cy.get('[data-cy=class-card]')
       .should('be.visible')
       .get('mat-card-title')
@@ -57,7 +57,7 @@ describe('Data Model Class', () => {
     cy.get(`[data-cy=${ClassType.TextRepresentation}]`).scrollIntoView().should('be.visible').click({ force: true });
     cy.get('.mat-mdc-dialog-container').should('be.visible');
     cy.get('[data-cy=cancel-button]').scrollIntoView().should('be.visible').click();
-    cy.get('.mat-mdc-dialog-container').should('not.exist').wait(100);
+    cy.get('.mat-mdc-dialog-container').should('not.exist');
 
     cy.get('[data-cy=create-class-button]').scrollIntoView().should('be.visible').click();
     cy.get(`[data-cy=${ClassType.TextRepresentation}]`).scrollIntoView().click({ force: true });
@@ -92,7 +92,7 @@ describe('Data Model Class', () => {
     cy.get('[data-cy=property-comment] textarea').type(textProperty.comment);
     cy.get('[data-cy=submit-button]').click();
 
-    cy.wait('@createPropertyRequest').wait(3000);
+    cy.wait('@createPropertyRequest');
     cy.get('[data-cy=property-label]').should('be.visible').should('include.text', textProperty.label);
 
     cy.get('[data-cy=create-property-button]').should('be.visible').click({ force: true });
@@ -103,7 +103,7 @@ describe('Data Model Class', () => {
     cy.get('[data-cy=property-comment] textarea').type(pageNumberProperty.comment);
     cy.get('[data-cy=submit-button]').click();
 
-    cy.wait('@createPropertyRequest').wait(3000);
+    cy.wait('@createPropertyRequest');
     cy.get('[data-cy=property-label]').should('be.visible').should('include.text', pageNumberProperty.label);
   });
 
@@ -129,7 +129,7 @@ describe('Data Model Class', () => {
     cy.get('[data-cy=property-comment] textarea').type(textProperty.comment);
     cy.get('[data-cy=submit-button]').click();
 
-    cy.wait('@createPropertyRequest').wait(500);
+    cy.wait('@createPropertyRequest');
     cy.get('[data-cy=property-label]').should('be.visible').should('include.text', textProperty.label);
   });
 });
