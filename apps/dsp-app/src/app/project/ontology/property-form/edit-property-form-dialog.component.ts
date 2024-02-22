@@ -34,7 +34,12 @@ export interface EditPropertyFormDialogProps {
     <app-property-form-2
       mat-dialog-content
       (formValueChange)="form = $event"
-      [formData]="{ property: data.propertyInfo }"></app-property-form-2>
+      [formData]="{
+        property: data.propertyInfo,
+        name: data.propertyInfo.propDef.label,
+        labels: data.propertyInfo.propDef.labels,
+        comments: data.propertyInfo.propDef.comments
+      }"></app-property-form-2>
     <app-gui-attr *ngIf="showGuiAttr"></app-gui-attr>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>

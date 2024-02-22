@@ -76,7 +76,12 @@ export type PropertyForm = FormGroup<{
 })
 export class PropertyForm2Component implements OnInit, OnDestroy {
   @Input() creationMode: boolean;
-  @Input() formData: { property: PropertyInfoObject };
+  @Input() formData: {
+    name?: string;
+    labels?: StringLiteralV2[];
+    comments?: StringLiteralV2[];
+    property: PropertyInfoObject;
+  };
   @Output() formValueChange = new EventEmitter<PropertyForm>();
 
   readonly defaultProperties = DefaultProperties.data;
@@ -99,11 +104,11 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
         value: this.formData.property.propType.guiEle,
         disabled: this.creationMode || this.filteredProperties[0].elements.length === 1,
       }),
-      name: this._fb.control<string>({ value: this.formData.property.propDef.label, disabled: !this.creationMode }, [
+      name: this._fb.control<string>({ value: this.formData.name ?? '', disabled: !this.creationMode }, [
         Validators.required,
       ]),
-      labels: DEFAULT_MULTILANGUAGE_FORM(this.formData.property.propDef.labels),
-      comments: DEFAULT_MULTILANGUAGE_FORM(this.formData.property.propDef.comments),
+      labels: DEFAULT_MULTILANGUAGE_FORM(this.formData.labels, [Validators.required]),
+      comments: DEFAULT_MULTILANGUAGE_FORM(this.formData.comments, [Validators.required]),
     });
 
     this.subscription = this.form.valueChanges.subscribe(() => {
