@@ -29,7 +29,7 @@ export interface EditPropertyFormDialogProps {
 @Component({
   selector: 'app-edit-property-form-dialog',
   template: ` <app-dialog-header
-      title="Create a new property"
+      title="Edit a property"
       [subtitle]="data.propertyInfo.propType.group + ': ' + data.propertyInfo.propType.label"></app-dialog-header>
     <app-property-form-2
       mat-dialog-content

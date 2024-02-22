@@ -202,9 +202,6 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     });
 
     this._cd.markForCheck();
-    setTimeout(() => {
-      this.createProperty('', { propType: this.defaultProperties[0].elements[0] });
-    }, 2000);
   }
 
   private initProjectOntologies(currentProject: ReadProject) {
