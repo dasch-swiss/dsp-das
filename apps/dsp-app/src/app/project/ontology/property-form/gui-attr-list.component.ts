@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ListsSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/property-form-2.component';
 import { Store } from '@ngxs/store';
+import { PropertyForm } from './property-form.type';
 
 @Component({
   selector: 'app-gui-attr-list',
@@ -10,7 +10,9 @@ import { Store } from '@ngxs/store';
       <span matPrefix> <mat-icon>tune</mat-icon>&nbsp; </span>
       <mat-label>Select a list</mat-label>
       <mat-select [formControl]="control">
-        <mat-option *ngFor="let item of lists$ | async" [value]="item.id"> {{ item.labels[0].value }} </mat-option>
+        <mat-option *ngFor="let item of lists$ | async" [value]="'hlist=<' + item.id + '>'">
+          {{ item.labels[0].value }}
+        </mat-option>
       </mat-select>
       <mat-error *ngIf="control.invalid && control.touched"> {{ control.errors[0] | humanReadableError }}</mat-error>
     </mat-form-field>
@@ -20,6 +22,7 @@ import { Store } from '@ngxs/store';
 export class GuiAttrListComponent {
   @Input() control: PropertyForm['controls']['guiAttr'];
   lists$ = this._store.select(ListsSelectors.listsInProject);
+  // gui attribute value for lists looks as follows: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
 
   constructor(private _store: Store) {}
 }

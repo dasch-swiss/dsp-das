@@ -1,13 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { Constants, ReadOntology } from '@dasch-swiss/dsp-js';
+import { ReadOntology } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
-import { PropertyInfoObject, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ListsSelectors, OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/property-form-2.component';
+import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { ClassToSelect } from '@dsp-app/src/app/project/ontology/property-form/property-form.component';
 import { Store } from '@ngxs/store';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { PropertyForm } from './property-form.type';
 
 @Component({
   selector: 'app-gui-attr-link',
