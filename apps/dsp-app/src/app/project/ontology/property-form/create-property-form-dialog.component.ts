@@ -3,8 +3,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Constants, CreateResourceProperty, KnoraApiConnection, UpdateOntology } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
-import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/property-form-2.component';
 import { finalize } from 'rxjs/operators';
+import { PropertyForm } from './property-form.type';
 
 export interface CreatePropertyFormDialogProps {
   ontologyId: string;
@@ -79,12 +79,10 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     newResProp.label = this.form.getRawValue().labels;
     newResProp.comment = this.form.getRawValue().comments;
 
-    /* TODO Julien removed
-                const guiAttr = this.propertyForm.controls['guiAttr'].value;
-                if (guiAttr) {
-                newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
-                }
-                */
+    const guiAttr = this.form.controls.guiAttr.value;
+    if (guiAttr) {
+      newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
+    }
     const selectedProperty = DefaultProperties.data
       .flatMap(el => el.elements)
       .find(e => e.guiEle === this.form.controls.propType.value);
@@ -93,7 +91,7 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     newResProp.subPropertyOf = [selectedProperty.subPropOf];
 
     if ([Constants.HasLinkTo, Constants.IsPartOf].includes(selectedProperty.subPropOf)) {
-      // TODO Julien removed: newResProp.objectType = guiAttr;
+      newResProp.objectType = guiAttr;
       newResProp.subjectType = this.data.resClassIri;
     } else {
       newResProp.objectType = selectedProperty.objectType;
@@ -101,5 +99,29 @@ export class CreatePropertyFormDialogComponent implements OnInit {
 
     onto.entity = newResProp;
     return onto;
+  }
+
+  private setGuiAttribute(guiAttr: string): string[] {
+    switch (this.data.propertyInfo.propType.guiEle) {
+      case Constants.GuiColorPicker:
+        return [`ncolors=${guiAttr}`];
+      case Constants.GuiList:
+      case Constants.GuiPulldown:
+      case Constants.GuiRadio:
+        return [`hlist=<${guiAttr}>`];
+      case Constants.GuiSimpleText:
+        // --> TODO could have two guiAttr fields: size and maxlength
+        // we suggest to use default value for size; we do not support this guiAttr in DSP-App
+        return [`maxlength=${guiAttr}`];
+      case Constants.GuiSpinbox:
+        // --> TODO could have two guiAttr fields: min and max
+        return [`min=${guiAttr}`, `max=${guiAttr}`];
+      case Constants.GuiTextarea:
+        // --> TODO could have four guiAttr fields: width, cols, rows, wrap
+        // we suggest to use default values; we do not support this guiAttr in DSP-App
+        return ['width=100%'];
+    }
+
+    return [];
   }
 }

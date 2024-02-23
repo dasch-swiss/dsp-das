@@ -1,39 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/vre/open-api';
 import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/shared/app-string-literal';
+import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/property-form.type';
 import { Subscription } from 'rxjs';
-
-type MULTIFORM_LANGUAGES = 'de' | 'fr' | 'it' | 'en' | 'rm';
-export type MultiLanguageForm = FormArray<
-  FormGroup<{
-    language: FormControl<MULTIFORM_LANGUAGES>;
-    value: FormControl<string>;
-  }>
->;
-export const DEFAULT_MULTILANGUAGE_FORM = (
-  data: StringLiteralV2[] = [{ language: 'de', value: '' }],
-  validators?: ValidatorFn[]
-) => {
-  return new FormArray(
-    data.map(
-      item =>
-        new FormGroup({
-          language: new FormControl<MULTIFORM_LANGUAGES>(item.language as MULTIFORM_LANGUAGES),
-          value: new FormControl(item.value, { validators }),
-        })
-    )
-  );
-};
-
-export type PropertyForm = FormGroup<{
-  propType: FormControl<string>;
-  name: FormControl<string>;
-  labels: MultiLanguageForm;
-  comments: MultiLanguageForm;
-  guiAttr: FormControl<string>;
-}>;
 
 @Component({
   selector: 'app-property-form-2',
@@ -58,8 +30,8 @@ export type PropertyForm = FormGroup<{
         </mat-optgroup>
       </mat-select>
       <!--TODO <mat-hint *ngIf="unsupportedPropertyType" class="ontology-warning-with-prefix">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    {{ propertyForm.controls['propType'].value.description }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </mat-hint>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              {{ propertyForm.controls['propType'].value.description }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </mat-hint>-->
     </mat-form-field>
     <app-common-input
       placeholder="Property name *"

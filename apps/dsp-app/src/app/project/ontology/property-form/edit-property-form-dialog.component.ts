@@ -16,8 +16,8 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { SetCurrentOntologyAction } from '@dasch-swiss/vre/shared/app-state';
-import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/property-form-2.component';
 import { Store } from '@ngxs/store';
+import { PropertyForm } from './property-form.type';
 
 export interface EditPropertyFormDialogProps {
   ontology: ReadOntology;
@@ -63,7 +63,6 @@ export class EditPropertyFormDialogComponent implements OnInit {
   propertyInfo = this.data.propertyInfo;
 
   guiAttribute: string;
-  showGuiAttr = false; // TODO
   unsupportedPropertyType = false; // TODO verify, I have set it to true
   get selectedProperty() {
     return DefaultProperties.data.flatMap(el => el.elements).find(e => e.guiEle === this.form.controls.propType.value);

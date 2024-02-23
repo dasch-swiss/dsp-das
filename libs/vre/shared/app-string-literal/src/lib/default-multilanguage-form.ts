@@ -1,0 +1,18 @@
+import { FormArray, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { StringLiteralV2 } from '@dasch-swiss/vre/open-api';
+import { MULTIFORM_LANGUAGES } from './multiform-languages.type';
+
+export const DEFAULT_MULTILANGUAGE_FORM = (
+  data: StringLiteralV2[] = [{ language: 'de', value: '' }],
+  validators?: ValidatorFn[]
+) => {
+  return new FormArray(
+    data.map(
+      item =>
+        new FormGroup({
+          language: new FormControl<MULTIFORM_LANGUAGES>(item.language as MULTIFORM_LANGUAGES),
+          value: new FormControl(item.value, { validators }),
+        })
+    )
+  );
+};
