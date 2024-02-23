@@ -6,11 +6,11 @@ import { PropertyInfoObject, SortingService } from '@dasch-swiss/vre/shared/app-
 import { ListsSelectors, OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { ClassToSelect } from '@dsp-app/src/app/project/ontology/property-form/property-form.component';
 import { Store } from '@ngxs/store';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-gui-attr',
-  template: ` <div [ngSwitch]="propertyInfo.propType.objectType">
+  template: `<div [ngSwitch]="propertyInfo.propType.objectType">
     <!-- list property -->
     <mat-form-field class="large-field property-type ontology-form-field" *ngSwitchCase="dspConstants.ListValue">
       <span matPrefix class="ontology-prefix-icon">
@@ -18,7 +18,7 @@ import { map } from 'rxjs/operators';
         >&nbsp;
       </span>
       <mat-label>Select list</mat-label>
-      <mat-select [formControl]="formControl">
+      <mat-select [formControl]="control">
         <mat-option *ngFor="let item of lists$ | async" [value]="item.id"> {{ item.labels[0].value }} </mat-option>
       </mat-select>
       <mat-hint *ngIf="formErrors.guiAttr"> {{ formErrors.guiAttr }}</mat-hint>
@@ -31,7 +31,7 @@ import { map } from 'rxjs/operators';
         >&nbsp;
       </span>
       <mat-label>Select resource class</mat-label>
-      <mat-select [formControl]="formControl">
+      <mat-select [formControl]="control">
         <mat-optgroup *ngFor="let onto of ontologyClasses$ | async" [label]="onto.ontologyLabel">
           <mat-option *ngFor="let oClass of onto.classes" [value]="oClass.id"> {{ oClass.label }} </mat-option>
         </mat-optgroup>
@@ -65,8 +65,8 @@ import { map } from 'rxjs/operators';
 })
 export class GuiAttrComponent {
   @Input() propertyInfo: PropertyInfoObject;
-  @Input() formControl: FormControl;
-  lists$ = this._store.select(ListsSelectors.listsInProject);
+  @Input() control: FormControl;
+  lists$ = this._store.select(ListsSelectors.listsInProject).pipe(tap(v => console.log(v, this.control)));
   readonly guiAttrIcon = 'tune';
   ontologyClasses$ = this._store.select(OntologiesSelectors.currentProjectOntologies).pipe(
     map((response: ReadOntology[]) => {

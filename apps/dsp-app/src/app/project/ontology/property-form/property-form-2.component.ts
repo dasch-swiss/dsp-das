@@ -78,7 +78,7 @@ export type PropertyForm = FormGroup<{
     <app-gui-attr
       *ngIf="showGuiAttr"
       [propertyInfo]="formData.property"
-      [formControl]="form.controls.guiAttr"></app-gui-attr>
+      [control]="form.controls.guiAttr"></app-gui-attr>
   </form>`,
 })
 export class PropertyForm2Component implements OnInit, OnDestroy {
@@ -88,6 +88,7 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
     labels?: StringLiteralV2[];
     comments?: StringLiteralV2[];
     property: PropertyInfoObject;
+    guiAttributes?: string[]; // TODO guiAttribute is string or string[]?
   };
   @Output() formValueChange = new EventEmitter<PropertyForm>();
 
@@ -120,7 +121,7 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
       ]),
       labels: DEFAULT_MULTILANGUAGE_FORM(this.formData.labels, [Validators.required]),
       comments: DEFAULT_MULTILANGUAGE_FORM(this.formData.comments, [Validators.required]),
-      guiAttr: this._fb.control<string[]>([]),
+      guiAttr: this._fb.control<string[]>(this.formData.guiAttributes),
     });
 
     this.subscription = this.form.valueChanges.subscribe(() => {

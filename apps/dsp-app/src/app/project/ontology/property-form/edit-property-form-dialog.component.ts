@@ -38,7 +38,8 @@ export interface EditPropertyFormDialogProps {
         property: data.propertyInfo,
         name: data.propertyInfo.propDef.label,
         labels: data.propertyInfo.propDef.labels,
-        comments: data.propertyInfo.propDef.comments
+        comments: data.propertyInfo.propDef.comments,
+        guiAttributes: [guiAttribute]
       }"></app-property-form-2>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
@@ -61,6 +62,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
   lastModificationDate = this.data.lastModificationDate;
   propertyInfo = this.data.propertyInfo;
 
+  guiAttribute: string;
   showGuiAttr = false; // TODO
   unsupportedPropertyType = false; // TODO verify, I have set it to true
   get selectedProperty() {
@@ -74,10 +76,17 @@ export class EditPropertyFormDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: EditPropertyFormDialogProps,
     private _store: Store,
     private _notification: NotificationService
-  ) {}
+  ) {
+    console.log('julien', this.data);
+  }
 
   ngOnInit() {
     this.dialogRef.updateSize('800px', '');
+    // gui attribute value for lists looks as follows: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
+    this.guiAttribute = this.data.propertyInfo.propDef.guiAttributes
+      .find(element => element.includes('hlist'))
+      .match(/\<([^)]+)\>/)[1];
+    console.log('gui attribute', this.guiAttribute);
   }
 
   onSubmit() {
