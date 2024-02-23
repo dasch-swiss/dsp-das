@@ -75,10 +75,13 @@ export type PropertyForm = FormGroup<{
       controlName="comments"
       placeholder="Comment"></dasch-swiss-multi-language-textarea>
 
-    <app-gui-attr
-      *ngIf="showGuiAttr"
-      [propertyInfo]="formData.property"
-      [control]="form.controls.guiAttr"></app-gui-attr>
+    <app-gui-attr-list
+      *ngIf="formData.property.propType.objectType === Constants.ListValue"
+      [control]="form.controls.guiAttr"></app-gui-attr-list>
+
+    <app-gui-attr-link
+      *ngIf="formData.property.propType.objectType === Constants.LinkValue"
+      [control]="form.controls.guiAttr"></app-gui-attr-link>
   </form>`,
 })
 export class PropertyForm2Component implements OnInit, OnDestroy {
@@ -92,11 +95,10 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
   };
   @Output() formValueChange = new EventEmitter<PropertyForm>();
 
+  readonly Constants = Constants;
   readonly defaultProperties = DefaultProperties.data;
   subscription: Subscription;
   form: PropertyForm;
-
-  showGuiAttr: boolean;
 
   get selectedProperty() {
     return this.defaultProperties.flatMap(el => el.elements).find(e => e.guiEle === this.form.controls.propType.value);
@@ -109,8 +111,6 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
   constructor(private _fb: FormBuilder) {}
 
   ngOnInit() {
-    this.showGuiAttr = [Constants.LinkValue, Constants.ListValue].includes(this.formData.property.propType.objectType);
-
     this.form = this._fb.group({
       propType: this._fb.control({
         value: this.formData.property.propType.guiEle,

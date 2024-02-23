@@ -35,6 +35,8 @@ import {
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { CreatePropertyFormDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/create-property-form-dialog.component';
 import { EditPropertyFormDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/edit-property-form-dialog.component';
+import { GuiAttrLinkComponent } from '@dsp-app/src/app/project/ontology/property-form/gui-attr-link.component';
+import { GuiAttrListComponent } from '@dsp-app/src/app/project/ontology/property-form/gui-attr-list.component';
 import { GuiAttrComponent } from '@dsp-app/src/app/project/ontology/property-form/gui-attr.component';
 import { PropertyForm2Component } from '@dsp-app/src/app/project/ontology/property-form/property-form-2.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -236,6 +238,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     FulltextSearchComponent,
     GeonameValueComponent,
     GuiAttrComponent,
+    GuiAttrListComponent,
+    GuiAttrLinkComponent,
     GridComponent,
     HeaderComponent,
     HelpComponent,
