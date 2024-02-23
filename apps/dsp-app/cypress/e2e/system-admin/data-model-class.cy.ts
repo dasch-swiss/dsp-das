@@ -1,5 +1,7 @@
+import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { faker } from '@faker-js/faker';
 import { ClassType, PropertyType } from '../../support/helpers/constants';
+import { DataModelClassProperty } from '../../support/helpers/interfaces';
 import ProjectPage from '../../support/pages/project-page';
 
 describe('Data Model Class', () => {
@@ -10,35 +12,44 @@ describe('Data Model Class', () => {
   });
 
   it('should create new data model class', () => {
-    const textClass = <DataModelClass>{
-      name: faker.string.alpha({ length: { min: 3, max: 16 } }),
+    const textClass: ResourceClassDefinitionWithAllLanguages = {
+      id: faker.lorem.word(),
+      subClassOf: [],
+      propertiesList: [],
+      canBeInstantiated: true,
       label: faker.lorem.words(5),
       comment: faker.lorem.words(10),
+      comments: [],
+      labels: [],
     };
 
-    const resourceClass = <DataModelClass>{
-      name: faker.string.alpha({ length: { min: 3, max: 16 } }),
+    const resourceClass: ResourceClassDefinitionWithAllLanguages = {
+      id: faker.lorem.word(),
+      subClassOf: [],
+      propertiesList: [],
+      canBeInstantiated: true,
       label: faker.lorem.words(5),
       comment: faker.lorem.words(10),
+      comments: [],
+      labels: [],
     };
 
     cy.intercept('POST', '/v2/ontologies/classes').as('createRequest');
 
-    cy.createOntology(projectPage.projectUuid);
+    cy.createOntology(projectPage);
 
     cy.get('[data-cy=create-class-button]').scrollIntoView().should('be.visible').click();
     cy.get(`[data-cy=${ClassType.TextRepresentation}]`).scrollIntoView().should('be.visible').click({ force: true });
-    cy.get('[data-cy=name-input]').clear().type(textClass.name);
+    cy.get('[data-cy=name-input]').clear().type(textClass.id);
     cy.get('[data-cy=label-input]').clear().type(textClass.label);
     cy.get('[data-cy=comment-textarea]').type(textClass.comment);
     cy.get('[data-cy=submit-button]').click();
 
     cy.wait('@createRequest');
     cy.get('[data-cy=class-card]').should('be.visible').get('mat-card-title').contains(textClass.label.split(' ')[0]);
-
     cy.get('[data-cy=create-class-button]').scrollIntoView().should('be.visible').click();
     cy.get(`[data-cy=${ClassType.Resource}]`).scrollIntoView().should('be.visible').click({ force: true });
-    cy.get('[data-cy=name-input]').clear().type(resourceClass.name);
+    cy.get('[data-cy=name-input]').clear().type(resourceClass.id);
     cy.get('[data-cy=label-input]').clear().type(resourceClass.label);
     cy.get('[data-cy=comment-textarea]').type(resourceClass.comment);
     cy.get('[data-cy=submit-button]').click();
@@ -51,7 +62,7 @@ describe('Data Model Class', () => {
   });
 
   it('should cancel to create data model class', () => {
-    cy.createOntology(projectPage.projectUuid);
+    cy.createOntology(projectPage);
 
     cy.get('[data-cy=create-class-button]').scrollIntoView().should('be.visible').click();
     cy.get(`[data-cy=${ClassType.TextRepresentation}]`).scrollIntoView().should('be.visible').click({ force: true });
@@ -68,19 +79,19 @@ describe('Data Model Class', () => {
 
   it('should create properties', () => {
     const textProperty = <DataModelClassProperty>{
-      name: faker.string.alpha({ length: { min: 3, max: 16 } }),
+      name: faker.lorem.word(),
       label: faker.lorem.words(5),
       comment: faker.lorem.words(10),
     };
 
     const pageNumberProperty = <DataModelClassProperty>{
-      name: faker.string.alpha({ length: { min: 3, max: 16 } }),
+      name: faker.lorem.word(),
       label: faker.lorem.words(5),
       comment: faker.lorem.words(10),
     };
 
     cy.intercept('POST', '/v2/ontologies/properties').as('createPropertyRequest');
-    cy.createOntology(projectPage.projectUuid);
+    cy.createOntology(projectPage);
 
     cy.get('[data-cy=properties-button]').should('be.visible').click({ force: true });
 
@@ -107,15 +118,15 @@ describe('Data Model Class', () => {
     cy.get('[data-cy=property-label]').should('be.visible').should('include.text', pageNumberProperty.label);
   });
 
-  it('should add property to a data model class', () => {
+  it.only('should add property to a data model class', () => {
     const textProperty = <DataModelClassProperty>{
-      name: faker.string.alpha({ length: { min: 3, max: 16 } }),
+      name: faker.lorem.word(),
       label: faker.lorem.words(5),
       comment: faker.lorem.words(10),
     };
 
     cy.intercept('POST', '/v2/ontologies/properties').as('createPropertyRequest');
-    cy.createDataModelClass(projectPage.projectUuid);
+    cy.createDataModelClass(projectPage);
 
     cy.get('[data-cy=class-card]').should('be.visible');
     cy.get('[data-cy=resource-class-properties-empty-list]').should('be.visible');

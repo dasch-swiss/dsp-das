@@ -1,27 +1,30 @@
+import { CreateOntology, OntologyMetadata } from '@dasch-swiss/dsp-js';
 import { faker } from '@faker-js/faker';
+import { JsonConvert } from 'json2typescript';
+import ProjectPage from '../pages/project-page';
 
 Cypress.Commands.add(
   'createOntology',
   (
-    projectUuid: string,
-    input: Ontology = <Ontology>{
+    projectPage: ProjectPage,
+    ontology: CreateOntology = {
       name: faker.string.alpha({ length: { min: 3, max: 16 } }),
+      attachedToProject: projectPage.projectIri,
+      comment: faker.lorem.words(10),
       label: faker.lorem.words(5),
-      comment: faker.lorem.sentence(),
     }
   ) => {
-    cy.intercept('POST', '/v2/ontologies').as('submitRequest');
-    cy.visit(`/project/${projectUuid}/data-models`);
-
-    cy.get('[data-cy=data-models-container]').find('[data-cy=create-button]').scrollIntoView().click();
-    cy.get('[data-cy=comment-textarea]').type(input.comment);
-    cy.get('[data-cy=name-input]').type(input.name);
-    cy.get('[data-cy=label-input]').clear().type(input.label);
-    cy.get('[data-cy=submit-button]').click();
-
-    cy.wait('@submitRequest');
-
-    cy.log('Ontology created!');
-    return cy.wrap(input).as('ontology');
+    return cy
+      .request<OntologyMetadata>(
+        'POST',
+        `${Cypress.env('apiUrl')}/v2/ontologies`,
+        new JsonConvert().serializeObject(ontology, CreateOntology)
+      )
+      .then(response => {
+        const ontologyMetadata = response.body;
+        cy.log('Ontology created!');
+        cy.visit(`/project/${projectPage.projectUuid}/ontology/${ontology.name}/editor/classes`);
+        return cy.wrap({ ontology, ontologyMetadata }).as('ontology');
+      });
   }
 );

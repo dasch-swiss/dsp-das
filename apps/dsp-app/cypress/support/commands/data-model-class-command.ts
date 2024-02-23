@@ -1,29 +1,34 @@
+import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { CreateResourceClassPayload } from '@dasch-swiss/dsp-js/src/models/v2/ontologies/create/create-resource-class';
 import { faker } from '@faker-js/faker';
+import { JsonConvert } from 'json2typescript';
+import ProjectPage from '../pages/project-page';
 
 Cypress.Commands.add(
   'createDataModelClass',
   (
-    projectUuid: string,
-    input = <DataModelClass>{
-      name: faker.string.alpha({ length: { min: 3, max: 16 } }),
-      label: faker.lorem.text(),
-      comment: faker.lorem.sentence(),
+    projectPage: ProjectPage,
+    resourceClass = {
+      id: faker.lorem.word(),
+      name: faker.lorem.word(),
+      type: '',
+      subClassOf: [],
+      comment: [{ value: faker.lorem.word() }],
+      label: [{ value: faker.lorem.word() }],
     }
   ) => {
-    cy.intercept('POST', '/v2/ontologies/classes').as('createClassRequest');
+    cy.createOntology(projectPage).then(ontology => {
+      resourceClass.id = ontology.ontologyMetadata['@id'];
+      const request = new JsonConvert().serializeObject(resourceClass, CreateResourceClassPayload);
+      cy.request<ResourceClassDefinitionWithAllLanguages>(
+        'POST',
+        `${Cypress.env('apiUrl')}/v2/ontologies/classes`,
+        request
+      ).then(response => {
+        cy.log('Data model class created!');
+      });
+    });
 
-    cy.createOntology(projectUuid);
-
-    cy.get('[data-cy=create-class-button]').scrollIntoView().should('be.visible').click();
-    cy.get('[data-cy=TextRepresentation]').scrollIntoView().should('be.visible').click();
-    cy.get('[data-cy=comment-textarea]').should('be.visible').clear().type(input.comment);
-    cy.get('[data-cy=name-input]').clear().type(input.name);
-    cy.get('[data-cy=label-input]').clear().type(input.label);
-    cy.get('[data-cy=submit-button]').should('be.visible').click();
-
-    cy.wait('@createClassRequest');
-    cy.log('Data model class created!');
-
-    return cy.wrap(input).as('dataModelClass');
+    return cy.wrap(resourceClass).as('dataModelClass');
   }
 );
