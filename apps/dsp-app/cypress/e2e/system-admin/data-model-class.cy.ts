@@ -118,7 +118,7 @@ describe('Data Model Class', () => {
     cy.get('[data-cy=property-label]').should('be.visible').should('include.text', pageNumberProperty.label);
   });
 
-  it.only('should add property to a data model class', () => {
+  it('should add property to a data model class', () => {
     const textProperty = <DataModelClassProperty>{
       name: faker.lorem.word(),
       label: faker.lorem.words(5),

@@ -54,7 +54,7 @@ import {
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
-import { DialogComponent, DialogEvent } from '../../main/dialog/dialog.component';
+import { DialogComponent } from '../../main/dialog/dialog.component';
 import { ProjectBase } from '../project-base';
 import {
   CreateResourceClassDialogComponent,
@@ -456,7 +456,7 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
       )
       .afterClosed()
       .subscribe(event => {
-        if (event !== DialogEvent.DialogCanceled) {
+        if (event !== false) {
           this.initOntologiesList();
         }
       });

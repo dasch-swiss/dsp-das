@@ -22,7 +22,7 @@ export interface CreateResourceClassDialogProps {
         (formValueChange)="form = $event"></app-resource-class-form>
     </div>
     <div mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close data-cy="cancel-button">Cancel</button>
+      <button mat-button mat-dialog-close data-cy="cancel-button" (click)="onCancel()">Cancel</button>
       <button
         data-cy="submit-button"
         mat-raised-button
@@ -50,6 +50,10 @@ export class CreateResourceClassDialogComponent implements OnInit {
 
   ngOnInit() {
     this.dialogRef.updateSize('800px', '');
+  }
+
+  onCancel() {
+    this.dialogRef.close(false);
   }
 
   onSubmit() {
