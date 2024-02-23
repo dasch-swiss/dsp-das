@@ -4,6 +4,7 @@ import { Constants, ReadOntology } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
 import { PropertyInfoObject, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ListsSelectors, OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/property-form-2.component';
 import { ClassToSelect } from '@dsp-app/src/app/project/ontology/property-form/property-form.component';
 import { Store } from '@ngxs/store';
 import { map, tap } from 'rxjs/operators';
@@ -12,7 +13,7 @@ import { map, tap } from 'rxjs/operators';
   selector: 'app-gui-attr',
   template: `<div [ngSwitch]="propertyInfo.propType.objectType">
     <!-- list property -->
-    <mat-form-field class="large-field property-type ontology-form-field" *ngSwitchCase="dspConstants.ListValue">
+    <mat-form-field class="large-field" *ngSwitchCase="dspConstants.ListValue">
       <span matPrefix class="ontology-prefix-icon">
         <mat-icon>{{ guiAttrIcon }}</mat-icon
         >&nbsp;
@@ -21,11 +22,11 @@ import { map, tap } from 'rxjs/operators';
       <mat-select [formControl]="control">
         <mat-option *ngFor="let item of lists$ | async" [value]="item.id"> {{ item.labels[0].value }} </mat-option>
       </mat-select>
-      <mat-hint *ngIf="formErrors.guiAttr"> {{ formErrors.guiAttr }}</mat-hint>
+      <mat-error *ngIf="control.invalid && control.touched"> {{ control.errors[0] | humanReadableError }}</mat-error>
     </mat-form-field>
 
     <!-- link property -->
-    <mat-form-field class="large-field property-type ontology-form-field" *ngSwitchCase="dspConstants.LinkValue">
+    <mat-form-field class="large-field" *ngSwitchCase="dspConstants.LinkValue">
       <span matPrefix class="ontology-prefix-icon">
         <mat-icon>{{ guiAttrIcon }}</mat-icon
         >&nbsp;
@@ -36,16 +37,11 @@ import { map, tap } from 'rxjs/operators';
           <mat-option *ngFor="let oClass of onto.classes" [value]="oClass.id"> {{ oClass.label }} </mat-option>
         </mat-optgroup>
       </mat-select>
-      <mat-hint *ngIf="formErrors.guiAttr"> {{ formErrors.guiAttr }}</mat-hint>
+      <mat-error *ngIf="control.invalid && control.touched"> {{ control.errors[0] | humanReadableError }}</mat-error>
     </mat-form-field>
 
     <!-- the gui-attribute for integer and decimal are not yet supported in the app -->
-    <mat-form-field
-      class="large-field property-type ontology-form-field"
-      *ngSwitchCase="
-        propertyInfo.propType.objectType === dspConstants.IntValue ||
-        propertyInfo.propType.objectType === dspConstants.DecimalValue
-      ">
+    <mat-form-field class="large-field" *ngSwitchCase="[dspConstants.IntValue, dspConstants.DecimalValue]">
       <span matPrefix class="ontology-prefix-icon">
         <mat-icon>{{ guiAttrIcon }}</mat-icon
         >&nbsp;
@@ -53,20 +49,15 @@ import { map, tap } from 'rxjs/operators';
       <mat-label>Define range</mat-label>
       <input matInput placeholder="min" />
       <input matInput placeholder="max" />
-      <!-- <mat-select formControlName="guiAttr">
-                                                                            <mat-option *ngFor="let item of resourceClasses" [value]="item.id">
-                                                                                {{item.label}}
-                                                                            </mat-option>
-                                                                        </mat-select> -->
     </mat-form-field>
-    <mat-hint *ngIf="formErrors.guiAttr"> {{ formErrors.guiAttr }}</mat-hint>
-    <!-- <div *ngSwitchDefault>{{propertyInfo.propType.subPropOf}} not yet implemented</div> -->
+    <mat-error *ngIf="control.invalid && control.touched"> {{ control.errors[0] | humanReadableError }}</mat-error>
   </div>`,
+  styles: ['.large-field {width: 100%}'],
 })
 export class GuiAttrComponent {
   @Input() propertyInfo: PropertyInfoObject;
-  @Input() control: FormControl;
-  lists$ = this._store.select(ListsSelectors.listsInProject).pipe(tap(v => console.log(v, this.control)));
+  @Input() control: PropertyForm['controls']['guiAttr'];
+  lists$ = this._store.select(ListsSelectors.listsInProject).pipe(tap(v => console.log(v[1].id, this.control.value)));
   readonly guiAttrIcon = 'tune';
   ontologyClasses$ = this._store.select(OntologiesSelectors.currentProjectOntologies).pipe(
     map((response: ReadOntology[]) => {

@@ -39,7 +39,7 @@ export interface EditPropertyFormDialogProps {
         name: data.propertyInfo.propDef.label,
         labels: data.propertyInfo.propDef.labels,
         comments: data.propertyInfo.propDef.comments,
-        guiAttributes: [guiAttribute]
+        guiAttribute
       }"></app-property-form-2>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
@@ -76,9 +76,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: EditPropertyFormDialogProps,
     private _store: Store,
     private _notification: NotificationService
-  ) {
-    console.log('julien', this.data);
-  }
+  ) {}
 
   ngOnInit() {
     this.dialogRef.updateSize('800px', '');
@@ -86,7 +84,6 @@ export class EditPropertyFormDialogComponent implements OnInit {
     this.guiAttribute = this.data.propertyInfo.propDef.guiAttributes
       .find(element => element.includes('hlist'))
       .match(/\<([^)]+)\>/)[1];
-    console.log('gui attribute', this.guiAttribute);
   }
 
   onSubmit() {

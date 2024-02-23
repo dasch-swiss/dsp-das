@@ -32,7 +32,7 @@ export type PropertyForm = FormGroup<{
   name: FormControl<string>;
   labels: MultiLanguageForm;
   comments: MultiLanguageForm;
-  guiAttr: FormControl<string[]>;
+  guiAttr: FormControl<string>;
 }>;
 
 @Component({
@@ -88,7 +88,7 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
     labels?: StringLiteralV2[];
     comments?: StringLiteralV2[];
     property: PropertyInfoObject;
-    guiAttributes?: string[]; // TODO guiAttribute is string or string[]?
+    guiAttribute?: string;
   };
   @Output() formValueChange = new EventEmitter<PropertyForm>();
 
@@ -121,7 +121,9 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
       ]),
       labels: DEFAULT_MULTILANGUAGE_FORM(this.formData.labels, [Validators.required]),
       comments: DEFAULT_MULTILANGUAGE_FORM(this.formData.comments, [Validators.required]),
-      guiAttr: this._fb.control<string[]>(this.formData.guiAttributes),
+      guiAttr: this._fb.control<string>({ value: this.formData.guiAttribute, disabled: !this.creationMode }, [
+        Validators.required,
+      ]),
     });
 
     this.subscription = this.form.valueChanges.subscribe(() => {
