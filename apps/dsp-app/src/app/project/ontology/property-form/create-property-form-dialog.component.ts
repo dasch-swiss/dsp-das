@@ -21,7 +21,7 @@ export interface CreatePropertyFormDialogProps {
     <app-property-form-2
       mat-dialog-content
       (formValueChange)="form = $event"
-      [formData]="{ property: data.propertyInfo }"
+      [formData]="{ resourceClassId: data.resClassIri, property: data.propertyInfo }"
       [creationMode]="true"></app-property-form-2>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>

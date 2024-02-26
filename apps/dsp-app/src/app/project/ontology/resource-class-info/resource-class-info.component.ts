@@ -40,6 +40,10 @@ import {
   RemovePropertyAction,
   ReplacePropertyAction,
 } from '@dasch-swiss/vre/shared/app-state';
+import {
+  CreatePropertyFormDialogComponent,
+  CreatePropertyFormDialogProps,
+} from '@dsp-app/src/app/project/ontology/property-form/create-property-form-dialog.component';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
@@ -286,14 +290,19 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
       });
   }
 
-  addNewProperty(propType: DefaultProperty, currentOntologyPropertiesToDisplay: PropToDisplay[]) {
-    const propertyAssignment: PropertyAssignment = {
-      resClass: this.resourceClass,
-      property: {
-        propType,
-      },
-    };
-    this.assignProperty(propertyAssignment, currentOntologyPropertiesToDisplay);
+  addNewProperty(propType: DefaultProperty) {
+    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+    this._dialog.open<CreatePropertyFormDialogComponent, CreatePropertyFormDialogProps>(
+      CreatePropertyFormDialogComponent,
+      {
+        data: {
+          ontologyId: ontology.id,
+          lastModificationDate: ontology.lastModificationDate,
+          propertyInfo: { propType },
+          resClassIri: this.resourceClass.id,
+        },
+      }
+    );
   }
 
   addExistingProperty(prop: PropertyInfoObject, currentOntologyPropertiesToDisplay: PropToDisplay[]) {

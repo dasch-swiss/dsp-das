@@ -30,8 +30,8 @@ import { Subscription } from 'rxjs';
         </mat-optgroup>
       </mat-select>
       <!--TODO <mat-hint *ngIf="unsupportedPropertyType" class="ontology-warning-with-prefix">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ propertyForm.controls['propType'].value.description }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </mat-hint>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {{ propertyForm.controls['propType'].value.description }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </mat-hint>-->
     </mat-form-field>
     <app-common-input
       placeholder="Property name *"
@@ -59,7 +59,7 @@ import { Subscription } from 'rxjs';
       [formControl]="form.controls.cardinality"
       [matTooltip]="'The property in this class can have multiple values'"
       matTooltipPosition="above"
-      [checked]="form.controls.cardinality.value.toString().endsWith('n')"
+      [checked]="[Cardinality._0_n, Cardinality._1_n].includes(form.controls.cardinality.value)"
       (change)="toggleMultiple()">
       Multiple values?
     </mat-slide-toggle>
@@ -77,10 +77,11 @@ import { Subscription } from 'rxjs';
 export class PropertyForm2Component implements OnInit, OnDestroy {
   @Input() creationMode: boolean;
   @Input() formData: {
+    property: PropertyInfoObject;
+    resourceClassId: string;
     name?: string;
     labels?: StringLiteralV2[];
     comments?: StringLiteralV2[];
-    property: PropertyInfoObject;
     guiAttribute?: string;
     cardinality?: Cardinality;
   };
@@ -102,6 +103,7 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
   constructor(private _fb: FormBuilder) {}
 
   ngOnInit() {
+    console.log(Cardinality._0_1.toString(), 'a');
     this.form = this._fb.group({
       propType: this._fb.control({
         value: this.formData.property.propType.guiEle,
@@ -116,8 +118,8 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
         Validators.required,
       ]),
       cardinality: this._fb.control({
-        value: this.formData.cardinality,
-        disabled: true, // TODO
+        value: this.formData.cardinality ?? Cardinality._0_1,
+        disabled: false, // TODO
       }),
     });
 
@@ -150,4 +152,6 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
+
+  protected readonly Cardinality = Cardinality;
 }
