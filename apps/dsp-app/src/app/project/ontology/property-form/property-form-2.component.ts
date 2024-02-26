@@ -30,8 +30,8 @@ import { Subscription } from 'rxjs';
         </mat-optgroup>
       </mat-select>
       <!--TODO <mat-hint *ngIf="unsupportedPropertyType" class="ontology-warning-with-prefix">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {{ propertyForm.controls['propType'].value.description }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </mat-hint>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              {{ propertyForm.controls['propType'].value.description }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </mat-hint>-->
     </mat-form-field>
     <app-common-input
       placeholder="Property name *"
@@ -55,23 +55,13 @@ import { Subscription } from 'rxjs';
       *ngIf="formData.property.propType.objectType === Constants.LinkValue"
       [control]="form.controls.guiAttr"></app-gui-attr-link>
 
-    <mat-slide-toggle
-      [formControl]="form.controls.cardinality"
-      [matTooltip]="'The property in this class can have multiple values'"
-      matTooltipPosition="above"
-      [checked]="[Cardinality._0_n, Cardinality._1_n].includes(form.controls.cardinality.value)"
-      (change)="toggleMultiple()">
-      Multiple values?
-    </mat-slide-toggle>
+    <app-multiple-slide-toggle
+      [control]="form.controls.cardinality"
+      [label]="'Multiple values ?'"></app-multiple-slide-toggle>
 
-    <mat-slide-toggle
-      [formControl]="form.controls.cardinality"
-      [matTooltip]="'The property in this class must have one value'"
-      matTooltipPosition="above"
-      [checked]="form.controls.cardinality.value.toString().startsWith('_1')"
-      (change)="toggleRequired()">
-      Required field?
-    </mat-slide-toggle>
+    <app-required-slide-toggle
+      [control]="form.controls.cardinality"
+      [label]="'Required value ?'"></app-required-slide-toggle>
   </form>`,
 })
 export class PropertyForm2Component implements OnInit, OnDestroy {
@@ -129,29 +119,7 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
     this.formValueChange.emit(this.form);
   }
 
-  toggleRequired() {
-    const requiredToggle = new Map<Cardinality, Cardinality>([
-      [Cardinality._1, Cardinality._0_1],
-      [Cardinality._0_1, Cardinality._1],
-      [Cardinality._0_n, Cardinality._1_n],
-      [Cardinality._1_n, Cardinality._0_n],
-    ]);
-    this.form.controls.cardinality.patchValue(requiredToggle.get(this.form.controls.cardinality.value));
-  }
-
-  toggleMultiple() {
-    const multipleToggle = new Map<Cardinality, Cardinality>([
-      [Cardinality._1, Cardinality._1_n],
-      [Cardinality._0_1, Cardinality._0_n],
-      [Cardinality._0_n, Cardinality._0_1],
-      [Cardinality._1_n, Cardinality._1],
-    ]);
-    this.form.controls.cardinality.patchValue(multipleToggle.get(this.form.controls.cardinality.value));
-  }
-
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
-
-  protected readonly Cardinality = Cardinality;
 }

@@ -37,7 +37,9 @@ import { CreatePropertyFormDialogComponent } from '@dsp-app/src/app/project/onto
 import { EditPropertyFormDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/edit-property-form-dialog.component';
 import { GuiAttrLinkComponent } from '@dsp-app/src/app/project/ontology/property-form/gui-attr-link.component';
 import { GuiAttrListComponent } from '@dsp-app/src/app/project/ontology/property-form/gui-attr-list.component';
+import { MultipleSlideToggleComponent } from '@dsp-app/src/app/project/ontology/property-form/multiple-slide-toggle.component';
 import { PropertyForm2Component } from '@dsp-app/src/app/project/ontology/property-form/property-form-2.component';
+import { RequiredSlideToggleComponent } from '@dsp-app/src/app/project/ontology/property-form/required-slide-toggle.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularSplitModule } from 'angular-split';
@@ -238,6 +240,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     GeonameValueComponent,
     GuiAttrListComponent,
     GuiAttrLinkComponent,
+    MultipleSlideToggleComponent,
+    RequiredSlideToggleComponent,
     GridComponent,
     HeaderComponent,
     HelpComponent,
