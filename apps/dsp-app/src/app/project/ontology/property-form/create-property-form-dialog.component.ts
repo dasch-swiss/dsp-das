@@ -53,10 +53,9 @@ export class CreatePropertyFormDialogComponent implements OnInit {
 
   onSubmit() {
     this.loading = true;
-    const onto = this.getOntologyForNewProperty();
 
     this._dspApiConnection.v2.onto
-      .createResourceProperty(onto)
+      .createResourceProperty(this.getOntologyForNewProperty())
       .pipe(
         finalize(() => {
           this.loading = false;

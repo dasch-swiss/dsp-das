@@ -18,6 +18,8 @@ import {
   PropertyDefinition,
   ReadOntology,
   ResourcePropertyDefinitionWithAllLanguages,
+  UpdateOntology,
+  UpdateResourceClassCardinality,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import {
@@ -40,6 +42,7 @@ import {
   RemovePropertyAction,
   ReplacePropertyAction,
 } from '@dasch-swiss/vre/shared/app-state';
+import { DialogService } from '@dsp-app/src/app/main/services/dialog.service';
 import {
   CreatePropertyFormDialogComponent,
   CreatePropertyFormDialogProps,
@@ -139,7 +142,8 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
     private _sortingService: SortingService,
     private _store: Store,
     private _actions$: Actions,
-    private _ontoService: OntologyService
+    private _ontoService: OntologyService,
+    private _dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -408,6 +412,36 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
       },
     };
     this.openEditDialog(dialogConfig);
+  }
+
+  newChangeCardinalities(
+    cardRequest: {
+      prop: PropToDisplay;
+      propType: DefaultProperty;
+      targetCardinality: GuiCardinality;
+    },
+    currentOntologyPropertiesToDisplay: PropToDisplay[]
+  ) {
+    this._dialogService.afterConfirmation('Please note that this change may not be reversible.').subscribe(() => {
+      // get the ontology, the class and its properties
+      const classUpdate = new UpdateOntology<UpdateResourceClassCardinality>();
+      classUpdate.lastModificationDate = this.ontology.lastModificationDate;
+      classUpdate.id = this.ontology.id;
+      const changedClass = new UpdateResourceClassCardinality();
+      changedClass.id = this.resourceClass.id;
+      changedClass.cardinalities = currentOntologyPropertiesToDisplay;
+
+      // get the property for replacing the cardinality
+      const idx = changedClass.cardinalities.findIndex(c => c.propertyIndex === cardRequest.prop.propDef.id);
+      if (idx === -1) {
+        return;
+      }
+      // set the new cardinality
+      changedClass.cardinalities[idx].cardinality = this.getTargetCardinality(this.targetGuiCardinality);
+
+      classUpdate.entity = changedClass;
+      this._dspApiConnection.v2.onto.replaceCardinalityOfResourceClass(classUpdate).subscribe(() => {});
+    });
   }
 
   /**
