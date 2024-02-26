@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Constants } from '@dasch-swiss/dsp-js';
+import { Cardinality, Constants } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/vre/open-api';
 import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/shared/app-string-literal';
@@ -30,8 +30,8 @@ import { Subscription } from 'rxjs';
         </mat-optgroup>
       </mat-select>
       <!--TODO <mat-hint *ngIf="unsupportedPropertyType" class="ontology-warning-with-prefix">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              {{ propertyForm.controls['propType'].value.description }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </mat-hint>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ propertyForm.controls['propType'].value.description }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </mat-hint>-->
     </mat-form-field>
     <app-common-input
       placeholder="Property name *"
@@ -54,6 +54,24 @@ import { Subscription } from 'rxjs';
     <app-gui-attr-link
       *ngIf="formData.property.propType.objectType === Constants.LinkValue"
       [control]="form.controls.guiAttr"></app-gui-attr-link>
+
+    <mat-slide-toggle
+      [formControl]="form.controls.cardinality"
+      [matTooltip]="'The property in this class can have multiple values'"
+      matTooltipPosition="above"
+      [checked]="form.controls.cardinality.value.toString().endsWith('n')"
+      (change)="toggleMultiple()">
+      Multiple values?
+    </mat-slide-toggle>
+
+    <mat-slide-toggle
+      [formControl]="form.controls.cardinality"
+      [matTooltip]="'The property in this class must have one value'"
+      matTooltipPosition="above"
+      [checked]="form.controls.cardinality.value.toString().startsWith('_1')"
+      (change)="toggleRequired()">
+      Required field?
+    </mat-slide-toggle>
   </form>`,
 })
 export class PropertyForm2Component implements OnInit, OnDestroy {
@@ -64,6 +82,7 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
     comments?: StringLiteralV2[];
     property: PropertyInfoObject;
     guiAttribute?: string;
+    cardinality?: Cardinality;
   };
   @Output() formValueChange = new EventEmitter<PropertyForm>();
 
@@ -96,12 +115,36 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
       guiAttr: this._fb.control<string>({ value: this.formData.guiAttribute, disabled: !this.creationMode }, [
         Validators.required,
       ]),
+      cardinality: this._fb.control({
+        value: this.formData.cardinality,
+        disabled: true, // TODO
+      }),
     });
 
     this.subscription = this.form.valueChanges.subscribe(() => {
       this.formValueChange.emit(this.form);
     });
     this.formValueChange.emit(this.form);
+  }
+
+  toggleRequired() {
+    const requiredToggle = new Map<Cardinality, Cardinality>([
+      [Cardinality._1, Cardinality._0_1],
+      [Cardinality._0_1, Cardinality._1],
+      [Cardinality._0_n, Cardinality._1_n],
+      [Cardinality._1_n, Cardinality._0_n],
+    ]);
+    this.form.controls.cardinality.patchValue(requiredToggle.get(this.form.controls.cardinality.value));
+  }
+
+  toggleMultiple() {
+    const multipleToggle = new Map<Cardinality, Cardinality>([
+      [Cardinality._1, Cardinality._1_n],
+      [Cardinality._0_1, Cardinality._0_n],
+      [Cardinality._0_n, Cardinality._0_1],
+      [Cardinality._1_n, Cardinality._1],
+    ]);
+    this.form.controls.cardinality.patchValue(multipleToggle.get(this.form.controls.cardinality.value));
   }
 
   ngOnDestroy() {
