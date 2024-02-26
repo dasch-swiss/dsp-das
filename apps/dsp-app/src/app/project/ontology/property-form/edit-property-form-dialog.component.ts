@@ -17,6 +17,7 @@ import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/a
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { SetCurrentOntologyAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
+import { switchMap, tap } from 'rxjs/operators';
 import { PropertyForm } from './property-form.type';
 
 export interface EditPropertyFormDialogProps {
@@ -62,7 +63,6 @@ export class EditPropertyFormDialogComponent implements OnInit {
   lastModificationDate = this.data.lastModificationDate;
   propertyInfo = this.data.propertyInfo;
 
-  guiAttribute: string;
   unsupportedPropertyType = false; // TODO verify, I have set it to true
   get selectedProperty() {
     return DefaultProperties.data.flatMap(el => el.elements).find(e => e.guiEle === this.form.controls.propType.value);
@@ -87,41 +87,44 @@ export class EditPropertyFormDialogComponent implements OnInit {
 
     this._dspApiConnection.v2.onto
       .updateResourceProperty(onto4Label)
-      .subscribe((propertyLabelResponse: ResourcePropertyDefinitionWithAllLanguages) => {
-        const onto4Comment = this.getUpdateOntologyForPropertyComment();
+      .pipe(
+        switchMap((propertyLabelResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+          const onto4Comment = this.getUpdateOntologyForPropertyComment();
 
-        this.lastModificationDate = propertyLabelResponse.lastModificationDate;
-        onto4Comment.lastModificationDate = this.lastModificationDate;
+          this.lastModificationDate = propertyLabelResponse.lastModificationDate;
+          onto4Comment.lastModificationDate = this.lastModificationDate;
 
-        if (onto4Comment.entity.comments.length) {
-          // if the comments array is not empty, send a request to update the comments
-          this._dspApiConnection.v2.onto
-            .updateResourceProperty(onto4Comment)
-            .subscribe((propertyCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
-              this.lastModificationDate = propertyCommentResponse.lastModificationDate;
+          if (onto4Comment.entity.comments.length) {
+            // if the comments array is not empty, send a request to update the comments
+            return this._dspApiConnection.v2.onto.updateResourceProperty(onto4Comment).pipe(
+              tap((propertyCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+                this.lastModificationDate = propertyCommentResponse.lastModificationDate;
 
-              this.final();
-            });
-        } else {
-          // if the comments array is empty, send a request to remove the comments
-          const deleteResourcePropertyComment = new DeleteResourcePropertyComment();
-          deleteResourcePropertyComment.id = this.propertyInfo.propDef.id;
-          deleteResourcePropertyComment.lastModificationDate = this.lastModificationDate;
+                this.final();
+              })
+            );
+          } else {
+            // if the comments array is empty, send a request to remove the comments
+            const deleteResourcePropertyComment = new DeleteResourcePropertyComment();
+            deleteResourcePropertyComment.id = this.propertyInfo.propDef.id;
+            deleteResourcePropertyComment.lastModificationDate = this.lastModificationDate;
 
-          this._dspApiConnection.v2.onto
-            .deleteResourcePropertyComment(deleteResourcePropertyComment)
-            .subscribe((deleteCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
-              this.lastModificationDate = deleteCommentResponse.lastModificationDate;
-              this.final();
-            });
-        }
-
+            return this._dspApiConnection.v2.onto.deleteResourcePropertyComment(deleteResourcePropertyComment).pipe(
+              tap((deleteCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+                this.lastModificationDate = deleteCommentResponse.lastModificationDate;
+                this.final();
+              })
+            );
+          }
+        })
+      )
+      .subscribe(() => {
         this.ontology.lastModificationDate = this.lastModificationDate;
         this._store.dispatch(new SetCurrentOntologyAction(this.ontology));
       });
   }
 
-  getUpdateOntolgyForPropertyLabel(): UpdateOntology<UpdateResourcePropertyLabel> {
+  private getUpdateOntolgyForPropertyLabel(): UpdateOntology<UpdateResourcePropertyLabel> {
     const onto4Label = new UpdateOntology<UpdateResourcePropertyLabel>();
     onto4Label.id = this.ontology.id;
     onto4Label.lastModificationDate = this.lastModificationDate;
@@ -133,7 +136,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
     return onto4Label;
   }
 
-  getUpdateOntologyForPropertyComment(): UpdateOntology<UpdateResourcePropertyComment> {
+  private getUpdateOntologyForPropertyComment(): UpdateOntology<UpdateResourcePropertyComment> {
     const onto4Comment = new UpdateOntology<UpdateResourcePropertyComment>();
     onto4Comment.id = this.ontology.id;
 
@@ -145,14 +148,14 @@ export class EditPropertyFormDialogComponent implements OnInit {
     return onto4Comment;
   }
 
-  onSuccess() {
+  private onSuccess() {
     this.loading = false;
     const msg = `Successfully updated ${this.propertyInfo.propDef.label}.`;
     this._notification.openSnackBar(msg);
     this.dialogRef.close();
   }
 
-  replaceGuiElement() {
+  private replaceGuiElement() {
     const onto4guiEle = new UpdateOntology<UpdateResourcePropertyGuiElement>();
     onto4guiEle.id = this.ontology.id;
     onto4guiEle.lastModificationDate = this.lastModificationDate;
@@ -175,7 +178,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
       });
   }
 
-  setGuiAttribute(guiAttr: string): string[] {
+  private setGuiAttribute(guiAttr: string): string[] {
     let guiAttributes: string[];
 
     switch (this.propertyInfo.propType.guiEle) {
@@ -206,7 +209,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
     return guiAttributes;
   }
 
-  final() {
+  private final() {
     // if property type is supported and is of type TextValue and the guiElement is different from its initial value, call replaceGuiElement() to update the guiElement
     // this only works for the TextValue object type currently
     // https://docs.dasch.swiss/latest/DSP-API/03-apis/api-v2/ontology-information/#changing-the-gui-element-and-gui-attributes-of-a-property
