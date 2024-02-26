@@ -12,11 +12,11 @@ import { BASE_PATH } from '@dasch-swiss/vre/open-api';
 import { PendoAnalyticsService } from '@dasch-swiss/vre/shared/app-analytics';
 import {
   AppConfigService,
-  buildTagFactory,
   BuildTagToken,
   DspApiConfigToken,
   DspAppConfigToken,
   DspInstrumentationToken,
+  buildTagFactory,
 } from '@dasch-swiss/vre/shared/app-config';
 import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
@@ -81,20 +81,22 @@ import { CreateProjectFormPageComponent } from './project/create-project-form-pa
 import { DataModelsComponent } from './project/data-models/data-models.component';
 import { DescriptionComponent } from './project/description/description.component';
 import { EditProjectFormPageComponent } from './project/edit-project-form-page/edit-project-form-page.component';
-import { ImageDisplayAbsoluteComponent } from './project/image-settings/image-display-absolute.component';
 import { ImageDisplayRatioComponent } from './project/image-settings/image-display-ratio.component';
 import { ImageSettingsComponent } from './project/image-settings/image-settings.component';
 import { ActionBubbleComponent } from './project/list/action-bubble/action-bubble.component';
-import { ListItemComponent } from './project/list/list-item/list-item.component';
 import { ListItemElementComponent } from './project/list/list-item-element/list-item-element.component';
 import { CreateListItemDialogComponent } from './project/list/list-item-form/edit-list-item/create-list-item-dialog.component';
 import { EditListItemDialogComponent } from './project/list/list-item-form/edit-list-item/edit-list-item-dialog.component';
 import { ListItemFormComponent } from './project/list/list-item-form/list-item-form.component';
 import { ReusableListItemFormComponent } from './project/list/list-item-form/reusable-list-item-form.component';
+import { ListItemComponent } from './project/list/list-item/list-item.component';
 import { ListComponent } from './project/list/list.component';
 import { CreateListInfoPageComponent } from './project/list/reusable-list-info-form/create-list-info-page.component';
 import { EditListInfoDialogComponent } from './project/list/reusable-list-info-form/edit-list-info-dialog.component';
 import { ReusableListInfoFormComponent } from './project/list/reusable-list-info-form/reusable-list-info-form.component';
+import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
+import { OntologyClassItemComponent } from './project/ontology-classes/ontology-class-item/ontology-class-item.component';
+import { OntologyClassesComponent } from './project/ontology-classes/ontology-classes.component';
 import { CreateResourceClassDialogComponent } from './project/ontology/create-resource-class-dialog/create-resource-class-dialog.component';
 import { EditResourceClassDialogComponent } from './project/ontology/edit-resource-class-dialog/edit-resource-class-dialog.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
@@ -104,9 +106,6 @@ import { PropertyInfoComponent } from './project/ontology/property-info/property
 import { ResourceClassFormComponent } from './project/ontology/resource-class-form/resource-class-form.component';
 import { ResourceClassInfoComponent } from './project/ontology/resource-class-info/resource-class-info.component';
 import { ResourceClassPropertyInfoComponent } from './project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
-import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
-import { OntologyClassItemComponent } from './project/ontology-classes/ontology-class-item/ontology-class-item.component';
-import { OntologyClassesComponent } from './project/ontology-classes/ontology-classes.component';
 import { ProjectComponent } from './project/project.component';
 import { ReusableProjectFormComponent } from './project/reusable-project-form/reusable-project-form.component';
 import { SettingsComponent } from './project/settings/settings.component';
@@ -234,7 +233,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     GridComponent,
     HeaderComponent,
     HelpComponent,
-    ImageDisplayAbsoluteComponent,
     ImageDisplayRatioComponent,
     IntermediateComponent,
     IntervalInputComponent,
