@@ -37,7 +37,8 @@ import { MultiLanguageFormService } from './multi-language-form.service';
           [readonly]="!editable"
           [ngModel]="formService.inputValue"
           (blur)="formService.formArray.markAsTouched()"
-          (ngModelChange)="formService.onInputChange($event)"></textarea>
+          (ngModelChange)="formService.onInputChange($event)"
+          [disabled]="formService.selectedFormControl.disabled"></textarea>
       </mat-form-field>
       <mat-button-toggle-group matPrefix #group="matButtonToggleGroup" vertical>
         <mat-button-toggle
