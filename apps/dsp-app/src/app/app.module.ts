@@ -33,6 +33,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { AssignPropertyDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/assign-property-dialog.component';
 import { CreatePropertyFormDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/create-property-form-dialog.component';
 import { EditPropertyFormDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/edit-property-form-dialog.component';
 import { GuiAttrLinkComponent } from '@dsp-app/src/app/project/ontology/property-form/gui-attr-link.component';
@@ -290,6 +291,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     PropertyFormComponent,
     PropertyForm2Component,
     CreatePropertyFormDialogComponent,
+    AssignPropertyDialogComponent,
     EditPropertyFormDialogComponent,
     PropertyInfoComponent,
     ReplaceFileFormComponent,

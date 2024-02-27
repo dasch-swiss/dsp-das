@@ -15,7 +15,10 @@ import {
   PropToAdd,
   PropToDisplay,
 } from '@dasch-swiss/vre/shared/app-state';
-import { DialogComponent, DialogEvent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import {
+  AssignPropertyDialogComponent,
+  AssignPropertyDialogProps,
+} from '@dsp-app/src/app/project/ontology/property-form/assign-property-dialog.component';
 import {
   CreatePropertyFormDialogComponent,
   CreatePropertyFormDialogProps,
@@ -54,7 +57,7 @@ import { map, takeUntil } from 'rxjs/operators';
             *ngFor="let prop of onto.properties; trackBy: trackByPropFn"
             [matTooltip]="prop.propDef.comment"
             matTooltipPosition="after"
-            (click)="addExistingProperty(prop)">
+            (click)="assignNewProperty(prop)">
             <mat-icon>{{ prop.propType?.icon }}</mat-icon>
             {{ prop.propDef.label }}
           </button>
@@ -135,7 +138,7 @@ export class AddPropertyMenuComponent {
     }
     const classLabel = propertyAssignment.resClass.label;
 
-    let mode: 'createProperty' | 'editProperty' = 'createProperty';
+    let mode = 'createProperty';
     let propLabel = `${propertyAssignment.property.propType.group}: ${propertyAssignment.property.propType.label}`;
     let title = `Add new property of type "${propLabel}" to class "${classLabel}"`;
     if (propertyAssignment.property.propDef) {
@@ -160,17 +163,39 @@ export class AddPropertyMenuComponent {
         position: currentOntologyPropertiesToDisplay.length + 1,
       },
     };
-    this.openEditDialog(dialogConfig);
+
+    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+
+    this._dialog.open<CreatePropertyFormDialogComponent, CreatePropertyFormDialogProps>(
+      CreatePropertyFormDialogComponent,
+      {
+        data: {
+          ontologyId: ontology.id,
+          lastModificationDate: ontology.lastModificationDate,
+          propertyInfo: propertyAssignment.property,
+          resClassIri: this.resourceClass.id,
+        },
+      }
+    );
   }
 
-  openEditDialog(dialogConfig: MatDialogConfig) {
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
+  assignNewProperty(prop: PropertyInfoObject) {
+    const propertyAssignment: PropertyAssignment = {
+      resClass: this.resourceClass,
+      property: {
+        propType: prop.propType,
+        propDef: prop.propDef,
+      },
+    };
 
-    dialogRef.afterClosed().subscribe((event: DialogEvent) => {
-      if (event !== DialogEvent.DialogCanceled) {
-        // update the view: list of properties in resource class
-        // TODO REMOVED this.updatePropertyAssignment.emit(this.ontology.id);
-      }
+    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+    this._dialog.open<AssignPropertyDialogComponent, AssignPropertyDialogProps>(AssignPropertyDialogComponent, {
+      data: {
+        ontologyId: ontology.id,
+        lastModificationDate: ontology.lastModificationDate,
+        propertyInfo: propertyAssignment.property,
+        resClassIri: this.resourceClass.id,
+      },
     });
   }
 

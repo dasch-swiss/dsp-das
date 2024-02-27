@@ -1,6 +1,13 @@
 import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Constants, CreateResourceProperty, KnoraApiConnection, UpdateOntology } from '@dasch-swiss/dsp-js';
+import {
+    ApiResponseError,
+    Constants,
+    CreateResourceProperty, IHasProperty,
+    KnoraApiConnection, ResourceClassDefinitionWithAllLanguages,
+    ResourcePropertyDefinitionWithAllLanguages,
+    UpdateOntology, UpdateResourceClassCardinality,
+} from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { finalize } from 'rxjs/operators';
