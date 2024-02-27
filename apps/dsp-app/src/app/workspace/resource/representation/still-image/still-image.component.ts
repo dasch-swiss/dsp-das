@@ -521,9 +521,6 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
     const linkVal = new CreateLinkValue();
     linkVal.type = Constants.LinkValue;
     linkVal.linkedResourceIri = this.resourceIri;
-    const commentVal = new CreateTextValueAsString();
-    commentVal.type = Constants.TextValue;
-    commentVal.text = comment;
     createResource.properties = {
       [Constants.HasColor]: [colorVal],
       [Constants.IsRegionOfValue]: [linkVal],
