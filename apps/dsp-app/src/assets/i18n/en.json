@@ -139,7 +139,7 @@
         },
         "imageSettings": {
           "isWatermark": "Apply watermark",
-          "restrictImageSize": "Restrict image size",
+          "restrictImageSize": "Restrict image size and sharpness",
           "percentageValue": "Percentage value",
           "percentage": "Percentage",
           "updateConfirmation": "You have successfully updated the project image settings."

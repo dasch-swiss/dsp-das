@@ -110,7 +110,7 @@
         },
         "imageSettings": {
           "isWatermark": "Wasserzeichen anwenden",
-          "restrictImageSize": "Bildgröße einschränken",
+          "restrictImageSize": "Bildgröße und Schärfe einschränken",
           "percentageValue": "Prozentwert",
           "percentage": "Prozentsatz",
           "updateConfirmation": "Sie haben die Projektbildeinstellungen erfolgreich aktualisiert."

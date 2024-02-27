@@ -1,39 +1,37 @@
 <dasch-swiss-centered-layout>
   <dasch-swiss-app-progress-indicator *ngIf="isProjectsLoading$ | async"></dasch-swiss-app-progress-indicator>
-  <div class="content large middle" *ngIf="(isProjectsLoading$ | async) === false">
+  <div class="content small middle" *ngIf="(isProjectsLoading$ | async) === false">
     <div class="mb-6">
       <div class="mb-6">
         <mat-slide-toggle [(ngModel)]="isWatermark">
           {{ 'appLabels.form.project.imageSettings.isWatermark' | translate }}
         </mat-slide-toggle>
       </div>
-      <ng-container *ngIf="!isWatermark">
-        <div class="mb-2">
-          <mat-slide-toggle [(ngModel)]="allowRestriction">
-            {{ 'appLabels.form.project.imageSettings.restrictImageSize' | translate }}
-          </mat-slide-toggle>
-        </div>
-        <div *ngIf="allowRestriction">
-          <div [@replaceAnimation] class="flex-with-gap">
-            <section class="child">
-              <div class="large-field">
-                <mat-slider
-                  min="1"
-                  max="99"
-                  step="1"
-                  showTickMarks
-                  discrete
-                  [displayWith]="formatPercentageLabel"
-                  ngDefaultControl>
-                  <input #percentageSlider matSliderThumb [(value)]="percentage" />
-                </mat-slider>
-              </div>
-            </section>
-            <app-image-display-ratio [ratio]="percentageSlider.value/100" class="child"></app-image-display-ratio>
+      <div class="mb-2">
+        <mat-slide-toggle [(ngModel)]="isWatermark ? false : allowRestriction" [disabled]="isWatermark">
+          {{ 'appLabels.form.project.imageSettings.restrictImageSize' | translate }}
+        </mat-slide-toggle>
+      </div>
+      <div [@replaceAnimation]>
+        <section class="child">
+          <div class="large-field">
+            <mat-slider
+              [disabled]="isWatermark || !allowRestriction"
+              min="1"
+              max="99"
+              step="1"
+              showTickMarks
+              discrete
+              [displayWith]="formatPercentageLabel"
+              ngDefaultControl>
+              <input #percentageSlider matSliderThumb [(value)]="percentage" />
+            </mat-slider>
           </div>
-        </div>
-        <app-image-display-ratio *ngIf="!allowRestriction" [ratio]="1" class="child"></app-image-display-ratio>
-      </ng-container>
+        </section>
+      </div>
+      <app-image-display-ratio
+        [isWatermark]="isWatermark"
+        [ratio]="(!allowRestriction || isWatermark) ? 1 : percentageSlider.value/100"></app-image-display-ratio>
     </div>
     <div class="action-buttons mt-2">
       <button
