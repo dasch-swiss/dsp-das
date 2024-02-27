@@ -29,8 +29,8 @@ import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/pr
         </mat-optgroup>
       </mat-select>
       <!--TODO <mat-hint *ngIf="unsupportedPropertyType" class="ontology-warning-with-prefix">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {{ propertyForm.controls['propType'].value.description }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </mat-hint>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  {{ propertyForm.controls['propType'].value.description }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </mat-hint>-->
     </mat-form-field>
     <app-common-input
       placeholder="Property name *"
@@ -84,9 +84,9 @@ export class PropertyForm2Component implements OnInit {
     return this.defaultProperties.flatMap(el => el.elements).find(e => e.guiEle === this.form.controls.propType.value);
   }
 
-  get filteredProperties() {
-    return this.defaultProperties.filter(property => property.group === this.formData.property.propType.group);
-  }
+  filteredProperties = this.defaultProperties.filter(
+    property => property.group === this.formData.property.propType.group
+  );
 
   constructor(private _fb: FormBuilder) {}
 
