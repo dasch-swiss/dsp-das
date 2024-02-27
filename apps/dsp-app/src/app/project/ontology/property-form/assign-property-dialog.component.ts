@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { KnoraApiConnection, UpdateOntology, UpdateResourceClassCardinality } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -20,7 +20,7 @@ export interface AssignPropertyDialogProps {
       [subtitle]="data.propertyInfo.propType.group + ': ' + data.propertyInfo.propType.label"></app-dialog-header>
     <app-property-form-2
       mat-dialog-content
-      (formValueChange)="form = $event"
+      (formValueChange)="getForm($event)"
       [formData]="{
         resourceClassId: data.resClassIri,
         property: data.propertyInfo,
@@ -42,7 +42,7 @@ export interface AssignPropertyDialogProps {
       </button>
     </div>`,
 })
-export class AssignPropertyDialogComponent implements OnInit, AfterViewInit {
+export class AssignPropertyDialogComponent implements OnInit {
   loading = false;
   form: PropertyForm;
 
@@ -57,8 +57,12 @@ export class AssignPropertyDialogComponent implements OnInit, AfterViewInit {
     this.dialogRef.updateSize('800px', '');
   }
 
-  ngAfterViewInit() {
+  getForm(form: PropertyForm) {
+    this.form = form;
     this.form.controls.propType.disable();
+    this.form.controls.name.disable();
+    this.form.controls.labels.disable();
+    this.form.controls.comments.disable();
   }
 
   onSubmit() {

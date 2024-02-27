@@ -1,11 +1,10 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Cardinality, Constants } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/vre/open-api';
 import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/shared/app-string-literal';
 import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/property-form.type';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-property-form-2',
@@ -30,8 +29,8 @@ import { Subscription } from 'rxjs';
         </mat-optgroup>
       </mat-select>
       <!--TODO <mat-hint *ngIf="unsupportedPropertyType" class="ontology-warning-with-prefix">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                {{ propertyForm.controls['propType'].value.description }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </mat-hint>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              {{ propertyForm.controls['propType'].value.description }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </mat-hint>-->
     </mat-form-field>
     <app-common-input
       placeholder="Property name *"
@@ -64,7 +63,7 @@ import { Subscription } from 'rxjs';
       [label]="'Required value ?'"></app-required-slide-toggle>
   </form>`,
 })
-export class PropertyForm2Component implements OnInit, OnDestroy {
+export class PropertyForm2Component implements OnInit {
   @Input() formData: {
     property: PropertyInfoObject;
     resourceClassId: string;
@@ -78,7 +77,7 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
 
   readonly Constants = Constants;
   readonly defaultProperties = DefaultProperties.data;
-  subscription: Subscription;
+
   form: PropertyForm;
 
   get selectedProperty() {
@@ -104,13 +103,6 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
       cardinality: this._fb.control(this.formData.cardinality ?? Cardinality._0_1),
     });
 
-    this.subscription = this.form.valueChanges.subscribe(() => {
-      this.formValueChange.emit(this.form);
-    });
     this.formValueChange.emit(this.form);
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 }
