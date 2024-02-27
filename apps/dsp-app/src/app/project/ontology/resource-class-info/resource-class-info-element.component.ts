@@ -1,24 +1,27 @@
-import { Component, Input } from '@angular/core';
-import { MatDialogConfig } from '@angular/material/dialog';
-import { Cardinality, ClassDefinition, UpdateOntology, UpdateResourceClassCardinality } from '@dasch-swiss/dsp-js';
-import { DefaultClass, DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import {
-  OntologiesSelectors,
-  OntologyProperties,
-  PropToDisplay,
-  RemovePropertyAction,
-} from '@dasch-swiss/vre/shared/app-state';
+  Cardinality,
+  ClassDefinition,
+  Constants,
+  KnoraApiConnection,
+  PropertyDefinition,
+  ReadOntology,
+  ResourcePropertyDefinitionWithAllLanguages,
+  UpdateOntology,
+  UpdateResourceClassCardinality,
+} from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
+import { OntologiesSelectors, OntologyProperties, PropToDisplay } from '@dasch-swiss/vre/shared/app-state';
+import { DialogService } from '@dsp-app/src/app/main/services/dialog.service';
 import { GuiCardinality } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
-import { ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
-import { map, take, takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-class-info-element',
-  template: ` <div
-    cdkDrag
-    [cdkDragDisabled]="!ontology.lastModificationDate || !canChangeGuiOrder || !userCanEdit"
-    *ngFor="let prop of currentOntologyPropertiesToDisplay; let i = index; trackBy: trackByPropToDisplayFn">
+  template: ` <div cdkDrag [cdkDragDisabled]="!ontology.lastModificationDate || !canChangeGuiOrder || !userCanEdit">
     <div class="drag-n-drop-placeholder" *cdkDragPlaceholder></div>
     <mat-list-item class="property" [disabled]="loadProperty">
       <span cdkDragHandle matListItemIcon class="list-icon gui-order">
@@ -32,73 +35,55 @@ import { map, take, takeUntil } from 'rxjs/operators';
         </span>
       </span>
       <!-- display only properties if they exist in list of properties;
-                                     objectType is not a linkValue (otherwise we have the property twice) -->
+                                                                                                                                                                                                               objectType is not a linkValue (otherwise we have the property twice) -->
       <span matListItemTitle>
         <app-resource-class-property-info
           class="property-info"
-          [propDef]="currentOntologyPropertiesToDisplay[i]?.propDef"
-          [propCard]="currentOntologyPropertiesToDisplay[i]"
+          [propDef]="prop?.propDef"
+          [propCard]="prop"
           [projectUuid]="projectUuid"
           [resourceIri]="resourceClass.id"
           [lastModificationDate]="lastModificationDate$ | async"
           [userCanEdit]="userCanEdit"
-          (removePropertyFromClass)="removeProperty($event, currentOntologyPropertiesToDisplay)"
-          (changeCardinalities)="changeCardinalities($event, currentOntologyPropertiesToDisplay)">
+          (changeCardinalities)="newChangeCardinalities($event, props)">
         </app-resource-class-property-info>
       </span>
     </mat-list-item>
   </div>`,
 })
-export class ResourceClassInfoElementComponent {
+export class ResourceClassInfoElementComponent implements OnInit {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   @Input() userCanEdit: boolean;
   @Input() resourceClass: ClassDefinition;
   @Input() projectUuid: string;
+  @Input() prop: PropToDisplay;
+  @Input() props: PropToDisplay[];
+  @Input() i: number; // index
 
   @Select(OntologiesSelectors.currentProjectOntologyProperties)
   currentProjectOntologyProperties$: Observable<OntologyProperties[]>;
-  currentOntologyPropertiesToDisplay$ = this._store.select(OntologiesSelectors.currentProjectOntologyProperties).pipe(
+
+  currentOntology$ = this._store.select(OntologiesSelectors.currentOntology);
+
+  lastModificationDate$ = this.currentOntology$.pipe(
     takeUntil(this.ngUnsubscribe),
-    map(ontoProperties => this.getPropsToDisplay([...this.resourceClass.propertiesList], [...ontoProperties]))
+    map(x => x?.lastModificationDate)
   );
 
-  constructor(private _store: Store) {}
+  ontology: ReadOntology;
+  canChangeGuiOrder = true; // TODO
+  loadProperty = false;
 
-  /**
-   * changeCardinalities: Open the dialogue in order to change the currentCardinality of an existing property and
-   * class combination
-   * @param cardRequest information about the property, its type and its new cardinalities to be set
-   * */
-  changeCardinalities(
-    cardRequest: {
-      prop: PropToDisplay;
-      propType: DefaultProperty;
-      targetCardinality: GuiCardinality;
-    },
-    currentOntologyPropertiesToDisplay: PropToDisplay[]
-  ) {
-    const dialogConfig: MatDialogConfig = {
-      width: '640px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: {
-        propInfo: {
-          propDef: cardRequest.prop.propDef,
-          propType: cardRequest.propType,
-        },
-        title: 'Update cardinality',
-        subtitle: `Set the cardinality for property ${cardRequest.prop.propDef.label}`,
-        mode: 'updateCardinality',
-        parentIri: this.resourceClass.id,
-        currentCardinality: cardRequest.prop.cardinality,
-        targetCardinality: cardRequest.targetCardinality,
-        classProperties: currentOntologyPropertiesToDisplay,
-      },
-    };
-    this.openEditDialog(dialogConfig);
+  constructor(
+    private _store: Store,
+    private _dialogService: DialogService,
+    @Inject(DspApiConnectionToken)
+    private _dspApiConnection: KnoraApiConnection
+  ) {}
+
+  ngOnInit() {
+    this.ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
   }
 
   newChangeCardinalities(
@@ -131,22 +116,44 @@ export class ResourceClassInfoElementComponent {
     });
   }
 
-  /**
-   * removes property from resource class
-   * @param property
-   */
-  removeProperty(property: DefaultClass, currentOntologyPropertiesToDisplay: PropToDisplay[]) {
-    // TODO temporary solution to replace eventemitter with subject because emitter loses subscriber after following subscription is triggered
-    this.updatePropertyAssignment.pipe(take(1)).subscribe(() => this.updatePropertyAssignment$.next());
+  private getPropsToDisplay(classProps: PropToDisplay[], ontoProperties: OntologyProperties[]): PropToDisplay[] {
+    if (classProps.length === 0 || ontoProperties.length === 0) {
+      return [];
+    }
 
-    this._store.dispatch(new RemovePropertyAction(property, this.resourceClass, currentOntologyPropertiesToDisplay));
-    this._actions$
-      .pipe(ofActionSuccessful(RemovePropertyAction))
-      .pipe(take(1))
-      .subscribe(res => {
-        // TODO should be the same as ontology lastModificationDate ? if yes remove commented line, otherwise add additional lastModificationDate property to the state
-        // this.lastModificationDate = res.lastModificationDate;
-        this.updatePropertyAssignment.emit(this.ontology.id);
-      });
+    const propsToDisplay: PropToDisplay[] = [];
+    let remainingProperties: PropertyDefinition[] = [];
+    classProps.forEach((hasProp: PropToDisplay) => {
+      const ontoIri = hasProp.propertyIndex.split(Constants.HashDelimiter)[0];
+      // ignore http://api.knora.org/ontology/knora-api/v2 and ignore  http://www.w3.org/2000/01/rdf-schema
+      if (ontoIri !== Constants.KnoraApiV2 && ontoIri !== Constants.Rdfs) {
+        // get property definition from list of project ontologies
+        const index = ontoProperties.findIndex((item: OntologyProperties) => item.ontology === ontoIri);
+        remainingProperties = [...ontoProperties[index].properties];
+        hasProp.propDef = remainingProperties.find(
+          (obj: ResourcePropertyDefinitionWithAllLanguages) =>
+            obj.id === hasProp.propertyIndex &&
+            ((obj.subjectType && !obj.subjectType.includes('Standoff') && obj.objectType !== Constants.LinkValue) ||
+              !obj.isLinkValueProperty)
+        );
+
+        // propDef was found, add hasProp to the properties list which has to be displayed in this resource class
+        if (hasProp.propDef) {
+          if (propsToDisplay.indexOf(hasProp) === -1) {
+            propsToDisplay.push(hasProp);
+          }
+
+          // and remove from list of existing properties to avoid double cardinality entries
+          // because the prop displayed in the class cannot be added a second time,
+          // so we have to hide it from the list of "Add existing property"
+          const delProp = remainingProperties.indexOf(hasProp.propDef, 0);
+          if (delProp > -1) {
+            remainingProperties.splice(delProp, 1);
+          }
+        }
+      }
+    });
+
+    return propsToDisplay;
   }
 }

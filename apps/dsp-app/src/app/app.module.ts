@@ -40,6 +40,8 @@ import { GuiAttrListComponent } from '@dsp-app/src/app/project/ontology/property
 import { MultipleSlideToggleComponent } from '@dsp-app/src/app/project/ontology/property-form/multiple-slide-toggle.component';
 import { PropertyForm2Component } from '@dsp-app/src/app/project/ontology/property-form/property-form-2.component';
 import { RequiredSlideToggleComponent } from '@dsp-app/src/app/project/ontology/property-form/required-slide-toggle.component';
+import { AddPropertyMenuComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/add-property-menu.component';
+import { ResourceClassInfoElementComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-info-element.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularSplitModule } from 'angular-split';
@@ -242,6 +244,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     GuiAttrLinkComponent,
     MultipleSlideToggleComponent,
     RequiredSlideToggleComponent,
+    ResourceClassInfoElementComponent,
+    AddPropertyMenuComponent,
     GridComponent,
     HeaderComponent,
     HelpComponent,
