@@ -29,7 +29,7 @@ export interface CreatePropertyFormDialogProps {
         color="primary"
         appLoadingButton
         [isLoading]="loading"
-        [disabled]="form.invalid"
+        [disabled]="form?.invalid"
         (click)="onSubmit()">
         Submit
       </button>
@@ -52,6 +52,7 @@ export class CreatePropertyFormDialogComponent implements OnInit {
 
   onFormInit(form: PropertyForm) {
     this.form = form;
+    console.log('received', this);
     this.form.controls.propType.disable();
   }
 
