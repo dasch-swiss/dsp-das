@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Cardinality, Constants } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/vre/open-api';
-import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DefaultProperties, PropertyCategory, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/shared/app-string-literal';
 import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/property-form.type';
 
@@ -29,8 +29,8 @@ import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/pr
         </mat-optgroup>
       </mat-select>
       <!--TODO <mat-hint *ngIf="unsupportedPropertyType" class="ontology-warning-with-prefix">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  {{ propertyForm.controls['propType'].value.description }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </mat-hint>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ propertyForm.controls['propType'].value.description }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </mat-hint>-->
     </mat-form-field>
     <app-common-input
       placeholder="Property name *"
@@ -84,9 +84,7 @@ export class PropertyForm2Component implements OnInit {
     return this.defaultProperties.flatMap(el => el.elements).find(e => e.guiEle === this.form.controls.propType.value);
   }
 
-  filteredProperties = this.defaultProperties.filter(
-    property => property.group === this.formData.property.propType.group
-  );
+  filteredProperties: PropertyCategory[];
 
   constructor(private _fb: FormBuilder) {}
 
@@ -102,6 +100,10 @@ export class PropertyForm2Component implements OnInit {
       guiAttr: this._fb.control<string>(this.formData.guiAttribute, [Validators.required]),
       cardinality: this._fb.control(this.formData.cardinality ?? Cardinality._0_1),
     });
+
+    this.filteredProperties = this.defaultProperties.filter(
+      property => property.group === this.formData.property.propType.group
+    );
 
     this.onFormInit.emit(this.form);
   }

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Constants, CreateResourceProperty, KnoraApiConnection, UpdateOntology } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -20,7 +20,7 @@ export interface CreatePropertyFormDialogProps {
       [subtitle]="data.propertyInfo.propType.group + ': ' + data.propertyInfo.propType.label"></app-dialog-header>
     <app-property-form-2
       mat-dialog-content
-      (onFormInit)="form = $event"
+      (onFormInit)="onFormInit($event)"
       [formData]="{ resourceClassId: data.resClassIri, property: data.propertyInfo }"></app-property-form-2>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
@@ -35,7 +35,7 @@ export interface CreatePropertyFormDialogProps {
       </button>
     </div>`,
 })
-export class CreatePropertyFormDialogComponent implements OnInit, AfterViewInit {
+export class CreatePropertyFormDialogComponent implements OnInit {
   loading = false;
   form: PropertyForm;
 
@@ -50,7 +50,8 @@ export class CreatePropertyFormDialogComponent implements OnInit, AfterViewInit 
     this.dialogRef.updateSize('800px', '');
   }
 
-  ngAfterViewInit() {
+  onFormInit(form: PropertyForm) {
+    this.form = form;
     this.form.controls.propType.disable();
   }
 
