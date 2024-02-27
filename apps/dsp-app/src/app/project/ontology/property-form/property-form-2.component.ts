@@ -29,8 +29,8 @@ import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/pr
         </mat-optgroup>
       </mat-select>
       <!--TODO <mat-hint *ngIf="unsupportedPropertyType" class="ontology-warning-with-prefix">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                {{ propertyForm.controls['propType'].value.description }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </mat-hint>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    {{ propertyForm.controls['propType'].value.description }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </mat-hint>-->
     </mat-form-field>
     <app-common-input
       placeholder="Property name *"
@@ -54,13 +54,15 @@ import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/pr
       *ngIf="formData.property.propType.objectType === Constants.LinkValue"
       [control]="form.controls.guiAttr"></app-gui-attr-link>
 
-    <app-multiple-slide-toggle
-      [control]="form.controls.cardinality"
-      [label]="'Multiple values ?'"></app-multiple-slide-toggle>
+    <div style="display: flex; justify-content: center; gap: 16px">
+      <app-multiple-slide-toggle
+        [control]="form.controls.cardinality"
+        [label]="'Multiple values ?'"></app-multiple-slide-toggle>
 
-    <app-required-slide-toggle
-      [control]="form.controls.cardinality"
-      [label]="'Required value ?'"></app-required-slide-toggle>
+      <app-required-slide-toggle
+        [control]="form.controls.cardinality"
+        [label]="'Required value ?'"></app-required-slide-toggle>
+    </div>
   </form>`,
 })
 export class PropertyForm2Component implements OnInit {
