@@ -30,8 +30,8 @@ import { Subscription } from 'rxjs';
         </mat-optgroup>
       </mat-select>
       <!--TODO <mat-hint *ngIf="unsupportedPropertyType" class="ontology-warning-with-prefix">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {{ propertyForm.controls['propType'].value.description }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </mat-hint>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                {{ propertyForm.controls['propType'].value.description }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </mat-hint>-->
     </mat-form-field>
     <app-common-input
       placeholder="Property name *"
@@ -65,7 +65,6 @@ import { Subscription } from 'rxjs';
   </form>`,
 })
 export class PropertyForm2Component implements OnInit, OnDestroy {
-  @Input() creationMode: boolean;
   @Input() formData: {
     property: PropertyInfoObject;
     resourceClassId: string;
@@ -96,20 +95,13 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
     this.form = this._fb.group({
       propType: this._fb.control({
         value: this.formData.property.propType.guiEle,
-        disabled: this.creationMode || this.filteredProperties[0].elements.length === 1,
+        disabled: this.filteredProperties[0].elements.length === 1,
       }),
-      name: this._fb.control<string>({ value: this.formData.name ?? '', disabled: !this.creationMode }, [
-        Validators.required,
-      ]),
+      name: this._fb.control<string>(this.formData.name ?? '', [Validators.required]),
       labels: DEFAULT_MULTILANGUAGE_FORM(this.formData.labels, [Validators.required]),
       comments: DEFAULT_MULTILANGUAGE_FORM(this.formData.comments, [Validators.required]),
-      guiAttr: this._fb.control<string>({ value: this.formData.guiAttribute, disabled: !this.creationMode }, [
-        Validators.required,
-      ]),
-      cardinality: this._fb.control({
-        value: this.formData.cardinality ?? Cardinality._0_1,
-        disabled: false, // TODO
-      }),
+      guiAttr: this._fb.control<string>(this.formData.guiAttribute, [Validators.required]),
+      cardinality: this._fb.control(this.formData.cardinality ?? Cardinality._0_1),
     });
 
     this.subscription = this.form.valueChanges.subscribe(() => {
