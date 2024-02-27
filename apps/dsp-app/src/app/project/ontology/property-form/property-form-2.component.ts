@@ -29,8 +29,8 @@ import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/pr
         </mat-optgroup>
       </mat-select>
       <!--TODO <mat-hint *ngIf="unsupportedPropertyType" class="ontology-warning-with-prefix">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              {{ propertyForm.controls['propType'].value.description }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </mat-hint>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {{ propertyForm.controls['propType'].value.description }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </mat-hint>-->
     </mat-form-field>
     <app-common-input
       placeholder="Property name *"
@@ -73,7 +73,7 @@ export class PropertyForm2Component implements OnInit {
     guiAttribute?: string;
     cardinality?: Cardinality;
   };
-  @Output() formValueChange = new EventEmitter<PropertyForm>();
+  @Output() onFormInit = new EventEmitter<PropertyForm>();
 
   readonly Constants = Constants;
   readonly defaultProperties = DefaultProperties.data;
@@ -103,6 +103,6 @@ export class PropertyForm2Component implements OnInit {
       cardinality: this._fb.control(this.formData.cardinality ?? Cardinality._0_1),
     });
 
-    this.formValueChange.emit(this.form);
+    this.onFormInit.emit(this.form);
   }
 }

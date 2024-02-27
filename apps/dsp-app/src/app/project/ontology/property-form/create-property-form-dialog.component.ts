@@ -1,13 +1,6 @@
 import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {
-    ApiResponseError,
-    Constants,
-    CreateResourceProperty, IHasProperty,
-    KnoraApiConnection, ResourceClassDefinitionWithAllLanguages,
-    ResourcePropertyDefinitionWithAllLanguages,
-    UpdateOntology, UpdateResourceClassCardinality,
-} from '@dasch-swiss/dsp-js';
+import { Constants, CreateResourceProperty, KnoraApiConnection, UpdateOntology } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { finalize } from 'rxjs/operators';
@@ -27,7 +20,7 @@ export interface CreatePropertyFormDialogProps {
       [subtitle]="data.propertyInfo.propType.group + ': ' + data.propertyInfo.propType.label"></app-dialog-header>
     <app-property-form-2
       mat-dialog-content
-      (formValueChange)="form = $event"
+      (onFormInit)="form = $event"
       [formData]="{ resourceClassId: data.resClassIri, property: data.propertyInfo }"></app-property-form-2>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>

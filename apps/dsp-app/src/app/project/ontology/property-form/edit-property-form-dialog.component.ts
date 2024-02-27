@@ -34,7 +34,7 @@ export interface EditPropertyFormDialogProps {
       [subtitle]="data.propertyInfo.propType.group + ': ' + data.propertyInfo.propType.label"></app-dialog-header>
     <app-property-form-2
       mat-dialog-content
-      (formValueChange)="form = $event"
+      (onFormInit)="form = $event"
       [formData]="{
         property: data.propertyInfo,
         name: data.propertyInfo.propDef.label,
