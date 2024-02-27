@@ -20,7 +20,7 @@ export interface CreatePropertyFormDialogProps {
       [subtitle]="data.propertyInfo.propType.group + ': ' + data.propertyInfo.propType.label"></app-dialog-header>
     <app-property-form-2
       mat-dialog-content
-      (onFormInit)="onFormInit($event)"
+      (afterFormInit)="onFormInit($event)"
       [formData]="{ resourceClassId: data.resClassIri, property: data.propertyInfo }"></app-property-form-2>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>

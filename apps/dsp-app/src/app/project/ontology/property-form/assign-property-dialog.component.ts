@@ -20,7 +20,7 @@ export interface AssignPropertyDialogProps {
       [subtitle]="data.propertyInfo.propType.group + ': ' + data.propertyInfo.propType.label"></app-dialog-header>
     <app-property-form-2
       mat-dialog-content
-      (onFormInit)="getForm($event)"
+      (afterFormInit)="getForm($event)"
       [formData]="{
         resourceClassId: data.resClassIri,
         property: data.propertyInfo,
