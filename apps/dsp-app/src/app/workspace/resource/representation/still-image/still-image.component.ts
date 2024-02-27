@@ -524,13 +524,18 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
     const commentVal = new CreateTextValueAsString();
     commentVal.type = Constants.TextValue;
     commentVal.text = comment;
-
     createResource.properties = {
-      [Constants.HasComment]: [commentVal],
       [Constants.HasColor]: [colorVal],
       [Constants.IsRegionOfValue]: [linkVal],
       [Constants.HasGeometry]: [geomVal],
     };
+    if (comment) {
+      const commentVal = new CreateTextValueAsString();
+      commentVal.type = Constants.TextValue;
+      commentVal.text = comment;
+      createResource.properties[Constants.HasComment] = [commentVal];
+    }
+
     this._dspApiConnection.v2.res.createResource(createResource).subscribe((res: ReadResource) => {
       this.regionAdded.emit(res.id);
     });
