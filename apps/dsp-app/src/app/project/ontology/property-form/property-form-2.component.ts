@@ -30,8 +30,8 @@ import { Subscription } from 'rxjs';
         </mat-optgroup>
       </mat-select>
       <!--TODO <mat-hint *ngIf="unsupportedPropertyType" class="ontology-warning-with-prefix">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              {{ propertyForm.controls['propType'].value.description }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </mat-hint>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {{ propertyForm.controls['propType'].value.description }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </mat-hint>-->
     </mat-form-field>
     <app-common-input
       placeholder="Property name *"
@@ -93,7 +93,6 @@ export class PropertyForm2Component implements OnInit, OnDestroy {
   constructor(private _fb: FormBuilder) {}
 
   ngOnInit() {
-    console.log(Cardinality._0_1.toString(), 'a');
     this.form = this._fb.group({
       propType: this._fb.control({
         value: this.formData.property.propType.guiEle,

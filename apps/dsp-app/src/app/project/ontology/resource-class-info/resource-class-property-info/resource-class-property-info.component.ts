@@ -1,6 +1,8 @@
-import { AfterContentInit, Component, EventEmitter, Inject, Input, OnChanges, Output } from '@angular/core';
+import { AfterContentInit, Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl } from '@angular/forms';
 import {
   CanDoResponse,
+  Cardinality,
   Constants,
   IHasProperty,
   KnoraApiConnection,
@@ -44,7 +46,7 @@ type CardinalityKey = 'multiple' | 'required';
   templateUrl: './resource-class-property-info.component.html',
   styleUrls: ['./resource-class-property-info.component.scss'],
 })
-export class ResourceClassPropertyInfoComponent implements OnChanges, AfterContentInit {
+export class ResourceClassPropertyInfoComponent implements OnInit, OnChanges, AfterContentInit {
   @Input() propDef: ResourcePropertyDefinitionWithAllLanguages;
 
   @Input() propCard: IHasProperty;
@@ -69,6 +71,7 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
     targetCardinality: GuiCardinality;
   }>();
 
+  cardinalityControl: FormControl<Cardinality>;
   propInfo: Property = new Property();
 
   propType: DefaultProperty;
@@ -82,8 +85,13 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _ontoService: OntologyService,
-    private _store: Store
+    private _store: Store,
+    private _fb: FormBuilder
   ) {}
+
+  ngOnInit() {
+    this.cardinalityControl = this._fb.control<Cardinality>(this.propCard.cardinality);
+  }
 
   ngOnChanges(): void {
     // set the cardinality values in the class view

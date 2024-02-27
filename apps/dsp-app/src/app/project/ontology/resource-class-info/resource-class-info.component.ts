@@ -18,8 +18,6 @@ import {
   PropertyDefinition,
   ReadOntology,
   ResourcePropertyDefinitionWithAllLanguages,
-  UpdateOntology,
-  UpdateResourceClassCardinality,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import {
@@ -39,7 +37,6 @@ import {
   PropertyAssignment,
   PropToAdd,
   PropToDisplay,
-  RemovePropertyAction,
   ReplacePropertyAction,
 } from '@dasch-swiss/vre/shared/app-state';
 import { DialogService } from '@dsp-app/src/app/main/services/dialog.service';
@@ -51,7 +48,6 @@ import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
 import { DialogComponent, DialogEvent } from '../../../main/dialog/dialog.component';
-import { GuiCardinality } from './resource-class-property-info/resource-class-property-info.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -321,25 +317,6 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * removes property from resource class
-   * @param property
-   */
-  removeProperty(property: DefaultClass, currentOntologyPropertiesToDisplay: PropToDisplay[]) {
-    // TODO temporary solution to replace eventemitter with subject because emitter loses subscriber after following subscription is triggered
-    this.updatePropertyAssignment.pipe(take(1)).subscribe(() => this.updatePropertyAssignment$.next());
-
-    this._store.dispatch(new RemovePropertyAction(property, this.resourceClass, currentOntologyPropertiesToDisplay));
-    this._actions$
-      .pipe(ofActionSuccessful(RemovePropertyAction))
-      .pipe(take(1))
-      .subscribe(res => {
-        // TODO should be the same as ontology lastModificationDate ? if yes remove commented line, otherwise add additional lastModificationDate property to the state
-        // this.lastModificationDate = res.lastModificationDate;
-        this.updatePropertyAssignment.emit(this.ontology.id);
-      });
-  }
-
-  /**
    * assignProperty: Open the dialogue in order to add an existing property to a class or to create a new
    * property and add it to the class
    * @param propertyAssignment information about the link of a property to a class
@@ -376,72 +353,6 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
       },
     };
     this.openEditDialog(dialogConfig);
-  }
-
-  /**
-   * changeCardinalities: Open the dialogue in order to change the currentCardinality of an existing property and
-   * class combination
-   * @param cardRequest information about the property, its type and its new cardinalities to be set
-   * */
-  changeCardinalities(
-    cardRequest: {
-      prop: PropToDisplay;
-      propType: DefaultProperty;
-      targetCardinality: GuiCardinality;
-    },
-    currentOntologyPropertiesToDisplay: PropToDisplay[]
-  ) {
-    const dialogConfig: MatDialogConfig = {
-      width: '640px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: {
-        propInfo: {
-          propDef: cardRequest.prop.propDef,
-          propType: cardRequest.propType,
-        },
-        title: 'Update cardinality',
-        subtitle: `Set the cardinality for property ${cardRequest.prop.propDef.label}`,
-        mode: 'updateCardinality',
-        parentIri: this.resourceClass.id,
-        currentCardinality: cardRequest.prop.cardinality,
-        targetCardinality: cardRequest.targetCardinality,
-        classProperties: currentOntologyPropertiesToDisplay,
-      },
-    };
-    this.openEditDialog(dialogConfig);
-  }
-
-  newChangeCardinalities(
-    cardRequest: {
-      prop: PropToDisplay;
-      propType: DefaultProperty;
-      targetCardinality: GuiCardinality;
-    },
-    currentOntologyPropertiesToDisplay: PropToDisplay[]
-  ) {
-    this._dialogService.afterConfirmation('Please note that this change may not be reversible.').subscribe(() => {
-      // get the ontology, the class and its properties
-      const classUpdate = new UpdateOntology<UpdateResourceClassCardinality>();
-      classUpdate.lastModificationDate = this.ontology.lastModificationDate;
-      classUpdate.id = this.ontology.id;
-      const changedClass = new UpdateResourceClassCardinality();
-      changedClass.id = this.resourceClass.id;
-      changedClass.cardinalities = currentOntologyPropertiesToDisplay;
-
-      // get the property for replacing the cardinality
-      const idx = changedClass.cardinalities.findIndex(c => c.propertyIndex === cardRequest.prop.propDef.id);
-      if (idx === -1) {
-        return;
-      }
-      // set the new cardinality
-      changedClass.cardinalities[idx].cardinality = this.getTargetCardinality(this.targetGuiCardinality);
-
-      classUpdate.entity = changedClass;
-      this._dspApiConnection.v2.onto.replaceCardinalityOfResourceClass(classUpdate).subscribe(() => {});
-    });
   }
 
   /**

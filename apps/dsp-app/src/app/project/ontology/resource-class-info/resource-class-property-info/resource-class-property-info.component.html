@@ -6,14 +6,14 @@
         *ngIf="propType"
         [matTooltip]="propType?.group + ': ' + propType?.label + ' (' + propDef.id.split('#')[1] + ')'"
         matTooltipPosition="above">
-        <mat-icon class="type">{{propType?.icon}}</mat-icon>
+        <mat-icon class="type">{{ propType?.icon }}</mat-icon>
       </span>
       <span
         class="label"
         [matTooltip]="propDef.comment"
         matTooltipPosition="above"
         matTooltipClass="multi-line-tooltip">
-        <span>{{propDef.label ? propDef.label : propDef.id}}</span>
+        <span>{{ propDef.label ? propDef.label : propDef.id }}</span>
       </span>
       <!-- property is linked to a class or to a list: display connected class or list -->
       <span
@@ -60,24 +60,12 @@
       matTooltipPosition="above"
       matTooltipClass="wide-tooltip"
       class="mat-caption">
-      {{propDef.id | split: '#':1}}
+      {{ propDef.id | split: '#':1 }}
     </span>
     <span class="fill-remaining-space center"></span>
     <span class="cardinality-toggles">
-      <mat-slide-toggle
-        data-name="multiple"
-        [checked]="propInfo.multiple"
-        [disabled]="!userCanEdit"
-        (toggleChange)="changeCardinalities.emit({ prop: propCard, propType: propType, targetCardinality: {key: 'multiple', value: !propInfo.multiple} })">
-      </mat-slide-toggle>
-      <span class="toggle-label">multiple</span>
-      <mat-slide-toggle
-        data-name="required"
-        [checked]="propInfo.required"
-        [disabled]="!userCanEdit"
-        (toggleChange)="changeCardinalities.emit({prop: propCard, propType: propType, targetCardinality: {key: 'required', value: !propInfo.required} })">
-      </mat-slide-toggle>
-      <span class="toggle-label">required</span>
+      <app-multiple-slide-toggle [control]="cardinalityControl" [label]="'multiple'"></app-multiple-slide-toggle>
+      <app-required-slide-toggle [control]="cardinalityControl" [label]="'required'"></app-required-slide-toggle>
     </span>
   </div>
 </div>
