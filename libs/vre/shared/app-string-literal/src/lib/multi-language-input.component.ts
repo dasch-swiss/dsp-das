@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import { HumanReadableErrorPipe } from './human-readable-error.pipe';
 import { MultiLanguageFormService } from './multi-language-form.service';
+import { MultiLanguages } from './multi-languages.type';
 
 @Component({
   selector: 'dasch-swiss-multi-language-input',
@@ -87,8 +88,7 @@ import { MultiLanguageFormService } from './multi-language-form.service';
   ],
 })
 export class MutiLanguageInputComponent implements OnInit, OnChanges {
-  @Input() formGroup: FormGroup;
-  @Input() controlName: string;
+  @Input() control: FormControl<MultiLanguages>;
   @Input() editable = true;
   @Input() placeholder: string;
   @Input() validators: ValidatorFn[];
@@ -104,6 +104,6 @@ export class MutiLanguageInputComponent implements OnInit, OnChanges {
   }
 
   private initialize() {
-    this.formService.onInit(this.formGroup, this.controlName, this.validators);
+    this.formService.onInit(this.control, this.validators);
   }
 }

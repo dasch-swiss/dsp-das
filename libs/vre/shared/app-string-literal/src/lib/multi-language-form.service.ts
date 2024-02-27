@@ -11,8 +11,7 @@ import { Store } from '@ngxs/store';
 export class MultiLanguageFormService {
   readonly availableLanguages = ['de', 'fr', 'it', 'en', 'rm'];
   selectedLanguageIndex: number;
-  formGroup: FormGroup;
-  controlName: string;
+  control: FormArray<FormGroup<{}>>;
   validators: ValidatorFn[];
 
   inputValue: string | null = null;
@@ -48,7 +47,7 @@ export class MultiLanguageFormService {
     private _cd: ChangeDetectorRef
   ) {}
 
-  onInit(formGroup: FormGroup, controlName: string, validators: ValidatorFn[]) {
+  onInit(control: FormControl<>, validators: ValidatorFn[]) {
     this.formGroup = formGroup;
     this.controlName = controlName;
     this.selectedLanguageIndex = this._setupLanguageIndex();
