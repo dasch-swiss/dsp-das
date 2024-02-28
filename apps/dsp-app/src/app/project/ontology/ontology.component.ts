@@ -46,11 +46,11 @@ import {
   SetCurrentProjectOntologyPropertiesAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { DialogService } from '@dsp-app/src/app/main/services/dialog.service';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { DialogComponent, DialogEvent } from '../../main/dialog/dialog.component';
+import { DialogService } from '../../main/services/dialog.service';
 import { ProjectBase } from '../project-base';
 import {
   CreateResourceClassDialogComponent,
@@ -245,8 +245,6 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
       this.currentProjectOntologies$,
     ])
       .pipe(
-        ofActionSuccessful(LoadListsInProjectAction),
-        switchMap(() => this._store.select(OntologiesSelectors.currentProjectOntologies)),
         take(1),
         map(([loadListsInProjectAction, project, currentProjectOntologies]) =>
           currentProjectOntologies.find(x => x.id === this._ontologyService.getOntologyIriFromRoute(project?.shortcode))
