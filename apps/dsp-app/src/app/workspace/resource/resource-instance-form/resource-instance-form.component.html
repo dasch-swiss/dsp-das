@@ -1,21 +1,10 @@
-<!-- create property values and submit data -->
-<dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
 <form
-  *ngIf="propertiesParentForm && !loading"
+  *ngIf="!loading; else loadingTemplate"
   [formGroup]="propertiesParentForm"
   (ngSubmit)="submitData()"
   appInvalidControlScroll>
-  <!-- upload file -->
-  <app-upload
-    *ngIf="hasFileValue"
-    [parentForm]="propertiesParentForm"
-    [representation]="hasFileValue"
-    (fileInfo)="setFileValue($event)">
-  </app-upload>
-
   <app-upload-2 [allowedFileTypes]="['image/png']"></app-upload-2>
 
-  <!-- create property values -->
   <app-select-properties
     #selectProps
     *ngIf="resourceClass"
@@ -36,3 +25,7 @@
     {{ 'appLabels.form.action.submit' | translate }}
   </button>
 </form>
+
+<ng-template #loadingTemplate>
+  <dasch-swiss-app-progress-indicator></dasch-swiss-app-progress-indicator>
+</ng-template>
