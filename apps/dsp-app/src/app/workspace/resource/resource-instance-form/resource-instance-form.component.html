@@ -2,7 +2,6 @@
 <dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
 <form
   *ngIf="propertiesParentForm && !loading"
-  class="resource-instance-form form-content"
   [formGroup]="propertiesParentForm"
   (ngSubmit)="submitData()"
   appInvalidControlScroll>
@@ -22,8 +21,7 @@
     [selectedResourceClass]="resourceClass"
     [properties]="properties"
     [parentForm]="propertiesParentForm"
-    [currentOntoIri]="ontologyIri"
-    class="select-properties">
+    [currentOntoIri]="ontologyIri">
   </app-select-properties>
 
   <button
@@ -32,8 +30,7 @@
     color="primary"
     appLoadingButton
     [isLoading]="loading"
-    class="form-submit"
-    [disabled]="!propertiesParentForm.valid">
+    [disabled]="propertiesParentForm.invalid">
     {{ 'appLabels.form.action.submit' | translate }}
   </button>
 </form>

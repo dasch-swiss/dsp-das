@@ -39,7 +39,6 @@ import { SelectPropertiesComponent } from './select-properties/select-properties
 @Component({
   selector: 'app-resource-instance-form',
   templateUrl: './resource-instance-form.component.html',
-  styleUrls: ['./resource-instance-form.component.scss'],
 })
 export class ResourceInstanceFormComponent implements OnInit, OnChanges {
   // ontology's resource class iri
