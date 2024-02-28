@@ -97,8 +97,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     // get ontology iri from res class iri
-    const splitIri = this.resourceClassIri.split('#');
-    this.ontologyIri = splitIri[0];
+    this.ontologyIri = this.resourceClassIri.split('#')[0];
     this.getResourceProperties(this.resourceClassIri);
     this.propertiesParentForm = this._fb.group({});
   }
