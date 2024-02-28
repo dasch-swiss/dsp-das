@@ -30,10 +30,9 @@ import {
   EmitEvent,
   Events as CommsEvents,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { ResourceService } from '../services/resource.service';
 import { SelectPropertiesComponent } from './select-properties/select-properties.component';
 
@@ -92,16 +91,11 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
     private _route: ActivatedRoute,
     private _router: Router,
     private _componentCommsService: ComponentCommunicationEventService,
-    private _notification: NotificationService,
     private _cd: ChangeDetectorRef,
     private _store: Store
   ) {}
 
   ngOnInit(): void {
-    if (!this.resourceClassIri) {
-      return;
-    }
-
     // get ontology iri from res class iri
     const splitIri = this.resourceClassIri.split('#');
     this.ontologyIri = splitIri[0];
@@ -119,71 +113,62 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
    * get all the properties of the resource class
    * @param resourceClassIri
    */
-  getResourceProperties(resourceClassIri: string) {
+  private getResourceProperties(resourceClassIri: string) {
     // reset errorMessage, it will be reassigned in the else clause if needed
     this.errorMessage = undefined;
 
     this.preparing = true;
     this.loading = true;
-    this._dspApiConnection.v2.ontologyCache.reloadCachedItem(this.ontologyIri).subscribe(() => {
-      this._dspApiConnection.v2.ontologyCache
-        .getResourceClassDefinition(resourceClassIri)
-        .pipe(
-          tap({
-            error: () => {
-              this.preparing = false;
-              this.loading = false;
-            },
-          })
-        )
-        .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
-          this.ontologyInfo = onto;
+    this._dspApiConnection.v2.ontologyCache
+      .reloadCachedItem(this.ontologyIri)
+      .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri)))
+      .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
+        this.ontologyInfo = onto;
 
-          this.resourceClass = onto.classes[resourceClassIri];
+        this.resourceClass = onto.classes[resourceClassIri];
 
-          // set label from resource class
-          const defaultClassLabel = this.defaultClasses.find(i => i.iri === this.resourceClass.subClassOf[0]);
-          this.resourceLabel = this.resourceClass.label + (defaultClassLabel ? ` (${defaultClassLabel.label})` : '');
+        // set label from resource class
+        const defaultClassLabel = this.defaultClasses.find(i => i.iri === this.resourceClass.subClassOf[0]);
+        this.resourceLabel = this.resourceClass.label + (defaultClassLabel ? ` (${defaultClassLabel.label})` : '');
 
-          // filter out all props that cannot be edited or are link props but also the hasFileValue props
-          this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition).filter(
-            prop =>
-              !prop.isLinkProperty &&
-              prop.isEditable &&
-              prop.id !== Constants.HasStillImageFileValue &&
-              prop.id !== Constants.HasDocumentFileValue &&
-              prop.id !== Constants.HasAudioFileValue &&
-              prop.id !== Constants.HasMovingImageFileValue &&
-              prop.id !== Constants.HasArchiveFileValue &&
-              prop.id !== Constants.HasTextFileValue
-            // --> TODO for UPLOAD: expand with other representation file values
-          );
+        // filter out all props that cannot be edited or are link props but also the hasFileValue props
+        this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition).filter(
+          prop =>
+            !prop.isLinkProperty &&
+            prop.isEditable &&
+            prop.id !== Constants.HasStillImageFileValue &&
+            prop.id !== Constants.HasDocumentFileValue &&
+            prop.id !== Constants.HasAudioFileValue &&
+            prop.id !== Constants.HasMovingImageFileValue &&
+            prop.id !== Constants.HasArchiveFileValue &&
+            prop.id !== Constants.HasTextFileValue
+          // --> TODO for UPLOAD: expand with other representation file values
+        );
 
-          if (onto.properties[Constants.HasStillImageFileValue]) {
-            this.hasFileValue = 'stillImage';
-          } else if (onto.properties[Constants.HasDocumentFileValue]) {
-            this.hasFileValue = 'document';
-          } else if (onto.properties[Constants.HasAudioFileValue]) {
-            this.hasFileValue = 'audio';
-          } else if (onto.properties[Constants.HasMovingImageFileValue]) {
-            this.hasFileValue = 'movingImage';
-          } else if (onto.properties[Constants.HasArchiveFileValue]) {
-            this.hasFileValue = 'archive';
-          } else if (onto.properties[Constants.HasTextFileValue]) {
-            this.hasFileValue = 'text';
-          } else {
-            this.hasFileValue = undefined;
-          }
+        if (onto.properties[Constants.HasStillImageFileValue]) {
+          this.hasFileValue = 'stillImage';
+        } else if (onto.properties[Constants.HasDocumentFileValue]) {
+          this.hasFileValue = 'document';
+        } else if (onto.properties[Constants.HasAudioFileValue]) {
+          this.hasFileValue = 'audio';
+        } else if (onto.properties[Constants.HasMovingImageFileValue]) {
+          this.hasFileValue = 'movingImage';
+        } else if (onto.properties[Constants.HasArchiveFileValue]) {
+          this.hasFileValue = 'archive';
+        } else if (onto.properties[Constants.HasTextFileValue]) {
+          this.hasFileValue = 'text';
+        } else {
+          this.hasFileValue = undefined;
+        }
 
-          // notifies the user that the selected resource does not have any properties defined yet.
-          if (!this.selectPropertiesComponent && this.properties.length === 0 && !this.hasFileValue) {
-            this.errorMessage = 'No properties defined for the selected resource.';
-          }
-          this.preparing = false;
-          this.loading = false;
-          this._cd.markForCheck();
-        });
-    });
+        // notifies the user that the selected resource does not have any properties defined yet.
+        if (!this.selectPropertiesComponent && this.properties.length === 0 && !this.hasFileValue) {
+          this.errorMessage = 'No properties defined for the selected resource.';
+        }
+        this.preparing = false;
+        this.loading = false;
+        this._cd.markForCheck();
+      });
   }
 
   setFileValue(file: CreateFileValue) {
