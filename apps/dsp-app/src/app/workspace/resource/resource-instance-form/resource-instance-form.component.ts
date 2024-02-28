@@ -59,8 +59,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
   properties: ResourcePropertyDefinition[];
   ontologyInfo: ResourceClassAndPropertyDefinitions;
 
-  // get default resource class definitions to translate the subClassOf iri into human readable words
-  // list of default resource classes
   readonly defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
 
   // selected resource class has a file value property: display the corresponding upload form
@@ -145,75 +143,71 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
   }
 
   submitData() {
-    if (this.propertiesParentForm.valid) {
-      this.loading = true;
-      const createResource = new CreateResource();
+    this.loading = true;
+    const createResource = new CreateResource();
 
-      const resLabelVal = <CreateTextValueAsString>this.selectPropertiesComponent.createValueComponent.getNewValue();
+    const resLabelVal = <CreateTextValueAsString>this.selectPropertiesComponent.createValueComponent.getNewValue();
 
-      createResource.label = resLabelVal.text;
+    createResource.label = resLabelVal.text;
 
-      createResource.type = this.resourceClass.id;
+    createResource.type = this.resourceClass.id;
 
-      createResource.attachedToProject = this.projectIri;
+    createResource.attachedToProject = this.projectIri;
 
-      this.propertiesObj = {};
+    this.propertiesObj = {};
 
-      this.selectPropertiesComponent.switchPropertiesComponent.forEach(child => {
-        const createVal = child.createValueComponent.getNewValue();
-        const iri = child.property.id;
-        if (createVal instanceof CreateValue) {
-          if (this.propertiesObj[iri]) {
-            // if a key already exists, add the createVal to the array
-            this.propertiesObj[iri].push(createVal);
-          } else {
-            // if no key exists, add one and add the createVal as the first value of the array
-            this.propertiesObj[iri] = [createVal];
-          }
-        }
-      });
-
-      if (this.fileValue) {
-        switch (this.hasFileValue) {
-          case 'stillImage':
-            this.propertiesObj[Constants.HasStillImageFileValue] = [this.fileValue];
-            break;
-          case 'document':
-            this.propertiesObj[Constants.HasDocumentFileValue] = [this.fileValue];
-            break;
-          case 'audio':
-            this.propertiesObj[Constants.HasAudioFileValue] = [this.fileValue];
-            break;
-          case 'movingImage':
-            this.propertiesObj[Constants.HasMovingImageFileValue] = [this.fileValue];
-            break;
-          case 'archive':
-            this.propertiesObj[Constants.HasArchiveFileValue] = [this.fileValue];
-            break;
-          case 'text':
-            this.propertiesObj[Constants.HasTextFileValue] = [this.fileValue];
+    this.selectPropertiesComponent.switchPropertiesComponent.forEach(child => {
+      const createVal = child.createValueComponent.getNewValue();
+      const iri = child.property.id;
+      if (createVal instanceof CreateValue) {
+        if (this.propertiesObj[iri]) {
+          // if a key already exists, add the createVal to the array
+          this.propertiesObj[iri].push(createVal);
+        } else {
+          // if no key exists, add one and add the createVal as the first value of the array
+          this.propertiesObj[iri] = [createVal];
         }
       }
+    });
 
-      createResource.properties = this.propertiesObj;
-      this._dspApiConnection.v2.res.createResource(createResource).subscribe((res: ReadResource) => {
-        this.resource = res;
-
-        const uuid = this._resourceService.getResourceUuid(this.resource.id);
-        const params = this._route.snapshot.url;
-        // go to ontology/[ontoname]/[classname]/[classuuid] relative to parent route project/[projectcode]/
-        this._router
-          .navigate([params[0].path, params[1].path, params[2].path, uuid], {
-            relativeTo: this._route.parent,
-          })
-          .then(() => {
-            this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
-            this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceCreated));
-            this._cd.markForCheck();
-          });
-      });
-    } else {
-      this.propertiesParentForm.markAllAsTouched();
+    if (this.fileValue) {
+      switch (this.hasFileValue) {
+        case 'stillImage':
+          this.propertiesObj[Constants.HasStillImageFileValue] = [this.fileValue];
+          break;
+        case 'document':
+          this.propertiesObj[Constants.HasDocumentFileValue] = [this.fileValue];
+          break;
+        case 'audio':
+          this.propertiesObj[Constants.HasAudioFileValue] = [this.fileValue];
+          break;
+        case 'movingImage':
+          this.propertiesObj[Constants.HasMovingImageFileValue] = [this.fileValue];
+          break;
+        case 'archive':
+          this.propertiesObj[Constants.HasArchiveFileValue] = [this.fileValue];
+          break;
+        case 'text':
+          this.propertiesObj[Constants.HasTextFileValue] = [this.fileValue];
+      }
     }
+
+    createResource.properties = this.propertiesObj;
+    this._dspApiConnection.v2.res.createResource(createResource).subscribe((res: ReadResource) => {
+      this.resource = res;
+
+      const uuid = this._resourceService.getResourceUuid(this.resource.id);
+      const params = this._route.snapshot.url;
+      // go to ontology/[ontoname]/[classname]/[classuuid] relative to parent route project/[projectcode]/
+      this._router
+        .navigate([params[0].path, params[1].path, params[2].path, uuid], {
+          relativeTo: this._route.parent,
+        })
+        .then(() => {
+          this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
+          this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceCreated));
+          this._cd.markForCheck();
+        });
+    });
   }
 }
