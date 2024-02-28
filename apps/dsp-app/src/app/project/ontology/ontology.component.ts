@@ -47,8 +47,8 @@ import {
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { DialogService } from '@dsp-app/src/app/main/services/dialog.service';
-import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
-import { combineLatest, Observable, Subject } from 'rxjs';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
+import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { DialogComponent, DialogEvent } from '../../main/dialog/dialog.component';
 import { ProjectBase } from '../project-base';
@@ -239,15 +239,17 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
    */
   initOntologiesList(): void {
     this._store.dispatch(new LoadProjectOntologiesAction(this.projectUuid));
-    this._actions$
+    combineLatest([
+      this._actions$.pipe(ofActionSuccessful(LoadListsInProjectAction)),
+      this.project$,
+      this.currentProjectOntologies$,
+    ])
       .pipe(
         ofActionSuccessful(LoadListsInProjectAction),
         switchMap(() => this._store.select(OntologiesSelectors.currentProjectOntologies)),
         take(1),
-        map(currentProjectOntologies =>
-          currentProjectOntologies.find(
-            x => x.id === this._ontologyService.getOntologyIriFromRoute(this.project?.shortcode)
-          )
+        map(([loadListsInProjectAction, project, currentProjectOntologies]) =>
+          currentProjectOntologies.find(x => x.id === this._ontologyService.getOntologyIriFromRoute(project?.shortcode))
         )
       )
       .subscribe(readOnto => {
