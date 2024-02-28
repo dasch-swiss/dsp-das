@@ -41,10 +41,7 @@ import { SelectPropertiesComponent } from './select-properties/select-properties
   templateUrl: './resource-instance-form.component.html',
 })
 export class ResourceInstanceFormComponent implements OnInit, OnChanges {
-  // ontology's resource class iri
   @Input() resourceClassIri: string;
-
-  // corresponding project iri
   @Input() projectIri: string;
 
   @ViewChild('selectProps')
