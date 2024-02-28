@@ -109,16 +109,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
     }
   }
 
-  /**
-   * get all the properties of the resource class
-   * @param resourceClassIri
-   */
   private getResourceProperties(resourceClassIri: string) {
-    // reset errorMessage, it will be reassigned in the else clause if needed
-    this.errorMessage = undefined;
-
-    this.preparing = true;
-    this.loading = true;
     this._dspApiConnection.v2.ontologyCache
       .reloadCachedItem(this.ontologyIri)
       .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri)))
@@ -160,14 +151,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
         } else {
           this.hasFileValue = undefined;
         }
-
-        // notifies the user that the selected resource does not have any properties defined yet.
-        if (!this.selectPropertiesComponent && this.properties.length === 0 && !this.hasFileValue) {
-          this.errorMessage = 'No properties defined for the selected resource.';
-        }
-        this.preparing = false;
-        this.loading = false;
-        this._cd.markForCheck();
       });
   }
 
