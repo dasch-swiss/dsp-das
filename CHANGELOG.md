@@ -1,5 +1,20 @@
 # Changelog
 
+## [11.6.5](https://github.com/dasch-swiss/dsp-das/compare/v11.6.4...v11.6.5) (2024-02-27)
+
+
+### Bug Fixes
+
+* submit button on upload resource does not load indefinitely  ([#1485](https://github.com/dasch-swiss/dsp-das/issues/1485)) ([e1a51b5](https://github.com/dasch-swiss/dsp-das/commit/e1a51b5a224bf532f3a3f0ff8e6b4a49c9b42bd2))
+
+## [11.6.4](https://github.com/dasch-swiss/dsp-das/compare/v11.6.3...v11.6.4) (2024-02-23)
+
+
+### Bug Fixes
+
+* new list node field error is not displayed ([#1481](https://github.com/dasch-swiss/dsp-das/issues/1481)) ([1ef0823](https://github.com/dasch-swiss/dsp-das/commit/1ef082364c13ead5a537bc32a734372744f1cbda))
+* ontology initialisation (DEV-3317) ([#1483](https://github.com/dasch-swiss/dsp-das/issues/1483)) ([be6ec9a](https://github.com/dasch-swiss/dsp-das/commit/be6ec9a5f4b16f4992b79ee69754da74f8b71178))
+
 ## [11.6.3](https://github.com/dasch-swiss/dsp-das/compare/v11.6.2...v11.6.3) (2024-02-23)
 
 
