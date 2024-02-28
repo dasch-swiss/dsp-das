@@ -33,6 +33,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { Upload2Component } from '@dsp-app/src/app/workspace/resource/representation/upload/upload2.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularSplitModule } from 'angular-split';
@@ -307,6 +308,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     TitleFromCamelCasePipe,
     TruncatePipe,
     UploadComponent,
+    Upload2Component,
     UriValueComponent,
     UserComponent,
     UserFormComponent,
