@@ -52,6 +52,10 @@
                         ">
             <div *ngIf="val !== undefined">
               <div class="value">
+                <app-switch-properties-2
+                  [property]="prop"
+                  [control]="myControl(prop.label + '_' + i)"></app-switch-properties-2>
+                <!--
                 <app-switch-properties
                   #switchProp
                   [property]="prop"
@@ -64,7 +68,7 @@
                                         ]
                                     "
                   [currentOntoIri]="currentOntoIri">
-                </app-switch-properties>
+                </app-switch-properties>-->
               </div>
               <div class="buttons">
                 <button

@@ -34,6 +34,8 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { Upload2Component } from '@dsp-app/src/app/workspace/resource/representation/upload/upload2.component';
+import { IntValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-2.component';
+import { SwitchProperties2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-2.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularSplitModule } from 'angular-split';
@@ -239,6 +241,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     IntervalInputComponent,
     IntervalValueComponent,
     IntValueComponent,
+    IntValue2Component,
     InvalidControlScrollDirective,
     JDNDatepickerDirective,
     KnoraDatePipe,
@@ -297,6 +300,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     StringifyStringLiteralPipe,
     SublistValueComponent,
     SwitchPropertiesComponent,
+    SwitchProperties2Component,
     SystemComponent,
     TextValueAsHtmlComponent,
     TextValueAsStringComponent,

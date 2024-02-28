@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormControl, UntypedFormGroup } from '@angular/forms';
 import {
   Cardinality,
   CardinalityUtil,
@@ -44,6 +44,9 @@ export class SelectPropertiesComponent implements OnInit {
 
   isRequiredProp: boolean;
 
+  myControl(label: string) {
+    return this.parentForm.controls[label] as FormControl<any>;
+  }
   constructor(private _valueService: ValueService) {}
 
   ngOnInit() {
