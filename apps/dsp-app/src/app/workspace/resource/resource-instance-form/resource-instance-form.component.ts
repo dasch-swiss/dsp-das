@@ -63,7 +63,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
 
   fileValue: CreateFileValue;
   loading = false;
-  propertiesObj = {};
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -151,18 +150,18 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
 
     createResource.attachedToProject = this.projectIri;
 
-    this.propertiesObj = {};
+    const propertiesObj = {};
 
     this.selectPropertiesComponent.switchPropertiesComponent.forEach(child => {
       const createVal = child.createValueComponent.getNewValue();
       const iri = child.property.id;
       if (createVal instanceof CreateValue) {
-        if (this.propertiesObj[iri]) {
+        if (propertiesObj[iri]) {
           // if a key already exists, add the createVal to the array
-          this.propertiesObj[iri].push(createVal);
+          propertiesObj[iri].push(createVal);
         } else {
           // if no key exists, add one and add the createVal as the first value of the array
-          this.propertiesObj[iri] = [createVal];
+          propertiesObj[iri] = [createVal];
         }
       }
     });
@@ -170,26 +169,26 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
     if (this.fileValue) {
       switch (this.hasFileValue) {
         case 'stillImage':
-          this.propertiesObj[Constants.HasStillImageFileValue] = [this.fileValue];
+          propertiesObj[Constants.HasStillImageFileValue] = [this.fileValue];
           break;
         case 'document':
-          this.propertiesObj[Constants.HasDocumentFileValue] = [this.fileValue];
+          propertiesObj[Constants.HasDocumentFileValue] = [this.fileValue];
           break;
         case 'audio':
-          this.propertiesObj[Constants.HasAudioFileValue] = [this.fileValue];
+          propertiesObj[Constants.HasAudioFileValue] = [this.fileValue];
           break;
         case 'movingImage':
-          this.propertiesObj[Constants.HasMovingImageFileValue] = [this.fileValue];
+          propertiesObj[Constants.HasMovingImageFileValue] = [this.fileValue];
           break;
         case 'archive':
-          this.propertiesObj[Constants.HasArchiveFileValue] = [this.fileValue];
+          propertiesObj[Constants.HasArchiveFileValue] = [this.fileValue];
           break;
         case 'text':
-          this.propertiesObj[Constants.HasTextFileValue] = [this.fileValue];
+          propertiesObj[Constants.HasTextFileValue] = [this.fileValue];
       }
     }
 
-    createResource.properties = this.propertiesObj;
+    createResource.properties = propertiesObj;
     this._dspApiConnection.v2.res.createResource(createResource).subscribe((res: ReadResource) => {
       this.resource = res;
 
