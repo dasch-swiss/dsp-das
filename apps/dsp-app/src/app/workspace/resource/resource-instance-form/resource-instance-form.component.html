@@ -1,7 +1,7 @@
 <!-- create property values and submit data -->
-<dasch-swiss-app-progress-indicator *ngIf="preparing"></dasch-swiss-app-progress-indicator>
+<dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
 <form
-  *ngIf="propertiesParentForm && !preparing"
+  *ngIf="propertiesParentForm && !loading"
   class="resource-instance-form form-content"
   [formGroup]="propertiesParentForm"
   (ngSubmit)="submitData()"
@@ -26,25 +26,14 @@
     class="select-properties">
   </app-select-properties>
 
-  <!-- action buttons: save -->
-  <div class="form-panel form-action">
-    <span class="fill-remaining-space"></span>
-    <span>
-      <button
-        mat-raised-button
-        type="submit"
-        [color]="error ? 'warn' : 'primary'"
-        class="form-submit"
-        [disabled]="!propertiesParentForm.valid">
-        <div class="progress-button-content">
-          <dasch-swiss-app-progress-indicator *ngIf="loading" [color]="'white'" [status]="0" class="submit-progress" />
-          <mat-icon *ngIf="!loading && error">close</mat-icon>
-          <span>
-            {{ !loading && error ? ('appLabels.form.action.retry' | translate) : ('appLabels.form.action.submit' |
-            translate) }}
-          </span>
-        </div>
-      </button>
-    </span>
-  </div>
+  <button
+    mat-raised-button
+    type="submit"
+    color="primary"
+    appLoadingButton
+    [isLoading]="loading"
+    class="form-submit"
+    [disabled]="!propertiesParentForm.valid">
+    {{ 'appLabels.form.action.submit' | translate }}
+  </button>
 </form>
