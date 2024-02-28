@@ -51,11 +51,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
   @ViewChild('selectProps')
   selectPropertiesComponent: SelectPropertiesComponent;
 
-  // form
   propertiesParentForm: UntypedFormGroup;
-
-  // form validation status
-  formValid = false;
 
   ontologyIri: string;
   resourceClass: ResourceClassDefinition;
@@ -66,21 +62,13 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
 
   // get default resource class definitions to translate the subClassOf iri into human readable words
   // list of default resource classes
-  defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
+  readonly defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
 
   // selected resource class has a file value property: display the corresponding upload form
   hasFileValue: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
 
   fileValue: CreateFileValue;
-
-  // prepare content
-  preparing = false;
-  // loading in case of submit
   loading = false;
-  // in case of any error
-  error = false;
-  errorMessage: any;
-
   propertiesObj = {};
 
   constructor(
@@ -209,32 +197,22 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
       }
 
       createResource.properties = this.propertiesObj;
-      this._dspApiConnection.v2.res
-        .createResource(createResource)
-        .pipe(
-          tap({
-            error: () => {
-              this.error = true;
-              this.loading = false;
-            },
-          })
-        )
-        .subscribe((res: ReadResource) => {
-          this.resource = res;
+      this._dspApiConnection.v2.res.createResource(createResource).subscribe((res: ReadResource) => {
+        this.resource = res;
 
-          const uuid = this._resourceService.getResourceUuid(this.resource.id);
-          const params = this._route.snapshot.url;
-          // go to ontology/[ontoname]/[classname]/[classuuid] relative to parent route project/[projectcode]/
-          this._router
-            .navigate([params[0].path, params[1].path, params[2].path, uuid], {
-              relativeTo: this._route.parent,
-            })
-            .then(() => {
-              this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
-              this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceCreated));
-              this._cd.markForCheck();
-            });
-        });
+        const uuid = this._resourceService.getResourceUuid(this.resource.id);
+        const params = this._route.snapshot.url;
+        // go to ontology/[ontoname]/[classname]/[classuuid] relative to parent route project/[projectcode]/
+        this._router
+          .navigate([params[0].path, params[1].path, params[2].path, uuid], {
+            relativeTo: this._route.parent,
+          })
+          .then(() => {
+            this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
+            this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceCreated));
+            this._cd.markForCheck();
+          });
+      });
     } else {
       this.propertiesParentForm.markAllAsTouched();
     }
