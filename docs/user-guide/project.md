@@ -77,20 +77,20 @@ From the data model overview page, click on the button `Create New`. You can fil
 
 Now you have to set a unique name (*please consider the NOTE*) and you can add a comment. Push the button `Create` to create your data model.
 
-> **_NOTE:_***There are some rules for the unique name:*
+> **NOTE: There are some rules for the unique name:**
 >
-> - *must be at least 3 characters long*
-> - *shouldn't start with a number*
-> - *shouldn't start with the letter v and a number*
-> - *spaces or special characters are not allowed*
-> - *may not contain these reserved terms:*
->   - *knora*
->   - *ontology*
->   - *salsah*
->   - *shared*
->   - *simple*
->   - *standoff*
-> - *the unique name can't be changed afterward!*
+> * must be at least 3 characters long
+> * shouldn't start with a number
+> * shouldn't start with the letter v and a number
+> * spaces or special characters are not allowed
+> * may not contain these reserved terms:
+>     * knora
+>     * ontology
+>     * salsah
+>     * shared
+>     * simple
+>     * standoff
+> * the unique name can't be changed afterward!
 
 *The label is a combination of the project's short name and the unique name. You can replace it with any other string.*
 ![Define the name of your data model.](../assets/images/Fig4.png)
@@ -113,7 +113,6 @@ Which type you choose depends on the data type which you need to describe. Let's
 
 For the label you could write *Book*, and you should add a preferably meaningful comment in at least one of the predefined languages English (en), German (de), French (fr) or Italian (it). Then click the `Submit` button:
 ![Give a label and a description.](../assets/images/Fig9.png)
-
 
 Now you have created your first class *Book*, as seen below:
 ![Layout after the creation of the resource class.](../assets/images/Fig10.png)
@@ -181,8 +180,11 @@ If data is already present, widening and restricting the cardinality of a proper
 If values are missing in the resources and you want to adjust the cardinality so that the resources do not match the selected cardinality (e.g. set a property to required, but the field is empty), an error message is displayed. In this case, all resources must be corrected first, then the desired cardinality can be set.
 
 ### Widening or restricting a cardinality of a property: Special cases
+
 #### Superclasses and subclasses
+
 Changing the cardinality of a superclass and a subclass and reversing it does not work if the properties are in a subproperty relationship or the changed property in the superclass does not exist in the subclass.
+
 ### Correct property selection in case of special classes
 
 #### Book class with pages as individual classes
@@ -193,6 +195,7 @@ This is how a book and the page class could look like:
 ![Page class as part of Book class](../assets/images/Fig42.png)
 
 ### Define Controlled Vocabularies
+
 One of the possible property types to choose from is *List* (= Controlled Vocabulary). Controlled vocabularies are hierarchical or non-hierarchical lexica of reference terms. Due to their normative or standardized nature, controlled vocabularies improve data quality and make database searching more efficient than free-text fields. Typical examples are keywords. In your book example, it may be useful to define a property that describes to which category of literature your pdf of a book belongs. **Before** you can add a property of type *List* to your data model, you have to define this controlled vocabulary. For its definition, you go to the data model overview page from your project workspace (Step 1):
 ![List tab.](../assets/images/controlled-voca-create.png)
 
@@ -206,6 +209,7 @@ A new window opens up and as in the case of other properties you have to add a l
 ![Select list for list property.](../assets/images/Fig41.png)
 
 #### How to define items in a controlled vocabulary
+
 In our example, we have created a controlled vocabulary named *Category*. Now, it is time to define the items. We will list some main literary genres as the first hierarchy in our controlled vocabulary. Enter the name of the node and click the `+` as shown below:
 ![Define main nodes.](../assets/images/Fig36.png)
 

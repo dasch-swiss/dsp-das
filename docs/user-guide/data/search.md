@@ -2,7 +2,6 @@
 
 DSP-APP offers the possibility for the user to search in 3 different ways: **full-text** search, **advanced** search, and **expert** search (Gravsearch query). The search bar is always available in the header of each page, whether logged in or out.
 
-
 ## Full-text search
 
 DSP offers a full-text search that searches through all text values and labels of resources based on one or several terms (or phrase) entered in the search bar.
@@ -61,12 +60,10 @@ Such an example is `r̥tasya`, where the `r̥` must be replaced either by `rr` o
 
 ## Advanced search
 
-
-
 ![search-advanced-link Advanced search link is findable in the search menu at the right of the full-text search field.](https://github.com/dasch-swiss/dsp-das/assets/136320187/a550b36a-3de9-4788-8fb9-13bd575c1199)
 
-The advanced search allows the creation of complex queries using a form. The advanced search can be accessed from the data browser of any project. 
-The form creates a string representing a Gravsearch (SPARQL) query to be sent to DSP-API. 
+The advanced search allows the creation of complex queries using a form. The advanced search can be accessed from the data browser of any project.
+The form creates a string representing a Gravsearch (SPARQL) query to be sent to DSP-API.
 
 A query consists of the following elements:
 
@@ -83,7 +80,7 @@ Although the selection of a resource or a property or both are optional, either 
 You can open the "Order by" dropdown, by selecting the checkboy of the property, you specify that it will be sorted by. The order of the entries determines which criterion should be used for sorting first. You can reorder them by clicking and dragging them.
 
 
-https://github.com/dasch-swiss/dsp-das/assets/136320187/e43bb484-91b9-48ad-a59d-0e7c79a4df1b
+<https://github.com/dasch-swiss/dsp-das/assets/136320187/e43bb484-91b9-48ad-a59d-0e7c79a4df1b>
 
 
 
@@ -117,8 +114,6 @@ For general information about regular expressions, see this [interactive tutoria
 
 ![is-like-search-results](https://github.com/dasch-swiss/dsp-das/assets/136320187/89a5d664-a75a-4b5e-867e-56e0c5347610)
 
-
-
 #### matches (Lucene Parser Syntax)
 
 Used with a text property, the `matches` operator lets the user search for texts that *match* the search value,
@@ -144,15 +139,11 @@ This is different from the "is equal to" operator that lets the user specify a c
 
 ![Specified-linked-resource](https://github.com/dasch-swiss/dsp-das/assets/136320187/739e7584-bd2d-4e84-839c-61dbf7fe05bd)
 
-
-
-
 ---
 
 ## Expert search
 
 ![Expert-link](https://github.com/dasch-swiss/dsp-das/assets/136320187/7a12ded5-0eac-4cb7-8ca0-ef53e3821f4b)
-
 
 The expert search can be more powerful than the advanced search, but requires knowing how to use the query language Gravsearch (based on SparQL and developed by the DaSCH team). With Gravsearch, expert users can build searches by combining text-related criteria with any other criteria.
 
