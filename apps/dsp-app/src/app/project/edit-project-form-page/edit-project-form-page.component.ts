@@ -6,22 +6,17 @@ import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { LoadProjectsAction, UpdateProjectAction } from '@dasch-swiss/vre/shared/app-state';
-import { ProjectForm } from '@dsp-app/src/app/project/reusable-project-form/project-form.type';
+import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { map, switchMap, take } from 'rxjs/operators';
+import { ProjectForm } from '../reusable-project-form/project-form.type';
 
 @Component({
   selector: 'app-edit-project-form-page',
   template: ` <dasch-swiss-centered-layout>
     <app-reusable-project-form
-      *ngIf="project$ | async as project"
-      [formData]="{
-        shortcode: project.shortcode,
-        shortname: project.shortname,
-        longname: project.longname,
-        description: project.description,
-        keywords: project.keywords
-      }"
+      *ngIf="formData$ | async as formData"
+      [formData]="formData"
       (afterFormInit)="form = $event"></app-reusable-project-form>
 
     <div style="display: flex; justify-content: space-between">
@@ -42,11 +37,20 @@ import { map, switchMap, take } from 'rxjs/operators';
 export class EditProjectFormPageComponent {
   form: ProjectForm;
   loading = false;
-  project$ = this.route.parent.parent.paramMap.pipe(
+  formData$ = this.route.parent.parent.paramMap.pipe(
     map(params => params.get(RouteConstants.uuidParameter)),
     map(uuid => this._projectService.uuidToIri(uuid)),
     switchMap(iri => this._projectApiService.get(iri)),
-    map(project => project.project)
+    map(project => project.project),
+    map(project => {
+      return {
+        shortcode: project.shortcode,
+        shortname: project.shortname,
+        longname: project.longname,
+        description: project.description as MultiLanguages,
+        keywords: project.keywords,
+      };
+    })
   );
 
   constructor(
