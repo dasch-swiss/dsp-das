@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
+import { MultiLanguageFormArray, MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
-import { MultiLanguageFormArray } from '../../../../../../../libs/vre/shared/app-string-literal/src/lib/multi-language-form.service';
 import { atLeastOneStringRequired } from '../../../main/form-validators/at-least-one-string-required.validator';
 
 @Component({
