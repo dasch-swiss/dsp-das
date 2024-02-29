@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ListNode } from '@dasch-swiss/dsp-js';
-import { MultiLanguageFormArray } from '../../../../../../../libs/vre/shared/app-string-literal/src/lib/multi-language-form.service';
+import { MultiLanguageFormArray } from '@dasch-swiss/vre/shared/app-string-literal';
 import { ListItemService } from '../list-item/list-item.service';
 
 @Component({

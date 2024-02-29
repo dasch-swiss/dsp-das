@@ -8,7 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import { HumanReadableErrorPipe } from './human-readable-error.pipe';
-import { MultiLanguageFormArray, MultiLanguageFormService } from './multi-language-form.service';
+import { MultiLanguageFormArray } from './multi-language-form-array.type';
+import { MultiLanguageFormService } from './multi-language-form.service';
 
 @Component({
   selector: 'dasch-swiss-multi-language-input',

@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ListInfoResponse, ListNode, ListNodeInfoResponse } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { MultiLanguageFormArray } from '../../../../../../../libs/vre/shared/app-string-literal/src/lib/multi-language-form.service';
+import { MultiLanguageFormArray } from '@dasch-swiss/vre/shared/app-string-literal';
 import { atLeastOneStringRequired } from '../../../main/form-validators/at-least-one-string-required.validator';
 import { ListItemService } from '../list-item/list-item.service';
 
