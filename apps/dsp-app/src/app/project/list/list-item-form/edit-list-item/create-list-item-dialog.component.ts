@@ -11,6 +11,7 @@ export interface CreateListItemDialogProps {
   projectIri: string;
   position: number;
 }
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-create-list-item-dialog',
@@ -20,7 +21,7 @@ export interface CreateListItemDialogProps {
     <div mat-dialog-content>
       <app-reusable-list-item-form
         [formData]="initialFormValue"
-        (formValueChange)="form = $event"></app-reusable-list-item-form>
+        (afterFormInit)="form = $event"></app-reusable-list-item-form>
     </div>
 
     <div mat-dialog-actions align="end">

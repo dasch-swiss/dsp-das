@@ -20,7 +20,7 @@ export interface EditListItemDialogProps {
     <div mat-dialog-content>
       <app-reusable-list-item-form
         [formData]="data.formData"
-        (formValueChange)="form = $event"></app-reusable-list-item-form>
+        (afterFormInit)="form = $event"></app-reusable-list-item-form>
     </div>
 
     <div mat-dialog-actions align="end">
