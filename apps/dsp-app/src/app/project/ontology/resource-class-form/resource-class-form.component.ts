@@ -6,6 +6,7 @@ import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
+import { MultiLanguageFormArray } from '../../../../../../../libs/vre/shared/app-string-literal/src/lib/multi-language-form.service';
 import { existingNamesValidator } from '../../../main/directive/existing-name/existing-names.validator';
 import { atLeastOneStringRequired } from '../../../main/form-validators/at-least-one-string-required.validator';
 import { CustomRegex } from '../../../workspace/resource/values/custom-regex';
@@ -25,16 +26,14 @@ import { CustomRegex } from '../../../workspace/resource/values/custom-regex';
       <dasch-swiss-multi-language-input
         data-cy="label-input"
         placeholder="Label *"
-        [formGroup]="form"
-        controlName="labels"
+        [formArray]="labelsControl"
         [validators]="labelsValidators">
       </dasch-swiss-multi-language-input>
 
       <dasch-swiss-multi-language-textarea
         data-cy="comment-textarea"
         placeholder="Comment *"
-        [formGroup]="form"
-        controlName="comments"
+        [formArray]="commentsControl"
         [editable]="true"
         [validators]="commentsValidators">
       </dasch-swiss-multi-language-textarea>
@@ -49,6 +48,15 @@ export class ResourceClassFormComponent implements OnInit, OnDestroy {
     comments: { language: string; value: string }[];
   };
   @Output() formValueChange = new EventEmitter<FormGroup>();
+
+  // TODO remove with typed forms
+  get commentsControl() {
+    return this.form.get('comments') as MultiLanguageFormArray;
+  }
+
+  get labelsControl() {
+    return this.form.get('labels') as MultiLanguageFormArray;
+  }
 
   form: FormGroup;
   existingNames: [RegExp] = [new RegExp('anEmptyRegularExpressionWasntPossible')];

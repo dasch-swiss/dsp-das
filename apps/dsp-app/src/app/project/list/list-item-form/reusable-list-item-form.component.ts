@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
+import { MultiLanguageFormArray } from '../../../../../../../libs/vre/shared/app-string-literal/src/lib/multi-language-form.service';
 import { atLeastOneStringRequired } from '../../../main/form-validators/at-least-one-string-required.validator';
 
 @Component({
@@ -10,15 +11,13 @@ import { atLeastOneStringRequired } from '../../../main/form-validators/at-least
   template: `
     <dasch-swiss-multi-language-input
       placeholder="Child node label *"
-      [formGroup]="form"
-      controlName="labels"
+      [formArray]="labelsControl"
       [validators]="labelsValidators">
     </dasch-swiss-multi-language-input>
 
     <dasch-swiss-multi-language-textarea
       placeholder="Child node description"
-      [formGroup]="form"
-      controlName="comments"
+      [formArray]="commentsControl"
       [validators]="commentsValidators">
     </dasch-swiss-multi-language-textarea>
   `,
@@ -36,6 +35,16 @@ export class ReusableListItemFormComponent implements OnInit, OnDestroy {
 
   readonly labelsValidators = [Validators.required, Validators.maxLength(2000)];
   readonly commentsValidators = [Validators.required, Validators.maxLength(2000)];
+
+  // TODO remove with typed forms
+  get labelsControl() {
+    return this.form.get('labels') as MultiLanguageFormArray;
+  }
+
+  // TODO remove with typed forms
+  get commentsControl() {
+    return this.form.get('comments') as MultiLanguageFormArray;
+  }
 
   constructor(private _fb: FormBuilder) {}
 
