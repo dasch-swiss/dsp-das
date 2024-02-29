@@ -1,4 +1,6 @@
-import { AfterContentInit, Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output } from '@angular/core';
+import {
+  AfterContentInit,
+  ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output,} from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import {
   CanDoResponse,
@@ -86,7 +88,8 @@ export class ResourceClassPropertyInfoComponent implements OnInit, OnChanges, Af
     private _dspApiConnection: KnoraApiConnection,
     private _ontoService: OntologyService,
     private _store: Store,
-    private _fb: FormBuilder
+    private _fb: FormBuilder,
+    private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -187,6 +190,7 @@ export class ResourceClassPropertyInfoComponent implements OnInit, OnChanges, Af
 
     this._dspApiConnection.v2.onto.canDeleteCardinalityFromResourceClass(onto).subscribe((canDoRes: CanDoResponse) => {
       this.propCanBeRemovedFromClass = canDoRes.canDo;
+      this._cd.markForCheck();
     });
   }
 }
