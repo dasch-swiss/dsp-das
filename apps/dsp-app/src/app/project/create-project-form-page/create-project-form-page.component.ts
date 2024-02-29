@@ -21,7 +21,7 @@ import { finalize } from 'rxjs/operators';
           description: [],
           keywords: []
         }"
-        (formValueChange)="form = $event"></app-reusable-project-form>
+        (afterFormInit)="form = $event"></app-reusable-project-form>
 
       <div style="display: flex; justify-content: space-between">
         <button color="primary" mat-button type="reset" (click)="goBack()">

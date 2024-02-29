@@ -7,7 +7,7 @@ import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { LoadProjectsAction, UpdateProjectAction } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
+import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { map, switchMap, take } from 'rxjs/operators';
 
 @Component({
@@ -22,7 +22,7 @@ import { map, switchMap, take } from 'rxjs/operators';
         description: project.description,
         keywords: project.keywords
       }"
-      (formValueChange)="form = $event"></app-reusable-project-form>
+      (afterFormInit)="form = $event"></app-reusable-project-form>
 
     <div style="display: flex; justify-content: space-between">
       <button
