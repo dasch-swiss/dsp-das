@@ -1,4 +1,9 @@
-import { FormArray } from '@angular/forms';
-import { MultiLanguageFormControl } from './multi-language-form.service';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { DaschLanguage } from './dash-language.type';
+
+type MultiLanguageFormControl = FormGroup<{
+  language: FormControl<DaschLanguage>;
+  value: FormControl<string>;
+}>;
 
 export type MultiLanguageFormArray = FormArray<MultiLanguageFormControl>;

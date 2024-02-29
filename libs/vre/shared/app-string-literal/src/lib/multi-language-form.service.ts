@@ -1,12 +1,9 @@
 import { ChangeDetectorRef, Injectable } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { FormBuilder, ValidatorFn } from '@angular/forms';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-
-export type MultiLanguageFormControl = FormGroup<{
-  language: FormControl<DaschLanguage>;
-  value: FormControl<string>;
-}>;
+import { DaschLanguage } from './dash-language.type';
+import { MultiLanguageFormArray } from './multi-language-form-array.type';
 
 /** Component Provider used in combination with
  * MultiLanguageInputComponent and MultiLanguageTextareaComponent.
