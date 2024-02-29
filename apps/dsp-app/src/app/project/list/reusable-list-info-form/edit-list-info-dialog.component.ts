@@ -17,9 +17,7 @@ export class EditListInfoDialogProps {
   template: `
     <app-dialog-header title="" subtitle="Edit controlled vocabulary info"></app-dialog-header>
     <div mat-dialog-content>
-      <app-reusable-list-info-form
-        [formData]="formData"
-        (formValueChange)="form = $event"></app-reusable-list-info-form>
+      <app-reusable-list-info-form [formData]="formData" (afterFormInit)="form = $event"></app-reusable-list-info-form>
     </div>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>

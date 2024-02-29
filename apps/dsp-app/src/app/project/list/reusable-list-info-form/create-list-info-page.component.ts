@@ -16,7 +16,7 @@ import { Store } from '@ngxs/store';
           labels: [],
           comments: []
         }"
-        (formValueChange)="form = $event"></app-reusable-list-info-form>
+        (afterFormInit)="form = $event"></app-reusable-list-info-form>
 
       <div style="display: flex; justify-content: flex-end">
         <button
