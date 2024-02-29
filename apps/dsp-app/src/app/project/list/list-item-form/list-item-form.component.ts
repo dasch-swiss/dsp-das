@@ -11,14 +11,14 @@ import { ListItemService } from '../list-item/list-item.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-list-item-form',
   template: `
-    <form [formGroup]="form" style="display: flex">
+    <form [formGroup]="form" style="display: flex" (ngSubmit)="createChildNode()">
       <dasch-swiss-multi-language-input
         style="flex: 1"
         [formArray]="form.controls.labels"
         [placeholder]="placeholder"
         [validators]="labelsValidators">
       </dasch-swiss-multi-language-input>
-      <button color="primary" mat-icon-button matSuffix [disabled]="form.invalid" (click)="createChildNode()">
+      <button color="primary" mat-icon-button matSuffix [disabled]="form.invalid" type="submit">
         <mat-icon> add</mat-icon>
       </button>
     </form>
