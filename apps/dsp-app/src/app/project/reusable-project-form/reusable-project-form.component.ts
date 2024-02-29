@@ -1,23 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
-import {
-  DEFAULT_MULTILANGUAGE_FORM,
-  MultiLanguageFormArray,
-  MultiLanguages,
-} from '@dasch-swiss/vre/shared/app-string-literal';
+import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { Store } from '@ngxs/store';
 import { arrayLengthGreaterThanZeroValidator } from '../../main/form-validators/array-length-greater-than-zero-validator';
 import { atLeastOneStringRequired } from '../../main/form-validators/at-least-one-string-required.validator';
+import { ProjectForm } from './project-form.type';
 import { shortcodeExistsValidator } from './shortcode-exists.validator';
-
-type ProjectForm = FormGroup<{
-  shortcode: FormControl<string>;
-  shortname: FormControl<string>;
-  longname: FormControl<string>;
-  description: MultiLanguageFormArray;
-  keywords: FormArray<FormControl<string>>;
-}>;
 
 @Component({
   selector: 'app-reusable-project-form',

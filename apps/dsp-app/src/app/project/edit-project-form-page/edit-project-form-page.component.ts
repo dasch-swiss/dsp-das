@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UpdateProjectRequest } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
@@ -7,6 +6,7 @@ import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { LoadProjectsAction, UpdateProjectAction } from '@dasch-swiss/vre/shared/app-state';
+import { ProjectForm } from '@dsp-app/src/app/project/reusable-project-form/project-form.type';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { map, switchMap, take } from 'rxjs/operators';
 
@@ -40,7 +40,7 @@ import { map, switchMap, take } from 'rxjs/operators';
   </dasch-swiss-centered-layout>`,
 })
 export class EditProjectFormPageComponent {
-  form: FormGroup;
+  form: ProjectForm;
   loading = false;
   project$ = this.route.parent.parent.paramMap.pipe(
     map(params => params.get(RouteConstants.uuidParameter)),
@@ -64,7 +64,7 @@ export class EditProjectFormPageComponent {
 
     const projectData: UpdateProjectRequest = {
       longname: this.form.value.longname,
-      description: this.form.value.description,
+      description: this.form.getRawValue().description,
       keywords: this.form.value.keywords,
     };
 
