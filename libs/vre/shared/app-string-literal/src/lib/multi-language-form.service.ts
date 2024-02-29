@@ -40,11 +40,11 @@ export class MultiLanguageFormService {
   get invalidErrors() {
     for (const control of this.formArray.controls) {
       if (control.controls.value.errors) {
-        return { language: control.value.language, error: control.controls.value.errors };
+        return { language: control.getRawValue().language, error: control.controls.value.errors };
       }
     }
     if (this.formArray.errors) {
-      return { error: this.formArray.errors };
+      return { error: this.formArray.errors, language: undefined };
     }
     return undefined;
   }
