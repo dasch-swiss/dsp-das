@@ -4,7 +4,7 @@ import { StringLiteral } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
-import { ListItemForm } from '@dsp-app/src/app/project/list/list-item-form/list-item-form.type';
+import { ListItemForm } from '../list-item-form.type';
 
 export interface CreateListItemDialogProps {
   nodeIri: string;

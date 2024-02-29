@@ -3,9 +3,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
-import { ListItemForm } from '@dsp-app/src/app/project/list/list-item-form/list-item-form.type';
 import { of } from 'rxjs';
 import { finalize, switchMap } from 'rxjs/operators';
+import { ListItemForm } from '../list-item-form.type';
 
 export interface EditListItemDialogProps {
   nodeIri: string;
