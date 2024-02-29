@@ -19,8 +19,10 @@ export class MultiLanguageFormService {
   inputValue: string | null = null;
 
   get selectedFormControl() {
-    const n = 0;
-    return this.formArray.controls[n];
+    const index = this.formArray
+      .getRawValue()
+      .findIndex(v => v.language === this.availableLanguages[this.selectedLanguageIndex]);
+    return this.formArray.controls[index];
   }
 
   get selectedLanguageControl() {
@@ -93,11 +95,11 @@ export class MultiLanguageFormService {
   changeLanguage(languageIndex: number) {
     this.selectedLanguageIndex = languageIndex;
 
-    const newFormControl = this.formArray.controls.find(
+    const existingControl = this.formArray.controls.find(
       control => control.value.language === this.availableLanguages[this.selectedLanguageIndex]
     );
 
-    this.inputValue = newFormControl ? this.selectedLanguageControl.value : null;
+    this.inputValue = existingControl ? this.selectedLanguageControl.value : null;
   }
 
   private _setupLanguageIndex(): number {
