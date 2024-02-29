@@ -19,7 +19,7 @@ export interface CreateResourceClassDialogProps {
     <div mat-dialog-content>
       <app-resource-class-form
         [formData]="{ name: '', labels: [], comments: [] }"
-        (formValueChange)="form = $event"></app-resource-class-form>
+        (afterFormInit)="form = $event"></app-resource-class-form>
     </div>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close data-cy="cancel-button" (click)="onCancel()">Cancel</button>
