@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { FormBuilder, ValidatorFn } from '@angular/forms';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { DaschLanguage } from './dash-language.type';
+import { DaschLanguage, isDaschLanguage } from './dash-language.type';
 import { MultiLanguageFormArray } from './multi-language-form-array.type';
 
 /** Component Provider used in combination with
