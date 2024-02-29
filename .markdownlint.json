@@ -25,6 +25,6 @@
         "ol_single": 1
     },
     "ol-prefix": {
-        "style": "one"
+        "style": "one_or_ordered"
     }
 }
