@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CreateResourceClass, KnoraApiConnection, UpdateOntology } from '@dasch-swiss/dsp-js';
+import { CreateResourceClass, KnoraApiConnection, StringLiteral, UpdateOntology } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { tap } from 'rxjs/operators';
+import { ResourceClassForm } from '../resource-class-form/resource-class-form.type';
 
 export interface CreateResourceClassDialogProps {
   id: string;
@@ -38,7 +38,7 @@ export interface CreateResourceClassDialogProps {
 })
 export class CreateResourceClassDialogComponent implements OnInit {
   loading = false;
-  form: FormGroup;
+  form: ResourceClassForm;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -84,8 +84,8 @@ export class CreateResourceClassDialogComponent implements OnInit {
     const newResClass = new CreateResourceClass();
 
     newResClass.name = this.form.value.name;
-    newResClass.label = this.form.value.labels;
-    newResClass.comment = this.form.value.comments;
+    newResClass.label = this.form.value.labels as StringLiteral[];
+    newResClass.comment = this.form.value.comments as StringLiteral[];
     newResClass.subClassOf = [this.data.id];
 
     onto.entity = newResClass;

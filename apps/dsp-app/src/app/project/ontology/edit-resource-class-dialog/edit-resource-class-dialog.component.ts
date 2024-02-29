@@ -1,15 +1,16 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   DeleteResourceClassComment,
   KnoraApiConnection,
   ResourceClassDefinitionWithAllLanguages,
+  StringLiteral,
   UpdateOntology,
   UpdateResourceClassComment,
   UpdateResourceClassLabel,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { ResourceClassForm } from '@dsp-app/src/app/project/ontology/resource-class-form/resource-class-form.type';
 import { switchMap, tap } from 'rxjs/operators';
 
 export interface EditResourceClassDialogProps {
@@ -45,7 +46,7 @@ export interface EditResourceClassDialogProps {
 })
 export class EditResourceClassDialogComponent implements OnInit {
   loading = false;
-  form: FormGroup;
+  form: ResourceClassForm;
   lastModificationDate: string;
 
   constructor(
@@ -71,7 +72,7 @@ export class EditResourceClassDialogComponent implements OnInit {
 
     const updateLabel = new UpdateResourceClassLabel();
     updateLabel.id = this.data.id;
-    updateLabel.labels = this.form.value.labels;
+    updateLabel.labels = this.form.value.labels as StringLiteral[];
     onto4Label.entity = updateLabel;
 
     // comment
@@ -80,7 +81,7 @@ export class EditResourceClassDialogComponent implements OnInit {
 
     const updateComment = new UpdateResourceClassComment();
     updateComment.id = this.data.id;
-    updateComment.comments = this.form.value.comments;
+    updateComment.comments = this.form.value.comments as StringLiteral[];
     onto4Comment.entity = updateComment;
 
     this._dspApiConnection.v2.onto

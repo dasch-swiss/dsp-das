@@ -1,24 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ClassDefinition, PropertyDefinition } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
-import {
-  DEFAULT_MULTILANGUAGE_FORM,
-  MultiLanguageFormArray,
-  MultiLanguages,
-} from '@dasch-swiss/vre/shared/app-string-literal';
+import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
+import { ResourceClassForm } from '@dsp-app/src/app/project/ontology/resource-class-form/resource-class-form.type';
 import { Store } from '@ngxs/store';
 import { existingNamesValidator } from '../../../main/directive/existing-name/existing-names.validator';
 import { atLeastOneStringRequired } from '../../../main/form-validators/at-least-one-string-required.validator';
 import { CustomRegex } from '../../../workspace/resource/values/custom-regex';
-
-export type ResourceClassForm = FormGroup<{
-  name: FormControl<string>;
-  labels: MultiLanguageFormArray;
-  comments: MultiLanguageFormArray;
-}>;
 
 @Component({
   selector: 'app-resource-class-form',
