@@ -1,5 +1,4 @@
 import { Component, Inject } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ListNodeInfo, UpdateListInfoRequest } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
@@ -35,7 +34,7 @@ export class EditListInfoDialogProps {
   `,
 })
 export class EditListInfoDialogComponent {
-  form: FormGroup;
+  form: ListInfoForm;
   loading = false;
 
   formData = { labels: this.data.list.labels as MultiLanguages, comments: this.data.list.comments as MultiLanguages };
