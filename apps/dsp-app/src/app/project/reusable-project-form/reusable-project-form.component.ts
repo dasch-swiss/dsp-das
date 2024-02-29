@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
+import { MultiLanguageFormArray, MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
-import { MultiLanguageFormArray } from '../../../../../../libs/vre/shared/app-string-literal/src/lib/multi-language-form.service';
 import { arrayLengthGreaterThanZeroValidator } from '../../main/form-validators/array-length-greater-than-zero-validator';
 import { atLeastOneStringRequired } from '../../main/form-validators/at-least-one-string-required.validator';
 import { shortcodeExistsValidator } from './shortcode-exists.validator';
