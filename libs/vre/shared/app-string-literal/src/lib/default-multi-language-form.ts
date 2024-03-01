@@ -3,7 +3,7 @@ import { StringLiteralV2 } from '@dasch-swiss/vre/open-api';
 import { DaschLanguage } from './dash-language.type';
 
 export const DEFAULT_MULTILANGUAGE_FORM = (
-  data: StringLiteralV2[] = [{ language: 'de', value: '' }],
+  data: StringLiteralV2[],
   controlValidators?: ValidatorFn[],
   arrayValidators?: ValidatorFn[]
 ) => {
