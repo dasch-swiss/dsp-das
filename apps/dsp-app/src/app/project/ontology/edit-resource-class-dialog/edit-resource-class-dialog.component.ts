@@ -10,6 +10,7 @@ import {
   UpdateResourceClassLabel,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { switchMap, tap } from 'rxjs/operators';
 import { ResourceClassForm } from '../resource-class-form/resource-class-form.type';
 
@@ -18,6 +19,9 @@ export interface EditResourceClassDialogProps {
   title: string;
   ontologyId: string;
   lastModificationDate: string;
+  name: string;
+  labels: MultiLanguages;
+  comments: MultiLanguages;
 }
 
 @Component({
@@ -26,7 +30,7 @@ export interface EditResourceClassDialogProps {
     <app-dialog-header [title]="data.title" subtitle="Customize resource class"></app-dialog-header>
     <div mat-dialog-content>
       <app-resource-class-form
-        [formData]="{ name: '', labels: [], comments: [] }"
+        [formData]="{ name: data.name, labels: data.labels, comments: data.comments }"
         (afterFormInit)="form = $event"></app-resource-class-form>
     </div>
     <div mat-dialog-actions align="end">
