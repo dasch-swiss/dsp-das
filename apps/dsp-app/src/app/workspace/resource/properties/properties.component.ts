@@ -34,9 +34,7 @@ import {
   ResourcePropertyDefinition,
   UpdateResourceMetadata,
   UpdateResourceMetadataResponse,
-  UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import {
   Events as CommsEvents,
@@ -47,15 +45,20 @@ import {
   SortingService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
-import { Store } from '@ngxs/store';
-import { Observable, Subscription, forkJoin } from 'rxjs';
+import {
+  GetAttachedProjectAction,
+  GetAttachedUserAction,
+  LoadClassItemsCountAction,
+  ResourceSelectors,
+} from '@dasch-swiss/vre/shared/app-state';
+import { Select, Store } from '@ngxs/store';
+import { Observable, Subject, Subscription, forkJoin } from 'rxjs';
+import { map, takeUntil, takeWhile } from 'rxjs/operators';
 import { ConfirmationWithComment, DialogComponent } from '../../../main/dialog/dialog.component';
 import { DspResource } from '../dsp-resource';
 import { RepresentationConstants } from '../representation/file-representation';
 import { IncomingService } from '../services/incoming.service';
 import { ResourceService } from '../services/resource.service';
-import { UserService } from '../services/user.service';
 import {
   AddedEventValue,
   DeletedEventValue,
@@ -79,6 +82,10 @@ export interface PropertyInfoValues {
   styleUrls: ['./properties.component.scss'],
 })
 export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
+
+  @Select(ResourceSelectors.isLoading) isRresourceLoading$: Observable<boolean>;
+
   /**
    * input `resource` of properties component:
    * complete information about the current resource
@@ -154,8 +161,23 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   displayedIncomingLinkResources: ReadResource[] = [];
   hasIncomingLinkIri = Constants.HasIncomingLinkValue;
 
-  project: ReadProject;
-  user: ReadUser;
+  project$ = this._store.select(ResourceSelectors.attachedProjects).pipe(
+    takeWhile(attachedProjects => this.resource !== undefined && attachedProjects[this.resource.res.id] !== undefined),
+    takeUntil(this.ngUnsubscribe),
+    map(attachedProjects =>
+      attachedProjects[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToProject)
+    )
+  );
+
+  get user$(): Observable<ReadUser> {
+    return this._store.select(ResourceSelectors.attachedUsers).pipe(
+      takeWhile(attachedUsers => this.resource !== undefined && attachedUsers[this.resource.res.id] !== undefined),
+      takeUntil(this.ngUnsubscribe),
+      map(attachedUsers =>
+        attachedUsers[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToUser)
+      )
+    );
+  }
 
   pageEvent: PageEvent;
   loading = false;
@@ -165,12 +187,10 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _projectApiService: ProjectApiService,
     private _dialog: MatDialog,
     private _incomingService: IncomingService,
     private _notification: NotificationService,
     private _resourceService: ResourceService,
-    private _userService: UserService,
     private _valueOperationEventService: ValueOperationEventService,
     private _valueService: ValueService,
     private _componentCommsService: ComponentCommunicationEventService,
@@ -241,18 +261,14 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       localStorage.setItem('showAllProps', JSON.stringify(this.showAllProps));
     }
+
+    this._store.dispatch([
+      new GetAttachedUserAction(this.resource.res.id, this.resource.res.attachedToUser),
+      new GetAttachedProjectAction(this.resource.res.id, this.resource.res.attachedToProject),
+    ]);
   }
 
   ngOnChanges(): void {
-    this._projectApiService.get(this.resource.res.attachedToProject).subscribe(response => {
-      this.project = response.project;
-    });
-
-    // get user information
-    this._userService.getUser(this.resource.res.attachedToUser).subscribe((response: UserResponse) => {
-      this.user = response.user;
-    });
-
     this._getAllIncomingLinkRes();
   }
 
@@ -262,6 +278,10 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
       this.valueOperationEventSubscriptions.forEach(sub => sub.unsubscribe());
     }
   }
+
+  trackByFn = (index: number, item: ReadResource) => `${index}-${item.id}`;
+  trackByValuesFn = (index: number, item: any) => `${index}-${item}`;
+  trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;
 
   /**
    * opens project
@@ -547,7 +567,10 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     // display notification and mark resource as 'erased'
     this._notification.openSnackBar(`${response.result}: ${this.resource.res.label}`);
     this.deletedResource = true;
-    const ontologyIri = this._ontologyService.getOntologyIriFromRoute(this.project?.shortcode);
+    const project = this._store
+      .selectSnapshot(ResourceSelectors.attachedProjects)
+      [this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToProject);
+    const ontologyIri = this._ontologyService.getOntologyIriFromRoute(project?.shortcode);
     const classId = this.resource.res.entityInfo.classes[this.resource.res.type]?.id;
     this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
     this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceDeleted));
