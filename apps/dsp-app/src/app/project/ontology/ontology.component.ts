@@ -441,7 +441,6 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
   }
 
   updateResourceClass(resClassInfo: DefaultClass, resClass: ResourceClassDefinitionWithAllLanguages): void {
-    console.log('julien', this, resClassInfo);
     const currentOntology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
 
     this._dialog
