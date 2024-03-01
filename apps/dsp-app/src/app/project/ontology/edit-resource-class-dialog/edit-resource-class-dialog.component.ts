@@ -10,8 +10,8 @@ import {
   UpdateResourceClassLabel,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ResourceClassForm } from '@dsp-app/src/app/project/ontology/resource-class-form/resource-class-form.type';
 import { switchMap, tap } from 'rxjs/operators';
+import { ResourceClassForm } from '../resource-class-form/resource-class-form.type';
 
 export interface EditResourceClassDialogProps {
   id: string;

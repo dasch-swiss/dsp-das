@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
-import { ListInfoForm } from '@dsp-app/src/app/project/list/reusable-list-info-form/list-info-form.type';
 import { atLeastOneStringRequired } from '../../../main/form-validators/at-least-one-string-required.validator';
+import { ListInfoForm } from './list-info-form.type';
 
 @Component({
   selector: 'app-reusable-list-info-form',

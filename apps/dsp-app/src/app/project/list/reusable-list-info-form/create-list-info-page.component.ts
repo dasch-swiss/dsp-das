@@ -5,8 +5,8 @@ import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { LoadListsInProjectAction } from '@dasch-swiss/vre/shared/app-state';
-import { ListInfoForm } from '@dsp-app/src/app/project/list/reusable-list-info-form/list-info-form.type';
 import { Store } from '@ngxs/store';
+import { ListInfoForm } from './list-info-form.type';
 
 @Component({
   selector: 'app-create-list-info-page',
