@@ -567,9 +567,8 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     // display notification and mark resource as 'erased'
     this._notification.openSnackBar(`${response.result}: ${this.resource.res.label}`);
     this.deletedResource = true;
-    const project = this._store
-      .selectSnapshot(ResourceSelectors.attachedProjects)
-      [this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToProject);
+    const attachedProject = this._store.selectSnapshot(ResourceSelectors.attachedProjects);
+    const project = attachedProject[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToProject);
     const ontologyIri = this._ontologyService.getOntologyIriFromRoute(project?.shortcode);
     const classId = this.resource.res.entityInfo.classes[this.resource.res.type]?.id;
     this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
