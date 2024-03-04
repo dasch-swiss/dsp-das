@@ -23,11 +23,7 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import {
-  ComponentCommunicationEventService,
-  EmitEvent,
-  Events as CommsEvents,
-} from '@dasch-swiss/vre/shared/app-helper-services';
+import { ComponentCommunicationEventService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { switchMap } from 'rxjs/operators';
@@ -148,7 +144,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
         })
         .then(() => {
           this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
-          this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceCreated));
           this._cd.markForCheck();
         });
     });
