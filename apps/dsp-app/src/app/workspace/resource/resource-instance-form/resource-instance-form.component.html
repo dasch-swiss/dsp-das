@@ -4,7 +4,6 @@
   (ngSubmit)="submitData()"
   appInvalidControlScroll>
   <app-upload-2 [allowedFileTypes]="['image/png']"></app-upload-2>
-
   <app-select-properties
     #selectProps
     *ngIf="resourceClass"
@@ -14,7 +13,6 @@
     [parentForm]="propertiesParentForm"
     [currentOntoIri]="ontologyIri">
   </app-select-properties>
-
   <button
     mat-raised-button
     type="submit"
