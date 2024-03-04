@@ -260,9 +260,8 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(ofActionSuccessful(GetAttachedUserAction))
       .pipe(take(1))
       .subscribe(() => {
-        this.user = this._store
-          .selectSnapshot(ResourceSelectors.attachedUsers)
-          [this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToUser);
+        const attachedUsers = this._store.selectSnapshot(ResourceSelectors.attachedUsers);
+        this.user = attachedUsers[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToUser);
       });
   }
 
