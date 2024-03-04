@@ -52,10 +52,19 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
   ontologyInfo: ResourceClassAndPropertyDefinitions;
 
   // selected resource class has a file value property: display the corresponding upload form
-  hasFileValue: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
+  hasFileValue: string;
 
   fileValue: CreateFileValue;
   loading = false;
+
+  readonly weirdConstants = [
+    Constants.HasStillImageFileValue,
+    Constants.HasDocumentFileValue,
+    Constants.HasAudioFileValue,
+    Constants.HasMovingImageFileValue,
+    Constants.HasArchiveFileValue,
+    Constants.HasTextFileValue,
+  ];
 
   get ontologyIri() {
     return this.resourceClassIri.split('#')[0];
@@ -65,17 +74,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
     // filter out all props that cannot be edited or are link props but also the hasFileValue props
     return this.ontologyInfo
       .getPropertyDefinitionsByType(ResourcePropertyDefinition)
-      .filter(
-        prop =>
-          !prop.isLinkProperty &&
-          prop.isEditable &&
-          prop.id !== Constants.HasStillImageFileValue &&
-          prop.id !== Constants.HasDocumentFileValue &&
-          prop.id !== Constants.HasAudioFileValue &&
-          prop.id !== Constants.HasMovingImageFileValue &&
-          prop.id !== Constants.HasArchiveFileValue &&
-          prop.id !== Constants.HasTextFileValue
-      );
+      .filter(prop => !prop.isLinkProperty && prop.isEditable && !this.weirdConstants.includes(prop.id));
   }
 
   constructor(
@@ -176,20 +175,10 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
   }
 
   private getHasFileValue(onto: ResourceClassAndPropertyDefinitions) {
-    if (onto.properties[Constants.HasStillImageFileValue]) {
-      return 'stillImage';
-    } else if (onto.properties[Constants.HasDocumentFileValue]) {
-      return 'document';
-    } else if (onto.properties[Constants.HasAudioFileValue]) {
-      return 'audio';
-    } else if (onto.properties[Constants.HasMovingImageFileValue]) {
-      return 'movingImage';
-    } else if (onto.properties[Constants.HasArchiveFileValue]) {
-      return 'archive';
-    } else if (onto.properties[Constants.HasTextFileValue]) {
-      return 'text';
-    } else {
-      return undefined;
+    for (const item in this.weirdConstants) {
+      if (onto.properties[item]) {
+        return item;
+      }
     }
   }
 }
