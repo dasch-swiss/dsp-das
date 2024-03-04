@@ -1,13 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  Inject,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
+import { Component, Inject, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -23,7 +14,6 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ComponentCommunicationEventService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { switchMap } from 'rxjs/operators';
@@ -77,8 +67,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
     private _resourceService: ResourceService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _componentCommsService: ComponentCommunicationEventService,
-    private _cd: ChangeDetectorRef,
     private _store: Store
   ) {}
 
