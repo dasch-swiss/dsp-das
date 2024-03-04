@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -107,6 +108,7 @@ interface PolygonsForRegion {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-still-image',
   templateUrl: './still-image.component.html',
   styleUrls: ['./still-image.component.scss'],
@@ -519,17 +521,22 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
     const linkVal = new CreateLinkValue();
     linkVal.type = Constants.LinkValue;
     linkVal.linkedResourceIri = this.resourceIri;
-    const commentVal = new CreateTextValueAsString();
-    commentVal.type = Constants.TextValue;
-    commentVal.text = comment;
-
     createResource.properties = {
-      [Constants.HasComment]: [commentVal],
       [Constants.HasColor]: [colorVal],
       [Constants.IsRegionOfValue]: [linkVal],
       [Constants.HasGeometry]: [geomVal],
     };
+    if (comment) {
+      const commentVal = new CreateTextValueAsString();
+      commentVal.type = Constants.TextValue;
+      commentVal.text = comment;
+      createResource.properties[Constants.HasComment] = [commentVal];
+    }
+
     this._dspApiConnection.v2.res.createResource(createResource).subscribe((res: ReadResource) => {
+      this._viewer.destroy();
+      this._setupViewer();
+      this.loadImages();
       this.regionAdded.emit(res.id);
     });
   }
@@ -774,10 +781,14 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
 
     loc.y *= aspectRatio;
 
-    this._viewer.addOverlay({
-      element: regEle,
-      location: loc,
-    });
+    this._viewer
+      .addOverlay({
+        element: regEle,
+        location: loc,
+      })
+      .addHandler('canvas-click', event => {
+        this.regionClicked.emit((<any>event).originalTarget.dataset.regionIri);
+      });
 
     this._regions[regionIri].push(regEle);
 
@@ -792,6 +803,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
     regEle.addEventListener('mouseleave', () => {
       comEle.setAttribute('style', 'display: none');
     });
+    regEle.dataset.regionIri = regionIri;
     regEle.addEventListener('click', () => {
       this.regionClicked.emit(regionIri);
     });

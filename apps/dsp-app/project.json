@@ -137,11 +137,11 @@
           "vendorChunk": false,
           "buildOptimizer": false
         },
-        "staging-server": {
+        "stage-server": {
           "fileReplacements": [
             {
               "replace": "apps/dsp-app/src/environments/environment.ts",
-              "with": "apps/dsp-app/src/environments/environment.staging-server.ts"
+              "with": "apps/dsp-app/src/environments/environment.stage-server.ts"
             }
           ],
           "optimization": false,
@@ -179,8 +179,8 @@
         "0845-test-server": {
           "browserTarget": "dsp-app:build:ls-test-server"
         },
-        "staging-server": {
-          "browserTarget": "dsp-app:build:staging-server"
+        "stage-server": {
+          "browserTarget": "dsp-app:build:stage-server"
         }
       }
     },
