@@ -51,9 +51,9 @@ import {
   LoadClassItemsCountAction,
   ResourceSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { Select, Store } from '@ngxs/store';
+import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, Subscription, forkJoin } from 'rxjs';
-import { map, takeUntil, takeWhile } from 'rxjs/operators';
+import { map, take, takeUntil, takeWhile } from 'rxjs/operators';
 import { ConfirmationWithComment, DialogComponent } from '../../../main/dialog/dialog.component';
 import { DspResource } from '../dsp-resource';
 import { RepresentationConstants } from '../representation/file-representation';
@@ -83,8 +83,6 @@ export interface PropertyInfoValues {
 })
 export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
-
-  @Select(ResourceSelectors.isLoading) isRresourceLoading$: Observable<boolean>;
 
   /**
    * input `resource` of properties component:
@@ -169,16 +167,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     )
   );
 
-  get user$(): Observable<ReadUser> {
-    return this._store.select(ResourceSelectors.attachedUsers).pipe(
-      takeWhile(attachedUsers => this.resource !== undefined && attachedUsers[this.resource.res.id] !== undefined),
-      takeUntil(this.ngUnsubscribe),
-      map(attachedUsers =>
-        attachedUsers[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToUser)
-      )
-    );
-  }
-
+  user: ReadUser;
   pageEvent: PageEvent;
   loading = false;
 
@@ -197,7 +186,8 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     private _sortingService: SortingService,
     private _cd: ChangeDetectorRef,
     private _store: Store,
-    private _ontologyService: OntologyService
+    private _ontologyService: OntologyService,
+    private _actions$: Actions
   ) {}
 
   ngOnInit(): void {
@@ -266,6 +256,14 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
       new GetAttachedUserAction(this.resource.res.id, this.resource.res.attachedToUser),
       new GetAttachedProjectAction(this.resource.res.id, this.resource.res.attachedToProject),
     ]);
+    this._actions$
+      .pipe(ofActionSuccessful(GetAttachedUserAction))
+      .pipe(take(1))
+      .subscribe(() => {
+        this.user = this._store
+          .selectSnapshot(ResourceSelectors.attachedUsers)
+          [this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToUser);
+      });
   }
 
   ngOnChanges(): void {

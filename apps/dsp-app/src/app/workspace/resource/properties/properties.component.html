@@ -129,11 +129,9 @@
     </span>
   </span>
   <span class="fill-remaining-space desktop-only"></span>
-  <span *ngIf="(user$ | async) || resource.res.creationDate">
+  <span *ngIf="user || resource.res.creationDate">
     Created
-    <span *ngIf="(user$ | async) as user"
-      >by {{(user.username ? user.username : user.givenName + ' ' + user.familyName)}}</span
-    >
+    <span *ngIf="user">by {{(user.username ? user.username : user.givenName + ' ' + user.familyName)}}</span>
     <span *ngIf="resource.res.creationDate"> on {{resource.res.creationDate | date}}</span>
   </span>
 </div>
@@ -182,7 +180,7 @@
               [canDelete]="deleteValueIsAllowed(prop)"
               [cantDeleteReason]="cantDeleteReason"
               [projectStatus]="(project$ | async)?.status"
-              [user]="user$ | async"
+              [user]="user"
               [valueUuidToHighlight]="valueUuidToHighlight"
               (referredResourceClicked)="openResource($event)"
               (referredResourceHovered)="previewResource()">

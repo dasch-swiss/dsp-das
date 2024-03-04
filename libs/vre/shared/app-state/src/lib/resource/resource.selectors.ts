@@ -6,7 +6,7 @@ import { ReourceStateModel } from './resource.state-model';
 
 export class ResourceSelectors {
   @Selector([ResourceState])
-  static isLoading(state: ReourceStateModel): boolean | undefined {
+  static isLoading(state: ReourceStateModel): boolean {
     return state.isLoading;
   }
 
