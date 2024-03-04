@@ -117,6 +117,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
 
   private getPayload() {
     const createResource = new CreateResource();
+    // TODO TERRIBLE, THIS IS ACCESSING CHILDREN COMPONENT USE A SERVICE ?
     const resLabelVal = <CreateTextValueAsString>this.selectPropertiesComponent.createValueComponent.getNewValue();
     createResource.label = resLabelVal.text;
     createResource.type = this.resourceClass.id;
