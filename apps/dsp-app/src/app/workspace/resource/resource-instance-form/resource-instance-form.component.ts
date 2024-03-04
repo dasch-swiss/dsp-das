@@ -63,7 +63,7 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.getResourceProperties(this.resourceClassIri);
-    this.unsuitableProperties = this.getUuneditableProperties();
+    this.unsuitableProperties = this._getUnsuitableProperties();
   }
 
   private getResourceProperties(resourceClassIri: string) {
@@ -80,7 +80,7 @@ export class ResourceInstanceFormComponent implements OnInit {
     this.loading = true;
 
     this._dspApiConnection.v2.res
-      .createResource(this.getPayload())
+      .createResource(this._getPayload())
       .pipe(
         switchMap((res: ReadResource) => {
           const uuid = this._resourceService.getResourceUuid(res.id);
@@ -101,7 +101,7 @@ export class ResourceInstanceFormComponent implements OnInit {
     }
   }
 
-  private getPayload() {
+  private _getPayload() {
     const createResource = new CreateResource();
     // TODO TERRIBLE, THIS IS ACCESSING CHILDREN COMPONENT USE A SERVICE ?
     const resLabelVal = <CreateTextValueAsString>this.selectPropertiesComponent.createValueComponent.getNewValue();
@@ -109,12 +109,12 @@ export class ResourceInstanceFormComponent implements OnInit {
     createResource.type = this.resourceClass.id;
     createResource.attachedToProject = this.projectIri;
 
-    createResource.properties = this.getPropertiesObj();
+    createResource.properties = this._getPropertiesObj();
 
     return createResource;
   }
 
-  private getPropertiesObj() {
+  private _getPropertiesObj() {
     const propertiesObj = {};
 
     // TODO TERRIBLE, THIS IS ACCESSING CHILDREN COMPONENT OF CHILDREN COMPONENT, USE A SERVICE ?
@@ -139,7 +139,7 @@ export class ResourceInstanceFormComponent implements OnInit {
     return propertiesObj;
   }
 
-  private getUuneditableProperties() {
+  private _getUnsuitableProperties() {
     // filter out all props that cannot be edited or are link props but also the hasFileValue props
     return this.ontologyInfo
       .getPropertyDefinitionsByType(ResourcePropertyDefinition)
