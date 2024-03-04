@@ -51,10 +51,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
 
   ontologyInfo: ResourceClassAndPropertyDefinitions;
 
-  get hasFileValue() {
-    return this.getHasFileValue(this.ontologyInfo);
-  }
-
   fileValue: CreateFileValue;
   loading = false;
 
@@ -136,7 +132,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
     });
 
     if (this.fileValue) {
-      propertiesObj[this.hasFileValue] = [this.fileValue];
+      const hasFileValue = this.getHasFileValue(this.ontologyInfo);
+      propertiesObj[hasFileValue] = [this.fileValue];
     }
 
     createResource.properties = propertiesObj;
