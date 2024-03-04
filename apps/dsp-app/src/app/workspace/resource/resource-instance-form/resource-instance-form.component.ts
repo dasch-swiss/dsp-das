@@ -63,7 +63,6 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.getResourceProperties(this.resourceClassIri);
-    this.unsuitableProperties = this._getUnsuitableProperties();
   }
 
   private getResourceProperties(resourceClassIri: string) {
@@ -72,6 +71,7 @@ export class ResourceInstanceFormComponent implements OnInit {
       .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri)))
       .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
         this.ontologyInfo = onto;
+        this.unsuitableProperties = this._getUnsuitableProperties();
         this.resourceClass = onto.classes[resourceClassIri];
       });
   }
