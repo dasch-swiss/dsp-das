@@ -130,6 +130,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
   private getPropertiesObj() {
     const propertiesObj = {};
 
+    // TODO TERRIBLE, THIS IS ACCESSING CHILDREN COMPONENT OF CHILDREN COMPONENT, USE A SERVICE ?
     this.selectPropertiesComponent.switchPropertiesComponent.forEach(child => {
       const createVal = child.createValueComponent.getNewValue();
       const iri = child.property.id;
