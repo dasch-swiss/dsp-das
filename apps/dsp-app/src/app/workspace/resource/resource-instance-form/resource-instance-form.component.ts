@@ -8,7 +8,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
@@ -47,7 +47,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
   @ViewChild('selectProps')
   selectPropertiesComponent: SelectPropertiesComponent;
 
-  propertiesParentForm: UntypedFormGroup;
+  propertiesParentForm = this._fb.group({});
 
   ontologyIri: string;
   resourceClass: ResourceClassDefinition;
@@ -80,7 +80,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
     // get ontology iri from res class iri
     this.ontologyIri = this.resourceClassIri.split('#')[0];
     this.getResourceProperties(this.resourceClassIri);
-    this.propertiesParentForm = this._fb.group({});
   }
 
   ngOnChanges(changes: SimpleChanges) {
