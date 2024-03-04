@@ -144,7 +144,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
         })
         .then(() => {
           this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
-          this._cd.markForCheck();
         });
     });
   }
