@@ -54,7 +54,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
   }
 
   resourceClass: ResourceClassDefinition;
-  resource: ReadResource;
   resourceLabel: string;
   properties: ResourcePropertyDefinition[];
   ontologyInfo: ResourceClassAndPropertyDefinitions;
@@ -186,9 +185,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
 
     createResource.properties = propertiesObj;
     this._dspApiConnection.v2.res.createResource(createResource).subscribe((res: ReadResource) => {
-      this.resource = res;
-
-      const uuid = this._resourceService.getResourceUuid(this.resource.id);
+      const uuid = this._resourceService.getResourceUuid(res.id);
       const params = this._route.snapshot.url;
       // go to ontology/[ontoname]/[classname]/[classuuid] relative to parent route project/[projectcode]/
       this._router
