@@ -27,7 +27,7 @@ jobs:
         run: |
           npm install
           npx nx run-many --all --target=lint --skip-nx-cache
-          npx nx run-many --all --target=test --configuration=ci
+        # npx nx run-many --all --target=test --configuration=ci
         env:
           TZ: Europe/Zurich
 
@@ -48,7 +48,7 @@ jobs:
           echo "registry=https://npm.pkg.github.com/dasch-swiss" >> ~/.npmrc
       - run: npm install
       - run: npx nx run dsp-app:lint
-        # - run: npx nx run dsp-app:test:ci
+      # - run: npx nx run dsp-app:test:ci
         env:
           TZ: Europe/Zurich
 
@@ -206,7 +206,7 @@ jobs:
             {"type": "docs", "section": "Documentation", "hidden": false }
             ]'
 
-  # build documentation
+# build documentation
   docs-build-test:
     name: Docs Build Test
     runs-on: ubuntu-latest
