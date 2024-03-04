@@ -32,7 +32,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { ResourceService } from '../services/resource.service';
 import { SelectPropertiesComponent } from './select-properties/select-properties.component';
 
@@ -132,10 +132,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
           this.hasFileValue = undefined;
         }
       });
-  }
-
-  setFileValue(file: CreateFileValue) {
-    this.fileValue = file;
   }
 
   submitData() {

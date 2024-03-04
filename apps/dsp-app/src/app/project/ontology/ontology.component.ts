@@ -48,8 +48,8 @@ import {
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
-import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { Observable, Subject, combineLatest } from 'rxjs';
+import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { DialogComponent } from '../../main/dialog/dialog.component';
 import { DialogService } from '../../main/services/dialog.service';
@@ -424,6 +424,9 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
       .open<CreateResourceClassDialogComponent, CreateResourceClassDialogProps, null>(
         CreateResourceClassDialogComponent,
         {
+          position: { right: '0px', top: '0px' },
+          height: '100vh',
+          minHeight: '100vh',
           data: {
             id: resClassInfo.iri,
             title: resClassInfo.label,
