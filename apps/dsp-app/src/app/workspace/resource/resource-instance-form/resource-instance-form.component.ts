@@ -45,6 +45,22 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
   @Input() projectIri: string;
 
   @ViewChild('selectProps')
+  selectPropertiesComponent: SelectPropertiesComponent;
+
+  propertiesParentForm = this._fb.group({});
+
+  resourceClass: ResourceClassDefinition;
+
+  ontologyInfo: ResourceClassAndPropertyDefinitions;
+
+  readonly defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
+
+  // selected resource class has a file value property: display the corresponding upload form
+  hasFileValue: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
+
+  fileValue: CreateFileValue;
+  loading = false;
+
   get ontologyIri() {
     return this.resourceClassIri.split('#')[0];
   }
@@ -65,22 +81,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
           prop.id !== Constants.HasTextFileValue
       );
   }
-
-  selectPropertiesComponent: SelectPropertiesComponent;
-
-  propertiesParentForm = this._fb.group({});
-
-  resourceClass: ResourceClassDefinition;
-
-  ontologyInfo: ResourceClassAndPropertyDefinitions;
-
-  readonly defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
-
-  // selected resource class has a file value property: display the corresponding upload form
-  hasFileValue: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
-
-  fileValue: CreateFileValue;
-  loading = false;
 
   constructor(
     @Inject(DspApiConnectionToken)
