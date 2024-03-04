@@ -93,12 +93,41 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
   submitData() {
     this.loading = true;
 
+    this._dspApiConnection.v2.res
+      .createResource(this.getPayload())
+      .pipe(
+        switchMap((res: ReadResource) => {
+          const uuid = this._resourceService.getResourceUuid(res.id);
+          return this._router.navigate(['..', uuid], { relativeTo: this._route });
+        }),
+        take(1)
+      )
+      .subscribe(() => {
+        this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
+      });
+  }
+
+  private getHasFileValue(onto: ResourceClassAndPropertyDefinitions) {
+    for (const item in this.weirdConstants) {
+      if (onto.properties[item]) {
+        return item;
+      }
+    }
+  }
+
+  private getPayload() {
     const createResource = new CreateResource();
     const resLabelVal = <CreateTextValueAsString>this.selectPropertiesComponent.createValueComponent.getNewValue();
     createResource.label = resLabelVal.text;
     createResource.type = this.resourceClass.id;
     createResource.attachedToProject = this.projectIri;
 
+    createResource.properties = this.getPropertiesObj();
+
+    return createResource;
+  }
+
+  private getPropertiesObj() {
     const propertiesObj = {};
 
     this.selectPropertiesComponent.switchPropertiesComponent.forEach(child => {
@@ -119,28 +148,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
       const hasFileValue = this.getHasFileValue(this.ontologyInfo);
       propertiesObj[hasFileValue] = [this.fileValue];
     }
-
-    createResource.properties = propertiesObj;
-
-    this._dspApiConnection.v2.res
-      .createResource(createResource)
-      .pipe(
-        switchMap((res: ReadResource) => {
-          const uuid = this._resourceService.getResourceUuid(res.id);
-          return this._router.navigate(['..', uuid], { relativeTo: this._route });
-        }),
-        take(1)
-      )
-      .subscribe(() => {
-        this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
-      });
-  }
-
-  private getHasFileValue(onto: ResourceClassAndPropertyDefinitions) {
-    for (const item in this.weirdConstants) {
-      if (onto.properties[item]) {
-        return item;
-      }
-    }
+    return propertiesObj;
   }
 }
