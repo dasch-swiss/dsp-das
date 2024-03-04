@@ -51,8 +51,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
 
   ontologyInfo: ResourceClassAndPropertyDefinitions;
 
-  // selected resource class has a file value property: display the corresponding upload form
-  hasFileValue: string;
+  get hasFileValue() {
+    return this.getHasFileValue(this.ontologyInfo);
+  }
 
   fileValue: CreateFileValue;
   loading = false;
@@ -106,7 +107,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
       .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
         this.ontologyInfo = onto;
         this.resourceClass = onto.classes[resourceClassIri];
-        this.hasFileValue = this.getHasFileValue(onto);
       });
   }
 
