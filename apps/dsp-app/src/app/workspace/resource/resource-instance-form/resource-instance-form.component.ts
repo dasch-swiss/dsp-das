@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -24,7 +24,7 @@ import { SelectPropertiesComponent } from './select-properties/select-properties
   selector: 'app-resource-instance-form',
   templateUrl: './resource-instance-form.component.html',
 })
-export class ResourceInstanceFormComponent implements OnInit, OnChanges {
+export class ResourceInstanceFormComponent implements OnInit {
   @Input() resourceClassIri: string;
   @Input() projectIri: string;
 
@@ -72,12 +72,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.getResourceProperties(this.resourceClassIri);
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.resourceClassIri) {
-      this.ngOnInit();
-    }
   }
 
   private getResourceProperties(resourceClassIri: string) {
