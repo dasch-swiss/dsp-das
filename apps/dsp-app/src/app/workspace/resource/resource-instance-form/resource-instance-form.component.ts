@@ -25,8 +25,6 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import {
   ComponentCommunicationEventService,
-  DefaultClass,
-  DefaultResourceClasses,
   EmitEvent,
   Events as CommsEvents,
 } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -52,8 +50,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
   resourceClass: ResourceClassDefinition;
 
   ontologyInfo: ResourceClassAndPropertyDefinitions;
-
-  readonly defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
 
   // selected resource class has a file value property: display the corresponding upload form
   hasFileValue: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
