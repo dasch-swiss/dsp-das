@@ -125,14 +125,9 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
     this._dspApiConnection.v2.res.createResource(createResource).subscribe((res: ReadResource) => {
       const uuid = this._resourceService.getResourceUuid(res.id);
       const params = this._route.snapshot.url;
-      // go to ontology/[ontoname]/[classname]/[classuuid] relative to parent route project/[projectcode]/
-      this._router
-        .navigate([params[0].path, params[1].path, params[2].path, uuid], {
-          relativeTo: this._route.parent,
-        })
-        .then(() => {
-          this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
-        });
+      this._router.navigate(['..', uuid]).then(() => {
+        this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
+      });
     });
   }
 
