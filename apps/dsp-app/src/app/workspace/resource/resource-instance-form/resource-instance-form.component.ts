@@ -113,14 +113,11 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
 
   submitData() {
     this.loading = true;
+
     const createResource = new CreateResource();
-
     const resLabelVal = <CreateTextValueAsString>this.selectPropertiesComponent.createValueComponent.getNewValue();
-
     createResource.label = resLabelVal.text;
-
     createResource.type = this.resourceClass.id;
-
     createResource.attachedToProject = this.projectIri;
 
     const propertiesObj = {};
