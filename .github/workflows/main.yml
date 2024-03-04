@@ -79,12 +79,12 @@ jobs:
           docker compose -f docker-compose.yml up -d sipi ingest api
           ./webapi/scripts/wait-for-api.sh
       - name: run e2e tests in ci
-        if: !github.event.head_commit
+        if: github.event_name != 'push'
         run: |
           cd ../dsp-das
           npm run e2e-ci
       - name: run e2e tests on cypress cloud on push
-        if: github.event.head_commit
+        if: github.event_name == 'push'
         run: |
           cd ../dsp-das
           export CYPRESS_RECORD_KEY=$CYPRESS_RECORD_KEY_SECRET
