@@ -53,7 +53,7 @@ export class ResourceInstanceFormComponent implements OnInit {
     return this.resourceClassIri.split('#')[0];
   }
 
-  get properties() {
+  get uneditableProperties() {
     // filter out all props that cannot be edited or are link props but also the hasFileValue props
     return this.ontologyInfo
       .getPropertyDefinitionsByType(ResourcePropertyDefinition)
