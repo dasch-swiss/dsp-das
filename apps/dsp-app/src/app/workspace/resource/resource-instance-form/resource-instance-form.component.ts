@@ -136,25 +136,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
     });
 
     if (this.fileValue) {
-      switch (this.hasFileValue) {
-        case 'stillImage':
-          propertiesObj[Constants.HasStillImageFileValue] = [this.fileValue];
-          break;
-        case 'document':
-          propertiesObj[Constants.HasDocumentFileValue] = [this.fileValue];
-          break;
-        case 'audio':
-          propertiesObj[Constants.HasAudioFileValue] = [this.fileValue];
-          break;
-        case 'movingImage':
-          propertiesObj[Constants.HasMovingImageFileValue] = [this.fileValue];
-          break;
-        case 'archive':
-          propertiesObj[Constants.HasArchiveFileValue] = [this.fileValue];
-          break;
-        case 'text':
-          propertiesObj[Constants.HasTextFileValue] = [this.fileValue];
-      }
+      propertiesObj[this.hasFileValue] = [this.fileValue];
     }
 
     createResource.properties = propertiesObj;
