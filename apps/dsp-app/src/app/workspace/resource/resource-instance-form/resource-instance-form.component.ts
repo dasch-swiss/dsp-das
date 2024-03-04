@@ -106,24 +106,8 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
       .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri)))
       .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
         this.ontologyInfo = onto;
-
         this.resourceClass = onto.classes[resourceClassIri];
-
-        if (onto.properties[Constants.HasStillImageFileValue]) {
-          this.hasFileValue = 'stillImage';
-        } else if (onto.properties[Constants.HasDocumentFileValue]) {
-          this.hasFileValue = 'document';
-        } else if (onto.properties[Constants.HasAudioFileValue]) {
-          this.hasFileValue = 'audio';
-        } else if (onto.properties[Constants.HasMovingImageFileValue]) {
-          this.hasFileValue = 'movingImage';
-        } else if (onto.properties[Constants.HasArchiveFileValue]) {
-          this.hasFileValue = 'archive';
-        } else if (onto.properties[Constants.HasTextFileValue]) {
-          this.hasFileValue = 'text';
-        } else {
-          this.hasFileValue = undefined;
-        }
+        this.hasFileValue = this.getHasFileValue(onto);
       });
   }
 
@@ -192,5 +176,23 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
           this._cd.markForCheck();
         });
     });
+  }
+
+  private getHasFileValue(onto: ResourceClassAndPropertyDefinitions) {
+    if (onto.properties[Constants.HasStillImageFileValue]) {
+      return 'stillImage';
+    } else if (onto.properties[Constants.HasDocumentFileValue]) {
+      return 'document';
+    } else if (onto.properties[Constants.HasAudioFileValue]) {
+      return 'audio';
+    } else if (onto.properties[Constants.HasMovingImageFileValue]) {
+      return 'movingImage';
+    } else if (onto.properties[Constants.HasArchiveFileValue]) {
+      return 'archive';
+    } else if (onto.properties[Constants.HasTextFileValue]) {
+      return 'text';
+    } else {
+      return undefined;
+    }
   }
 }
