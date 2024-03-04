@@ -12,11 +12,11 @@ import { BASE_PATH } from '@dasch-swiss/vre/open-api';
 import { PendoAnalyticsService } from '@dasch-swiss/vre/shared/app-analytics';
 import {
   AppConfigService,
+  buildTagFactory,
   BuildTagToken,
   DspApiConfigToken,
   DspAppConfigToken,
   DspInstrumentationToken,
-  buildTagFactory,
 } from '@dasch-swiss/vre/shared/app-config';
 import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
@@ -34,6 +34,7 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { Upload2Component } from '@dsp-app/src/app/workspace/resource/representation/upload/upload2.component';
+import { BooleanValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/boolean-value-2.component';
 import { IntValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-2.component';
 import { SwitchProperties2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-2.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -204,6 +205,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     AvTimelineComponent,
     DescriptionComponent,
     BooleanValueComponent,
+    BooleanValue2Component,
     CenteredLayoutComponent,
     ChipListInputComponent,
     CollaborationComponent,

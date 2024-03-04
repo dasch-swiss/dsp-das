@@ -1,13 +1,13 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { FormControl, UntypedFormGroup } from '@angular/forms';
-import { Constants, ReadResource, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
-import { BaseValueDirective } from '../../../../../main/directive/base-value.directive';
+import { Component, Input } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Constants, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 
 @Component({
   selector: 'app-switch-properties-2',
   template: `
     <span [ngSwitch]="property.objectType">
       <app-int-value-2 *ngSwitchCase="constants.IntValue" [control]="control"></app-int-value-2>
+      <app-boolean-value-2 *ngSwitchCase="constants.BooleanValue" [control]="control"></app-boolean-value-2>
 
       <span *ngSwitchDefault>
         <p>
