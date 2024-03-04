@@ -53,12 +53,7 @@ export class ResourceInstanceFormComponent implements OnInit {
     return this.resourceClassIri.split('#')[0];
   }
 
-  get uneditableProperties() {
-    // filter out all props that cannot be edited or are link props but also the hasFileValue props
-    return this.ontologyInfo
-      .getPropertyDefinitionsByType(ResourcePropertyDefinition)
-      .filter(prop => !prop.isLinkProperty && prop.isEditable && !this.weirdConstants.includes(prop.id));
-  }
+  uneditableProperties: ResourcePropertyDefinition[];
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -72,6 +67,7 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.getResourceProperties(this.resourceClassIri);
+    this.uneditableProperties = this.getUuneditableProperties();
   }
 
   private getResourceProperties(resourceClassIri: string) {
@@ -145,5 +141,12 @@ export class ResourceInstanceFormComponent implements OnInit {
       propertiesObj[hasFileValue] = [this.fileValue];
     }
     return propertiesObj;
+  }
+
+  private getUuneditableProperties() {
+    // filter out all props that cannot be edited or are link props but also the hasFileValue props
+    return this.ontologyInfo
+      .getPropertyDefinitionsByType(ResourcePropertyDefinition)
+      .filter(prop => !prop.isLinkProperty && prop.isEditable && !this.weirdConstants.includes(prop.id));
   }
 }
