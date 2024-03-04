@@ -140,6 +140,7 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
     }
 
     createResource.properties = propertiesObj;
+
     this._dspApiConnection.v2.res.createResource(createResource).subscribe((res: ReadResource) => {
       const uuid = this._resourceService.getResourceUuid(res.id);
       const params = this._route.snapshot.url;
