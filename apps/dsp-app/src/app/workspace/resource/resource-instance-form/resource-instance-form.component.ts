@@ -49,7 +49,10 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
 
   propertiesParentForm = this._fb.group({});
 
-  ontologyIri: string;
+  get ontologyIri() {
+    return this.resourceClassIri.split('#')[0];
+  }
+
   resourceClass: ResourceClassDefinition;
   resource: ReadResource;
   resourceLabel: string;
@@ -77,8 +80,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    // get ontology iri from res class iri
-    this.ontologyIri = this.resourceClassIri.split('#')[0];
     this.getResourceProperties(this.resourceClassIri);
   }
 
