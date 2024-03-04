@@ -16,7 +16,7 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 import { ResourceService } from '../services/resource.service';
 import { SelectPropertiesComponent } from './select-properties/select-properties.component';
 
@@ -122,12 +122,18 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
 
     createResource.properties = propertiesObj;
 
-    this._dspApiConnection.v2.res.createResource(createResource).subscribe((res: ReadResource) => {
-      const uuid = this._resourceService.getResourceUuid(res.id);
-      this._router.navigate(['..', uuid], { relativeTo: this._route }).then(() => {
+    this._dspApiConnection.v2.res
+      .createResource(createResource)
+      .pipe(
+        switchMap((res: ReadResource) => {
+          const uuid = this._resourceService.getResourceUuid(res.id);
+          return this._router.navigate(['..', uuid], { relativeTo: this._route });
+        }),
+        take(1)
+      )
+      .subscribe(() => {
         this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
       });
-    });
   }
 
   private getHasFileValue(onto: ResourceClassAndPropertyDefinitions) {
