@@ -1,6 +1,6 @@
 <form
   *ngIf="!loading; else loadingTemplate"
-  [formGroup]="propertiesParentForm"
+  [formGroup]="dynamicForm"
   (ngSubmit)="submitData()"
   appInvalidControlScroll>
   <app-upload-2 [allowedFileTypes]="['image/png']"></app-upload-2>
@@ -9,8 +9,8 @@
     *ngIf="resourceClass"
     [ontologyInfo]="ontologyInfo"
     [selectedResourceClass]="resourceClass"
-    [properties]="uneditableProperties"
-    [parentForm]="propertiesParentForm"
+    [properties]="unsuitableProperties"
+    [parentForm]="dynamicForm"
     [currentOntoIri]="ontologyIri">
   </app-select-properties>
   <button
@@ -19,7 +19,7 @@
     color="primary"
     appLoadingButton
     [isLoading]="loading"
-    [disabled]="propertiesParentForm.invalid">
+    [disabled]="dynamicForm.invalid">
     {{ 'appLabels.form.action.submit' | translate }}
   </button>
 </form>

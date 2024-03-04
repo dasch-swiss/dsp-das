@@ -31,13 +31,11 @@ export class ResourceInstanceFormComponent implements OnInit {
   @ViewChild('selectProps')
   selectPropertiesComponent: SelectPropertiesComponent;
 
-  propertiesParentForm = this._fb.group({});
-
+  dynamicForm = this._fb.group({});
   resourceClass: ResourceClassDefinition;
-
   ontologyInfo: ResourceClassAndPropertyDefinitions;
-
   fileValue: CreateFileValue;
+  unsuitableProperties: ResourcePropertyDefinition[];
   loading = false;
 
   readonly weirdConstants = [
@@ -53,8 +51,6 @@ export class ResourceInstanceFormComponent implements OnInit {
     return this.resourceClassIri.split('#')[0];
   }
 
-  uneditableProperties: ResourcePropertyDefinition[];
-
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
@@ -67,7 +63,7 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.getResourceProperties(this.resourceClassIri);
-    this.uneditableProperties = this.getUuneditableProperties();
+    this.unsuitableProperties = this.getUuneditableProperties();
   }
 
   private getResourceProperties(resourceClassIri: string) {
