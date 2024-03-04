@@ -45,16 +45,33 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
   @Input() projectIri: string;
 
   @ViewChild('selectProps')
-  selectPropertiesComponent: SelectPropertiesComponent;
-
-  propertiesParentForm = this._fb.group({});
-
   get ontologyIri() {
     return this.resourceClassIri.split('#')[0];
   }
 
+  get properties() {
+    // filter out all props that cannot be edited or are link props but also the hasFileValue props
+    return this.ontologyInfo
+      .getPropertyDefinitionsByType(ResourcePropertyDefinition)
+      .filter(
+        prop =>
+          !prop.isLinkProperty &&
+          prop.isEditable &&
+          prop.id !== Constants.HasStillImageFileValue &&
+          prop.id !== Constants.HasDocumentFileValue &&
+          prop.id !== Constants.HasAudioFileValue &&
+          prop.id !== Constants.HasMovingImageFileValue &&
+          prop.id !== Constants.HasArchiveFileValue &&
+          prop.id !== Constants.HasTextFileValue
+      );
+  }
+
+  selectPropertiesComponent: SelectPropertiesComponent;
+
+  propertiesParentForm = this._fb.group({});
+
   resourceClass: ResourceClassDefinition;
-  properties: ResourcePropertyDefinition[];
+
   ontologyInfo: ResourceClassAndPropertyDefinitions;
 
   readonly defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
@@ -95,20 +112,6 @@ export class ResourceInstanceFormComponent implements OnInit, OnChanges {
         this.ontologyInfo = onto;
 
         this.resourceClass = onto.classes[resourceClassIri];
-
-        // filter out all props that cannot be edited or are link props but also the hasFileValue props
-        this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition).filter(
-          prop =>
-            !prop.isLinkProperty &&
-            prop.isEditable &&
-            prop.id !== Constants.HasStillImageFileValue &&
-            prop.id !== Constants.HasDocumentFileValue &&
-            prop.id !== Constants.HasAudioFileValue &&
-            prop.id !== Constants.HasMovingImageFileValue &&
-            prop.id !== Constants.HasArchiveFileValue &&
-            prop.id !== Constants.HasTextFileValue
-          // --> TODO for UPLOAD: expand with other representation file values
-        );
 
         if (onto.properties[Constants.HasStillImageFileValue]) {
           this.hasFileValue = 'stillImage';
