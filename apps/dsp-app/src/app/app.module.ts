@@ -40,6 +40,7 @@ import { BooleanValue2Component } from '@dsp-app/src/app/workspace/resource/reso
 import { IntValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-2.component';
 import { IntValue3Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-3.component';
 import { SwitchProperties2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-2.component';
+import { UriValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/uri-value-2.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularSplitModule } from 'angular-split';
@@ -322,6 +323,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     UploadComponent,
     Upload2Component,
     UriValueComponent,
+    UriValue2Component,
     UserComponent,
     UserFormComponent,
     UserMenuComponent,
