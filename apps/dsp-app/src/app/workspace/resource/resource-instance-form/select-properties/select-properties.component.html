@@ -25,12 +25,8 @@
     <span *ngIf="propertyValuesKeyValuePair[prop.id + '-cardinality'][0] === 1">*</span>
   </h3>
   <div class="property-value large-field">
-    <ng-container
-      *ngFor="
-                            let val of propertyValuesKeyValuePair[prop.id];
-                            let i = index
-                        ">
-      <div *ngIf="val !== undefined">
+    <ng-container *ngFor="let val of propertyValuesKeyValuePair[prop.id];let i = index">
+      <ng-container *ngIf="val !== undefined">
         <app-switch-properties-2
           class="value"
           [property]="prop"
@@ -58,7 +54,7 @@
           (click)="deleteValue(prop, i, $event)">
           <mat-icon>delete</mat-icon>
         </button>
-      </div>
+      </ng-container>
     </ng-container>
 
     <!-- Add button -->
