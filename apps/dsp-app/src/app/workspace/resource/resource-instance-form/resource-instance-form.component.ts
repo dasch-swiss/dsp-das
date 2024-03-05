@@ -112,11 +112,6 @@ export class ResourceInstanceFormComponent implements OnInit {
       }
     });
   }
-
-  loadComponent<T>(index: number, component) {
-    return this.componentHosts.get(index).viewContainerRef.createComponent<T>(component).instance;
-  }
-
   submitData() {
     this.loading = true;
 
@@ -185,5 +180,9 @@ export class ResourceInstanceFormComponent implements OnInit {
     return this.ontologyInfo
       .getPropertyDefinitionsByType(ResourcePropertyDefinition)
       .filter(prop => !prop.isLinkProperty && prop.isEditable && !this.weirdConstants.includes(prop.id));
+  }
+
+  private loadComponent<T>(index: number, component) {
+    return this.componentHosts.get(index).viewContainerRef.createComponent<T>(component).instance;
   }
 }
