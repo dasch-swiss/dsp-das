@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
@@ -15,10 +16,10 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
+import { CommonInputComponent } from '@dsp-app/src/app/project/common-input/common-input.component';
 import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/resource-instance-form/component-host.directive';
 import { BooleanValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/boolean-value-2.component';
 import { IntValue3Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-3.component';
-import { UriValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/uri-value-2.component';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs/operators';
 import { ResourceService } from '../services/resource.service';
@@ -62,7 +63,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _fb: UntypedFormBuilder,
+    private _fb: FormBuilder,
     private _resourceService: ResourceService,
     private _route: ActivatedRoute,
     private _router: Router,
@@ -93,24 +94,20 @@ export class ResourceInstanceFormComponent implements OnInit {
       this.futurePayload.push(null);
       switch (prop.objectType) {
         case Constants.IntValue:
+          this.dynamicForm.addControl(prop.label, this._fb.control(0, [Validators.required]));
           const instance = this.loadComponent<IntValue3Component>(index, IntValue3Component);
-          instance.data = 0;
-          instance.dataChange.subscribe(newValue => {
-            this.futurePayload[index] = newValue;
-          });
+          instance.control = this.dynamicForm.controls[prop.label];
           break;
         case Constants.BooleanValue:
+          this.dynamicForm.addControl(prop.label, this._fb.control(false));
           const instance2 = this.loadComponent<BooleanValue2Component>(index, BooleanValue2Component);
-          instance2.data = false;
-          instance2.dataChange.subscribe(newValue => {
-            this.futurePayload[index] = newValue;
-          });
+          instance2.control = this.dynamicForm.controls[prop.label];
           break;
         case Constants.UriValue:
-          const instance3 = this.loadComponent<UriValue2Component>(index, UriValue2Component);
-          instance3.dataChange.subscribe(newValue => {
-            this.futurePayload[index] = newValue;
-          });
+          this.dynamicForm.addControl(prop.label, this._fb.control(null, [Validators.email]));
+          const instance3 = this.loadComponent<CommonInputComponent>(index, CommonInputComponent);
+          instance3.control = this.dynamicForm.controls[prop.label];
+          instance3.validatorErrors = [{ errorKey: 'email', message: 'This is not a valid email.' }];
           break;
       }
     });
