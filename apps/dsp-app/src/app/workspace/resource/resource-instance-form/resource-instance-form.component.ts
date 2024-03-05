@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
@@ -90,6 +89,8 @@ export class ResourceInstanceFormComponent implements OnInit {
   }
 
   private _buildForm() {
+    this.dynamicForm.addControl('label', this._fb.control(null, [Validators.required]));
+
     this.unsuitableProperties.forEach((prop, index) => {
       this.futurePayload.push(null);
       switch (prop.objectType) {
@@ -112,6 +113,7 @@ export class ResourceInstanceFormComponent implements OnInit {
       }
     });
   }
+
   submitData() {
     this.loading = true;
 
@@ -140,7 +142,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   private _getPayload() {
     const createResource = new CreateResource();
     // TODO TERRIBLE, THIS IS ACCESSING CHILDREN COMPONENT USE A SERVICE ?
-    const resLabelVal = <CreateTextValueAsString>this.selectPropertiesComponent.createValueComponent.getNewValue();
+    const resLabelVal = this.dynamicForm.controls['label'].value;
     createResource.label = resLabelVal.text;
     createResource.type = this.resourceClass.id;
     createResource.attachedToProject = this.projectIri;
