@@ -95,19 +95,19 @@ export class ResourceInstanceFormComponent implements OnInit {
       this.futurePayload.push(null);
       switch (prop.objectType) {
         case Constants.IntValue:
-          this.dynamicForm.addControl(prop.label, this._fb.control(0, [Validators.required]));
+          this.dynamicForm.addControl(prop.id, this._fb.control(0, [Validators.required]));
           const instance = this.loadComponent<IntValue3Component>(index, IntValue3Component);
-          instance.control = this.dynamicForm.controls[prop.label];
+          instance.control = this.dynamicForm.controls[prop.id];
           break;
         case Constants.BooleanValue:
-          this.dynamicForm.addControl(prop.label, this._fb.control(false));
+          this.dynamicForm.addControl(prop.id, this._fb.control(false));
           const instance2 = this.loadComponent<BooleanValue2Component>(index, BooleanValue2Component);
-          instance2.control = this.dynamicForm.controls[prop.label];
+          instance2.control = this.dynamicForm.controls[prop.id];
           break;
         case Constants.UriValue:
-          this.dynamicForm.addControl(prop.label, this._fb.control(null, [Validators.email]));
+          this.dynamicForm.addControl(prop.id, this._fb.control(null, [Validators.email]));
           const instance3 = this.loadComponent<CommonInputComponent>(index, CommonInputComponent);
-          instance3.control = this.dynamicForm.controls[prop.label];
+          instance3.control = this.dynamicForm.controls[prop.id];
           instance3.validatorErrors = [{ errorKey: 'email', message: 'This is not a valid email.' }];
           break;
       }
@@ -141,7 +141,6 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   private _getPayload() {
     const createResource = new CreateResource();
-    // TODO TERRIBLE, THIS IS ACCESSING CHILDREN COMPONENT USE A SERVICE ?
     const resLabelVal = this.dynamicForm.controls['label'].value;
     createResource.label = resLabelVal.text;
     createResource.type = this.resourceClass.id;
@@ -155,19 +154,8 @@ export class ResourceInstanceFormComponent implements OnInit {
   private _getPropertiesObj() {
     const propertiesObj = {};
 
-    // TODO TERRIBLE, THIS IS ACCESSING CHILDREN COMPONENT OF CHILDREN COMPONENT, USE A SERVICE ?
-    this.selectPropertiesComponent.switchPropertiesComponent.forEach(child => {
-      const createVal = child.createValueComponent.getNewValue();
-      const iri = child.property.id;
-      if (createVal instanceof CreateValue) {
-        if (propertiesObj[iri]) {
-          // if a key already exists, add the createVal to the array
-          propertiesObj[iri].push(createVal);
-        } else {
-          // if no key exists, add one and add the createVal as the first value of the array
-          propertiesObj[iri] = [createVal];
-        }
-      }
+    Object.keys(this.dynamicForm.controls).forEach(iri => {
+      propertiesObj[iri] = [this.dynamicForm.controls[iri].value];
     });
 
     if (this.fileValue) {
