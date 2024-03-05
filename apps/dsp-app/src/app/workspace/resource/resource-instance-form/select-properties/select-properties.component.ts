@@ -36,8 +36,6 @@ export class SelectPropertiesComponent implements OnInit {
 
   propertyValuesKeyValuePair = {}; // { [index: string]: [number] }
 
-  addButtonIsVisible: boolean;
-
   isRequiredProp: boolean;
 
   myControl(label: string) {
@@ -46,25 +44,23 @@ export class SelectPropertiesComponent implements OnInit {
   constructor(private _valueService: ValueService) {}
 
   ngOnInit() {
-    if (this.properties) {
-      for (const prop of this.properties) {
-        if (prop) {
-          if (prop.objectType === 'http://api.knora.org/ontology/knora-api/v2#TextValue') {
-            prop.objectType = this._valueService.getTextValueClass(prop);
-          }
-
-          // each property will have at least one value so add one by default
-          this.propertyValuesKeyValuePair[prop.id] = [0];
-
-          // each property will also have a filtered array to be used when deleting a value.
-          // see the deleteValue method below for more info
-          this.propertyValuesKeyValuePair[`${prop.id}-filtered`] = [0];
-
-          // each property will also have a cardinality array to be used when marking a field as required
-          // see the isPropRequired method below for more info
-          this.isPropRequired(prop.id);
-          this.propertyValuesKeyValuePair[`${prop.id}-cardinality`] = [this.isRequiredProp ? 1 : 0];
+    for (const prop of this.properties) {
+      if (prop) {
+        if (prop.objectType === 'http://api.knora.org/ontology/knora-api/v2#TextValue') {
+          prop.objectType = this._valueService.getTextValueClass(prop);
         }
+
+        // each property will have at least one value so add one by default
+        this.propertyValuesKeyValuePair[prop.id] = [0];
+
+        // each property will also have a filtered array to be used when deleting a value.
+        // see the deleteValue method below for more info
+        this.propertyValuesKeyValuePair[`${prop.id}-filtered`] = [0];
+
+        // each property will also have a cardinality array to be used when marking a field as required
+        // see the isPropRequired method below for more info
+        this.isPropRequired(prop.id);
+        this.propertyValuesKeyValuePair[`${prop.id}-cardinality`] = [this.isRequiredProp ? 1 : 0];
       }
     }
   }
