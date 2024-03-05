@@ -34,10 +34,6 @@ export class SelectPropertiesComponent implements OnInit {
 
   @Input() currentOntoIri: string;
 
-  parentResource = new ReadResource();
-
-  index = 0;
-
   propertyValuesKeyValuePair = {}; // { [index: string]: [number] }
 
   addButtonIsVisible: boolean;
@@ -71,8 +67,6 @@ export class SelectPropertiesComponent implements OnInit {
         }
       }
     }
-
-    this.parentResource.entityInfo = this.ontologyInfo;
   }
 
   /**
