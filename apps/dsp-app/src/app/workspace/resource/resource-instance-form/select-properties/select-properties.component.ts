@@ -36,8 +36,6 @@ export class SelectPropertiesComponent implements OnInit {
 
   propertyValuesKeyValuePair = {}; // { [index: string]: [number] }
 
-  isRequiredProp: boolean;
-
   get propertiesWithoutLink() {
     return this.properties.filter(prop => !prop.isLinkProperty);
   }
@@ -58,35 +56,11 @@ export class SelectPropertiesComponent implements OnInit {
       this.propertyValuesKeyValuePair[`${prop.id}-filtered`] = [0];
 
       // each property will also have a cardinality array to be used when marking a field as required
-      // see the isPropRequired method below for more info
-      this.isPropRequired(prop.id);
-      this.propertyValuesKeyValuePair[`${prop.id}-cardinality`] = [this.isRequiredProp ? 1 : 0];
-    }
-  }
-
-  /**
-   * check the cardinality of a property
-   * If the cardinality is 1 or 1-N, the property will be marked as required
-   * If the cardinality is 0-1 or 0-N, the property will not be required
-   *
-   * @param propId property id
-   */
-  private isPropRequired(propId: string): boolean {
-    if (this.selectedResourceClass !== undefined && propId) {
-      // TODO FOLLOWING LINE IS A BUG ARRAY-CALLBACK-RETURN SHOULDNT BE DISABLED
-      // eslint-disable-next-line array-callback-return
-      this.selectedResourceClass.propertiesList.filter((card: IHasProperty) => {
-        if (card.propertyIndex === propId) {
-          // cardinality 1 or 1-N
-          if (card.cardinality === Cardinality._1 || card.cardinality === Cardinality._1_n) {
-            this.isRequiredProp = true;
-          } else {
-            // cardinality 0-1 or 0-N
-            this.isRequiredProp = false;
-          }
-        }
-      });
-      return this.isRequiredProp;
+      const card = this.selectedResourceClass.propertiesList.find(
+        (card: IHasProperty) => card.propertyIndex === prop.id
+      );
+      const isRequiredProp = [Cardinality._1, Cardinality._1_n].includes(card.cardinality);
+      this.propertyValuesKeyValuePair[`${prop.id}-cardinality`] = [isRequiredProp ? 1 : 0];
     }
   }
 }
