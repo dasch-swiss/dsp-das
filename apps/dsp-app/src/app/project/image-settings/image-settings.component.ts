@@ -15,7 +15,7 @@ import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { switchMap, takeWhile } from 'rxjs/operators';
 import { ReplaceAnimation } from '../../main/animations/replace-animation';
-import { InputMasks } from './../../../../../../libs/vre/shared/app-helper-services/src/lib/input-masks';
+import { InputMasks } from '../../main/directive/input-masks';
 
 enum ImageSettingsEnum {
   Off = 'Off',

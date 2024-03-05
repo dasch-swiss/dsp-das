@@ -22,7 +22,7 @@
           <div class="mb-2">
             <mat-form-field>
               <input
-                [textMask]="inputMasks.wholeNumberInputMask(2)"
+                [appTextMask]="inputMasks.wholeNumberInputMask(2)"
                 (ngModelChange)="onPercentageInputChange()"
                 matInput
                 [(ngModel)]="percentage" />
@@ -33,7 +33,7 @@
           <div class="mb-2">
             <mat-form-field>
               <input
-                [textMask]="inputMasks.wholeNumberInputMask(4)"
+                [appTextMask]="inputMasks.wholeNumberInputMask(4)"
                 (ngModelChange)="onFixedWidthInputChange()"
                 matInput
                 [(ngModel)]="fixedWidth" />

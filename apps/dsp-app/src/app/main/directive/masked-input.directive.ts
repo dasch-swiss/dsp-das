@@ -2,11 +2,11 @@ import {
   Directive,
   ElementRef,
   forwardRef,
+  HostListener,
   Inject,
   Input,
   OnChanges,
   Optional,
-  Provider,
   Renderer2,
   SimpleChanges,
 } from '@angular/core';
@@ -22,25 +22,39 @@ export class TextMaskConfig {
   showMask?: boolean;
 }
 
-export const MASKEDINPUT_VALUE_ACCESSOR: Provider = {
-  provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MaskedInputDirective),
-  multi: true,
-};
-
 @Directive({
-  host: {
-    '(input)': '_handleInput($event.target.value)',
-    '(blur)': 'onTouched()',
-    '(compositionstart)': '_compositionStart()',
-    '(compositionend)': '_compositionEnd($event.target.value)',
-  },
-  selector: '[textMask]',
+  selector: '[appTextMask]',
   exportAs: 'textMask',
-  providers: [MASKEDINPUT_VALUE_ACCESSOR],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => MaskedInputDirective),
+      multi: true,
+    },
+  ],
 })
 export class MaskedInputDirective implements ControlValueAccessor, OnChanges {
-  @Input('textMask') textMaskConfig: TextMaskConfig = {
+  @HostListener('compositionend', ['$event'])
+  compositionEnd($event) {
+    this._compositionEnd($event.target.value);
+  }
+
+  @HostListener('compositionstart')
+  compositionStart() {
+    this._compositionStart();
+  }
+
+  @HostListener('blur')
+  blur() {
+    this.onTouched();
+  }
+
+  @HostListener('input', ['$event'])
+  input($event) {
+    this._handleInput($event.target.value);
+  }
+
+  @Input('appTextMask') textMaskConfig: TextMaskConfig = {
     mask: [],
     guide: true,
     placeholderChar: '_',
@@ -119,9 +133,10 @@ export class MaskedInputDirective implements ControlValueAccessor, OnChanges {
     }
 
     if (this.inputElement && create) {
-      this.textMaskInputElement = createTextMaskInputElement(
-        Object.assign({ inputElement: this.inputElement }, this.textMaskConfig)
-      );
+      this.textMaskInputElement = createTextMaskInputElement({
+        inputElement: this.inputElement,
+        ...this.textMaskConfig,
+      });
     }
   }
 
@@ -131,6 +146,8 @@ export class MaskedInputDirective implements ControlValueAccessor, OnChanges {
 
   _compositionEnd(value: any): void {
     this._composing = false;
-    this._compositionMode && this._handleInput(value);
+    if (this._compositionMode) {
+      this._handleInput(value);
+    }
   }
 }
