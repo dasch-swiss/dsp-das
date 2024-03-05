@@ -1,12 +1,15 @@
 import {
   AfterContentInit,
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ComponentFactoryResolver,
   Inject,
   Input,
   OnInit,
+  QueryList,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import { FormControl, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,6 +28,7 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/resource-instance-form/component-host.directive';
+import { BooleanValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/boolean-value-2.component';
 import { IntValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-2.component';
 import { IntValue3Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-3.component';
 import { Store } from '@ngxs/store';
@@ -43,7 +47,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   @ViewChild('selectProps')
   selectPropertiesComponent: SelectPropertiesComponent;
 
-  @ViewChild(ComponentHostDirective, { static: true }) componentHost!: ComponentHostDirective;
+  @ViewChildren(ComponentHostDirective) componentHosts!: QueryList<ComponentHostDirective>;
 
   dynamicForm = this._fb.group({});
   resourceClass: ResourceClassDefinition;
@@ -51,6 +55,8 @@ export class ResourceInstanceFormComponent implements OnInit {
   fileValue: CreateFileValue;
   unsuitableProperties: ResourcePropertyDefinition[];
   loading = false;
+
+  futurePayload: any[] = [];
 
   readonly weirdConstants = [
     Constants.HasStillImageFileValue,
@@ -72,7 +78,8 @@ export class ResourceInstanceFormComponent implements OnInit {
     private _resourceService: ResourceService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _store: Store
+    private _store: Store,
+    private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -86,26 +93,37 @@ export class ResourceInstanceFormComponent implements OnInit {
       .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
         this.ontologyInfo = onto;
         this.unsuitableProperties = this._getUnsuitableProperties();
+        this._cd.detectChanges();
         this.resourceClass = onto.classes[resourceClassIri];
         this._buildForm();
+        this._cd.detectChanges();
       });
   }
 
   private _buildForm() {
-    this.unsuitableProperties.forEach(prop => {
-      console.log(prop);
+    this.unsuitableProperties.forEach((prop, index) => {
+      this.futurePayload.push(null);
       switch (prop.objectType) {
         case Constants.IntValue:
-          const instance = this.loadComponent<IntValue3Component>(IntValue3Component);
-          instance.data = 35;
-          instance.dataChange.subscribe(newValue => console.log(newValue));
+          const instance = this.loadComponent<IntValue3Component>(index, IntValue3Component);
+          instance.data = 0;
+          instance.dataChange.subscribe(newValue => {
+            this.futurePayload[index] = newValue;
+          });
+          break;
+        case Constants.BooleanValue:
+          const instance2 = this.loadComponent<BooleanValue2Component>(index, BooleanValue2Component);
+          instance2.data = false;
+          instance2.dataChange.subscribe(newValue => {
+            this.futurePayload[index] = newValue;
+          });
           break;
       }
     });
   }
 
-  loadComponent<T>(component) {
-    return this.componentHost.viewContainerRef.createComponent<T>(component).instance;
+  loadComponent<T>(index: number, component) {
+    return this.componentHosts.first.viewContainerRef.createComponent<T>(component).instance;
   }
   submitData() {
     this.loading = true;
