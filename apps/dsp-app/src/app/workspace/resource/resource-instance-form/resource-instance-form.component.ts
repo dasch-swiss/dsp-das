@@ -45,7 +45,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   loading = false;
 
   futurePayload: any[] = [];
-
+  labelControl = this._fb.control<string>('test', [Validators.required]);
   readonly weirdConstants = [
     Constants.HasStillImageFileValue,
     Constants.HasDocumentFileValue,
@@ -89,8 +89,6 @@ export class ResourceInstanceFormComponent implements OnInit {
   }
 
   private _buildForm() {
-    this.dynamicForm.addControl('label', this._fb.control(null, [Validators.required]));
-
     this.unsuitableProperties.forEach((prop, index) => {
       this.futurePayload.push(null);
       switch (prop.objectType) {
@@ -141,8 +139,7 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   private _getPayload() {
     const createResource = new CreateResource();
-    const resLabelVal = this.dynamicForm.controls['label'].value;
-    createResource.label = resLabelVal.text;
+    createResource.label = this.labelControl.value;
     createResource.type = this.resourceClass.id;
     createResource.attachedToProject = this.projectIri;
 

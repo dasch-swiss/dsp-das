@@ -5,14 +5,14 @@
   appInvalidControlScroll>
   <app-upload-2 [allowedFileTypes]="['image/png']"></app-upload-2>
 
-  <div style="display: flex" *ngIf="dynamicForm.controls['label']">
+  <div style="display: flex">
     <h3
       class="mat-subtitle-2"
       matTooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
       matTooltipPosition="above">
       Resource label *
     </h3>
-    <app-common-input [control]="dynamicForm.controls['label']"></app-common-input>
+    <app-common-input [control]="labelControl"></app-common-input>
   </div>
 
   <div *ngFor="let prop of unsuitableProperties" style="display: flex">
