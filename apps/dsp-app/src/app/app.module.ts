@@ -54,6 +54,7 @@ import { DialogComponent } from './main/dialog/dialog.component';
 import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
 import { DisableContextMenuDirective } from './main/directive/disable-context-menu.directive';
 import { InvalidControlScrollDirective } from './main/directive/invalid-control-scroll.directive';
+import { MaskedInputDirective } from './main/directive/masked-input.directive';
 import { FooterComponent } from './main/footer/footer.component';
 import { GridComponent } from './main/grid/grid.component';
 import { HeaderComponent } from './main/header/header.component';
@@ -81,6 +82,7 @@ import { CreateProjectFormPageComponent } from './project/create-project-form-pa
 import { DataModelsComponent } from './project/data-models/data-models.component';
 import { DescriptionComponent } from './project/description/description.component';
 import { EditProjectFormPageComponent } from './project/edit-project-form-page/edit-project-form-page.component';
+import { ImageDisplayAbsoluteComponent } from './project/image-settings/image-display-absolute.component';
 import { ImageDisplayRatioComponent } from './project/image-settings/image-display-ratio.component';
 import { ImageSettingsComponent } from './project/image-settings/image-settings.component';
 import { ActionBubbleComponent } from './project/list/action-bubble/action-bubble.component';
@@ -327,6 +329,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     DataModelsComponent,
     IsFalsyPipe,
     CreateListItemDialogComponent,
+    ImageDisplayAbsoluteComponent,
+    MaskedInputDirective,
   ],
   imports: [
     AngularSplitModule,

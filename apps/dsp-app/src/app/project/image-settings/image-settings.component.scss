@@ -7,6 +7,13 @@
   justify-content: space-between;
 }
 
+@media (min-width: 1000px) {
+  .flex-with-gap {
+    display: flex;
+    gap: 48px;
+  }
+}
+
 .mb-2 {
   margin-bottom: 16px;
 }
@@ -17,4 +24,18 @@
 
 .mt-2 {
   margin-top: 16px;
+}
+
+.ml-6 {
+  margin-left: 48px;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.nowrap {
+  white-space: nowrap;
 }
