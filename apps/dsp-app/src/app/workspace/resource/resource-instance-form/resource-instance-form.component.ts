@@ -130,7 +130,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   }
 
   loadComponent<T>(index: number, component) {
-    return this.componentHosts.first.viewContainerRef.createComponent<T>(component).instance;
+    return this.componentHosts.get(index).viewContainerRef.createComponent<T>(component).instance;
   }
   submitData() {
     this.loading = true;

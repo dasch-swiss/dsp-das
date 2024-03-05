@@ -1,6 +1,7 @@
 <div *ngFor="let item of futurePayload">item: {{item === null ? 'null' : ''}} {{item}}</div>
 <div *ngFor="let prop of unsuitableProperties" style="display: flex">
-  {{prop.label}}<ng-template appComponentHost />
+  <div>{{prop.label}}</div>
+  <div><ng-template appComponentHost /></div>
 </div>
 <form
   *ngIf="!loading; else loadingTemplate"
