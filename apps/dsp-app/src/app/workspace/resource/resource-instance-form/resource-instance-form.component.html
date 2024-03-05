@@ -1,3 +1,6 @@
+<div *ngFor="let prop of unsuitableProperties" style="display: flex">
+  {{prop.label}}<ng-template appComponentHost />
+</div>
 <form
   *ngIf="!loading; else loadingTemplate"
   [formGroup]="dynamicForm"

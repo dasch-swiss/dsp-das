@@ -1,4 +1,13 @@
-import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterContentInit,
+  AfterViewInit,
+  Component,
+  ComponentFactoryResolver,
+  Inject,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormControl, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -15,6 +24,9 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
+import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/resource-instance-form/component-host.directive';
+import { IntValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-2.component';
+import { IntValue3Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-3.component';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs/operators';
 import { ResourceService } from '../services/resource.service';
@@ -30,6 +42,8 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   @ViewChild('selectProps')
   selectPropertiesComponent: SelectPropertiesComponent;
+
+  @ViewChild(ComponentHostDirective, { static: true }) componentHost!: ComponentHostDirective;
 
   dynamicForm = this._fb.group({});
   resourceClass: ResourceClassDefinition;
@@ -81,17 +95,18 @@ export class ResourceInstanceFormComponent implements OnInit {
     this.unsuitableProperties.forEach(prop => {
       console.log(prop);
       switch (prop.objectType) {
-        case Constants.BooleanValue:
-          this.dynamicForm.addControl(prop.label, new FormControl<boolean>(true));
-          break;
         case Constants.IntValue:
-          this.dynamicForm.addControl(prop.label, new FormControl<number>(0));
+          const instance = this.loadComponent<IntValue3Component>(IntValue3Component);
+          instance.data = 35;
+          instance.dataChange.subscribe(newValue => console.log(newValue));
           break;
       }
     });
-    console.log('form', this.dynamicForm, Constants.BooleanValue, Constants);
   }
 
+  loadComponent<T>(component) {
+    return this.componentHost.viewContainerRef.createComponent<T>(component).instance;
+  }
   submitData() {
     this.loading = true;
 
