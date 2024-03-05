@@ -15,7 +15,33 @@ import { SwitchPropertiesComponent } from './switch-properties/switch-properties
 
 @Component({
   selector: 'app-select-properties',
-  templateUrl: './select-properties.component.html',
+  template: `
+    <div style="display: flex">
+      <h3
+        class="mat-subtitle-2"
+        matTooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
+        matTooltipPosition="above">
+        Resource label *
+      </h3>
+      <app-text-value-as-string
+        #createVal
+        [mode]="'create'"
+        [commentDisabled]="true"
+        [valueRequiredValidator]="true"
+        [parentForm]="parentForm"
+        [formName]="'label'">
+      </app-text-value-as-string>
+    </div>
+
+    <!-- resource's properties (defined in the ontology) -->
+    <app-property-item
+      *ngFor="let prop of propertiesWithoutLink"
+      [prop]="prop"
+      [propertyValuesKeyValuePair]="propertyValuesKeyValuePair"
+      [parentForm]="parentForm"
+      [ontologyInfo]="ontologyInfo"
+      [selectedResourceClass]="selectedResourceClass"></app-property-item>
+  `,
 })
 export class SelectPropertiesComponent implements OnInit {
   @ViewChildren('switchProp')
