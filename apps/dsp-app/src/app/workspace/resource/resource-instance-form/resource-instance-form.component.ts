@@ -5,8 +5,6 @@ import {
   Constants,
   CreateFileValue,
   CreateResource,
-  CreateTextValueAsString,
-  CreateValue,
   KnoraApiConnection,
   ReadResource,
   ResourceClassAndPropertyDefinitions,
@@ -115,6 +113,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   submitData() {
     this.loading = true;
 
+    const payload = this._getPayload();
     this._dspApiConnection.v2.res
       .createResource(this._getPayload())
       .pipe(
