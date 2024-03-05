@@ -56,9 +56,7 @@ export class SelectPropertiesComponent implements OnInit {
       this.propertyValuesKeyValuePair[`${prop.id}-filtered`] = [0];
 
       // each property will also have a cardinality array to be used when marking a field as required
-      const card = this.selectedResourceClass.propertiesList.find(
-        (card: IHasProperty) => card.propertyIndex === prop.id
-      );
+      const card = this.selectedResourceClass.propertiesList.find(item => item.propertyIndex === prop.id);
       const isRequiredProp = [Cardinality._1, Cardinality._1_n].includes(card.cardinality);
       this.propertyValuesKeyValuePair[`${prop.id}-cardinality`] = [isRequiredProp ? 1 : 0];
     }
