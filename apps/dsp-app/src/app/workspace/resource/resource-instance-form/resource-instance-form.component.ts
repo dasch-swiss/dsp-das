@@ -31,6 +31,7 @@ import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/reso
 import { BooleanValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/boolean-value-2.component';
 import { IntValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-2.component';
 import { IntValue3Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-3.component';
+import { UriValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/uri-value-2.component';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs/operators';
 import { ResourceService } from '../services/resource.service';
@@ -115,6 +116,12 @@ export class ResourceInstanceFormComponent implements OnInit {
           const instance2 = this.loadComponent<BooleanValue2Component>(index, BooleanValue2Component);
           instance2.data = false;
           instance2.dataChange.subscribe(newValue => {
+            this.futurePayload[index] = newValue;
+          });
+          break;
+        case Constants.UriValue:
+          const instance3 = this.loadComponent<UriValue2Component>(index, UriValue2Component);
+          instance3.dataChange.subscribe(newValue => {
             this.futurePayload[index] = newValue;
           });
           break;

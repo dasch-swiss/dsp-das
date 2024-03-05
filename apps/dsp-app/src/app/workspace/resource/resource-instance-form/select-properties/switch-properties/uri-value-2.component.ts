@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -7,4 +7,13 @@ import { FormControl, Validators } from '@angular/forms';
 })
 export class UriValue2Component {
   control = new FormControl<string>('', [Validators.email]);
+  @Output() valueChange = new EventEmitter<string>();
+
+  constructor() {
+    this.control.valueChanges.subscribe(control => {
+      if (this.control.valid) {
+        this.valueChange.emit(control);
+      }
+    });
+  }
 }
