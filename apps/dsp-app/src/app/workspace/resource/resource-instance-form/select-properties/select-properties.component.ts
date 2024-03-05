@@ -16,7 +16,6 @@ import { SwitchPropertiesComponent } from './switch-properties/switch-properties
 @Component({
   selector: 'app-select-properties',
   templateUrl: './select-properties.component.html',
-  styleUrls: ['./select-properties.component.scss'],
 })
 export class SelectPropertiesComponent implements OnInit {
   @ViewChildren('switchProp')

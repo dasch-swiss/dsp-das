@@ -1,21 +1,19 @@
 <!-- resource's label (defined in the base ontology) -->
-<div class="property">
+<div style="display: flex">
   <h3
     class="mat-subtitle-2"
     matTooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
     matTooltipPosition="above">
     Resource label *
   </h3>
-  <div class="value">
-    <app-text-value-as-string
-      #createVal
-      [mode]="'create'"
-      [commentDisabled]="true"
-      [valueRequiredValidator]="true"
-      [parentForm]="parentForm"
-      [formName]="'label'">
-    </app-text-value-as-string>
-  </div>
+  <app-text-value-as-string
+    #createVal
+    [mode]="'create'"
+    [commentDisabled]="true"
+    [valueRequiredValidator]="true"
+    [parentForm]="parentForm"
+    [formName]="'label'">
+  </app-text-value-as-string>
 </div>
 
 <!-- resource's properties (defined in the ontology) -->
