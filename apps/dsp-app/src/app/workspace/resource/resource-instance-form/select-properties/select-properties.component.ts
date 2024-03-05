@@ -38,6 +38,9 @@ export class SelectPropertiesComponent implements OnInit {
 
   isRequiredProp: boolean;
 
+  get propertiesWithoutLink() {
+    return this.properties.filter(prop => !prop.isLinkProperty);
+  }
   myControl(label: string) {
     return this.parentForm.controls[label] as FormControl<any>;
   }
