@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
+import { FormControl, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
@@ -73,7 +73,23 @@ export class ResourceInstanceFormComponent implements OnInit {
         this.ontologyInfo = onto;
         this.unsuitableProperties = this._getUnsuitableProperties();
         this.resourceClass = onto.classes[resourceClassIri];
+        this._buildForm();
       });
+  }
+
+  private _buildForm() {
+    this.unsuitableProperties.forEach(prop => {
+      console.log(prop);
+      switch (prop.objectType) {
+        case Constants.BooleanValue:
+          this.dynamicForm.addControl(prop.label, new FormControl<boolean>(true));
+          break;
+        case Constants.IntValue:
+          this.dynamicForm.addControl(prop.label, new FormControl<number>(0));
+          break;
+      }
+    });
+    console.log('form', this.dynamicForm, Constants.BooleanValue, Constants);
   }
 
   submitData() {
