@@ -34,6 +34,7 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { Upload2Component } from '@dsp-app/src/app/workspace/resource/representation/upload/upload2.component';
+import { PropertyItemComponent } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/property-item.component';
 import { BooleanValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/boolean-value-2.component';
 import { IntValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-2.component';
 import { SwitchProperties2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-2.component';
@@ -269,6 +270,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     PermissionInfoComponent,
     ProfileComponent,
     ProjectComponent,
+    PropertyItemComponent,
     CreateProjectFormPageComponent,
     ReusableProjectFormComponent,
     EditProjectFormPageComponent,
