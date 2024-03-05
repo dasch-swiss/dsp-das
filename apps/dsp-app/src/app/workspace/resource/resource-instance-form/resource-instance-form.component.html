@@ -1,23 +1,15 @@
-<div *ngFor="let item of futurePayload">item: {{item === null ? 'null' : ''}} {{item}}</div>
-<div *ngFor="let prop of unsuitableProperties" style="display: flex">
-  <div>{{prop.label}}</div>
-  <div><ng-template appComponentHost /></div>
-</div>
 <form
   *ngIf="!loading; else loadingTemplate"
   [formGroup]="dynamicForm"
   (ngSubmit)="submitData()"
   appInvalidControlScroll>
   <app-upload-2 [allowedFileTypes]="['image/png']"></app-upload-2>
-  <!--<app-select-properties
-    #selectProps
-    *ngIf="resourceClass"
-    [ontologyInfo]="ontologyInfo"
-    [selectedResourceClass]="resourceClass"
-    [properties]="unsuitableProperties"
-    [parentForm]="dynamicForm"
-    [currentOntoIri]="ontologyIri">
-  </app-select-properties>-->
+
+  <div *ngFor="let prop of unsuitableProperties" style="display: flex">
+    <div>{{prop.label}}</div>
+    <div><ng-template appComponentHost /></div>
+  </div>
+
   <button
     mat-raised-button
     type="submit"

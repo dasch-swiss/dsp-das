@@ -1,17 +1,5 @@
-import {
-  AfterContentInit,
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ComponentFactoryResolver,
-  Inject,
-  Input,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
-import { FormControl, UntypedFormBuilder } from '@angular/forms';
+import { ChangeDetectorRef, Component, Inject, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
@@ -29,7 +17,6 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/resource-instance-form/component-host.directive';
 import { BooleanValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/boolean-value-2.component';
-import { IntValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-2.component';
 import { IntValue3Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-3.component';
 import { UriValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/uri-value-2.component';
 import { Store } from '@ngxs/store';
@@ -132,6 +119,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   loadComponent<T>(index: number, component) {
     return this.componentHosts.get(index).viewContainerRef.createComponent<T>(component).instance;
   }
+
   submitData() {
     this.loading = true;
 
