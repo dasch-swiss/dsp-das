@@ -41,9 +41,7 @@ export class SelectPropertiesComponent implements OnInit {
   get propertiesWithoutLink() {
     return this.properties.filter(prop => !prop.isLinkProperty);
   }
-  myControl(label: string) {
-    return this.parentForm.controls[label] as FormControl<any>;
-  }
+
   constructor(private _valueService: ValueService) {}
 
   ngOnInit() {
@@ -64,19 +62,6 @@ export class SelectPropertiesComponent implements OnInit {
       this.isPropRequired(prop.id);
       this.propertyValuesKeyValuePair[`${prop.id}-cardinality`] = [this.isRequiredProp ? 1 : 0];
     }
-  }
-
-  /**
-   * given a resource property, check if an add button should be displayed under the property values
-   *
-   * @param prop the resource property
-   */
-  addValueIsAllowed(prop: ResourcePropertyDefinition): boolean {
-    return CardinalityUtil.createValueForPropertyAllowed(
-      prop.id,
-      this.propertyValuesKeyValuePair[prop.id].length,
-      this.ontologyInfo.classes[this.selectedResourceClass.id]
-    );
   }
 
   /**
@@ -103,49 +88,5 @@ export class SelectPropertiesComponent implements OnInit {
       });
       return this.isRequiredProp;
     }
-  }
-
-  /**
-   * called from the template when the user clicks on the add button
-   */
-  addNewValueFormToProperty(prop: ResourcePropertyDefinition, ev: Event) {
-    ev.preventDefault();
-
-    // get the length of the corresponding property values array
-    const length = this.propertyValuesKeyValuePair[prop.id].length;
-
-    // add a new element to the corresponding property values array.
-    // conveniently, we can use the length of the array to add the next number in the sequence
-    this.propertyValuesKeyValuePair[prop.id].push(length);
-
-    // add a new element to the corresponding filtered property values array as well.
-    // if this array contains more than one element, the delete button with be shown
-    this.propertyValuesKeyValuePair[`${prop.id}-filtered`].push(length);
-  }
-
-  deleteValue(prop: ResourcePropertyDefinition, index: number, ev: Event) {
-    ev.preventDefault();
-    // don't actually remove the item from the property values array, just set it to undefined.
-    // this is because if we actually modify the indexes of the array, the template will re-evaluate
-    // and recreate components for any elements after the deleted index, effectively erasing entered data if any was entered
-    this.propertyValuesKeyValuePair[prop.id][index] = undefined;
-
-    // update the filtered version of the corresponding property values array.
-    // used in the template to calculate if the delete button should be shown.
-    // i.e. don't show the delete button if there is only one value
-    this.propertyValuesKeyValuePair[`${prop.id}-filtered`] = this._filterValueArray(
-      this.propertyValuesKeyValuePair[prop.id]
-    );
-  }
-
-  /**
-   * given an array of numbers, returns a filtered list with no undefined elements
-   *
-   * @param arrayToFilter an array of number containing undefined elements you wish to filter
-   */
-  private _filterValueArray(arrayToFilter: number[]): number[] {
-    arrayToFilter = arrayToFilter.filter(element => element !== undefined);
-
-    return arrayToFilter;
   }
 }

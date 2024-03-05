@@ -22,4 +22,7 @@
 <app-property-item
   *ngFor="let prop of propertiesWithoutLink"
   [prop]="prop"
-  [propertyValuesKeyValuePair]="propertyValuesKeyValuePair"></app-property-item>
+  [propertyValuesKeyValuePair]="propertyValuesKeyValuePair"
+  [parentForm]="parentForm"
+  [ontologyInfo]="ontologyInfo"
+  [selectedResourceClass]="selectedResourceClass"></app-property-item>
