@@ -23,7 +23,7 @@ import {
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { DialogConfigUtil } from '@dsp-app/src/app/providers/drawer-config-util';
-import { EditUser } from '@dsp-app/src/app/user/user-form/user-edit.service';
+import { EditUser } from '@dsp-app/src/app/user/user-form/user-form-model';
 import { UserFormComponent } from '@dsp-app/src/app/user/user-form/user-form.component';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, combineLatest } from 'rxjs';
