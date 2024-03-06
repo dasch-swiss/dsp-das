@@ -12,7 +12,7 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { switchMap, take, takeWhile } from 'rxjs/operators';
 import { ReplaceAnimation } from '../../main/animations/replace-animation';
 import { InputMasks } from '../../main/directive/input-masks';
 
@@ -100,10 +100,19 @@ export class ImageSettingsComponent implements OnInit {
   private getImageSettings() {
     this._store
       .dispatch(new LoadProjectRestrictedViewSettingsAction(this._projectService.uuidToIri(this.projectUuid)))
-      .pipe(switchMap(() => this.viewSettings$.pipe(take(1))))
+      .pipe(
+        switchMap(() =>
+          this.viewSettings$.pipe(
+            take(1),
+            takeWhile(settings => settings !== null)
+          )
+        )
+      )
       .subscribe(settings => {
-        if (!settings.watermark) {
+        if (!settings.watermark && settings.size) {
           delete settings.watermark;
+        } else if (!settings.watermark) {
+          return;
         }
 
         this.currentSettings = settings;
