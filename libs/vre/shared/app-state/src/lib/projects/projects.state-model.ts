@@ -8,5 +8,5 @@ export class ProjectsStateModel {
   allProjects: ReadProject[] = [];
   projectMembers: IKeyValuePairs<ReadUser> = {};
   projectGroups: IKeyValuePairs<ReadGroup> = {};
-  projectRestrictedViewSettings: IKeyValuePair<any> = {}; //ProjectRestrictedViewSettings
+  projectRestrictedViewSettings: IKeyValuePair<any> = {};
 }
