@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectRestrictedViewSettings } from '@dasch-swiss/dsp-js';
-import { SetRestrictedViewRequest } from '@dasch-swiss/vre/open-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -13,7 +12,7 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { switchMap, take, takeWhile } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 import { ReplaceAnimation } from '../../main/animations/replace-animation';
 import { InputMasks } from '../../main/directive/input-masks';
 
@@ -35,11 +34,15 @@ export class ImageSettingsComponent implements OnInit {
   readonly inputMasks = InputMasks;
   readonly imageSettingsEnum = ImageSettingsEnum;
 
+  currentSettings: ProjectRestrictedViewSettings;
   imageSettings: ImageSettingsEnum = ImageSettingsEnum.Off;
   projectUuid = this.route.parent.parent.snapshot.paramMap.get(RouteConstants.uuidParameter);
   percentage: string = '99';
-
   fixedWidth: string;
+
+  get hasChanges(): boolean {
+    return JSON.stringify(this.currentSettings) !== JSON.stringify(this.getRequest());
+  }
 
   get ratio(): number {
     if (!this.percentage) {
@@ -70,16 +73,14 @@ export class ImageSettingsComponent implements OnInit {
   }
 
   onSubmit() {
-    const request: SetRestrictedViewRequest = {
-      size: this.getSizeForRequest(),
-      watermark: this.imageSettings === ImageSettingsEnum.Watermark,
-    };
-
-    this._store.dispatch(new UpdateProjectRestrictedViewSettingsAction(this.projectUuid, request)).subscribe(() => {
-      this._notification.openSnackBar(
-        this.translateService.instant('appLabels.form.project.imageSettings.updateConfirmation')
-      );
-    });
+    this._store
+      .dispatch(new UpdateProjectRestrictedViewSettingsAction(this.projectUuid, this.getRequest()))
+      .subscribe(() => {
+        this.currentSettings = this._store.selectSnapshot(ProjectsSelectors.projectRestrictedViewSettings);
+        this._notification.openSnackBar(
+          this.translateService.instant('appLabels.form.project.imageSettings.updateConfirmation')
+        );
+      });
   }
 
   onPercentageInputChange() {
@@ -90,19 +91,23 @@ export class ImageSettingsComponent implements OnInit {
     this.percentage = null;
   }
 
+  private getRequest(): any {
+    return this.imageSettings === ImageSettingsEnum.Watermark
+      ? { watermark: true }
+      : { size: this.getSizeForRequest() };
+  }
+
   private getImageSettings() {
     this._store
       .dispatch(new LoadProjectRestrictedViewSettingsAction(this._projectService.uuidToIri(this.projectUuid)))
-      .pipe(
-        switchMap(() =>
-          this.viewSettings$.pipe(
-            take(1),
-            takeWhile(settings => settings?.watermark !== null)
-          )
-        )
-      )
+      .pipe(switchMap(() => this.viewSettings$.pipe(take(1))))
       .subscribe(settings => {
-        if (settings.size === 'pct:100') {
+        if (!settings.watermark) {
+          delete settings.watermark;
+        }
+
+        this.currentSettings = settings;
+        if ((settings.watermark === false && !settings.size) || (settings.size && settings.size === 'pct:100')) {
           this.imageSettings = this.imageSettingsEnum.Off;
           return;
         }
