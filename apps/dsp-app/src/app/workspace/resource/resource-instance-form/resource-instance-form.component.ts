@@ -106,6 +106,11 @@ export class ResourceInstanceFormComponent implements OnInit {
           instance3.control = this.dynamicForm.controls[prop.id];
           instance3.validatorErrors = [{ errorKey: 'email', message: 'This is not a valid email.' }];
           break;
+        case Constants.DecimalValue:
+          this.dynamicForm.addControl(prop.id, this._fb.control(0, [Validators.required]));
+          const instance4 = this.loadComponent<IntValue3Component>(index, IntValue3Component);
+          instance4.control = this.dynamicForm.controls[prop.id];
+          instance4.step = 0.05;
       }
     });
   }
