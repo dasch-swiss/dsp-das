@@ -39,7 +39,7 @@ export class ImageSettingsComponent implements OnInit {
   projectUuid = this.route.parent.parent.snapshot.paramMap.get(RouteConstants.uuidParameter);
   percentage: string = '99';
 
-  fixedWidthNumber: number;
+  fixedWidth: string;
 
   get ratio(): number {
     if (!this.percentage) {
@@ -47,24 +47,6 @@ export class ImageSettingsComponent implements OnInit {
     }
 
     return parseInt(this.percentage, 0) / 100;
-  }
-
-  get fixedWidth(): string {
-    return this.fixedWidthNumber ? this.fixedWidthNumber.toString() : '';
-  }
-
-  set fixedWidth(value: string) {
-    if (!value) {
-      this.fixedWidthNumber = null;
-      return;
-    }
-
-    const width = parseInt(value, 0);
-    if (width < this.minWidth || width > this.maxWidth) {
-      return;
-    }
-
-    this.fixedWidthNumber = width;
   }
 
   get isPercentageSize(): boolean {

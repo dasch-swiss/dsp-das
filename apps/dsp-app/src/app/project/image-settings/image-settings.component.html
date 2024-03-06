@@ -55,8 +55,7 @@
         color="primary"
         [disabled]="
           imageSettings === imageSettingsEnum.RestrictImageSize 
-          && (isPercentageSize && !(ratio > 0)) 
-          || (!isPercentageSize && (fixedWidth === null || fixedWidthNumber < minWidth || fixedWidthNumber > maxWidth))"
+          && ((isPercentageSize && ratio <= 0) || (!isPercentageSize && !fixedWidth))"
         (click)="onSubmit()"
         appLoadingButton
         [isLoading]="isProjectsLoading$ | async">
