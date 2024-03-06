@@ -21,6 +21,8 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { DialogConfigUtil } from '@dsp-app/src/app/providers/drawer-config-util';
+import { UserFormComponent } from '@dsp-app/src/app/user/user-form/user-form.component';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -315,6 +317,11 @@ export class AddUserComponent implements OnInit {
       // update the view
       this.refreshParent.emit();
     });
+  }
+
+  createUser() {
+    const dialogConfig = DialogConfigUtil.dialogDrawerConfig({ project: this.projectUuid });
+    this._dialog.open(UserFormComponent, dialogConfig);
   }
 
   resetInput(ev: Event) {
