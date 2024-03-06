@@ -1,8 +1,4 @@
-<form
-  *ngIf="!loading; else loadingTemplate"
-  [formGroup]="dynamicForm"
-  (ngSubmit)="submitData()"
-  appInvalidControlScroll>
+<form *ngIf="!loading; else loadingTemplate" [formGroup]="dynamicForm" appInvalidControlScroll>
   <app-upload-2 [allowedFileTypes]="['image/png']"></app-upload-2>
 
   <div style="display: flex">
@@ -16,8 +12,10 @@
   </div>
 
   <div *ngFor="let prop of unsuitableProperties" style="display: flex">
-    <div>{{prop.label}}</div>
-    <div><ng-template appComponentHost /></div>
+    <div>{{ prop.label }}</div>
+    <div>
+      <app-switch-properties-3 [property]="prop" [formArray]="dynamicForm.controls[prop.id]"></app-switch-properties-3>
+    </div>
   </div>
 
   <button

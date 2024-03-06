@@ -424,9 +424,6 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
       .open<CreateResourceClassDialogComponent, CreateResourceClassDialogProps, null>(
         CreateResourceClassDialogComponent,
         {
-          position: { right: '0px', top: '0px' },
-          height: '100vh',
-          minHeight: '100vh',
           data: {
             id: resClassInfo.iri,
             title: resClassInfo.label,

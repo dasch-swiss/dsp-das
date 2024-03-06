@@ -14,8 +14,6 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/resource-instance-form/component-host.directive';
-import { BooleanValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/boolean-value-2.component';
-import { IntValue3Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-3.component';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs/operators';
 import { ResourceService } from '../services/resource.service';
@@ -41,7 +39,6 @@ export class ResourceInstanceFormComponent implements OnInit {
   unsuitableProperties: ResourcePropertyDefinition[];
   loading = false;
 
-  futurePayload: any[] = [];
   labelControl = this._fb.control<string>('test', [Validators.required]);
   readonly weirdConstants = [
     Constants.HasStillImageFileValue,
@@ -78,7 +75,6 @@ export class ResourceInstanceFormComponent implements OnInit {
       .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
         this.ontologyInfo = onto;
         this.unsuitableProperties = this._getUnsuitableProperties();
-        this._cd.detectChanges();
         this.resourceClass = onto.classes[resourceClassIri];
         this._buildForm();
         this._cd.detectChanges();
@@ -87,19 +83,7 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   private _buildForm() {
     this.unsuitableProperties.forEach((prop, index) => {
-      this.futurePayload.push(null);
-      switch (prop.objectType) {
-        case Constants.IntValue:
-          this.dynamicForm.addControl(prop.id, this._fb.control(0, [Validators.required]));
-          const instance = this.loadComponent<IntValue3Component>(index, IntValue3Component);
-          instance.control = this.dynamicForm.controls[prop.id];
-          break;
-        case Constants.BooleanValue:
-          this.dynamicForm.addControl(prop.id, this._fb.control(false));
-          const instance2 = this.loadComponent<BooleanValue2Component>(index, BooleanValue2Component);
-          instance2.control = this.dynamicForm.controls[prop.id];
-          break;
-      }
+      this.dynamicForm.addControl(prop.id, this._fb.array([]));
     });
   }
 
@@ -159,9 +143,5 @@ export class ResourceInstanceFormComponent implements OnInit {
     return this.ontologyInfo
       .getPropertyDefinitionsByType(ResourcePropertyDefinition)
       .filter(prop => !prop.isLinkProperty && prop.isEditable && !this.weirdConstants.includes(prop.id));
-  }
-
-  private loadComponent<T>(index: number, component) {
-    return this.componentHosts.get(index).viewContainerRef.createComponent<T>(component).instance;
   }
 }
