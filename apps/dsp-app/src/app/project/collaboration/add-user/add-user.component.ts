@@ -21,13 +21,13 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { DialogConfigUtil } from '@dsp-app/src/app/providers/drawer-config-util';
-import { UserFormComponent } from '@dsp-app/src/app/user/user-form/user-form.component';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
 import { existingNamesValidator } from '../../../main/directive/existing-name/existing-names.validator';
+import { DialogConfigUtil } from '../../../providers/drawer-config-util';
+import { UserFormComponent } from '../../../user/user-form/user-form.component';
 import { AutocompleteItem } from '../../../workspace/search/operator';
 
 @Component({
