@@ -17,6 +17,7 @@ import { CommonInputComponent } from '@dsp-app/src/app/project/common-input/comm
 import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/resource-instance-form/component-host.directive';
 import { BooleanValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/boolean-value-2.component';
 import { IntValue3Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-3.component';
+import { ColorValue2Component } from '@dsp-app/src/app/workspace/resource/values/color-value/color-picker/color-value-2.component';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs/operators';
 import { ResourceService } from '../services/resource.service';
@@ -111,6 +112,12 @@ export class ResourceInstanceFormComponent implements OnInit {
           const instance4 = this.loadComponent<IntValue3Component>(index, IntValue3Component);
           instance4.control = this.dynamicForm.controls[prop.id];
           instance4.step = 0.05;
+          break;
+        case Constants.ColorValue:
+          this.dynamicForm.addControl(prop.id, this._fb.control('#000000', [Validators.required]));
+          const instance5 = this.loadComponent<ColorValue2Component>(index, ColorValue2Component);
+          instance5.control = this.dynamicForm.controls[prop.id];
+          break;
       }
     });
   }
