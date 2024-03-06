@@ -329,7 +329,7 @@ export class UsersListComponent implements OnInit {
   }
 
   createUser() {
-    const dialogConfig = DialogConfigUtil.dialogDrawerConfig();
+    const dialogConfig = DialogConfigUtil.dialogDrawerConfig<EditUser>({});
     this._matDialog.open(UserFormComponent, dialogConfig);
   }
 
