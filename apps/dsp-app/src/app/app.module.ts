@@ -35,6 +35,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { IMaskModule } from 'angular-imask';
 import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
@@ -54,7 +55,6 @@ import { DialogComponent } from './main/dialog/dialog.component';
 import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
 import { DisableContextMenuDirective } from './main/directive/disable-context-menu.directive';
 import { InvalidControlScrollDirective } from './main/directive/invalid-control-scroll.directive';
-import { MaskedInputDirective } from './main/directive/masked-input.directive';
 import { FooterComponent } from './main/footer/footer.component';
 import { GridComponent } from './main/grid/grid.component';
 import { HeaderComponent } from './main/header/header.component';
@@ -330,7 +330,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     IsFalsyPipe,
     CreateListItemDialogComponent,
     ImageDisplayAbsoluteComponent,
-    MaskedInputDirective,
   ],
   imports: [
     AngularSplitModule,
@@ -346,6 +345,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CommonModule,
     FormsModule,
     HttpClientModule,
+    IMaskModule,
     MaterialModule,
     MatJDNConvertibleCalendarDateAdapterModule,
     NgxSkeletonLoaderModule,

@@ -13,7 +13,7 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { switchMap, takeWhile } from 'rxjs/operators';
+import { switchMap, take, takeWhile } from 'rxjs/operators';
 import { ReplaceAnimation } from '../../main/animations/replace-animation';
 import { InputMasks } from '../../main/directive/input-masks';
 
@@ -37,16 +37,25 @@ export class ImageSettingsComponent implements OnInit {
 
   imageSettings: ImageSettingsEnum = ImageSettingsEnum.Off;
   projectUuid = this.route.parent.parent.snapshot.paramMap.get(RouteConstants.uuidParameter);
-  percentage: number = 99;
+  percentage: string = '99';
 
-  _fixedWidth: number;
-  get fixedWidth(): number {
-    return this._fixedWidth;
+  fixedWidthNumber: number;
+
+  get ratio(): number {
+    if (!this.percentage) {
+      return 0;
+    }
+
+    return parseInt(this.percentage, 0) / 100;
+  }
+
+  get fixedWidth(): string {
+    return this.fixedWidthNumber ? this.fixedWidthNumber.toString() : '';
   }
 
   set fixedWidth(value: string) {
     if (!value) {
-      this._fixedWidth = null;
+      this.fixedWidthNumber = null;
       return;
     }
 
@@ -55,7 +64,7 @@ export class ImageSettingsComponent implements OnInit {
       return;
     }
 
-    this._fixedWidth = width;
+    this.fixedWidthNumber = width;
   }
 
   get isPercentageSize(): boolean {
@@ -102,7 +111,14 @@ export class ImageSettingsComponent implements OnInit {
   private getImageSettings() {
     this._store
       .dispatch(new LoadProjectRestrictedViewSettingsAction(this._projectService.uuidToIri(this.projectUuid)))
-      .pipe(switchMap(() => this.viewSettings$.pipe(takeWhile(settings => settings?.watermark !== null))))
+      .pipe(
+        switchMap(() =>
+          this.viewSettings$.pipe(
+            take(1),
+            takeWhile(settings => settings?.watermark !== null)
+          )
+        )
+      )
       .subscribe(settings => {
         if (settings.size === 'pct:100') {
           this.imageSettings = this.imageSettingsEnum.Off;
@@ -125,7 +141,7 @@ export class ImageSettingsComponent implements OnInit {
     }
 
     if (size.startsWith('pct')) {
-      this.percentage = parseInt(size.split(':')[1], 0);
+      (this.percentage = size.split(':')[1]), 0;
       this.fixedWidth = null;
     } else {
       this.fixedWidth = size.split(',')[1];

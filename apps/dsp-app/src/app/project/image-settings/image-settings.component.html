@@ -17,40 +17,35 @@
           </mat-radio-group>
         </div>
       </div>
-      <div *ngIf="imageSettings === imageSettingsEnum.RestrictImageSize" class="flex-with-gap">
-        <div class="mb-6">
-          <div class="mb-2">
-            <mat-form-field>
-              <input
-                [appTextMask]="inputMasks.wholeNumberInputMask(2)"
-                (ngModelChange)="onPercentageInputChange()"
-                matInput
-                [(ngModel)]="percentage" />
-              <mat-label>{{ 'appLabels.form.project.imageSettings.percentage' | translate }} </mat-label>
-            </mat-form-field>
-            <mat-label> %</mat-label>
-          </div>
-          <div class="mb-2">
-            <mat-form-field>
-              <input
-                [appTextMask]="inputMasks.wholeNumberInputMask(4)"
-                (ngModelChange)="onFixedWidthInputChange()"
-                matInput
-                [(ngModel)]="fixedWidth" />
-              <mat-label> {{ 'appLabels.form.project.imageSettings.absoluteWidth' | translate }} </mat-label>
-            </mat-form-field>
-            <mat-label class="nowrap"> x {{ fixedWidth }} Px</mat-label>
-          </div>
+      <div *ngIf="imageSettings === imageSettingsEnum.RestrictImageSize" class="mb-6">
+        <div class="mb-2">
+          <mat-form-field>
+            <input
+              [imask]="inputMasks.minMaxInputMask(1, 99)"
+              (ngModelChange)="onPercentageInputChange()"
+              matInput
+              [(ngModel)]="percentage" />
+            <mat-label>{{ 'appLabels.form.project.imageSettings.percentage' | translate }} </mat-label>
+          </mat-form-field>
+          <mat-label> %</mat-label>
         </div>
-        <div class="mb-6">
-          <app-image-display-ratio [@replaceAnimation] *ngIf="isPercentageSize" [ratio]="percentage/100" class="child">
-          </app-image-display-ratio>
-          <app-image-display-absolute
-            [@replaceAnimation]
-            *ngIf="!isPercentageSize && fixedWidth >= minWidth && fixedWidth <= maxWidth"
-            [widthPx]="fixedWidth">
-          </app-image-display-absolute>
+        <div class="mb-2">
+          <mat-form-field [floatLabel]="'always'" class="large-field">
+            <input
+              [imask]="inputMasks.minMaxInputMask(minWidth, maxWidth)"
+              (ngModelChange)="onFixedWidthInputChange()"
+              matInput
+              [(ngModel)]="fixedWidth" />
+            <mat-label>
+              {{ 'appLabels.form.project.imageSettings.absoluteWidth' | translate: {min: minWidth, max: maxWidth} }}
+            </mat-label>
+          </mat-form-field>
+          <mat-label class="nowrap"> x {{ fixedWidth }} Px</mat-label>
         </div>
+        <app-image-display-ratio [@replaceAnimation] *ngIf="isPercentageSize" [ratio]="ratio" class="child">
+        </app-image-display-ratio>
+        <app-image-display-absolute [@replaceAnimation] *ngIf="!isPercentageSize" [widthPx]="fixedWidth">
+        </app-image-display-absolute>
       </div>
     </div>
     <div class="action-buttons mt-2">
@@ -60,8 +55,8 @@
         color="primary"
         [disabled]="
           imageSettings === imageSettingsEnum.RestrictImageSize 
-          && (isPercentageSize && !(percentage >= 1)) 
-          || (!isPercentageSize && (fixedWidth === null || fixedWidth < minWidth || fixedWidth > maxWidth))"
+          && (isPercentageSize && !(ratio > 0)) 
+          || (!isPercentageSize && (fixedWidth === null || fixedWidthNumber < minWidth || fixedWidthNumber > maxWidth))"
         (click)="onSubmit()"
         appLoadingButton
         [isLoading]="isProjectsLoading$ | async">

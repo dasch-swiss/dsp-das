@@ -143,7 +143,7 @@
           "ratio": "Ratio",
           "fixed": "Fixed width",
           "restrictImageSize": "Restrict image size",
-          "absoluteWidth": "Absolute width in pixels",
+          "absoluteWidth": "Absolute width in pixels from: {{min}} to: {{max}}",
           "percentageValue": "Percentage value",
           "percentage": "Percentage",
           "updateConfirmation": "You have successfully updated the project image settings."
