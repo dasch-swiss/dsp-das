@@ -22,6 +22,9 @@ import {
   SetUserAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { DialogConfigUtil } from '@dsp-app/src/app/providers/drawer-config-util';
+import { EditUser } from '@dsp-app/src/app/user/user-form/user-edit.service';
+import { UserFormComponent } from '@dsp-app/src/app/user/user-form/user-form.component';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, combineLatest } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
@@ -323,6 +326,16 @@ export class UsersListComponent implements OnInit {
         })
       )
       .subscribe();
+  }
+
+  createUser() {
+    const dialogConfig = DialogConfigUtil.dialogDrawerConfig();
+    this._matDialog.open(UserFormComponent, dialogConfig);
+  }
+
+  editUser(userId) {
+    const dialogConfig = DialogConfigUtil.dialogDrawerConfig<EditUser>({ userId });
+    this._matDialog.open(UserFormComponent, dialogConfig);
   }
 
   /**
