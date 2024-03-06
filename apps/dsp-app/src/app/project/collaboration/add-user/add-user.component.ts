@@ -27,6 +27,7 @@ import { map, startWith } from 'rxjs/operators';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
 import { existingNamesValidator } from '../../../main/directive/existing-name/existing-names.validator';
 import { DialogConfigUtil } from '../../../providers/drawer-config-util';
+import { EditUser } from '../../../user/user-form/user-form-model';
 import { UserFormComponent } from '../../../user/user-form/user-form.component';
 import { AutocompleteItem } from '../../../workspace/search/operator';
 
@@ -320,7 +321,7 @@ export class AddUserComponent implements OnInit {
   }
 
   createUser() {
-    const dialogConfig = DialogConfigUtil.dialogDrawerConfig({ project: this.projectUuid });
+    const dialogConfig = DialogConfigUtil.dialogDrawerConfig<EditUser>({ projectUuid: this.projectUuid });
     this._dialog.open(UserFormComponent, dialogConfig);
   }
 
