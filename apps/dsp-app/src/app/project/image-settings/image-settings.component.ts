@@ -141,7 +141,7 @@ export class ImageSettingsComponent implements OnInit {
     }
 
     if (size.startsWith('pct')) {
-      (this.percentage = size.split(':')[1]), 0;
+      this.percentage = size.split(':')[1];
       this.fixedWidth = null;
     } else {
       this.fixedWidth = size.split(',')[1];
