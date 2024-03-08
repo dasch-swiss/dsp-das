@@ -1,10 +1,11 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
-import { ErrorHandler, NgModule, NgZone } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule, NgZone } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
@@ -12,11 +13,11 @@ import { BASE_PATH } from '@dasch-swiss/vre/open-api';
 import { PendoAnalyticsService } from '@dasch-swiss/vre/shared/app-analytics';
 import {
   AppConfigService,
-  buildTagFactory,
   BuildTagToken,
   DspApiConfigToken,
   DspAppConfigToken,
   DspInstrumentationToken,
+  buildTagFactory,
 } from '@dasch-swiss/vre/shared/app-config';
 import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
@@ -35,6 +36,8 @@ import {
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import * as Sentry from '@sentry/angular-ivy';
+import { IMaskModule } from 'angular-imask';
 import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
@@ -234,7 +237,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     GridComponent,
     HeaderComponent,
     HelpComponent,
-    ImageDisplayAbsoluteComponent,
     ImageDisplayRatioComponent,
     IntermediateComponent,
     IntervalInputComponent,
@@ -329,6 +331,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     DataModelsComponent,
     IsFalsyPipe,
     CreateListItemDialogComponent,
+    ImageDisplayAbsoluteComponent,
   ],
   imports: [
     AngularSplitModule,
@@ -344,6 +347,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CommonModule,
     FormsModule,
     HttpClientModule,
+    IMaskModule,
     MaterialModule,
     MatJDNConvertibleCalendarDateAdapterModule,
     NgxSkeletonLoaderModule,
@@ -404,6 +408,16 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: IiifWithCredentialsInterceptor,
+      multi: true,
+    },
+    {
+      provide: Sentry.TraceService,
+      deps: [Router],
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => () => {},
+      deps: [Sentry.TraceService],
       multi: true,
     },
   ],

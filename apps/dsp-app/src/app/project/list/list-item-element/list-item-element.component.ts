@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { ListNode } from '@dasch-swiss/dsp-js';
+import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguageFormArray } from '@dasch-swiss/vre/shared/app-string-literal';
 import { ListItemService } from '../list-item/list-item.service';
 
 @Component({
@@ -16,8 +16,7 @@ import { ListItemService } from '../list-item/list-item.service';
           <dasch-swiss-multi-language-input
             [placeholder]="node.labels | appStringifyStringLiteral: 'all' | appTruncate: 128"
             [editable]="false"
-            [formGroup]="readOnlyForm"
-            controlName="labels"
+            [formArray]="readOnlyFormArray"
             [validators]="[]">
           </dasch-swiss-multi-language-input>
 
@@ -51,12 +50,9 @@ export class ListItemElementComponent implements OnInit, OnChanges {
   showChildren = false;
   showActionBubble = false;
 
-  readOnlyForm: FormGroup;
+  readOnlyFormArray: MultiLanguageFormArray;
 
-  constructor(
-    private _fb: FormBuilder,
-    public listItemService: ListItemService
-  ) {}
+  constructor(public listItemService: ListItemService) {}
 
   ngOnInit() {
     this.buildForm();
@@ -67,16 +63,7 @@ export class ListItemElementComponent implements OnInit, OnChanges {
   }
 
   private buildForm() {
-    this.readOnlyForm = this._fb.group({
-      labels: this._fb.array(
-        this.node.labels.map(({ language, value }) =>
-          this._fb.group({
-            language,
-            value,
-          })
-        )
-      ),
-    });
+    this.readOnlyFormArray = DEFAULT_MULTILANGUAGE_FORM(this.node.labels);
   }
 
   mouseEnter() {

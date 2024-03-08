@@ -1,5 +1,70 @@
 # Changelog
 
+## [11.7.0](https://github.com/dasch-swiss/dsp-das/compare/v11.6.5...v11.7.0) (2024-03-07)
+
+
+### Enhancements
+
+* resource state management (DEV-3358) ([#1496](https://github.com/dasch-swiss/dsp-das/issues/1496)) ([48b06bc](https://github.com/dasch-swiss/dsp-das/commit/48b06bc700dcfa219f001e9601078085b325c355))
+* watermark with radios and inputs (DEV-3313) ([#1502](https://github.com/dasch-swiss/dsp-das/issues/1502)) ([99096da](https://github.com/dasch-swiss/dsp-das/commit/99096da361ee7be70b94824ee461f77dcd43c761))
+* watermark with radios and inputs (DEV-3313) ([#1506](https://github.com/dasch-swiss/dsp-das/issues/1506)) ([6397d37](https://github.com/dasch-swiss/dsp-das/commit/6397d37d7ec0ce511f54540c02eed10f6c61b6b0))
+
+
+### Bug Fixes
+
+* **docs:** fix dead links in docs ([#1492](https://github.com/dasch-swiss/dsp-das/issues/1492)) ([4558e34](https://github.com/dasch-swiss/dsp-das/commit/4558e343aa5b3f693e925bc295c8e9e8e59c5f8e))
+* hotfix for list is undefined (sentry JA-1) ([#1508](https://github.com/dasch-swiss/dsp-das/issues/1508)) ([79301da](https://github.com/dasch-swiss/dsp-das/commit/79301dabf84e058f0e64d90a401481a316364e35))
+* image region  comment field  validation removed(DEV-3315) ([#1487](https://github.com/dasch-swiss/dsp-das/issues/1487)) ([985bcd0](https://github.com/dasch-swiss/dsp-das/commit/985bcd05fb157a938bd9ad6da95c186fb080f751))
+* refresh image viewer after new item was added (DEV-3277) ([#1491](https://github.com/dasch-swiss/dsp-das/issues/1491)) ([7706ce7](https://github.com/dasch-swiss/dsp-das/commit/7706ce77c2233f15bce51e356cfccabd01178b40))
+* removed absolute image size restriction, added sample image (DEV-3304) ([#1484](https://github.com/dasch-swiss/dsp-das/issues/1484)) ([00021a8](https://github.com/dasch-swiss/dsp-das/commit/00021a88b806ef4ad3823fc5beaa2cdb28abccc3))
+* resource class item autocomplete refresh and loading (DEV-3371) ([#1504](https://github.com/dasch-swiss/dsp-das/issues/1504)) ([c87de3c](https://github.com/dasch-swiss/dsp-das/commit/c87de3c4f12df37ca497db6329c672960eeda731))
+
+
+### Maintenance
+
+* add sentry error tracker ([#1507](https://github.com/dasch-swiss/dsp-das/issues/1507)) ([bbcd255](https://github.com/dasch-swiss/dsp-das/commit/bbcd2558994e90032f7fc1bd4ca94f5a934b8f0e))
+* cypress cloud only runs after release-please PR is merged ([#1499](https://github.com/dasch-swiss/dsp-das/issues/1499)) ([9920587](https://github.com/dasch-swiss/dsp-das/commit/99205872c43a38248022b10f1e472e8b6d55b2eb))
+* forms using multi language inputs should be typed ([#1494](https://github.com/dasch-swiss/dsp-das/issues/1494)) ([17333d0](https://github.com/dasch-swiss/dsp-das/commit/17333d094175b1be20bd30a8cee7a73d679b8191))
+* remove unused code in ontology component ([#1472](https://github.com/dasch-swiss/dsp-das/issues/1472)) ([bae7609](https://github.com/dasch-swiss/dsp-das/commit/bae76097ae590fba810b979cc2aa2af47e4ba6a2))
+* remove unused unit tests ([#1497](https://github.com/dasch-swiss/dsp-das/issues/1497)) ([5499904](https://github.com/dasch-swiss/dsp-das/commit/5499904806673723fdec02942e905e3a6b2fd9a9))
+* run e2e tests after release please actions on cypress cloud  ([#1498](https://github.com/dasch-swiss/dsp-das/issues/1498)) ([5cc4577](https://github.com/dasch-swiss/dsp-das/commit/5cc4577ee41f8d189811be486e2c4ae78624e0a8))
+* type chip list input component ([#1501](https://github.com/dasch-swiss/dsp-das/issues/1501)) ([1c75ca5](https://github.com/dasch-swiss/dsp-das/commit/1c75ca5157dd6d97bee44abde4bad83b105f97e1))
+* type common input ([#1500](https://github.com/dasch-swiss/dsp-das/issues/1500)) ([860a430](https://github.com/dasch-swiss/dsp-das/commit/860a4305bf86f774f7df074adb54364573b576b4))
+* type multi language controls ([#1489](https://github.com/dasch-swiss/dsp-das/issues/1489)) ([42d5112](https://github.com/dasch-swiss/dsp-das/commit/42d51121a06d36b3eeaf88cc975f30b595e88869))
+
+
+### Documentation
+
+* comply to dsp-docs markdown requirements ([#1490](https://github.com/dasch-swiss/dsp-das/issues/1490)) ([4e99390](https://github.com/dasch-swiss/dsp-das/commit/4e993900defe0ae322185e77a08f8e3d97866dfe))
+
+## [11.6.5](https://github.com/dasch-swiss/dsp-das/compare/v11.6.4...v11.6.5) (2024-02-27)
+
+
+### Bug Fixes
+
+* submit button on upload resource does not load indefinitely  ([#1485](https://github.com/dasch-swiss/dsp-das/issues/1485)) ([e1a51b5](https://github.com/dasch-swiss/dsp-das/commit/e1a51b5a224bf532f3a3f0ff8e6b4a49c9b42bd2))
+
+## [11.6.4](https://github.com/dasch-swiss/dsp-das/compare/v11.6.3...v11.6.4) (2024-02-23)
+
+
+### Bug Fixes
+
+* new list node field error is not displayed ([#1481](https://github.com/dasch-swiss/dsp-das/issues/1481)) ([1ef0823](https://github.com/dasch-swiss/dsp-das/commit/1ef082364c13ead5a537bc32a734372744f1cbda))
+* ontology initialisation (DEV-3317) ([#1483](https://github.com/dasch-swiss/dsp-das/issues/1483)) ([be6ec9a](https://github.com/dasch-swiss/dsp-das/commit/be6ec9a5f4b16f4992b79ee69754da74f8b71178))
+
+## [11.6.3](https://github.com/dasch-swiss/dsp-das/compare/v11.6.2...v11.6.3) (2024-02-23)
+
+
+### Bug Fixes
+
+* highlits section by clicked region in image viewer (DEV-3277) ([#1468](https://github.com/dasch-swiss/dsp-das/issues/1468)) ([50a5db5](https://github.com/dasch-swiss/dsp-das/commit/50a5db556f544f3beaf8b23a26caabd0d7328a85))
+* initiates new search when user is logged in sucessfully (DEV-3293) ([#1469](https://github.com/dasch-swiss/dsp-das/issues/1469)) ([70f7f25](https://github.com/dasch-swiss/dsp-das/commit/70f7f25f373e0e054c7cd4240ce969c07450efb0))
+
+
+### Maintenance
+
+* update dsp-js to v.9.1.12 ([#1478](https://github.com/dasch-swiss/dsp-das/issues/1478)) ([a99cfeb](https://github.com/dasch-swiss/dsp-das/commit/a99cfebbec6aeea49277a32ec6bc52486a564de5))
+
 ## [11.6.2](https://github.com/dasch-swiss/dsp-das/compare/v11.6.1...v11.6.2) (2024-02-14)
 
 

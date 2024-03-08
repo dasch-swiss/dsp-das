@@ -138,14 +138,16 @@
           }
         },
         "imageSettings": {
+          "off": "Off",
           "isWatermark": "Apply watermark",
           "ratio": "Ratio",
           "fixed": "Fixed width",
           "restrictImageSize": "Restrict image size",
-          "absoluteWidth": "Absolute width",
+          "absoluteWidth": "Absolute width in pixels from: {{min}} to: {{max}}",
           "percentageValue": "Percentage value",
           "percentage": "Percentage",
-          "updateConfirmation": "You have successfully updated the project image settings."
+          "updateConfirmation": "You have successfully updated the project image settings.",
+          "info": "To limit the size of your image, input either a percentage or an absolute pixel width. You cannot provide values for both options."
         }
       },
       "member": {
