@@ -5,7 +5,9 @@ import { FormArray, FormControl } from '@angular/forms';
   selector: 'app-nu-list',
   template: ` <div *ngFor="let control of formArray.controls; let index = index" style="display: flex">
       <ng-container *ngTemplateOutlet="itemTpl; context: { $implicit: control }"></ng-container>
-      <button mat-raised-button (click)="formArray.removeAt(index)">Removes</button>
+      <button (click)="formArray.removeAt(index)" mat-icon-button>
+        <mat-icon>delete</mat-icon>
+      </button>
     </div>
     <button mat-raised-button (click)="add()">Add</button>`,
 })
