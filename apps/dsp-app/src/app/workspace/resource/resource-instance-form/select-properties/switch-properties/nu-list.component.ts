@@ -14,9 +14,9 @@ import { FormArray, FormControl } from '@angular/forms';
 export class NuListComponent {
   @Input() itemTpl: TemplateRef<any>;
   @Input() formArray: FormArray;
-  @Input() newControl: FormControl<any>;
+  @Input() newValue: any;
 
   add() {
-    this.formArray.push(this.newControl);
+    this.formArray.push(new FormControl(this.newValue));
   }
 }
