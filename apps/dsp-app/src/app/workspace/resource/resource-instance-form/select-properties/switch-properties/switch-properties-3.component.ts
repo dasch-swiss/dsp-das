@@ -68,7 +68,6 @@ export class SwitchProperties3Component implements AfterViewInit {
   }
 
   private getTemplate(): { template: TemplateRef<any>; newValue: any } {
-    console.log(this.property.objectType);
     switch (this.property.objectType) {
       case Constants.IntValue:
         return { template: this.intTpl, newValue: 0 };
