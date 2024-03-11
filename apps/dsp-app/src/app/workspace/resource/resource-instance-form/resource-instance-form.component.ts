@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
   CreateFileValue,
+  CreateIntValue,
   CreateResource,
   IHasPropertyWithPropertyDefinition,
   KnoraApiConnection,
@@ -40,6 +41,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   unsuitableProperties: IHasPropertyWithPropertyDefinition[];
   loading = false;
 
+  mapping = new Map<string, string>();
   labelControl = this._fb.control<string>('test', [Validators.required]);
   readonly weirdConstants = [
     Constants.HasStillImageFileValue,
@@ -88,6 +90,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   private _buildForm() {
     this.unsuitableProperties.forEach((prop, index) => {
       this.dynamicForm.addControl(prop.propertyDefinition.id, this._fb.array([]));
+      this.mapping.set(prop.propertyDefinition.id, prop.propertyDefinition.objectType);
     });
   }
 
@@ -133,7 +136,8 @@ export class ResourceInstanceFormComponent implements OnInit {
     const propertiesObj = {};
 
     Object.keys(this.dynamicForm.controls).forEach(iri => {
-      propertiesObj[iri] = [this.dynamicForm.controls[iri].value];
+      console.log(iri, this.mapping.get(iri));
+      propertiesObj[iri] = this.getValue(iri);
     });
 
     if (this.fileValue) {
@@ -141,6 +145,19 @@ export class ResourceInstanceFormComponent implements OnInit {
       propertiesObj[hasFileValue] = [this.fileValue];
     }
     return propertiesObj;
+  }
+
+  private getValue(iri) {
+    switch (this.mapping.get(iri)) {
+      case Constants.IntValue:
+        return this.dynamicForm.controls[iri].controls.map(control => {
+          const newIntValue = new CreateIntValue();
+          newIntValue.int = control.value;
+          return newIntValue;
+        });
+      default:
+        return [this.dynamicForm.controls[iri].value];
+    }
   }
 
   private getProperties() {
