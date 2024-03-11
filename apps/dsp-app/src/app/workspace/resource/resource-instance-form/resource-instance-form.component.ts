@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
+  CreateBooleanValue,
   CreateFileValue,
   CreateIntValue,
   CreateResource,
@@ -154,6 +155,12 @@ export class ResourceInstanceFormComponent implements OnInit {
           const newIntValue = new CreateIntValue();
           newIntValue.int = control.value;
           return newIntValue;
+        });
+      case Constants.BooleanValue:
+        return this.dynamicForm.controls[iri].controls.map(control => {
+          const newBooleanValue = new CreateBooleanValue();
+          newBooleanValue.bool = control.value;
+          return newBooleanValue;
         });
       default:
         return [this.dynamicForm.controls[iri].value];
