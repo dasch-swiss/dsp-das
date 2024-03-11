@@ -43,6 +43,7 @@ import { IntValue3Component } from '@dsp-app/src/app/workspace/resource/resource
 import { NuListComponent } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/nu-list.component';
 import { SwitchProperties2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-2.component';
 import { SwitchProperties3Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-3.component';
+import { TimeValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/time-value-2.component';
 import { UriValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/uri-value-2.component';
 import { ColorValue2Component } from '@dsp-app/src/app/workspace/resource/values/color-value/color-picker/color-value-2.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -341,6 +342,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     VideoPreviewComponent,
     HintComponent,
     TextComponent,
+    TimeValue2Component,
     OntologyClassesComponent,
     OntologyClassItemComponent,
     OntologyClassInstanceComponent,
