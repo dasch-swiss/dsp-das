@@ -31,6 +31,13 @@ import { Constants, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 
     <ng-template #defaultTpl>Nothing to show</ng-template>
   `,
+  styles: [
+    `
+      mat-form-field {
+        width: 100%;
+      }
+    `,
+  ],
 })
 export class SwitchProperties3Component implements AfterViewInit {
   @Input() property: ResourcePropertyDefinition;
