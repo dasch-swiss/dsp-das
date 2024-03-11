@@ -137,7 +137,6 @@ export class ResourceInstanceFormComponent implements OnInit {
     const propertiesObj = {};
 
     Object.keys(this.dynamicForm.controls).forEach(iri => {
-      console.log(iri, this.mapping.get(iri));
       propertiesObj[iri] = this.getValue(iri);
     });
 
