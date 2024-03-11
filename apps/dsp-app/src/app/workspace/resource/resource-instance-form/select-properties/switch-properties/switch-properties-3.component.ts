@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { FormArray, FormControl } from '@angular/forms';
-import { Cardinality, Constants, PropertyDefinition } from '@dasch-swiss/dsp-js';
+import { Cardinality, Constants, PropertyDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 
 @Component({
   selector: 'app-switch-properties-3',
@@ -36,11 +36,15 @@ import { Cardinality, Constants, PropertyDefinition } from '@dasch-swiss/dsp-js'
     </ng-template>
 
     <ng-template let-item #dateTpl>
-      <app-date-value-handler #dateInput [formControl]="item"></app-date-value-handler>
+      <app-date-value-handler [formControl]="item"></app-date-value-handler>
     </ng-template>
 
     <ng-template let-item #timeTpl>
-      <app-time-value-2 #dateInput [control]="item"></app-time-value-2>
+      <app-time-value-2 [control]="item"></app-time-value-2>
+    </ng-template>
+
+    <ng-template let-item #listTpl>
+      <app-list-value-2 [propertyDef]="resPropDef"></app-list-value-2>
     </ng-template>
 
     <ng-template #defaultTpl><span style="width: 100%">Nothing to show</span></ng-template>
@@ -54,7 +58,7 @@ import { Cardinality, Constants, PropertyDefinition } from '@dasch-swiss/dsp-js'
   ],
 })
 export class SwitchProperties3Component implements AfterViewInit {
-  @Input() objectType: PropertyDefinition['objectType'];
+  @Input() propertyDefinition: PropertyDefinition;
   @Input() cardinality: Cardinality;
   @Input() formArray: FormArray;
 
@@ -65,10 +69,19 @@ export class SwitchProperties3Component implements AfterViewInit {
   @ViewChild('textTpl') textTpl: TemplateRef<any>;
   @ViewChild('dateTpl') dateTpl: TemplateRef<any>;
   @ViewChild('timeTpl') timeTpl: TemplateRef<any>;
+  @ViewChild('listTpl') listTpl: TemplateRef<any>;
   @ViewChild('defaultTpl') defaultTpl: TemplateRef<any>;
 
   itemTpl: TemplateRef<any>;
   newValue: any;
+
+  get objectType() {
+    return this.propertyDefinition.objectType;
+  }
+
+  get resPropDef() {
+    return this.propertyDefinition as ResourcePropertyDefinition;
+  }
 
   constructor(private _cd: ChangeDetectorRef) {}
 
@@ -78,7 +91,6 @@ export class SwitchProperties3Component implements AfterViewInit {
     this.newValue = data.newValue;
     this.formArray.push(new FormControl(this.newValue));
     this._cd.detectChanges();
-    console.log(this.objectType, this.cardinality);
   }
 
   private getTemplate(): { template: TemplateRef<any>; newValue: any } {
@@ -97,6 +109,8 @@ export class SwitchProperties3Component implements AfterViewInit {
         return { template: this.dateTpl, newValue: '' };
       case Constants.TimeValue:
         return { template: this.timeTpl, newValue: '' };
+      case Constants.ListValue:
+        return { template: this.listTpl, newValue: null };
       default:
         return { template: this.defaultTpl, newValue: null };
     }

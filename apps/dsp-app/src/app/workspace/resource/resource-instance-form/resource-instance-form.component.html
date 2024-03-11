@@ -16,7 +16,7 @@
       <div style="margin-top: 16px">{{ prop.propertyDefinition.label }}</div>
       <div>
         <app-switch-properties-3
-          [objectType]="prop.propertyDefinition.objectType"
+          [propertyDefinition]="prop.propertyDefinition"
           [formArray]="dynamicForm.controls[prop.propertyDefinition.id]"
           [cardinality]="prop.cardinality"></app-switch-properties-3>
       </div>
