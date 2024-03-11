@@ -39,6 +39,7 @@ import { PropertyItemComponent } from '@dsp-app/src/app/workspace/resource/resou
 import { BooleanValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/boolean-value-2.component';
 import { IntValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-2.component';
 import { IntValue3Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-3.component';
+import { NuListComponent } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/nu-list.component';
 import { SwitchProperties2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-2.component';
 import { SwitchProperties3Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-3.component';
 import { UriValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/uri-value-2.component';
@@ -272,6 +273,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ListViewComponent,
     LoginFormComponent,
     MembershipComponent,
+    NuListComponent,
     OntologyComponent,
     OntologyFormComponent,
     PasswordFormComponent,
