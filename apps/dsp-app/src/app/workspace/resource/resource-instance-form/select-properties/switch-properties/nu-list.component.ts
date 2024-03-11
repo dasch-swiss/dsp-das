@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, TemplateRef } from '@angular/core';
 import { FormArray, FormControl } from '@angular/forms';
 
 @Component({
@@ -10,14 +10,11 @@ import { FormArray, FormControl } from '@angular/forms';
     <button mat-raised-button (click)="add()">Add</button>`,
 })
 export class NuListComponent {
-  @Input() itemTpl;
+  @Input() itemTpl: TemplateRef<any>;
   @Input() formArray: FormArray;
-
-  ngOnChanges() {
-    console.log(this.itemTpl, 'changes');
-  }
+  @Input() newControl: FormControl<any>;
 
   add() {
-    this.formArray.push(new FormControl(0));
+    this.formArray.push(this.newControl);
   }
 }

@@ -1,14 +1,16 @@
-import { AfterViewInit, Component, Input, TemplateRef, ViewChild } from '@angular/core';
-import { FormArray } from '@angular/forms';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, TemplateRef, ViewChild } from '@angular/core';
+import { FormArray, FormControl } from '@angular/forms';
 import { Constants, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 
 @Component({
   selector: 'app-switch-properties-3',
   template: `
-    <app-nu-list [itemTpl]="itemTpl" [formArray]="formArray"></app-nu-list>
+    <app-nu-list [itemTpl]="itemTpl" [newControl]="newControl" [formArray]="formArray"></app-nu-list>
 
     <ng-template let-item #intTpl>
-      <app-int-value-3 [control]="item"></app-int-value-3>
+      <mat-form-field style="width: 100%">
+        <input matInput [formControl]="item" type="number" />
+      </mat-form-field>
     </ng-template>
   `,
 })
@@ -19,15 +21,21 @@ export class SwitchProperties3Component implements AfterViewInit {
   @ViewChild('intTpl') intTpl: TemplateRef<any>;
 
   itemTpl: TemplateRef<any>;
+  newControl: FormControl<any>;
+
+  constructor(private _cd: ChangeDetectorRef) {}
 
   ngAfterViewInit() {
-    this.itemTpl = this.getTemplate();
+    const data = this.getTemplate();
+    this.itemTpl = data.template;
+    this.newControl = data.control;
+    this._cd.detectChanges();
   }
 
   private getTemplate() {
     switch (this.property.objectType) {
       case Constants.IntValue:
-        return this.intTpl;
+        return { template: this.intTpl, control: new FormControl(0) };
     }
   }
 }
