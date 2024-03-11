@@ -20,9 +20,7 @@ import { Constants, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
     </ng-template>
 
     <ng-template let-item #booleanTpl>
-      <mat-form-field>
-        <mat-slide-toggle [formControl]="item"></mat-slide-toggle>
-      </mat-form-field>
+      <mat-slide-toggle [formControl]="item" style="width: 100%"></mat-slide-toggle>
     </ng-template>
 
     <ng-template let-item #colorTpl>
@@ -30,10 +28,10 @@ import { Constants, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
     </ng-template>
 
     <ng-template let-item #textTpl>
-      <app-common-input [control]="item"></app-common-input>
+      <app-common-input [control]="item" style="width: 100%"></app-common-input>
     </ng-template>
 
-    <ng-template #defaultTpl>Nothing to show</ng-template>
+    <ng-template #defaultTpl><span style="width: 100%">Nothing to show</span></ng-template>
   `,
   styles: [
     `
