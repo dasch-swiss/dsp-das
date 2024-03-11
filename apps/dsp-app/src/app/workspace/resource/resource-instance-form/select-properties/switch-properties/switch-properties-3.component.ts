@@ -1,11 +1,15 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { FormArray, FormControl } from '@angular/forms';
-import { Constants, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { Cardinality, Constants, PropertyDefinition } from '@dasch-swiss/dsp-js';
 
 @Component({
   selector: 'app-switch-properties-3',
   template: `
-    <app-nu-list [itemTpl]="itemTpl" [newValue]="newValue" [formArray]="formArray"></app-nu-list>
+    <app-nu-list
+      [itemTpl]="itemTpl"
+      [newValue]="newValue"
+      [formArray]="formArray"
+      [cardinality]="cardinality"></app-nu-list>
 
     <ng-template let-item #intTpl>
       <mat-form-field>
@@ -42,7 +46,8 @@ import { Constants, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
   ],
 })
 export class SwitchProperties3Component implements AfterViewInit {
-  @Input() property: ResourcePropertyDefinition;
+  @Input() objectType: PropertyDefinition['objectType'];
+  @Input() cardinality: Cardinality;
   @Input() formArray: FormArray;
 
   @ViewChild('intTpl') intTpl: TemplateRef<any>;
@@ -63,10 +68,11 @@ export class SwitchProperties3Component implements AfterViewInit {
     this.newValue = data.newValue;
     this.formArray.push(new FormControl(this.newValue));
     this._cd.detectChanges();
+    console.log(this.objectType, this.cardinality);
   }
 
   private getTemplate(): { template: TemplateRef<any>; newValue: any } {
-    switch (this.property.objectType) {
+    switch (this.objectType) {
       case Constants.IntValue:
         return { template: this.intTpl, newValue: 0 };
       case Constants.DecimalValue:
@@ -81,4 +87,6 @@ export class SwitchProperties3Component implements AfterViewInit {
         return { template: this.defaultTpl, newValue: null };
     }
   }
+
+  protected readonly Cardinality = Cardinality;
 }

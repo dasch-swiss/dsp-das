@@ -5,6 +5,7 @@ import {
   Constants,
   CreateFileValue,
   CreateResource,
+  IHasPropertyWithPropertyDefinition,
   KnoraApiConnection,
   ReadResource,
   ResourceClassAndPropertyDefinitions,
@@ -36,7 +37,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   resourceClass: ResourceClassDefinition;
   ontologyInfo: ResourceClassAndPropertyDefinitions;
   fileValue: CreateFileValue;
-  unsuitableProperties: ResourcePropertyDefinition[];
+  unsuitableProperties: IHasPropertyWithPropertyDefinition[];
   loading = false;
 
   labelControl = this._fb.control<string>('test', [Validators.required]);
@@ -74,8 +75,11 @@ export class ResourceInstanceFormComponent implements OnInit {
       .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri)))
       .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
         this.ontologyInfo = onto;
-        this.unsuitableProperties = this._getUnsuitableProperties();
         this.resourceClass = onto.classes[resourceClassIri];
+        this.unsuitableProperties = onto.classes[resourceClassIri]
+          .getResourcePropertiesList()
+          .filter(v => v.guiOrder !== undefined);
+        console.log('final', this.unsuitableProperties);
         this._buildForm();
         this._cd.detectChanges();
       });
@@ -83,7 +87,7 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   private _buildForm() {
     this.unsuitableProperties.forEach((prop, index) => {
-      this.dynamicForm.addControl(prop.id, this._fb.array([]));
+      this.dynamicForm.addControl(prop.propertyDefinition.id, this._fb.array([]));
     });
   }
 
@@ -138,8 +142,13 @@ export class ResourceInstanceFormComponent implements OnInit {
     return propertiesObj;
   }
 
-  private _getUnsuitableProperties() {
+  private getProperties() {
     // filter out all props that cannot be edited or are link props but also the hasFileValue props
+    console.log(
+      this.ontologyInfo,
+      'julien',
+      this.ontologyInfo.getPropertyDefinitionsByType(ResourcePropertyDefinition)
+    );
     return this.ontologyInfo
       .getPropertyDefinitionsByType(ResourcePropertyDefinition)
       .filter(prop => !prop.isLinkProperty && prop.isEditable && !this.weirdConstants.includes(prop.id));

@@ -13,11 +13,12 @@
 
   <div style="display: grid; grid-template-columns: 100px 400px; grid-gap: 10px">
     <ng-container *ngFor="let prop of unsuitableProperties">
-      <div style="margin-top: 16px">{{ prop.label }}</div>
+      <div style="margin-top: 16px">{{ prop.propertyDefinition.label }}</div>
       <div>
         <app-switch-properties-3
-          [property]="prop"
-          [formArray]="dynamicForm.controls[prop.id]"></app-switch-properties-3>
+          [objectType]="prop.propertyDefinition.objectType"
+          [formArray]="dynamicForm.controls[prop.propertyDefinition.id]"
+          [cardinality]="prop.cardinality"></app-switch-properties-3>
       </div>
     </ng-container>
   </div>
