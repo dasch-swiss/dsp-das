@@ -7,6 +7,7 @@ import {
   CreateFileValue,
   CreateIntValue,
   CreateResource,
+  CreateTextValueAsString,
   IHasPropertyWithPropertyDefinition,
   KnoraApiConnection,
   ReadResource,
@@ -148,18 +149,25 @@ export class ResourceInstanceFormComponent implements OnInit {
   }
 
   private getValue(iri) {
+    const controls = this.dynamicForm.controls[iri].controls;
     switch (this.mapping.get(iri)) {
       case Constants.IntValue:
-        return this.dynamicForm.controls[iri].controls.map(control => {
+        return controls.map(control => {
           const newIntValue = new CreateIntValue();
           newIntValue.int = control.value;
           return newIntValue;
         });
       case Constants.BooleanValue:
-        return this.dynamicForm.controls[iri].controls.map(control => {
+        return controls.map(control => {
           const newBooleanValue = new CreateBooleanValue();
           newBooleanValue.bool = control.value;
           return newBooleanValue;
+        });
+      case Constants.TextValue:
+        return controls.map(control => {
+          const newTextValue = new CreateTextValueAsString();
+          newTextValue.text = control.value;
+          return newTextValue;
         });
       default:
         return [this.dynamicForm.controls[iri].value];
