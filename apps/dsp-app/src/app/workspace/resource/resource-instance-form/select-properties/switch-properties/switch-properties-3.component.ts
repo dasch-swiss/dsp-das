@@ -51,6 +51,7 @@ export class SwitchProperties3Component implements AfterViewInit {
     const data = this.getTemplate();
     this.itemTpl = data.template;
     this.newControl = data.control;
+    this.formArray.push(this.newControl);
     this._cd.detectChanges();
   }
 

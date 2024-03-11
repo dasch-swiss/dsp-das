@@ -11,11 +11,15 @@
     <app-common-input [control]="labelControl"></app-common-input>
   </div>
 
-  <div *ngFor="let prop of unsuitableProperties" style="display: flex">
-    <div>{{ prop.label }}</div>
-    <div>
-      <app-switch-properties-3 [property]="prop" [formArray]="dynamicForm.controls[prop.id]"></app-switch-properties-3>
-    </div>
+  <div style="display: grid; grid-template-columns: 100px 400px; grid-gap: 10px">
+    <ng-container *ngFor="let prop of unsuitableProperties">
+      <div>{{ prop.label }}</div>
+      <div>
+        <app-switch-properties-3
+          [property]="prop"
+          [formArray]="dynamicForm.controls[prop.id]"></app-switch-properties-3>
+      </div>
+    </ng-container>
   </div>
 
   <button
