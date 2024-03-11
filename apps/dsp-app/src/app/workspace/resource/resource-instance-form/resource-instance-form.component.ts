@@ -16,7 +16,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/resource-instance-form/component-host.directive';
 import { Store } from '@ngxs/store';
-import { switchMap, take } from 'rxjs/operators';
+import { switchMap, take, tap } from 'rxjs/operators';
 import { ResourceService } from '../services/resource.service';
 import { SelectPropertiesComponent } from './select-properties/select-properties.component';
 
@@ -93,11 +93,12 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   submitData() {
     this.loading = true;
+    console.log('payload sent', this._getPayload());
 
-    const payload = this._getPayload();
     this._dspApiConnection.v2.res
       .createResource(this._getPayload())
       .pipe(
+        tap(v => console.log(v)),
         switchMap((res: ReadResource) => {
           const uuid = this._resourceService.getResourceUuid(res.id);
           return this._router.navigate(['..', uuid], { relativeTo: this._route });
