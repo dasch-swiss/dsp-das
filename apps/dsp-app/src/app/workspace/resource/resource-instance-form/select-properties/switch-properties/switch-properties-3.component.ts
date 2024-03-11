@@ -35,6 +35,10 @@ import { Cardinality, Constants, PropertyDefinition } from '@dasch-swiss/dsp-js'
       <app-common-input [control]="item" style="width: 100%"></app-common-input>
     </ng-template>
 
+    <ng-template let-item #dateTpl>
+      <app-date-value-handler #dateInput [formControl]="item"></app-date-value-handler>
+    </ng-template>
+
     <ng-template #defaultTpl><span style="width: 100%">Nothing to show</span></ng-template>
   `,
   styles: [
@@ -55,6 +59,7 @@ export class SwitchProperties3Component implements AfterViewInit {
   @ViewChild('booleanTpl') booleanTpl: TemplateRef<any>;
   @ViewChild('colorTpl') colorTpl: TemplateRef<any>;
   @ViewChild('textTpl') textTpl: TemplateRef<any>;
+  @ViewChild('dateTpl') dateTpl: TemplateRef<any>;
   @ViewChild('defaultTpl') defaultTpl: TemplateRef<any>;
 
   itemTpl: TemplateRef<any>;
@@ -83,6 +88,8 @@ export class SwitchProperties3Component implements AfterViewInit {
         return { template: this.colorTpl, newValue: '#000000' };
       case Constants.TextValue:
         return { template: this.textTpl, newValue: '' };
+      case Constants.DateValue:
+        return { template: this.dateTpl, newValue: '' };
       default:
         return { template: this.defaultTpl, newValue: null };
     }
