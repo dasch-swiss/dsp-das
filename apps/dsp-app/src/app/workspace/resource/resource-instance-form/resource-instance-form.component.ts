@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
   CreateBooleanValue,
+  CreateColorValue,
   CreateFileValue,
   CreateIntValue,
   CreateResource,
@@ -168,6 +169,13 @@ export class ResourceInstanceFormComponent implements OnInit {
           const newTextValue = new CreateTextValueAsString();
           newTextValue.text = control.value;
           return newTextValue;
+        });
+      // TODO case Date
+      case Constants.ColorValue:
+        return controls.map(control => {
+          const newColorValue = new CreateColorValue();
+          newColorValue.color = control.value;
+          return newColorValue;
         });
       default:
         return [this.dynamicForm.controls[iri].value];
