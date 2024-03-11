@@ -1,8 +1,4 @@
-<form
-  *ngIf="!loading; else loadingTemplate"
-  [formGroup]="dynamicForm"
-  appInvalidControlScroll
-  (ngSubmit)="submitData()">
+<form *ngIf="!loading; else loadingTemplate" [formGroup]="dynamicForm" appInvalidControlScroll>
   <app-upload-2 [allowedFileTypes]="['image/png']"></app-upload-2>
 
   <div style="display: flex">
@@ -27,7 +23,7 @@
     </ng-container>
   </div>
 
-  <button mat-raised-button type="submit" color="primary" appLoadingButton [isLoading]="loading">
+  <button mat-raised-button type="submit" color="primary" appLoadingButton [isLoading]="loading" (click)="submitData()">
     {{ 'appLabels.form.action.submit' | translate }}
   </button>
 </form>

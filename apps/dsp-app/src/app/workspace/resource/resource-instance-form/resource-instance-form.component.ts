@@ -5,6 +5,7 @@ import {
   Constants,
   CreateBooleanValue,
   CreateColorValue,
+  CreateDecimalValue,
   CreateFileValue,
   CreateIntValue,
   CreateResource,
@@ -157,6 +158,12 @@ export class ResourceInstanceFormComponent implements OnInit {
           const newIntValue = new CreateIntValue();
           newIntValue.int = control.value;
           return newIntValue;
+        });
+      case Constants.DecimalValue:
+        return controls.map(control => {
+          const newDecimalValue = new CreateDecimalValue();
+          newDecimalValue.decimal = control.value;
+          return newDecimalValue;
         });
       case Constants.BooleanValue:
         return controls.map(control => {
