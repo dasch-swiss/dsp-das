@@ -5,8 +5,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 @Component({
   selector: 'app-list-value-2',
   template: `
-    V
-    <button mat-button [matMenuTriggerFor]="rootNodesMenu" *ngIf="listRootNode">A{{ listRootNode.label }}B</button>W
+    <button mat-button [matMenuTriggerFor]="rootNodesMenu" *ngIf="listRootNode">{{ listRootNode.label }}</button>
     <mat-menu #rootNodesMenu="matMenu">
       <button mat-menu-item *ngFor="let node of listRootNode?.children" [matMenuTriggerFor]="vertebrates">
         {{ node.label }}
