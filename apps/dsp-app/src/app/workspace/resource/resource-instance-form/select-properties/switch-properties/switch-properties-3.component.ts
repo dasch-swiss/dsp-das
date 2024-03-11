@@ -29,6 +29,10 @@ import { Constants, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
       <app-color-value-2 [control]="item"></app-color-value-2>
     </ng-template>
 
+    <ng-template let-item #textTpl>
+      <app-common-input [control]="item"></app-common-input>
+    </ng-template>
+
     <ng-template #defaultTpl>Nothing to show</ng-template>
   `,
   styles: [
@@ -47,6 +51,7 @@ export class SwitchProperties3Component implements AfterViewInit {
   @ViewChild('decimalTpl') decimalTpl: TemplateRef<any>;
   @ViewChild('booleanTpl') booleanTpl: TemplateRef<any>;
   @ViewChild('colorTpl') colorTpl: TemplateRef<any>;
+  @ViewChild('textTpl') textTpl: TemplateRef<any>;
   @ViewChild('defaultTpl') defaultTpl: TemplateRef<any>;
 
   itemTpl: TemplateRef<any>;
@@ -63,6 +68,7 @@ export class SwitchProperties3Component implements AfterViewInit {
   }
 
   private getTemplate(): { template: TemplateRef<any>; control: FormControl<any> } {
+    console.log(this.property.objectType);
     switch (this.property.objectType) {
       case Constants.IntValue:
         return { template: this.intTpl, control: new FormControl(0) };
@@ -72,6 +78,8 @@ export class SwitchProperties3Component implements AfterViewInit {
         return { template: this.booleanTpl, control: new FormControl(false) };
       case Constants.ColorValue:
         return { template: this.colorTpl, control: new FormControl('#000000') };
+      case Constants.TextValue:
+        return { template: this.textTpl, control: new FormControl('') };
       default:
         return { template: this.defaultTpl, control: new FormControl(null) };
     }
