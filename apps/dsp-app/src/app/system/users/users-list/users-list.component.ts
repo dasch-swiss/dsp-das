@@ -28,8 +28,8 @@ import { map, switchMap, take } from 'rxjs/operators';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
 import { DialogService } from '../../../main/services/dialog.service';
 import { DialogConfigUtil } from '../../../providers/drawer-config-util';
-import { EditUser } from '../../../user/user-form/user-form-model';
 import { UserFormComponent } from '../../../user/user-form/user-form.component';
+import { UserToEdit } from '../../../user/user-form/user-form.type';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -329,12 +329,12 @@ export class UsersListComponent implements OnInit {
   }
 
   createUser() {
-    const dialogConfig = DialogConfigUtil.dialogDrawerConfig<EditUser>({});
+    const dialogConfig = DialogConfigUtil.dialogDrawerConfig<UserToEdit>({});
     this._matDialog.open(UserFormComponent, dialogConfig);
   }
 
   editUser(userId) {
-    const dialogConfig = DialogConfigUtil.dialogDrawerConfig<EditUser>({ userId });
+    const dialogConfig = DialogConfigUtil.dialogDrawerConfig<UserToEdit>({ userId });
     this._matDialog.open(UserFormComponent, dialogConfig);
   }
 
