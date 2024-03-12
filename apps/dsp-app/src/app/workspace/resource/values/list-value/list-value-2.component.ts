@@ -6,12 +6,15 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 @Component({
   selector: 'app-list-value-2',
   template: `
-    <app-nested-menu
-      style="flex: 1"
-      *ngIf="listRootNode"
-      [data]="listRootNode"
-      [selection]="mySelectedNode?.label"
-      (selectedNode)="selectedNode($event)"></app-nested-menu>
+    <div>
+      <app-nested-menu
+        style="flex: 1"
+        *ngIf="listRootNode"
+        [data]="listRootNode"
+        [selection]="mySelectedNode?.label"
+        (selectedNode)="selectedNode($event)"></app-nested-menu>
+      <mat-error *ngIf="control.touched && control.errors">{{ control.errors | humanReadableError }}</mat-error>
+    </div>
     <button mat-flat-button (click)="resetNode()" *ngIf="mySelectedNode">Reset</button>
   `,
   styles: [':host {display: flex; align-items: center}'],
