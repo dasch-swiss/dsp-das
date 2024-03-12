@@ -6,7 +6,7 @@ import { CreateUserAction, LoadUsersAction, UpdateUserAction, UserSelectors } fr
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, of, Subject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
-import { EditUser } from './user-form-model';
+import { UserToEdit } from './user-form.type';
 
 @Injectable()
 export class UserEditService {
@@ -34,7 +34,7 @@ export class UserEditService {
     );
   }
 
-  getUser$(userConfig: EditUser): Observable<ReadUser> {
+  getUser$(userConfig: UserToEdit): Observable<ReadUser> {
     this._enrollToProject = userConfig?.projectUuid ? this._projectService.uuidToIri(userConfig.projectUuid) : '';
     return this.allUsers$.pipe(
       switchMap(allUsers => {

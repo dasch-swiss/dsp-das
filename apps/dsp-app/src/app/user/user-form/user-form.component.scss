@@ -1,8 +1,5 @@
-.form {
-  width: 580px;
-  margin-left: 48px;
-}
-
-.hidden {
-  display: none;
+.form-panel {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
