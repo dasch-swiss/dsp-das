@@ -35,15 +35,15 @@ export class UserEditService {
     );
   }
 
-  getUser$(userConfig: UserToEdit): Observable<ReadUser> {
-    this._userId = userConfig?.userId || '';
-    this._enrollToProject = userConfig?.projectUuid ? this._projectService.uuidToIri(userConfig.projectUuid) : '';
+  getUser$(userToEdit: UserToEdit): Observable<ReadUser> {
+    this._userId = userToEdit?.userId || '';
+    this._enrollToProject = userToEdit?.projectUuid ? this._projectService.uuidToIri(userToEdit.projectUuid) : '';
     return this.allUsers$.pipe(
       switchMap(allUsers => {
         if (allUsers.length === 0) {
           this._store.dispatch(new LoadUsersAction(true));
         }
-        const user = allUsers.find(u => u?.id === userConfig?.userId);
+        const user = allUsers.find(u => u?.id === userToEdit?.userId);
         return of(user || new ReadUser());
       })
     );
