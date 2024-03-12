@@ -14,6 +14,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
       (selectedNode)="selectedNode($event)"></app-nested-menu>
     <button mat-flat-button (click)="resetNode()" *ngIf="mySelectedNode">Reset</button>
   `,
+  styles: [':host {display: flex; align-items: center}'],
 })
 export class ListValue2Component implements OnInit {
   @Input() propertyDef: ResourcePropertyDefinition;
