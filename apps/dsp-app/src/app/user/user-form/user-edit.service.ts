@@ -17,7 +17,6 @@ export class UserEditService {
   existingUserNames$: Observable<RegExp[]>;
   existingUserEmails$: Observable<RegExp[]>;
 
-  // emit if a transaction is finished
   transactionDone = new Subject<boolean>();
 
   constructor(
