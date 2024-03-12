@@ -8,6 +8,7 @@ import {
   CreateDecimalValue,
   CreateFileValue,
   CreateIntValue,
+  CreateListValue,
   CreateResource,
   CreateTextValueAsString,
   IHasPropertyWithPropertyDefinition,
@@ -183,6 +184,12 @@ export class ResourceInstanceFormComponent implements OnInit {
           const newColorValue = new CreateColorValue();
           newColorValue.color = control.value;
           return newColorValue;
+        });
+      case Constants.ListValue:
+        return controls.map(control => {
+          const newListValue = new CreateListValue();
+          newListValue.listNode = control.value;
+          return newListValue;
         });
       default:
         return [this.dynamicForm.controls[iri].value];
