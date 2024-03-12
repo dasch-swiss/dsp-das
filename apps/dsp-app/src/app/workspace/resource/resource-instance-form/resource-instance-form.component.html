@@ -13,7 +13,7 @@
 
   <div style="display: grid; grid-template-columns: 100px 400px; grid-gap: 10px">
     <ng-container *ngFor="let prop of unsuitableProperties">
-      <div style="margin-top: 16px">{{ prop.propertyDefinition.label }}</div>
+      <div style="padding-top: 16px">{{ prop.propertyDefinition.label }}</div>
       <div>
         <app-switch-properties-3
           [propertyDefinition]="prop.propertyDefinition"

@@ -24,11 +24,11 @@ import { Cardinality, Constants, PropertyDefinition, ResourcePropertyDefinition 
     </ng-template>
 
     <ng-template let-item #booleanTpl>
-      <mat-slide-toggle [formControl]="item" style="width: 100%"></mat-slide-toggle>
+      <mat-slide-toggle [formControl]="item" style="width: 100%; align-self: center"></mat-slide-toggle>
     </ng-template>
 
     <ng-template let-item #colorTpl>
-      <app-color-value-2 [control]="item"></app-color-value-2>
+      <app-color-value-2 [control]="item" style="flex: 1"></app-color-value-2>
     </ng-template>
 
     <ng-template let-item #textTpl>
