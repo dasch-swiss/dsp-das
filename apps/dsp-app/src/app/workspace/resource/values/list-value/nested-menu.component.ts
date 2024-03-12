@@ -12,14 +12,11 @@ import { ListNodeV2 } from '@dasch-swiss/dsp-js';
     </div>
     <mat-menu #menu="matMenu">
       <ng-container *ngFor="let node of data.children; let i = index">
-        <button mat-menu-item style="padding: 0">
-          <app-nested-menu
-            [data]="node"
-            *ngIf="node.children.length > 0; else menuItem"
-            (selectedNode)="selectedNode.emit($event)"></app-nested-menu>
+        <button mat-menu-item style="padding: 0" *ngIf="node.children.length > 0; else menuItem">
+          <app-nested-menu [data]="node" (selectedNode)="selectedNode.emit($event)"></app-nested-menu>
         </button>
         <ng-template #menuItem>
-          <div (click)="selectedNode.emit(node)" style="padding: 0 16px">{{ node.label }}</div>
+          <button mat-menu-item (click)="selectedNode.emit(node)" style="padding: 0 16px">{{ node.label }}</button>
         </ng-template>
       </ng-container>
     </mat-menu>
