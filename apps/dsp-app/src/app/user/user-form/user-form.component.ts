@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ReadUser, StringLiteral } from '@dasch-swiss/dsp-js';
@@ -19,7 +19,7 @@ import { UserForm, UserToEdit } from './user-form.type';
   styleUrls: ['./user-form.component.scss'],
   providers: [UserEditService],
 })
-export class UserFormComponent implements OnInit, OnDestroy {
+export class UserFormComponent implements OnDestroy {
   @Select(UserSelectors.isSysAdmin) readonly loggedInUserIsSysAdmin$: Observable<boolean>;
 
   readonly languagesList: StringLiteral[] = AppGlobal.languagesList;
@@ -49,9 +49,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
     private _userEditService: UserEditService,
     private _dialogRef: MatDialogRef<UserFormComponent>,
     @Inject(MAT_DIALOG_DATA) public userConfig: UserToEdit
-  ) {}
-
-  ngOnInit() {
+  ) {
     this._userEditService
       .getUser$(this.userConfig)
       .pipe(takeUntil(this._destroy$))
