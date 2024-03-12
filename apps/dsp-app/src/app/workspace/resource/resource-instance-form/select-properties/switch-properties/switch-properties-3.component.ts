@@ -5,55 +5,55 @@ import { Cardinality, Constants, PropertyDefinition, ResourcePropertyDefinition 
 @Component({
   selector: 'app-switch-properties-3',
   template: `
-    <app-nu-list
-      [itemTpl]="itemTpl"
-      [newValue]="newValue"
-      [formArray]="formArray"
-      [cardinality]="cardinality"
-      (addItem)="addItem()"></app-nu-list>
+        <app-nu-list
+            [itemTpl]="itemTpl"
+            [newValue]="newValue"
+            [formArray]="formArray"
+            [cardinality]="cardinality"
+            (addItem)="addItem()"></app-nu-list>
 
-    <ng-template let-item #intTpl>
-      <mat-form-field>
-        <input matInput [formControl]="item" type="number" />
-      </mat-form-field>
-    </ng-template>
+        <ng-template let-item #intTpl>
+            <mat-form-field>
+                <input matInput [formControl]="item" type="number" />
+            </mat-form-field>
+        </ng-template>
 
-    <ng-template let-item #decimalTpl>
-      <mat-form-field>
-        <input matInput [formControl]="item" type="number" />
-      </mat-form-field>
-    </ng-template>
+        <ng-template let-item #decimalTpl>
+            <mat-form-field>
+                <input matInput [formControl]="item" type="number" />
+            </mat-form-field>
+        </ng-template>
 
-    <ng-template let-item #booleanTpl>
-      <mat-slide-toggle [formControl]="item" style="width: 100%; align-self: center"></mat-slide-toggle>
-    </ng-template>
+        <ng-template let-item #booleanTpl>
+            <mat-slide-toggle [formControl]="item" style="width: 100%; align-self: center"></mat-slide-toggle>
+        </ng-template>
 
-    <ng-template let-item #colorTpl>
-      <app-color-value-2 [control]="item" style="flex: 1"></app-color-value-2>
-    </ng-template>
+        <ng-template let-item #colorTpl>
+            <app-color-value-2 [control]="item" style="flex: 1"></app-color-value-2>
+        </ng-template>
 
-    <ng-template let-item #textTpl>
-      <app-common-input [control]="item" style="width: 100%"></app-common-input>
-    </ng-template>
+        <ng-template let-item #textTpl>
+            <app-common-input [control]="item" style="width: 100%"></app-common-input>
+        </ng-template>
 
-    <ng-template let-item #dateTpl>
-      <app-date-value-handler [formControl]="item"></app-date-value-handler>
-    </ng-template>
+        <ng-template let-item #dateTpl>
+            <app-date-value-handler [formControl]="item"></app-date-value-handler>
+        </ng-template>
 
-    <ng-template let-item #timeTpl>
-      <app-time-value-2 [control]="item"></app-time-value-2>
-    </ng-template>
+        <ng-template let-item #timeTpl>
+            <app-time-value-2 [control]="item"></app-time-value-2>
+        </ng-template>
 
-    <ng-template let-item #listTpl>
-      <app-list-value-2 [propertyDef]="resPropDef" [control]="item" style="flex: 1"></app-list-value-2>
-    </ng-template>
+        <ng-template let-item #listTpl>
+            <app-list-value-2 [propertyDef]="resPropDef" [control]="item" style="flex: 1"></app-list-value-2>
+        </ng-template>
 
-    <ng-template let-item #geoNameTpl>
-      <app-geoname-value-2 [control]="item" style="width: 100%"></app-geoname-value-2>
-    </ng-template>
+        <ng-template let-item #geoNameTpl>
+            <app-geoname-value-2 [control]="item" style="width: 100%"></app-geoname-value-2>
+        </ng-template>
 
-    <ng-template let-item #linkTpl>
-      <app-link-value-2 [control]="item" style="width: 100%"></app-link-value-2>
+        <ng-template let-item #linkTpl>
+            <app-link-value-2 [control]="item" style="width: 100%"></app-link-value-2><!-- TODO remove those 3 parameters later
     </ng-template>
 
     <ng-template #defaultTpl><span style="width: 100%">Nothing to show</span></ng-template>
