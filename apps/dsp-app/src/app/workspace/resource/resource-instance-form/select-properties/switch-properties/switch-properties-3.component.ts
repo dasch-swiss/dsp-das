@@ -52,6 +52,10 @@ import { Cardinality, Constants, PropertyDefinition, ResourcePropertyDefinition 
       <app-geoname-value-2 [control]="item" style="width: 100%"></app-geoname-value-2>
     </ng-template>
 
+    <ng-template let-item #linkTpl>
+      <app-link-value-2 [control]="item" style="width: 100%"></app-link-value-2>
+    </ng-template>
+
     <ng-template #defaultTpl><span style="width: 100%">Nothing to show</span></ng-template>
   `,
   styles: [
@@ -76,6 +80,7 @@ export class SwitchProperties3Component implements AfterViewInit {
   @ViewChild('timeTpl') timeTpl: TemplateRef<any>;
   @ViewChild('listTpl') listTpl: TemplateRef<any>;
   @ViewChild('geoNameTpl') geoNameTpl: TemplateRef<any>;
+  @ViewChild('linkTpl') linkTpl: TemplateRef<any>;
   @ViewChild('defaultTpl') defaultTpl: TemplateRef<any>;
 
   itemTpl: TemplateRef<any>;
@@ -119,10 +124,10 @@ export class SwitchProperties3Component implements AfterViewInit {
         return { template: this.listTpl, newValue: null };
       case Constants.GeonameValue:
         return { template: this.geoNameTpl, newValue: '' };
+      case Constants.LinkValue:
+        return { template: this.linkTpl, newValue: null };
       default:
         return { template: this.defaultTpl, newValue: null };
     }
   }
-
-  protected readonly Cardinality = Cardinality;
 }
