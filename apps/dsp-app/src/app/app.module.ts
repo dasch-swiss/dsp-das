@@ -47,6 +47,7 @@ import { TimeValue2Component } from '@dsp-app/src/app/workspace/resource/resourc
 import { UriValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/uri-value-2.component';
 import { ColorValue2Component } from '@dsp-app/src/app/workspace/resource/values/color-value/color-picker/color-value-2.component';
 import { ListValue2Component } from '@dsp-app/src/app/workspace/resource/values/list-value/list-value-2.component';
+import { NestedMenuComponent } from '@dsp-app/src/app/workspace/resource/values/list-value/nested-menu.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AngularSplitModule } from 'angular-split';
@@ -279,6 +280,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     LoginFormComponent,
     MembershipComponent,
     NuListComponent,
+    NestedMenuComponent,
     OntologyComponent,
     OntologyFormComponent,
     PasswordFormComponent,

@@ -4,19 +4,8 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 
 @Component({
   selector: 'app-list-value-2',
-  template: `
-    <button mat-button [matMenuTriggerFor]="rootNodesMenu" *ngIf="listRootNode">{{ listRootNode.label }}</button>
-    <mat-menu #rootNodesMenu="matMenu">
-      <button mat-menu-item *ngFor="let node of listRootNode?.children" [matMenuTriggerFor]="vertebrates">
-        {{ node.label }}
-      </button>
-    </mat-menu>
-
-    <mat-menu #vertebrates="matMenu">
-      <button mat-menu-item>Birds</button>
-      <button mat-menu-item>Mammals</button>
-    </mat-menu>
-  `,
+  template:
+    ' <app-nested-menu *ngIf="listRootNode" [data]="listRootNode" (selected)="selectedNode($event)"></app-nested-menu> ',
 })
 export class ListValue2Component implements OnInit {
   @Input() propertyDef: ResourcePropertyDefinition;
@@ -30,6 +19,10 @@ export class ListValue2Component implements OnInit {
 
   ngOnInit() {
     this._loadRootNodes();
+  }
+
+  selectedNode(node: ListNodeV2) {
+    console.log(node);
   }
 
   private _loadRootNodes(): void {
