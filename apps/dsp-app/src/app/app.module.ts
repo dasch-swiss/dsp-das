@@ -46,6 +46,7 @@ import { SwitchProperties3Component } from '@dsp-app/src/app/workspace/resource/
 import { TimeValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/time-value-2.component';
 import { UriValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/uri-value-2.component';
 import { ColorValue2Component } from '@dsp-app/src/app/workspace/resource/values/color-value/color-picker/color-value-2.component';
+import { GeonameValue2Component } from '@dsp-app/src/app/workspace/resource/values/geoname-value/geoname-value-2.component';
 import { ListValue2Component } from '@dsp-app/src/app/workspace/resource/values/list-value/list-value-2.component';
 import { NestedMenuComponent } from '@dsp-app/src/app/workspace/resource/values/list-value/nested-menu.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -249,6 +250,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     FormattedBooleanPipe,
     FulltextSearchComponent,
     GeonameValueComponent,
+    GeonameValue2Component,
     GridComponent,
     HeaderComponent,
     HelpComponent,

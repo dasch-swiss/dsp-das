@@ -7,6 +7,7 @@ import {
   CreateColorValue,
   CreateDecimalValue,
   CreateFileValue,
+  CreateGeonameValue,
   CreateIntValue,
   CreateListValue,
   CreateResource,
@@ -194,6 +195,11 @@ export class ResourceInstanceFormComponent implements OnInit {
           const newListValue = new CreateListValue();
           newListValue.listNode = control.value;
           return newListValue;
+        });
+      case Constants.GeonameValue:
+        return controls.map(control => {
+          const newGeonameValue = new CreateGeonameValue();
+          newGeonameValue.geoname = control.value;
         });
       default:
         return [this.dynamicForm.controls[iri].value];
