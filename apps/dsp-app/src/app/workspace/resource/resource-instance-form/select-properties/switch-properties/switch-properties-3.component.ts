@@ -44,7 +44,7 @@ import { Cardinality, Constants, PropertyDefinition, ResourcePropertyDefinition 
     </ng-template>
 
     <ng-template let-item #listTpl>
-      <app-list-value-2 [propertyDef]="resPropDef"></app-list-value-2>
+      <app-list-value-2 [propertyDef]="resPropDef" [control]="item"></app-list-value-2>
     </ng-template>
 
     <ng-template #defaultTpl><span style="width: 100%">Nothing to show</span></ng-template>

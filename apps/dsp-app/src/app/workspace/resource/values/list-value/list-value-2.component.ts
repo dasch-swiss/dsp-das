@@ -1,15 +1,18 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { KnoraApiConnection, ListNodeV2, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 
 @Component({
   selector: 'app-list-value-2',
   template:
-    ' <app-nested-menu *ngIf="listRootNode" [data]="listRootNode" (selected)="selectedNode($event)"></app-nested-menu> ',
+    ' <app-nested-menu *ngIf="listRootNode" [data]="listRootNode" [selection]="mySelectedNode?.label" (selectedNode)="selectedNode($event)"></app-nested-menu> ',
 })
 export class ListValue2Component implements OnInit {
   @Input() propertyDef: ResourcePropertyDefinition;
+  @Input() control: FormControl<string>;
   listRootNode: ListNodeV2;
+  mySelectedNode: ListNodeV2;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -22,7 +25,8 @@ export class ListValue2Component implements OnInit {
   }
 
   selectedNode(node: ListNodeV2) {
-    console.log(node);
+    this.mySelectedNode = node;
+    this.control.patchValue(node.id);
   }
 
   private _loadRootNodes(): void {

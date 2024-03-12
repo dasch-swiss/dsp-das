@@ -5,7 +5,7 @@ import { ListNodeV2 } from '@dasch-swiss/dsp-js';
   selector: 'app-nested-menu',
   template: `
     <button *ngIf="data.isRootNode" mat-button [matMenuTriggerFor]="menu">
-      {{ data.label }}
+      {{ selection ?? 'Select a list in ' + data.label }}
     </button>
     <button *ngIf="!data.isRootNode" mat-menu-item [matMenuTriggerFor]="menu">
       {{ data.label }}
@@ -16,10 +16,10 @@ import { ListNodeV2 } from '@dasch-swiss/dsp-js';
           <app-nested-menu
             [data]="node"
             *ngIf="node.children.length > 0; else menuItem"
-            (selected)="selected.emit($event)"></app-nested-menu>
+            (selectedNode)="selectedNode.emit($event)"></app-nested-menu>
         </button>
         <ng-template #menuItem>
-          <button mat-menu-item (click)="selected.emit(node)">{{ node.label }}</button>
+          <button mat-menu-item (click)="selectedNode.emit(node)">{{ node.label }}</button>
         </ng-template>
       </ng-container>
     </mat-menu>
@@ -27,5 +27,6 @@ import { ListNodeV2 } from '@dasch-swiss/dsp-js';
 })
 export class NestedMenuComponent {
   @Input() data: ListNodeV2;
-  @Output() selected = new EventEmitter<ListNodeV2>();
+  @Input() selection: string;
+  @Output() selectedNode = new EventEmitter<ListNodeV2>();
 }
