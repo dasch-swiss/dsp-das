@@ -47,6 +47,7 @@ import { TimeValue2Component } from '@dsp-app/src/app/workspace/resource/resourc
 import { UriValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/uri-value-2.component';
 import { ColorValue2Component } from '@dsp-app/src/app/workspace/resource/values/color-value/color-picker/color-value-2.component';
 import { GeonameValue2Component } from '@dsp-app/src/app/workspace/resource/values/geoname-value/geoname-value-2.component';
+import { LinkValue2Component } from '@dsp-app/src/app/workspace/resource/values/link-value/link-value-2.component';
 import { ListValue2Component } from '@dsp-app/src/app/workspace/resource/values/list-value/list-value-2.component';
 import { NestedMenuComponent } from '@dsp-app/src/app/workspace/resource/values/list-value/nested-menu.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -279,6 +280,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ListValueComponent,
     ListValue2Component,
     ListViewComponent,
+    LinkValue2Component,
     LoginFormComponent,
     MembershipComponent,
     NuListComponent,
