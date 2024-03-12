@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { GeonameService, SearchPlace } from '@dsp-app/src/app/workspace/resource/services/geoname.service';
-import { Observable } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -14,28 +13,29 @@ import { filter, switchMap } from 'rxjs/operators';
       placeholder="Geoname value"
       aria-label="geoname"
       [matAutocomplete]="auto" />
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPlaceInSearch">
-      <mat-option *ngFor="let place of places$ | async" [value]="place.id"> {{ place?.displayName }} </mat-option>
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPlaceInSearch.bind(this)">
+      <mat-option *ngFor="let place of places" [value]="place.id"> {{ place?.displayName }}</mat-option>
     </mat-autocomplete>
   </mat-form-field>`,
 })
 export class GeonameValue2Component implements OnInit {
   @Input() control: FormControl<string>;
-  places$: Observable<SearchPlace[]>;
+  places: SearchPlace[];
 
   constructor(private _geonameService: GeonameService) {}
 
   ngOnInit() {
-    this.places$ = this.control.valueChanges.pipe(
-      filter(searchTerm => searchTerm.length >= 3),
-      switchMap((searchTerm: string) => this._geonameService.searchPlace(searchTerm))
-    );
+    this.control.valueChanges
+      .pipe(
+        filter(searchTerm => searchTerm.length >= 3),
+        switchMap((searchTerm: string) => this._geonameService.searchPlace(searchTerm))
+      )
+      .subscribe(places => {
+        this.places = places;
+      });
   }
 
-  displayPlaceInSearch(place: SearchPlace | null) {
-    console.log(place);
-    if (place !== null) {
-      return place.displayName;
-    }
+  displayPlaceInSearch(placeId: string) {
+    return this.places?.find(place => place.id === placeId).displayName;
   }
 }

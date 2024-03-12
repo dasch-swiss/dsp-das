@@ -81,10 +81,6 @@ export class SwitchProperties3Component implements AfterViewInit {
   itemTpl: TemplateRef<any>;
   newValue: any;
 
-  get objectType() {
-    return this.propertyDefinition.objectType;
-  }
-
   get resPropDef() {
     return this.propertyDefinition as ResourcePropertyDefinition;
   }
@@ -104,7 +100,7 @@ export class SwitchProperties3Component implements AfterViewInit {
   }
 
   private getTemplate(): { template: TemplateRef<any>; newValue: any } {
-    switch (this.objectType) {
+    switch (this.propertyDefinition.objectType) {
       case Constants.IntValue:
         return { template: this.intTpl, newValue: 0 };
       case Constants.DecimalValue:
