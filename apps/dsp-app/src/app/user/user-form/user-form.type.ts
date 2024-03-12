@@ -5,8 +5,6 @@ export interface UserToEdit {
   projectUuid?: string;
 }
 
-export type UserFormControlName = keyof UserForm;
-
 export type UserForm = FormGroup<{
   givenName: FormControl<string>;
   familyName: FormControl<string>;
