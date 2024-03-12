@@ -1,5 +1,5 @@
-import { Component, Input, TemplateRef } from '@angular/core';
-import { FormArray, FormControl } from '@angular/forms';
+import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import { FormArray } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 
 @Component({
@@ -15,7 +15,7 @@ import { Cardinality } from '@dasch-swiss/dsp-js';
     </div>
     <button
       mat-raised-button
-      (click)="add()"
+      (click)="addItem.emit()"
       *ngIf="formArray.controls.length === 0 || [Cardinality._0_n, Cardinality._1_n].includes(cardinality)">
       Add
     </button>`,
@@ -25,10 +25,7 @@ export class NuListComponent {
   @Input() formArray: FormArray;
   @Input() newValue: any;
   @Input() cardinality: Cardinality;
-
-  add() {
-    this.formArray.push(new FormControl(this.newValue));
-  }
+  @Output() addItem = new EventEmitter();
 
   protected readonly Cardinality = Cardinality;
 }

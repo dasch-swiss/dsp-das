@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, TemplateRef, ViewChild } from '@angular/core';
-import { FormArray, FormControl } from '@angular/forms';
+import { FormArray, FormControl, Validators } from '@angular/forms';
 import { Cardinality, Constants, PropertyDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 
 @Component({
@@ -9,7 +9,8 @@ import { Cardinality, Constants, PropertyDefinition, ResourcePropertyDefinition 
       [itemTpl]="itemTpl"
       [newValue]="newValue"
       [formArray]="formArray"
-      [cardinality]="cardinality"></app-nu-list>
+      [cardinality]="cardinality"
+      (addItem)="addItem()"></app-nu-list>
 
     <ng-template let-item #intTpl>
       <mat-form-field>
@@ -89,8 +90,12 @@ export class SwitchProperties3Component implements AfterViewInit {
     const data = this.getTemplate();
     this.itemTpl = data.template;
     this.newValue = data.newValue;
-    this.formArray.push(new FormControl(this.newValue));
+    this.addItem();
     this._cd.detectChanges();
+  }
+
+  addItem() {
+    this.formArray.push(new FormControl(this.newValue, Validators.required));
   }
 
   private getTemplate(): { template: TemplateRef<any>; newValue: any } {

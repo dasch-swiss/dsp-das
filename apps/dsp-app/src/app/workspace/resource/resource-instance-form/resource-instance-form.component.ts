@@ -100,8 +100,12 @@ export class ResourceInstanceFormComponent implements OnInit {
   }
 
   submitData() {
-    this.loading = true;
+    console.log('form', this.dynamicForm);
+    if (this.dynamicForm.invalid) {
+      return;
+    }
     console.log('payload sent', this._getPayload());
+    this.loading = true;
 
     this._dspApiConnection.v2.res
       .createResource(this._getPayload())
