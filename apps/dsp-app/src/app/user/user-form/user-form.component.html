@@ -40,9 +40,13 @@
 </form>
 <div class="form-panel">
   <button color="primary" mat-button (click)="cancel()">{{ 'appLabels.form.action.cancel' | translate }}</button>
-  <button mat-raised-button color="primary" [disabled]="!userForm.valid || submitting" (click)="submit()">
-    <dasch-swiss-app-progress-indicator [color]="'white'" [status]="0" *ngIf="submitting" class="submit-progress">
-    </dasch-swiss-app-progress-indicator>
+  <button
+    mat-raised-button
+    color="primary"
+    appLoadingButton
+    [isLoading]="submitting"
+    [disabled]="!userForm.valid || submitting"
+    (click)="submit()">
     {{editExistingUser ? ('appLabels.form.action.update' | translate) : ('appLabels.form.action.submit' | translate)}}
   </button>
 </div>
