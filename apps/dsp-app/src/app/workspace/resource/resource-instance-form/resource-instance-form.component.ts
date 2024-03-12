@@ -200,6 +200,7 @@ export class ResourceInstanceFormComponent implements OnInit {
         return controls.map(control => {
           const newGeonameValue = new CreateGeonameValue();
           newGeonameValue.geoname = control.value;
+          return newGeonameValue;
         });
       default:
         return [this.dynamicForm.controls[iri].value];
