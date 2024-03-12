@@ -5,8 +5,15 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 
 @Component({
   selector: 'app-list-value-2',
-  template:
-    ' <app-nested-menu *ngIf="listRootNode" [data]="listRootNode" [selection]="mySelectedNode?.label" (selectedNode)="selectedNode($event)"></app-nested-menu><button mat-flat-button (click)="resetNode()" *ngIf="mySelectedNode">Reset</button> ',
+  template: `
+    <app-nested-menu
+      style="flex: 1"
+      *ngIf="listRootNode"
+      [data]="listRootNode"
+      [selection]="mySelectedNode?.label"
+      (selectedNode)="selectedNode($event)"></app-nested-menu>
+    <button mat-flat-button (click)="resetNode()" *ngIf="mySelectedNode">Reset</button>
+  `,
 })
 export class ListValue2Component implements OnInit {
   @Input() propertyDef: ResourcePropertyDefinition;
