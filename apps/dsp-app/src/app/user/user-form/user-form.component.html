@@ -21,7 +21,9 @@
     class="medium-field"
     [control]="userForm.controls.familyName"
     [placeholder]="'appLabels.form.user.general.familyName' | translate"></app-common-input>
-  <app-password-form *ngIf="!editExistingUser" (password)="setPassword($event)"></app-password-form>
+  <app-password-form
+    *ngIf="!editExistingUser"
+    (password)="this.userForm.controls.password.setValue($event)"></app-password-form>
   <mat-form-field class="large-field">
     <mat-select
       [formControl]="userForm.controls.lang"
@@ -31,8 +33,8 @@
   </mat-form-field>
   <div class="large-field" *ngIf="loggedInUserIsSysAdmin$ | async">
     <mat-slide-toggle
-      [checked]="userIsSystemAdmin"
-      (change)="userIsSystemAdmin = !userIsSystemAdmin"
+      [checked]="userForm.controls.systemAdmin.value"
+      (change)="userForm.controls.systemAdmin.setValue(!userForm.controls.systemAdmin.value)"
       [disabled]="editExistingUser">
       {{ 'appLabels.form.user.general.sysAdmin' | translate }}
     </mat-slide-toggle>

@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ReadUser, StringLiteral, UpdateUserRequest, User } from '@dasch-swiss/dsp-js';
+import { ReadUser, StringLiteral } from '@dasch-swiss/dsp-js';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Select } from '@ngxs/store';
@@ -67,7 +67,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
   }
 
   private _buildForm(user: ReadUser): void {
-    this.userIsSystemAdmin = ProjectService.IsMemberOfSystemAdminGroup(user.permissions.groupsPerProject);
     this.userForm = this._fb.group({
       givenName: [user.givenName || '', Validators.required],
       familyName: [user.familyName || '', Validators.required],
@@ -87,43 +86,12 @@ export class UserFormComponent implements OnInit, OnDestroy {
       ],
       password: [{ value: '', disabled: this.editExistingUser }],
       lang: [user.lang || 'en'],
+      systemAdmin: [ProjectService.IsMemberOfSystemAdminGroup(user.permissions.groupsPerProject)],
     });
   }
 
-  setPassword(pw: string) {
-    this.userForm.controls.password.setValue(pw);
-  }
-
   submit(): void {
-    this.submitting = true;
-    if (this.editExistingUser) {
-      this._updateUser();
-    } else {
-      this._createUser();
-    }
-  }
-
-  private _updateUser(): void {
-    const userUpdate: UpdateUserRequest = {
-      familyName: this.userForm.controls.familyName.value,
-      givenName: this.userForm.controls.givenName.value,
-      lang: this.userForm.controls.lang.value,
-    };
-    this._userEditService.updateUser(this.userConfig.userId, userUpdate);
-  }
-
-  private _createUser(): void {
-    const user = new User();
-    user.familyName = this.userForm.controls.familyName.value;
-    user.givenName = this.userForm.controls.givenName.value;
-    user.email = this.userForm.controls.email.value;
-    user.username = this.userForm.controls.username.value;
-    user.password = this.userForm.controls.password.value;
-    user.lang = this.userForm.controls.lang.value;
-    user.systemAdmin = this.userIsSystemAdmin;
-    user.status = true;
-
-    this._userEditService.createUser(user);
+    this._userEditService.submitUserForm(this.userForm);
   }
 
   cancel() {

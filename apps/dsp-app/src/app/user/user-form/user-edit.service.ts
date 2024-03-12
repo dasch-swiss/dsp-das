@@ -6,12 +6,13 @@ import { CreateUserAction, LoadUsersAction, UpdateUserAction, UserSelectors } fr
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, of, Subject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
-import { UserToEdit } from './user-form.type';
+import { UserForm, UserToEdit } from './user-form.type';
 
 @Injectable()
 export class UserEditService {
   @Select(UserSelectors.allUsers) private allUsers$: Observable<ReadUser[]>;
   private _enrollToProject = ''; // project Iri to add a new user as member to
+  private _userId = '';
 
   existingUserNames$: Observable<RegExp[]>;
   existingUserEmails$: Observable<RegExp[]>;
@@ -35,6 +36,7 @@ export class UserEditService {
   }
 
   getUser$(userConfig: UserToEdit): Observable<ReadUser> {
+    this._userId = userConfig?.userId || '';
     this._enrollToProject = userConfig?.projectUuid ? this._projectService.uuidToIri(userConfig.projectUuid) : '';
     return this.allUsers$.pipe(
       switchMap(allUsers => {
@@ -47,22 +49,45 @@ export class UserEditService {
     );
   }
 
-  createUser(user: User) {
+  submitUserForm(form: UserForm) {
+    if (this._userId) {
+      this._updateUser(form);
+    } else {
+      this._createUser(form);
+    }
+  }
+
+  private _updateUser(form: UserForm): void {
+    const userUpdate: UpdateUserRequest = {
+      familyName: form.controls.familyName.value,
+      givenName: form.controls.givenName.value,
+      lang: form.controls.lang.value,
+    };
+    this._store.dispatch(new UpdateUserAction(this._userId, userUpdate));
+    this._actions$.pipe(ofActionSuccessful(UpdateUserAction), take(1)).subscribe(() => {
+      this._onSubmittted();
+    });
+  }
+
+  private _createUser(form: UserForm): void {
+    const user = new User();
+    user.familyName = form.controls.familyName.value;
+    user.givenName = form.controls.givenName.value;
+    user.email = form.controls.email.value;
+    user.username = form.controls.username.value;
+    user.password = form.controls.password.value;
+    user.lang = form.controls.lang.value;
+    user.systemAdmin = form.controls.systemAdmin.value;
+    user.status = true;
+
     this._store.dispatch(new CreateUserAction(user, this._enrollToProject));
     this._actions$.pipe(ofActionSuccessful(CreateUserAction), take(1)).subscribe(() => {
       this._onSubmittted();
     });
   }
 
-  updateUser(userId: string, user: UpdateUserRequest) {
-    this._store.dispatch(new UpdateUserAction(userId, user));
-    this._actions$.pipe(ofActionSuccessful(UpdateUserAction), take(1)).subscribe(() => {
-      this._onSubmittted(!!userId);
-    });
-  }
-
-  private _onSubmittted(existingUser = false) {
-    const action = existingUser ? 'updated the' : 'created a';
+  private _onSubmittted() {
+    const action = this._userId ? 'updated the' : 'created a';
     const notification = this._enrollToProject
       ? `You have successfully ${action} user's profile and added the user to the project.`
       : `You have successfully ${action} user's profile`;
