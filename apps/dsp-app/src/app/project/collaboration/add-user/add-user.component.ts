@@ -171,12 +171,12 @@ export class AddUserComponent implements OnInit {
 
         let usernameLabel = existsInProject + u.username;
         if (usernameLabel.length > 0) {
-          usernameLabel = usernameLabel + ' | ';
+          usernameLabel += ' | ';
         }
 
         let emailLabel = u.email;
         if (emailLabel.length > 0) {
-          emailLabel = emailLabel + ' | ';
+          emailLabel += ' | ';
         }
 
         this.users[i] = {
