@@ -17,27 +17,21 @@ import { filter, map, switchMap } from 'rxjs/operators';
   selector: 'app-link-value-2',
   template: `
     <mat-form-field class="child-value-component" floatLabel="never">
-      <div class="search-input">
-        <input
-          matInput
-          [formControl]="control"
-          class="value"
-          type="text"
-          [placeholder]="'appLabels.form.action.searchHelp' | translate"
-          aria-label="resource"
-          [matAutocomplete]="auto" />
-        <span matSuffix class="progress-indicator">
-          <dasch-swiss-app-progress-indicator *ngIf="loadingResults" [status]="0"></dasch-swiss-app-progress-indicator>
-        </span>
-      </div>
+      <input
+        matInput
+        [formControl]="control"
+        [placeholder]="'appLabels.form.action.searchHelp' | translate"
+        aria-label="resource"
+        [matAutocomplete]="auto" />
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource">
         <mat-option *ngIf="resources.length === 0" disabled="true"> No results were found.</mat-option>
         <!--<mat-option *ngFor="let rc of resourceClasses" (click)="openDialog('createLinkResource', $event, propIri, rc)">
-                                                                                                                                                                                                                          Create New: {{ rc?.label }}
-                                                                                                                                                                                                                        </mat-option>-->
-        <mat-option *ngFor="let res of resources" [value]="res.entityInfo['id']"> {{ res?.label }}</mat-option>
+                                                                                                                                                                                                                                                                                  Create New: {{ rc?.label }}
+                                                                                                                                                                                                                                                                                </mat-option>-->
+        <mat-option *ngFor="let res of resources" [value]="res.id"> {{ res.label }}</mat-option>
       </mat-autocomplete>
     </mat-form-field>
+    A{{ control.value }}BB
   `,
 })
 export class LinkValue2Component implements OnInit {
@@ -71,10 +65,10 @@ export class LinkValue2Component implements OnInit {
   ngOnInit() {
     // in case the resource is referencing itself, assign the parent resource to linkedResource
     /*
-                                                                                                                      if (this.displayValue && this.displayValue.linkedResourceIri === this.parentResource.id) {
-                                                                                                                        this.displayValue.linkedResource = this.parentResource;
-                                                                                                                      }
-                                                                                                                         */
+                                                                                                                                                  if (this.displayValue && this.displayValue.linkedResourceIri === this.parentResource.id) {
+                                                                                                                                                    this.displayValue.linkedResource = this.parentResource;
+                                                                                                                                                  }
+                                                                                                                                                     */
 
     const linkType = this.parentResource.getLinkPropertyIriFromLinkValuePropertyIri(this.propIri);
     this.restrictToResourceClass = this.parentResource.entityInfo.properties[linkType].objectType;
@@ -129,10 +123,9 @@ export class LinkValue2Component implements OnInit {
       });
   }
 
-  displayResource(resource: ReadResource | null): string {
-    if (resource instanceof ReadResource) {
-      return resource.label;
-    }
+  displayResource(resId: string | undefined): string {
+    if (!resId) return '';
+    return this.resources.find(res => res.id === resId).label;
   }
 
   private _getSubclasses(

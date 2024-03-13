@@ -9,6 +9,7 @@ import {
   CreateFileValue,
   CreateGeonameValue,
   CreateIntValue,
+  CreateLinkValue,
   CreateListValue,
   CreateResource,
   CreateTextValueAsString,
@@ -211,6 +212,12 @@ export class ResourceInstanceFormComponent implements OnInit {
           const newGeonameValue = new CreateGeonameValue();
           newGeonameValue.geoname = control.value;
           return newGeonameValue;
+        });
+      case Constants.LinkValue:
+        return controls.map(control => {
+          const newLinkValue = new CreateLinkValue();
+          newLinkValue.linkedResourceIri = control.value.id;
+          return newLinkValue;
         });
       default:
         return [this.dynamicForm.controls[iri].value];
