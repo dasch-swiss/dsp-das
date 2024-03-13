@@ -95,7 +95,8 @@ export class ResourceInstanceFormComponent implements OnInit {
 
         this.unsuitableProperties = onto.classes[resourceClassIri]
           .getResourcePropertiesList()
-          .filter(v => v.guiOrder !== undefined);
+          .filter(v => v.guiOrder !== undefined)
+          .filter(v => v.propertyDefinition['isLinkProperty'] === false);
         console.log('final', this.unsuitableProperties);
         this._buildForm();
         this._cd.detectChanges();
