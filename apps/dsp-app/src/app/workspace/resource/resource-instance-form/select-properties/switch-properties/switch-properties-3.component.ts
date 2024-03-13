@@ -118,7 +118,7 @@ export class SwitchProperties3Component implements AfterViewInit {
   }
 
   addItem() {
-    this.formArray.push(new FormControl(this.newValue, [Validators.required, ...this.validators]));
+    this.formArray.push(new FormControl(this.newValue, [Validators.required, ...(this.validators ?? [])]));
   }
 
   private getTemplate(): { template: TemplateRef<any>; newValue: any; validators?: ValidatorFn[] } {
