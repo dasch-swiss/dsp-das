@@ -5,7 +5,6 @@ import {
   KnoraApiConnection,
   ReadResource,
   ReadResourceSequence,
-  ResourceClassAndPropertyDefinitions,
   ResourceClassDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -25,8 +24,8 @@ import { filter, map, switchMap } from 'rxjs/operators';
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource">
         <mat-option *ngIf="resources.length === 0" disabled="true"> No results were found.</mat-option>
         <!--<mat-option *ngFor="let rc of resourceClasses" (click)="openDialog('createLinkResource', $event, propIri, rc)">
-                                                                                                                                                                                                                                                                                                                                                  Create New: {{ rc?.label }}
-                                                                                                                                                                                                                                                                                                                                                </mat-option>-->
+                                                                                                                                                                                                                                                                                                                                                          Create New: {{ rc?.label }}
+                                                                                                                                                                                                                                                                                                                                                        </mat-option>-->
         <mat-option *ngFor="let res of resources" [value]="res.id"> {{ res.label }}</mat-option>
       </mat-autocomplete>
     </mat-form-field>
@@ -47,7 +46,6 @@ export class LinkValue2Component implements OnInit {
   resourceClasses: ResourceClassDefinition[];
   subClasses: ResourceClassDefinition[] = [];
   restrictToResourceClass: string;
-  resourceClassLabel: string;
 
   resources: ReadResource[] = [];
 
@@ -60,13 +58,6 @@ export class LinkValue2Component implements OnInit {
   ngOnInit() {
     const linkType = this.parentResource.getLinkPropertyIriFromLinkValuePropertyIri(this.propIri);
     this.restrictToResourceClass = this.parentResource.entityInfo.properties[linkType].objectType;
-
-    // get label of resource class
-    this._dspApiConnection.v2.ontologyCache
-      .getResourceClassDefinition(this.restrictToResourceClass)
-      .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
-        this.resourceClassLabel = onto.classes[this.restrictToResourceClass].label;
-      });
 
     this._dspApiConnection.v2.ontologyCache
       .getOntology(this.currentOntoIri)
