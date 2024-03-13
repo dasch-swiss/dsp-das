@@ -17,6 +17,7 @@
       <div>
         <app-switch-properties-3
           [propertyDefinition]="prop.propertyDefinition"
+          [property]="prop"
           [formArray]="dynamicForm.controls[prop.propertyDefinition.id]"
           [cardinality]="prop.cardinality"></app-switch-properties-3>
       </div>

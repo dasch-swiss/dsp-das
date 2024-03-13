@@ -10,6 +10,7 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/values/link-value/temp-link-value.service';
 import { filter, map, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -32,8 +33,8 @@ import { filter, map, switchMap } from 'rxjs/operators';
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource">
         <mat-option *ngIf="resources.length === 0" disabled="true"> No results were found.</mat-option>
         <!--<mat-option *ngFor="let rc of resourceClasses" (click)="openDialog('createLinkResource', $event, propIri, rc)">
-                                                                                                                                                                  Create New: {{ rc?.label }}
-                                                                                                                                                                </mat-option>-->
+                                                                                                                                                                                                          Create New: {{ rc?.label }}
+                                                                                                                                                                                                        </mat-option>-->
         <mat-option *ngFor="let res of resources" [value]="res"> {{ res?.label }}</mat-option>
       </mat-autocomplete>
     </mat-form-field>
@@ -42,8 +43,14 @@ import { filter, map, switchMap } from 'rxjs/operators';
 export class LinkValue2Component implements OnInit {
   @Input() control: FormControl<any>;
   @Input() propIri: string;
-  @Input() currentOntoIri: string;
-  @Input() parentResource: ReadResource;
+
+  get currentOntoIri() {
+    return this._tempLinkValueService.currentOntoIri;
+  }
+
+  get parentResource() {
+    return this._tempLinkValueService.parentResource;
+  }
 
   loadingResults = false;
 
@@ -57,16 +64,17 @@ export class LinkValue2Component implements OnInit {
 
   constructor(
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection
+    private _dspApiConnection: KnoraApiConnection,
+    private _tempLinkValueService: TempLinkValueService
   ) {}
 
   ngOnInit() {
     // in case the resource is referencing itself, assign the parent resource to linkedResource
     /*
-                                                                                          if (this.displayValue && this.displayValue.linkedResourceIri === this.parentResource.id) {
-                                                                                            this.displayValue.linkedResource = this.parentResource;
-                                                                                          }
-                                                                                             */
+                                                                                                              if (this.displayValue && this.displayValue.linkedResourceIri === this.parentResource.id) {
+                                                                                                                this.displayValue.linkedResource = this.parentResource;
+                                                                                                              }
+                                                                                                                 */
 
     const linkType = this.parentResource.getLinkPropertyIriFromLinkValuePropertyIri(this.propIri);
     this.restrictToResourceClass = this.parentResource.entityInfo.properties[linkType].objectType;

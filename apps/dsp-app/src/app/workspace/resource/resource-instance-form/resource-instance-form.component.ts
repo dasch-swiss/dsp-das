@@ -22,6 +22,7 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/resource-instance-form/component-host.directive';
+import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/values/link-value/temp-link-value.service';
 import { Store } from '@ngxs/store';
 import { switchMap, take, tap } from 'rxjs/operators';
 import { ResourceService } from '../services/resource.service';
@@ -30,6 +31,7 @@ import { SelectPropertiesComponent } from './select-properties/select-properties
 @Component({
   selector: 'app-resource-instance-form',
   templateUrl: './resource-instance-form.component.html',
+  providers: [TempLinkValueService],
 })
 export class ResourceInstanceFormComponent implements OnInit {
   @Input() resourceClassIri: string;
@@ -70,7 +72,8 @@ export class ResourceInstanceFormComponent implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router,
     private _store: Store,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _tempLinkValueService: TempLinkValueService
   ) {}
 
   ngOnInit(): void {
@@ -84,6 +87,12 @@ export class ResourceInstanceFormComponent implements OnInit {
       .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
         this.ontologyInfo = onto;
         this.resourceClass = onto.classes[resourceClassIri];
+        this._tempLinkValueService.currentOntoIri = this.ontologyIri;
+
+        const readResource = new ReadResource();
+        readResource.entityInfo = this.ontologyInfo;
+        this._tempLinkValueService.parentResource = readResource;
+
         this.unsuitableProperties = onto.classes[resourceClassIri]
           .getResourcePropertiesList()
           .filter(v => v.guiOrder !== undefined);
