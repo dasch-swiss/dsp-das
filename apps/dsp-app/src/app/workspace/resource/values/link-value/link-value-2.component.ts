@@ -14,19 +14,17 @@ import { filter, switchMap } from 'rxjs/operators';
         matInput
         [formControl]="control"
         aria-label="resource"
-        placeholder="Name of existing resource"
+        placeholder="Name of an existing resource"
         [matAutocomplete]="auto" />
-      <mat-autocomplete
-        #auto="matAutocomplete"
-        [displayWith]="displayResource.bind(this)"
-        (optionSelected)="closePanel()">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource.bind(this)">
         <mat-option *ngIf="resources.length === 0" disabled="true"> No results were found.</mat-option>
         <!--<mat-option *ngFor="let rc of resourceClasses" (click)="openDialog('createLinkResource', $event, propIri, rc)">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Create New: {{ rc?.label }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </mat-option>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          Create New: {{ rc?.label }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </mat-option>-->
         <mat-option *ngFor="let res of resources" [value]="res.id"> {{ res.label }}</mat-option>
       </mat-autocomplete>
       <mat-hint>{{ 'appLabels.form.action.searchHelp' | translate }}</mat-hint>
+      <mat-error *ngIf="control.errors as errors">{{ errors | humanReadableError }}</mat-error>
     </mat-form-field>
   `,
 })
@@ -62,19 +60,12 @@ export class LinkValue2Component implements OnInit {
       });
   }
 
-  closePanel() {
-    console.log('close panel');
-    // this.autoComplete.closePanel();
-  }
-
   private _getRestrictToResourceClass() {
     const linkType = this._tempLinkValueService.parentResource.getLinkPropertyIriFromLinkValuePropertyIri(this.propIri);
     return this._tempLinkValueService.parentResource.entityInfo.properties[linkType].objectType;
   }
 
   displayResource(resId: string | undefined): string {
-    console.log('display', resId, this.resources);
-    if (!resId || !this.resources || this.resources.length === 0) return '';
     return this.resources.find(res => res.id === resId).label;
   }
 }
