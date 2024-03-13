@@ -25,8 +25,8 @@ import { filter, map, switchMap } from 'rxjs/operators';
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource">
         <mat-option *ngIf="resources.length === 0" disabled="true"> No results were found.</mat-option>
         <!--<mat-option *ngFor="let rc of resourceClasses" (click)="openDialog('createLinkResource', $event, propIri, rc)">
-                                                                                                                                                                                                                                                                                                                  Create New: {{ rc?.label }}
-                                                                                                                                                                                                                                                                                                                </mat-option>-->
+                                                                                                                                                                                                                                                                                                                                                  Create New: {{ rc?.label }}
+                                                                                                                                                                                                                                                                                                                                                </mat-option>-->
         <mat-option *ngFor="let res of resources" [value]="res.id"> {{ res.label }}</mat-option>
       </mat-autocomplete>
     </mat-form-field>
@@ -72,15 +72,9 @@ export class LinkValue2Component implements OnInit {
       .getOntology(this.currentOntoIri)
       .pipe(map(ontoMap => new Map(Array.from(ontoMap).filter(([key]) => key !== Constants.KnoraApiV2))))
       .subscribe(filteredOntoMap => {
-        let resClasses = [];
-
-        // loop through each ontology in the project and create an array of ResourceClassDefinitions
-        filteredOntoMap.forEach(onto => {
-          resClasses = resClasses.concat(
-            filteredOntoMap.get(onto.id).getClassDefinitionsByType(ResourceClassDefinition)
-          );
-        });
-
+        const resClasses = Array.from(filteredOntoMap.values()).reduce((prev, onto) => {
+          return prev.concat(filteredOntoMap.get(onto.id).getClassDefinitionsByType(ResourceClassDefinition));
+        }, []);
         // add the superclass to the list of resource classes
         // recursively loop through all of the superclass's subclasses, including nested subclasses
         // and add them to the list of resource classes
