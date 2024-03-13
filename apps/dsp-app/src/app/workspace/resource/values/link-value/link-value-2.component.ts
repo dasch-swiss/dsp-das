@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { KnoraApiConnection, ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
@@ -9,23 +9,24 @@ import { filter, switchMap } from 'rxjs/operators';
 @Component({
   selector: 'app-link-value-2',
   template: `
-    <mat-form-field>
+    <mat-form-field style="width: 100%">
       <input
         matInput
         [formControl]="control"
-        [placeholder]="'appLabels.form.action.searchHelp' | translate"
         aria-label="resource"
+        placeholder="Name of existing resource"
         [matAutocomplete]="auto" />
       <mat-autocomplete
         #auto="matAutocomplete"
-        [displayWith]="displayResource"
-        (optionSelected)="autoComplete.closePanel()">
+        [displayWith]="displayResource.bind(this)"
+        (optionSelected)="closePanel()">
         <mat-option *ngIf="resources.length === 0" disabled="true"> No results were found.</mat-option>
         <!--<mat-option *ngFor="let rc of resourceClasses" (click)="openDialog('createLinkResource', $event, propIri, rc)">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                  Create New: {{ rc?.label }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                </mat-option>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Create New: {{ rc?.label }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </mat-option>-->
         <mat-option *ngFor="let res of resources" [value]="res.id"> {{ res.label }}</mat-option>
       </mat-autocomplete>
+      <mat-hint>{{ 'appLabels.form.action.searchHelp' | translate }}</mat-hint>
     </mat-form-field>
   `,
 })
@@ -40,13 +41,15 @@ export class LinkValue2Component implements OnInit {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _tempLinkValueService: TempLinkValueService
+    private _tempLinkValueService: TempLinkValueService,
+    private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.control.valueChanges
       .pipe(
         filter(searchTerm => searchTerm?.length >= 3),
+        filter(searchTerm => !searchTerm.startsWith('http')),
         switchMap((searchTerm: string) =>
           this._dspApiConnection.v2.search.doSearchByLabel(searchTerm, 0, {
             limitToResourceClass: this._getRestrictToResourceClass(),
@@ -55,7 +58,13 @@ export class LinkValue2Component implements OnInit {
       )
       .subscribe((response: ReadResourceSequence) => {
         this.resources = response.resources;
+        this._cd.detectChanges();
       });
+  }
+
+  closePanel() {
+    console.log('close panel');
+    // this.autoComplete.closePanel();
   }
 
   private _getRestrictToResourceClass() {
@@ -64,6 +73,7 @@ export class LinkValue2Component implements OnInit {
   }
 
   displayResource(resId: string | undefined): string {
+    console.log('display', resId, this.resources);
     if (!resId || !this.resources || this.resources.length === 0) return '';
     return this.resources.find(res => res.id === resId).label;
   }
