@@ -23,7 +23,6 @@ import { Cardinality } from '@dasch-swiss/dsp-js';
 export class NuListComponent {
   @Input() itemTpl: TemplateRef<any>;
   @Input() formArray: FormArray;
-  @Input() newValue: any;
   @Input() cardinality: Cardinality;
   @Output() addItem = new EventEmitter();
 

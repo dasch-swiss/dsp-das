@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, TemplateRef, ViewChild } from '@angular/core';
-import { FormArray, FormControl, Validators } from '@angular/forms';
+import { FormArray, FormControl, ValidatorFn, Validators } from '@angular/forms';
 import {
   Cardinality,
   Constants,
@@ -7,13 +7,13 @@ import {
   PropertyDefinition,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
+import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
 
 @Component({
   selector: 'app-switch-properties-3',
   template: `
     <app-nu-list
       [itemTpl]="itemTpl"
-      [newValue]="newValue"
       [formArray]="formArray"
       [cardinality]="cardinality"
       (addItem)="addItem()"></app-nu-list>
@@ -119,7 +119,7 @@ export class SwitchProperties3Component implements AfterViewInit {
     this.formArray.push(new FormControl(this.newValue, Validators.required));
   }
 
-  private getTemplate(): { template: TemplateRef<any>; newValue: any } {
+  private getTemplate(): { template: TemplateRef<any>; newValue: any; validators?: ValidatorFn[] } {
     switch (this.propertyDefinition.objectType) {
       case Constants.IntValue:
         return { template: this.intTpl, newValue: 0 };
@@ -142,7 +142,7 @@ export class SwitchProperties3Component implements AfterViewInit {
       case Constants.LinkValue:
         return { template: this.linkTpl, newValue: null };
       case Constants.UriValue:
-        return { template: this.uriTpl, newValue: '' };
+        return { template: this.uriTpl, newValue: '', validators: [Validators.pattern(CustomRegex.URI_REGEX)] };
       default:
         return { template: this.defaultTpl, newValue: null };
     }
