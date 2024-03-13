@@ -8,5 +8,5 @@ import { FormControl } from '@angular/forms';
 })
 export class UriValue2Component {
   @Input() control: FormControl<string>;
-  readonly emailError = [{ errorKey: 'email', message: 'This is not a valid email.' }];
+  readonly emailError = [{ errorKey: 'pattern', message: 'This is not a valid link.' }];
 }

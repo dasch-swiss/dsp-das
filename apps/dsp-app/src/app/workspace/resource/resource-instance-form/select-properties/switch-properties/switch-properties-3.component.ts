@@ -100,6 +100,7 @@ export class SwitchProperties3Component implements AfterViewInit {
 
   itemTpl: TemplateRef<any>;
   newValue: any;
+  validators: ValidatorFn[];
 
   get resPropDef() {
     return this.propertyDefinition as ResourcePropertyDefinition;
@@ -111,12 +112,13 @@ export class SwitchProperties3Component implements AfterViewInit {
     const data = this.getTemplate();
     this.itemTpl = data.template;
     this.newValue = data.newValue;
+    this.validators = data.validators;
     this.addItem();
     this._cd.detectChanges();
   }
 
   addItem() {
-    this.formArray.push(new FormControl(this.newValue, Validators.required));
+    this.formArray.push(new FormControl(this.newValue, [Validators.required, ...this.validators]));
   }
 
   private getTemplate(): { template: TemplateRef<any>; newValue: any; validators?: ValidatorFn[] } {
