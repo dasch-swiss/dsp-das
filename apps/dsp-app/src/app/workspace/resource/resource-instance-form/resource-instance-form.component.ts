@@ -216,7 +216,7 @@ export class ResourceInstanceFormComponent implements OnInit {
       case Constants.LinkValue:
         return controls.map(control => {
           const newLinkValue = new CreateLinkValue();
-          newLinkValue.linkedResourceIri = control.value.id;
+          newLinkValue.linkedResourceIri = control.value;
           return newLinkValue;
         });
       default:
