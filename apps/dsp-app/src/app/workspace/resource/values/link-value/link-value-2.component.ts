@@ -7,7 +7,6 @@ import {
   ReadResourceSequence,
   ResourceClassAndPropertyDefinitions,
   ResourceClassDefinition,
-  ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/values/link-value/temp-link-value.service';
@@ -26,8 +25,8 @@ import { filter, map, switchMap } from 'rxjs/operators';
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource">
         <mat-option *ngIf="resources.length === 0" disabled="true"> No results were found.</mat-option>
         <!--<mat-option *ngFor="let rc of resourceClasses" (click)="openDialog('createLinkResource', $event, propIri, rc)">
-                                                                                                                                                                                                                                                                                                          Create New: {{ rc?.label }}
-                                                                                                                                                                                                                                                                                                        </mat-option>-->
+                                                                                                                                                                                                                                                                                                                  Create New: {{ rc?.label }}
+                                                                                                                                                                                                                                                                                                                </mat-option>-->
         <mat-option *ngFor="let res of resources" [value]="res.id"> {{ res.label }}</mat-option>
       </mat-autocomplete>
     </mat-form-field>
@@ -51,7 +50,6 @@ export class LinkValue2Component implements OnInit {
   resourceClassLabel: string;
 
   resources: ReadResource[] = [];
-  properties: ResourcePropertyDefinition[];
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -89,10 +87,6 @@ export class LinkValue2Component implements OnInit {
         this.resourceClasses = resClasses
           .filter((resClassDef: ResourceClassDefinition) => resClassDef.id === this.restrictToResourceClass)
           .concat(this._getSubclasses(resClasses, this.restrictToResourceClass));
-
-        this.properties = filteredOntoMap
-          .get(this.currentOntoIri)
-          .getPropertyDefinitionsByType(ResourcePropertyDefinition);
       });
 
     this._onFormChange();
