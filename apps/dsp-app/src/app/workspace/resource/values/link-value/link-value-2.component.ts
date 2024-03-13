@@ -26,12 +26,11 @@ import { filter, map, switchMap } from 'rxjs/operators';
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource">
         <mat-option *ngIf="resources.length === 0" disabled="true"> No results were found.</mat-option>
         <!--<mat-option *ngFor="let rc of resourceClasses" (click)="openDialog('createLinkResource', $event, propIri, rc)">
-                                                                                                                                                                                                                                                                                                  Create New: {{ rc?.label }}
-                                                                                                                                                                                                                                                                                                </mat-option>-->
+                                                                                                                                                                                                                                                                                                          Create New: {{ rc?.label }}
+                                                                                                                                                                                                                                                                                                        </mat-option>-->
         <mat-option *ngFor="let res of resources" [value]="res.id"> {{ res.label }}</mat-option>
       </mat-autocomplete>
     </mat-form-field>
-    A{{ control.value }}BB
   `,
 })
 export class LinkValue2Component implements OnInit {
@@ -45,8 +44,6 @@ export class LinkValue2Component implements OnInit {
   get parentResource() {
     return this._tempLinkValueService.parentResource;
   }
-
-  loadingResults = false;
 
   resourceClasses: ResourceClassDefinition[];
   subClasses: ResourceClassDefinition[] = [];
@@ -63,13 +60,6 @@ export class LinkValue2Component implements OnInit {
   ) {}
 
   ngOnInit() {
-    // in case the resource is referencing itself, assign the parent resource to linkedResource
-    /*
-                                                                                                                                                          if (this.displayValue && this.displayValue.linkedResourceIri === this.parentResource.id) {
-                                                                                                                                                            this.displayValue.linkedResource = this.parentResource;
-                                                                                                                                                          }
-                                                                                                                                                             */
-
     const linkType = this.parentResource.getLinkPropertyIriFromLinkValuePropertyIri(this.propIri);
     this.restrictToResourceClass = this.parentResource.entityInfo.properties[linkType].objectType;
 
