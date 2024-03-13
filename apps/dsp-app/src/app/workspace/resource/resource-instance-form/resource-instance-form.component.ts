@@ -13,6 +13,7 @@ import {
   CreateListValue,
   CreateResource,
   CreateTextValueAsString,
+  CreateUriValue,
   IHasPropertyWithPropertyDefinition,
   KnoraApiConnection,
   ReadResource,
@@ -219,8 +220,12 @@ export class ResourceInstanceFormComponent implements OnInit {
           newLinkValue.linkedResourceIri = control.value;
           return newLinkValue;
         });
-      default:
-        return [this.dynamicForm.controls[iri].value];
+      case Constants.UriValue:
+        return controls.map(control => {
+          const newUriValue = new CreateUriValue();
+          newUriValue.uri = control.value;
+          return newUriValue;
+        });
     }
   }
 

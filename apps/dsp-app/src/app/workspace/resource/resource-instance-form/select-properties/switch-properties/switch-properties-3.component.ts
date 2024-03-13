@@ -63,7 +63,10 @@ import {
         [control]="item"
         style="width: 100%"
         [propIri]="property.propertyDefinition.id"></app-link-value-2>
-      <!-- TODO remove those 3 parameters later-->
+    </ng-template>
+
+    <ng-template let-item #uriTpl>
+      <app-uri-value-2 [control]="item" style="width: 100%"></app-uri-value-2>
     </ng-template>
 
     <ng-template #defaultTpl><span style="width: 100%">Nothing to show</span></ng-template>
@@ -92,6 +95,7 @@ export class SwitchProperties3Component implements AfterViewInit {
   @ViewChild('listTpl') listTpl: TemplateRef<any>;
   @ViewChild('geoNameTpl') geoNameTpl: TemplateRef<any>;
   @ViewChild('linkTpl') linkTpl: TemplateRef<any>;
+  @ViewChild('uriTpl') uriTpl: TemplateRef<any>;
   @ViewChild('defaultTpl') defaultTpl: TemplateRef<any>;
 
   itemTpl: TemplateRef<any>;
@@ -137,6 +141,8 @@ export class SwitchProperties3Component implements AfterViewInit {
         return { template: this.geoNameTpl, newValue: '' };
       case Constants.LinkValue:
         return { template: this.linkTpl, newValue: null };
+      case Constants.UriValue:
+        return { template: this.uriTpl, newValue: '' };
       default:
         return { template: this.defaultTpl, newValue: null };
     }
