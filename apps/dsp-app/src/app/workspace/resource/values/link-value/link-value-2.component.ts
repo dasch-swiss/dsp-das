@@ -8,7 +8,7 @@ import { filter, switchMap } from 'rxjs/operators';
 @Component({
   selector: 'app-link-value-2',
   template: `
-    <mat-form-field class="child-value-component" floatLabel="never">
+    <mat-form-field>
       <input
         matInput
         [formControl]="control"
@@ -18,8 +18,8 @@ import { filter, switchMap } from 'rxjs/operators';
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource">
         <mat-option *ngIf="resources.length === 0" disabled="true"> No results were found.</mat-option>
         <!--<mat-option *ngFor="let rc of resourceClasses" (click)="openDialog('createLinkResource', $event, propIri, rc)">
-                                                                                                                                                                                                                                                                                                                                                                                                          Create New: {{ rc?.label }}
-                                                                                                                                                                                                                                                                                                                                                                                                        </mat-option>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                  Create New: {{ rc?.label }}
+                                                                                                                                                                                                                                                                                                                                                                                                                </mat-option>-->
         <mat-option *ngFor="let res of resources" [value]="res.id"> {{ res.label }}</mat-option>
       </mat-autocomplete>
     </mat-form-field>
