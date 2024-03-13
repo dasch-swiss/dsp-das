@@ -1,6 +1,6 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { KnoraApiConnection, ReadResource, ReadResourceSequence, ResourceClassDefinition } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/values/link-value/temp-link-value.service';
 import { filter, switchMap } from 'rxjs/operators';
@@ -18,8 +18,8 @@ import { filter, switchMap } from 'rxjs/operators';
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource">
         <mat-option *ngIf="resources.length === 0" disabled="true"> No results were found.</mat-option>
         <!--<mat-option *ngFor="let rc of resourceClasses" (click)="openDialog('createLinkResource', $event, propIri, rc)">
-                                                                                                                                                                                                                                                                                                                                                                          Create New: {{ rc?.label }}
-                                                                                                                                                                                                                                                                                                                                                                        </mat-option>-->
+                                                                                                                                                                                                                                                                                                                                                                                          Create New: {{ rc?.label }}
+                                                                                                                                                                                                                                                                                                                                                                                        </mat-option>-->
         <mat-option *ngFor="let res of resources" [value]="res.id"> {{ res.label }}</mat-option>
       </mat-autocomplete>
     </mat-form-field>
@@ -33,9 +33,6 @@ export class LinkValue2Component implements OnInit {
     return this._tempLinkValueService.parentResource;
   }
 
-  subClasses: ResourceClassDefinition[] = [];
-  restrictToResourceClass: string;
-
   resources: ReadResource[] = [];
 
   constructor(
@@ -45,19 +42,19 @@ export class LinkValue2Component implements OnInit {
   ) {}
 
   ngOnInit() {
-    const linkType = this.parentResource.getLinkPropertyIriFromLinkValuePropertyIri(this.propIri);
-    this.restrictToResourceClass = this.parentResource.entityInfo.properties[linkType].objectType;
-
     this._onFormChange();
   }
 
   private _onFormChange() {
+    const linkType = this.parentResource.getLinkPropertyIriFromLinkValuePropertyIri(this.propIri);
+    const restrictToResourceClass = this.parentResource.entityInfo.properties[linkType].objectType;
+
     this.control.valueChanges
       .pipe(
         filter(searchTerm => searchTerm?.length >= 3),
         switchMap((searchTerm: string) =>
           this._dspApiConnection.v2.search.doSearchByLabel(searchTerm, 0, {
-            limitToResourceClass: this.restrictToResourceClass,
+            limitToResourceClass: restrictToResourceClass,
           })
         )
       )
