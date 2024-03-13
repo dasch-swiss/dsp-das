@@ -5,5 +5,4 @@ import { ReadResource } from '@dasch-swiss/dsp-js';
 export class TempLinkValueService {
   parentResource: ReadResource;
   currentOntoIri: string;
-  propIri: string;
 }
