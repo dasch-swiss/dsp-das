@@ -31,7 +31,7 @@ export class DateValueComponent extends BaseValueDirective implements OnInit, On
    * @param date1 date for comparison with date2
    * @param date2 date for comparison with date1
    */
-  sameDate(date1: KnoraDate, date2: KnoraDate): boolean {
+  private sameDate(date1: KnoraDate, date2: KnoraDate): boolean {
     return (
       date1.calendar === date2.calendar &&
       date1.year === date2.year &&
@@ -80,7 +80,7 @@ export class DateValueComponent extends BaseValueDirective implements OnInit, On
    * @param value the value to be populated.
    * @param dateOrPeriod the date or period to read from.
    */
-  populateValue(value: UpdateDateValue | CreateDateValue, dateOrPeriod: KnoraDate | KnoraPeriod) {
+  private populateValue(value: UpdateDateValue | CreateDateValue, dateOrPeriod: KnoraDate | KnoraPeriod) {
     if (dateOrPeriod instanceof KnoraDate) {
       value.calendar = dateOrPeriod.calendar;
       value.startEra = dateOrPeriod.era !== 'noEra' ? dateOrPeriod.era : undefined;
