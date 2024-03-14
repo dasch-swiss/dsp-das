@@ -3,20 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
-  CreateBooleanValue,
-  CreateColorValue,
-  CreateDateValue,
-  CreateDecimalValue,
   CreateFileValue,
-  CreateGeonameValue,
-  CreateIntervalValue,
-  CreateIntValue,
-  CreateLinkValue,
-  CreateListValue,
   CreateResource,
-  CreateTextValueAsString,
-  CreateTimeValue,
-  CreateUriValue,
   IHasPropertyWithPropertyDefinition,
   KnoraApiConnection,
   ReadResource,
@@ -28,7 +16,6 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/resource-instance-form/component-host.directive';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
-import { populateValue } from '@dsp-app/src/app/workspace/resource/values/date-value/populate-value-method';
 import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/values/link-value/temp-link-value.service';
 import { Store } from '@ngxs/store';
 import { switchMap, take, tap } from 'rxjs/operators';
