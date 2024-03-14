@@ -40,6 +40,7 @@ import { PropertyItemComponent } from '@dsp-app/src/app/workspace/resource/resou
 import { BooleanValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/boolean-value-2.component';
 import { IntValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-2.component';
 import { IntValue3Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-3.component';
+import { IntervalValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/interval-value-2.component';
 import { NuListComponent } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/nu-list.component';
 import { SwitchProperties2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-2.component';
 import { SwitchProperties3Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-3.component';
@@ -264,6 +265,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     IntValueComponent,
     IntValue2Component,
     IntValue3Component,
+    IntervalValue2Component,
     InvalidControlScrollDirective,
     JDNDatepickerDirective,
     KnoraDatePipe,

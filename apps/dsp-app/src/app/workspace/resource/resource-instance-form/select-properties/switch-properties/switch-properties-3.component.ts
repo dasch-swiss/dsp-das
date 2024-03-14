@@ -50,6 +50,10 @@ import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-r
       <app-time-value-2 [control]="item"></app-time-value-2>
     </ng-template>
 
+    <ng-template let-item #intervalTpl>
+      <app-interval-value-2 [control]="item"></app-interval-value-2>
+    </ng-template>
+
     <ng-template let-item #listTpl>
       <app-list-value-2 [propertyDef]="resPropDef" [control]="item" style="flex: 1"></app-list-value-2>
     </ng-template>
@@ -92,6 +96,7 @@ export class SwitchProperties3Component implements AfterViewInit {
   @ViewChild('textTpl') textTpl: TemplateRef<any>;
   @ViewChild('dateTpl') dateTpl: TemplateRef<any>;
   @ViewChild('timeTpl') timeTpl: TemplateRef<any>;
+  @ViewChild('intervalTpl') intervalTpl: TemplateRef<any>;
   @ViewChild('listTpl') listTpl: TemplateRef<any>;
   @ViewChild('geoNameTpl') geoNameTpl: TemplateRef<any>;
   @ViewChild('linkTpl') linkTpl: TemplateRef<any>;
@@ -137,6 +142,8 @@ export class SwitchProperties3Component implements AfterViewInit {
         return { template: this.dateTpl, newValue: '' };
       case Constants.TimeValue:
         return { template: this.timeTpl, newValue: { date: null, time: null } };
+      case Constants.IntervalValue:
+        return { template: this.intervalTpl, newValue: { start: null, end: null } };
       case Constants.ListValue:
         return { template: this.listTpl, newValue: null };
       case Constants.GeonameValue:

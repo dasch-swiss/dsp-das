@@ -9,6 +9,7 @@ import {
   CreateDecimalValue,
   CreateFileValue,
   CreateGeonameValue,
+  CreateIntervalValue,
   CreateIntValue,
   CreateLinkValue,
   CreateListValue,
@@ -210,6 +211,13 @@ export class ResourceInstanceFormComponent implements OnInit {
           const newTimeValue = new CreateTimeValue();
           newTimeValue.time = control.value;
           return newTimeValue;
+        });
+      case Constants.IntervalValue:
+        return controls.map(control => {
+          const newIntervalValue = new CreateIntervalValue();
+          newIntervalValue.start = control.value.start;
+          newIntervalValue.end = control.value.end;
+          return newIntervalValue;
         });
       case Constants.ColorValue:
         return controls.map(control => {
