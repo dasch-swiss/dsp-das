@@ -187,6 +187,9 @@
           }
         }
       }
+    },
+    "resource": {
+      "properties": "Properties"
     }
   }
 }

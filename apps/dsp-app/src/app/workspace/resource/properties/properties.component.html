@@ -1,5 +1,5 @@
 <!-- toolbar -->
-<div class="toolbar" *ngIf="project$ | async" [class.deleted]="deletedResource || resource.res.isDeleted">
+<div class="toolbar" *ngIf="attachedProject" [class.deleted]="deletedResource || resource.res.isDeleted">
   <!-- resource info -->
   <h3 class="label mat-headline-6">{{resource.res.label}} <span *ngIf="deletedResource">(deleted)</span></h3>
 
@@ -78,7 +78,7 @@
     <!-- more menu with: delete, erase resource -->
     <button
       color="primary"
-      *ngIf="userCanEdit && (project$ | async)?.status"
+      *ngIf="userCanEdit && attachedProject?.status"
       mat-icon-button
       class="more-menu"
       matTooltip="More"
@@ -116,23 +116,6 @@
         Erase resource
       </button>
     </mat-menu>
-  </span>
-</div>
-
-<!-- additional line with project and user information -->
-<div class="infobar mat-caption" *ngIf="(project$ | async) as project">
-  <span *ngIf="displayProjectInfo"
-    >This resource {{ resource.res.isDeleted ? 'belonged' : 'belongs' }} to the project
-    <span class="project link" (click)="openProject(project)" (mouseover)="previewProject()">
-      <strong>{{project?.shortname}}</strong>
-      <mat-icon inline>open_in_new</mat-icon>
-    </span>
-  </span>
-  <span class="fill-remaining-space desktop-only"></span>
-  <span *ngIf="user || resource.res.creationDate">
-    Created
-    <span *ngIf="user">by {{(user.username ? user.username : user.givenName + ' ' + user.familyName)}}</span>
-    <span *ngIf="resource.res.creationDate"> on {{resource.res.creationDate | date}}</span>
   </span>
 </div>
 
@@ -179,15 +162,15 @@
               [propArray]="resource.resProps"
               [canDelete]="deleteValueIsAllowed(prop)"
               [cantDeleteReason]="cantDeleteReason"
-              [projectStatus]="(project$ | async)?.status"
-              [user]="user"
+              [projectStatus]="attachedProject?.status"
+              [user]="attachedUser"
               [valueUuidToHighlight]="valueUuidToHighlight"
               (referredResourceClicked)="openResource($event)"
               (referredResourceHovered)="previewResource()">
             </app-display-edit>
           </div>
           <!-- Add value form -->
-          <div *ngIf="addValueFormIsVisible && propID === prop.propDef.id && (project$ | async)?.status">
+          <div *ngIf="addValueFormIsVisible && propID === prop.propDef.id && attachedProject?.status">
             <app-add-value
               #addValue
               class="add-value"
@@ -197,7 +180,7 @@
             </app-add-value>
           </div>
           <!-- Add button -->
-          <div *ngIf="addValueIsAllowed(prop) && (project$ | async)?.status">
+          <div *ngIf="addValueIsAllowed(prop) && attachedProject?.status">
             <button
               mat-icon-button
               type="button"

@@ -1,4 +1,4 @@
-@use "../../../styles/config" as *;
+@use '../../../styles/config' as *;
 
 .representation-container {
   width: 100%;
@@ -29,13 +29,35 @@
   }
 
   p {
-    color:
-    $yellow_700;
+    color: $yellow_700;
   }
 }
 
 .close {
   cursor: pointer;
+}
+
+.resource-header {
+  margin-bottom: 24px;
+}
+
+.resource-class-label {
+  text-transform: uppercase;
+  font-size: 18px;
+  letter-spacing: 1.25px;
+}
+
+.resource-label {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 16px;
+  margin-bottom: 0;
+}
+
+.infobar {
+  box-sizing: border-box;
+  white-space: nowrap;
+  color: rgba(0, 0, 0, 0.87);
 }
 
 @media (max-width: 1024px) {

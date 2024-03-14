@@ -1,8 +1,7 @@
-@use "../../../../styles/config" as *;
+@use '../../../../styles/config' as *;
 
 // toolbar
-.toolbar,
-.infobar {
+.toolbar {
   display: flex;
   box-sizing: border-box;
   flex-direction: row;
@@ -31,11 +30,6 @@
   .action button {
     border-radius: 0;
   }
-}
-
-.infobar {
-  height: 24px;
-  flex-wrap: wrap;
 }
 
 .clipboard-arkurl {
@@ -186,7 +180,6 @@
     mat-icon {
       color: $primary;
     }
-
   }
 
   button:hover {
@@ -201,7 +194,6 @@
   button:disabled:hover {
     background-color: transparent;
   }
-
 }
 
 @media screen and (max-width: 768px) {

@@ -41,19 +41,12 @@ import {
   ComponentCommunicationEventService,
   EmitEvent,
   OntologyService,
-  ProjectService,
   SortingService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import {
-  GetAttachedProjectAction,
-  GetAttachedUserAction,
-  LoadClassItemsCountAction,
-  ResourceSelectors,
-} from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
+import { LoadClassItemsCountAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Actions, Store } from '@ngxs/store';
 import { Observable, Subject, Subscription, forkJoin } from 'rxjs';
-import { map, take, takeUntil, takeWhile } from 'rxjs/operators';
 import { ConfirmationWithComment, DialogComponent } from '../../../main/dialog/dialog.component';
 import { DspResource } from '../dsp-resource';
 import { RepresentationConstants } from '../representation/file-representation';
@@ -109,6 +102,9 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() valueUuidToHighlight: string;
 
+  @Input() attachedUser: ReadUser;
+  @Input() attachedProject: ReadProject;
+
   /**
    * output `referredProjectClicked` of resource view component:
    * can be used to go to project page
@@ -158,16 +154,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   allIncomingLinkResources: ReadResource[] = [];
   displayedIncomingLinkResources: ReadResource[] = [];
   hasIncomingLinkIri = Constants.HasIncomingLinkValue;
-
-  project$ = this._store.select(ResourceSelectors.attachedProjects).pipe(
-    takeWhile(attachedProjects => this.resource !== undefined && attachedProjects[this.resource.res.id] !== undefined),
-    takeUntil(this.ngUnsubscribe),
-    map(attachedProjects =>
-      attachedProjects[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToProject)
-    )
-  );
-
-  user: ReadUser;
   pageEvent: PageEvent;
   loading = false;
 
@@ -251,18 +237,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       localStorage.setItem('showAllProps', JSON.stringify(this.showAllProps));
     }
-
-    this._store.dispatch([
-      new GetAttachedUserAction(this.resource.res.id, this.resource.res.attachedToUser),
-      new GetAttachedProjectAction(this.resource.res.id, this.resource.res.attachedToProject),
-    ]);
-    this._actions$
-      .pipe(ofActionSuccessful(GetAttachedUserAction))
-      .pipe(take(1))
-      .subscribe(() => {
-        const attachedUsers = this._store.selectSnapshot(ResourceSelectors.attachedUsers);
-        this.user = attachedUsers[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToUser);
-      });
   }
 
   ngOnChanges(): void {
@@ -279,19 +253,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   trackByFn = (index: number, item: ReadResource) => `${index}-${item.id}`;
   trackByValuesFn = (index: number, item: any) => `${index}-${item}`;
   trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;
-
-  /**
-   * opens project
-   * @param project
-   */
-  openProject(project: ReadProject) {
-    const uuid = ProjectService.IriToUuid(project.id);
-    window.open(`/project/${uuid}`, '_blank');
-  }
-
-  previewProject() {
-    // --> TODO: pop up project preview on hover
-  }
 
   /**
    * goes to the next page of the incoming link pagination

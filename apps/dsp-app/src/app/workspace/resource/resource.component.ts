@@ -13,7 +13,6 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  ApiResponseError,
   Constants,
   CountQueryResponse,
   IHasPropertyWithPropertyDefinition,
@@ -23,6 +22,7 @@ import {
   ReadDocumentFileValue,
   ReadLinkValue,
   ReadMovingImageFileValue,
+  ReadProject,
   ReadResource,
   ReadResourceSequence,
   ReadStillImageFileValue,
@@ -30,13 +30,18 @@ import {
   ReadUser,
   SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Select } from '@ngxs/store';
-import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
-import { map, takeUntil, tap } from 'rxjs/operators';
+import {
+  GetAttachedProjectAction,
+  GetAttachedUserAction,
+  ResourceSelectors,
+  UserSelectors,
+} from '@dasch-swiss/vre/shared/app-state';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
+import { Observable, Subject, Subscription, combineLatest } from 'rxjs';
+import { map, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { SplitSize } from '../results/results.component';
 import { DspCompoundPosition, DspResource } from './dsp-resource';
 import { PropertyInfoValues } from './properties/properties.component';
@@ -117,6 +122,16 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
   attachedToProjectResource = '';
 
+  project$ = this._store.select(ResourceSelectors.attachedProjects).pipe(
+    takeWhile(attachedProjects => this.resource !== undefined && attachedProjects[this.resource.res.id] !== undefined),
+    takeUntil(this.ngUnsubscribe),
+    map(attachedProjects =>
+      attachedProjects[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToProject)
+    )
+  );
+
+  resourceAttachedUser: ReadUser;
+
   get isAdmin$(): Observable<boolean> {
     return combineLatest([this.user$, this.userProjectAdminGroups$]).pipe(
       takeUntil(this.ngUnsubscribe),
@@ -129,8 +144,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   }
 
   @Select(UserSelectors.user) user$: Observable<ReadUser>;
-  @Select(UserSelectors.userProjectAdminGroups)
-  userProjectAdminGroups$: Observable<string[]>;
+  @Select(UserSelectors.userProjectAdminGroups) userProjectAdminGroups$: Observable<string[]>;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -142,7 +156,9 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     private _router: Router,
     private _titleService: Title,
     private _valueOperationEventService: ValueOperationEventService,
-    private _cdr: ChangeDetectorRef
+    private _cdr: ChangeDetectorRef,
+    private _store: Store,
+    private _actions$: Actions
   ) {
     this._route.params.subscribe(params => {
       this.projectCode = params.project;
@@ -250,6 +266,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   initResource(iri) {
     this.oldResourceIri = this.resourceIri;
     this.getResource(iri).subscribe(dspResource => {
+      this.getResourceAttachedData(dspResource);
       this.renderResource(dspResource);
     });
   }
@@ -394,6 +411,19 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   representationLoaded(e: boolean) {
     this.loading = !e;
     this._cdr.detectChanges();
+  }
+
+  resourceClassLabel = (resource: DspResource): string => resource.res.entityInfo?.classes[resource.res.type].label;
+
+  resourceLabel = (incomingResource: DspResource, resource: DspResource): string =>
+    incomingResource ? resource.res.label + ': ' + incomingResource.res.label : resource.res.label;
+
+  openProject(project: ReadProject) {
+    window.open(`${RouteConstants.projectRelative}/${ProjectService.IriToUuid(project.id)}`, '_blank');
+  }
+
+  previewProject() {
+    // --> TODO: pop up project preview on hover
   }
 
   /**
@@ -679,5 +709,21 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     if (this.stillImageComponent !== undefined) {
       this.stillImageComponent.updateRegions();
     }
+  }
+
+  private getResourceAttachedData(resource: DspResource): void {
+    this._actions$
+      .pipe(ofActionSuccessful(GetAttachedUserAction))
+      .pipe(take(1))
+      .subscribe(() => {
+        const attachedUsers = this._store.selectSnapshot(ResourceSelectors.attachedUsers);
+        this.resourceAttachedUser = attachedUsers[resource.res.id].value.find(
+          u => u.id === resource.res.attachedToUser
+        );
+      });
+    this._store.dispatch([
+      new GetAttachedUserAction(resource.res.id, resource.res.attachedToUser),
+      new GetAttachedProjectAction(resource.res.id, resource.res.attachedToProject),
+    ]);
   }
 }
