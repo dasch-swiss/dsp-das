@@ -7,7 +7,57 @@
   <div class="resource-view" *ngIf="resource">
     <!-- dsp-resource-representation -->
     <div class="resource-header">
-      <p class="resource-class-label">{{resourceClassLabel(resource)}}</p>
+      <div class="resource-class-header">
+        <h3>{{resourceClassLabel(resource)}}<span *ngIf="resource.res.isDeleted">(deleted)</span></h3>
+        <span class="action" *ngIf="project$ | async" [class.deleted]="resource.res.isDeleted">
+          <!-- Share resource: copy ark url, add to favorites or open in new tab -->
+          <button
+            color="primary"
+            mat-icon-button
+            class="share-res"
+            matTooltip="Share resource: {{resource.res.versionArkUrl}}"
+            matTooltipPosition="above"
+            [disabled]="resource.res.isDeleted"
+            [matMenuTriggerFor]="share">
+            <mat-icon>share</mat-icon>
+            <!-- <span class="desktop-only">Citation Link</span> -->
+          </button>
+          <mat-menu #share="matMenu" class="res-share-menu">
+            <button
+              mat-menu-item
+              matTooltip="Copy ARK url"
+              matTooltipPosition="above"
+              [cdkCopyToClipboard]="resource.res.versionArkUrl"
+              (click)="notification.openSnackBar('ARK URL copied to clipboard!')">
+              <mat-icon>content_copy</mat-icon>
+              Copy ARK url to clipboard
+            </button>
+            <button
+              mat-menu-item
+              matTooltip="Copy internal link"
+              matTooltipPosition="above"
+              [cdkCopyToClipboard]="resource.res.id"
+              (click)="notification.openSnackBar('Internal link copied to clipboard!')">
+              <mat-icon>content_copy</mat-icon>
+              Copy internal link to clipboard
+            </button>
+            <button
+              mat-menu-item
+              matTooltip="Open in new tab"
+              matTooltipPosition="above"
+              (click)="openResource(resource.res.id)">
+              <mat-icon>open_in_new</mat-icon>
+              Open resource in new tab
+            </button>
+            <!-- TODO: activate favorite action to add resource to collection -->
+            <!--
+                <button mat-button class="add-res-to-collection">
+                    <mat-icon>star_border</mat-icon>
+                </button>
+                -->
+          </mat-menu>
+        </span>
+      </div>
       <p class="resource-label">{{resourceLabel(incomingResource, resource)}}</p>
       <div class="infobar mat-caption" *ngIf="(project$ | async) as project">
         Resource of the project
@@ -114,11 +164,15 @@
         [(selectedIndex)]="selectedTab"
         (selectedTabChange)="tabChanged($event)">
         <!-- first tab for the main resource e.g. book -->
-        <mat-tab [label]="'appLabels.resource.properties' | translate">
+        <mat-tab #matTabProperties>
+          <ng-template mat-tab-label>
+            <ng-container
+              *ngTemplateOutlet="toggleShowAllPropsButtonTemplate; context: { label: 'appLabels.resource.properties' | translate, isActive: matTabProperties.isActive }">
+            </ng-container>
+          </ng-template>
           <app-properties
             *ngIf="resource.res"
             [resource]="resource"
-            [displayProjectInfo]="true"
             [attachedUser]="resourceAttachedUser"
             [attachedProject]="project$ | async"
             [adminPermissions]="isAdmin$ | async"
@@ -127,11 +181,15 @@
         </mat-tab>
 
         <!-- incoming resource -->
-        <mat-tab *ngIf="incomingResource" [label]="resourceClassLabel(incomingResource)">
+        <mat-tab *ngIf="incomingResource" #matTabIncoming>
+          <ng-template mat-tab-label>
+            <ng-container
+              *ngTemplateOutlet="toggleShowAllPropsButtonTemplate; context: { label: resourceClassLabel(incomingResource), isActive: matTabIncoming.isActive }">
+            </ng-container>
+          </ng-template>
           <app-properties
             *ngIf="incomingResource.res"
             [resource]="incomingResource"
-            [displayProjectInfo]="false"
             [adminPermissions]="isAdmin$ | async"
             [attachedUser]="resourceAttachedUser"
             [attachedProject]="project$ | async"
@@ -159,7 +217,6 @@
             [class.active]="annotation.res.id === selectedRegion">
             <app-properties
               [resource]="annotation"
-              [displayProjectInfo]="false"
               [isAnnotation]="true"
               [adminPermissions]="isAdmin$ | async"
               [attachedUser]="resourceAttachedUser"
@@ -175,7 +232,6 @@
         <app-properties
           *ngIf="resource.res"
           [resource]="resource"
-          [displayProjectInfo]="true"
           [attachedUser]="resourceAttachedUser"
           [attachedProject]="project$ | async"
           [adminPermissions]="isAdmin$ | async"
@@ -202,3 +258,19 @@
     </ul>
   </div>
 </div>
+
+<ng-template #toggleShowAllPropsButtonTemplate let-label="label" let-isActive="isActive">
+  <span>{{label}}</span>
+  <!-- Toggle list of properties: all or only the ones with value -->
+  <button
+    color="primary"
+    mat-icon-button
+    class="toggle-props"
+    *ngIf="!resource.res.isDeleted && isActive"
+    [matTooltip]="((showAllProps$ | async) ? 'Hide empty' : 'Show all')+' properties'"
+    matTooltipPosition="above"
+    (click)="toggleShowAllProps()">
+    <mat-icon>{{(showAllProps$ | async) ? 'unfold_less' : 'unfold_more'}}</mat-icon>
+    <!-- <span class="desktop-only">{{showAllProps ? 'Hide empty' : 'Show all'}} properties</span> -->
+  </button>
+</ng-template>

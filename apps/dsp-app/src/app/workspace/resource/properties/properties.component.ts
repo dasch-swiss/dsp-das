@@ -45,7 +45,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { LoadClassItemsCountAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { Observable, Subject, Subscription, forkJoin } from 'rxjs';
 import { ConfirmationWithComment, DialogComponent } from '../../../main/dialog/dialog.component';
 import { DspResource } from '../dsp-resource';
@@ -82,12 +82,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
    * complete information about the current resource
    */
   @Input() resource: DspResource;
-
-  /**
-   * input `displayProjectInfo` of properties component:
-   * display project info or not; "This resource belongs to project XYZ"
-   */
-  @Input() displayProjectInfo = false;
 
   /**
    * does the logged-in user has system or project admin permissions?
@@ -157,7 +151,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   pageEvent: PageEvent;
   loading = false;
 
-  showAllProps = false; // show or hide empty properties
+  @Select(ResourceSelectors.showAllProps) showAllProps$: Observable<boolean>;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -172,8 +166,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     private _sortingService: SortingService,
     private _cd: ChangeDetectorRef,
     private _store: Store,
-    private _ontologyService: OntologyService,
-    private _actions$: Actions
+    private _ontologyService: OntologyService
   ) {}
 
   ngOnInit(): void {
@@ -230,13 +223,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         this.deleteValueFromResource(deletedValue.deletedValue);
       })
     );
-
-    // keep the information if the user wants to display all properties or not
-    if (localStorage.getItem('showAllProps')) {
-      this.showAllProps = JSON.parse(localStorage.getItem('showAllProps'));
-    } else {
-      localStorage.setItem('showAllProps', JSON.stringify(this.showAllProps));
-    }
   }
 
   ngOnChanges(): void {
@@ -514,11 +500,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       console.warn('No properties exist for this resource');
     }
-  }
-
-  toggleAllProps(status: boolean) {
-    this.showAllProps = !status;
-    localStorage.setItem('showAllProps', JSON.stringify(this.showAllProps));
   }
 
   private _onResourceDeleted(response: DeleteResourceResponse) {

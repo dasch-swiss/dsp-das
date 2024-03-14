@@ -37,6 +37,7 @@ import {
   GetAttachedProjectAction,
   GetAttachedUserAction,
   ResourceSelectors,
+  ToggleShowAllPropsAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
@@ -108,8 +109,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   // this will store the current page position information
   compoundPosition: DspCompoundPosition;
 
-  showAllProps = false;
-
   loading = true;
 
   refresh: boolean;
@@ -132,6 +131,8 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
   resourceAttachedUser: ReadUser;
 
+  notification = this._notification;
+
   get isAdmin$(): Observable<boolean> {
     return combineLatest([this.user$, this.userProjectAdminGroups$]).pipe(
       takeUntil(this.ngUnsubscribe),
@@ -143,6 +144,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     );
   }
 
+  @Select(ResourceSelectors.showAllProps) showAllProps$: Observable<boolean>;
   @Select(UserSelectors.user) user$: Observable<ReadUser>;
   @Select(UserSelectors.userProjectAdminGroups) userProjectAdminGroups$: Observable<string[]>;
 
@@ -424,6 +426,10 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
   previewProject() {
     // --> TODO: pop up project preview on hover
+  }
+
+  toggleShowAllProps() {
+    this._store.dispatch(new ToggleShowAllPropsAction());
   }
 
   /**
@@ -709,6 +715,16 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     if (this.stillImageComponent !== undefined) {
       this.stillImageComponent.updateRegions();
     }
+  }
+
+  /**
+   * opens resource
+   * @param linkValue
+   */
+  openResource(linkValue: ReadLinkValue | string) {
+    const iri = typeof linkValue == 'string' ? linkValue : linkValue.linkedResourceIri;
+    const path = this._resourceService.getResourcePath(iri);
+    window.open(`/resource${path}`, '_blank');
   }
 
   private getResourceAttachedData(resource: DspResource): void {
