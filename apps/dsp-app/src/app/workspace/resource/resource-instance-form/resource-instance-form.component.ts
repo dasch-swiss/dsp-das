@@ -14,6 +14,7 @@ import {
   CreateListValue,
   CreateResource,
   CreateTextValueAsString,
+  CreateTimeValue,
   CreateUriValue,
   IHasPropertyWithPropertyDefinition,
   KnoraApiConnection,
@@ -203,6 +204,12 @@ export class ResourceInstanceFormComponent implements OnInit {
           const dateOrPeriod = control.value;
           populateValue(newDateValue, dateOrPeriod);
           return newDateValue;
+        });
+      case Constants.TimeValue:
+        return controls.map(control => {
+          const newTimeValue = new CreateTimeValue();
+          newTimeValue.time = control.value;
+          return newTimeValue;
         });
       case Constants.ColorValue:
         return controls.map(control => {

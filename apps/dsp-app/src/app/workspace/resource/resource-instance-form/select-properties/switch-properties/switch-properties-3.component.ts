@@ -136,7 +136,7 @@ export class SwitchProperties3Component implements AfterViewInit {
       case Constants.DateValue:
         return { template: this.dateTpl, newValue: '' };
       case Constants.TimeValue:
-        return { template: this.timeTpl, newValue: '' };
+        return { template: this.timeTpl, newValue: { date: null, time: null } };
       case Constants.ListValue:
         return { template: this.listTpl, newValue: null };
       case Constants.GeonameValue:
