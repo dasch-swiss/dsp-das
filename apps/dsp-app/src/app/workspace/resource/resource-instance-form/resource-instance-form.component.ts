@@ -175,7 +175,9 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   private getValue(iri) {
     const controls = this.dynamicForm.controls[iri].controls;
-    return propertiesTypeMapping.get(this.mapping.get(iri)).mapping(controls.value);
+    return controls.map(control => {
+      return propertiesTypeMapping.get(this.mapping.get(iri)).mapping(control.value);
+    });
   }
 
   private getProperties() {
