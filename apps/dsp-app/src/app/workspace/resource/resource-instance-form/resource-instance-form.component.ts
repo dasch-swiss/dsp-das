@@ -27,6 +27,7 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/resource-instance-form/component-host.directive';
+import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import { populateValue } from '@dsp-app/src/app/workspace/resource/values/date-value/populate-value-method';
 import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/values/link-value/temp-link-value.service';
 import { Store } from '@ngxs/store';
@@ -174,82 +175,7 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   private getValue(iri) {
     const controls = this.dynamicForm.controls[iri].controls;
-    switch (this.mapping.get(iri)) {
-      case Constants.IntValue:
-        return controls.map(control => {
-          const newIntValue = new CreateIntValue();
-          newIntValue.int = control.value;
-          return newIntValue;
-        });
-      case Constants.DecimalValue:
-        return controls.map(control => {
-          const newDecimalValue = new CreateDecimalValue();
-          newDecimalValue.decimal = control.value;
-          return newDecimalValue;
-        });
-      case Constants.BooleanValue:
-        return controls.map(control => {
-          const newBooleanValue = new CreateBooleanValue();
-          newBooleanValue.bool = control.value;
-          return newBooleanValue;
-        });
-      case Constants.TextValue:
-        return controls.map(control => {
-          const newTextValue = new CreateTextValueAsString();
-          newTextValue.text = control.value;
-          return newTextValue;
-        });
-      case Constants.DateValue:
-        return controls.map(control => {
-          const newDateValue = new CreateDateValue();
-          const dateOrPeriod = control.value;
-          populateValue(newDateValue, dateOrPeriod);
-          return newDateValue;
-        });
-      case Constants.TimeValue:
-        return controls.map(control => {
-          const newTimeValue = new CreateTimeValue();
-          newTimeValue.time = control.value;
-          return newTimeValue;
-        });
-      case Constants.IntervalValue:
-        return controls.map(control => {
-          const newIntervalValue = new CreateIntervalValue();
-          newIntervalValue.start = control.value.start;
-          newIntervalValue.end = control.value.end;
-          return newIntervalValue;
-        });
-      case Constants.ColorValue:
-        return controls.map(control => {
-          const newColorValue = new CreateColorValue();
-          newColorValue.color = control.value;
-          return newColorValue;
-        });
-      case Constants.ListValue:
-        return controls.map(control => {
-          const newListValue = new CreateListValue();
-          newListValue.listNode = control.value;
-          return newListValue;
-        });
-      case Constants.GeonameValue:
-        return controls.map(control => {
-          const newGeonameValue = new CreateGeonameValue();
-          newGeonameValue.geoname = control.value;
-          return newGeonameValue;
-        });
-      case Constants.LinkValue:
-        return controls.map(control => {
-          const newLinkValue = new CreateLinkValue();
-          newLinkValue.linkedResourceIri = control.value;
-          return newLinkValue;
-        });
-      case Constants.UriValue:
-        return controls.map(control => {
-          const newUriValue = new CreateUriValue();
-          newUriValue.uri = control.value;
-          return newUriValue;
-        });
-    }
+    return propertiesTypeMapping.get(this.mapping.get(iri)).mapping(controls.value);
   }
 
   private getProperties() {
