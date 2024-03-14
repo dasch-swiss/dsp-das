@@ -5,6 +5,7 @@ import {
   Constants,
   CreateBooleanValue,
   CreateColorValue,
+  CreateDateValue,
   CreateDecimalValue,
   CreateFileValue,
   CreateGeonameValue,
@@ -24,6 +25,7 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/resource-instance-form/component-host.directive';
+import { populateValue } from '@dsp-app/src/app/workspace/resource/values/date-value/populate-value-method';
 import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/values/link-value/temp-link-value.service';
 import { Store } from '@ngxs/store';
 import { switchMap, take, tap } from 'rxjs/operators';
@@ -195,7 +197,13 @@ export class ResourceInstanceFormComponent implements OnInit {
           newTextValue.text = control.value;
           return newTextValue;
         });
-      // TODO case Date
+      case Constants.DateValue:
+        return controls.map(control => {
+          const newDateValue = new CreateDateValue();
+          const dateOrPeriod = control.value;
+          populateValue(newDateValue, dateOrPeriod);
+          return newDateValue;
+        });
       case Constants.ColorValue:
         return controls.map(control => {
           const newColorValue = new CreateColorValue();
