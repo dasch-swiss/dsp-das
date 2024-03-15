@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -6,5 +6,5 @@ import { FormControl } from '@angular/forms';
   template: ' <mat-slide-toggle [formControl]="control"></mat-slide-toggle>',
 })
 export class BooleanValue2Component {
-  @Input() control: FormControl<boolean>;
+  @Input() control!: FormControl<boolean>;
 }

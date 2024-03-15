@@ -7,6 +7,6 @@ import { FormControl } from '@angular/forms';
     '<app-common-input [control]="control" placeholder="External link" [validatorErrors]="[emailError]"></app-common-input>',
 })
 export class UriValue2Component {
-  @Input() control: FormControl<string>;
+  @Input() control!: FormControl<string>;
   readonly emailError = { errorKey: 'pattern', message: 'This is not a valid link.' };
 }
