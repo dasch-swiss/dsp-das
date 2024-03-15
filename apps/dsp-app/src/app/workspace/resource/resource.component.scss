@@ -41,6 +41,25 @@
   margin-bottom: 24px;
 }
 
+.resource-label {
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: row;
+  align-items: left;
+  justify-content: space-between;
+
+  h4 {
+    display: inline-block;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 16px;
+    margin-bottom: 0;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    padding-top: 16px;
+  }
+}
+
 .resource-class-header {
   display: flex;
   box-sizing: border-box;
@@ -54,6 +73,7 @@
     font-size: 18px;
     font-weight: normal;
     letter-spacing: 1.25px;
+    margin-block-end: 0em;
   }
 
   .action {
@@ -63,13 +83,6 @@
       border-radius: 0;
     }
   }
-}
-
-.resource-label {
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 16px;
-  margin-bottom: 0;
 }
 
 .infobar {

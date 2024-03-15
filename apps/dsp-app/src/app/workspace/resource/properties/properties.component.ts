@@ -44,10 +44,14 @@ import {
   SortingService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { LoadClassItemsCountAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import {
+  LoadClassItemsCountAction,
+  ResourceSelectors,
+  ToggleShowAllPropsAction,
+} from '@dasch-swiss/vre/shared/app-state';
+import { ConfirmationWithComment, DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject, Subscription, forkJoin } from 'rxjs';
-import { ConfirmationWithComment, DialogComponent } from '../../../main/dialog/dialog.component';
 import { DspResource } from '../dsp-resource';
 import { RepresentationConstants } from '../representation/file-representation';
 import { IncomingService } from '../services/incoming.service';
@@ -94,6 +98,8 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
    */
   @Input() isAnnotation = false;
 
+  @Input() showResourceToolbar = false;
+
   @Input() valueUuidToHighlight: string;
 
   @Input() attachedUser: ReadUser;
@@ -129,7 +135,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
 
   readonly amount_resources = 25;
 
-  lastModificationDate: string;
+  @Input() lastModificationDate: string;
 
   deletedResource = false;
 
@@ -156,15 +162,15 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _dialog: MatDialog,
     private _incomingService: IncomingService,
     private _notification: NotificationService,
     private _resourceService: ResourceService,
     private _valueOperationEventService: ValueOperationEventService,
     private _valueService: ValueService,
-    private _componentCommsService: ComponentCommunicationEventService,
     private _sortingService: SortingService,
     private _cd: ChangeDetectorRef,
+    private _componentCommsService: ComponentCommunicationEventService,
+    private _dialog: MatDialog,
     private _store: Store,
     private _ontologyService: OntologyService
   ) {}
@@ -277,6 +283,10 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
 
   previewResource() {
     // --> TODO: pop up resource preview on hover
+  }
+
+  toggleShowAllProps() {
+    this._store.dispatch(new ToggleShowAllPropsAction());
   }
 
   openDialog(type: 'delete' | 'erase' | 'edit') {
@@ -505,7 +515,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   private _onResourceDeleted(response: DeleteResourceResponse) {
     // display notification and mark resource as 'erased'
     this._notification.openSnackBar(`${response.result}: ${this.resource.res.label}`);
-    this.deletedResource = true;
     const attachedProject = this._store.selectSnapshot(ResourceSelectors.attachedProjects);
     const project = attachedProject[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToProject);
     const ontologyIri = this._ontologyService.getOntologyIriFromRoute(project?.shortcode);
@@ -514,9 +523,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceDeleted));
     // if it is an Annotation/Region which has been erases, we emit the
     // regionChanged event, in order to refresh the page
-    if (this.isAnnotation) {
-      this.regionDeleted.emit();
-    }
+    this.regionDeleted.emit();
 
     this._cd.markForCheck();
   }
