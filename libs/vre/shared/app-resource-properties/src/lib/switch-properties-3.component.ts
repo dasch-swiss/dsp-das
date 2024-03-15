@@ -84,28 +84,28 @@ import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-r
   ],
 })
 export class SwitchProperties3Component implements AfterViewInit {
-  @Input() propertyDefinition: PropertyDefinition;
-  @Input() cardinality: Cardinality;
-  @Input() formArray: FormArray;
-  @Input() property: IHasPropertyWithPropertyDefinition; // TODO remove later ?
+  @Input() propertyDefinition!: PropertyDefinition;
+  @Input() cardinality!: Cardinality;
+  @Input() formArray!: FormArray;
+  @Input() property!: IHasPropertyWithPropertyDefinition; // TODO remove later ?
 
-  @ViewChild('intTpl') intTpl: TemplateRef<any>;
-  @ViewChild('decimalTpl') decimalTpl: TemplateRef<any>;
-  @ViewChild('booleanTpl') booleanTpl: TemplateRef<any>;
-  @ViewChild('colorTpl') colorTpl: TemplateRef<any>;
-  @ViewChild('textTpl') textTpl: TemplateRef<any>;
-  @ViewChild('dateTpl') dateTpl: TemplateRef<any>;
-  @ViewChild('timeTpl') timeTpl: TemplateRef<any>;
-  @ViewChild('intervalTpl') intervalTpl: TemplateRef<any>;
-  @ViewChild('listTpl') listTpl: TemplateRef<any>;
-  @ViewChild('geoNameTpl') geoNameTpl: TemplateRef<any>;
-  @ViewChild('linkTpl') linkTpl: TemplateRef<any>;
-  @ViewChild('uriTpl') uriTpl: TemplateRef<any>;
-  @ViewChild('defaultTpl') defaultTpl: TemplateRef<any>;
+  @ViewChild('intTpl') intTpl!: TemplateRef<any>;
+  @ViewChild('decimalTpl') decimalTpl!: TemplateRef<any>;
+  @ViewChild('booleanTpl') booleanTpl!: TemplateRef<any>;
+  @ViewChild('colorTpl') colorTpl!: TemplateRef<any>;
+  @ViewChild('textTpl') textTpl!: TemplateRef<any>;
+  @ViewChild('dateTpl') dateTpl!: TemplateRef<any>;
+  @ViewChild('timeTpl') timeTpl!: TemplateRef<any>;
+  @ViewChild('intervalTpl') intervalTpl!: TemplateRef<any>;
+  @ViewChild('listTpl') listTpl!: TemplateRef<any>;
+  @ViewChild('geoNameTpl') geoNameTpl!: TemplateRef<any>;
+  @ViewChild('linkTpl') linkTpl!: TemplateRef<any>;
+  @ViewChild('uriTpl') uriTpl!: TemplateRef<any>;
+  @ViewChild('defaultTpl') defaultTpl!: TemplateRef<any>;
 
-  itemTpl: TemplateRef<any>;
+  itemTpl!: TemplateRef<any>;
   newValue: any;
-  validators: ValidatorFn[];
+  validators: ValidatorFn[] | undefined;
 
   get resPropDef() {
     return this.propertyDefinition as ResourcePropertyDefinition;

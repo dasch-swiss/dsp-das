@@ -6,5 +6,5 @@ import { FormControl, FormGroup } from '@angular/forms';
   template: ' <app-time-input #timeInput [formControl]="control"></app-time-input> ',
 })
 export class TimeValue2Component {
-  @Input() control: FormControl<{ date: any; time: any }>;
+  @Input() control!: FormControl<{ date: any; time: any }>;
 }

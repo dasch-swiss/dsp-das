@@ -21,9 +21,9 @@ import { Cardinality } from '@dasch-swiss/dsp-js';
     </button>`,
 })
 export class NuListComponent {
-  @Input() itemTpl: TemplateRef<any>;
-  @Input() formArray: FormArray;
-  @Input() cardinality: Cardinality;
+  @Input() itemTpl!: TemplateRef<any>;
+  @Input() formArray!: FormArray;
+  @Input() cardinality!: Cardinality;
   @Output() addItem = new EventEmitter();
 
   protected readonly Cardinality = Cardinality;
