@@ -16,13 +16,8 @@
     justify-content: space-between;
     align-items: center;
 
-    .title,
-    .create-project-button {
+    .title {
       display: inline-block;
-    }
-
-    .create-project-button {
-      @include mat.button-typography(t.$dsp-typography-config);
     }
   }
 
@@ -65,8 +60,7 @@
       display: block;
       padding-bottom: 5%;
 
-      .title,
-      .create-project-button {
+      .title {
         display: block;
       }
     }
