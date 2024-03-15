@@ -15,10 +15,10 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/resource-instance-form/component-host.directive';
-import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
-import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/values/link-value/temp-link-value.service';
 import { Store } from '@ngxs/store';
 import { switchMap, take, tap } from 'rxjs/operators';
+import { propertiesTypeMapping } from '../../../../../../../libs/vre/shared/app-resource-properties/src/lib/resource-payloads-mapping';
+import { TempLinkValueService } from '../../../../../../../libs/vre/shared/app-resource-properties/src/lib/temp-link-value.service';
 import { ResourceService } from '../services/resource.service';
 import { SelectPropertiesComponent } from './select-properties/select-properties.component';
 

@@ -14,7 +14,7 @@ import {
   CreateTimeValue,
   CreateUriValue,
 } from '@dasch-swiss/dsp-js';
-import { populateValue } from '@dsp-app/src/app/workspace/resource/values/date-value/populate-value-method';
+import { populateValue } from './populate-value-method';
 
 export const propertiesTypeMapping = new Map<string, { newValue: any; mapping: (value: any) => any }>([
   [

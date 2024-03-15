@@ -40,8 +40,6 @@ import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/reso
 import { PropertyItemComponent } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/property-item.component';
 import { IntValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-2.component';
 import { SwitchProperties2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-2.component';
-import { GeonameValue2Component } from '@dsp-app/src/app/workspace/resource/values/geoname-value/geoname-value-2.component';
-import { LinkValue2Component } from '@dsp-app/src/app/workspace/resource/values/link-value/link-value-2.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -50,10 +48,6 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { ColorValue2Component } from '../../../../libs/vre/shared/app-resource-properties/src/lib/color-value-2.component';
-import { ListValue2Component } from '../../../../libs/vre/shared/app-resource-properties/src/lib/list-value-2.component';
-import { NestedMenuComponent } from '../../../../libs/vre/shared/app-resource-properties/src/lib/nested-menu.component';
-import { NuListComponent } from '../../../../libs/vre/shared/app-resource-properties/src/lib/nu-list.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmDialogComponent } from './main/action/confirm-dialog/confirm-dialog.component';
@@ -226,7 +220,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ComponentHostDirective,
     ColorPickerComponent,
     ColorValueComponent,
-    ColorValue2Component,
     CommentFormComponent,
     CommonInputComponent,
     ComparisonComponent,
@@ -251,7 +244,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     FormattedBooleanPipe,
     FulltextSearchComponent,
     GeonameValueComponent,
-    GeonameValue2Component,
     GridComponent,
     HeaderComponent,
     HelpComponent,
@@ -277,13 +269,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ListItemElementComponent,
     ListItemFormComponent,
     ListValueComponent,
-    ListValue2Component,
     ListViewComponent,
-    LinkValue2Component,
     LoginFormComponent,
     MembershipComponent,
-    NuListComponent,
-    NestedMenuComponent,
     OntologyComponent,
     OntologyFormComponent,
     PasswordFormComponent,

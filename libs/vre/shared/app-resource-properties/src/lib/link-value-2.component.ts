@@ -3,8 +3,8 @@ import { FormControl } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { KnoraApiConnection, ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/values/link-value/temp-link-value.service';
 import { filter, switchMap } from 'rxjs/operators';
+import { TempLinkValueService } from './temp-link-value.service';
 
 @Component({
   selector: 'app-link-value-2',
