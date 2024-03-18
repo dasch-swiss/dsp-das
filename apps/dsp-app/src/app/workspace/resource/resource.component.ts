@@ -465,6 +465,8 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
   resourceClassLabel = (resource: DspResource): string => resource.res.entityInfo?.classes[resource.res.type].label;
 
+  resourceClassTooltip = (resource: DspResource): string => resource.res.entityInfo?.classes[resource.res.type].comment;
+
   resourceLabel = (incomingResource: DspResource, resource: DspResource): string =>
     incomingResource ? resource.res.label + ': ' + incomingResource.res.label : resource.res.label;
 

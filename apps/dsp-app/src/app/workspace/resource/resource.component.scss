@@ -67,6 +67,10 @@
   align-items: left;
   justify-content: space-between;
 
+  h3.label-info {
+    cursor: help;
+  }
+
   h3 {
     display: inline-block;
     text-transform: uppercase;
