@@ -240,6 +240,9 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     if (this.valueOperationEventSubscriptions !== undefined) {
       this.valueOperationEventSubscriptions.forEach(sub => sub.unsubscribe());
     }
+
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   trackByFn = (index: number, item: ReadResource) => `${index}-${item.id}`;
@@ -411,6 +414,10 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
    * @param valueToAdd the value to add to the end of the values array of the filtered property
    */
   addValueToResource(valueToAdd: ReadValue): void {
+    if (!valueToAdd.id.includes(this.resource.res.id)) {
+      return;
+    }
+
     if (this.resource.resProps) {
       this.resource.resProps
         .filter(propInfoValueArray => propInfoValueArray.propDef.id === valueToAdd.property) // filter to the correct property
@@ -515,9 +522,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   private _onResourceDeleted(response: DeleteResourceResponse) {
     // display notification and mark resource as 'erased'
     this._notification.openSnackBar(`${response.result}: ${this.resource.res.label}`);
-    const attachedProject = this._store.selectSnapshot(ResourceSelectors.attachedProjects);
-    const project = attachedProject[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToProject);
-    const ontologyIri = this._ontologyService.getOntologyIriFromRoute(project?.shortcode);
+    const ontologyIri = this._ontologyService.getOntologyIriFromRoute(this.attachedProject.shortcode);
     const classId = this.resource.res.entityInfo.classes[this.resource.res.type]?.id;
     this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
     this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceDeleted));
