@@ -1,0 +1,8 @@
+<img *ngIf="previewImageUrl" [src]="previewImageUrl" alt="IIIF Preview" height="360" />
+<form *ngIf="form" [formGroup]="form" style="display: flex; flex-direction: row">
+  <button mat-icon-button (click)="pasteFromClipboard()"><mat-icon>content_paste</mat-icon></button>
+  <app-common-input
+    [control]="form.controls.url"
+    [placeholder]="'Iiif image url'"
+    [validatorErrors]="[invalidIiifUrl, previewImageError, infoJsonError]"></app-common-input>
+</form>
