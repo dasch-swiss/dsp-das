@@ -9,10 +9,10 @@
     <div class="resource-header">
       <div class="resource-class-header">
         <h3
-          [class.label-info]="resourceClassTooltip(resource)"
-          [matTooltip]="resourceClassTooltip(resource)"
+          [class.label-info]="resourceClassType?.comment"
+          [matTooltip]="resourceClassType?.comment"
           matTooltipPosition="above">
-          {{resourceClassLabel(resource)}}<span *ngIf="resource.res.isDeleted">(deleted)</span>
+          {{resourceClassType?.label}}<span *ngIf="resource.res.isDeleted">(deleted)</span>
         </h3>
         <span class="action" *ngIf="project$ | async" [class.deleted]="resource.res.isDeleted">
           <!-- Share resource: copy ark url, add to favorites or open in new tab -->

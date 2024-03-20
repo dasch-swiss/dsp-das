@@ -35,6 +35,7 @@ import {
   ReadTextFileValue,
   ReadUser,
   ReadValue,
+  ResourceClassDefinitionWithPropertyDefinition,
   SystemPropertyDefinition,
   UpdateResourceMetadata,
   UpdateResourceMetadataResponse,
@@ -184,6 +185,10 @@ export class ResourceComponent implements OnChanges, OnDestroy {
           : false;
       })
     );
+  }
+
+  get resourceClassType(): ResourceClassDefinitionWithPropertyDefinition {
+    return this.resource.res.entityInfo.classes[this.resource.res.type];
   }
 
   @Select(ResourceSelectors.showAllProps) showAllProps$: Observable<boolean>;
@@ -464,8 +469,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   }
 
   resourceClassLabel = (resource: DspResource): string => resource.res.entityInfo?.classes[resource.res.type].label;
-
-  resourceClassTooltip = (resource: DspResource): string => resource.res.entityInfo?.classes[resource.res.type].comment;
 
   resourceLabel = (incomingResource: DspResource, resource: DspResource): string =>
     incomingResource ? resource.res.label + ': ' + incomingResource.res.label : resource.res.label;
@@ -850,7 +853,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     const attachedProject = this._store.selectSnapshot(ResourceSelectors.attachedProjects);
     const project = attachedProject[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToProject);
     const ontologyIri = this._ontologyService.getOntologyIriFromRoute(project?.shortcode);
-    const classId = this.resource.res.entityInfo.classes[this.resource.res.type]?.id;
+    const classId = this.resourceClassType?.id;
     this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
     this._componentCommsService.emit(new EmitEvent(Events.resourceDeleted));
     // if it is an Annotation/Region which has been erases, we emit the
