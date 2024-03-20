@@ -13,6 +13,10 @@
     white-space: pre-wrap;
   }
 
+  .rm-value.list:has(.hierarchy:only-child) .last {
+    font-weight: normal;
+  }
+
   .rm-value.list,
   .rm-value .hierarchy {
     display: inline-flex;
