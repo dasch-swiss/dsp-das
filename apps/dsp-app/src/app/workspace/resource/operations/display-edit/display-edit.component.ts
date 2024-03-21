@@ -83,6 +83,7 @@ export class DisplayEditComponent implements OnInit {
 
   mode: 'read' | 'update' | 'create' | 'search';
   canModify: boolean;
+  canReadComments: boolean;
   editModeActive = false;
   submittingValue = false;
   shouldShowCommentToggle: boolean;
@@ -123,6 +124,7 @@ export class DisplayEditComponent implements OnInit {
     );
 
     this.canModify = allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
+    this.canReadComments = true; // allPermissions.indexOf(PermissionUtil.Permissions.RV) === -1; // TODO permissions to show comments should be provided
 
     // check if comment toggle button should be shown
     this.checkCommentToggleVisibility();

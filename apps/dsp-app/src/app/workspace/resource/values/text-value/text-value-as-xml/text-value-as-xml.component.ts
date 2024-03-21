@@ -24,9 +24,10 @@ import { ckEditor } from '../ck-editor';
 })
 export class TextValueAsXMLComponent extends BaseValueDirective implements OnInit, OnChanges, OnDestroy {
   @Input() displayValue?: ReadTextValueAsXml;
+  @Input() shouldShowCommentToggle: boolean = false;
 
   @Output() internalLinkClicked: EventEmitter<string> = new EventEmitter<string>();
-
+  @Output() toggleCommentClicked: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() internalLinkHovered: EventEmitter<string> = new EventEmitter<string>();
 
   readonly standardMapping = Constants.StandardMapping; // todo: define this somewhere else
@@ -128,6 +129,10 @@ export class TextValueAsXMLComponent extends BaseValueDirective implements OnIni
     }
 
     return updatedTextValue;
+  }
+
+  toggleComment() {
+    this.toggleCommentClicked.emit();
   }
 
   /**
