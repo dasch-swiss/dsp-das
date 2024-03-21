@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
 @use '../../../styles/config' as *;
 @use '../../../styles/typography' as t;
+@use '../../../styles/responsive' as *;
 
 .project-tile {
   :hover {
@@ -25,7 +26,7 @@
     }
     .title-text {
       font-weight: 500;
-      font-size: 16px;
+      font-size: 18px;
       color: $black;
       display: -webkit-box;
       -webkit-line-clamp: 8;
@@ -35,6 +36,16 @@
       text-overflow: ellipsis;
       line-height: 24px;
       margin: 0;
+    }
+  }
+}
+
+@media (max-width: map-get($grid-breakpoints, notebook)) {
+  .project-tile {
+    .title {
+      p.title-text {
+        font-size: 16px;
+      }
     }
   }
 }

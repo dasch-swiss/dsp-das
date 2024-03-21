@@ -6,7 +6,7 @@
   .title-bar {
     .title {
       font-weight: 700;
-      font-size: 24px;
+      font-size: 20px;
       line-height: 28px;
     }
   }
@@ -34,14 +34,14 @@
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: map-get($grid-breakpoints, notebook)) {
   .overview .project-tiles {
     grid-template-columns: 30% 30% 30%;
     grid-column-gap: 5%;
   }
 }
 
-@media (max-width: 840px) {
+@media (max-width: map-get($grid-breakpoints, tablet)) {
   .overview {
     padding: 5%;
 
@@ -52,7 +52,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: map-get($grid-breakpoints, phone)) {
   .overview {
     padding: 10%;
 

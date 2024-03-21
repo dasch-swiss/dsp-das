@@ -1,7 +1,10 @@
 @use '../../../styles/config' as *;
+@use '../../../styles/responsive' as *;
 
 .representation-container {
   width: 100%;
+  margin-bottom: 64px;
+  min-width: 500px;
 }
 
 .previousBtn {
@@ -52,11 +55,15 @@
     display: inline-block;
     font-weight: 500;
     font-size: 18px;
-    line-height: 18px;
+    line-height: 22px;
     margin-bottom: 0;
     margin-block-start: 0;
     margin-block-end: 0;
     padding-top: 16px;
+  }
+
+  button {
+    margin-left: 14px;
   }
 }
 
@@ -74,7 +81,7 @@
   h3 {
     display: inline-block;
     text-transform: uppercase;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: normal;
     letter-spacing: 1.25px;
     margin-block-end: 0em;
@@ -91,12 +98,13 @@
 }
 
 .infobar {
+  margin-top: 10px;
   box-sizing: border-box;
   white-space: nowrap;
   color: rgba(0, 0, 0, 0.87);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: map-get($grid-breakpoints, notebook)) {
   .previousBtn {
     margin: 12px auto 0 12px;
     // position: relative;
