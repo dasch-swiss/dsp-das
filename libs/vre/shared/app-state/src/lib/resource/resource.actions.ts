@@ -16,3 +16,9 @@ export class GetAttachedProjectAction {
     public projectIri: string
   ) {}
 }
+
+export class ToggleShowAllPropsAction {
+  static readonly type = '[Resource] Toggle Show All Properties';
+
+  constructor() {}
+}

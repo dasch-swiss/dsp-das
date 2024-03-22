@@ -70,6 +70,13 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
   loadingResults = false;
   showNoResultsMessage = false;
 
+  get linkLabel() {
+    const prepend = this.displayValue.property.includes(Constants.HasStandoffLinkToValue)
+      ? `${this.valueFormControl.value?.resourceClassLabel}:`
+      : '';
+    return `${prepend}${this.valueFormControl.value?.label}`;
+  }
+
   constructor(
     private _dialog: MatDialog,
     @Inject(FormBuilder) protected _fb: FormBuilder,

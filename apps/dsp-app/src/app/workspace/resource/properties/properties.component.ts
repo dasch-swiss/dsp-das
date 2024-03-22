@@ -32,7 +32,6 @@ import {
   ReadUser,
   ReadValue,
   ResourcePropertyDefinition,
-  StoredProject,
   UpdateResourceMetadata,
   UpdateResourceMetadataResponse,
 } from '@dasch-swiss/dsp-js';
@@ -42,21 +41,17 @@ import {
   ComponentCommunicationEventService,
   EmitEvent,
   OntologyService,
-  ProjectService,
   SortingService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
-  GetAttachedProjectAction,
-  GetAttachedUserAction,
   LoadClassItemsCountAction,
-  ProjectsSelectors,
   ResourceSelectors,
+  ToggleShowAllPropsAction,
 } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
+import { ConfirmationWithComment, DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
+import { Select, Store } from '@ngxs/store';
 import { Observable, Subject, Subscription, forkJoin } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { ConfirmationWithComment, DialogComponent } from '../../../main/dialog/dialog.component';
 import { DspResource } from '../dsp-resource';
 import { RepresentationConstants } from '../representation/file-representation';
 import { IncomingService } from '../services/incoming.service';
@@ -93,12 +88,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   @Input() resource: DspResource;
 
   /**
-   * input `displayProjectInfo` of properties component:
-   * display project info or not; "This resource belongs to project XYZ"
-   */
-  @Input() displayProjectInfo = false;
-
-  /**
    * does the logged-in user has system or project admin permissions?
    */
   @Input() adminPermissions = false;
@@ -109,7 +98,12 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
    */
   @Input() isAnnotation = false;
 
+  @Input() showResourceToolbar = false;
+
   @Input() valueUuidToHighlight: string;
+
+  @Input() attachedUser: ReadUser;
+  @Input() attachedProject: ReadProject;
 
   /**
    * output `referredProjectClicked` of resource view component:
@@ -141,7 +135,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
 
   readonly amount_resources = 25;
 
-  lastModificationDate: string;
+  @Input() lastModificationDate: string;
 
   deletedResource = false;
 
@@ -160,30 +154,25 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   allIncomingLinkResources: ReadResource[] = [];
   displayedIncomingLinkResources: ReadResource[] = [];
   hasIncomingLinkIri = Constants.HasIncomingLinkValue;
-
-  project: ReadProject | StoredProject;
-  user: ReadUser;
-
   pageEvent: PageEvent;
   loading = false;
 
-  showAllProps = false; // show or hide empty properties
+  @Select(ResourceSelectors.showAllProps) showAllProps$: Observable<boolean>;
 
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _dialog: MatDialog,
     private _incomingService: IncomingService,
     private _notification: NotificationService,
     private _resourceService: ResourceService,
     private _valueOperationEventService: ValueOperationEventService,
     private _valueService: ValueService,
-    private _componentCommsService: ComponentCommunicationEventService,
     private _sortingService: SortingService,
     private _cd: ChangeDetectorRef,
+    private _componentCommsService: ComponentCommunicationEventService,
+    private _dialog: MatDialog,
     private _store: Store,
-    private _ontologyService: OntologyService,
-    private _actions$: Actions
+    private _ontologyService: OntologyService
   ) {}
 
   ngOnInit(): void {
@@ -240,15 +229,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         this.deleteValueFromResource(deletedValue.deletedValue);
       })
     );
-
-    // keep the information if the user wants to display all properties or not
-    if (localStorage.getItem('showAllProps')) {
-      this.showAllProps = JSON.parse(localStorage.getItem('showAllProps'));
-    } else {
-      localStorage.setItem('showAllProps', JSON.stringify(this.showAllProps));
-    }
-
-    this._getResourceAttachedData();
   }
 
   ngOnChanges(): void {
@@ -268,19 +248,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   trackByFn = (index: number, item: ReadResource) => `${index}-${item.id}`;
   trackByValuesFn = (index: number, item: any) => `${index}-${item}`;
   trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;
-
-  /**
-   * opens project
-   * @param project
-   */
-  openProject(project: ReadProject | StoredProject) {
-    const uuid = ProjectService.IriToUuid(project.id);
-    window.open(`/project/${uuid}`, '_blank');
-  }
-
-  previewProject() {
-    // --> TODO: pop up project preview on hover
-  }
 
   /**
    * goes to the next page of the incoming link pagination
@@ -319,6 +286,10 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
 
   previewResource() {
     // --> TODO: pop up resource preview on hover
+  }
+
+  toggleShowAllProps() {
+    this._store.dispatch(new ToggleShowAllPropsAction());
   }
 
   openDialog(type: 'delete' | 'erase' | 'edit') {
@@ -548,54 +519,16 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  toggleAllProps(status: boolean) {
-    this.showAllProps = !status;
-    localStorage.setItem('showAllProps', JSON.stringify(this.showAllProps));
-  }
-
-  private _getResourceAttachedData() {
-    this._store.dispatch([
-      new GetAttachedUserAction(this.resource.res.id, this.resource.res.attachedToUser),
-      new GetAttachedProjectAction(this.resource.res.id, this.resource.res.attachedToProject),
-    ]);
-
-    this.project = this._store
-      .selectSnapshot(ProjectsSelectors.allProjects)
-      .find(p => p.id === this.resource.res.attachedToProject);
-    this._actions$
-      .pipe(ofActionSuccessful(GetAttachedProjectAction))
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(() => {
-        const attachedProjects = this._store.selectSnapshot(ResourceSelectors.attachedProjects);
-        this.project = attachedProjects[this.resource.res.id].value.find(
-          u => u.id === this.resource.res.attachedToProject
-        );
-      });
-
-    this._actions$
-      .pipe(ofActionSuccessful(GetAttachedUserAction))
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(() => {
-        const attachedUsers = this._store.selectSnapshot(ResourceSelectors.attachedUsers);
-        this.user = attachedUsers[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToUser);
-      });
-  }
-
   private _onResourceDeleted(response: DeleteResourceResponse) {
     // display notification and mark resource as 'erased'
     this._notification.openSnackBar(`${response.result}: ${this.resource.res.label}`);
-    this.deletedResource = true;
-    const attachedProject = this._store.selectSnapshot(ResourceSelectors.attachedProjects);
-    const project = attachedProject[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToProject);
-    const ontologyIri = this._ontologyService.getOntologyIriFromRoute(project?.shortcode);
+    const ontologyIri = this._ontologyService.getOntologyIriFromRoute(this.attachedProject.shortcode);
     const classId = this.resource.res.entityInfo.classes[this.resource.res.type]?.id;
     this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
     this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceDeleted));
     // if it is an Annotation/Region which has been erases, we emit the
     // regionChanged event, in order to refresh the page
-    if (this.isAnnotation) {
-      this.regionDeleted.emit();
-    }
+    this.regionDeleted.emit();
 
     this._cd.markForCheck();
   }

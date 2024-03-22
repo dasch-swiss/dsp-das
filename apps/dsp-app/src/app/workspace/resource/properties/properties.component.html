@@ -1,5 +1,8 @@
 <!-- toolbar -->
-<div class="toolbar" *ngIf="project" [class.deleted]="deletedResource || resource.res.isDeleted">
+<div
+  class="toolbar"
+  *ngIf="attachedProject && showResourceToolbar"
+  [class.deleted]="deletedResource || resource.res.isDeleted">
   <!-- resource info -->
   <h3 class="label mat-headline-6">{{resource.res.label}} <span *ngIf="deletedResource">(deleted)</span></h3>
 
@@ -13,10 +16,10 @@
       mat-icon-button
       class="toggle-props"
       *ngIf="!resource.res.isDeleted"
-      [matTooltip]="(showAllProps ? 'Hide empty' : 'Show all')+' properties'"
+      [matTooltip]="((showAllProps$ | async) ? 'Hide empty' : 'Show all')+' properties'"
       matTooltipPosition="above"
-      (click)="toggleAllProps(showAllProps)">
-      <mat-icon>{{showAllProps ? 'unfold_less' : 'unfold_more'}}</mat-icon>
+      (click)="toggleShowAllProps()">
+      <mat-icon>{{(showAllProps$ | async) ? 'unfold_less' : 'unfold_more'}}</mat-icon>
       <!-- <span class="desktop-only">{{showAllProps ? 'Hide empty' : 'Show all'}} properties</span> -->
     </button>
 
@@ -78,7 +81,7 @@
     <!-- more menu with: delete, erase resource -->
     <button
       color="primary"
-      *ngIf="userCanEdit && project?.status"
+      *ngIf="userCanEdit && attachedProject?.status"
       mat-icon-button
       class="more-menu"
       matTooltip="More"
@@ -119,23 +122,6 @@
   </span>
 </div>
 
-<!-- additional line with project and user information -->
-<div class="infobar mat-caption" *ngIf="project">
-  <span *ngIf="displayProjectInfo"
-    >This resource {{ resource.res.isDeleted ? 'belonged' : 'belongs' }} to the project
-    <span class="project link" (click)="openProject(project)" (mouseover)="previewProject()">
-      <strong>{{project?.shortname}}</strong>
-      <mat-icon inline>open_in_new</mat-icon>
-    </span>
-  </span>
-  <span class="fill-remaining-space desktop-only"></span>
-  <span *ngIf="user || resource.res.creationDate">
-    Created
-    <span *ngIf="user">by {{(user.username ? user.username : user.givenName + ' ' + user.familyName)}}</span>
-    <span *ngIf="resource.res.creationDate"> on {{resource.res.creationDate | date}}</span>
-  </span>
-</div>
-
 <!-- list of properties -->
 <div class="properties-container">
   <div class="properties" *ngIf="resource.resProps.length > 0; else noProperties">
@@ -143,7 +129,7 @@
     <div *ngFor="let prop of resource.resProps; let last = last; trackBy: trackByPropertyInfoFn">
       <!-- show property; all in case of showAll === true or only the ones with prop.values -->
       <div
-        *ngIf="(showAllProps || ( prop.values && prop.values.length > 0 ) || (prop.propDef.id === hasIncomingLinkIri && numberOffAllIncomingLinkRes > 0)) && (
+        *ngIf="((showAllProps$ | async) || ( prop.values && prop.values.length > 0 ) || (prop.propDef.id === hasIncomingLinkIri && numberOffAllIncomingLinkRes > 0)) && (
                 !prop.propDef['isLinkProperty'] &&
                 prop.propDef.objectType !== representationConstants.stillImage &&
                 prop.propDef.objectType !== representationConstants.movingImage &&
@@ -179,15 +165,15 @@
               [propArray]="resource.resProps"
               [canDelete]="deleteValueIsAllowed(prop)"
               [cantDeleteReason]="cantDeleteReason"
-              [projectStatus]="project?.status"
-              [user]="user"
+              [projectStatus]="attachedProject?.status"
+              [user]="attachedUser"
               [valueUuidToHighlight]="valueUuidToHighlight"
               (referredResourceClicked)="openResource($event)"
               (referredResourceHovered)="previewResource()">
             </app-display-edit>
           </div>
           <!-- Add value form -->
-          <div *ngIf="addValueFormIsVisible && propID === prop.propDef.id && project?.status">
+          <div *ngIf="addValueFormIsVisible && propID === prop.propDef.id && attachedProject?.status">
             <app-add-value
               #addValue
               class="add-value"
@@ -197,7 +183,7 @@
             </app-add-value>
           </div>
           <!-- Add button -->
-          <div *ngIf="addValueIsAllowed(prop) && project?.status">
+          <div *ngIf="addValueIsAllowed(prop) && attachedProject?.status">
             <button
               mat-icon-button
               type="button"
@@ -222,15 +208,23 @@
                                            [pageSize]="amount_resources" [hidePageSize]="true" [pageIndex]="pageEvent.pageIndex"
                                            (page)="goToPage($event)">
                             </mat-paginator> -->
-              <div class="pagination" *ngIf="allIncomingLinkResources.length > amount_resources">
-                <p>Show more</p>
-                <button [disabled]="pageEvent.pageIndex < 1" (click)="handleIncomingLinkBackward()">
-                  <mat-icon>chevron_left</mat-icon>
-                </button>
+              <div class="navigation" *ngIf="allIncomingLinkResources.length > amount_resources">
                 <button
+                  mat-button
+                  class="pagination-button previous"
+                  [disabled]="pageEvent.pageIndex < 1"
+                  (click)="handleIncomingLinkBackward()">
+                  <mat-icon>west</mat-icon>
+                  <span>Previous</span>
+                </button>
+                <span class="fill-remaining-space"></span>
+                <button
+                  mat-button
+                  class="pagination-button next"
                   [disabled]="allIncomingLinkResources.length/ amount_resources <= pageEvent.pageIndex + 1"
                   (click)="handleIncomingLinkForward()">
-                  <mat-icon>chevron_right</mat-icon>
+                  <span>Next</span>
+                  <mat-icon>east</mat-icon>
                 </button>
               </div>
             </div>

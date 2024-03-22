@@ -6,6 +6,11 @@ import { ReourceStateModel } from './resource.state-model';
 
 export class ResourceSelectors {
   @Selector([ResourceState])
+  static showAllProps(state: ReourceStateModel): boolean {
+    return state.showAllProps;
+  }
+
+  @Selector([ResourceState])
   static isLoading(state: ReourceStateModel): boolean {
     return state.isLoading;
   }

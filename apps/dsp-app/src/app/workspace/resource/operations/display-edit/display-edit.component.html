@@ -15,7 +15,10 @@
         *ngSwitchCase="'ReadTextValueAsString'"
         [mode]="mode"
         [displayValue]="$any(displayValue)"
-        [textArea]="textArea"></app-text-value-as-string>
+        [shouldShowCommentToggle]="canReadComments && shouldShowCommentToggle"
+        [textArea]="textArea"
+        (toggleCommentClicked)="toggleComment()">
+      </app-text-value-as-string>
       <app-text-value-as-html
         class="parent-value-component"
         #displayVal
@@ -30,6 +33,8 @@
         *ngSwitchCase="'ReadTextValueAsXml'"
         [mode]="mode"
         [displayValue]="$any(displayValue)"
+        [shouldShowCommentToggle]="canReadComments && shouldShowCommentToggle"
+        (toggleCommentClicked)="toggleComment()"
         (internalLinkClicked)="standoffLinkClicked($event)"
         (internalLinkHovered)="standoffLinkHovered($event)"></app-text-value-as-xml>
       <app-int-value
@@ -75,7 +80,7 @@
         [mode]="mode"
         [displayValue]="$any(displayValue)"></app-time-value>
       <app-geoname-value
-        class="parent-value-component"
+        class="parent-value-component geoname"
         #displayVal
         *ngSwitchCase="constants.GeonameValue"
         [mode]="mode"
@@ -131,14 +136,6 @@
         </button>
         <button mat-button class="info" matTooltip="{{ getTooltipText() }}" matTooltipClass="info-tooltip">
           <mat-icon>info</mat-icon>
-        </button>
-        <button
-          mat-button
-          class="comment-toggle"
-          title="toggle comment"
-          *ngIf="shouldShowCommentToggle"
-          (click)="toggleComment()">
-          <mat-icon>comment</mat-icon>
         </button>
         <span
           [matTooltip]="

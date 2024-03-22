@@ -1,7 +1,18 @@
 // css for parent value components
+@use 'config' as *;
 
 .read-mode-view {
   font: 400 15px/24px sans-serif;
+
+  .show-comment {
+    color: $dark-text;
+
+    .mat-icon {
+      font-size: 18px;
+      display: inline;
+      vertical-align: text-bottom;
+    }
+  }
 
   .rm-value,
   .rm-comment {
@@ -11,6 +22,10 @@
 
   .rm-value.text-value {
     white-space: pre-wrap;
+  }
+
+  .rm-value.list:has(.hierarchy:only-child) .last {
+    font-weight: normal;
   }
 
   .rm-value.list,
