@@ -208,15 +208,23 @@
                                            [pageSize]="amount_resources" [hidePageSize]="true" [pageIndex]="pageEvent.pageIndex"
                                            (page)="goToPage($event)">
                             </mat-paginator> -->
-              <div class="pagination" *ngIf="allIncomingLinkResources.length > amount_resources">
-                <p>Show more</p>
-                <button [disabled]="pageEvent.pageIndex < 1" (click)="handleIncomingLinkBackward()">
-                  <mat-icon>chevron_left</mat-icon>
-                </button>
+              <div class="navigation" *ngIf="allIncomingLinkResources.length > amount_resources">
                 <button
+                  mat-button
+                  class="pagination-button previous"
+                  [disabled]="pageEvent.pageIndex < 1"
+                  (click)="handleIncomingLinkBackward()">
+                  <mat-icon>west</mat-icon>
+                  <span>Previous</span>
+                </button>
+                <span class="fill-remaining-space"></span>
+                <button
+                  mat-button
+                  class="pagination-button next"
                   [disabled]="allIncomingLinkResources.length/ amount_resources <= pageEvent.pageIndex + 1"
                   (click)="handleIncomingLinkForward()">
-                  <mat-icon>chevron_right</mat-icon>
+                  <span>Next</span>
+                  <mat-icon>east</mat-icon>
                 </button>
               </div>
             </div>

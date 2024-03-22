@@ -176,36 +176,45 @@
   margin: 0;
 }
 
-.pagination {
+.navigation {
   display: flex;
+  box-sizing: border-box;
+  flex-direction: row;
   align-items: center;
-  button {
-    margin: 0 15px;
-    padding: 0;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    border-radius: 100%;
-    height: fit-content;
-    padding: 10px;
-    display: flex; //centers the icon
+  white-space: nowrap;
+  height: 60px;
+  width: 100%;
 
+  .pagination-button:disabled {
+    span,
     mat-icon {
-      color: $primary;
+      color: $cool_gray_300;
     }
   }
 
-  button:hover {
-    background-color: $cool_gray_300;
+  .pagination-button {
+    &.previous {
+      span {
+        padding-left: 14px;
+      }
+    }
+
+    &.next {
+      span {
+        padding-right: 14px;
+      }
+    }
+
+    span,
+    mat-icon {
+      color: $primary;
+      font-weight: 400;
+    }
   }
 
-  button:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-
-  button:disabled:hover {
-    background-color: transparent;
+  .range {
+    color: $cool_gray_500;
+    font-weight: 300;
   }
 }
 
