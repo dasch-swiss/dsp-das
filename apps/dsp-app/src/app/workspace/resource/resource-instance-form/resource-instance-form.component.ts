@@ -3,8 +3,14 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
+  CreateArchiveFileValue,
+  CreateAudioFileValue,
+  CreateDocumentFileValue,
   CreateFileValue,
+  CreateMovingImageFileValue,
   CreateResource,
+  CreateStillImageFileValue,
+  CreateTextFileValue,
   IHasPropertyWithPropertyDefinition,
   KnoraApiConnection,
   ReadResource,
@@ -159,10 +165,10 @@ export class ResourceInstanceFormComponent implements OnInit {
 
     if (this.fileValue) {
       /*
-                const hasFileValue = this.getHasFileValue(this.ontologyInfo);
-                propertiesObj[hasFileValue] = [this.fileValue];
+                      const hasFileValue = this.getHasFileValue(this.ontologyInfo);
+                      propertiesObj[hasFileValue] = [this.fileValue];
 
-                   */
+                         */
       console.log(this.fileValue);
       propertiesObj[Constants.HasStillImageFileValue] = [this.fileValue];
     }
@@ -186,5 +192,51 @@ export class ResourceInstanceFormComponent implements OnInit {
     return this.ontologyInfo
       .getPropertyDefinitionsByType(ResourcePropertyDefinition)
       .filter(prop => !prop.isLinkProperty && prop.isEditable && !this.weirdConstants.includes(prop.id));
+  }
+
+  /**
+   * create a new file value.
+   */
+  getNewValue(): CreateFileValue | false {
+    let fileValue:
+      | CreateStillImageFileValue
+      | CreateDocumentFileValue
+      | CreateAudioFileValue
+      | CreateArchiveFileValue
+      | CreateMovingImageFileValue
+      | CreateTextFileValue;
+
+    switch (this.representation) {
+      case 'stillImage':
+        fileValue = new CreateStillImageFileValue();
+        break;
+
+      case 'document':
+        fileValue = new CreateDocumentFileValue();
+        break;
+
+      case 'audio':
+        fileValue = new CreateAudioFileValue();
+        break;
+
+      case 'movingImage':
+        fileValue = new CreateMovingImageFileValue();
+        break;
+
+      case 'archive':
+        fileValue = new CreateArchiveFileValue();
+        break;
+
+      case 'text':
+        fileValue = new CreateTextFileValue();
+        break;
+
+      default:
+        break;
+    }
+
+    fileValue.filename = filename;
+
+    return fileValue;
   }
 }
