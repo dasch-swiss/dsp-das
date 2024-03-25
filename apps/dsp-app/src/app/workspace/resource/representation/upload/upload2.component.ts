@@ -22,7 +22,7 @@ import {
       <input hidden type="file" (change)="addFileFromClick($event)" #fileInput />
       <mat-icon>cloud_upload</mat-icon>
       <div>Drag and drop or click to upload</div>
-      <div class="mat-subtitle-2">The following file types are supported: >{{ allowedFileTypes.join(',') }}</div>
+      <div class="mat-subtitle-2">The following file types are supported: <br />{{ allowedFileTypes.join(', ') }}</div>
     </div>
 
     <ng-template #showFileTemplate>
@@ -74,7 +74,8 @@ export class Upload2Component {
   }
 
   addFile(file: File) {
-    if (!this.allowedFileTypes.includes(file.type)) {
+    console.log(file);
+    if (!this.allowedFileTypes.some(_file => file.type.endsWith(_file))) {
       this._notification.openSnackBar(`This file type (${file.type}) is not supported`);
       return;
     }
