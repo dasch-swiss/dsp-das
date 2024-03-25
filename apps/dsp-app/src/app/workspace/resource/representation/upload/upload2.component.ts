@@ -1,15 +1,8 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import {
-  CreateArchiveFileValue,
-  CreateAudioFileValue,
-  CreateDocumentFileValue,
-  CreateFileValue,
-  CreateMovingImageFileValue,
-  CreateStillImageFileValue,
-  CreateTextFileValue,
-} from '@dasch-swiss/dsp-js';
+import { CreateFileValue } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { fileValueMapping } from '@dsp-app/src/app/workspace/resource/representation/upload/file-mappings';
 import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/representation/upload/file-representation.type';
 import {
   UploadedFileResponse,
@@ -67,35 +60,8 @@ export class Upload2Component {
   previewUrl: SafeUrl | null = null;
 
   get allowedFileTypes() {
-    return this.fileMapping.get(this.representation).fileTypes;
+    return fileValueMapping.get(this.representation).fileTypes;
   }
-
-  readonly fileMapping = new Map<
-    FileRepresentationType,
-    {
-      fileTypes: string[];
-      uploadClass: new () => CreateFileValue;
-    }
-  >([
-    [
-      'stillImage',
-      {
-        fileTypes: ['jp2', 'jpg', 'jpeg', 'png', 'tif', 'tiff'],
-        uploadClass: CreateStillImageFileValue,
-      },
-    ],
-    ['movingImage', { fileTypes: ['mp4'], uploadClass: CreateMovingImageFileValue }],
-    ['audio', { fileTypes: ['mp3', 'wav'], uploadClass: CreateAudioFileValue }],
-    [
-      'document',
-      {
-        fileTypes: ['doc', 'docx', 'pdf', 'ppt', 'pptx', 'xls', 'xlsx'],
-        uploadClass: CreateDocumentFileValue,
-      },
-    ],
-    ['text', { fileTypes: ['csv', 'odd', 'rng', 'txt', 'xml', 'xsd', 'xsl'], uploadClass: CreateTextFileValue }],
-    ['archive', { fileTypes: ['7z', 'gz', 'gzip', 'tar', 'tgz', 'z', 'zip'], uploadClass: CreateArchiveFileValue }],
-  ]);
 
   constructor(
     private _notification: NotificationService,
@@ -133,7 +99,7 @@ export class Upload2Component {
           break;
       }
 
-      const filePayload = new (this.fileMapping.get(this.representation).uploadClass)();
+      const filePayload = new (fileValueMapping.get(this.representation).uploadClass)();
       filePayload.filename = res.uploadedFiles[0].internalFilename;
       this.selectedFile.emit(filePayload);
     });

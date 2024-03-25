@@ -3,14 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
-  CreateArchiveFileValue,
-  CreateAudioFileValue,
-  CreateDocumentFileValue,
   CreateFileValue,
-  CreateMovingImageFileValue,
   CreateResource,
-  CreateStillImageFileValue,
-  CreateTextFileValue,
   IHasPropertyWithPropertyDefinition,
   KnoraApiConnection,
   ReadResource,
@@ -20,6 +14,8 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
+import { fileValueMapping } from '@dsp-app/src/app/workspace/resource/representation/upload/file-mappings';
+import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/representation/upload/file-representation.type';
 import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/resource-instance-form/component-host.directive';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/values/link-value/temp-link-value.service';
@@ -45,7 +41,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   dynamicForm = this._fb.group({});
   resourceClass: ResourceClassDefinition;
   ontologyInfo: ResourceClassAndPropertyDefinitions;
-  hasFileValue: string;
+  hasFileValue: FileRepresentationType;
   fileValue: CreateFileValue;
   unsuitableProperties: IHasPropertyWithPropertyDefinition[];
   loading = false;
@@ -142,7 +138,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   private getHasFileValue(onto: ResourceClassAndPropertyDefinitions) {
     for (const item in this.weirdConstants) {
       if (onto.properties[item]) {
-        return item;
+        return item as FileRepresentationType;
       }
     }
   }
@@ -167,12 +163,12 @@ export class ResourceInstanceFormComponent implements OnInit {
 
     if (this.fileValue) {
       /*
-                                                          const hasFileValue = this.getHasFileValue(this.ontologyInfo);
-                                                          propertiesObj[hasFileValue] = [this.fileValue];
+                                                                                              const hasFileValue = this.getHasFileValue(this.ontologyInfo);
+                                                                                              propertiesObj[hasFileValue] = [this.fileValue];
 
-                                                             */
+                                                                                                 */
       console.log(this.fileValue);
-      propertiesObj[Constants.HasStillImageFileValue] = [this.getNewValue()];
+      propertiesObj[Constants.HasStillImageFileValue] = [this._getNewValue()];
     }
     return propertiesObj;
   }
@@ -196,48 +192,8 @@ export class ResourceInstanceFormComponent implements OnInit {
       .filter(prop => !prop.isLinkProperty && prop.isEditable && !this.weirdConstants.includes(prop.id));
   }
 
-  /**
-   * create a new file value.
-   */
-  getNewValue(): CreateFileValue | false {
-    let fileValue:
-      | CreateStillImageFileValue
-      | CreateDocumentFileValue
-      | CreateAudioFileValue
-      | CreateArchiveFileValue
-      | CreateMovingImageFileValue
-      | CreateTextFileValue;
-
-    const representation = 'stillImage'; // TODO
-    switch (representation) {
-      case 'stillImage':
-        fileValue = new CreateStillImageFileValue();
-        break;
-      /*
-                                    case 'document':
-                                      fileValue = new CreateDocumentFileValue();
-                                      break;
-
-                                    case 'audio':
-                                      fileValue = new CreateAudioFileValue();
-                                      break;
-
-                                    case 'movingImage':
-                                      fileValue = new CreateMovingImageFileValue();
-                                      break;
-
-                                    case 'archive':
-                                      fileValue = new CreateArchiveFileValue();
-                                      break;
-
-                                    case 'text':
-                                      fileValue = new CreateTextFileValue();
-                                      break;
-                              */
-      default:
-        break;
-    }
-
+  private _getNewValue(): CreateFileValue | false {
+    const fileValue = new (fileValueMapping.get(this.hasFileValue).uploadClass)();
     fileValue.filename = this.fileValue.filename;
 
     return fileValue;
