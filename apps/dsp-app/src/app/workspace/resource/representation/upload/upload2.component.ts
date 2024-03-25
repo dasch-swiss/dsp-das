@@ -60,7 +60,6 @@ import {
 export class Upload2Component {
   @Input() allowedFileTypes: string[];
   @Input({ required: true }) representation: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
-
   @Output() selectedFile = new EventEmitter<CreateFileValue>();
 
   @ViewChild('fileInput') fileInput;
@@ -78,7 +77,6 @@ export class Upload2Component {
   }
 
   addFile(file: File) {
-    console.log(file, 'file');
     if (!this.allowedFileTypes.includes(file.type)) {
       this._notification.openSnackBar(`This file type (${file.type}) is not supported`);
       return;
@@ -90,35 +88,28 @@ export class Upload2Component {
 
   uploadFile(file: File): void {
     const formData = new FormData();
-
     formData.append(file.name, file);
+
     this._upload.upload(formData).subscribe((res: UploadedFileResponse) => {
-      // prepare thumbnail url to display something after upload
       switch (this.representation) {
         case 'stillImage':
-          const temporaryUrl = res.uploadedFiles[0].temporaryUrl;
-          const thumbnailUri = '/full/256,/0/default.jpg';
-          this.previewUrl = this._sanitizer.bypassSecurityTrustUrl(temporaryUrl + thumbnailUri);
+          this.previewUrl = this._sanitizer.bypassSecurityTrustUrl(
+            `${res.uploadedFiles[0].temporaryUrl}/full/256,/0/default.jpg`
+          );
           break;
         case 'document':
           this.previewUrl = res.uploadedFiles[0].temporaryUrl;
           break;
       }
 
-      // this.fileControl.setValue(res.uploadedFiles[0]);
       const fileValue = this.getNewValue(res.uploadedFiles[0].internalFilename);
-
-      if (fileValue) {
-        this.selectedFile.emit(fileValue);
-      }
+      this.selectedFile.emit(fileValue);
     });
+
     this.fileInput.nativeElement.value = null; // set the html input value to null so in case of an error the user can upload the same file again.
   }
 
-  /**
-   * create a new file value.
-   */
-  private getNewValue(filename: string): CreateFileValue | false {
+  private getNewValue(filename: string) {
     let fileValue:
       | CreateStillImageFileValue
       | CreateDocumentFileValue
