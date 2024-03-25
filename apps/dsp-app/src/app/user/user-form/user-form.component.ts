@@ -1,11 +1,28 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { ReadUser, StringLiteral } from '@dasch-swiss/dsp-js';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { Constants, ReadUser, StringLiteral, UpdateUserRequest, User } from '@dasch-swiss/dsp-js';
+import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Select } from '@ngxs/store';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import {
+  AddUserToProjectMembershipAction,
+  CreateUserAction,
+  ProjectsSelectors,
+  SetUserAction,
+  UserSelectors,
+} from '@dasch-swiss/vre/shared/app-state';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
+import { Observable, combineLatest } from 'rxjs';
+import { take, tap } from 'rxjs/operators';
 import { AppGlobal } from '../../app-global';
 import { existingNamesAsyncValidator } from '../../main/directive/existing-name/existing-names.validator';
 import { CustomRegex } from '../../workspace/resource/values/custom-regex';
