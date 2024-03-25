@@ -165,12 +165,12 @@ export class ResourceInstanceFormComponent implements OnInit {
 
     if (this.fileValue) {
       /*
-                      const hasFileValue = this.getHasFileValue(this.ontologyInfo);
-                      propertiesObj[hasFileValue] = [this.fileValue];
+                                              const hasFileValue = this.getHasFileValue(this.ontologyInfo);
+                                              propertiesObj[hasFileValue] = [this.fileValue];
 
-                         */
+                                                 */
       console.log(this.fileValue);
-      propertiesObj[Constants.HasStillImageFileValue] = [this.fileValue];
+      propertiesObj[Constants.HasStillImageFileValue] = [this.getNewValue()];
     }
     return propertiesObj;
   }
@@ -206,36 +206,37 @@ export class ResourceInstanceFormComponent implements OnInit {
       | CreateMovingImageFileValue
       | CreateTextFileValue;
 
-    switch (this.representation) {
+    const representation = 'stillImage'; // TODO
+    switch (representation) {
       case 'stillImage':
         fileValue = new CreateStillImageFileValue();
         break;
+      /*
+                        case 'document':
+                          fileValue = new CreateDocumentFileValue();
+                          break;
 
-      case 'document':
-        fileValue = new CreateDocumentFileValue();
-        break;
+                        case 'audio':
+                          fileValue = new CreateAudioFileValue();
+                          break;
 
-      case 'audio':
-        fileValue = new CreateAudioFileValue();
-        break;
+                        case 'movingImage':
+                          fileValue = new CreateMovingImageFileValue();
+                          break;
 
-      case 'movingImage':
-        fileValue = new CreateMovingImageFileValue();
-        break;
+                        case 'archive':
+                          fileValue = new CreateArchiveFileValue();
+                          break;
 
-      case 'archive':
-        fileValue = new CreateArchiveFileValue();
-        break;
-
-      case 'text':
-        fileValue = new CreateTextFileValue();
-        break;
-
+                        case 'text':
+                          fileValue = new CreateTextFileValue();
+                          break;
+                  */
       default:
         break;
     }
 
-    fileValue.filename = filename;
+    fileValue.filename = this.fileValue.filename;
 
     return fileValue;
   }

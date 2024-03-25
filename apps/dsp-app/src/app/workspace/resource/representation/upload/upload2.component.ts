@@ -1,5 +1,19 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {
+  CreateArchiveFileValue,
+  CreateAudioFileValue,
+  CreateDocumentFileValue,
+  CreateFileValue,
+  CreateMovingImageFileValue,
+  CreateStillImageFileValue,
+  CreateTextFileValue,
+} from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import {
+  UploadedFileResponse,
+  UploadFileService,
+} from '@dsp-app/src/app/workspace/resource/representation/upload/upload-file.service';
 
 @Component({
   selector: 'app-upload-2',
@@ -45,12 +59,17 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 })
 export class Upload2Component {
   @Input() allowedFileTypes: string[];
-  @Output() selectedFile = new EventEmitter<File>();
+  @Output() selectedFile = new EventEmitter<CreateFileValue>();
 
+  @ViewChild('fileInput') fileInput;
   file: File;
-  previewUrl: string | ArrayBuffer | null = null;
+  previewUrl: SafeUrl | null = null;
 
-  constructor(private _notification: NotificationService) {}
+  constructor(
+    private _notification: NotificationService,
+    private _upload: UploadFileService,
+    private _sanitizer: DomSanitizer
+  ) {}
 
   addFileFromClick(event: any) {
     this.addFile(event.target.files[0]);
@@ -67,7 +86,84 @@ export class Upload2Component {
       this.previewThumbnail(file);
     }
     this.file = file;
-    this.selectedFile.emit(file);
+    this.uploadFile(file);
+  }
+
+  uploadFile(file: File): void {
+    const formData = new FormData();
+
+    formData.append(file.name, file);
+    this._upload.upload(formData).subscribe((res: UploadedFileResponse) => {
+      // prepare thumbnail url to display something after upload
+      const representation = 'stillImage'; // TODO temp
+      switch (representation) {
+        case 'stillImage':
+          const temporaryUrl = res.uploadedFiles[0].temporaryUrl;
+          const thumbnailUri = '/full/256,/0/default.jpg';
+          this.previewUrl = this._sanitizer.bypassSecurityTrustUrl(temporaryUrl + thumbnailUri);
+          break;
+        /*
+                                                case 'document':
+                                                  this.previewUrl = res.uploadedFiles[0].temporaryUrl;
+                                                  break;
+
+                                         */
+      }
+
+      // this.fileControl.setValue(res.uploadedFiles[0]);
+      const fileValue = this.getNewValue(res.uploadedFiles[0].internalFilename);
+
+      if (fileValue) {
+        this.selectedFile.emit(fileValue);
+      }
+    });
+    this.fileInput.nativeElement.value = null; // set the html input value to null so in case of an error the user can upload the same file again.
+  }
+
+  /**
+   * create a new file value.
+   */
+  private getNewValue(filename: string): CreateFileValue | false {
+    let fileValue:
+      | CreateStillImageFileValue
+      | CreateDocumentFileValue
+      | CreateAudioFileValue
+      | CreateArchiveFileValue
+      | CreateMovingImageFileValue
+      | CreateTextFileValue;
+
+    switch ('stillImage') {
+      case 'stillImage':
+        fileValue = new CreateStillImageFileValue();
+        break;
+      /*
+                                                case 'document':
+                                                  fileValue = new CreateDocumentFileValue();
+                                                  break;
+
+                                                case 'audio':
+                                                  fileValue = new CreateAudioFileValue();
+                                                  break;
+
+                                                case 'movingImage':
+                                                  fileValue = new CreateMovingImageFileValue();
+                                                  break;
+
+                                                case 'archive':
+                                                  fileValue = new CreateArchiveFileValue();
+                                                  break;
+
+                                                case 'text':
+                                                  fileValue = new CreateTextFileValue();
+                                                  break;
+                                          */
+      default:
+        break;
+    }
+
+    fileValue.filename = filename;
+
+    return fileValue;
   }
 
   removeFile() {
