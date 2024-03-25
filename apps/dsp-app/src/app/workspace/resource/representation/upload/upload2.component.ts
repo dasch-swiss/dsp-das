@@ -58,13 +58,37 @@ import {
   styles: ['td {padding: 8px; text-align: center}'],
 })
 export class Upload2Component {
-  @Input() allowedFileTypes: string[];
   @Input({ required: true }) representation: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
   @Output() selectedFile = new EventEmitter<CreateFileValue>();
 
   @ViewChild('fileInput') fileInput;
   file: File;
   previewUrl: SafeUrl | null = null;
+
+  get allowedFileTypes() {
+    return this.fileMapping.get(this.representation).fileTypes;
+  }
+
+  readonly fileMapping = new Map<string, { fileTypes: string[]; uploadClass: new () => CreateFileValue }>([
+    [
+      'stillImage',
+      {
+        fileTypes: ['jp2', 'jpg', 'jpeg', 'png', 'tif', 'tiff'],
+        uploadClass: CreateStillImageFileValue,
+      },
+    ],
+    ['movingImage', { fileTypes: ['mp4'], uploadClass: CreateMovingImageFileValue }],
+    ['audio', { fileTypes: ['mp3', 'wav'], uploadClass: CreateAudioFileValue }],
+    [
+      'document',
+      {
+        fileTypes: ['doc', 'docx', 'pdf', 'ppt', 'pptx', 'xls', 'xlsx'],
+        uploadClass: CreateDocumentFileValue,
+      },
+    ],
+    ['text', { fileTypes: ['csv', 'odd', 'rng', 'txt', 'xml', 'xsd', 'xsl'], uploadClass: CreateTextFileValue }],
+    ['archive', { fileTypes: ['7z', 'gz', 'gzip', 'tar', 'tgz', 'z', 'zip'], uploadClass: CreateArchiveFileValue }],
+  ]);
 
   constructor(
     private _notification: NotificationService,
@@ -110,42 +134,7 @@ export class Upload2Component {
   }
 
   private getNewValue(filename: string) {
-    let fileValue:
-      | CreateStillImageFileValue
-      | CreateDocumentFileValue
-      | CreateAudioFileValue
-      | CreateArchiveFileValue
-      | CreateMovingImageFileValue
-      | CreateTextFileValue;
-
-    switch (this.representation) {
-      case 'stillImage':
-        fileValue = new CreateStillImageFileValue();
-        break;
-      case 'document':
-        fileValue = new CreateDocumentFileValue();
-        break;
-
-      case 'audio':
-        fileValue = new CreateAudioFileValue();
-        break;
-
-      case 'movingImage':
-        fileValue = new CreateMovingImageFileValue();
-        break;
-
-      case 'archive':
-        fileValue = new CreateArchiveFileValue();
-        break;
-
-      case 'text':
-        fileValue = new CreateTextFileValue();
-        break;
-
-      default:
-        break;
-    }
-
+    const fileValue = new (this.fileMapping.get(this.representation).uploadClass)();
     fileValue.filename = filename;
 
     return fileValue;
