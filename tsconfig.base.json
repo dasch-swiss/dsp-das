@@ -32,8 +32,8 @@
       "@dasch-swiss/shared/prelude": [
         "libs/shared/prelude/src/index.ts"
       ],
-      "@dasch-swiss/vre-shared-resource-properties": [
-        "libs/vre-shared-resource-properties/src/index.ts"
+      "@dasch-swiss/vre/shared/app-resource-properties": [
+        "libs/vre/shared/app-resource-properties/src/index.ts"
       ],
       "@dasch-swiss/vre/advanced-search": [
         "libs/vre/advanced-search/src/index.ts"
