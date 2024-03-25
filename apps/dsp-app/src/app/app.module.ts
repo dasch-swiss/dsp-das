@@ -27,6 +27,7 @@ import {
   CenteredLayoutComponent,
   LoadingButtonDirective,
 } from '@dasch-swiss/vre/shared/app-progress-indicator';
+import { SwitchProperties3Component } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import {
   AppStringLiteralComponent,
@@ -49,6 +50,14 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { BooleanValue2Component } from '../../../../libs/vre/shared/app-resource-properties/src/lib/boolean-value-2.component';
+import { ColorValue2Component } from '../../../../libs/vre/shared/app-resource-properties/src/lib/color-value-2.component';
+import { IntervalValue2Component } from '../../../../libs/vre/shared/app-resource-properties/src/lib/interval-value-2.component';
+import { ListValue2Component } from '../../../../libs/vre/shared/app-resource-properties/src/lib/list-value-2.component';
+import { NestedMenuComponent } from '../../../../libs/vre/shared/app-resource-properties/src/lib/nested-menu.component';
+import { NuListComponent } from '../../../../libs/vre/shared/app-resource-properties/src/lib/nu-list.component';
+import { TimeValue2Component } from '../../../../libs/vre/shared/app-resource-properties/src/lib/time-value-2.component';
+import { UriValue2Component } from '../../../../libs/vre/shared/app-resource-properties/src/lib/uri-value-2.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmDialogComponent } from './main/action/confirm-dialog/confirm-dialog.component';
@@ -346,6 +355,15 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     IsFalsyPipe,
     CreateListItemDialogComponent,
     ImageDisplayAbsoluteComponent,
+    SwitchProperties3Component,
+    BooleanValue2Component,
+    ColorValue2Component,
+    IntervalValue2Component,
+    ListValue2Component,
+    NestedMenuComponent,
+    TimeValue2Component,
+    UriValue2Component,
+    NuListComponent,
   ],
   imports: [
     AngularSplitModule,
