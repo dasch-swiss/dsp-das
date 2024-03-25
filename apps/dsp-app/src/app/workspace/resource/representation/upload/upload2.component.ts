@@ -126,18 +126,12 @@ export class Upload2Component {
           break;
       }
 
-      const fileValue = this.getNewValue(res.uploadedFiles[0].internalFilename);
-      this.selectedFile.emit(fileValue);
+      const filePayload = new (this.fileMapping.get(this.representation).uploadClass)();
+      filePayload.filename = res.uploadedFiles[0].internalFilename;
+      this.selectedFile.emit(filePayload);
     });
 
     this.fileInput.nativeElement.value = null; // set the html input value to null so in case of an error the user can upload the same file again.
-  }
-
-  private getNewValue(filename: string) {
-    const fileValue = new (this.fileMapping.get(this.representation).uploadClass)();
-    fileValue.filename = filename;
-
-    return fileValue;
   }
 
   removeFile() {
