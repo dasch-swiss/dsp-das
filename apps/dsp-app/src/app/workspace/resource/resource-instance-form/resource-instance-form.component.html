@@ -1,5 +1,5 @@
 <form *ngIf="!loading; else loadingTemplate" [formGroup]="dynamicForm" appInvalidControlScroll>
-  <app-upload-2 [allowedFileTypes]="['image/png']"></app-upload-2>
+  <app-upload-2 [allowedFileTypes]="['image/png']" (selectedFile)="onSelectedFile($event)"></app-upload-2>
 
   <div style="display: flex">
     <h3
