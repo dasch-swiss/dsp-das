@@ -1,28 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-} from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { Constants, ReadUser, StringLiteral, UpdateUserRequest, User } from '@dasch-swiss/dsp-js';
-import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ReadUser, StringLiteral } from '@dasch-swiss/dsp-js';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import {
-  AddUserToProjectMembershipAction,
-  CreateUserAction,
-  ProjectsSelectors,
-  SetUserAction,
-  UserSelectors,
-} from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { Observable, combineLatest } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AppGlobal } from '../../app-global';
 import { existingNamesAsyncValidator } from '../../main/directive/existing-name/existing-names.validator';
 import { CustomRegex } from '../../workspace/resource/values/custom-regex';
@@ -46,7 +29,6 @@ export class UserFormComponent implements OnInit {
   private _existingUserEmails$: Observable<RegExp[]>;
 
   readonly languagesList: StringLiteral[] = AppGlobal.languagesList;
-  readonly _usernameMinLength = 4;
 
   readonly emailPatternErrorMsg = {
     errorKey: 'pattern',
@@ -89,11 +71,7 @@ export class UserFormComponent implements OnInit {
       ],
       username: [
         { value: this.user.username || '', disabled: this.editExistingUser },
-        [
-          Validators.required,
-          Validators.minLength(this._usernameMinLength),
-          Validators.pattern(CustomRegex.USERNAME_REGEX),
-        ],
+        [Validators.required, Validators.minLength(4), Validators.pattern(CustomRegex.USERNAME_REGEX)],
         existingNamesAsyncValidator(this._existingUserNames$),
       ],
       password: [{ value: '', disabled: this.editExistingUser }],
