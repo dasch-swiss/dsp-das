@@ -14,21 +14,27 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
       <div *ngIf="previewUrl">
         <img [src]="previewUrl" alt="File Preview" style="max-width: 100%; max-height: 200px;" />
       </div>
-      <div
-        style="display: grid; grid-template-columns: auto auto auto auto; grid-gap: 10px; align-items: center; margin-top: 24px">
-        <span>Name</span>
-        <span>Size</span>
-        <span>Last Modified Date</span>
-        <span>Delete</span>
-        <span>{{ file.name }}</span>
-        <span>{{ Math.floor(file.size / 1000) }} kb</span>
-        <span>{{ file.lastModified | date }}</span>
-        <button mat-icon-button (click)="removeFile()">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
+      <table style="border: 1px solid; width: 100%">
+        <tr style="background: lightblue">
+          <th>Name</th>
+          <th>Size</th>
+          <th>Last Modified Date</th>
+          <th>Delete</th>
+        </tr>
+        <tr>
+          <td>{{ file.name }}</td>
+          <td>{{ Math.floor(file.size / 1000) }} kb</td>
+          <td>{{ file.lastModified | date }}</td>
+          <td>
+            <button mat-icon-button (click)="removeFile()">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </table>
     </ng-template>
   `,
+  styles: ['td {padding: 8px; text-align: center}'],
 })
 export class Upload2Component {
   @Input() allowedFileTypes: string[];
