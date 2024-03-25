@@ -34,6 +34,8 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { CreateUserPageComponent } from '@dsp-app/src/app/user/create-user-page/create-user-page.component';
+import { EditUserPageComponent } from '@dsp-app/src/app/user/edit-user-page/edit-user-page.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -217,6 +219,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ConfirmDialogComponent,
     ConfirmationMessageComponent,
     CookiePolicyComponent,
+    CreateUserPageComponent,
     CreateLinkResourceComponent,
     CreateResourceClassDialogComponent,
     DateValueComponent,
@@ -229,6 +232,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     DocumentComponent,
     DragDropDirective,
     EditResourceClassDialogComponent,
+    EditUserPageComponent,
     ExpertSearchComponent,
     FooterComponent,
     FormattedBooleanPipe,
