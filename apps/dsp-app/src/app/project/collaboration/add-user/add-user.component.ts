@@ -21,14 +21,13 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { CreateUserPageComponent } from '@dsp-app/src/app/user/create-user-page/create-user-page.component';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
 import { existingNamesValidator } from '../../../main/directive/existing-name/existing-names.validator';
 import { DialogConfigUtil } from '../../../providers/drawer-config-util';
-import { UserFormComponent } from '../../../user/user-form/user-form.component';
-import { UserToEdit } from '../../../user/user-form/user-form.type';
 import { AutocompleteItem } from '../../../workspace/search/operator';
 
 @Component({
@@ -321,8 +320,8 @@ export class AddUserComponent implements OnInit {
   }
 
   createUser() {
-    const dialogConfig = DialogConfigUtil.dialogDrawerConfig<UserToEdit>({ projectUuid: this.projectUuid });
-    this._dialog.open(UserFormComponent, dialogConfig);
+    const dialogConfig = DialogConfigUtil.dialogDrawerConfig<string>(this.projectUuid);
+    this._dialog.open(CreateUserPageComponent, dialogConfig);
   }
 
   resetInput(ev: Event) {

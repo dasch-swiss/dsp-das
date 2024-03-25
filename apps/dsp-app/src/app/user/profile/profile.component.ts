@@ -3,12 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { EditUserPageComponent } from '@dsp-app/src/app/user/edit-user-page/edit-user-page.component';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil, takeWhile } from 'rxjs/operators';
 import { DialogConfigUtil } from '../../providers/drawer-config-util';
 import { UserFormComponent } from '../user-form/user-form.component';
-import { UserToEdit } from '../user-form/user-form.type';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,7 +46,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   editProfile(userId) {
-    const dialogConfig = DialogConfigUtil.dialogDrawerConfig<UserToEdit>({ userId });
-    this._dialog.open(UserFormComponent, dialogConfig);
+    const dialogConfig = DialogConfigUtil.dialogDrawerConfig<string>(userId);
+    this._dialog.open(EditUserPageComponent, dialogConfig);
   }
 }

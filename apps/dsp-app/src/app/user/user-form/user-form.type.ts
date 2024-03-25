@@ -1,10 +1,5 @@
 import { FormControl, FormGroup } from '@angular/forms';
 
-export interface UserToEdit {
-  userId?: string;
-  projectUuid?: string;
-}
-
 export type UserForm = FormGroup<{
   givenName: FormControl<string>;
   familyName: FormControl<string>;
