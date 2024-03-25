@@ -247,6 +247,10 @@ a,
 //
 // resource
 
+.dsp-representation:has(.toolbar .compoundNavigation) {
+  margin-bottom: 64px;
+}
+
 .dsp-representation {
   width: 100%;
   height: 70vh;
@@ -254,7 +258,7 @@ a,
   display: block;
   position: relative;
   padding: 0;
-  margin-bottom: 35px;
+  margin-bottom: 20px;
 
   &.video,
   &.audio,

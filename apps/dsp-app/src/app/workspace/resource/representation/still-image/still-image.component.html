@@ -32,7 +32,7 @@
 
 <div class="toolbar">
   <!-- navigation -->
-  <div *ngIf="compoundNavigation">
+  <div *ngIf="compoundNavigation" class="compoundNavigation">
     <mat-slider
       [color]="'primary'"
       [disabled]="compoundNavigation.totalPages < 2"
