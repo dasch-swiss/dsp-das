@@ -15,11 +15,12 @@
     <ng-container *ngFor="let prop of unsuitableProperties">
       <div style="padding-top: 16px">{{ prop.propertyDefinition.label }}</div>
       <div>
-        <app-switch-properties-3
-          [propertyDefinition]="prop.propertyDefinition"
-          [property]="prop"
-          [formArray]="dynamicForm.controls[prop.propertyDefinition.id]"
-          [cardinality]="prop.cardinality"></app-switch-properties-3>
+        <!--
+              <app-switch-properties-3
+                [propertyDefinition]="prop.propertyDefinition"
+                [property]="prop"
+                [formArray]="dynamicForm.controls[prop.propertyDefinition.id]"
+                [cardinality]="prop.cardinality"></app-switch-properties-3>-->
       </div>
     </ng-container>
   </div>
