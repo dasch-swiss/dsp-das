@@ -1,6 +1,7 @@
 <form *ngIf="!loading; else loadingTemplate" [formGroup]="dynamicForm" appInvalidControlScroll>
   <app-upload-2
-    representation="stillImage"
+    *ngIf="hasFileValue"
+    [representation]="hasFileValue"
     (selectedFile)="onSelectedFile($event)"
     style="display: block; margin-bottom: 16px"></app-upload-2>
 

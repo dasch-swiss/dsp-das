@@ -10,6 +10,7 @@ import {
   CreateTextFileValue,
 } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/representation/upload/file-representation.type';
 import {
   UploadedFileResponse,
   UploadFileService,
@@ -58,7 +59,7 @@ import {
   styles: ['td {padding: 8px; text-align: center}'],
 })
 export class Upload2Component {
-  @Input({ required: true }) representation: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
+  @Input({ required: true }) representation: FileRepresentationType;
   @Output() selectedFile = new EventEmitter<CreateFileValue>();
 
   @ViewChild('fileInput') fileInput;
@@ -69,7 +70,13 @@ export class Upload2Component {
     return this.fileMapping.get(this.representation).fileTypes;
   }
 
-  readonly fileMapping = new Map<string, { fileTypes: string[]; uploadClass: new () => CreateFileValue }>([
+  readonly fileMapping = new Map<
+    FileRepresentationType,
+    {
+      fileTypes: string[];
+      uploadClass: new () => CreateFileValue;
+    }
+  >([
     [
       'stillImage',
       {
