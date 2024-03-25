@@ -74,7 +74,9 @@ export class ResourceInstanceFormComponent implements OnInit {
     this.getResourceProperties(this.resourceClassIri);
   }
 
-  onSelectedFile(file: any) {}
+  onSelectedFile(file: CreateFileValue) {
+    this.fileValue = file;
+  }
 
   private getResourceProperties(resourceClassIri: string) {
     this._dspApiConnection.v2.ontologyCache

@@ -14,14 +14,19 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
       <div *ngIf="previewUrl">
         <img [src]="previewUrl" alt="File Preview" style="max-width: 100%; max-height: 200px;" />
       </div>
-      <span>Name</span>
-      <span>Size</span>
-      <span>Last Modified Date</span>
-      <span>Delete</span>
-      <span>{{ file.name }}</span>
-      <button mat-icon-button (click)="removeFile()">
-        <mat-icon>delete</mat-icon>
-      </button>
+      <div
+        style="display: grid; grid-template-columns: auto auto auto auto; grid-gap: 10px; align-items: center; margin-top: 24px">
+        <span>Name</span>
+        <span>Size</span>
+        <span>Last Modified Date</span>
+        <span>Delete</span>
+        <span>{{ file.name }}</span>
+        <span>{{ Math.floor(file.size / 1000) }} kb</span>
+        <span>{{ file.lastModified | date }}</span>
+        <button mat-icon-button (click)="removeFile()">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
     </ng-template>
   `,
 })
@@ -35,7 +40,8 @@ export class Upload2Component {
   constructor(private _notification: NotificationService) {}
 
   addFile(event: any) {
-    const file: File = event.target.files[0];
+    console.log(event, '');
+    const file: File = event[0];
 
     if (!this.allowedFileTypes.includes(file.type)) {
       this._notification.openSnackBar(`This file type (${file.type}) is not supported`);
@@ -48,6 +54,7 @@ export class Upload2Component {
     this.file = file;
     this.selectedFile.emit(file);
   }
+
   removeFile() {
     this.file = null;
   }
@@ -59,4 +66,6 @@ export class Upload2Component {
       this.previewUrl = reader.result;
     };
   }
+
+  protected readonly Math = Math;
 }
