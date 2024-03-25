@@ -4,8 +4,15 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 @Component({
   selector: 'app-upload-2',
   template: `
-    <div *ngIf="!file; else showFileTemplate" appDragDrop (click)="fileInput.click()" (fileDropped)="addFile($event)">
-      <input hidden type="file" (change)="addFile($event)" #fileInput />
+    <div
+      *ngIf="!file; else showFileTemplate"
+      appDragDrop
+      (click)="fileInput.click()"
+      (fileDropped)="addFile($event.item(0))"
+      style="text-align: center;
+    padding: 16px; cursor: pointer">
+      <input hidden type="file" (change)="addFileFromClick($event)" #fileInput />
+      <mat-icon>cloud_upload</mat-icon>
       <div>Drag and drop or click to upload</div>
       <div class="mat-subtitle-2">The following file types are supported: >{{ allowedFileTypes.join(',') }}</div>
     </div>
@@ -45,10 +52,12 @@ export class Upload2Component {
 
   constructor(private _notification: NotificationService) {}
 
-  addFile(event: any) {
-    console.log(event, '');
-    const file: File = event[0];
+  addFileFromClick(event: any) {
+    this.addFile(event.target.files[0]);
+  }
 
+  addFile(file: File) {
+    console.log(file, 'file');
     if (!this.allowedFileTypes.includes(file.type)) {
       this._notification.openSnackBar(`This file type (${file.type}) is not supported`);
       return;
