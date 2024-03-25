@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { CreateFileValue } from '@dasch-swiss/dsp-js';
+import { Constants, CreateFileValue } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { fileValueMapping } from '@dsp-app/src/app/workspace/resource/representation/upload/file-mappings';
 import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/representation/upload/file-representation.type';
@@ -89,12 +89,12 @@ export class Upload2Component {
 
     this._upload.upload(formData).subscribe((res: UploadedFileResponse) => {
       switch (this.representation) {
-        case 'stillImage':
+        case Constants.HasStillImageFileValue:
           this.previewUrl = this._sanitizer.bypassSecurityTrustUrl(
             `${res.uploadedFiles[0].temporaryUrl}/full/256,/0/default.jpg`
           );
           break;
-        case 'document':
+        case Constants.HasDocumentFileValue:
           this.previewUrl = res.uploadedFiles[0].temporaryUrl;
           break;
       }

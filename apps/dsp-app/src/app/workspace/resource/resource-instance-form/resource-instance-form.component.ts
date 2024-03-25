@@ -136,7 +136,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   }
 
   private getHasFileValue(onto: ResourceClassAndPropertyDefinitions) {
-    for (const item in this.weirdConstants) {
+    for (const item of this.weirdConstants) {
       if (onto.properties[item]) {
         return item as FileRepresentationType;
       }
@@ -163,10 +163,10 @@ export class ResourceInstanceFormComponent implements OnInit {
 
     if (this.fileValue) {
       /*
-                                                                                              const hasFileValue = this.getHasFileValue(this.ontologyInfo);
-                                                                                              propertiesObj[hasFileValue] = [this.fileValue];
+                                                                                                    const hasFileValue = this.getHasFileValue(this.ontologyInfo);
+                                                                                                    propertiesObj[hasFileValue] = [this.fileValue];
 
-                                                                                                 */
+                                                                                                       */
       console.log(this.fileValue);
       propertiesObj[Constants.HasStillImageFileValue] = [this._getNewValue()];
     }

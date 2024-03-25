@@ -1,4 +1,5 @@
 import {
+  Constants,
   CreateArchiveFileValue,
   CreateAudioFileValue,
   CreateDocumentFileValue,
@@ -17,21 +18,45 @@ export const fileValueMapping = new Map<
   }
 >([
   [
-    'stillImage',
+    Constants.HasStillImageFileValue as FileRepresentationType,
     {
       fileTypes: ['jp2', 'jpg', 'jpeg', 'png', 'tif', 'tiff'],
       uploadClass: CreateStillImageFileValue,
     },
   ],
-  ['movingImage', { fileTypes: ['mp4'], uploadClass: CreateMovingImageFileValue }],
-  ['audio', { fileTypes: ['mp3', 'wav'], uploadClass: CreateAudioFileValue }],
   [
-    'document',
+    Constants.HasMovingImageFileValue as FileRepresentationType,
+    {
+      fileTypes: ['mp4'],
+      uploadClass: CreateMovingImageFileValue,
+    },
+  ],
+  [
+    Constants.HasAudioFileValue as FileRepresentationType,
+    {
+      fileTypes: ['mp3', 'wav'],
+      uploadClass: CreateAudioFileValue,
+    },
+  ],
+  [
+    Constants.HasDocumentFileValue as FileRepresentationType,
     {
       fileTypes: ['doc', 'docx', 'pdf', 'ppt', 'pptx', 'xls', 'xlsx'],
       uploadClass: CreateDocumentFileValue,
     },
   ],
-  ['text', { fileTypes: ['csv', 'odd', 'rng', 'txt', 'xml', 'xsd', 'xsl'], uploadClass: CreateTextFileValue }],
-  ['archive', { fileTypes: ['7z', 'gz', 'gzip', 'tar', 'tgz', 'z', 'zip'], uploadClass: CreateArchiveFileValue }],
+  [
+    Constants.HasTextFileValue as FileRepresentationType,
+    {
+      fileTypes: ['csv', 'odd', 'rng', 'txt', 'xml', 'xsd', 'xsl'],
+      uploadClass: CreateTextFileValue,
+    },
+  ],
+  [
+    Constants.HasArchiveFileValue as FileRepresentationType,
+    {
+      fileTypes: ['7z', 'gz', 'gzip', 'tar', 'tgz', 'z', 'zip'],
+      uploadClass: CreateArchiveFileValue,
+    },
+  ],
 ]);
