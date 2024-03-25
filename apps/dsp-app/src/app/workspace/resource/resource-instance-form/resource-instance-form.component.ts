@@ -20,7 +20,7 @@ import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/reso
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/values/link-value/temp-link-value.service';
 import { Store } from '@ngxs/store';
-import { switchMap, take, tap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 import { ResourceService } from '../services/resource.service';
 import { SelectPropertiesComponent } from './select-properties/select-properties.component';
 
@@ -113,17 +113,14 @@ export class ResourceInstanceFormComponent implements OnInit {
   }
 
   submitData() {
-    console.log('form', this.dynamicForm);
     if (this.dynamicForm.invalid) {
       return;
     }
-    console.log('payload sent', this._getPayload());
     this.loading = true;
 
     this._dspApiConnection.v2.res
       .createResource(this._getPayload())
       .pipe(
-        tap(v => console.log(v)),
         switchMap((res: ReadResource) => {
           const uuid = this._resourceService.getResourceUuid(res.id);
           return this._router.navigate(['..', uuid], { relativeTo: this._route });
@@ -163,10 +160,10 @@ export class ResourceInstanceFormComponent implements OnInit {
 
     if (this.fileValue) {
       /*
-                                                                                                    const hasFileValue = this.getHasFileValue(this.ontologyInfo);
-                                                                                                    propertiesObj[hasFileValue] = [this.fileValue];
+                                                                                                          const hasFileValue = this.getHasFileValue(this.ontologyInfo);
+                                                                                                          propertiesObj[hasFileValue] = [this.fileValue];
 
-                                                                                                       */
+                                                                                                             */
       console.log(this.fileValue);
       propertiesObj[Constants.HasStillImageFileValue] = [this._getNewValue()];
     }
