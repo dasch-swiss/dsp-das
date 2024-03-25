@@ -59,6 +59,8 @@ import {
 })
 export class Upload2Component {
   @Input() allowedFileTypes: string[];
+  @Input({ required: true }) representation: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
+
   @Output() selectedFile = new EventEmitter<CreateFileValue>();
 
   @ViewChild('fileInput') fileInput;
@@ -82,9 +84,6 @@ export class Upload2Component {
       return;
     }
 
-    if (file.type.startsWith('image')) {
-      this.previewThumbnail(file);
-    }
     this.file = file;
     this.uploadFile(file);
   }
@@ -95,19 +94,15 @@ export class Upload2Component {
     formData.append(file.name, file);
     this._upload.upload(formData).subscribe((res: UploadedFileResponse) => {
       // prepare thumbnail url to display something after upload
-      const representation = 'stillImage'; // TODO temp
-      switch (representation) {
+      switch (this.representation) {
         case 'stillImage':
           const temporaryUrl = res.uploadedFiles[0].temporaryUrl;
           const thumbnailUri = '/full/256,/0/default.jpg';
           this.previewUrl = this._sanitizer.bypassSecurityTrustUrl(temporaryUrl + thumbnailUri);
           break;
-        /*
-                                                case 'document':
-                                                  this.previewUrl = res.uploadedFiles[0].temporaryUrl;
-                                                  break;
-
-                                         */
+        case 'document':
+          this.previewUrl = res.uploadedFiles[0].temporaryUrl;
+          break;
       }
 
       // this.fileControl.setValue(res.uploadedFiles[0]);
@@ -132,31 +127,30 @@ export class Upload2Component {
       | CreateMovingImageFileValue
       | CreateTextFileValue;
 
-    switch ('stillImage') {
+    switch (this.representation) {
       case 'stillImage':
         fileValue = new CreateStillImageFileValue();
         break;
-      /*
-                                                case 'document':
-                                                  fileValue = new CreateDocumentFileValue();
-                                                  break;
+      case 'document':
+        fileValue = new CreateDocumentFileValue();
+        break;
 
-                                                case 'audio':
-                                                  fileValue = new CreateAudioFileValue();
-                                                  break;
+      case 'audio':
+        fileValue = new CreateAudioFileValue();
+        break;
 
-                                                case 'movingImage':
-                                                  fileValue = new CreateMovingImageFileValue();
-                                                  break;
+      case 'movingImage':
+        fileValue = new CreateMovingImageFileValue();
+        break;
 
-                                                case 'archive':
-                                                  fileValue = new CreateArchiveFileValue();
-                                                  break;
+      case 'archive':
+        fileValue = new CreateArchiveFileValue();
+        break;
 
-                                                case 'text':
-                                                  fileValue = new CreateTextFileValue();
-                                                  break;
-                                          */
+      case 'text':
+        fileValue = new CreateTextFileValue();
+        break;
+
       default:
         break;
     }
@@ -168,14 +162,6 @@ export class Upload2Component {
 
   removeFile() {
     this.file = null;
-  }
-
-  private previewThumbnail(file: File) {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      this.previewUrl = reader.result;
-    };
   }
 
   protected readonly Math = Math;
