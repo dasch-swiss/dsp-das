@@ -45,8 +45,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   resourceClass: ResourceClassDefinition;
   ontologyInfo: ResourceClassAndPropertyDefinitions;
   fileRepresentation: FileRepresentationType;
-  fileValue: CreateFileValue;
-  unsuitableProperties: IHasPropertyWithPropertyDefinition[];
+  properties: IHasPropertyWithPropertyDefinition[];
   loading = false;
 
   mapping = new Map<string, string>();
@@ -115,7 +114,7 @@ export class ResourceInstanceFormComponent implements OnInit {
         readResource.entityInfo = this.ontologyInfo;
         this._tempLinkValueService.parentResource = readResource;
 
-        this.unsuitableProperties = onto.classes[resourceClassIri]
+        this.properties = onto.classes[resourceClassIri]
           .getResourcePropertiesList()
           .filter(v => v.guiOrder !== undefined)
           .filter(v => v.propertyDefinition['isLinkProperty'] === false);
@@ -129,7 +128,7 @@ export class ResourceInstanceFormComponent implements OnInit {
       this.form.addControl('file', this._fb.control(null, [Validators.required]));
     }
 
-    this.unsuitableProperties.forEach((prop, index) => {
+    this.properties.forEach((prop, index) => {
       this.form.controls.dynamic.addControl(prop.propertyDefinition.id, this._fb.array(['']));
       this.mapping.set(prop.propertyDefinition.id, prop.propertyDefinition.objectType);
     });
