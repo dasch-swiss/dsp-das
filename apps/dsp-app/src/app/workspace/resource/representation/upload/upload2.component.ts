@@ -110,6 +110,7 @@ export class Upload2Component implements ControlValueAccessor {
 
   removeFile() {
     this.ngControl.control.setValue(null);
+    this.ngControl.control.markAsUntouched();
   }
 
   private _uploadFile(file: File): void {
