@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ReadProject, ResourceClassDefinition, StoredProject } from '@dasch-swiss/dsp-js';
+import { ReadProject, ResourceClassDefinition } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -8,7 +8,6 @@ import {
   IProjectOntologiesKeyValuePairs,
   OntologiesSelectors,
   ProjectsSelectors,
-  UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { Select } from '@ngxs/store';
 import { combineLatest, Observable } from 'rxjs';
@@ -24,13 +23,9 @@ import { map, takeWhile } from 'rxjs/operators';
 export class CreateRessourcePageComponent {
   @Select(OntologiesSelectors.projectOntologies)
   projectOntologies$: Observable<IProjectOntologiesKeyValuePairs>;
-  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
-  @Select(UserSelectors.userProjects) userProjects$: Observable<StoredProject[]>;
   @Select(ProjectsSelectors.currentProject) project$: Observable<ReadProject>;
 
-  projectUuid = this._route.snapshot.params.uuid
-    ? this._route.snapshot.params.uuid
-    : this._route.parent.snapshot.params.uuid;
+  projectUuid = this._route.snapshot.params.uuid ?? this._route.parent.snapshot.params.uuid;
 
   constructor(
     private _route: ActivatedRoute,
@@ -38,11 +33,6 @@ export class CreateRessourcePageComponent {
     protected _projectService: ProjectService
   ) {}
 
-  get instanceId$(): Observable<string> {
-    return this._route.params.pipe(map(params => params[RouteConstants.instanceParameter]));
-  }
-
-  // id (iri) of resource class
   get classId$(): Observable<string> {
     return combineLatest([this.ontoId$, this._route.params]).pipe(
       map(([ontoId, params]) => {
@@ -71,24 +61,8 @@ export class CreateRessourcePageComponent {
   }
 
   get resClass$(): Observable<ResourceClassDefinition> {
-    return combineLatest([
-      this.projectOntologies$,
-      this.classId$,
-      this.ontoId$,
-      this.instanceId$,
-      this.userProjects$,
-      this.isSysAdmin$,
-    ]).pipe(
-      map(([projectOntologies, classId, ontoId, instanceId, userProjects, isSysAdmin]) => {
-        if (
-          instanceId !== RouteConstants.addClassInstance ||
-          (instanceId === RouteConstants.addClassInstance &&
-            !(userProjects?.some(p => p.id === this.projectIri) || isSysAdmin)) ||
-          !projectOntologies[this.projectIri]
-        ) {
-          return;
-        }
-
+    return combineLatest([this.projectOntologies$, this.classId$, this.ontoId$]).pipe(
+      map(([projectOntologies, classId, ontoId]) => {
         const ontology = projectOntologies[this.projectIri].readOntologies.find(onto => onto.id === ontoId);
         if (ontology) {
           // find ontology of current resource class to get the class label
