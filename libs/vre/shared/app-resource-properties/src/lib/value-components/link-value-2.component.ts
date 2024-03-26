@@ -1,8 +1,13 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { MatDialog } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import {
+  CreateResourceDialogProps,
+  CreateRessourceDialogComponent,
+} from '@dsp-app/src/app/project/create-ressource-page/create-ressource-dialog.component';
 import { filter, switchMap } from 'rxjs/operators';
 import { TempLinkValueService } from './temp-link-value.service';
 
@@ -17,10 +22,10 @@ import { TempLinkValueService } from './temp-link-value.service';
         placeholder="Name of an existing resource"
         [matAutocomplete]="auto" />
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource.bind(this)">
-        <mat-option *ngIf="resources.length === 0" disabled="true"> No results were found.</mat-option>
-        <!--<mat-option *ngFor="let rc of resourceClasses" (click)="openDialog('createLinkResource', $event, propIri, rc)">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Create New: {{ rc?.label }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </mat-option>-->
+        <mat-option *ngIf="resources.length === 0" [disabled]="true"> No results were found.</mat-option>
+        <!--<mat-option *ngFor="let rc of resourceClasses" (click)="openCreateResourceDialog($event, propIri, rc.label)">
+                        Create New: {{ rc?.label }}
+                        </mat-option>-->
         <mat-option *ngFor="let res of resources" [value]="res.id"> {{ res.label }}</mat-option>
       </mat-autocomplete>
       <mat-hint>{{ 'appLabels.form.action.searchHelp' | translate }}</mat-hint>
@@ -40,6 +45,7 @@ export class LinkValue2Component implements OnInit {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _tempLinkValueService: TempLinkValueService,
+    private _dialog: MatDialog,
     private _cd: ChangeDetectorRef
   ) {}
 
@@ -58,6 +64,16 @@ export class LinkValue2Component implements OnInit {
         this.resources = response.resources;
         this._cd.detectChanges();
       });
+  }
+
+  openCreateResourceDialog(event: any, propIri: string, resourceType: string) {
+    this._dialog.open<CreateRessourceDialogComponent, CreateResourceDialogProps>(CreateRessourceDialogComponent, {
+      data: {
+        resourceType,
+        resourceClassIri: '',
+        projectIri: propIri,
+      },
+    });
   }
 
   private _getRestrictToResourceClass() {
