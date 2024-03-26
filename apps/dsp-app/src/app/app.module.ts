@@ -166,11 +166,9 @@ import { UploadComponent } from './workspace/resource/representation/upload/uplo
 import { VideoPreviewComponent } from './workspace/resource/representation/video/video-preview/video-preview.component';
 import { VideoComponent } from './workspace/resource/representation/video/video.component';
 import { ResourceInstanceFormComponent } from './workspace/resource/resource-instance-form/resource-instance-form.component';
-import { SelectOntologyComponent } from './workspace/resource/resource-instance-form/select-ontology/select-ontology.component';
 import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
 import { SelectPropertiesComponent } from './workspace/resource/resource-instance-form/select-properties/select-properties.component';
 import { SwitchPropertiesComponent } from './workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties.component';
-import { SelectResourceClassComponent } from './workspace/resource/resource-instance-form/select-resource-class/select-resource-class.component';
 import { ResourceLinkFormComponent } from './workspace/resource/resource-link-form/resource-link-form.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { BooleanValueComponent } from './workspace/resource/values/boolean-value/boolean-value.component';
@@ -310,10 +308,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     SelectedResourcesComponent,
     SelectGroupComponent,
     SelectLanguageComponent,
-    SelectOntologyComponent,
     SelectProjectComponent,
     SelectPropertiesComponent,
-    SelectResourceClassComponent,
     SortButtonComponent,
     SplitPipe,
     StatusComponent,
