@@ -17,7 +17,7 @@ import { map, takeWhile } from 'rxjs/operators';
   selector: 'app-create-ressource-page',
   template: ` <app-create-ressource-form
     [resourceType]="(resClass$ | async)?.label"
-    [resourceClassIri]="classId$ | async"
+    [resourceClassIri]="classIri$ | async"
     [projectIri]="projectIri"></app-create-ressource-form>`,
 })
 export class CreateRessourcePageComponent {
@@ -33,14 +33,12 @@ export class CreateRessourcePageComponent {
     protected _projectService: ProjectService
   ) {}
 
-  get classId$(): Observable<string> {
-    return combineLatest([this.ontoId$, this._route.params]).pipe(
-      map(([ontoId, params]) => {
-        const className = params[RouteConstants.classParameter];
-        return `${ontoId}#${className}`;
-      })
-    );
-  }
+  classIri$ = this.ontoId$.pipe(
+    map(ontoId => {
+      const className = this._route.snapshot.params[RouteConstants.classParameter];
+      return `${ontoId}#${className}`;
+    })
+  );
 
   get ontoId$(): Observable<string> {
     return combineLatest([this.project$, this._route.params]).pipe(
@@ -48,9 +46,6 @@ export class CreateRessourcePageComponent {
       map(([project, params]) => {
         const iriBase = this._ontologyService.getIriBaseUrl();
         const ontologyName = params[RouteConstants.ontoParameter];
-        // get the resource ids from the route. Do not use the RouteConstants ontology route constant here,
-        // because the ontology and class ids are not defined within the apps domain. They are defined by
-        // the api and can not be changed generically via route constants.
         return `${iriBase}/ontology/${project.shortcode}/${ontologyName}/v2`;
       })
     );
@@ -61,7 +56,7 @@ export class CreateRessourcePageComponent {
   }
 
   get resClass$(): Observable<ResourceClassDefinition> {
-    return combineLatest([this.projectOntologies$, this.classId$, this.ontoId$]).pipe(
+    return combineLatest([this.projectOntologies$, this.classIri$, this.ontoId$]).pipe(
       map(([projectOntologies, classId, ontoId]) => {
         const ontology = projectOntologies[this.projectIri].readOntologies.find(onto => onto.id === ontoId);
         if (ontology) {
