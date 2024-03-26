@@ -51,7 +51,6 @@ export class ResourceInstanceFormComponent implements OnInit {
   loading = false;
 
   mapping = new Map<string, string>();
-  labelControl = this._fb.control<string>('', [Validators.required]);
   readonly resourceClassTypes = [
     Constants.HasStillImageFileValue,
     Constants.HasDocumentFileValue,
@@ -108,7 +107,7 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   private _buildForm() {
     if (this.fileRepresentation) {
-      this.form.addControl('file', this._fb.control(null));
+      this.form.addControl('file', this._fb.control(null, [Validators.required]));
     }
 
     this.unsuitableProperties.forEach((prop, index) => {
@@ -147,7 +146,7 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   private _getPayload() {
     const createResource = new CreateResource();
-    createResource.label = this.labelControl.value;
+    createResource.label = this.form.controls.label.value;
     createResource.type = this.resourceClass.id;
     createResource.attachedToProject = this.projectIri;
     createResource.properties = this._getPropertiesObj();
@@ -163,10 +162,10 @@ export class ResourceInstanceFormComponent implements OnInit {
 
     if (this.form.controls.file) {
       /*
-                                                                                                                                                                                                          const hasFileValue = this.getHasFileValue(this.ontologyInfo);
-                                                                                                                                                                                                          propertiesObj[hasFileValue] = [this.fileValue];
+                                                                                                                                                                                                                            const hasFileValue = this.getHasFileValue(this.ontologyInfo);
+                                                                                                                                                                                                                            propertiesObj[hasFileValue] = [this.fileValue];
 
-                                                                                                                                                                                                             */
+                                                                                                                                                                                                                               */
       propertiesObj[this.fileRepresentation] = [this._getFileValue()];
     }
     return propertiesObj;
