@@ -14,103 +14,17 @@
           matTooltipPosition="above">
           {{resourceClassType?.label}}<span *ngIf="resource.res.isDeleted">(deleted)</span>
         </h3>
-        <span class="action" *ngIf="project$ | async" [class.deleted]="resource.res.isDeleted">
-          <!-- Share resource: copy ark url, add to favorites or open in new tab -->
-          <button
-            color="primary"
-            mat-icon-button
-            class="share-res"
-            matTooltip="Share resource: {{resource.res.versionArkUrl}}"
-            matTooltipPosition="above"
-            [disabled]="resource.res.isDeleted"
-            [matMenuTriggerFor]="share">
-            <mat-icon>share</mat-icon>
-            <!-- <span class="desktop-only">Citation Link</span> -->
-          </button>
-          <mat-menu #share="matMenu" class="res-share-menu">
-            <button
-              mat-menu-item
-              matTooltip="Copy ARK url"
-              matTooltipPosition="above"
-              [cdkCopyToClipboard]="resource.res.versionArkUrl"
-              (click)="notification.openSnackBar('ARK URL copied to clipboard!')">
-              <mat-icon>content_copy</mat-icon>
-              Copy ARK url to clipboard
-            </button>
-            <button
-              mat-menu-item
-              matTooltip="Copy internal link"
-              matTooltipPosition="above"
-              [cdkCopyToClipboard]="resource.res.id"
-              (click)="notification.openSnackBar('Internal link copied to clipboard!')">
-              <mat-icon>content_copy</mat-icon>
-              Copy internal link to clipboard
-            </button>
-            <button
-              mat-menu-item
-              matTooltip="Open in new tab"
-              matTooltipPosition="above"
-              (click)="openResource(resource.res.id)">
-              <mat-icon>open_in_new</mat-icon>
-              Open resource in new tab
-            </button>
-            <!-- TODO: activate favorite action to add resource to collection -->
-            <!--
-                <button mat-button class="add-res-to-collection">
-                    <mat-icon>star_border</mat-icon>
-                </button>
-                -->
-          </mat-menu>
-          <!-- permission info: display full info in case of system or project admin; otherwise display only user's permissions -->
-          <app-permission-info
-            *ngIf="isAdmin$ | async"
-            [hasPermissions]="resource.res.hasPermissions"
-            [userHasPermission]="resource.res.userHasPermission"></app-permission-info>
-          <app-permission-info
-            *ngIf="!(isAdmin$ | async)"
-            [userHasPermission]="resource.res.userHasPermission"></app-permission-info>
-          <!-- more menu with: delete, erase resource -->
-          <button
-            color="primary"
-            *ngIf="userCanEdit && (project$ | async)?.status"
-            mat-icon-button
-            class="more-menu"
-            matTooltip="More"
-            matTooltipPosition="above"
-            [matMenuTriggerFor]="more"
-            [disabled]="resource.res.isDeleted">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #more="matMenu" class="res-more-menu">
-            <button
-              [disabled]="!userCanDelete"
-              mat-menu-item
-              matTooltip="Move resource to trash bin."
-              matTooltipPosition="above"
-              (click)="openDialog('delete')">
-              <mat-icon>delete</mat-icon>
-              Delete resource
-            </button>
-            <button
-              *ngIf="isAdmin$ | async"
-              mat-menu-item
-              matTooltip="Erase resource forever. This cannot be undone."
-              matTooltipPosition="above"
-              (click)="openDialog('erase')">
-              <mat-icon>delete_forever</mat-icon>
-              Erase resource
-            </button>
-          </mat-menu>
-        </span>
+        <app-resource-toolbar
+          [resource]="resource"
+          [lastModificationDate]="resource.res.lastModificationDate"
+          [adminPermissions]="isAdmin$ | async"
+          [attachedProject]="project$ | async"
+          (regionChanged)="regionChanged.emit()"
+          (regionDeleted)="regionDeleted.emit()"></app-resource-toolbar>
       </div>
       <div class="resource-label">
         <h4>{{resourceLabel(incomingResource, resource)}}</h4>
-        <button
-          mat-icon-button
-          color="primary"
-          matTooltip="Edit label"
-          (click)="openDialog('edit')"
-          *ngIf="userCanEdit">
+        <button mat-icon-button color="primary" matTooltip="Edit label" (click)="openEditDialog()" *ngIf="userCanEdit">
           <mat-icon>edit</mat-icon>
         </button>
       </div>

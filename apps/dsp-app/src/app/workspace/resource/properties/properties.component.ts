@@ -10,15 +10,12 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import {
   ApiResponseError,
   CardinalityUtil,
   Constants,
   CountQueryResponse,
-  DeleteResource,
-  DeleteResourceResponse,
   DeleteValue,
   IHasPropertyWithPropertyDefinition,
   KnoraApiConnection,
@@ -32,25 +29,11 @@ import {
   ReadUser,
   ReadValue,
   ResourcePropertyDefinition,
-  UpdateResourceMetadata,
-  UpdateResourceMetadataResponse,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import {
-  Events as CommsEvents,
-  ComponentCommunicationEventService,
-  EmitEvent,
-  OntologyService,
-  SortingService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import {
-  LoadClassItemsCountAction,
-  ResourceSelectors,
-  ToggleShowAllPropsAction,
-} from '@dasch-swiss/vre/shared/app-state';
-import { ConfirmationWithComment, DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
-import { Select, Store } from '@ngxs/store';
+import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Select } from '@ngxs/store';
 import { Observable, Subject, Subscription, forkJoin } from 'rxjs';
 import { DspResource } from '../dsp-resource';
 import { RepresentationConstants } from '../representation/file-representation';
@@ -137,8 +120,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() lastModificationDate: string;
 
-  deletedResource = false;
-
   userCanDelete: boolean;
   cantDeleteReason = '';
 
@@ -163,16 +144,11 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _incomingService: IncomingService,
-    private _notification: NotificationService,
     private _resourceService: ResourceService,
     private _valueOperationEventService: ValueOperationEventService,
     private _valueService: ValueService,
     private _sortingService: SortingService,
-    private _cd: ChangeDetectorRef,
-    private _componentCommsService: ComponentCommunicationEventService,
-    private _dialog: MatDialog,
-    private _store: Store,
-    private _ontologyService: OntologyService
+    private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -286,84 +262,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
 
   previewResource() {
     // --> TODO: pop up resource preview on hover
-  }
-
-  toggleShowAllProps() {
-    this._store.dispatch(new ToggleShowAllPropsAction());
-  }
-
-  openDialog(type: 'delete' | 'erase' | 'edit') {
-    const dialogConfig: MatDialogConfig = {
-      width: '560px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: { mode: `${type}Resource`, title: this.resource.res.label },
-    };
-
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe((answer: ConfirmationWithComment) => {
-      if (!answer) {
-        // if the user clicks outside of the dialog window, answer is undefined
-        return;
-      }
-      if (answer.confirmed === true) {
-        if (type !== 'edit') {
-          const payload = new DeleteResource();
-          payload.id = this.resource.res.id;
-          payload.type = this.resource.res.type;
-          payload.deleteComment = answer.comment ? answer.comment : undefined;
-          payload.lastModificationDate = this.lastModificationDate;
-          switch (type) {
-            case 'delete':
-              // delete the resource and refresh the view
-              this._dspApiConnection.v2.res.deleteResource(payload).subscribe((response: DeleteResourceResponse) => {
-                this._onResourceDeleted(response);
-              });
-              break;
-
-            case 'erase':
-              // erase the resource and refresh the view
-              this._dspApiConnection.v2.res.eraseResource(payload).subscribe((response: DeleteResourceResponse) => {
-                this._onResourceDeleted(response);
-              });
-              break;
-          }
-        } else if (this.resource.res.label !== answer.comment) {
-          // update resource's label if it has changed
-          // get the correct lastModificationDate from the resource
-          this._dspApiConnection.v2.res.getResource(this.resource.res.id).subscribe((res: ReadResource) => {
-            const payload = new UpdateResourceMetadata();
-            payload.id = this.resource.res.id;
-            payload.type = this.resource.res.type;
-            payload.lastModificationDate = res.lastModificationDate;
-            payload.label = answer.comment;
-
-            this._dspApiConnection.v2.res
-              .updateResourceMetadata(payload)
-              .subscribe((response: UpdateResourceMetadataResponse) => {
-                this.resource.res.label = payload.label;
-                this.lastModificationDate = response.lastModificationDate;
-                // if annotations tab is active; a label of a region has been changed --> update regions
-                this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceChanged));
-                if (this.isAnnotation) {
-                  this.regionChanged.emit();
-                }
-                this._cd.markForCheck();
-              });
-          });
-        }
-      }
-    });
-  }
-
-  /**
-   * display message to confirm the copy of the citation link (ARK URL)
-   */
-  openSnackBar(message: string) {
-    this._notification.openSnackBar(message);
   }
 
   /**
@@ -517,20 +415,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       console.warn('No properties exist for this resource');
     }
-  }
-
-  private _onResourceDeleted(response: DeleteResourceResponse) {
-    // display notification and mark resource as 'erased'
-    this._notification.openSnackBar(`${response.result}: ${this.resource.res.label}`);
-    const ontologyIri = this._ontologyService.getOntologyIriFromRoute(this.attachedProject.shortcode);
-    const classId = this.resource.res.entityInfo.classes[this.resource.res.type]?.id;
-    this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
-    this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceDeleted));
-    // if it is an Annotation/Region which has been erases, we emit the
-    // regionChanged event, in order to refresh the page
-    this.regionDeleted.emit();
-
-    this._cd.markForCheck();
   }
 
   /**

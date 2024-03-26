@@ -70,11 +70,10 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
   loadingResults = false;
   showNoResultsMessage = false;
 
-  get linkLabel() {
-    const prepend = this.displayValue.property.includes(Constants.HasStandoffLinkToValue)
-      ? `${this.valueFormControl.value?.resourceClassLabel}:`
+  get linkLabelResourceClass() {
+    return this.displayValue.property.includes(Constants.HasStandoffLinkToValue)
+      ? `${this.valueFormControl.value?.resourceClassLabel}: `
       : '';
-    return `${prepend}${this.valueFormControl.value?.label}`;
   }
 
   constructor(

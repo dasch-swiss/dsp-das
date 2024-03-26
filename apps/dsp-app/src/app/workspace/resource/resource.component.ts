@@ -11,15 +11,13 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
   CountQueryResponse,
-  DeleteResource,
-  DeleteResourceResponse,
   IHasPropertyWithPropertyDefinition,
   KnoraApiConnection,
   PermissionUtil,
@@ -45,14 +43,12 @@ import {
   ComponentCommunicationEventService,
   EmitEvent,
   Events,
-  OntologyService,
   ProjectService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   GetAttachedProjectAction,
   GetAttachedUserAction,
-  LoadClassItemsCountAction,
   ResourceSelectors,
   ToggleShowAllPropsAction,
   UserSelectors,
@@ -160,20 +156,15 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
   notification = this._notification;
 
-  get allPermissions(): PermissionUtil.Permissions[] {
+  get userCanEdit(): boolean {
     if (!this.resource.res) {
-      return [];
+      return false;
     }
 
-    return PermissionUtil.allUserPermissions(this.resource.res.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR');
-  }
-
-  get userCanEdit() {
-    return this.allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
-  }
-
-  get userCanDelete() {
-    return this.allPermissions.indexOf(PermissionUtil.Permissions.D) !== -1;
+    const allPermissions = PermissionUtil.allUserPermissions(
+      this.resource.res.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR'
+    );
+    return allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
   }
 
   get isAdmin$(): Observable<boolean> {
@@ -209,8 +200,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     private _store: Store,
     private _actions$: Actions,
     private _dialog: MatDialog,
-    private _componentCommsService: ComponentCommunicationEventService,
-    private _ontologyService: OntologyService
+    private _componentCommsService: ComponentCommunicationEventService
   ) {
     this._route.params.subscribe(params => {
       this.projectCode = params.project;
@@ -770,99 +760,36 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     }
   }
 
-  /**
-   * opens resource
-   * @param linkValue
-   */
-  openResource(linkValue: ReadLinkValue | string) {
-    const iri = typeof linkValue == 'string' ? linkValue : linkValue.linkedResourceIri;
-    const path = this._resourceService.getResourcePath(iri);
-    window.open(`/resource${path}`, '_blank');
-  }
-
-  openDialog(type: 'delete' | 'erase' | 'edit') {
-    const dialogConfig: MatDialogConfig = {
-      width: '560px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: { mode: `${type}Resource`, title: this.resource.res.label },
-    };
-
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-
+  openEditDialog() {
+    const dialogRef = this._dialog.open(DialogComponent, {
+      data: { mode: `editResource`, title: this.resource.res.label },
+    });
     dialogRef.afterClosed().subscribe((answer: ConfirmationWithComment) => {
-      if (!answer) {
-        // if the user clicks outside of the dialog window, answer is undefined
-        return;
-      }
-      if (answer.confirmed === true) {
-        if (type !== 'edit') {
-          const payload = new DeleteResource();
+      if (answer.confirmed === true && this.resource.res.label !== answer.comment) {
+        // update resource's label if it has changed
+        // get the correct lastModificationDate from the resource
+        this._dspApiConnection.v2.res.getResource(this.resource.res.id).subscribe((res: ReadResource) => {
+          const payload = new UpdateResourceMetadata();
           payload.id = this.resource.res.id;
           payload.type = this.resource.res.type;
-          payload.deleteComment = answer.comment ? answer.comment : undefined;
-          payload.lastModificationDate = this.resource.res.lastModificationDate;
-          switch (type) {
-            case 'delete':
-              // delete the resource and refresh the view
-              this._dspApiConnection.v2.res.deleteResource(payload).subscribe((response: DeleteResourceResponse) => {
-                this._onResourceDeleted(response);
-              });
-              break;
+          payload.lastModificationDate = res.lastModificationDate;
+          payload.label = answer.comment;
 
-            case 'erase':
-              // erase the resource and refresh the view
-              this._dspApiConnection.v2.res.eraseResource(payload).subscribe((response: DeleteResourceResponse) => {
-                this._onResourceDeleted(response);
-              });
-              break;
-          }
-        } else if (this.resource.res.label !== answer.comment) {
-          // update resource's label if it has changed
-          // get the correct lastModificationDate from the resource
-          this._dspApiConnection.v2.res.getResource(this.resource.res.id).subscribe((res: ReadResource) => {
-            const payload = new UpdateResourceMetadata();
-            payload.id = this.resource.res.id;
-            payload.type = this.resource.res.type;
-            payload.lastModificationDate = res.lastModificationDate;
-            payload.label = answer.comment;
-
-            this._dspApiConnection.v2.res
-              .updateResourceMetadata(payload)
-              .subscribe((response: UpdateResourceMetadataResponse) => {
-                this.resource.res.label = payload.label;
-                this.resource.res.lastModificationDate = response.lastModificationDate;
-                // if annotations tab is active; a label of a region has been changed --> update regions
-                this._componentCommsService.emit(new EmitEvent(Events.resourceChanged));
-                if (this.matTabAnnotations && this.matTabAnnotations.isActive) {
-                  this.regionChanged.emit();
-                }
-                this._cdr.markForCheck();
-              });
-          });
-        }
+          this._dspApiConnection.v2.res
+            .updateResourceMetadata(payload)
+            .subscribe((response: UpdateResourceMetadataResponse) => {
+              this.resource.res.label = payload.label;
+              this.resource.res.lastModificationDate = response.lastModificationDate;
+              // if annotations tab is active; a label of a region has been changed --> update regions
+              this._componentCommsService.emit(new EmitEvent(Events.resourceChanged));
+              if (this.matTabAnnotations && this.matTabAnnotations.isActive) {
+                this.regionChanged.emit();
+              }
+              this._cdr.markForCheck();
+            });
+        });
       }
     });
-  }
-
-  private _onResourceDeleted(response: DeleteResourceResponse) {
-    // display notification and mark resource as 'erased'
-    this._notification.openSnackBar(`${response.result}: ${this.resource.res.label}`);
-    const attachedProject = this._store.selectSnapshot(ResourceSelectors.attachedProjects);
-    const project = attachedProject[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToProject);
-    const ontologyIri = this._ontologyService.getOntologyIriFromRoute(project?.shortcode);
-    const classId = this.resourceClassType?.id;
-    this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
-    this._componentCommsService.emit(new EmitEvent(Events.resourceDeleted));
-    // if it is an Annotation/Region which has been erases, we emit the
-    // regionChanged event, in order to refresh the page
-    if (this.matTabAnnotations.isActive) {
-      this.regionDeleted.emit();
-    }
-
-    this._cdr.markForCheck();
   }
 
   private _getResourceAttachedData(resource: DspResource): void {
