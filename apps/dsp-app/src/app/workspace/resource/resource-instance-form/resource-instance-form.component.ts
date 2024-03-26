@@ -39,9 +39,9 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   form: FormGroup<{
     label: FormControl<string>;
-    dynamic: FormGroup<{ [key: string]: FormArray<FormControl<string>> }>;
+    properties: FormGroup<{ [key: string]: FormArray<FormControl<string>> }>;
     file?: FormControl<CreateFileValue>;
-  }> = this._fb.group({ label: this._fb.control('', [Validators.required]), dynamic: this._fb.group({}) });
+  }> = this._fb.group({ label: this._fb.control('', [Validators.required]), properties: this._fb.group({}) });
   resourceClass: ResourceClassDefinition;
   ontologyInfo: ResourceClassAndPropertyDefinitions;
   fileRepresentation: FileRepresentationType;
@@ -129,7 +129,7 @@ export class ResourceInstanceFormComponent implements OnInit {
     }
 
     this.properties.forEach((prop, index) => {
-      this.form.controls.dynamic.addControl(prop.propertyDefinition.id, this._fb.array(['']));
+      this.form.controls.properties.addControl(prop.propertyDefinition.id, this._fb.array(['']));
       this.mapping.set(prop.propertyDefinition.id, prop.propertyDefinition.objectType);
     });
   }
@@ -154,7 +154,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   private _getPropertiesObj() {
     const propertiesObj = {};
 
-    Object.keys(this.form.controls.dynamic.controls).forEach(iri => {
+    Object.keys(this.form.controls.properties.controls).forEach(iri => {
       propertiesObj[iri] = this.getValue(iri);
     });
 
@@ -165,7 +165,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   }
 
   private getValue(iri: string) {
-    const controls = this.form.controls.dynamic.controls[iri].controls;
+    const controls = this.form.controls.properties.controls[iri].controls;
     return controls.map(control => {
       return propertiesTypeMapping.get(this.mapping.get(iri)).mapping(control.value);
     });
