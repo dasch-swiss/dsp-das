@@ -48,7 +48,7 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   mapping = new Map<string, string>();
   labelControl = this._fb.control<string>('', [Validators.required]);
-  readonly weirdConstants = [
+  readonly resourceClassTypes = [
     Constants.HasStillImageFileValue,
     Constants.HasDocumentFileValue,
     Constants.HasAudioFileValue,
@@ -133,7 +133,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   }
 
   private getHasFileValue(onto: ResourceClassAndPropertyDefinitions) {
-    for (const item of this.weirdConstants) {
+    for (const item of this.resourceClassTypes) {
       if (onto.properties[item]) {
         return item as FileRepresentationType;
       }
@@ -160,10 +160,10 @@ export class ResourceInstanceFormComponent implements OnInit {
 
     if (this.fileValue) {
       /*
-                                                                                                                      const hasFileValue = this.getHasFileValue(this.ontologyInfo);
-                                                                                                                      propertiesObj[hasFileValue] = [this.fileValue];
+                                                                                                                            const hasFileValue = this.getHasFileValue(this.ontologyInfo);
+                                                                                                                            propertiesObj[hasFileValue] = [this.fileValue];
 
-                                                                                                                         */
+                                                                                                                               */
       console.log(this.fileValue);
       propertiesObj[this.hasFileValue] = [this._getNewValue()];
     }
@@ -186,7 +186,7 @@ export class ResourceInstanceFormComponent implements OnInit {
     );
     return this.ontologyInfo
       .getPropertyDefinitionsByType(ResourcePropertyDefinition)
-      .filter(prop => !prop.isLinkProperty && prop.isEditable && !this.weirdConstants.includes(prop.id));
+      .filter(prop => !prop.isLinkProperty && prop.isEditable && !this.resourceClassTypes.includes(prop.id));
   }
 
   private _getNewValue(): CreateFileValue | false {

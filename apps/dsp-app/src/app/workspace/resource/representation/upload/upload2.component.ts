@@ -75,11 +75,13 @@ export class Upload2Component {
   }
 
   addFile(file: File) {
-    if (!this.allowedFileTypes.some(_file => file.type.endsWith(_file))) {
-      this._notification.openSnackBar(`This file type (${file.type}) is not supported`);
+    const regex = /\.([^.\\/:*?"<>|\r\n]+)$/;
+    const match = file.name.match(regex);
+    const fileExtension = match[1];
+    if (!match || !this.allowedFileTypes.some(allowedFileExtension => fileExtension === allowedFileExtension)) {
+      this._notification.openSnackBar(`The extension ${fileExtension} is not supported`);
       return;
     }
-
     this.file = file;
     this._uploadFile(file);
   }
