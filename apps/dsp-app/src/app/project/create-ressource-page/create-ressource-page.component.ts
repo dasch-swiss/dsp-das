@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ReadProject, ResourceClassDefinition } from '@dasch-swiss/dsp-js';
+import { ResourceClassDefinition } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -9,9 +9,9 @@ import {
   OntologiesSelectors,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { combineLatest, Observable } from 'rxjs';
-import { map, takeWhile } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-ressource-page',
@@ -23,15 +23,25 @@ import { map, takeWhile } from 'rxjs/operators';
 export class CreateRessourcePageComponent {
   @Select(OntologiesSelectors.projectOntologies)
   projectOntologies$: Observable<IProjectOntologiesKeyValuePairs>;
-  @Select(ProjectsSelectors.currentProject) project$: Observable<ReadProject>;
 
+  project$ = this._store.select(ProjectsSelectors.currentProject);
   projectUuid = this._route.snapshot.params.uuid ?? this._route.parent.snapshot.params.uuid;
 
   constructor(
     private _route: ActivatedRoute,
     private _ontologyService: OntologyService,
+    private _store: Store,
     protected _projectService: ProjectService
   ) {}
+
+  ontoId$ = this.project$.pipe(
+    filter(project => project !== undefined),
+    map(project => {
+      const iriBase = this._ontologyService.getIriBaseUrl();
+      const ontologyName = this._route.snapshot.params[RouteConstants.ontoParameter];
+      return `${iriBase}/ontology/${project.shortcode}/${ontologyName}/v2`;
+    })
+  );
 
   classIri$ = this.ontoId$.pipe(
     map(ontoId => {
@@ -39,17 +49,6 @@ export class CreateRessourcePageComponent {
       return `${ontoId}#${className}`;
     })
   );
-
-  get ontoId$(): Observable<string> {
-    return combineLatest([this.project$, this._route.params]).pipe(
-      takeWhile(([project]) => project !== undefined),
-      map(([project, params]) => {
-        const iriBase = this._ontologyService.getIriBaseUrl();
-        const ontologyName = params[RouteConstants.ontoParameter];
-        return `${iriBase}/ontology/${project.shortcode}/${ontologyName}/v2`;
-      })
-    );
-  }
 
   get projectIri() {
     return this._projectService.uuidToIri(this.projectUuid);
