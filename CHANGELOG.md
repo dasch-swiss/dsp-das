@@ -1,5 +1,79 @@
 # Changelog
 
+## [11.7.4](https://github.com/dasch-swiss/dsp-das/compare/v11.7.3...v11.7.4) (2024-03-22)
+
+
+### Bug Fixes
+
+* add user by project admin (DEV-3414) ([#1519](https://github.com/dasch-swiss/dsp-das/issues/1519)) ([bc7160d](https://github.com/dasch-swiss/dsp-das/commit/bc7160dac22d43a6b821bea44217857e8ca33c34))
+* resource attached project retrieving (#DEV-3424) ([#1525](https://github.com/dasch-swiss/dsp-das/issues/1525)) ([f603c00](https://github.com/dasch-swiss/dsp-das/commit/f603c00b6b5e47aeaf30fbfbf938004e1fa3be9b))
+* resource item list value (DEV-3248) ([#1517](https://github.com/dasch-swiss/dsp-das/issues/1517)) ([a415410](https://github.com/dasch-swiss/dsp-das/commit/a415410e395986affc9b7195dd761dea592777c4))
+* resource item properties update (DEV-3393) ([#1512](https://github.com/dasch-swiss/dsp-das/issues/1512)) ([da48b72](https://github.com/dasch-swiss/dsp-das/commit/da48b72eb761e0f0e41a984db20cbac80e82689f))
+
+
+### Maintenance
+
+* update dsp-js to v9.1.14 ([#1530](https://github.com/dasch-swiss/dsp-das/issues/1530)) ([7c8d761](https://github.com/dasch-swiss/dsp-das/commit/7c8d7610af2887e253197e030dfa7309ee76d81b))
+
+## [11.7.3](https://github.com/dasch-swiss/dsp-das/compare/v11.7.2...v11.7.3) (2024-03-12)
+
+
+### Bug Fixes
+
+* image settings restriction note ([#1518](https://github.com/dasch-swiss/dsp-das/issues/1518)) ([c486dcb](https://github.com/dasch-swiss/dsp-das/commit/c486dcb944e489d0464ede2feed6323e71e60fa6))
+* incoming resource gravsearch query comment field set as optional (DEV-3315) ([#1509](https://github.com/dasch-swiss/dsp-das/issues/1509)) ([4695b8b](https://github.com/dasch-swiss/dsp-das/commit/4695b8b9ac0d6a6f33589f89ed7f6eb6d6107dac))
+
+## [11.7.2](https://github.com/dasch-swiss/dsp-das/compare/v11.7.1...v11.7.2) (2024-03-08)
+
+
+### Bug Fixes
+
+* remove sentry sourcemap on deploy ([#1513](https://github.com/dasch-swiss/dsp-das/issues/1513)) ([8a753f8](https://github.com/dasch-swiss/dsp-das/commit/8a753f8c94eec7ae91c12fe618c9e123623dce98))
+
+## [11.7.1](https://github.com/dasch-swiss/dsp-das/compare/v11.7.0...v11.7.1) (2024-03-08)
+
+
+### Maintenance
+
+* Update dsp js to v9.1.13 ([#1510](https://github.com/dasch-swiss/dsp-das/issues/1510)) ([2a11675](https://github.com/dasch-swiss/dsp-das/commit/2a11675baa989bc1013217845dd57bbb8596d333))
+
+## [11.7.0](https://github.com/dasch-swiss/dsp-das/compare/v11.6.5...v11.7.0) (2024-03-07)
+
+
+### Enhancements
+
+* resource state management (DEV-3358) ([#1496](https://github.com/dasch-swiss/dsp-das/issues/1496)) ([48b06bc](https://github.com/dasch-swiss/dsp-das/commit/48b06bc700dcfa219f001e9601078085b325c355))
+* watermark with radios and inputs (DEV-3313) ([#1502](https://github.com/dasch-swiss/dsp-das/issues/1502)) ([99096da](https://github.com/dasch-swiss/dsp-das/commit/99096da361ee7be70b94824ee461f77dcd43c761))
+* watermark with radios and inputs (DEV-3313) ([#1506](https://github.com/dasch-swiss/dsp-das/issues/1506)) ([6397d37](https://github.com/dasch-swiss/dsp-das/commit/6397d37d7ec0ce511f54540c02eed10f6c61b6b0))
+
+
+### Bug Fixes
+
+* **docs:** fix dead links in docs ([#1492](https://github.com/dasch-swiss/dsp-das/issues/1492)) ([4558e34](https://github.com/dasch-swiss/dsp-das/commit/4558e343aa5b3f693e925bc295c8e9e8e59c5f8e))
+* hotfix for list is undefined (sentry JA-1) ([#1508](https://github.com/dasch-swiss/dsp-das/issues/1508)) ([79301da](https://github.com/dasch-swiss/dsp-das/commit/79301dabf84e058f0e64d90a401481a316364e35))
+* image region  comment field  validation removed(DEV-3315) ([#1487](https://github.com/dasch-swiss/dsp-das/issues/1487)) ([985bcd0](https://github.com/dasch-swiss/dsp-das/commit/985bcd05fb157a938bd9ad6da95c186fb080f751))
+* refresh image viewer after new item was added (DEV-3277) ([#1491](https://github.com/dasch-swiss/dsp-das/issues/1491)) ([7706ce7](https://github.com/dasch-swiss/dsp-das/commit/7706ce77c2233f15bce51e356cfccabd01178b40))
+* removed absolute image size restriction, added sample image (DEV-3304) ([#1484](https://github.com/dasch-swiss/dsp-das/issues/1484)) ([00021a8](https://github.com/dasch-swiss/dsp-das/commit/00021a88b806ef4ad3823fc5beaa2cdb28abccc3))
+* resource class item autocomplete refresh and loading (DEV-3371) ([#1504](https://github.com/dasch-swiss/dsp-das/issues/1504)) ([c87de3c](https://github.com/dasch-swiss/dsp-das/commit/c87de3c4f12df37ca497db6329c672960eeda731))
+
+
+### Maintenance
+
+* add sentry error tracker ([#1507](https://github.com/dasch-swiss/dsp-das/issues/1507)) ([bbcd255](https://github.com/dasch-swiss/dsp-das/commit/bbcd2558994e90032f7fc1bd4ca94f5a934b8f0e))
+* cypress cloud only runs after release-please PR is merged ([#1499](https://github.com/dasch-swiss/dsp-das/issues/1499)) ([9920587](https://github.com/dasch-swiss/dsp-das/commit/99205872c43a38248022b10f1e472e8b6d55b2eb))
+* forms using multi language inputs should be typed ([#1494](https://github.com/dasch-swiss/dsp-das/issues/1494)) ([17333d0](https://github.com/dasch-swiss/dsp-das/commit/17333d094175b1be20bd30a8cee7a73d679b8191))
+* remove unused code in ontology component ([#1472](https://github.com/dasch-swiss/dsp-das/issues/1472)) ([bae7609](https://github.com/dasch-swiss/dsp-das/commit/bae76097ae590fba810b979cc2aa2af47e4ba6a2))
+* remove unused unit tests ([#1497](https://github.com/dasch-swiss/dsp-das/issues/1497)) ([5499904](https://github.com/dasch-swiss/dsp-das/commit/5499904806673723fdec02942e905e3a6b2fd9a9))
+* run e2e tests after release please actions on cypress cloud  ([#1498](https://github.com/dasch-swiss/dsp-das/issues/1498)) ([5cc4577](https://github.com/dasch-swiss/dsp-das/commit/5cc4577ee41f8d189811be486e2c4ae78624e0a8))
+* type chip list input component ([#1501](https://github.com/dasch-swiss/dsp-das/issues/1501)) ([1c75ca5](https://github.com/dasch-swiss/dsp-das/commit/1c75ca5157dd6d97bee44abde4bad83b105f97e1))
+* type common input ([#1500](https://github.com/dasch-swiss/dsp-das/issues/1500)) ([860a430](https://github.com/dasch-swiss/dsp-das/commit/860a4305bf86f774f7df074adb54364573b576b4))
+* type multi language controls ([#1489](https://github.com/dasch-swiss/dsp-das/issues/1489)) ([42d5112](https://github.com/dasch-swiss/dsp-das/commit/42d51121a06d36b3eeaf88cc975f30b595e88869))
+
+
+### Documentation
+
+* comply to dsp-docs markdown requirements ([#1490](https://github.com/dasch-swiss/dsp-das/issues/1490)) ([4e99390](https://github.com/dasch-swiss/dsp-das/commit/4e993900defe0ae322185e77a08f8e3d97866dfe))
+
 ## [11.6.5](https://github.com/dasch-swiss/dsp-das/compare/v11.6.4...v11.6.5) (2024-02-27)
 
 

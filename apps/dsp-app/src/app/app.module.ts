@@ -1,10 +1,11 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
-import { ErrorHandler, NgModule, NgZone } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule, NgZone } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
@@ -45,6 +46,8 @@ import { AddPropertyMenuComponent } from '@dsp-app/src/app/project/ontology/reso
 import { ResourceClassInfoElementComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-info-element.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import * as Sentry from '@sentry/angular-ivy';
+import { IMaskModule } from 'angular-imask';
 import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
@@ -91,6 +94,7 @@ import { CreateProjectFormPageComponent } from './project/create-project-form-pa
 import { DataModelsComponent } from './project/data-models/data-models.component';
 import { DescriptionComponent } from './project/description/description.component';
 import { EditProjectFormPageComponent } from './project/edit-project-form-page/edit-project-form-page.component';
+import { ImageDisplayAbsoluteComponent } from './project/image-settings/image-display-absolute.component';
 import { ImageDisplayRatioComponent } from './project/image-settings/image-display-ratio.component';
 import { ImageSettingsComponent } from './project/image-settings/image-settings.component';
 import { ActionBubbleComponent } from './project/list/action-bubble/action-bubble.component';
@@ -347,6 +351,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     DataModelsComponent,
     IsFalsyPipe,
     CreateListItemDialogComponent,
+    ImageDisplayAbsoluteComponent,
   ],
   imports: [
     AngularSplitModule,
@@ -362,6 +367,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CommonModule,
     FormsModule,
     HttpClientModule,
+    IMaskModule,
     MaterialModule,
     MatJDNConvertibleCalendarDateAdapterModule,
     NgxSkeletonLoaderModule,
@@ -422,6 +428,16 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: IiifWithCredentialsInterceptor,
+      multi: true,
+    },
+    {
+      provide: Sentry.TraceService,
+      deps: [Router],
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => () => {},
+      deps: [Sentry.TraceService],
       multi: true,
     },
   ],
