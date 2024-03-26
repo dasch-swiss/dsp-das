@@ -48,6 +48,8 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { CreateRessourceFormComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-form.component';
+import { CreateRessourcePageComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-page.component';
 import { Upload2Component } from '@dsp-app/src/app/workspace/resource/representation/upload/upload2.component';
 import { PropertyItemComponent } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/property-item.component';
 import { SwitchProperties2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-2.component';
@@ -234,6 +236,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CookiePolicyComponent,
     CreateLinkResourceComponent,
     CreateResourceClassDialogComponent,
+    CreateRessourcePageComponent,
+    CreateRessourceFormComponent,
     DateValueComponent,
     DateValueHandlerComponent,
     DecimalValueComponent,
