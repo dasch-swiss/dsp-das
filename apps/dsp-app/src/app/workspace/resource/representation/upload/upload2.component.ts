@@ -12,6 +12,13 @@ import {
 
 @Component({
   selector: 'app-upload-2',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => Upload2Component),
+      multi: true,
+    },
+  ],
   template: `
     <div
       *ngIf="!file; else showFileTemplate"
@@ -50,13 +57,6 @@ import {
       </table>
     </ng-template>
   `,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => Upload2Component),
-      multi: true,
-    },
-  ],
   styles: ['td {padding: 8px; text-align: center}'],
 })
 export class Upload2Component implements ControlValueAccessor {
