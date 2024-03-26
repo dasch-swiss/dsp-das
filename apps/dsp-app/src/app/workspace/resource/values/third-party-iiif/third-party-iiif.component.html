@@ -1,8 +1,29 @@
-<img *ngIf="previewImageUrl" [src]="previewImageUrl" alt="IIIF Preview" height="360" />
-<form *ngIf="form" [formGroup]="form" style="display: flex; flex-direction: row">
-  <button mat-icon-button (click)="pasteFromClipboard()"><mat-icon>content_paste</mat-icon></button>
-  <app-common-input
-    [control]="form.controls.url"
-    [placeholder]="'Iiif image url'"
-    [validatorErrors]="[invalidIiifUrl, previewImageError, infoJsonError]"></app-common-input>
-</form>
+<div class="third-party-iiif-preview">
+  <div *ngIf="!previewImageUrl || !iiifUrlControl.valid" class="third-party-iiif-preview-placeholder">
+    <mat-icon class="iiif-preview-icon">preview</mat-icon>
+    <div>[ preview ]</div>
+    <div class="iiif-url-explanation mat-subtitle-2">
+      <div>The url must point to be a valid iiif image (jpg, tif, jp2, png).</div>
+      <div>Example: "{{exampleString}}"</div>
+    </div>
+  </div>
+  <img *ngIf="previewImageUrl && iiifUrlControl.valid" [src]="previewImageUrl" alt="IIIF Preview" height="240" />
+</div>
+<mat-form-field class="third-party-iiif-field">
+  <mat-label>IIIF Image URL</mat-label>
+  <input matInput [formControl]="iiifUrlControl" placeholder="Enter IIIF image URL" />
+  <mat-error *ngIf="iiifUrlControl.errors as errors"> {{ errors | humanReadableError: validatorErrors }} </mat-error>
+  <button
+    *ngIf="iiifUrlControl.value"
+    [disabled]="iiifUrlControl.valid"
+    (click)="resetIfInvalid()"
+    mat-icon-button
+    matSuffix
+    type="button"
+    color="primary">
+    <mat-icon>{{ iiifUrlControl.valid ? 'check' : 'close'}}</mat-icon>
+  </button>
+  <button type="button" color="primary" mat-icon-button matSuffix (click)="pasteFromClipboard()">
+    <mat-icon>content_paste</mat-icon>
+  </button>
+</mat-form-field>

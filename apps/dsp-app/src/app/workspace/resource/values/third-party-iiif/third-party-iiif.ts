@@ -1,36 +1,19 @@
-import { FormControl, FormGroup } from '@angular/forms';
-
-export type IiiifUrlForm = FormGroup<{
-  url: FormControl<string>;
-}>;
-
-const possibleFormats = [
-  'avif',
-  'bmp',
-  'gif',
-  'heic',
-  'heif',
-  'jpeg',
-  'jpg',
-  'jp2',
-  'pdf',
-  'png',
-  'svg',
-  'tif',
-  'tiff',
-  'webp',
-];
-
-export class IiifUrl {
+export class IIIFUrl {
   private _url: URL;
+
+  private readonly qualform_ex = /^(color|gray|bitonal|default)\.(jpg|tif|png|jp2)$/;
+  private readonly rotation_ex = /^[-+]?[0-9]*\.?[0-9]+$|^![-+]?[0-9]*\.?[0-9]+$/;
+  private readonly size_ex = /^(\^?max)|(\^?pct:[0-9]*\.?[0-9]*)|(\^?[0-9]*,)|(\^?,[0-9]*)|(\^?!?[0-9]*,[0-9]*)$/;
+  private readonly region_ex =
+    /^(full)|(square)|([0-9]+,[0-9]+,[0-9]+,[0-9]+)|(pct:[0-9]*\.?[0-9]*,[0-9]*\.?[0-9]*,[0-9]*\.?[0-9]*,[0-9]*\.?[0-9]*)$/;
 
   private constructor(url: string) {
     this._url = new URL(url);
   }
 
-  static create(url: string): IiifUrl | null {
+  static createUrl(url: string): IIIFUrl | null {
     try {
-      return new IiifUrl(url.toLowerCase());
+      return new IIIFUrl(url.toLowerCase());
     } catch (error) {
       return null;
     }
@@ -48,27 +31,44 @@ export class IiifUrl {
     return this._segments[this._segments.length - 1];
   }
 
-  private _isInfoJsonUrl(): boolean {
-    return this._segments[this._segments.length - 1] === 'info.json';
+  private get _rotationSegment(): string {
+    return this._segments[this._segments.length - 2];
   }
 
-  private get _format(): string {
-    return this._qualitySegment.indexOf('.') === -1 ? '' : this._qualitySegment.split('.')[1];
+  private get _sizeSegment(): string {
+    return this._segments[this._segments.length - 3];
+  }
+
+  private get _regionSegment(): string {
+    return this._segments[this._segments.length - 4];
   }
 
   get isValidIiifUrl(): boolean {
-    if (this._isInfoJsonUrl()) {
-      return this._segments.length >= 2;
+    if (this._segments.length < 5) {
+      return false;
     }
-    return this._segments.length >= 5 && possibleFormats.includes(this._format);
+
+    if (!this.qualform_ex.test(this._qualitySegment)) {
+      return false;
+    }
+
+    if (!this.rotation_ex.test(this._rotationSegment)) {
+      return false;
+    }
+
+    if (!this.size_ex.test(this._sizeSegment)) {
+      return false;
+    }
+
+    if (!this.region_ex.test(this._regionSegment)) {
+      return false;
+    }
+
+    return true;
   }
 
   get iiifImageInstanceUrl(): string {
-    if (this._isInfoJsonUrl()) {
-      return `${this._baseUrl}/${this._segments.slice(0, this._segments.length - 1).join('/')}`;
-    } else {
-      return `${this._baseUrl}/${this._segments.slice(0, this._segments.length - 4).join('/')}`;
-    }
+    return `${this._baseUrl}/${this._segments.slice(0, this._segments.length - 4).join('/')}`;
   }
 
   get infoJsonUrl() {
@@ -76,6 +76,6 @@ export class IiifUrl {
   }
 
   get previewImageUrl() {
-    return `${this.iiifImageInstanceUrl}/full/,360/0/default.jpg`;
+    return `${this.iiifImageInstanceUrl}/full/,240/0/default.jpg`;
   }
 }

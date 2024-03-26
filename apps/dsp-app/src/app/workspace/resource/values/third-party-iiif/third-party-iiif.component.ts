@@ -1,41 +1,38 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import {
   iiifUrlValidator,
   infoJsonUrlValidatorAsync,
   previewImageUrlValidatorAsync,
 } from '@dsp-app/src/app/workspace/resource/values/third-party-iiif/iiif-url-validator';
-import { IiifUrl, IiiifUrlForm } from '@dsp-app/src/app/workspace/resource/values/third-party-iiif/third-party-iiif';
+import { IIIFUrl } from '@dsp-app/src/app/workspace/resource/values/third-party-iiif/third-party-iiif';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-third-part-iiif',
   templateUrl: './third-party-iiif.component.html',
+  styleUrls: ['./third-party-iiif.component.scss'],
 })
 export class ThirdPartyIiifComponent implements OnInit, OnDestroy {
   @Input() iiifUrlValue = '';
+  @Output() afterControlInit = new EventEmitter<FormControl<string>>();
 
-  form: IiiifUrlForm;
+  iiifUrlControl: FormControl<string>;
 
   previewImageUrl: string | null;
 
   private _destroy$ = new Subject<void>();
 
-  readonly invalidIiifUrl = {
-    errorKey: 'invalidIiifUrl',
-    message: 'The provided URL is not a valid iiif image URL',
-  };
+  readonly validatorErrors = [
+    { errorKey: 'required', message: 'This field is required' },
+    { errorKey: 'invalidIiifUrl', message: 'The provided URL is not a valid IIIF image URL' },
+    { errorKey: 'previewImageError', message: 'The image cannot be loaded from the third party server' },
+    { errorKey: 'infoJsonError', message: 'The iiif info json cannot be loaded from the third party server' },
+  ];
 
-  readonly previewImageError = {
-    errorKey: 'previewImageError',
-    message: 'The image can not be loaded from the third party server',
-  };
-
-  readonly infoJsonError = {
-    errorKey: 'infoJsonError',
-    message: 'The iiif info json can not be loaded from the third party server',
-  };
+  readonly templateString = '{scheme}://{server}{/prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format}';
+  readonly exampleString = 'https://example.org/image-service/abcd1234/full/max/0/default.jpg';
 
   constructor(
     private _cdr: ChangeDetectorRef,
@@ -43,34 +40,38 @@ export class ThirdPartyIiifComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.buildForm();
+    this.iiifUrlControl = new FormControl(this.iiifUrlValue, {
+      validators: [Validators.required, iiifUrlValidator()],
+      asyncValidators: [previewImageUrlValidatorAsync(), infoJsonUrlValidatorAsync()],
+      updateOn: 'change',
+    });
 
-    this.form.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(changes => {
-      const iiifUrl = IiifUrl.create(changes.url);
+    this.iiifUrlControl.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(urlStr => {
+      const iiifUrl = IIIFUrl.createUrl(urlStr);
       this.previewImageUrl = iiifUrl?.previewImageUrl;
+      this._cdr.detectChanges();
     });
 
-    this.form.statusChanges.pipe(takeUntil(this._destroy$)).subscribe(() => {
-      this._cdr.detectChanges(); // Manually trigger change detection
+    this.iiifUrlControl.statusChanges.pipe(takeUntil(this._destroy$)).subscribe(() => {
+      this._cdr.detectChanges();
     });
-  }
 
-  buildForm() {
-    this.form = this._fb.group({
-      url: [
-        this.iiifUrlValue,
-        [Validators.required, iiifUrlValidator()],
-        [previewImageUrlValidatorAsync(), infoJsonUrlValidatorAsync()],
-      ],
-    });
+    this.afterControlInit.emit(this.iiifUrlControl);
   }
 
   pasteFromClipboard() {
     if (navigator.clipboard && navigator.clipboard.readText) {
       navigator.clipboard.readText().then(text => {
-        this.form.controls.url.setValue(text);
-        this.form.updateValueAndValidity();
+        this.iiifUrlControl.setValue(text);
+        this.iiifUrlControl.updateValueAndValidity();
+        this._cdr.detectChanges();
       });
+    }
+  }
+
+  resetIfInvalid() {
+    if (this.iiifUrlControl.invalid) {
+      this.iiifUrlControl.reset();
     }
   }
 
