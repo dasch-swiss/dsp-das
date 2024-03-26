@@ -10,7 +10,6 @@ import {
   ReadResource,
   ResourceClassAndPropertyDefinitions,
   ResourceClassDefinition,
-  ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
@@ -77,43 +76,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getResourceProperties(this.resourceClassIri);
-  }
-
-  private getResourceProperties(resourceClassIri: string) {
-    this._dspApiConnection.v2.ontologyCache
-      .reloadCachedItem(this.ontologyIri)
-      .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri)))
-      .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
-        this.ontologyInfo = onto;
-        this.resourceClass = onto.classes[resourceClassIri];
-        this._tempLinkValueService.currentOntoIri = this.ontologyIri;
-
-        this.fileRepresentation = this._getFileRepresentation(onto);
-
-        const readResource = new ReadResource();
-        readResource.entityInfo = this.ontologyInfo;
-        this._tempLinkValueService.parentResource = readResource;
-
-        this.unsuitableProperties = onto.classes[resourceClassIri]
-          .getResourcePropertiesList()
-          .filter(v => v.guiOrder !== undefined)
-          .filter(v => v.propertyDefinition['isLinkProperty'] === false);
-        console.log('final', this.unsuitableProperties);
-        this._buildForm();
-        this._cd.detectChanges();
-      });
-  }
-
-  private _buildForm() {
-    if (this.fileRepresentation) {
-      this.form.addControl('file', this._fb.control(null, [Validators.required]));
-    }
-
-    this.unsuitableProperties.forEach((prop, index) => {
-      this.form.controls.dynamic.addControl(prop.propertyDefinition.id, this._fb.array(['']));
-      this.mapping.set(prop.propertyDefinition.id, prop.propertyDefinition.objectType);
-    });
+    this._getResourceProperties(this.resourceClassIri);
   }
 
   submitData() {
@@ -135,6 +98,41 @@ export class ResourceInstanceFormComponent implements OnInit {
       .subscribe(() => {
         this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
       });
+  }
+
+  private _getResourceProperties(resourceClassIri: string) {
+    this._dspApiConnection.v2.ontologyCache
+      .reloadCachedItem(this.ontologyIri)
+      .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri)))
+      .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
+        this.ontologyInfo = onto;
+        this.resourceClass = onto.classes[resourceClassIri];
+        this._tempLinkValueService.currentOntoIri = this.ontologyIri;
+
+        this.fileRepresentation = this._getFileRepresentation(onto);
+
+        const readResource = new ReadResource();
+        readResource.entityInfo = this.ontologyInfo;
+        this._tempLinkValueService.parentResource = readResource;
+
+        this.unsuitableProperties = onto.classes[resourceClassIri]
+          .getResourcePropertiesList()
+          .filter(v => v.guiOrder !== undefined)
+          .filter(v => v.propertyDefinition['isLinkProperty'] === false);
+        this._buildForm();
+        this._cd.detectChanges();
+      });
+  }
+
+  private _buildForm() {
+    if (this.fileRepresentation) {
+      this.form.addControl('file', this._fb.control(null, [Validators.required]));
+    }
+
+    this.unsuitableProperties.forEach((prop, index) => {
+      this.form.controls.dynamic.addControl(prop.propertyDefinition.id, this._fb.array(['']));
+      this.mapping.set(prop.propertyDefinition.id, prop.propertyDefinition.objectType);
+    });
   }
 
   private _getFileRepresentation(onto: ResourceClassAndPropertyDefinitions) {
@@ -167,23 +165,11 @@ export class ResourceInstanceFormComponent implements OnInit {
     return propertiesObj;
   }
 
-  private getValue(iri) {
+  private getValue(iri: string) {
     const controls = this.form.controls.dynamic.controls[iri].controls;
     return controls.map(control => {
       return propertiesTypeMapping.get(this.mapping.get(iri)).mapping(control.value);
     });
-  }
-
-  private getProperties() {
-    // filter out all props that cannot be edited or are link props but also the hasFileValue props
-    console.log(
-      this.ontologyInfo,
-      'julien',
-      this.ontologyInfo.getPropertyDefinitionsByType(ResourcePropertyDefinition)
-    );
-    return this.ontologyInfo
-      .getPropertyDefinitionsByType(ResourcePropertyDefinition)
-      .filter(prop => !prop.isLinkProperty && prop.isEditable && !this.resourceClassTypes.includes(prop.id));
   }
 
   private _getFileValue() {
