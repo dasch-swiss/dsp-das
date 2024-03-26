@@ -160,12 +160,12 @@ export class ResourceInstanceFormComponent implements OnInit {
 
     if (this.fileValue) {
       /*
-                                                                                                          const hasFileValue = this.getHasFileValue(this.ontologyInfo);
-                                                                                                          propertiesObj[hasFileValue] = [this.fileValue];
+                                                                                                                const hasFileValue = this.getHasFileValue(this.ontologyInfo);
+                                                                                                                propertiesObj[hasFileValue] = [this.fileValue];
 
-                                                                                                             */
+                                                                                                                   */
       console.log(this.fileValue);
-      propertiesObj[Constants.HasStillImageFileValue] = [this._getNewValue()];
+      propertiesObj[this.hasFileValue] = [this._getNewValue()];
     }
     return propertiesObj;
   }
