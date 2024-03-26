@@ -9,6 +9,7 @@ import {
   CreateRessourceDialogComponent,
 } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-dialog.component';
 import { filter, switchMap } from 'rxjs/operators';
+import { LinkValue2DataService } from './link-value-2-data.service';
 import { TempLinkValueService } from './temp-link-value.service';
 
 @Component({
@@ -24,18 +25,21 @@ import { TempLinkValueService } from './temp-link-value.service';
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource.bind(this)">
         <mat-option *ngIf="resources.length === 0" [disabled]="true"> No results were found.</mat-option>
         <!--<mat-option *ngFor="let rc of resourceClasses" (click)="openCreateResourceDialog($event, propIri, rc.label)">
-                        Create New: {{ rc?.label }}
-                        </mat-option>-->
+                                                Create New: {{ rc?.label }}
+                                                </mat-option>-->
         <mat-option *ngFor="let res of resources" [value]="res.id"> {{ res.label }}</mat-option>
       </mat-autocomplete>
       <mat-hint>{{ 'appLabels.form.action.searchHelp' | translate }}</mat-hint>
       <mat-error *ngIf="control.errors as errors">{{ errors | humanReadableError }}</mat-error>
     </mat-form-field>
   `,
+  providers: [LinkValue2DataService],
 })
 export class LinkValue2Component implements OnInit {
   @Input() control: FormControl<any>;
   @Input() propIri: string;
+
+  @Input() currentOntoIri: string; // For resourceClasses
 
   @ViewChild('auto') autoComplete: MatAutocompleteTrigger;
 
@@ -46,7 +50,8 @@ export class LinkValue2Component implements OnInit {
     private _dspApiConnection: KnoraApiConnection,
     private _tempLinkValueService: TempLinkValueService,
     private _dialog: MatDialog,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _linkValue2DataService: LinkValue2DataService
   ) {}
 
   ngOnInit() {
@@ -64,6 +69,8 @@ export class LinkValue2Component implements OnInit {
         this.resources = response.resources;
         this._cd.detectChanges();
       });
+
+    this._linkValue2DataService.onInit(this.currentOntoIri);
   }
 
   openCreateResourceDialog(event: any, propIri: string, resourceType: string) {
