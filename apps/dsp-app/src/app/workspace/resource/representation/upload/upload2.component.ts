@@ -1,5 +1,5 @@
-import { Component, ElementRef, forwardRef, Input, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectorRef, Component, ElementRef, Input, Self, ViewChild } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -12,13 +12,6 @@ import {
 
 @Component({
   selector: 'app-upload-2',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => Upload2Component),
-      multi: true,
-    },
-  ],
   template: `
     <div
       *ngIf="!file; else showFileTemplate"
@@ -32,6 +25,7 @@ import {
       <div>Drag and drop or click to upload</div>
       <div class="mat-subtitle-2">The following file types are supported: <br />{{ allowedFileTypes.join(', ') }}</div>
     </div>
+    <mat-error *ngIf="ngControl.touched && ngControl.errors">{{ ngControl.errors | humanReadableError }}</mat-error>
 
     <ng-template #showFileTemplate>
       <div *ngIf="previewUrl">
@@ -68,6 +62,7 @@ export class Upload2Component implements ControlValueAccessor {
   file: File;
   previewUrl: SafeUrl | null = null;
   onChange: Function;
+  onTouched: Function;
   isDisabled = false;
 
   get allowedFileTypes() {
@@ -77,8 +72,16 @@ export class Upload2Component implements ControlValueAccessor {
   constructor(
     private _notification: NotificationService,
     private _upload: UploadFileService,
-    private _sanitizer: DomSanitizer
-  ) {}
+    private _sanitizer: DomSanitizer,
+    private _cdr: ChangeDetectorRef,
+    @Self() public ngControl: NgControl
+  ) {
+    ngControl.valueAccessor = this;
+  }
+
+  ngOnInit() {
+    console.log(this.ngControl);
+  }
 
   writeValue(value: null): void {
     this.file = null;
@@ -88,7 +91,9 @@ export class Upload2Component implements ControlValueAccessor {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {}
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
 
   setDisabledState(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
@@ -99,6 +104,7 @@ export class Upload2Component implements ControlValueAccessor {
   }
 
   addFile(file: File) {
+    this.onTouched();
     if (this.isDisabled) return;
 
     const regex = /\.([^.\\/:*?"<>|\r\n]+)$/;
@@ -135,6 +141,7 @@ export class Upload2Component implements ControlValueAccessor {
       const filePayload = new (fileValueMapping.get(this.representation).uploadClass)();
       filePayload.filename = res.uploadedFiles[0].internalFilename;
       this.onChange(filePayload);
+      this._cdr.detectChanges();
     });
 
     this.fileInput.nativeElement.value = null;
