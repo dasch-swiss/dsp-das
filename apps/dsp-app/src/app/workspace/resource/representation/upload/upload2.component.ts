@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
+import { Component, ElementRef, forwardRef, Input, ViewChild } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -50,6 +50,13 @@ import {
       </table>
     </ng-template>
   `,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => Upload2Component),
+      multi: true,
+    },
+  ],
   styles: ['td {padding: 8px; text-align: center}'],
 })
 export class Upload2Component implements ControlValueAccessor {
@@ -75,7 +82,6 @@ export class Upload2Component implements ControlValueAccessor {
 
   writeValue(value: null): void {
     this.file = null;
-    this.fileInput.nativeElement.value = null;
   }
 
   registerOnChange(fn: any): void {
