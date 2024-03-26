@@ -30,7 +30,9 @@ import {
 import {
   BooleanValue2Component,
   ColorValue2Component,
+  GeonameValue2Component,
   IntervalValue2Component,
+  LinkValue2Component,
   ListValue2Component,
   NestedMenuComponent,
   NuListComponent,
@@ -50,8 +52,6 @@ import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/reso
 import { PropertyItemComponent } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/property-item.component';
 import { IntValue2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/int-value-2.component';
 import { SwitchProperties2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-2.component';
-import { GeonameValue2Component } from '@dsp-app/src/app/workspace/resource/values/geoname-value/geoname-value-2.component';
-import { LinkValue2Component } from '@dsp-app/src/app/workspace/resource/values/link-value/link-value-2.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';

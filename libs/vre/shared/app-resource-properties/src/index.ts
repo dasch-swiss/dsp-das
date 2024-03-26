@@ -8,3 +8,5 @@ export * from './lib/nested-menu.component';
 export * from './lib/nu-list.component';
 export * from './lib/time-value-2.component';
 export * from './lib/uri-value-2.component';
+export * from './lib/geoname-value-2.component';
+export * from './lib/link-value-2.component';
