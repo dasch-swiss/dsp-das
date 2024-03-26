@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -16,12 +16,10 @@ import { TempLinkValueService } from '@dasch-swiss/vre/shared/app-resource-prope
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { fileValueMapping } from '@dsp-app/src/app/workspace/resource/representation/upload/file-mappings';
 import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/representation/upload/file-representation.type';
-import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/resource-instance-form/component-host.directive';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs/operators';
 import { ResourceService } from '../services/resource.service';
-import { SelectPropertiesComponent } from './select-properties/select-properties.component';
 
 @Component({
   selector: 'app-resource-instance-form',
@@ -32,16 +30,12 @@ export class ResourceInstanceFormComponent implements OnInit {
   @Input({ required: true }) resourceClassIri: string;
   @Input({ required: true }) projectIri: string;
 
-  @ViewChild('selectProps')
-  selectPropertiesComponent: SelectPropertiesComponent;
-
-  @ViewChildren(ComponentHostDirective) componentHosts!: QueryList<ComponentHostDirective>;
-
   form: FormGroup<{
     label: FormControl<string>;
     properties: FormGroup<{ [key: string]: FormArray<FormControl<string>> }>;
     file?: FormControl<CreateFileValue>;
   }> = this._fb.group({ label: this._fb.control('', [Validators.required]), properties: this._fb.group({}) });
+
   resourceClass: ResourceClassDefinition;
   ontologyInfo: ResourceClassAndPropertyDefinitions;
   fileRepresentation: FileRepresentationType;
