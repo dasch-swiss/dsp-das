@@ -150,9 +150,7 @@ export class ResourceInstanceFormComponent implements OnInit {
     createResource.label = this.labelControl.value;
     createResource.type = this.resourceClass.id;
     createResource.attachedToProject = this.projectIri;
-
     createResource.properties = this._getPropertiesObj();
-
     return createResource;
   }
 
@@ -165,11 +163,11 @@ export class ResourceInstanceFormComponent implements OnInit {
 
     if (this.form.controls.file) {
       /*
-                                                                                                                                                                                        const hasFileValue = this.getHasFileValue(this.ontologyInfo);
-                                                                                                                                                                                        propertiesObj[hasFileValue] = [this.fileValue];
+                                                                                                                                                                                              const hasFileValue = this.getHasFileValue(this.ontologyInfo);
+                                                                                                                                                                                              propertiesObj[hasFileValue] = [this.fileValue];
 
-                                                                                                                                                                                           */
-      propertiesObj[this.fileRepresentation] = [this._getNewValue()];
+                                                                                                                                                                                                 */
+      propertiesObj[this.fileRepresentation] = [this._getFileValue()];
     }
     return propertiesObj;
   }
@@ -193,10 +191,9 @@ export class ResourceInstanceFormComponent implements OnInit {
       .filter(prop => !prop.isLinkProperty && prop.isEditable && !this.resourceClassTypes.includes(prop.id));
   }
 
-  private _getNewValue(): CreateFileValue | false {
+  private _getFileValue() {
     const fileValue = new (fileValueMapping.get(this.fileRepresentation).uploadClass)();
     fileValue.filename = this.form.controls.file.value.filename;
-
     return fileValue;
   }
 }
