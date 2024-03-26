@@ -30,8 +30,8 @@ import { SelectPropertiesComponent } from './select-properties/select-properties
   providers: [TempLinkValueService],
 })
 export class ResourceInstanceFormComponent implements OnInit {
-  @Input() resourceClassIri: string;
-  @Input() projectIri: string;
+  @Input({ required: true }) resourceClassIri: string;
+  @Input({ required: true }) projectIri: string;
 
   @ViewChild('selectProps')
   selectPropertiesComponent: SelectPropertiesComponent;
@@ -41,7 +41,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   form: FormGroup<{
     label: FormControl<string>;
     dynamic: FormGroup<{ [key: string]: FormArray<FormControl<string>> }>;
-    file?: FormControl;
+    file?: FormControl<CreateFileValue>;
   }> = this._fb.group({ label: this._fb.control('', [Validators.required]), dynamic: this._fb.group({}) });
   resourceClass: ResourceClassDefinition;
   ontologyInfo: ResourceClassAndPropertyDefinitions;
@@ -163,13 +163,12 @@ export class ResourceInstanceFormComponent implements OnInit {
       propertiesObj[iri] = this.getValue(iri);
     });
 
-    if (this.fileValue) {
+    if (this.form.controls.file) {
       /*
-                                                                                                                                                                      const hasFileValue = this.getHasFileValue(this.ontologyInfo);
-                                                                                                                                                                      propertiesObj[hasFileValue] = [this.fileValue];
+                                                                                                                                                                                        const hasFileValue = this.getHasFileValue(this.ontologyInfo);
+                                                                                                                                                                                        propertiesObj[hasFileValue] = [this.fileValue];
 
-                                                                                                                                                                         */
-      console.log(this.fileValue);
+                                                                                                                                                                                           */
       propertiesObj[this.fileRepresentation] = [this._getNewValue()];
     }
     return propertiesObj;
@@ -196,7 +195,7 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   private _getNewValue(): CreateFileValue | false {
     const fileValue = new (fileValueMapping.get(this.fileRepresentation).uploadClass)();
-    fileValue.filename = this.fileValue.filename;
+    fileValue.filename = this.form.controls.file.value.filename;
 
     return fileValue;
   }
