@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Constants, CreateFileValue } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -54,10 +54,11 @@ import {
 export class Upload2Component {
   @Input({ required: true }) representation: FileRepresentationType;
   @Output() selectedFile = new EventEmitter<CreateFileValue>();
+  @ViewChild('fileInput') fileInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild('fileInput') fileInput;
   file: File;
   previewUrl: SafeUrl | null = null;
+  readonly Math = Math;
 
   get allowedFileTypes() {
     return fileValueMapping.get(this.representation).fileTypes;
@@ -74,17 +75,20 @@ export class Upload2Component {
   }
 
   addFile(file: File) {
-    console.log(file);
     if (!this.allowedFileTypes.some(_file => file.type.endsWith(_file))) {
       this._notification.openSnackBar(`This file type (${file.type}) is not supported`);
       return;
     }
 
     this.file = file;
-    this.uploadFile(file);
+    this._uploadFile(file);
   }
 
-  uploadFile(file: File): void {
+  removeFile() {
+    this.file = null;
+  }
+
+  private _uploadFile(file: File): void {
     const formData = new FormData();
     formData.append(file.name, file);
 
@@ -105,12 +109,6 @@ export class Upload2Component {
       this.selectedFile.emit(filePayload);
     });
 
-    this.fileInput.nativeElement.value = null; // set the html input value to null so in case of an error the user can upload the same file again.
+    this.fileInput.nativeElement.value = null;
   }
-
-  removeFile() {
-    this.file = null;
-  }
-
-  protected readonly Math = Math;
 }
