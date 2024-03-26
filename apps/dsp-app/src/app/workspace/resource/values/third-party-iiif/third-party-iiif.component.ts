@@ -21,6 +21,7 @@ export class ThirdPartyIiifComponent implements OnInit, OnDestroy {
   iiifUrlControl: FormControl<string>;
 
   previewImageUrl: string | null;
+  formStatus: 'VALIDATING' | 'LOADING' | 'IDLE' = 'IDLE';
 
   private _destroy$ = new Subject<void>();
 
@@ -49,10 +50,10 @@ export class ThirdPartyIiifComponent implements OnInit, OnDestroy {
     this.iiifUrlControl.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(urlStr => {
       const iiifUrl = IIIFUrl.createUrl(urlStr);
       this.previewImageUrl = iiifUrl?.previewImageUrl;
-      this._cdr.detectChanges();
     });
 
-    this.iiifUrlControl.statusChanges.pipe(takeUntil(this._destroy$)).subscribe(() => {
+    this.iiifUrlControl.statusChanges.pipe(takeUntil(this._destroy$)).subscribe(state => {
+      this.formStatus = state === 'PENDING' ? 'VALIDATING' : 'IDLE';
       this._cdr.detectChanges();
     });
 

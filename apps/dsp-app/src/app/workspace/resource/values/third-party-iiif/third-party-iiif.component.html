@@ -1,5 +1,7 @@
 <div class="third-party-iiif-preview">
-  <div *ngIf="!previewImageUrl || !iiifUrlControl.valid" class="third-party-iiif-preview-placeholder">
+  <div
+    *ngIf="(!previewImageUrl || !iiifUrlControl.valid) && formStatus === 'IDLE'"
+    class="third-party-iiif-preview-placeholder">
     <mat-icon class="iiif-preview-icon">preview</mat-icon>
     <div>[ preview ]</div>
     <div class="iiif-url-explanation mat-subtitle-2">
@@ -7,7 +9,15 @@
       <div>Example: "{{exampleString}}"</div>
     </div>
   </div>
-  <img *ngIf="previewImageUrl && iiifUrlControl.valid" [src]="previewImageUrl" alt="IIIF Preview" height="240" />
+  <dasch-swiss-app-progress-indicator *ngIf="formStatus !=='IDLE'"></dasch-swiss-app-progress-indicator>
+  <img
+    *ngIf="previewImageUrl && iiifUrlControl.valid"
+    [src]="previewImageUrl"
+    (loadstart)="formStatus='LOADING'"
+    (loadeddata)="formStatus='IDLE'"
+    (error)="formStatus='IDLE'"
+    alt="IIIF Preview"
+    height="240" />
 </div>
 <mat-form-field class="third-party-iiif-field">
   <mat-label>IIIF Image URL</mat-label>

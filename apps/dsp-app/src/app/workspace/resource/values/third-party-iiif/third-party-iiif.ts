@@ -76,6 +76,6 @@ export class IIIFUrl {
   }
 
   get previewImageUrl() {
-    return `${this.iiifImageInstanceUrl}/full/,240/0/default.jpg`;
+    return `${this.iiifImageInstanceUrl}/${this._regionSegment}/${this._sizeSegment}/${this._rotationSegment}/${this._qualitySegment}`;
   }
 }
