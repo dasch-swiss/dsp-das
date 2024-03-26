@@ -48,6 +48,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { CreateRessourceDialogComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-dialog.component';
 import { CreateRessourceFormComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-form.component';
 import { CreateRessourcePageComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-page.component';
 import { Upload2Component } from '@dsp-app/src/app/workspace/resource/representation/upload/upload2.component';
@@ -238,6 +239,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CreateResourceClassDialogComponent,
     CreateRessourcePageComponent,
     CreateRessourceFormComponent,
+    CreateRessourceDialogComponent,
     DateValueComponent,
     DateValueHandlerComponent,
     DecimalValueComponent,
