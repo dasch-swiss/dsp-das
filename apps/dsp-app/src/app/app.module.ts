@@ -49,7 +49,6 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { Upload2Component } from '@dsp-app/src/app/workspace/resource/representation/upload/upload2.component';
-import { ComponentHostDirective } from '@dsp-app/src/app/workspace/resource/resource-instance-form/component-host.directive';
 import { PropertyItemComponent } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/property-item.component';
 import { SwitchProperties2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-2.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -226,7 +225,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CenteredLayoutComponent,
     ChipListInputComponent,
     CollaborationComponent,
-    ComponentHostDirective,
     ColorPickerComponent,
     ColorValueComponent,
     CommentFormComponent,
