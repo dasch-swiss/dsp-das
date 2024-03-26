@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
@@ -39,6 +39,11 @@ export class ResourceInstanceFormComponent implements OnInit {
   @ViewChildren(ComponentHostDirective) componentHosts!: QueryList<ComponentHostDirective>;
 
   dynamicForm = this._fb.group({});
+  form: FormGroup<{
+    label: FormControl<string>;
+    dynamic: FormGroup;
+    file?: FormControl;
+  }> = this._fb.group({ label: this._fb.control('', [Validators.required]), dynamic: this.dynamicForm });
   resourceClass: ResourceClassDefinition;
   ontologyInfo: ResourceClassAndPropertyDefinitions;
   hasFileValue: FileRepresentationType;
@@ -75,10 +80,6 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.getResourceProperties(this.resourceClassIri);
-  }
-
-  onSelectedFile(file: CreateFileValue) {
-    this.fileValue = file;
   }
 
   private getResourceProperties(resourceClassIri: string) {
@@ -160,10 +161,10 @@ export class ResourceInstanceFormComponent implements OnInit {
 
     if (this.fileValue) {
       /*
-                                                                                                                            const hasFileValue = this.getHasFileValue(this.ontologyInfo);
-                                                                                                                            propertiesObj[hasFileValue] = [this.fileValue];
+                                                                                                                                                    const hasFileValue = this.getHasFileValue(this.ontologyInfo);
+                                                                                                                                                    propertiesObj[hasFileValue] = [this.fileValue];
 
-                                                                                                                               */
+                                                                                                                                                       */
       console.log(this.fileValue);
       propertiesObj[this.hasFileValue] = [this._getNewValue()];
     }

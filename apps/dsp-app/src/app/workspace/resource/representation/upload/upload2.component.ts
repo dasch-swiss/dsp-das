@@ -1,6 +1,7 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { ControlValueAccessor } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Constants, CreateFileValue } from '@dasch-swiss/dsp-js';
+import { Constants } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { fileValueMapping } from '@dsp-app/src/app/workspace/resource/representation/upload/file-mappings';
 import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/representation/upload/file-representation.type';
@@ -51,14 +52,16 @@ import {
   `,
   styles: ['td {padding: 8px; text-align: center}'],
 })
-export class Upload2Component {
+export class Upload2Component implements ControlValueAccessor {
   @Input({ required: true }) representation: FileRepresentationType;
-  @Output() selectedFile = new EventEmitter<CreateFileValue>();
   @ViewChild('fileInput') fileInput: ElementRef<HTMLInputElement>;
+
+  readonly Math = Math;
 
   file: File;
   previewUrl: SafeUrl | null = null;
-  readonly Math = Math;
+  onChange: Function;
+  isDisabled = false;
 
   get allowedFileTypes() {
     return fileValueMapping.get(this.representation).fileTypes;
@@ -70,11 +73,28 @@ export class Upload2Component {
     private _sanitizer: DomSanitizer
   ) {}
 
+  writeValue(value: null): void {
+    this.file = null;
+    this.fileInput.nativeElement.value = null;
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {}
+
+  setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+  }
+
   addFileFromClick(event: any) {
     this.addFile(event.target.files[0]);
   }
 
   addFile(file: File) {
+    if (this.isDisabled) return;
+
     const regex = /\.([^.\\/:*?"<>|\r\n]+)$/;
     const match = file.name.match(regex);
     const fileExtension = match[1];
@@ -108,7 +128,7 @@ export class Upload2Component {
 
       const filePayload = new (fileValueMapping.get(this.representation).uploadClass)();
       filePayload.filename = res.uploadedFiles[0].internalFilename;
-      this.selectedFile.emit(filePayload);
+      this.onChange(filePayload);
     });
 
     this.fileInput.nativeElement.value = null;
