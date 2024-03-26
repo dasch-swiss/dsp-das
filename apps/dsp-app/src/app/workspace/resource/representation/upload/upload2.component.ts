@@ -14,7 +14,7 @@ import {
   selector: 'app-upload-2',
   template: `
     <div
-      *ngIf="!file; else showFileTemplate"
+      *ngIf="ngControl.value === null; else showFileTemplate"
       appDragDrop
       (click)="fileInput.click()"
       (fileDropped)="addFile($event.item(0))"
@@ -39,9 +39,9 @@ import {
           <th>Delete</th>
         </tr>
         <tr>
-          <td>{{ file.name }}</td>
-          <td>{{ Math.floor(file.size / 1000) }} kb</td>
-          <td>{{ file.lastModified | date }}</td>
+          <td>{{ fileToUpload.name }}</td>
+          <td>{{ Math.floor(fileToUpload.size / 1000) }} kb</td>
+          <td>{{ fileToUpload.lastModified | date }}</td>
           <td>
             <button mat-icon-button (click)="removeFile()">
               <mat-icon>delete</mat-icon>
@@ -59,11 +59,11 @@ export class Upload2Component implements ControlValueAccessor {
 
   readonly Math = Math;
 
-  file: File;
   previewUrl: SafeUrl | null = null;
+  fileToUpload: File;
+
   onChange: Function;
   onTouched: Function;
-  isDisabled = false;
 
   get allowedFileTypes() {
     return fileValueMapping.get(this.representation).fileTypes;
@@ -79,13 +79,7 @@ export class Upload2Component implements ControlValueAccessor {
     ngControl.valueAccessor = this;
   }
 
-  ngOnInit() {
-    console.log(this.ngControl);
-  }
-
-  writeValue(value: null): void {
-    this.file = null;
-  }
+  writeValue(value: null): void {}
 
   registerOnChange(fn: any): void {
     this.onChange = fn;
@@ -95,17 +89,12 @@ export class Upload2Component implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {
-    this.isDisabled = isDisabled;
-  }
-
   addFileFromClick(event: any) {
     this.addFile(event.target.files[0]);
   }
 
   addFile(file: File) {
     this.onTouched();
-    if (this.isDisabled) return;
 
     const regex = /\.([^.\\/:*?"<>|\r\n]+)$/;
     const match = file.name.match(regex);
@@ -114,12 +103,13 @@ export class Upload2Component implements ControlValueAccessor {
       this._notification.openSnackBar(`The extension ${fileExtension} is not supported`);
       return;
     }
-    this.file = file;
+
+    this.fileToUpload = file;
     this._uploadFile(file);
   }
 
   removeFile() {
-    this.file = null;
+    this.ngControl.control.setValue(null);
   }
 
   private _uploadFile(file: File): void {
@@ -138,9 +128,9 @@ export class Upload2Component implements ControlValueAccessor {
           break;
       }
 
-      const filePayload = new (fileValueMapping.get(this.representation).uploadClass)();
-      filePayload.filename = res.uploadedFiles[0].internalFilename;
-      this.onChange(filePayload);
+      const fileResponse = new (fileValueMapping.get(this.representation).uploadClass)();
+      fileResponse.filename = res.uploadedFiles[0].internalFilename;
+      this.onChange(fileResponse);
       this._cdr.detectChanges();
     });
 
