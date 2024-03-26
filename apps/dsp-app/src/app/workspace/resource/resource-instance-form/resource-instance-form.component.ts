@@ -47,7 +47,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   loading = false;
 
   mapping = new Map<string, string>();
-  labelControl = this._fb.control<string>('test', [Validators.required]);
+  labelControl = this._fb.control<string>('', [Validators.required]);
   readonly weirdConstants = [
     Constants.HasStillImageFileValue,
     Constants.HasDocumentFileValue,
@@ -160,10 +160,10 @@ export class ResourceInstanceFormComponent implements OnInit {
 
     if (this.fileValue) {
       /*
-                                                                                                                const hasFileValue = this.getHasFileValue(this.ontologyInfo);
-                                                                                                                propertiesObj[hasFileValue] = [this.fileValue];
+                                                                                                                      const hasFileValue = this.getHasFileValue(this.ontologyInfo);
+                                                                                                                      propertiesObj[hasFileValue] = [this.fileValue];
 
-                                                                                                                   */
+                                                                                                                         */
       console.log(this.fileValue);
       propertiesObj[this.hasFileValue] = [this._getNewValue()];
     }
