@@ -1,9 +1,9 @@
-<form *ngIf="!loading; else loadingTemplate" [formGroup]="dynamicForm" appInvalidControlScroll>
+<form *ngIf="!loading; else loadingTemplate" [formGroup]="form" appInvalidControlScroll>
   <app-upload-2
-    *ngIf="hasFileValue"
-    [representation]="hasFileValue"
+    *ngIf="form.controls.file"
+    [formControl]="form.controls.file"
+    [representation]="fileRepresentation"
     style="display: block; margin-bottom: 16px"></app-upload-2>
-
   <div style="display: flex">
     <h3
       class="mat-subtitle-2"
@@ -21,7 +21,7 @@
         <app-switch-properties-3
           [propertyDefinition]="prop.propertyDefinition"
           [property]="prop"
-          [formArray]="dynamicForm.controls[prop.propertyDefinition.id]"
+          [formArray]="form.controls.dynamic.controls[prop.propertyDefinition.id]"
           [cardinality]="prop.cardinality"></app-switch-properties-3>
       </div>
     </ng-container>

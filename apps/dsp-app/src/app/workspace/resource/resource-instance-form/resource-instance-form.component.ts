@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
@@ -38,15 +38,14 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   @ViewChildren(ComponentHostDirective) componentHosts!: QueryList<ComponentHostDirective>;
 
-  dynamicForm = this._fb.group({});
   form: FormGroup<{
     label: FormControl<string>;
-    dynamic: FormGroup;
+    dynamic: FormGroup<{ [key: string]: FormArray<FormControl<string>> }>;
     file?: FormControl;
-  }> = this._fb.group({ label: this._fb.control('', [Validators.required]), dynamic: this.dynamicForm });
+  }> = this._fb.group({ label: this._fb.control('', [Validators.required]), dynamic: this._fb.group({}) });
   resourceClass: ResourceClassDefinition;
   ontologyInfo: ResourceClassAndPropertyDefinitions;
-  hasFileValue: FileRepresentationType;
+  fileRepresentation: FileRepresentationType;
   fileValue: CreateFileValue;
   unsuitableProperties: IHasPropertyWithPropertyDefinition[];
   loading = false;
@@ -91,7 +90,8 @@ export class ResourceInstanceFormComponent implements OnInit {
         this.resourceClass = onto.classes[resourceClassIri];
         this._tempLinkValueService.currentOntoIri = this.ontologyIri;
 
-        this.hasFileValue = this.getHasFileValue(onto);
+        this.fileRepresentation = this._getFileRepresentation(onto);
+
         const readResource = new ReadResource();
         readResource.entityInfo = this.ontologyInfo;
         this._tempLinkValueService.parentResource = readResource;
@@ -107,14 +107,18 @@ export class ResourceInstanceFormComponent implements OnInit {
   }
 
   private _buildForm() {
+    if (this.fileRepresentation) {
+      this.form.addControl('file', this._fb.control(null));
+    }
+
     this.unsuitableProperties.forEach((prop, index) => {
-      this.dynamicForm.addControl(prop.propertyDefinition.id, this._fb.array([]));
+      this.form.controls.dynamic.addControl(prop.propertyDefinition.id, this._fb.array(['']));
       this.mapping.set(prop.propertyDefinition.id, prop.propertyDefinition.objectType);
     });
   }
 
   submitData() {
-    if (this.dynamicForm.invalid) {
+    if (this.form.invalid) {
       return;
     }
     this.loading = true;
@@ -133,7 +137,7 @@ export class ResourceInstanceFormComponent implements OnInit {
       });
   }
 
-  private getHasFileValue(onto: ResourceClassAndPropertyDefinitions) {
+  private _getFileRepresentation(onto: ResourceClassAndPropertyDefinitions) {
     for (const item of this.resourceClassTypes) {
       if (onto.properties[item]) {
         return item as FileRepresentationType;
@@ -155,24 +159,24 @@ export class ResourceInstanceFormComponent implements OnInit {
   private _getPropertiesObj() {
     const propertiesObj = {};
 
-    Object.keys(this.dynamicForm.controls).forEach(iri => {
+    Object.keys(this.form.controls.dynamic.controls).forEach(iri => {
       propertiesObj[iri] = this.getValue(iri);
     });
 
     if (this.fileValue) {
       /*
-                                                                                                                                                    const hasFileValue = this.getHasFileValue(this.ontologyInfo);
-                                                                                                                                                    propertiesObj[hasFileValue] = [this.fileValue];
+                                                                                                                                                                      const hasFileValue = this.getHasFileValue(this.ontologyInfo);
+                                                                                                                                                                      propertiesObj[hasFileValue] = [this.fileValue];
 
-                                                                                                                                                       */
+                                                                                                                                                                         */
       console.log(this.fileValue);
-      propertiesObj[this.hasFileValue] = [this._getNewValue()];
+      propertiesObj[this.fileRepresentation] = [this._getNewValue()];
     }
     return propertiesObj;
   }
 
   private getValue(iri) {
-    const controls = this.dynamicForm.controls[iri].controls;
+    const controls = this.form.controls.dynamic.controls[iri].controls;
     return controls.map(control => {
       return propertiesTypeMapping.get(this.mapping.get(iri)).mapping(control.value);
     });
@@ -191,7 +195,7 @@ export class ResourceInstanceFormComponent implements OnInit {
   }
 
   private _getNewValue(): CreateFileValue | false {
-    const fileValue = new (fileValueMapping.get(this.hasFileValue).uploadClass)();
+    const fileValue = new (fileValueMapping.get(this.fileRepresentation).uploadClass)();
     fileValue.filename = this.fileValue.filename;
 
     return fileValue;
