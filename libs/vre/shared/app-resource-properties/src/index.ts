@@ -10,3 +10,5 @@ export * from './lib/time-value-2.component';
 export * from './lib/uri-value-2.component';
 export * from './lib/geoname-value-2.component';
 export * from './lib/link-value-2.component';
+export * from './lib/temp-link-value.service';
+export * from './lib/int-value-2.component';
