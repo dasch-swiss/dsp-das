@@ -43,7 +43,7 @@ export class LinkValue2Component implements OnInit {
   @Input({ required: true }) control: FormControl<string>;
   @Input() propIri: string;
 
-  @ViewChild('auto') autoComplete: MatAutocompleteTrigger;
+  @ViewChild(MatAutocompleteTrigger) autoComplete: MatAutocompleteTrigger;
 
   resources: ReadResource[] = [];
 
@@ -81,6 +81,8 @@ export class LinkValue2Component implements OnInit {
   }
 
   openCreateResourceDialog(event: any, resourceClassIri: string, resourceType: string) {
+    let myResourceId: string;
+
     event.stopPropagation();
     const projectIri = (this._store.selectSnapshot(ProjectsSelectors.currentProject) as ReadProject).id;
     this._dialog
@@ -92,10 +94,17 @@ export class LinkValue2Component implements OnInit {
         },
       })
       .afterClosed()
-      .subscribe(resourceId => {
-        if (resourceId) {
-          this.control.setValue(resourceId);
-        }
+      .pipe(
+        switchMap(resourceId => {
+          myResourceId = resourceId as string;
+          return this._dspApiConnection.v2.res.getResource(myResourceId);
+        })
+      )
+      .subscribe((res: ReadResource) => {
+        this.resources.push(res);
+        this.control.setValue(myResourceId);
+        this.autoComplete.closePanel();
+        this._cd.detectChanges();
       });
   }
 
