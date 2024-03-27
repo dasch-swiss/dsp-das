@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -74,6 +74,7 @@ import { ResourceService } from '../services/resource.service';
 export class ResourceInstanceFormComponent implements OnInit {
   @Input({ required: true }) resourceClassIri: string;
   @Input({ required: true }) projectIri: string;
+  @Output() createdResourceId = new EventEmitter<string>();
 
   form: FormGroup<{
     label: FormControl<string>;
@@ -126,15 +127,12 @@ export class ResourceInstanceFormComponent implements OnInit {
 
     this._dspApiConnection.v2.res
       .createResource(this._getPayload())
-      .pipe(
-        switchMap((res: ReadResource) => {
-          const uuid = this._resourceService.getResourceUuid(res.id);
-          return this._router.navigate(['..', uuid], { relativeTo: this._route });
-        }),
-        take(1)
-      )
-      .subscribe(() => {
+      .pipe(take(1))
+      .subscribe((res: ReadResource) => {
+        const uuid = this._resourceService.getResourceUuid(res.id);
         this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
+        this.createdResourceId.emit(uuid);
+        this._router.navigate(['..', uuid], { relativeTo: this._route });
       });
   }
 
