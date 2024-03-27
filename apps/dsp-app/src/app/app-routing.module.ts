@@ -78,6 +78,10 @@ const routes: Routes = [
         component: CreateRessourcePageComponent,
       },
       {
+        path: RouteConstants.JulienOntologyClassRelative,
+        component: OntologyClassInstanceComponent,
+      },
+      {
         path: RouteConstants.addList,
         component: CreateListInfoPageComponent,
         canActivate: [AuthGuard],

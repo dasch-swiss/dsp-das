@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
   CreateFileValue,
@@ -105,8 +104,6 @@ export class ResourceInstanceFormComponent implements OnInit {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _fb: FormBuilder,
-    private _route: ActivatedRoute,
-    private _router: Router,
     private _store: Store,
     private _cd: ChangeDetectorRef,
     private _tempLinkValueService: TempLinkValueService
