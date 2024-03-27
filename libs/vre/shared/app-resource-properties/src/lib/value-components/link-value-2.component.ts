@@ -40,7 +40,7 @@ import { TempLinkValueService } from './temp-link-value.service';
   providers: [LinkValue2DataService],
 })
 export class LinkValue2Component implements OnInit {
-  @Input() control: FormControl<any>;
+  @Input({ required: true }) control: FormControl<string>;
   @Input() propIri: string;
 
   @ViewChild('auto') autoComplete: MatAutocompleteTrigger;
@@ -83,13 +83,20 @@ export class LinkValue2Component implements OnInit {
   openCreateResourceDialog(event: any, resourceClassIri: string, resourceType: string) {
     event.stopPropagation();
     const projectIri = (this._store.selectSnapshot(ProjectsSelectors.currentProject) as ReadProject).id;
-    this._dialog.open<CreateRessourceDialogComponent, CreateResourceDialogProps>(CreateRessourceDialogComponent, {
-      data: {
-        resourceType,
-        resourceClassIri,
-        projectIri,
-      },
-    });
+    this._dialog
+      .open<CreateRessourceDialogComponent, CreateResourceDialogProps, string>(CreateRessourceDialogComponent, {
+        data: {
+          resourceType,
+          resourceClassIri,
+          projectIri,
+        },
+      })
+      .afterClosed()
+      .subscribe(resourceId => {
+        if (resourceId) {
+          this.control.setValue(resourceId);
+        }
+      });
   }
 
   private _getRestrictToResourceClass() {

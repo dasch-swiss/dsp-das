@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ResourceClassDefinition } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
@@ -9,6 +9,7 @@ import {
   OntologiesSelectors,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { ResourceService } from '@dsp-app/src/app/workspace/resource/services/resource.service';
 import { Select, Store } from '@ngxs/store';
 import { combineLatest, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
@@ -18,7 +19,8 @@ import { filter, map } from 'rxjs/operators';
   template: ` <app-create-ressource-form
     [resourceType]="(resClass$ | async)?.label"
     [resourceClassIri]="classIri$ | async"
-    [projectIri]="projectIri"></app-create-ressource-form>`,
+    [projectIri]="projectIri"
+    (createdResourceIri)="afterCreation($event)"></app-create-ressource-form>`,
 })
 export class CreateRessourcePageComponent {
   @Select(OntologiesSelectors.projectOntologies)
@@ -31,7 +33,9 @@ export class CreateRessourcePageComponent {
     private _route: ActivatedRoute,
     private _ontologyService: OntologyService,
     private _store: Store,
-    protected _projectService: ProjectService
+    protected _projectService: ProjectService,
+    private _router: Router,
+    private _resourceService: ResourceService
   ) {}
 
   ontoId$ = this.project$.pipe(
@@ -65,5 +69,10 @@ export class CreateRessourcePageComponent {
         }
       })
     );
+  }
+
+  afterCreation(resourceIri: string) {
+    const uuid = this._resourceService.getResourceUuid(resourceIri);
+    this._router.navigate(['..', uuid], { relativeTo: this._route });
   }
 }

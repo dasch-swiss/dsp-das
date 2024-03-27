@@ -19,7 +19,6 @@ import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/repr
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs/operators';
-import { ResourceService } from '../services/resource.service';
 
 @Component({
   selector: 'app-resource-instance-form',
@@ -74,7 +73,7 @@ import { ResourceService } from '../services/resource.service';
 export class ResourceInstanceFormComponent implements OnInit {
   @Input({ required: true }) resourceClassIri: string;
   @Input({ required: true }) projectIri: string;
-  @Output() createdResourceId = new EventEmitter<string>();
+  @Output() createdResourceIri = new EventEmitter<string>();
 
   form: FormGroup<{
     label: FormControl<string>;
@@ -106,7 +105,6 @@ export class ResourceInstanceFormComponent implements OnInit {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _fb: FormBuilder,
-    private _resourceService: ResourceService,
     private _route: ActivatedRoute,
     private _router: Router,
     private _store: Store,
@@ -129,10 +127,8 @@ export class ResourceInstanceFormComponent implements OnInit {
       .createResource(this._getPayload())
       .pipe(take(1))
       .subscribe((res: ReadResource) => {
-        const uuid = this._resourceService.getResourceUuid(res.id);
         this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
-        this.createdResourceId.emit(uuid);
-        this._router.navigate(['..', uuid], { relativeTo: this._route });
+        this.createdResourceIri.emit(res.id);
       });
   }
 
