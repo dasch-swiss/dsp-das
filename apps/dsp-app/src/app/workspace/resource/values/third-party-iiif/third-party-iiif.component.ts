@@ -1,13 +1,9 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import {
-  iiifUrlValidator,
-  infoJsonUrlValidatorAsync,
-  previewImageUrlValidatorAsync,
-} from '@dsp-app/src/app/workspace/resource/values/third-party-iiif/iiif-url-validator';
-import { IIIFUrl } from '@dsp-app/src/app/workspace/resource/values/third-party-iiif/third-party-iiif';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { iiifUrlValidator, infoJsonUrlValidatorAsync, previewImageUrlValidatorAsync } from './iiif-url-validator';
+import { IIIFUrl } from './third-party-iiif';
 
 @Component({
   selector: 'app-third-part-iiif',

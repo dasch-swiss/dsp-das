@@ -1,7 +1,7 @@
 import { AbstractControl, AsyncValidatorFn, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { IIIFUrl } from '@dsp-app/src/app/workspace/resource/values/third-party-iiif/third-party-iiif';
 import { from, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { IIIFUrl } from './third-party-iiif';
 
 export function iiifUrlValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
