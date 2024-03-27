@@ -3,6 +3,7 @@ import {
   Constants,
   KnoraApiConnection,
   ReadOntology,
+  ReadResource,
   ResourceClassDefinition,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
@@ -18,7 +19,7 @@ export class LinkValue2DataService {
   resourceClasses!: ResourceClassDefinition[];
   subClasses: ResourceClassDefinition[] = [];
   properties!: ResourcePropertyDefinition[];
-  restrictToResourceClass!: string;
+  restrictToResourceClass: string;
 
   currentOntoIri!: string; // For resourceClasses
   constructor(
@@ -26,7 +27,10 @@ export class LinkValue2DataService {
     private _dspApiConnection: KnoraApiConnection
   ) {}
 
-  onInit(currentOntoIri: string) {
+  onInit(currentOntoIri: string, parentResource: ReadResource, propIri: any) {
+    const linkType = parentResource.getLinkPropertyIriFromLinkValuePropertyIri(propIri);
+    this.restrictToResourceClass = parentResource.entityInfo.properties[linkType].objectType || '';
+
     this.currentOntoIri = currentOntoIri;
 
     this._dspApiConnection.v2.ontologyCache

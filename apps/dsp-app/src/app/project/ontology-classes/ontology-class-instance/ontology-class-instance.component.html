@@ -39,8 +39,11 @@
 <div
   class="single-instance-form"
   *ngIf="(instanceId$ | async) && (instanceId$ | async) === routeConstants.addClassInstance">
-  <h3>Create new resource of type: {{(resClass$ | async)?.label}}</h3>
-  <app-resource-instance-form [resourceClassIri]="classId$ | async" [projectIri]="projectIri">
+  <h3>Create new resource of type: {{ (resClass$ | async)?.label }}</h3>
+  <app-resource-instance-form
+    *ngIf="classId$ | async as classId"
+    [resourceClassIri]="classId"
+    [projectIri]="projectIri">
   </app-resource-instance-form>
 </div>
 
