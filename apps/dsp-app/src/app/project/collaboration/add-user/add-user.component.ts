@@ -26,6 +26,8 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
 import { existingNamesValidator } from '../../../main/directive/existing-name/existing-names.validator';
+import { DialogConfigUtil } from '../../../providers/drawer-config-util';
+import { CreateUserPageComponent } from '../../../user/create-user-page/create-user-page.component';
 import { AutocompleteItem } from '../../../workspace/search/operator';
 
 @Component({
@@ -325,6 +327,11 @@ export class AddUserComponent implements OnInit {
       // update the view
       this.refreshParent.emit();
     });
+  }
+
+  createUser() {
+    const dialogConfig = DialogConfigUtil.dialogDrawerConfig<string>(this.projectUuid);
+    this._dialog.open(CreateUserPageComponent, dialogConfig);
   }
 
   resetInput(ev: Event) {

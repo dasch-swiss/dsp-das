@@ -27,6 +27,9 @@ import { Observable, combineLatest } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
 import { DialogService } from '../../../main/services/dialog.service';
+import { DialogConfigUtil } from '../../../providers/drawer-config-util';
+import { CreateUserPageComponent } from '../../../user/create-user-page/create-user-page.component';
+import { EditUserPageComponent } from '../../../user/edit-user-page/edit-user-page.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -323,6 +326,16 @@ export class UsersListComponent implements OnInit {
         })
       )
       .subscribe();
+  }
+
+  createUser() {
+    const dialogConfig = DialogConfigUtil.dialogDrawerConfig();
+    this._matDialog.open(CreateUserPageComponent, dialogConfig);
+  }
+
+  editUser(userId) {
+    const dialogConfig = DialogConfigUtil.dialogDrawerConfig<string>(userId);
+    this._matDialog.open(EditUserPageComponent, dialogConfig);
   }
 
   /**
