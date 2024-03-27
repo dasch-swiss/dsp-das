@@ -1,3 +1,4 @@
+<h1>Julien</h1>
 <div class="restricted-message" *ngIf="resource?.res?.userHasPermission === 'RV' && showRestrictedMessage">
   <mat-icon>report_problem</mat-icon>
   <p>This resource is restricted, file representations may be of lower quality and some properties may be hidden.</p>
@@ -78,7 +79,7 @@
       </app-text>
 
       <span *ngSwitchDefault>
-        The file representation type "{{representationsToDisplay[0].fileValue.type}}" is not yet implemented
+        The file representation type "{{ representationsToDisplay[0].fileValue.type }}" is not yet implemented
       </span>
 
       <!-- TODO: here we'll add more viewers and players dsp-moving-image, dsp-audio etc. -->
@@ -162,7 +163,7 @@
   <div *ngIf="!resource && !loading" class="no-results">
     <p>
       The resource
-      <span *ngIf="resourceIri">&mdash; <strong> {{resourceIri}}</strong> &mdash;</span>
+      <span *ngIf="resourceIri">&mdash; <strong> {{ resourceIri }}</strong> &mdash;</span>
       could not be found.
     </p>
     <p>Reasons:</p>

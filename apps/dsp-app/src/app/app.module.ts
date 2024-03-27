@@ -54,6 +54,7 @@ import { CreateRessourcePageComponent } from '@dsp-app/src/app/project/create-re
 import { Upload2Component } from '@dsp-app/src/app/workspace/resource/representation/upload/upload2.component';
 import { PropertyItemComponent } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/property-item.component';
 import { SwitchProperties2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-2.component';
+import { ResourcePageComponent } from '@dsp-app/src/app/workspace/resource/resource-page.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -309,6 +310,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ResourceInstanceFormComponent,
     ResourceLinkFormComponent,
     ResourceListComponent,
+    ResourcePageComponent,
     ResultsComponent,
     SearchPanelComponent,
     SelectedResourcesComponent,
