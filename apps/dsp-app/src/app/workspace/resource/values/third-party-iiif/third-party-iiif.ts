@@ -31,6 +31,10 @@ export class IIIFUrl {
     return this._segments[this._segments.length - 1];
   }
 
+  private get _quality(): string {
+    return this._qualitySegment.split('.')[0];
+  }
+
   private get _rotationSegment(): string {
     return this._segments[this._segments.length - 2];
   }
@@ -76,6 +80,6 @@ export class IIIFUrl {
   }
 
   get previewImageUrl() {
-    return `${this.iiifImageInstanceUrl}/${this._regionSegment}/${this._sizeSegment}/${this._rotationSegment}/${this._qualitySegment}`;
+    return `${this.iiifImageInstanceUrl}/${this._regionSegment}/${this._sizeSegment}/${this._rotationSegment}/${this._quality}.jpg`;
   }
 }
