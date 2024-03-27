@@ -22,7 +22,6 @@ export class ThirdPartyIiifComponent implements OnInit, OnDestroy {
   private _destroy$ = new Subject<void>();
 
   readonly validatorErrors = [
-    { errorKey: 'required', message: 'This field is required' },
     { errorKey: 'invalidIiifUrl', message: 'The provided URL is not a valid IIIF image URL' },
     { errorKey: 'previewImageError', message: 'The image cannot be loaded from the third party server' },
     { errorKey: 'infoJsonError', message: 'The iiif info json cannot be loaded from the third party server' },
@@ -40,7 +39,6 @@ export class ThirdPartyIiifComponent implements OnInit, OnDestroy {
     this.iiifUrlControl = new FormControl(this.iiifUrlValue, {
       validators: [Validators.required, iiifUrlValidator()],
       asyncValidators: [previewImageUrlValidatorAsync(), infoJsonUrlValidatorAsync()],
-      updateOn: 'change',
     });
 
     this.iiifUrlControl.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(urlStr => {
