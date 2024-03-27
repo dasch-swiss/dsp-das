@@ -2,12 +2,14 @@ import { ChangeDetectorRef, Component, Inject, Input, OnInit, ViewChild } from '
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
-import { KnoraApiConnection, ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ReadProject, ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import {
   CreateResourceDialogProps,
   CreateRessourceDialogComponent,
 } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-dialog.component';
+import { Store } from '@ngxs/store';
 import { filter, switchMap } from 'rxjs/operators';
 import { LinkValue2DataService } from './link-value-2-data.service';
 import { TempLinkValueService } from './temp-link-value.service';
@@ -26,7 +28,7 @@ import { TempLinkValueService } from './temp-link-value.service';
         <mat-option *ngIf="resources.length === 0" [disabled]="true"> No results were found.</mat-option>
         <mat-option
           *ngFor="let rc of _linkValue2DataService.resourceClasses"
-          (click)="openCreateResourceDialog($event, propIri, rc.label)">
+          (click)="openCreateResourceDialog($event, rc.id, rc.label)">
           Create New: {{ rc?.label }}
         </mat-option>
         <mat-option *ngFor="let res of resources" [value]="res.id"> {{ res.label }}</mat-option>
@@ -51,7 +53,8 @@ export class LinkValue2Component implements OnInit {
     private _tempLinkValueService: TempLinkValueService,
     private _dialog: MatDialog,
     private _cd: ChangeDetectorRef,
-    public _linkValue2DataService: LinkValue2DataService
+    public _linkValue2DataService: LinkValue2DataService,
+    private _store: Store
   ) {}
 
   ngOnInit() {
@@ -77,12 +80,14 @@ export class LinkValue2Component implements OnInit {
     );
   }
 
-  openCreateResourceDialog(event: any, propIri: string, resourceType: string) {
+  openCreateResourceDialog(event: any, resourceClassIri: string, resourceType: string) {
+    event.stopPropagation();
+    const projectIri = (this._store.selectSnapshot(ProjectsSelectors.currentProject) as ReadProject).id;
     this._dialog.open<CreateRessourceDialogComponent, CreateResourceDialogProps>(CreateRessourceDialogComponent, {
       data: {
         resourceType,
-        resourceClassIri: '',
-        projectIri: propIri,
+        resourceClassIri,
+        projectIri,
       },
     });
   }
