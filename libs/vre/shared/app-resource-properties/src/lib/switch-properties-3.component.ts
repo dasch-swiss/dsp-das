@@ -148,7 +148,11 @@ export class SwitchProperties3Component implements AfterViewInit {
       case Constants.GeonameValue:
         return { template: this.geoNameTpl, newValue: '' };
       case Constants.LinkValue:
-        return { template: this.linkTpl, newValue: null };
+        return {
+          template: this.linkTpl,
+          newValue: null,
+          validators: [Validators.pattern(/http:\/\/rdfh.ch\/.*/)],
+        };
       case Constants.UriValue:
         return { template: this.uriTpl, newValue: '', validators: [Validators.pattern(CustomRegex.URI_REGEX)] };
       default:
