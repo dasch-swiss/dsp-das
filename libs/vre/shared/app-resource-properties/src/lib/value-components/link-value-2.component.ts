@@ -41,8 +41,6 @@ export class LinkValue2Component implements OnInit {
   @Input() control: FormControl<any>;
   @Input() propIri: string;
 
-  @Input() currentOntoIri: string; // For resourceClasses
-
   @ViewChild('auto') autoComplete: MatAutocompleteTrigger;
 
   resources: ReadResource[] = [];
@@ -72,7 +70,7 @@ export class LinkValue2Component implements OnInit {
         this._cd.detectChanges();
       });
 
-    this._linkValue2DataService.onInit(this.currentOntoIri);
+    this._linkValue2DataService.onInit(this._tempLinkValueService.currentOntoIri);
   }
 
   openCreateResourceDialog(event: any, propIri: string, resourceType: string) {
