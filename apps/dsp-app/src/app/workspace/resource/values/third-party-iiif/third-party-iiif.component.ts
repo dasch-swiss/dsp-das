@@ -59,7 +59,6 @@ export class ThirdPartyIiifComponent implements OnInit, OnDestroy {
       navigator.clipboard.readText().then(text => {
         this.iiifUrlControl.setValue(text);
         this.iiifUrlControl.updateValueAndValidity();
-        this._cdr.detectChanges();
       });
     }
   }

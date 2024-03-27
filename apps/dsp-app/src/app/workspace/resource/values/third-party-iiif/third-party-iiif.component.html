@@ -33,7 +33,13 @@
     color="primary">
     <mat-icon>{{ iiifUrlControl.valid ? 'check' : 'close'}}</mat-icon>
   </button>
-  <button type="button" color="primary" mat-icon-button matSuffix (click)="pasteFromClipboard()">
+  <button
+    type="button"
+    color="primary"
+    mat-icon-button
+    matSuffix
+    matTooltip="Paste from clipboard"
+    (click)="pasteFromClipboard()">
     <mat-icon>content_paste</mat-icon>
   </button>
 </mat-form-field>
