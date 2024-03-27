@@ -11,6 +11,11 @@ export class ResourceSelectors {
   }
 
   @Selector([ResourceState])
+  static showAllComments(state: ReourceStateModel): boolean {
+    return state.showAllComments;
+  }
+
+  @Selector([ResourceState])
   static isLoading(state: ReourceStateModel): boolean {
     return state.isLoading;
   }

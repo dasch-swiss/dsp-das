@@ -1,7 +1,10 @@
-import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Inject, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { CreateTextValueAsString, ReadTextValueAsString, UpdateTextValueAsString } from '@dasch-swiss/dsp-js';
+import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Select } from '@ngxs/store';
 import * as Editor from 'ckeditor5-custom-build';
+import { Observable } from 'rxjs';
 import { BaseValueDirective } from '../../../../../main/directive/base-value.directive';
 import { ValueErrorStateMatcher } from '../../value-error-state-matcher';
 import { ckEditor } from '../ck-editor';
@@ -14,11 +17,8 @@ import { ckEditor } from '../ck-editor';
 export class TextValueAsStringComponent extends BaseValueDirective implements OnInit, OnChanges, OnDestroy {
   @Input() displayValue?: ReadTextValueAsString;
   @Input() textArea?: boolean = false;
-  @Input() shouldShowCommentToggle: boolean = false;
 
   @Input() guiElement: 'simpleText' | 'textArea' | 'richText' = 'simpleText';
-
-  @Output() toggleCommentClicked: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   matcher = new ValueErrorStateMatcher();
   customValidators = [];
@@ -26,6 +26,8 @@ export class TextValueAsStringComponent extends BaseValueDirective implements On
   // https://ckeditor.com/docs/ckeditor5/latest/builds/guides/integration/frameworks/angular.html
   editor: Editor;
   editorConfig;
+
+  @Select(ResourceSelectors.showAllComments) showAllComments$: Observable<boolean>;
 
   constructor(@Inject(FormBuilder) protected _fb: FormBuilder) {
     super();
@@ -90,9 +92,5 @@ export class TextValueAsStringComponent extends BaseValueDirective implements On
     }
 
     return updatedTextValue;
-  }
-
-  toggleComment() {
-    this.toggleCommentClicked.emit();
   }
 }

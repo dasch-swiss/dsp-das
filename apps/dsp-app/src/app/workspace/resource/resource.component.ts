@@ -50,7 +50,6 @@ import {
   GetAttachedProjectAction,
   GetAttachedUserAction,
   ResourceSelectors,
-  ToggleShowAllPropsAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
@@ -182,7 +181,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     return this.resource.res.entityInfo.classes[this.resource.res.type];
   }
 
-  @Select(ResourceSelectors.showAllProps) showAllProps$: Observable<boolean>;
   @Select(UserSelectors.user) user$: Observable<ReadUser>;
   @Select(UserSelectors.userProjectAdminGroups) userProjectAdminGroups$: Observable<string[]>;
 
@@ -469,10 +467,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
   previewProject() {
     // --> TODO: pop up project preview on hover
-  }
-
-  toggleShowAllProps() {
-    this._store.dispatch(new ToggleShowAllPropsAction());
   }
 
   /**

@@ -12,7 +12,10 @@ import {
 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Constants, CreateTextValueAsXml, ReadTextValueAsXml, UpdateTextValueAsXml } from '@dasch-swiss/dsp-js';
+import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Select } from '@ngxs/store';
 import * as Editor from 'ckeditor5-custom-build';
+import { Observable } from 'rxjs';
 import { BaseValueDirective } from '../../../../../main/directive/base-value.directive';
 import { ValueErrorStateMatcher } from '../../value-error-state-matcher';
 import { ckEditor } from '../ck-editor';
@@ -24,10 +27,8 @@ import { ckEditor } from '../ck-editor';
 })
 export class TextValueAsXMLComponent extends BaseValueDirective implements OnInit, OnChanges, OnDestroy {
   @Input() displayValue?: ReadTextValueAsXml;
-  @Input() shouldShowCommentToggle: boolean = false;
 
   @Output() internalLinkClicked: EventEmitter<string> = new EventEmitter<string>();
-  @Output() toggleCommentClicked: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() internalLinkHovered: EventEmitter<string> = new EventEmitter<string>();
 
   readonly standardMapping = Constants.StandardMapping; // todo: define this somewhere else
@@ -50,6 +51,8 @@ export class TextValueAsXMLComponent extends BaseValueDirective implements OnIni
     '</figure>': '',
     '<br>': '<br/>',
   };
+
+  @Select(ResourceSelectors.showAllComments) showAllComments$: Observable<boolean>;
 
   constructor(
     @Inject(FormBuilder) protected _fb: FormBuilder,
@@ -129,10 +132,6 @@ export class TextValueAsXMLComponent extends BaseValueDirective implements OnIni
     }
 
     return updatedTextValue;
-  }
-
-  toggleComment() {
-    this.toggleCommentClicked.emit();
   }
 
   /**

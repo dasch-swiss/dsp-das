@@ -15,9 +15,7 @@
         *ngSwitchCase="'ReadTextValueAsString'"
         [mode]="mode"
         [displayValue]="$any(displayValue)"
-        [shouldShowCommentToggle]="canReadComments && shouldShowCommentToggle"
-        [textArea]="textArea"
-        (toggleCommentClicked)="toggleComment()">
+        [textArea]="textArea">
       </app-text-value-as-string>
       <app-text-value-as-html
         class="parent-value-component"
@@ -33,8 +31,6 @@
         *ngSwitchCase="'ReadTextValueAsXml'"
         [mode]="mode"
         [displayValue]="$any(displayValue)"
-        [shouldShowCommentToggle]="canReadComments && shouldShowCommentToggle"
-        (toggleCommentClicked)="toggleComment()"
         (internalLinkClicked)="standoffLinkClicked($event)"
         (internalLinkHovered)="standoffLinkHovered($event)"></app-text-value-as-xml>
       <app-int-value

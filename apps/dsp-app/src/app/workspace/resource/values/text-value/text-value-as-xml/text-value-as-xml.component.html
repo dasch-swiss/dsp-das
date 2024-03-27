@@ -10,16 +10,8 @@
     <ng-template #sourceMode>
       <span class="rm-value">{{ displayValue?.xml }}</span>
     </ng-template>
-    <span class="rm-comment" *ngIf="shouldShowComment"> {{ commentFormControl.value }} </span>
+    <span class="rm-comment" *ngIf="showAllComments$ | async"> {{ commentFormControl.value }} </span>
   </div>
-  <button
-    mat-icon-button
-    color="primary"
-    matTooltip="Show comment"
-    *ngIf="shouldShowCommentToggle"
-    (click)="toggleComment()">
-    <mat-icon>mark_chat_unread</mat-icon>
-  </button>
 </span>
 <ng-template #showForm>
   <div *ngIf="editor; else noConfig" [formGroup]="form">

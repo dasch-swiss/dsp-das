@@ -83,10 +83,8 @@ export class DisplayEditComponent implements OnInit {
 
   mode: 'read' | 'update' | 'create' | 'search';
   canModify: boolean;
-  canReadComments: boolean;
   editModeActive = false;
   submittingValue = false;
-  shouldShowCommentToggle: boolean;
   // type of given displayValue
   // or knora-api-js-lib class representing the value
   valueTypeOrClass: string;
@@ -124,10 +122,6 @@ export class DisplayEditComponent implements OnInit {
     );
 
     this.canModify = allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
-    this.canReadComments = true; // allPermissions.indexOf(PermissionUtil.Permissions.RV) === -1; // TODO permissions to show comments should be provided
-
-    // check if comment toggle button should be shown
-    this.checkCommentToggleVisibility();
 
     this.valueTypeOrClass = this._valueService.getValueTypeOrClass(this.displayValue);
 
@@ -194,9 +188,6 @@ export class DisplayEditComponent implements OnInit {
     this.valueHovered = false;
     this.mode = 'update';
 
-    // hide comment toggle button while in edit mode
-    this.checkCommentToggleVisibility();
-
     // hide read mode comment when switching to edit mode
     this.displayValueComponent.shouldShowComment = false;
   }
@@ -241,9 +232,6 @@ export class DisplayEditComponent implements OnInit {
 
             // hide comment once back in read mode
             this.displayValueComponent.updateCommentVisibility();
-
-            // check if comment toggle button should be shown
-            this.checkCommentToggleVisibility();
 
             // hide the progress indicator
             this.submittingValue = false;
@@ -336,27 +324,6 @@ export class DisplayEditComponent implements OnInit {
 
     // hide comment once back in read mode
     this.displayValueComponent.updateCommentVisibility();
-
-    // check if comment toggle button should be shown
-    this.checkCommentToggleVisibility();
-  }
-
-  /**
-   * show or hide the comment.
-   */
-  toggleComment() {
-    this.displayValueComponent.toggleCommentVisibility();
-  }
-
-  /**
-   * check if the comment toggle button should be shown.
-   * Only show the comment toggle button if user is in READ mode and a comment exists for the value.
-   */
-  checkCommentToggleVisibility() {
-    this.shouldShowCommentToggle =
-      this.mode === 'read' &&
-      this.displayValue.valueHasComment !== '' &&
-      this.displayValue.valueHasComment !== undefined;
   }
 
   /**

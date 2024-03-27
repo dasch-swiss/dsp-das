@@ -81,8 +81,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
    */
   @Input() isAnnotation = false;
 
-  @Input() showResourceToolbar = false;
-
   @Input() valueUuidToHighlight: string;
 
   @Input() attachedUser: ReadUser;

@@ -1,7 +1,9 @@
 <!-- toolbar -->
-<div class="toolbar" *ngIf="attachedProject && showResourceToolbar" [class.deleted]="resource.res.isDeleted">
+<div class="toolbar" *ngIf="attachedProject" [class.deleted]="resource.res.isDeleted">
   <!-- resource info -->
-  <h3 class="label mat-headline-6">{{resource.res.label}} <span *ngIf="resource.res.isDeleted">(deleted)</span></h3>
+  <h3 class="label mat-headline-6" *ngIf="isAnnotation">
+    {{resource.res.label}} <span *ngIf="resource.res.isDeleted">(deleted)</span>
+  </h3>
 
   <span class="fill-remaining-space"></span>
   <app-resource-toolbar
@@ -10,9 +12,11 @@
     [adminPermissions]="adminPermissions"
     [showToggleProperties]="true"
     [showEditLabel]="true"
+    [isAnnotation]="isAnnotation"
     [attachedProject]="attachedProject"
     (regionChanged)="regionChanged.emit()"
-    (regionDeleted)="regionDeleted.emit()"></app-resource-toolbar>
+    (regionDeleted)="regionDeleted.emit()">
+  </app-resource-toolbar>
 </div>
 
 <!-- list of properties -->

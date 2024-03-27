@@ -1,21 +1,64 @@
 <!-- tools: share, add to favorites, edit, delete etc. -->
-<span class="action" [class.deleted]="resource.res.isDeleted" *ngIf="attachedProject">
+<span class="action" [class.deleted]="resource.res.isDeleted">
+  <!-- Toggle show all comments button-->
+  <button
+    color="primary"
+    mat-icon-button
+    class="toggle-props"
+    *ngIf="canReadComments && isAnnotation && showToggleProperties"
+    [matTooltip]="((showAllComments$ | async) ? 'Hide' : 'Show all')+' comments'"
+    matTooltipPosition="above"
+    (click)="toggleShowAllComments()">
+    <mat-icon>{{(showAllComments$ | async) ? 'comments_disabled' : 'comment'}}</mat-icon>
+  </button>
+  <button
+    color="primary"
+    mat-button
+    class="toggle-props"
+    *ngIf="canReadComments && !isAnnotation && showToggleProperties"
+    [matTooltip]="((showAllComments$ | async) ? 'Hide' : 'Show all')+' comments'"
+    matTooltipPosition="above"
+    (click)="toggleShowAllComments()">
+    <mat-icon>{{(showAllComments$ | async) ? 'comments_disabled' : 'comment'}}</mat-icon>
+    {{(showAllComments$ | async) ? 'Hide ' : 'Show all'}} comments
+  </button>
   <!-- Toggle list of properties: all or only the ones with value -->
   <button
     color="primary"
     mat-icon-button
     class="toggle-props"
-    *ngIf="showToggleProperties && !resource.res.isDeleted"
+    *ngIf="isAnnotation && showToggleProperties && !resource.res.isDeleted"
     [matTooltip]="((showAllProps$ | async) ? 'Hide empty' : 'Show all')+' properties'"
     matTooltipPosition="above"
     (click)="toggleShowAllProps()">
     <mat-icon>{{(showAllProps$ | async) ? 'unfold_less' : 'unfold_more'}}</mat-icon>
-    <!-- <span class="desktop-only">{{showAllProps ? 'Hide empty' : 'Show all'}} properties</span> -->
+  </button>
+  <button
+    color="primary"
+    mat-button
+    class="toggle-props"
+    *ngIf="!isAnnotation && showToggleProperties && !resource.res.isDeleted"
+    [matTooltip]="((showAllProps$ | async) ? 'Hide empty' : 'Show all')+' properties'"
+    matTooltipPosition="above"
+    (click)="toggleShowAllProps()">
+    <mat-icon>{{(showAllProps$ | async) ? 'unfold_less' : 'unfold_more'}}</mat-icon>
+    {{(showAllProps$ | async) ? 'Hide empty' : 'Show all'}} properties
   </button>
 
+  <button
+    *ngIf="hasIconButtonActions"
+    mat-icon-button
+    matTooltip="Open resource in new tab"
+    color="primary"
+    matTooltipPosition="above"
+    [disabled]="resource.res.isDeleted"
+    (click)="openResource(resource.res.id)">
+    <mat-icon>open_in_new</mat-icon>
+  </button>
   <!-- Share resource: copy ark url, add to favorites or open in new tab -->
   <button
     color="primary"
+    *ngIf="hasIconButtonActions"
     mat-icon-button
     class="share-res"
     matTooltip="Share resource: {{resource.res.versionArkUrl}}"
@@ -44,14 +87,6 @@
       <mat-icon>content_copy</mat-icon>
       Copy internal link to clipboard
     </button>
-    <button
-      mat-menu-item
-      matTooltip="Open in new tab"
-      matTooltipPosition="above"
-      (click)="openResource(resource.res.id)">
-      <mat-icon>open_in_new</mat-icon>
-      Open resource in new tab
-    </button>
     <!-- TODO: activate favorite action to add resource to collection -->
     <!--
                 <button mat-button class="add-res-to-collection">
@@ -62,16 +97,16 @@
 
   <!-- permission info: display full info in case of system or project admin; otherwise display only user's permissions -->
   <app-permission-info
-    *ngIf="adminPermissions"
+    *ngIf="adminPermissions && hasIconButtonActions"
     [hasPermissions]="resource.res.hasPermissions"
     [userHasPermission]="resource.res.userHasPermission"></app-permission-info>
   <app-permission-info
-    *ngIf="!adminPermissions"
+    *ngIf="!adminPermissions && hasIconButtonActions"
     [userHasPermission]="resource.res.userHasPermission"></app-permission-info>
   <!-- more menu with: delete, erase resource -->
   <button
     color="primary"
-    *ngIf="userCanEdit && attachedProject?.status"
+    *ngIf="(userCanEdit && attachedProject?.status) && hasIconButtonActions"
     mat-icon-button
     class="more-menu"
     matTooltip="More"

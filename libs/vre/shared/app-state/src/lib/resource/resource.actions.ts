@@ -22,3 +22,9 @@ export class ToggleShowAllPropsAction {
 
   constructor() {}
 }
+
+export class ToggleShowAllCommentsAction {
+  static readonly type = '[Resource] Toggle Show All Comments';
+
+  constructor() {}
+}

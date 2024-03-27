@@ -32,6 +32,7 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   LoadClassItemsCountAction,
   ResourceSelectors,
+  ToggleShowAllCommentsAction,
   ToggleShowAllPropsAction,
 } from '@dasch-swiss/vre/shared/app-state';
 import { ConfirmationWithComment, DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
@@ -73,7 +74,14 @@ export class ResourceToolbarComponent implements OnInit {
   userCanDelete: boolean;
   userCanEdit: boolean;
 
+  canReadComments: boolean;
+
+  get hasIconButtonActions() {
+    return this.isAnnotation || !this.showToggleProperties;
+  }
+
   @Select(ResourceSelectors.showAllProps) showAllProps$: Observable<boolean>;
+  @Select(ResourceSelectors.showAllComments) showAllComments$: Observable<boolean>;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -94,6 +102,7 @@ export class ResourceToolbarComponent implements OnInit {
         this.resource.res.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR'
       );
 
+      this.canReadComments = true; // allPermissions.indexOf(PermissionUtil.Permissions.RV) === -1; // TODO permissions to show comments should be provided
       // if user has modify permissions, set addButtonIsVisible to true so the user see's the add button
       this.userCanEdit = allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
       this.userCanDelete = allPermissions.indexOf(PermissionUtil.Permissions.D) !== -1;
@@ -112,6 +121,10 @@ export class ResourceToolbarComponent implements OnInit {
 
   toggleShowAllProps() {
     this._store.dispatch(new ToggleShowAllPropsAction());
+  }
+
+  toggleShowAllComments() {
+    this._store.dispatch(new ToggleShowAllCommentsAction());
   }
 
   openDialog(type: 'delete' | 'erase' | 'edit') {

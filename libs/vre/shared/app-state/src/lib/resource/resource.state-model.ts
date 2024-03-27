@@ -3,6 +3,7 @@ import { IKeyValuePairs } from '../model-interfaces';
 
 export class ReourceStateModel {
   showAllProps = false;
+  showAllComments = false;
   isLoading = false;
   attachedUsers: IKeyValuePairs<ReadUser> = {};
   attachedProjects: IKeyValuePairs<ReadProject> = {};

@@ -127,12 +127,7 @@
         [(selectedIndex)]="selectedTab"
         (selectedTabChange)="tabChanged($event)">
         <!-- first tab for the main resource e.g. book -->
-        <mat-tab #matTabProperties>
-          <ng-template mat-tab-label>
-            <ng-container
-              *ngTemplateOutlet="toggleShowAllPropsButtonTemplate; context: { label: 'appLabels.resource.properties' | translate, isActive: matTabProperties.isActive }">
-            </ng-container>
-          </ng-template>
+        <mat-tab #matTabProperties [label]="'appLabels.resource.properties' | translate">
           <app-properties
             *ngIf="resource.res"
             [lastModificationDate]="resource.res.lastModificationDate"
@@ -145,12 +140,7 @@
         </mat-tab>
 
         <!-- incoming resource -->
-        <mat-tab *ngIf="incomingResource" #matTabIncoming>
-          <ng-template mat-tab-label>
-            <ng-container
-              *ngTemplateOutlet="toggleShowAllPropsButtonTemplate; context: { label: resourceClassLabel(incomingResource), isActive: matTabIncoming.isActive }">
-            </ng-container>
-          </ng-template>
+        <mat-tab *ngIf="incomingResource" #matTabIncoming [label]="resourceClassLabel(incomingResource)">
           <app-properties
             *ngIf="incomingResource.res"
             [resource]="incomingResource"
@@ -181,13 +171,13 @@
             [id]="annotation.res.id"
             [class.active]="annotation.res.id === selectedRegion">
             <app-properties
-              [showResourceToolbar]="true"
               [resource]="annotation"
               [adminPermissions]="isAdmin$ | async"
               [attachedUser]="resourceAttachedUser"
               [attachedProject]="project$ | async"
               [valueUuidToHighlight]="valueUuid"
               (regionChanged)="updateRegion()"
+              isAnnotation="true"
               (regionDeleted)="reloadWithResource()">
             </app-properties>
           </div>
@@ -223,19 +213,3 @@
     </ul>
   </div>
 </div>
-
-<ng-template #toggleShowAllPropsButtonTemplate let-label="label" let-isActive="isActive">
-  <span>{{label}}</span>
-  <!-- Toggle list of properties: all or only the ones with value -->
-  <button
-    color="primary"
-    mat-icon-button
-    class="toggle-props"
-    *ngIf="!resource.res.isDeleted && isActive"
-    [matTooltip]="((showAllProps$ | async) ? 'Hide empty' : 'Show all')+' properties'"
-    matTooltipPosition="above"
-    (click)="toggleShowAllProps()">
-    <mat-icon>{{(showAllProps$ | async) ? 'unfold_less' : 'unfold_more'}}</mat-icon>
-    <!-- <span class="desktop-only">{{showAllProps ? 'Hide empty' : 'Show all'}} properties</span> -->
-  </button>
-</ng-template>
