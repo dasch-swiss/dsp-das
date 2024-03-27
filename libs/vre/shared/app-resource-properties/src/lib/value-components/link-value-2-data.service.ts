@@ -29,17 +29,18 @@ export class LinkValue2DataService {
   onInit(currentOntoIri: string) {
     this.currentOntoIri = currentOntoIri;
 
-    this._dspApiConnection.v2.ontologyCache.getOntology(this.currentOntoIri).subscribe(
-      (ontoMap: Map<string, ReadOntology>) => {
+    this._dspApiConnection.v2.ontologyCache
+      .getOntology(this.currentOntoIri)
+      .subscribe((ontoMap: Map<string, ReadOntology>) => {
         // filter out knorabase ontology
         const filteredOntoMap = new Map(Array.from(ontoMap).filter(([key]) => key !== Constants.KnoraApiV2));
 
-        let resClasses = [];
+        let resClasses: ResourceClassDefinition[] = [];
 
         // loop through each ontology in the project and create an array of ResourceClassDefinitions
         filteredOntoMap.forEach(onto => {
           resClasses = resClasses.concat(
-            filteredOntoMap.get(onto.id).getClassDefinitionsByType(ResourceClassDefinition)
+            filteredOntoMap.get(onto.id)?.getClassDefinitionsByType(ResourceClassDefinition) ?? []
           );
         });
 
@@ -54,14 +55,9 @@ export class LinkValue2DataService {
           this._getSubclasses(resClasses, this.restrictToResourceClass)
         );
 
-        this.properties = filteredOntoMap
-          .get(this.currentOntoIri)
-          .getPropertyDefinitionsByType(ResourcePropertyDefinition);
-      },
-      error => {
-        console.error(error);
-      }
-    );
+        this.properties =
+          filteredOntoMap.get(this.currentOntoIri)?.getPropertyDefinitionsByType(ResourcePropertyDefinition) ?? [];
+      });
   }
 
   /**
