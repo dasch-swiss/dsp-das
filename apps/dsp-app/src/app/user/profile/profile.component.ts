@@ -3,12 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { EditUserPageComponent } from '@dsp-app/src/app/user/edit-user-page/edit-user-page.component';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil, takeWhile } from 'rxjs/operators';
 import { DialogConfigUtil } from '../../providers/drawer-config-util';
-import { UserFormComponent } from '../user-form/user-form.component';
+import { EditUserPageComponent } from '../edit-user-page/edit-user-page.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

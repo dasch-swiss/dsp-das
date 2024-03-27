@@ -1,12 +1,12 @@
-import { Component, Inject, OnDestroy } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ReadUser, UpdateUserRequest } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { LoadUsersAction, UpdateUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { UserForm } from '@dsp-app/src/app/user/user-form/user-form.type';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
+import { UserForm } from '../user-form/user-form.type';
 
 @Component({
   selector: 'dsp-app-edit-user-page',
@@ -28,7 +28,6 @@ export class EditUserPageComponent {
     private _notification: NotificationService,
     private _store: Store
   ) {
-    console.log(this.userId, 'ff');
     this.user$ = this.getUser$();
   }
 
@@ -39,7 +38,6 @@ export class EditUserPageComponent {
           this._store.dispatch(new LoadUsersAction(true));
         }
         const user = allUsers.find(u => u?.id === this.userId);
-        console.log(user);
         return of(user);
       })
     );
