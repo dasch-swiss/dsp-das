@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { CreateRessourcePageComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-page.component';
+import { OntologyClassInstanceComponent } from '@dsp-app/src/app/project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { HelpComponent } from './main/help/help.component';
@@ -70,10 +71,10 @@ const routes: Routes = [
       },
       {
         path: RouteConstants.OntologyClassRelative,
-        component: CreateRessourcePageComponent,
+        component: OntologyClassInstanceComponent,
       },
       {
-        path: RouteConstants.OntologyClassInstanceRelative,
+        path: RouteConstants.OntologyClassAddRelative,
         component: CreateRessourcePageComponent,
       },
       {

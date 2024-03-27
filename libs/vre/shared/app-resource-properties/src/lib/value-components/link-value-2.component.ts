@@ -25,8 +25,8 @@ import { TempLinkValueService } from './temp-link-value.service';
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource.bind(this)">
         <mat-option *ngIf="resources.length === 0" [disabled]="true"> No results were found.</mat-option>
         <!--<mat-option *ngFor="let rc of resourceClasses" (click)="openCreateResourceDialog($event, propIri, rc.label)">
-                                                        Create New: {{ rc?.label }}
-                                                        </mat-option>-->
+                                                                Create New: {{ rc?.label }}
+                                                                </mat-option>-->
         <mat-option *ngFor="let res of resources" [value]="res.id"> {{ res.label }}</mat-option>
       </mat-autocomplete>
       <mat-hint>{{ 'appLabels.form.action.searchHelp' | translate }}</mat-hint>
@@ -89,7 +89,7 @@ export class LinkValue2Component implements OnInit {
   }
 
   displayResource(resId: string | null): string {
-    if (!this.resources || resId === null) return;
+    if (!this.resources || resId === null) return '';
     return this.resources.find(res => res.id === resId)?.label ?? '';
   }
 }
