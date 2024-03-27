@@ -118,7 +118,6 @@ export class SwitchProperties3Component implements AfterViewInit {
     this.itemTpl = data.template;
     this.newValue = data.newValue;
     this.validators = data.validators;
-    this.addItem();
     this._cd.detectChanges();
   }
 

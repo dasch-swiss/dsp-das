@@ -151,6 +151,7 @@ export class ResourceInstanceFormComponent implements OnInit {
           .getResourcePropertiesList()
           .filter(v => v.guiOrder !== undefined)
           .filter(v => v.propertyDefinition['isLinkProperty'] === false);
+        console.log('go');
         this._buildForm();
         this._cd.detectChanges();
       });
@@ -161,6 +162,7 @@ export class ResourceInstanceFormComponent implements OnInit {
       this.form.addControl('file', this._fb.control(null, [Validators.required]));
     }
 
+    console.log('s', this);
     this.properties.forEach((prop, index) => {
       this.form.controls.properties.addControl(prop.propertyDefinition.id, this._fb.array(['']));
       this.mapping.set(prop.propertyDefinition.id, prop.propertyDefinition.objectType);
