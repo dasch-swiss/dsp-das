@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, TemplateRef, ViewChild } from '@angular/core';
-import { FormArray, FormControl, ValidatorFn, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, ValidatorFn, Validators } from '@angular/forms';
 import {
   Cardinality,
   Constants,
@@ -111,52 +111,69 @@ export class SwitchProperties3Component implements AfterViewInit {
     return this.propertyDefinition as ResourcePropertyDefinition;
   }
 
-  constructor(private _cd: ChangeDetectorRef) {}
+  constructor(
+    private _cd: ChangeDetectorRef,
+    private _fb: FormBuilder
+  ) {}
 
   ngAfterViewInit() {
     const data = this.getTemplate();
     this.itemTpl = data.template;
     this.newValue = data.newValue;
-    this.validators = data.validators;
+    this.addItem();
     this._cd.detectChanges();
   }
 
   addItem() {
-    this.formArray.push(new FormControl(this.newValue, [Validators.required, ...(this.validators ?? [])]));
+    this.formArray.push(this.newValue);
   }
 
-  private getTemplate(): { template: TemplateRef<any>; newValue: any; validators?: ValidatorFn[] } {
+  private getTemplate(): { template: TemplateRef<any>; newValue: any } {
     switch (this.propertyDefinition.objectType) {
       case Constants.IntValue:
-        return { template: this.intTpl, newValue: 0 };
+        return { template: this.intTpl, newValue: this._fb.control(0, Validators.required) };
       case Constants.DecimalValue:
-        return { template: this.decimalTpl, newValue: 0 };
+        return { template: this.decimalTpl, newValue: this._fb.control(0, Validators.required) };
       case Constants.BooleanValue:
-        return { template: this.booleanTpl, newValue: false };
+        return { template: this.booleanTpl, newValue: this._fb.control(false, Validators.required) };
       case Constants.ColorValue:
-        return { template: this.colorTpl, newValue: '#000000' };
+        return { template: this.colorTpl, newValue: this._fb.control('#000000', Validators.required) };
       case Constants.TextValue:
-        return { template: this.textTpl, newValue: '' };
+        return { template: this.textTpl, newValue: this._fb.control('', Validators.required) };
       case Constants.DateValue:
-        return { template: this.dateTpl, newValue: '' };
+        return { template: this.dateTpl, newValue: this._fb.control('', Validators.required) };
       case Constants.TimeValue:
-        return { template: this.timeTpl, newValue: { date: null, time: null } };
+        return {
+          template: this.timeTpl,
+          newValue: this._fb.group({
+            date: this._fb.control(null, Validators.required),
+            time: this._fb.control(null, Validators.required),
+          }),
+        };
       case Constants.IntervalValue:
-        return { template: this.intervalTpl, newValue: { start: null, end: null } };
+        return {
+          template: this.intervalTpl,
+          newValue: this._fb.group({
+            start: this._fb.control(null, Validators.required),
+            end: this._fb.control(null, Validators.required),
+          }),
+        };
       case Constants.ListValue:
-        return { template: this.listTpl, newValue: null };
+        return { template: this.listTpl, newValue: this._fb.control(null, Validators.required) };
       case Constants.GeonameValue:
-        return { template: this.geoNameTpl, newValue: '' };
+        return { template: this.geoNameTpl, newValue: this._fb.control('', Validators.required) };
       case Constants.LinkValue:
         return {
           template: this.linkTpl,
-          newValue: null,
-          validators: [Validators.pattern(/http:\/\/rdfh.ch\/.*/)],
+          newValue: this._fb.control(null, [Validators.required, Validators.pattern(/http:\/\/rdfh.ch\/.*/)]),
         };
       case Constants.UriValue:
-        return { template: this.uriTpl, newValue: '', validators: [Validators.pattern(CustomRegex.URI_REGEX)] };
+        return {
+          template: this.uriTpl,
+          newValue: this._fb.control('', [Validators.required, Validators.pattern(CustomRegex.URI_REGEX)]),
+        };
       default:
-        return { template: this.defaultTpl, newValue: null };
+        throw Error('Unrecognized property');
     }
   }
 }

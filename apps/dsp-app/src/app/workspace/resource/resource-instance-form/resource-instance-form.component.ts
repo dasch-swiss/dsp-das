@@ -76,7 +76,7 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   form: FormGroup<{
     label: FormControl<string>;
-    properties: FormGroup<{ [key: string]: FormArray<FormControl<string>> }>;
+    properties: FormGroup<{ [key: string]: FormArray<any> }>;
     file?: FormControl<CreateFileValue>;
   }> = this._fb.group({ label: this._fb.control('', [Validators.required]), properties: this._fb.group({}) });
 
@@ -161,7 +161,7 @@ export class ResourceInstanceFormComponent implements OnInit {
 
     console.log('s', this);
     this.properties.forEach((prop, index) => {
-      this.form.controls.properties.addControl(prop.propertyDefinition.id, this._fb.array(['']));
+      this.form.controls.properties.addControl(prop.propertyDefinition.id, this._fb.array([]));
       this.mapping.set(prop.propertyDefinition.id, prop.propertyDefinition.objectType);
     });
   }

@@ -3,8 +3,12 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-interval-value-2',
-  template: '<app-interval-input #intervalInput [formControl]="control"></app-interval-input>',
+  template: '<app-common-input [control]="control.controls.start" type="number" ></app-common-input>',
 })
 export class IntervalValue2Component {
-  @Input() control!: FormControl<any>;
+  @Input() control!: FormGroup<{ start: FormControl<number>; end: FormControl<number> }>;
+
+  ngOnInit() {
+    console.log('g', this.control);
+  }
 }
