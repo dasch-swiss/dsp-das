@@ -20,6 +20,12 @@
     margin: 0px;
   }
 
+  .rm-comment {
+    margin-top: 6px;
+    font-size: small;
+    border-top: 1px solid rgba(33, 33, 33, 0.1);
+  }
+
   .rm-value.text-value {
     white-space: pre-wrap;
   }
