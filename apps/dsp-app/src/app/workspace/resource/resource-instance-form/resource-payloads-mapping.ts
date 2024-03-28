@@ -87,7 +87,8 @@ export const propertiesTypeMapping = new Map<string, { newValue: any; mapping: (
     Constants.IntervalValue,
     {
       newValue: null,
-      mapping: (value: { start: any; end: any }) => {
+      mapping: (value: { start: number; end: number }) => {
+        console.log(value, 'z');
         const newIntervalValue = new CreateIntervalValue();
         newIntervalValue.start = value.start;
         newIntervalValue.end = value.end;

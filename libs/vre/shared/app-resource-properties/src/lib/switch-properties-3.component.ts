@@ -154,8 +154,8 @@ export class SwitchProperties3Component implements AfterViewInit {
         return {
           template: this.intervalTpl,
           newValue: this._fb.group({
-            start: this._fb.control(null, Validators.required),
-            end: this._fb.control(null, Validators.required),
+            start: this._fb.control(0, Validators.required),
+            end: this._fb.control(0, Validators.required),
           }),
         };
       case Constants.ListValue:
