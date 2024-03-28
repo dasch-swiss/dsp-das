@@ -22,7 +22,6 @@ export class ResourcePageComponent {
   project$ = this._store.select(ProjectsSelectors.currentProject);
   resourceIri$ = this.project$.pipe(
     filter(v => v !== undefined),
-    tap(v => console.log('ddsf', v)),
     map(project => `${this._acs.dspAppConfig.iriBase}/${project.shortcode}/${this.instanceId}`)
   );
 }
