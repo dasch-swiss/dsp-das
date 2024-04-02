@@ -6,7 +6,6 @@ import { BaseValueDirective } from '../../../../../main/directive/base-value.dir
 @Component({
   selector: 'app-switch-properties',
   templateUrl: './switch-properties.component.html',
-  styleUrls: ['./switch-properties.component.scss'],
 })
 export class SwitchPropertiesComponent implements OnInit {
   @ViewChild('createVal') createValueComponent: BaseValueDirective;

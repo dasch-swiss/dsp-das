@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { CreateRessourcePageComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-page.component';
+import { OntologyClassInstanceComponent } from '@dsp-app/src/app/project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
+import { ResourcePageComponent } from '@dsp-app/src/app/workspace/resource/resource-page.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
-import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
 import { HelpComponent } from './main/help/help.component';
 import { StatusComponent } from './main/status/status.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
@@ -16,7 +18,6 @@ import { ListComponent } from './project/list/list.component';
 import { CreateListInfoPageComponent } from './project/list/reusable-list-info-form/create-list-info-page.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
-import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
 import { ProjectComponent } from './project/project.component';
 import { SettingsComponent } from './project/settings/settings.component';
 import { ProjectsComponent } from './system/projects/projects.component';
@@ -70,14 +71,16 @@ const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
-        canActivate: [OntologyClassInstanceGuard],
         path: RouteConstants.OntologyClassRelative,
         component: OntologyClassInstanceComponent,
       },
       {
-        canActivate: [OntologyClassInstanceGuard],
-        path: RouteConstants.OntologyClassInstanceRelative,
-        component: OntologyClassInstanceComponent,
+        path: RouteConstants.OntologyClassAddRelative,
+        component: CreateRessourcePageComponent,
+      },
+      {
+        path: RouteConstants.JulienOntologyClassRelative,
+        component: ResourcePageComponent,
       },
       {
         path: RouteConstants.addList,

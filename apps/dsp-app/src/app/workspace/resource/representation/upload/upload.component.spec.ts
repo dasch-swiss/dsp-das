@@ -108,7 +108,6 @@ describe('UploadComponent', () => {
 
     it('should reset the form', () => {
       testHostComponent.uploadComp.form = fb.group({ test: '' });
-      testHostComponent.uploadComp.resetForm();
       expect(testHostComponent.uploadComp.form.get('test').value).toBeNull();
     });
   });

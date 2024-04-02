@@ -1,275 +1,211 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  Inject,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   Constants,
   CreateFileValue,
   CreateResource,
-  CreateTextValueAsString,
-  CreateValue,
+  IHasPropertyWithPropertyDefinition,
   KnoraApiConnection,
   ReadResource,
   ResourceClassAndPropertyDefinitions,
   ResourceClassDefinition,
-  ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import {
-  ComponentCommunicationEventService,
-  DefaultClass,
-  DefaultResourceClasses,
-  EmitEvent,
-  Events as CommsEvents,
-} from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { TempLinkValueService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
+import { fileValueMapping } from '@dsp-app/src/app/workspace/resource/representation/upload/file-mappings';
+import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/representation/upload/file-representation.type';
+import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import { Store } from '@ngxs/store';
-import { tap } from 'rxjs/operators';
-import { ResourceService } from '../services/resource.service';
-import { SelectPropertiesComponent } from './select-properties/select-properties.component';
+import { switchMap, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-instance-form',
-  templateUrl: './resource-instance-form.component.html',
-  styleUrls: ['./resource-instance-form.component.scss'],
+  template: `
+    <form *ngIf="!loading; else loadingTemplate" [formGroup]="form" appInvalidControlScroll>
+      <app-upload-2
+        *ngIf="form.controls.file"
+        [formControl]="form.controls.file"
+        [representation]="fileRepresentation"
+        style="display: block; margin-bottom: 16px"></app-upload-2>
+
+      <div style="display: flex">
+        <h3
+          class="mat-subtitle-2"
+          matTooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
+          matTooltipPosition="above">
+          Resource label *
+        </h3>
+        <app-common-input [control]="form.controls.label"></app-common-input>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 100px 400px; grid-gap: 10px">
+        <ng-container *ngFor="let prop of properties">
+          <div style="padding-top: 16px">{{ prop.propertyDefinition.label }}</div>
+          <div>
+            <app-switch-properties-3
+              [propertyDefinition]="prop.propertyDefinition"
+              [property]="prop"
+              [formArray]="form.controls.properties.controls[prop.propertyDefinition.id]"
+              [cardinality]="prop.cardinality"></app-switch-properties-3>
+          </div>
+        </ng-container>
+      </div>
+
+      <button
+        mat-raised-button
+        type="submit"
+        color="primary"
+        appLoadingButton
+        [isLoading]="loading"
+        (click)="submitData()">
+        {{ 'appLabels.form.action.submit' | translate }}
+      </button>
+    </form>
+
+    <ng-template #loadingTemplate>
+      <dasch-swiss-app-progress-indicator></dasch-swiss-app-progress-indicator>
+    </ng-template>
+  `,
+  providers: [TempLinkValueService],
 })
-export class ResourceInstanceFormComponent implements OnInit, OnChanges {
-  // ontology's resource class iri
-  @Input() resourceClassIri: string;
+export class ResourceInstanceFormComponent implements OnInit {
+  @Input({ required: true }) resourceClassIri: string;
+  @Input({ required: true }) projectIri: string;
+  @Output() createdResourceIri = new EventEmitter<string>();
 
-  // corresponding project iri
-  @Input() projectIri: string;
+  form: FormGroup<{
+    label: FormControl<string>;
+    properties: FormGroup<{ [key: string]: FormArray<any> }>;
+    file?: FormControl<CreateFileValue>;
+  }> = this._fb.group({ label: this._fb.control('', [Validators.required]), properties: this._fb.group({}) });
 
-  @ViewChild('selectProps')
-  selectPropertiesComponent: SelectPropertiesComponent;
-
-  // form
-  propertiesParentForm: UntypedFormGroup;
-
-  // form validation status
-  formValid = false;
-
-  ontologyIri: string;
   resourceClass: ResourceClassDefinition;
-  resource: ReadResource;
-  resourceLabel: string;
-  properties: ResourcePropertyDefinition[];
   ontologyInfo: ResourceClassAndPropertyDefinitions;
-
-  // get default resource class definitions to translate the subClassOf iri into human readable words
-  // list of default resource classes
-  defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
-
-  // selected resource class has a file value property: display the corresponding upload form
-  hasFileValue: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
-
-  fileValue: CreateFileValue;
-
-  // prepare content
-  preparing = false;
-  // loading in case of submit
+  fileRepresentation: FileRepresentationType;
+  properties: IHasPropertyWithPropertyDefinition[];
   loading = false;
-  // in case of any error
-  error = false;
-  errorMessage: any;
 
-  propertiesObj = {};
+  mapping = new Map<string, string>();
+  readonly resourceClassTypes = [
+    Constants.HasStillImageFileValue,
+    Constants.HasDocumentFileValue,
+    Constants.HasAudioFileValue,
+    Constants.HasMovingImageFileValue,
+    Constants.HasArchiveFileValue,
+    Constants.HasTextFileValue,
+  ];
+
+  get ontologyIri() {
+    return this.resourceClassIri.split('#')[0];
+  }
 
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _fb: UntypedFormBuilder,
-    private _resourceService: ResourceService,
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _componentCommsService: ComponentCommunicationEventService,
-    private _notification: NotificationService,
+    private _fb: FormBuilder,
+    private _store: Store,
     private _cd: ChangeDetectorRef,
-    private _store: Store
+    private _tempLinkValueService: TempLinkValueService
   ) {}
 
   ngOnInit(): void {
-    if (!this.resourceClassIri) {
-      return;
-    }
-
-    // get ontology iri from res class iri
-    const splitIri = this.resourceClassIri.split('#');
-    this.ontologyIri = splitIri[0];
-    this.getResourceProperties(this.resourceClassIri);
-    this.propertiesParentForm = this._fb.group({});
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.resourceClassIri) {
-      this.ngOnInit();
-    }
-  }
-
-  /**
-   * get all the properties of the resource class
-   * @param resourceClassIri
-   */
-  getResourceProperties(resourceClassIri: string) {
-    // reset errorMessage, it will be reassigned in the else clause if needed
-    this.errorMessage = undefined;
-
-    this.preparing = true;
-    this.loading = true;
-    this._dspApiConnection.v2.ontologyCache.reloadCachedItem(this.ontologyIri).subscribe(() => {
-      this._dspApiConnection.v2.ontologyCache
-        .getResourceClassDefinition(resourceClassIri)
-        .pipe(
-          tap({
-            error: () => {
-              this.preparing = false;
-              this.loading = false;
-            },
-          })
-        )
-        .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
-          this.ontologyInfo = onto;
-
-          this.resourceClass = onto.classes[resourceClassIri];
-
-          // set label from resource class
-          const defaultClassLabel = this.defaultClasses.find(i => i.iri === this.resourceClass.subClassOf[0]);
-          this.resourceLabel = this.resourceClass.label + (defaultClassLabel ? ` (${defaultClassLabel.label})` : '');
-
-          // filter out all props that cannot be edited or are link props but also the hasFileValue props
-          this.properties = onto.getPropertyDefinitionsByType(ResourcePropertyDefinition).filter(
-            prop =>
-              !prop.isLinkProperty &&
-              prop.isEditable &&
-              prop.id !== Constants.HasStillImageFileValue &&
-              prop.id !== Constants.HasDocumentFileValue &&
-              prop.id !== Constants.HasAudioFileValue &&
-              prop.id !== Constants.HasMovingImageFileValue &&
-              prop.id !== Constants.HasArchiveFileValue &&
-              prop.id !== Constants.HasTextFileValue
-            // --> TODO for UPLOAD: expand with other representation file values
-          );
-
-          if (onto.properties[Constants.HasStillImageFileValue]) {
-            this.hasFileValue = 'stillImage';
-          } else if (onto.properties[Constants.HasDocumentFileValue]) {
-            this.hasFileValue = 'document';
-          } else if (onto.properties[Constants.HasAudioFileValue]) {
-            this.hasFileValue = 'audio';
-          } else if (onto.properties[Constants.HasMovingImageFileValue]) {
-            this.hasFileValue = 'movingImage';
-          } else if (onto.properties[Constants.HasArchiveFileValue]) {
-            this.hasFileValue = 'archive';
-          } else if (onto.properties[Constants.HasTextFileValue]) {
-            this.hasFileValue = 'text';
-          } else {
-            this.hasFileValue = undefined;
-          }
-
-          // notifies the user that the selected resource does not have any properties defined yet.
-          if (!this.selectPropertiesComponent && this.properties.length === 0 && !this.hasFileValue) {
-            this.errorMessage = 'No properties defined for the selected resource.';
-          }
-          this.preparing = false;
-          this.loading = false;
-          this._cd.markForCheck();
-        });
-    });
-  }
-
-  setFileValue(file: CreateFileValue) {
-    this.fileValue = file;
+    this._getResourceProperties(this.resourceClassIri);
   }
 
   submitData() {
-    if (this.propertiesParentForm.valid) {
-      this.loading = true;
-      const createResource = new CreateResource();
-
-      const resLabelVal = <CreateTextValueAsString>this.selectPropertiesComponent.createValueComponent.getNewValue();
-
-      createResource.label = resLabelVal.text;
-
-      createResource.type = this.resourceClass.id;
-
-      createResource.attachedToProject = this.projectIri;
-
-      this.propertiesObj = {};
-
-      this.selectPropertiesComponent.switchPropertiesComponent.forEach(child => {
-        const createVal = child.createValueComponent.getNewValue();
-        const iri = child.property.id;
-        if (createVal instanceof CreateValue) {
-          if (this.propertiesObj[iri]) {
-            // if a key already exists, add the createVal to the array
-            this.propertiesObj[iri].push(createVal);
-          } else {
-            // if no key exists, add one and add the createVal as the first value of the array
-            this.propertiesObj[iri] = [createVal];
-          }
-        }
-      });
-
-      if (this.fileValue) {
-        switch (this.hasFileValue) {
-          case 'stillImage':
-            this.propertiesObj[Constants.HasStillImageFileValue] = [this.fileValue];
-            break;
-          case 'document':
-            this.propertiesObj[Constants.HasDocumentFileValue] = [this.fileValue];
-            break;
-          case 'audio':
-            this.propertiesObj[Constants.HasAudioFileValue] = [this.fileValue];
-            break;
-          case 'movingImage':
-            this.propertiesObj[Constants.HasMovingImageFileValue] = [this.fileValue];
-            break;
-          case 'archive':
-            this.propertiesObj[Constants.HasArchiveFileValue] = [this.fileValue];
-            break;
-          case 'text':
-            this.propertiesObj[Constants.HasTextFileValue] = [this.fileValue];
-        }
-      }
-
-      createResource.properties = this.propertiesObj;
-      this._dspApiConnection.v2.res
-        .createResource(createResource)
-        .pipe(
-          tap({
-            error: () => {
-              this.error = true;
-              this.loading = false;
-            },
-          })
-        )
-        .subscribe((res: ReadResource) => {
-          this.resource = res;
-
-          const uuid = this._resourceService.getResourceUuid(this.resource.id);
-          const params = this._route.snapshot.url;
-          // go to ontology/[ontoname]/[classname]/[classuuid] relative to parent route project/[projectcode]/
-          this._router
-            .navigate([params[0].path, params[1].path, params[2].path, uuid], {
-              relativeTo: this._route.parent,
-            })
-            .then(() => {
-              this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
-              this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceCreated));
-              this._cd.markForCheck();
-            });
-        });
-    } else {
-      this.propertiesParentForm.markAllAsTouched();
+    this.form.markAllAsTouched();
+    if (this.form.invalid) {
+      return;
     }
+    this.loading = true;
+
+    this._dspApiConnection.v2.res
+      .createResource(this._getPayload())
+      .pipe(take(1))
+      .subscribe((res: ReadResource) => {
+        this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
+        this.createdResourceIri.emit(res.id);
+      });
+  }
+
+  private _getResourceProperties(resourceClassIri: string) {
+    this._dspApiConnection.v2.ontologyCache
+      .reloadCachedItem(this.ontologyIri)
+      .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri)))
+      .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
+        this.ontologyInfo = onto;
+        this.resourceClass = onto.classes[resourceClassIri];
+        this._tempLinkValueService.currentOntoIri = this.ontologyIri;
+
+        this.fileRepresentation = this._getFileRepresentation(onto);
+
+        const readResource = new ReadResource();
+        readResource.entityInfo = this.ontologyInfo;
+        this._tempLinkValueService.parentResource = readResource;
+
+        this.properties = onto.classes[resourceClassIri]
+          .getResourcePropertiesList()
+          .filter(v => v.guiOrder !== undefined)
+          .filter(v => v.propertyDefinition['isLinkProperty'] === false);
+        console.log('go');
+        this._buildForm();
+        this._cd.detectChanges();
+      });
+  }
+
+  private _buildForm() {
+    if (this.fileRepresentation) {
+      this.form.addControl('file', this._fb.control(null, [Validators.required]));
+    }
+
+    console.log('s', this);
+    this.properties.forEach((prop, index) => {
+      this.form.controls.properties.addControl(prop.propertyDefinition.id, this._fb.array([]));
+      this.mapping.set(prop.propertyDefinition.id, prop.propertyDefinition.objectType);
+    });
+  }
+
+  private _getFileRepresentation(onto: ResourceClassAndPropertyDefinitions) {
+    for (const item of this.resourceClassTypes) {
+      if (onto.properties[item]) {
+        return item as FileRepresentationType;
+      }
+    }
+  }
+
+  private _getPayload() {
+    const createResource = new CreateResource();
+    createResource.label = this.form.controls.label.value;
+    createResource.type = this.resourceClass.id;
+    createResource.attachedToProject = this.projectIri;
+    createResource.properties = this._getPropertiesObj();
+    return createResource;
+  }
+
+  private _getPropertiesObj() {
+    const propertiesObj = {};
+
+    Object.keys(this.form.controls.properties.controls).forEach(iri => {
+      propertiesObj[iri] = this.getValue(iri);
+    });
+
+    if (this.form.controls.file) {
+      propertiesObj[this.fileRepresentation] = [this._getFileValue()];
+    }
+    return propertiesObj;
+  }
+
+  private getValue(iri: string) {
+    const controls = this.form.controls.properties.controls[iri].controls;
+    return controls.map(control => {
+      return propertiesTypeMapping.get(this.mapping.get(iri)).mapping(control.value);
+    });
+  }
+
+  private _getFileValue() {
+    const fileValue = new (fileValueMapping.get(this.fileRepresentation).uploadClass)();
+    fileValue.filename = this.form.controls.file.value.filename;
+    return fileValue;
   }
 }

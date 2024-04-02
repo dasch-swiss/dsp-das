@@ -56,8 +56,8 @@ import {
   EditPropertyFormDialogComponent,
   EditPropertyFormDialogProps,
 } from '@dsp-app/src/app/project/ontology/property-form/edit-property-form-dialog.component';
-import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { Observable, Subject, combineLatest } from 'rxjs';
+import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { DialogComponent } from '../../main/dialog/dialog.component';
 import { DialogService } from '../../main/services/dialog.service';

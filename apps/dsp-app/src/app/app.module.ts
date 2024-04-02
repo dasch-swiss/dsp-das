@@ -13,11 +13,11 @@ import { BASE_PATH } from '@dasch-swiss/vre/open-api';
 import { PendoAnalyticsService } from '@dasch-swiss/vre/shared/app-analytics';
 import {
   AppConfigService,
+  buildTagFactory,
   BuildTagToken,
   DspApiConfigToken,
   DspAppConfigToken,
   DspInstrumentationToken,
-  buildTagFactory,
 } from '@dasch-swiss/vre/shared/app-config';
 import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
@@ -27,6 +27,20 @@ import {
   CenteredLayoutComponent,
   LoadingButtonDirective,
 } from '@dasch-swiss/vre/shared/app-progress-indicator';
+import {
+  BooleanValue2Component,
+  ColorValue2Component,
+  GeonameValue2Component,
+  IntervalValue2Component,
+  IntValue2Component,
+  LinkValue2Component,
+  ListValue2Component,
+  NestedMenuComponent,
+  NuListComponent,
+  SwitchProperties3Component,
+  TimeValue2Component,
+  UriValue2Component,
+} from '@dasch-swiss/vre/shared/app-resource-properties';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import {
   AppStringLiteralComponent,
@@ -34,16 +48,13 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
-import { AssignPropertyDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/assign-property-dialog.component';
-import { CreatePropertyFormDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/create-property-form-dialog.component';
-import { EditPropertyFormDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/edit-property-form-dialog.component';
-import { GuiAttrLinkComponent } from '@dsp-app/src/app/project/ontology/property-form/gui-attr-link.component';
-import { GuiAttrListComponent } from '@dsp-app/src/app/project/ontology/property-form/gui-attr-list.component';
-import { MultipleSlideToggleComponent } from '@dsp-app/src/app/project/ontology/property-form/multiple-slide-toggle.component';
-import { PropertyForm2Component } from '@dsp-app/src/app/project/ontology/property-form/property-form-2.component';
-import { RequiredSlideToggleComponent } from '@dsp-app/src/app/project/ontology/property-form/required-slide-toggle.component';
-import { AddPropertyMenuComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/add-property-menu.component';
-import { ResourceClassInfoElementComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-info-element.component';
+import { CreateRessourceDialogComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-dialog.component';
+import { CreateRessourceFormComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-form.component';
+import { CreateRessourcePageComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-page.component';
+import { Upload2Component } from '@dsp-app/src/app/workspace/resource/representation/upload/upload2.component';
+import { PropertyItemComponent } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/property-item.component';
+import { SwitchProperties2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-2.component';
+import { ResourcePageComponent } from '@dsp-app/src/app/workspace/resource/resource-page.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -159,11 +170,9 @@ import { UploadComponent } from './workspace/resource/representation/upload/uplo
 import { VideoPreviewComponent } from './workspace/resource/representation/video/video-preview/video-preview.component';
 import { VideoComponent } from './workspace/resource/representation/video/video.component';
 import { ResourceInstanceFormComponent } from './workspace/resource/resource-instance-form/resource-instance-form.component';
-import { SelectOntologyComponent } from './workspace/resource/resource-instance-form/select-ontology/select-ontology.component';
 import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
 import { SelectPropertiesComponent } from './workspace/resource/resource-instance-form/select-properties/select-properties.component';
 import { SwitchPropertiesComponent } from './workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties.component';
-import { SelectResourceClassComponent } from './workspace/resource/resource-instance-form/select-resource-class/select-resource-class.component';
 import { ResourceLinkFormComponent } from './workspace/resource/resource-link-form/resource-link-form.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { BooleanValueComponent } from './workspace/resource/values/boolean-value/boolean-value.component';
@@ -229,6 +238,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CookiePolicyComponent,
     CreateLinkResourceComponent,
     CreateResourceClassDialogComponent,
+    CreateRessourcePageComponent,
+    CreateRessourceFormComponent,
+    CreateRessourceDialogComponent,
     DateValueComponent,
     DateValueHandlerComponent,
     DecimalValueComponent,
@@ -250,6 +262,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     RequiredSlideToggleComponent,
     ResourceClassInfoElementComponent,
     AddPropertyMenuComponent,
+    GeonameValue2Component,
     GridComponent,
     HeaderComponent,
     HelpComponent,
@@ -258,6 +271,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     IntervalInputComponent,
     IntervalValueComponent,
     IntValueComponent,
+    IntValue2Component,
     InvalidControlScrollDirective,
     JDNDatepickerDirective,
     KnoraDatePipe,
@@ -275,6 +289,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ListItemFormComponent,
     ListValueComponent,
     ListViewComponent,
+    LinkValue2Component,
     LoginFormComponent,
     MembershipComponent,
     OntologyComponent,
@@ -283,6 +298,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     PermissionInfoComponent,
     ProfileComponent,
     ProjectComponent,
+    PropertyItemComponent,
     CreateProjectFormPageComponent,
     ReusableProjectFormComponent,
     EditProjectFormPageComponent,
@@ -304,15 +320,14 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ResourceInstanceFormComponent,
     ResourceLinkFormComponent,
     ResourceListComponent,
+    ResourcePageComponent,
     ResultsComponent,
     SearchPanelComponent,
     SelectedResourcesComponent,
     SelectGroupComponent,
     SelectLanguageComponent,
-    SelectOntologyComponent,
     SelectProjectComponent,
     SelectPropertiesComponent,
-    SelectResourceClassComponent,
     SortButtonComponent,
     SplitPipe,
     StatusComponent,
@@ -320,6 +335,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     StringifyStringLiteralPipe,
     SublistValueComponent,
     SwitchPropertiesComponent,
+    SwitchProperties2Component,
     SystemComponent,
     TextValueAsHtmlComponent,
     TextValueAsStringComponent,
@@ -331,6 +347,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     TitleFromCamelCasePipe,
     TruncatePipe,
     UploadComponent,
+    Upload2Component,
     UriValueComponent,
     UserComponent,
     UserFormComponent,
@@ -352,6 +369,15 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     IsFalsyPipe,
     CreateListItemDialogComponent,
     ImageDisplayAbsoluteComponent,
+    SwitchProperties3Component,
+    BooleanValue2Component,
+    ColorValue2Component,
+    IntervalValue2Component,
+    ListValue2Component,
+    NestedMenuComponent,
+    TimeValue2Component,
+    UriValue2Component,
+    NuListComponent,
   ],
   imports: [
     AngularSplitModule,
@@ -430,6 +456,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
       useClass: IiifWithCredentialsInterceptor,
       multi: true,
     },
+
     {
       provide: Sentry.TraceService,
       deps: [Router],
