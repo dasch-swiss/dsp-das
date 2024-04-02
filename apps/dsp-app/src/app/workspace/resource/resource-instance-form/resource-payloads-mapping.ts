@@ -1,4 +1,3 @@
-import { FormControl } from '@angular/forms';
 import {
   Constants,
   CreateBooleanValue,
@@ -13,10 +12,11 @@ import {
   CreateTextValueAsString,
   CreateTimeValue,
   CreateUriValue,
+  CreateValue,
 } from '@dasch-swiss/dsp-js';
 import { populateValue } from '@dsp-app/src/app/workspace/resource/values/date-value/populate-value-method';
 
-export const propertiesTypeMapping = new Map<string, { newValue: any; mapping: (value: any) => any }>([
+export const propertiesTypeMapping = new Map<string, { newValue: any; mapping: (value: any) => CreateValue }>([
   [
     Constants.IntValue,
     {

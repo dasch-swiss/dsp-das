@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   Constants,
   CreateFileValue,
@@ -18,6 +18,7 @@ import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/repr
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs/operators';
+import { FormValueArray } from '../../../../../../../libs/vre/shared/app-resource-properties/src/lib/form-value-array.type';
 
 @Component({
   selector: 'app-resource-instance-form',
@@ -76,7 +77,7 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   form: FormGroup<{
     label: FormControl<string>;
-    properties: FormGroup<{ [key: string]: FormArray<any> }>;
+    properties: FormGroup<{ [key: string]: FormValueArray }>;
     file?: FormControl<CreateFileValue>;
   }> = this._fb.group({ label: this._fb.control('', [Validators.required]), properties: this._fb.group({}) });
 
@@ -148,7 +149,6 @@ export class ResourceInstanceFormComponent implements OnInit {
           .getResourcePropertiesList()
           .filter(v => v.guiOrder !== undefined)
           .filter(v => v.propertyDefinition['isLinkProperty'] === false);
-        console.log('go');
         this._buildForm();
         this._cd.detectChanges();
       });
@@ -159,9 +159,16 @@ export class ResourceInstanceFormComponent implements OnInit {
       this.form.addControl('file', this._fb.control(null, [Validators.required]));
     }
 
-    console.log('s', this);
     this.properties.forEach((prop, index) => {
-      this.form.controls.properties.addControl(prop.propertyDefinition.id, this._fb.array([]));
+      this.form.controls.properties.addControl(
+        prop.propertyDefinition.id,
+        this._fb.array([
+          this._fb.group({
+            item: null,
+            comment: this._fb.control(''),
+          }),
+        ])
+      );
       this.mapping.set(prop.propertyDefinition.id, prop.propertyDefinition.objectType);
     });
   }
@@ -198,8 +205,12 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   private getValue(iri: string) {
     const controls = this.form.controls.properties.controls[iri].controls;
-    return controls.map(control => {
-      return propertiesTypeMapping.get(this.mapping.get(iri)).mapping(control.value);
+    return controls.map(group => {
+      const entity = propertiesTypeMapping.get(this.mapping.get(iri)).mapping(group.controls.item.value);
+      if (group.controls.comment.value) {
+        entity.valueHasComment = group.controls.comment.value;
+      }
+      return entity;
     });
   }
 

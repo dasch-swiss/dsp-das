@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, TemplateRef, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, ValidatorFn, Validators } from '@angular/forms';
 import {
   Cardinality,
   Constants,
@@ -8,6 +8,7 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
+import { FormValueArray } from './form-value-array.type';
 
 @Component({
   selector: 'app-switch-properties-3',
@@ -86,7 +87,7 @@ import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-r
 export class SwitchProperties3Component implements AfterViewInit {
   @Input() propertyDefinition!: PropertyDefinition;
   @Input() cardinality!: Cardinality;
-  @Input() formArray!: FormArray;
+  @Input() formArray!: FormValueArray;
   @Input() property!: IHasPropertyWithPropertyDefinition; // TODO remove later ?
 
   @ViewChild('intTpl') intTpl!: TemplateRef<any>;
@@ -104,7 +105,7 @@ export class SwitchProperties3Component implements AfterViewInit {
   @ViewChild('defaultTpl') defaultTpl!: TemplateRef<any>;
 
   itemTpl!: TemplateRef<any>;
-  newValue: any;
+  newControl: any;
   validators: ValidatorFn[] | undefined;
 
   get resPropDef() {
@@ -119,13 +120,12 @@ export class SwitchProperties3Component implements AfterViewInit {
   ngAfterViewInit() {
     const data = this.getTemplate();
     this.itemTpl = data.template;
-    this.newValue = data.newValue;
-    this.addItem();
+    this.newControl = data.newValue;
     this._cd.detectChanges();
   }
 
   addItem() {
-    this.formArray.push(this.newValue);
+    this.formArray.push(this._fb.group({ item: this.newControl, comment: new FormControl('') }));
   }
 
   private getTemplate(): { template: TemplateRef<any>; newValue: any } {

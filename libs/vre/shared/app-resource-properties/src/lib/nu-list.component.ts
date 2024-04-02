@@ -1,11 +1,16 @@
-import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
-import { FormArray } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
 import { Cardinality } from '@dasch-swiss/dsp-js';
+import { FormValueArray } from './form-value-array.type';
 
 @Component({
   selector: 'app-nu-list',
-  template: ` <div *ngFor="let control of formArray.controls; let index = index" style="display: flex">
-      <ng-container *ngTemplateOutlet="itemTpl; context: { $implicit: control }"></ng-container>
+  template: ` <div *ngFor="let group of formArray.controls; let index = index" style="display: flex">
+      <div>
+        <ng-container *ngTemplateOutlet="itemTpl; context: { $implicit: group.controls.item }"></ng-container>
+        <mat-form-field style="flex: 1" subscriptSizing="dynamic" class="formfield">
+          <textarea matInput rows="9" [placeholder]="'Comment'" [formControl]="group.controls.comment"></textarea>
+        </mat-form-field>
+      </div>
       <button
         (click)="formArray.removeAt(index)"
         mat-icon-button
@@ -20,11 +25,15 @@ import { Cardinality } from '@dasch-swiss/dsp-js';
       Add
     </button>`,
 })
-export class NuListComponent {
+export class NuListComponent implements OnInit {
   @Input() itemTpl!: TemplateRef<any>;
-  @Input() formArray!: FormArray;
+  @Input() formArray!: FormValueArray;
   @Input() cardinality!: Cardinality;
   @Output() addItem = new EventEmitter();
 
   protected readonly Cardinality = Cardinality;
+
+  ngOnInit() {
+    console.log(this);
+  }
 }
