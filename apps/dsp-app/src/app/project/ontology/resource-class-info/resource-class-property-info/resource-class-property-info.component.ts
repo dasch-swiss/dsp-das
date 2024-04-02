@@ -17,6 +17,7 @@ import {
   Constants,
   IHasProperty,
   KnoraApiConnection,
+  ResourceClassDefinitionWithAllLanguages,
   ResourcePropertyDefinitionWithAllLanguages,
   UpdateOntology,
   UpdateResourceClassCardinality,
@@ -24,9 +25,10 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DefaultClass, DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ListsSelectors, OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { DialogService } from '@dsp-app/src/app/main/services/dialog.service';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { switchMap, takeUntil, tap } from 'rxjs/operators';
 
 // property data structure
 export class Property {
@@ -102,11 +104,19 @@ export class ResourceClassPropertyInfoComponent implements OnInit, OnChanges, Af
     private _ontoService: OntologyService,
     private _store: Store,
     private _fb: FormBuilder,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _dialog: DialogService
   ) {}
 
   ngOnInit() {
     this.cardinalityControl = this._fb.control<Cardinality>(this.propCard.cardinality);
+    this.cardinalityControl.valueChanges
+      .pipe(
+        switchMap(changes =>
+          this._dialog.afterConfirmation('Please note that this change may not be reversible.', 'Attention')
+        )
+      )
+      .subscribe();
   }
 
   ngOnChanges(): void {
@@ -211,6 +221,32 @@ export class ResourceClassPropertyInfoComponent implements OnInit, OnChanges, Af
       this.propCanBeRemovedFromClass = canDoRes.canDo;
       this._cd.markForCheck();
     });
+  }
+
+  submitCardinalitiesChange() {
+    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+
+    // get the ontology, the class and its properties
+    const classUpdate = new UpdateOntology<UpdateResourceClassCardinality>();
+    classUpdate.lastModificationDate = this.lastModificationDate;
+    classUpdate.id = ontology.id;
+    const changedClass = new UpdateResourceClassCardinality();
+    changedClass.id = this.resourceIri; // TODO this.resClassIri;
+    changedClass.cardinalities = this.classProperties;
+
+    // get the property for replacing the cardinality
+    const idx = changedClass.cardinalities.findIndex(c => c.propertyIndex === this.propertyInfo.propDef.id);
+    if (idx === -1) {
+      return;
+    }
+    changedClass.cardinalities[idx].cardinality = this.cardinalityControl.value;
+
+    classUpdate.entity = changedClass;
+    return this._dspApiConnection.v2.onto.replaceCardinalityOfResourceClass(classUpdate).pipe(
+      tap((res: ResourceClassDefinitionWithAllLanguages) => {
+        this.lastModificationDate = res.lastModificationDate;
+      })
+    );
   }
 
   ngOnDestroy() {
