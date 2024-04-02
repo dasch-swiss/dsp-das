@@ -53,7 +53,6 @@ export class ListValue2Component implements OnInit {
         // TODO weird to have n subscribes inside ngFors
         this.listRootNode = response;
         this._cd.detectChanges();
-        console.log('root node set', this.listRootNode);
       });
     }
   }

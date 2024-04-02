@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { FormValueArray } from './form-value-array.type';
 
@@ -25,15 +25,11 @@ import { FormValueArray } from './form-value-array.type';
       Add
     </button>`,
 })
-export class NuListComponent implements OnInit {
+export class NuListComponent {
   @Input() itemTpl!: TemplateRef<any>;
   @Input() formArray!: FormValueArray;
   @Input() cardinality!: Cardinality;
   @Output() addItem = new EventEmitter();
 
   protected readonly Cardinality = Cardinality;
-
-  ngOnInit() {
-    console.log(this);
-  }
 }

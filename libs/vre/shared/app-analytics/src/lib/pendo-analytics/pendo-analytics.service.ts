@@ -32,7 +32,6 @@ export class PendoAnalyticsService {
    * set active user
    */
   setActiveUser(id: string): void {
-    console.log('setActiveUser', id);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     pendo.initialize({
@@ -67,7 +66,6 @@ export class PendoAnalyticsService {
    * remove active user
    */
   removeActiveUser(): void {
-    console.log('removeActiveUser');
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     pendo.initialize({
