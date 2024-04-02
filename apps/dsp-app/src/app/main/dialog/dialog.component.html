@@ -6,7 +6,7 @@
       [title]="'appLabels.form.user.title.profile' | translate"
       [subtitle]="'appLabels.form.user.title.new' | translate">
     </app-dialog-header>
-    <app-user-form [name]="data.name" [projectUuid]="data.project" (closeDialog)="dialogRef.close()"> </app-user-form>
+    <app-user-form [name]="data.name" [projectUuid]="data.project" (closeDialog)="dialogRef.close()"></app-user-form>
   </div>
 
   <!-- Modify user data -->
@@ -25,7 +25,7 @@
 
   <!-- Manage user project membership -->
   <div *ngSwitchCase="'manageProjectMembership'">
-    <app-dialog-header [title]="data.user.username" [subtitle]="'Manage project membership'"> </app-dialog-header>
+    <app-dialog-header [title]="data.user.username" [subtitle]="'Manage project membership'"></app-dialog-header>
     <app-membership [user]="data.user" (closeDialog)="dialogRef.close()"></app-membership>
     <mat-dialog-actions>
       <span class="fill-remaining-space"></span>
@@ -48,42 +48,9 @@
       (closeDialog)="dialogRef.close($event)"></app-ontology-form>
   </div>
 
-  <div *ngSwitchCase="'updateCardinality'">
-    <app-property-form
-      [propertyInfo]="data.propInfo"
-      [resClassIri]="data.parentIri"
-      [guiOrder]="data.position"
-      [classProperties]="data.classProperties"
-      [changeCardinalities]="true"
-      [targetGuiCardinality]="data.targetCardinality"
-      [currentCardinality]="data.currentCardinality"
-      (closeDialog)="dialogRef.close()">
-    </app-property-form>
-  </div>
-
-  <div *ngSwitchCase="'createProperty'">
-    <app-dialog-header [title]="data.title" [subtitle]="data.subtitle"> </app-dialog-header>
-    <app-property-form
-      [propertyInfo]="data.propInfo"
-      [resClassIri]="data.parentIri"
-      [guiOrder]="data.position"
-      (closeDialog)="dialogRef.close()">
-    </app-property-form>
-  </div>
-
-  <div *ngSwitchCase="'editProperty'">
-    <app-dialog-header [title]="data.title" [subtitle]="data.subtitle"> </app-dialog-header>
-    <app-property-form
-      [propertyInfo]="data.propInfo"
-      [resClassIri]="data.parentIri"
-      [guiOrder]="data.position"
-      (closeDialog)="dialogRef.close($event)">
-    </app-property-form>
-  </div>
-
   <!-- all about RESOURCE -->
   <div *ngSwitchCase="'editResource'">
-    <app-dialog-header [title]="data.title" [subtitle]="'Edit resource\'s label'"> </app-dialog-header>
+    <app-dialog-header [title]="data.title" [subtitle]="'Edit resource\'s label'"></app-dialog-header>
     <mat-dialog-content class="form-content">
       <mat-form-field class="large-field">
         <input matInput placeholder="Label" [value]="data.title" (keyup)="onKey($event)" />
