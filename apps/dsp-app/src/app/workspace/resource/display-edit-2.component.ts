@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { PropertyInfoValues } from '@dsp-app/src/app/workspace/resource/properties/properties.component';
 import { FormBuilder } from '@angular/forms';
-import { FormValueArray } from '../../../../../../libs/vre/shared/app-resource-properties/src/lib/form-value-array.type';
+import { FormValueArray } from '@dasch-swiss/vre/shared/app-resource-properties';
 
 @Component({
   selector: 'app-display-edit-2',
@@ -15,6 +15,7 @@ import { FormValueArray } from '../../../../../../libs/vre/shared/app-resource-p
         [property]="prop.guiDef"
         [cardinality]="prop.guiDef.cardinality"
         [formArray]="formArray"></app-switch-properties-3>
+      <button (click)="submitData()">Edit</button>
     </ng-template>
     <button (click)="displayMode = !displayMode">TOGGLE</button>
   `,
@@ -26,4 +27,8 @@ export class DisplayEdit2Component {
   formArray: FormValueArray = this._fb.array([this._fb.group({ item: null, comment: '' })]);
 
   constructor(private _fb: FormBuilder) {}
+
+  submitData() {
+    if (this.formArray.invalid) return;
+  }
 }

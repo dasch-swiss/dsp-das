@@ -11,14 +11,13 @@ import {
   ResourceClassDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { TempLinkValueService } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { FormValueArray, TempLinkValueService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { fileValueMapping } from '@dsp-app/src/app/workspace/resource/representation/upload/file-mappings';
 import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/representation/upload/file-representation.type';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs/operators';
-import { FormValueArray } from '../../../../../../../libs/vre/shared/app-resource-properties/src/lib/form-value-array.type';
 
 @Component({
   selector: 'app-resource-instance-form',
