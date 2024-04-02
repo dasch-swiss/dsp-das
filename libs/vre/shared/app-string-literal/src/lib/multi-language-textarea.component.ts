@@ -39,7 +39,7 @@ import { MultiLanguageFormService } from './multi-language-form.service';
           [ngModel]="formService.inputValue"
           (blur)="formService.formArray.markAsTouched()"
           (ngModelChange)="formService.onInputChange($event)"
-          [disabled]="formService.selectedFormControl.disabled"></textarea>
+          [disabled]="formService.selectedFormControl?.disabled ?? false"></textarea>
       </mat-form-field>
       <mat-button-toggle-group matPrefix #group="matButtonToggleGroup" vertical>
         <mat-button-toggle
