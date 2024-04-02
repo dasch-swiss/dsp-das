@@ -18,7 +18,7 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { SetCurrentOntologyAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { switchMap, tap } from 'rxjs/operators';
-import { PropertyForm } from './property-form.type';
+import { PropertyForm } from '../property-form.type';
 
 export interface EditPropertyFormDialogProps {
   ontology: ReadOntology;

@@ -15,17 +15,15 @@ import {
   PropToAdd,
   PropToDisplay,
 } from '@dasch-swiss/vre/shared/app-state';
-import {
-  AssignPropertyDialogComponent,
-  AssignPropertyDialogProps,
-} from '@dsp-app/src/app/project/ontology/property-form/assign-property-dialog.component';
-import {
-  CreatePropertyFormDialogComponent,
-  CreatePropertyFormDialogProps,
-} from '@dsp-app/src/app/project/ontology/property-form/create-property-form-dialog.component';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
+import {
+  AssignPropertyDialogComponent,
+  AssignPropertyDialogProps,
+  CreatePropertyFormDialogComponent,
+  CreatePropertyFormDialogProps,
+} from '@dasch-swiss/vre/shared/app-property-form';
 
 @Component({
   selector: 'app-add-property-menu',

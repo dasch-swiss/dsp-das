@@ -48,10 +48,6 @@ import {
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
-import {
-  EditPropertyFormDialogComponent,
-  EditPropertyFormDialogProps,
-} from '@dsp-app/src/app/project/ontology/property-form/edit-property-form-dialog.component';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, switchMap, take, takeUntil } from 'rxjs/operators';
@@ -66,6 +62,10 @@ import {
   EditResourceClassDialogComponent,
   EditResourceClassDialogProps,
 } from './edit-resource-class-dialog/edit-resource-class-dialog.component';
+import {
+  EditPropertyFormDialogComponent,
+  EditPropertyFormDialogProps,
+} from '@dasch-swiss/vre/shared/app-property-form';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

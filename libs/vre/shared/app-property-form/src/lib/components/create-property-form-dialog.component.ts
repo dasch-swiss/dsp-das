@@ -12,7 +12,7 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { finalize, switchMap } from 'rxjs/operators';
-import { PropertyForm } from './property-form.type';
+import { PropertyForm } from '../property-form.type';
 
 export interface CreatePropertyFormDialogProps {
   ontologyId: string;

@@ -4,7 +4,7 @@ import { KnoraApiConnection, UpdateOntology, UpdateResourceClassCardinality } fr
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { finalize } from 'rxjs/operators';
-import { PropertyForm } from './property-form.type';
+import { PropertyForm } from '../property-form.type';
 
 export interface AssignPropertyDialogProps {
   ontologyId: string;

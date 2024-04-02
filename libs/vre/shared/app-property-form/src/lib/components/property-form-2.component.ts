@@ -4,7 +4,7 @@ import { Cardinality, Constants } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/vre/open-api';
 import { DefaultProperties, PropertyCategory, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/shared/app-string-literal';
-import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/property-form.type';
+import { PropertyForm } from '../property-form.type';
 
 @Component({
   selector: 'app-property-form-2',

@@ -5,7 +5,7 @@ import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { map } from 'rxjs/operators';
-import { PropertyForm } from './property-form.type';
+import { PropertyForm } from '../property-form.type';
 
 export interface ClassToSelect {
   ontologyId: string;

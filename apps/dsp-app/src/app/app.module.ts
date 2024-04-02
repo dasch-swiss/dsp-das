@@ -50,14 +50,6 @@ import {
 import { CreateRessourceDialogComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-dialog.component';
 import { CreateRessourceFormComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-form.component';
 import { CreateRessourcePageComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-page.component';
-import { AssignPropertyDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/assign-property-dialog.component';
-import { CreatePropertyFormDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/create-property-form-dialog.component';
-import { EditPropertyFormDialogComponent } from '@dsp-app/src/app/project/ontology/property-form/edit-property-form-dialog.component';
-import { GuiAttrLinkComponent } from '@dsp-app/src/app/project/ontology/property-form/gui-attr-link.component';
-import { GuiAttrListComponent } from '@dsp-app/src/app/project/ontology/property-form/gui-attr-list.component';
-import { MultipleSlideToggleComponent } from '@dsp-app/src/app/project/ontology/property-form/multiple-slide-toggle.component';
-import { PropertyForm2Component } from '@dsp-app/src/app/project/ontology/property-form/property-form-2.component';
-import { RequiredSlideToggleComponent } from '@dsp-app/src/app/project/ontology/property-form/required-slide-toggle.component';
 import { AddPropertyMenuComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/add-property-menu.component';
 import { ResourceClassInfoElementComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-info-element.component';
 import { Upload2Component } from '@dsp-app/src/app/workspace/resource/representation/upload/upload2.component';
@@ -211,6 +203,7 @@ import { AdvancedSearchContainerComponent } from './workspace/search/advanced-se
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
+import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -219,6 +212,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
 
 @NgModule({
   declarations: [
+    ...PropertyFormComponents,
     AccountComponent,
     ActionBubbleComponent,
     AddRegionFormComponent,
@@ -264,10 +258,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     FormattedBooleanPipe,
     FulltextSearchComponent,
     GeonameValueComponent,
-    GuiAttrListComponent,
-    GuiAttrLinkComponent,
-    MultipleSlideToggleComponent,
-    RequiredSlideToggleComponent,
     ResourceClassInfoElementComponent,
     AddPropertyMenuComponent,
     GeonameValue2Component,
@@ -314,10 +304,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ProjectsComponent,
     ProjectsListComponent,
     PropertiesComponent,
-    PropertyForm2Component,
-    CreatePropertyFormDialogComponent,
-    AssignPropertyDialogComponent,
-    EditPropertyFormDialogComponent,
     PropertyInfoComponent,
     ReplaceFileFormComponent,
     ResourceClassFormComponent,
