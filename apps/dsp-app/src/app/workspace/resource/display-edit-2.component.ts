@@ -1,7 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { PropertyInfoValues } from '@dsp-app/src/app/workspace/resource/properties/properties.component';
 import { FormBuilder } from '@angular/forms';
 import { FormValueArray } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
+import { KnoraApiConnection, UpdateResource, UpdateResourceMetadataResponse } from '@dasch-swiss/dsp-js';
+import { take } from 'rxjs/operators';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 
 @Component({
   selector: 'app-display-edit-2',
@@ -26,9 +30,47 @@ export class DisplayEdit2Component {
 
   formArray: FormValueArray = this._fb.array([this._fb.group({ item: null, comment: '' })]);
 
-  constructor(private _fb: FormBuilder) {}
+  constructor(
+    private _fb: FormBuilder,
+    @Inject(DspApiConnectionToken)
+    private _dspApiConnection: KnoraApiConnection
+  ) {}
 
   submitData() {
     if (this.formArray.invalid) return;
+
+    this._dspApiConnection.v2.res
+      .updateResourceMetadata(this._getPayload())
+      .pipe(take(1))
+      .subscribe((res: UpdateResourceMetadataResponse) => {
+        console.log(res);
+      });
+  }
+
+  private getValue(iri: string) {
+    return this.formArray.controls.map(group => {
+      const entity = propertiesTypeMapping.get(this.prop.propDef.objectType).mapping(group.controls.item.value);
+      if (group.controls.comment.value) {
+        entity.valueHasComment = group.controls.comment.value;
+      }
+      return entity;
+    });
+  }
+
+  private _getPropertiesObj() {
+    const propertiesObj = {};
+
+    Object.keys(this.formArray.controls).forEach(iri => {
+      propertiesObj[iri] = this.getValue(iri);
+    });
+
+    return propertiesObj;
+  }
+
+  private _getPayload() {
+    const updateResource = new UpdateResource();
+    updateResource.property = this.prop.propDef.id;
+    updateResource.value = this.formArray.controls[0].value.item;
+    return updateResource;
   }
 }
