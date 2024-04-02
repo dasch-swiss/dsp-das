@@ -35,7 +35,7 @@ import { map, takeUntil } from 'rxjs/operators';
         </span>
       </span>
       <!-- display only properties if they exist in list of properties;
-                                                                                                                                                                                                               objectType is not a linkValue (otherwise we have the property twice) -->
+                                                                                                                                                                                                                         objectType is not a linkValue (otherwise we have the property twice) -->
       <span matListItemTitle>
         <app-resource-class-property-info
           class="property-info"
@@ -45,6 +45,7 @@ import { map, takeUntil } from 'rxjs/operators';
           [resourceIri]="resourceClass.id"
           [lastModificationDate]="lastModificationDate$ | async"
           [userCanEdit]="userCanEdit"
+          [resourceClass]="resourceClass"
           (changeCardinalities)="newChangeCardinalities($event, props)">
         </app-resource-class-property-info>
       </span>

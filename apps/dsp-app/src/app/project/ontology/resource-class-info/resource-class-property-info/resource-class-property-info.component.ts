@@ -14,6 +14,7 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import {
   CanDoResponse,
   Cardinality,
+  ClassDefinition,
   Constants,
   IHasProperty,
   KnoraApiConnection,
@@ -75,6 +76,8 @@ export class ResourceClassPropertyInfoComponent implements OnInit, OnChanges, Af
   @Input() userCanEdit: boolean; // is user a project admin or sys admin?
 
   @Output() removePropertyFromClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
+
+  @Input() resourceClass: ClassDefinition;
 
   @Output() changeCardinalities: EventEmitter<{
     prop: IHasProperty;
@@ -224,6 +227,8 @@ export class ResourceClassPropertyInfoComponent implements OnInit, OnChanges, Af
   }
 
   submitCardinalitiesChange() {
+    const classProperties;
+
     const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
 
     // get the ontology, the class and its properties
@@ -232,7 +237,7 @@ export class ResourceClassPropertyInfoComponent implements OnInit, OnChanges, Af
     classUpdate.id = ontology.id;
     const changedClass = new UpdateResourceClassCardinality();
     changedClass.id = this.resourceIri; // TODO this.resClassIri;
-    changedClass.cardinalities = this.classProperties;
+    changedClass.cardinalities = classProperties;
 
     // get the property for replacing the cardinality
     const idx = changedClass.cardinalities.findIndex(c => c.propertyIndex === this.propertyInfo.propDef.id);
