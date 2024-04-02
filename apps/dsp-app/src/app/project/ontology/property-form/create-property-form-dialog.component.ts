@@ -1,9 +1,17 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Constants, CreateResourceProperty, KnoraApiConnection, UpdateOntology } from '@dasch-swiss/dsp-js';
+import {
+  Constants,
+  CreateResourceProperty,
+  IHasProperty,
+  KnoraApiConnection,
+  ResourcePropertyDefinitionWithAllLanguages,
+  UpdateOntology,
+  UpdateResourceClassCardinality,
+} from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
-import { finalize } from 'rxjs/operators';
+import { finalize, switchMap } from 'rxjs/operators';
 import { PropertyForm } from './property-form.type';
 
 export interface CreatePropertyFormDialogProps {
@@ -62,6 +70,7 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     this._dspApiConnection.v2.onto
       .createResourceProperty(this.getOntologyForNewProperty())
       .pipe(
+        switchMap((response: ResourcePropertyDefinitionWithAllLanguages) => this.assignProperty(response)),
         finalize(() => {
           this.loading = false;
         })
@@ -69,6 +78,29 @@ export class CreatePropertyFormDialogComponent implements OnInit {
       .subscribe(() => {
         this.dialogRef.close();
       });
+  }
+
+  assignProperty(prop: ResourcePropertyDefinitionWithAllLanguages) {
+    const onto = new UpdateOntology<UpdateResourceClassCardinality>();
+
+    onto.lastModificationDate = prop.lastModificationDate;
+    onto.id = this.data.ontologyId;
+
+    const addCard = new UpdateResourceClassCardinality();
+    addCard.id = this.data.resClassIri;
+    addCard.cardinalities = [];
+
+    const propCard: IHasProperty = {
+      propertyIndex: prop.id,
+      cardinality: this.form.controls.cardinality.value,
+      guiOrder: 0, // TODO it was: this.guiOrder, // add new property to the end of current list of properties
+    };
+
+    addCard.cardinalities.push(propCard);
+
+    onto.entity = addCard;
+
+    return this._dspApiConnection.v2.onto.addCardinalityToResourceClass(onto);
   }
 
   private getOntologyForNewProperty(): UpdateOntology<CreateResourceProperty> {
