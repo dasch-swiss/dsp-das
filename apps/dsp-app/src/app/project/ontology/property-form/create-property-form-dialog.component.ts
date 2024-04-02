@@ -105,7 +105,7 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     return onto;
   }
 
-  private setGuiAttribute(guiAttr: string): string[] {
+  private setGuiAttribute(guiAttr: string): string[] | undefined {
     switch (this.data.propertyInfo.propType.guiEle) {
       case Constants.GuiColorPicker:
         return [`ncolors=${guiAttr}`];
@@ -126,6 +126,6 @@ export class CreatePropertyFormDialogComponent implements OnInit {
         return ['width=100%'];
     }
 
-    return [];
+    return undefined;
   }
 }
