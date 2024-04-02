@@ -49,10 +49,6 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import {
-  CreatePropertyFormDialogComponent,
-  CreatePropertyFormDialogProps,
-} from '@dsp-app/src/app/project/ontology/property-form/create-property-form-dialog.component';
-import {
   EditPropertyFormDialogComponent,
   EditPropertyFormDialogProps,
 } from '@dsp-app/src/app/project/ontology/property-form/edit-property-form-dialog.component';
@@ -335,8 +331,6 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     };
   }
 
-  trackByPropertyCategoryFn = (index: number, item: PropertyCategory) => `${index}-${item.group}`;
-
   trackByClassDefinitionFn = (index: number, item: ClassDefinition) => `${index}-${item.id}`;
 
   trackByPropertyDefinitionFn = (index: number, item: PropertyDefinition) => `${index}-${item.id}`;
@@ -471,26 +465,7 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
       });
   }
 
-  createProperty(mode: string, data: PropertyInfoObject) {
-    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-    this._dialog
-      .open<CreatePropertyFormDialogComponent, CreatePropertyFormDialogProps>(CreatePropertyFormDialogComponent, {
-        data: {
-          ontologyId: ontology.id,
-          lastModificationDate: ontology.lastModificationDate,
-          propertyInfo: data,
-        },
-      })
-      .afterClosed()
-      .subscribe(() => {
-        // get the ontologies for this project
-        this.initOntologiesList();
-        // update the view of resource class or list of properties
-        this.initOntology();
-      });
-  }
-
-  editProperty(mode: string, data: PropertyInfoObject) {
+  editProperty(data: PropertyInfoObject) {
     const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
     this._dialog
       .open<EditPropertyFormDialogComponent, EditPropertyFormDialogProps>(EditPropertyFormDialogComponent, {
