@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ClassDefinition, Constants, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import {
   DefaultProperties,
@@ -120,64 +120,6 @@ export class AddPropertyMenuComponent {
   trackByDefaultPropertyFn = (index: number, item: DefaultProperty) => `${index}-${item.label}`;
 
   trackByPropFn = (index: number, item: PropertyInfoObject) => `${index}-${item.propDef?.id}`;
-
-  addExistingProperty(prop: PropertyInfoObject) {
-    const propertyAssignment: PropertyAssignment = {
-      resClass: this.resourceClass,
-      property: {
-        propType: prop.propType,
-        propDef: prop.propDef,
-      },
-    };
-    this.assignProperty(propertyAssignment, this.currentOntologyPropertiesToDisplay);
-  }
-
-  assignProperty(propertyAssignment: PropertyAssignment, currentOntologyPropertiesToDisplay: PropToDisplay[]) {
-    if (!propertyAssignment) {
-      return;
-    }
-    const classLabel = propertyAssignment.resClass.label;
-
-    let mode = 'createProperty';
-    let propLabel = `${propertyAssignment.property.propType.group}: ${propertyAssignment.property.propType.label}`;
-    let title = `Add new property of type "${propLabel}" to class "${classLabel}"`;
-    if (propertyAssignment.property.propDef) {
-      // the property already exists. To assign an existing property simply open the dialog in edit mode
-      mode = 'editProperty';
-      propLabel = propertyAssignment.property.propDef.label;
-      title = `Add existing property "${propLabel}" to class "${classLabel}"`;
-    }
-
-    const dialogConfig: MatDialogConfig = {
-      width: '640px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: {
-        propInfo: propertyAssignment.property,
-        title,
-        subtitle: 'Customize property and cardinality',
-        mode,
-        parentIri: propertyAssignment.resClass.id,
-        position: currentOntologyPropertiesToDisplay.length + 1,
-      },
-    };
-
-    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-
-    this._dialog.open<CreatePropertyFormDialogComponent, CreatePropertyFormDialogProps>(
-      CreatePropertyFormDialogComponent,
-      {
-        data: {
-          ontologyId: ontology.id,
-          lastModificationDate: ontology.lastModificationDate,
-          propertyInfo: propertyAssignment.property,
-          resClassIri: this.resourceClass.id,
-        },
-      }
-    );
-  }
 
   assignNewProperty(prop: PropertyInfoObject) {
     const propertyAssignment: PropertyAssignment = {
