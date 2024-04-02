@@ -7,8 +7,10 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
 } from '@angular/core';
+import { FormBuilder, FormControl } from '@angular/forms';
 import {
   CanDoResponse,
   Cardinality,
@@ -23,7 +25,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DefaultClass, DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ListsSelectors, OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 // property data structure
@@ -93,6 +95,7 @@ export class ResourceClassPropertyInfoComponent implements OnInit, OnChanges, Af
   propAttributeComment: string;
 
   propCanBeRemovedFromClass: boolean;
+
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,

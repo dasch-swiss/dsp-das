@@ -26,7 +26,6 @@ import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/a
 import {
   DefaultClass,
   DefaultProperties,
-  DefaultProperty,
   DefaultResourceClasses,
   OntologyService,
   ProjectService,
@@ -48,6 +47,7 @@ import {
   SetCurrentProjectOntologyPropertiesAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import {
   CreatePropertyFormDialogComponent,
   CreatePropertyFormDialogProps,
