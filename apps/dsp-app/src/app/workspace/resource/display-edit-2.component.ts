@@ -3,7 +3,7 @@ import { PropertyInfoValues } from '@dsp-app/src/app/workspace/resource/properti
 import { FormBuilder } from '@angular/forms';
 import { FormValueArray } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
-import { KnoraApiConnection, UpdateResource, UpdateResourceMetadataResponse } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, UpdateResource, UpdateValue, WriteValueResponse } from '@dasch-swiss/dsp-js';
 import { take } from 'rxjs/operators';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 
@@ -39,10 +39,12 @@ export class DisplayEdit2Component {
   submitData() {
     if (this.formArray.invalid) return;
 
-    this._dspApiConnection.v2.res
-      .updateResourceMetadata(this._getPayload())
+    const z = this._getPayload();
+    console.log(z, 'ss', this);
+    this._dspApiConnection.v2.values
+      .updateValue(z)
       .pipe(take(1))
-      .subscribe((res: UpdateResourceMetadataResponse) => {
+      .subscribe((res: WriteValueResponse) => {
         console.log(res);
       });
   }
@@ -57,19 +59,11 @@ export class DisplayEdit2Component {
     });
   }
 
-  private _getPropertiesObj() {
-    const propertiesObj = {};
-
-    Object.keys(this.formArray.controls).forEach(iri => {
-      propertiesObj[iri] = this.getValue(iri);
-    });
-
-    return propertiesObj;
-  }
-
   private _getPayload() {
-    const updateResource = new UpdateResource();
-    updateResource.property = this.prop.propDef.id;
+    const updateResource = new UpdateResource<UpdateValue>();
+    updateResource.id = this.prop.guiDef.propertyDefinition.id;
+    updateResource.property = this.prop.propDef.objectType;
+    updateResource.type = this.prop.propDef.objectType;
     updateResource.value = this.formArray.controls[0].value.item;
     return updateResource;
   }
