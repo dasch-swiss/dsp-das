@@ -43,7 +43,6 @@ import {
 } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import {
-  AppStringLiteralComponent,
   HumanReadableErrorPipe,
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
@@ -415,7 +414,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         deps: [HttpClient],
       },
     }),
-    AppStringLiteralComponent,
     MultiLanguageTextareaComponent,
     MutiLanguageInputComponent,
     NgxsStoreModule,
