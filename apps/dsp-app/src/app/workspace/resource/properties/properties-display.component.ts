@@ -30,46 +30,44 @@ import { PropertyInfoValues } from '@dsp-app/src/app/workspace/resource/properti
             </div>
             <div class="property-value">
               <!-- the value(s) of the property -->
-              <div *ngFor="let val of prop.values; trackBy: trackByValuesFn">
-                <app-display-edit-2 [val]="val"></app-display-edit-2>
-              </div>
+              <app-display-edit-2 [prop]="prop"></app-display-edit-2>
               <!-- Add value form -->
               <!--<div *ngIf="addValueFormIsVisible && propID === prop.propDef.id && project?.status">
-                                                                                                    <app-add-value
-                                                                                                      #addValue
-                                                                                                      class="add-value"
-                                                                                                      [parentResource]="resource.res"
-                                                                                                      [resourcePropertyDefinition]="$any(resource.res.entityInfo.properties[prop.propDef.id])"
-                                                                                                      (operationCancelled)="hideAddValueForm()">
-                                                                                                    </app-add-value>
-                                                                                                  </div>-->
+                                                                                                                  <app-add-value
+                                                                                                                    #addValue
+                                                                                                                    class="add-value"
+                                                                                                                    [parentResource]="resource.res"
+                                                                                                                    [resourcePropertyDefinition]="$any(resource.res.entityInfo.properties[prop.propDef.id])"
+                                                                                                                    (operationCancelled)="hideAddValueForm()">
+                                                                                                                  </app-add-value>
+                                                                                                                </div>-->
 
               <!-- in case of incoming links we have to display them here -->
               <!--<div *ngIf="prop.propDef.id === hasIncomingLinkIri">
-                                                                                                    <div>
-                                                                                                      <a
-                                                                                                        class="link link-value"
-                                                                                                        *ngFor="let inRes of displayedIncomingLinkResources; trackBy: trackByFn"
-                                                                                                        (click)="openResource(inRes.id)"
-                                                                                                        >{{ inRes.resourceClassLabel }}: <strong>{{ inRes.label }}</strong></a
-                                                                                                      >
-                                                                                                      <mat-paginator *ngIf="numberOffAllIncomingLinkRes > amount_resources" [length]=numberOffAllIncomingLinkRes
-                                                                                                                                                                                                                                                                 [pageSize]="amount_resources" [hidePageSize]="true" [pageIndex]="pageEvent.pageIndex"
-                                                                                                                                                                                                                                                                 (page)="goToPage($event)">
-                                                                                                                                                                                                                                                  </mat-paginator>
-                                                                                                      <div class="pagination" *ngIf="allIncomingLinkResources.length > amount_resources">
-                                                                                                        <p>Show more</p>
-                                                                                                        <button [disabled]="pageEvent.pageIndex < 1" (click)="handleIncomingLinkBackward()">
-                                                                                                          <mat-icon>chevron_left</mat-icon>
-                                                                                                        </button>
-                                                                                                        <button
-                                                                                                          [disabled]="allIncomingLinkResources.length / amount_resources <= pageEvent.pageIndex + 1"
-                                                                                                          (click)="handleIncomingLinkForward()">
-                                                                                                          <mat-icon>chevron_right</mat-icon>
-                                                                                                        </button>
-                                                                                                      </div>
-                                                                                                    </div>
-                                                                                                  </div>-->
+                                                                                                                  <div>
+                                                                                                                    <a
+                                                                                                                      class="link link-value"
+                                                                                                                      *ngFor="let inRes of displayedIncomingLinkResources; trackBy: trackByFn"
+                                                                                                                      (click)="openResource(inRes.id)"
+                                                                                                                      >{{ inRes.resourceClassLabel }}: <strong>{{ inRes.label }}</strong></a
+                                                                                                                    >
+                                                                                                                    <mat-paginator *ngIf="numberOffAllIncomingLinkRes > amount_resources" [length]=numberOffAllIncomingLinkRes
+                                                                                                                                                                                                                                                                               [pageSize]="amount_resources" [hidePageSize]="true" [pageIndex]="pageEvent.pageIndex"
+                                                                                                                                                                                                                                                                               (page)="goToPage($event)">
+                                                                                                                                                                                                                                                                </mat-paginator>
+                                                                                                                    <div class="pagination" *ngIf="allIncomingLinkResources.length > amount_resources">
+                                                                                                                      <p>Show more</p>
+                                                                                                                      <button [disabled]="pageEvent.pageIndex < 1" (click)="handleIncomingLinkBackward()">
+                                                                                                                        <mat-icon>chevron_left</mat-icon>
+                                                                                                                      </button>
+                                                                                                                      <button
+                                                                                                                        [disabled]="allIncomingLinkResources.length / amount_resources <= pageEvent.pageIndex + 1"
+                                                                                                                        (click)="handleIncomingLinkForward()">
+                                                                                                                        <mat-icon>chevron_right</mat-icon>
+                                                                                                                      </button>
+                                                                                                                    </div>
+                                                                                                                  </div>
+                                                                                                                </div>-->
             </div>
           </div>
         </div>
