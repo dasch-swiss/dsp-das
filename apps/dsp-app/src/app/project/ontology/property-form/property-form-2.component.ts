@@ -29,21 +29,18 @@ import { PropertyForm } from '@dsp-app/src/app/project/ontology/property-form/pr
         </mat-optgroup>
       </mat-select>
       <!--TODO <mat-hint *ngIf="unsupportedPropertyType" class="ontology-warning-with-prefix">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    {{ propertyForm.controls['propType'].value.description }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </mat-hint>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      {{ propertyForm.controls['propType'].value.description }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </mat-hint>-->
     </mat-form-field>
     <app-common-input
       placeholder="Property name *"
       prefixIcon="fingerprint"
-      [formGroup]="form"
-      controlName="name"></app-common-input>
+      [control]="form.controls.name"></app-common-input>
     <dasch-swiss-multi-language-input
-      [formGroup]="form"
-      controlName="labels"
+      [formArray]="form.controls.labels"
       placeholder="Property label*"></dasch-swiss-multi-language-input>
     <dasch-swiss-multi-language-textarea
-      [formGroup]="form"
-      controlName="comments"
+      [formArray]="form.controls.comments"
       placeholder="Comment"></dasch-swiss-multi-language-textarea>
 
     <app-gui-attr-list
@@ -101,8 +98,24 @@ export class PropertyForm2Component implements OnInit {
         disabled: this.filteredProperties[0].elements.length === 1,
       }),
       name: this._fb.control<string>(this.formData.name ?? '', [Validators.required]),
-      labels: DEFAULT_MULTILANGUAGE_FORM(this.formData.labels, [Validators.required]),
-      comments: DEFAULT_MULTILANGUAGE_FORM(this.formData.comments, [Validators.required]),
+      labels: DEFAULT_MULTILANGUAGE_FORM(
+        this.formData.labels ?? [
+          {
+            language: 'de',
+            value: '',
+          },
+        ],
+        [Validators.required]
+      ),
+      comments: DEFAULT_MULTILANGUAGE_FORM(
+        this.formData.comments ?? [
+          {
+            language: 'de',
+            value: '',
+          },
+        ],
+        [Validators.required]
+      ),
       guiAttr: this._fb.control<string>(this.formData.guiAttribute, [Validators.required]),
       cardinality: this._fb.control(this.formData.cardinality ?? Cardinality._0_1),
     });
