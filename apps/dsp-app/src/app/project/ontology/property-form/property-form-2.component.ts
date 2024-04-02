@@ -115,7 +115,7 @@ export class PropertyForm2Component implements OnInit {
       guiAttr: this._fb.control<string>(
         {
           value: this.formData.guiAttribute,
-          disabled: true,
+          disabled: ![Constants.LinkValue, Constants.ListValue].includes(this.formData.property.propType.objectType),
         },
         [Validators.required]
       ),
