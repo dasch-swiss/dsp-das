@@ -204,6 +204,9 @@ import { ExpertSearchComponent } from './workspace/search/expert-search/expert-s
 import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
+import { PropertiesDisplayComponent } from '@dsp-app/src/app/workspace/resource/properties/properties-display.component';
+import { SwitchValuesComponent } from '@dsp-app/src/app/workspace/resource/switch-values.component';
+import { DisplayEdit2Component } from '@dsp-app/src/app/workspace/resource/display-edit-2.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -213,6 +216,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
 @NgModule({
   declarations: [
     ...PropertyFormComponents,
+    PropertiesDisplayComponent,
+    SwitchValuesComponent,
+    DisplayEdit2Component,
     AccountComponent,
     ActionBubbleComponent,
     AddRegionFormComponent,
