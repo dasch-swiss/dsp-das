@@ -1,12 +1,17 @@
 import { Component, Input } from '@angular/core';
-import { ReadOntology } from '@dasch-swiss/dsp-js';
+import { ClassDefinition, ReadOntology } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
 import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { ClassToSelect } from '@dsp-app/src/app/project/ontology/property-form/property-form.component';
 import { Store } from '@ngxs/store';
 import { map } from 'rxjs/operators';
 import { PropertyForm } from './property-form.type';
+
+export interface ClassToSelect {
+  ontologyId: string;
+  ontologyLabel: string;
+  classes: ClassDefinition[];
+}
 
 @Component({
   selector: 'app-gui-attr-link',
@@ -16,10 +21,10 @@ import { PropertyForm } from './property-form.type';
       <mat-label>Select resource class</mat-label>
       <mat-select [formControl]="control">
         <mat-optgroup *ngFor="let onto of ontologyClasses$ | async" [label]="onto.ontologyLabel">
-          <mat-option *ngFor="let oClass of onto.classes" [value]="oClass.id"> {{ oClass.label }} </mat-option>
+          <mat-option *ngFor="let oClass of onto.classes" [value]="oClass.id"> {{ oClass.label }}</mat-option>
         </mat-optgroup>
       </mat-select>
-      <mat-error *ngIf="control.invalid && control.touched"> {{ control.errors[0] | humanReadableError }}</mat-error>
+      <mat-error *ngIf="control.invalid && control.touched"> {{ control.errors[0] | humanReadableError }} </mat-error>
     </mat-form-field>
   `,
   styles: ['mat-form-field {width: 100%}'],

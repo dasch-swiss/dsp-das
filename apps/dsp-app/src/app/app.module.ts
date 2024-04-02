@@ -133,7 +133,6 @@ import { CreateResourceClassDialogComponent } from './project/ontology/create-re
 import { EditResourceClassDialogComponent } from './project/ontology/edit-resource-class-dialog/edit-resource-class-dialog.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
-import { PropertyFormComponent } from './project/ontology/property-form/property-form.component';
 import { PropertyInfoComponent } from './project/ontology/property-info/property-info.component';
 import { ResourceClassFormComponent } from './project/ontology/resource-class-form/resource-class-form.component';
 import { ResourceClassInfoComponent } from './project/ontology/resource-class-info/resource-class-info.component';
@@ -316,7 +315,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ProjectsComponent,
     ProjectsListComponent,
     PropertiesComponent,
-    PropertyFormComponent,
     PropertyForm2Component,
     CreatePropertyFormDialogComponent,
     AssignPropertyDialogComponent,
