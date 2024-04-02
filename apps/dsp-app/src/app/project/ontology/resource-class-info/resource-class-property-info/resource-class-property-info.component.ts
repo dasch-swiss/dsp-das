@@ -116,8 +116,12 @@ export class ResourceClassPropertyInfoComponent implements OnInit, OnChanges, Af
     this.cardinalityControl.valueChanges
       .pipe(
         switchMap(changes =>
-          this._dialog.afterConfirmation('Please note that this change may not be reversible.', 'Attention')
-        )
+          this._dialog.afterConfirmation(
+            'Please note that this change may not be reversible. Do you wish to continue ?',
+            'Attention'
+          )
+        ),
+        switchMap(() => this.submitCardinalitiesChange())
       )
       .subscribe();
   }
@@ -227,8 +231,6 @@ export class ResourceClassPropertyInfoComponent implements OnInit, OnChanges, Af
   }
 
   submitCardinalitiesChange() {
-    const classProperties;
-
     const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
 
     // get the ontology, the class and its properties
@@ -237,13 +239,10 @@ export class ResourceClassPropertyInfoComponent implements OnInit, OnChanges, Af
     classUpdate.id = ontology.id;
     const changedClass = new UpdateResourceClassCardinality();
     changedClass.id = this.resourceIri; // TODO this.resClassIri;
-    changedClass.cardinalities = classProperties;
+    changedClass.cardinalities = [this.propCard]; // TODO might be wrong
 
     // get the property for replacing the cardinality
-    const idx = changedClass.cardinalities.findIndex(c => c.propertyIndex === this.propertyInfo.propDef.id);
-    if (idx === -1) {
-      return;
-    }
+    const idx = changedClass.cardinalities.findIndex(c => c.propertyIndex === this.propDef.id);
     changedClass.cardinalities[idx].cardinality = this.cardinalityControl.value;
 
     classUpdate.entity = changedClass;
