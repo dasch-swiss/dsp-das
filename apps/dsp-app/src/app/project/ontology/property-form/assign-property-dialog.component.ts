@@ -26,7 +26,10 @@ export interface AssignPropertyDialogProps {
         property: data.propertyInfo,
         name: data.propertyInfo.propDef.label,
         labels: data.propertyInfo.propDef.labels,
-        comments: data.propertyInfo.propDef.comments,
+        comments:
+          data.propertyInfo.propDef.comments.length > 0
+            ? data.propertyInfo.propDef.comments
+            : [{ language: 'de', value: '' }],
         guiAttribute: data.propertyInfo.propDef.guiAttributes[0]
       }"></app-property-form-2>
     <div mat-dialog-actions align="end">
