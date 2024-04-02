@@ -6,7 +6,6 @@ import { Cardinality } from '@dasch-swiss/dsp-js';
   selector: 'app-required-slide-toggle',
   template: `
     <mat-slide-toggle
-      [formControl]="control"
       [matTooltip]="'The property in this class must have one value'"
       matTooltipPosition="above"
       [checked]="control.value.toString().startsWith('_1')"
