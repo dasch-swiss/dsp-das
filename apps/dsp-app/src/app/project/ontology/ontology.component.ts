@@ -471,40 +471,6 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
       });
   }
 
-  /**
-   * opens property form to create or edit property info
-   * @param mode whether an existing property is assigned or a new one is created
-   * @param propertyInfo the property to assign and edit
-   */
-  openPropertyForm(mode: 'createProperty' | 'editProperty', propertyInfo: PropertyInfoObject): void {
-    const title = propertyInfo.propDef
-      ? propertyInfo.propDef.label
-      : `${propertyInfo.propType.group}: ${propertyInfo.propType.label}`;
-
-    const dialogConfig: MatDialogConfig = {
-      width: '640px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: {
-        propInfo: propertyInfo,
-        title,
-        subtitle: 'Customize property',
-        mode,
-      },
-    };
-
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(() => {
-      // get the ontologies for this project
-      this.initOntologiesList();
-      // update the view of resource class or list of properties
-      this.initOntology();
-    });
-  }
-
   createProperty(mode: string, data: PropertyInfoObject) {
     const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
     this._dialog
