@@ -52,8 +52,22 @@ export class ListValue2Component implements OnInit {
       this._dspApiConnection.v2.list.getList(trimmedRootNodeIRI).subscribe((response: ListNodeV2) => {
         // TODO weird to have n subscribes inside ngFors
         this.listRootNode = response;
+
+        this._lookForNode(response);
         this._cd.detectChanges();
       });
+    }
+  }
+
+  private _lookForNode(response: ListNodeV2) {
+    if (response.id === this.control.value) {
+      this.selectedNode(response);
+      return;
+    }
+
+    for (const child of response.children) {
+      this._lookForNode(child);
+      if (this.mySelectedNode) return;
     }
   }
 }
