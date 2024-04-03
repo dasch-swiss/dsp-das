@@ -53,7 +53,7 @@ export class DisplayEdit2Component {
     this.formArray = this._fb.array(
       this.prop.values.map(value =>
         this._fb.group({
-          item: propertiesTypeMapping.get(this.prop.propDef.objectType).control(value.strval) as AbstractControl,
+          item: propertiesTypeMapping.get(this.prop.propDef.objectType).control(value) as AbstractControl,
           comment: this._fb.control(value.valueHasComment),
         })
       )

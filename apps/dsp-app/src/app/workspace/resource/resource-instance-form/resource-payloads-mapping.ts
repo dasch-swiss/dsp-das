@@ -48,7 +48,7 @@ export const propertiesTypeMapping = new Map<
   string,
   {
     newValue: any;
-    control: (value?: ReadValue | any) => AbstractControl;
+    control: (value?: ReadValue) => AbstractControl;
     mapping: (value: any) => CreateValue;
     updateMapping: (id: string, value: any) => UpdateValue;
   }
@@ -57,7 +57,7 @@ export const propertiesTypeMapping = new Map<
     Constants.IntValue,
     {
       newValue: null,
-      control: (value: ReadIntValue) => new FormControl(value.int ?? 0, Validators.required),
+      control: (value?: ReadIntValue) => new FormControl(value?.int ?? 0, Validators.required),
       mapping: (value: number) => {
         const newIntValue = new CreateIntValue();
         newIntValue.int = value;
@@ -75,7 +75,7 @@ export const propertiesTypeMapping = new Map<
     Constants.DecimalValue,
     {
       newValue: null,
-      control: (value: ReadDecimalValue) => new FormControl(value.decimal ?? 0, Validators.required),
+      control: (value?: ReadDecimalValue) => new FormControl(value?.decimal ?? 0, Validators.required),
 
       mapping: (value: number) => {
         const newDecimalValue = new CreateDecimalValue();
@@ -94,7 +94,7 @@ export const propertiesTypeMapping = new Map<
     Constants.BooleanValue,
     {
       newValue: null,
-      control: (value: ReadBooleanValue) => new FormControl(value.bool ?? false, Validators.required),
+      control: (value?: ReadBooleanValue) => new FormControl(value?.bool, Validators.required),
 
       mapping: (value: boolean) => {
         const newBooleanValue = new CreateBooleanValue();
@@ -113,7 +113,7 @@ export const propertiesTypeMapping = new Map<
     Constants.TextValue,
     {
       newValue: null,
-      control: (value: ReadTextValue) => new FormControl(value.strval ?? '', Validators.required),
+      control: (value?: ReadTextValue) => new FormControl(value?.strval, Validators.required),
 
       mapping: (value: string) => {
         const newTextValue = new CreateTextValueAsString();
@@ -132,7 +132,7 @@ export const propertiesTypeMapping = new Map<
     Constants.DateValue,
     {
       newValue: null,
-      control: (value: ReadDateValue) => new FormControl(value.date ?? '', Validators.required),
+      control: (value?: ReadDateValue) => new FormControl(value?.date, Validators.required),
       mapping: (value: any) => {
         const newDateValue = new CreateDateValue();
         populateValue(newDateValue, value);
@@ -150,10 +150,10 @@ export const propertiesTypeMapping = new Map<
     Constants.TimeValue,
     {
       newValue: null,
-      control: (value: ReadTimeValue) =>
+      control: (value?: ReadTimeValue) =>
         new FormGroup({
-          date: new FormControl(value.time ?? null, Validators.required),
-          time: new FormControl(value.time ?? null, Validators.required),
+          date: new FormControl(value?.time, Validators.required), // TODO
+          time: new FormControl(value?.time, Validators.required),
         }),
 
       mapping: (value: any) => {
@@ -173,10 +173,10 @@ export const propertiesTypeMapping = new Map<
     Constants.IntervalValue,
     {
       newValue: null,
-      control: (value: ReadIntervalValue) =>
+      control: (value?: ReadIntervalValue) =>
         new FormGroup({
-          start: new FormControl(value.start ?? null, Validators.required),
-          end: new FormControl(value.end ?? null, Validators.required),
+          start: new FormControl(value?.start, Validators.required),
+          end: new FormControl(value?.end, Validators.required),
         }),
       mapping: (value: { start: number; end: number }) => {
         const newIntervalValue = new CreateIntervalValue();
@@ -197,7 +197,7 @@ export const propertiesTypeMapping = new Map<
     Constants.ColorValue,
     {
       newValue: null,
-      control: (value: ReadColorValue) => new FormControl(value.color ?? '#000000'),
+      control: (value?: ReadColorValue) => new FormControl(value?.color ?? '#000000'),
       mapping: (value: string) => {
         const newColorValue = new CreateColorValue();
         newColorValue.color = value;
@@ -215,7 +215,7 @@ export const propertiesTypeMapping = new Map<
     Constants.ListValue,
     {
       newValue: null,
-      control: (value: ReadListValue) => new FormControl(value.listNodeLabel ?? null, Validators.required),
+      control: (value?: ReadListValue) => new FormControl(value?.listNodeLabel, Validators.required),
       mapping: (value: string) => {
         const newListValue = new CreateListValue();
         newListValue.listNode = value;
@@ -233,7 +233,7 @@ export const propertiesTypeMapping = new Map<
     Constants.GeonameValue,
     {
       newValue: null,
-      control: (value: ReadGeonameValue) => new FormControl(value.geoname ?? '', Validators.required),
+      control: (value?: ReadGeonameValue) => new FormControl(value?.geoname, Validators.required),
 
       mapping: (value: string) => {
         const newGeonameValue = new CreateGeonameValue();
@@ -252,11 +252,8 @@ export const propertiesTypeMapping = new Map<
     Constants.LinkValue,
     {
       newValue: null,
-      control: (value: ReadLinkValue) =>
-        new FormControl(value.linkedResourceIri ?? '', [
-          Validators.required,
-          Validators.pattern(/http:\/\/rdfh.ch\/.*/),
-        ]),
+      control: (value?: ReadLinkValue) =>
+        new FormControl(value?.linkedResourceIri, [Validators.required, Validators.pattern(/http:\/\/rdfh.ch\/.*/)]),
       mapping: (value: string) => {
         const newLinkValue = new CreateLinkValue();
         newLinkValue.linkedResourceIri = value;
@@ -274,8 +271,8 @@ export const propertiesTypeMapping = new Map<
     Constants.UriValue,
     {
       newValue: null,
-      control: (value: ReadUriValue) =>
-        new FormControl(value.uri ?? '', [Validators.required, Validators.pattern(CustomRegex.URI_REGEX)]),
+      control: (value?: ReadUriValue) =>
+        new FormControl(value?.uri, [Validators.required, Validators.pattern(CustomRegex.URI_REGEX)]),
       mapping: (value: string) => {
         const newUriValue = new CreateUriValue();
         newUriValue.uri = value;
