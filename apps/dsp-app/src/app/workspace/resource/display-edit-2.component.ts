@@ -50,14 +50,14 @@ export class DisplayEdit2Component {
       return;
     }
 
-    this.formArray = this._fb.array([
-      this._fb.group({
-        item: propertiesTypeMapping
-          .get(this.prop.propDef.objectType)
-          .control(this.prop.values[0].strval) as AbstractControl,
-        comment: this._fb.control(''),
-      }),
-    ]);
+    this.formArray = this._fb.array(
+      this.prop.values.map(value =>
+        this._fb.group({
+          item: propertiesTypeMapping.get(this.prop.propDef.objectType).control(value.strval) as AbstractControl,
+          comment: this._fb.control(value.valueHasComment),
+        })
+      )
+    );
 
     this.displayMode = false;
   }
